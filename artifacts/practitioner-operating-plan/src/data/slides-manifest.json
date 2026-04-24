@@ -104,8 +104,56 @@
     "speakerNotes": ""
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c01",
     "position": 14,
+    "filepath": "src/pages/slides/PartIIIDivider.tsx",
+    "title": "Part III — Hiring runbook",
+    "description": "Section divider entering the hiring voice: how to actually find each of the five people, with sourcing channels in and around Dryden, screening questions, paid trial structures, and walk-away signals.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c02",
+    "position": 15,
+    "filepath": "src/pages/slides/HiringOpsManager.tsx",
+    "title": "Hiring — Operations Manager",
+    "description": "How to find the Dryden ops manager: Chamber and Job Bank, Confederation College alumni, regional logistics referrals, Facebook groups, bulletin boards. Screening questions, 2-week paid shadow-then-solo trial, walk-away signals, 30/60/90.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c03",
+    "position": 16,
+    "filepath": "src/pages/slides/HiringBookkeeper.tsx",
+    "title": "Hiring — Bookkeeper",
+    "description": "How to find the bookkeeper: CPB Canada directory, Northwestern Ontario CPAs, Chamber referrals, Indeed/LinkedIn remote-Canada search. Screening on CRA fluency, 1-month paid trial against fixed scope, walk-away signals, 30/60/90.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c04",
+    "position": 17,
+    "filepath": "src/pages/slides/HiringHousecleaner.tsx",
+    "title": "Hiring — Housecleaner",
+    "description": "How to find the weekly housecleaner: working-parent referrals first, Dryden Facebook groups and Kijiji second, bulletin boards, Molly Maid as paid backstop. Screening, 2-visit paid trial, walk-away signals, 30/60/90.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c05",
+    "position": 18,
+    "filepath": "src/pages/slides/HiringTutor.tsx",
+    "title": "Hiring — Tutor",
+    "description": "How to find the year-round tutor: Lakehead Faculty of Education, Confederation College EA program, Keewatin-Patricia DSB, Dryden retired teachers, OCT register, current-teacher referrals. Vulnerable Sector Check required, 4-session paid trial with kids voting, 30/60/90.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c06",
+    "position": 19,
+    "filepath": "src/pages/slides/HiringHandyman.tsx",
+    "title": "Hiring — Handyman-Housekeeper",
+    "description": "How to find the handyman-housekeeper safely: referrals only, never an open posting. Explicit child-safety vetting protocol — Vulnerable Sector Check, three reference calls, never alone with kids for 90 days, open conversation with the kids, annual re-check. Two-week paid trial outside-then-inside-with-parent-present, heavy walk-away list, slower 30/60/90.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
+    "position": 20,
     "filepath": "src/pages/slides/Budget.tsx",
     "title": "Monthly budget — three contract sizes",
     "description": "Team baseline ($10,800 → $11k loaded) reconciled against $20k, $25k, and $30k contracts — team + take-home + agency reinvestment equals the contract size on each row.",
@@ -113,7 +161,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b16",
-    "position": 15,
+    "position": 21,
     "filepath": "src/pages/slides/CashFlow.tsx",
     "title": "Cash flow — bridging the 60-day pay cycle",
     "description": "12-month cumulative cash chart for all three contract sizes assuming a net-60 payment lag, naming the bridge capital required on day one (~$36k–$44k) before the first invoice clears.",
@@ -121,7 +169,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
-    "position": 16,
+    "position": 22,
     "filepath": "src/pages/slides/Winter.tsx",
     "title": "Winter contingency",
     "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
@@ -129,7 +177,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b10",
-    "position": 17,
+    "position": 23,
     "filepath": "src/pages/slides/AgencyVision.tsx",
     "title": "Agency vision",
     "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts.",
@@ -137,7 +185,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
-    "position": 18,
+    "position": 24,
     "filepath": "src/pages/slides/PartIVDivider.tsx",
     "title": "Part IV — For Dad",
     "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
@@ -145,7 +193,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
-    "position": 19,
+    "position": 25,
     "filepath": "src/pages/slides/CaseForRate.tsx",
     "title": "The case for the rate",
     "description": "What $25k/month actually buys (operating system, not a person) versus what 'lean' actually costs (the contract).",
@@ -153,7 +201,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
-    "position": 20,
+    "position": 26,
     "filepath": "src/pages/slides/CaseForTeam.tsx",
     "title": "The case for the team",
     "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
@@ -161,7 +209,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
-    "position": 21,
+    "position": 27,
     "filepath": "src/pages/slides/ValueDelivered.tsx",
     "title": "Value delivered",
     "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, reusable coordinator infrastructure, and base stability.",
@@ -169,7 +217,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
-    "position": 22,
+    "position": 28,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
     "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $25k/mo on a 12-month engagement reviewed at month six.",
