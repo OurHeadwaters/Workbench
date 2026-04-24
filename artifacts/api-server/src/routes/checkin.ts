@@ -78,11 +78,18 @@ function serialize(row: typeof financialSnapshotsTable.$inferSelect) {
   };
 }
 
+// Order by snapshot year (descending) first so backfilled rows for older
+// years don't show up "ahead" of the newest year just because they were
+// entered later.  Within a year (rare — Robin would have to re-record),
+// the most-recent entry wins.
 router.get("/snapshots", async (_req, res) => {
   const rows = await db
     .select()
     .from(financialSnapshotsTable)
-    .orderBy(desc(financialSnapshotsTable.takenAt));
+    .orderBy(
+      desc(financialSnapshotsTable.year),
+      desc(financialSnapshotsTable.takenAt),
+    );
   res.json({ snapshots: rows.map(serialize) });
 });
 
@@ -92,7 +99,10 @@ router.get("/snapshots/latest", async (_req, res) => {
   const [row] = await db
     .select()
     .from(financialSnapshotsTable)
-    .orderBy(desc(financialSnapshotsTable.takenAt))
+    .orderBy(
+      desc(financialSnapshotsTable.year),
+      desc(financialSnapshotsTable.takenAt),
+    )
     .limit(1);
   if (!row) {
     res.json({ snapshot: null });

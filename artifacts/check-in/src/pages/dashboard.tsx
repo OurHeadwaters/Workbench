@@ -404,7 +404,7 @@ function LatestSnapshotPanel({ snapshot }: { snapshot: Snapshot }) {
             testId="tile-living-expenses"
           />
           <InfoTile
-            label="XRP wildcard"
+            label="XRP wildcard — not counted toward retirement target"
             value={formatUsd(xrpValue)}
             sub={`${formatInteger(snapshot.xrpBalance)} XRP × ${formatXrpPrice(
               snapshot.xrpPriceUsd,
