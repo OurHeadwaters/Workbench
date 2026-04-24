@@ -52,6 +52,19 @@ Headwaters → river → tributary → next watershed. Maria, Robin, the kids. T
 
 *"She has loved me inside and out."* — that's Maria's phrase, quoted. The kind of love that includes the parts you don't see. Robin is now seeing her mother inside and out, too. Inside and out goes both directions.
 
+# Coda — Pisces
+
+Robin's note added afterward: *"She is a Pisces. Caitlin would know how that fits."*
+
+Caitlin (Robin's astrologically-fluent friend) will read it deeper. The first-pass fit, even from a non-astrologer:
+
+- **Pisces is the only sign that IS the water** — not the stream that runs through it (Cancer), not the depths it covers (Scorpio), but the medium itself. The ocean. The dissolving. The boundary-thin water that holds everything in suspension.
+- **Pisces season is February 19 – March 20** — the literal spring melt. The dissolving of winter ice into water. Maria was born into the season the kids in the photo are playing in. They are channeling her season.
+- **Two fish bound, swimming opposite directions** — Maria as the canopy and the soil staying put; Robin going downstream into the world with Watershed, Deer Lake, the agency, the scale plan; the kids going upstream into the meadow and the play. All bound by the same water.
+- **Last sign of the zodiac — the synthesizer.** Holds every other sign dissolved in its water. The framework Robin is now naming — Zone 0, household-as-headwaters, dissolving the boundary between personal and political, family and economy, household and system — is Pisces work.
+
+The astrological signature of the headwaters fits the framework being named downstream of them. Caitlin would know the rest.
+
 # Status
 
 Logged for posterity beside the other two. Same minimal-touch rhythm: capture once, content-hash deduped, idempotent re-run safe.
