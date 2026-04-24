@@ -1,0 +1,722 @@
+Guidelines and Sample Bylaw Language for Multi-stakeholder Cooperatives
+Compiled by Margaret Lund
+For the Cooperative Development Foundation
+December, 2012
+
+Bylaws are the owner’s and operator’s manual for any cooperative business.  They are designed to address issues of long-term significance for the cooperative and codify the rules of conduct for the enterprise as well as delineate the rights, responsibilities, and protections offered to members.    At their best, a good set of cooperative bylaws will provide a clear and accessible guidebook to help generations of co-op members understand the nature and objectives of their common endeavor and guide it accordingly in a sound and consistent manner.  
+Unlike articles of incorporation, cooperative bylaws are an internal document and are not required to be filed with the Secretary of State.  However, the board and membership of the cooperative do have to agree to abide by the provisions found in the bylaws when operating the cooperative.  Bylaws may be changed over time, but to do so generally requires a majority vote of the membership so it is not something that should be done without due consideration.
+While any almost any issue may be addressed by a bylaw, they are designed to provide guidance on topics at an organizational rather than an operational level.  As such, the best bylaws clearly articulate solid principals and parameters rather than detailed directives. Their language should be clear and unambiguous and they should be internally consistent with the organization’s articles of incorporation (if there is any conflict, the articles will generally prevail) and must also abide by state statute.  If the articles of incorporation or state statute pertain to a clause in the  bylaws, it is often helpful to include a reference to that effect.
+Most cooperative bylaws will cover the basic tenets of purpose, membership requirements, rights and responsibilities of members, meetings and meeting notice, voting, number of directors and terms, how business will be conducted, net margin distribution, equity redemption, dissolution, indemnification, and the process for amending the bylaws. Some state cooperative statutes contain detailed requirements regarding some of these issues while other do not, so co-op members should always consult with a qualified attorney before many any changes to their bylaws.
+For multi-stakeholder cooperatives in particular, the bylaws provide the ideal opportunity to articulate the common mission and purpose held by the co-op’s diverse group of stakeholders and to specifically describe and codify the relationship, rights, and responsibilities of each different membership class.  
+
+
+
+Cooperatives will often restate the basic purpose of the organization in the bylaws, which is typically outlined in the articles of incorporation as well. 
+Example: “the purpose of ABC Cooperative is to create a marketing cooperative to promote the production and sale of such-and-such and related products.” 
+Any time that similar issues are addressed in both the articles and the bylaws it is best to use the same language to avoid confusion. 
+
+
+
+Many multi-stakeholder cooperatives will also state a specific mission in their bylaws. This is particularly useful for multi-stakeholder cooperatives that involve a diverse group of members or ones that bring together members who typically are not part of the same organization, such as producers and consumers. The mission statement articulates what these diverse parties have in common.  A mission statement is also useful for cooperatives that have a particular social purpose which all members are working toward such a commitment to local foods or belief in fair trade.
+Examples: “the mission of the cooperative is to satisfy our local food needs with locally grown and produced foods” 
+Or more broadly 
+“Our goals are to encourage healthy eating, expand local economic development, promote community involvement and support sustainable living”  
+Or  
+“our mission is to build long-term trade partnerships that are economically just and environmentally sound, to foster mutually beneficial relationships between farmers and consumers, and to demonstrate, through our success, - the contribution of co-operatives and Fair Trade to a more equitable, democratic and sustainable world”.
+
+
+
+
+The cooperative bylaws are the place for the very important work of spelling out who can be a member of the cooperative and under what circumstances.  For multi-stakeholder cooperatives, it is particularly important that this portion of the bylaw be thorough, yet straightforward and explicit so that there are no misunderstandings in the future.  The membership section may be organized in various ways. Throughout the bylaws, however, each topic should have its own specific heading or subheading to make it easy to use as a reference document.:
+CLASSES OF MEMBERSHIP:
+Example:
+
+ Section 1. Classes of Ownership. There are two classes of ownership. The worker class consists of all worker patrons of the cooperative as defined herein who have purchased a Worker Share. The consumer class consists of all consumer patrons of the cooperative as defined herein who have purchased a Consumer Share. 
+Section 2. Ownership Eligibility and Acceptance. Ownership in the cooperative shall be open to any person that supports the purposes of the cooperative as expressed in the Articles of Incorporation, these By-laws, and the policies of the cooperative, and who is a resident of the State OF XXXX  when the Ownership Share is purchased. An application shall be accepted unless the Board determines in its discretion that the interests of the cooperative would be better served by returning the subscription. All employees of this cooperative are eligible for Worker Ownership after a suitable vesting period. Any person eligible for Worker Ownership shall be ineligible for Consumer Ownership.
+Or
+SECTION 1. The Cooperative shall have four classes of members, with the designation, qualifications, requirements, methods of acceptance and incidents of each class of members as set forth below.
+
+SECTION 2.  PRODUCER MEMBERS:  Any organic producer shall be eligible for membership as a “Producer Member” upon:
+		A.  Purchase of one (1) share of Class A Stock. 
+		B.  Payment of all grower fees
+C.  Complying with all equity requirements of the Cooperative.
+			D.  Being organically certified by the Cooperative approval certification process
+E.  Signing a membership agreement with the Cooperative.
+
+SECTION 3.  EMPLOYEE MEMBERS:  Any wage or contract employee of the Cooperative shall be eligible for membership as an  “Employee Member” if that person is employed by the Cooperative and after:
+		A.  Purchase of one (1) share of Class A Stock. 
+		B.  Complying with all equity requirements of the Cooperative
+C.  Meeting the minimum employment eligibility requirement of the Cooperative 
+as determined by the Board of Directors.
+
+SECTION 4.  CONSUMER MEMBERS:  Any person or entity shall be eligible for membership as a “Consumer Member” provided that that person is actively purchasing products from the Cooperative and after:
+		A.  Purchase of one (1) share of Class A Stock. 
+		B.  Complying with all equity requirements of the Cooperative.
+		
+SECTION 5.  INVESTOR MEMBERS:  Any person or entity shall be eligible for membership as an “Investor Member” provided that that person is an investor in the Cooperative and after:
+		A.  Purchase of one (1) share of Class A Stock. 
+		B.  Purchase of Class B Stock in such amounts as shall be determined by the
+		Board of Directors.
+C.  Complying with all other equity requirements of the Cooperative.
+
+SECTION 6.  Forfeiture of membership:  Any member shall forfeit membership in the event that the member fails to meet the requirements of membership, as determined by the Board of Directors after notice to the member and an opportunity to rebut any allegations before the Board.
+
+The above example includes a brief paragraph on forfeiture of membership. Some cooperatives have a more detailed section dealing with member termination.  An example is below:
+
+TERMINATION OF MEMBERSHIP:
+
+E.  Termination of Membership 
+i.  Resignation - Members wishing to leave the Co-op must submit a written note to the secretary.  Resigning members are responsible for fulfilling all outstanding obligations.  The Class A membership stock is redeemable at the discretion of the Board of Directors. 
+
+ii.  Involuntary termination - The board of directors may terminate an individual or organization’s membership for one of the following reasons:
+Did not participate in the Co-op for one year or more
+Violated terms of Co-op policy, board policy, product standards, or these bylaws 
+Acted contrary to the best interests of the Co-op.
+
+Members may be expelled for cause from the Co-op by a majority vote of the board of directors.  The board may only terminate membership during a board meeting.  The Class A membership stock is redeemable at the discretion of the Board of Directors. 
+Termination of membership will use the following procedure:
+The board will send a certified letter stating the reason for the proposed termination and outline specific incidences of violation of policies or bylaws.  The letter must be sent at least seven days prior to the vote to terminate membership.
+The member will be invited to the board meeting to be heard.
+The decision of the board is final.
+
+In cases where members may have accumulated significant amounts of patronage in the form of equity held by the cooperative, it is also important to document the method for the redemption of equity once a member has been terminated.  One example from a hybrid worker-consumer cooperative is below:
+
+Section 4. Ownership Termination. When a Worker-owner voluntarily or involuntarily ends his or her work in the company, his or her ownership automatically ends and the ownership share shall be deemed transferred back to the corporation. 
+Within fourteen days of termination, the company will pay for the owner’s share at its original price in cash, after offsetting against the share price any negative balance, if one exists, in the Internal Account for that member, any debts that member owes to the cooperative. If the owner’s Internal Account still has a negative balance, this negative balance will be debited against the Reserve Fund, thereby insuring that any operating losses do not accumulate so as to leave a Worker Owner owing money to the corporation when that owner retires or otherwise terminates his or her ownership. 
+Any positive balance in the owner’s Internal Account for the retiring or terminating owner not represented by written notices of allocation and associated interest shall be paid in full by the corporation in cash or, at the election of the corporation, by means of the corporation’s promissory note payable on such terms as the Board of Directors shall determine, provided that the note be payable in full within six months of the termination date Board of Directors shall determine, provided that the note be payable in full within six months of the termination date, unless it would otherwise impair the Corporation’s finances. 
+
+TRANSFERABILITY OF OWNERSHIP SHARES
+
+Many state cooperative statutes have regulations governing the transferability of ownership shares.  Even if this is the case, it is still useful to have such a paragraph (consistent with state law!) in the bylaws to make the bylaws more useful as a reference document.  In such places it is often helpful to reference state law in the bylaw so that members know that it is not a subject that is open to amendment on an individual firm level. 
+
+An example:
+
+Transferability:
+
+No Owner may sell, assign any interest in, or otherwise transfer his or her Ownership Share during the period of his or her membership in the corporation. All certificates representing Ownership Shares shall, in accordance with the law, have a notation thereon referring to the restrictions governing the transfer of these shares.
+
+MEMBER RIGHTS AND RESPONSIBILITIES
+
+Some coops include specific “rights and responsibilities of members” section in their bylaws, while other leave this level of detail to the board of directors to determine. Here is one sample from a bylaw:
+
+Example:
+
+C.  Membership Rights 
+Be eligible for patronage refunds (see Finances section).
+Participate in annual and special membership meetings.
+Vote in elections for the board or on ballots.
+Serve on the board of directors or on committees.
+
+D.  Membership Responsibilities 
+Members are expected to participate in the activities of the Co-op, including, but not limited to the following:
+Contribute to the Co-op’s capital by purchasing a membership shares.
+Patronize the Co-op.
+Know and understand the criteria for participation, product standards, bylaws, and policies of the Co-op.
+Participate in any educational activities mandated by the board of directors or product committees.
+Keep current on the activities and actions of the Co-op, attend annual and special member meetings, vote in elections, and respond to surveys.
+Participate in committee work.
+Share experience and provide member-to-member education as requested.
+Assist in the development of new products or product uses.
+Promote the Co-op and encourage others to become members.
+Contact local, state, and federal representatives on issues related to the Co-op’s mission.
+
+Or
+Section 3. Worker Ownership Stock and Rights.  The price of a worker ownership share shall be set by the Board. An ownership share will function for all intents and purposes as an ownership certificate.  Workers who have begun paying for an ownership share as part of a payroll deduction plan are entitled to all the rights and privileges of ownership, including voting and dividend rights. Each Worker Owner shall be entitled to a certificate of Ownership Stock.  
+
+The Worker Ownership Stock of this corporation may be purchased, owned, and/or held only by Worker Owners of the company. Each Worker Owner may own no more than one share of Ownership Stock, which will entitle its holder to vote in any meeting of the Owners according to Article VI of these By-laws. 
+
+No Worker Owner may sell, assign any interest in, or otherwise transfer his or her Ownership Share during the period of his or her working for and membership in the corporation. All certificates representing Ownership Shares shall, in accordance with the law, have a notation thereon referring to the restrictions governing the transfer of these shares. 
+
+
+
+
+
+The meetings section of the bylaws outlines the date, location, notice process, quorum requirements and content of the annual membership meeting as well as the requirements for calling any special meetings.  It is a requirement for every cooperative to hold an annual membership meeting to elect directors and report firm performance to the members. Some state cooperative statutes also contain direction on issues such as quorum and meeting notice – your attorney should be able to give guidance on any required elements.
+	
+The article should clarify the means for counting quorum and if mailed-in ballots (if allowed) or members calling in to the meeting from a remote location count toward meeting quorum. Some co-ops print an outline of the required elements of an annual meeting in the bylaws themselves while others just refer to the required elements.  
+
+Following are some samples of how other cooperatives have addressed these issues:
+
+Examples:
+
+ANNUAL MEETING 
+
+Annual meeting date and content:
+Section 1. Annual Meeting
+The annual meeting of the members of this Association shall be held in the State of XXXX, during the month of September or on such date as the board of directors may determine. The board shall designate the time and place of meetings.
+Or
+SECTION 1.   The annual meeting shall be held no later than the 31st day of August or the last day of the fourth month after the close of the fiscal year.  It will be the responsibility of the Board of Directors to set the exact date of the meeting.  The annual meeting shall be for the purpose of electing directors and receiving the annual audit, and any other business that may come before the members of the Cooperative.
+ANNUAL MEETING NOTICE: 
+
+SECTION 3.   Not less than thirty (30) days nor more than ninety (90) days’ notice shall be given before for each annual meeting.  Meeting notices shall always be written, giving date, place, time, and agenda.  The agenda for an annual meeting shall include a slate of director candidates and any by-law amendments that will be considered.
+Or
+Section 3. Notice of Meetings
+Written notice of every regular and special meeting of members shall be prepared and mailed to the last known post office address of each member at least ten (10) days before such meetings. Notice is given when it is deposited in the U.S. mail.
+The meeting notice may also be delivered by electronic means. Such notice shall state the nature of the business expected to be conducted and the time and place of the meeting. No business shall be transacted at any special meeting other than
+that referred to in the notice.
+SPECIAL MEETINGS:
+It is important in this section that cooperative founders make provision for the calling of special meetings if necessary.  Generally, most business of the cooperative should be able to be taken care of through the normal schedule of annual membership meetings and regular board meetings.  Under the unusual circumstances where this is not the case, however, a special meeting may be called by the board or -- if permitted by the bylaws and/or required by state law -- by the membership.  Special meetings are generally limited to discussion of the topic at hand.
+
+Some examples:
+
+Section 4.2 - Special Meetings:  Special meetings of the members of the Cooperative may be called at any time by order of the board of directors or by petition calling for membership meeting and specifying the agenda signed by 20% of the membership of the Cooperative. If such a petition is submitted, the secretary of the Cooperative shall schedule a membership meeting within 30 days, and within fourteen (14) days shall give written notification to the voting membership of the meeting time, date, and place as well as the business to be transacted. No business shall be transacted at any special meeting other than that referred to in the notice.
+
+Some multi-stakeholder cooperatives allow for special meetings to be called by the members of a single class:
+Section 3. Special meetings. Special Meetings of the members of the Cooperative may be
+called at any time by order of the Board of Directors, and shall be called at any time
+upon written request of at least one‐third of the members of any one ownership class
+(Consumers, Workers, or Producers). The request shall state the time, place, and object
+of the meeting. No business shall be transacted at Special Meetings other than what is
+described in the posted notices
+
+MEETING RULES:
+Some co-ops also give notice in the bylaws of how a meeting is to be conducted:
+SECTION 6.   The rules of order at a membership meetings shall be the latest copy of  Robert’s Rules of Order, unless in conflict with these by-laws or any special rules of order the cooperative may adopt, which shall supersede Robert’s Rules of Order.
+QUORUM:
+Quorum requirements are sometimes set out in state statute as the second example illustrates:
+Section 4.5 -  Quorum: At any annual, special or membership meeting of the members, a quorum to qualify a vote shall consist of a majority of the members.  
+Or
+SECTION 4.   A quorum of members at member meetings shall be ten percent (10%) of the first 100 members plus 5% of additional members, subject to the limitations in §185.14, Wisconsin Statutes. For purposes of establishing a quorum at member meetings, all signed mail-in ballots may be counted in computing a quorum.
+Or
+Owners represented by signed ballot shall be counted in computing a quorum but only on those questions on which the ballot or signed vote is taken.
+
+Some multi-stakeholder cooperatives require a quorum from each membership class. An example is below:
+Section 6. Quorum. A quorum at an Annual or Special owner meeting shall be calculated separately for each ownership class, and each class for which a quorum is present may conduct its proper business. A quorum shall be 10% for each ownership class.
+
+
+VOTING:
+Detailing who is permitted to vote, by what method and on what issues is a very important element of cooperative bylaws.  State statute often applies in this area.
+
+Example:
+
+Each member shall be entitled to only one vote. Voting shall be permitted by mail, e-mail, or in person. Proxy voting shall be allowed. Each proxy shall be in writing, signed by the voting member and no members shall vote more than one proxy.
+
+Or
+SECTION 5.  Any motion, including amendments to these By-Laws, brought before the membership at any member meeting may be voted on by mail-in ballot.  In order to vote by mail-in ballot, the full text of the proposed motion must have been provided to the cooperative membership, along with a ballot as part of the notice of the member meeting at which the motion will be debated. Ballots must be returned to the cooperative offices, inside an envelope signed by the voting member, by common carrier prior to the meeting at which the motion will be debated, or hand delivered by a Cooperative member at the call of the meeting at which the motion will be debated.
+REPRESENTATION OF ORGANIZATIONAL MEMBERS:
+If the co-op allows organizations or households to be co-op members, it is prudent to articulate the process for selecting a representative to vote on behalf of that member.  An example is below:
+
+iii.   Designated vote for organizational members 
+Members that are not natural persons (such as organizations, businesses, or households) must designate a representative authorized to cast a single vote on Co-op issues.  These members may also designate an alternative representative. 
+The designation must be in writing.
+The designation must be provided to the secretary at or before the member meeting.  
+The written designation will remain effective until it is replaced by a more recent written designation.
+
+
+
+
+
+
+At a minimum, cooperative bylaws should make specific provision for how board members are elected, when they shall meet, their number, terms and minimum qualifications, duties of the board, removal of directors, whether different classes of members have specific number of board seats, what provisions are made in the event of a board vacancy, and what constitutes a quorum of the board for the purposes of transacting business.  Bylaws also sometimes detail the board nominations process, board compensation, conflicts of interest, and other related issues. 
+
+State statute sometimes dictates a minimum number of board members. In general, it is prudent practice to list a range of acceptable number of board members in the bylaws (for example, between five and nine directors) so that the board can still conduct business in the case of a vacancy. It is also generally good practice to have an odd number of directors to make it clear when a majority of board members has taken an action. For a new co-op, it is also useful to make sure that the election of board seats is staggered (by, for example, having the initial board terms be of different lengths even if subsequently they are the same length) so that the entire board does not turn over at the same time.  Sometimes bylaws also allow for or mandate the appointment of some directors by the member-elected directors.  This allows the board to supplement the skills and experience of elected directors with some other desirable qualifications. 
+
+Some multi-stakeholder cooperatives make provision for a different length of board term for different classes of directors; others have every director serve the same length of term. Many co-op bylaws are silent on the issue of term limits, but it is often a good practice to at least limit consecutive terms to allow more members to participate in governance. A good deal depends on the size of the pool of prospective board members – a co-op may, for example, place limits on the number of terms served by consumer members for whom there is a large number of prospective candidates to draw from, but not impose these same limits for worker member representatives who draw from a much smaller pool. A co-op may also place term limits on elected members, but allow appointed members to serve indefinitely to provide for stability and continuity. A few co-ops also allow an appointed board position specifically for the CEO. This is common in investor-owned corporations but not widely practiced in cooperatives, although may be appropriate in certain circumstances.  These kinds of decisions are best discussed and customized at the level of each individual cooperative. 
+
+Many co-op bylaws include section headings that specifically address each topic considered to be important, even if the particular bylaw only states that the issue is to be decided at the discretion of the sitting board. That way, it is clear to members that this issue was not forgotten, but instead was intentionally left up to the board.   
+
+Some co-op bylaws have a separate section governing board meeting protocol; others include these items in the general board of directors section of the bylaws. Many co-ops also include an indemnification paragraph to protect board members who serve in good faith. This is an area where legal guidance from a qualified attorney is particularly important.
+
+Some co-ops outline a specific nominations process in their bylaws while others leave the matter up to the board to decide. It is also an important decision for the co-op whether to allow nominations from the floor for the board of directors at the annual meeting.  While some co-ops consider this more participatory, others do not allow the practice because it does not give the members (particularly those members who are not attending the meeting) the same information about each candidate.  If a co-op does decide to use a formal nominations process, in the interests of democracy it is also a good idea to present an alternate process whereby a board candidate not selected by the nominations committee could be placed on the ballot anyway if he or she were to secure the signature of a certain percentage of the membership. 
+
+Here are some examples of bylaw provisions:
+
+NUMBER, QUALIFICATIONS AND COMPOSITION OF DIRECTORS:
+
+Section 1. Number and Qualifications of Directors
+The Association shall have a board of directors of between five and eleven members; provided, however, if the Association has fewer than five members, the number of directors shall equal the number of members. Each director shall be a designated voting member of this Association in good standing.
+
+Or 
+
+Section 3. Eligibility. The directors shall accept any Consumer, Producer or Worker owner
+in good standing, who has been an owner for at least one year, as a candidate
+for election to the appropriate class of the Board of Directors. The elected directors
+may appoint any person to the Board of Directors who is deemed to have a
+contribution to the operation of the Cooperative, whether or not such person is an
+owner of the Cooperative.
+
+Or
+Number and qualifications of the board - [See 185.31(1) & (2)]
+The board shall consist of seven (7) directors.
+Directors must be members of the Cooperative.
+There will be three (3) directors representing membership classes and four (4) directors voted upon at-large by all members.  If in any year there are no members of a membership class in the Co-op, that representative seat will default to being temporarily filled at-large.  The three membership class representative directors are:
+Producer Representative - elected by members of the producer membership class.
+Buyer Representative - elected by members of the buyer membership class.
+Worker Representative - elected by members of the worker membership class. 
+The four at-large directors will be elected by the entire membership.
+Or
+Section 2. Composition of Board of Directors. The Board of Directors shall, at a minimum,
+consist of the following:
+a. Two (2) directors elected by the Worker‐owners
+b. Two (2) directors elected by the Consumer‐owners.
+c. Two (2) directors elected by the Producer‐owners.
+d. One (1), three (3), or five (5) directors, selected by the 6 elected directors above.
+
+Or
+SECTION 1.   There shall be seven (7) members of the Board of Directors.  Directors shall be elected by district, with each district comprised of each class of members specified in Article II above.  
+	A.  The Producer Member district may elect up to four members of the board, each of whom shall be a Producer Member or a representative of a Producer Member who is other than a natural person.  Members of the Board elected from the Producer Member District shall serve for a term of two years.  At the first annual meeting,  there shall be elected two directors for a term of two years and two directors for a term of one year.   At each annual meeting thereafter, there shall be elected directors equal in number to those whose terms have expired, for terms of two years.
+	B.  The Employee Member district may elect one member of the board, who shall be an Employee Member, and shall serve a term of one year.
+	C.  The Customer Member district may elect one member of the board, who shall be a Customer Member or a representative of a Customer Member who is other than a natural person.   Members of the Board elected from the Customer Member District shall serve a term of one year.
+	D.  The Investor Member district may elect one member of the board, who shall be an Investor Member or a representative of an Investor Member who is other than a natural person.   Members of the Board elected from the Investor Member District shall serve a term of one year.
+POWERS AND SPECIFIC DUTIES OF THE BOARD:
+
+A.   Powers of the Board  - [Chapter 185.31(1)]  
+All powers of the Cooperative, except those reserved to the Members, shall be exercised by or under the authority of the board.  The board of directors will set, implement, and interpret policies to further the mission of the Co-op.  
+
+TERMS OF DIRECTORS:
+
+C.   Board terms - [See 185.31(3)]
+Directors will be elected by the members at annual membership meetings or at a special member meeting called to fill a vacancy.  
+Directors will serve for three (3) year terms. 
+Terms are staggered to preserve the continuity of governance. (In electing the first board, two directors shall be elected for a one year term, two directors for a two year term, and three directors for a three year term.) 
+
+TERMS LIMITS:
+
+Section 5.3 -   Limit on Terms Served:  No director after having served for three (3) consecutive full terms shall be eligible to succeed himself or herself, but after a lapse of one (1) year shall again be eligible.
+
+HOW ELECTIONS ARE CONDUCTED:
+
+One very important purpose of the bylaws is to spell out specifically how elections for the board are to be held.  Under some state statutes mailed ballots are allowed only if they are specifically permitted in the co-op’s bylaws for example.  Under any statute, it is particularly advisable for the elections section of the bylaws to be clear and unambiguous. Coop founders must thing about such issues as whether mailed ballots will be accepted or if all voting must take place at the annual meeting, what methods of delivery are permissible, whether proxy voting will be allowed etc.
+
+Some examples:
+
+SECTION 3.  Members shall elect directors by written ballot.  Voting for the election of directors by mailed ballot shall be allowed.  Such ballot will be mailed with notice of the Annual Meeting.  Board ballots must be returned to the cooperative offices by common carrier, in an envelope affixed with the signature of the voting member, prior to the Annual Meeting or hand delivered by a Cooperative member at the call for ballots at the Annual Meeting.
+Or
+Section 4. Election of Directors. Directors will be elected at the Annual Meeting of the
+Owners. Owners may vote only for the directors representing the class of ownership
+share which they own. Owners unable to attend the Annual Meeting may vote with a
+signed absentee ballot received by the time of the vote. Directors shall be elected by a
+simple majority of the class she/he represents.
+
+BOARD VACANCIES:
+
+The bylaws should also address how board vacancies are to be filled, and whether interim directors need to represent a certain class of member.  Generally interim directors are only appointed until the next annual meeting at which time the membership can chose a replacement to serve the remainder of the departing director’s term.
+
+Some examples:
+
+SECTION 4.	Vacancies occurring on the Board of Directors, except any caused by removal by the cooperative members, shall be filled by appointment by the remaining directors until the next Annual Meeting of members of the cooperative.
+Or
+Section 7. Vacancies. In the event of any vacancy in the Board of Directors through
+death, resignation, or other cause, the remaining directors may, by a majority vote, elect
+a successor to hold office until the next annual meeting, at which time a director shall
+be elected to complete the terms of the director whose place was vacant. The Board of
+Directors shall appoint an individual who is of the same ownership class as the vacating
+director. In the event of a vacancy in an appointed position on the Board of Directors,
+the remaining directors may appoint a replacement director to fulfill the remaining
+term of the director whose place was vacated.
+
+REMOVAL OF DIRECTORS:
+While it is not pleasant to contemplate, co-op bylaws must also outline the circumstances under which an elected board member can be removed. Some co-ops allow directors to be removed either by the membership or by their fellow directors.  Others only allow for removal by the membership. Some multi-stakeholder cooperatives also require an affirmative vote from the membership class that the director represents. Some bylaws also outline under what circumstances a member may be removed from the cooperative.
+
+Examples:
+
+Section 6. Removal of Directors. Any elected director may he removed from office with
+or without cause by a vote of not less than two‐thirds of the membership class from
+which the director had been elected. Any appointed director may be removed from
+office with or without cause by a majority vote of the other directors, provided that at
+least one director from each class of elected directors votes in favor of the removal.
+
+Or
+
+F.   Removal of Directors - [See 185.31(4)]
+1. Board removal 
+If a director fails to attend two (2) consecutive board meetings without an excused absence, the board has the option to remove that director and fill the vacancy.
+If a director acts contrary to the best interests of the Cooperative, the board has the option to remove that director and fill the vacancy.
+If the resulting vacancy is a representative of a membership class (producer, buyer, or worker), the board will appoint another member of that same membership class. 
+
+2. Membership removal 
+An at-large director may be removed upon a majority vote of all members.  
+A membership class (producer, buyer, or worker) may remove their representative by a majority vote of their membership class.  
+
+INDEMNIFICATION:
+Co-ops should consult their attorney about including an indemnification paragraph for board members:
+
+Examples:
+
+SECTION 10.  The Board of Directors shall have general supervision of the affairs of the cooperative, make recommendations to the cooperative, and shall perform other duties as are specified by these by-laws.   The cooperative will hold harmless and indemnify Board members for any liability arising from good faith actions taken by the Board.  Board members who accept special duties or assignments will not be held liable to any greater degree than any other Board member for their good faith actions. 
+Or
+Section 1.  Board of Directors Liability. A member of the Board of Directors shall not be
+liable to the Cooperative for monetary damages for conduct as a member of the Board
+of Directors, except for acts or omissions involving intentional misconduct or a
+knowing violation of the law by the individual.
+
+Section 2. Indemnification. The Cooperative shall indemnify, to the full extent provided
+by law, the members of the Board of Directors, as well as its officers, employees and
+agents, from any and all costs, expenses and damages, including reasonable attorneys'
+fees, arising out of or in connection with any claims, suits or other actions based on acts
+or omissions by such person on behalf of the Cooperative, in his or her capacity as a
+member of a committee, an officer, employee or agent of the Cooperative. Such
+indemnification shall continue as to individuals who have ceased their respective
+position with the Cooperative. The right to indemnification under this Article shall not
+be the exclusive rights of any person.
+
+Section 3. Limitation. No indemnification shall be provided if such payment is
+prohibited by the provisions of North Carolina law; or if in the opinion of corporate
+counsel such payment would subject the Cooperative to the loss of its treatment as a
+cooperative for U.S. federal income taxes.
+Or
+L.   Indemnification and director liability - [See 185.034-185.039]
+No director of the Co-op shall be personally liable to the Co-op or its members for monetary damages for breach of fiduciary duty as director, except for liability:
+For breach of the director’s duty of loyalty to the Co-op or its members;
+For acts or omissions not in good faith or that involve intentional misconduct or 
+	a knowing violation of law; or
+For a transaction from which the director derived an improper personal benefit.
+The Co-op shall indemnify a director or officer in good standing for all reasonable expenses incurred in a legal proceeding due to her or his position on the board.
+
+BOARD COMPENSATION:
+Some co-op allow for board compensation, others do not. If it is permitted, in the interests of transparency it is good practice to have the membership vote on the issue.
+
+Examples:
+G.   Reimbursement and compensation - [See 185.36]
+The Cooperative will reimburse board members for reasonable expenses connected with fulfilling board of director duties.  
+Compensation, if any, for board members will be determined by members at annual or special membership meetings.  
+No board director may vote upon reimbursement for their services.  
+
+Or
+SECTION 8.  Members of the Board of Directors shall receive no compensation for their Board service, but are entitled to reasonable per diem to cover necessary expenses while engaged in the business of the cooperative, subject to Board approval.
+CONFLICT OF INTEREST:
+It is good practice to have a strong and clear conflict of interest statement in the bylaws of the co-op.  Sometimes a co-op bylaw will reference a more specific and detailed conflict of interest policy that the board is charged with developing, as in the first example.
+Examples:
+H.   Conflict of interest 
+It shall be the duty of all board directors to make prompt and full disclosure to the board of any personal, professional, or financial conflict of interest in a matter under discussion.  
+A board member shall not participate in any vote on any matter in which the director has a conflict of interest as defined in these by-laws or by the board.
+Directors will follow the board’s conflict of interest policy.  
+
+Or
+Section 5.2 - Conflict of Interest Disclosure: It shall be the duty of all board of directors to complete annual conflict of interest disclosures and make prompt and full disclosure to the board of any personal, professional, or financial conflict of interest in a matter under discussion. When a conflict of interest is disclosed, the board member must not participate in the discussion or vote on the relevant issues. No person shall be eligible to be a director if that person is in competition with, or is affiliated with any enterprise that is in competition with or is detrimental to the Cooperative.  If there is a known conflict of interest, the director/officer must present written notice to the board of directors, who will have the power to vote to recognize and accept or decline the potential conflict of interest or to bring the issue to the membership for a vote to replace the said director/officer in conflict.
+Or
+Article Fourteen
+Conflict of Interest
+Section 1. General policy.
+Recognizing that directors and officers have a duty to loyalty and fidelity to the Association and must govern the Association’s affairs honestly and economically, while exercising their best care, skill and judgment for the benefit of the Association, to avoid even the appearance of impropriety, the directors and officers of the Association shall:
+Section 1.1
+Disclose to the Board any situation wherein the director or officer has a conflicting or duality of interest that could possibly cause that person to act in other than the best interest of the Association; and
+Section 1.2
+Follow the procedures stated in Section 2, below, governing the participation on behalf of the Association in any transaction in which the person has, or may have, a conflict of interest.
+Section 2. Procedure.
+Any director or officer having a known duality of interest or possible conflict of interest on any matter shall make a disclosure of such conflict to the other directors. Such director shall not vote or use his or her personal influence on the matter, but such director may be counted in determining the quorum for the meeting. The minutes of the meeting shall
+reflect the making of the disclosure, the abstention from voting and the quorum situation. Any officer having a known duality of interest or possible conflict of interest on any matter before such officer for administrative action shall report the conflict to the president or, in the case of the president, to the vice president. Such officer shall abstain from taking
+any administrative action on the matter. The requirements in this Section 2 shall not be construed as preventing any director or officer from briefly stating his or her position in the matter, nor from answering pertinent questions of the board or other officers.
+.
+BOARD MEETINGS
+ARTICLE VI: Board Meetings
+The bylaws should reference the expected schedule of board meetings and the process for calling them.
+Examples:
+SECTION 7.  The directors shall hold their first Board meeting immediately after the annual meeting.  The president may call a meeting at any time and shall do so upon the demand of a majority of the directors.  The Board shall determine a regular schedule of meetings sufficient to meet the needs of the cooperative.
+ Or
+Section 2. Regular Meetings. Regular meetings of the Board of Directors shall be held at
+least quarterly, one immediately after the Annual Meeting of owners and thereafter, at
+such time and date as may be fixed by the directors.
+
+Or
+I.   Regular board meetings - [See 185.32(1)]
+i.   The board of directors will hold, at a minimum, 10 meetings per year at a time and place the president chooses.  The president or a designee will chair the meetings.  The secretary or a designee will keep meeting minutes. 
+ii.   Board meeting schedule - Distribution of a schedule of time and places for regular meetings shall be sufficient notice to conduct legal business.  
+Any board meeting may be conducted by telephone or other electronic means of communication through which the directors may simultaneously hear one another.
+Any action required or permitted to be taken at a meeting of the board of directors may be taken by written action signed by all of the directors.  The written action is effective when signed by all the directors and shall have the same force and effect as a unanimous vote at a meeting.
+
+It is also useful to clarify if the Chair of the board has sole discretion to call board meetings, or if other directors may, under certain circumstances, call a meeting of the board.  A sample of such a provision is below:
+K.   Special Board Meetings - [See 185.32]
+Special meetings of the board may be held from time to time.
+The meeting will be called by the president or by any 2 directors. 
+Held at a time and place designated in the meeting notice.
+Only business specified in the written notice may be conducted.
+Appearance at a meeting will constitute a waiver of notice, except when a director attends the meeting and objects to the transaction of business because the meeting was not lawfully convened.
+MEETING NOTICE, QUORUM etc.
+The bylaws should also specify what constitutes appropriate notice for a board meeting and how quorum is to be determined. Sometimes bylaws will spell out whether members can attend by phone or other electronic means, and some also contain an affirmative right of co-op members to attend a board meeting.  
+Some examples:
+Section 7. Notice of Board Meetings
+Oral, written, or electronic notice of each meeting of the board of directors shall be given each director by, or under the supervision of, the secretary of the Association prior to the time of meeting. But such notice may be waived by any director, and their appearance at a meeting shall constitute a waiver of notice.
+
+Attendance at board meeting by phone or other electronic means:
+Section 5.12  -  Meeting Participation: Participation in person is preferred, however, any board meeting may be conducted by telephone or other electronic means of communication through which the directors may simultaneously hear one another.
+Attendance of members at a board meeting:
+Section 7.  Open Board Meetings. As a general rule the decisions and operations of the
+Cooperative are open to all members. Formal notice is not required to non‐board,
+Cooperative members, but notice and agenda of regular and special meetings will be
+publicized to the membership at large. Any Cooperative member may attend meetings
+of the Board of Directors, as an observer. When the Board of Directors meets in
+Executive Session, such meetings shall be closed to non‐Board of Director members.
+
+
+Quorum at board meetings:
+
+J.   Quorum [Chapter 185.32(2)] - A majority of the directors in office shall constitute a quorum for transaction of business.  An act of the majority of the directors present at a meeting at which a quorum is present shall be an act of the board.
+Some multi-stakeholder cooperatives also require that representatives of each class of members assent to a decision before it is valid:
+Section 6. Decisions. Decisions of the Board of Directors shall be made by the affirmative
+vote of a majority of the directors present. However, affirmative decisions on any and
+all motions before the Board of Directors, requires the consent of at least one director
+from each ownership class. Such consent may be obtained within a week following the
+meeting, from a director who was not present at the meeting.
+
+
+
+
+
+
+Most cooperative bylaws outline a standard set of general responsibilities for each of the four primary board positions: President, Vice President, Secretary and Treasurer.  Sometimes coops will allow the Secretary and Treasurer roles to be combined.  The most important difference that appears in cooperative bylaws in this area concerns the powers of the chair: In some co-ops, the President of the board is authorized to take a broad number of actions on behalf of the cooperative; in others, the duties of the Chair are much more limited. This is an important consideration, and one worthy of thought and discussion amongst members and with an attorney. It is also a good idea to designate the term of each officer; one year is common, although some in some organizations officers serve two year terms. It is also good practice to state specifically how a board officer might be removed.
+Some co-ops list specific committees in their bylaws, others just leave it up to the officers of the corporation to determine which committees are necessary.
+Some examples:
+SECTION 11.  The Board shall elect from their number a President, Vice President, Secretary and a Treasurer.
+	A. The principal responsibilities of the President shall be to preside at all meetings of the  members and of the Board of Directors.  The President shall sign all certificates  of stock and all contracts and other instruments, unless otherwise authorized by the  Board.  The President shall be an ex-officio member of all committees.
+
+	B.  The principal responsibilities of the Vice-President shall be to discharge the duties of  the President in the event of his or her absence or disability.
+
+	C.  The principal responsibilities of the Secretary shall be to keep a true and correct record of the proceedings of all meetings of the members and of the Board of Directors; to countersign and affix the seal of the cooperative to all papers and documents requiring such action; and to systematically see to the safety of books,  papers, records, and documents pertaining to the business of the cooperative as may  be assigned to the Secretary by the Board of Directors.
+
+	D.  The principal duties of the Treasurer shall be to sign all agreements of indebtedness  and security agreements, as authorized by the Board, and to review the internal controls and financial systems used by the cooperative when requested by the Board
+
+Or
+A.   Election - At the first board meeting following the annual meeting, the board of directors will elect from among themselves a president, a vice president, a secretary and a treasurer.  At their discretion, the board may choose to combine the office of secretary and treasurer.  Officers will hold office for one year unless removed early by resignation or for cause.  In the case of death, resignation, or disability of any officer, the board may declare the office vacant and appoint any eligible member for that position.
+
+B.  Duties of the President – The president shall be the principal executive officer of the Co-op and preside at member and board meetings.  The president may call special meetings of the board or members.  With the board’s approval, the president may sign contracts or other necessary documents.  
+
+C.   Duties of the Vice President – In the absence of the president, the vice president will perform the duties of the president.  The vice president will organize the annual review of the Co-op’s manager.  
+
+D.   Duties of the Secretary – The secretary will record and distribute accurate minutes of all member, committee, and board meetings.  The secretary will submit required correspondence to the Wisconsin Department of Financial Institutions, keep reports required by law, and sign meeting minutes.  Upon election of a successor, the secretary shall turn over all books and other Co-op property to the board.  
+
+E.   Duties of the Treasurer – The treasurer is responsible for all financial matters of the Cooperative and provides members with financial reports at each meeting and a financial statement at the end of each year.  Upon election of a successor, the treasurer shall turn over all monies, property, books, records and documents pertaining to the board.
+
+
+Or
+
+Section 1. Officers. The officers of the corporation shall consist of a Chair of the Board of Directors, a President, a Secretary, and any other officers as the Board of Directors may determine. 
+Section 2. Election. The officers shall be elected by the Board of Directors for a one year term at the new board’s first meeting. 
+Section 3. Qualifications. Each officer shall be a Member of the Board of Directors. 
+Section 4. Removal. Any officer may be removed from office with or without cause by a vote of a majority of a quorum of the Board present at any meeting, the notice for which shall include such purpose. 
+Section 5. Duties of the Board Chair. The Chair will be responsible to ensure the integrity of the board’s governance. 
+Section 6. President. Delegation to the President shall be determined by the board of directors. 
+Section 7. Secretary. The Secretary will be responsible for the integrity of the board’s documents and will preside at meetings of the board in the event of the chair’s absence
+Or
+Article Seven
+Duties of Officers
+Section 1. President.
+The president shall (1) preside over all meetings of the Association and of the board of directors; (2) call special meetings of the board of directors; (3) appoint such committees as the board of directors may deem advisable for the proper conduct of the Association; and (4) perform all acts and duties usually performed by a presiding officer.
+
+Committees of the board:
+Here are two examples, one where particular committees are specifically designated and another where this responsibility is left to the board to decide:
+SECTION 1.  A Finance Committee composed of the Treasurer and at least two other members shall be 	appointed by the Board.  It shall be the duty of this committee to review financial reports of the cooperative and review the proposed cooperative budget for the fiscal year, and submit it to the Board of Directors for approval and to do such financial planning; budget adjustment, and other money matters as directed by the Board of Directors.
+
+SECTION 2.   A Cooperative Committee, chaired by a Board member, consisting of at least three (3) members shall be appointed by the Board.  This committee shall deal with by-law changes, cooperative structure, equity, and other similar issues facing the cooperative.
+
+SECTION 3.  An Education Committee, chaired by a Board member, and consisting of at least three (3) members shall be appointed by the Board.  This committee shall foster cooperative education through seminars, advice, classes, resources, and other methods which will benefit the cooperative.
+
+SECTION 4.   A Marketing Committee, chaired by a Board member, consisting of at least three (3) members shall be appointed by the Board.  This committee shall serve as liaison between the Board and Marketing Department, focus on long term marketing strategies, and take up other marketing related subjects as directed by the Board.
+
+SECTION 5.  Committee posts will be filled at the second Board of Directors meeting after the Annual Membership meeting.
+
+Or
+I.   Committees - The board may create temporary or standing committees.  Committee powers shall be specifically stated by board resolution, and in no case shall any such committee exceed its conferred powers.  
+
+
+
+
+
+
+The financial section of the bylaws contain many important issues such as the allocation of patronage, apportionment of losses and equity redemption.
+Financial operations and patronage allocation:
+Section 1. Financial Operation. This corporation operates on a cooperative basis and allocates earnings and losses to patron-owners on the basis of the business done with or for such patrons. Thus, in accordance with Subchapter T of the Internal Revenue Code, this corporation may declare a patronage dividend to be distributed among the owners in accordance with the total amount of patronage made by each such patron during the preceding fiscal year. For consumer owners, patronage is defined as the total amount of purchases; for worker owners, patronage is defined as the total number of hours worked. 
+
+Or
+SECTION 2.  The apportionment of net proceeds of the cooperative within each member district shall be on the following basis:
+	A.  To the Producer Members on the basis of patronage with the Cooperative, measured by the dollar value of the goods sold to the cooperative.
+
+	B.  To Employee members on the basis of each employee’s annual wage or contract pay from the Cooperative.
+
+	C.  To Customer Members on the basis of their patronage of the cooperative, measured by the dollar amount of goods purchased from the Cooperative. 
+
+	D.  To the Investor Members on the basis of the interest and dividend earnings from the Cooperative.
+	
+SECTION 3.  The apportionment of net proceeds of the cooperative between each member district shall be a decision of the Board of Directors based on a practical and equitable result.
+
+Or
+Section I ‐ Financial Operation.  This Cooperative operates on a cooperative basis and
+allocates earnings and losses to patron‐owners on the basis of “patronage” ‐ the business
+done with or for such patrons. For Consumer owners, patronage is defined as the total
+amount of purchases made from the Cooperative; for Worker owners, patronage is defined
+as the total number of hours worked for the Cooperative; and for Producer owners,
+patronage is defined as the total amount paid for products sold through the Cooperative.
+
+At the end of each calendar year, the earnings and losses of the Cooperative to be
+allocated shall be divided into three equal portions, with one portion allocated to each
+of the three ownership classes. Thus within each class, in accordance with Subchapter T
+of the Internal Revenue Code, this Cooperative may declare a patronage dividend to be
+distributed among the owners of each class in accordance with the total amount of
+patronage made by each such patron during the preceding calendar year.
+
+Section 2.  Patronage Dividend. The patronage dividend, as determined by the Board
+of Directors, shall be paid in cash, property or written notices of allocations as
+defined in Subchapter T of the Internal Revenue Code. Each owner shall have an
+internal capital account in his or her name. The surplus earnings of the owner generated
+revenue after paying taxes, interest on loans, and allocations to the
+Reserve Fund (see Section 4 below) shall be allocated to owners as a patronage
+dividend. Unless otherwise decided by the Board of Directors, the patronage
+dividend shall be credited to the owners' Internal Accounts. At least 20% of each
+year's patronage allocation must be paid out in cash/check to owners.
+
+Or
+A.   Net proceeds  [See 185.45(3)]
+In accordance with accepted accounting practices and section 185.45(1), Wisconsin Statutes, the annual net proceeds from operations, if any, may be distributed to the membership as patronage refunds or may be retained as income to the Co-op.  The board will annually review the finances of the co-op and decide how the net proceeds shall be used to further the goals of the co-op and the membership in accordance with section 185(2), Wisconsin Statutes.
+Apportionment of losses:
+B.   Apportionment of losses [See 185.45(6)]
+All or any part of the net proceeds may be applied to losses incurred in prior years.  In the best interests of the Cooperative, the board may apportion losses.
+Or
+Section 6. Loss or Losses.
+If the Association incurs a net loss in any fiscal year, such net loss may be charged against the Capital Reserve. If the loss exceeds the Capital Reserve or, in any event, if the Board so elects, the loss may be recovered from prior or subsequent years’ Net Margins. The Board shall have no authority to make assessment for net losses against Members. This section
+shall not be construed to deprive the Association of the right to carry back or carry forward net operating losses in accordance with the Internal Revenue Code or Ohio taxing statutes.
+
+Equity redemption:
+C.   Patronage refunds to members [See 185.45(3)]
+In the event that the board decides to distribute all or part of net proceeds as patronage refunds to members, the following shall be distributed and paid to patrons, in accordance with the ratio of their patronage (business transactions) to the total patronage (business transactions by all members, as follows: 
+
+Reserves (retained capital equity).  The board may create reasonable reserves for necessary purposes to retain a portion of net proceeds in the Co-op to help keep operations on a sound financial basis.  The retained portion of the patronage refund is allocated to the member’s equity account and paid out at a later date.  
+Patronage refunds.  All remaining funds shall be distributed and paid to patrons.
+
+Or
+
+Section 3. Equity Capital. The Board of Directors shall manage the Cooperative’s equity
+capital in a way to preserve and build upon the Cooperative's financial position while
+also allowing for redemptions of equity as and when the Cooperative has the financial
+strength to redeem equity. The Board of Directors may, from time to time, establish
+policies for redeeming equities, stock, or other forms of equity used for qualified or
+non‐qualified notices of allocation, or the Board may eliminate equity redemption
+policies in favor of a capital management policy. No person shall have any right
+whatsoever to require the retirement or redemption of any patron’s equities except in
+accordance with their term, or of any allocated capital reserve. Any redemption or
+retirement is solely within the discretion and on such terms as determined from time to
+time by the Board of Directors of this Cooperative.
+Or
+Section 4. Distribution of Patrons’ Net Margins.
+Section 4.1 Written Notice of Allocation.
+The Association shall distribute Patrons’ Net Margins within eight and one-half (8 ½) months after the end of each fiscal year by written notice of the allocation. The written notice shall show the manner and amount of distribution, and the exact amount distributed in cash, or in Capital Credits (or any combination of the two). The Board of Directors may establish a plan for financing the Association that relates Patron investment to patronage transactions. Such plan may provide for the periodic adjustment of Patron investment by the application of a Patron’s patronage refunds to additional investment requirements prescribed by the plan.
+
+Equity Redemption
+Section 1. Regular Redemption.
+If at any time the board of directors determines that the financial condition of the Association will not be impaired by a redemption, capital credited to members’ accounts may be redeemed in full or in part. Any such redemption of capital shall be made in order of priority according to the year in which the capital was furnished and credited, the capital first received by the Association being the first redeemed.
+Section 2. Discretionary Special Redemptions.
+Notwithstanding any other provision of these bylaws, the board, at its absolute discretion, shall have the power to retire any capital credited to members’ accounts on such terms and conditions as may be agreed upon by the parties in any instance in which the interests of the Association and its members are deemed to be furthered thereby and funds are
+determined by the board to be available for such purposes.
+
+Reserve Funds;
+Some co-ops mandate the maintenance of a capital reserve fund:
+Section 5. Capital Reserve.
+The Association shall maintain a Capital Reserve for the purpose of providing a reserve against which it may charge losses and other charges that could be charged against the surplus of a business corporation for profit.
+
+Or
+
+Section 4. Reserve Fund. A portion of the Cooperative’s net worth shall be maintained as
+a Reserve Fund that will serve to protect members and creditors from any operating
+losses that the Cooperative might incur. The Board of Directors will from time to time determine the proportion of the Cooperative’s surplus or deficit that will be allocated to the Reserve Fund, with the remainder of the surplus or loss to be allocated to individual owners. The proportion of patronage allocations to be paid in cash and the proportion to be paid as a non‐cash allocation to internal accounts shall be as periodically set by the Board of Directors.
+
+Consent to patronage distributions:
+ “Consent to patronage distributions” means that all members will report their co-op patronage refunds and retained capital equity to the IRS as earnings.  Each year members will receive a 1099 form itemizing their patronage refunds earned in that year.  
+
+An example:
+
+Section 5. Consent to Take Patronage Distributions Into Income. Each person who
+hereafter applies for and is accepted into ownership in this Cooperative and each
+owner of this Cooperative as of the effective date of this bylaw who continues as a
+owner after such date shall, by such act alone, consents that the amount of any
+distributions with respect to her or his patronage which are made in written notices of
+allocation (as defined in 26U.S.C. §1388) and which are received by the owner from this
+Cooperative, will be taken into account by the owner at their stated dollar amount in
+the manner provided in 26 U.S.C. §1385(a) in the taxable year in which the written
+notices of allocation are received by the owner.
+
+Equity Records:
+All cooperatives must keep timely and accurate records of their members’ equity and many have bylaws to that effect.  Some also address such issues as unclaimed equity:
+D.   Equity records [From the IRS code]
+The records of the Co-op will be kept in such a manner that the patronage refunds and any retained capital equity (allocated or unallocated) of each member of the Cooperative may be determined at any time. Within 8.5 months after the close of the Co-op’s tax year, each patron (member) will receive a “written notice of allocation” which reports each member’s patronage refund and capital retained for the year.
+Also
+	
+Equity redemption for terminating members.  When a member terminates membership, the equity held within the Co-op will be refunded, upon written request to the board, in accordance with board policy on equity redemption.  
+Equity retirement for deceased members.  Upon the death of a member, that member’s heirs or legal representative may request, in writing, the retirement of the deceased member’s capital account.  The capital account will be redeemed in accordance with board policy.  
+Unclaimed equity.  Any equity or patronage refunds which remain unclaimed six years after the date authorized for redemption or retirement will be paid or distributed according to Wisconsin statutes in effect at that time for the disposition of unclaimed funds.
+
+Or
+
+Section 4.2 Events of Forfeiture of Refund.
+If the Association distributes a patronage refund to a Patron who (a) does not consent to include the patronage refund in income as provided in the Consent Bylaw; or (b) is unable to receive distribution; or (c) cannot be located for redemption of such patronage refunds, such patronage refunds shall forfeit to this Association and be added to the Capital Reserve. Patronage refunds of less than Ten Dollars ($10) shall be treated as nondistributable
+Net Margins and added to the Capital Reserve.
+
+Some co-op’s bylaws specifically require an audit of financial statements:
+Financial Review:
+G.   Financial Review - The Co-op’s financial accounts will be reviewed and reported on at least once a year by an independent auditor selected by the board.  An annual report including accounting information or appropriate summaries shall be available to the membership.  
+
+
+
+
+
+Cooperative bylaws also must specify the process for their own amendment.  Usually any amendment to the bylaws must be voted on by the membership, but it is also possible for a co-op to allow for bylaw amendments by action of the board alone. Sometimes affirmative action is needed by each membership class within the co-op:
+Examples:
+
+SECTION 1.The initial By-Laws of the XXX Cooperative shall be adopted by a 3/4 vote of the initial Board of Directors.
+
+SECTION 2.  The By-Laws of the XXXX Cooperative  may be amended by a 3/4 majority vote of members at any membership meeting of the cooperative, except as provided in Section 3 below,  provided that the amendment has been submitted by the Board of Directors or submitted to the Board and signed by five members of the Cooperative, and then included in writing in the notice of the Member Meeting. 
+
+SECTION 3.  Amendments to Article II of these By-Laws shall be approved by a 3/4 vote of each district of members 9+at any membership meeting in the manner provided in Section 2 of this Article IV. 
+
+Or
+These Bylaws may be amended by the affirmative vote of two-thirds of the Board of
+Directors, at any regular or special meeting, provided that notice of any proposed amendment shall be given at the preceding meeting and the notice to participants of the meeting at which the proposed amendment is to be acted upon. Also, amendments to these Bylaws require the affirmative vote of at least one director of each owner class.
+
+Or
+B.  Member initiated amendments to the bylaws [See 185.07(3)]
+These bylaws may be amended at any membership meeting by a three-fourths (3/4) majority of the members voting, unless otherwise provided by law.  Any and all proposed changes of the bylaws shall be included in the notice of a membership meeting given to all members as described in Section IV of these bylaws.  
+C.   Board initiated amendments to the bylaws  [See 185.07(1) and (2)]
+The board of directors may amend the bylaws with immediate effect.  Any bylaw adopted or amended by the board shall be reported at the next regular member meeting.  Any such bylaw shall be at any time subject to amendment or repeal by the members.  
+Or
+
+Amendment
+If notice of the character of the amendment proposed has been given in the notice of meeting, these Bylaws may be altered or amended at any regular or special meeting of the members by the affirmative vote of the majority of the member votes cast.
+
+Or
+
+
+Section 4. Amendments to By-laws. The By-laws of the corporation may be altered, rescinded, or amended by a vote of four of the seven Directors or by a vote of two-thirds of the Worker- owners and two-thirds of the Consumer-owners. 
+.
+
+
+
+
+
+
+
+Although no one likes to think about it, a good set of co-op bylaws will also outline a clear and fair procedure for the dissolution of the cooperative if necessary.  This is a particularly important place where a multi-stakeholder cooperative might want to think about requiring the assent of a majority of each membership class.
+Examples:
+A.   Voluntary dissolution  [See 185.71]
+At any member meeting, whether or not a quorum is present, the co-op may dissolve if:  
+
+Proper notice.  Notice that a resolution for dissolution will be considered and acted upon has been included in the notice of meeting; and 
+¾ member vote.  The resolution is approved by three-fourths of the member votes cast.  Stockholders may vote on the resolution for dissolution if authorized by the Articles of Incorporation.  
+
+When the resolution is adopted, either a committee designated by the resolution or the board shall liquidate all assets and pay the net proceeds of such liquidation available for distribution to all persons entitled to the same by law, the articles, and the bylaws.  
+
+The board will submit articles of dissolution to the Wisconsin Department of Financial Institutions in accordance with chapter 185.71 of the Wisconsin Statutes.
+
+B.   Involuntary dissolution  [See 185.72]
+In the event of a decree by a circuit court that the Cooperative must be involuntarily dissolved, the Cooperative will follow chapter 185.72 of the Wisconsin Statutes.
+
+Or
+Dissolution and Property Interest of Members
+Section 1. Voluntary Dissolution.
+At any member meeting held for the purpose of dissolving the Association, the members may adopt a resolution of dissolution by the affirmative vote of sixty percent (60%) of the members votes cast on the proposal. Notice of the meeting shall be given to all members, whether or not entitled to vote.
+Section 2. Involuntary Dissolution.
+The board of directors may adopt a resolution of dissolution in the following cases:
+
+Section 2.1
+When the Association has been adjudged bankrupt or has made a general assignment for the benefit of creditors;
+
+Section 2.2
+By leave of the court, when a receiver has been appointed in a general creditors’ suit or in any suit in which the affairs of the Association are to be wound up;
+
+Section 2.3
+When the Articles of Incorporation have been canceled for failing to file annual franchise or excise tax returns or to pay franchise and excise taxes and the Association has not been nor desires to be reinstated; or
+
+Section 2.4 When substantially all of the assets have been sold at judicial sale or otherwise.
+The board of directors shall be responsible for seeing the appropriate state filings are made and notices given pursuant to Chapter 1729.
+
+Section 3. Disbursement of Assets.
+Upon dissolution, the board of directors shall disburse the Association’s assets in the following order; first, to pay the Association’s debts and liabilities; second, to retire all capital furnished through patronage (member capital accounts) without priority on a pro rata basis; and third, to distribute the remaining property and assets of the Association among the members and former members in the proportion in which the aggregate patronage of each member bears to the total patronage of all such members insofar as practical, unless otherwise provided by law.
+
+

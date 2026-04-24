@@ -1,0 +1,19 @@
+:root {
+  --pos-primary: #1f3d2e;
+  --pos-primary-deep: #15281f;
+  --pos-accent: #b85a3e;
+  --pos-accent-deep: #8e3f29;
+  --pos-bg: #f4ede0;
+  --pos-paper: #ebe2d0;
+  --pos-card: #ffffff;
+  --pos-text: #18201b;
+  --pos-muted: #6b7665;
+  --pos-rule: #c8bfa7;
+  --pos-rule-strong: #998a6a;
+  --pos-amber: #d18b1c;
+  --pos-amber-soft: #f5d089;
+  --pos-success: #2f6b3f;
+  --pos-danger: #b8412e;
+  --pos-font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --pos-font-mono: "IBM Plex Mono", "Menlo", monospace;
+}
