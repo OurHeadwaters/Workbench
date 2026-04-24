@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home } from "lucide-react";
+import { BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useOwnerAuth } from "@/hooks/useOwnerAuth";
+import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
   { href: "/", label: "Overview", icon: Home },
@@ -16,6 +18,7 @@ const NAV_ITEMS = [
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const { logout } = useOwnerAuth();
 
   return (
     <div className="min-h-[100dvh] flex flex-col md:flex-row bg-background">
@@ -50,6 +53,19 @@ export default function Layout({ children }: { children: ReactNode }) {
             );
           })}
         </nav>
+        <div className="p-4 border-t border-border">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={logout}
+            className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            data-testid="button-owner-logout"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign out
+          </Button>
+        </div>
       </aside>
       <main className="flex-1 overflow-y-auto flex flex-col relative">
         <div className="max-w-6xl mx-auto w-full p-4 md:p-8 lg:p-12 flex-1">

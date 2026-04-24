@@ -24,9 +24,75 @@ import {
 import { and, desc, asc, eq, ilike, or, sql, inArray } from "drizzle-orm";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { randomBytes } from "crypto";
+import {
+  OWNER_TOKEN,
+  isValidOwnerToken,
+  isOwnerRequest,
+} from "../lib/ownerAuth";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
+
+// ----------------------- owner authentication -----------------------
+//
+// Everything under /api/library/* requires the library owner token EXCEPT
+// the contributor-facing share-link endpoints (which authenticate via the
+// share token in the URL itself).  Without this, anyone who guessed the
+// /library/ paths could browse, edit, or delete every entry and read out
+// every contributor's share-link URL.
+
+const PUBLIC_LIBRARY_PREFIXES = [
+  "/share-links/by-token/",
+  "/owner/login",
+];
+
+router.use((req, res, next) => {
+  if (PUBLIC_LIBRARY_PREFIXES.some((p) => req.path.startsWith(p))) {
+    next();
+    return;
+  }
+  if (!OWNER_TOKEN) {
+    res.status(503).json({
+      error:
+        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
+    });
+    return;
+  }
+  if (isOwnerRequest(req)) {
+    next();
+    return;
+  }
+  res.status(401).json({ error: "Unauthorized" });
+});
+
+// Lightweight endpoint the frontend calls on every load to verify the token
+// stored in localStorage is still valid.  Returns 200 if the request reached
+// us through the auth gate above, otherwise the gate already 401'd.
+router.get("/owner/me", (_req, res) => {
+  res.json({ ok: true });
+});
+
+// Owner login: verifies a passphrase against LIBRARY_OWNER_TOKEN.  We do not
+// mint a separate session token — the passphrase itself becomes the bearer
+// token the client stores and replays.  Bypasses the gate above so an
+// unauthenticated browser can attempt to log in.
+router.post("/owner/login", (req, res) => {
+  if (!OWNER_TOKEN) {
+    res.status(503).json({
+      error:
+        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
+    });
+    return;
+  }
+  const body = (req.body ?? {}) as { passphrase?: unknown };
+  const passphrase =
+    typeof body.passphrase === "string" ? body.passphrase : "";
+  if (!isValidOwnerToken(passphrase)) {
+    res.status(401).json({ error: "Wrong passphrase" });
+    return;
+  }
+  res.json({ ok: true, token: passphrase });
+});
 
 // ----------------------- helpers -----------------------
 

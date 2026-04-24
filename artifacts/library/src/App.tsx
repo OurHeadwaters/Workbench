@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,31 +15,43 @@ import Contributors from "@/pages/contributors/index";
 import ShareLinks from "@/pages/share-links/index";
 import NeedsReview from "@/pages/needs-review";
 import PublicShare from "@/pages/share/[token]";
+import Login from "@/pages/login";
 import Layout from "@/components/Layout";
+import { useOwnerAuth } from "@/hooks/useOwnerAuth";
+import { ReactNode } from "react";
 
 const queryClient = new QueryClient();
+
+function RequireOwner({ children }: { children: ReactNode }) {
+  const { isLoggedIn } = useOwnerAuth();
+  if (!isLoggedIn) return <Redirect to="/login" />;
+  return <>{children}</>;
+}
 
 function Router() {
   return (
     <Switch>
       <Route path="/share/:token" component={PublicShare} />
+      <Route path="/login" component={Login} />
       <Route>
-        <Layout>
-          <Switch>
-            <Route path="/" component={Home} />
-            <Route path="/entries" component={Entries} />
-            <Route path="/entries/new" component={NewEntry} />
-            <Route path="/entries/:id" component={EntryDetail} />
-            <Route path="/producers" component={Producers} />
-            <Route path="/producers/:slug" component={ProducerDetail} />
-            <Route path="/subjects" component={Subjects} />
-            <Route path="/buckets" component={Buckets} />
-            <Route path="/contributors" component={Contributors} />
-            <Route path="/share-links" component={ShareLinks} />
-            <Route path="/needs-review" component={NeedsReview} />
-            <Route component={NotFound} />
-          </Switch>
-        </Layout>
+        <RequireOwner>
+          <Layout>
+            <Switch>
+              <Route path="/" component={Home} />
+              <Route path="/entries" component={Entries} />
+              <Route path="/entries/new" component={NewEntry} />
+              <Route path="/entries/:id" component={EntryDetail} />
+              <Route path="/producers" component={Producers} />
+              <Route path="/producers/:slug" component={ProducerDetail} />
+              <Route path="/subjects" component={Subjects} />
+              <Route path="/buckets" component={Buckets} />
+              <Route path="/contributors" component={Contributors} />
+              <Route path="/share-links" component={ShareLinks} />
+              <Route path="/needs-review" component={NeedsReview} />
+              <Route component={NotFound} />
+            </Switch>
+          </Layout>
+        </RequireOwner>
       </Route>
     </Switch>
   );

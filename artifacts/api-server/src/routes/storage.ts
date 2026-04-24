@@ -11,6 +11,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage"
 import { ObjectPermission } from "../lib/objectAcl";
 import { db, libraryEntriesTable, shareLinksTable } from "@workspace/db";
 import { or, eq } from "drizzle-orm";
+import { isOwnerRequest } from "../lib/ownerAuth";
 
 // ----------------------- upload authorization -----------------------
 //
@@ -24,27 +25,6 @@ import { or, eq } from "drizzle-orm";
 //
 // Without this guard, anyone could mint signed upload URLs and write
 // arbitrary objects to our bucket.
-
-const OWNER_TOKEN = process.env.LIBRARY_OWNER_TOKEN;
-
-function timingSafeEq(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  const ab = Buffer.from(a, "utf8");
-  const bb = Buffer.from(b, "utf8");
-  let mismatch = 0;
-  for (let i = 0; i < ab.length; i++) mismatch |= ab[i]! ^ bb[i]!;
-  return mismatch === 0;
-}
-
-function extractOwnerToken(req: Request): string | null {
-  const header = req.header("x-library-owner-token");
-  if (header) return header.trim();
-  const auth = req.header("authorization");
-  if (auth && auth.toLowerCase().startsWith("bearer ")) {
-    return auth.slice(7).trim();
-  }
-  return null;
-}
 
 async function shareTokenIsValid(token: string): Promise<boolean> {
   if (!token) return false;
@@ -65,8 +45,7 @@ async function requireUploadAuth(
   res: Response,
   next: () => void,
 ): Promise<void> {
-  const owner = extractOwnerToken(req);
-  if (OWNER_TOKEN && owner && timingSafeEq(owner, OWNER_TOKEN)) {
+  if (isOwnerRequest(req)) {
     next();
     return;
   }
