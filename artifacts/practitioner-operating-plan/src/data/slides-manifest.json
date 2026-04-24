@@ -200,8 +200,32 @@
     "speakerNotes": ""
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
+    "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c10",
     "position": 26,
+    "filepath": "src/pages/slides/NamingTheAgency.tsx",
+    "title": "Naming the agency: Headwaters",
+    "description": "The inflection point — the dam-breaks framing, the brand structure (Headwaters parent → Watershed product + Deer Lake pilot + future engagements), and the one-line rationale that Headwaters has the open lanes while Watershed has the contested ones.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c11",
+    "position": 27,
+    "filepath": "src/pages/slides/BrandIPLandscape.tsx",
+    "title": "Brand & IP landscape",
+    "description": "Domains available vs. taken (WHOIS Apr 2026) and the indicative trademark picture for Watershed (191 marks, contested in Class 9/36) vs. Headwaters (76 marks, no active mark in Class 36 financial services or Class 9 consumer software).",
+    "speakerNotes": ""
+  },
+  {
+    "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c12",
+    "position": 28,
+    "filepath": "src/pages/slides/NamingActionItems.tsx",
+    "title": "What the founder does this week",
+    "description": "Sequenced personal-action checklist with registrar/registry links and costs: domains today, defensive registrations, CIPO trademark search, Google Workspace email, paid agent clearance opinion, and NUANS search before incorporating.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
+    "position": 29,
     "filepath": "src/pages/slides/PartIVDivider.tsx",
     "title": "Part IV — For Dad",
     "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
@@ -209,7 +233,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
-    "position": 27,
+    "position": 30,
     "filepath": "src/pages/slides/CaseForRate.tsx",
     "title": "The case for the rate",
     "description": "What $90k/month actually buys — operating system, transparency stack, and pilot reserve — versus what 'lean' actually costs (the contract and the next reserve waiting in line).",
@@ -217,7 +241,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
-    "position": 28,
+    "position": 31,
     "filepath": "src/pages/slides/CaseForTeam.tsx",
     "title": "The case for the team",
     "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
@@ -225,7 +249,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
-    "position": 29,
+    "position": 32,
     "filepath": "src/pages/slides/ValueDelivered.tsx",
     "title": "Value delivered",
     "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, transparency stack + infrastructure that scales, and base stability.",
@@ -233,7 +257,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
-    "position": 30,
+    "position": 33,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
     "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$175k bridge ask.",
@@ -241,7 +265,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
-    "position": 31,
+    "position": 34,
     "filepath": "src/pages/slides/PartVDivider.tsx",
     "title": "Part V — Pilot to template",
     "description": "Section divider entering the scale voice: Deer Lake earns it, then so does every reserve. The template the practitioner builds for pilot #1 is the playbook the next reserve inherits.",
@@ -249,7 +273,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d02",
-    "position": 32,
+    "position": 35,
     "filepath": "src/pages/slides/PilotDeerLake.tsx",
     "title": "Why Deer Lake is Pilot #1",
     "description": "Three reasons Deer Lake is the right pilot: the right scale (~870 people), a council ready for transparency, and a practitioner with skin in the game and the structural plan to deliver.",
@@ -257,7 +281,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d03",
-    "position": 33,
+    "position": 36,
     "filepath": "src/pages/slides/Template.tsx",
     "title": "The six-module template",
     "description": "What gets templatized: operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, net-positive accountability. Each module is documented as we ship it for Deer Lake.",
@@ -265,7 +289,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d04",
-    "position": 34,
+    "position": 37,
     "filepath": "src/pages/slides/PathToScale.tsx",
     "title": "The path to scale",
     "description": "Five-year arc: Year 1 Deer Lake pilot, Year 2 second reserve at marginal cost, Year 3 three-to-five concurrent contracts, Year 5 open template that any practitioner can run.",
