@@ -8,6 +8,7 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "validate-slides": "pnpm exec tsx scripts/validate-slides.ts",
+    "export-onepager-pdf": "pnpm exec tsx scripts/export-onepager-pdf.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
@@ -19,6 +20,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "puppeteer-core": "^24.42.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",

@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "Zv5Rvad3STpUUDLpHrWNg"
@@ -12,3 +11,9 @@ id = "_On_cicOyJQEsIGN5TbcU"
 uri = "file://artifacts/practitioner-operating-plan/public/hero-morning-desk.png"
 type = "image"
 title = "morning desk dawn"
+
+[[outputs]]
+id = "fAkXwaa1zHxK8nTbCpXPq"
+uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"
+type = "pdf"
+title = "Practitioner Operating Plan — One Page Summary"
