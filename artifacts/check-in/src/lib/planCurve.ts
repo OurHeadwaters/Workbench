@@ -1,4 +1,4 @@
-// The 11-year plan curve from Robin's age 39 (2026) to age 50 (April 2037).
+// The 11-year plan curve from Bobbie's age 39 (2026) to age 50 (April 2037).
 //
 // Targets are end-of-year values.  Edit the table below if your assumptions
 // change — every other piece of math in the app reads from these numbers.
@@ -76,7 +76,7 @@ export function paceLabel(color: PaceColor): string {
 }
 
 /**
- * Whole years between the snapshot year and Robin's age-50 year (2037).
+ * Whole years between the snapshot year and Bobbie's age-50 year (2037).
  * Returns 0 if the snapshot is from 2037 or later — the plan is done.
  */
 export function yearsToRetirement(snapshotYear: number): number {
@@ -84,7 +84,7 @@ export function yearsToRetirement(snapshotYear: number): number {
 }
 
 /**
- * Project the portfolio forward to age 50 assuming Robin's *current*
+ * Project the portfolio forward to age 50 assuming Bobbie's *current*
  * investing rate continues unchanged and the portfolio earns
  * `realReturn` per year (default 7% real, the standard long-run U.S.
  * equity assumption after inflation).

@@ -51,7 +51,7 @@ export default function NewSnapshot() {
   const [form, setForm] = useState<FormState>(() => emptyForm(currentYear));
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-fill the XRP balance from the most recent snapshot — Robin doesn't
+  // Pre-fill the XRP balance from the most recent snapshot — Bobbie doesn't
   // trade, so the field is "sticky" in real life and re-typing it would be
   // silly.  We do this once, only if she hasn't already touched the field.
   const snapshotsQuery = useQuery({

@@ -39,7 +39,7 @@ router.get("/owner/me", (_req, res) => {
 });
 
 // Login: passphrase IS the bearer token (same model as the library).  We
-// share the same env var so Robin only manages one passphrase.
+// share the same env var so Bobbie only manages one passphrase.
 router.post("/owner/login", (req, res) => {
   if (!OWNER_TOKEN) {
     res.status(503).json({
@@ -80,7 +80,7 @@ function serialize(row: typeof financialSnapshotsTable.$inferSelect) {
 
 // Order by snapshot year (descending) first so backfilled rows for older
 // years don't show up "ahead" of the newest year just because they were
-// entered later.  Within a year (rare — Robin would have to re-record),
+// entered later.  Within a year (rare — Bobbie would have to re-record),
 // the most-recent entry wins.
 router.get("/snapshots", async (_req, res) => {
   const rows = await db

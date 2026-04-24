@@ -84,7 +84,7 @@ export default function Contributors() {
                 <Label htmlFor="contrib-name">Name</Label>
                 <Input
                   id="contrib-name"
-                  placeholder="e.g. Robin Sonstenes"
+                  placeholder="e.g. Bobbie Sonstenes"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 />

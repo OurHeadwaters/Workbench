@@ -502,7 +502,7 @@ function InfoTile({
 
 function PlanCurveCard({ snapshots }: { snapshots: Snapshot[] }) {
   // Build the chart series.  The plan target line is always present; actual
-  // points only appear for years Robin has snapshotted.
+  // points only appear for years Bobbie has snapshotted.
   const byYear = new Map<number, Snapshot>();
   for (const s of snapshots) {
     // If she snapshotted a year more than once, keep the most recent (which

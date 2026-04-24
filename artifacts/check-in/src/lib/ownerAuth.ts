@@ -1,6 +1,6 @@
 // Token storage shared between the dashboard pages.  The passphrase IS the
 // token (see artifacts/api-server/src/routes/checkin.ts), so there is nothing
-// to refresh — Robin types it once per browser, it sits in localStorage, and
+// to refresh — Bobbie types it once per browser, it sits in localStorage, and
 // every API call replays it as a Bearer token.
 
 const STORAGE_KEY = "checkin.ownerToken";

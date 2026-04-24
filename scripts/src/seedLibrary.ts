@@ -84,7 +84,7 @@ const PRODUCERS: ProducerSeed[] = [
 ];
 
 const CONTRIBUTORS: { name: string; organization?: string; email?: string; notes?: string }[] = [
-  { name: "Robin", organization: "807 / NWO Food Hub", notes: "Library owner — primary curator." },
+  { name: "Bobbie", organization: "807 / NWO Food Hub", notes: "Library owner — primary curator." },
   { name: "Jen Springett", organization: "Northern Fresh Distribution Network", notes: "Cold-chain logistics partner; sample contributor." },
 ];
 
