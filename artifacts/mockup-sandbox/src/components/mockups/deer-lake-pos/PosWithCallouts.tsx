@@ -134,14 +134,39 @@ export function PosWithCallouts() {
           <div
             style={{
               fontSize: 13,
-              color: "#4a4a3a",
-              marginBottom: 18,
-              lineHeight: 1.5,
+              color: "#2a2a1f",
+              marginBottom: 14,
+              lineHeight: 1.55,
+              padding: "12px 14px",
+              background: "#ebe2cf",
+              borderLeft: "3px solid #1f3d2e",
+              borderRadius: "0 6px 6px 0",
             }}
           >
-            Click-through mockup for council & contractor review. Every primary
-            tap on the cashier's path runs through this preview — PIN, item
-            grid, cart, four payment methods, cash tender, receipt.
+            <strong style={{ color: "#1f3d2e" }}>Design brief.</strong> A
+            calm, big-button POS sized for a 10–15&quot; landscape tablet so a
+            day-1 cashier can run the till without training: plain-language
+            categories, whole-tile tap targets ≥ 60 px, an always-visible cart,
+            one big <em>Pay</em> button, four equally-weighted payment methods
+            including the band&apos;s Community Account, a quick-amount cash
+            tender pad, and an offline strip that reassures staff sales are
+            saved locally when the satellite link drops. Manager override sits
+            in the top bar, never in the cashier&apos;s primary path. Boreal
+            green / cream / brick palette and IBM Plex type read as serious
+            operational tooling — closer to an IKEA self-checkout than a
+            consumer app.
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--pos-font-mono)",
+              fontSize: 10,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#7a6f55",
+              marginBottom: 10,
+            }}
+          >
+            Detail
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
