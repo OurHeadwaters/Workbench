@@ -4,7 +4,7 @@ export default function RisksAsk() {
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="mb-[3vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-            06 · What could go wrong, and what we're asking
+            07 · What could go wrong, and what we're asking
           </div>
           <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
             What could go wrong, and how we handle it.

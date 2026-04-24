@@ -43,7 +43,7 @@ export default function CaseForTeam() {
               className="mt-[2vh] pt-[1.5vh] border-t font-mono uppercase tracking-[0.22em] text-[0.9vw] text-muted"
               style={{ borderColor: "var(--slide-rule)" }}
             >
-              Saves ~$11k/mo on paper. Costs the contract.
+              Saves ~$50k/mo on paper. Costs the contract.
             </div>
           </div>
 
@@ -70,7 +70,7 @@ export default function CaseForTeam() {
               className="mt-[2vh] pt-[1.5vh] border-t font-mono uppercase tracking-[0.22em] text-[0.9vw]"
               style={{ borderColor: "rgba(244,237,224,0.3)", color: "#e9c8a8" }}
             >
-              Costs ~$11k/mo. Buys the contract — and the next one.
+              Costs ~$50k/mo. Buys the contract — and the next one.
             </div>
           </div>
         </div>

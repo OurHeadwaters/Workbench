@@ -48,8 +48,16 @@
     "speakerNotes": ""
   },
   {
-    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a07",
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a08",
     "position": 7,
+    "filepath": "src/pages/slides/ServicePartner.tsx",
+    "title": "Operations & technology partner",
+    "description": "What the band pays the operations & technology partner ($90k/mo = $66.7k cost basis + $23.3k 35% reinvestment) and what stays in the community when the contract ends — 9 servers, privacy phones, public price dashboard, household lookup, six-module playbook, and an annual value-delivered audit.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a07",
+    "position": 8,
     "filepath": "src/pages/slides/RisksAsk.tsx",
     "title": "Risks and the ask",
     "description": "Top six operational risks with mitigations, and the closing ask mirroring the existing 807 partnership pitch tone.",

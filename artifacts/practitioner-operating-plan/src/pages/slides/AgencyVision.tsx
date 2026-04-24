@@ -88,11 +88,12 @@ export default function AgencyVision() {
         </div>
 
         <div
-          className="mt-[3vh] pt-[2.5vh] border-t font-display italic text-[1.65vw] text-muted leading-[1.4] max-w-[80vw]"
+          className="mt-[3vh] pt-[2.5vh] border-t font-display italic text-[1.55vw] text-muted leading-[1.4] max-w-[82vw]"
           style={{ borderColor: "var(--slide-rule)", textWrap: "balance" }}
         >
           The point isn't that this contract is the prize. The point is that
-          everything it pays for outlasts it.
+          everything it pays for outlasts it — and that Deer Lake is pilot #1
+          for a template the next reserve inherits ready-built (Part V).
         </div>
       </div>
     </div>

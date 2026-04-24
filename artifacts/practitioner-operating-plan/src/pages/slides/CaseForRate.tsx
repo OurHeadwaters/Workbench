@@ -8,60 +8,71 @@ export default function CaseForRate() {
               IV · 01 — The case for the rate
             </div>
             <h2
-              className="font-display text-[3.8vw] leading-[1] tracking-tight text-primary font-medium"
+              className="font-display text-[3.6vw] leading-[1] tracking-tight text-primary font-medium"
               style={{ textWrap: "balance" }}
             >
               You're not buying a person.
-              <span className="italic font-normal text-accent"> You're buying an operating system.</span>
+              <span className="italic font-normal text-accent"> You're buying an operating system — and the next pilot it pays for.</span>
             </h2>
           </div>
-          <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1.15vw] text-muted leading-[1.4]">
-            A retainer pays the structure. The structure is what makes the work
-            reliable. Anything less starves the structure — and unreliable work
-            is what costs you the contract.
+          <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1.1vw] text-muted leading-[1.4]">
+            $90k/mo pays for the structure that delivers the work and the
+            reinvestment that builds the next reserve's pilot. The 35% markup
+            isn't margin — it's the lever that scales the model.
           </div>
         </div>
 
         <div className="flex-1 grid grid-cols-12 gap-[1.4vw] min-h-0">
           <div
-            className="col-span-7 rounded-[0.4vw] p-[1.8vw] flex flex-col"
+            className="col-span-7 rounded-[0.4vw] p-[1.6vw] flex flex-col"
             style={{ background: "var(--slide-paper)" }}
           >
             <div className="font-mono uppercase tracking-[0.22em] text-[1vw] text-accent font-semibold mb-[1.5vh]">
-              What $25k / month actually buys
+              What $90k / month actually buys
             </div>
-            <div className="space-y-[1.4vh] font-body text-[1.2vw] leading-[1.45] text-text">
+            <div className="space-y-[1.1vh] font-body text-[1.05vw] leading-[1.4] text-text">
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">A.</div>
                 <div>
-                  <span className="font-semibold text-primary">An operations
-                  manager in Dryden</span> who holds the phone and runs the
-                  depot. The contract has hands, not just a name on a contract.
+                  <span className="font-semibold text-primary">An operations manager in Dryden</span>{" "}
+                  who holds the phone and runs the depot. The contract has hands, not just a name on a contract.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">B.</div>
                 <div>
                   <span className="font-semibold text-primary">A real back office</span> —
-                  bookkeeping, invoicing, CRA, contract admin. The agency is
-                  legally and financially clean.
+                  bookkeeping, invoicing, CRA, contract admin. The agency is legally and financially clean.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">C.</div>
                 <div>
-                  <span className="font-semibold text-primary">A delivery
-                  apparatus that holds in winter</span> — the ice road and the
-                  air freight, with backup, not heroics.
+                  <span className="font-semibold text-primary">A delivery apparatus that holds in winter</span> —
+                  the ice road and the air freight, with backup, not heroics.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">D.</div>
                 <div>
-                  <span className="font-semibold text-primary">A practitioner
-                  who is rested enough to do the work for years</span> — not a
-                  flame-out at month nine when the project is just starting to
-                  matter.
+                  <span className="font-semibold text-primary">A tech lead and a 9-server stack</span> —
+                  band-owned data sovereignty, public price dashboard, household lookup,
+                  privacy phones for council. The transparency the reserve has been asking for.
+                </div>
+              </div>
+              <div className="flex gap-[1vw]">
+                <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">E.</div>
+                <div>
+                  <span className="font-semibold text-primary">A practitioner who is rested enough to do the work for years</span> —
+                  not a flame-out at month nine when the project is just starting to matter.
+                </div>
+              </div>
+              <div className="flex gap-[1vw]">
+                <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">F.</div>
+                <div>
+                  <span className="font-semibold text-primary">The next pilot, pre-funded</span> —
+                  35% reinvestment compounded into a reserve so the second community
+                  doesn't wait nine months for a grant.
                 </div>
               </div>
             </div>
@@ -69,7 +80,7 @@ export default function CaseForRate() {
 
           <div className="col-span-5 flex flex-col gap-[1.4vw]">
             <div
-              className="rounded-[0.4vw] p-[1.8vw] flex-1 flex flex-col"
+              className="rounded-[0.4vw] p-[1.6vw] flex-1 flex flex-col"
               style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
             >
               <div
@@ -78,29 +89,32 @@ export default function CaseForRate() {
               >
                 What anything less buys
               </div>
-              <div className="font-display text-[1.7vw] font-medium leading-tight mb-[1vh]">
-                A talented person trying to be a team of one.
+              <div className="font-display text-[1.6vw] font-medium leading-tight mb-[1vh]">
+                A talented person trying to be a team of one — and zero infrastructure for the next reserve.
               </div>
-              <div className="font-body text-[1.1vw] leading-[1.5] opacity-95">
+              <div className="font-body text-[1.05vw] leading-[1.45] opacity-95">
                 Which is exactly the failure mode of every northern contract
                 that quietly didn't deliver. The savings are short-term; the
-                cost is the contract itself.
+                cost is the contract itself — and the next reserve waiting in
+                line.
               </div>
             </div>
 
             <div
-              className="rounded-[0.4vw] p-[1.6vw]"
+              className="rounded-[0.4vw] p-[1.4vw]"
               style={{ background: "var(--slide-paper)" }}
             >
-              <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-accent font-semibold mb-[0.8vh]">
+              <div className="font-mono uppercase tracking-[0.22em] text-[0.9vw] text-accent font-semibold mb-[0.8vh]">
                 The math, plainly
               </div>
-              <div className="font-body text-[1.05vw] text-text leading-[1.45]">
-                Of $25k: ~<span className="font-semibold text-primary">$11k</span> goes
-                to the team, ~<span className="font-semibold text-primary">$9k</span> to
-                the practitioner, ~<span className="font-semibold text-primary">$5k</span> to
-                growing the agency that takes the next contract for you.
-                Nothing disappears.
+              <div className="font-body text-[0.95vw] text-text leading-[1.45]">
+                Of $90k:{" "}
+                <span className="font-semibold text-primary">~$66.7k</span> is
+                cost basis (the team that delivers). The other{" "}
+                <span className="font-semibold text-primary">~$23.3k</span>{" "}
+                (35% markup) is the reinvestment line — tech CAPEX, training,
+                pilot reserve. Audited annually against measurable savings
+                delivered to Deer Lake. Nothing disappears.
               </div>
             </div>
           </div>

@@ -60,7 +60,7 @@
     "position": 8,
     "filepath": "src/pages/slides/PartIIDivider.tsx",
     "title": "Part II — The team that protects the calendar",
-    "description": "Section divider entering the operating voice: five roles, the budget, and the winter contingency.",
+    "description": "Section divider entering the operating voice: the costed team, the 35% reinvestment markup, the bridge capital, the receipts.",
     "speakerNotes": ""
   },
   {
@@ -155,8 +155,8 @@
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
     "position": 20,
     "filepath": "src/pages/slides/Budget.tsx",
-    "title": "Monthly budget — three contract sizes",
-    "description": "Team baseline ($10,800 → $11k loaded) reconciled against $20k, $25k, and $30k contracts — team + take-home + agency reinvestment equals the contract size on each row.",
+    "title": "Budget — three contract sizes (cost × 1.35)",
+    "description": "Cost-basis composition with new $60k/$90k/$125k contract sizes. Bill = cost × 1.35; the 35% is a dedicated reinvestment line.",
     "speakerNotes": ""
   },
   {
@@ -164,12 +164,28 @@
     "position": 21,
     "filepath": "src/pages/slides/CashFlow.tsx",
     "title": "Cash flow — bridging the 60-day pay cycle",
-    "description": "12-month cumulative cash chart for all three contract sizes assuming a net-60 payment lag, naming the bridge capital required on day one (~$36k–$44k) before the first invoice clears.",
+    "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX, naming the bridge capital required (~$89k / $175k / $245k) before the first invoice clears.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b17",
+    "position": 22,
+    "filepath": "src/pages/slides/Reinvestment.tsx",
+    "title": "Reinvestment — what the 35% builds",
+    "description": "Four destinations of the 35% markup: tech CAPEX (~$60k/yr — 9 servers, 6 privacy phones, computers), tooling subscriptions (~$2k/mo), training & R&D (~$3k/mo), and the pilot scale reserve (~$10k/mo accruing).",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b18",
+    "position": 23,
+    "filepath": "src/pages/slides/Accountability.tsx",
+    "title": "Net-positive accountability",
+    "description": "Five measures (procurement savings delivered, time returned to band staff, transparency tooling shipped & adopted, capacity built locally, year-end value-delivered audit) plus a forward-credit clause if the value delivered doesn't beat the markup.",
     "speakerNotes": ""
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
-    "position": 22,
+    "position": 24,
     "filepath": "src/pages/slides/Winter.tsx",
     "title": "Winter contingency",
     "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
@@ -177,15 +193,15 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b10",
-    "position": 23,
+    "position": 25,
     "filepath": "src/pages/slides/AgencyVision.tsx",
     "title": "Agency vision",
-    "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts.",
+    "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts. Bridges into Part V (the template).",
     "speakerNotes": ""
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
-    "position": 24,
+    "position": 26,
     "filepath": "src/pages/slides/PartIVDivider.tsx",
     "title": "Part IV — For Dad",
     "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
@@ -193,15 +209,15 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
-    "position": 25,
+    "position": 27,
     "filepath": "src/pages/slides/CaseForRate.tsx",
     "title": "The case for the rate",
-    "description": "What $25k/month actually buys (operating system, not a person) versus what 'lean' actually costs (the contract).",
+    "description": "What $90k/month actually buys — operating system, transparency stack, and pilot reserve — versus what 'lean' actually costs (the contract and the next reserve waiting in line).",
     "speakerNotes": ""
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
-    "position": 26,
+    "position": 28,
     "filepath": "src/pages/slides/CaseForTeam.tsx",
     "title": "The case for the team",
     "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
@@ -209,18 +225,50 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
-    "position": 27,
+    "position": 29,
     "filepath": "src/pages/slides/ValueDelivered.tsx",
     "title": "Value delivered",
-    "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, reusable coordinator infrastructure, and base stability.",
+    "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, transparency stack + infrastructure that scales, and base stability.",
     "speakerNotes": ""
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
-    "position": 28,
+    "position": 30,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
-    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $25k/mo on a 12-month engagement reviewed at month six.",
+    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$175k bridge ask.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
+    "position": 31,
+    "filepath": "src/pages/slides/PartVDivider.tsx",
+    "title": "Part V — Pilot to template",
+    "description": "Section divider entering the scale voice: Deer Lake earns it, then so does every reserve. The template the practitioner builds for pilot #1 is the playbook the next reserve inherits.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d02",
+    "position": 32,
+    "filepath": "src/pages/slides/PilotDeerLake.tsx",
+    "title": "Why Deer Lake is Pilot #1",
+    "description": "Three reasons Deer Lake is the right pilot: the right scale (~870 people), a council ready for transparency, and a practitioner with skin in the game and the structural plan to deliver.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d03",
+    "position": 33,
+    "filepath": "src/pages/slides/Template.tsx",
+    "title": "The six-module template",
+    "description": "What gets templatized: operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, net-positive accountability. Each module is documented as we ship it for Deer Lake.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d04",
+    "position": 34,
+    "filepath": "src/pages/slides/PathToScale.tsx",
+    "title": "The path to scale",
+    "description": "Five-year arc: Year 1 Deer Lake pilot, Year 2 second reserve at marginal cost, Year 3 three-to-five concurrent contracts, Year 5 open template that any practitioner can run.",
     "speakerNotes": ""
   }
 ]

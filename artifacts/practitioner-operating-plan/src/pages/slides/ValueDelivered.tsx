@@ -70,15 +70,17 @@ export default function ValueDelivered() {
             <div className="flex items-baseline gap-[1vw] mb-[1vh]">
               <div className="font-mono text-accent font-semibold text-[1.1vw]">03</div>
               <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
-                Coordinator infrastructure that scales
+                Transparency stack + infrastructure that scales
               </div>
             </div>
             <div className="font-display text-[1.85vw] leading-tight text-primary font-medium mb-[1vh]">
-              Built for Deer Lake. Reusable for the next two.
+              9 servers, public price dashboard, six-module playbook.
             </div>
             <div className="font-body text-[1.1vw] text-text leading-[1.5]">
-              The 11am / 4pm rhythm, the depot, the back office — all designed
-              so contract two doesn't restart from zero. Your dollar funds an
+              Band-owned data sovereignty. Household-level grocery price
+              lookup. Privacy phones for council. A documented playbook so
+              contract two doesn't restart from zero — and so the band can
+              take ownership of the stack on handoff. Your dollar funds an
               asset, not just a service.
             </div>
           </div>
