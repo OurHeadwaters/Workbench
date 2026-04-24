@@ -47,6 +47,7 @@ type Item = {
   unit?: string;
   freight?: boolean;
   initials: string;
+  emoji: string;
   tone: string;
 };
 
@@ -73,63 +74,63 @@ const CATEGORIES: { id: CategoryId; label: string; sub: string; Icon: LucideIcon
 
 const ITEMS: Item[] = [
   // Grocery
-  { id: "g-flour", name: "Robin Hood Flour", unit: "10 kg", price: 34.99, category: "grocery", freight: true, initials: "RH", tone: "#c2a76f" },
-  { id: "g-sugar", name: "White Sugar", unit: "4 kg", price: 14.99, category: "grocery", freight: true, initials: "SG", tone: "#e9d9b1" },
-  { id: "g-tang", name: "Tang Orange", unit: "1 kg jar", price: 12.99, category: "grocery", initials: "TG", tone: "#e08a3a" },
-  { id: "g-kd", name: "Kraft Dinner", unit: "225 g box", price: 3.79, category: "grocery", initials: "KD", tone: "#d4a23b" },
-  { id: "g-klik", name: "Klik Canned Meat", unit: "340 g", price: 6.49, category: "grocery", initials: "KL", tone: "#8a4a36" },
-  { id: "g-beans", name: "Bush's Baked Beans", unit: "398 mL", price: 4.29, category: "grocery", initials: "BB", tone: "#7a5a3c" },
-  { id: "g-crackers", name: "Premium Plus Crackers", unit: "454 g", price: 7.99, category: "grocery", initials: "CR", tone: "#c69c5d" },
-  { id: "g-tea", name: "Tetley Tea", unit: "72 ct", price: 9.99, category: "grocery", initials: "TT", tone: "#6e3e2a" },
-  { id: "g-oats", name: "Quaker Oats", unit: "1 kg", price: 8.49, category: "grocery", initials: "QO", tone: "#a87b4a" },
-  { id: "g-pb", name: "Peanut Butter", unit: "1 kg", price: 11.49, category: "grocery", initials: "PB", tone: "#8d6238" },
-  { id: "g-spam", name: "Spam Classic", unit: "340 g", price: 7.99, category: "grocery", initials: "SP", tone: "#3f5a8a" },
-  { id: "g-pasta", name: "Spaghetti", unit: "900 g", price: 4.99, category: "grocery", initials: "PA", tone: "#caa66b" },
+  { id: "g-flour", name: "Robin Hood Flour", unit: "10 kg", price: 34.99, category: "grocery", freight: true, initials: "RH", emoji: "🌾", tone: "#c2a76f" },
+  { id: "g-sugar", name: "White Sugar", unit: "4 kg", price: 14.99, category: "grocery", freight: true, initials: "SG", emoji: "🍬", tone: "#e9d9b1" },
+  { id: "g-tang", name: "Tang Orange", unit: "1 kg jar", price: 12.99, category: "grocery", initials: "TG", emoji: "🧃", tone: "#e08a3a" },
+  { id: "g-kd", name: "Kraft Dinner", unit: "225 g box", price: 3.79, category: "grocery", initials: "KD", emoji: "🍝", tone: "#d4a23b" },
+  { id: "g-klik", name: "Klik Canned Meat", unit: "340 g", price: 6.49, category: "grocery", initials: "KL", emoji: "🥫", tone: "#8a4a36" },
+  { id: "g-beans", name: "Bush's Baked Beans", unit: "398 mL", price: 4.29, category: "grocery", initials: "BB", emoji: "🫘", tone: "#7a5a3c" },
+  { id: "g-crackers", name: "Premium Plus Crackers", unit: "454 g", price: 7.99, category: "grocery", initials: "CR", emoji: "🍘", tone: "#c69c5d" },
+  { id: "g-tea", name: "Tetley Tea", unit: "72 ct", price: 9.99, category: "grocery", initials: "TT", emoji: "🍵", tone: "#6e3e2a" },
+  { id: "g-oats", name: "Quaker Oats", unit: "1 kg", price: 8.49, category: "grocery", initials: "QO", emoji: "🥣", tone: "#a87b4a" },
+  { id: "g-pb", name: "Peanut Butter", unit: "1 kg", price: 11.49, category: "grocery", initials: "PB", emoji: "🥜", tone: "#8d6238" },
+  { id: "g-spam", name: "Spam Classic", unit: "340 g", price: 7.99, category: "grocery", initials: "SP", emoji: "🥫", tone: "#3f5a8a" },
+  { id: "g-pasta", name: "Spaghetti", unit: "900 g", price: 4.99, category: "grocery", initials: "PA", emoji: "🍝", tone: "#caa66b" },
   // Fresh produce — flown in weekly
-  { id: "g-apples", name: "Apples (fresh)", unit: "3 lb bag", price: 13.99, category: "grocery", freight: true, initials: "AP", tone: "#a8362a" },
-  { id: "g-bananas", name: "Bananas (fresh)", unit: "per lb", price: 2.49, category: "grocery", freight: true, initials: "BN", tone: "#d3b73a" },
-  { id: "g-potatoes", name: "Potatoes (fresh)", unit: "5 lb bag", price: 9.49, category: "grocery", freight: true, initials: "PT", tone: "#a07a3a" },
-  { id: "g-onions", name: "Onions (fresh)", unit: "2 lb bag", price: 6.99, category: "grocery", freight: true, initials: "ON", tone: "#c8a874" },
+  { id: "g-apples", name: "Apples (fresh)", unit: "3 lb bag", price: 13.99, category: "grocery", freight: true, initials: "AP", emoji: "🍎", tone: "#a8362a" },
+  { id: "g-bananas", name: "Bananas (fresh)", unit: "per lb", price: 2.49, category: "grocery", freight: true, initials: "BN", emoji: "🍌", tone: "#d3b73a" },
+  { id: "g-potatoes", name: "Potatoes (fresh)", unit: "5 lb bag", price: 9.49, category: "grocery", freight: true, initials: "PT", emoji: "🥔", tone: "#a07a3a" },
+  { id: "g-onions", name: "Onions (fresh)", unit: "2 lb bag", price: 6.99, category: "grocery", freight: true, initials: "ON", emoji: "🧅", tone: "#c8a874" },
 
   // Dairy
-  { id: "d-evap", name: "Carnation Evap. Milk", unit: "354 mL", price: 3.79, category: "dairy", initials: "CE", tone: "#bfb9a4" },
-  { id: "d-milk", name: "2% Milk", unit: "4 L bag", price: 11.99, category: "dairy", freight: true, initials: "ML", tone: "#3c6f9c" },
-  { id: "d-butter", name: "Butter", unit: "454 g", price: 9.49, category: "dairy", initials: "BU", tone: "#e7c25d" },
-  { id: "d-eggs", name: "Large Eggs", unit: "12 ct", price: 7.99, category: "dairy", initials: "EG", tone: "#c79a4a" },
-  { id: "d-cheese", name: "Cheddar Block", unit: "500 g", price: 13.99, category: "dairy", initials: "CH", tone: "#cd7a26" },
-  { id: "d-yogurt", name: "Plain Yogurt", unit: "750 g", price: 7.49, category: "dairy", initials: "YG", tone: "#dcd2b6" },
+  { id: "d-evap", name: "Carnation Evap. Milk", unit: "354 mL", price: 3.79, category: "dairy", initials: "CE", emoji: "🥛", tone: "#bfb9a4" },
+  { id: "d-milk", name: "2% Milk", unit: "4 L bag", price: 11.99, category: "dairy", freight: true, initials: "ML", emoji: "🥛", tone: "#3c6f9c" },
+  { id: "d-butter", name: "Butter", unit: "454 g", price: 9.49, category: "dairy", initials: "BU", emoji: "🧈", tone: "#e7c25d" },
+  { id: "d-eggs", name: "Large Eggs", unit: "12 ct", price: 7.99, category: "dairy", initials: "EG", emoji: "🥚", tone: "#c79a4a" },
+  { id: "d-cheese", name: "Cheddar Block", unit: "500 g", price: 13.99, category: "dairy", initials: "CH", emoji: "🧀", tone: "#cd7a26" },
+  { id: "d-yogurt", name: "Plain Yogurt", unit: "750 g", price: 7.49, category: "dairy", initials: "YG", emoji: "🍶", tone: "#dcd2b6" },
 
   // Frozen
-  { id: "f-beef", name: "Ground Beef", unit: "1 kg frozen", price: 18.99, category: "frozen", freight: true, initials: "GB", tone: "#7d3a30" },
-  { id: "f-chicken", name: "Chicken Breasts", unit: "1 kg frozen", price: 22.99, category: "frozen", freight: true, initials: "CK", tone: "#c79a72" },
-  { id: "f-pizza", name: "Frozen Pizza", unit: "12 in", price: 9.99, category: "frozen", initials: "PZ", tone: "#a04a30" },
-  { id: "f-veg", name: "Mixed Vegetables", unit: "750 g", price: 6.99, category: "frozen", initials: "VG", tone: "#3f7a4a" },
-  { id: "f-icecream", name: "Vanilla Ice Cream", unit: "1.5 L", price: 11.49, category: "frozen", initials: "IC", tone: "#dcc6a4" },
-  { id: "f-fish", name: "Fish Sticks", unit: "700 g", price: 9.99, category: "frozen", initials: "FS", tone: "#7a8c6a" },
+  { id: "f-beef", name: "Ground Beef", unit: "1 kg frozen", price: 18.99, category: "frozen", freight: true, initials: "GB", emoji: "🥩", tone: "#7d3a30" },
+  { id: "f-chicken", name: "Chicken Breasts", unit: "1 kg frozen", price: 22.99, category: "frozen", freight: true, initials: "CK", emoji: "🍗", tone: "#c79a72" },
+  { id: "f-pizza", name: "Frozen Pizza", unit: "12 in", price: 9.99, category: "frozen", initials: "PZ", emoji: "🍕", tone: "#a04a30" },
+  { id: "f-veg", name: "Mixed Vegetables", unit: "750 g", price: 6.99, category: "frozen", initials: "VG", emoji: "🥦", tone: "#3f7a4a" },
+  { id: "f-icecream", name: "Vanilla Ice Cream", unit: "1.5 L", price: 11.49, category: "frozen", initials: "IC", emoji: "🍦", tone: "#dcc6a4" },
+  { id: "f-fish", name: "Fish Sticks", unit: "700 g", price: 9.99, category: "frozen", initials: "FS", emoji: "🐟", tone: "#7a8c6a" },
 
   // Household
-  { id: "h-tp", name: "Toilet Paper", unit: "12 roll", price: 19.99, category: "household", freight: true, initials: "TP", tone: "#e8e2d2" },
-  { id: "h-tide", name: "Tide Detergent", unit: "2.95 L", price: 24.99, category: "household", freight: true, initials: "TD", tone: "#d9803a" },
-  { id: "h-bleach", name: "Bleach", unit: "3.6 L", price: 7.49, category: "household", initials: "BL", tone: "#9bb1c8" },
-  { id: "h-bags", name: "Garbage Bags", unit: "30 ct", price: 11.99, category: "household", initials: "GB", tone: "#3a3f3a" },
-  { id: "h-paper", name: "Paper Towel", unit: "6 roll", price: 14.99, category: "household", initials: "PT", tone: "#d9c89a" },
-  { id: "h-dish", name: "Dish Soap", unit: "740 mL", price: 5.99, category: "household", initials: "DS", tone: "#3f7a8a" },
+  { id: "h-tp", name: "Toilet Paper", unit: "12 roll", price: 19.99, category: "household", freight: true, initials: "TP", emoji: "🧻", tone: "#e8e2d2" },
+  { id: "h-tide", name: "Tide Detergent", unit: "2.95 L", price: 24.99, category: "household", freight: true, initials: "TD", emoji: "🧴", tone: "#d9803a" },
+  { id: "h-bleach", name: "Bleach", unit: "3.6 L", price: 7.49, category: "household", initials: "BL", emoji: "🧴", tone: "#9bb1c8" },
+  { id: "h-bags", name: "Garbage Bags", unit: "30 ct", price: 11.99, category: "household", initials: "GB", emoji: "🗑️", tone: "#3a3f3a" },
+  { id: "h-paper", name: "Paper Towel", unit: "6 roll", price: 14.99, category: "household", initials: "PT", emoji: "🧻", tone: "#d9c89a" },
+  { id: "h-dish", name: "Dish Soap", unit: "740 mL", price: 5.99, category: "household", initials: "DS", emoji: "🧼", tone: "#3f7a8a" },
 
   // Hot Food
-  { id: "ht-bannock", name: "Fresh Bannock", unit: "single", price: 3.5, category: "hot", initials: "BA", tone: "#b88a52" },
-  { id: "ht-chili", name: "Chili Bowl", unit: "12 oz", price: 8.5, category: "hot", initials: "CB", tone: "#9a3f2a" },
-  { id: "ht-sandwich", name: "Deli Sandwich", unit: "single", price: 7.5, category: "hot", initials: "SW", tone: "#b89a6a" },
-  { id: "ht-coffee", name: "Coffee — Large", unit: "16 oz", price: 2.75, category: "hot", initials: "CF", tone: "#3a2a1f" },
-  { id: "ht-hotdog", name: "Hot Dog", unit: "single", price: 4.5, category: "hot", initials: "HD", tone: "#a64a3a" },
-  { id: "ht-soup", name: "Soup of the Day", unit: "12 oz", price: 6.0, category: "hot", initials: "SO", tone: "#a87a3a" },
+  { id: "ht-bannock", name: "Fresh Bannock", unit: "single", price: 3.5, category: "hot", initials: "BA", emoji: "🍞", tone: "#b88a52" },
+  { id: "ht-chili", name: "Chili Bowl", unit: "12 oz", price: 8.5, category: "hot", initials: "CB", emoji: "🌶️", tone: "#9a3f2a" },
+  { id: "ht-sandwich", name: "Deli Sandwich", unit: "single", price: 7.5, category: "hot", initials: "SW", emoji: "🥪", tone: "#b89a6a" },
+  { id: "ht-coffee", name: "Coffee — Large", unit: "16 oz", price: 2.75, category: "hot", initials: "CF", emoji: "☕", tone: "#3a2a1f" },
+  { id: "ht-hotdog", name: "Hot Dog", unit: "single", price: 4.5, category: "hot", initials: "HD", emoji: "🌭", tone: "#a64a3a" },
+  { id: "ht-soup", name: "Soup of the Day", unit: "12 oz", price: 6.0, category: "hot", initials: "SO", emoji: "🍲", tone: "#a87a3a" },
 
   // Tobacco
-  { id: "t-dum", name: "du Maurier Pack", unit: "25 ct", price: 19.99, category: "tobacco", initials: "DM", tone: "#5a3a2a" },
-  { id: "t-play", name: "Players Pack", unit: "25 ct", price: 19.49, category: "tobacco", initials: "PL", tone: "#1f3a2a" },
-  { id: "t-bel", name: "Belmont Pack", unit: "25 ct", price: 20.49, category: "tobacco", initials: "BE", tone: "#3a3a4a" },
-  { id: "t-pouch", name: "Rolling Tobacco", unit: "50 g pouch", price: 34.99, category: "tobacco", initials: "RT", tone: "#7a4a2a" },
-  { id: "t-lighter", name: "Bic Lighter", unit: "single", price: 2.99, category: "tobacco", initials: "LI", tone: "#b85a3e" },
-  { id: "t-papers", name: "Rolling Papers", unit: "1 booklet", price: 3.49, category: "tobacco", initials: "PA", tone: "#dcd2b6" },
+  { id: "t-dum", name: "du Maurier Pack", unit: "25 ct", price: 19.99, category: "tobacco", initials: "DM", emoji: "🚬", tone: "#5a3a2a" },
+  { id: "t-play", name: "Players Pack", unit: "25 ct", price: 19.49, category: "tobacco", initials: "PL", emoji: "🚬", tone: "#1f3a2a" },
+  { id: "t-bel", name: "Belmont Pack", unit: "25 ct", price: 20.49, category: "tobacco", initials: "BE", emoji: "🚬", tone: "#3a3a4a" },
+  { id: "t-pouch", name: "Rolling Tobacco", unit: "50 g pouch", price: 34.99, category: "tobacco", initials: "RT", emoji: "🚬", tone: "#7a4a2a" },
+  { id: "t-lighter", name: "Bic Lighter", unit: "single", price: 2.99, category: "tobacco", initials: "LI", emoji: "🔥", tone: "#b85a3e" },
+  { id: "t-papers", name: "Rolling Papers", unit: "1 booklet", price: 3.49, category: "tobacco", initials: "PA", emoji: "📄", tone: "#dcd2b6" },
 ];
 
 const QUICK_AMOUNTS = [5, 10, 20, 50] as const;
@@ -769,15 +770,16 @@ function PosFrame({
               }}
             >
               <div
-                className="w-16 h-16 rounded-md flex items-center justify-center font-bold text-xl flex-shrink-0"
+                className="w-16 h-16 rounded-md flex items-center justify-center flex-shrink-0 relative overflow-hidden"
                 style={{
-                  background: item.tone,
-                  color: "#fff",
-                  fontFamily: "var(--pos-font-mono)",
-                  textShadow: "0 1px 1px rgba(0,0,0,0.25)",
+                  background: `linear-gradient(135deg, ${item.tone}, ${item.tone}cc)`,
+                  boxShadow: "inset 0 -8px 16px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18)",
                 }}
+                aria-hidden="true"
               >
-                {item.initials}
+                <span style={{ fontSize: 36, lineHeight: 1, filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.35))" }}>
+                  {item.emoji}
+                </span>
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-between">
                 <div>
@@ -894,14 +896,16 @@ function PosFrame({
                 <div key={line.id} className="p-3">
                   <div className="flex gap-3 items-start">
                     <div
-                      className="w-12 h-12 rounded-md flex items-center justify-center font-bold flex-shrink-0"
+                      className="w-12 h-12 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden"
                       style={{
-                        background: line.tone,
-                        color: "#fff",
-                        fontFamily: "var(--pos-font-mono)",
+                        background: `linear-gradient(135deg, ${line.tone}, ${line.tone}cc)`,
+                        boxShadow: "inset 0 -6px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18)",
                       }}
+                      aria-hidden="true"
                     >
-                      {line.initials}
+                      <span style={{ fontSize: 28, lineHeight: 1, filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.35))" }}>
+                        {line.emoji}
+                      </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div
@@ -1732,12 +1736,13 @@ function ManagerOverrideModal({ onClose }: { onClose: () => void }) {
                     <button
                       key={k}
                       onClick={() => setPin("")}
-                      className="h-14 rounded-md text-xs font-semibold uppercase tracking-wider"
+                      className="rounded-md text-xs font-semibold uppercase tracking-wider"
                       style={{
                         background: "var(--pos-paper)",
                         color: "var(--pos-text)",
                         border: "1px solid var(--pos-rule)",
                         fontFamily: "var(--pos-font-mono)",
+                        minHeight: 60,
                       }}
                     >
                       Clear
@@ -1749,11 +1754,12 @@ function ManagerOverrideModal({ onClose }: { onClose: () => void }) {
                     <button
                       key={k}
                       onClick={() => setPin(pin.slice(0, -1))}
-                      className="h-14 rounded-md flex items-center justify-center"
+                      className="rounded-md flex items-center justify-center"
                       style={{
                         background: "var(--pos-paper)",
                         color: "var(--pos-text)",
                         border: "1px solid var(--pos-rule)",
+                        minHeight: 60,
                       }}
                     >
                       <Delete size={20} />
@@ -1764,12 +1770,13 @@ function ManagerOverrideModal({ onClose }: { onClose: () => void }) {
                   <button
                     key={k}
                     onClick={() => setPin((pin + k).slice(0, 4))}
-                    className="h-14 rounded-md text-xl font-semibold"
+                    className="rounded-md text-xl font-semibold"
                     style={{
                       background: "var(--pos-card)",
                       color: "var(--pos-text)",
                       border: "1px solid var(--pos-rule)",
                       fontFamily: "var(--pos-font-mono)",
+                      minHeight: 60,
                     }}
                   >
                     {k}
