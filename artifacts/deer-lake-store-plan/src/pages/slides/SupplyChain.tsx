@@ -4,54 +4,54 @@ export default function SupplyChain() {
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="mb-[3vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-            02 · Supply chain
+            02 · How groceries get here
           </div>
           <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
-            Three lanes in.
-            <span className="italic font-normal text-accent"> One curated shelf.</span>
+            Three ways in.
+            <span className="italic font-normal text-accent"> One shelf that's been thought through.</span>
           </h2>
         </div>
 
         <div className="grid grid-cols-3 gap-[1.5vw] mb-[3vh]">
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="flex items-center gap-[0.6vw] mb-[1.2vh]">
-              <div className="font-mono text-[1.05vw] text-accent font-semibold">LANE 1</div>
+              <div className="font-mono text-[1.05vw] text-accent font-semibold">WAY 1</div>
               <div className="flex-1 h-[1px] bg-rule" />
-              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">Existing</div>
+              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">The truck we already run</div>
             </div>
             <div className="font-display text-[1.7vw] leading-tight text-primary font-medium mb-[1vh]">
-              Tbay → Sioux Lookout → Dryden
+              Thunder Bay → Sioux Lookout → Dryden
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              807's bi-weekly producer lane. Refurbished cold trailer + paid driver, formalising May 2026 (AGM capital project).
+              807's own refrigerated truck and paid driver, already moving food on this route every two weeks. Becomes official in May 2026.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="flex items-center gap-[0.6vw] mb-[1.2vh]">
-              <div className="font-mono text-[1.05vw] text-accent font-semibold">LANE 2</div>
+              <div className="font-mono text-[1.05vw] text-accent font-semibold">WAY 2</div>
               <div className="flex-1 h-[1px] bg-rule" />
-              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">Proposed</div>
+              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">The winter-road truck we'd add</div>
             </div>
             <div className="font-display text-[1.7vw] leading-tight text-primary font-medium mb-[1vh]">
-              Dryden → Deer Lake (ice-road truck)
+              Dryden → Deer Lake (winter road truck)
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              Ice-road-rated second vehicle. LFIF (when reopens) via LFFC partnership — deliberately a separate envelope from Lane 1.
+              A second truck built for the winter road, paid for through LFIF (the regional infrastructure fund) when it reopens, with LFFC. Kept separate from the Thunder Bay truck on purpose so one breakdown can't stop everything.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="flex items-center gap-[0.6vw] mb-[1.2vh]">
-              <div className="font-mono text-[1.05vw] text-accent font-semibold">LANE 3</div>
+              <div className="font-mono text-[1.05vw] text-accent font-semibold">WAY 3</div>
               <div className="flex-1 h-[1px] bg-rule" />
-              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">Shoulder season</div>
+              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">Flying it in when the road's closed</div>
             </div>
             <div className="font-display text-[1.7vw] leading-tight text-primary font-medium mb-[1vh]">
-              Air freight (Apr–Nov)
+              Air freight (April–November)
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              Wasaya, Bearskin, North Star Air for perishables when the winter road is closed. Buffer inventory carries the gap.
+              Wasaya, Bearskin and North Star Air bring fresh food in by plane the months the winter road isn't usable. Extra inventory on the shelf covers the in-between weeks.
             </div>
           </div>
         </div>
@@ -62,47 +62,47 @@ export default function SupplyChain() {
         >
           <div className="col-span-4">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] opacity-75 mb-[1vh]">
-              The shelf
+              What's on the shelf
             </div>
             <div className="font-display text-[2.2vw] leading-tight font-medium mb-[1.5vh]">
-              Local first. Regional second. Northern brand basics direct.
+              Local food first. Regional next. Big brands direct.
             </div>
             <div className="font-body text-[1.05vw] opacity-85 leading-[1.5]">
-              Nutrition North-eligible items priced after subsidy pass-through. Ineligible items show transparent freight cost on the shelf tag — no hidden markups.
+              Federal subsidy shows up in the shelf price; freight cost is printed on the tag for items that don't qualify. Nothing hidden — and families stop flying to Winnipeg for what should be here.
             </div>
           </div>
 
           <div className="col-span-8 grid grid-cols-2 gap-x-[2vw] gap-y-[1.6vh]">
             <div>
               <div className="font-mono uppercase tracking-[0.18em] text-[1.05vw] mb-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                Local · Deer Lake
+                From Deer Lake itself
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Onboarded onto 807's platform. Carry local first; community recognises the shelf.
+                Local food goes on the shelf first, so the community recognises what they're picking up.
               </div>
             </div>
             <div>
               <div className="font-mono uppercase tracking-[0.18em] text-[1.05vw] mb-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                Fresh · 807 producers
+                Fresh from 807's farms
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Slate River Dairy, Thunder Oak, Belluz, Sleepy G, eggs, meat, baked.
+                Slate River Dairy, Thunder Oak, Belluz, Sleepy G, plus eggs, meat and baked goods.
               </div>
             </div>
             <div>
               <div className="font-mono uppercase tracking-[0.18em] text-[1.05vw] mb-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                Broadline staples
+                Everyday staples by the pallet
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Sysco Canada, GFS Canada, Federated Co-operatives — pallet-economics SKUs.
+                Sysco Canada, GFS Canada and Federated Co-operatives bring the high-volume items in by the pallet so the price stays low.
               </div>
             </div>
             <div>
               <div className="font-mono uppercase tracking-[0.18em] text-[1.05vw] mb-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                Northern brand basics
+                Northern household brands
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Robin Hood flour 10kg, Carnation, Klik, Tang, Kraft Dinner, Bimbo bread.
+                Robin Hood flour 10kg, Carnation, Klik, Tang, Kraft Dinner, Bimbo bread — the brands people already buy.
               </div>
             </div>
           </div>

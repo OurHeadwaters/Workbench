@@ -5,61 +5,61 @@ export default function StaffingModel() {
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              03 · Staffing
+              03 · Who works the store
             </div>
             <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
-              The Outback model.
-              <span className="italic font-normal text-accent"> Adapted for Deer Lake.</span>
+              Trained people fly in to start.
+              <span className="italic font-normal text-accent"> Deer Lake takes over by month 12.</span>
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[34vw]">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted mb-[0.6vh]">
-              Project's biggest single risk
+              The biggest thing that could go wrong
             </div>
             <div className="font-body text-[1.25vw] text-primary leading-[1.35]">
-              Staffing won't solve itself locally on day one — and depending on it to is how Northern stores collapse. The fix is pre-built elsewhere.
+              Northern stores collapse when they assume local staff can run a brand-new operation from day one. Deer Lake doesn't have to figure that out alone — we bring trained people who've done it before.
             </div>
           </div>
         </div>
 
         <div className="flex-1 grid grid-cols-4 gap-[1.4vw] min-h-0 mb-[2.5vh]">
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">01 · SETUP</div>
+            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">01 · HOW IT'S SET UP</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              4-on / 2-off rotations
+              4 weeks on, 2 weeks home
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              Free band-provided housing as part of comp. Banked hours, no overhead. The housing problem becomes the recruiting hook.
+              The band provides housing for the people who fly in — that's what makes the job attractive enough to fill. No extra cost to the store; the housing the band already has becomes the reason staff say yes.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">02 · THE PITCH</div>
+            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">02 · WHY PEOPLE TAKE THE JOB</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              Working-holiday economics
+              Good money, rent covered
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              Same shape as outback Australia mining work. Sample: $25/hr × 60 hr/wk × 9 rotations ≈ <span className="text-primary font-semibold">$54k banked, rent paid for</span>.
+              Same setup as Australian mining-town work that always fills its jobs. A worker doing $25/hr × 60 hr/wk × 9 rotations earns about <span className="text-primary font-semibold">$54k with rent paid for</span>.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">03 · WIND-DOWN</div>
+            <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">03 · HANDING IT OVER</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              Year-1 mix flips
+              The mix flips during year one
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              Month 1: ~80% rotational / 20% local. Month 12: ~20% rotational / 80% local. Local-hire training pipeline runs continuously from month 2.
+              Month 1: about 80% from out of town, 20% from Deer Lake. Month 12: about 20% from out of town, 80% from Deer Lake. Training local staff starts in month 2 and never stops.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">04 · WHY IT WORKS</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              Bench depth without a wait
+              Trained people on day one, local managers by year-end
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              Rotational outsider <span className="text-primary font-semibold">is</span> the trainer. Local hire <span className="text-primary font-semibold">is</span> the future manager. Solves what NWC's local-only model can't.
+              The person flying in <span className="text-primary font-semibold">is</span> the trainer. The person from Deer Lake <span className="text-primary font-semibold">is</span> the future manager. The current store's "hire local and hope" approach is exactly what doesn't work.
             </div>
           </div>
         </div>
@@ -70,10 +70,10 @@ export default function StaffingModel() {
         >
           <div className="flex items-center justify-between mb-[1.4vh]">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] opacity-80">
-              12-month staffing wind-down
+              First 12 months · the handover from out-of-town to local staff
             </div>
             <div className="font-mono text-[1.05vw] opacity-70">
-              <span style={{ color: "#e9c8a8" }}>■</span> Rotational outsider · <span className="opacity-80">■</span> Local hire
+              <span style={{ color: "#e9c8a8" }}>■</span> Flown in from out of town · <span className="opacity-80">■</span> Hired in Deer Lake
             </div>
           </div>
           <div className="grid grid-cols-12 gap-[0.8vw] items-end h-[12vh]">

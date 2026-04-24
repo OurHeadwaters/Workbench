@@ -29,13 +29,13 @@ export default function Cover() {
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-80">
-            Operating Partner Proposal · Spring 2026
+            A plan for the store · Spring 2026
           </div>
         </div>
 
         <div className="max-w-[78vw]">
           <div className="font-mono uppercase tracking-[0.3em] text-[1.2vw] opacity-80 mb-[2vh]">
-            Deer Lake First Nation, Treaty 5 · Northwestern Ontario
+            Deer Lake First Nation · Treaty 5 · Northwestern Ontario
           </div>
           <h1
             className="font-display font-medium text-[7.4vw] leading-[0.95] tracking-tight"
@@ -47,7 +47,7 @@ export default function Cover() {
             </span>
           </h1>
           <div className="mt-[3vh] font-display italic text-[2.4vw] opacity-95">
-            Operational plan for the contractor + band council
+            A plan for the contractor and the band council to read together
           </div>
         </div>
 
@@ -58,18 +58,19 @@ export default function Cover() {
               style={{ background: "rgba(244,237,224,0.5)" }}
             />
             <div className="font-body text-[1.45vw] leading-[1.5] opacity-95">
-              Less leakage. More local capacity. A store the community
-              recognises as theirs from day one.
+              More of Deer Lake's grocery money stays in Deer Lake.
+              Fewer trips to Winnipeg. A store that feels like the community's
+              from the day it opens.
             </div>
           </div>
           <div className="text-right">
             <div className="font-mono uppercase tracking-[0.25em] text-[1.1vw] opacity-75 mb-[1vh]">
-              Prepared for
+              Written for
             </div>
             <div className="font-display text-[1.8vw] leading-tight">
-              The Operating Partner
+              The contractor running the store
               <div className="font-body font-light text-[1.1vw] opacity-80 mt-[0.4vh]">
-                Deer Lake, Ontario
+                An operating plan you don't have to write yourself · Deer Lake, Ontario
               </div>
             </div>
           </div>

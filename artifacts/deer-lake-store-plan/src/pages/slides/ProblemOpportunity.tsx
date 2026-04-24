@@ -1,26 +1,26 @@
 export default function ProblemOpportunity() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
-      <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
-        <div className="flex items-baseline justify-between mb-[3.5vh]">
+      <div className="absolute inset-0 px-[6vw] py-[4.5vh] flex flex-col">
+        <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              01 · Situation
+              01 · Where we are today
             </div>
             <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
-              Where the money is going.
-              <span className="italic font-normal text-accent"> Where it could go instead.</span>
+              Deer Lake's grocery money is leaving.
+              <span className="italic font-normal text-accent"> Most of it can stay home.</span>
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted mb-[0.6vh]">
-              Estimated annual leakage
+              Money leaving Deer Lake each year
             </div>
             <div className="font-display text-[5vw] leading-none text-accent font-semibold">
               ~$1.6M
             </div>
             <div className="font-body text-[1vw] text-muted mt-[0.4vh]">
-              Deer Lake → outside the community
+              Spent on groceries in Winnipeg or kept by the current store's owners
             </div>
           </div>
         </div>
@@ -36,32 +36,38 @@ export default function ProblemOpportunity() {
                 Today
               </div>
             </div>
-            <div className="font-display text-[2.2vw] leading-tight text-primary mb-[2.5vh] font-medium">
-              One incumbent. No competition. The federal subsidy mostly stays with the retailer.
+            <div className="font-display text-[1.95vw] leading-tight text-primary mb-[1.2vh] font-medium">
+              One store, no other choice. The federal subsidy mostly stays with the owners — not on the shelf.
             </div>
-            <div className="space-y-[1.8vh] font-body text-[1.45vw] leading-[1.4]">
+            <div className="border-l-[0.25vw] border-accent pl-[1vw] mb-[1.5vh] font-display italic text-[1.25vw] leading-[1.3] text-primary">
+              "Less like a local store — different clientele — more like a Walmart."
+              <div className="font-mono not-italic uppercase tracking-[0.18em] text-[0.85vw] text-muted mt-[0.3vh]">
+                Heard in Deer Lake
+              </div>
+            </div>
+            <div className="space-y-[1.1vh] font-body text-[1.3vw] leading-[1.35]">
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  <span className="font-semibold">87%</span> of Ontario fly-in communities have <span className="font-semibold">no competing grocery</span> — the highest of any province.
+                  <span className="font-semibold">87%</span> of Ontario fly-in communities have <span className="font-semibold">only one grocery store</span> — the highest of any province. Deer Lake is one of them.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  Northern food basket runs <span className="font-semibold">~$1,680 / month</span> for a family of four — vs. <span className="font-semibold">~$1,000</span> in southern Ontario.
+                  Feeding a family of four up here costs about <span className="font-semibold">$1,680 a month</span>. The same groceries in southern Ontario cost about <span className="font-semibold">$1,000</span>.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  Where there is no competition, only <span className="font-semibold">58¢</span> of every Nutrition North subsidy dollar reaches the shelf. The other <span className="font-semibold">42¢</span> stays with the retailer.
+                  With only one store, just <span className="font-semibold">58¢</span> of every Nutrition North dollar reaches the shelf — the other <span className="font-semibold">42¢</span> the store keeps.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  The North West Co. takes <span className="font-semibold">more than half</span> of the federal <span className="font-semibold">$144.8M</span> Nutrition North subsidy annually.
+                  The North West Company alone takes <span className="font-semibold">more than half</span> of the <span className="font-semibold">$144.8M</span> federal Nutrition North budget each year.
                 </div>
               </div>
             </div>
@@ -74,35 +80,35 @@ export default function ProblemOpportunity() {
             <div className="flex items-center gap-[0.8vw] mb-[2vh]">
               <div className="w-[0.6vw] h-[0.6vw] rounded-full" style={{ background: "#e9c8a8" }} />
               <div className="font-mono uppercase tracking-[0.22em] text-[1.1vw] opacity-80">
-                A community-owned alternative
+                A store the community owns
               </div>
             </div>
-            <div className="font-display text-[2.2vw] leading-tight mb-[2.5vh] font-medium">
-              Pass-through climbs. Margin recirculates. The store reads as the community's, not the retailer's.
+            <div className="font-display text-[1.95vw] leading-tight mb-[1.5vh] font-medium">
+              More of every dollar stays here. The store feels like yours. Jobs come with it.
             </div>
-            <div className="space-y-[1.8vh] font-body text-[1.45vw] leading-[1.4]">
+            <div className="space-y-[1.4vh] font-body text-[1.4vw] leading-[1.4]">
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  With a competing local store the pass-through climbs to <span className="font-semibold">~84¢ on the dollar</span> — a measured ~26¢ swing per subsidy dollar back to households.
+                  Once Deer Lake has a second store of its own, about <span className="font-semibold">84¢</span> of every Nutrition North dollar reaches the shelf instead of 58¢ — about <span className="font-semibold">26¢ more per dollar</span> coming back to families.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  Community-owned models are not theory. <span className="font-semibold">Arctic Co-operatives Ltd.</span> runs 32 community-owned stores; <span className="font-semibold">Mistissini's Meechum</span> anchors a 4,000-person Cree community.
+                  This isn't an experiment. <span className="font-semibold">Arctic Co-operatives Ltd.</span> already runs 32 community-owned stores up north, and <span className="font-semibold">Mistissini's Meechum</span> store serves a Cree community of 4,000 people.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  807 supplies at wholesale with no margin extracted from Deer Lake — covered by the same ~10% commission charged to producers across the network.
+                  807 sells groceries to the store at cost — we don't take a cut from Deer Lake. We get paid the same ~10% the producers on our route already pay us.
                 </div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  Local hire pipeline turns the store into <span className="font-semibold">17–20 community jobs</span> over two years. Replaces leakage with employment.
+                  Over two years the store grows into <span className="font-semibold">17–20 jobs for people who live in Deer Lake</span>.
                 </div>
               </div>
             </div>
