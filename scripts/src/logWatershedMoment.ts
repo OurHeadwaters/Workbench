@@ -23,9 +23,9 @@ const SUMMARY =
 
 const NOTES = `# The moment
 
-Robin shared the X-Buckets / Watershed vision video (https://x-buckets-vision.replit.app/xbuckets-video/) — a 44-second, 7-scene piece titled "Watershed — Channel Every Drop" — and named it as the headwaters that set this whole arc in motion. They reframed the practitioner operating plan and the Deer Lake co-op store plan as Zone 1+ artifacts in a permaculture sense, with Watershed as Zone 0: the personal household budget system on XRPL, grassroots, decentralized, anti-surveillance. Built explicitly NOT for the top-down climate-action class — built for the lineage of theorists (the professors who revolted, the class before) who had the framework but never had the tooling to ship it. Grounding the computers and the watershed under Meath with personal responsibility and decentralization.
+You shared the X-Buckets / Watershed vision video (https://x-buckets-vision.replit.app/xbuckets-video/) — a 44-second, 7-scene piece titled "Watershed — Channel Every Drop" — and named it as the headwaters that set this whole arc in motion. You reframed the practitioner operating plan and the Deer Lake co-op store plan as Zone 1+ artifacts in a permaculture sense, with Watershed as Zone 0: the personal household budget system on XRPL, grassroots, decentralized, anti-surveillance. Built explicitly NOT for the top-down climate-action class — built for the lineage of theorists (the professors who revolted, the class before) who had the framework but never had the tooling to ship it. Grounding the computers and the watershed under Meath with personal responsibility and decentralization.
 
-To map the seam between Watershed and the downstream work safely, I generated a 14-section context-handoff prompt and Robin pasted it into the Watershed project's AI agent. This entry archives the response that came back.
+To map the seam between Watershed and the downstream work safely, I generated a 14-section context-handoff prompt and you pasted it into the Watershed project's AI agent. This entry archives the response that came back.
 
 # What the briefing surfaces (read in order if revisiting)
 
