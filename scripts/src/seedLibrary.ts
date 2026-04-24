@@ -691,7 +691,7 @@ async function main() {
     const fileSize = buf.byteLength;
     const ct = guessContentType(filename);
     const ft = coarseFileType(ct, filename);
-    const storageRef = `attached:${filename}`;
+    const storageRef = `gcs:/public-objects/attached_assets/${filename}`;
 
     // Idempotency: skip if a row already exists with this content_hash.
     const existing = await db

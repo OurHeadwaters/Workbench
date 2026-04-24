@@ -111,7 +111,7 @@ export const GetLibraryStatsResponse = zod.object({
           .string()
           .nullish()
           .describe(
-            "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+            "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
           ),
         contentHash: zod.string().nullish(),
         fileSize: zod.number().nullish(),
@@ -257,7 +257,7 @@ export const ListLibraryEntriesResponse = zod.object({
         .string()
         .nullish()
         .describe(
-          "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+          "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
         ),
       contentHash: zod.string().nullish(),
       fileSize: zod.number().nullish(),
@@ -397,7 +397,7 @@ export const CreateLibraryEntryResponse = zod.object({
       .string()
       .nullish()
       .describe(
-        "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+        "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
       ),
     contentHash: zod.string().nullish(),
     fileSize: zod.number().nullish(),
@@ -506,7 +506,7 @@ export const GetLibraryEntryResponse = zod.object({
     .string()
     .nullish()
     .describe(
-      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
     ),
   contentHash: zod.string().nullish(),
   fileSize: zod.number().nullish(),
@@ -623,7 +623,7 @@ export const UpdateLibraryEntryResponse = zod.object({
     .string()
     .nullish()
     .describe(
-      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
     ),
   contentHash: zod.string().nullish(),
   fileSize: zod.number().nullish(),
@@ -735,7 +735,7 @@ export const CreateEntryFromUrlResponse = zod.object({
     .string()
     .nullish()
     .describe(
-      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
     ),
   contentHash: zod.string().nullish(),
   fileSize: zod.number().nullish(),
@@ -948,7 +948,7 @@ export const GetProducerResponse = zod
               .string()
               .nullish()
               .describe(
-                "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+                "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
               ),
             contentHash: zod.string().nullish(),
             fileSize: zod.number().nullish(),
@@ -1331,7 +1331,7 @@ export const SubmitShareLinkUploadResponse = zod.object({
       .string()
       .nullish()
       .describe(
-        "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+        "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
       ),
     contentHash: zod.string().nullish(),
     fileSize: zod.number().nullish(),
@@ -1438,7 +1438,7 @@ export const ListNeedsReviewResponseItem = zod.object({
     .string()
     .nullish()
     .describe(
-      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
     ),
   contentHash: zod.string().nullish(),
   fileSize: zod.number().nullish(),
@@ -1547,7 +1547,7 @@ export const GetRecentActivityResponseItem = zod.object({
     .string()
     .nullish()
     .describe(
-      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
     ),
   contentHash: zod.string().nullish(),
   fileSize: zod.number().nullish(),

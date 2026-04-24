@@ -1,8 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { Readable } from "stream";
-import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
-import path from "node:path";
 import {
   RequestUploadUrlBody,
   RequestUploadUrlResponse,
@@ -57,31 +54,6 @@ async function requireUploadAuth(
   res.status(401).json({ error: "Unauthorized" });
 }
 
-const ATTACHED_ASSETS_DIR = process.env.REPL_HOME
-  ? path.resolve(process.env.REPL_HOME, "attached_assets")
-  : path.resolve(process.cwd(), "../../attached_assets");
-
-function guessContentType(name: string): string {
-  const ext = name.toLowerCase().split(".").pop() || "";
-  switch (ext) {
-    case "pdf": return "application/pdf";
-    case "png": return "image/png";
-    case "jpg":
-    case "jpeg": return "image/jpeg";
-    case "gif": return "image/gif";
-    case "webp": return "image/webp";
-    case "svg": return "image/svg+xml";
-    case "xlsx": return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    case "xls": return "application/vnd.ms-excel";
-    case "docx": return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    case "doc": return "application/msword";
-    case "csv": return "text/csv";
-    case "txt": return "text/plain; charset=utf-8";
-    case "zip": return "application/zip";
-    default: return "application/octet-stream";
-  }
-}
-
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
 
@@ -129,33 +101,6 @@ router.get("/storage/public-objects/*filePath", async (req: Request, res: Respon
   try {
     const raw = req.params.filePath;
     const filePath = Array.isArray(raw) ? raw.join("/") : raw;
-
-    // Local-filesystem fallback for `attached_assets/...` — these files live in the
-    // project's attached_assets/ directory rather than object storage.
-    if (filePath.startsWith("attached_assets/")) {
-      const rel = filePath.slice("attached_assets/".length);
-      // Prevent directory traversal.
-      const abs = path.resolve(ATTACHED_ASSETS_DIR, rel);
-      if (!abs.startsWith(ATTACHED_ASSETS_DIR + path.sep) && abs !== ATTACHED_ASSETS_DIR) {
-        res.status(400).json({ error: "Invalid path" });
-        return;
-      }
-      try {
-        const s = await stat(abs);
-        if (!s.isFile()) {
-          res.status(404).json({ error: "File not found" });
-          return;
-        }
-        res.setHeader("Content-Type", guessContentType(abs));
-        res.setHeader("Content-Length", String(s.size));
-        res.setHeader("Cache-Control", "public, max-age=3600");
-        createReadStream(abs).pipe(res);
-        return;
-      } catch {
-        res.status(404).json({ error: "File not found" });
-        return;
-      }
-    }
 
     const file = await objectStorageService.searchPublicObject(filePath);
     if (!file) {

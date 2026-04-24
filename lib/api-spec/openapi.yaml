@@ -707,7 +707,7 @@ components:
         storageRef:
           type: string
           nullable: true
-          description: Object reference. May be `gcs:/objects/<id>` or `attached:<filename>` for pre-seeded assets.
+          description: Object reference. Format `gcs:<path>`, where `<path>` is either `/objects/<id>` (private) or `/public-objects/<path>` (publicly served).
         contentHash: { type: string, nullable: true }
         fileSize: { type: integer, nullable: true }
         contentType: { type: string, nullable: true }

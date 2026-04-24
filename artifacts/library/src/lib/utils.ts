@@ -19,9 +19,6 @@ export function entryAssetUrl(entry: LibraryEntry | undefined): string | null {
     if (entry.storageRef.startsWith("gcs:")) {
       return `/api/storage${entry.storageRef.replace(/^gcs:/, '')}`;
     }
-    if (entry.storageRef.startsWith("attached:")) {
-      return `/api/storage/public-objects/attached_assets/${entry.storageRef.replace(/^attached:/, '')}`;
-    }
   }
   return null;
 }

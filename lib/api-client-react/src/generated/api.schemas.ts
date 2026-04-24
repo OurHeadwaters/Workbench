@@ -126,7 +126,7 @@ export interface LibraryEntry {
   sourceUrl?: string | null;
   screenshotUrl?: string | null;
   screenshotObjectPath?: string | null;
-  /** Object reference. May be `gcs:/objects/<id>` or `attached:<filename>` for pre-seeded assets. */
+  /** Object reference. Format `gcs:<path>`, where `<path>` is either `/objects/<id>` (private) or `/public-objects/<path>` (publicly served). */
   storageRef?: string | null;
   contentHash?: string | null;
   fileSize?: number | null;
