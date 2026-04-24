@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "Zv5Rvad3STpUUDLpHrWNg"
+uri = "file://artifacts/deer-lake-store-plan/public/hero-boreal.png"
+type = "image"
+title = "boreal hero"
