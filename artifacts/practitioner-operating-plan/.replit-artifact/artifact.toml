@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/practitioner-operating-plan/"
+title = "Practitioner Operating Plan"
+version = "1.0.0"
+id = "artifacts/practitioner-operating-plan"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/practitioner-operating-plan/" ]
+localPort = 20957
+
+[services.development]
+run = "pnpm --filter @workspace/practitioner-operating-plan run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/practitioner-operating-plan", "run", "build" ]
+publicDir = "artifacts/practitioner-operating-plan/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20957"
+BASE_PATH = "/practitioner-operating-plan/"

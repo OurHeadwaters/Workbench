@@ -1,0 +1,170 @@
+[
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b01",
+    "position": 1,
+    "filepath": "src/pages/slides/Cover.tsx",
+    "title": "Cover",
+    "description": "Title slide for the Practitioner Operating Plan — the team and budget that make the yes sustainable.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b02",
+    "position": 2,
+    "filepath": "src/pages/slides/Inflection.tsx",
+    "title": "Why this matters",
+    "description": "Naming the contract as the inflection point and the question it forces — what does the yes have to look like to stay a yes?",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b03",
+    "position": 3,
+    "filepath": "src/pages/slides/PartIDivider.tsx",
+    "title": "Part I — The life I'm building",
+    "description": "Section divider entering the private voice: non-negotiables, daily rhythm, weekly rhythm, what a great week looks like.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b04",
+    "position": 4,
+    "filepath": "src/pages/slides/NonNegotiables.tsx",
+    "title": "The non-negotiables",
+    "description": "Five things that don't move: phone-free until 10am, 7–10am with the kids, work block 10:30 to 4/6, dinner already prepared, weekends mostly off.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b05",
+    "position": 5,
+    "filepath": "src/pages/slides/DailyRhythm.tsx",
+    "title": "Daily rhythm — summer vs winter",
+    "description": "Side-by-side daily rhythm for summer and winter, because winter is the part that breaks plans.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b06",
+    "position": 6,
+    "filepath": "src/pages/slides/WeeklyRhythm.tsx",
+    "title": "Weekly rhythm and check-ins",
+    "description": "The 11am and 4pm hand-offs with the on-site Dryden manager and the optional weekend deep-work block.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b07",
+    "position": 7,
+    "filepath": "src/pages/slides/GreatWeek.tsx",
+    "title": "What a great week looks like",
+    "description": "A narrative slide reflecting the practitioner's own words back to them — three tests for whether the week was actually good.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b08",
+    "position": 8,
+    "filepath": "src/pages/slides/PartIIDivider.tsx",
+    "title": "Part II — The team that protects the calendar",
+    "description": "Section divider entering the operating voice: five roles, the budget, and the winter contingency.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b09",
+    "position": 9,
+    "filepath": "src/pages/slides/RoleOpsManager.tsx",
+    "title": "Operations Manager (Dryden)",
+    "description": "The phone-holder and time-protector, on-site in Dryden, dual-purpose for 807 ops and Deer Lake aggregation/distribution. 40 hrs/wk @ $40/hr ≈ $7,000/mo.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0a",
+    "position": 10,
+    "filepath": "src/pages/slides/RoleBookkeeper.tsx",
+    "title": "Bookkeeper / Agency Admin",
+    "description": "Invoicing, contracts, CRA, the back office of the agency — built once, used for years. 10 hrs/wk @ $40/hr ≈ $1,700/mo.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0b",
+    "position": 11,
+    "filepath": "src/pages/slides/RoleHousecleaner.tsx",
+    "title": "Housecleaner",
+    "description": "Recurring weekly clean — the mid-week mess reset taken off the parent and put on the schedule. 4 hrs/wk @ $30/hr ≈ $500/mo.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0c",
+    "position": 12,
+    "filepath": "src/pages/slides/RoleTutor.tsx",
+    "title": "Tutor",
+    "description": "Math, reading, structure — winter-weighted (~10 hrs/wk Nov–Apr, ~2 hrs/wk in summer). ≈ $900/mo annualised.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0d",
+    "position": 13,
+    "filepath": "src/pages/slides/RoleHandyman.tsx",
+    "title": "Handyman-Housekeeper combo",
+    "description": "Practical-first, parenting-intent second, framed as 'consider, don't commit' with explicit vetting requirements. 5 hrs/wk @ $30/hr ≈ $700/mo if engaged.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
+    "position": 14,
+    "filepath": "src/pages/slides/Budget.tsx",
+    "title": "Monthly budget — three contract sizes",
+    "description": "Team baseline ($10,800 → $11k loaded) reconciled against $20k, $25k, and $30k contracts — team + take-home + agency reinvestment equals the contract size on each row.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
+    "position": 15,
+    "filepath": "src/pages/slides/Winter.tsx",
+    "title": "Winter contingency",
+    "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b10",
+    "position": 16,
+    "filepath": "src/pages/slides/AgencyVision.tsx",
+    "title": "Agency vision",
+    "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
+    "position": 17,
+    "filepath": "src/pages/slides/PartIVDivider.tsx",
+    "title": "Part IV — For Dad",
+    "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
+    "position": 18,
+    "filepath": "src/pages/slides/CaseForRate.tsx",
+    "title": "The case for the rate",
+    "description": "What $25k/month actually buys (operating system, not a person) versus what 'lean' actually costs (the contract).",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
+    "position": 19,
+    "filepath": "src/pages/slides/CaseForTeam.tsx",
+    "title": "The case for the team",
+    "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
+    "position": 20,
+    "filepath": "src/pages/slides/ValueDelivered.tsx",
+    "title": "Value delivered",
+    "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, reusable coordinator infrastructure, and base stability.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
+    "position": 21,
+    "filepath": "src/pages/slides/Closing.tsx",
+    "title": "Naming the deal",
+    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $25k/mo on a 12-month engagement reviewed at month six.",
+    "speakerNotes": ""
+  }
+]

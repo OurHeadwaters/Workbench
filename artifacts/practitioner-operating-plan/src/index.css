@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: var(--slide-primary);
+  --color-accent: var(--slide-accent);
+  --color-bg: var(--slide-bg);
+  --color-text: var(--slide-text);
+  --color-muted: var(--slide-muted);
+  --color-paper: var(--slide-paper);
+  --color-rule: var(--slide-rule);
+  --color-ink: var(--slide-ink);
+  --font-display: var(--font-display-family);
+  --font-body: var(--font-body-family);
+  --font-mono: var(--font-mono-family);
+}
+
+:root {
+  /* Same boreal-cream palette as the Deer Lake deck so the two read as siblings */
+  --slide-primary: #1f3d2e;
+  --slide-accent: #b85a3e;
+  --slide-bg: #f4ede0;
+  --slide-paper: #ebe2d0;
+  --slide-text: #18201b;
+  --slide-muted: #6b7665;
+  --slide-rule: #c8bfa7;
+  --slide-ink: #2a2520;
+  --font-display-family: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono-family: "IBM Plex Mono", "Menlo", monospace;
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--slide-bg);
+  color: var(--slide-text);
+  font-family: var(--font-body-family);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide-viewer {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* One-pager: looks clean on screen, prints cleanly to a single letter page */
+.onepager-screen {
+  background: #d6cdb8;
+  min-height: 100vh;
+  width: 100%;
+  padding: 4vh 0;
+  display: flex;
+  justify-content: center;
+}
+
+.onepager-sheet {
+  width: 8.5in;
+  min-height: 11in;
+  background: #faf6ec;
+  color: var(--slide-ink);
+  padding: 0.55in 0.6in;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-body-family);
+  box-sizing: border-box;
+}
+
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.4in;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .onepager-screen {
+    background: #ffffff !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  .onepager-sheet {
+    width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+}
