@@ -25,3 +25,23 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+
+## Artifacts
+
+- **`artifacts/api-server`** — Express 5 API. Mounts `/api/library` (CRUD + stats/recent/from-url/share-links/needs-review) and `/api/storage` (presigned uploads + public-objects). The public-objects route has a local-filesystem fallback for `attached_assets/<filename>` so seeded entries can be served without re-uploading to object storage.
+- **`artifacts/library`** — React + Vite "Northern Food Systems Research Library" at `/library/`. Drag-and-drop research library for Robin's NWO food-systems work (Deer Lake co-op store, LFIF cold-transport pilot, 807/NWO Hub). Features: SHA-256 file dedup, paste-URL ingestion (Microlink for metadata + screenshot, cheerio fallback), tokenized contributor share-links, needs-review queue, search/filter, stable per-entry URLs, public `/share/:token` upload portal.
+- **`artifacts/deer-lake-store-plan`** — Slides deck for the Deer Lake store operational plan.
+- **`artifacts/mockup-sandbox`** — Internal design canvas.
+
+## Library schema
+
+Drizzle tables in `lib/db/src/schema/library.ts`:
+- `subjects`, `project_buckets`, `producers`, `contributors` — taxonomies
+- `library_entries` (unique partial idx on `content_hash`), `entry_subjects`, `entry_buckets`
+- `share_links` — tokenized contributor upload portals
+
+## Seed
+
+`pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` — idempotent seed that catalogues all 88 files in `attached_assets/`, creates the producer/subject/bucket/contributor taxonomies, and provisions a sample share-link for Jen Springett. Producer notes:
+- `Crazy Good Spices` is flagged `uncertain` (operating status unknown)
+- `Shumaka Dust` substitutes for it in current planning

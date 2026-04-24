@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: Storage
+    description: Object storage upload and serving endpoints.
+  - name: library
+    description: Northern Food Systems Research Library — entries, producers, subjects, project buckets, contributors, and tokenized share links.
 paths:
   /healthz:
     get:
@@ -24,6 +28,516 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /storage/uploads/request-url:
+    post:
+      tags: [Storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      description: |
+        Returns a presigned GCS URL for direct upload. The client sends JSON
+        metadata here, then uploads the file directly to the returned URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadUrlRequest'
+      responses:
+        '200':
+          description: Presigned upload URL generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadUrlResponse'
+        '400':
+          description: Missing or invalid required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '500':
+          description: Failed to generate upload URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /storage/public-objects/{filePath}:
+    get:
+      tags: [Storage]
+      operationId: getPublicObject
+      summary: Serve a public asset from PUBLIC_OBJECT_SEARCH_PATHS
+      parameters:
+        - name: filePath
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Relative file path within the public search paths.
+      responses:
+        '200':
+          description: Object content streamed with correct Content-Type.
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /storage/objects/{objectPath}:
+    get:
+      tags: [Storage]
+      operationId: getStorageObject
+      summary: Serve an object entity from PRIVATE_OBJECT_DIR
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object content streamed with correct Content-Type.
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Object not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/stats:
+    get:
+      tags: [library]
+      operationId: getLibraryStats
+      summary: Library overview stats
+      description: Counts of entries by status, top subjects, top producers, top buckets, recent activity.
+      responses:
+        '200':
+          description: Library stats.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryStats'
+
+  /library/entries:
+    get:
+      tags: [library]
+      operationId: listLibraryEntries
+      summary: List library entries
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: subjectSlug
+          schema: { type: string }
+          description: Filter by subject slug. Repeat to combine.
+        - in: query
+          name: producerSlug
+          schema: { type: string }
+        - in: query
+          name: bucketSlug
+          schema: { type: string }
+        - in: query
+          name: contributorId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [published, needs_review]
+        - in: query
+          name: kind
+          schema:
+            type: string
+            enum: [file, web_source]
+        - in: query
+          name: fileType
+          schema:
+            type: string
+            description: Coarse file type (pdf, image, doc, sheet, text, other)
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, default: 0 }
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [recent, title, producer]
+            default: recent
+      responses:
+        '200':
+          description: Entries page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntryPage'
+    post:
+      tags: [library]
+      operationId: createLibraryEntry
+      summary: Create or finalize a library entry (after a file upload)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLibraryEntryRequest'
+      responses:
+        '200':
+          description: Created or matched existing entry (on duplicate hash).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntryUpsertResult'
+        '400':
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/entries/{id}:
+    get:
+      tags: [library]
+      operationId: getLibraryEntry
+      summary: Get a library entry by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Entry detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntry'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      tags: [library]
+      operationId: updateLibraryEntry
+      summary: Update an entry (edit summary, retag, approve from review)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLibraryEntryRequest'
+      responses:
+        '200':
+          description: Updated entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntry'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    delete:
+      tags: [library]
+      operationId: deleteLibraryEntry
+      summary: Delete an entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Deleted.
+
+  /library/entries/from-url:
+    post:
+      tags: [library]
+      operationId: createEntryFromUrl
+      summary: Paste a website URL — create a web-source entry with extracted metadata and screenshot.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEntryFromUrlRequest'
+      responses:
+        '200':
+          description: Created entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntry'
+        '400':
+          description: Invalid URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/producers:
+    get:
+      tags: [library]
+      operationId: listProducers
+      summary: List producers / sources
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200':
+          description: Producers list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producer'
+    post:
+      tags: [library]
+      operationId: createProducer
+      summary: Create a producer / source profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProducerRequest'
+      responses:
+        '200':
+          description: Created producer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producer'
+
+  /library/producers/{slug}:
+    get:
+      tags: [library]
+      operationId: getProducer
+      summary: Get producer by slug, with related entries
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Producer detail with entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProducerDetail'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/subjects:
+    get:
+      tags: [library]
+      operationId: listSubjects
+      summary: List subject tags with counts
+      responses:
+        '200':
+          description: Subjects list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubjectWithCount'
+
+  /library/buckets:
+    get:
+      tags: [library]
+      operationId: listProjectBuckets
+      summary: List project buckets with counts
+      responses:
+        '200':
+          description: Project buckets list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectBucketWithCount'
+
+  /library/contributors:
+    get:
+      tags: [library]
+      operationId: listContributors
+      summary: List contributors
+      responses:
+        '200':
+          description: Contributors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contributor'
+    post:
+      tags: [library]
+      operationId: createContributor
+      summary: Create a contributor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContributorRequest'
+      responses:
+        '200':
+          description: Created contributor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contributor'
+
+  /library/share-links:
+    get:
+      tags: [library]
+      operationId: listShareLinks
+      summary: List tokenized share links the owner has generated
+      responses:
+        '200':
+          description: Share links.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShareLinkSummary'
+    post:
+      tags: [library]
+      operationId: createShareLink
+      summary: Generate a tokenized contributor upload link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShareLinkRequest'
+      responses:
+        '200':
+          description: Created share link.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareLink'
+
+  /library/share-links/by-token/{token}:
+    get:
+      tags: [library]
+      operationId: getShareLinkByToken
+      summary: Public — resolve a share-link token (contributor lands here)
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Public share-link info (no PII beyond contributor display name).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicShareLink'
+        '404':
+          description: Not found or revoked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/share-links/by-token/{token}/uploads:
+    post:
+      tags: [library]
+      operationId: submitShareLinkUpload
+      summary: Public — submit a file uploaded via share link (lands in needs_review queue)
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLibraryEntryRequest'
+      responses:
+        '200':
+          description: Created entry in needs_review.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryEntryUpsertResult'
+        '404':
+          description: Not found or revoked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /library/needs-review:
+    get:
+      tags: [library]
+      operationId: listNeedsReview
+      summary: List entries waiting for owner review
+      responses:
+        '200':
+          description: Needs-review queue.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryEntry'
+
+  /library/recent:
+    get:
+      tags: [library]
+      operationId: getRecentActivity
+      summary: Most recently added or updated entries (for dashboard)
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 50, default: 8 }
+      responses:
+        '200':
+          description: Recent entries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryEntry'
+
 components:
   schemas:
     HealthStatus:
@@ -33,4 +547,423 @@ components:
           type: string
       required:
         - status
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        size:
+          type: integer
+          minimum: 1
+        contentType:
+          type: string
+          minLength: 1
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+        objectPath:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/UploadUrlRequest'
 
+    Subject:
+      type: object
+      required: [id, slug, name]
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        color: { type: string, nullable: true }
+    SubjectWithCount:
+      allOf:
+        - $ref: '#/components/schemas/Subject'
+        - type: object
+          required: [entryCount]
+          properties:
+            entryCount: { type: integer }
+
+    ProjectBucket:
+      type: object
+      required: [id, slug, name]
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        color: { type: string, nullable: true }
+    ProjectBucketWithCount:
+      allOf:
+        - $ref: '#/components/schemas/ProjectBucket'
+        - type: object
+          required: [entryCount]
+          properties:
+            entryCount: { type: integer }
+
+    Producer:
+      type: object
+      required: [id, slug, name]
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        name: { type: string }
+        kind:
+          type: string
+          enum: [producer, distributor, study, organization, other]
+          nullable: true
+        description: { type: string, nullable: true }
+        websiteUrl: { type: string, nullable: true }
+        screenshotUrl: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        location: { type: string, nullable: true }
+        statusFlag:
+          type: string
+          nullable: true
+          description: e.g. "operating", "uncertain", "wound down"
+        statusNotes: { type: string, nullable: true }
+        substituteForProducerSlug:
+          type: string
+          nullable: true
+          description: e.g. Shumaka Dust substitutes for Crazy Good Spices
+        entryCount: { type: integer, default: 0 }
+    ProducerDetail:
+      allOf:
+        - $ref: '#/components/schemas/Producer'
+        - type: object
+          properties:
+            entries:
+              type: array
+              items:
+                $ref: '#/components/schemas/LibraryEntry'
+
+    CreateProducerRequest:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1 }
+        slug: { type: string }
+        kind:
+          type: string
+          enum: [producer, distributor, study, organization, other]
+        description: { type: string }
+        websiteUrl: { type: string }
+        contactEmail: { type: string }
+        contactPhone: { type: string }
+        location: { type: string }
+        statusFlag: { type: string }
+        statusNotes: { type: string }
+        substituteForProducerSlug: { type: string }
+
+    Contributor:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        organization: { type: string, nullable: true }
+        email: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        entryCount: { type: integer, default: 0 }
+    CreateContributorRequest:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1 }
+        organization: { type: string }
+        email: { type: string }
+        notes: { type: string }
+
+    LibraryEntry:
+      type: object
+      required: [id, kind, title, status, createdAt, updatedAt, subjects, buckets]
+      properties:
+        id: { type: string, format: uuid }
+        kind:
+          type: string
+          enum: [file, web_source]
+        title: { type: string }
+        summary: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        status:
+          type: string
+          enum: [published, needs_review]
+        sourceUrl: { type: string, nullable: true }
+        screenshotUrl: { type: string, nullable: true }
+        screenshotObjectPath: { type: string, nullable: true }
+        # File-specific
+        storageRef:
+          type: string
+          nullable: true
+          description: Object reference. May be `gcs:/objects/<id>` or `attached:<filename>` for pre-seeded assets.
+        contentHash: { type: string, nullable: true }
+        fileSize: { type: integer, nullable: true }
+        contentType: { type: string, nullable: true }
+        originalFilename: { type: string, nullable: true }
+        fileType:
+          type: string
+          nullable: true
+          description: Coarse type (pdf, image, doc, sheet, text, other)
+        # Extracted fields
+        contactInfo:
+          type: object
+          additionalProperties: true
+          nullable: true
+        prices:
+          type: object
+          additionalProperties: true
+          nullable: true
+        dates:
+          type: object
+          additionalProperties: true
+          nullable: true
+        geography:
+          type: object
+          additionalProperties: true
+          nullable: true
+        statusFlag: { type: string, nullable: true }
+        # Relations
+        producer:
+          allOf:
+            - $ref: '#/components/schemas/Producer'
+          nullable: true
+        contributor:
+          allOf:
+            - $ref: '#/components/schemas/Contributor'
+          nullable: true
+        subjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+        buckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectBucket'
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    LibraryEntryPage:
+      type: object
+      required: [entries, total]
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LibraryEntry'
+        total: { type: integer }
+
+    CreateLibraryEntryRequest:
+      type: object
+      required: [kind, title]
+      properties:
+        kind:
+          type: string
+          enum: [file, web_source]
+        title: { type: string, minLength: 1 }
+        summary: { type: string }
+        notes: { type: string }
+        # File fields
+        storageRef: { type: string }
+        objectPath:
+          type: string
+          description: Returned from /storage/uploads/request-url. Server normalizes to a storageRef.
+        contentHash: { type: string, description: "SHA-256 hex digest of the file. Used for duplicate detection." }
+        fileSize: { type: integer }
+        contentType: { type: string }
+        originalFilename: { type: string }
+        # Web-source fields
+        sourceUrl: { type: string }
+        screenshotUrl: { type: string }
+        # Extracted
+        contactInfo:
+          type: object
+          additionalProperties: true
+        prices:
+          type: object
+          additionalProperties: true
+        dates:
+          type: object
+          additionalProperties: true
+        geography:
+          type: object
+          additionalProperties: true
+        statusFlag: { type: string }
+        # Relations
+        producerId: { type: string, format: uuid }
+        producerSlug: { type: string }
+        contributorId: { type: string, format: uuid }
+        subjectSlugs:
+          type: array
+          items: { type: string }
+        bucketSlugs:
+          type: array
+          items: { type: string }
+        status:
+          type: string
+          enum: [published, needs_review]
+
+    LibraryEntryUpsertResult:
+      type: object
+      required: [entry, duplicate]
+      properties:
+        entry:
+          $ref: '#/components/schemas/LibraryEntry'
+        duplicate:
+          type: boolean
+          description: True if a file with the same content hash already existed; the existing entry is returned.
+
+    UpdateLibraryEntryRequest:
+      type: object
+      properties:
+        title: { type: string }
+        summary: { type: string }
+        notes: { type: string }
+        statusFlag: { type: string }
+        contactInfo:
+          type: object
+          additionalProperties: true
+        prices:
+          type: object
+          additionalProperties: true
+        dates:
+          type: object
+          additionalProperties: true
+        geography:
+          type: object
+          additionalProperties: true
+        producerId: { type: string, format: uuid, nullable: true }
+        producerSlug: { type: string, nullable: true }
+        subjectSlugs:
+          type: array
+          items: { type: string }
+        bucketSlugs:
+          type: array
+          items: { type: string }
+        status:
+          type: string
+          enum: [published, needs_review]
+
+    CreateEntryFromUrlRequest:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string, format: uri }
+        producerSlug: { type: string }
+        subjectSlugs:
+          type: array
+          items: { type: string }
+        bucketSlugs:
+          type: array
+          items: { type: string }
+        notes: { type: string }
+
+    CreateShareLinkRequest:
+      type: object
+      required: [contributorId]
+      properties:
+        contributorId: { type: string, format: uuid }
+        label: { type: string }
+        presetSubjectSlugs:
+          type: array
+          items: { type: string }
+        presetBucketSlugs:
+          type: array
+          items: { type: string }
+        expiresAt: { type: string, format: date-time }
+
+    ShareLink:
+      type: object
+      required: [id, token, contributor, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        token: { type: string }
+        label: { type: string, nullable: true }
+        contributor:
+          $ref: '#/components/schemas/Contributor'
+        presetSubjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+        presetBuckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectBucket'
+        url:
+          type: string
+          description: Full public URL the owner can copy and share.
+        uploadCount: { type: integer, default: 0 }
+        revokedAt: { type: string, format: date-time, nullable: true }
+        expiresAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    ShareLinkSummary:
+      allOf:
+        - $ref: '#/components/schemas/ShareLink'
+
+    PublicShareLink:
+      type: object
+      required: [token, contributorName]
+      properties:
+        token: { type: string }
+        label: { type: string, nullable: true }
+        contributorName: { type: string }
+        ownerLabel:
+          type: string
+          description: e.g. "Northern Food Systems Research Library"
+        presetSubjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+        presetBuckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectBucket'
+
+    LibraryStatsCount:
+      type: object
+      required: [slug, name, count]
+      properties:
+        slug: { type: string }
+        name: { type: string }
+        count: { type: integer }
+        color: { type: string, nullable: true }
+
+    LibraryStats:
+      type: object
+      required: [totalEntries, totalProducers, totalSubjects, totalBuckets, needsReviewCount, fileCount, webSourceCount, topSubjects, topProducers, bucketBreakdown]
+      properties:
+        totalEntries: { type: integer }
+        totalProducers: { type: integer }
+        totalSubjects: { type: integer }
+        totalBuckets: { type: integer }
+        needsReviewCount: { type: integer }
+        fileCount: { type: integer }
+        webSourceCount: { type: integer }
+        topSubjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/LibraryStatsCount'
+        topProducers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LibraryStatsCount'
+        bucketBreakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/LibraryStatsCount'
+        recentEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LibraryEntry'

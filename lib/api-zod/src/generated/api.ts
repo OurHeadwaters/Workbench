@@ -14,3 +14,1615 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Returns a presigned GCS URL for direct upload. The client sends JSON
+metadata here, then uploads the file directly to the returned URL.
+
+ * @summary Request a presigned URL for file upload
+ */
+
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string().min(1),
+  size: zod.number().min(1),
+  contentType: zod.string().min(1),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url(),
+  objectPath: zod.string(),
+  metadata: zod
+    .object({
+      name: zod.string().min(1),
+      size: zod.number().min(1),
+      contentType: zod.string().min(1),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Serve a public asset from PUBLIC_OBJECT_SEARCH_PATHS
+ */
+export const GetPublicObjectParams = zod.object({
+  filePath: zod.coerce
+    .string()
+    .describe("Relative file path within the public search paths."),
+});
+
+/**
+ * @summary Serve an object entity from PRIVATE_OBJECT_DIR
+ */
+export const GetStorageObjectParams = zod.object({
+  objectPath: zod.coerce.string(),
+});
+
+/**
+ * Counts of entries by status, top subjects, top producers, top buckets, recent activity.
+ * @summary Library overview stats
+ */
+export const getLibraryStatsResponseRecentEntriesItemProducerOneEntryCountDefault = 0;
+export const getLibraryStatsResponseRecentEntriesItemContributorOneEntryCountDefault = 0;
+
+export const GetLibraryStatsResponse = zod.object({
+  totalEntries: zod.number(),
+  totalProducers: zod.number(),
+  totalSubjects: zod.number(),
+  totalBuckets: zod.number(),
+  needsReviewCount: zod.number(),
+  fileCount: zod.number(),
+  webSourceCount: zod.number(),
+  topSubjects: zod.array(
+    zod.object({
+      slug: zod.string(),
+      name: zod.string(),
+      count: zod.number(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  topProducers: zod.array(
+    zod.object({
+      slug: zod.string(),
+      name: zod.string(),
+      count: zod.number(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  bucketBreakdown: zod.array(
+    zod.object({
+      slug: zod.string(),
+      name: zod.string(),
+      count: zod.number(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  recentEntries: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        kind: zod.enum(["file", "web_source"]),
+        title: zod.string(),
+        summary: zod.string().nullish(),
+        notes: zod.string().nullish(),
+        status: zod.enum(["published", "needs_review"]),
+        sourceUrl: zod.string().nullish(),
+        screenshotUrl: zod.string().nullish(),
+        screenshotObjectPath: zod.string().nullish(),
+        storageRef: zod
+          .string()
+          .nullish()
+          .describe(
+            "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+          ),
+        contentHash: zod.string().nullish(),
+        fileSize: zod.number().nullish(),
+        contentType: zod.string().nullish(),
+        originalFilename: zod.string().nullish(),
+        fileType: zod
+          .string()
+          .nullish()
+          .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+        contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+        prices: zod.record(zod.string(), zod.unknown()).nullish(),
+        dates: zod.record(zod.string(), zod.unknown()).nullish(),
+        geography: zod.record(zod.string(), zod.unknown()).nullish(),
+        statusFlag: zod.string().nullish(),
+        producer: zod
+          .object({
+            id: zod.string().uuid(),
+            slug: zod.string(),
+            name: zod.string(),
+            kind: zod
+              .enum([
+                "producer",
+                "distributor",
+                "study",
+                "organization",
+                "other",
+              ])
+              .nullish(),
+            description: zod.string().nullish(),
+            websiteUrl: zod.string().nullish(),
+            screenshotUrl: zod.string().nullish(),
+            contactEmail: zod.string().nullish(),
+            contactPhone: zod.string().nullish(),
+            location: zod.string().nullish(),
+            statusFlag: zod
+              .string()
+              .nullish()
+              .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+            statusNotes: zod.string().nullish(),
+            substituteForProducerSlug: zod
+              .string()
+              .nullish()
+              .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+            entryCount: zod
+              .number()
+              .default(
+                getLibraryStatsResponseRecentEntriesItemProducerOneEntryCountDefault,
+              ),
+          })
+          .nullish(),
+        contributor: zod
+          .object({
+            id: zod.string().uuid(),
+            name: zod.string(),
+            organization: zod.string().nullish(),
+            email: zod.string().nullish(),
+            notes: zod.string().nullish(),
+            entryCount: zod
+              .number()
+              .default(
+                getLibraryStatsResponseRecentEntriesItemContributorOneEntryCountDefault,
+              ),
+          })
+          .nullish(),
+        subjects: zod.array(
+          zod.object({
+            id: zod.string().uuid(),
+            slug: zod.string(),
+            name: zod.string(),
+            description: zod.string().nullish(),
+            color: zod.string().nullish(),
+          }),
+        ),
+        buckets: zod.array(
+          zod.object({
+            id: zod.string().uuid(),
+            slug: zod.string(),
+            name: zod.string(),
+            description: zod.string().nullish(),
+            color: zod.string().nullish(),
+          }),
+        ),
+        createdAt: zod.coerce.date(),
+        updatedAt: zod.coerce.date(),
+      }),
+    )
+    .optional(),
+});
+
+/**
+ * @summary List library entries
+ */
+export const listLibraryEntriesQueryLimitDefault = 50;
+export const listLibraryEntriesQueryLimitMax = 200;
+
+export const listLibraryEntriesQueryOffsetDefault = 0;
+export const listLibraryEntriesQueryOffsetMin = 0;
+
+export const listLibraryEntriesQuerySortDefault = `recent`;
+
+export const ListLibraryEntriesQueryParams = zod.object({
+  search: zod.coerce.string().optional(),
+  subjectSlug: zod.coerce
+    .string()
+    .optional()
+    .describe("Filter by subject slug. Repeat to combine."),
+  producerSlug: zod.coerce.string().optional(),
+  bucketSlug: zod.coerce.string().optional(),
+  contributorId: zod.coerce.string().uuid().optional(),
+  status: zod.enum(["published", "needs_review"]).optional(),
+  kind: zod.enum(["file", "web_source"]).optional(),
+  fileType: zod.coerce.string().optional(),
+  limit: zod.coerce
+    .number()
+    .min(1)
+    .max(listLibraryEntriesQueryLimitMax)
+    .default(listLibraryEntriesQueryLimitDefault),
+  offset: zod.coerce
+    .number()
+    .min(listLibraryEntriesQueryOffsetMin)
+    .default(listLibraryEntriesQueryOffsetDefault),
+  sort: zod
+    .enum(["recent", "title", "producer"])
+    .default(listLibraryEntriesQuerySortDefault),
+});
+
+export const listLibraryEntriesResponseEntriesItemProducerOneEntryCountDefault = 0;
+export const listLibraryEntriesResponseEntriesItemContributorOneEntryCountDefault = 0;
+
+export const ListLibraryEntriesResponse = zod.object({
+  entries: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      kind: zod.enum(["file", "web_source"]),
+      title: zod.string(),
+      summary: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      status: zod.enum(["published", "needs_review"]),
+      sourceUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      screenshotObjectPath: zod.string().nullish(),
+      storageRef: zod
+        .string()
+        .nullish()
+        .describe(
+          "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+        ),
+      contentHash: zod.string().nullish(),
+      fileSize: zod.number().nullish(),
+      contentType: zod.string().nullish(),
+      originalFilename: zod.string().nullish(),
+      fileType: zod
+        .string()
+        .nullish()
+        .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+      contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+      prices: zod.record(zod.string(), zod.unknown()).nullish(),
+      dates: zod.record(zod.string(), zod.unknown()).nullish(),
+      geography: zod.record(zod.string(), zod.unknown()).nullish(),
+      statusFlag: zod.string().nullish(),
+      producer: zod
+        .object({
+          id: zod.string().uuid(),
+          slug: zod.string(),
+          name: zod.string(),
+          kind: zod
+            .enum(["producer", "distributor", "study", "organization", "other"])
+            .nullish(),
+          description: zod.string().nullish(),
+          websiteUrl: zod.string().nullish(),
+          screenshotUrl: zod.string().nullish(),
+          contactEmail: zod.string().nullish(),
+          contactPhone: zod.string().nullish(),
+          location: zod.string().nullish(),
+          statusFlag: zod
+            .string()
+            .nullish()
+            .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+          statusNotes: zod.string().nullish(),
+          substituteForProducerSlug: zod
+            .string()
+            .nullish()
+            .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+          entryCount: zod
+            .number()
+            .default(
+              listLibraryEntriesResponseEntriesItemProducerOneEntryCountDefault,
+            ),
+        })
+        .nullish(),
+      contributor: zod
+        .object({
+          id: zod.string().uuid(),
+          name: zod.string(),
+          organization: zod.string().nullish(),
+          email: zod.string().nullish(),
+          notes: zod.string().nullish(),
+          entryCount: zod
+            .number()
+            .default(
+              listLibraryEntriesResponseEntriesItemContributorOneEntryCountDefault,
+            ),
+        })
+        .nullish(),
+      subjects: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          slug: zod.string(),
+          name: zod.string(),
+          description: zod.string().nullish(),
+          color: zod.string().nullish(),
+        }),
+      ),
+      buckets: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          slug: zod.string(),
+          name: zod.string(),
+          description: zod.string().nullish(),
+          color: zod.string().nullish(),
+        }),
+      ),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+    }),
+  ),
+  total: zod.number(),
+});
+
+/**
+ * @summary Create or finalize a library entry (after a file upload)
+ */
+
+export const CreateLibraryEntryBody = zod.object({
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string().min(1),
+  summary: zod.string().optional(),
+  notes: zod.string().optional(),
+  storageRef: zod.string().optional(),
+  objectPath: zod
+    .string()
+    .optional()
+    .describe(
+      "Returned from \/storage\/uploads\/request-url. Server normalizes to a storageRef.",
+    ),
+  contentHash: zod
+    .string()
+    .optional()
+    .describe("SHA-256 hex digest of the file. Used for duplicate detection."),
+  fileSize: zod.number().optional(),
+  contentType: zod.string().optional(),
+  originalFilename: zod.string().optional(),
+  sourceUrl: zod.string().optional(),
+  screenshotUrl: zod.string().optional(),
+  contactInfo: zod.record(zod.string(), zod.unknown()).optional(),
+  prices: zod.record(zod.string(), zod.unknown()).optional(),
+  dates: zod.record(zod.string(), zod.unknown()).optional(),
+  geography: zod.record(zod.string(), zod.unknown()).optional(),
+  statusFlag: zod.string().optional(),
+  producerId: zod.string().uuid().optional(),
+  producerSlug: zod.string().optional(),
+  contributorId: zod.string().uuid().optional(),
+  subjectSlugs: zod.array(zod.string()).optional(),
+  bucketSlugs: zod.array(zod.string()).optional(),
+  status: zod.enum(["published", "needs_review"]).optional(),
+});
+
+export const createLibraryEntryResponseEntryProducerOneEntryCountDefault = 0;
+export const createLibraryEntryResponseEntryContributorOneEntryCountDefault = 0;
+
+export const CreateLibraryEntryResponse = zod.object({
+  entry: zod.object({
+    id: zod.string().uuid(),
+    kind: zod.enum(["file", "web_source"]),
+    title: zod.string(),
+    summary: zod.string().nullish(),
+    notes: zod.string().nullish(),
+    status: zod.enum(["published", "needs_review"]),
+    sourceUrl: zod.string().nullish(),
+    screenshotUrl: zod.string().nullish(),
+    screenshotObjectPath: zod.string().nullish(),
+    storageRef: zod
+      .string()
+      .nullish()
+      .describe(
+        "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      ),
+    contentHash: zod.string().nullish(),
+    fileSize: zod.number().nullish(),
+    contentType: zod.string().nullish(),
+    originalFilename: zod.string().nullish(),
+    fileType: zod
+      .string()
+      .nullish()
+      .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+    contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+    prices: zod.record(zod.string(), zod.unknown()).nullish(),
+    dates: zod.record(zod.string(), zod.unknown()).nullish(),
+    geography: zod.record(zod.string(), zod.unknown()).nullish(),
+    statusFlag: zod.string().nullish(),
+    producer: zod
+      .object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        kind: zod
+          .enum(["producer", "distributor", "study", "organization", "other"])
+          .nullish(),
+        description: zod.string().nullish(),
+        websiteUrl: zod.string().nullish(),
+        screenshotUrl: zod.string().nullish(),
+        contactEmail: zod.string().nullish(),
+        contactPhone: zod.string().nullish(),
+        location: zod.string().nullish(),
+        statusFlag: zod
+          .string()
+          .nullish()
+          .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+        statusNotes: zod.string().nullish(),
+        substituteForProducerSlug: zod
+          .string()
+          .nullish()
+          .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+        entryCount: zod
+          .number()
+          .default(createLibraryEntryResponseEntryProducerOneEntryCountDefault),
+      })
+      .nullish(),
+    contributor: zod
+      .object({
+        id: zod.string().uuid(),
+        name: zod.string(),
+        organization: zod.string().nullish(),
+        email: zod.string().nullish(),
+        notes: zod.string().nullish(),
+        entryCount: zod
+          .number()
+          .default(
+            createLibraryEntryResponseEntryContributorOneEntryCountDefault,
+          ),
+      })
+      .nullish(),
+    subjects: zod.array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    ),
+    buckets: zod.array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    ),
+    createdAt: zod.coerce.date(),
+    updatedAt: zod.coerce.date(),
+  }),
+  duplicate: zod
+    .boolean()
+    .describe(
+      "True if a file with the same content hash already existed; the existing entry is returned.",
+    ),
+});
+
+/**
+ * @summary Get a library entry by ID
+ */
+export const GetLibraryEntryParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const getLibraryEntryResponseProducerOneEntryCountDefault = 0;
+export const getLibraryEntryResponseContributorOneEntryCountDefault = 0;
+
+export const GetLibraryEntryResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string(),
+  summary: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["published", "needs_review"]),
+  sourceUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  screenshotObjectPath: zod.string().nullish(),
+  storageRef: zod
+    .string()
+    .nullish()
+    .describe(
+      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+    ),
+  contentHash: zod.string().nullish(),
+  fileSize: zod.number().nullish(),
+  contentType: zod.string().nullish(),
+  originalFilename: zod.string().nullish(),
+  fileType: zod
+    .string()
+    .nullish()
+    .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+  contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+  prices: zod.record(zod.string(), zod.unknown()).nullish(),
+  dates: zod.record(zod.string(), zod.unknown()).nullish(),
+  geography: zod.record(zod.string(), zod.unknown()).nullish(),
+  statusFlag: zod.string().nullish(),
+  producer: zod
+    .object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      kind: zod
+        .enum(["producer", "distributor", "study", "organization", "other"])
+        .nullish(),
+      description: zod.string().nullish(),
+      websiteUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      contactEmail: zod.string().nullish(),
+      contactPhone: zod.string().nullish(),
+      location: zod.string().nullish(),
+      statusFlag: zod
+        .string()
+        .nullish()
+        .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+      statusNotes: zod.string().nullish(),
+      substituteForProducerSlug: zod
+        .string()
+        .nullish()
+        .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+      entryCount: zod
+        .number()
+        .default(getLibraryEntryResponseProducerOneEntryCountDefault),
+    })
+    .nullish(),
+  contributor: zod
+    .object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      organization: zod.string().nullish(),
+      email: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      entryCount: zod
+        .number()
+        .default(getLibraryEntryResponseContributorOneEntryCountDefault),
+    })
+    .nullish(),
+  subjects: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  buckets: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update an entry (edit summary, retag, approve from review)
+ */
+export const UpdateLibraryEntryParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateLibraryEntryBody = zod.object({
+  title: zod.string().optional(),
+  summary: zod.string().optional(),
+  notes: zod.string().optional(),
+  statusFlag: zod.string().optional(),
+  contactInfo: zod.record(zod.string(), zod.unknown()).optional(),
+  prices: zod.record(zod.string(), zod.unknown()).optional(),
+  dates: zod.record(zod.string(), zod.unknown()).optional(),
+  geography: zod.record(zod.string(), zod.unknown()).optional(),
+  producerId: zod.string().uuid().nullish(),
+  producerSlug: zod.string().nullish(),
+  subjectSlugs: zod.array(zod.string()).optional(),
+  bucketSlugs: zod.array(zod.string()).optional(),
+  status: zod.enum(["published", "needs_review"]).optional(),
+});
+
+export const updateLibraryEntryResponseProducerOneEntryCountDefault = 0;
+export const updateLibraryEntryResponseContributorOneEntryCountDefault = 0;
+
+export const UpdateLibraryEntryResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string(),
+  summary: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["published", "needs_review"]),
+  sourceUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  screenshotObjectPath: zod.string().nullish(),
+  storageRef: zod
+    .string()
+    .nullish()
+    .describe(
+      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+    ),
+  contentHash: zod.string().nullish(),
+  fileSize: zod.number().nullish(),
+  contentType: zod.string().nullish(),
+  originalFilename: zod.string().nullish(),
+  fileType: zod
+    .string()
+    .nullish()
+    .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+  contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+  prices: zod.record(zod.string(), zod.unknown()).nullish(),
+  dates: zod.record(zod.string(), zod.unknown()).nullish(),
+  geography: zod.record(zod.string(), zod.unknown()).nullish(),
+  statusFlag: zod.string().nullish(),
+  producer: zod
+    .object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      kind: zod
+        .enum(["producer", "distributor", "study", "organization", "other"])
+        .nullish(),
+      description: zod.string().nullish(),
+      websiteUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      contactEmail: zod.string().nullish(),
+      contactPhone: zod.string().nullish(),
+      location: zod.string().nullish(),
+      statusFlag: zod
+        .string()
+        .nullish()
+        .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+      statusNotes: zod.string().nullish(),
+      substituteForProducerSlug: zod
+        .string()
+        .nullish()
+        .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+      entryCount: zod
+        .number()
+        .default(updateLibraryEntryResponseProducerOneEntryCountDefault),
+    })
+    .nullish(),
+  contributor: zod
+    .object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      organization: zod.string().nullish(),
+      email: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      entryCount: zod
+        .number()
+        .default(updateLibraryEntryResponseContributorOneEntryCountDefault),
+    })
+    .nullish(),
+  subjects: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  buckets: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete an entry
+ */
+export const DeleteLibraryEntryParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+/**
+ * @summary Paste a website URL — create a web-source entry with extracted metadata and screenshot.
+ */
+export const CreateEntryFromUrlBody = zod.object({
+  url: zod.string().url(),
+  producerSlug: zod.string().optional(),
+  subjectSlugs: zod.array(zod.string()).optional(),
+  bucketSlugs: zod.array(zod.string()).optional(),
+  notes: zod.string().optional(),
+});
+
+export const createEntryFromUrlResponseProducerOneEntryCountDefault = 0;
+export const createEntryFromUrlResponseContributorOneEntryCountDefault = 0;
+
+export const CreateEntryFromUrlResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string(),
+  summary: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["published", "needs_review"]),
+  sourceUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  screenshotObjectPath: zod.string().nullish(),
+  storageRef: zod
+    .string()
+    .nullish()
+    .describe(
+      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+    ),
+  contentHash: zod.string().nullish(),
+  fileSize: zod.number().nullish(),
+  contentType: zod.string().nullish(),
+  originalFilename: zod.string().nullish(),
+  fileType: zod
+    .string()
+    .nullish()
+    .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+  contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+  prices: zod.record(zod.string(), zod.unknown()).nullish(),
+  dates: zod.record(zod.string(), zod.unknown()).nullish(),
+  geography: zod.record(zod.string(), zod.unknown()).nullish(),
+  statusFlag: zod.string().nullish(),
+  producer: zod
+    .object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      kind: zod
+        .enum(["producer", "distributor", "study", "organization", "other"])
+        .nullish(),
+      description: zod.string().nullish(),
+      websiteUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      contactEmail: zod.string().nullish(),
+      contactPhone: zod.string().nullish(),
+      location: zod.string().nullish(),
+      statusFlag: zod
+        .string()
+        .nullish()
+        .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+      statusNotes: zod.string().nullish(),
+      substituteForProducerSlug: zod
+        .string()
+        .nullish()
+        .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+      entryCount: zod
+        .number()
+        .default(createEntryFromUrlResponseProducerOneEntryCountDefault),
+    })
+    .nullish(),
+  contributor: zod
+    .object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      organization: zod.string().nullish(),
+      email: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      entryCount: zod
+        .number()
+        .default(createEntryFromUrlResponseContributorOneEntryCountDefault),
+    })
+    .nullish(),
+  subjects: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  buckets: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List producers / sources
+ */
+export const ListProducersQueryParams = zod.object({
+  search: zod.coerce.string().optional(),
+});
+
+export const listProducersResponseEntryCountDefault = 0;
+
+export const ListProducersResponseItem = zod.object({
+  id: zod.string().uuid(),
+  slug: zod.string(),
+  name: zod.string(),
+  kind: zod
+    .enum(["producer", "distributor", "study", "organization", "other"])
+    .nullish(),
+  description: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  contactEmail: zod.string().nullish(),
+  contactPhone: zod.string().nullish(),
+  location: zod.string().nullish(),
+  statusFlag: zod
+    .string()
+    .nullish()
+    .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+  statusNotes: zod.string().nullish(),
+  substituteForProducerSlug: zod
+    .string()
+    .nullish()
+    .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+  entryCount: zod.number().default(listProducersResponseEntryCountDefault),
+});
+export const ListProducersResponse = zod.array(ListProducersResponseItem);
+
+/**
+ * @summary Create a producer / source profile
+ */
+
+export const CreateProducerBody = zod.object({
+  name: zod.string().min(1),
+  slug: zod.string().optional(),
+  kind: zod
+    .enum(["producer", "distributor", "study", "organization", "other"])
+    .optional(),
+  description: zod.string().optional(),
+  websiteUrl: zod.string().optional(),
+  contactEmail: zod.string().optional(),
+  contactPhone: zod.string().optional(),
+  location: zod.string().optional(),
+  statusFlag: zod.string().optional(),
+  statusNotes: zod.string().optional(),
+  substituteForProducerSlug: zod.string().optional(),
+});
+
+export const createProducerResponseEntryCountDefault = 0;
+
+export const CreateProducerResponse = zod.object({
+  id: zod.string().uuid(),
+  slug: zod.string(),
+  name: zod.string(),
+  kind: zod
+    .enum(["producer", "distributor", "study", "organization", "other"])
+    .nullish(),
+  description: zod.string().nullish(),
+  websiteUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  contactEmail: zod.string().nullish(),
+  contactPhone: zod.string().nullish(),
+  location: zod.string().nullish(),
+  statusFlag: zod
+    .string()
+    .nullish()
+    .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+  statusNotes: zod.string().nullish(),
+  substituteForProducerSlug: zod
+    .string()
+    .nullish()
+    .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+  entryCount: zod.number().default(createProducerResponseEntryCountDefault),
+});
+
+/**
+ * @summary Get producer by slug, with related entries
+ */
+export const GetProducerParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const getProducerResponseOneEntryCountDefault = 0;
+export const getProducerResponseTwoEntriesItemProducerOneEntryCountDefault = 0;
+export const getProducerResponseTwoEntriesItemContributorOneEntryCountDefault = 0;
+
+export const GetProducerResponse = zod
+  .object({
+    id: zod.string().uuid(),
+    slug: zod.string(),
+    name: zod.string(),
+    kind: zod
+      .enum(["producer", "distributor", "study", "organization", "other"])
+      .nullish(),
+    description: zod.string().nullish(),
+    websiteUrl: zod.string().nullish(),
+    screenshotUrl: zod.string().nullish(),
+    contactEmail: zod.string().nullish(),
+    contactPhone: zod.string().nullish(),
+    location: zod.string().nullish(),
+    statusFlag: zod
+      .string()
+      .nullish()
+      .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+    statusNotes: zod.string().nullish(),
+    substituteForProducerSlug: zod
+      .string()
+      .nullish()
+      .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+    entryCount: zod.number().default(getProducerResponseOneEntryCountDefault),
+  })
+  .and(
+    zod.object({
+      entries: zod
+        .array(
+          zod.object({
+            id: zod.string().uuid(),
+            kind: zod.enum(["file", "web_source"]),
+            title: zod.string(),
+            summary: zod.string().nullish(),
+            notes: zod.string().nullish(),
+            status: zod.enum(["published", "needs_review"]),
+            sourceUrl: zod.string().nullish(),
+            screenshotUrl: zod.string().nullish(),
+            screenshotObjectPath: zod.string().nullish(),
+            storageRef: zod
+              .string()
+              .nullish()
+              .describe(
+                "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+              ),
+            contentHash: zod.string().nullish(),
+            fileSize: zod.number().nullish(),
+            contentType: zod.string().nullish(),
+            originalFilename: zod.string().nullish(),
+            fileType: zod
+              .string()
+              .nullish()
+              .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+            contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+            prices: zod.record(zod.string(), zod.unknown()).nullish(),
+            dates: zod.record(zod.string(), zod.unknown()).nullish(),
+            geography: zod.record(zod.string(), zod.unknown()).nullish(),
+            statusFlag: zod.string().nullish(),
+            producer: zod
+              .object({
+                id: zod.string().uuid(),
+                slug: zod.string(),
+                name: zod.string(),
+                kind: zod
+                  .enum([
+                    "producer",
+                    "distributor",
+                    "study",
+                    "organization",
+                    "other",
+                  ])
+                  .nullish(),
+                description: zod.string().nullish(),
+                websiteUrl: zod.string().nullish(),
+                screenshotUrl: zod.string().nullish(),
+                contactEmail: zod.string().nullish(),
+                contactPhone: zod.string().nullish(),
+                location: zod.string().nullish(),
+                statusFlag: zod
+                  .string()
+                  .nullish()
+                  .describe(
+                    'e.g. \"operating\", \"uncertain\", \"wound down\"',
+                  ),
+                statusNotes: zod.string().nullish(),
+                substituteForProducerSlug: zod
+                  .string()
+                  .nullish()
+                  .describe(
+                    "e.g. Shumaka Dust substitutes for Crazy Good Spices",
+                  ),
+                entryCount: zod
+                  .number()
+                  .default(
+                    getProducerResponseTwoEntriesItemProducerOneEntryCountDefault,
+                  ),
+              })
+              .nullish(),
+            contributor: zod
+              .object({
+                id: zod.string().uuid(),
+                name: zod.string(),
+                organization: zod.string().nullish(),
+                email: zod.string().nullish(),
+                notes: zod.string().nullish(),
+                entryCount: zod
+                  .number()
+                  .default(
+                    getProducerResponseTwoEntriesItemContributorOneEntryCountDefault,
+                  ),
+              })
+              .nullish(),
+            subjects: zod.array(
+              zod.object({
+                id: zod.string().uuid(),
+                slug: zod.string(),
+                name: zod.string(),
+                description: zod.string().nullish(),
+                color: zod.string().nullish(),
+              }),
+            ),
+            buckets: zod.array(
+              zod.object({
+                id: zod.string().uuid(),
+                slug: zod.string(),
+                name: zod.string(),
+                description: zod.string().nullish(),
+                color: zod.string().nullish(),
+              }),
+            ),
+            createdAt: zod.coerce.date(),
+            updatedAt: zod.coerce.date(),
+          }),
+        )
+        .optional(),
+    }),
+  );
+
+/**
+ * @summary List subject tags with counts
+ */
+export const ListSubjectsResponseItem = zod
+  .object({
+    id: zod.string().uuid(),
+    slug: zod.string(),
+    name: zod.string(),
+    description: zod.string().nullish(),
+    color: zod.string().nullish(),
+  })
+  .and(
+    zod.object({
+      entryCount: zod.number(),
+    }),
+  );
+export const ListSubjectsResponse = zod.array(ListSubjectsResponseItem);
+
+/**
+ * @summary List project buckets with counts
+ */
+export const ListProjectBucketsResponseItem = zod
+  .object({
+    id: zod.string().uuid(),
+    slug: zod.string(),
+    name: zod.string(),
+    description: zod.string().nullish(),
+    color: zod.string().nullish(),
+  })
+  .and(
+    zod.object({
+      entryCount: zod.number(),
+    }),
+  );
+export const ListProjectBucketsResponse = zod.array(
+  ListProjectBucketsResponseItem,
+);
+
+/**
+ * @summary List contributors
+ */
+export const listContributorsResponseEntryCountDefault = 0;
+
+export const ListContributorsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  organization: zod.string().nullish(),
+  email: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  entryCount: zod.number().default(listContributorsResponseEntryCountDefault),
+});
+export const ListContributorsResponse = zod.array(ListContributorsResponseItem);
+
+/**
+ * @summary Create a contributor
+ */
+
+export const CreateContributorBody = zod.object({
+  name: zod.string().min(1),
+  organization: zod.string().optional(),
+  email: zod.string().optional(),
+  notes: zod.string().optional(),
+});
+
+export const createContributorResponseEntryCountDefault = 0;
+
+export const CreateContributorResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  organization: zod.string().nullish(),
+  email: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  entryCount: zod.number().default(createContributorResponseEntryCountDefault),
+});
+
+/**
+ * @summary List tokenized share links the owner has generated
+ */
+export const listShareLinksResponseOneContributorEntryCountDefault = 0;
+export const listShareLinksResponseOneUploadCountDefault = 0;
+
+export const ListShareLinksResponseItem = zod.object({
+  id: zod.string().uuid(),
+  token: zod.string(),
+  label: zod.string().nullish(),
+  contributor: zod.object({
+    id: zod.string().uuid(),
+    name: zod.string(),
+    organization: zod.string().nullish(),
+    email: zod.string().nullish(),
+    notes: zod.string().nullish(),
+    entryCount: zod
+      .number()
+      .default(listShareLinksResponseOneContributorEntryCountDefault),
+  }),
+  presetSubjects: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+  presetBuckets: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+  url: zod
+    .string()
+    .optional()
+    .describe("Full public URL the owner can copy and share."),
+  uploadCount: zod
+    .number()
+    .default(listShareLinksResponseOneUploadCountDefault),
+  revokedAt: zod.coerce.date().nullish(),
+  expiresAt: zod.coerce.date().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const ListShareLinksResponse = zod.array(ListShareLinksResponseItem);
+
+/**
+ * @summary Generate a tokenized contributor upload link
+ */
+export const CreateShareLinkBody = zod.object({
+  contributorId: zod.string().uuid(),
+  label: zod.string().optional(),
+  presetSubjectSlugs: zod.array(zod.string()).optional(),
+  presetBucketSlugs: zod.array(zod.string()).optional(),
+  expiresAt: zod.coerce.date().optional(),
+});
+
+export const createShareLinkResponseContributorEntryCountDefault = 0;
+export const createShareLinkResponseUploadCountDefault = 0;
+
+export const CreateShareLinkResponse = zod.object({
+  id: zod.string().uuid(),
+  token: zod.string(),
+  label: zod.string().nullish(),
+  contributor: zod.object({
+    id: zod.string().uuid(),
+    name: zod.string(),
+    organization: zod.string().nullish(),
+    email: zod.string().nullish(),
+    notes: zod.string().nullish(),
+    entryCount: zod
+      .number()
+      .default(createShareLinkResponseContributorEntryCountDefault),
+  }),
+  presetSubjects: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+  presetBuckets: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+  url: zod
+    .string()
+    .optional()
+    .describe("Full public URL the owner can copy and share."),
+  uploadCount: zod.number().default(createShareLinkResponseUploadCountDefault),
+  revokedAt: zod.coerce.date().nullish(),
+  expiresAt: zod.coerce.date().nullish(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Public — resolve a share-link token (contributor lands here)
+ */
+export const GetShareLinkByTokenParams = zod.object({
+  token: zod.coerce.string(),
+});
+
+export const GetShareLinkByTokenResponse = zod.object({
+  token: zod.string(),
+  label: zod.string().nullish(),
+  contributorName: zod.string(),
+  ownerLabel: zod
+    .string()
+    .optional()
+    .describe('e.g. \"Northern Food Systems Research Library\"'),
+  presetSubjects: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+  presetBuckets: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    )
+    .optional(),
+});
+
+/**
+ * @summary Public — submit a file uploaded via share link (lands in needs_review queue)
+ */
+export const SubmitShareLinkUploadParams = zod.object({
+  token: zod.coerce.string(),
+});
+
+export const SubmitShareLinkUploadBody = zod.object({
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string().min(1),
+  summary: zod.string().optional(),
+  notes: zod.string().optional(),
+  storageRef: zod.string().optional(),
+  objectPath: zod
+    .string()
+    .optional()
+    .describe(
+      "Returned from \/storage\/uploads\/request-url. Server normalizes to a storageRef.",
+    ),
+  contentHash: zod
+    .string()
+    .optional()
+    .describe("SHA-256 hex digest of the file. Used for duplicate detection."),
+  fileSize: zod.number().optional(),
+  contentType: zod.string().optional(),
+  originalFilename: zod.string().optional(),
+  sourceUrl: zod.string().optional(),
+  screenshotUrl: zod.string().optional(),
+  contactInfo: zod.record(zod.string(), zod.unknown()).optional(),
+  prices: zod.record(zod.string(), zod.unknown()).optional(),
+  dates: zod.record(zod.string(), zod.unknown()).optional(),
+  geography: zod.record(zod.string(), zod.unknown()).optional(),
+  statusFlag: zod.string().optional(),
+  producerId: zod.string().uuid().optional(),
+  producerSlug: zod.string().optional(),
+  contributorId: zod.string().uuid().optional(),
+  subjectSlugs: zod.array(zod.string()).optional(),
+  bucketSlugs: zod.array(zod.string()).optional(),
+  status: zod.enum(["published", "needs_review"]).optional(),
+});
+
+export const submitShareLinkUploadResponseEntryProducerOneEntryCountDefault = 0;
+export const submitShareLinkUploadResponseEntryContributorOneEntryCountDefault = 0;
+
+export const SubmitShareLinkUploadResponse = zod.object({
+  entry: zod.object({
+    id: zod.string().uuid(),
+    kind: zod.enum(["file", "web_source"]),
+    title: zod.string(),
+    summary: zod.string().nullish(),
+    notes: zod.string().nullish(),
+    status: zod.enum(["published", "needs_review"]),
+    sourceUrl: zod.string().nullish(),
+    screenshotUrl: zod.string().nullish(),
+    screenshotObjectPath: zod.string().nullish(),
+    storageRef: zod
+      .string()
+      .nullish()
+      .describe(
+        "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+      ),
+    contentHash: zod.string().nullish(),
+    fileSize: zod.number().nullish(),
+    contentType: zod.string().nullish(),
+    originalFilename: zod.string().nullish(),
+    fileType: zod
+      .string()
+      .nullish()
+      .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+    contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+    prices: zod.record(zod.string(), zod.unknown()).nullish(),
+    dates: zod.record(zod.string(), zod.unknown()).nullish(),
+    geography: zod.record(zod.string(), zod.unknown()).nullish(),
+    statusFlag: zod.string().nullish(),
+    producer: zod
+      .object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        kind: zod
+          .enum(["producer", "distributor", "study", "organization", "other"])
+          .nullish(),
+        description: zod.string().nullish(),
+        websiteUrl: zod.string().nullish(),
+        screenshotUrl: zod.string().nullish(),
+        contactEmail: zod.string().nullish(),
+        contactPhone: zod.string().nullish(),
+        location: zod.string().nullish(),
+        statusFlag: zod
+          .string()
+          .nullish()
+          .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+        statusNotes: zod.string().nullish(),
+        substituteForProducerSlug: zod
+          .string()
+          .nullish()
+          .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+        entryCount: zod
+          .number()
+          .default(
+            submitShareLinkUploadResponseEntryProducerOneEntryCountDefault,
+          ),
+      })
+      .nullish(),
+    contributor: zod
+      .object({
+        id: zod.string().uuid(),
+        name: zod.string(),
+        organization: zod.string().nullish(),
+        email: zod.string().nullish(),
+        notes: zod.string().nullish(),
+        entryCount: zod
+          .number()
+          .default(
+            submitShareLinkUploadResponseEntryContributorOneEntryCountDefault,
+          ),
+      })
+      .nullish(),
+    subjects: zod.array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    ),
+    buckets: zod.array(
+      zod.object({
+        id: zod.string().uuid(),
+        slug: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        color: zod.string().nullish(),
+      }),
+    ),
+    createdAt: zod.coerce.date(),
+    updatedAt: zod.coerce.date(),
+  }),
+  duplicate: zod
+    .boolean()
+    .describe(
+      "True if a file with the same content hash already existed; the existing entry is returned.",
+    ),
+});
+
+/**
+ * @summary List entries waiting for owner review
+ */
+export const listNeedsReviewResponseProducerOneEntryCountDefault = 0;
+export const listNeedsReviewResponseContributorOneEntryCountDefault = 0;
+
+export const ListNeedsReviewResponseItem = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string(),
+  summary: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["published", "needs_review"]),
+  sourceUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  screenshotObjectPath: zod.string().nullish(),
+  storageRef: zod
+    .string()
+    .nullish()
+    .describe(
+      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+    ),
+  contentHash: zod.string().nullish(),
+  fileSize: zod.number().nullish(),
+  contentType: zod.string().nullish(),
+  originalFilename: zod.string().nullish(),
+  fileType: zod
+    .string()
+    .nullish()
+    .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+  contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+  prices: zod.record(zod.string(), zod.unknown()).nullish(),
+  dates: zod.record(zod.string(), zod.unknown()).nullish(),
+  geography: zod.record(zod.string(), zod.unknown()).nullish(),
+  statusFlag: zod.string().nullish(),
+  producer: zod
+    .object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      kind: zod
+        .enum(["producer", "distributor", "study", "organization", "other"])
+        .nullish(),
+      description: zod.string().nullish(),
+      websiteUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      contactEmail: zod.string().nullish(),
+      contactPhone: zod.string().nullish(),
+      location: zod.string().nullish(),
+      statusFlag: zod
+        .string()
+        .nullish()
+        .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+      statusNotes: zod.string().nullish(),
+      substituteForProducerSlug: zod
+        .string()
+        .nullish()
+        .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+      entryCount: zod
+        .number()
+        .default(listNeedsReviewResponseProducerOneEntryCountDefault),
+    })
+    .nullish(),
+  contributor: zod
+    .object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      organization: zod.string().nullish(),
+      email: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      entryCount: zod
+        .number()
+        .default(listNeedsReviewResponseContributorOneEntryCountDefault),
+    })
+    .nullish(),
+  subjects: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  buckets: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListNeedsReviewResponse = zod.array(ListNeedsReviewResponseItem);
+
+/**
+ * @summary Most recently added or updated entries (for dashboard)
+ */
+export const getRecentActivityQueryLimitDefault = 8;
+export const getRecentActivityQueryLimitMax = 50;
+
+export const GetRecentActivityQueryParams = zod.object({
+  limit: zod.coerce
+    .number()
+    .min(1)
+    .max(getRecentActivityQueryLimitMax)
+    .default(getRecentActivityQueryLimitDefault),
+});
+
+export const getRecentActivityResponseProducerOneEntryCountDefault = 0;
+export const getRecentActivityResponseContributorOneEntryCountDefault = 0;
+
+export const GetRecentActivityResponseItem = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["file", "web_source"]),
+  title: zod.string(),
+  summary: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["published", "needs_review"]),
+  sourceUrl: zod.string().nullish(),
+  screenshotUrl: zod.string().nullish(),
+  screenshotObjectPath: zod.string().nullish(),
+  storageRef: zod
+    .string()
+    .nullish()
+    .describe(
+      "Object reference. May be `gcs:\/objects\/<id>` or `attached:<filename>` for pre-seeded assets.",
+    ),
+  contentHash: zod.string().nullish(),
+  fileSize: zod.number().nullish(),
+  contentType: zod.string().nullish(),
+  originalFilename: zod.string().nullish(),
+  fileType: zod
+    .string()
+    .nullish()
+    .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
+  contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
+  prices: zod.record(zod.string(), zod.unknown()).nullish(),
+  dates: zod.record(zod.string(), zod.unknown()).nullish(),
+  geography: zod.record(zod.string(), zod.unknown()).nullish(),
+  statusFlag: zod.string().nullish(),
+  producer: zod
+    .object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      kind: zod
+        .enum(["producer", "distributor", "study", "organization", "other"])
+        .nullish(),
+      description: zod.string().nullish(),
+      websiteUrl: zod.string().nullish(),
+      screenshotUrl: zod.string().nullish(),
+      contactEmail: zod.string().nullish(),
+      contactPhone: zod.string().nullish(),
+      location: zod.string().nullish(),
+      statusFlag: zod
+        .string()
+        .nullish()
+        .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
+      statusNotes: zod.string().nullish(),
+      substituteForProducerSlug: zod
+        .string()
+        .nullish()
+        .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
+      entryCount: zod
+        .number()
+        .default(getRecentActivityResponseProducerOneEntryCountDefault),
+    })
+    .nullish(),
+  contributor: zod
+    .object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      organization: zod.string().nullish(),
+      email: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      entryCount: zod
+        .number()
+        .default(getRecentActivityResponseContributorOneEntryCountDefault),
+    })
+    .nullish(),
+  subjects: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  buckets: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      slug: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      color: zod.string().nullish(),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const GetRecentActivityResponse = zod.array(
+  GetRecentActivityResponseItem,
+);

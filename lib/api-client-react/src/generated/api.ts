@@ -5,18 +5,47 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  Contributor,
+  CreateContributorRequest,
+  CreateEntryFromUrlRequest,
+  CreateLibraryEntryRequest,
+  CreateProducerRequest,
+  CreateShareLinkRequest,
+  ErrorEnvelope,
+  GetRecentActivityParams,
+  HealthStatus,
+  LibraryEntry,
+  LibraryEntryPage,
+  LibraryEntryUpsertResult,
+  LibraryStats,
+  ListLibraryEntriesParams,
+  ListProducersParams,
+  Producer,
+  ProducerDetail,
+  ProjectBucketWithCount,
+  PublicShareLink,
+  ShareLink,
+  ShareLinkSummary,
+  SubjectWithCount,
+  UpdateLibraryEntryRequest,
+  UploadUrlRequest,
+  UploadUrlResponse,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -92,6 +121,1968 @@ export function useHealthCheck<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getHealthCheckQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Returns a presigned GCS URL for direct upload. The client sends JSON
+metadata here, then uploads the file directly to the returned URL.
+
+ * @summary Request a presigned URL for file upload
+ */
+export const getRequestUploadUrlUrl = () => {
+  return `/api/storage/uploads/request-url`;
+};
+
+export const requestUploadUrl = async (
+  uploadUrlRequest: UploadUrlRequest,
+  options?: RequestInit,
+): Promise<UploadUrlResponse> => {
+  return customFetch<UploadUrlResponse>(getRequestUploadUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(uploadUrlRequest),
+  });
+};
+
+export const getRequestUploadUrlMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  const mutationKey = ["requestUploadUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    { data: BodyType<UploadUrlRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestUploadUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestUploadUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestUploadUrl>>
+>;
+export type RequestUploadUrlMutationBody = BodyType<UploadUrlRequest>;
+export type RequestUploadUrlMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+export const useRequestUploadUrl = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  return useMutation(getRequestUploadUrlMutationOptions(options));
+};
+
+/**
+ * @summary Serve a public asset from PUBLIC_OBJECT_SEARCH_PATHS
+ */
+export const getGetPublicObjectUrl = (filePath: string) => {
+  return `/api/storage/public-objects/${filePath}`;
+};
+
+export const getPublicObject = async (
+  filePath: string,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getGetPublicObjectUrl(filePath), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPublicObjectQueryKey = (filePath: string) => {
+  return [`/api/storage/public-objects/${filePath}`] as const;
+};
+
+export const getGetPublicObjectQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPublicObject>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  filePath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPublicObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetPublicObjectQueryKey(filePath);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicObject>>> = ({
+    signal,
+  }) => getPublicObject(filePath, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!filePath,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPublicObject>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPublicObjectQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPublicObject>>
+>;
+export type GetPublicObjectQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Serve a public asset from PUBLIC_OBJECT_SEARCH_PATHS
+ */
+
+export function useGetPublicObject<
+  TData = Awaited<ReturnType<typeof getPublicObject>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  filePath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPublicObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPublicObjectQueryOptions(filePath, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Serve an object entity from PRIVATE_OBJECT_DIR
+ */
+export const getGetStorageObjectUrl = (objectPath: string) => {
+  return `/api/storage/objects/${objectPath}`;
+};
+
+export const getStorageObject = async (
+  objectPath: string,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getGetStorageObjectUrl(objectPath), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetStorageObjectQueryKey = (objectPath: string) => {
+  return [`/api/storage/objects/${objectPath}`] as const;
+};
+
+export const getGetStorageObjectQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStorageObject>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  objectPath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStorageObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetStorageObjectQueryKey(objectPath);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getStorageObject>>
+  > = ({ signal }) =>
+    getStorageObject(objectPath, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!objectPath,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getStorageObject>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetStorageObjectQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStorageObject>>
+>;
+export type GetStorageObjectQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Serve an object entity from PRIVATE_OBJECT_DIR
+ */
+
+export function useGetStorageObject<
+  TData = Awaited<ReturnType<typeof getStorageObject>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  objectPath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStorageObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetStorageObjectQueryOptions(objectPath, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Counts of entries by status, top subjects, top producers, top buckets, recent activity.
+ * @summary Library overview stats
+ */
+export const getGetLibraryStatsUrl = () => {
+  return `/api/library/stats`;
+};
+
+export const getLibraryStats = async (
+  options?: RequestInit,
+): Promise<LibraryStats> => {
+  return customFetch<LibraryStats>(getGetLibraryStatsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLibraryStatsQueryKey = () => {
+  return [`/api/library/stats`] as const;
+};
+
+export const getGetLibraryStatsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLibraryStats>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLibraryStats>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLibraryStatsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLibraryStats>>> = ({
+    signal,
+  }) => getLibraryStats({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLibraryStats>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLibraryStatsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLibraryStats>>
+>;
+export type GetLibraryStatsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Library overview stats
+ */
+
+export function useGetLibraryStats<
+  TData = Awaited<ReturnType<typeof getLibraryStats>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLibraryStats>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLibraryStatsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List library entries
+ */
+export const getListLibraryEntriesUrl = (params?: ListLibraryEntriesParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/library/entries?${stringifiedParams}`
+    : `/api/library/entries`;
+};
+
+export const listLibraryEntries = async (
+  params?: ListLibraryEntriesParams,
+  options?: RequestInit,
+): Promise<LibraryEntryPage> => {
+  return customFetch<LibraryEntryPage>(getListLibraryEntriesUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListLibraryEntriesQueryKey = (
+  params?: ListLibraryEntriesParams,
+) => {
+  return [`/api/library/entries`, ...(params ? [params] : [])] as const;
+};
+
+export const getListLibraryEntriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listLibraryEntries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListLibraryEntriesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listLibraryEntries>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListLibraryEntriesQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listLibraryEntries>>
+  > = ({ signal }) => listLibraryEntries(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listLibraryEntries>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListLibraryEntriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listLibraryEntries>>
+>;
+export type ListLibraryEntriesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List library entries
+ */
+
+export function useListLibraryEntries<
+  TData = Awaited<ReturnType<typeof listLibraryEntries>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListLibraryEntriesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listLibraryEntries>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListLibraryEntriesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create or finalize a library entry (after a file upload)
+ */
+export const getCreateLibraryEntryUrl = () => {
+  return `/api/library/entries`;
+};
+
+export const createLibraryEntry = async (
+  createLibraryEntryRequest: CreateLibraryEntryRequest,
+  options?: RequestInit,
+): Promise<LibraryEntryUpsertResult> => {
+  return customFetch<LibraryEntryUpsertResult>(getCreateLibraryEntryUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createLibraryEntryRequest),
+  });
+};
+
+export const getCreateLibraryEntryMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLibraryEntry>>,
+    TError,
+    { data: BodyType<CreateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createLibraryEntry>>,
+  TError,
+  { data: BodyType<CreateLibraryEntryRequest> },
+  TContext
+> => {
+  const mutationKey = ["createLibraryEntry"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createLibraryEntry>>,
+    { data: BodyType<CreateLibraryEntryRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createLibraryEntry(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateLibraryEntryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createLibraryEntry>>
+>;
+export type CreateLibraryEntryMutationBody =
+  BodyType<CreateLibraryEntryRequest>;
+export type CreateLibraryEntryMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Create or finalize a library entry (after a file upload)
+ */
+export const useCreateLibraryEntry = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLibraryEntry>>,
+    TError,
+    { data: BodyType<CreateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createLibraryEntry>>,
+  TError,
+  { data: BodyType<CreateLibraryEntryRequest> },
+  TContext
+> => {
+  return useMutation(getCreateLibraryEntryMutationOptions(options));
+};
+
+/**
+ * @summary Get a library entry by ID
+ */
+export const getGetLibraryEntryUrl = (id: string) => {
+  return `/api/library/entries/${id}`;
+};
+
+export const getLibraryEntry = async (
+  id: string,
+  options?: RequestInit,
+): Promise<LibraryEntry> => {
+  return customFetch<LibraryEntry>(getGetLibraryEntryUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLibraryEntryQueryKey = (id: string) => {
+  return [`/api/library/entries/${id}`] as const;
+};
+
+export const getGetLibraryEntryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLibraryEntry>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLibraryEntry>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLibraryEntryQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLibraryEntry>>> = ({
+    signal,
+  }) => getLibraryEntry(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLibraryEntry>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLibraryEntryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLibraryEntry>>
+>;
+export type GetLibraryEntryQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Get a library entry by ID
+ */
+
+export function useGetLibraryEntry<
+  TData = Awaited<ReturnType<typeof getLibraryEntry>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLibraryEntry>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLibraryEntryQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update an entry (edit summary, retag, approve from review)
+ */
+export const getUpdateLibraryEntryUrl = (id: string) => {
+  return `/api/library/entries/${id}`;
+};
+
+export const updateLibraryEntry = async (
+  id: string,
+  updateLibraryEntryRequest: UpdateLibraryEntryRequest,
+  options?: RequestInit,
+): Promise<LibraryEntry> => {
+  return customFetch<LibraryEntry>(getUpdateLibraryEntryUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateLibraryEntryRequest),
+  });
+};
+
+export const getUpdateLibraryEntryMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateLibraryEntry>>,
+    TError,
+    { id: string; data: BodyType<UpdateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateLibraryEntry>>,
+  TError,
+  { id: string; data: BodyType<UpdateLibraryEntryRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateLibraryEntry"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateLibraryEntry>>,
+    { id: string; data: BodyType<UpdateLibraryEntryRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateLibraryEntry(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateLibraryEntryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateLibraryEntry>>
+>;
+export type UpdateLibraryEntryMutationBody =
+  BodyType<UpdateLibraryEntryRequest>;
+export type UpdateLibraryEntryMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Update an entry (edit summary, retag, approve from review)
+ */
+export const useUpdateLibraryEntry = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateLibraryEntry>>,
+    TError,
+    { id: string; data: BodyType<UpdateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateLibraryEntry>>,
+  TError,
+  { id: string; data: BodyType<UpdateLibraryEntryRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateLibraryEntryMutationOptions(options));
+};
+
+/**
+ * @summary Delete an entry
+ */
+export const getDeleteLibraryEntryUrl = (id: string) => {
+  return `/api/library/entries/${id}`;
+};
+
+export const deleteLibraryEntry = async (
+  id: string,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteLibraryEntryUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteLibraryEntryMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLibraryEntry>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteLibraryEntry>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deleteLibraryEntry"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteLibraryEntry>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteLibraryEntry(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteLibraryEntryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteLibraryEntry>>
+>;
+
+export type DeleteLibraryEntryMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete an entry
+ */
+export const useDeleteLibraryEntry = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLibraryEntry>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteLibraryEntry>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getDeleteLibraryEntryMutationOptions(options));
+};
+
+/**
+ * @summary Paste a website URL — create a web-source entry with extracted metadata and screenshot.
+ */
+export const getCreateEntryFromUrlUrl = () => {
+  return `/api/library/entries/from-url`;
+};
+
+export const createEntryFromUrl = async (
+  createEntryFromUrlRequest: CreateEntryFromUrlRequest,
+  options?: RequestInit,
+): Promise<LibraryEntry> => {
+  return customFetch<LibraryEntry>(getCreateEntryFromUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createEntryFromUrlRequest),
+  });
+};
+
+export const getCreateEntryFromUrlMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createEntryFromUrl>>,
+    TError,
+    { data: BodyType<CreateEntryFromUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createEntryFromUrl>>,
+  TError,
+  { data: BodyType<CreateEntryFromUrlRequest> },
+  TContext
+> => {
+  const mutationKey = ["createEntryFromUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createEntryFromUrl>>,
+    { data: BodyType<CreateEntryFromUrlRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createEntryFromUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateEntryFromUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createEntryFromUrl>>
+>;
+export type CreateEntryFromUrlMutationBody =
+  BodyType<CreateEntryFromUrlRequest>;
+export type CreateEntryFromUrlMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Paste a website URL — create a web-source entry with extracted metadata and screenshot.
+ */
+export const useCreateEntryFromUrl = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createEntryFromUrl>>,
+    TError,
+    { data: BodyType<CreateEntryFromUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createEntryFromUrl>>,
+  TError,
+  { data: BodyType<CreateEntryFromUrlRequest> },
+  TContext
+> => {
+  return useMutation(getCreateEntryFromUrlMutationOptions(options));
+};
+
+/**
+ * @summary List producers / sources
+ */
+export const getListProducersUrl = (params?: ListProducersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/library/producers?${stringifiedParams}`
+    : `/api/library/producers`;
+};
+
+export const listProducers = async (
+  params?: ListProducersParams,
+  options?: RequestInit,
+): Promise<Producer[]> => {
+  return customFetch<Producer[]>(getListProducersUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProducersQueryKey = (params?: ListProducersParams) => {
+  return [`/api/library/producers`, ...(params ? [params] : [])] as const;
+};
+
+export const getListProducersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProducers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListProducersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProducers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListProducersQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listProducers>>> = ({
+    signal,
+  }) => listProducers(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProducers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProducersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProducers>>
+>;
+export type ListProducersQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List producers / sources
+ */
+
+export function useListProducers<
+  TData = Awaited<ReturnType<typeof listProducers>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListProducersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProducers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProducersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a producer / source profile
+ */
+export const getCreateProducerUrl = () => {
+  return `/api/library/producers`;
+};
+
+export const createProducer = async (
+  createProducerRequest: CreateProducerRequest,
+  options?: RequestInit,
+): Promise<Producer> => {
+  return customFetch<Producer>(getCreateProducerUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createProducerRequest),
+  });
+};
+
+export const getCreateProducerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProducer>>,
+    TError,
+    { data: BodyType<CreateProducerRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProducer>>,
+  TError,
+  { data: BodyType<CreateProducerRequest> },
+  TContext
+> => {
+  const mutationKey = ["createProducer"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProducer>>,
+    { data: BodyType<CreateProducerRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createProducer(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProducerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProducer>>
+>;
+export type CreateProducerMutationBody = BodyType<CreateProducerRequest>;
+export type CreateProducerMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a producer / source profile
+ */
+export const useCreateProducer = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProducer>>,
+    TError,
+    { data: BodyType<CreateProducerRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProducer>>,
+  TError,
+  { data: BodyType<CreateProducerRequest> },
+  TContext
+> => {
+  return useMutation(getCreateProducerMutationOptions(options));
+};
+
+/**
+ * @summary Get producer by slug, with related entries
+ */
+export const getGetProducerUrl = (slug: string) => {
+  return `/api/library/producers/${slug}`;
+};
+
+export const getProducer = async (
+  slug: string,
+  options?: RequestInit,
+): Promise<ProducerDetail> => {
+  return customFetch<ProducerDetail>(getGetProducerUrl(slug), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetProducerQueryKey = (slug: string) => {
+  return [`/api/library/producers/${slug}`] as const;
+};
+
+export const getGetProducerQueryOptions = <
+  TData = Awaited<ReturnType<typeof getProducer>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  slug: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getProducer>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetProducerQueryKey(slug);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getProducer>>> = ({
+    signal,
+  }) => getProducer(slug, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!slug,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getProducer>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetProducerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getProducer>>
+>;
+export type GetProducerQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Get producer by slug, with related entries
+ */
+
+export function useGetProducer<
+  TData = Awaited<ReturnType<typeof getProducer>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  slug: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getProducer>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetProducerQueryOptions(slug, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List subject tags with counts
+ */
+export const getListSubjectsUrl = () => {
+  return `/api/library/subjects`;
+};
+
+export const listSubjects = async (
+  options?: RequestInit,
+): Promise<SubjectWithCount[]> => {
+  return customFetch<SubjectWithCount[]>(getListSubjectsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListSubjectsQueryKey = () => {
+  return [`/api/library/subjects`] as const;
+};
+
+export const getListSubjectsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listSubjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSubjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListSubjectsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSubjects>>> = ({
+    signal,
+  }) => listSubjects({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listSubjects>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListSubjectsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listSubjects>>
+>;
+export type ListSubjectsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List subject tags with counts
+ */
+
+export function useListSubjects<
+  TData = Awaited<ReturnType<typeof listSubjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSubjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListSubjectsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List project buckets with counts
+ */
+export const getListProjectBucketsUrl = () => {
+  return `/api/library/buckets`;
+};
+
+export const listProjectBuckets = async (
+  options?: RequestInit,
+): Promise<ProjectBucketWithCount[]> => {
+  return customFetch<ProjectBucketWithCount[]>(getListProjectBucketsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectBucketsQueryKey = () => {
+  return [`/api/library/buckets`] as const;
+};
+
+export const getListProjectBucketsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectBuckets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectBuckets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListProjectBucketsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectBuckets>>
+  > = ({ signal }) => listProjectBuckets({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectBuckets>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectBucketsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectBuckets>>
+>;
+export type ListProjectBucketsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List project buckets with counts
+ */
+
+export function useListProjectBuckets<
+  TData = Awaited<ReturnType<typeof listProjectBuckets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectBuckets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectBucketsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List contributors
+ */
+export const getListContributorsUrl = () => {
+  return `/api/library/contributors`;
+};
+
+export const listContributors = async (
+  options?: RequestInit,
+): Promise<Contributor[]> => {
+  return customFetch<Contributor[]>(getListContributorsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListContributorsQueryKey = () => {
+  return [`/api/library/contributors`] as const;
+};
+
+export const getListContributorsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listContributors>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContributors>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListContributorsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listContributors>>
+  > = ({ signal }) => listContributors({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listContributors>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListContributorsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listContributors>>
+>;
+export type ListContributorsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List contributors
+ */
+
+export function useListContributors<
+  TData = Awaited<ReturnType<typeof listContributors>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContributors>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListContributorsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a contributor
+ */
+export const getCreateContributorUrl = () => {
+  return `/api/library/contributors`;
+};
+
+export const createContributor = async (
+  createContributorRequest: CreateContributorRequest,
+  options?: RequestInit,
+): Promise<Contributor> => {
+  return customFetch<Contributor>(getCreateContributorUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createContributorRequest),
+  });
+};
+
+export const getCreateContributorMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContributor>>,
+    TError,
+    { data: BodyType<CreateContributorRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createContributor>>,
+  TError,
+  { data: BodyType<CreateContributorRequest> },
+  TContext
+> => {
+  const mutationKey = ["createContributor"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createContributor>>,
+    { data: BodyType<CreateContributorRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createContributor(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateContributorMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createContributor>>
+>;
+export type CreateContributorMutationBody = BodyType<CreateContributorRequest>;
+export type CreateContributorMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a contributor
+ */
+export const useCreateContributor = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContributor>>,
+    TError,
+    { data: BodyType<CreateContributorRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createContributor>>,
+  TError,
+  { data: BodyType<CreateContributorRequest> },
+  TContext
+> => {
+  return useMutation(getCreateContributorMutationOptions(options));
+};
+
+/**
+ * @summary List tokenized share links the owner has generated
+ */
+export const getListShareLinksUrl = () => {
+  return `/api/library/share-links`;
+};
+
+export const listShareLinks = async (
+  options?: RequestInit,
+): Promise<ShareLinkSummary[]> => {
+  return customFetch<ShareLinkSummary[]>(getListShareLinksUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListShareLinksQueryKey = () => {
+  return [`/api/library/share-links`] as const;
+};
+
+export const getListShareLinksQueryOptions = <
+  TData = Awaited<ReturnType<typeof listShareLinks>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listShareLinks>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListShareLinksQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listShareLinks>>> = ({
+    signal,
+  }) => listShareLinks({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listShareLinks>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListShareLinksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listShareLinks>>
+>;
+export type ListShareLinksQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List tokenized share links the owner has generated
+ */
+
+export function useListShareLinks<
+  TData = Awaited<ReturnType<typeof listShareLinks>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listShareLinks>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListShareLinksQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate a tokenized contributor upload link
+ */
+export const getCreateShareLinkUrl = () => {
+  return `/api/library/share-links`;
+};
+
+export const createShareLink = async (
+  createShareLinkRequest: CreateShareLinkRequest,
+  options?: RequestInit,
+): Promise<ShareLink> => {
+  return customFetch<ShareLink>(getCreateShareLinkUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createShareLinkRequest),
+  });
+};
+
+export const getCreateShareLinkMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createShareLink>>,
+    TError,
+    { data: BodyType<CreateShareLinkRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createShareLink>>,
+  TError,
+  { data: BodyType<CreateShareLinkRequest> },
+  TContext
+> => {
+  const mutationKey = ["createShareLink"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createShareLink>>,
+    { data: BodyType<CreateShareLinkRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createShareLink(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateShareLinkMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createShareLink>>
+>;
+export type CreateShareLinkMutationBody = BodyType<CreateShareLinkRequest>;
+export type CreateShareLinkMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate a tokenized contributor upload link
+ */
+export const useCreateShareLink = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createShareLink>>,
+    TError,
+    { data: BodyType<CreateShareLinkRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createShareLink>>,
+  TError,
+  { data: BodyType<CreateShareLinkRequest> },
+  TContext
+> => {
+  return useMutation(getCreateShareLinkMutationOptions(options));
+};
+
+/**
+ * @summary Public — resolve a share-link token (contributor lands here)
+ */
+export const getGetShareLinkByTokenUrl = (token: string) => {
+  return `/api/library/share-links/by-token/${token}`;
+};
+
+export const getShareLinkByToken = async (
+  token: string,
+  options?: RequestInit,
+): Promise<PublicShareLink> => {
+  return customFetch<PublicShareLink>(getGetShareLinkByTokenUrl(token), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetShareLinkByTokenQueryKey = (token: string) => {
+  return [`/api/library/share-links/by-token/${token}`] as const;
+};
+
+export const getGetShareLinkByTokenQueryOptions = <
+  TData = Awaited<ReturnType<typeof getShareLinkByToken>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getShareLinkByToken>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetShareLinkByTokenQueryKey(token);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getShareLinkByToken>>
+  > = ({ signal }) => getShareLinkByToken(token, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!token,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getShareLinkByToken>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetShareLinkByTokenQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getShareLinkByToken>>
+>;
+export type GetShareLinkByTokenQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Public — resolve a share-link token (contributor lands here)
+ */
+
+export function useGetShareLinkByToken<
+  TData = Awaited<ReturnType<typeof getShareLinkByToken>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  token: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getShareLinkByToken>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetShareLinkByTokenQueryOptions(token, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Public — submit a file uploaded via share link (lands in needs_review queue)
+ */
+export const getSubmitShareLinkUploadUrl = (token: string) => {
+  return `/api/library/share-links/by-token/${token}/uploads`;
+};
+
+export const submitShareLinkUpload = async (
+  token: string,
+  createLibraryEntryRequest: CreateLibraryEntryRequest,
+  options?: RequestInit,
+): Promise<LibraryEntryUpsertResult> => {
+  return customFetch<LibraryEntryUpsertResult>(
+    getSubmitShareLinkUploadUrl(token),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createLibraryEntryRequest),
+    },
+  );
+};
+
+export const getSubmitShareLinkUploadMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitShareLinkUpload>>,
+    TError,
+    { token: string; data: BodyType<CreateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitShareLinkUpload>>,
+  TError,
+  { token: string; data: BodyType<CreateLibraryEntryRequest> },
+  TContext
+> => {
+  const mutationKey = ["submitShareLinkUpload"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitShareLinkUpload>>,
+    { token: string; data: BodyType<CreateLibraryEntryRequest> }
+  > = (props) => {
+    const { token, data } = props ?? {};
+
+    return submitShareLinkUpload(token, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitShareLinkUploadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitShareLinkUpload>>
+>;
+export type SubmitShareLinkUploadMutationBody =
+  BodyType<CreateLibraryEntryRequest>;
+export type SubmitShareLinkUploadMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Public — submit a file uploaded via share link (lands in needs_review queue)
+ */
+export const useSubmitShareLinkUpload = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitShareLinkUpload>>,
+    TError,
+    { token: string; data: BodyType<CreateLibraryEntryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitShareLinkUpload>>,
+  TError,
+  { token: string; data: BodyType<CreateLibraryEntryRequest> },
+  TContext
+> => {
+  return useMutation(getSubmitShareLinkUploadMutationOptions(options));
+};
+
+/**
+ * @summary List entries waiting for owner review
+ */
+export const getListNeedsReviewUrl = () => {
+  return `/api/library/needs-review`;
+};
+
+export const listNeedsReview = async (
+  options?: RequestInit,
+): Promise<LibraryEntry[]> => {
+  return customFetch<LibraryEntry[]>(getListNeedsReviewUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListNeedsReviewQueryKey = () => {
+  return [`/api/library/needs-review`] as const;
+};
+
+export const getListNeedsReviewQueryOptions = <
+  TData = Awaited<ReturnType<typeof listNeedsReview>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listNeedsReview>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListNeedsReviewQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listNeedsReview>>> = ({
+    signal,
+  }) => listNeedsReview({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listNeedsReview>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListNeedsReviewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listNeedsReview>>
+>;
+export type ListNeedsReviewQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List entries waiting for owner review
+ */
+
+export function useListNeedsReview<
+  TData = Awaited<ReturnType<typeof listNeedsReview>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listNeedsReview>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListNeedsReviewQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Most recently added or updated entries (for dashboard)
+ */
+export const getGetRecentActivityUrl = (params?: GetRecentActivityParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/library/recent?${stringifiedParams}`
+    : `/api/library/recent`;
+};
+
+export const getRecentActivity = async (
+  params?: GetRecentActivityParams,
+  options?: RequestInit,
+): Promise<LibraryEntry[]> => {
+  return customFetch<LibraryEntry[]>(getGetRecentActivityUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRecentActivityQueryKey = (
+  params?: GetRecentActivityParams,
+) => {
+  return [`/api/library/recent`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetRecentActivityQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRecentActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetRecentActivityParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRecentActivity>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetRecentActivityQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRecentActivity>>
+  > = ({ signal }) => getRecentActivity(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRecentActivity>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRecentActivityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRecentActivity>>
+>;
+export type GetRecentActivityQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Most recently added or updated entries (for dashboard)
+ */
+
+export function useGetRecentActivity<
+  TData = Awaited<ReturnType<typeof getRecentActivity>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetRecentActivityParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getRecentActivity>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRecentActivityQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

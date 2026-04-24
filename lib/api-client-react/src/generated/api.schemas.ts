@@ -8,3 +8,403 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface ErrorEnvelope {
+  error: string;
+}
+
+export interface UploadUrlRequest {
+  /** @minLength 1 */
+  name: string;
+  /** @minimum 1 */
+  size: number;
+  /** @minLength 1 */
+  contentType: string;
+}
+
+export interface UploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
+  metadata?: UploadUrlRequest;
+}
+
+export interface Subject {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  color?: string | null;
+}
+
+export type SubjectWithCount = Subject & {
+  entryCount: number;
+};
+
+export interface ProjectBucket {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  color?: string | null;
+}
+
+export type ProjectBucketWithCount = ProjectBucket & {
+  entryCount: number;
+};
+
+export type ProducerKind =
+  | (typeof ProducerKind)[keyof typeof ProducerKind]
+  | null;
+
+export const ProducerKind = {
+  producer: "producer",
+  distributor: "distributor",
+  study: "study",
+  organization: "organization",
+  other: "other",
+} as const;
+
+export interface Producer {
+  id: string;
+  slug: string;
+  name: string;
+  kind?: ProducerKind;
+  description?: string | null;
+  websiteUrl?: string | null;
+  screenshotUrl?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  location?: string | null;
+  /** e.g. "operating", "uncertain", "wound down" */
+  statusFlag?: string | null;
+  statusNotes?: string | null;
+  /** e.g. Shumaka Dust substitutes for Crazy Good Spices */
+  substituteForProducerSlug?: string | null;
+  entryCount?: number;
+}
+
+export type LibraryEntryKind =
+  (typeof LibraryEntryKind)[keyof typeof LibraryEntryKind];
+
+export const LibraryEntryKind = {
+  file: "file",
+  web_source: "web_source",
+} as const;
+
+export type LibraryEntryStatus =
+  (typeof LibraryEntryStatus)[keyof typeof LibraryEntryStatus];
+
+export const LibraryEntryStatus = {
+  published: "published",
+  needs_review: "needs_review",
+} as const;
+
+export interface Contributor {
+  id: string;
+  name: string;
+  organization?: string | null;
+  email?: string | null;
+  notes?: string | null;
+  entryCount?: number;
+}
+
+export type LibraryEntryContactInfo = { [key: string]: unknown } | null;
+
+export type LibraryEntryPrices = { [key: string]: unknown } | null;
+
+export type LibraryEntryDates = { [key: string]: unknown } | null;
+
+export type LibraryEntryGeography = { [key: string]: unknown } | null;
+
+export interface LibraryEntry {
+  id: string;
+  kind: LibraryEntryKind;
+  title: string;
+  summary?: string | null;
+  notes?: string | null;
+  status: LibraryEntryStatus;
+  sourceUrl?: string | null;
+  screenshotUrl?: string | null;
+  screenshotObjectPath?: string | null;
+  /** Object reference. May be `gcs:/objects/<id>` or `attached:<filename>` for pre-seeded assets. */
+  storageRef?: string | null;
+  contentHash?: string | null;
+  fileSize?: number | null;
+  contentType?: string | null;
+  originalFilename?: string | null;
+  /** Coarse type (pdf, image, doc, sheet, text, other) */
+  fileType?: string | null;
+  contactInfo?: LibraryEntryContactInfo;
+  prices?: LibraryEntryPrices;
+  dates?: LibraryEntryDates;
+  geography?: LibraryEntryGeography;
+  statusFlag?: string | null;
+  producer?: Producer | null;
+  contributor?: Contributor | null;
+  subjects: Subject[];
+  buckets: ProjectBucket[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ProducerDetail = Producer & {
+  entries?: LibraryEntry[];
+};
+
+export type CreateProducerRequestKind =
+  (typeof CreateProducerRequestKind)[keyof typeof CreateProducerRequestKind];
+
+export const CreateProducerRequestKind = {
+  producer: "producer",
+  distributor: "distributor",
+  study: "study",
+  organization: "organization",
+  other: "other",
+} as const;
+
+export interface CreateProducerRequest {
+  /** @minLength 1 */
+  name: string;
+  slug?: string;
+  kind?: CreateProducerRequestKind;
+  description?: string;
+  websiteUrl?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  location?: string;
+  statusFlag?: string;
+  statusNotes?: string;
+  substituteForProducerSlug?: string;
+}
+
+export interface CreateContributorRequest {
+  /** @minLength 1 */
+  name: string;
+  organization?: string;
+  email?: string;
+  notes?: string;
+}
+
+export interface LibraryEntryPage {
+  entries: LibraryEntry[];
+  total: number;
+}
+
+export type CreateLibraryEntryRequestKind =
+  (typeof CreateLibraryEntryRequestKind)[keyof typeof CreateLibraryEntryRequestKind];
+
+export const CreateLibraryEntryRequestKind = {
+  file: "file",
+  web_source: "web_source",
+} as const;
+
+export type CreateLibraryEntryRequestContactInfo = { [key: string]: unknown };
+
+export type CreateLibraryEntryRequestPrices = { [key: string]: unknown };
+
+export type CreateLibraryEntryRequestDates = { [key: string]: unknown };
+
+export type CreateLibraryEntryRequestGeography = { [key: string]: unknown };
+
+export type CreateLibraryEntryRequestStatus =
+  (typeof CreateLibraryEntryRequestStatus)[keyof typeof CreateLibraryEntryRequestStatus];
+
+export const CreateLibraryEntryRequestStatus = {
+  published: "published",
+  needs_review: "needs_review",
+} as const;
+
+export interface CreateLibraryEntryRequest {
+  kind: CreateLibraryEntryRequestKind;
+  /** @minLength 1 */
+  title: string;
+  summary?: string;
+  notes?: string;
+  storageRef?: string;
+  /** Returned from /storage/uploads/request-url. Server normalizes to a storageRef. */
+  objectPath?: string;
+  /** SHA-256 hex digest of the file. Used for duplicate detection. */
+  contentHash?: string;
+  fileSize?: number;
+  contentType?: string;
+  originalFilename?: string;
+  sourceUrl?: string;
+  screenshotUrl?: string;
+  contactInfo?: CreateLibraryEntryRequestContactInfo;
+  prices?: CreateLibraryEntryRequestPrices;
+  dates?: CreateLibraryEntryRequestDates;
+  geography?: CreateLibraryEntryRequestGeography;
+  statusFlag?: string;
+  producerId?: string;
+  producerSlug?: string;
+  contributorId?: string;
+  subjectSlugs?: string[];
+  bucketSlugs?: string[];
+  status?: CreateLibraryEntryRequestStatus;
+}
+
+export interface LibraryEntryUpsertResult {
+  entry: LibraryEntry;
+  /** True if a file with the same content hash already existed; the existing entry is returned. */
+  duplicate: boolean;
+}
+
+export type UpdateLibraryEntryRequestContactInfo = { [key: string]: unknown };
+
+export type UpdateLibraryEntryRequestPrices = { [key: string]: unknown };
+
+export type UpdateLibraryEntryRequestDates = { [key: string]: unknown };
+
+export type UpdateLibraryEntryRequestGeography = { [key: string]: unknown };
+
+export type UpdateLibraryEntryRequestStatus =
+  (typeof UpdateLibraryEntryRequestStatus)[keyof typeof UpdateLibraryEntryRequestStatus];
+
+export const UpdateLibraryEntryRequestStatus = {
+  published: "published",
+  needs_review: "needs_review",
+} as const;
+
+export interface UpdateLibraryEntryRequest {
+  title?: string;
+  summary?: string;
+  notes?: string;
+  statusFlag?: string;
+  contactInfo?: UpdateLibraryEntryRequestContactInfo;
+  prices?: UpdateLibraryEntryRequestPrices;
+  dates?: UpdateLibraryEntryRequestDates;
+  geography?: UpdateLibraryEntryRequestGeography;
+  producerId?: string | null;
+  producerSlug?: string | null;
+  subjectSlugs?: string[];
+  bucketSlugs?: string[];
+  status?: UpdateLibraryEntryRequestStatus;
+}
+
+export interface CreateEntryFromUrlRequest {
+  url: string;
+  producerSlug?: string;
+  subjectSlugs?: string[];
+  bucketSlugs?: string[];
+  notes?: string;
+}
+
+export interface CreateShareLinkRequest {
+  contributorId: string;
+  label?: string;
+  presetSubjectSlugs?: string[];
+  presetBucketSlugs?: string[];
+  expiresAt?: string;
+}
+
+export interface ShareLink {
+  id: string;
+  token: string;
+  label?: string | null;
+  contributor: Contributor;
+  presetSubjects?: Subject[];
+  presetBuckets?: ProjectBucket[];
+  /** Full public URL the owner can copy and share. */
+  url?: string;
+  uploadCount?: number;
+  revokedAt?: string | null;
+  expiresAt?: string | null;
+  createdAt: string;
+}
+
+export type ShareLinkSummary = ShareLink;
+
+export interface PublicShareLink {
+  token: string;
+  label?: string | null;
+  contributorName: string;
+  /** e.g. "Northern Food Systems Research Library" */
+  ownerLabel?: string;
+  presetSubjects?: Subject[];
+  presetBuckets?: ProjectBucket[];
+}
+
+export interface LibraryStatsCount {
+  slug: string;
+  name: string;
+  count: number;
+  color?: string | null;
+}
+
+export interface LibraryStats {
+  totalEntries: number;
+  totalProducers: number;
+  totalSubjects: number;
+  totalBuckets: number;
+  needsReviewCount: number;
+  fileCount: number;
+  webSourceCount: number;
+  topSubjects: LibraryStatsCount[];
+  topProducers: LibraryStatsCount[];
+  bucketBreakdown: LibraryStatsCount[];
+  recentEntries?: LibraryEntry[];
+}
+
+export type ListLibraryEntriesParams = {
+  search?: string;
+  /**
+   * Filter by subject slug. Repeat to combine.
+   */
+  subjectSlug?: string;
+  producerSlug?: string;
+  bucketSlug?: string;
+  contributorId?: string;
+  status?: ListLibraryEntriesStatus;
+  kind?: ListLibraryEntriesKind;
+  /**
+   * Coarse file type (pdf, image, doc, sheet, text, other)
+   */
+  fileType?: string;
+  /**
+   * @minimum 1
+   * @maximum 200
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
+  sort?: ListLibraryEntriesSort;
+};
+
+export type ListLibraryEntriesStatus =
+  (typeof ListLibraryEntriesStatus)[keyof typeof ListLibraryEntriesStatus];
+
+export const ListLibraryEntriesStatus = {
+  published: "published",
+  needs_review: "needs_review",
+} as const;
+
+export type ListLibraryEntriesKind =
+  (typeof ListLibraryEntriesKind)[keyof typeof ListLibraryEntriesKind];
+
+export const ListLibraryEntriesKind = {
+  file: "file",
+  web_source: "web_source",
+} as const;
+
+export type ListLibraryEntriesSort =
+  (typeof ListLibraryEntriesSort)[keyof typeof ListLibraryEntriesSort];
+
+export const ListLibraryEntriesSort = {
+  recent: "recent",
+  title: "title",
+  producer: "producer",
+} as const;
+
+export type ListProducersParams = {
+  search?: string;
+};
+
+export type GetRecentActivityParams = {
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+};
