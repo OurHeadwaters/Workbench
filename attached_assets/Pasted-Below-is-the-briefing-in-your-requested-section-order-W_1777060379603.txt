@@ -1,0 +1,302 @@
+Below is the briefing in your requested section order. Where something is in code today I say "shipped"; where it is only in vision-video copy or roadmap I say so. Where I'm extrapolating I mark it (speculation).
+
+1. Vocabulary (canonical terms)
+The product has two parallel vocabularies running side by side, and you should know which is which when you compose on top.
+
+Water-metaphor vocabulary (UI copy / vision-video / brand):
+
+rainfall — income arriving in the wallet
+drop — a unit of money / a single financial event in narrative copy ("every drop has a job")
+Reservoir — the household's total budgeted balance (sum of all buckets)
+channels — the routing rules from rainfall into buckets
+cistern — used interchangeably with savings bucket in copy
+Drip Harvester — the automated yield product (sweeps XRPL AMM fees from a separate "earner wallet" into a savings cistern)
+payday — the period-close ritual where rainfall gets distributed
+drought — a mode/flag for reduced-income periods (it's a real field on PaydayHistoryEntry, so it's more than just a copy word)
+Giving Well — the charity flow on the XRP Spring card
+Code / data-model vocabulary (what the user actually sees in lists, what the schema calls things):
+
+Bucket — the destination category. This is the noun in code and in the visible UI: "Buckets" tab, "Spending Buckets", "Savings Buckets". Channel is never the name of a bucket in the data model.
+Assignment — a manual entry that puts an amount into a bucket with a note, asset, and tax year. This is the closest thing to a "drop" as a row.
+PaydayHistoryEntry — the record produced when a payday is executed.
+Household — the entity in the database (households table). There is no Watershed or Headwaters table; "Watershed" is the brand and the household entity is just Household.
+Mappings you can rely on:
+
+"drop" (narrative) ≈ Assignment or spend-event (data)
+"channel" (narrative) ≈ payday allocation rule, no first-class type
+"cistern" (narrative) ≡ Bucket with group: "savings"
+"Reservoir" (narrative) ≈ derived sum, not stored
+"Watershed" (brand) ≡ Household (entity)
+Headwaters does not appear anywhere in code or copy. Treat it as available naming territory.
+
+Legacy "X-Buckets" still in the system that has not been renamed:
+
+The artifact directory: artifacts/xbuckets/
+The localStorage keys users carry across sessions: xbuckets-prototype-v5, xbuckets-earn-agent-v1, xbuckets-locale-v1
+The patronage wallet constants: XBUCKETS_PATRONAGE_WALLET, XBUCKETS_PATRONAGE_LABEL (the label string says "Keep Watershed free" but the constant name still says XBUCKETS)
+A scattering of xbuckets-* localStorage keys in components
+Test snapshots, internal logs, package paths
+User-facing surface is largely renamed; data-at-rest and source paths are not. Important for downstream work: if you key anything off the storage namespace or the artifact path, expect it to keep saying xbuckets for the foreseeable future.
+
+2. Architecture (the literal stack)
+On XRPL (mainnet, real, today):
+
+Payment transactions (RLUSD/USDC/QCAD or native XRP), constructed client-side
+A Memo on each Payment of the form MemoData = hex("Watershed:<bucketName>:<note>"), MemoType = hex("text/plain"). This is the only on-chain link between a transaction and a bucket. Built in SigningSheet.tsx.
+account_lines reads against xrplcluster.com to fetch live RLUSD/USDC/QCAD trust-line balances (fetchRLUSDBalance in lib/xrpl.ts)
+AMM pool reads (live) for the Earn tab pool browser
+AMMDeposit (constructed for the Drip Harvester earner-wallet flow — flow is built; production usage is prototype)
+Signing happens externally via Xaman (xApp deeplink / push) and WalletConnect v2 using the xrpl_signTransaction method. Watershed never holds a key.
+Not on XRPL today, even though the metaphor implies it:
+
+There is no per-bucket XRPL subaccount being provisioned automatically. Bucket.xrplAddress is an optional field that a user can set, but nothing in the shipped flow opens trust lines per bucket.
+No XRPL Hooks. No on-ledger waterfall. No on-ledger period-close artifact.
+No automatic TrustSet from inside the app (users set up trust lines in their wallet themselves; the app assumes they exist).
+Off-chain, in the repo:
+
+Frontend: React 18 + Vite + Tailwind + Framer Motion PWA at artifacts/xbuckets. Capacitor is wired up for iOS/Android wrapping; native subscription flows go through RevenueCat instead of Stripe.
+API server: Express 5 at artifacts/api-server (/api/*). Routes: auth, households, spend, drip, stripe, revenuecat, support-chat, invest-interest, push, admin, health.
+DB: PostgreSQL via Drizzle ORM in lib/db. Schemas: users, households, household_members, household_invites, household_budget_state, push_subscriptions, conversations, messages, chat_feedback, invest_interest, password_reset_tokens, openai_daily_usage, rate_limits. There's also an undeclared-in-this-list drip_sweep_fees table referenced by the drip fee endpoint.
+API codegen: OpenAPI → Orval → typed React hooks (lib/api-client-react) and Zod types (lib/api-zod).
+Source of truth — the honest answer is hybrid, leaning off-chain:
+
+Wallet balance in the asset (RLUSD etc.) → on-chain is the truth.
+Bucket assignments, targets, payday plans, history, drought flags, settings → off-chain JSON blob in household_budget_state.state (text column, currently just stringified state) or in localStorage when the user is solo.
+Reconciliation rule: lib/reconcile.ts proportionally rescales bucket balances to match the live wallet RLUSD balance whenever they drift. So the on-chain number wins in totals, but bucket attribution is reconstructed off-chain — there is no authoritative on-ledger statement that "$120 of this $400 RLUSD balance is the Groceries bucket." The Memo strings are the only audit thread, and they are per-payment, not per-balance.
+Deployment topology (today): a single-tenant SaaS — one Postgres, one API, one web frontend serving all users distinguished by householdId and walletAddress. There is no per-household self-hosted deployment shipping in this repo. The "self-hosted under the meadow" framing is narrative; the codebase is a normal multi-tenant web app.
+
+Why XRPL specifically: I can only infer from the codebase, not from documented decision records. What's evident: low fees + native multi-asset support (RLUSD, USDC, QCAD, XRP) lets the same wallet hold multiple stablecoin denominations cheaply; AMM is built-in, which makes the Drip Harvester yield story possible without third-party DeFi; Xaman provides a strong non-custodial wallet UX. (speculation on motive) — there is no WHY-XRPL.md in the repo.
+
+3. Data model
+These are real, shipped types (artifacts/xbuckets/src/types.ts):
+
+Bucket = {
+  id, group: "spending"|"savings", name, balance, target,
+  xrplAddress?, lowThreshold?: { type: "amount"|"percent", value }
+}
+Assignment = {
+  id, bucketName, amount, note, asset, createdAt, isoDate, taxYear
+}
+PaydayHistoryEntry = {
+  id, isoDate, totalDistributed,
+  buckets: [{ id, name, amount, previousAmount? }],
+  kind?: "payday"|"reconciliation",
+  preReconciliationTotal?, drought?, droughtIncomeUsd?
+}
+IncomeStream = { id, name, amount, frequency: weekly|biweekly|semimonthly|monthly }
+ExternalBill = { id, name, amount, frequency }
+Cardholder   = { id, name, role: parent|child|partner, spendingLimit, bucketIds, initials, color }
+GivingHistoryEntry = { id, isoDate, xrpAmount, usdValueAtTime, destinationLabel, destinationAddress, txHash? }
+DB tables relevant to households (lib/db/src/schema/households.ts):
+
+households(id uuid pk, owner_address text, secret text, created_at)
+household_members(household_id, wallet_address, joined_at; UNIQUE pair)
+household_invites(token pk, household_id, created_at, expires_at, used)
+household_budget_state(household_id pk, state text default '{}', updated_at, updated_by)
+Notes:
+
+Buckets are user-defined, but the app ships default taxonomies in lib/constants.ts:
+Spending defaults: Groceries, Restaurants, Gas, Entertainment, Clothing, Household, Bills, Gifts, Medical, Kids
+Savings defaults: Starter Emergency Fund, Debt Payoff, Emergency Reserve
+Plus a Ramsey Baby Steps scaffold (BABY_STEPS_US and a CA variant BABY_STEPS) that classifies savings buckets into 7 steps by keyword match.
+Recurring vs one-off: Recurring is modelled at the income stream and external bill level, not at the assignment level. Assignments are individual events. There is no recurring: true flag on a bucket assignment.
+Transfers between buckets: Two mechanisms.
+Payday waterfall (lib/paydayFill.ts, lib/paydayUtils.ts): on payday, the planner fills buckets sequentially against their target values. Surplus flows down a configured order. This is a planning-time waterfall, not a continuous overflow.
+Reconciliation (lib/reconcile.ts): proportional rescaling when on-chain balance drifts from the sum of bucket balances; recorded as a PaydayHistoryEntry with kind: "reconciliation".
+No automated overflow rules ("when Bucket A hits target, route excess to Bucket B"). Sweep behaviour exists only inside the Drip Harvester (yield from the earner wallet → one chosen savings cistern), not bucket-to-bucket.
+Period closing: A "period" is the cadence between paydays, configured by the income stream's frequency. The artifact produced when a period closes is a PaydayHistoryEntry. There is no signed/anchored period-close receipt on XRPL.
+4. Identity, wallets, custody
+Custody: strictly non-custodial. The app never sees a private key. All signing is delegated to Xaman or WalletConnect.
+How a household gets an XRPL wallet: they don't — they bring one. The user installs Xaman (or any WC v2 XRPL wallet), creates the wallet there, then taps "Connect" in Watershed which deeplinks to the wallet for signing. There is no in-app wallet creation, no seed-phrase UI, no recovery UI. The "grandmother test" is therefore inherited from Xaman, not solved by Watershed.
+No-crypto path: users who don't want to touch a wallet at all can fund and log spends via Stripe (card / Apple Pay / Google Pay). For those users the bucket model still works, but there is no on-chain footprint at all — they're using Watershed as a pure planning layer with Stripe as the rails.
+Multi-member households:
+The schema supports multiple members; the route enforces a hard cap of 2 in routes/households.ts (if (members.length >= 2) return 409).
+Members typically connect their own individual wallets. They share a single householdId and a single household_budget_state JSON blob, synced server-side and gated by a per-household 32-byte secret issued at create time and held by each member.
+Invites are single-use 16-byte tokens with an expiresAt.
+There is no role model. No "trustee", no "read-only advisor", no "child member with limited buckets" enforced server-side. The Cardholder type with role: parent|child|partner exists in the frontend type system but is presentational, not an authorization boundary.
+Privacy posture:
+On-chain: standard XRPL-public — addresses, amounts, currencies, and the Memo string Watershed:<bucketName>:<note> are all visible to anyone reading the ledger. The bucket name and note are public. This is the single biggest privacy gotcha for downstream use.
+Off-chain: bucket balances, targets, history, income amounts live in localStorage and/or household_budget_state text. Server can read them; they are not encrypted at rest in any visible way in the schema (state TEXT).
+5. The bucket model (philosophy in product)
+Standard taxonomy: spending defaults + savings defaults + Baby Steps scaffold (above). This is seeded, not enforced — the user is free to rename, delete, add. The Baby Steps mapping is a soft classifier that matches by keyword (groceries, gas, emergency, debt, tithe, etc.) and assigns a step number for visualisation.
+How a drop gets classified: manual today, with a roadmap toward Card Sync.
+Manual: user logs a spend or assignment and picks a bucket.
+On-chain Payments built by the app embed the bucket name in the Memo, so a Watershed-signed Payment is self-classifying.
+"Card Sync" (Plaid-like rail / on-chain card rails) is in copy as H1 2026 roadmap, not shipped.
+There is no ML categoriser in the app.
+Sweep / waterfall behaviour:
+Payday Planner is the canonical waterfall: it fills buckets against their target in a configured order, with a "drought" mode that proportionally scales targets when income is reduced.
+Drip Harvester is the only continuous sweep: when an earner wallet (separate from main) accumulates ≥ a user-set threshold (default $25 RLUSD) of harvested AMM fees, it auto-deposits to one configured savings cistern. A 5% protocol fee is taken from the yield (never principal); recorded server-side in drip_sweep_fees.
+There is no bucket-A-to-bucket-B overflow rule.
+Period closing: "Execute Payday" → PaydayHistoryEntry is appended → bucket balances move to their planned values → the period resets. Reconciliations also produce entries (kind: "reconciliation"). The history list is the audit log.
+6. User-facing surface
+What the household member sees day-to-day: five tabs in a bottom nav.
+Buckets — dashboard with the Reservoir total, bucket tiles (animated water levels), payment card, ambient drops animation.
+Payday — planner, faq, history.
+Earn — Drip Harvester setup + AMM pool browser + education.
+Learn — coach tips, baby-steps progress, Family Mode (gated premium).
+Admin — settings, household, invite/join, exports, tenant overrides, replay tour.
+There's also a legacy invest tab type and an Invest route variant gated behind premium.
+Mobile, web, both? Single React PWA codebase, served as a web app and wrapped via Capacitor for iOS/Android. No separate native code.
+Notification model: server-side scheduler paydayScheduler.ts + a push route + push_subscriptions table. So Web Push notifications for payday reminders are server-side; native push goes through Capacitor + the same backend. There's also in-app notifications (toasts, the InboxCard, the WhatsNew system mentioned in tasks).
+Onboarding (5–10 steps):
+Land on /, see a 3-slide cinematic story tour (GettingStartedTour.tsx) with the rainfall metaphor.
+(Optional) sign up / sign in (auth gates the household-sync features).
+Tenant mode is auto-detected (cu | enthusiast | advisor from VITE_TENANT_MODE or a localStorage override).
+5-step spotlight walkthrough (SpotlightTour.tsx) over the live dashboard: Buckets tab → Stream → Water Tower → Payday tab → Earn tab.
+Connect a wallet (Xaman or WC) or skip to Stripe-only mode.
+Configure income streams + external bills (the "no-bills" subtraction step).
+Run the First Payday Checklist (FirstPaydayChecklist.tsx).
+Execute the first payday → the first Assignments get created, the first PaydayHistoryEntry is logged.
+Tour seen is gated by watershed-tour-seen-v1 in localStorage; replay options live in settings.
+7. Integration surfaces
+HTTP API (REST, JSON, served at /api/*):
+
+Authoritative list as of today:
+
+Health: GET /api/health
+Auth (email + password): /api/auth/* (signup, login, password reset, etc.)
+Households:
+POST /api/households — create, returns { householdId, secret }
+GET /api/households/member/:walletAddress
+POST /api/households/:id/invite (capped at 2 members)
+POST /api/households/join
+GET /api/households/:id/state — returns the JSON budget blob
+PUT /api/households/:id/state — replaces the JSON budget blob
+DELETE /api/households/:id/member/:walletAddress
+Spend events: POST /api/spend-event, GET /api/spend-events (auth-gated)
+Drip: GET /api/drip/fee-rate, POST /api/drip/record-sweep-fee
+Stripe: subscription + topup + gift (/api/stripe/config, /topup-intent, /gift, /gift/confirm, /gift/:token, /gift/redeem, plus webhooks)
+RevenueCat: receipt + entitlement endpoints
+Push: subscribe / unsubscribe + payday scheduling
+Support chat: SSE-streamed AI responses
+Invest interest, admin, etc.
+Authentication model:
+
+Web users: session-cookie auth from the auth router (email + password, password reset).
+Households: the secret returned by create/join is a Bearer token (Authorization: Bearer <secret>) used to read/write the household's state and roster — it's a shared secret held by every member of that household, not per-member identity. This is the key fact for any "external advisor with read-only access" story — there's no read-only role; the secret is all-or-nothing.
+GraphQL / WebSocket: none. Support chat uses SSE.
+
+Webhooks (incoming, not outgoing): Stripe and RevenueCat webhooks. Watershed itself does not emit outbound webhooks ("payday closed", "drip swept", "bucket overflowed") to third parties today. If a downstream product wants to react to a payday close, it has to poll GET /households/:id/state with the household secret.
+
+Export formats: CSV (tax-export oriented, CRA/IRS framing) is the main shipped export. PDF/JSON exports are not in the route surface I can see. There is no on-chain receipt format for a period close.
+
+Read-only public / transparency endpoints: none today. Nothing in the API exposes aggregated, anonymised data. If you want a public dashboard that aggregates household drops, you're building it on top — the household state blob would have to be opted-in by each household and shipped over an API that doesn't currently exist.
+
+"Household ledger as a service" pattern: de facto, yes — the household_budget_state blob plus the secret-bearer auth model is exactly that pattern. Officially, no — it isn't typed, isn't documented, and the state is a freeform text JSON column, not a versioned schema. Anything you build on it is coupled to the frontend's AppState shape, which is unstable.
+
+8. Governance, audit, sovereignty
+Who can change a bucket definition / override a classification / undo a sweep: any member of the household with the household secret can do all of it via PUT /households/:id/state, which replaces the entire JSON blob. There is no field-level permission, no audit of who changed what at the field level. The updatedBy column on household_budget_state records the wallet address of the last writer — that's the entire write-audit story at the DB layer.
+Audit trail of money movement:
+PaydayHistoryEntry list (off-chain, in the state blob) — append-only by convention but technically mutable since the whole blob is rewritable.
+On-chain Payment Memos (immutable, public, but only created when the user signs a Payment via the app).
+drip_sweep_fees table (server-side) for protocol-fee events.
+spend_events table (server-side, auth-gated).
+Stripe / RevenueCat receipts for fiat / IAP.
+Multi-party scenarios:
+Two adults: supported (the 2-member cap was clearly designed for "couple"). Both members hold the same secret. Both can write.
+Household with a trustee / external advisor: not modelled. No read-only role, no third "observer" member. An advisor would either get the shared secret (full write) or be out-of-band entirely.
+Tenant mode advisor exists (tenantConfig.ts) — this is a white-label deployment for an IG-style advisor brand, not a per-household advisor permission.
+The "self-hosted under the meadow" story: in the current repo this is narrative, not architecture. The repo is a multi-tenant SaaS with one Postgres. There is no Docker-compose, no per-household provisioning script, no documentation for running one node per household. To honour the sovereignty story for real you'd need to add a deployment artifact (single-tenant container + sqlite/postgres + the secret bootstrapping). Useful to flag as an unbuilt commitment.
+9. Permaculture / Zone 0 mapping
+I want to be careful here. The word permaculture does not appear anywhere in the codebase. Neither does zone 0, zone 1, Catch and Store, Obtain a Yield, Self-Regulation, etc. The Zone 0 framing is your shared framing with the founder, not a token in the product.
+
+What is in the product, and which permaculture principles each maps to (my mapping, marked as interpretation):
+
+Catch and Store Energy → the Reservoir + bucket balances. Income is "rainfall caught the moment it lands". This metaphor is heavy in copy.en.ts.
+Obtain a Yield → the Drip Harvester (XRPL AMM fees → savings cistern). The 5% protocol fee on yield (not principal) is the explicit "fair-share-of-yield" decision in code (lib/protocol-fee.ts).
+Apply Self-Regulation and Accept Feedback → the drought mode in PaydayHistoryEntry and the proportional target-scaling in paydayUtils.ts. When income drops, the system tightens automatically and surfaces the gap rather than hiding it.
+Use Edges and Value the Marginal → the Giving Well (donate unrealized XRP gains above a threshold) and the patronage wallet are explicit "value the marginal" mechanisms — small surpluses get a productive home.
+Produce No Waste → the "every drop has a job" copy + the constraint that you cannot leave the payday planner with unallocated rainfall ("All assigned — confirm" button).
+Where the Zone 0 → Zone 1+ boundary lives in the architecture, concretely:
+
+The strict boundary is the wallet address + the household secret. Inside that boundary: the household's state blob, their bucket assignments, their on-chain Memos.
+The natural seam for Zone 1+ composition is GET /households/:id/state with explicit per-household consent (sharing the secret) plus the read-only AMM/account_lines XRPL endpoints. There is no purpose-built "Zone 1 publishing API" — if you want one, you'd add a new endpoint that derives an aggregated view from household_budget_state and an opt-in flag inside the state blob (e.g. state.publishToCommunity = true).
+The current architecture does not have a primitive for "publish my grocery drops to a community aggregate while keeping my own data private." This is build-it-yourself territory and will need a server-side aggregation layer that the household opts into.
+10. Current state, capability by capability
+Using your states: shipped & in production / built & demoable, not yet adopted / designed, not yet built / considered & explicitly deferred.
+
+Envelope / bucket budgeting UI — shipped & demoable
+Payday planner with waterfall + drought mode — shipped & demoable
+Reconciliation against on-chain RLUSD balance — shipped & demoable
+Xaman wallet connection + signing — shipped
+WalletConnect v2 XRPL signing — shipped
+On-chain Payment with Watershed:<bucket>:<note> Memo — shipped
+Live RLUSD balance fetch from XRPL mainnet — shipped
+Live AMM pool browser (Earn tab) — shipped
+Drip Harvester (auto-sweep AMM fees → savings cistern, 5% protocol fee) — built & demoable (production usage at small scale; the broader earner-wallet provisioning story is prototype)
+Stripe subscription billing + Stripe top-up + Stripe gift — shipped
+RevenueCat in-app purchase flow — shipped (native build path)
+Household 2-member sync via shared secret — shipped
+Cinematic + spotlight onboarding tours — shipped
+EN + FR locale system — shipped
+Multi-tenant white-label modes (cu/enthusiast/advisor) — shipped
+Web Push payday reminders — shipped
+AI support chat (SSE, gpt-5-mini via Replit AI proxy) — shipped
+Giving Well charitable flow on XRP gains — shipped
+CSV tax export (CRA/IRS-shaped) — shipped
+Bundle-size guard in CI — shipped
+Card Sync (Plaid-style or on-chain card rails) — designed, not built, copy says "targeting H1 2026"
+Per-bucket XRPL subaccounts (open trust line per bucket) — considered but not implemented (Bucket.xrplAddress field exists, no flow uses it)
+XRPL Hooks for on-chain enforcement — not in scope today
+Outbound webhooks to third parties — not built
+Read-only public / transparency endpoints — not built
+Trustee / read-only advisor role — not designed in the codebase
+More-than-2-member households — not built (DB allows it; route blocks it)
+Self-hosted-per-household deployment artifact — not built; aspirational
+Encrypted-at-rest household state — not built; state is plain TEXT
+11. Rejected alternatives
+Banks / Plaid / Open Banking — not rejected, deferred. Card Sync copy targets H1 2026 and is framed as roadmap, not "we won't do this." For now the substitute is "log manually or import CSV from your bank."
+Custodial wallets — explicitly rejected as a stance ("Watershed never touches your money"). Stripe is the no-crypto path, but Stripe routes funds the user's own card / bank, not a Watershed wallet.
+Exchange integrations / fiat on/off-ramps — not in code. (speculation) Likely deliberately out of scope to keep the non-custodial framing clean. Xaman itself can do on-ramp; Watershed defers to it.
+ESG / impact-finance integrations — not addressed in code, neither shipped nor explicitly rejected. Open question.
+AI auto-categorisation — out of scope today. The only AI in the product is the support chat; it does not see user bucket data and the system message excludes sensitive context. There is no on-device classifier and no server-side categoriser.
+12. Open questions and known tensions (visible in the repo)
+These are inferred from the current task backlog (#6, #7, #15, #16, #19, #22, #24, #25, #27, #40, #41, #43–#46, #57, #58, etc.) and from gaps between copy and code:
+
+Source-of-truth tension. The "every drop is a job" promise is satisfied off-chain (planner + reconciliation) but the on-chain Memo is the only durable receipt. There's no agreed answer to: "if the off-chain state and on-chain history disagree, which is authoritative for an audit?" Reconciliation tilts toward "chain wins for totals, off-chain wins for attribution," which is workable but not documented.
+Bucket Memo privacy. Bucket names go on a public ledger inside the Memo. If a household renames "Groceries" to "Therapy" they expose that publicly on every signed Payment. There's no toggle to redact or hash the Memo, and no flag in copy that warns about this.
+2-member cap. The DB supports N members; the route enforces 2. Whether this is a permanent product decision or a launch-shaped constraint isn't recorded. It blocks any "household + trustee + advisor" composition.
+Household state shape is unversioned. household_budget_state.state is TEXT default '{}' — there is no schema version, no migration path, and the frontend's AppState shape evolves freely. Tasks #19 (read-once) and #16 (remove cast workarounds) are symptoms.
+Live currency conversion correctness (#15 is open). USD→CAD via frankfurter.app is a single point of correctness for every CAD figure shown.
+Drip Harvester productisation gap. Earner-wallet provisioning, the 5% protocol fee, withdraw flow (#40), real APR display (#41) — the yield product has shipped UX but unfinished economics.
+Self-hosted commitment vs SaaS reality — see §8.
+Tenant-mode bleed. The same codebase serves three brands (cu/enthusiast/advisor) plus two regions (US/CA Baby Steps). Feature flags and copy variants are real and load-bearing; that fragility is going to matter the moment a downstream product asks "which version of Watershed am I composing with?"
+13. Specific integration questions for the downstream work
+a. Could the practitioner's 35% reinvestment account (CAPEX, tooling, training, pilot reserve) be a Watershed instance?
+
+Mostly yes, with caveats. The bucket model is expressive enough: those four are exactly four Buckets with group: "savings" and per-bucket target values, and the Payday Planner waterfall handles "fill reinvestment account from monthly inflow" cleanly. The fit problems are:
+
+A "reinvestment account" is conceptually one parent with four children. Watershed has no nested-bucket primitive — the four would live as four flat siblings in the savings group. (speculation) You'd label them with a shared prefix (e.g. Reinvest · CAPEX) and treat the parent as a derived sum in the downstream UI.
+The 2-member cap means an agency with multiple practitioners can't all hold member-credentials on the same instance. Either one person is the holder of record, or you spin up multiple instances and aggregate externally.
+There is no role separation between "writer" and "reader," so an external auditor can't get read-only access without holding the full secret.
+b. Can a household's grocery drops surface to a public aggregate dashboard while keeping individual data private?
+
+Not with what's shipped. Two missing pieces: (1) there is no read-only public/aggregation endpoint, and (2) there is no opt-in publish flag in the household state. What is present and useful: bucket Memos on signed Payments are already public on XRPL — so a community-side aggregator could in principle scrape Watershed-tagged Memos addressed to known merchant patterns and bucket="Groceries" to build an aggregate, but that's a workaround, not a sanctioned integration, and it leaks the bucket name privacy issue noted above. The clean path is to add an opt-in publishToCommunity flag in the state blob and a new aggregation endpoint server-side. That's downstream work, not Watershed work as it stands.
+
+c. Could Watershed's audit / period-close artifact serve as the receipt format for the 35%-markup audit?
+
+Partially. The shipped artifact is PaydayHistoryEntry (off-chain, JSON, in the household state blob) plus the CSV tax export. As a data structure it can carry the five measures — the bucket list, totals, dates, and reconciliation deltas are all there. As an audit receipt it's weak because it lives in mutable text storage with no signature, no anchoring, no cryptographic proof of "this is what closed the period." If the practitioner audit needs evidentiary weight, you'd want to extend the period-close to also write a hash anchor as an XRPL Memo on a self-Payment from the household wallet. That extension is unbuilt.
+
+d. Is the agency's monthly reserve account (Pilot #2 funding) a Watershed instance?
+
+Could be, with the same caveats as (a). Mechanically a Household whose two "members" are the agency principals, with a savings bucket "Pilot 2 Reserve" and a planner that fills it monthly, works. But: it stretches the household metaphor (an agency is not a household), it inherits the 2-member cap, and there is no audit posture suited to org-level accountability. My honest read: it's expressive enough to track the reserve, but you should not assume it's the right system of record for an agency-scale obligation without first deciding whether you accept "household masquerading as agency" as a long-term shape.
+
+e. Is there a self-hosted-in-community deployment pattern?
+
+No, not today. Current posture is multi-tenant SaaS, not single-household self-hosted, and certainly not community-cluster self-hosted. The 9 servers + 6 privacy-phones provisioning in the Deer Lake plan would need either (1) all 9 running independent multi-tenant instances of Watershed (overkill), or (2) a new single-tenant deployment artifact built for this purpose (not in repo), or (3) one shared SaaS instance hosted on community infra serving the band's households (closest to what the code supports today). I'd flag this as a real gap between the founder's narrative and the shipped architecture; it should be surfaced in the operating plan as "Watershed deployment pattern: pending."
+
+14. What you'd want a downstream agent to know that you didn't ask about
+A few things that bit me while reading the codebase and would bite a downstream integrator:
+
+Storage namespace is xbuckets-*. If you key any cross-product feature off Watershed's localStorage, expect that prefix to keep saying xbuckets — they have not migrated keys.
+The household secret is a shared, all-powerful bearer token. Treat it like a root key. Anyone holding it can read and rewrite the entire household budget state.
+The household state blob has no schema version. Build adapters, not direct binds, on top of it. The frontend changes its AppState shape freely.
+Bucket names are public on XRPL via the Payment Memo. If you compose Watershed into a context where bucket names should be private (anything mental-health, family-conflict, etc.), this is a real disclosure hazard.
+The Stripe path means "Watershed user without a wallet" is a first-class user. Don't assume every Watershed household has an XRPL address. The Drip Harvester, Memo audit thread, and on-chain reconciliation are all wallet-only. A no-wallet household has only the off-chain bucket layer.
+Tenant mode is environment-driven (VITE_TENANT_MODE) with a localStorage override. Different tenants see different features. If a downstream product needs to reason about "what does Watershed look like to this user," it needs the tenant mode as input.
+The 5% protocol fee on Drip yield is the only place Watershed itself takes money out of a user's wallet. It's transparent (shown in sweep confirmations) and capped to yield, not principal — but downstream economic models that route through the Drip Harvester need to know the household will see ~5% leakage at sweep time.
+Region matters. US Baby Steps and CA Baby Steps are slightly different (RRSP/TFSA/RESP vs 401k/Roth/529). RegionContext.tsx switches them. For a Deer Lake (Canadian) deployment you can lean on the CA defaults, but the savings-bucket nomenclature is opinionated.
+There is no "household snapshot at time T" API. Reads return the current state. If you want point-in-time evidence (for an annual audit), you have to capture and store snapshots yourself; Watershed will not do it for you.
+The vision-video vocabulary leads the product vocabulary. When in doubt about terms, default to the data-model nouns (Bucket, Assignment, PaydayHistoryEntry, Household) and use the water-metaphor terms (drop, cistern, Reservoir, channel, rainfall) only in user-facing copy where the founder is already using them.
+If anything above looks misaligned with what the founder told you in conversation, flag it and I'll dig deeper into that specific area — there are likely product decisions made verbally that haven't landed in code yet, and I'd rather mark those clearly than smooth them over.
