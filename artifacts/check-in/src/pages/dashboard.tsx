@@ -382,9 +382,15 @@ function LatestSnapshotPanel({ snapshot }: { snapshot: Snapshot }) {
           <InfoTile
             label="Investing rate"
             value={formatPercent(investingRate)}
-            sub={`${formatUsd(
-              snapshot.ownerTakeHome - snapshot.annualLivingExpenses,
-            )} above living costs`}
+            sub={
+              plan
+                ? `Plan target ${formatPercent(plan.targetAnnualInvestingRate)} · ${formatUsd(
+                    snapshot.ownerTakeHome - snapshot.annualLivingExpenses,
+                  )} above living costs`
+                : `${formatUsd(
+                    snapshot.ownerTakeHome - snapshot.annualLivingExpenses,
+                  )} above living costs`
+            }
             testId="tile-investing-rate"
           />
           <InfoTile
