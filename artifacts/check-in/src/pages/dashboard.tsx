@@ -21,14 +21,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, PlusCircle, Sparkles } from "lucide-react";
-import { listSnapshots } from "@/lib/api";
+import { listSnapshots, getLatestSnapshot } from "@/lib/api";
 import {
   PLAN_CURVE,
   TARGET_PORTFOLIO_USD,
   TARGET_RETIRE_DATE,
+  TARGET_RETIRE_AGE,
+  ASSUMED_REAL_RETURN,
   getPlanForYear,
   paceFromRatio,
   paceLabel,
+  yearsToRetirement,
+  projectPortfolioAtFifty,
   type PaceColor,
 } from "@/lib/planCurve";
 import {
@@ -54,19 +58,27 @@ const PACE_DOT: Record<PaceColor, string> = {
 };
 
 export default function Dashboard() {
+  // The full list backs the chart and the small history strip; the
+  // dedicated "latest" endpoint backs the top panel so the most-watched
+  // section of the page renders from a tiny payload independent of how
+  // long the history grows.
+  const latestQuery = useQuery({
+    queryKey: ["check-in", "snapshots", "latest"],
+    queryFn: getLatestSnapshot,
+  });
   const snapshotsQuery = useQuery({
     queryKey: ["check-in", "snapshots"],
     queryFn: listSnapshots,
   });
 
-  if (snapshotsQuery.isLoading) {
+  if (latestQuery.isLoading || snapshotsQuery.isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
-  if (snapshotsQuery.isError) {
+  if (latestQuery.isError || snapshotsQuery.isError) {
     return (
       <Card>
         <CardContent className="py-12 text-center text-destructive">
@@ -77,7 +89,7 @@ export default function Dashboard() {
   }
 
   const snapshots = snapshotsQuery.data ?? [];
-  const latest: Snapshot | null = snapshots[0] ?? null;
+  const latest: Snapshot | null = latestQuery.data ?? null;
 
   return (
     <div className="space-y-8">
@@ -100,7 +112,10 @@ export default function Dashboard() {
       </div>
 
       {latest ? (
-        <LatestSnapshotPanel snapshot={latest} />
+        <>
+          <RetirementOutlookPanel snapshot={latest} />
+          <LatestSnapshotPanel snapshot={latest} />
+        </>
       ) : (
         <Card>
           <CardContent className="py-12 text-center space-y-4">
@@ -127,7 +142,165 @@ export default function Dashboard() {
       )}
 
       <PlanCurveCard snapshots={snapshots} />
+
+      {snapshots.length > 0 ? (
+        <RecentHistoryCard snapshots={snapshots} />
+      ) : null}
     </div>
+  );
+}
+
+function RetirementOutlookPanel({ snapshot }: { snapshot: Snapshot }) {
+  const yearsLeft = yearsToRetirement(snapshot.year);
+  const annualContribution = Math.max(
+    0,
+    snapshot.ownerTakeHome - snapshot.annualLivingExpenses,
+  );
+  const projection = projectPortfolioAtFifty({
+    currentPortfolio: snapshot.portfolioValue,
+    annualContribution,
+    yearsRemaining: yearsLeft,
+  });
+  const projectionRatio =
+    projection !== null ? projection / TARGET_PORTFOLIO_USD : 0;
+  const projectionColor: PaceColor = paceFromRatio(projectionRatio);
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2" data-testid="panel-retirement-outlook">
+      <InfoTile
+        label={`Years to age ${TARGET_RETIRE_AGE}`}
+        value={
+          yearsLeft === 0
+            ? "Plan complete"
+            : yearsLeft === 1
+              ? "1 year"
+              : `${yearsLeft} years`
+        }
+        sub={`From ${snapshot.year} to ${snapshot.year + yearsLeft}`}
+        testId="tile-years-remaining"
+      />
+      <ProjectionTile
+        projection={projection}
+        ratio={projectionRatio}
+        color={projectionColor}
+        annualContribution={annualContribution}
+      />
+    </div>
+  );
+}
+
+function ProjectionTile({
+  projection,
+  ratio,
+  color,
+  annualContribution,
+}: {
+  projection: number | null;
+  ratio: number;
+  color: PaceColor;
+  annualContribution: number;
+}) {
+  return (
+    <div
+      className="rounded-md border border-border bg-card p-4 space-y-1.5"
+      data-testid="tile-projection-at-fifty"
+    >
+      <div className="flex items-center justify-between">
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          Projected at age {TARGET_RETIRE_AGE}
+        </div>
+        <span
+          className={`inline-block h-2 w-2 rounded-full ${PACE_DOT[color]}`}
+        />
+      </div>
+      <div className="font-serif text-2xl font-bold tracking-tight">
+        {projection === null ? "—" : formatUsd(Math.round(projection))}
+      </div>
+      <div className="text-xs text-muted-foreground">
+        Holding {formatUsd(annualContribution)}/yr above living costs at{" "}
+        {formatPercent(ASSUMED_REAL_RETURN, 0)} real ·{" "}
+        {formatPercent(ratio, 0)} of {formatUsdCompact(TARGET_PORTFOLIO_USD)}{" "}
+        target
+      </div>
+    </div>
+  );
+}
+
+function RecentHistoryCard({ snapshots }: { snapshots: Snapshot[] }) {
+  // Spec asks for a small history list on the dashboard itself, newest
+  // first.  Cap to the most recent five so it doesn't crowd the page —
+  // the full History page handles the long view.
+  const recent = snapshots.slice(0, 5);
+  return (
+    <Card className="shadow-sm" data-testid="card-recent-history">
+      <CardHeader>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <CardTitle className="font-serif text-xl">
+              Past snapshots
+            </CardTitle>
+            <CardDescription>
+              The last few years at a glance — newest first.
+            </CardDescription>
+          </div>
+          <Link href="/history">
+            <Button
+              variant="ghost"
+              size="sm"
+              data-testid="link-dashboard-history"
+            >
+              See all
+            </Button>
+          </Link>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {recent.map((s) => {
+          const plan = getPlanForYear(s.year);
+          const ratio = plan ? s.portfolioValue / plan.portfolioTarget : 1;
+          const color: PaceColor = plan ? paceFromRatio(ratio) : "green";
+          return (
+            <div
+              key={s.id}
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-md border border-border bg-card p-3"
+              data-testid={`row-history-${s.year}`}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={`inline-block h-2 w-2 rounded-full ${PACE_DOT[color]}`}
+                />
+                <span className="font-serif text-lg font-semibold tracking-tight">
+                  {s.year}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatDate(s.takenAt)}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span>
+                  Portfolio{" "}
+                  <span className="font-medium text-foreground">
+                    {formatUsd(s.portfolioValue)}
+                  </span>
+                </span>
+                <span>
+                  ARR{" "}
+                  <span className="font-medium text-foreground">
+                    {formatUsd(s.watershedArr)}
+                  </span>
+                </span>
+                <span>
+                  Take-home{" "}
+                  <span className="font-medium text-foreground">
+                    {formatUsd(s.ownerTakeHome)}
+                  </span>
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 }
 

@@ -68,6 +68,13 @@ export async function listSnapshots(): Promise<Snapshot[]> {
   return data.snapshots;
 }
 
+export async function getLatestSnapshot(): Promise<Snapshot | null> {
+  const data = await request<{ snapshot: Snapshot | null }>(
+    "/snapshots/latest",
+  );
+  return data.snapshot;
+}
+
 export type CreateSnapshotInput = {
   year: number;
   watershedArr: number;

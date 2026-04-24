@@ -45,14 +45,19 @@ export function getPlanForYear(year: number): PlanYear | null {
 
 export const TARGET_PORTFOLIO_USD = 5_000_000;
 export const TARGET_RETIRE_DATE = "April 2037";
+export const TARGET_RETIRE_YEAR = 2037;
+export const TARGET_RETIRE_AGE = 50;
+/** Long-run real-return assumption for the "projected at 50" calc. */
+export const ASSUMED_REAL_RETURN = 0.07;
 
 // Pace bucketing — read alongside getPlanForYear() to color a snapshot.
-// "Green" means the snapshot is at or above the year's target line; "yellow"
-// means it's within striking distance; "red" means it's materially behind.
+// Per spec: green only when at or above the year's target line, yellow
+// 80–99%, red below 80%.  These thresholds are the heart of the dashboard,
+// so be very strict about them.
 export type PaceColor = "green" | "yellow" | "red";
 
 export function paceFromRatio(ratio: number): PaceColor {
-  if (ratio >= 0.95) return "green";
+  if (ratio >= 1.0) return "green";
   if (ratio >= 0.8) return "yellow";
   return "red";
 }
@@ -61,4 +66,41 @@ export function paceLabel(color: PaceColor): string {
   if (color === "green") return "On pace";
   if (color === "yellow") return "Slightly behind";
   return "Behind";
+}
+
+/**
+ * Whole years between the snapshot year and Robin's age-50 year (2037).
+ * Returns 0 if the snapshot is from 2037 or later — the plan is done.
+ */
+export function yearsToRetirement(snapshotYear: number): number {
+  return Math.max(0, TARGET_RETIRE_YEAR - snapshotYear);
+}
+
+/**
+ * Project the portfolio forward to age 50 assuming Robin's *current*
+ * investing rate continues unchanged and the portfolio earns
+ * `realReturn` per year (default 7% real, the standard long-run U.S.
+ * equity assumption after inflation).
+ *
+ * Annual contribution = max(0, ownerTakeHome − annualLivingExpenses).
+ * Each contribution is assumed to land at year-end (ordinary annuity);
+ * close enough for a once-a-year planning tool.
+ *
+ * Returns null if there are no years left to project.
+ */
+export function projectPortfolioAtFifty(args: {
+  currentPortfolio: number;
+  annualContribution: number;
+  yearsRemaining: number;
+  realReturn?: number;
+}): number | null {
+  const { currentPortfolio, annualContribution, yearsRemaining } = args;
+  const r = args.realReturn ?? ASSUMED_REAL_RETURN;
+  if (yearsRemaining <= 0) return currentPortfolio;
+  const growthFactor = Math.pow(1 + r, yearsRemaining);
+  const contributionFv =
+    r === 0
+      ? annualContribution * yearsRemaining
+      : (annualContribution * (growthFactor - 1)) / r;
+  return currentPortfolio * growthFactor + contributionFv;
 }

@@ -86,6 +86,21 @@ router.get("/snapshots", async (_req, res) => {
   res.json({ snapshots: rows.map(serialize) });
 });
 
+// Convenience endpoint for the dashboard's "latest snapshot" panel — saves
+// the client from pulling the full history just to render the top card.
+router.get("/snapshots/latest", async (_req, res) => {
+  const [row] = await db
+    .select()
+    .from(financialSnapshotsTable)
+    .orderBy(desc(financialSnapshotsTable.takenAt))
+    .limit(1);
+  if (!row) {
+    res.json({ snapshot: null });
+    return;
+  }
+  res.json({ snapshot: serialize(row) });
+});
+
 router.post("/snapshots", async (req, res) => {
   const body = (req.body ?? {}) as Record<string, unknown>;
 

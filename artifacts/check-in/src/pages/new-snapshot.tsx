@@ -189,7 +189,7 @@ export default function NewSnapshot() {
           )}
         </CardHeader>
         <CardContent>
-          <form onSubmit={onSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} noValidate className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 id="year"
