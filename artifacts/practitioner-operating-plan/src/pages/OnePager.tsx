@@ -182,6 +182,62 @@ export default function OnePager() {
           </div>
         </div>
 
+        <div className="mb-[14pt]">
+          <div
+            className="font-mono uppercase tracking-[0.2em] text-[9pt] text-[#b85a3e] font-semibold mb-[6pt]"
+          >
+            Cash flow on a 60-day pay cycle
+          </div>
+          <div className="text-[10pt] leading-[1.45] text-[#2a2520]">
+            Indigenous-services contracts typically pay net-60. Payroll for the
+            team starts month one; the first invoice doesn't clear until month
+            three. The deepest dip is end of month two — two months of outflow
+            already spent before any revenue lands. That gap has a name:{" "}
+            <span className="font-semibold">bridge capital</span>. It isn't lost
+            money — it's working capital permanently tied up in receivables,
+            recovered when the engagement ends and the last two invoices clear.
+          </div>
+          <table
+            className="w-full text-[10pt] border-collapse mt-[6pt]"
+            style={{ tableLayout: "fixed" }}
+          >
+            <thead>
+              <tr className="border-b border-[#c8bfa7] text-left text-[#6b7665] font-semibold">
+                <th className="py-[4pt] pr-[4pt] w-[28%]">Contract size</th>
+                <th className="py-[4pt] pr-[4pt] w-[24%] text-right">
+                  Outflow / mo
+                </th>
+                <th className="py-[4pt] pr-[4pt] w-[24%] text-right">
+                  Bridge needed
+                </th>
+                <th className="py-[4pt] w-[24%] text-right">
+                  Recovers by
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-[#2a2520]">
+              <tr className="border-b border-[#e3dac4]">
+                <td className="py-[5pt] pr-[4pt] font-semibold">$20,000 / mo</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$18,000</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$36,000</td>
+                <td className="py-[5pt] text-right">Beyond month 12</td>
+              </tr>
+              <tr className="border-b border-[#e3dac4]">
+                <td className="py-[5pt] pr-[4pt] font-semibold">$25,000 / mo</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$20,000</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$40,000</td>
+                <td className="py-[5pt] text-right">~Month 10</td>
+              </tr>
+              <tr>
+                <td className="py-[5pt] pr-[4pt] font-semibold">$30,000 / mo</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$22,000</td>
+                <td className="py-[5pt] pr-[4pt] text-right">$44,000</td>
+                <td className="py-[5pt] text-right">~Month 8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div className="grid grid-cols-2 gap-[14pt] mb-[10pt]">
           <div>
             <div
@@ -191,10 +247,13 @@ export default function OnePager() {
             </div>
             <div className="text-[10pt] leading-[1.45] text-[#2a2520]">
               A monthly retainer of <span className="font-semibold">$25,000</span>{" "}
-              against a 12-month engagement, reviewed at month 6. This funds the
-              team that delivers the work, keeps the practitioner in the field
-              long enough to actually do the job, and seeds the agency the next
-              contract will live inside.
+              against a 12-month engagement, reviewed at month 6, plus
+              acknowledgement that{" "}
+              <span className="font-semibold">~$40,000 of bridge capital</span>{" "}
+              is required on day one to cover team payroll until the first net-60
+              invoice clears. This funds the team that delivers the work, keeps
+              the practitioner in the field long enough to actually do the job,
+              and seeds the agency the next contract will live inside.
             </div>
           </div>
           <div>
