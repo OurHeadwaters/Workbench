@@ -32,7 +32,7 @@ const week: Day[] = [
     day: "Thu",
     hours: "2 hrs OM",
     block: "Label & manifest",
-    who: "OM runs Shippo labels for the full batch (wholesale, custom, DTC) and books the Friday pickup. Bookkeeper closes the salt cost-centre for the month.",
+    who: "OM runs Shippo labels for the full batch (wholesale, custom, DTC) and books the Friday pickup. Bookkeeper files the SALT-01 monthly close (template at /salt-monthly-close) — channel CM, OM-hours-cap flag, net to the agency P&L.",
     drop: "Never drops — labels happen even if pickup slides; pickup just rebooks for Mon.",
   },
   {

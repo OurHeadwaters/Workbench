@@ -100,7 +100,7 @@ export default function HardRules() {
                 pause until the ratio is restored.
               </div>
               <div className="mt-[0.8vh] font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted">
-                Fillable template → /hours
+                Fillable templates → <a href="/hours" className="underline decoration-dotted underline-offset-2 text-text">/hours</a> · <a href="/salt-coa" className="underline decoration-dotted underline-offset-2 text-text">/salt-coa</a> · <a href="/salt-monthly-close" className="underline decoration-dotted underline-offset-2 text-text">/salt-monthly-close</a>
               </div>
             </div>
           </div>

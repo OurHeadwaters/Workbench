@@ -243,9 +243,27 @@ export default function SaltPL() {
         <div className="mt-[1.2vh] font-body text-[0.78vw] text-muted leading-[1.35]">
           Numbers above are the planning baseline — actuals get reconciled
           monthly into the agency books under cost-centre{" "}
-          <span className="font-mono text-text">SALT-01</span>. The bookkeeper
-          publishes the channel-level CM in the same quarterly hours-by-pillar
-          report that enforces Rule 02.
+          <a
+            href="/salt-coa"
+            className="font-mono text-text underline decoration-dotted underline-offset-2"
+          >
+            SALT-01
+          </a>{" "}
+          (chart of accounts, allocation rules). The bookkeeper files the{" "}
+          <a
+            href="/salt-monthly-close"
+            className="text-text underline decoration-dotted underline-offset-2"
+          >
+            monthly close
+          </a>{" "}
+          and publishes the channel-level CM in the same{" "}
+          <a
+            href="/hours"
+            className="text-text underline decoration-dotted underline-offset-2"
+          >
+            quarterly hours-by-pillar report
+          </a>{" "}
+          that enforces Rule 02.
         </div>
       </div>
     </div>

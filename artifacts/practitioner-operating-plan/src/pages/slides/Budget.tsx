@@ -271,11 +271,24 @@ export default function Budget() {
               + Salt line ·
             </span>
             Sits alongside as a separate cost-centre (
-            <span className="font-mono">SALT-01</span>): ~$108k revenue · ~$61k
-            net annual contribution · ~12 OM hrs/mo capped. Channel-by-channel
-            contribution margin (wholesale 63%, custom labels 66%, DTC batch
-            36%, markets PR / cost-recovery only) lives in the Part&nbsp;VI
-            salt P&amp;L slide; the operating runbook is the slide before it.
+            <a
+              href="/salt-coa"
+              className="font-mono underline decoration-dotted underline-offset-2 text-primary"
+            >
+              SALT-01
+            </a>
+            ): ~$108k revenue · ~$61k net annual contribution · ~12 OM hrs/mo
+            capped. Channel-by-channel contribution margin (wholesale 63%,
+            custom labels 66%, DTC batch 36%, markets PR / cost-recovery only)
+            lives in the Part&nbsp;VI salt P&amp;L slide; the operating runbook
+            is the slide before it; the bookkeeper&rsquo;s{" "}
+            <a
+              href="/salt-monthly-close"
+              className="underline decoration-dotted underline-offset-2 text-primary"
+            >
+              monthly close template
+            </a>{" "}
+            is what reconciles actuals into those buckets.
           </span>
         </div>
       </div>

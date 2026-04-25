@@ -13,6 +13,8 @@ import BrandOnePager from "@/pages/BrandOnePager";
 import Checklist from "@/pages/Checklist";
 import HoursByPillar from "@/pages/HoursByPillar";
 import LeaseTooling from "@/pages/LeaseTooling";
+import SaltCoA from "@/pages/SaltCoA";
+import SaltMonthlyClose from "@/pages/SaltMonthlyClose";
 import StudioWindDown from "@/pages/StudioWindDown";
 import InquiryTriage from "@/pages/InquiryTriage";
 import Today from "@/pages/Today";
@@ -348,6 +350,8 @@ export default function App() {
   if (location === "/checklist") return <Checklist />;
   if (location === "/hours") return <HoursByPillar />;
   if (location === "/lease-tooling") return <LeaseTooling />;
+  if (location === "/salt-coa") return <SaltCoA />;
+  if (location === "/salt-monthly-close") return <SaltMonthlyClose />;
   if (location === "/studio-wind-down") return <StudioWindDown />;
   if (location === "/inquiry-triage") return <InquiryTriage />;
 
