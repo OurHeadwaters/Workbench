@@ -38,17 +38,19 @@ const DEFAULT_STATE: State = {
       id: "ops-manager",
       name: "Operations Manager",
       baselinePercent: 65,
-      hours: { deerLake: 0, salt: 0, internalDesign: 0, agencyBackOffice: 0 },
+      hours: { deerLake: 235, salt: 45, internalDesign: 35, agencyBackOffice: 45 },
       prevQuarterUnder: false,
-      notes: "",
+      notes:
+        "~28 hrs/week. Deer Lake: store-manager 1:1s, weekly staffing + supplier coordination, monthly P&L walk-through with the band council, freight + cold-chain escalations. Salt: production scheduling and co-pack check-ins. Internal design: sprint kickoffs and resourcing calls. Back-office: contracts, vendor onboarding, HR admin, agency-wide weekly ops huddle.",
     },
     {
       id: "bookkeeper",
       name: "Bookkeeper / Admin",
       baselinePercent: 40,
-      hours: { deerLake: 0, salt: 0, internalDesign: 0, agencyBackOffice: 0 },
+      hours: { deerLake: 60, salt: 30, internalDesign: 20, agencyBackOffice: 40 },
       prevQuarterUnder: false,
-      notes: "",
+      notes:
+        "~12 hrs/week. Deer Lake: store payroll, vendor pay-runs, monthly statement to the band council, this Hours-by-Pillar report. Salt: COGS reconciliation, HST on retail orders, royalty tracking. Internal design: project-time allocation and client invoicing. Back-office: agency payroll, monthly close, GST/HST filings, year-end T4s/T4As.",
     },
     {
       id: "it-tech",
