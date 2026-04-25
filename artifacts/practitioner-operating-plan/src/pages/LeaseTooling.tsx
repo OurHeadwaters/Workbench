@@ -66,8 +66,11 @@ export default function LeaseTooling() {
       <div className="onepager-sheet">
         <div className="flex items-baseline justify-between border-b border-[#c8bfa7] pb-[8pt] mb-[10pt] print:pb-[4pt] print:mb-[4pt]">
           <div>
-            <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[3pt] print:text-[7pt] print:mb-[2pt]">
+            <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[1pt] print:text-[7pt] print:mb-[1pt]">
               Headwaters · Dad-lease CRA tooling
+            </div>
+            <div className="font-display italic text-[8.5pt] text-[#1f3d2e] mb-[3pt] leading-[1.25] print:text-[7pt] print:mb-[2pt]">
+              We've always known how to fix it, now we can.
             </div>
             <h1 className="font-display text-[19pt] leading-[1.05] tracking-tight text-[#1f3d2e] font-semibold print:text-[12pt]">
               Ten items to set the related-party rent up clean.

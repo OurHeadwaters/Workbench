@@ -37,6 +37,12 @@ export default function NamingTheAgency() {
             >
               Headwaters.
             </h1>
+            <div
+              className="font-display italic text-[1.2vw] leading-[1.25] mt-[1.2vh] max-w-[22vw]"
+              style={{ color: "#e9c8a8" }}
+            >
+              We've always known how to fix it, now we can.
+            </div>
           </div>
           <div className="col-span-7">
             <div

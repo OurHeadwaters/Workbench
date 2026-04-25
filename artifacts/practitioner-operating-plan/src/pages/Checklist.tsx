@@ -66,8 +66,11 @@ export default function Checklist() {
       <div className="onepager-sheet">
         <div className="flex items-baseline justify-between border-b border-[#c8bfa7] pb-[8pt] mb-[10pt] print:pb-[5pt] print:mb-[6pt]">
           <div>
-            <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[3pt] print:text-[7pt] print:mb-[2pt]">
+            <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[1pt] print:text-[7pt] print:mb-[1pt]">
               Headwaters · This-Week Action Checklist
+            </div>
+            <div className="font-display italic text-[8.5pt] text-[#1f3d2e] mb-[3pt] leading-[1.25] print:text-[7pt] print:mb-[2pt]">
+              We've always known how to fix it, now we can.
             </div>
             <h1 className="font-display text-[19pt] leading-[1.05] tracking-tight text-[#1f3d2e] font-semibold print:text-[15pt]">
               Six items, in order. Domains today, agent before any filing.

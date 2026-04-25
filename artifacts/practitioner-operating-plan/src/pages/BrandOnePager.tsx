@@ -10,7 +10,10 @@ export default function BrandOnePager() {
             <h1 className="font-display text-[22pt] leading-[1.05] tracking-tight text-[#1f3d2e] font-semibold">
               Headwaters.
             </h1>
-            <div className="font-display italic text-[11pt] text-[#2a2520] mt-[3pt] max-w-[5in] leading-[1.35]">
+            <div className="font-display italic text-[10pt] text-[#1f3d2e] mt-[3pt] leading-[1.3]">
+              We've always known how to fix it, now we can.
+            </div>
+            <div className="font-display italic text-[11pt] text-[#2a2520] mt-[2pt] max-w-[5in] leading-[1.35]">
               The parent agency. Watershed lives inside it; Deer Lake is the
               first engagement; future reserves are the rest.
             </div>
@@ -218,6 +221,9 @@ export default function BrandOnePager() {
             </div>
             <div className="leading-[1.4]">
               Founder · Headwaters
+              <div className="font-display italic text-[8pt] text-[#1f3d2e] mt-[1pt] leading-[1.3]">
+                We've always known how to fix it, now we can.
+              </div>
               <div className="font-mono text-[9pt] text-[#1f3d2e] font-semibold mt-[2pt]">
                 you@headwaters.ca
               </div>
@@ -284,7 +290,7 @@ function BrandStructureDiagram() {
       </defs>
 
       <path
-        d="M 300 50 L 300 90 L 100 90 L 100 120"
+        d="M 300 70 L 300 95 L 100 95 L 100 120"
         stroke="#b85a3e"
         strokeWidth="1.2"
         fill="none"
@@ -293,7 +299,7 @@ function BrandStructureDiagram() {
         markerEnd="url(#brand-arrow)"
       />
       <path
-        d="M 300 50 L 300 120"
+        d="M 300 70 L 300 120"
         stroke="#b85a3e"
         strokeWidth="1.2"
         fill="none"
@@ -302,7 +308,7 @@ function BrandStructureDiagram() {
         markerEnd="url(#brand-arrow)"
       />
       <path
-        d="M 300 50 L 300 90 L 500 90 L 500 120"
+        d="M 300 70 L 300 95 L 500 95 L 500 120"
         stroke="#b85a3e"
         strokeWidth="1.2"
         fill="none"
@@ -316,13 +322,13 @@ function BrandStructureDiagram() {
           x="220"
           y="14"
           width="160"
-          height="40"
+          height="56"
           rx="3"
           fill="#1f3d2e"
         />
         <text
           x="300"
-          y="32"
+          y="30"
           textAnchor="middle"
           fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
           fontSize="8"
@@ -333,7 +339,7 @@ function BrandStructureDiagram() {
         </text>
         <text
           x="300"
-          y="48"
+          y="46"
           textAnchor="middle"
           fontFamily="Georgia, 'Times New Roman', serif"
           fontSize="16"
@@ -341,6 +347,18 @@ function BrandStructureDiagram() {
           fill="#f4ede0"
         >
           Headwaters
+        </text>
+        <text
+          x="300"
+          y="61"
+          textAnchor="middle"
+          fontFamily="Georgia, 'Times New Roman', serif"
+          fontSize="7"
+          fontStyle="italic"
+          fill="#e9c8a8"
+          opacity="0.9"
+        >
+          We've always known how to fix it, now we can.
         </text>
       </g>
 

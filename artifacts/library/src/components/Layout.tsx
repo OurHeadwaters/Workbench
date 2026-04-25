@@ -65,6 +65,9 @@ export default function Layout({ children }: { children: ReactNode }) {
             <LogOut className="h-4 w-4 mr-2" />
             Sign out
           </Button>
+          <p className="mt-3 px-1 text-[11px] italic leading-snug text-muted-foreground">
+            A Headwaters project — We've always known how to fix it, now we can.
+          </p>
         </div>
       </aside>
       <main className="flex-1 overflow-y-auto flex flex-col relative">
