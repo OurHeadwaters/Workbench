@@ -13,8 +13,8 @@ const constellation: ConstellationEntry[] = [
     role: "The held-water gauge. Reads the slow days the system is doing its quiet work, and the shallow bays where life actually happens.",
   },
   {
-    name: "SaltBox Zone 1",
-    role: "The survival floor. What you preserved, cellared, salted. What does not depend on the season.",
+    name: "SaltBox Zone 0",
+    role: "Motherhood, homeschooling, homebase. The saltbox-house itself: in permaculture Zone 0 is the dwelling, and its health is the precondition for water flowing out to every other zone.",
   },
   {
     name: "807 Benefits Zone 3",
@@ -92,11 +92,12 @@ export default function Codetry() {
           <p>
             A codetry app is named the way a saltbox house is built — every
             beam carries weight.{" "}
-            <span className="italic">SaltBox Zone 1</span> is not a clever
-            rename of an emergency-fund tracker. The name is the design
-            spec. It tells you what the surface is for, what climate it
-            lives in, and what other parts of the system it sits beside.
-            Change the name and you have changed the structure.
+            <span className="italic">SaltBox Zone 0</span> is not a clever
+            rename of a homeschooling tracker. The name is the design
+            spec: it carries that the household is Zone 0, that this is
+            the saltbox-house itself, and that everything else in the
+            system flows from this center. Change the name and you have
+            changed the structure.
           </p>
 
           <Subhead>Different from code poetry</Subhead>
@@ -123,7 +124,7 @@ export default function Codetry() {
             Codetry borrows from the cold-climate vernacular. A saltbox
             house wasn&rsquo;t designed for prettiness — its asymmetric
             roof and thick north wall were the only way a house survived a
-            Zone 1 winter. The form{" "}
+            boreal winter. The form{" "}
             <span className="font-semibold">is</span> the function.
             Codetry asks the same of software: let the form-language do
             the structural work. Let the name carry weight a column would
@@ -155,17 +156,45 @@ export default function Codetry() {
 
         <div className="mt-[14pt] pt-[8pt] border-t border-[#c8bfa7] text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[7.5pt] print:mt-[10pt] print:pt-[5pt] print:break-inside-avoid">
           <span className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#1f3d2e] mr-[4pt]">
+            Grounding
+          </span>
+          This constellation is built on regenerative agriculture and
+          permaculture as living disciplines, not as metaphors. Its
+          specific shaping comes from a decade of daily listening to
+          Jack Spirko&rsquo;s{" "}
+          <span className="italic">The Survival Podcast</span> &mdash;
+          whose tagline,{" "}
+          <span className="italic">
+            &ldquo;for if times get tough or even if they don&rsquo;t,&rdquo;
+          </span>{" "}
+          has been the working frame since 2011 &mdash; alongside the
+          peer-to-peer mutual-aid logic of the Freedom Cells movement.
+          The working axiom is that{" "}
+          <span className="italic">
+            there is no shortage of problems, but when we look for
+            solutions it all becomes a little easier.
+          </span>{" "}
+          Every app here is solution-shaped because of that axiom. The
+          original layer on top &mdash; the saltbox-house principle, the
+          Zone 0&ndash;5 reading of northwestern Ontario, and codetry as
+          the naming method &mdash; is the local contribution. The
+          disciplines underneath are not.
+        </div>
+
+        <div className="mt-[10pt] pt-[8pt] border-t border-[#c8bfa7] text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[7.5pt] print:mt-[7pt] print:pt-[5pt] print:break-inside-avoid">
+          <span className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#1f3d2e] mr-[4pt]">
             Lineage
           </span>
           Code poetry as a movement is acknowledged and respected;
-          codetry is a distinct discipline in the way regenerative
-          agriculture is distinct from permaculture — adjacent, sharing
-          roots, doing different work. The single-word coinage{" "}
+          codetry is a distinct discipline from code poetry &mdash;
+          adjacent, sharing the conviction that words placed
+          deliberately can do structural work, doing different jobs.
+          The single-word coinage{" "}
           <span className="italic">codetry</span> has scattered prior
           life (notably a 2017 self-published book of the same name on
-          an unrelated subject); the meaning loaded into it here —
+          an unrelated subject); the meaning loaded into it here &mdash;
           metaphor-first software design where naming carries the
-          architectural weight — is the contribution of this
+          architectural weight &mdash; is the contribution of this
           constellation.
         </div>
       </div>
