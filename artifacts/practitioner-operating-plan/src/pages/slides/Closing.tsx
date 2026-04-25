@@ -72,6 +72,12 @@ export default function Closing() {
               looks like — costed, structured, accountable, and built to
               outlast this contract.
             </div>
+            <div
+              className="mt-[2vh] font-mono uppercase tracking-[0.25em] text-[0.95vw] opacity-70"
+              style={{ color: "#e9c8a8" }}
+            >
+              Reviewed over the next two weeks · Named when you're home from Deer Lake
+            </div>
           </div>
           <div className="text-right">
             <div className="font-mono uppercase tracking-[0.25em] text-[1vw] opacity-70 mb-[0.8vh]">

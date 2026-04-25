@@ -264,8 +264,16 @@
     "speakerNotes": ""
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b19",
     "position": 34,
+    "filepath": "src/pages/slides/FeedbackWindow.tsx",
+    "title": "The next two weeks",
+    "description": "A two-week feedback and negotiating window between handing the deck over and naming the deal: opens Mon Apr 27, 2026 and closes when the contractor is back home from Deer Lake (~Sun May 10 / Mon May 11). Three beats — Week 1 read & react on the road, Week 2 talk it through, Closing day name the deal at the kitchen table — plus the founder posture that no guided execution work begins until the deal is named.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
+    "position": 35,
     "filepath": "src/pages/slides/PartVDivider.tsx",
     "title": "Part V — Pilot to template",
     "description": "Section divider entering the scale voice: Deer Lake earns it, then so does every reserve. The template the practitioner builds for pilot #1 is the playbook the next reserve inherits.",
@@ -273,7 +281,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d02",
-    "position": 35,
+    "position": 36,
     "filepath": "src/pages/slides/PilotDeerLake.tsx",
     "title": "Why Deer Lake is Pilot #1",
     "description": "Three reasons Deer Lake is the right pilot: the right scale (~870 people), a council ready for transparency, and a practitioner with skin in the game and the structural plan to deliver.",
@@ -281,7 +289,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d03",
-    "position": 36,
+    "position": 37,
     "filepath": "src/pages/slides/Template.tsx",
     "title": "The six-module template",
     "description": "What gets templatized: operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, net-positive accountability. Each module is documented as we ship it for Deer Lake.",
@@ -289,7 +297,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d04",
-    "position": 37,
+    "position": 38,
     "filepath": "src/pages/slides/PathToScale.tsx",
     "title": "The path to scale",
     "description": "Five-year arc: Year 1 Deer Lake pilot, Year 2 second reserve at marginal cost, Year 3 three-to-five concurrent contracts, Year 5 open template that any practitioner can run.",
