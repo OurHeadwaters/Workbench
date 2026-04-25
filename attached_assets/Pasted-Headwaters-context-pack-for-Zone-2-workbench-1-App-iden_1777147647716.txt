@@ -1,0 +1,46 @@
+Headwaters context-pack for Zone 2 workbench
+1. App identity
+Name: Headwaters (formerly Watershed / xBuckets)
+Zone: 1 — Daily kitchen garden
+Tagline: "Channel every drop. Watch the ripple effect."
+Live URL: x-buckets-vision.replit.app
+Scope: Non-custodial XRPL stablecoin envelope-budgeting PWA
+Tenancy: Three white-label skins via VITE_TENANT_MODE — cu (Alterna credit-union), enthusiast (Xaman crypto-native), advisor (IG Wealth). Active build: advisor.
+2. Codetry worked-examples
+The places where the metaphor IS the architecture, not decoration. Each entry: the name → what it actually does → why renaming would change the structure.
+
+Headwaters → the household balance is the source of the whole watershed; every other zone (institutional homes, community food, regen industries) sits downstream of what flows through here. Rename to "Budget App" and you lose the constraint that the source must keep flowing or every downstream zone dries up.
+Buckets → envelope categories. You can only pour from one bucket into another; you cannot summon water from nothing. The architectural constraint: every transfer is a literal redistribution, never a creation. Rename to "Categories" and the UI starts quietly suggesting balances can grow by clicking.
+XRP Spring → savings, defined as free XRP above the 10 XRP network reserve. A spring upwells from below the reserve floor; the user sees "what's pooled above the rock." The new six-stage bamboo growth scene (just shipped) extends the metaphor from data model into artwork — same constraint, now visible.
+Drip Harvester → AMM liquidity-pool yield. Small steady drops collected over time. The verb "harvest" carries patience and seasonality; "Auto-Compound" would have erased both.
+Community Well → monthly pooled tips that round-distribute to community proposals. A well everyone draws from and contributes to; the monthly snapshot/round cycle is the well refilling.
+Giving Well → user-to-user tip pool for charitable giving. Same well metaphor at the household scale.
+Surplus Pool (in flight) → where Payday overflow goes once envelopes are full. Pool, not "extra savings account" — water seeking level.
+Payday Planner → the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving.
+3. Live state / current build
+Three parallel project tasks in flight on isolated branches:
+
+#793 Spring: six-stage bamboo progression — IMPLEMENTED today, awaiting approval
+#794 Payday Surplus Pool — pending
+#795 Tutorial Hub — pending
+Earn tab is the active surface (XRP Spring card, Drip Harvester setup, Community Well sheet). 132 e2e tests, 527 unit tests — green except 2 pre-existing flaky visual snapshots (settlement-explainer, ~1% pixel drift). Companion video artifact "Headwaters — Channel Every Drop" lives in the same repo. Stripe is wired for the advisor skin's premium gates.
+
+4. Cross-zone touchpoints (where Zone 1 already brushes other zones)
+Zone 0 (SaltBox / Bright Side) → "household" is the unit of account here. Both delivery models need a budget-shaped surface; Headwaters' household primitive (households table, household-auth) is the natural candidate.
+Zone 3 (Community Knowledge Hub / 807 Benefits) → the Community Well distributes to community proposals. Clear seam: 807 Co-op proposals could be the proposal source for the Well's monthly round.
+Zone 4 (Regen Revolution) → Drip Harvester picks AMM pools; the conventional-to-regenerative rubric could mark which pools/issuers/instruments are aligned. "Regen-aligned" as a pool filter.
+Zone 5 (Dam Days / Shallows) → the Earn tab surfaces tiny stage labels ("Pristine pool," "Producing"). Stage-transition events are a clean trigger for private Dam Days entries.
+Pre-zone (Brainstorm Library) → ideas in .local/tasks/ are seeds not yet zoned; worth a periodic sweep into the Library.
+5. Coordination handles for Zone 2
+Repo: pnpm monorepo, this artifact at artifacts/xbuckets/
+In-flight plan files: .local/tasks/task-{793,794,795}.md
+Long-term project memory: replit.md at repo root
+Tenant skins: artifacts/xbuckets/src/tenantConfig.ts
+Copy keys (codetry naming lives here): artifacts/xbuckets/src/copy.en.ts and copy.fr.ts — bilingual EN/FR
+Visual source-of-truth for in-flight UI: artifacts/mockup-sandbox/ — components get approved on canvas before graduating into the main app
+What I'd ask of Zone 2 going forward:
+
+A shared name registry — when a noun appears in Headwaters and elsewhere (household, well, pool, harvest), Zone 2 should be the source of truth so we don't fork meanings.
+A cross-zone proposal queue — when Zone 3's 807 proposals should appear in the Community Well, we'll need a shared schema (proposal id, title, ask, beneficiary).
+Zone-1-aligned worked examples for the codetry doc — point at: Spring + bamboo (data→art), Buckets (constraint→UI), Community Well (rounding cycle→pooling cadence). Those three are the cleanest demonstrations of metaphor-as-architecture in this app right now.
+That's the pack. Tell me what to refine or what Zone 2 needs more of.
