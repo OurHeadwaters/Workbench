@@ -1,0 +1,142 @@
+Good. I have everything I need. Here is the full inventory, then the proposed plan.
+
+STEP 1 — INVENTORY
+A. Public routes with cart / checkout / Square payment
+Route	What it does
+/salts	"Add to cart" button on every single-jar card; "Add to cart" on all 3 gift bundles; "Build your own" flow with add-to-cart and direct /checkout?gift=1 navigation; copy references "at checkout" and "skip the shipping fee"
+/checkout	Full Square checkout page — billing info, shipping, gift note, wrap upgrade, Square payment SDK
+/order/thanks	Post-payment confirmation landing page
+/review/:token	Triggered by the review-invite email; lets customers leave a product review after fulfillment
+Navbar — all pages	CartIcon (bag icon with badge) visible on every page, desktop and mobile
+All pages (except /wholesale/line-sheet, /coop-prompt)	CartDrawer — slide-out cart persistent across the whole site
+B. Public routes marketing "design for others"
+Surface	What it exposes
+Navbar — "Software"	Link to /portfolio on every page, desktop and mobile
+Navbar — "Training"	Link to /training on every page, desktop and mobile
+Footer — "Studio" column	Three links: "Software · Portfolio" → /portfolio; "Training" → /training; "Start a Conversation" → /app-design/start
+/portfolio	Case studies, full IATagline (paragraph variant), all 3 service packages (Starter Site / Operational Tool / Advanced Blockchain) with CTA buttons; meta description says "from the Parr's Jars studio"
+/training	Full training offering page; fit description reads "with help from a working studio"; page positions Parr as a hired builder for other organizations
+/app-design/start	Full design intake form, submits to design_leads table
+/services	Redirects to /portfolio
+Home page	IATagline short variant ("AI? It's actually IA…"); two CTA links to /portfolio; one CTA link to /app-design/start; founder bio paragraph includes links to /portfolio and /training
+Contact page (/contact)	Interest dropdown includes "App Design" option; if ?interest=app-design is in the URL, it redirects immediately to /app-design/start; a "Start a Conversation" hyperlink in the form body links to /app-design/start
+C. Public routes marketing custom labels
+Surface	What it exposes
+/custom-labels	Full page: pitch text, LabelGallery component (visual gallery), two CTA links to /contact?interest=custom-labels; a pull quote about a 550-jar corporate run
+Contact page	Interest dropdown includes "Custom-label / B2B" option
+Custom labels are not in the main nav and not in the footer — they're only reachable by direct URL or from the Contact form's dropdown.
+
+D. Backend scheduled services and kill switches
+Service	Where it starts	Kill switch	Status
+Cart-recovery scheduler	index.ts → startRecoveryScheduler()	DISABLE_CART_RECOVERY_SCHEDULER=1	✅ Kill switch exists in code
+Momentum digest scheduler	index.ts → startMomentumDigestScheduler()	DISABLE_MOMENTUM_DIGEST_SCHEDULER=1	✅ Kill switch exists in code
+Review invite scheduler	index.ts → startReviewScheduler()	❌ No kill switch — silently no-ops only if RESEND_API_KEY is absent	Needs one added
+Square webhook handler	Route always mounted at POST /api/square/webhook	❌ No kill switch — always live and processing	Needs one added
+Checkout API	Route always mounted at POST /api/checkout and related endpoints	❌ No kill switch — always accepts order creation	Needs one added
+Owner order SMS	Fires inside the Square webhook handler	De-facto off unless OWNER_NOTIFICATION_PHONE is set (already opt-in)	No new switch needed
+Abandoned-cart email routes	Routes at /api/abandoned-cart/*	No scheduler of its own (carts only created via checkout); route stays mounted but harmless with checkout disabled	Low priority
+E. Public lead-capture forms for parked work
+Form	Route	Backend destination
+App Design intake	/app-design/start	POST /api/design-leads → design_leads table
+Contact form — "App design" interest	/contact?interest=app-design → redirects to /app-design/start	same
+Contact form — "Custom-label / B2B" interest	/contact	same contact form submission (captured in contact_leads or equivalent)
+Studio "Share an idea" form	Studio artifact (separate app)	POST /api/studio-leads → studio_leads table
+F. Incidental agency framing elsewhere (flagging for your decision)
+These didn't fit neatly in the categories above but are agency-facing:
+
+Footer tagline: "Good salt, good code, stronger communities." — the "good code" clause is pure agency voice
+Home founder bio: "The same workshop now builds software and trains the teams who run it, the kind of tools that fit the way you actually work." — agency pitch embedded mid-personal-story
+Home section heading: "One workshop. Building a new normal." — arguably fine on its own, but paired with software/training links it reads as agency positioning
+Training page: The entire page is an offer to hire Parr to build software for other organizations. Removing it from the nav makes it unlisted, but the copy itself only makes sense if you're offering client work.
+About page: No IATagline directly, but the bio paragraph mirrors what's on Home — same software/training framing
+/learn and /learn/:slug — these are in the nav ("Learn · Free pill"). I didn't see agency language in a quick scan but surfacing for completeness — is this learning content about building software? If so, it may need a look.
+STEP 2 — PROPOSED PLAN
+Here is what I'd do, organized by area. No changes until you approve.
+
+1. Public navigation and footer (2 nav items removed, 1 footer section removed)
+Navbar: Remove "Software" and "Training" links. Keep "Salts," "Learn," "Where to Buy," "About." The "Contact" button stays but is trimmed (see below).
+Footer: Remove the entire "Studio" column (portfolio, training, app-design/start links). Keep "Salts," "Connect," and the contact address block.
+Footer tagline: Revise "Good salt, good code, stronger communities." — drop "good code" or replace. You tell me the line, or I can propose one.
+2. Salts page — remove the store, add a find-us CTA
+Remove all "Add to cart" buttons, bundle cart flows, and build-your-own cart flows.
+Replace with a clean "Where to find us" CTA that links to /where-to-buy and optionally a direct link to 807foodcoop.ca.
+Remove the "free local pickup at checkout" reference.
+Keep all product description, photography, ingredient info, and voice intact.
+3. Remove CartIcon and CartDrawer from the shell
+Remove CartIcon from Navbar (both desktop and mobile).
+Remove CartDrawer from Shell.
+CartProvider and all cart logic stays in the codebase — just no longer rendered.
+4. /checkout and /order/thanks — routes stay but go dark
+Keep both pages in code.
+Add a redirect: anyone who navigates to /checkout or /order/thanks directly gets sent to /where-to-buy.
+This protects against any bookmarked or shared checkout links without hard-deleting the code.
+5. Where to Buy page — upgrade to primary "find us" surface
+Restructure /where-to-buy to clearly feature:
+807 Food Co-operative — link to 807foodcoop.ca, described as the easiest way to order
+Calberry markets — 4 markets listed with dates; I'll build an editable array in constants.ts for easy updates (you fill the dates after approving the plan)
+Farmers market table — seasonal presence note
+Keep existing stockists (Village Trading Post, Hinterland & Co, Petro-Canada/Mastrangelo) lower on the page as secondary retail locations.
+6. Home page — strip agency framing
+Remove the IATagline component (both its import and render).
+Remove "See the packages →" link and associated CTA block.
+Remove "Start a Conversation → /app-design/start" CTA.
+Revise "View full portfolio →" link — either remove or point to a generic about/salts page.
+Revise the founder bio sentence about "builds software and trains teams" — you approve the replacement line or I draft one that keeps the community development angle without being a services ad.
+7. Portfolio and Training pages — off public navigation (code intact)
+Both pages stay in the codebase and their routes stay registered.
+They are just no longer linked from anywhere a visitor naturally reaches.
+No further changes to their content unless you say so.
+8. /app-design/start — off public navigation (code intact)
+Route stays registered. Page stays in code.
+Removed from all public navigation, footer, and Home CTAs (covered by steps above).
+9. Contact page — trim the interest dropdown
+Remove "App Design" option from the interest selector.
+Remove "Custom-label / B2B" option from the interest selector.
+Remove the redirect logic that fires when ?interest=app-design is in the URL.
+Remove the "Start a Conversation → /app-design/start" hyperlink in the form body.
+Remaining interests in the dropdown: "Salts / wholesale" and "General."
+The page itself stays public — it's a useful general contact surface.
+10. /custom-labels — off public navigation (code intact)
+Not in the main nav already, so this is just making sure no public links remain.
+The Salts page currently has no link to it. The Contact page's interest dropdown link is removed in step 9.
+Route stays registered, page stays in code.
+11. Studio artifact — admin-gate it (default option A)
+Add a simple password gate to the Studio app (reuse the existing RT_PASSWORD-style pattern or a new STUDIO_PASSWORD secret).
+The Studio artifact stays deployed at its current path/domain — no unpublishing, no holding page.
+This is the default. I'll ask before doing (b) or (c).
+12. Backend — add missing kill switches and flip all commerce jobs off
+New kill switches to add (code change):
+
+DISABLE_REVIEW_SCHEDULER=1 — add to review-scheduler.ts startReviewScheduler() function
+DISABLE_SQUARE_WEBHOOK=1 — add early-return to the webhook handler (returns HTTP 200 and logs "disabled")
+DISABLE_CHECKOUT=1 — add early-return to the checkout route handler (returns HTTP 503 with a clear message)
+Env vars to set (no code change needed for these — kill switches already exist):
+
+DISABLE_CART_RECOVERY_SCHEDULER=1
+DISABLE_MOMENTUM_DIGEST_SCHEDULER=1
+Env vars to set (after new kill switches are added):
+
+DISABLE_REVIEW_SCHEDULER=1
+DISABLE_SQUARE_WEBHOOK=1
+DISABLE_CHECKOUT=1
+13. SETUP.md — prepend operating-mode note
+Add a short section at the very top documenting:
+
+Current operating mode: brand-and-presence (no online checkout)
+Which background services are off and the exact env var to re-enable each one
+Note that Books and Meeting Companion are unaffected
+THREE THINGS I NEED FROM YOU BEFORE STARTING
+1. Calberry markets. I'll build a placeholder structure in constants.ts like:
+
+export const MARKET_EVENTS = [
+  { name: "Calberry Market", location: "...", dates: "..." },
+  ...
+];
+You can fill in the 4 markets and their seasonal dates anytime — either before approval or after. Just confirm you're OK with me leaving them as placeholders for now.
+
+2. Studio gating — confirming option A. I'll add a password gate to the Studio artifact. It will prompt for a password before showing any content, using a STUDIO_PASSWORD secret. The domain/path stays the same, no public announcement. Confirmed?
+
+3. The founder bio on Home and the Footer tagline. These are your words, not template copy. I can draft replacement lines, but I'd rather you approve them:
+
+The bio sentence currently ends: "The same workshop now builds software and trains the teams who run it, the kind of tools that fit the way you actually work. Whether you're stocking your pantry or building something new from scratch, the door's open and the kettle's on."
+The footer has: "Good salt, good code, stronger communities."
