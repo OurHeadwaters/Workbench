@@ -1,0 +1,105 @@
+PROJECT BRIEFING: Bobbie Parr — A Northern Model
+
+Who this is
+
+Bobbie Parr is a maker, developer, and community-minded entrepreneur based in Northwestern Ontario (the "807" — Thunder Bay and surrounding region). The work collected here is not a single business — it is a model: a set of interconnected ventures that all serve and are rooted in the same northern community. The pivot away from a food-only identity toward this broader framing is deliberate and recent.
+
+What has been built (the full picture)
+
+1. Parr's Jars — Smoked Sea Salt Storefront
+A complete e-commerce experience for a handcrafted gourmet smoked sea salt line. Key built features:
+
+Full product catalog with individual jars and gift bundle flows (fixed presets and a pick-your-own 3- or 6-jar builder)
+Square payment integration — checkout, webhook processing, order confirmation
+Shipping zone logic tuned for Northwestern Ontario geography
+Low-stock tracking and admin toggle (in-stock / low / out)
+Abandoned cart recovery system with timed follow-up emails
+Customer review engine with secure token-based invite flow
+Order notification emails to Parr on every paid sale
+Sales momentum dashboard tracking top sellers, trends, and restocking needs
+Admin dashboard for Parr to manage orders, stock states, and momentum data
+Distribution strategy is deliberately local-first: primary online channel is the 807 Food Co-op (807foodcoop.ca), complemented by physical retail at Village Trading Post, Mastrangelo Fuels / Petro-Canada, and regional farmers markets. This is intentional — the co-op is a community institution and a value-aligned partner, not just a convenience.
+
+2. Custom Labels — B2B / White-Label Salt Offer
+An "early access, taking inquiries now" B2B tier for custom-labelled salt jars aimed at weddings, corporate gifts, and local hospitality. Features:
+
+A dedicated /custom-labels page with concept explorer and label mockup gallery
+Label concepts organized by "cheekiness tier" (professional, playful, bold)
+Interest tracking per label concept with a weekly digest email to Parr
+Vegetable character illustrations planned as a whimsical add-on
+Inquiry capture wired to lead routing
+3. Wholesale / Distributor Package
+A complete wholesale and distributor package for regional retailers and distributors (e.g. Superior Seasons / 100km Foods model). Built features:
+
+Dedicated /wholesale page with tiered pricing, terms, and minimum order info
+Downloadable PDF line sheet (generated on demand)
+Lead capture routed to Parr's private inbox
+Crafted specifically for the active conversation with Kevin and similar regional distribution relationships
+4. Bobbie Parr Studio — App Design Agency
+A design and development studio that builds practical software tools for small northern businesses. Key built features:
+
+Portfolio with real case studies: 807 Benefits Membership, XBuckets, Rootwork, and others
+Three-tier service packaging (Starter / Growth / Custom) with honest, community-calibrated pricing
+Guided intake funnel for prospective clients — leisurely, multi-step, no hard sell
+Lead storage and private triage page so Parr can review, annotate, and respond to leads from a phone
+Confirmation emails to both Parr and the client on intake submission
+Studio leads tracked separately from Parr's Jars leads
+5. Training — AI-Assisted Tool Building ("Vibe Coding")
+A formal training offer teaching small businesses, co-ops, and community organizations how to build their own internal software tools using AI assistance. Three formats:
+
+Half-Day Intro ($1,200) — one working session, one shipped tool
+Four-Week Cohort ($4,800) — weekly sessions for 2–6 people, building a real production tool
+Embedded Build ($12,000) — studio embeds alongside the client's team, ships and hands off
+The philosophy is explicit and principled: teach the human part of building — taste, judgment, and what to leave to engineers. Credit open-source and AI contributors openly. This is not a course, it is a studio-led apprenticeship.
+
+6. 807 Food Co-op Research Tool
+A shareable prompt page (/coop-prompt) that lets anyone copy a research prompt about the 807 Food Co-op to paste into an AI chat. Small but telling — it shows how Parr thinks about accessible tools for community use.
+
+7. Books — Internal Financial Tool
+A private bookkeeping and financial dashboard for the studio itself. Tracks transactions, accounts, and generates financial summaries. Not a product — a real internal tool Parr uses.
+
+8. Meeting Companion — Internal Transcription Tool
+An internal tool for recording and summarizing meetings, built on top of OpenAI audio capabilities. Again, not a product — a working internal tool that is also a proof of the studio's approach.
+
+9. Grant Admin
+A private page for editing and sharing a grant blurb — evidence that Parr is actively pursuing grant funding for some dimension of this work (likely the co-op, training, or community food angle).
+
+The Northern Model — what makes this coherent
+
+The phrase "northern model" names something real: everything here is designed for the specific constraints and values of small, tight-margin, community-rooted businesses in Northwestern Ontario, where:
+
+Distribution is thin, geography is vast, and relationships matter more than algorithms
+People distrust software that doesn't understand their reality
+Community institutions (co-ops, local markets, regional distributors) are load-bearing economic infrastructure
+The gap between "big-city software" and what northern businesses actually need is enormous — and largely unserved
+Parr is not just building products. Parr is building an integrated studio that:
+
+Makes things (salt, software tools) and sells them directly into the northern market
+Builds tools for other northern businesses and organizations
+Teaches northern people to build their own tools
+Embeds into the distribution and retail ecosystem (co-op, wholesale, stockists) rather than competing with it
+The food pivot is not a failure — it is a clarification. The salts remain, but as one of many examples of what this model produces, not the core identity.
+
+Infrastructure that already exists
+
+Centralized API server handling all artifacts (Express + Drizzle + PostgreSQL)
+Square payment processing, fully wired
+Email delivery via Nodemailer (order alerts, lead notifications, recovery emails, digests)
+SMS alerting for new orders
+Auto-generated TypeScript API clients across the monorepo (OpenAPI + Orval)
+Shared database schema across all apps
+Authentication layers for admin, books, design leads, and grant admin
+End-to-end cart recovery automation (background script, timed retry logic)
+Review scheduling and token-based invite system
+Abandoned cart and momentum analytics
+What is drafted but not activated (proposed tasks)
+
+Over 100 tasks are in draft state covering: vegetable character illustrations, wholesale lead inbox, PDF line sheet generation, label share flows, SMS failure alerts, resend cooldown persistence, revenue rounding fixes, threshold history charts, abandoned cart UI for Parr, custom recovery email copy, weekly digest, analytics opt-out, and more.
+
+Strategic questions to take to the other agent
+
+Which pillar — salts, studio, or training — should be the public lead for the northern model brand?
+Is there a grant or funding angle worth structuring the narrative around more explicitly?
+Which of the 100+ drafted tasks are worth activating now vs. parking?
+Should the studio site and Parr's Jars stay as separate URLs or unify under one domain?
+Is the 807 Food Co-op relationship deep enough to build a formal partnership or co-branded offer around?
