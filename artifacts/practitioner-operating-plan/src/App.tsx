@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { Link, Route, Switch, useLocation } from "wouter";
 
 import { slides } from "@/slideLoader";
 import OnePager from "@/pages/OnePager";
+import Today from "@/pages/Today";
+import Week from "@/pages/Week";
+import WeekCloseOut from "@/pages/WeekCloseOut";
+import Year from "@/pages/Year";
+import CheckIn from "@/pages/CheckIn";
+import CheckInNewSnapshot from "@/pages/CheckInNewSnapshot";
+import CheckInHistory from "@/pages/CheckInHistory";
+import { AppLayout } from "@/components/AppLayout";
+import { ToastProvider } from "@/components/Toast";
 
 function getSlideIndex(pathname: string): number {
   const match = pathname.match(/^\/slide(\d+)$/);
@@ -143,7 +152,7 @@ function AllSlides() {
   );
 }
 
-// This component is used for the deployed view at `/`
+// Full-bleed slide deck viewer used by the `/plan` route.
 function SlideViewer() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [dims, setDims] = useState(() => ({
@@ -193,27 +202,39 @@ function SlideViewer() {
   );
 }
 
+function NotFound() {
+  return (
+    <div className="space-y-4 py-8 text-center">
+      <p className="text-xs uppercase tracking-widest text-stone-500">
+        404
+      </p>
+      <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+        That page isn&rsquo;t part of the plan.
+      </h1>
+      <p className="text-sm text-stone-600">
+        <Link href="/today" className="underline">
+          Back to today
+        </Link>
+      </p>
+    </div>
+  );
+}
+
 export default function App() {
   const [location, navigate] = useLocation();
 
-  // DO NOT edit this useEffect - redirects unknown routes to the first slide.
-  // The "/", "/allslides", and "/onepager" routes are handled separately below.
+  // /today is the canonical front door. Bare / redirects there; unknown
+  // routes fall through the Switch below to a real 404 instead of being
+  // silently rewritten.
   useEffect(() => {
-    if (
-      location !== "/" &&
-      location !== "/allslides" &&
-      location !== "/onepager" &&
-      getSlideIndex(location) === -1
-    ) {
-      if (slides.length > 0) {
-        navigate(`/slide${slides[0].position}`, { replace: true });
-      }
+    if (location === "/") {
+      navigate("/today", { replace: true });
     }
   }, [location, navigate]);
 
-  // DO NOT edit this useEffect - allows the parent frame to navigate
-  // between slides via postMessage so it can avoid changing the iframe
-  // src (which causes a white flash).
+  // Allow the parent slides preview frame to navigate between slides via
+  // postMessage so it can avoid changing the iframe src (which causes a
+  // white flash). Required for the slides workspace UI.
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (
@@ -229,8 +250,32 @@ export default function App() {
     return () => window.removeEventListener("message", onMessage);
   }, [navigate]);
 
-  if (location === "/") return <SlideViewer />;
+  // Slide-editor and all-slides views are full-bleed and rendered without
+  // the app chrome — they're consumed by the workspace preview iframe and
+  // by the export pipeline respectively.
   if (location === "/allslides") return <AllSlides />;
+  if (getSlideIndex(location) !== -1) return <SlideEditor />;
+
+  // Plan view also renders full-bleed (it embeds the slides iframe).
+  if (location === "/plan") return <SlideViewer />;
+
+  // OnePager keeps its own self-contained chrome.
   if (location === "/onepager") return <OnePager />;
-  return <SlideEditor />;
+
+  return (
+    <ToastProvider>
+      <AppLayout>
+        <Switch>
+          <Route path="/today" component={Today} />
+          <Route path="/week/close-out" component={WeekCloseOut} />
+          <Route path="/week" component={Week} />
+          <Route path="/year" component={Year} />
+          <Route path="/year/check-in" component={CheckIn} />
+          <Route path="/year/check-in/new" component={CheckInNewSnapshot} />
+          <Route path="/year/check-in/history" component={CheckInHistory} />
+          <Route component={NotFound} />
+        </Switch>
+      </AppLayout>
+    </ToastProvider>
+  );
 }
