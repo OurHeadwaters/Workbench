@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import {
   dateForDayInWeek,
@@ -15,13 +15,17 @@ import {
   type DayPlan,
 } from "../data/plan2026";
 import {
+  BENCH,
+  BENCH_SEAT_IDS,
   PRIMARY_HOURS_PER_BATCH,
   STANDBY_HOURS,
   STANDBY_PAID_PER_BATCH,
   STANDBY_RATE,
   getBatchDays,
   getBatchForWeek,
-  getBenchSeat,
+  getEffectiveBatch,
+  type BenchSeatId,
+  type EffectiveBenchRole,
 } from "../data/saltBench";
 import { useAppState, useAppStateActions } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
@@ -70,21 +74,49 @@ export default function Week() {
   const todayWeek = getCurrentWeekNumber();
   const isCurrentWeek = weekNumber === todayWeek;
   const state = useAppState();
-  const { setWeekNote, reopenWeek } = useAppStateActions();
+  const { setWeekNote, reopenWeek, setBenchOverride } = useAppStateActions();
   const note = state.weekNotes[String(weekNumber)] ?? "";
   const closeOut = state.weekCloseOuts[String(weekNumber)];
   const closed = !!closeOut;
+
+  // Which batch role (if any) the OM is currently picking a swap for.
+  // Tracked locally because it's pure UI affordance — the chosen seat
+  // gets persisted via setBenchOverride; the open/closed state of the
+  // picker shouldn't.
+  const [swapEditing, setSwapEditing] = useState<
+    "primary" | "standby" | null
+  >(null);
 
   // Day-1 roll-forward: shared with Today via lib/carryover.
   const carriedItems = findCarriedFromPriorWeeks(state, weekNumber);
 
   // Salt batch panel: when this week is one of the named Q2 batch weeks,
   // pull the primary + paid standby from the bench module so the calendar
-  // shows the bench rotation by name on its actual date.
+  // shows the bench rotation by name on its actual date. Apply any
+  // OM-recorded override on top of the seed roster — `getEffectiveBatch`
+  // exposes both the active seat and (when swapped) the original.
   const batch = getBatchForWeek(weekNumber);
-  const batchPrimary = batch ? getBenchSeat(batch.primary) : null;
-  const batchStandby = batch ? getBenchSeat(batch.standby) : null;
+  const batchOverride = state.benchOverrides[String(weekNumber)];
+  const effective = batch ? getEffectiveBatch(batch, batchOverride) : null;
+  const batchPrimary = effective?.primary ?? null;
+  const batchStandby = effective?.standby ?? null;
   const batchDays = batch ? getBatchDays(batch) : [];
+
+  // Reset the open swap picker whenever the user navigates to a
+  // different week — otherwise it would stay open across week changes.
+  useEffect(() => {
+    setSwapEditing(null);
+  }, [weekNumber]);
+
+  function applySwap(role: "primary" | "standby", seatId: BenchSeatId) {
+    setBenchOverride(weekNumber, role, seatId);
+    setSwapEditing(null);
+  }
+
+  function clearSwap(role: "primary" | "standby") {
+    setBenchOverride(weekNumber, role, null);
+    setSwapEditing(null);
+  }
 
   const totalSteps =
     week.days?.reduce((acc, d) => acc + d.steps.length, 0) ?? 0;
@@ -178,38 +210,38 @@ export default function Week() {
             className="grid gap-3 sm:grid-cols-2"
             data-testid="salt-batch-roster"
           >
-            <div
-              className="rounded-md border border-rose-200 bg-white p-3"
-              data-testid="salt-batch-primary"
-            >
-              <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
-                Primary · Tue + Wed
-              </p>
-              <p className="mt-1 text-sm font-semibold text-stone-900">
-                {batchPrimary.name}
-              </p>
-              <p className="text-xs text-stone-600">{batchPrimary.base}</p>
-              <p className="mt-1 font-mono text-xs text-stone-500">
-                {PRIMARY_HOURS_PER_BATCH} hrs casual · pick + pack
-              </p>
-            </div>
-            <div
-              className="rounded-md border border-rose-200 bg-white p-3"
-              data-testid="salt-batch-standby"
-            >
-              <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
-                Standby (paid) · Fri ship day
-              </p>
-              <p className="mt-1 text-sm font-semibold text-stone-900">
-                {batchStandby.name}
-              </p>
-              <p className="text-xs text-stone-600">{batchStandby.base}</p>
-              <p className="mt-1 font-mono text-xs text-stone-500">
-                {STANDBY_HOURS} hrs × ${STANDBY_RATE} ={" "}
-                <span className="text-stone-900">${STANDBY_PAID_PER_BATCH}</span>{" "}
-                · paid even if not called
-              </p>
-            </div>
+            <BenchRoleCard
+              role="primary"
+              label="Primary · Tue + Wed"
+              effective={batchPrimary}
+              footer={`${PRIMARY_HOURS_PER_BATCH} hrs casual · pick + pack`}
+              editing={swapEditing === "primary"}
+              onStartSwap={() => setSwapEditing("primary")}
+              onCancelSwap={() => setSwapEditing(null)}
+              onPick={(id) => applySwap("primary", id)}
+              onRestore={() => clearSwap("primary")}
+              testIdRoot="salt-batch-primary"
+            />
+            <BenchRoleCard
+              role="standby"
+              label="Standby (paid) · Fri ship day"
+              effective={batchStandby}
+              footer={
+                <>
+                  {STANDBY_HOURS} hrs × ${STANDBY_RATE} ={" "}
+                  <span className="text-stone-900">
+                    ${STANDBY_PAID_PER_BATCH}
+                  </span>{" "}
+                  · paid even if not called
+                </>
+              }
+              editing={swapEditing === "standby"}
+              onStartSwap={() => setSwapEditing("standby")}
+              onCancelSwap={() => setSwapEditing(null)}
+              onPick={(id) => applySwap("standby", id)}
+              onRestore={() => clearSwap("standby")}
+              testIdRoot="salt-batch-standby"
+            />
           </div>
           <ol
             className="divide-y divide-rose-100 overflow-hidden rounded-md border border-rose-100 bg-white text-xs"
@@ -218,9 +250,9 @@ export default function Week() {
             {batchDays.map((d) => {
               const who =
                 d.who === "primary"
-                  ? batchPrimary.name
+                  ? batchPrimary.seat.name
                   : d.who === "standby"
-                    ? `${batchStandby.name} (standby)`
+                    ? `${batchStandby.seat.name} (standby)`
                     : "OM only";
               return (
                 <li
@@ -246,8 +278,11 @@ export default function Week() {
             })}
           </ol>
           <p className="text-xs text-rose-900/70">
-            Sourced from the SaltBench slide (VI · 02b). If the rotation
-            changes there, update <code>src/data/saltBench.ts</code>.
+            Sourced from the SaltBench slide (VI · 02b). Use{" "}
+            <strong>Swap</strong> to record a one-off change for this
+            batch — the swap saves locally and surfaces in the
+            bookkeeper close-out. Permanent rotation changes still
+            belong in <code>src/data/saltBench.ts</code>.
           </p>
         </section>
       )}
@@ -381,6 +416,136 @@ export default function Week() {
           See the full year →
         </Link>
       </div>
+    </div>
+  );
+}
+
+// One card on the salt-batch roster panel — primary or standby.
+// Knows how to render the active seat, the "swapped from <original>"
+// note when applicable, and the swap picker (a small dropdown of
+// every bench seat). Kept inline with Week.tsx since it's only used
+// here and depends on local state.
+type BenchRoleCardProps = {
+  role: "primary" | "standby";
+  label: string;
+  effective: EffectiveBenchRole;
+  footer: ReactNode;
+  editing: boolean;
+  onStartSwap: () => void;
+  onCancelSwap: () => void;
+  onPick: (id: BenchSeatId) => void;
+  onRestore: () => void;
+  testIdRoot: string;
+};
+
+function BenchRoleCard({
+  role,
+  label,
+  effective,
+  footer,
+  editing,
+  onStartSwap,
+  onCancelSwap,
+  onPick,
+  onRestore,
+  testIdRoot,
+}: BenchRoleCardProps) {
+  const swapped = !!effective.originalSeat;
+  return (
+    <div
+      className="rounded-md border border-rose-200 bg-white p-3"
+      data-testid={testIdRoot}
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
+          {label}
+        </p>
+        {editing ? (
+          <button
+            type="button"
+            onClick={onCancelSwap}
+            className="text-xs text-stone-500 hover:text-stone-900"
+            data-testid={`button-swap-cancel-${role}`}
+          >
+            Cancel
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onStartSwap}
+            className="rounded-sm border border-stone-300 px-1.5 py-0.5 text-xs text-stone-600 hover:bg-stone-100"
+            data-testid={`button-swap-${role}`}
+          >
+            Swap
+          </button>
+        )}
+      </div>
+      <p
+        className="mt-1 text-sm font-semibold text-stone-900"
+        data-testid={`${testIdRoot}-name`}
+      >
+        {effective.seat.name}
+      </p>
+      <p className="text-xs text-stone-600">{effective.seat.base}</p>
+      {swapped && (
+        <p
+          className="mt-1 flex flex-wrap items-center gap-2 text-xs italic text-amber-800"
+          data-testid={`${testIdRoot}-swap-note`}
+        >
+          <span>swapped from {effective.originalSeat!.name}</span>
+          <button
+            type="button"
+            onClick={onRestore}
+            className="not-italic underline underline-offset-2 hover:text-amber-900"
+            data-testid={`button-swap-restore-${role}`}
+          >
+            Restore
+          </button>
+        </p>
+      )}
+      {editing && (
+        <div
+          className="mt-2 space-y-1.5 rounded-sm border border-stone-200 bg-stone-50 p-2"
+          data-testid={`swap-picker-${role}`}
+        >
+          <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
+            Pick a bench seat
+          </p>
+          <ul className="space-y-1">
+            {BENCH_SEAT_IDS.map((id) => {
+              const seat = BENCH[id];
+              const isCurrent = id === effective.id;
+              return (
+                <li key={id}>
+                  <button
+                    type="button"
+                    onClick={() => onPick(id)}
+                    disabled={isCurrent}
+                    className={
+                      "flex w-full items-baseline justify-between gap-2 rounded-sm px-2 py-1 text-left text-xs " +
+                      (isCurrent
+                        ? "cursor-default bg-stone-200 text-stone-600"
+                        : "hover:bg-stone-200")
+                    }
+                    data-testid={`swap-option-${role}-${id}`}
+                  >
+                    <span className="font-medium text-stone-900">
+                      {seat.name}
+                    </span>
+                    <span className="text-stone-500">{seat.base}</span>
+                    {isCurrent && (
+                      <span className="font-mono uppercase tracking-wider text-stone-500">
+                        current
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+      <p className="mt-1 font-mono text-xs text-stone-500">{footer}</p>
     </div>
   );
 }

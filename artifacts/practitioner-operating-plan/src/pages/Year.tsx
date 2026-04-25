@@ -5,7 +5,7 @@ import {
   BATCHES,
   STANDBY_PAID_PER_BATCH,
   getBatchesByQuarter,
-  getBenchSeat,
+  getEffectiveBatch,
   isBatchWeek,
   type BatchAssignment,
   type Quarter,
@@ -192,8 +192,13 @@ export default function Year() {
               </div>
               <ol className="divide-y divide-stone-200 overflow-hidden rounded-lg border border-stone-200 bg-white">
                 {batches.map((b: BatchAssignment) => {
-                  const primary = getBenchSeat(b.primary);
-                  const standby = getBenchSeat(b.standby);
+                  // Apply any per-batch override the OM recorded on the
+                  // Week page so swaps surface here too — same
+                  // `getEffectiveBatch` path used by Week and
+                  // WeekCloseOut, keeping the bench rotation consistent
+                  // across all three views.
+                  const override = state.benchOverrides[String(b.weekNumber)];
+                  const eff = getEffectiveBatch(b, override);
                   return (
                     <li
                       key={b.weekNumber}
@@ -224,11 +229,21 @@ export default function Year() {
                             Primary · Tue + Wed
                           </dt>
                           <dd className="mt-0.5 text-stone-900">
-                            <span className="font-medium">{primary.name}</span>
+                            <span className="font-medium">
+                              {eff.primary.seat.name}
+                            </span>
                             <span className="text-stone-500">
                               {" "}
-                              · {primary.base}
+                              · {eff.primary.seat.base}
                             </span>
+                            {eff.primary.originalSeat && (
+                              <span
+                                className="ml-1 italic text-amber-800"
+                                data-testid={`batch-${b.weekNumber}-primary-swap-note`}
+                              >
+                                · swapped from {eff.primary.originalSeat.name}
+                              </span>
+                            )}
                           </dd>
                         </div>
                         <div data-testid={`batch-${b.weekNumber}-standby`}>
@@ -236,11 +251,21 @@ export default function Year() {
                             Standby (paid) · Fri ship day
                           </dt>
                           <dd className="mt-0.5 text-stone-900">
-                            <span className="font-medium">{standby.name}</span>
+                            <span className="font-medium">
+                              {eff.standby.seat.name}
+                            </span>
                             <span className="text-stone-500">
                               {" "}
-                              · {standby.base}
+                              · {eff.standby.seat.base}
                             </span>
+                            {eff.standby.originalSeat && (
+                              <span
+                                className="ml-1 italic text-amber-800"
+                                data-testid={`batch-${b.weekNumber}-standby-swap-note`}
+                              >
+                                · swapped from {eff.standby.originalSeat.name}
+                              </span>
+                            )}
                           </dd>
                         </div>
                         <div

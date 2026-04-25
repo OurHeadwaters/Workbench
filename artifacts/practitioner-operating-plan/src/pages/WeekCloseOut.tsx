@@ -8,7 +8,7 @@ import {
   STANDBY_PAID_PER_BATCH,
   STANDBY_RATE,
   getBatchForWeek,
-  getBenchSeat,
+  getEffectiveBatch,
 } from "../data/saltBench";
 import { useAppState, useAppStateActions } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
@@ -79,9 +79,14 @@ export default function WeekCloseOut() {
   // its own line — that's the cost the bookkeeper books when the OM
   // closes the week. Otherwise the standby cost lives only on the
   // SaltBench cost table and slips out of the operating calendar.
+  // Apply any per-batch override the OM recorded on the Week page so
+  // the cost is attributed to whoever actually worked the batch, not
+  // to the seed roster name.
   const batch = getBatchForWeek(weekNumber);
-  const batchPrimary = batch ? getBenchSeat(batch.primary) : null;
-  const batchStandby = batch ? getBenchSeat(batch.standby) : null;
+  const batchOverride = state.benchOverrides[String(weekNumber)];
+  const effective = batch ? getEffectiveBatch(batch, batchOverride) : null;
+  const batchPrimary = effective?.primary ?? null;
+  const batchStandby = effective?.standby ?? null;
 
   function onConfirm() {
     const carried = undoneInWeek
@@ -195,12 +200,20 @@ export default function WeekCloseOut() {
             >
               <span>
                 <span className="font-medium text-stone-900">
-                  Primary · {batchPrimary.name}
+                  Primary · {batchPrimary.seat.name}
                 </span>
                 <span className="text-stone-500">
                   {" "}
                   · {PRIMARY_HOURS_PER_BATCH} hrs casual · pick + pack
                 </span>
+                {batchPrimary.originalSeat && (
+                  <span
+                    className="ml-2 italic text-amber-800"
+                    data-testid="salt-batch-close-primary-swap-note"
+                  >
+                    swapped from {batchPrimary.originalSeat.name}
+                  </span>
+                )}
               </span>
               <span className="font-mono text-stone-900">
                 ${PRIMARY_PAID_PER_BATCH.toLocaleString("en-US")}
@@ -212,13 +225,21 @@ export default function WeekCloseOut() {
             >
               <span>
                 <span className="font-medium text-stone-900">
-                  Standby (paid) · {batchStandby.name}
+                  Standby (paid) · {batchStandby.seat.name}
                 </span>
                 <span className="text-stone-500">
                   {" "}
                   · {STANDBY_HOURS} hrs × ${STANDBY_RATE} · paid even if
                   not called
                 </span>
+                {batchStandby.originalSeat && (
+                  <span
+                    className="ml-2 italic text-amber-800"
+                    data-testid="salt-batch-close-standby-swap-note"
+                  >
+                    swapped from {batchStandby.originalSeat.name}
+                  </span>
+                )}
               </span>
               <span className="font-mono text-stone-900">
                 ${STANDBY_PAID_PER_BATCH}

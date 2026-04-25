@@ -22,6 +22,16 @@ export const BENCH: Record<string, BenchSeat> = {
   roger: { name: "Roger S.", base: "Eagle River — 30 min" },
 };
 
+export type BenchSeatId = keyof typeof BENCH;
+
+// Stable ordering for the swap dropdown. Mirrors the order the seats are
+// declared above so the OM sees the same roster every time.
+export const BENCH_SEAT_IDS = Object.keys(BENCH) as BenchSeatId[];
+
+export function isBenchSeatId(id: string): id is BenchSeatId {
+  return Object.prototype.hasOwnProperty.call(BENCH, id);
+}
+
 // Casual labour rate — same $30/hr applies to both the primary's
 // pick + pack hours and the standby's Friday paid shift. Centralized
 // here so a future rate change updates every line in one place.
@@ -230,4 +240,55 @@ export function formatBatchHeadline(batch: BatchAssignment): string {
 
 export function getBenchSeat(id: keyof typeof BENCH): BenchSeat {
   return BENCH[id];
+}
+
+// Effective batch assignment after applying any per-batch override the
+// OM has recorded (see lib/storage `benchOverrides`). Each role exposes:
+//   - `id` / `seat`        — who is *actually* working this week
+//   - `originalId` / `originalSeat` — the seed assignment, only set
+//     when the role was swapped (so the UI can render the
+//     "swapped from <original>" note and the bookkeeper can audit
+//     the change after the fact)
+// Stale or unknown override ids fall through to the seed assignment, so
+// a seat removed from the BENCH map can never strand a batch week.
+export type EffectiveBenchRole = {
+  id: BenchSeatId;
+  seat: BenchSeat;
+  originalId?: BenchSeatId;
+  originalSeat?: BenchSeat;
+};
+
+export type EffectiveBatch = {
+  primary: EffectiveBenchRole;
+  standby: EffectiveBenchRole;
+};
+
+export type BenchOverrideInput = {
+  primary?: string;
+  standby?: string;
+};
+
+function resolveRole(
+  baseId: BenchSeatId,
+  overrideId: string | undefined,
+): EffectiveBenchRole {
+  if (overrideId && isBenchSeatId(overrideId) && overrideId !== baseId) {
+    return {
+      id: overrideId,
+      seat: BENCH[overrideId],
+      originalId: baseId,
+      originalSeat: BENCH[baseId],
+    };
+  }
+  return { id: baseId, seat: BENCH[baseId] };
+}
+
+export function getEffectiveBatch(
+  batch: BatchAssignment,
+  override?: BenchOverrideInput,
+): EffectiveBatch {
+  return {
+    primary: resolveRole(batch.primary, override?.primary),
+    standby: resolveRole(batch.standby, override?.standby),
+  };
 }

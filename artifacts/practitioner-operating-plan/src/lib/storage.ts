@@ -4,7 +4,19 @@ import type { MilestoneId, MilestoneState, Phase } from "./phases";
 import { PHASE_ORDER } from "./phases";
 
 export const STORAGE_KEY = "pop:v1";
-export const STORAGE_VERSION = 3;
+export const STORAGE_VERSION = 4;
+
+// Per-batch bench swap. Keyed by week number string (matching how the
+// rest of this slice keys week-scoped state — weekNotes, completedWeeks,
+// etc.). Either field may be present alone (e.g., only the standby was
+// swapped). The base assignment lives in `data/saltBench.ts`; this slice
+// only records *changes* to it. Seat ids are validated at the call site
+// against the BENCH map so a stale override referring to a removed seat
+// is treated as no override.
+export type BenchOverride = {
+  primary?: string;
+  standby?: string;
+};
 
 // "My Three Things" — three editable rows the practitioner commits to
 // for today, plus three to move the current phase forward. Stored as
@@ -75,6 +87,10 @@ export type AppState = {
   // to a different phase, the slot is treated as empty until they set
   // new ones — see lib/threeThings.ts for the readPhaseThree helper.
   phaseThree: PhaseThreeSlot | null;
+  // Per-batch bench swaps. Empty by default — when the OM swaps a seat
+  // for a specific batch week, an entry lands here keyed by that week
+  // number string. See `BenchOverride` above.
+  benchOverrides: Record<string, BenchOverride>;
 };
 
 export const DEFAULT_STATE: AppState = {
@@ -90,6 +106,7 @@ export const DEFAULT_STATE: AppState = {
   dismissedPhaseSuggestion: null,
   dailyThree: {},
   phaseThree: null,
+  benchOverrides: {},
 };
 
 // Migrate a parsed payload of any prior schema version up to STORAGE_VERSION.
@@ -119,6 +136,14 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       phaseThree: null,
     };
   }
+  // v3 -> v4: introduced benchOverrides (per-batch seat swaps).
+  if (working.version === 3) {
+    working = {
+      ...working,
+      version: 4,
+      benchOverrides: {},
+    };
+  }
   // Unknown future version: best-effort — trust and keep known keys.
   const rawPhase = working.currentPhase as Phase | undefined;
   const safePhase: Phase =
@@ -140,6 +165,8 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       (working.dismissedPhaseSuggestion as Phase | null) ?? null,
     dailyThree: (working.dailyThree as AppState["dailyThree"]) ?? {},
     phaseThree: (working.phaseThree as PhaseThreeSlot | null) ?? null,
+    benchOverrides:
+      (working.benchOverrides as AppState["benchOverrides"]) ?? {},
   };
 }
 
@@ -447,6 +474,38 @@ export function useAppStateActions() {
     [],
   );
 
+  // --- Bench overrides --------------------------------------------------
+  // Per-batch swap of the primary or standby seat. Pass `null` to clear
+  // that role's override and fall back to the seed roster in
+  // `data/saltBench.ts`. When both roles' overrides are cleared, the
+  // week's entry is removed entirely so the storage payload doesn't
+  // accumulate empty objects.
+  const setBenchOverride = useCallback(
+    (
+      weekNumber: number,
+      role: "primary" | "standby",
+      seatId: string | null,
+    ) => {
+      const s = getState();
+      const key = String(weekNumber);
+      const current = s.benchOverrides[key] ?? {};
+      const next: BenchOverride = { ...current };
+      if (seatId === null) {
+        delete next[role];
+      } else {
+        next[role] = seatId;
+      }
+      const nextOverrides = { ...s.benchOverrides };
+      if (next.primary === undefined && next.standby === undefined) {
+        delete nextOverrides[key];
+      } else {
+        nextOverrides[key] = next;
+      }
+      setState({ ...s, benchOverrides: nextOverrides });
+    },
+    [],
+  );
+
   // "Set fresh ones" — used when the practitioner enters a new phase
   // and accepts the soft prompt to start a new phase-scoped 3.
   const resetPhaseThree = useCallback((phase: Phase) => {
@@ -484,5 +543,6 @@ export function useAppStateActions() {
     setPhaseThing,
     togglePhaseThing,
     resetPhaseThree,
+    setBenchOverride,
   };
 }
