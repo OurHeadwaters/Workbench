@@ -92,7 +92,7 @@ export default function HardRules() {
                 never at the cost of an aggregation run, a price audit, or
                 a council deliverable.
               </span>{" "}
-              The same applies to the bookkeeper, the future tech lead, and
+              The same applies to the bookkeeper, the IT/Tech, and
               every shared resource the agency funds.
             </div>
 

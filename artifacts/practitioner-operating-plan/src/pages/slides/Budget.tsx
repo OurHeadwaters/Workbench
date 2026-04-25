@@ -12,8 +12,9 @@ type Row = {
 const rows: Row[] = [
   { label: "Practitioner / Lead", sub: "Engagement owner", a: 14000, b: 18000, c: 20000 },
   { label: "Operations Manager", sub: "Dryden, on-site", a: 8500, b: 8500, c: 9000 },
-  { label: "Tech Lead / SRE", sub: "Servers, privacy phones, transparency stack", a: 9500, b: 9500, c: 10000 },
+  { label: "IT/Tech", sub: "Servers, privacy phones, transparency stack, store IT", a: 9500, b: 9500, c: 10000 },
   { label: "Bookkeeper / Admin", sub: "Remote", a: 2500, b: 2500, c: 3000 },
+  { label: "Food Handler", sub: "Headwaters-owned · embedded at Deer Lake store Day 1 · salt batches + 807 piecework + kitchen/shop tidy + supplies inventory", a: 5000, b: 5000, c: 5000 },
   { label: "Community Dev. Associate", sub: "Engagement #2 readiness", a: null, b: 7500, c: 8500, isAdd: true },
   { label: "Junior Analyst / Field", sub: "Data, household lookups, fieldwork", a: null, b: 6500, c: 6500, isAdd: true },
   { label: "Senior Engineer #2", sub: "Resilience for the server fleet", a: null, b: null, c: 10000, isAdd: true },
@@ -23,15 +24,15 @@ const rows: Row[] = [
   { label: "Facilities — aggregation hub", sub: "Dad-warehouse · $2,200 rent + utilities, all-in (garage + house-next-door priced as expansion options, not yet activated)", a: 3000, b: 3000, c: 3000 },
   { label: "Tooling, SaaS, insurance", sub: "Operating overhead", a: 1800, b: 2500, c: 3000 },
   { label: "Recurring tech ops", sub: "Cloud, phone plans, monitoring", a: 1800, b: 2200, c: 2500 },
-  { label: "Buffer", sub: "Statutory + variance", a: 4200, b: 7400, c: 1500 },
+  { label: "Buffer", sub: "Statutory + variance · Food Handler absorbs the floor & scale slack", a: 0, b: 2400, c: 0 },
 ];
 
 const sumCol = (key: "a" | "b" | "c") =>
   rows.reduce((acc, r) => acc + (r[key] ?? 0), 0);
 
-const costA = sumCol("a"); // 47,400
+const costA = sumCol("a"); // 48,200
 const costB = sumCol("b"); // 69,700
-const costC = sumCol("c"); // 95,600
+const costC = sumCol("c"); // 99,100
 
 const fmt = (n: number) => "$" + n.toLocaleString("en-US");
 const fmtK = (n: number) => "$" + Math.round(n / 1000) + "k";
@@ -51,7 +52,7 @@ const scenarios: Scenario[] = [
     label: "Floor",
     contract: 60000,
     cost: costA,
-    note: "Practitioner-side core (4 roles) + life + overhead. Honest, but no second engagement on the horizon.",
+    note: "Practitioner-side core (4 agency hires + Food Handler embedded at the store) + life + overhead. Buffer absorbed by the Food Handler line at the floor; no second engagement on the horizon.",
   },
   {
     key: "B",
@@ -66,7 +67,7 @@ const scenarios: Scenario[] = [
     label: "Scale",
     contract: 125000,
     cost: costC,
-    note: "Adds Sr. Engineer + Regional Outreach + Trainer. Three concurrent reserves by year two.",
+    note: "Adds Sr. Engineer + Regional Outreach + Trainer. Buffer absorbed by Food Handler at scale too; three concurrent reserves by year two.",
   },
 ];
 

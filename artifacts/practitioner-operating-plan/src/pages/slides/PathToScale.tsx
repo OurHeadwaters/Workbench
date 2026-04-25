@@ -21,7 +21,7 @@ const stages: Stage[] = [
   {
     year: "Year 3",
     headline: "3–5 contracts running concurrently",
-    body: "The agency is the deliverable. Two CD Associates run engagement-side; tech lead and senior engineer run the infrastructure. Each pilot ships the same six modules with reserve-specific adaptations.",
+    body: "The agency is the deliverable. Two CD Associates run engagement-side; IT/Tech and senior engineer run the infrastructure. Each pilot ships the same six modules with reserve-specific adaptations.",
     cost: "Up to 5 contracts · ~$5M+ annualised",
   },
   {

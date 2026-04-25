@@ -9,7 +9,7 @@ const costLines: Line[] = [
     label: "Cost basis (the team)",
     amount: "$66,700 / mo",
     detail:
-      "Practitioner, ops manager in Dryden, tech lead, bookkeeper, CD associate, junior analyst, life supports, tooling, recurring tech ops.",
+      "Practitioner, ops manager in Dryden, IT/Tech, bookkeeper, food handler (Headwaters-owned, embedded at the store Day 1), CD associate, junior analyst, life supports, tooling, recurring tech ops.",
   },
   {
     label: "Reinvestment (35% markup)",

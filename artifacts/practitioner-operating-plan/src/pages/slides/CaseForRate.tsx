@@ -56,7 +56,7 @@ export default function CaseForRate() {
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">D.</div>
                 <div>
-                  <span className="font-semibold text-primary">A tech lead and a 9-server stack</span> —
+                  <span className="font-semibold text-primary">An IT/Tech and a 9-server stack</span> —
                   band-owned data sovereignty, public price dashboard, household lookup,
                   privacy phones for council. The transparency the reserve has been asking for.
                 </div>

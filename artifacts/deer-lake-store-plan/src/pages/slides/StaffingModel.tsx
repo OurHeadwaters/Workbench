@@ -22,6 +22,29 @@ export default function StaffingModel() {
           </div>
         </div>
 
+        <div
+          className="rounded-[0.4vw] p-[1.4vw] mb-[2vh] flex items-center justify-between gap-[2vw]"
+          style={{ background: "var(--slide-paper)", borderLeft: "0.4vw solid var(--slide-accent)" }}
+        >
+          <div className="shrink-0">
+            <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-accent font-semibold mb-[0.4vh]">
+              Day-1 Headwaters embed
+            </div>
+            <div className="font-display text-[1.5vw] leading-tight text-primary font-medium">
+              Food Handler · on the floor from the day the store opens
+            </div>
+          </div>
+          <div className="font-body text-[1vw] text-text leading-[1.45] max-w-[52vw]">
+            One Headwaters-owned <span className="text-primary font-semibold">Food Handler</span> is
+            embedded at the store from Day 1: salt-line kitchen handling on
+            batch days, 807-branded piecework, kitchen + equipment tidy, shop
+            and office cleanup, and food/supplies inventory. They aren't part
+            of the rotation above — they're a permanent agency role at the
+            store, paid out of the practitioner budget rather than the store
+            P&amp;L, so the band's grocery margin isn't carrying that line.
+          </div>
+        </div>
+
         <div className="flex-1 grid grid-cols-4 gap-[1.4vw] min-h-0 mb-[2.5vh]">
           <div className="rounded-[0.4vw] p-[1.6vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1.05vw] text-accent font-semibold mb-[1vh]">01 · HOW IT'S SET UP</div>

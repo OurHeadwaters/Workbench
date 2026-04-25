@@ -77,8 +77,8 @@ export default function OnePager() {
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
-                <td className="py-[3pt] pr-[4pt] font-semibold">Tech Lead / SRE</td>
-                <td className="py-[3pt] pr-[4pt]">Server fleet, privacy phones, transparency stack</td>
+                <td className="py-[3pt] pr-[4pt] font-semibold">IT/Tech</td>
+                <td className="py-[3pt] pr-[4pt]">Server fleet, privacy phones, transparency stack, store IT</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$9,500</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
@@ -86,6 +86,12 @@ export default function OnePager() {
                 <td className="py-[3pt] pr-[4pt] font-semibold">Bookkeeper / Admin</td>
                 <td className="py-[3pt] pr-[4pt]">Invoicing, contracts, CRA, agency back office</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$2,500</td>
+                <td className="py-[3pt] text-right text-[#6b7665]">A</td>
+              </tr>
+              <tr className="border-b border-[#e3dac4] align-top">
+                <td className="py-[3pt] pr-[4pt] font-semibold">Food Handler</td>
+                <td className="py-[3pt] pr-[4pt]">Headwaters-owned, embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen/shop tidy, food &amp; supplies inventory</td>
+                <td className="py-[3pt] pr-[4pt] text-right font-semibold">$5,000</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
@@ -108,12 +114,12 @@ export default function OnePager() {
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
                 <td className="py-[3pt] pr-[4pt] font-semibold">
-                  Life supports + overhead + buffer
+                  Life supports + overhead
                 </td>
                 <td className="py-[3pt] pr-[4pt]">
-                  Cleaner, tutor, handyman, tooling/SaaS, recurring tech ops, statutory buffer
+                  Cleaner, tutor, handyman, tooling/SaaS, recurring tech ops (statutory buffer absorbed by Food Handler at the floor)
                 </td>
-                <td className="py-[3pt] pr-[4pt] text-right font-semibold">$9,900</td>
+                <td className="py-[3pt] pr-[4pt] text-right font-semibold">$5,700</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
               <tr className="border-b border-[#c8bfa7] align-top">
@@ -130,7 +136,7 @@ export default function OnePager() {
                   A · floor → B · recommended → C · scale
                 </td>
                 <td className="py-[5pt] pr-[4pt] text-right" colSpan={2}>
-                  $47,400 / $69,700 / $95,600
+                  $48,200 / $69,700 / $99,100
                 </td>
               </tr>
             </tbody>
@@ -159,10 +165,10 @@ export default function OnePager() {
             <tbody className="text-[#2a2520]">
               <tr className="border-b border-[#e3dac4]">
                 <td className="py-[3pt] pr-[4pt] font-semibold">A · floor</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$47,400</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$12,600 (27%)</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$48,200</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$11,800 (24%)</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$60,000</td>
-                <td className="py-[3pt] text-right">~$95k</td>
+                <td className="py-[3pt] text-right">~$96k</td>
               </tr>
               <tr className="border-b border-[#e3dac4] bg-[#f0e6d2]">
                 <td className="py-[3pt] pr-[4pt] font-semibold">B · recommended</td>
@@ -173,10 +179,10 @@ export default function OnePager() {
               </tr>
               <tr>
                 <td className="py-[3pt] pr-[4pt] font-semibold">C · scale</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$95,600</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$29,400 (31%)</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$99,100</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$25,900 (26%)</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$125,000</td>
-                <td className="py-[3pt] text-right">~$251k</td>
+                <td className="py-[3pt] text-right">~$258k</td>
               </tr>
             </tbody>
           </table>

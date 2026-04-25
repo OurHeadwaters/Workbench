@@ -44,16 +44,18 @@ export default function PartIIIDivider() {
             <span className="italic font-normal opacity-90"> find each of them.</span>
           </h1>
           <div className="mt-[3vh] font-body text-[1.7vw] leading-[1.4] opacity-85 max-w-[60vw]">
-            The budget is theoretical until five real people are doing the work.
-            For each role: where to look in and around Dryden, what to ask, what
-            a paid trial looks like, what to walk away from.
+            The budget is theoretical until the four agency hires (Ops Manager,
+            Bookkeeper, IT/Tech, Food Handler) and the three household supports
+            are real people doing the work. For each role: where to look in
+            and around Dryden, what to ask, what a paid trial looks like, what
+            to walk away from.
           </div>
         </div>
 
         <div
           className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-65 self-end"
         >
-          Ops Manager → Bookkeeper → Housecleaner → Tutor → Handyman
+          Ops Manager → Bookkeeper → IT/Tech → Food Handler → Housecleaner → Tutor → Handyman
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@ const measures: Measure[] = [
     title: "Time returned to band staff",
     metric: "Hours / month not spent on what we now run",
     detail:
-      "The ops manager runs supply, the bookkeeper runs CRA, the tech lead runs the dashboard. Band administration gets those hours back for governance, programs, and council priorities.",
+      "The ops manager runs supply, the bookkeeper runs CRA, the IT/Tech runs the dashboard. Band administration gets those hours back for governance, programs, and council priorities.",
     cadence: "Tracked monthly",
   },
   {

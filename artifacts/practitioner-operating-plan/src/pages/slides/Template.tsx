@@ -39,7 +39,7 @@ const modules: Module[] = [
     title: "Tech infrastructure",
     source: "Reinvestment CAPEX · year-1 spend",
     contents:
-      "9 servers, 6 privacy phones, 8 work computers, networking, the POS configuration (Deer Lake Square mockup → live store), and a deployment checklist any tech lead can run on a new reserve in two weeks.",
+      "9 servers, 6 privacy phones, 8 work computers, networking, the POS configuration (Deer Lake Square mockup → live store), and a deployment checklist any IT/Tech can run on a new reserve in two weeks.",
   },
   {
     num: "06",
