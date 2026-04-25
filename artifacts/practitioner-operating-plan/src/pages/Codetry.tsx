@@ -13,8 +13,8 @@ const constellation: ConstellationEntry[] = [
     role: "Care institutions and centralized homes. The cultivated microclimate sheltered against the winds — the bright-frame name for the institutional dwelling. Awaiting agent context-pack.",
   },
   {
-    name: "Headwaters / xBuckets Zone 1 (parent)",
-    role: "Household budget. Non-custodial; channels every drop of income into named pools. The daily-balance constraint everything else must fit inside, or the system breaks down. The parent metaphor for Zone 1.",
+    name: "Headwaters Zone 1 (parent)",
+    role: "Non-custodial XRPL envelope-budgeting PWA (was xBuckets / Watershed). The household balance is the source of the whole watershed; every other zone sits downstream. The cleanest demonstrations of metaphor-as-architecture: Buckets (envelopes — you can only pour from one to another, never summon water from nothing; rename to 'Categories' and the UI starts suggesting balances can grow by clicking), XRP Spring (savings above the 10-XRP network reserve, with a six-stage bamboo growth scene that extends the metaphor from data model into artwork), Community Well (monthly pooled tips round-distributed to community proposals — the well refilling). Plus Drip Harvester, Giving Well, Surplus Pool, Payday Planner.",
   },
   {
     name: "Family Buckets Zone 1 (sibling)",

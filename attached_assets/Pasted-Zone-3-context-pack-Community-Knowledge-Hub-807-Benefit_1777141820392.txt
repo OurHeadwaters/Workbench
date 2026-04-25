@@ -1,0 +1,38 @@
+Zone 3 context-pack — Community Knowledge Hub / 807 Benefits
+Identity
+Zone: 3 — Main crops. Community production for NWO food systems.
+App name: 807 Benefits (member-facing brand) / Community Knowledge Hub (constellation name).
+Live: community-knowledge-hub.replit.app — Dryden 807 Food Co-op members portal.
+Co-op of record: 807 Food Co-operative & Hub. Designed so a second co-op can be added without a rewrite (tenant seam: legal name, contacts, regional copy all sourced from a tenant accessor, not hardcoded).
+Tech surface (for Zone 2 only): React + Vite frontend (artifacts/807-benefits), Express 5 + Postgres + Drizzle backend (artifacts/api-server), Clerk auth, Square payments, Resend email, Local Line for orders.
+Worked examples — where the metaphor IS the architecture
+Each of these is a real shipped surface, not a slide. Use them in the codetry doc as concrete instances of naming-is-design.
+
+"Today I…" verbs as the routing primitive. The library front door isn't a menu of features; it's a shelf of verbs the member picks based on what today asks for ("Today I cook & preserve / gather / order / learn / trade / help"). The verb is the route, the photo-tile is the chapter cover, the cream "recipe-card" label sits on the photo. Audience (household vs producer) swaps which shelf you're looking at. Files: artifacts/807-benefits/src/components/library.tsx, data in src/data/library.ts.
+Library of recipe books. Audience-aware shelves of 8–12 themed stacks. The metaphor is structural: stacks = chapters, audience choice = which book. Recently the visual caught up to the metaphor — tiles read as printed recipe cards on a photo. Two-column on phones (a paired spread), three-column on desktop.
+Treasurer Calm Monthly Journey. "Calm" is the contract, not a vibe. Confidence meter + per-treasurer lookahead preference (off / 1 / 2 / 3 days) + 14-day snooze-expiry outline + email digest + in-app banner. Treasurers plan ahead instead of reacting. Files: pages/board-treasurer.tsx, api-server/src/lib/duesSnoozeExpiryDigest.ts.
+Dues snooze as the primary verb. Treasurers don't "defer" or "pause" a dues line — they snooze it, and the system auto-wakes them with a digest tied to (recipient, lineItem, snoozedUntil). The verb dictates the behavior (something will wake you), not the other way around.
+Stuck Board ("What's stuck"). Cross-domain aggregator at /admin/stuck and /board-hub/stuck. Pulls aging items from member onboarding, producer pipeline, outstanding dues, partner/grant sync errors, open grants, and marketplace seller replies into one owner-tagged view with last-touch timestamps. The name is the spec: things get stuck → the board surfaces them.
+Producer Playbook. Sequenced chapters (markdown) producers can work through, surfaced as a list/detail with mailto CTAs back to the co-op. Playbook = ordered plays, not a wiki.
+NOHFC Grow Application Workspace. Single-grant focused workspace at /applications/nohfc-grow-stream (lives in the Grants Finder artifact). Five tabs (eligibility, sections, budget, attachments, submission packet), deadline countdown, one-click "switch to July 31 intake" on a not-eligible verdict. Deliberately not a generalized grant form-builder — the grant is the unit of work.
+Audience chooser as structural pivot. Signed-out visitors choose household vs producer; the choice persists in localStorage (807.audience.v1) and changes which library, which CTAs, and which dashboard cards render. One pivot, two products.
+Board hub as a cluster of role rooms. /board-hub/{chair, treasurer, secretary, director, operations, distribution, agm, training, applications, drive-map, social-ideas, cashflow-budget, onboarding, stuck, orders} — each role gets its own room rather than a single admin dashboard. The role IS the room.
+Tenant seam. tenant.headerProductLabel, tenant.legalName, board contact routing in api-server/src/config/board.ts etc. — anywhere the app would say "807 Food Co-op" goes through the seam. The seam is what makes Zone 3 a pattern for community production, not a one-off for Dryden.
+Kitchen rental kept quiet, not removed. Public marketing has zero kitchen-rental promotion; /partners/kitchen-rental exists as a "borrow equipment for community programs" page that still POSTs the same inquiry route. The naming carries the policy: it's borrowing, not renting.
+Appreciation Wall / "help" stack. Members pin thank-you notes to other members. A first-class surface, not a footer widget — gratitude has its own room because the system says it matters.
+What Zone 3 can offer the constellation
+A working multi-tenant member-portal pattern (audience pivot + tenant seam) any other community-production co-op could fork from.
+Treasurer/board operations primitives (snooze, digest, stuck board, role-rooms) that other zones with governance needs (Zone 4 Regen Revolution especially) could mirror.
+A real worked example of "verbs as routes" that Zones 1, 2, and 5 can lean on without re-deriving it.
+What Zone 3 needs from the workbench
+Decisions on which patterns get hoisted into the constellation's shared vocabulary (verb routing, role-rooms, tenant seam) vs. kept Zone-3-local.
+A canonical place for cross-zone copy/voice rules so the same metaphor doesn't get re-translated each app.
+Heads-up before Zone 2 names a new primitive that overlaps an existing 807-Benefits noun (e.g., "snooze", "stack", "playbook", "stuck") so we don't fork the meaning.
+Coordination handles
+Codebase: artifacts/807-benefits (frontend), artifacts/api-server (API), shared db schema. Same monorepo as the other in-Replit apps.
+Production URL: community-knowledge-hub.replit.app.
+How to reach me: edits to this codebase land here; the Zone 2 workbench can drop tasks into the same project queue and I'll pick them up.
+Non-negotiables when coordinating:
+Don't break the tenant seam (no hardcoded "807" / "Dryden" in app code — go through tenant.*).
+Don't rename a shipped verb without a migration plan; the verb is the route.
+Database changes go through Drizzle + pnpm --filter @workspace/db push, never hand-written SQL migrations.

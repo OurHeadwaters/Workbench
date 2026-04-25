@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "lastUpdated": "2026-04-25",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
@@ -32,7 +32,10 @@
         { "name": "Quote of the Day", "rule": "Deterministic per calendar date; rotates next morning. The quote rests with the day." },
         { "name": "Live Follow-Along", "rule": "Opt-in only, passphrase as header (X-Share-Pass), lock-in count excluded from share payload. Privacy is the default posture, not a setting." },
         { "name": "Per-child Goals + tips", "rule": "Goal lives with the child, the tip meets them where they are. No streaks, no leaderboards. (Goals row in flight: #175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge — Z0 agent will send a delta before this row locks.)" }
-      ]
+      ],
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "household primitive as shared unit of account — note: requires bridge since Saltbox is local-first IndexedDB, not server-backed"
+      }
     },
     {
       "zone": 0,
@@ -41,18 +44,64 @@
       "domain": "Centralized homes / care institutions",
       "url": null,
       "status": "pending",
-      "context": "awaiting agent context-pack"
+      "context": "awaiting agent context-pack",
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "household primitive as shared unit of account for institutional dwelling units"
+      }
     },
     {
       "zone": 1,
       "name": "Headwaters",
-      "aliases": ["xBuckets", "Buckets"],
-      "domain": "Household budget — daily-balance constraint everything else must fit inside",
+      "formerNames": ["xBuckets", "Watershed"],
+      "domain": "Non-custodial XRPL stablecoin envelope-budgeting PWA — household balance is the source of the watershed",
       "url": "https://x-buckets-vision.replit.app/",
       "status": "live",
       "tagline": "Channel every drop. Watch the ripple effect.",
-      "dataPosture": "non-custodial (you keep your own salt)",
-      "role": "parent metaphor for Zone 1"
+      "dataPosture": "non-custodial XRPL; PWA; bilingual EN/FR (copy.en.ts + copy.fr.ts)",
+      "tenancy": {
+        "skins": ["cu (Alterna credit-union)", "enthusiast (Xaman crypto-native)", "advisor (IG Wealth)"],
+        "active": "advisor",
+        "switch": "VITE_TENANT_MODE"
+      },
+      "role": "parent metaphor for Zone 1; household primitive available for Zone 0",
+      "workedExamples": [
+        { "name": "Headwaters", "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up." },
+        { "name": "Buckets", "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking." },
+        { "name": "XRP Spring", "rule": "savings, defined as free XRP above the 10-XRP network reserve. A spring upwells from below the reserve floor; the user sees what's pooled above the rock. The new six-stage bamboo growth scene (just shipped, #793) extends the metaphor from data model into artwork — same constraint, now visible." },
+        { "name": "Drip Harvester", "rule": "AMM liquidity-pool yield. Small steady drops collected over time. The verb 'harvest' carries patience and seasonality; 'Auto-Compound' would have erased both." },
+        { "name": "Community Well", "rule": "monthly pooled tips that round-distribute to community proposals. A well everyone draws from and contributes to; the monthly snapshot/round cycle is the well refilling." },
+        { "name": "Giving Well", "rule": "user-to-user tip pool for charitable giving. Same well metaphor at the household scale." },
+        { "name": "Surplus Pool", "rule": "where Payday overflow goes once envelopes are full. Pool, not 'extra savings account' — water seeking level. (In flight: #794)" },
+        { "name": "Payday Planner", "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving." }
+      ],
+      "inFlight": [
+        { "id": 793, "title": "Spring: six-stage bamboo progression", "status": "implemented, awaiting approval" },
+        { "id": 794, "title": "Payday Surplus Pool", "status": "pending" },
+        { "id": 795, "title": "Tutorial Hub", "status": "pending" }
+      ],
+      "crossZoneTouchpoints": [
+        { "to": "Zone 0", "seam": "household primitive (households table, household-auth) is the natural shared unit between SaltBox/Bright Side and Headwaters" },
+        { "to": "Zone 3", "seam": "807 Co-op proposals as the proposal source for Community Well monthly rounds (shared schema needed: proposal id, title, ask, beneficiary)" },
+        { "to": "Zone 4", "seam": "Drip Harvester pool filter — 'regen-aligned' marker on pools/issuers/instruments per RR's conventional-to-regenerative rubric" },
+        { "to": "Zone 5", "seam": "Spring stage-transition events as triggers for private Dam Days entries" },
+        { "to": "Pre-zone", "seam": "periodic sweep of .local/tasks/ seeds into Brainstorm Library" }
+      ],
+      "requestsToZone2": [
+        "Shared name registry — Z2 as source of truth for shared nouns (household, well, pool, harvest, bucket) so meanings don't fork",
+        "Cross-zone proposal queue — shared schema for 807 proposals appearing in Community Well",
+        "Zone-1-aligned worked examples for /codetry — Spring + bamboo (data→art), Buckets (constraint→UI), Community Well (rounding cycle→pooling cadence) as the cleanest demonstrations"
+      ],
+      "qa": "132 e2e tests, 527 unit tests, green except 2 pre-existing flaky visual snapshots (~1% pixel drift on settlement-explainer)",
+      "coordinationHandles": {
+        "repo": "pnpm monorepo, artifact at artifacts/xbuckets/",
+        "tasks": ".local/tasks/task-{793,794,795}.md",
+        "memory": "replit.md at repo root",
+        "tenantConfig": "artifacts/xbuckets/src/tenantConfig.ts",
+        "copyKeys": "artifacts/xbuckets/src/copy.en.ts and copy.fr.ts (bilingual EN/FR)",
+        "mockupSandbox": "artifacts/mockup-sandbox/ — components approved on canvas before graduating into the main app",
+        "companion": "video artifact 'Headwaters — Channel Every Drop' lives in same repo",
+        "billing": "Stripe wired for advisor skin's premium gates"
+      }
     },
     {
       "zone": 1,
@@ -82,8 +131,59 @@
       "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, cross-zone synthesis",
       "url": null,
       "status": "live (you are here)",
-      "agentCharter": "Reads state from neighbor zones; writes back as memos; never mutates other zones; channels the four teachers; will not name unilaterally",
-      "pingProtocol": "Open a project task with Z2 in title and link the working-doc section"
+      "audience": "Bobbie — single practitioner, NWO, building a constellation as her business shape. Reads as a trade journal kept by hand.",
+      "cadence": {
+        "daily": "Today view — current week's steps + carry-overs",
+        "weekly": "Week-card with notes + close-the-week ritual",
+        "annual": "Snapshot with green/yellow/red plan-curve check-in",
+        "ad-hoc": "Cost-review walkthroughs (~70 dollar figures, walked one at a time with Approve/Edit/Skip + private notes)",
+        "print-target": "/codetry working-doc — the version-controlled paper trail; live page lives in Dam Days and Shallows"
+      },
+      "namingWeight": "'Practitioner' (not user/customer/founder — craft-as-livelihood not startup-as-bet); 'Operating' (not strategic — a working day plan not a business-school exercise); 'Plan' (not platform — a printed plan a practitioner walks with, even though it lives in a browser). All three commitments would erase under 'Founder Dashboard'.",
+      "workedExamples": [
+        { "name": "Today / Week / Year", "rule": "time-shape not feature-shape. The same data — phases × weeks × steps — surfaces three ways depending on the time-window the practitioner is standing in. 'Dashboard' would have flattened them." },
+        { "name": "Idea → Pitch → Contract → Fulfillment → Impact", "rule": "deal-flow as the spine the slide deck is re-spined around (src/lib/phases.ts). The phase IS where the practitioner currently is, and the deck reorders around that phase. Renaming to 'stages' would let the deck go static again." },
+        { "name": "Cost review walkthrough", "rule": "~70 dollar figures registered in costRegistry.ts with rank order. Walked one-at-a-time, Approve/Edit/Skip + private notes. Not 'settings' — a discipline that gets done, like a pre-flight check." },
+        { "name": "Carry-over", "rule": "unfinished steps from past weeks roll forward as 'Carried over' on Today (not 'Overdue,' not 'Tasks'). Honest about time having passed without making it punitive." },
+        { "name": "Codetry (this doc)", "rule": "the version-controlled paper trail of the practice. Renaming to 'Design system' would erase that codetry is the practice naming itself." }
+      ],
+      "interfaces": {
+        "needs": {
+          "Z1 (Headwaters)": "household balance to gate weekly steps; Spring level to inform cost-review priority; Payday Planner / Surplus Pool to flag weeks with slack for new commitments",
+          "Z3 (CKH)": "deal-flow signal — 807 Co-op proposals matching Idea→Pitch→Contract→Fulfillment→Impact stages; producer activity as where workbench deals come from",
+          "Z4 (Regen Revolution)": "industry-track tagging on deals so cost-review can prioritize regen-aligned commitments",
+          "Z5 (Dam Days)": "weekly digest of shallows-surfaced patterns to land in Today view as soft prompts"
+        },
+        "offers": {
+          "all": "/codetry as the constellation's name registry; /constellation.json as the machine-readable mirror; deal-flow phase as a published value other zones can read; cross-zone synthesis surfaced weekly to the practitioner"
+        }
+      },
+      "constraints": {
+        "single-user": "localStorage means no multi-device sync — print-targets exist for a reason",
+        "no-backend": "can publish manifest + doc; cannot subscribe to other zones' events directly without a server. Weekly digest pattern requires fetching each zone's published JSON.",
+        "naming-discipline": "as codetry-doc steward, if I let a name slip (e.g., 'Categories' for 'Buckets', 'Founder' for 'Practitioner'), I break the codetry contract."
+      },
+      "failureMode": "doc drifts from live constellation; manifest is the integrity check — if /constellation.json is out of sync with /codetry, alarm.",
+      "agentCharter": "Reads state from neighbor zones; writes back as memos in the doc; never mutates other zones; channels the four teachers; will not name unilaterally — naming is the practitioner's call.",
+      "scopeBound": "Synthesize and surface. Do not name (practitioner does). Do not move money (Z1 does). Do not write into other zones' databases. Workbench and print shop, not orchestrator.",
+      "pingProtocol": "Same-monorepo: project task with Z2 in title. Cross-monorepo: send the practitioner a memo for the workbench to fold in (project tasks don't cross monorepo boundaries).",
+      "coordinationHandles": {
+        "repo": "pnpm monorepo, artifact at artifacts/practitioner-operating-plan/",
+        "memory": "replit.md at repo root (constantly updated)",
+        "codetrySource": "src/pages/Codetry.tsx",
+        "manifest": "public/constellation.json (served at /practitioner-operating-plan/constellation.json)",
+        "costRegistry": "src/data/costRegistry.ts (~70 dollar figures, the cost-review backbone)",
+        "phases": "src/lib/phases.ts (deal-flow pipeline)",
+        "planData": "src/data/plan2026.ts (4 phases × 52 weeks)",
+        "stateKey": "browser localStorage under 'pop:v1' (no backend, no auth)"
+      },
+      "claimedRequests": {
+        "fromZ1Headwaters": [
+          "Shared name registry — claimed (codetry doc + manifest are the source of truth for shared nouns)",
+          "Cross-zone proposal queue — noted, awaiting CKH (Z3) confirmation on shared schema",
+          "Z1-aligned worked examples in /codetry — done (Buckets / XRP Spring + bamboo / Community Well surfaced as the cleanest demonstrations in the Headwaters bullet)"
+        ]
+      }
     },
     {
       "zone": 3,
@@ -93,7 +193,10 @@
       "url": "https://community-knowledge-hub.replit.app/",
       "status": "live",
       "geography": "Dryden, Northwestern Ontario (807)",
-      "context": "awaiting agent context-pack for cadence + load-bearing surfaces"
+      "context": "awaiting agent context-pack for cadence + load-bearing surfaces",
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "807 proposals as the proposal source for Community Well monthly rounds — needs shared schema (proposal id, title, ask, beneficiary). Awaiting CKH confirmation."
+      }
     },
     {
       "zone": 4,
@@ -101,7 +204,10 @@
       "domain": "Conventional-to-regenerative track for industries — multi-year transition at sector scale",
       "url": null,
       "status": "pending",
-      "context": "awaiting agent context-pack"
+      "context": "awaiting agent context-pack",
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "'regen-aligned' marker on Drip Harvester pools/issuers/instruments per RR's conventional-to-regenerative rubric. Awaiting RR confirmation."
+      }
     },
     {
       "zone": 5,
@@ -110,7 +216,10 @@
       "url": null,
       "status": "pending",
       "mechanic": "Default private (the dam holds it). Share button floats a thought to the shallows for all to see, shrouded in mystery from the depths below. Where things go that don't fit any other zone — the rock you skip a few times to see how it lands.",
-      "context": "awaiting agent context-pack for built-status and shallows mechanics"
+      "context": "awaiting agent context-pack for built-status and shallows mechanics",
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "Spring stage-transition events as triggers for private Dam Days entries. Awaiting Dam Days confirmation."
+      }
     }
   ],
   "preZone": [
@@ -119,17 +228,23 @@
       "domain": "Seed bank — ideas before they're sorted into a zone",
       "url": null,
       "status": "pending",
-      "context": "awaiting agent context-pack"
+      "context": "awaiting agent context-pack",
+      "proposedInterfaces": {
+        "fromZ1Headwaters": "periodic sweep of .local/tasks/ seeds into the Library. Awaiting Library confirmation."
+      }
     }
   ],
   "interfaces": {
     "convention": "Each zone publishes its own /api/zone.json (or equivalent) when ready. This site's /constellation.json aggregates references. Cross-zone signals route through Zone 5's shallows.",
     "writePolicy": "Zone 2 reads, synthesizes, surfaces. Other zones own their own writes. Naming, strategy, and money decisions stay with the practitioner.",
-    "namingDiscipline": "Some collapses to avoid: Lock-In ≠ Focus Timer (reintroduces measurement). Memory bucket ≠ gallery or album. Moment (Saltbox keepsake) ≠ Note ≠ Entry. Family Buckets ≠ rename of xBuckets/Headwaters (it is a sibling extension)."
+    "namingDiscipline": "Some collapses to avoid: Lock-In ≠ Focus Timer (reintroduces measurement). Memory bucket ≠ gallery or album. Moment (Saltbox keepsake) ≠ Note ≠ Entry. Family Buckets ≠ rename of Headwaters (it is a sibling extension). Buckets ≠ Categories (would suggest balances can grow by clicking). Headwaters ≠ Watershed ≠ xBuckets (former names; current canonical name is Headwaters).",
+    "monorepoTopology": "Saltbox + Family Buckets + Headwaters appear to share one pnpm monorepo (shared lib/api-spec, lib/db, artifacts/api-server). Practitioner Operating Plan is in a separate monorepo. Project-task pings work within a monorepo only; cross-monorepo handshake is via published manifest URL + per-zone status JSONs (or practitioner relay)."
   },
   "openQuestions": [
     "Saltbox vs SaltBox vs Salt box — three writings have appeared. Z0 agent uses 'Saltbox' (one word, capital S). Pending practitioner decision.",
+    "Headwaters in /codetry doc title — Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'Headwaters Zone 1 (parent)' with '(was xBuckets / Watershed)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
     "/business — real route to create on this Z2 site, or shorthand for 'this site as a whole'?",
-    "Bright Side & Regen Revolution & Dam Days — built apps with URLs yet, or named slots?"
+    "Bright Side & Regen Revolution & Dam Days — built apps with URLs yet, or named slots?",
+    "Bilingual surface area — Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?"
   ]
 }
