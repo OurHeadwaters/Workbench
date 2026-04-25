@@ -10,7 +10,7 @@ export default function HiringFoodHandler() {
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[0.95vw] text-muted mb-[0.8vh]">
-              III · Hiring 04 — Food Handler (at the Deer Lake store)
+              V · Hiring 04 — Food Handler (at the Deer Lake store)
             </div>
             <h2
               className="font-display text-[3.2vw] leading-[1] tracking-tight text-primary font-medium"

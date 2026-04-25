@@ -93,7 +93,7 @@ export default function SaltBench() {
         <div className="flex items-baseline justify-between mb-[1.4vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[0.8vh]">
-              VI · 02b — The depot casual-labour bench
+              VIII · 06 — The depot casual-labour bench
             </div>
             <h2
               className="font-display text-[2.8vw] leading-[1] tracking-tight text-primary font-medium"

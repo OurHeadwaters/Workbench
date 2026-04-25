@@ -12,7 +12,7 @@ export default function GreatWeek() {
         <div className="col-span-5 flex flex-col justify-between">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              I · 04 — A great week looks like
+              III · 04 — A great week looks like
             </div>
             <h2
               className="font-display text-[3.6vw] leading-[1.02] tracking-tight text-primary font-medium"

@@ -112,7 +112,7 @@ export default function CashFlow() {
         <div className="flex items-baseline justify-between mb-[1.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              II · Cash flow on a 60-day pay cycle
+              V · Cash flow on a 60-day pay cycle
             </div>
             <h2
               className="font-display text-[3.2vw] leading-[1] tracking-tight text-primary font-medium"

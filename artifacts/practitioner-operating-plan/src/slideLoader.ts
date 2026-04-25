@@ -55,18 +55,19 @@ export const slides: LoadedSlide[] = [...manifestSlides]
     };
   });
 
-// Lifestyle Design Philosophy view: the original 38-slide ordering. The
-// five operating-plan phase openers are excluded so this view stays the
-// stable, unchanged reference the practitioner can come back to for the
-// inner-world read.
+// Lifestyle Design Philosophy view: the deck in manifest order. Filters
+// any operatingOnly slides out — currently there are none (the original
+// phase-opener stubs were removed when the deck was re-narrated into the
+// 8-part arc), but the field is kept in the schema in case a future
+// view needs to add view-specific slides again.
 export const lifestyleSlides: LoadedSlide[] = slides.filter(
   (s) => !s.operatingOnly,
 );
 
-// Operating plan view: re-spined around Idea → Pitch → Contract →
-// Fulfillment → Impact. Within each phase, the phase opener comes first
-// (operatingOnly=true), then the original slides in their manifest
-// position order.
+// Operating plan view: groups slides by phase (Idea → Pitch → Contract
+// → Fulfillment → Impact) for any UI that wants a phase-grouped read.
+// If a phase has an operatingOnly opener it comes first; otherwise the
+// phase's slides appear in manifest order.
 export const operatingSlides: LoadedSlide[] = PHASES.flatMap((phase) => {
   const inPhase = slides.filter((s) => s.phase === phase);
   const opener = inPhase.find((s) => s.operatingOnly);

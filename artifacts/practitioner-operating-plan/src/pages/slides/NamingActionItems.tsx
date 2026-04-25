@@ -11,7 +11,7 @@ export default function NamingActionItems() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              III · 04 — What the founder does this week
+              IV · 05 — What the founder does this week
             </div>
             <h2
               className="font-display text-[3.2vw] leading-[1] tracking-tight text-primary font-medium"

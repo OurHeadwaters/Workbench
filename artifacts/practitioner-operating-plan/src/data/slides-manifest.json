@@ -18,251 +18,62 @@
     "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b03",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e01",
     "position": 3,
-    "filepath": "src/pages/slides/PartIDivider.tsx",
-    "title": "Part I — The life I'm building",
-    "description": "Section divider entering the private voice: non-negotiables, daily rhythm, weekly rhythm, what a great week looks like.",
+    "filepath": "src/pages/slides/BetHighway.tsx",
+    "title": "Bright Side is the highway",
+    "description": "Part I opener — names Bright Side (the PHI-free residential-care staff companion app, Zone 0 centralized, paired with SaltBox) as the life focus and the highway every other line either feeds or stays out of.",
     "speakerNotes": "",
-    "phase": "fulfillment"
+    "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b04",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e02",
     "position": 4,
-    "filepath": "src/pages/slides/NonNegotiables.tsx",
-    "title": "The non-negotiables",
-    "description": "Five things that don't move: phone-free until 10am, 7–10am with the kids, work block 10:30 to 4/6, dinner already prepared, weekends mostly off.",
+    "filepath": "src/pages/slides/BetThreeDoors.tsx",
+    "title": "Three doors, one product",
+    "description": "Three doors into Bright Side, all already shipped: the floor (/unit-sheet clipboard with transition runs), the lobby (/lobby MVP wall + yesterday strip), and the director (/sector templates + planning pages). One codebase, three audiences.",
     "speakerNotes": "",
-    "phase": "fulfillment"
+    "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b05",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e03",
     "position": 5,
-    "filepath": "src/pages/slides/DailyRhythm.tsx",
-    "title": "Daily rhythm — summer vs winter",
-    "description": "Side-by-side daily rhythm for summer and winter, because winter is the part that breaks plans.",
+    "filepath": "src/pages/slides/BetMissionLine.tsx",
+    "title": "The line I won't lose",
+    "description": "The mission line: the institution can be a cultivated microclimate, not a wind tunnel — every screen a small wall against the wind. Names the four teachers (TSP, Salatin, LFTN, Cells) and how each shows up in the product.",
     "speakerNotes": "",
-    "phase": "fulfillment"
+    "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b06",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e04",
     "position": 6,
-    "filepath": "src/pages/slides/WeeklyRhythm.tsx",
-    "title": "Weekly rhythm and check-ins",
-    "description": "The 11am and 4pm hand-offs with the on-site Dryden manager and the optional weekend deep-work block.",
+    "filepath": "src/pages/slides/BetLooseEnds.tsx",
+    "title": "Why I haven't started yet — and what ends that",
+    "description": "Names the loose-ends trap, commits to working backwards from the next conference date toward a Princess Court (or other Kenora-district) pilot, and gives permission to start before the desk is clean.",
     "speakerNotes": "",
-    "phase": "fulfillment"
+    "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b07",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e05",
     "position": 7,
-    "filepath": "src/pages/slides/GreatWeek.tsx",
-    "title": "What a great week looks like",
-    "description": "A narrative slide reflecting the practitioner's own words back to them — three tests for whether the week was actually good.",
+    "filepath": "src/pages/slides/HeadwatersDivider.tsx",
+    "title": "Part II — What Headwaters is",
+    "description": "Section divider introducing the agency container: vision, name, and the brand & IP runway.",
     "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b08",
-    "position": 8,
-    "filepath": "src/pages/slides/PartIIDivider.tsx",
-    "title": "Part II — The team that protects the calendar",
-    "description": "Section divider entering the operating voice: the costed team, the 35% reinvestment markup, the bridge capital, the receipts.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b09",
-    "position": 9,
-    "filepath": "src/pages/slides/RoleOpsManager.tsx",
-    "title": "Operations Manager (Dryden)",
-    "description": "The phone-holder and time-protector, on-site in Dryden, dual-purpose for 807 ops and Deer Lake aggregation/distribution. 40 hrs/wk @ $40/hr ≈ $7,000/mo.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0a",
-    "position": 10,
-    "filepath": "src/pages/slides/RoleBookkeeper.tsx",
-    "title": "Bookkeeper / Agency Admin",
-    "description": "Invoicing, contracts, CRA, the back office of the agency — built once, used for years. 10 hrs/wk @ $40/hr ≈ $1,700/mo.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a30",
-    "position": 11,
-    "filepath": "src/pages/slides/RoleFoodHandler.tsx",
-    "title": "Food Handler (embedded at the Deer Lake store)",
-    "description": "Headwaters-owned Food Handler embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen + shop tidy, food/supplies inventory.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0b",
-    "position": 12,
-    "filepath": "src/pages/slides/RoleHousecleaner.tsx",
-    "title": "Housecleaner",
-    "description": "Recurring weekly clean — the mid-week mess reset taken off the parent and put on the schedule. 4 hrs/wk @ $30/hr ≈ $500/mo.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0c",
-    "position": 13,
-    "filepath": "src/pages/slides/RoleTutor.tsx",
-    "title": "Tutor",
-    "description": "Math, reading, structure — winter-weighted (~10 hrs/wk Nov–Apr, ~2 hrs/wk in summer). ≈ $900/mo annualised.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0d",
-    "position": 14,
-    "filepath": "src/pages/slides/RoleHandyman.tsx",
-    "title": "Handyman-Housekeeper combo",
-    "description": "Practical-first, parenting-intent second, framed as 'consider, don't commit' with explicit vetting requirements. 5 hrs/wk @ $30/hr ≈ $700/mo if engaged.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c01",
-    "position": 15,
-    "filepath": "src/pages/slides/PartIIIDivider.tsx",
-    "title": "Part III — Hiring runbook",
-    "description": "Section divider entering the hiring voice: how to actually find each of the four agency hires (Ops Manager, Bookkeeper, IT/Tech, Food Handler) and the three household supports, with sourcing channels in and around Dryden, screening questions, paid trial structures, and walk-away signals.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c02",
-    "position": 16,
-    "filepath": "src/pages/slides/HiringOpsManager.tsx",
-    "title": "Hiring — Operations Manager",
-    "description": "How to find the Dryden ops manager: Chamber and Job Bank, Confederation College alumni, regional logistics referrals, Facebook groups, bulletin boards. Screening questions, 2-week paid shadow-then-solo trial, walk-away signals, 30/60/90.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c03",
-    "position": 17,
-    "filepath": "src/pages/slides/HiringBookkeeper.tsx",
-    "title": "Hiring — Bookkeeper",
-    "description": "How to find the bookkeeper: CPB Canada directory, Northwestern Ontario CPAs, Chamber referrals, Indeed/LinkedIn remote-Canada search. Screening on CRA fluency, 1-month paid trial against fixed scope, walk-away signals, 30/60/90.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a31",
-    "position": 18,
-    "filepath": "src/pages/slides/HiringITTech.tsx",
-    "title": "Hiring — IT/Tech",
-    "description": "Hiring runbook for the IT/Tech role: source from northern-Ontario MSPs and self-hosting communities, screen for runbook discipline, paid one-week trial.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a32",
-    "position": 19,
-    "filepath": "src/pages/slides/HiringFoodHandler.tsx",
-    "title": "Hiring — Food Handler",
-    "description": "Hiring runbook for the Headwaters-owned Food Handler at the Deer Lake store: source from Deer Lake first, screen for kitchen + cleaning fit, paid two-shift trial.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c04",
-    "position": 20,
-    "filepath": "src/pages/slides/HiringHousecleaner.tsx",
-    "title": "Hiring — Housecleaner",
-    "description": "How to find the weekly housecleaner: working-parent referrals first, Dryden Facebook groups and Kijiji second, bulletin boards, Molly Maid as paid backstop. Screening, 2-visit paid trial, walk-away signals, 30/60/90.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c05",
-    "position": 21,
-    "filepath": "src/pages/slides/HiringTutor.tsx",
-    "title": "Hiring — Tutor",
-    "description": "How to find the year-round tutor: Lakehead Faculty of Education, Confederation College EA program, Keewatin-Patricia DSB, Dryden retired teachers, OCT register, current-teacher referrals. Vulnerable Sector Check required, 4-session paid trial with kids voting, 30/60/90.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c06",
-    "position": 22,
-    "filepath": "src/pages/slides/HiringHandyman.tsx",
-    "title": "Hiring — Handyman-Housekeeper",
-    "description": "How to find the handyman-housekeeper safely: referrals only, never an open posting. Explicit child-safety vetting protocol — Vulnerable Sector Check, three reference calls, never alone with kids for 90 days, open conversation with the kids, annual re-check. Two-week paid trial outside-then-inside-with-parent-present, heavy walk-away list, slower 30/60/90.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
-    "position": 23,
-    "filepath": "src/pages/slides/Budget.tsx",
-    "title": "Budget — three contract sizes (cost × 1.35)",
-    "description": "Cost-basis composition with new $60k/$90k/$125k contract sizes. Bill = cost × 1.35; the 35% is a dedicated reinvestment line.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b16",
-    "position": 24,
-    "filepath": "src/pages/slides/CashFlow.tsx",
-    "title": "Cash flow — bridging the 60-day pay cycle",
-    "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX and the new aggregation hub line, naming the bridge capital required (~$95k / $181k / $251k) before the first invoice clears.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b1a",
-    "position": 25,
-    "filepath": "src/pages/slides/PlatformBillPayback.tsx",
-    "title": "The $22k already spent — how we get paid back",
-    "description": "Names the $22,000 owed to Headwaters for the full 807 grant deliverable scope — both the CDP/business-development stream and the marketing/promotion stream the other contractor backed out of — plus Replit hosting actuals, framed as ~$40k of original grant scope delivered for $22k. Proposes a two-trigger repayment structure (deficit clears OR new platform-enabled revenue starts producing) with no cash up front, no debt taken on by 807, and no draw on existing operations until a trigger is met. Footer links to /payback-memo, the printable signed memorandum that turns the slide into a paper trail both organisations can hold each other to.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b17",
-    "position": 26,
-    "filepath": "src/pages/slides/Reinvestment.tsx",
-    "title": "Reinvestment — what the 35% builds",
-    "description": "Four destinations of the 35% markup: tech CAPEX (~$60k/yr — 9 servers, 6 privacy phones, computers), tooling subscriptions (~$2k/mo), training & R&D (~$3k/mo), and the pilot scale reserve (~$10k/mo accruing).",
-    "speakerNotes": "",
-    "phase": "fulfillment"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b18",
-    "position": 27,
-    "filepath": "src/pages/slides/Accountability.tsx",
-    "title": "Net-positive accountability",
-    "description": "Five measures (procurement savings delivered, time returned to band staff, transparency tooling shipped & adopted, capacity built locally, year-end value-delivered audit) plus a forward-credit clause if the value delivered doesn't beat the markup.",
-    "speakerNotes": "",
-    "phase": "contract"
-  },
-  {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
-    "position": 28,
-    "filepath": "src/pages/slides/Winter.tsx",
-    "title": "Winter contingency",
-    "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
-    "speakerNotes": "",
-    "phase": "fulfillment"
+    "phase": "idea"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b10",
-    "position": 29,
+    "position": 8,
     "filepath": "src/pages/slides/AgencyVision.tsx",
     "title": "Agency vision",
-    "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts. Bridges into Part V (the template).",
+    "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts. Bridges into Part VII (the template).",
     "speakerNotes": "",
     "phase": "idea"
   },
   {
     "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c10",
-    "position": 30,
+    "position": 9,
     "filepath": "src/pages/slides/NamingTheAgency.tsx",
     "title": "Naming the agency: Headwaters",
     "description": "The inflection point — the dam-breaks framing, the brand structure (Headwaters parent → Watershed product + Deer Lake pilot + future engagements), and the one-line rationale that Headwaters has the open lanes while Watershed has the contested ones.",
@@ -271,7 +82,7 @@
   },
   {
     "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c11",
-    "position": 31,
+    "position": 10,
     "filepath": "src/pages/slides/BrandIPLandscape.tsx",
     "title": "Brand & IP landscape",
     "description": "Domains available vs. taken (WHOIS Apr 2026) and the indicative trademark picture for Watershed (191 marks, contested in Class 9/36) vs. Headwaters (76 marks, no active mark in Class 36 financial services or Class 9 consumer software).",
@@ -279,26 +90,305 @@
     "phase": "idea"
   },
   {
-    "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c12",
-    "position": 32,
-    "filepath": "src/pages/slides/NamingActionItems.tsx",
-    "title": "What the founder does this week",
-    "description": "Sequenced personal-action checklist with registrar/registry links and costs: domains today, defensive registrations, CIPO trademark search, Google Workspace email, paid agent clearance opinion, and NUANS search before incorporating.",
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b03",
+    "position": 11,
+    "filepath": "src/pages/slides/PartIDivider.tsx",
+    "title": "Part III — What I protect",
+    "description": "Section divider entering the protection layer: non-negotiables, daily and weekly rhythm, what a great week looks like, and the two hard rules that keep the bet alive.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b04",
+    "position": 12,
+    "filepath": "src/pages/slides/NonNegotiables.tsx",
+    "title": "The non-negotiables",
+    "description": "Five things that don't move: phone-free until 10am, 7–10am with the kids, work block 10:30 to 4/6, dinner already prepared, weekends mostly off.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b05",
+    "position": 13,
+    "filepath": "src/pages/slides/DailyRhythm.tsx",
+    "title": "Daily rhythm — summer vs winter",
+    "description": "Side-by-side daily rhythm for summer and winter, because winter is the part that breaks plans.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b06",
+    "position": 14,
+    "filepath": "src/pages/slides/WeeklyRhythm.tsx",
+    "title": "Weekly rhythm and check-ins",
+    "description": "The 11am and 4pm hand-offs with the on-site Dryden manager and the optional weekend deep-work block.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b07",
+    "position": 15,
+    "filepath": "src/pages/slides/GreatWeek.tsx",
+    "title": "What a great week looks like",
+    "description": "A narrative slide reflecting the practitioner's own words back to them — three tests for whether the week was actually good.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e04",
+    "position": 16,
+    "filepath": "src/pages/slides/HardRules.tsx",
+    "title": "Two hard rules",
+    "description": "The two non-negotiables that govern the legacy lines under Headwaters: founder's hands off jars and tables forever, and Deer Lake gets first call on the shared team's hours. Quarterly hours-by-pillar check enforces it.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e06",
+    "position": 17,
+    "filepath": "src/pages/slides/PipelineDivider.tsx",
+    "title": "Part IV — The pipeline I keep",
+    "description": "Section divider for the pipeline discipline: the rule, the prospect map, the one-SaaS focus, the shiny-loose-end test, and the recurring founder action items.",
     "speakerNotes": "",
     "phase": "idea"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e07",
+    "position": 18,
+    "filepath": "src/pages/slides/PipelineRule.tsx",
+    "title": "No contract closes without the next one named",
+    "description": "The hard rule — every closing engagement requires a named next contract before sign-off. Voiced in the same register as the non-negotiables and the two hard rules.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e08",
+    "position": 19,
+    "filepath": "src/pages/slides/ProspectMap.tsx",
+    "title": "Prospect map",
+    "description": "807 Food, Parr's Jars, Bright Side, Headwaters Finance (Enthusiast / Credit Union / IG), Headwaters Governance, Start9 + Privacy Phones — each graded Floor / Highway / Long game and tagged for whether it respects or threatens the non-negotiables.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e09",
+    "position": 20,
+    "filepath": "src/pages/slides/OneSaaSAtATime.tsx",
+    "title": "One SaaS at a time",
+    "description": "Bright Side is the bet now; Headwaters Finance Credit Union is named-target only when warm; Enthusiast tier is community marketing, not a second product launch.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e0a",
+    "position": 21,
+    "filepath": "src/pages/slides/ShinyLooseEndTest.tsx",
+    "title": "The shiny loose end test",
+    "description": "Four questions before saying yes to anything new: does it ladder to the mission line, does it cost work-block hours, is the next contract named, and does Bright Side advance this week regardless?",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c12",
+    "position": 22,
+    "filepath": "src/pages/slides/NamingActionItems.tsx",
+    "title": "What the founder does this week",
+    "description": "Sequenced personal-action checklist with registrar/registry links and costs: domains today, defensive registrations, CIPO trademark search, Google Workspace email, paid agent clearance opinion, and NUANS search before incorporating. The recurring action page for Part IV.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b08",
+    "position": 23,
+    "filepath": "src/pages/slides/PartIIDivider.tsx",
+    "title": "Part V — Deer Lake — the contract that pays",
+    "description": "Section divider entering the operating voice for the current contract: six roles, seven hires, one budget, and the accountability bar.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b09",
+    "position": 24,
+    "filepath": "src/pages/slides/RoleOpsManager.tsx",
+    "title": "Operations Manager (Dryden)",
+    "description": "The phone-holder and time-protector, on-site in Dryden, dual-purpose for 807 ops and Deer Lake aggregation/distribution. 40 hrs/wk @ $40/hr ≈ $7,000/mo.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0a",
+    "position": 25,
+    "filepath": "src/pages/slides/RoleBookkeeper.tsx",
+    "title": "Bookkeeper / Agency Admin",
+    "description": "Invoicing, contracts, CRA, the back office of the agency — built once, used for years. 10 hrs/wk @ $40/hr ≈ $1,700/mo.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a30",
+    "position": 26,
+    "filepath": "src/pages/slides/RoleFoodHandler.tsx",
+    "title": "Food Handler (embedded at the Deer Lake store)",
+    "description": "Headwaters-owned Food Handler embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen + shop tidy, food/supplies inventory.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0b",
+    "position": 27,
+    "filepath": "src/pages/slides/RoleHousecleaner.tsx",
+    "title": "Housecleaner",
+    "description": "Recurring weekly clean — the mid-week mess reset taken off the parent and put on the schedule. 4 hrs/wk @ $30/hr ≈ $500/mo.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0c",
+    "position": 28,
+    "filepath": "src/pages/slides/RoleTutor.tsx",
+    "title": "Tutor",
+    "description": "Math, reading, structure — winter-weighted (~10 hrs/wk Nov–Apr, ~2 hrs/wk in summer). ≈ $900/mo annualised.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0d",
+    "position": 29,
+    "filepath": "src/pages/slides/RoleHandyman.tsx",
+    "title": "Handyman-Housekeeper combo",
+    "description": "Practical-first, parenting-intent second, framed as 'consider, don't commit' with explicit vetting requirements. 5 hrs/wk @ $30/hr ≈ $700/mo if engaged.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c01",
+    "position": 30,
+    "filepath": "src/pages/slides/PartIIIDivider.tsx",
+    "title": "Part V — Hiring runbook",
+    "description": "Sub-divider inside Part V for the hiring runbook: how to actually find each agency hire and household support, with sourcing channels in and around Dryden, screening questions, paid trial structures, and walk-away signals.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c02",
+    "position": 31,
+    "filepath": "src/pages/slides/HiringOpsManager.tsx",
+    "title": "Hiring — Operations Manager",
+    "description": "How to find the Dryden ops manager: Chamber and Job Bank, Confederation College alumni, regional logistics referrals, Facebook groups, bulletin boards. Screening questions, 2-week paid shadow-then-solo trial, walk-away signals, 30/60/90.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c03",
+    "position": 32,
+    "filepath": "src/pages/slides/HiringBookkeeper.tsx",
+    "title": "Hiring — Bookkeeper",
+    "description": "How to find the bookkeeper: CPB Canada directory, Northwestern Ontario CPAs, Chamber referrals, Indeed/LinkedIn remote-Canada search. Screening on CRA fluency, 1-month paid trial against fixed scope, walk-away signals, 30/60/90.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a31",
     "position": 33,
+    "filepath": "src/pages/slides/HiringITTech.tsx",
+    "title": "Hiring — IT/Tech",
+    "description": "Hiring runbook for the IT/Tech role: source from northern-Ontario MSPs and self-hosting communities, screen for runbook discipline, paid one-week trial.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a32",
+    "position": 34,
+    "filepath": "src/pages/slides/HiringFoodHandler.tsx",
+    "title": "Hiring — Food Handler",
+    "description": "Hiring runbook for the Headwaters-owned Food Handler at the Deer Lake store: source from Deer Lake first, screen for kitchen + cleaning fit, paid two-shift trial.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c04",
+    "position": 35,
+    "filepath": "src/pages/slides/HiringHousecleaner.tsx",
+    "title": "Hiring — Housecleaner",
+    "description": "How to find the weekly housecleaner: working-parent referrals first, Dryden Facebook groups and Kijiji second, bulletin boards, Molly Maid as paid backstop. Screening, 2-visit paid trial, walk-away signals, 30/60/90.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c05",
+    "position": 36,
+    "filepath": "src/pages/slides/HiringTutor.tsx",
+    "title": "Hiring — Tutor",
+    "description": "How to find the year-round tutor: Lakehead Faculty of Education, Confederation College EA program, Keewatin-Patricia DSB, Dryden retired teachers, OCT register, current-teacher referrals. Vulnerable Sector Check required, 4-session paid trial with kids voting, 30/60/90.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c06",
+    "position": 37,
+    "filepath": "src/pages/slides/HiringHandyman.tsx",
+    "title": "Hiring — Handyman-Housekeeper",
+    "description": "How to find the handyman-housekeeper safely: referrals only, never an open posting. Explicit child-safety vetting protocol — Vulnerable Sector Check, three reference calls, never alone with kids for 90 days, open conversation with the kids, annual re-check. Two-week paid trial outside-then-inside-with-parent-present, heavy walk-away list, slower 30/60/90.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
+    "position": 38,
+    "filepath": "src/pages/slides/Budget.tsx",
+    "title": "Budget — three contract sizes (cost × 1.35)",
+    "description": "Cost-basis composition with new $60k/$90k/$125k contract sizes. Bill = cost × 1.35; the 35% is a dedicated reinvestment line.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b16",
+    "position": 39,
+    "filepath": "src/pages/slides/CashFlow.tsx",
+    "title": "Cash flow — bridging the 60-day pay cycle",
+    "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX and the new aggregation hub line, naming the bridge capital required (~$95k / $181k / $251k) before the first invoice clears.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b1a",
+    "position": 40,
+    "filepath": "src/pages/slides/PlatformBillPayback.tsx",
+    "title": "The $22k already spent — how we get paid back",
+    "description": "Names the $22,000 owed to Headwaters for the full 807 grant deliverable scope — both the CDP/business-development stream and the marketing/promotion stream the other contractor backed out of — plus Replit hosting actuals, framed as ~$40k of original grant scope delivered for $22k. Proposes a two-trigger repayment structure (deficit clears OR new platform-enabled revenue starts producing) with no cash up front, no debt taken on by 807, and no draw on existing operations until a trigger is met. Footer links to /payback-memo, the printable signed memorandum that turns the slide into a paper trail both organisations can hold each other to.",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b17",
+    "position": 41,
+    "filepath": "src/pages/slides/Reinvestment.tsx",
+    "title": "Reinvestment — what the 35% builds",
+    "description": "Four destinations of the 35% markup: tech CAPEX (~$60k/yr — 9 servers, 6 privacy phones, computers), tooling subscriptions (~$2k/mo), training & R&D (~$3k/mo), and the pilot scale reserve (~$10k/mo accruing).",
+    "speakerNotes": "",
+    "phase": "fulfillment"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b18",
+    "position": 42,
+    "filepath": "src/pages/slides/Accountability.tsx",
+    "title": "Net-positive accountability",
+    "description": "Five measures (procurement savings delivered, time returned to band staff, transparency tooling shipped & adopted, capacity built locally, year-end value-delivered audit) plus a forward-credit clause if the value delivered doesn't beat the markup.",
+    "speakerNotes": "",
+    "phase": "contract"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
+    "position": 43,
     "filepath": "src/pages/slides/PartIVDivider.tsx",
-    "title": "Part IV — For Dad",
-    "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
+    "title": "Part VI — For Dad",
+    "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, naming the deal, and the next two weeks.",
     "speakerNotes": "",
     "phase": "pitch"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
-    "position": 34,
+    "position": 44,
     "filepath": "src/pages/slides/CaseForRate.tsx",
     "title": "The case for the rate",
     "description": "What $90k/month actually buys — operating system, transparency stack, and pilot reserve — versus what 'lean' actually costs (the contract and the next reserve waiting in line).",
@@ -307,7 +397,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
-    "position": 35,
+    "position": 45,
     "filepath": "src/pages/slides/CaseForTeam.tsx",
     "title": "The case for the team",
     "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
@@ -316,7 +406,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
-    "position": 36,
+    "position": 46,
     "filepath": "src/pages/slides/ValueDelivered.tsx",
     "title": "Value delivered",
     "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, transparency stack + infrastructure that scales, and base stability.",
@@ -325,16 +415,16 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
-    "position": 37,
+    "position": 47,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
-    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$181k bridge ask.",
+    "description": "Slide that names the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$181k bridge ask.",
     "speakerNotes": "",
     "phase": "contract"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b19",
-    "position": 38,
+    "position": 48,
     "filepath": "src/pages/slides/FeedbackWindow.tsx",
     "title": "The next two weeks",
     "description": "A two-week feedback and negotiating window between handing the deck over and naming the deal: opens Mon Apr 27, 2026 and closes when the contractor is back home from Deer Lake (~Sun May 10 / Mon May 11). Three beats — Week 1 read & react on the road, Week 2 talk it through, Closing day name the deal at the kitchen table — plus the founder posture that no guided execution work begins until the deal is named.",
@@ -343,16 +433,16 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
-    "position": 39,
+    "position": 49,
     "filepath": "src/pages/slides/PartVDivider.tsx",
-    "title": "Part V — Pilot to template",
+    "title": "Part VII — Pilot to template",
     "description": "Section divider entering the scale voice: Deer Lake earns it, then so does every reserve. The template the practitioner builds for pilot #1 is the playbook the next reserve inherits.",
     "speakerNotes": "",
     "phase": "impact"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d02",
-    "position": 40,
+    "position": 50,
     "filepath": "src/pages/slides/PilotDeerLake.tsx",
     "title": "Why Deer Lake is Pilot #1",
     "description": "Three reasons Deer Lake is the right pilot: the right scale (~870 people), a council ready for transparency, and a practitioner with skin in the game and the structural plan to deliver.",
@@ -361,7 +451,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d03",
-    "position": 41,
+    "position": 51,
     "filepath": "src/pages/slides/Template.tsx",
     "title": "The six-module template",
     "description": "What gets templatized: operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, net-positive accountability. Each module is documented as we ship it for Deer Lake.",
@@ -370,7 +460,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d04",
-    "position": 42,
+    "position": 52,
     "filepath": "src/pages/slides/PathToScale.tsx",
     "title": "The path to scale",
     "description": "Five-year arc: Year 1 Deer Lake pilot, Year 2 second reserve at marginal cost, Year 3 three-to-five concurrent contracts, Year 5 open template that any practitioner can run.",
@@ -379,16 +469,16 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e01",
-    "position": 43,
+    "position": 53,
     "filepath": "src/pages/slides/PartVIDivider.tsx",
-    "title": "Part VI — What stays, what changes, where my hands go",
-    "description": "Section divider entering the Headwaters posture on legacy lines: salt and design under the parent, and where the founder's hands go from here.",
+    "title": "Part VIII — What outlives the contract",
+    "description": "Section divider entering the legacy lines under Headwaters: salt and design under the parent, plus the winter contingency that has to survive every year.",
     "speakerNotes": "",
     "phase": "impact"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e02",
-    "position": 44,
+    "position": 54,
     "filepath": "src/pages/slides/SaltUnderHeadwaters.tsx",
     "title": "Salt under Headwaters",
     "description": "Parr's Jars stays — but as a shared-depot revenue line, not a DTC jar-packing or farmers-market business. Three roles under Headwaters (proof of model, depot load-test, shared-labor revenue), with DTC moving to batch-only and markets sunset.",
@@ -397,7 +487,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e05",
-    "position": 45,
+    "position": 55,
     "filepath": "src/pages/slides/SaltRunbook.tsx",
     "title": "Salt runbook — through the Dryden depot",
     "description": "How the salt line actually runs: monthly batch cadence in the last week of each month, channel-by-channel inventory rules (6-week wholesale buffer, custom-labels paid up front, zero standing DTC stock), the day-by-day Mon→Fri week of the batch with ops-manager hours and casual-labour share, returns routing, and explicit drop-rules when a Deer Lake aggregation run lands the same week. Rules 01 and 02 enforced inline.",
@@ -406,7 +496,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e07",
-    "position": 46,
+    "position": 56,
     "filepath": "src/pages/slides/SaltKlaviyo.tsx",
     "title": "Salt Klaviyo flow — batch slip + batch shipped",
     "description": "The two customer emails the salt runbook promises, drafted and wired in Klaviyo: a manual-trigger 'your batch ships [date]' slip notice fired by the OM when a Deer Lake aggregation run pushes the DTC batch a week, and an auto-fired monthly 'your batch shipped' notification on the Shippo label webhook. Includes subject + preheader + body copy, trigger conditions, audience segments, cadence rules, the Shopify metafield as the date source of truth, and the seed-list test gate before promoting to live.",
@@ -415,7 +505,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e08",
-    "position": 47,
+    "position": 57,
     "filepath": "src/pages/slides/SaltCheckout.tsx",
     "title": "Salt storefront — checkout & dynamic batch date",
     "description": "Storefront mockup for parrsjars.ca showing the dynamic next-batch-ship date in three places: sitewide banner, cart drawer line, and the order confirmation. Documents the Shopify metafield → theme → Klaviyo catalog sync chain, the explicitly banned copy ('ships in 2 days', 'in stock — order now', countdown timers), and the metafield-empty fallback that keeps the storefront safe with a Slack ping to the OM.",
@@ -424,7 +514,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e09",
-    "position": 48,
+    "position": 58,
     "filepath": "src/pages/slides/SaltOpsNote.tsx",
     "title": "OM operator note — slip flow & next batch date",
     "description": "One-page operator note for the Dryden ops manager covering when to fire the slip flow (Wed 11:00–14:00 trigger window, four-step checklist) and how to set the next batch date (recurring first-Mon 9:00 ET, four-step checklist), plus the five-don't list signed at OM onboarding. Pinned in Notion and posted on the depot wall next to the salt runbook.",
@@ -433,7 +523,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e0a",
-    "position": 49,
+    "position": 59,
     "filepath": "src/pages/slides/SaltBench.tsx",
     "title": "Depot casual-labour bench",
     "description": "The named, pre-vetted 4-person Dryden-area casual-labour bench the salt runbook leans on so Rule 01 holds. Seed roster (4 named members with bases, vetting notes, availability windows, and rotation slots), a written A→B→C→D rotation policy with paid standby, the bench cost broken out as a $15k/yr SALT-01-LBR cost-centre that ties back to the salt P&L, an OM runbook for adding/screening/paperwork (T4A + WSIB), and the explicit T-7/T-3/T-0/T+7 batch-slips path for the week the whole bench is unavailable.",
@@ -442,7 +532,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e06",
-    "position": 50,
+    "position": 60,
     "filepath": "src/pages/slides/SaltPL.tsx",
     "title": "Salt P&L line",
     "description": "Annual P&L for the salt line by channel (wholesale, custom labels, DTC batch, sunset markets) — revenue, COGS, freight, packaging, allocated labour share, gross margin per channel, and the depot rent allocation. Net contribution sized against the recommended $90k/mo agency ask, with the explicit triggers that cut a channel.",
@@ -451,7 +541,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e03",
-    "position": 51,
+    "position": 61,
     "filepath": "src/pages/slides/DesignUnderHeadwaters.tsx",
     "title": "Design under Headwaters",
     "description": "Outside studio intake closes; design becomes the in-house Transparency Stack delivered inside community-development engagements. Two narrow carve-outs: mission-aligned regional work that's really Pilot #2 in disguise, and the studio site staying live as portfolio.",
@@ -459,62 +549,21 @@
     "phase": "impact"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e04",
-    "position": 52,
-    "filepath": "src/pages/slides/HardRules.tsx",
-    "title": "Two hard rules",
-    "description": "The two non-negotiables that govern salt and internal design under Headwaters: founder's hands off jars and tables forever, and Deer Lake gets first call on the shared team's hours. Quarterly hours-by-pillar check enforces it.",
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
+    "position": 62,
+    "filepath": "src/pages/slides/Winter.tsx",
+    "title": "Winter contingency",
+    "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
     "speakerNotes": "",
     "phase": "impact"
   },
   {
-    "id": "a4d3c2b1-9876-4321-0fed-cba987654301",
-    "position": 53,
-    "filepath": "src/pages/slides/PhaseIdeaOpener.tsx",
-    "title": "Phase — Idea",
-    "description": "Operating-plan opener for the Idea phase: why this matters, what the agency is, what we're naming.",
+    "id": "d2e8f4a1-5c7b-4e92-a3d6-1f8b7c4d9e0b",
+    "position": 63,
+    "filepath": "src/pages/slides/ReReadClosing.tsx",
+    "title": "Re-read this when you're tired",
+    "description": "Single closing page restating the bet, the non-negotiables in one line, the pipeline rule, and the mission line — the deck in one place when the head needs reset.",
     "speakerNotes": "",
-    "phase": "idea",
-    "operatingOnly": true
-  },
-  {
-    "id": "a4d3c2b1-9876-4321-0fed-cba987654302",
-    "position": 54,
-    "filepath": "src/pages/slides/PhasePitchOpener.tsx",
-    "title": "Phase — Pitch",
-    "description": "Operating-plan opener for the Pitch phase: make the case for the rate and the team, then hand the deck over.",
-    "speakerNotes": "",
-    "phase": "pitch",
-    "operatingOnly": true
-  },
-  {
-    "id": "a4d3c2b1-9876-4321-0fed-cba987654303",
-    "position": 55,
-    "filepath": "src/pages/slides/PhaseContractOpener.tsx",
-    "title": "Phase — Contract",
-    "description": "Operating-plan opener for the Contract phase: lock the value-delivered terms, work the feedback window, name the deal.",
-    "speakerNotes": "",
-    "phase": "contract",
-    "operatingOnly": true
-  },
-  {
-    "id": "a4d3c2b1-9876-4321-0fed-cba987654304",
-    "position": 56,
-    "filepath": "src/pages/slides/PhaseFulfillmentOpener.tsx",
-    "title": "Phase — Fulfillment",
-    "description": "Operating-plan opener for the Fulfillment phase: protect the calendar, run the team, manage the cash, weather winter.",
-    "speakerNotes": "",
-    "phase": "fulfillment",
-    "operatingOnly": true
-  },
-  {
-    "id": "a4d3c2b1-9876-4321-0fed-cba987654305",
-    "position": 57,
-    "filepath": "src/pages/slides/PhaseImpactOpener.tsx",
-    "title": "Phase — Impact",
-    "description": "Operating-plan opener for the Impact phase: prove Deer Lake, document the template, plan the path to scale.",
-    "speakerNotes": "",
-    "phase": "impact",
-    "operatingOnly": true
+    "phase": "impact"
   }
 ]

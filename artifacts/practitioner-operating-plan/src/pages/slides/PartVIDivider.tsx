@@ -21,11 +21,11 @@ export default function PartVIDivider() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              Part VI · Operating voice
+              Part VIII · What outlives the contract
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">
-            For me, the team, and Dad — same answer
+            Legacy lines under Headwaters · the work the bet inherits
           </div>
         </div>
 
@@ -34,7 +34,7 @@ export default function PartVIDivider() {
             className="font-display italic font-light text-[14vw] leading-[0.85] mb-[2vh]"
             style={{ color: "#e9c8a8" }}
           >
-            VI.
+            VIII.
           </div>
           <h1
             className="font-display text-[5.6vw] leading-[1] tracking-tight font-medium"
@@ -51,12 +51,13 @@ export default function PartVIDivider() {
             still belong —{" "}
             <span className="not-italic font-semibold" style={{ color: "#e9c8a8" }}>
               and, if so, in what shape.
-            </span>
+            </span>{" "}
+            Plus winter — the season the structure has to survive every year.
           </div>
         </div>
 
         <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-65 self-end">
-          Salt under Headwaters → Design under Headwaters → Two hard rules
+          Salt under Headwaters → Design under Headwaters → Winter contingency
         </div>
       </div>
     </div>

@@ -21,11 +21,11 @@ export default function PartIDivider() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              Part I · Private voice
+              Part III · What I protect
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">
-            For the practitioner only
+            The shape that lets the bet ship
           </div>
         </div>
 
@@ -34,7 +34,7 @@ export default function PartIDivider() {
             className="font-display italic font-light text-[14vw] leading-[0.85] mb-[2vh]"
             style={{ color: "#e9c8a8" }}
           >
-            I.
+            III.
           </div>
           <h1
             className="font-display text-[6vw] leading-[1] tracking-tight font-medium"
@@ -45,14 +45,14 @@ export default function PartIDivider() {
           </h1>
           <div className="mt-[3vh] font-body text-[1.7vw] leading-[1.4] opacity-85 max-w-[60vw]">
             What a yes has to look like, day by day, to still be a yes after
-            month nine.
+            month nine — and the two hard rules the bet relies on.
           </div>
         </div>
 
         <div
           className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-65 self-end"
         >
-          Non-negotiables → Daily rhythm → Weekly rhythm → A great week
+          Non-negotiables → Daily rhythm → Weekly rhythm → A great week → Two hard rules
         </div>
       </div>
     </div>

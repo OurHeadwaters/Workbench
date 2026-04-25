@@ -5,7 +5,7 @@ export default function PilotDeerLake() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              V · 01 — Why Deer Lake is Pilot #1
+              VII · 01 — Why Deer Lake is Pilot #1
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"

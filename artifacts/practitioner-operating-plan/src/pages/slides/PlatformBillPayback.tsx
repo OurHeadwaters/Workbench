@@ -50,7 +50,7 @@ export default function PlatformBillPayback() {
         <div className="flex items-baseline justify-between mb-[1.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[0.8vh]">
-              II · The ${Math.round(principal / 1000)}k already spent — how we get paid back
+              V · The ${Math.round(principal / 1000)}k already spent — how we get paid back
             </div>
             <h2
               className="font-display text-[2.6vw] leading-[1.05] tracking-tight text-primary font-medium"

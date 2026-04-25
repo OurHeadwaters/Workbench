@@ -5,7 +5,7 @@ export default function HardRules() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              VI · 08 — Two hard rules
+              III · 05 — Two hard rules
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"
@@ -45,9 +45,9 @@ export default function HardRules() {
             <div className="font-body text-[1.05vw] leading-[1.5] opacity-95 mb-[1.5vh]">
               Not in a busy week, not for a holiday push, not because
               someone called in sick. No packing, no labeling, no booth
-              setup, no market drives. The whole point of Part II's team
-              and Part III's runbook was to put those hours somewhere
-              else — inside the engagements, inside Part I's calendar,
+              setup, no market drives. The whole point of Part V's team
+              and Part V's hiring runbook was to put those hours somewhere
+              else — inside the engagements, inside this section's calendar,
               inside the kids' actual childhood.
             </div>
             <div
@@ -61,7 +61,7 @@ export default function HardRules() {
                 What enforces it
               </div>
               <div className="font-body text-[0.95vw] leading-[1.45] opacity-95">
-                The named 4-person depot bench (Part VI · 02b) and its
+                The named 4-person depot bench (Part VIII · 06) and its
                 A→B→C→D rotation are the mechanism — populated by week 6 of
                 the OM&rsquo;s start, costed at $15k/yr in SALT-01-LBR. If the
                 bench can&rsquo;t run a batch, the batch slips on the

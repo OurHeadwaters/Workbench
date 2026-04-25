@@ -12,7 +12,7 @@ export default function AgencyVision() {
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              III · Agency vision
+              II · 01 — Agency vision
             </div>
             <h2
               className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium"
@@ -93,7 +93,7 @@ export default function AgencyVision() {
         >
           The point isn't that this contract is the prize. The point is that
           everything it pays for outlasts it — and that Deer Lake is pilot #1
-          for a template the next reserve inherits ready-built (Part V).
+          for a template the next reserve inherits ready-built (Part VII).
         </div>
       </div>
     </div>

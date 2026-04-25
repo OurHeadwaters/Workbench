@@ -73,7 +73,7 @@ export default function SaltOpsNote() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              VI · 05 — OM operator note
+              VIII · 05 — OM operator note
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"

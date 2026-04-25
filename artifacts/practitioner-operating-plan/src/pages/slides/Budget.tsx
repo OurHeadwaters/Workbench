@@ -195,7 +195,7 @@ export default function Budget() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              II · Budget — three contract sizes
+              V · Budget — three contract sizes
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"
@@ -452,7 +452,7 @@ export default function Budget() {
             </a>{" "}
             and the salt P&amp;L. Channel-by-channel margin (wholesale 63%,
             custom labels 66%, DTC batch 36%, markets PR-only) is on the
-            Part&nbsp;VI salt P&amp;L slide; the bookkeeper&rsquo;s{" "}
+            Part&nbsp;VIII salt P&amp;L slide; the bookkeeper&rsquo;s{" "}
             <a
               href="/salt-monthly-close"
               className="underline decoration-dotted underline-offset-2 text-primary"

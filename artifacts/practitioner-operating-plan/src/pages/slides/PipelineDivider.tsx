@@ -1,11 +1,11 @@
-export default function PartVDivider() {
+export default function PipelineDivider() {
   return (
     <div
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
     >
       <div
-        className="absolute left-[-12vw] top-[-8vh] w-[50vw] h-[50vw] rounded-full"
+        className="absolute -left-[12vw] top-[-8vh] w-[50vw] h-[50vw] rounded-full"
         style={{ background: "rgba(184,90,62,0.18)" }}
       />
       <div
@@ -21,11 +21,11 @@ export default function PartVDivider() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              Part VII · Pilot to template
+              Part IV · The pipeline I keep
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">
-            For every reserve that needs this next
+            One rule · one map · one test · the weekly action
           </div>
         </div>
 
@@ -34,30 +34,27 @@ export default function PartVDivider() {
             className="font-display italic font-light text-[14vw] leading-[0.85] mb-[2vh]"
             style={{ color: "#e9c8a8" }}
           >
-            VII.
+            IV.
           </div>
           <h1
-            className="font-display text-[5.6vw] leading-[1] tracking-tight font-medium"
+            className="font-display text-[6vw] leading-[1] tracking-tight font-medium"
             style={{ textWrap: "balance" }}
           >
-            Deer Lake earns it.
-            <span className="block italic font-normal opacity-90">
-              Then so does every reserve.
-            </span>
+            The next contract is
+            <span className="italic font-normal opacity-90"> already named.</span>
           </h1>
-          <div className="mt-[3vh] font-body text-[1.6vw] leading-[1.4] opacity-85 max-w-[68vw]">
-            The reserve needs transparency right now. They need guidance and
-            support. We have the tools to deliver at scale —{" "}
-            <span className="not-italic font-semibold" style={{ color: "#e9c8a8" }}>
-              with Deer Lake as the pilot.
-            </span>
+          <div className="mt-[3vh] font-body text-[1.7vw] leading-[1.4] opacity-85 max-w-[60vw]">
+            How I keep the pipeline alive without splitting attention from
+            the bet — the rule, the prospect map graded against the
+            non-negotiables, and the test that stops new shiny things from
+            becoming new loose ends.
           </div>
         </div>
 
         <div
           className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-65 self-end"
         >
-          Why pilot #1 → The six-module template → The path to scale
+          The hard rule → Prospect map → One SaaS at a time → The test → This week
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export default function NamingTheAgency() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              III · 02 — Naming the agency
+              II · 02 — Naming the agency
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">

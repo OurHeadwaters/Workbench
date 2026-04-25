@@ -9,14 +9,14 @@ const modules: Module[] = [
   {
     num: "01",
     title: "Operating plan",
-    source: "Parts I–II of this deck",
+    source: "Parts III & V of this deck",
     contents:
       "Practitioner runbook (non-negotiables, daily rhythm, weekly check-ins) and the costed team baseline. The how-to-actually-live-while-running-this.",
   },
   {
     num: "02",
     title: "Hiring runbook",
-    source: "Part III · five role pages",
+    source: "Part V · seven hiring pages",
     contents:
       "Sourcing channels, screening questions, paid trial structures, and explicit child-safety vetting protocols for every role. Reusable in any small Northern town with a regional college and a bulletin board.",
   },
@@ -57,7 +57,7 @@ export default function Template() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              V · 02 — The template
+              VII · 02 — The template
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"

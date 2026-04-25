@@ -12,7 +12,7 @@ export default function HiringHandyman() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[0.95vw] text-muted mb-[0.8vh]">
-              III · Hiring 05 — Handyman-Housekeeper combo
+              V · Hiring 07 — Handyman-Housekeeper combo
             </div>
             <h2
               className="font-display text-[3.1vw] leading-[1] tracking-tight text-primary font-medium"

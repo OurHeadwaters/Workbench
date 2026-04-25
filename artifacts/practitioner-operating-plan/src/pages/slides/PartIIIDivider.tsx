@@ -21,7 +21,7 @@ export default function PartIIIDivider() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              Part III · Hiring runbook
+              Part V · Hiring runbook
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">
@@ -34,7 +34,7 @@ export default function PartIIIDivider() {
             className="font-display italic font-light text-[14vw] leading-[0.85] mb-[2vh]"
             style={{ color: "#e9c8a8" }}
           >
-            III.
+            V·b
           </div>
           <h1
             className="font-display text-[6vw] leading-[1] tracking-tight font-medium"

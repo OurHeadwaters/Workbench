@@ -5,7 +5,7 @@ export default function Winter() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              II · Winter contingency
+              VIII · 09 — Winter contingency
             </div>
             <h2
               className="font-display text-[3.8vw] leading-[1] tracking-tight text-primary font-medium"

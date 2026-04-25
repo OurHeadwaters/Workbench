@@ -33,7 +33,7 @@ export default function Closing() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-85">
-              IV · 04 — Naming the deal
+              VI · 04 — Naming the deal
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-65">

@@ -13,7 +13,7 @@ export default function RoleFoodHandler() {
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              II · Role 03 — Food Handler (embedded at the Deer Lake store)
+              V · Role 03 — Food Handler (embedded at the Deer Lake store)
             </div>
             <h2
               className="font-display text-[3.6vw] leading-[1] tracking-tight text-primary font-medium"

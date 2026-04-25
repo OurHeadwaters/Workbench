@@ -1,16 +1,16 @@
-export default function PartVDivider() {
+export default function HeadwatersDivider() {
   return (
     <div
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
     >
       <div
-        className="absolute left-[-12vw] top-[-8vh] w-[50vw] h-[50vw] rounded-full"
-        style={{ background: "rgba(184,90,62,0.18)" }}
+        className="absolute -right-[10vw] -top-[10vh] w-[55vw] h-[55vw] rounded-full"
+        style={{ background: "rgba(244,237,224,0.04)" }}
       />
       <div
-        className="absolute right-[8vw] bottom-[8vh] w-[14vw] h-[14vw] rounded-full"
-        style={{ background: "rgba(244,237,224,0.06)" }}
+        className="absolute right-[6vw] top-[6vh] w-[14vw] h-[14vw] rounded-full"
+        style={{ background: "rgba(184,90,62,0.18)" }}
       />
 
       <div className="relative z-10 w-full h-full px-[7vw] py-[7vh] flex flex-col justify-between">
@@ -21,11 +21,11 @@ export default function PartVDivider() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-80">
-              Part VII · Pilot to template
+              Part II · What Headwaters is
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-60">
-            For every reserve that needs this next
+            The agency that carries the bet
           </div>
         </div>
 
@@ -34,30 +34,25 @@ export default function PartVDivider() {
             className="font-display italic font-light text-[14vw] leading-[0.85] mb-[2vh]"
             style={{ color: "#e9c8a8" }}
           >
-            VII.
+            II.
           </div>
           <h1
-            className="font-display text-[5.6vw] leading-[1] tracking-tight font-medium"
+            className="font-display text-[6vw] leading-[1] tracking-tight font-medium"
             style={{ textWrap: "balance" }}
           >
-            Deer Lake earns it.
-            <span className="block italic font-normal opacity-90">
-              Then so does every reserve.
-            </span>
+            What Headwaters is
+            <span className="italic font-normal opacity-90"> before you read about it.</span>
           </h1>
-          <div className="mt-[3vh] font-body text-[1.6vw] leading-[1.4] opacity-85 max-w-[68vw]">
-            The reserve needs transparency right now. They need guidance and
-            support. We have the tools to deliver at scale —{" "}
-            <span className="not-italic font-semibold" style={{ color: "#e9c8a8" }}>
-              with Deer Lake as the pilot.
-            </span>
+          <div className="mt-[3vh] font-body text-[1.7vw] leading-[1.4] opacity-85 max-w-[60vw]">
+            The vision, the name, the open lanes — so the rest of the deck
+            isn't naming an agency that hasn't been introduced yet.
           </div>
         </div>
 
         <div
           className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-65 self-end"
         >
-          Why pilot #1 → The six-module template → The path to scale
+          Agency vision → Naming the agency → Brand &amp; IP landscape
         </div>
       </div>
     </div>

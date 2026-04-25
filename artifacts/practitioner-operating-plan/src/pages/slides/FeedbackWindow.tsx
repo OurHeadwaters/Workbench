@@ -21,7 +21,7 @@ export default function FeedbackWindow() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.32em] text-[1.05vw] opacity-85">
-              IV · 05 — The next two weeks
+              VI · 05 — The next two weeks
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-65">

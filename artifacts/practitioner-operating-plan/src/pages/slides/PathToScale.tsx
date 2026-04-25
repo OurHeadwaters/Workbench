@@ -71,7 +71,7 @@ export default function PathToScale() {
               className="font-mono uppercase tracking-[0.28em] text-[1vw] mb-[1vh]"
               style={{ color: "#e9c8a8" }}
             >
-              V · 03 — The path
+              VII · 03 — The path
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight font-medium"

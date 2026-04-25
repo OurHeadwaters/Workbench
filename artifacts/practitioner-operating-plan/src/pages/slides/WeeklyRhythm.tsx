@@ -5,7 +5,7 @@ export default function WeeklyRhythm() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              I · 03 — Weekly rhythm
+              III · 03 — Weekly rhythm
             </div>
             <h2 className="font-display text-[3.8vw] leading-[1] tracking-tight text-primary font-medium">
               Two check-ins a day.

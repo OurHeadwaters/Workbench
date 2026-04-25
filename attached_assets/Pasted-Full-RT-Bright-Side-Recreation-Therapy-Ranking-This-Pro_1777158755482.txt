@@ -1,0 +1,50 @@
+Full RT / Bright Side / Recreation Therapy Ranking — This Project
+"Princess Court" doesn't appear anywhere in the codebase, so I want to flag that first — it's not a facility name, feature, or product name yet recorded here. It's likely a real care home or community living residence you have in mind as a pilot site. I'll come back to that.
+
+Here's everything ranked by depth of relevance:
+
+Tier 1 — The Core Bright Side Assets
+1. docs/bright-side-business-plan.md — The crown jewel
+This is a complete, investor-quality business plan already living in this project. It covers: the full product vision (music-and-memory, "co-built not intake-driven" philosophy), a North American market size estimate ($18.9M SAM across ~31,400 memory-care and assisted-living facilities), a competitive breakdown of Music & Memory, SingFit, and Eversound, a recommended flat $3,600/facility/year pricing model with tiered nonprofit and future consumer options, a go-to-market plan targeting three customer archetypes (independent memory-care homes first, then chapter programs, then mid-size chains), a three-phase product roadmap (months 0–3 harden MVP, 3–9 multi-tenant and licensed music, 9–18 chapter and EHR), a 18-month $385–420K operating budget, HIPAA/PIPEDA/GDPR compliance posture, and 10 open questions for the founder to answer before sharing externally. It has fifteen named assumptions and identifies music licensing as the highest-likelihood high-impact risk. This document is ready to share with an impact investor or a provincial funding program right now, with the blank sections (funding amount, terms, founding entity) filled in.
+
+2. The ryans-logbook artifact directory
+The actual RT app lived here and was moved to a standalone project on April 23, 2026. The directory still exists but src/ is empty. What it tells us is that the full-stack RT tool was built and confirmed working before being spun out — this is not vaporware. Bright Side has a real MVP history.
+
+3. The drop migration — a blueprint of what was built
+lib/db/migrations/drop-rec-therapy-tables.sql shows the full data model that existed: rt_sessions, rt_residents, rt_session_participants, rt_joy_moments, rt_physio_logs, rt_short_staffing_logs, rt_appointments, rt_equipment_bookings, rt_calendar_activities, rt_workflow_blocks, rt_outings, rt_segments, rt_attendance, rt_outing_participants. That is fourteen tables — far more comprehensive than the business plan's MVP description suggests. The tool had physiotherapy logging, short-staffing documentation, appointment scheduling, equipment booking, and full outing management. This scope is significantly ahead of what the business plan describes as "Phase 1."
+
+4. The replit.md Rec Therapy documentation block
+Even though the code moved out, the architecture is fully documented here: password-gated staff login (RT_PASSWORD) and a separate director login (RT_DIRECTOR_PASSWORD), coded resident model (no PHI — only codes like R-042, names stay in the facility EMR), session recording via MediaRecorder and OpenAI Whisper, joy moment tagging across six categories (connection, laughter, movement, music, memory, milestone), a director dashboard with five sections (Overview, Residents, Nudges/AI-flagged residents, Calendar with GPT-4o-mini activity planning, Bright Spots monthly summary), and the RT_FACILITY_NAME env var for white-labeling. This is effectively the architecture spec for the standalone project.
+
+Tier 2 — Directly Transferable Technical Building Blocks
+5. Meeting Companion — the audio pipeline Bright Side needs
+This is the most underappreciated RT asset in the project. Meeting Companion is a polished, production-ready audio recording and AI analysis app. It uses MediaRecorder with IndexedDB offline resilience (so a recording survives a network drop — critical on a care floor), uploads to the API server, runs through OpenAI's Whisper model for transcription, then a second GPT pass for speaker diarization and slide deck generation. The PWA setup (service worker, manifest.json, iOS home-screen install, display: standalone) means it runs like a native app on a facility iPad. Every single one of these capabilities is what Bright Side's session recording feature needs. The code is already written, tested, and running. The Bright Side standalone project should be pulling directly from this pattern.
+
+6. API server infrastructure
+The shared Express + Drizzle ORM + PostgreSQL backend is the same stack the RT tool was built on. Bearer-token auth, email via Resend, OpenAI integration, structured error handling, Zod validation — all of this is already built and could be referenced or replicated in the standalone. The pattern for a route protected by a password-gated Bearer token (exactly how RT_PASSWORD worked) is demonstrated everywhere in this codebase.
+
+7. Email flows via Resend
+The project already has templated transactional emails (order confirmations, gift delivery alerts, app design intake confirmations). The Resend integration is live and tested. Bright Side's family invitation email, "session nudge" alert (if a facility hasn't run a session in 14 days — flagged as a retention risk in the business plan), and weekly bright-moments digest email could all be built directly from these patterns.
+
+Tier 3 — Feature Concepts Worth Carrying Forward
+8. Director dashboard — the Parr's Jars Admin as a reference
+The admin page at /admin in Parr's Jars has revenue cards, top-sellers analytics, day-of-week charts, repeat-customer counts, and a "rule-based suggestions" engine. The RT director dashboard had a parallel structure (Overview analytics, Residents engagement, Nudges). The Parr's Jars admin is a working reference for how the Bright Side director dashboard should feel — data-forward, scannable, not clinical.
+
+9. Abandoned cart / session nudge logic
+The Parr's Jars cart recovery system (tasks #64, #65 in the proposed queue) sends recovery emails to customers who didn't complete checkout. Bright Side's business plan explicitly flags "if a facility has not run a session in 14 days, trigger a proactive check-in" as a retention strategy. The trigger-and-email pattern for that nudge is directly transferable.
+
+10. The "champion" model and warm-referral pipeline
+The custom labels B2B page and the wholesale distributor package both use a model of: warm referral → qualified lead → manual checkpoint before any commitment. The business plan recommends the same model for Bright Side: identify one motivated staff "champion" per facility, build on personal contacts first, offer free pilots in exchange for case studies. The Parr's Jars wholesale page (Task #17, merged) is a live reference for how to build that B2B offer page.
+
+Tier 4 — Strategic / Business Intelligence
+11. The IA positioning framework
+Across Parr's Jars, AI tools are framed as "Implementation Agent (IA) — real shipped tools, not chatbots and vibes." That discipline — accurate, confident, not overreaching — is exactly the voice Bright Side needs when explaining its AI features (Whisper transcription, GPT-4o-mini activity planning, nudge detection) to care directors who are rightly skeptical of clinical AI claims.
+
+12. Grant copy discipline
+The studio artifact has a strict single-source-of-truth system for grant-eligibility language (one file, one constant, a prebuild check that fails if it finds duplicates). Bright Side has significant grant potential — provincial digital health programs in Ontario, federal NRC IRAP, Canada Digital Adoption Program — and will need the same discipline around grant-specific language in its marketing surfaces.
+
+13. Parr's Books financial tracking
+When Bright Side is generating subscription revenue, the same bookkeeping patterns in Parr's Books (income/expense tracking, receipt review, monthly net profit) would apply to managing the Bright Side entity's finances. Not immediately relevant, but part of the same owner's operational toolkit.
+
+Princess Court
+This name doesn't exist anywhere in the codebase. Given the context — RT, care homes, community living — this is almost certainly either a Long Term Care home or a Community Living residence that you have a personal or professional connection to, likely a pilot candidate. If Princess Court is a real facility you're building toward, that changes the go-to-market plan meaningfully: a warm first pilot with a known contact is worth more than any cold outreach strategy, and the business plan's open question #6 ("Who are the first two pilot facilities?") is answered.
