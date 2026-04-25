@@ -3,6 +3,7 @@ import { Link, Route, Switch, useLocation } from "wouter";
 
 import { slides } from "@/slideLoader";
 import OnePager from "@/pages/OnePager";
+import BrandOnePager from "@/pages/BrandOnePager";
 import Today from "@/pages/Today";
 import Week from "@/pages/Week";
 import WeekCloseOut from "@/pages/WeekCloseOut";
@@ -259,8 +260,9 @@ export default function App() {
   // Plan view also renders full-bleed (it embeds the slides iframe).
   if (location === "/plan") return <SlideViewer />;
 
-  // OnePager keeps its own self-contained chrome.
+  // OnePager and BrandOnePager keep their own self-contained chrome.
   if (location === "/onepager") return <OnePager />;
+  if (location === "/brand") return <BrandOnePager />;
 
   return (
     <ToastProvider>
