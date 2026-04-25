@@ -1,9 +1,10 @@
-// Q2 salt batch calendar — surfaced on the Year, Week, and WeekCloseOut
-// pages so the bench rotation lives on the operating calendar, not just on
-// the SaltBench slide. Names + dates here are the seed roster from
-// `src/pages/slides/SaltBench.tsx` (VI · 02b); changing one means changing
-// both. The standby paid shift is its own line so the $1,200/yr standby
-// cost surfaces in operations, not only in the bench cost table.
+// Full-year salt batch calendar — surfaced on the Year, Week, and
+// WeekCloseOut pages so the bench rotation lives on the operating
+// calendar, not just on the SaltBench slide. Names + dates here are
+// the seed roster from `src/pages/slides/SaltBench.tsx` (VI · 02b);
+// changing one means changing both. The standby paid shift is its own
+// line so the $1,200/yr standby cost surfaces in operations, not only
+// in the bench cost table.
 
 import { dateForDayInWeek, formatShortDate } from "../lib/dateMath";
 
@@ -33,19 +34,22 @@ export const PRIMARY_PAID_PER_BATCH =
   PRIMARY_HOURS_PER_BATCH * CASUAL_HOURLY_RATE;
 
 // Standby pay: 1 standby per batch × 4 hrs × $30 = $120 per batch.
-// Three Q2 batches × $120 = $360 in Q2 (full-year line is $1,200 on
-// the SaltBench cost table — the per-batch line shown here is what
-// actually books to the cost-centre when the OM closes the week).
+// Nine batches across Q2–Q4 × $120 = $1,080 in paid standby shifts;
+// the $1,200/yr line on the SaltBench cost table also carries a $120
+// cancellation reserve for the one batch a year where the primary
+// drops at T-1 and the standby is bumped up.
 export const STANDBY_HOURS = 4;
 export const STANDBY_RATE = CASUAL_HOURLY_RATE;
 export const STANDBY_PAID_PER_BATCH = STANDBY_HOURS * STANDBY_RATE;
+
+export type Quarter = "Q1" | "Q2" | "Q3" | "Q4";
 
 export type BatchAssignment = {
   // Week in plan2026 the batch lands in. Mon = receive, Tue = pick,
   // Wed = pack DTC, Thu = label & manifest, Fri = ship & close.
   weekNumber: number;
   // Quarter label used in the calendar header.
-  quarter: "Q1" | "Q2" | "Q3" | "Q4";
+  quarter: Quarter;
   // 1-indexed batch number within the quarter. The bench slide uses
   // "Apr / May / Jun" prose; we keep the month for the page UI.
   monthLabel: string;
@@ -61,11 +65,15 @@ export type BatchAssignment = {
   standby: keyof typeof BENCH;
 };
 
-// Q2 schedule. Primaries match the "next slot" column on SaltBench:
+// Full-year batch schedule — one batch per month, every 4th plan
+// week (Q1 is Foundation phase, no batches yet). Q2 primaries match
+// the "next slot" column on SaltBench:
 //   Apr 30 → Marie · May 28 → Devin · Jun 25 → Jess · Apr 30 backup → Roger.
-// Standbys are then distributed so each seat picks up roughly one paid
-// standby per quarter, matching the cost line on the SaltBench slide.
-export const Q2_BATCHES: BatchAssignment[] = [
+// Q3/Q4 continue the A → B → C → D rotation policy from the slide,
+// distributing primary + standby load across the four bench seats so
+// each works 4–5 batches/yr (~2–3 primary, ~2–3 standby). Year-end
+// tally: Marie 3P+2S, Devin 2P+2S, Jess 2P+3S, Roger 2P+2S.
+export const BATCHES: BatchAssignment[] = [
   {
     weekNumber: 17,
     quarter: "Q2",
@@ -90,6 +98,54 @@ export const Q2_BATCHES: BatchAssignment[] = [
     primary: "jess",
     standby: "marie",
   },
+  {
+    weekNumber: 29,
+    quarter: "Q3",
+    monthLabel: "July",
+    manifestISO: "2026-07-23",
+    primary: "roger",
+    standby: "devin",
+  },
+  {
+    weekNumber: 33,
+    quarter: "Q3",
+    monthLabel: "August",
+    manifestISO: "2026-08-20",
+    primary: "marie",
+    standby: "jess",
+  },
+  {
+    weekNumber: 37,
+    quarter: "Q3",
+    monthLabel: "September",
+    manifestISO: "2026-09-17",
+    primary: "devin",
+    standby: "roger",
+  },
+  {
+    weekNumber: 41,
+    quarter: "Q4",
+    monthLabel: "October",
+    manifestISO: "2026-10-15",
+    primary: "marie",
+    standby: "jess",
+  },
+  {
+    weekNumber: 45,
+    quarter: "Q4",
+    monthLabel: "November",
+    manifestISO: "2026-11-12",
+    primary: "roger",
+    standby: "devin",
+  },
+  {
+    weekNumber: 49,
+    quarter: "Q4",
+    monthLabel: "December",
+    manifestISO: "2026-12-10",
+    primary: "jess",
+    standby: "marie",
+  },
 ];
 
 // Friday ship date — one day after the Thursday manifest anchor.
@@ -100,11 +156,15 @@ export function getShipISO(batch: BatchAssignment): string {
 }
 
 export function getBatchForWeek(weekNumber: number): BatchAssignment | undefined {
-  return Q2_BATCHES.find((b) => b.weekNumber === weekNumber);
+  return BATCHES.find((b) => b.weekNumber === weekNumber);
 }
 
 export function isBatchWeek(weekNumber: number): boolean {
-  return Q2_BATCHES.some((b) => b.weekNumber === weekNumber);
+  return BATCHES.some((b) => b.weekNumber === weekNumber);
+}
+
+export function getBatchesByQuarter(quarter: Quarter): BatchAssignment[] {
+  return BATCHES.filter((b) => b.quarter === quarter);
 }
 
 // What the primary actually does on the batch week, day-by-day. Mirrors
