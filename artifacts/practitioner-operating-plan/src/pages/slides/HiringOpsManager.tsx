@@ -68,6 +68,93 @@ export default function HiringOpsManager() {
           d60="Owns depot rhythm. Flags problems 24 hours before they reach me."
           d90="I can be off-grid 3 days and the operation doesn't notice."
         />
+
+        <div
+          className="mt-[1.2vh] rounded-[0.4vw] px-[1.1vw] py-[0.9vh] flex items-stretch gap-[1vw]"
+          style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
+        >
+          <div className="shrink-0 flex flex-col justify-center min-w-[11vw] max-w-[14vw]">
+            <div
+              className="font-mono uppercase tracking-[0.22em] text-[0.74vw] font-semibold"
+              style={{ color: "#e9c8a8" }}
+            >
+              + Plus the depot bench
+            </div>
+            <div className="font-display text-[1.25vw] leading-tight font-medium mt-[0.2vh]">
+              OM&rsquo;s second hire — by week 6.
+            </div>
+            <div
+              className="font-mono uppercase tracking-[0.18em] text-[0.66vw] mt-[0.4vh]"
+              style={{ color: "#e9c8a8" }}
+            >
+              Cost-centre · SALT-01-LBR
+            </div>
+          </div>
+          <div className="flex-1 grid grid-cols-3 gap-[0.8vw] items-stretch">
+            <BenchStat
+              label="Headcount"
+              value="4 seats"
+              note="Casual / contracted · T4A · not employees · A→B→C→D rotation."
+            />
+            <BenchStat
+              label="Hours · Rate"
+              value={
+                <>
+                  ~150 hrs/seat/yr
+                  <span className="block font-mono text-[0.95vw] mt-[0.15vh] opacity-90">
+                    ×4 = ~600 hrs/yr · @ $30/hr
+                  </span>
+                </>
+              }
+              note="Direct picking + Q4 overflow + paid standby. OM caps at 12 hrs/mo on the line."
+            />
+            <BenchStat
+              label="Reconciles to"
+              value={
+                <>
+                  $15,000 / yr
+                  <span className="block font-mono text-[0.78vw] mt-[0.15vh] opacity-90">
+                    $10.5k channel-alloc · $4.5k overhead
+                  </span>
+                </>
+              }
+              note="Same $15k line on SaltBench, the salt P&L, and the salt callout on Budget."
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BenchStat({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: React.ReactNode;
+  note: string;
+}) {
+  return (
+    <div
+      className="rounded-[0.3vw] px-[0.75vw] py-[0.45vh] flex flex-col"
+      style={{ background: "rgba(244,237,224,0.08)" }}
+    >
+      <div
+        className="font-mono uppercase tracking-[0.22em] text-[0.66vw] font-semibold"
+        style={{ color: "#e9c8a8" }}
+      >
+        {label}
+      </div>
+      <div className="font-display text-[1.15vw] font-medium leading-tight mt-[0.15vh]">
+        {value}
+      </div>
+      <div
+        className="font-body text-[0.72vw] leading-[1.25] mt-[0.3vh]"
+        style={{ opacity: 0.85 }}
+      >
+        {note}
       </div>
     </div>
   );

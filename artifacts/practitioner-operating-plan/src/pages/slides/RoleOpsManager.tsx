@@ -79,7 +79,9 @@ export default function RoleOpsManager() {
                 </div>
                 <div>
                   The salt batch — last week of every month, ~12 hrs of OM time
-                  capped, casual-labour bench does the picking and packing.{" "}
+                  capped; the depot bench (4 casual / contracted, T4A · ~600
+                  hrs/yr · $30/hr · costed $15k/yr in the salt P&amp;L) does
+                  the picking and packing.{" "}
                   <span className="text-accent font-semibold">My hands never on a jar.</span>
                 </div>
               </div>

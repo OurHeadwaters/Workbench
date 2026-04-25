@@ -302,24 +302,36 @@ export default function Budget() {
             ) : (
               <>~$108k revenue · ~$61k net annual contribution</>
             )}{" "}
-            · ~12 OM hrs/mo capped, plus a{" "}
-            <span className="font-semibold text-primary">$15k/yr named depot
-            bench</span>{" "}
-            (4 pre-vetted Dryden-area casuals on A→B→C→D rotation, cost-centre{" "}
-            <span className="font-mono">SALT-01-LBR</span>) — the mechanism
-            that keeps Rule 01 enforceable, costed in the salt P&amp;L not the
-            agency P&amp;L. Channel-by-channel contribution margin (wholesale
-            63%, custom labels 66%, DTC batch 36%, markets PR / cost-recovery
-            only) lives in the Part&nbsp;VI salt P&amp;L slide; the bench
-            roster and operating runbook are the slides around it; the
-            bookkeeper&rsquo;s{" "}
+            · ~12 OM hrs/mo capped, plus a named depot bench —{" "}
+            <span className="font-semibold text-primary">
+              4 casual / contracted (T4A)
+            </span>{" "}
+            · ~150 hrs/seat/yr · ~600 hrs/yr total · $30/hr · A→B→C→D rotation,
+            costed{" "}
+            <span className="font-mono font-semibold text-primary">$15k/yr</span>{" "}
+            in the salt P&amp;L (
+            <span className="font-mono">SALT-01-LBR</span>:{" "}
+            <span className="font-mono">$10.5k channel-allocated</span> direct
+            picking + Q4 overflow ·{" "}
+            <span className="font-mono">$4.5k overhead</span> standby /
+            training / screening / mileage + WSIB). The mechanism that keeps
+            Rule 01 enforceable; reconciles to the same $15k line on{" "}
+            <a
+              href="/salt-bench"
+              className="underline decoration-dotted underline-offset-2 text-primary"
+            >
+              SaltBench
+            </a>{" "}
+            and the salt P&amp;L. Channel-by-channel margin (wholesale 63%,
+            custom labels 66%, DTC batch 36%, markets PR-only) is on the
+            Part&nbsp;VI salt P&amp;L slide; the bookkeeper&rsquo;s{" "}
             <a
               href="/salt-monthly-close"
               className="underline decoration-dotted underline-offset-2 text-primary"
             >
               monthly close template
             </a>{" "}
-            is what reconciles actuals into those buckets.
+            reconciles actuals into those buckets.
           </span>
         </div>
       </div>

@@ -64,13 +64,14 @@ export default function CaseForTeam() {
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Two people who can answer the phone in Dryden, not one.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Books reconciled monthly. CRA filings boring, on time.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Practitioner free to do the actual strategic work the contract pays for.</div></div>
+              <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>A 4-seat depot bench (T4A, $30/hr, ~600 hrs/yr) so the salt line never lands on the founder. Costed $15k/yr in the salt P&amp;L, not invisible.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>The team that holds Deer Lake is the team that takes contract two.</div></div>
             </div>
             <div
               className="mt-[2vh] pt-[1.5vh] border-t font-mono uppercase tracking-[0.22em] text-[0.9vw]"
               style={{ borderColor: "rgba(244,237,224,0.3)", color: "#e9c8a8" }}
             >
-              Costs ~$50k/mo. Buys the contract — and the next one.
+              Costs ~$50k/mo agency + $15k/yr bench. Buys the contract — and the next one.
             </div>
           </div>
         </div>
