@@ -17,6 +17,11 @@ const STORAGE_KEY = "headwaters-salt-monthly-close-v1";
 // upstream source so re-pasting Square doesn't disturb the Shopify diff.
 const SNAPSHOT_KEY_PREFIX = `${STORAGE_KEY}:snapshot:`;
 const IMPORT_SOURCES: ImportSource[] = ["square", "shopify", "shippo"];
+// Filed monthly closes live in a separate blob alongside the in-progress
+// state. Kept separate so the lightweight reader in `lib/saltClose.ts`
+// (which only cares about the latest in-progress numbers) doesn't need
+// to know anything about the history shape.
+const FILED_HISTORY_KEY = "headwaters-salt-monthly-close-history-v1";
 
 type ChannelKey = "wholesale" | "customLabels" | "dtcBatch" | "markets";
 
@@ -113,6 +118,57 @@ const DEFAULT_STATE: State = {
 
 const OM_HOURS_CAP = 12;
 
+function parseChannels(raw: unknown): Record<ChannelKey, ChannelLine> {
+  const src = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  return CHANNELS.reduce((acc, c) => {
+    const ch = (src[c.key] && typeof src[c.key] === "object" ? src[c.key] : {}) as Record<
+      string,
+      unknown
+    >;
+    acc[c.key] = {
+      revenue: numOr0(ch.revenue),
+      cogs: numOr0(ch.cogs),
+      freight: numOr0(ch.freight),
+      packaging: numOr0(ch.packaging),
+    };
+    return acc;
+  }, {} as Record<ChannelKey, ChannelLine>);
+}
+
+function parseQuarterly(raw: unknown): Record<ChannelKey, QuarterlyRollup> {
+  const src = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  return CHANNELS.reduce((acc, c) => {
+    const q = (src[c.key] && typeof src[c.key] === "object" ? src[c.key] : {}) as Record<
+      string,
+      unknown
+    >;
+    acc[c.key] = {
+      priorRevenue: numOr0(q.priorRevenue),
+      priorCmDollars: Number.isFinite(Number(q.priorCmDollars))
+        ? Number(q.priorCmDollars)
+        : 0,
+      prevQuarterUnder: Boolean(q.prevQuarterUnder),
+    };
+    return acc;
+  }, {} as Record<ChannelKey, QuarterlyRollup>);
+}
+
+function copyChannels(src: Record<ChannelKey, ChannelLine>): Record<ChannelKey, ChannelLine> {
+  return CHANNELS.reduce((acc, c) => {
+    acc[c.key] = { ...src[c.key] };
+    return acc;
+  }, {} as Record<ChannelKey, ChannelLine>);
+}
+
+function copyQuarterly(
+  src: Record<ChannelKey, QuarterlyRollup>,
+): Record<ChannelKey, QuarterlyRollup> {
+  return CHANNELS.reduce((acc, c) => {
+    acc[c.key] = { ...src[c.key] };
+    return acc;
+  }, {} as Record<ChannelKey, QuarterlyRollup>);
+}
+
 function loadState(): State {
   if (typeof window === "undefined") return DEFAULT_STATE;
   try {
@@ -120,27 +176,8 @@ function loadState(): State {
     if (!raw) return DEFAULT_STATE;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return DEFAULT_STATE;
-    const channels = CHANNELS.reduce((acc, c) => {
-      const src = parsed?.channels?.[c.key] ?? {};
-      acc[c.key] = {
-        revenue: numOr0(src.revenue),
-        cogs: numOr0(src.cogs),
-        freight: numOr0(src.freight),
-        packaging: numOr0(src.packaging),
-      };
-      return acc;
-    }, {} as Record<ChannelKey, ChannelLine>);
-    const quarterly = CHANNELS.reduce((acc, c) => {
-      const src = parsed?.quarterly?.[c.key] ?? {};
-      acc[c.key] = {
-        priorRevenue: numOr0(src.priorRevenue),
-        priorCmDollars: Number.isFinite(Number(src.priorCmDollars))
-          ? Number(src.priorCmDollars)
-          : 0,
-        prevQuarterUnder: Boolean(src.prevQuarterUnder),
-      };
-      return acc;
-    }, {} as Record<ChannelKey, QuarterlyRollup>);
+    const channels = parseChannels(parsed.channels);
+    const quarterly = parseQuarterly(parsed.quarterly);
     const monthInQuarter = clampMonthInQuarter(parsed.monthInQuarter);
     const skuMapping: SkuMapping[] = Array.isArray(parsed.skuMapping)
       ? (parsed.skuMapping as unknown[]).reduce<SkuMapping[]>((acc, raw) => {
@@ -300,6 +337,124 @@ function fmtDelta(n: number): string {
   return `${sign}$${abs.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 }
 
+// ─── Filed-close history ─────────────────────────────────────────────
+// A snapshot of the in-progress State at the moment the bookkeeper
+// "files" the close. Stored in its own localStorage key so the
+// lightweight reader in `lib/saltClose.ts` doesn't need to learn the
+// history shape. Per-channel `revenue` + `cmDollars` (derived from the
+// stored line) are what the prior-months-in-quarter rollup auto-suggest
+// reads back, so the bookkeeper never has to retype last month's CM$.
+type FiledClose = {
+  id: string;
+  filedAt: string; // ISO timestamp
+  month: string;
+  monthInQuarter: 1 | 2 | 3;
+  preparedBy: string;
+  preparedOn: string;
+  channels: Record<ChannelKey, ChannelLine>;
+  // Snapshot of the quarterly rollup as it was filed — needed so the
+  // last-quarter-3 close can be replayed into a QTD CM% for the
+  // auto-prev-quarter-under-floor signal.
+  quarterly: Record<ChannelKey, QuarterlyRollup>;
+  omHours: number;
+  omRate: number;
+  casualHours: number;
+  casualRate: number;
+  depotAllocation: number;
+  notes: string;
+};
+
+function parseFiledClose(raw: unknown): FiledClose | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const id =
+    typeof r.id === "string" && r.id
+      ? r.id
+      : `f_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const filedAt =
+    typeof r.filedAt === "string" && r.filedAt
+      ? r.filedAt
+      : new Date().toISOString();
+  return {
+    id,
+    filedAt,
+    month: typeof r.month === "string" ? r.month : "",
+    monthInQuarter: clampMonthInQuarter(r.monthInQuarter),
+    preparedBy: typeof r.preparedBy === "string" ? r.preparedBy : "",
+    preparedOn: typeof r.preparedOn === "string" ? r.preparedOn : "",
+    channels: parseChannels(r.channels),
+    quarterly: parseQuarterly(r.quarterly),
+    omHours: numOr0(r.omHours),
+    omRate: Number.isFinite(Number(r.omRate)) ? Number(r.omRate) : 53,
+    casualHours: numOr0(r.casualHours),
+    casualRate: Number.isFinite(Number(r.casualRate)) ? Number(r.casualRate) : 25,
+    depotAllocation: Number.isFinite(Number(r.depotAllocation))
+      ? Number(r.depotAllocation)
+      : 300,
+    notes: typeof r.notes === "string" ? r.notes : "",
+  };
+}
+
+function loadFiledHistory(): FiledClose[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(FILED_HISTORY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const out: FiledClose[] = [];
+    for (const r of parsed) {
+      const fc = parseFiledClose(r);
+      if (fc) out.push(fc);
+    }
+    out.sort((a, b) => a.filedAt.localeCompare(b.filedAt));
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+// Compute per-channel month CM$ + month revenue for a single filed
+// close. Used both by the prior-months-in-quarter auto-suggest and by
+// the prev-quarter-under-floor derivation.
+function channelMonthMetrics(
+  close: FiledClose,
+): Record<ChannelKey, { revenue: number; cmDollars: number }> {
+  return CHANNELS.reduce((acc, c) => {
+    const line = close.channels[c.key];
+    const variable = line.cogs + line.freight + line.packaging;
+    acc[c.key] = {
+      revenue: line.revenue,
+      cmDollars: line.revenue - variable,
+    };
+    return acc;
+  }, {} as Record<ChannelKey, { revenue: number; cmDollars: number }>);
+}
+
+// Walk filed in reverse chronological order looking for the contiguous
+// chain of months that fill out the *current* quarter — i.e. for a
+// month-3 in-progress close, find the month-2 then month-1 immediately
+// before it. Stops at the first non-matching slot so a stray gap (a
+// reset, a re-filing, jumping quarters) doesn't pull stale numbers.
+function computePriorChain(
+  filed: FiledClose[],
+  monthInQuarter: 1 | 2 | 3,
+): FiledClose[] {
+  if (monthInQuarter === 1) return [];
+  let expected: number = monthInQuarter - 1;
+  const chain: FiledClose[] = [];
+  for (let i = filed.length - 1; i >= 0; i--) {
+    if (filed[i].monthInQuarter === expected) {
+      chain.unshift(filed[i]);
+      expected -= 1;
+      if (expected < 1) break;
+    } else {
+      break;
+    }
+  }
+  return chain;
+}
+
 export default function SaltMonthlyClose() {
   const [state, setState] = useState<State>(() => loadState());
   // Bump on every reset so each PasteCard knows to reload its snapshot
@@ -309,6 +464,9 @@ export default function SaltMonthlyClose() {
   // divergence between preview and apply behaviour that the diff
   // feature is supposed to prevent.
   const [snapshotResetCounter, setSnapshotResetCounter] = useState(0);
+  const [filed, setFiled] = useState<FiledClose[]>(() => loadFiledHistory());
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [justFiledId, setJustFiledId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -317,6 +475,14 @@ export default function SaltMonthlyClose() {
       // ignore quota / privacy-mode failures
     }
   }, [state]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(FILED_HISTORY_KEY, JSON.stringify(filed));
+    } catch {
+      // ignore quota / privacy-mode failures
+    }
+  }, [filed]);
 
   const updateChannel = (key: ChannelKey, patch: Partial<ChannelLine>) => {
     setState((prev) => ({
@@ -402,6 +568,109 @@ export default function SaltMonthlyClose() {
     if (typeof window !== "undefined") window.print();
   };
 
+  // File the current in-progress close as a snapshot. Re-filing the same
+  // month (matched case-insensitively, after trimming) replaces the
+  // previous snapshot so the bookkeeper can correct a mistake without
+  // ending up with two competing copies of "Mar 2026" in the rollup.
+  const fileClose = () => {
+    if (typeof window !== "undefined") {
+      const totalRev = CHANNELS.reduce(
+        (s, c) => s + state.channels[c.key].revenue,
+        0,
+      );
+      if (totalRev <= 0) {
+        const ok = window.confirm(
+          "No channel revenue entered. File this close anyway?",
+        );
+        if (!ok) return;
+      }
+    }
+    const id =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `f_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const now = new Date().toISOString();
+    const monthKey = state.month.trim().toLowerCase();
+    const snapshot: FiledClose = {
+      id,
+      filedAt: now,
+      month: state.month,
+      monthInQuarter: state.monthInQuarter,
+      preparedBy: state.preparedBy,
+      preparedOn: state.preparedOn,
+      channels: copyChannels(state.channels),
+      quarterly: copyQuarterly(state.quarterly),
+      omHours: state.omHours,
+      omRate: state.omRate,
+      casualHours: state.casualHours,
+      casualRate: state.casualRate,
+      depotAllocation: state.depotAllocation,
+      notes: state.notes,
+    };
+    setFiled((prev) => {
+      const filtered = monthKey
+        ? prev.filter((f) => f.month.trim().toLowerCase() !== monthKey)
+        : prev.slice();
+      filtered.push(snapshot);
+      filtered.sort((a, b) => a.filedAt.localeCompare(b.filedAt));
+      return filtered;
+    });
+    setJustFiledId(id);
+    setHistoryOpen(true);
+  };
+
+  // Reopen a filed close: pull every field back into the in-progress
+  // state and remove the snapshot from the list (so re-filing replaces
+  // it cleanly instead of leaving an orphan duplicate). Skips the
+  // confirm prompt when the in-progress state is the empty default.
+  const reopenClose = (id: string) => {
+    const close = filed.find((f) => f.id === id);
+    if (!close) return;
+    const hasInProgressData =
+      state.month.trim() !== "" ||
+      CHANNELS.some(
+        (c) =>
+          state.channels[c.key].revenue > 0 ||
+          state.channels[c.key].cogs > 0 ||
+          state.channels[c.key].freight > 0 ||
+          state.channels[c.key].packaging > 0,
+      );
+    if (hasInProgressData && typeof window !== "undefined") {
+      const ok = window.confirm(
+        "Reopen this filed close? The current in-progress numbers will be replaced.",
+      );
+      if (!ok) return;
+    }
+    setState((prev) => ({
+      ...prev,
+      month: close.month,
+      monthInQuarter: close.monthInQuarter,
+      preparedBy: close.preparedBy,
+      preparedOn: close.preparedOn,
+      channels: copyChannels(close.channels),
+      quarterly: copyQuarterly(close.quarterly),
+      omHours: close.omHours,
+      omRate: close.omRate,
+      casualHours: close.casualHours,
+      casualRate: close.casualRate,
+      depotAllocation: close.depotAllocation,
+      notes: close.notes,
+    }));
+    setFiled((prev) => prev.filter((f) => f.id !== id));
+    setJustFiledId(null);
+  };
+
+  const deleteClose = (id: string) => {
+    if (typeof window !== "undefined") {
+      const ok = window.confirm(
+        "Delete this filed close? It can't be recovered (the prior-month rollup will fall back to manual entry).",
+      );
+      if (!ok) return;
+    }
+    setFiled((prev) => prev.filter((f) => f.id !== id));
+    if (justFiledId === id) setJustFiledId(null);
+  };
+
   // Monthly totals — what posts to the agency P&L this month.
   const totals = useMemo(() => {
     const rev = CHANNELS.reduce((s, c) => s + state.channels[c.key].revenue, 0);
@@ -428,6 +697,95 @@ export default function SaltMonthlyClose() {
     });
   }, [state.channels]);
 
+  // The contiguous chain of filed closes that fill out the prior months
+  // in *this* quarter. e.g. when the in-progress month is month-3, this
+  // is [month-1 close, month-2 close] if both have been filed in order.
+  const priorChain = useMemo(
+    () => computePriorChain(filed, state.monthInQuarter),
+    [filed, state.monthInQuarter],
+  );
+
+  // Sum of priorChain per channel — what the bookkeeper used to retype
+  // by hand into the Prior months rev / Prior months CM $ fields.
+  const autoPriorRollup = useMemo<
+    Record<ChannelKey, { revenue: number; cmDollars: number }>
+  >(() => {
+    const acc = CHANNELS.reduce((a, c) => {
+      a[c.key] = { revenue: 0, cmDollars: 0 };
+      return a;
+    }, {} as Record<ChannelKey, { revenue: number; cmDollars: number }>);
+    for (const close of priorChain) {
+      const m = channelMonthMetrics(close);
+      for (const c of CHANNELS) {
+        acc[c.key].revenue += m[c.key].revenue;
+        acc[c.key].cmDollars += m[c.key].cmDollars;
+      }
+    }
+    return acc;
+  }, [priorChain]);
+
+  // True when the manual rollup numbers already match the auto-suggest
+  // (within $1 to absorb rounding). Used to disable the "Use these"
+  // button so the bookkeeper isn't tempted to keep clicking it.
+  const priorRollupMatches = useMemo(() => {
+    if (priorChain.length === 0) return false;
+    return CHANNELS.every((c) => {
+      const sug = autoPriorRollup[c.key];
+      const cur = state.quarterly[c.key];
+      return (
+        Math.abs(round0(sug.revenue) - round0(cur.priorRevenue)) <= 1 &&
+        Math.abs(round0(sug.cmDollars) - round0(cur.priorCmDollars)) <= 1
+      );
+    });
+  }, [priorChain.length, autoPriorRollup, state.quarterly]);
+
+  // Most recent filed close that itself was a quarter-close (month 3).
+  // Replayed into a QTD CM% to produce the auto "prev quarter under
+  // floor?" signal. Excludes any month-3 close that's part of the
+  // current quarter chain (would be a self-reference).
+  const lastQuarterCloseEntry = useMemo<FiledClose | null>(() => {
+    const chainIds = new Set(priorChain.map((f) => f.id));
+    for (let i = filed.length - 1; i >= 0; i--) {
+      const f = filed[i];
+      if (f.monthInQuarter === 3 && !chainIds.has(f.id)) return f;
+    }
+    return null;
+  }, [filed, priorChain]);
+
+  const autoPrevQuarterUnder = useMemo<Record<ChannelKey, boolean> | null>(() => {
+    if (!lastQuarterCloseEntry) return null;
+    const out = {} as Record<ChannelKey, boolean>;
+    for (const c of CHANNELS) {
+      if (c.cmFloor === null) {
+        out[c.key] = false;
+        continue;
+      }
+      const line = lastQuarterCloseEntry.channels[c.key];
+      const roll = lastQuarterCloseEntry.quarterly[c.key];
+      const variable = line.cogs + line.freight + line.packaging;
+      const monthCm = line.revenue - variable;
+      const qtdRev = line.revenue + roll.priorRevenue;
+      const qtdCm = monthCm + roll.priorCmDollars;
+      const cmPct = qtdRev > 0 ? (qtdCm / qtdRev) * 100 : 0;
+      out[c.key] = qtdRev > 0 && cmPct < c.cmFloor;
+    }
+    return out;
+  }, [lastQuarterCloseEntry]);
+
+  const usePriorChainSuggestion = () => {
+    setState((prev) => {
+      const next = copyQuarterly(prev.quarterly);
+      for (const c of CHANNELS) {
+        next[c.key] = {
+          ...next[c.key],
+          priorRevenue: round0(autoPriorRollup[c.key].revenue),
+          priorCmDollars: round0(autoPriorRollup[c.key].cmDollars),
+        };
+      }
+      return { ...prev, quarterly: next };
+    });
+  };
+
   // Per-channel quarter-to-date CM, computed as
   //   (this month CM$ + prior months in this quarter CM$)
   //   / (this month revenue + prior months revenue).
@@ -443,11 +801,21 @@ export default function SaltMonthlyClose() {
       const isQuarterEnd = state.monthInQuarter === 3;
       const qtdBelowFloor =
         m.channel.cmFloor !== null && qtdRevenue > 0 && qtdCmPct < m.channel.cmFloor;
-      const triggersReprice =
-        isQuarterEnd && qtdBelowFloor && roll.prevQuarterUnder;
-      return { ...m, qtdRevenue, qtdCmDollars, qtdCmPct, qtdBelowFloor, triggersReprice };
+      const prevUnder = autoPrevQuarterUnder
+        ? autoPrevQuarterUnder[m.channel.key]
+        : roll.prevQuarterUnder;
+      const triggersReprice = isQuarterEnd && qtdBelowFloor && prevUnder;
+      return {
+        ...m,
+        qtdRevenue,
+        qtdCmDollars,
+        qtdCmPct,
+        qtdBelowFloor,
+        triggersReprice,
+        prevUnder,
+      };
     });
-  }, [channelMetrics, state.quarterly, state.monthInQuarter]);
+  }, [channelMetrics, state.quarterly, state.monthInQuarter, autoPrevQuarterUnder]);
 
   const omOverCap = state.omHours > OM_HOURS_CAP;
   const wholesale = quarterlyMetrics.find((m) => m.channel.key === "wholesale");
@@ -487,13 +855,21 @@ export default function SaltMonthlyClose() {
             the end of a quarter when QTD CM% is under floor and last quarter
             was under too.
           </div>
-          <div className="flex gap-[6pt]">
+          <div className="flex gap-[6pt] flex-wrap justify-end">
             <a
               href={`${import.meta.env.BASE_URL}salt-coa`}
               className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#1f3d2e] hover:bg-[#ebe2d0]"
             >
               Open chart of accounts
             </a>
+            <button
+              type="button"
+              onClick={() => setHistoryOpen((v) => !v)}
+              title="Show / hide the list of filed monthly closes."
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#1f3d2e] hover:bg-[#ebe2d0]"
+            >
+              {historyOpen ? "Hide history" : `History (${filed.length})`}
+            </button>
             <button
               type="button"
               onClick={reset}
@@ -510,6 +886,14 @@ export default function SaltMonthlyClose() {
             </button>
             <button
               type="button"
+              onClick={fileClose}
+              title="Save this close as a filed snapshot. Re-filing the same month replaces the previous snapshot."
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#1f3d2e] bg-[#ebe2d0] text-[#1f3d2e] hover:bg-[#dfd2b4]"
+            >
+              File this close
+            </button>
+            <button
+              type="button"
               onClick={onPrint}
               className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded bg-[#1f3d2e] text-[#f4ede0] hover:opacity-90"
             >
@@ -517,6 +901,17 @@ export default function SaltMonthlyClose() {
             </button>
           </div>
         </div>
+
+        {historyOpen && (
+          <FiledCloseHistory
+            filed={filed}
+            channels={CHANNELS}
+            justFiledId={justFiledId}
+            currentMonthInQuarter={state.monthInQuarter}
+            onReopen={reopenClose}
+            onDelete={deleteClose}
+          />
+        )}
 
         <div className="grid grid-cols-4 gap-[8pt] mb-[10pt] text-[9pt] print:gap-[6pt] print:mb-[6pt]">
           <FieldBlock label="Month" hint="e.g. Jan 2026">
@@ -796,6 +1191,14 @@ export default function SaltMonthlyClose() {
               Trigger fires only at month 3, when QTD &lt; floor and prev quarter was also under.
             </div>
           </div>
+          <PriorChainBanner
+            monthInQuarter={state.monthInQuarter}
+            chain={priorChain}
+            channels={CHANNELS}
+            rollup={autoPriorRollup}
+            matches={priorRollupMatches}
+            onApply={usePriorChainSuggestion}
+          />
           <table
             className="w-full text-[9pt] border-collapse print:text-[8.5pt]"
             style={{ tableLayout: "fixed" }}
@@ -835,6 +1238,9 @@ export default function SaltMonthlyClose() {
                 const roll = state.quarterly[m.channel.key];
                 const isQuarterEnd = state.monthInQuarter === 3;
                 const noFloor = m.channel.cmFloor === null;
+                const autoPrev = autoPrevQuarterUnder
+                  ? autoPrevQuarterUnder[m.channel.key]
+                  : null;
                 return (
                   <tr
                     key={m.channel.key}
@@ -883,25 +1289,60 @@ export default function SaltMonthlyClose() {
                       {m.qtdRevenue > 0 ? fmtPct(m.qtdCmPct) : "—"}
                     </td>
                     <td className="py-[4pt] px-[2pt] text-center">
-                      <label className="inline-flex items-center justify-center cursor-pointer print:cursor-auto">
-                        <input
-                          type="checkbox"
-                          checked={roll.prevQuarterUnder}
-                          disabled={noFloor}
-                          onChange={(e) =>
-                            updateQuarterly(m.channel.key, { prevQuarterUnder: e.target.checked })
-                          }
-                          className="print-hide w-[12pt] h-[12pt] accent-[#1f3d2e] disabled:opacity-30"
-                        />
-                        <span
-                          aria-hidden
-                          className="hidden print:inline-flex w-[10pt] h-[10pt] border border-[#1f3d2e] items-center justify-center"
-                        >
-                          {roll.prevQuarterUnder && (
-                            <span className="font-mono text-[8pt] leading-none">✓</span>
+                      {autoPrev !== null ? (
+                        <div className="flex flex-col items-center gap-[1pt]">
+                          <span
+                            aria-label={
+                              autoPrev
+                                ? "Prev quarter under floor (auto)"
+                                : "Prev quarter at or above floor (auto)"
+                            }
+                            className={`inline-flex w-[12pt] h-[12pt] border items-center justify-center rounded-[1pt] ${
+                              noFloor
+                                ? "border-[#e3dac4] opacity-30"
+                                : autoPrev
+                                ? "bg-[#1f3d2e] border-[#1f3d2e] text-[#f4ede0]"
+                                : "border-[#1f3d2e]"
+                            }`}
+                          >
+                            {!noFloor && autoPrev && (
+                              <span className="font-mono text-[8pt] leading-none">✓</span>
+                            )}
+                          </span>
+                          {!noFloor && (
+                            <span
+                              className="font-mono uppercase tracking-[0.14em] text-[6.5pt] text-[#6b7665] leading-tight print:text-[6pt]"
+                              title={`Auto-derived from filed close “${
+                                lastQuarterCloseEntry?.month || "—"
+                              }”`}
+                            >
+                              auto
+                            </span>
                           )}
-                        </span>
-                      </label>
+                        </div>
+                      ) : (
+                        <label className="inline-flex items-center justify-center cursor-pointer print:cursor-auto">
+                          <input
+                            type="checkbox"
+                            checked={roll.prevQuarterUnder}
+                            disabled={noFloor}
+                            onChange={(e) =>
+                              updateQuarterly(m.channel.key, {
+                                prevQuarterUnder: e.target.checked,
+                              })
+                            }
+                            className="print-hide w-[12pt] h-[12pt] accent-[#1f3d2e] disabled:opacity-30"
+                          />
+                          <span
+                            aria-hidden
+                            className="hidden print:inline-flex w-[10pt] h-[10pt] border border-[#1f3d2e] items-center justify-center"
+                          >
+                            {roll.prevQuarterUnder && (
+                              <span className="font-mono text-[8pt] leading-none">✓</span>
+                            )}
+                          </span>
+                        </label>
+                      )}
                     </td>
                     <td className="py-[4pt] pl-[2pt] text-left text-[8.5pt] font-semibold print:text-[8pt]">
                       {noFloor ? (
@@ -925,6 +1366,17 @@ export default function SaltMonthlyClose() {
               })}
             </tbody>
           </table>
+          {lastQuarterCloseEntry && (
+            <div className="mt-[3pt] text-[7.5pt] text-[#6b7665] italic leading-[1.4] print:text-[7pt]">
+              Prev-quarter checkbox auto-set from the filed close
+              {" "}
+              <span className="font-mono text-[#1f3d2e]">
+                {lastQuarterCloseEntry.month || "(unnamed)"}
+              </span>{" "}
+              · per-channel QTD CM% replayed from that snapshot. Reopen the
+              close from the history drawer below to override the source data.
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[10pt] mb-[10pt] print:gap-[6pt] print:mb-[6pt]">
@@ -1861,3 +2313,249 @@ function TimesheetCard({
   );
 }
 
+
+// ─── Prior-chain auto-suggest banner ─────────────────────────────────
+// Sits above the QTD rollup table. When there are filed closes in the
+// current quarter, suggests the prior-months rev / CM$ totals so the
+// bookkeeper doesn't retype them. Print-hidden — the printed close
+// shows only the resulting rollup numbers.
+
+function PriorChainBanner({
+  monthInQuarter,
+  chain,
+  channels,
+  rollup,
+  matches,
+  onApply,
+}: {
+  monthInQuarter: 1 | 2 | 3;
+  chain: FiledClose[];
+  channels: { key: ChannelKey; label: string }[];
+  rollup: Record<ChannelKey, { revenue: number; cmDollars: number }>;
+  matches: boolean;
+  onApply: () => void;
+}) {
+  if (monthInQuarter === 1) {
+    return (
+      <div className="print-hide mb-[5pt] text-[8pt] text-[#6b7665] italic leading-[1.4]">
+        Month 1 of quarter — no prior months in this quarter to roll forward.
+      </div>
+    );
+  }
+  if (chain.length === 0) {
+    return (
+      <div className="print-hide mb-[5pt] text-[8pt] text-[#a07a18] italic leading-[1.4]">
+        No filed closes in this quarter yet — fill the prior-months fields by
+        hand below, then click <span className="font-semibold">File this close</span>{" "}
+        once today&rsquo;s month is reconciled so next month&rsquo;s rollup can
+        auto-suggest from the saved snapshot.
+      </div>
+    );
+  }
+  const monthList = chain.map((c) => c.month || "(unnamed)").join(" + ");
+  const totalRev = channels.reduce((s, c) => s + rollup[c.key].revenue, 0);
+  const totalCm = channels.reduce((s, c) => s + rollup[c.key].cmDollars, 0);
+  return (
+    <div
+      className="print-hide mb-[6pt] border border-[#c8bfa7] rounded-[3pt] bg-[#f7f1e3] p-[6pt] text-[8.5pt] text-[#2a2520] leading-[1.4]"
+      data-testid="prior-chain-banner"
+    >
+      <div className="flex items-baseline justify-between gap-[8pt]">
+        <div>
+          <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#1f3d2e] font-semibold mb-[2pt]">
+            Suggested from filed closes — {monthList}
+          </div>
+          <div className="text-[8pt] text-[#6b7665]">
+            Per-channel:{" "}
+            {channels
+              .map(
+                (c) =>
+                  `${c.label} ${fmt(round0(rollup[c.key].revenue))} rev / ${fmt(
+                    round0(rollup[c.key].cmDollars),
+                  )} CM`,
+              )
+              .join(" · ")}
+            . Totals {fmt(round0(totalRev))} rev / {fmt(round0(totalCm))} CM.
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onApply}
+          disabled={matches}
+          className={`shrink-0 font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded ${
+            matches
+              ? "border border-[#c8bfa7] text-[#6b7665] bg-transparent cursor-default"
+              : "bg-[#1f3d2e] text-[#f4ede0] hover:opacity-90"
+          }`}
+          title={
+            matches
+              ? "Prior-months fields already match the filed closes."
+              : "Fill all four channels' prior-months rev + CM$ from the filed closes."
+          }
+        >
+          {matches ? "Matches filed closes" : "Use these"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Filed-close history drawer ──────────────────────────────────────
+// Lists every filed close newest first so the bookkeeper can reopen
+// one (load it back into the in-progress state) or delete a misfiled
+// snapshot. Print-hidden by intent — the printed close shows only the
+// month being reconciled, not the history pane.
+
+function FiledCloseHistory({
+  filed,
+  channels,
+  justFiledId,
+  currentMonthInQuarter,
+  onReopen,
+  onDelete,
+}: {
+  filed: FiledClose[];
+  channels: { key: ChannelKey; label: string; cmFloor: number | null }[];
+  justFiledId: string | null;
+  currentMonthInQuarter: 1 | 2 | 3;
+  onReopen: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
+  const reverse = [...filed].reverse();
+  return (
+    <div className="print-hide border border-[#c8bfa7] rounded-[3pt] bg-[#f7f1e3] mb-[10pt] p-[8pt]">
+      <div className="flex items-baseline justify-between mb-[5pt]">
+        <div>
+          <div className="font-mono uppercase tracking-[0.2em] text-[8pt] text-[#b85a3e] font-semibold">
+            Filed monthly closes
+          </div>
+          <div className="text-[8pt] text-[#6b7665] mt-[1pt]">
+            {filed.length === 0
+              ? "Nothing filed yet — once you click File this close, snapshots collect here."
+              : `${filed.length} filed close${
+                  filed.length === 1 ? "" : "s"
+                } · newest first. Reopen pulls a close back into the form for editing; Delete removes it from the rollup auto-suggest.`}
+          </div>
+        </div>
+      </div>
+      {filed.length > 0 && (
+        <table className="w-full text-[8.5pt] border-collapse" style={{ tableLayout: "fixed" }}>
+          <thead>
+            <tr className="text-left text-[#6b7665] font-mono uppercase tracking-[0.14em] text-[7pt] border-b border-[#c8bfa7]">
+              <th className="py-[3pt] pr-[4pt] w-[18%]">Month · MQ</th>
+              <th className="py-[3pt] px-[4pt] w-[16%]">Filed</th>
+              <th className="py-[3pt] px-[4pt] w-[12%] text-right">Total rev</th>
+              <th className="py-[3pt] px-[4pt] w-[12%] text-right">Total CM $</th>
+              <th className="py-[3pt] px-[4pt] w-[26%]">Channels (rev / CM%)</th>
+              <th className="py-[3pt] pl-[4pt] w-[16%] text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reverse.map((close) => {
+              const m = channelMonthMetrics(close);
+              const totalRev = channels.reduce((s, c) => s + m[c.key].revenue, 0);
+              const totalCm = channels.reduce((s, c) => s + m[c.key].cmDollars, 0);
+              const filedDate = (() => {
+                try {
+                  return new Date(close.filedAt).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+                } catch {
+                  return close.filedAt;
+                }
+              })();
+              const isJust = close.id === justFiledId;
+              const inCurrentQuarterChain =
+                currentMonthInQuarter > close.monthInQuarter;
+              return (
+                <tr
+                  key={close.id}
+                  className="border-b border-[#e3dac4]"
+                  style={{ background: isJust ? "#fbeed1" : "transparent" }}
+                  data-testid="filed-close-row"
+                >
+                  <td className="py-[4pt] pr-[4pt] align-top">
+                    <div className="font-semibold text-[#1f3d2e] leading-tight">
+                      {close.month || "(unnamed)"}
+                    </div>
+                    <div className="font-mono text-[7.5pt] text-[#6b7665] mt-[1pt]">
+                      MQ {close.monthInQuarter} of 3
+                      {inCurrentQuarterChain && (
+                        <span className="ml-[3pt] text-[#1f3d2e]">· in current Q</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-[4pt] px-[4pt] align-top text-[8pt] text-[#2a2520]">
+                    {filedDate}
+                    {close.preparedBy && (
+                      <div className="text-[7.5pt] text-[#6b7665] mt-[1pt]">
+                        by {close.preparedBy}
+                      </div>
+                    )}
+                  </td>
+                  <td className="py-[4pt] px-[4pt] align-top text-right font-mono text-[#1f3d2e]">
+                    {fmt(round0(totalRev))}
+                  </td>
+                  <td className="py-[4pt] px-[4pt] align-top text-right font-mono text-[#1f3d2e]">
+                    {fmt(round0(totalCm))}
+                  </td>
+                  <td className="py-[4pt] px-[4pt] align-top text-[7.5pt] text-[#2a2520] leading-[1.4]">
+                    {channels
+                      .map((c) => {
+                        const cm = m[c.key];
+                        const cmPct =
+                          cm.revenue > 0 ? (cm.cmDollars / cm.revenue) * 100 : null;
+                        const underFloor =
+                          c.cmFloor !== null &&
+                          cm.revenue > 0 &&
+                          (cmPct ?? 0) < c.cmFloor;
+                        return (
+                          <span
+                            key={c.key}
+                            className={underFloor ? "text-[#a07a18]" : ""}
+                          >
+                            {c.label}{" "}
+                            <span className="font-mono">
+                              {fmt(round0(cm.revenue))}
+                              {cmPct !== null && ` / ${fmtPct(cmPct)}`}
+                            </span>
+                          </span>
+                        );
+                      })
+                      .reduce<React.ReactNode[]>((acc, el, i) => {
+                        if (i > 0) acc.push(" · ");
+                        acc.push(el);
+                        return acc;
+                      }, [])}
+                  </td>
+                  <td className="py-[4pt] pl-[4pt] align-top text-right">
+                    <div className="inline-flex flex-col items-end gap-[2pt]">
+                      <button
+                        type="button"
+                        onClick={() => onReopen(close.id)}
+                        className="font-mono uppercase tracking-[0.14em] text-[7.5pt] px-[6pt] py-[2pt] rounded border border-[#1f3d2e] text-[#1f3d2e] hover:bg-[#ebe2d0]"
+                      >
+                        Reopen
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDelete(close.id)}
+                        className="font-mono uppercase tracking-[0.14em] text-[7.5pt] text-[#b85a3e] hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
