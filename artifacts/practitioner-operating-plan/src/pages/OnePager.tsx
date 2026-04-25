@@ -1,4 +1,16 @@
+import {
+  SALT_PLANNING_BASELINE,
+  WHOLESALE_CM_FLOOR,
+  useLatestSaltClose,
+} from "../lib/saltClose";
+
+const fmtMoney = (n: number) => {
+  const sign = n < 0 ? "-" : "";
+  return `${sign}$${Math.abs(Math.round(n)).toLocaleString("en-US")}`;
+};
+
 export default function OnePager() {
+  const latestSaltClose = useLatestSaltClose();
   return (
     <div className="onepager-screen">
       <div className="onepager-sheet">
@@ -218,6 +230,114 @@ export default function OnePager() {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div className="mb-[10pt]">
+          <div
+            className="font-mono uppercase tracking-[0.2em] text-[8.5pt] text-[#b85a3e] font-semibold mb-[5pt]"
+          >
+            Salt cost-centre · SALT-01 net contribution to the agency P&amp;L
+          </div>
+          <div
+            className="border border-[#c8bfa7] rounded-[3pt] p-[8pt]"
+            style={{
+              background: latestSaltClose
+                ? latestSaltClose.status === "reprice"
+                  ? "#f7d7c9"
+                  : latestSaltClose.status === "watch"
+                  ? "#fbeed1"
+                  : "#ebe2d0"
+                : "transparent",
+            }}
+          >
+            <div className="grid grid-cols-3 gap-[8pt] items-end">
+              <div>
+                <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
+                  {latestSaltClose
+                    ? `Latest filed close · ${latestSaltClose.month || "month not labelled"}`
+                    : "Planning baseline · pre-filing"}
+                </div>
+                <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold">
+                  {latestSaltClose
+                    ? fmtMoney(latestSaltClose.net)
+                    : fmtMoney(SALT_PLANNING_BASELINE.monthlyNet)}
+                  <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
+                    {latestSaltClose ? "this month → 8400" : "/ mo (~$61k/yr)"}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
+                  Wholesale CM% · floor {WHOLESALE_CM_FLOOR}%
+                </div>
+                <div
+                  className="font-display text-[16pt] leading-tight font-semibold"
+                  style={{
+                    color:
+                      latestSaltClose && latestSaltClose.status !== "ok"
+                        ? "#b85a3e"
+                        : "#1f3d2e",
+                  }}
+                >
+                  {latestSaltClose && latestSaltClose.wholesaleCmPct !== null
+                    ? `${latestSaltClose.wholesaleCmPct.toFixed(0)}%`
+                    : `${SALT_PLANNING_BASELINE.wholesaleCmPct}%`}
+                  <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
+                    {latestSaltClose && latestSaltClose.wholesaleQtdCmPct !== null
+                      ? `· QTD ${latestSaltClose.wholesaleQtdCmPct.toFixed(0)}%`
+                      : "· planning"}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
+                  Status
+                </div>
+                <div
+                  className="font-display text-[14pt] leading-tight font-semibold uppercase tracking-[0.04em]"
+                  style={{
+                    color: !latestSaltClose
+                      ? "#6b7665"
+                      : latestSaltClose.status === "reprice"
+                      ? "#b85a3e"
+                      : latestSaltClose.status === "watch"
+                      ? "#a07a18"
+                      : "#1f3d2e",
+                  }}
+                >
+                  {!latestSaltClose
+                    ? "Pre-filing"
+                    : latestSaltClose.status === "reprice"
+                    ? "Reprice"
+                    : latestSaltClose.status === "watch"
+                    ? "Watch"
+                    : "OK"}
+                </div>
+              </div>
+            </div>
+            <div className="text-[8pt] text-[#6b7665] mt-[4pt] leading-[1.35]">
+              {latestSaltClose ? (
+                <>
+                  {latestSaltClose.statusReason} Posts as a single line (8400)
+                  to the agency P&amp;L; planning baseline is ~$61k/yr net.
+                  Source: <span className="font-mono">/salt-monthly-close</span>
+                  {latestSaltClose.preparedBy
+                    ? ` · filed by ${latestSaltClose.preparedBy}${
+                        latestSaltClose.preparedOn ? ` (${latestSaltClose.preparedOn})` : ""
+                      }`
+                    : ""}
+                  .
+                </>
+              ) : (
+                <>
+                  Planning baseline ~$61k/yr net (~$5.1k/mo) at wholesale
+                  CM 63%. Once the bookkeeper files a monthly close at{" "}
+                  <span className="font-mono">/salt-monthly-close</span>, the
+                  live figure replaces the baseline here.
+                </>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-[12pt] mb-[8pt]">

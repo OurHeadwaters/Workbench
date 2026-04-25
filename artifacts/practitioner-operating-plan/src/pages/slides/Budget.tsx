@@ -1,3 +1,5 @@
+import { useLatestSaltClose } from "../../lib/saltClose";
+
 type Row = {
   label: string;
   sub?: string;
@@ -69,6 +71,7 @@ const scenarios: Scenario[] = [
 ];
 
 export default function Budget() {
+  const latestSaltClose = useLatestSaltClose();
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
       <div className="absolute inset-0 px-[5vw] py-[4vh] flex flex-col">
@@ -277,8 +280,29 @@ export default function Budget() {
             >
               SALT-01
             </a>
-            ): ~$108k revenue · ~$61k net annual contribution · ~12 OM hrs/mo
-            capped, plus a{" "}
+            ):{" "}
+            {latestSaltClose ? (
+              <>
+                latest filed close{" "}
+                <span className="font-semibold text-primary">
+                  {fmt(Math.round(latestSaltClose.net))} net
+                </span>{" "}
+                for {latestSaltClose.month || "this month"} · wholesale CM{" "}
+                {latestSaltClose.wholesaleCmPct !== null
+                  ? `${latestSaltClose.wholesaleCmPct.toFixed(0)}%`
+                  : "—"}
+                {latestSaltClose.status !== "ok" && (
+                  <span className="text-accent font-semibold">
+                    {" "}
+                    · {latestSaltClose.status === "reprice" ? "REPRICE" : "WATCH"}
+                  </span>
+                )}
+                {" · planning baseline ~$108k rev · ~$61k net/yr"}
+              </>
+            ) : (
+              <>~$108k revenue · ~$61k net annual contribution</>
+            )}{" "}
+            · ~12 OM hrs/mo capped, plus a{" "}
             <span className="font-semibold text-primary">$15k/yr named depot
             bench</span>{" "}
             (4 pre-vetted Dryden-area casuals on A→B→C→D rotation, cost-centre{" "}
