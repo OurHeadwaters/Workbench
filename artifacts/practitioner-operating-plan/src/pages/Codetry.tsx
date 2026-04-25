@@ -30,7 +30,7 @@ const constellation: ConstellationEntry[] = [
   },
   {
     name: "Regen Revolution Zone 4",
-    role: "Conventional-to-regenerative track for industries. Multi-year transition work at sector scale; soil-building so cultivation can feed the river back instead of mining it. Awaiting agent context-pack.",
+    role: "Conventional-to-regenerative track for industries; current sector is regen beef in NWO through its highest-leverage chokepoint (abattoir capacity, not pasture or customers). Live anchor: CCM Operations Tool (Oxdrift coop) — operational software for the abattoir, deliberately not farmer-facing yet. The cleanest demonstrations of metaphor-as-architecture: 'Per-customer share split' replacing 'cut sheet management' (renaming the centerpiece rewrote schema, success metrics, and build sequence in one move), 'Don't fix my book' (Karen's line — naming her paper ledger as a working artifact REMOVED a feature, the booking calendar, from v0.1), OMAFRA traceability as byproduct not feature (prevents a parallel ledger), Estimate → actual → variance as one named loop. Plus the tone-as-architecture lines: 'Failures land on the tool, not on her' / 'Make it easier for Karen to say no, not just easier to say yes'.",
   },
   {
     name: "Dam Days and Shallows Zone 5",
