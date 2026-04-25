@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "lastUpdated": "2026-04-25",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
@@ -179,24 +179,66 @@
       },
       "claimedRequests": {
         "fromZ1Headwaters": [
-          "Shared name registry — claimed (codetry doc + manifest are the source of truth for shared nouns)",
+          "Shared name registry — claimed (see top-level nameRegistry; codetry doc + manifest are the source of truth for shared nouns)",
           "Cross-zone proposal queue — noted, awaiting CKH (Z3) confirmation on shared schema",
           "Z1-aligned worked examples in /codetry — done (Buckets / XRP Spring + bamboo / Community Well surfaced as the cleanest demonstrations in the Headwaters bullet)"
+        ],
+        "fromZ3CKH": [
+          "Decisions on which Z3 patterns get hoisted into shared vocabulary (verb-routing / role-rooms / tenant seam) — surfaced as openQuestion; awaiting practitioner call",
+          "Canonical place for cross-zone copy/voice rules — claimed (this manifest's interfaces.namingDiscipline + nameRegistry; mirrored in /codetry doc)",
+          "Heads-up before naming a new primitive overlapping Z3 nouns (snooze / stack / playbook / stuck) — claimed (nameRegistry.reservedNouns lists Z3's terms; Z2 will check before introducing any new shared noun)"
         ]
       }
     },
     {
       "zone": 3,
       "name": "Community Knowledge Hub",
+      "memberFacingBrand": "807 Benefits",
       "aliases": ["807 Benefits", "807 Food Co-op"],
-      "domain": "Community production — Northwestern Ontario food systems",
+      "zoneShorthand": "Main crops",
+      "domain": "Community production for NWO food systems — multi-tenant member-portal pattern",
       "url": "https://community-knowledge-hub.replit.app/",
       "status": "live",
-      "geography": "Dryden, Northwestern Ontario (807)",
-      "context": "awaiting agent context-pack for cadence + load-bearing surfaces",
-      "proposedInterfaces": {
-        "fromZ1Headwaters": "807 proposals as the proposal source for Community Well monthly rounds — needs shared schema (proposal id, title, ask, beneficiary). Awaiting CKH confirmation."
-      }
+      "geography": "Dryden, Northwestern Ontario (807); co-op of record: 807 Food Co-operative & Hub",
+      "dataPosture": "React + Vite frontend (artifacts/807-benefits), Express 5 + Postgres + Drizzle backend (artifacts/api-server). Clerk auth, Square payments, Resend email, Local Line for orders. Tenant-aware from day one — second co-op can be added without rewrite via tenant.headerProductLabel / tenant.legalName / board contact routing.",
+      "workedExamples": [
+        { "name": "'Today I…' verbs as routing primitive", "rule": "the library front door isn't a menu of features; it's a shelf of verbs the member picks based on what today asks for (Today I cook & preserve / gather / order / learn / trade / help). The verb is the route, the photo-tile is the chapter cover, the cream recipe-card label sits on the photo. Audience (household vs producer) swaps which shelf you're looking at." },
+        { "name": "Library of recipe books", "rule": "audience-aware shelves of 8–12 themed stacks. Stacks = chapters, audience choice = which book. Visual recently caught up to metaphor — tiles read as printed recipe cards on a photo. Two-column on phones (a paired spread), three-column on desktop." },
+        { "name": "Treasurer Calm Monthly Journey", "rule": "'Calm' is the contract, not a vibe. Confidence meter + per-treasurer lookahead preference (off / 1 / 2 / 3 days) + 14-day snooze-expiry outline + email digest + in-app banner. Treasurers plan ahead instead of reacting." },
+        { "name": "Dues snooze as primary verb", "rule": "treasurers don't 'defer' or 'pause' a dues line — they snooze it, and the system auto-wakes them with a digest tied to (recipient, lineItem, snoozedUntil). The verb dictates the behavior (something will wake you), not the other way around." },
+        { "name": "Stuck Board", "rule": "cross-domain aggregator at /admin/stuck and /board-hub/stuck. Pulls aging items from member onboarding, producer pipeline, outstanding dues, partner/grant sync errors, open grants, and marketplace seller replies into one owner-tagged view with last-touch timestamps. The name is the spec: things get stuck → the board surfaces them." },
+        { "name": "Producer Playbook", "rule": "sequenced markdown chapters producers work through, surfaced as list/detail with mailto CTAs back to the co-op. Playbook = ordered plays, not a wiki." },
+        { "name": "NOHFC Grow Application Workspace", "rule": "single-grant focused workspace at /applications/nohfc-grow-stream (lives in the Grants Finder artifact). Five tabs (eligibility, sections, budget, attachments, submission packet), deadline countdown, one-click switch to July 31 intake on a not-eligible verdict. Deliberately not a generalized grant form-builder — the grant is the unit of work." },
+        { "name": "Audience chooser as structural pivot", "rule": "signed-out visitors choose household vs producer; the choice persists in localStorage (807.audience.v1) and changes which library, which CTAs, and which dashboard cards render. One pivot, two products." },
+        { "name": "Board hub as cluster of role rooms", "rule": "/board-hub/{chair, treasurer, secretary, director, operations, distribution, agm, training, applications, drive-map, social-ideas, cashflow-budget, onboarding, stuck, orders} — each role gets its own room rather than a single admin dashboard. The role IS the room." },
+        { "name": "Tenant seam", "rule": "tenant.headerProductLabel, tenant.legalName, board contact routing in api-server/src/config/board.ts — anywhere the app would say '807 Food Co-op' goes through the seam. The seam is what makes Z3 a pattern for community production, not a one-off for Dryden." },
+        { "name": "Kitchen rental kept quiet", "rule": "public marketing has zero kitchen-rental promotion; /partners/kitchen-rental exists as a 'borrow equipment for community programs' page that still POSTs the same inquiry route. The naming carries the policy: it's borrowing, not renting." },
+        { "name": "Appreciation Wall / 'help' stack", "rule": "members pin thank-you notes to other members. A first-class surface, not a footer widget — gratitude has its own room because the system says it matters." }
+      ],
+      "offersToConstellation": [
+        "Working multi-tenant member-portal pattern (audience pivot + tenant seam) any community-production co-op could fork from",
+        "Treasurer/board operations primitives (snooze, digest, stuck board, role-rooms) that other zones with governance needs (Z4 Regen Revolution especially) could mirror",
+        "A real worked example of 'verbs as routes' that Z1, Z2, Z5 can lean on without re-deriving"
+      ],
+      "requestsToZone2": [
+        "Decisions on which patterns get hoisted into the constellation's shared vocabulary (verb routing, role-rooms, tenant seam) vs kept Z3-local",
+        "Canonical place for cross-zone copy/voice rules so the same metaphor doesn't get re-translated each app",
+        "Heads-up before Z2 names a new primitive that overlaps an existing 807-Benefits noun (snooze, stack, playbook, stuck) so we don't fork the meaning"
+      ],
+      "nonNegotiables": [
+        "Don't break the tenant seam — no hardcoded '807' / 'Dryden' in app code; route through tenant.*",
+        "Don't rename a shipped verb without a migration plan; the verb is the route",
+        "Database changes go through Drizzle + pnpm --filter @workspace/db push, never hand-written SQL migrations"
+      ],
+      "coordinationHandles": {
+        "frontend": "artifacts/807-benefits",
+        "backend": "artifacts/api-server (shared db schema)",
+        "monorepo": "same pnpm monorepo as Saltbox / Family Buckets / Headwaters — NOT same monorepo as Z2",
+        "stack": "Clerk auth, Square payments, Resend email, Local Line for orders",
+        "production": "community-knowledge-hub.replit.app",
+        "ping": "edits to Z3 codebase land via project tasks in Z3's monorepo; cross-monorepo to Z2 requires practitioner relay"
+      },
+      "z1Z3InterfaceStatus": "Z1 Headwaters proposed: 807 proposals → Community Well monthly rounds (shared schema needed). Z3's pack focused on offerings to Z4 governance and asks of Z2; did not address the Z1 proposal directly. Status: pending practitioner relay to confirm or decline."
     },
     {
       "zone": 4,
@@ -206,7 +248,8 @@
       "status": "pending",
       "context": "awaiting agent context-pack",
       "proposedInterfaces": {
-        "fromZ1Headwaters": "'regen-aligned' marker on Drip Harvester pools/issuers/instruments per RR's conventional-to-regenerative rubric. Awaiting RR confirmation."
+        "fromZ1Headwaters": "'regen-aligned' marker on Drip Harvester pools/issuers/instruments per RR's conventional-to-regenerative rubric. Awaiting RR confirmation.",
+        "fromZ3CKH": "Z3 governance primitives (snooze / digest / stuck board / role-rooms) available to mirror for sector-scale governance needs"
       }
     },
     {
@@ -237,14 +280,33 @@
   "interfaces": {
     "convention": "Each zone publishes its own /api/zone.json (or equivalent) when ready. This site's /constellation.json aggregates references. Cross-zone signals route through Zone 5's shallows.",
     "writePolicy": "Zone 2 reads, synthesizes, surfaces. Other zones own their own writes. Naming, strategy, and money decisions stay with the practitioner.",
-    "namingDiscipline": "Some collapses to avoid: Lock-In ≠ Focus Timer (reintroduces measurement). Memory bucket ≠ gallery or album. Moment (Saltbox keepsake) ≠ Note ≠ Entry. Family Buckets ≠ rename of Headwaters (it is a sibling extension). Buckets ≠ Categories (would suggest balances can grow by clicking). Headwaters ≠ Watershed ≠ xBuckets (former names; current canonical name is Headwaters).",
-    "monorepoTopology": "Saltbox + Family Buckets + Headwaters appear to share one pnpm monorepo (shared lib/api-spec, lib/db, artifacts/api-server). Practitioner Operating Plan is in a separate monorepo. Project-task pings work within a monorepo only; cross-monorepo handshake is via published manifest URL + per-zone status JSONs (or practitioner relay)."
+    "namingDiscipline": "Some collapses to avoid: Lock-In ≠ Focus Timer (reintroduces measurement). Memory bucket ≠ gallery or album. Moment (Saltbox keepsake) ≠ Note ≠ Entry. Family Buckets ≠ rename of Headwaters (it is a sibling extension). Buckets ≠ Categories (would suggest balances can grow by clicking). Headwaters ≠ Watershed ≠ xBuckets (former names; current canonical name is Headwaters). Snooze ≠ defer/pause (the verb commits the system to wake you). Borrow ≠ rent (kitchen access — naming carries policy). Stuck ≠ overdue (Stuck Board is a cross-domain aging-item aggregator, not a deadline list). Playbook ≠ wiki (ordered plays, not browsable info). Calm ≠ comfortable/easy (treasurer monthly-journey contract).",
+    "monorepoTopology": "Saltbox + Family Buckets + Headwaters + 807 Benefits / CKH all share one pnpm monorepo (artifacts/gather, artifacts/xbuckets, artifacts/807-benefits, with shared lib/api-spec, lib/db, artifacts/api-server). Practitioner Operating Plan is in a separate monorepo. Z3 agent's pack assumed Z2 is in the same monorepo ('drop tasks into the same project queue and I'll pick them up') — that assumption is incorrect. Cross-monorepo coordination still requires manifest URL + per-zone status JSONs, or practitioner relay."
+  },
+  "nameRegistry": {
+    "stewardedBy": "Zone 2 (Practitioner Operating Plan)",
+    "policy": "When a noun appears across two or more zones, the codetry doc + manifest are the source of truth. Zones propose new shared nouns to Z2; the practitioner names; Z2 stewards. This is a working registry — practitioner has final say on conflicts. Definitions live in each zone's workedExamples array; this index is for collision detection.",
+    "reservedNouns": {
+      "Z0 (Saltbox)": ["Lock-In", "Gentle Words", "Brave Moments", "Quote of the Day", "Live Follow-Along", "Moment", "Goals (per-child)"],
+      "Z1 (Headwaters)": ["Headwaters", "Bucket", "Spring", "Drip Harvester", "Well (Community / Giving)", "Pool (Surplus)", "Payday", "household"],
+      "Z1 (Family Buckets)": ["Courage Bucket", "memory (bucket kind)", "savings (bucket kind)"],
+      "Z2 (Practitioner Operating Plan)": ["Practitioner", "Today / Week / Year", "Phase (Idea / Pitch / Contract / Fulfillment / Impact)", "Carry-over", "codetry"],
+      "Z3 (Community Knowledge Hub / 807 Benefits)": ["snooze", "stack", "playbook", "stuck", "Calm", "room", "verb (as route)", "audience (as pivot)", "tenant (as seam)", "borrow"]
+    },
+    "watchedCollisions": [
+      "Library — three meanings already in play: Z3 (recipe-book library of audience-aware shelves), pre-zone (Brainstorm Library — idea seeds), and Z2's monorepo has artifacts/library (Northern Food Systems Research Library). Real forking risk; practitioner attention warranted.",
+      "Bucket — Z0 Family Buckets (memory bucket) and Z1 Headwaters (envelope bucket). Same root metaphor (a thing that holds what you put in it), different surface; namespaced by zone, consistent with water-grammar.",
+      "Moment — Saltbox keepsake; the Z0 agent flagged 'Moment ≠ Note ≠ Entry'. If any zone introduces 'Moment' as a noun, route through Z2 first."
+    ]
   },
   "openQuestions": [
     "Saltbox vs SaltBox vs Salt box — three writings have appeared. Z0 agent uses 'Saltbox' (one word, capital S). Pending practitioner decision.",
     "Headwaters in /codetry doc title — Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'Headwaters Zone 1 (parent)' with '(was xBuckets / Watershed)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
     "/business — real route to create on this Z2 site, or shorthand for 'this site as a whole'?",
     "Bright Side & Regen Revolution & Dam Days — built apps with URLs yet, or named slots?",
-    "Bilingual surface area — Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?"
+    "Bilingual surface area — Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?",
+    "Z3 patterns to hoist into shared vocabulary — practitioner call needed: verb-as-route (currently Z3-local; Z1/Z2/Z5 could lean on it without re-deriving), role-rooms (Z4 governance could mirror), tenant seam (Z3 pattern for community-production co-ops). Hoist? Keep Z3-local? Per-pattern?",
+    "Three Libraries — Z3's recipe-book library, pre-zone Brainstorm Library, and Z2 monorepo's artifacts/library (Northern Food Systems Research Library). Same word, three meanings; collision risk on the rise. Disambiguate with prefixes (Recipe Library / Brainstorm Library / Research Library), or accept the polysemy?",
+    "Z1↔Z3 proposal queue — Z1 Headwaters proposed 807 proposals → Community Well monthly rounds. Z3's pack didn't address it. Pending practitioner relay to confirm or decline."
   ]
 }

@@ -26,7 +26,7 @@ const constellation: ConstellationEntry[] = [
   },
   {
     name: "Community Knowledge Hub / 807 Benefits Zone 3",
-    role: "Community production for Northwestern Ontario food systems — Dryden's 807 Food Co-op members portal. The honest baseline of what NWO actually offers without coddling. Awaiting agent context-pack for cadence and load-bearing surfaces.",
+    role: "Members portal for Dryden's 807 Food Co-op (community-knowledge-hub.replit.app); designed multi-tenant from day one so a second co-op can fork without rewrite (tenant seam at tenant.headerProductLabel etc.). The cleanest demonstrations of metaphor-as-architecture: 'Today I…' verbs as the routing primitive (verb is the route — Today I cook & preserve / gather / order / learn / trade / help), Stuck Board (the name is the spec — things get stuck, the board surfaces them with owner-tags and last-touch timestamps), the role IS the room (board hub gives chair / treasurer / secretary / ops each their own room rather than one admin dashboard), Treasurer Calm Monthly Journey ('Calm' is the contract, not a vibe — confidence meter + lookahead + snooze-expiry + digest). Plus dues-snooze-as-verb, audience chooser as structural pivot, Producer Playbook, Kitchen rental kept quiet (borrowing, not renting), Appreciation Wall.",
   },
   {
     name: "Regen Revolution Zone 4",
