@@ -8,7 +8,7 @@ type AuditRow = {
 const auditRows: AuditRow[] = [
   {
     label: "Stream 1 · Business Development & Financial Support",
-    sub: "The CDP-contractor stream from the 807 grant proposal — ~12 months of platform build (transparency stack, member-facing storefront, ops back end), financial systems, and business planning. Originally a $20,000 grant line.",
+    sub: "The CDP-contractor stream from the 807 grant proposal — three named deliverables: operational systems for the co-op (the transparency-stack platform layered over the existing Local Line + Square stand-up to close the gaps between them), business planning + revenue strategy, and an actionable roadmap as pilot funding ends. Carve-outs: accountant fees (~$6k) paid by the co-op directly, not in this bill; bookkeeper engagement vanished, absorbed by Headwaters. Originally a $20,000 grant line.",
     amount: "incl.",
   },
   {
