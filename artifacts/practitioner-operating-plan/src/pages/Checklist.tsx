@@ -59,6 +59,8 @@ export default function Checklist() {
     if (typeof window !== "undefined") window.print();
   };
 
+  const pdfHref = `${import.meta.env.BASE_URL}headwaters-checklist.pdf`;
+
   return (
     <div className="onepager-screen checklist">
       <div className="onepager-sheet">
@@ -92,6 +94,13 @@ export default function Checklist() {
             >
               Reset
             </button>
+            <a
+              href={pdfHref}
+              download="headwaters-checklist.pdf"
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#1f3d2e] text-[#1f3d2e] hover:bg-[#ebe2d0]"
+            >
+              Download PDF
+            </a>
             <button
               type="button"
               onClick={onPrint}
