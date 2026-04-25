@@ -1,0 +1,70 @@
+What this project is:
+A pnpm monorepo (TypeScript, Express, PostgreSQL, React/Vite) running several tools for a small Canadian food business called Parr's Jars. It hosts a public storefront, an internal bookkeeping app, a studio/artist page, a meeting companion tool, and until recently a rec therapy tool (which has now been removed and moved to its own project).
+
+What's already been safely extracted:
+
+Bright Side (rec therapy tool) — fully removed from this project. A complete initialization prompt exists for rebuilding it as a standalone Replit. Gone from here, safe elsewhere.
+Parr's Books expansion — a complete team-roles expansion prompt (owner / ops manager / bookkeeper / food handler) has been written out and is in my possession.
+North Star statement — "We've always known how to fix it. Now we can." — captured.
+Personal founder framing — the full narrative about the rec & community development background, scaling through AI tools — captured and written up.
+What still lives only in this project:
+
+Product Catalog (5 products, exact copy):
+
+Salty Garlic $12 / 60g — Sea Salt, Garlic Powder, Onion Powder, Black Pepper, Smoked Paprika, Parsley. Tagline: "The flavour-first garlic shaker."
+Salty Onion $12 / 60g — Sea Salt, Chive Powder, Onion Powder, Smoked Paprika, Garlic Powder, Black Pepper, Parsley, Ground Celery Seed. Tagline: "The everyday workhorse."
+Salty Finish $12 / 60g — Sea Salt, Garlic Powder, Onion Powder, Smoked Paprika, Thyme, Black Pepper, Parsley. Tagline: "The BBQ and all-protein blend."
+Cheezy Salt $12 / 60g — Sea Salt, Nutritional Yeast, Onion Powder, Chive Powder, Black Pepper, Smoked Paprika, Garlic Powder, Chili Powder. Tagline: "Nutritional yeast. Popcorn-approved."
+The Shaker Set $45 / 4 jars — all four blends, one box. Tagline: "All four gourmet blends. One box."
+Each product also has a full paragraph description written in a distinct voice — crafted copy, not generic. These are currently embedded in code only.
+
+Gift Bundles:
+
+The Trio $32 — Salty Garlic, Salty Onion, Salty Finish. "Three jars, one ribbon. Easy yes."
+The Six-Pack $60 — all four blends + a second Salty Garlic + second Salty Finish. "The full gourmet lineup, plus seconds of the favourites."
+The Host Gift Box $38 — Salty Garlic, Salty Finish, Cheezy Salt. "Show up like you mean it."
+Build Your Own 3-jar $32 / Build Your Own 6-jar (also $60) — mix any jars at bundle pricing.
+Shipping Tiers (Ontario only):
+1 jar: $8 / 2–3 jars: $12 / 4–6 jars: $15 / 7–12 jars: $18 / Free at $75+
+
+Wholesale Terms (very specific, hard to reconstruct):
+
+Case quantity: 25, Opening minimum: 4 cases, Reorder minimum: 2 cases
+Lead time: 2–3 weeks. Ships from Dryden, ON. Pickup at Princess St. workshop.
+Packaging: glass jars, sealed shaker lids, hand-labeled, 25/case, stacks two high
+Shelf life: indefinitely shelf-stable, lot codes on each jar for traceability
+Facility: shared with a peanut butter producer — not nut-free. CFIA-style small-batch. Full allergen statements on every jar.
+Payment: opening orders prepaid, reorders invoice on shipment due on receipt
+Volume discount: 10+ cases = 5% off the case price
+Stockists (current retailers):
+
+807 Food Co-operative (807foodcoop.ca)
+Village Trading Post (Northwestern Ontario)
+Petro-Canada / Mastrangelo Fuels (Northwestern Ontario)
+Hinterland & Co (Northwestern Ontario — full address not confirmed)
+Positioning Copy (lives only in the codebase):
+Short line: "AI? It's actually IA — an Implementation Agent."
+Full paragraph: "Most 'AI' marketing today is chatbots and vibes. What you get from this workshop is an Implementation Agent — someone who actually ships the named tool you needed. The benefits platform, the grants finder, the operations app on the tablet behind the till. Real systems your team can point at on Monday morning."
+
+Grant Blurb (Studio):
+"Some projects may be up to 50% grant-funded — ask about options."
+
+Operational Setup Documentation — a detailed manual (SETUP.md) covering:
+
+Every secret the app requires and exactly where to find it (Square, Resend, Twilio, OpenAI)
+Step-by-step DNS verification for parrsjars.ca as a sending domain in Resend (SPF, DKIM, DMARC records)
+Square webhook configuration (URL format, which events to subscribe to)
+SMS order notification setup via Twilio
+How to smoke-test everything end to end before going live
+Active tools still running in this project:
+
+Parr's Jars storefront (parrsjars.ca) — public e-commerce with Square checkout, gift mode, admin dashboard, cart recovery emails, SMS order alerts
+Parr's Books — private bookkeeping app (two users, full ledger, Canadian GST/HST tax codes, receipt attachments, P&L and category reports)
+Bobbie Parr Studio — artist/studio site with grant blurb management
+Meeting Companion — hands-free PWA for recording meetings, AI transcription, speaker diarization, auto-generated slide decks
+These tools are actively running — they are not just archived code. The storefront takes real orders. Books has real financial records.
+
+The core question:
+Given all of the above — what would you do? Is there a final extraction worth doing before stepping away, or is enough already saved that this project could be abandoned without meaningful loss? What specifically would you capture first if you had one session left?
+
+That gives your other agent everything it needs to make a real recommendation rather than a generic one. Want me to add anything before you use it?
