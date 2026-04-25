@@ -7,6 +7,25 @@ import { fileURLToPath } from "url";
 
 import puppeteer from "puppeteer-core";
 
+type PageExport = {
+  route: string;
+  outputFile: string;
+  label: string;
+};
+
+const PAGES: PageExport[] = [
+  {
+    route: "/onepager",
+    outputFile: "practitioner-operating-plan-onepager.pdf",
+    label: "one-pager",
+  },
+  {
+    route: "/checklist",
+    outputFile: "headwaters-checklist.pdf",
+    label: "Headwaters checklist",
+  },
+];
+
 function resolveChromiumExecutable(): string | undefined {
   const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;
   if (fromEnv) return fromEnv;
@@ -27,10 +46,6 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const distDir = path.join(projectRoot, "dist/public");
 const outputDir = path.join(projectRoot, "public");
-const outputPath = path.join(
-  outputDir,
-  "practitioner-operating-plan-onepager.pdf",
-);
 
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -51,7 +66,7 @@ const MIME_TYPES: Record<string, string> = {
 };
 
 async function buildBundle(): Promise<void> {
-  console.log("[export-pdf] Building production bundle (BASE_PATH=/) ...");
+  console.log("[export-pdfs] Building production bundle (BASE_PATH=/) ...");
   await new Promise<void>((resolve, reject) => {
     const proc = spawn(
       "pnpm",
@@ -144,10 +159,7 @@ async function startStaticServer(): Promise<{
   };
 }
 
-async function renderPdf(port: number): Promise<void> {
-  const url = `http://127.0.0.1:${port}/onepager`;
-  console.log(`[export-pdf] Opening ${url} in headless Chrome ...`);
-
+async function renderPdfs(port: number): Promise<void> {
   const executablePath = resolveChromiumExecutable();
   if (!executablePath) {
     throw new Error(
@@ -155,7 +167,7 @@ async function renderPdf(port: number): Promise<void> {
         "or set PUPPETEER_EXECUTABLE_PATH to a Chrome/Chromium binary.",
     );
   }
-  console.log(`[export-pdf] Using Chromium at ${executablePath}`);
+  console.log(`[export-pdfs] Using Chromium at ${executablePath}`);
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -168,37 +180,63 @@ async function renderPdf(port: number): Promise<void> {
   });
 
   try {
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 60_000 });
-    await page.emulateMediaType("print");
-    // Make sure any web fonts (if added later) are fully loaded before printing.
-    await page.evaluate(async () => {
-      if ("fonts" in document) {
-        await (document as Document & { fonts: { ready: Promise<unknown> } })
-          .fonts.ready;
-      }
-    });
-
     await mkdir(outputDir, { recursive: true });
-    await page.pdf({
-      path: outputPath,
-      format: "letter",
-      printBackground: true,
-      preferCSSPageSize: true,
-    });
+
+    for (const pageSpec of PAGES) {
+      const url = `http://127.0.0.1:${port}${pageSpec.route}`;
+      const outputPath = path.join(outputDir, pageSpec.outputFile);
+      console.log(
+        `[export-pdfs] Rendering ${pageSpec.label} from ${url} ...`,
+      );
+
+      const page = await browser.newPage();
+      try {
+        await page.goto(url, { waitUntil: "networkidle0", timeout: 60_000 });
+        await page.emulateMediaType("print");
+        // Make sure any web fonts (if added later) are fully loaded before printing.
+        await page.evaluate(async () => {
+          if ("fonts" in document) {
+            await (document as Document & {
+              fonts: { ready: Promise<unknown> };
+            }).fonts.ready;
+          }
+        });
+
+        await page.pdf({
+          path: outputPath,
+          format: "letter",
+          printBackground: true,
+          preferCSSPageSize: true,
+        });
+
+        console.log(
+          `[export-pdfs] Wrote ${path.relative(projectRoot, outputPath)}`,
+        );
+      } finally {
+        await page.close();
+      }
+    }
   } finally {
     await browser.close();
   }
 }
 
+function shouldSkipBuild(): boolean {
+  if (process.argv.includes("--skip-build")) return true;
+  const flag = process.env.SKIP_BUILD;
+  if (!flag) return false;
+  return flag !== "0" && flag.toLowerCase() !== "false";
+}
+
 async function main() {
-  await buildBundle();
+  if (shouldSkipBuild()) {
+    console.log("[export-pdfs] Skipping internal build (SKIP_BUILD set).");
+  } else {
+    await buildBundle();
+  }
   const server = await startStaticServer();
   try {
-    await renderPdf(server.port);
-    console.log(
-      `[export-pdf] Wrote ${path.relative(projectRoot, outputPath)}`,
-    );
+    await renderPdfs(server.port);
   } finally {
     await server.close();
   }
