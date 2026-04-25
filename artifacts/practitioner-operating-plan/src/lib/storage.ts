@@ -4,7 +4,28 @@ import type { MilestoneId, MilestoneState, Phase } from "./phases";
 import { PHASE_ORDER } from "./phases";
 
 export const STORAGE_KEY = "pop:v1";
-export const STORAGE_VERSION = 2;
+export const STORAGE_VERSION = 3;
+
+// "My Three Things" — three editable rows the practitioner commits to
+// for today, plus three to move the current phase forward. Stored as
+// fixed-length-3 arrays (kept that way by the helpers in
+// `lib/threeThings.ts`) so the UI never has to worry about missing
+// slots.
+export type ThreeThingItem = { text: string; done: boolean };
+export type ThreeThingTriple = [
+  ThreeThingItem,
+  ThreeThingItem,
+  ThreeThingItem,
+];
+
+// Single slot for the phase-scoped 3. When `phase` no longer matches
+// the active currentPhase, the displayed list is treated as empty so
+// the practitioner is prompted to set fresh ones for the new phase
+// rather than carrying stale items forward across phase boundaries.
+export type PhaseThreeSlot = {
+  phase: Phase;
+  items: ThreeThingTriple;
+};
 
 // Snapshot model is a faithful migration of the standalone Annual Plan
 // Check-in app: portfolio + Watershed ARR + owner take-home + XRP wildcard
@@ -46,6 +67,14 @@ export type AppState = {
   currentPhase: Phase;
   milestones: MilestoneState;
   dismissedPhaseSuggestion: Phase | null;
+  // "My Three Things" — keyed by ISO date so day rollover is automatic
+  // (a new day naturally has no entry and starts fresh; previous days
+  // are archived in place for the yesterday + weekly views).
+  dailyThree: Record<string, ThreeThingTriple>;
+  // Phase-scoped 3 lives in a single slot. When the practitioner moves
+  // to a different phase, the slot is treated as empty until they set
+  // new ones — see lib/threeThings.ts for the readPhaseThree helper.
+  phaseThree: PhaseThreeSlot | null;
 };
 
 export const DEFAULT_STATE: AppState = {
@@ -59,6 +88,8 @@ export const DEFAULT_STATE: AppState = {
   currentPhase: "idea",
   milestones: {},
   dismissedPhaseSuggestion: null,
+  dailyThree: {},
+  phaseThree: null,
 };
 
 // Migrate a parsed payload of any prior schema version up to STORAGE_VERSION.
@@ -77,6 +108,15 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       currentPhase: "idea",
       milestones: {},
       dismissedPhaseSuggestion: null,
+    };
+  }
+  // v2 -> v3: introduced dailyThree + phaseThree (My Three Things).
+  if (working.version === 2) {
+    working = {
+      ...working,
+      version: 3,
+      dailyThree: {},
+      phaseThree: null,
     };
   }
   // Unknown future version: best-effort — trust and keep known keys.
@@ -98,6 +138,8 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
     milestones: (working.milestones as MilestoneState) ?? {},
     dismissedPhaseSuggestion:
       (working.dismissedPhaseSuggestion as Phase | null) ?? null,
+    dailyThree: (working.dailyThree as AppState["dailyThree"]) ?? {},
+    phaseThree: (working.phaseThree as PhaseThreeSlot | null) ?? null,
   };
 }
 
@@ -313,6 +355,115 @@ export function useAppStateActions() {
     setState({ ...s, dismissedPhaseSuggestion: phase });
   }, []);
 
+  // --- My Three Things --------------------------------------------------
+  // Items always live in length-3 triples; helpers in
+  // `lib/threeThings.ts` enforce that on read so callers below can
+  // treat slot indexes 0/1/2 as always-present.
+
+  const setDailyThing = useCallback(
+    (dateISO: string, idx: number, text: string) => {
+      const s = getState();
+      const existing = s.dailyThree[dateISO];
+      const next: ThreeThingTriple = existing
+        ? ([existing[0], existing[1], existing[2]] as ThreeThingTriple)
+        : ([
+            { text: "", done: false },
+            { text: "", done: false },
+            { text: "", done: false },
+          ] as ThreeThingTriple);
+      next[idx] = { ...next[idx], text };
+      setState({
+        ...s,
+        dailyThree: { ...s.dailyThree, [dateISO]: next },
+      });
+    },
+    [],
+  );
+
+  const toggleDailyThing = useCallback(
+    (dateISO: string, idx: number, done: boolean) => {
+      const s = getState();
+      const existing = s.dailyThree[dateISO];
+      const next: ThreeThingTriple = existing
+        ? ([existing[0], existing[1], existing[2]] as ThreeThingTriple)
+        : ([
+            { text: "", done: false },
+            { text: "", done: false },
+            { text: "", done: false },
+          ] as ThreeThingTriple);
+      next[idx] = { ...next[idx], done };
+      setState({
+        ...s,
+        dailyThree: { ...s.dailyThree, [dateISO]: next },
+      });
+    },
+    [],
+  );
+
+  // Phase-scoped writers stamp the current phase onto the slot. If the
+  // slot was attached to a different phase, it's replaced wholesale —
+  // that's how we keep stale phase items from leaking forward.
+  const setPhaseThing = useCallback(
+    (phase: Phase, idx: number, text: string) => {
+      const s = getState();
+      const existing =
+        s.phaseThree && s.phaseThree.phase === phase
+          ? s.phaseThree.items
+          : ([
+              { text: "", done: false },
+              { text: "", done: false },
+              { text: "", done: false },
+            ] as ThreeThingTriple);
+      const next: ThreeThingTriple = [
+        existing[0],
+        existing[1],
+        existing[2],
+      ] as ThreeThingTriple;
+      next[idx] = { ...next[idx], text };
+      setState({ ...s, phaseThree: { phase, items: next } });
+    },
+    [],
+  );
+
+  const togglePhaseThing = useCallback(
+    (phase: Phase, idx: number, done: boolean) => {
+      const s = getState();
+      const existing =
+        s.phaseThree && s.phaseThree.phase === phase
+          ? s.phaseThree.items
+          : ([
+              { text: "", done: false },
+              { text: "", done: false },
+              { text: "", done: false },
+            ] as ThreeThingTriple);
+      const next: ThreeThingTriple = [
+        existing[0],
+        existing[1],
+        existing[2],
+      ] as ThreeThingTriple;
+      next[idx] = { ...next[idx], done };
+      setState({ ...s, phaseThree: { phase, items: next } });
+    },
+    [],
+  );
+
+  // "Set fresh ones" — used when the practitioner enters a new phase
+  // and accepts the soft prompt to start a new phase-scoped 3.
+  const resetPhaseThree = useCallback((phase: Phase) => {
+    const s = getState();
+    setState({
+      ...s,
+      phaseThree: {
+        phase,
+        items: [
+          { text: "", done: false },
+          { text: "", done: false },
+          { text: "", done: false },
+        ],
+      },
+    });
+  }, []);
+
   return {
     toggleStepDone,
     setWeekNote,
@@ -328,5 +479,10 @@ export function useAppStateActions() {
     setCurrentPhase,
     setMilestone,
     dismissPhaseSuggestion,
+    setDailyThing,
+    toggleDailyThing,
+    setPhaseThing,
+    togglePhaseThing,
+    resetPhaseThree,
   };
 }

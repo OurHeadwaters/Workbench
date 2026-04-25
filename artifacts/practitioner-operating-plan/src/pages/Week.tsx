@@ -16,6 +16,7 @@ import {
 import { useAppState, useAppStateActions } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
 import { StepCard } from "../components/StepCard";
+import { WeekStreak } from "../components/WeekStreak";
 
 const DAY_LABELS: Array<{ short: DayPlan["dayShort"]; label: string }> = [
   { short: "mon", label: "Monday" },
@@ -219,6 +220,8 @@ export default function Week() {
           })}
         </div>
       )}
+
+      <WeekStreak />
 
       <section className="space-y-3 rounded-lg border border-stone-200 bg-white p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-700">

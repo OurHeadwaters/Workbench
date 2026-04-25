@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { type ReactNode } from "react";
 
 import { PhaseIndicator } from "./PhaseIndicator";
+import { TodayThreeBar } from "./TodayThreeBar";
 
 const NAV_ITEMS: Array<{
   label: string;
@@ -33,6 +34,9 @@ const NAV_ITEMS: Array<{
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  // Avoid double-rendering the editable bar on /today, where the full
+  // ThreeThings card already owns that surface.
+  const onToday = location === "/today" || location.startsWith("/today/");
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 antialiased">
@@ -73,6 +77,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
+      {!onToday && <TodayThreeBar />}
       <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
       <footer className="mx-auto mt-16 max-w-5xl px-6 pb-12 pt-8 text-xs text-stone-500">
         State stored locally in this browser. No accounts, no servers.

@@ -17,6 +17,8 @@ import {
 import { useAppState } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
 import { StepCard } from "../components/StepCard";
+import { ThreeThings } from "../components/ThreeThings";
+import { WeekStreak } from "../components/WeekStreak";
 
 const REMAINING_DAY_LABELS: Record<DayPlan["dayShort"], string> = {
   mon: "Monday",
@@ -83,6 +85,8 @@ export default function Today() {
           <p className="max-w-2xl text-sm text-stone-600">{week.description}</p>
         )}
       </header>
+
+      <ThreeThings />
 
       {carried.length > 0 && (
         <section className="space-y-3">
@@ -186,6 +190,8 @@ export default function Today() {
           </ol>
         </section>
       )}
+
+      <WeekStreak />
 
       <section className="rounded-lg border border-stone-200 bg-white p-5">
         <div className="flex items-center justify-between">
