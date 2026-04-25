@@ -12,7 +12,9 @@
     "export-pdfs": "pnpm exec tsx scripts/export-pdfs.ts",
     "export-onepager-pdf": "pnpm exec tsx scripts/export-pdfs.ts",
     "export-checklist-pdf": "pnpm exec tsx scripts/export-pdfs.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "catalog:",
@@ -30,6 +32,7 @@
     "tailwindcss": "catalog:",
     "tsx": "catalog:",
     "vite": "catalog:",
+    "vitest": "^4.1.5",
     "wouter": "catalog:",
     "zod": "catalog:"
   }
