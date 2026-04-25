@@ -206,7 +206,7 @@ export default function SaltRunbook() {
               No step in this runbook reads "founder packs". If casual labour
               calls in sick, the OM pulls from the{" "}
               <span className="font-semibold">named 4-person depot bench</span>{" "}
-              (next slide — roster, rotation, paperwork, $15k/yr cost). If
+              (VIII · 06 — roster, rotation, paperwork, $15k/yr cost). If
               the whole bench is unavailable,{" "}
               <span className="font-semibold">the batch slips</span> on the
               T-7/T-3/T-0 path — never falls back to the founder's hands.

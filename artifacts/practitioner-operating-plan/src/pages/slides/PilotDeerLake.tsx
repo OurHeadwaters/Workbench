@@ -87,7 +87,7 @@ export default function PilotDeerLake() {
               And the structural plan to deliver.
             </div>
             <div className="font-body text-[1.05vw] leading-[1.5] opacity-95 flex-1">
-              The Operating Plan in Parts I–IV is the structure. The team is
+              The Operating Plan in Parts I–V is the structure. The team is
               named, the budget is costed, the cash bridge is real, the hiring
               runbook is written, and the accountability is auditable. The
               practitioner isn't a stranger flying in for a quarter — this is

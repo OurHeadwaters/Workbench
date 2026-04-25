@@ -214,7 +214,7 @@ export default function Budget() {
               <span className="font-mono">{markupPct}%</span> is a dedicated{" "}
               <span className="font-semibold text-primary">reinvestment</span>{" "}
               line — tech, training, and seed for pilot&nbsp;#2. Justified by
-              measurable savings delivered (next slide).
+              measurable savings delivered (V · Net-positive accountability).
             </div>
           </div>
         </div>
