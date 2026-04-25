@@ -54,17 +54,19 @@ const DEFAULT_STATE: State = {
       id: "it-tech",
       name: "IT/Tech",
       baselinePercent: 60,
-      hours: { deerLake: 0, salt: 0, internalDesign: 0, agencyBackOffice: 0 },
+      hours: { deerLake: 130, salt: 30, internalDesign: 25, agencyBackOffice: 30 },
       prevQuarterUnder: false,
-      notes: "",
+      notes:
+        "~15 hrs/week plus on-call. Deer Lake: POS upkeep, inventory sync, in-store networking, payment-terminal uptime, satellite-link babysitting. Salt: webshop + order-automation tweaks. Internal design: build tools and asset pipeline. Back-office: agency device/account admin, backups, MFA cleanup.",
     },
     {
       id: "food-handler",
       name: "Food Handler",
-      baselinePercent: 0,
-      hours: { deerLake: 0, salt: 0, internalDesign: 0, agencyBackOffice: 0 },
+      baselinePercent: 90,
+      hours: { deerLake: 360, salt: 0, internalDesign: 10, agencyBackOffice: 20 },
       prevQuarterUnder: false,
-      notes: "",
+      notes:
+        "~30 hrs/week at the Deer Lake store: receiving, prep, cold-chain checks, daily food-safety log. Back-office time is cert renewals (FoodSafe), training refresh, and SOP write-ups paid out of practitioner overhead. Small internal-design slice covers shelf labels and recipe cards. Salt batches are processed by separate certified staff — do not bill salt hours here.",
     },
   ],
 };
