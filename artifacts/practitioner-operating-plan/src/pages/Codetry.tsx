@@ -160,16 +160,29 @@ export default function Codetry() {
           </span>
           This constellation is built on regenerative agriculture and
           permaculture as living disciplines, not as metaphors. Its
-          specific shaping comes from a decade of daily listening to
-          Jack Spirko&rsquo;s{" "}
+          specific shaping comes from a small constellation of teachers
+          held in daily rotation since 2011: Jack Spirko&rsquo;s{" "}
           <span className="italic">The Survival Podcast</span> &mdash;
           whose tagline,{" "}
           <span className="italic">
             &ldquo;for if times get tough or even if they don&rsquo;t,&rdquo;
           </span>{" "}
-          has been the working frame since 2011 &mdash; alongside the
-          peer-to-peer mutual-aid logic of the Freedom Cells movement.
-          The working axiom is that{" "}
+          has been the working frame; Joel Salatin&rsquo;s{" "}
+          <span className="italic">The Lunatic Farmer</span> &mdash;{" "}
+          <span className="italic">
+            &ldquo;frequent meditations on food and farming that bring a
+            wise and humble conscience to practice, policy, and
+            participation&rdquo;
+          </span>
+          ; Nicole Sauce&rsquo;s{" "}
+          <span className="italic">Living Free in Tennessee</span>{" "}
+          &mdash;{" "}
+          <span className="italic">
+            &ldquo;build the life you choose on your terms&rdquo;
+          </span>
+          ; and the peer-to-peer community-organization logic of the
+          Freedom Cells movement. The working axiom across all of them
+          is that{" "}
           <span className="italic">
             there is no shortage of problems, but when we look for
             solutions it all becomes a little easier.
