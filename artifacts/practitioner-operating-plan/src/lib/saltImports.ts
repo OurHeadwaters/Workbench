@@ -21,7 +21,14 @@ export type ChannelTotals = {
   packaging: number;
 };
 
+// Stable identifier per upstream system. Used by the close page to key the
+// "last applied" snapshot in localStorage so each PasteCard can show a
+// channel-level diff against its own previous paste — re-pulling Square
+// mid-week shouldn't have to clobber Shopify's snapshot or vice versa.
+export type ImportSource = "square" | "shopify" | "shippo";
+
 export type ParsedTotals = {
+  source: ImportSource;
   byChannel: Record<ChannelKey, ChannelTotals>;
   unmapped: { sku: string; rows: number; revenue: number }[];
   rowCount: number;
@@ -126,7 +133,7 @@ export function parseSquareExport(
   const unmapped = new Map<string, { rows: number; revenue: number }>();
 
   if (headers.length === 0) {
-    return { byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
+    return { source: "square", byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
   }
 
   const skuCol = findHeader(headers, ["SKU", "Item SKU", "Variant SKU", "Lineitem sku"]);
@@ -185,6 +192,7 @@ export function parseSquareExport(
   }
 
   return {
+    source: "square",
     byChannel: out,
     unmapped: unmappedToList(unmapped),
     rowCount,
@@ -216,7 +224,7 @@ export function parseShopifyExport(
   const unmapped = new Map<string, { rows: number; revenue: number }>();
 
   if (headers.length === 0) {
-    return { byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
+    return { source: "shopify", byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
   }
 
   const skuCol = findHeader(headers, ["Lineitem sku", "Lineitem SKU", "SKU", "Variant SKU"]);
@@ -314,6 +322,7 @@ export function parseShopifyExport(
   }
 
   return {
+    source: "shopify",
     byChannel: out,
     unmapped: unmappedToList(unmapped),
     rowCount,
@@ -348,7 +357,7 @@ export function parseShippoExport(
   const unmapped = new Map<string, { rows: number; revenue: number }>();
 
   if (headers.length === 0) {
-    return { byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
+    return { source: "shippo", byChannel: out, unmapped: [], rowCount: 0, warnings: ["Nothing to parse — paste a CSV or TSV with a header row."], matchedColumns: [] };
   }
 
   const costCol = findHeader(headers, [
@@ -434,6 +443,7 @@ export function parseShippoExport(
   }
 
   return {
+    source: "shippo",
     byChannel: out,
     unmapped: unmappedToList(unmapped),
     rowCount,

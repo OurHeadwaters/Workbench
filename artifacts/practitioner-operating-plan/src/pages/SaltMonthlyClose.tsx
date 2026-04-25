@@ -5,12 +5,18 @@ import {
   parseSquareExport,
   parseTimesheet,
   type ChannelTotals,
+  type ImportSource,
   type ParsedTotals,
   type SkuMapping,
   type TimesheetParse,
 } from "../lib/saltImports";
 
 const STORAGE_KEY = "headwaters-salt-monthly-close-v1";
+// Per-source "last applied" snapshot. Same prefix as the close so a
+// `clear` of the close namespace also wipes the snapshots; keyed by
+// upstream source so re-pasting Square doesn't disturb the Shopify diff.
+const SNAPSHOT_KEY_PREFIX = `${STORAGE_KEY}:snapshot:`;
+const IMPORT_SOURCES: ImportSource[] = ["square", "shopify", "shippo"];
 
 type ChannelKey = "wholesale" | "customLabels" | "dtcBatch" | "markets";
 
@@ -204,8 +210,105 @@ function fmtPct(n: number): string {
   return `${n.toFixed(0)}%`;
 }
 
+// ─── Per-source apply snapshots ─────────────────────────────────────────
+// Each PasteCard remembers the parsed totals from its last successful
+// apply. The diff between the *new* parsed totals and that snapshot is
+// what the bookkeeper actually needs to reconcile when Square gets
+// re-pulled mid-week — "what moved since the last apply" — without
+// having to choose between Replace (lose other manual overrides) or Add
+// (double-count the rows that didn't change).
+
+export type AppliedSnapshot = {
+  byChannel: Record<ChannelKey, ChannelTotals>;
+  fields: (keyof ChannelTotals)[];
+  appliedAt: string;
+  rowCount: number;
+};
+
+function snapshotKey(source: ImportSource): string {
+  return SNAPSHOT_KEY_PREFIX + source;
+}
+
+function loadSnapshot(source: ImportSource): AppliedSnapshot | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(snapshotKey(source));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    const byChannel = CHANNELS.reduce((acc, c) => {
+      const src = (parsed.byChannel as Record<string, unknown>)?.[c.key] ?? {};
+      const s = src as Record<string, unknown>;
+      acc[c.key] = {
+        revenue: Number(s.revenue) || 0,
+        cogs: Number(s.cogs) || 0,
+        freight: Number(s.freight) || 0,
+        packaging: Number(s.packaging) || 0,
+      };
+      return acc;
+    }, {} as Record<ChannelKey, ChannelTotals>);
+    const allowedFields = new Set(["revenue", "cogs", "freight", "packaging"]);
+    const fields: (keyof ChannelTotals)[] = Array.isArray(parsed.fields)
+      ? (parsed.fields as unknown[]).filter(
+          (f): f is keyof ChannelTotals =>
+            typeof f === "string" && allowedFields.has(f),
+        )
+      : [];
+    return {
+      byChannel,
+      fields,
+      appliedAt: String(parsed.appliedAt ?? ""),
+      rowCount: Number(parsed.rowCount) || 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveSnapshot(source: ImportSource, snap: AppliedSnapshot): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(snapshotKey(source), JSON.stringify(snap));
+  } catch {
+    // ignore quota / privacy-mode failures
+  }
+}
+
+function clearAllSnapshots(): void {
+  if (typeof window === "undefined") return;
+  try {
+    for (const s of IMPORT_SOURCES) {
+      window.localStorage.removeItem(snapshotKey(s));
+    }
+  } catch {
+    // ignore
+  }
+}
+
+function fmtAppliedAt(iso: string): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function fmtDelta(n: number): string {
+  if (!Number.isFinite(n) || Math.round(n) === 0) return "—";
+  const sign = n > 0 ? "+" : "−";
+  const abs = Math.abs(Math.round(n));
+  return `${sign}$${abs.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+}
+
 export default function SaltMonthlyClose() {
   const [state, setState] = useState<State>(() => loadState());
+  // Bump on every reset so each PasteCard knows to reload its snapshot
+  // from localStorage. Without this, a card would keep showing a stale
+  // "Last applied" indicator and an enabled "Apply diff only" button
+  // even after the snapshot has been wiped — exactly the kind of
+  // divergence between preview and apply behaviour that the diff
+  // feature is supposed to prevent.
+  const [snapshotResetCounter, setSnapshotResetCounter] = useState(0);
 
   useEffect(() => {
     try {
@@ -231,26 +334,53 @@ export default function SaltMonthlyClose() {
 
   // Apply a parsed import. `fields` is the subset of the channel line we
   // own — Square owns revenue+cogs, Shopify owns revenue+cogs+freight,
-  // Shippo owns freight+packaging. `mode` either replaces (overwrites the
-  // owned fields with the parsed totals) or adds (sums into them, useful
-  // when two sources contribute to the same field for the same channel).
+  // Shippo owns freight+packaging. `mode` is one of:
+  //   - "replace": overwrite the owned fields with the parsed totals
+  //   - "add":     sum the parsed totals into the owned fields (useful
+  //                when two sources contribute the same field for the
+  //                same channel)
+  //   - "diff":    apply only the change since the last apply for this
+  //                source — i.e. cur += parsed − snapshot. Lets the
+  //                bookkeeper re-paste a corrected Square export and
+  //                only the lines that actually moved get touched, with
+  //                manual overrides on other channels left alone.
+  // After every apply (regardless of mode), the parsed totals become the
+  // new snapshot for that source, so the next paste's diff is computed
+  // against the freshest baseline.
   const applyImport = (
     parsed: ParsedTotals,
     fields: (keyof ChannelTotals)[],
-    mode: "replace" | "add",
+    mode: "replace" | "add" | "diff",
   ) => {
+    const snapshot = mode === "diff" ? loadSnapshot(parsed.source) : null;
     setState((prev) => {
       const next = { ...prev.channels } as Record<ChannelKey, ChannelLine>;
       for (const key of Object.keys(next) as ChannelKey[]) {
         const cur = { ...next[key] };
         const incoming = parsed.byChannel[key];
         for (const f of fields) {
-          if (mode === "replace") cur[f] = round0(incoming[f]);
-          else cur[f] = round0(cur[f] + incoming[f]);
+          if (mode === "replace") {
+            cur[f] = round0(incoming[f]);
+          } else if (mode === "add") {
+            cur[f] = round0(cur[f] + incoming[f]);
+          } else {
+            // diff: only apply the delta since the last snapshot. If
+            // there's no prior snapshot, treat it as zero so the first
+            // diff-apply behaves like an add (which is what the
+            // bookkeeper expects from a fresh source).
+            const prevSnap = snapshot?.byChannel[key]?.[f] ?? 0;
+            cur[f] = round0(cur[f] + (incoming[f] - prevSnap));
+          }
         }
         next[key] = cur;
       }
       return { ...prev, channels: next };
+    });
+    saveSnapshot(parsed.source, {
+      byChannel: parsed.byChannel,
+      fields,
+      appliedAt: new Date().toISOString(),
+      rowCount: parsed.rowCount,
     });
   };
 
@@ -258,8 +388,16 @@ export default function SaltMonthlyClose() {
     setState((prev) => ({ ...prev, skuMapping: next }));
   };
 
-  const reset = () => setState({ ...DEFAULT_STATE, skuMapping: state.skuMapping });
-  const resetIncludingSkuMapping = () => setState(DEFAULT_STATE);
+  const reset = () => {
+    clearAllSnapshots();
+    setSnapshotResetCounter((n) => n + 1);
+    setState({ ...DEFAULT_STATE, skuMapping: state.skuMapping });
+  };
+  const resetIncludingSkuMapping = () => {
+    clearAllSnapshots();
+    setSnapshotResetCounter((n) => n + 1);
+    setState(DEFAULT_STATE);
+  };
   const onPrint = () => {
     if (typeof window !== "undefined") window.print();
   };
@@ -427,6 +565,7 @@ export default function SaltMonthlyClose() {
           skuMapping={state.skuMapping}
           onSkuMappingChange={updateSkuMapping}
           onApply={applyImport}
+          snapshotResetCounter={snapshotResetCounter}
           onTimesheetApply={(parsed) =>
             // Keep decimal hours so the Rule 01 cap evaluates honestly
             // around the 12-hour threshold (10.6 hrs rounds to 11 and
@@ -1028,18 +1167,20 @@ function LabourRow({
 type ImportApply = (
   parsed: ParsedTotals,
   fields: (keyof ChannelTotals)[],
-  mode: "replace" | "add",
+  mode: "replace" | "add" | "diff",
 ) => void;
 
 function ImportSection({
   skuMapping,
   onSkuMappingChange,
   onApply,
+  snapshotResetCounter,
   onTimesheetApply,
 }: {
   skuMapping: SkuMapping[];
   onSkuMappingChange: (next: SkuMapping[]) => void;
   onApply: ImportApply;
+  snapshotResetCounter: number;
   onTimesheetApply: (parsed: TimesheetParse) => void;
 }) {
   const [open, setOpen] = useState(true);
@@ -1099,34 +1240,40 @@ function ImportSection({
             <PasteCard
               title="Square — wholesale invoices & POS"
               subtitle="Items export. Posts to channel revenue (4400.x) + COGS (5100)."
+              source="square"
               defaultChannel="wholesale"
               parser={(csv, mapping, channel) => parseSquareExport(csv, mapping, channel)}
               fields={["revenue", "cogs"]}
               fieldLabel="rev + COGS"
               skuMapping={skuMapping}
               onApply={onApply}
+              snapshotResetCounter={snapshotResetCounter}
               hint='Headers expected: "SKU", "Net Sales" (or "Gross Sales"), "Cost of Goods Sold" (optional). Default channel catches unmapped rows.'
             />
             <PasteCard
               title="Shopify — DTC batch payouts"
               subtitle="Orders export. Posts to revenue (4400.x), COGS (5100), shipping → freight (5200)."
+              source="shopify"
               defaultChannel="dtcBatch"
               parser={(csv, mapping, channel) => parseShopifyExport(csv, mapping, channel)}
               fields={["revenue", "cogs", "freight"]}
               fieldLabel="rev + COGS + ship"
               skuMapping={skuMapping}
               onApply={onApply}
+              snapshotResetCounter={snapshotResetCounter}
               hint='Headers expected: "Lineitem sku", "Lineitem price", "Lineitem quantity", "Shipping" (per order), "Name" (order id). Refunds & discounts subtract from revenue.'
             />
             <PasteCard
               title="Shippo / Manitoulin — freight"
               subtitle="Shipping-label export. Posts to freight (5200) + packaging (5300)."
+              source="shippo"
               defaultChannel="dtcBatch"
               parser={(csv, mapping, channel) => parseShippoExport(csv, mapping, channel)}
               fields={["freight", "packaging"]}
               fieldLabel="freight + pkg"
               skuMapping={skuMapping}
               onApply={onApply}
+              snapshotResetCounter={snapshotResetCounter}
               hint='Headers expected: "Cost". Add a "Channel" column (W/CL/DTC/MK or 4400.x) to split, or a "Reference 1" that matches a SKU rule. Otherwise everything goes to the default channel.'
             />
             <TimesheetCard onApply={onTimesheetApply} />
@@ -1229,27 +1376,49 @@ function SkuMappingEditor({
 function PasteCard({
   title,
   subtitle,
+  source,
   defaultChannel,
   parser,
   fields,
   fieldLabel,
   skuMapping,
   onApply,
+  snapshotResetCounter,
   hint,
 }: {
   title: string;
   subtitle: string;
+  source: ImportSource;
   defaultChannel: ChannelKey;
   parser: (csv: string, mapping: SkuMapping[], defaultChannel: ChannelKey) => ParsedTotals;
   fields: (keyof ChannelTotals)[];
   fieldLabel: string;
   skuMapping: SkuMapping[];
   onApply: ImportApply;
+  snapshotResetCounter: number;
   hint: string;
 }) {
   const [text, setText] = useState("");
   const [channel, setChannel] = useState<ChannelKey>(defaultChannel);
   const [mode, setMode] = useState<"replace" | "add">("replace");
+  // Mirror the source's localStorage snapshot in component state so the
+  // diff column re-renders the moment we apply (snapshot becomes the
+  // freshly-applied paste, so the next paste's diff is computed against
+  // it). null until the bookkeeper has applied this source at least once.
+  const [snapshot, setSnapshot] = useState<AppliedSnapshot | null>(() =>
+    loadSnapshot(source),
+  );
+
+  // Re-read the snapshot from localStorage whenever the parent bumps the
+  // reset counter — i.e. when Reset / Reset-with-SKU-map is clicked.
+  // Without this the card would keep showing a stale "Last applied"
+  // indicator and an enabled "Apply diff only" button after a reset,
+  // even though `applyImport` would (correctly) compute the diff against
+  // the now-empty localStorage snapshot. Fixing it in one place keeps
+  // the preview and the apply behaviour honest with each other.
+  useEffect(() => {
+    setSnapshot(loadSnapshot(source));
+  }, [snapshotResetCounter, source]);
 
   const parsed = useMemo(() => {
     if (!text.trim()) return null;
@@ -1262,6 +1431,44 @@ function PasteCard({
   const totalAcrossChannels = parsed
     ? CHANNELS.reduce((s, c) => s + totalForFields(parsed.byChannel[c.key]), 0)
     : 0;
+
+  // Per-channel/per-field deltas vs the last applied snapshot for this
+  // source. Returns 0 when no snapshot exists yet so the column can stay
+  // mounted but render dashes.
+  const deltaFor = (key: ChannelKey, field: keyof ChannelTotals): number => {
+    if (!snapshot || !parsed) return 0;
+    const prev = snapshot.byChannel[key]?.[field] ?? 0;
+    return parsed.byChannel[key][field] - prev;
+  };
+
+  // True if any owned field on any channel has actually moved since the
+  // last apply. Used to gate the "Apply diff only" button — it's a
+  // no-op when nothing's changed and we don't want the bookkeeper to
+  // re-stamp the snapshot timestamp for nothing.
+  const anyDelta = useMemo(() => {
+    if (!parsed || !snapshot) return false;
+    for (const c of CHANNELS) {
+      for (const f of fields) {
+        if (Math.round(deltaFor(c.key, f)) !== 0) return true;
+      }
+    }
+    return false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parsed, snapshot, fields]);
+
+  const handleApply = (applyMode: "replace" | "add" | "diff") => {
+    if (!parsed) return;
+    onApply(parsed, fields, applyMode);
+    // Reflect the new baseline immediately — saveSnapshot has already
+    // written it inside onApply, but the localStorage read in setState
+    // initializer doesn't auto-refresh.
+    setSnapshot({
+      byChannel: parsed.byChannel,
+      fields,
+      appliedAt: new Date().toISOString(),
+      rowCount: parsed.rowCount,
+    });
+  };
 
   return (
     <div className="border border-[#c8bfa7] rounded-[3pt] bg-white p-[8pt]">
@@ -1276,6 +1483,17 @@ function PasteCard({
           {fieldLabel}
         </div>
       </div>
+
+      {snapshot && (
+        <div className="text-[7.5pt] text-[#6b7665] italic mb-[3pt] leading-[1.3]">
+          Last applied{" "}
+          <span className="font-mono not-italic text-[#1f3d2e]">
+            {fmtAppliedAt(snapshot.appliedAt)}
+          </span>{" "}
+          · <span className="font-mono not-italic">{snapshot.rowCount}</span>{" "}
+          row{snapshot.rowCount === 1 ? "" : "s"}. Re-paste to see what moved.
+        </div>
+      )}
 
       <div className="flex items-baseline gap-[6pt] mb-[4pt] text-[8pt]">
         <label className="text-[#6b7665]">
@@ -1336,36 +1554,90 @@ function PasteCard({
           <table className="w-full text-[8.5pt]" style={{ tableLayout: "fixed" }}>
             <thead>
               <tr className="text-left text-[#6b7665] font-mono uppercase tracking-[0.14em] text-[7pt]">
-                <th className="pb-[2pt] w-[34%]">Channel</th>
+                <th className="pb-[2pt] w-[28%]">Channel</th>
                 {fields.map((f) => (
                   <th key={f} className="pb-[2pt] text-right">
                     {f}
+                    {snapshot && (
+                      <div className="font-normal normal-case text-[6.5pt] tracking-normal text-[#6b7665]">
+                        Δ vs last
+                      </div>
+                    )}
                   </th>
                 ))}
-                <th className="pb-[2pt] text-right">Total</th>
+                <th className="pb-[2pt] text-right">
+                  Total
+                  {snapshot && (
+                    <div className="font-normal normal-case text-[6.5pt] tracking-normal text-[#6b7665]">
+                      Δ vs last
+                    </div>
+                  )}
+                </th>
               </tr>
             </thead>
             <tbody>
               {CHANNELS.map((c) => {
                 const line = parsed.byChannel[c.key];
                 const total = totalForFields(line);
-                if (total === 0 && fields.every((f) => line[f] === 0)) return null;
+                const rowDeltas = fields.map((f) => deltaFor(c.key, f));
+                const totalDelta = rowDeltas.reduce((s, d) => s + d, 0);
+                const rowChanged = snapshot
+                  ? rowDeltas.some((d) => Math.round(d) !== 0)
+                  : false;
+                if (
+                  total === 0 &&
+                  fields.every((f) => line[f] === 0) &&
+                  !rowChanged
+                )
+                  return null;
                 return (
-                  <tr key={c.key} className="border-t border-[#f0e7d2]">
+                  <tr
+                    key={c.key}
+                    className="border-t border-[#f0e7d2]"
+                    style={{
+                      background: rowChanged ? "#fbeed1" : "transparent",
+                    }}
+                  >
                     <td className="py-[2pt]">
                       <span className="font-semibold text-[#1f3d2e]">{c.label}</span>{" "}
                       <span className="font-mono text-[7.5pt] text-[#6b7665]">{c.code}</span>
                     </td>
-                    {fields.map((f) => (
-                      <td
-                        key={f}
-                        className="py-[2pt] text-right font-mono text-[#1f3d2e]"
-                      >
-                        {fmt(line[f])}
-                      </td>
-                    ))}
+                    {fields.map((f, idx) => {
+                      const d = rowDeltas[idx];
+                      const dRound = Math.round(d);
+                      return (
+                        <td
+                          key={f}
+                          className="py-[2pt] text-right font-mono text-[#1f3d2e]"
+                        >
+                          {fmt(line[f])}
+                          {snapshot && (
+                            <div
+                              className="text-[7pt] font-mono"
+                              style={{
+                                color: dRound === 0 ? "#a8a294" : "#b85a3e",
+                              }}
+                            >
+                              {fmtDelta(d)}
+                            </div>
+                          )}
+                        </td>
+                      );
+                    })}
                     <td className="py-[2pt] text-right font-mono font-semibold text-[#1f3d2e]">
                       {fmt(total)}
+                      {snapshot && (
+                        <div
+                          className="text-[7pt] font-mono font-semibold"
+                          style={{
+                            color: Math.round(totalDelta) === 0
+                              ? "#a8a294"
+                              : "#b85a3e",
+                          }}
+                        >
+                          {fmtDelta(totalDelta)}
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );
@@ -1374,18 +1646,69 @@ function PasteCard({
                 <td className="py-[2pt] font-mono uppercase tracking-[0.14em] text-[7.5pt] text-[#1f3d2e]">
                   Total
                 </td>
-                {fields.map((f) => (
-                  <td
-                    key={f}
-                    className="py-[2pt] text-right font-mono text-[#1f3d2e]"
-                  >
-                    {fmt(
-                      CHANNELS.reduce((s, c) => s + parsed.byChannel[c.key][f], 0),
-                    )}
-                  </td>
-                ))}
+                {fields.map((f) => {
+                  const totalForField = CHANNELS.reduce(
+                    (s, c) => s + parsed.byChannel[c.key][f],
+                    0,
+                  );
+                  const totalDeltaForField = snapshot
+                    ? CHANNELS.reduce((s, c) => s + deltaFor(c.key, f), 0)
+                    : 0;
+                  return (
+                    <td
+                      key={f}
+                      className="py-[2pt] text-right font-mono text-[#1f3d2e]"
+                    >
+                      {fmt(totalForField)}
+                      {snapshot && (
+                        <div
+                          className="text-[7pt] font-mono"
+                          style={{
+                            color: Math.round(totalDeltaForField) === 0
+                              ? "#a8a294"
+                              : "#b85a3e",
+                          }}
+                        >
+                          {fmtDelta(totalDeltaForField)}
+                        </div>
+                      )}
+                    </td>
+                  );
+                })}
                 <td className="py-[2pt] text-right font-mono font-semibold text-[#1f3d2e]">
                   {fmt(totalAcrossChannels)}
+                  {snapshot && (
+                    <div
+                      className="text-[7pt] font-mono font-semibold"
+                      style={{
+                        color: Math.round(
+                          CHANNELS.reduce(
+                            (s, c) =>
+                              s +
+                              fields.reduce(
+                                (s2, f) => s2 + deltaFor(c.key, f),
+                                0,
+                              ),
+                            0,
+                          ),
+                        ) === 0
+                          ? "#a8a294"
+                          : "#b85a3e",
+                      }}
+                    >
+                      {fmtDelta(
+                        CHANNELS.reduce(
+                          (s, c) =>
+                            s +
+                            fields.reduce(
+                              (s2, f) => s2 + deltaFor(c.key, f),
+                              0,
+                            ),
+                          0,
+                        ),
+                      )}
+                    </div>
+                  )}
                 </td>
               </tr>
             </tbody>
@@ -1403,17 +1726,36 @@ function PasteCard({
             </div>
           )}
 
-          <div className="mt-[5pt] flex items-center gap-[6pt]">
+          {snapshot && !anyDelta && (
+            <div className="mt-[3pt] text-[8pt] text-[#1f3d2e] italic leading-[1.4]">
+              No channel/field has moved since the last apply on{" "}
+              <span className="font-mono not-italic">
+                {fmtAppliedAt(snapshot.appliedAt)}
+              </span>
+              . Diff-only apply will be a no-op.
+            </div>
+          )}
+
+          <div className="mt-[5pt] flex items-center gap-[6pt] flex-wrap">
             <button
               type="button"
-              onClick={() => {
-                onApply(parsed, fields, mode);
-              }}
+              onClick={() => handleApply(mode)}
               className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded bg-[#1f3d2e] text-[#f4ede0] hover:opacity-90"
               disabled={parsed.rowCount === 0}
             >
               Apply to channel lines
             </button>
+            {snapshot && (
+              <button
+                type="button"
+                onClick={() => handleApply("diff")}
+                disabled={parsed.rowCount === 0 || !anyDelta}
+                title="Add only the change since the last apply for this source — leaves manual overrides on unchanged channels untouched."
+                className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#1f3d2e] text-[#1f3d2e] hover:bg-[#ebe2d0] disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Apply diff only
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setText("")}
