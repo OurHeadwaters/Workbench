@@ -1,4 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  parseShippoExport,
+  parseShopifyExport,
+  parseSquareExport,
+  parseTimesheet,
+  type ChannelTotals,
+  type ParsedTotals,
+  type SkuMapping,
+  type TimesheetParse,
+} from "../lib/saltImports";
 
 const STORAGE_KEY = "headwaters-salt-monthly-close-v1";
 
@@ -9,6 +19,13 @@ const CHANNELS: { key: ChannelKey; code: string; label: string; cmFloor: number 
   { key: "customLabels", code: "4400.20", label: "Custom labels", cmFloor: 60 },
   { key: "dtcBatch", code: "4400.30", label: "DTC batch", cmFloor: 30 },
   { key: "markets", code: "4400.40", label: "Markets (PR)", cmFloor: null },
+];
+
+const DEFAULT_SKU_MAPPING: SkuMapping[] = [
+  { sku: "SALT-WHL-", channel: "wholesale" },
+  { sku: "SALT-CL-", channel: "customLabels" },
+  { sku: "SALT-DTC-", channel: "dtcBatch" },
+  { sku: "SALT-MKT-", channel: "markets" },
 ];
 
 type ChannelLine = {
@@ -43,6 +60,10 @@ type State = {
   casualRate: number;
   depotAllocation: number;
   notes: string;
+  // SKU → channel routing the bookkeeper maintains. Persisted so the
+  // map carries forward month over month and only needs editing when a
+  // new SKU appears in the upstream exports.
+  skuMapping: SkuMapping[];
 };
 
 const EMPTY_LINE: ChannelLine = {
@@ -81,6 +102,7 @@ const DEFAULT_STATE: State = {
   casualRate: 25,
   depotAllocation: 300,
   notes: "",
+  skuMapping: DEFAULT_SKU_MAPPING,
 };
 
 const OM_HOURS_CAP = 12;
@@ -114,6 +136,23 @@ function loadState(): State {
       return acc;
     }, {} as Record<ChannelKey, QuarterlyRollup>);
     const monthInQuarter = clampMonthInQuarter(parsed.monthInQuarter);
+    const skuMapping: SkuMapping[] = Array.isArray(parsed.skuMapping)
+      ? (parsed.skuMapping as unknown[]).reduce<SkuMapping[]>((acc, raw) => {
+          if (!raw || typeof raw !== "object") return acc;
+          const sku = String((raw as { sku?: unknown }).sku ?? "").trim();
+          const channel = (raw as { channel?: unknown }).channel;
+          if (!sku) return acc;
+          if (
+            channel !== "wholesale" &&
+            channel !== "customLabels" &&
+            channel !== "dtcBatch" &&
+            channel !== "markets"
+          )
+            return acc;
+          acc.push({ sku, channel });
+          return acc;
+        }, [])
+      : DEFAULT_SKU_MAPPING;
     return {
       month: String(parsed.month ?? ""),
       monthInQuarter,
@@ -129,6 +168,7 @@ function loadState(): State {
         ? Number(parsed.depotAllocation)
         : 300,
       notes: String(parsed.notes ?? ""),
+      skuMapping: skuMapping.length > 0 ? skuMapping : DEFAULT_SKU_MAPPING,
     };
   } catch {
     return DEFAULT_STATE;
@@ -145,6 +185,11 @@ function clampMonthInQuarter(v: unknown): 1 | 2 | 3 {
 function numOr0(v: unknown): number {
   const n = Number(v);
   return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+function round0(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  return Math.round(n);
 }
 
 function fmt(n: number): string {
@@ -184,7 +229,37 @@ export default function SaltMonthlyClose() {
     }));
   };
 
-  const reset = () => setState(DEFAULT_STATE);
+  // Apply a parsed import. `fields` is the subset of the channel line we
+  // own — Square owns revenue+cogs, Shopify owns revenue+cogs+freight,
+  // Shippo owns freight+packaging. `mode` either replaces (overwrites the
+  // owned fields with the parsed totals) or adds (sums into them, useful
+  // when two sources contribute to the same field for the same channel).
+  const applyImport = (
+    parsed: ParsedTotals,
+    fields: (keyof ChannelTotals)[],
+    mode: "replace" | "add",
+  ) => {
+    setState((prev) => {
+      const next = { ...prev.channels } as Record<ChannelKey, ChannelLine>;
+      for (const key of Object.keys(next) as ChannelKey[]) {
+        const cur = { ...next[key] };
+        const incoming = parsed.byChannel[key];
+        for (const f of fields) {
+          if (mode === "replace") cur[f] = round0(incoming[f]);
+          else cur[f] = round0(cur[f] + incoming[f]);
+        }
+        next[key] = cur;
+      }
+      return { ...prev, channels: next };
+    });
+  };
+
+  const updateSkuMapping = (next: SkuMapping[]) => {
+    setState((prev) => ({ ...prev, skuMapping: next }));
+  };
+
+  const reset = () => setState({ ...DEFAULT_STATE, skuMapping: state.skuMapping });
+  const resetIncludingSkuMapping = () => setState(DEFAULT_STATE);
   const onPrint = () => {
     if (typeof window !== "undefined") window.print();
   };
@@ -265,10 +340,11 @@ export default function SaltMonthlyClose() {
 
         <div className="print-hide flex items-center justify-between gap-[8pt] mb-[10pt] text-[9pt]">
           <div className="text-[#6b7665] max-w-[60%]">
-            Enter the month&rsquo;s actuals against the SALT-01 chart of
-            accounts. Monthly CM%, labour, depot allocation and the
-            OM-hours-cap (Rule 01) calculate live. The wholesale reprice /
-            drop trigger is{" "}
+            Paste the upstream exports below — Square / Shopify / Shippo /
+            depot timesheet — and the channel splits drop straight into the
+            SALT-01 chart of accounts. Monthly CM%, labour, depot allocation
+            and the OM-hours-cap (Rule 01) calculate live from the parsed
+            numbers. The wholesale reprice / drop trigger is{" "}
             <span className="font-semibold">quarterly</span>: it only fires at
             the end of a quarter when QTD CM% is under floor and last quarter
             was under too.
@@ -283,6 +359,13 @@ export default function SaltMonthlyClose() {
             <button
               type="button"
               onClick={reset}
+              title="Clear this month's actuals (keeps the SKU map). Hold Shift to also reset the SKU map to the defaults."
+              onClickCapture={(e) => {
+                if (e.shiftKey) {
+                  e.preventDefault();
+                  resetIncludingSkuMapping();
+                }
+              }}
               className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#6b7665] hover:bg-[#ebe2d0]"
             >
               Reset
@@ -339,6 +422,21 @@ export default function SaltMonthlyClose() {
             />
           </FieldBlock>
         </div>
+
+        <ImportSection
+          skuMapping={state.skuMapping}
+          onSkuMappingChange={updateSkuMapping}
+          onApply={applyImport}
+          onTimesheetApply={(parsed) =>
+            // Keep decimal hours so the Rule 01 cap evaluates honestly
+            // around the 12-hour threshold (10.6 hrs rounds to 11 and
+            // hides a near-cap month).
+            setState((prev) => ({
+              ...prev,
+              omHours: Number.isFinite(parsed.hours) ? Math.max(0, parsed.hours) : 0,
+            }))
+          }
+        />
 
         <table
           className="w-full text-[9pt] border-collapse mb-[8pt] print:text-[8.5pt]"
@@ -920,3 +1018,504 @@ function LabourRow({
     </div>
   );
 }
+
+// ─── Import section ──────────────────────────────────────────────────────
+// Sits above the channel table. Lets the bookkeeper paste each upstream
+// export, see how it splits across channels, then commit the parsed totals
+// to the channel inputs. Print-hidden — the printed close shows only the
+// resulting numbers, not the paste boxes.
+
+type ImportApply = (
+  parsed: ParsedTotals,
+  fields: (keyof ChannelTotals)[],
+  mode: "replace" | "add",
+) => void;
+
+function ImportSection({
+  skuMapping,
+  onSkuMappingChange,
+  onApply,
+  onTimesheetApply,
+}: {
+  skuMapping: SkuMapping[];
+  onSkuMappingChange: (next: SkuMapping[]) => void;
+  onApply: ImportApply;
+  onTimesheetApply: (parsed: TimesheetParse) => void;
+}) {
+  const [open, setOpen] = useState(true);
+  const [mappingOpen, setMappingOpen] = useState(false);
+
+  return (
+    <div className="print-hide border border-dashed border-[#c8bfa7] rounded-[3pt] mb-[10pt] bg-[#f7f1e3]">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-baseline justify-between gap-[8pt] px-[10pt] py-[7pt] text-left hover:bg-[#ebe2d0] rounded-[3pt]"
+      >
+        <div>
+          <div className="font-mono uppercase tracking-[0.2em] text-[8pt] text-[#b85a3e] font-semibold">
+            Paste exports & classify
+          </div>
+          <div className="text-[8.5pt] text-[#6b7665] mt-[1pt]">
+            Square wholesale invoices · Shopify DTC payouts · Manitoulin /
+            Shippo freight · depot timesheet. Channel split is driven by the
+            SKU map below; rows that don&rsquo;t match a SKU rule fall to the
+            export&rsquo;s default channel.
+          </div>
+        </div>
+        <div className="font-mono text-[10pt] text-[#1f3d2e] shrink-0">
+          {open ? "−" : "+"}
+        </div>
+      </button>
+
+      {open && (
+        <div className="px-[10pt] pb-[10pt] space-y-[8pt]">
+          <div className="border border-[#c8bfa7] rounded-[3pt] bg-white">
+            <button
+              type="button"
+              onClick={() => setMappingOpen((v) => !v)}
+              className="w-full flex items-baseline justify-between gap-[8pt] px-[8pt] py-[5pt] text-left hover:bg-[#f7f1e3]"
+            >
+              <div>
+                <span className="font-mono uppercase tracking-[0.18em] text-[8pt] text-[#1f3d2e] font-semibold">
+                  SKU → channel map
+                </span>
+                <span className="ml-[6pt] text-[8pt] text-[#6b7665]">
+                  {skuMapping.length} rule{skuMapping.length === 1 ? "" : "s"} ·
+                  prefixes ending in “-” match every SKU starting with that
+                  prefix
+                </span>
+              </div>
+              <span className="font-mono text-[9pt] text-[#1f3d2e]">
+                {mappingOpen ? "Hide" : "Edit"}
+              </span>
+            </button>
+            {mappingOpen && (
+              <SkuMappingEditor mapping={skuMapping} onChange={onSkuMappingChange} />
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[8pt]">
+            <PasteCard
+              title="Square — wholesale invoices & POS"
+              subtitle="Items export. Posts to channel revenue (4400.x) + COGS (5100)."
+              defaultChannel="wholesale"
+              parser={(csv, mapping, channel) => parseSquareExport(csv, mapping, channel)}
+              fields={["revenue", "cogs"]}
+              fieldLabel="rev + COGS"
+              skuMapping={skuMapping}
+              onApply={onApply}
+              hint='Headers expected: "SKU", "Net Sales" (or "Gross Sales"), "Cost of Goods Sold" (optional). Default channel catches unmapped rows.'
+            />
+            <PasteCard
+              title="Shopify — DTC batch payouts"
+              subtitle="Orders export. Posts to revenue (4400.x), COGS (5100), shipping → freight (5200)."
+              defaultChannel="dtcBatch"
+              parser={(csv, mapping, channel) => parseShopifyExport(csv, mapping, channel)}
+              fields={["revenue", "cogs", "freight"]}
+              fieldLabel="rev + COGS + ship"
+              skuMapping={skuMapping}
+              onApply={onApply}
+              hint='Headers expected: "Lineitem sku", "Lineitem price", "Lineitem quantity", "Shipping" (per order), "Name" (order id). Refunds & discounts subtract from revenue.'
+            />
+            <PasteCard
+              title="Shippo / Manitoulin — freight"
+              subtitle="Shipping-label export. Posts to freight (5200) + packaging (5300)."
+              defaultChannel="dtcBatch"
+              parser={(csv, mapping, channel) => parseShippoExport(csv, mapping, channel)}
+              fields={["freight", "packaging"]}
+              fieldLabel="freight + pkg"
+              skuMapping={skuMapping}
+              onApply={onApply}
+              hint='Headers expected: "Cost". Add a "Channel" column (W/CL/DTC/MK or 4400.x) to split, or a "Reference 1" that matches a SKU rule. Otherwise everything goes to the default channel.'
+            />
+            <TimesheetCard onApply={onTimesheetApply} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SkuMappingEditor({
+  mapping,
+  onChange,
+}: {
+  mapping: SkuMapping[];
+  onChange: (next: SkuMapping[]) => void;
+}) {
+  const updateRow = (idx: number, patch: Partial<SkuMapping>) => {
+    const next = mapping.slice();
+    next[idx] = { ...next[idx], ...patch };
+    onChange(next);
+  };
+  const removeRow = (idx: number) => {
+    const next = mapping.slice();
+    next.splice(idx, 1);
+    onChange(next);
+  };
+  const addRow = () => {
+    onChange([...mapping, { sku: "", channel: "wholesale" }]);
+  };
+  return (
+    <div className="border-t border-[#e3dac4] px-[8pt] py-[6pt]">
+      <table className="w-full text-[8.5pt]" style={{ tableLayout: "fixed" }}>
+        <thead>
+          <tr className="text-left text-[#6b7665] font-mono uppercase tracking-[0.16em] text-[7.5pt]">
+            <th className="pb-[3pt] pr-[4pt] w-[55%]">SKU or prefix (ends in “-”)</th>
+            <th className="pb-[3pt] px-[4pt] w-[35%]">Channel</th>
+            <th className="pb-[3pt] pl-[4pt] w-[10%] text-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {mapping.map((row, i) => (
+            <tr key={i} className="border-t border-[#f0e7d2]">
+              <td className="py-[3pt] pr-[4pt]">
+                <input
+                  type="text"
+                  value={row.sku}
+                  onChange={(e) => updateRow(i, { sku: e.target.value })}
+                  placeholder="e.g. SALT-CL-  or  SALT-WHL-001"
+                  className="w-full bg-transparent font-mono text-[9pt] text-[#1f3d2e] border-b border-[#e3dac4] focus:outline-none focus:border-[#1f3d2e]"
+                />
+              </td>
+              <td className="py-[3pt] px-[4pt]">
+                <select
+                  value={row.channel}
+                  onChange={(e) =>
+                    updateRow(i, { channel: e.target.value as ChannelKey })
+                  }
+                  className="w-full bg-transparent font-mono text-[9pt] text-[#1f3d2e] border-b border-[#e3dac4] focus:outline-none focus:border-[#1f3d2e]"
+                >
+                  {CHANNELS.map((c) => (
+                    <option key={c.key} value={c.key}>
+                      {c.label} ({c.code})
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td className="py-[3pt] pl-[4pt] text-right">
+                <button
+                  type="button"
+                  onClick={() => removeRow(i)}
+                  className="font-mono uppercase tracking-[0.14em] text-[7.5pt] text-[#b85a3e] hover:underline"
+                  aria-label={`Remove row ${i + 1}`}
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+          ))}
+          {mapping.length === 0 && (
+            <tr>
+              <td colSpan={3} className="py-[6pt] text-center text-[#6b7665] italic">
+                No SKU rules — every parsed row will go to the default channel.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <button
+        type="button"
+        onClick={addRow}
+        className="mt-[4pt] font-mono uppercase tracking-[0.16em] text-[7.5pt] px-[6pt] py-[3pt] rounded border border-[#c8bfa7] text-[#1f3d2e] hover:bg-[#ebe2d0]"
+      >
+        + Add SKU rule
+      </button>
+    </div>
+  );
+}
+
+function PasteCard({
+  title,
+  subtitle,
+  defaultChannel,
+  parser,
+  fields,
+  fieldLabel,
+  skuMapping,
+  onApply,
+  hint,
+}: {
+  title: string;
+  subtitle: string;
+  defaultChannel: ChannelKey;
+  parser: (csv: string, mapping: SkuMapping[], defaultChannel: ChannelKey) => ParsedTotals;
+  fields: (keyof ChannelTotals)[];
+  fieldLabel: string;
+  skuMapping: SkuMapping[];
+  onApply: ImportApply;
+  hint: string;
+}) {
+  const [text, setText] = useState("");
+  const [channel, setChannel] = useState<ChannelKey>(defaultChannel);
+  const [mode, setMode] = useState<"replace" | "add">("replace");
+
+  const parsed = useMemo(() => {
+    if (!text.trim()) return null;
+    return parser(text, skuMapping, channel);
+  }, [text, parser, skuMapping, channel]);
+
+  const totalForFields = (line: ChannelTotals) =>
+    fields.reduce((s, f) => s + line[f], 0);
+
+  const totalAcrossChannels = parsed
+    ? CHANNELS.reduce((s, c) => s + totalForFields(parsed.byChannel[c.key]), 0)
+    : 0;
+
+  return (
+    <div className="border border-[#c8bfa7] rounded-[3pt] bg-white p-[8pt]">
+      <div className="flex items-baseline justify-between gap-[6pt] mb-[3pt]">
+        <div>
+          <div className="font-display text-[11pt] text-[#1f3d2e] font-semibold leading-tight">
+            {title}
+          </div>
+          <div className="text-[8pt] text-[#6b7665] mt-[1pt]">{subtitle}</div>
+        </div>
+        <div className="text-[7.5pt] font-mono uppercase tracking-[0.14em] text-[#6b7665] shrink-0">
+          {fieldLabel}
+        </div>
+      </div>
+
+      <div className="flex items-baseline gap-[6pt] mb-[4pt] text-[8pt]">
+        <label className="text-[#6b7665]">
+          Default channel:&nbsp;
+          <select
+            value={channel}
+            onChange={(e) => setChannel(e.target.value as ChannelKey)}
+            className="bg-transparent font-mono text-[#1f3d2e] border-b border-[#c8bfa7] focus:outline-none focus:border-[#1f3d2e]"
+          >
+            {CHANNELS.map((c) => (
+              <option key={c.key} value={c.key}>
+                {c.label} ({c.code})
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-[#6b7665] ml-auto">
+          On apply:&nbsp;
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value as "replace" | "add")}
+            className="bg-transparent font-mono text-[#1f3d2e] border-b border-[#c8bfa7] focus:outline-none focus:border-[#1f3d2e]"
+          >
+            <option value="replace">Replace owned fields</option>
+            <option value="add">Add to existing</option>
+          </select>
+        </label>
+      </div>
+
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={4}
+        placeholder={`Paste the ${title.split(" — ")[0]} CSV / TSV here…`}
+        className="w-full text-[8.5pt] font-mono text-[#2a2520] border border-[#c8bfa7] rounded-[2pt] p-[4pt] focus:outline-none focus:border-[#1f3d2e] bg-[#fafaf5]"
+      />
+
+      <div className="text-[7.5pt] text-[#6b7665] italic mt-[3pt] leading-[1.4]">
+        {hint}
+      </div>
+
+      {parsed && (
+        <div className="mt-[5pt]">
+          {parsed.warnings.length > 0 && (
+            <ul className="text-[8pt] text-[#a07a18] list-disc list-inside mb-[3pt] space-y-[1pt]">
+              {parsed.warnings.map((w, i) => (
+                <li key={i}>{w}</li>
+              ))}
+            </ul>
+          )}
+          <div className="text-[8pt] text-[#6b7665] mb-[2pt]">
+            Parsed <span className="font-mono">{parsed.rowCount}</span> row
+            {parsed.rowCount === 1 ? "" : "s"} · matched columns:{" "}
+            {parsed.matchedColumns
+              .map((m) => `${m.label}=${m.header ?? "—"}`)
+              .join(" · ")}
+          </div>
+          <table className="w-full text-[8.5pt]" style={{ tableLayout: "fixed" }}>
+            <thead>
+              <tr className="text-left text-[#6b7665] font-mono uppercase tracking-[0.14em] text-[7pt]">
+                <th className="pb-[2pt] w-[34%]">Channel</th>
+                {fields.map((f) => (
+                  <th key={f} className="pb-[2pt] text-right">
+                    {f}
+                  </th>
+                ))}
+                <th className="pb-[2pt] text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CHANNELS.map((c) => {
+                const line = parsed.byChannel[c.key];
+                const total = totalForFields(line);
+                if (total === 0 && fields.every((f) => line[f] === 0)) return null;
+                return (
+                  <tr key={c.key} className="border-t border-[#f0e7d2]">
+                    <td className="py-[2pt]">
+                      <span className="font-semibold text-[#1f3d2e]">{c.label}</span>{" "}
+                      <span className="font-mono text-[7.5pt] text-[#6b7665]">{c.code}</span>
+                    </td>
+                    {fields.map((f) => (
+                      <td
+                        key={f}
+                        className="py-[2pt] text-right font-mono text-[#1f3d2e]"
+                      >
+                        {fmt(line[f])}
+                      </td>
+                    ))}
+                    <td className="py-[2pt] text-right font-mono font-semibold text-[#1f3d2e]">
+                      {fmt(total)}
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="border-t border-[#1f3d2e]">
+                <td className="py-[2pt] font-mono uppercase tracking-[0.14em] text-[7.5pt] text-[#1f3d2e]">
+                  Total
+                </td>
+                {fields.map((f) => (
+                  <td
+                    key={f}
+                    className="py-[2pt] text-right font-mono text-[#1f3d2e]"
+                  >
+                    {fmt(
+                      CHANNELS.reduce((s, c) => s + parsed.byChannel[c.key][f], 0),
+                    )}
+                  </td>
+                ))}
+                <td className="py-[2pt] text-right font-mono font-semibold text-[#1f3d2e]">
+                  {fmt(totalAcrossChannels)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {parsed.unmapped.length > 0 && (
+            <div className="mt-[3pt] text-[8pt] text-[#a07a18] leading-[1.4]">
+              <span className="font-semibold">Unmapped SKU{parsed.unmapped.length === 1 ? "" : "s"} (fell to default channel):</span>{" "}
+              {parsed.unmapped
+                .slice(0, 5)
+                .map((u) => `${u.sku} (${u.rows}×, ${fmt(u.revenue)})`)
+                .join(", ")}
+              {parsed.unmapped.length > 5 && ` · +${parsed.unmapped.length - 5} more`}
+              . Add a SKU rule above to route these next month.
+            </div>
+          )}
+
+          <div className="mt-[5pt] flex items-center gap-[6pt]">
+            <button
+              type="button"
+              onClick={() => {
+                onApply(parsed, fields, mode);
+              }}
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded bg-[#1f3d2e] text-[#f4ede0] hover:opacity-90"
+              disabled={parsed.rowCount === 0}
+            >
+              Apply to channel lines
+            </button>
+            <button
+              type="button"
+              onClick={() => setText("")}
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#6b7665] hover:bg-[#ebe2d0]"
+            >
+              Clear paste
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TimesheetCard({
+  onApply,
+}: {
+  onApply: (parsed: TimesheetParse) => void;
+}) {
+  const [text, setText] = useState("");
+
+  const parsed = useMemo(() => {
+    if (!text.trim()) return null;
+    return parseTimesheet(text);
+  }, [text]);
+
+  return (
+    <div className="border border-[#c8bfa7] rounded-[3pt] bg-white p-[8pt]">
+      <div className="flex items-baseline justify-between gap-[6pt] mb-[3pt]">
+        <div>
+          <div className="font-display text-[11pt] text-[#1f3d2e] font-semibold leading-tight">
+            Depot timesheet — OM hours
+          </div>
+          <div className="text-[8pt] text-[#6b7665] mt-[1pt]">
+            Replaces the OM-hours field below (Rule 01 cap of {OM_HOURS_CAP} hrs / mo evaluates from this).
+          </div>
+        </div>
+        <div className="text-[7.5pt] font-mono uppercase tracking-[0.14em] text-[#6b7665] shrink-0">
+          OM hours
+        </div>
+      </div>
+
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={4}
+        placeholder={`Paste the depot timesheet CSV here…\nExpected: "Hours" column + optional "Cost Code" filtered to SALT.\nOr just paste a list of numbers (one per line).`}
+        className="w-full text-[8.5pt] font-mono text-[#2a2520] border border-[#c8bfa7] rounded-[2pt] p-[4pt] focus:outline-none focus:border-[#1f3d2e] bg-[#fafaf5]"
+      />
+
+      <div className="text-[7.5pt] text-[#6b7665] italic mt-[3pt] leading-[1.4]">
+        Either a CSV with “Hours” (and optionally “Cost Code” containing SALT)
+        or one decimal hours value per line.
+      </div>
+
+      {parsed && (
+        <div className="mt-[5pt]">
+          {parsed.warnings.length > 0 && (
+            <ul className="text-[8pt] text-[#a07a18] list-disc list-inside mb-[3pt] space-y-[1pt]">
+              {parsed.warnings.map((w, i) => (
+                <li key={i}>{w}</li>
+              ))}
+            </ul>
+          )}
+          <div className="text-[8pt] text-[#6b7665]">
+            Parsed <span className="font-mono">{parsed.rowCount}</span> row
+            {parsed.rowCount === 1 ? "" : "s"} · matched columns:{" "}
+            {parsed.matchedColumns.length > 0
+              ? parsed.matchedColumns
+                  .map((m) => `${m.label}=${m.header ?? "—"}`)
+                  .join(" · ")
+              : "(numeric tokens)"}
+          </div>
+          <div className="mt-[2pt] text-[10pt] text-[#1f3d2e] font-semibold">
+            Total OM hours:{" "}
+            <span className="font-mono">{parsed.hours.toFixed(1)}</span>
+            {parsed.hours > OM_HOURS_CAP && (
+              <span className="ml-[6pt] text-[#b85a3e] font-mono text-[9pt]">
+                over Rule 01 cap of {OM_HOURS_CAP}
+              </span>
+            )}
+          </div>
+          <div className="mt-[5pt] flex items-center gap-[6pt]">
+            <button
+              type="button"
+              onClick={() => onApply(parsed)}
+              disabled={parsed.rowCount === 0 && parsed.hours === 0}
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded bg-[#1f3d2e] text-[#f4ede0] hover:opacity-90 disabled:opacity-40"
+            >
+              Apply to OM hours
+            </button>
+            <button
+              type="button"
+              onClick={() => setText("")}
+              className="font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#6b7665] hover:bg-[#ebe2d0]"
+            >
+              Clear paste
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
