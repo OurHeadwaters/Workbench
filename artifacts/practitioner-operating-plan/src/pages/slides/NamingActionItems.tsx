@@ -24,6 +24,9 @@ export default function NamingActionItems() {
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1vw] text-muted leading-[1.4]">
             Domains and email today. Trademark search this week. Agent opinion
             before any filing or printing. Then incorporate. In that order.
+            <div className="mt-[0.8vh] font-mono uppercase tracking-[0.22em] text-[0.78vw] text-accent">
+              Carry version → /checklist
+            </div>
           </div>
         </div>
 
