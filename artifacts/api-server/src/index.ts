@@ -1,5 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { seedBookkeeper } from "./lib/bookkeeperSeed";
 
 const rawPort = process.env["PORT"];
 
@@ -22,4 +23,8 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
+
+  seedBookkeeper().catch((seedErr) => {
+    logger.error({ err: seedErr }, "bookkeeper seed failed");
+  });
 });

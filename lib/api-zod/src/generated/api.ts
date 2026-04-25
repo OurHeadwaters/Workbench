@@ -60,9 +60,6 @@ export const GetStorageObjectParams = zod.object({
  * Counts of entries by status, top subjects, top producers, top buckets, recent activity.
  * @summary Library overview stats
  */
-export const getLibraryStatsResponseRecentEntriesItemProducerOneEntryCountDefault = 0;
-export const getLibraryStatsResponseRecentEntriesItemContributorOneEntryCountDefault = 0;
-
 export const GetLibraryStatsResponse = zod.object({
   totalEntries: zod.number(),
   totalProducers: zod.number(),
@@ -95,110 +92,6 @@ export const GetLibraryStatsResponse = zod.object({
       color: zod.string().nullish(),
     }),
   ),
-  recentEntries: zod
-    .array(
-      zod.object({
-        id: zod.string().uuid(),
-        kind: zod.enum(["file", "web_source"]),
-        title: zod.string(),
-        summary: zod.string().nullish(),
-        notes: zod.string().nullish(),
-        status: zod.enum(["published", "needs_review"]),
-        sourceUrl: zod.string().nullish(),
-        screenshotUrl: zod.string().nullish(),
-        screenshotObjectPath: zod.string().nullish(),
-        storageRef: zod
-          .string()
-          .nullish()
-          .describe(
-            "Object reference. Format `gcs:<path>`, where `<path>` is either `\/objects\/<id>` (private) or `\/public-objects\/<path>` (publicly served).",
-          ),
-        contentHash: zod.string().nullish(),
-        fileSize: zod.number().nullish(),
-        contentType: zod.string().nullish(),
-        originalFilename: zod.string().nullish(),
-        fileType: zod
-          .string()
-          .nullish()
-          .describe("Coarse type (pdf, image, doc, sheet, text, other)"),
-        contactInfo: zod.record(zod.string(), zod.unknown()).nullish(),
-        prices: zod.record(zod.string(), zod.unknown()).nullish(),
-        dates: zod.record(zod.string(), zod.unknown()).nullish(),
-        geography: zod.record(zod.string(), zod.unknown()).nullish(),
-        statusFlag: zod.string().nullish(),
-        producer: zod
-          .object({
-            id: zod.string().uuid(),
-            slug: zod.string(),
-            name: zod.string(),
-            kind: zod
-              .enum([
-                "producer",
-                "distributor",
-                "study",
-                "organization",
-                "other",
-              ])
-              .nullish(),
-            description: zod.string().nullish(),
-            websiteUrl: zod.string().nullish(),
-            screenshotUrl: zod.string().nullish(),
-            contactEmail: zod.string().nullish(),
-            contactPhone: zod.string().nullish(),
-            location: zod.string().nullish(),
-            statusFlag: zod
-              .string()
-              .nullish()
-              .describe('e.g. \"operating\", \"uncertain\", \"wound down\"'),
-            statusNotes: zod.string().nullish(),
-            substituteForProducerSlug: zod
-              .string()
-              .nullish()
-              .describe("e.g. Shumaka Dust substitutes for Crazy Good Spices"),
-            entryCount: zod
-              .number()
-              .default(
-                getLibraryStatsResponseRecentEntriesItemProducerOneEntryCountDefault,
-              ),
-          })
-          .nullish(),
-        contributor: zod
-          .object({
-            id: zod.string().uuid(),
-            name: zod.string(),
-            organization: zod.string().nullish(),
-            email: zod.string().nullish(),
-            notes: zod.string().nullish(),
-            entryCount: zod
-              .number()
-              .default(
-                getLibraryStatsResponseRecentEntriesItemContributorOneEntryCountDefault,
-              ),
-          })
-          .nullish(),
-        subjects: zod.array(
-          zod.object({
-            id: zod.string().uuid(),
-            slug: zod.string(),
-            name: zod.string(),
-            description: zod.string().nullish(),
-            color: zod.string().nullish(),
-          }),
-        ),
-        buckets: zod.array(
-          zod.object({
-            id: zod.string().uuid(),
-            slug: zod.string(),
-            name: zod.string(),
-            description: zod.string().nullish(),
-            color: zod.string().nullish(),
-          }),
-        ),
-        createdAt: zod.coerce.date(),
-        updatedAt: zod.coerce.date(),
-      }),
-    )
-    .optional(),
 });
 
 /**
@@ -1626,3 +1519,974 @@ export const GetRecentActivityResponseItem = zod.object({
 export const GetRecentActivityResponse = zod.array(
   GetRecentActivityResponseItem,
 );
+
+/**
+ * @summary Current authenticated user with role
+ */
+export const GetBookkeeperMeResponse = zod.object({
+  id: zod.string().uuid(),
+  clerkUserId: zod.string(),
+  email: zod.string(),
+  firstName: zod.string().nullish(),
+  lastName: zod.string().nullish(),
+  role: zod
+    .enum(["owner", "ops_manager", "bookkeeper", "food_handler"])
+    .describe(
+      "Role assigned in app_users (mirror of Clerk publicMetadata.role).",
+    ),
+  isAuthenticated: zod.boolean(),
+  isOwner: zod.boolean().optional(),
+});
+
+/**
+ * @summary List app users with roles (owner only)
+ */
+export const ListBookkeeperUsersResponseItem = zod.object({
+  id: zod.string().uuid(),
+  clerkUserId: zod.string(),
+  email: zod.string(),
+  firstName: zod.string().nullish(),
+  lastName: zod.string().nullish(),
+  role: zod
+    .enum(["owner", "ops_manager", "bookkeeper", "food_handler"])
+    .describe(
+      "Role assigned in app_users (mirror of Clerk publicMetadata.role).",
+    ),
+  createdAt: zod.coerce.date(),
+  lastSeenAt: zod.coerce.date().nullish(),
+});
+export const ListBookkeeperUsersResponse = zod.array(
+  ListBookkeeperUsersResponseItem,
+);
+
+/**
+ * @summary Change a user's role (owner only)
+ */
+export const UpdateBookkeeperUserParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateBookkeeperUserBody = zod.object({
+  role: zod
+    .enum(["owner", "ops_manager", "bookkeeper", "food_handler"])
+    .describe(
+      "Role assigned in app_users (mirror of Clerk publicMetadata.role).",
+    ),
+});
+
+export const UpdateBookkeeperUserResponse = zod.object({
+  id: zod.string().uuid(),
+  clerkUserId: zod.string(),
+  email: zod.string(),
+  firstName: zod.string().nullish(),
+  lastName: zod.string().nullish(),
+  role: zod
+    .enum(["owner", "ops_manager", "bookkeeper", "food_handler"])
+    .describe(
+      "Role assigned in app_users (mirror of Clerk publicMetadata.role).",
+    ),
+  createdAt: zod.coerce.date(),
+  lastSeenAt: zod.coerce.date().nullish(),
+});
+
+/**
+ * @summary List cost centres
+ */
+export const ListCostCentresResponseItem = zod.object({
+  id: zod.string().uuid(),
+  code: zod
+    .string()
+    .describe("Short code, e.g. SALT-01, DEERLAKE, HEADWATERS."),
+  name: zod.string(),
+  parentEntity: zod
+    .string()
+    .describe('Where the net rolls up, e.g. \"Headwaters (agency P&L)\".'),
+  owner: zod
+    .string()
+    .nullish()
+    .describe('Who files the close, e.g. \"Bookkeeper\".'),
+  description: zod.string().nullish(),
+  color: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const ListCostCentresResponse = zod.array(ListCostCentresResponseItem);
+
+/**
+ * @summary Create a cost centre (owner only)
+ */
+
+export const CreateCostCentreBody = zod.object({
+  code: zod.string().min(1),
+  name: zod.string().min(1),
+  parentEntity: zod.string().min(1),
+  owner: zod.string().optional(),
+  description: zod.string().optional(),
+  color: zod.string().optional(),
+});
+
+export const CreateCostCentreResponse = zod.object({
+  id: zod.string().uuid(),
+  code: zod
+    .string()
+    .describe("Short code, e.g. SALT-01, DEERLAKE, HEADWATERS."),
+  name: zod.string(),
+  parentEntity: zod
+    .string()
+    .describe('Where the net rolls up, e.g. \"Headwaters (agency P&L)\".'),
+  owner: zod
+    .string()
+    .nullish()
+    .describe('Who files the close, e.g. \"Bookkeeper\".'),
+  description: zod.string().nullish(),
+  color: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update a cost centre (owner only)
+ */
+export const UpdateCostCentreParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateCostCentreBody = zod.object({
+  name: zod.string().optional(),
+  parentEntity: zod.string().optional(),
+  owner: zod.string().optional(),
+  description: zod.string().optional(),
+  color: zod.string().optional(),
+  isActive: zod.boolean().optional(),
+});
+
+export const UpdateCostCentreResponse = zod.object({
+  id: zod.string().uuid(),
+  code: zod
+    .string()
+    .describe("Short code, e.g. SALT-01, DEERLAKE, HEADWATERS."),
+  name: zod.string(),
+  parentEntity: zod
+    .string()
+    .describe('Where the net rolls up, e.g. \"Headwaters (agency P&L)\".'),
+  owner: zod
+    .string()
+    .nullish()
+    .describe('Who files the close, e.g. \"Bookkeeper\".'),
+  description: zod.string().nullish(),
+  color: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List chart-of-accounts entries
+ */
+export const ListAccountsQueryParams = zod.object({
+  costCentreCode: zod.coerce
+    .string()
+    .optional()
+    .describe("Filter to accounts that belong to a cost-centre group."),
+});
+
+export const ListAccountsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  code: zod.string().describe("Account number, e.g. 4400.10, 5400, 6020."),
+  name: zod.string(),
+  type: zod.enum([
+    "revenue",
+    "cost_of_sales",
+    "expense",
+    "asset",
+    "liability",
+    "equity",
+    "contra",
+  ]),
+  normalSide: zod.enum(["debit", "credit"]),
+  costCentreCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "When set, this account belongs to a cost-centre group (e.g. SALT-01).",
+    ),
+  mirrorAccountCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
+    ),
+  notes: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAccountsResponse = zod.array(ListAccountsResponseItem);
+
+/**
+ * @summary Add an account (owner only)
+ */
+
+export const CreateAccountBody = zod.object({
+  code: zod.string().min(1),
+  name: zod.string().min(1),
+  type: zod.enum([
+    "revenue",
+    "cost_of_sales",
+    "expense",
+    "asset",
+    "liability",
+    "equity",
+    "contra",
+  ]),
+  normalSide: zod.enum(["debit", "credit"]),
+  costCentreCode: zod.string().optional(),
+  mirrorAccountCode: zod.string().optional(),
+  notes: zod.string().optional(),
+});
+
+export const CreateAccountResponse = zod.object({
+  id: zod.string().uuid(),
+  code: zod.string().describe("Account number, e.g. 4400.10, 5400, 6020."),
+  name: zod.string(),
+  type: zod.enum([
+    "revenue",
+    "cost_of_sales",
+    "expense",
+    "asset",
+    "liability",
+    "equity",
+    "contra",
+  ]),
+  normalSide: zod.enum(["debit", "credit"]),
+  costCentreCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "When set, this account belongs to a cost-centre group (e.g. SALT-01).",
+    ),
+  mirrorAccountCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
+    ),
+  notes: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update an account (owner only)
+ */
+export const UpdateAccountParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateAccountBody = zod.object({
+  name: zod.string().optional(),
+  type: zod
+    .enum([
+      "revenue",
+      "cost_of_sales",
+      "expense",
+      "asset",
+      "liability",
+      "equity",
+      "contra",
+    ])
+    .optional(),
+  normalSide: zod.enum(["debit", "credit"]).optional(),
+  costCentreCode: zod.string().nullish(),
+  mirrorAccountCode: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  isActive: zod.boolean().optional(),
+});
+
+export const UpdateAccountResponse = zod.object({
+  id: zod.string().uuid(),
+  code: zod.string().describe("Account number, e.g. 4400.10, 5400, 6020."),
+  name: zod.string(),
+  type: zod.enum([
+    "revenue",
+    "cost_of_sales",
+    "expense",
+    "asset",
+    "liability",
+    "equity",
+    "contra",
+  ]),
+  normalSide: zod.enum(["debit", "credit"]),
+  costCentreCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "When set, this account belongs to a cost-centre group (e.g. SALT-01).",
+    ),
+  mirrorAccountCode: zod
+    .string()
+    .nullish()
+    .describe(
+      "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
+    ),
+  notes: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List ledger transactions
+ */
+export const listTransactionsQueryLimitDefault = 50;
+export const listTransactionsQueryLimitMax = 200;
+
+export const listTransactionsQueryOffsetDefault = 0;
+export const listTransactionsQueryOffsetMin = 0;
+
+export const ListTransactionsQueryParams = zod.object({
+  costCentreCode: zod.coerce.string().optional(),
+  accountCode: zod.coerce.string().optional(),
+  status: zod.enum(["posted", "voided"]).optional(),
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+  search: zod.coerce.string().optional(),
+  limit: zod.coerce
+    .number()
+    .min(1)
+    .max(listTransactionsQueryLimitMax)
+    .default(listTransactionsQueryLimitDefault),
+  offset: zod.coerce
+    .number()
+    .min(listTransactionsQueryOffsetMin)
+    .default(listTransactionsQueryOffsetDefault),
+});
+
+export const ListTransactionsResponse = zod.object({
+  items: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      postedDate: zod.coerce.date(),
+      description: zod.string(),
+      reference: zod
+        .string()
+        .nullish()
+        .describe("External ref (invoice no, receipt no, batch ID)."),
+      status: zod.enum(["posted", "voided"]),
+      voidedReason: zod.string().nullish(),
+      voidedAt: zod.coerce.date().nullish(),
+      reversesTransactionId: zod.string().uuid().nullish(),
+      sourceSubmissionId: zod.string().uuid().nullish(),
+      totalDebit: zod.number(),
+      totalCredit: zod.number(),
+      lines: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          accountCode: zod.string(),
+          accountName: zod.string(),
+          costCentreCode: zod.string().nullish(),
+          memo: zod.string().nullish(),
+          debit: zod.number().describe("Amount in dollars (2dp)."),
+          credit: zod.number().describe("Amount in dollars (2dp)."),
+        }),
+      ),
+      createdAt: zod.coerce.date(),
+      createdByEmail: zod.string(),
+    }),
+  ),
+  total: zod.number(),
+});
+
+/**
+ * @summary Post a balanced multi-line transaction (bookkeeper, ops_manager, owner)
+ */
+
+export const createTransactionBodyLinesItemDebitMin = 0;
+
+export const createTransactionBodyLinesItemCreditMin = 0;
+
+export const createTransactionBodyLinesMin = 2;
+
+export const CreateTransactionBody = zod.object({
+  postedDate: zod.coerce.date(),
+  description: zod.string().min(1),
+  reference: zod.string().optional(),
+  lines: zod
+    .array(
+      zod.object({
+        accountCode: zod.string().min(1),
+        costCentreCode: zod.string().optional(),
+        memo: zod.string().optional(),
+        debit: zod.number().min(createTransactionBodyLinesItemDebitMin),
+        credit: zod.number().min(createTransactionBodyLinesItemCreditMin),
+      }),
+    )
+    .min(createTransactionBodyLinesMin),
+});
+
+export const CreateTransactionResponse = zod.object({
+  id: zod.string().uuid(),
+  postedDate: zod.coerce.date(),
+  description: zod.string(),
+  reference: zod
+    .string()
+    .nullish()
+    .describe("External ref (invoice no, receipt no, batch ID)."),
+  status: zod.enum(["posted", "voided"]),
+  voidedReason: zod.string().nullish(),
+  voidedAt: zod.coerce.date().nullish(),
+  reversesTransactionId: zod.string().uuid().nullish(),
+  sourceSubmissionId: zod.string().uuid().nullish(),
+  totalDebit: zod.number(),
+  totalCredit: zod.number(),
+  lines: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      costCentreCode: zod.string().nullish(),
+      memo: zod.string().nullish(),
+      debit: zod.number().describe("Amount in dollars (2dp)."),
+      credit: zod.number().describe("Amount in dollars (2dp)."),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  createdByEmail: zod.string(),
+});
+
+/**
+ * @summary Get a transaction with lines
+ */
+export const GetTransactionParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const GetTransactionResponse = zod.object({
+  id: zod.string().uuid(),
+  postedDate: zod.coerce.date(),
+  description: zod.string(),
+  reference: zod
+    .string()
+    .nullish()
+    .describe("External ref (invoice no, receipt no, batch ID)."),
+  status: zod.enum(["posted", "voided"]),
+  voidedReason: zod.string().nullish(),
+  voidedAt: zod.coerce.date().nullish(),
+  reversesTransactionId: zod.string().uuid().nullish(),
+  sourceSubmissionId: zod.string().uuid().nullish(),
+  totalDebit: zod.number(),
+  totalCredit: zod.number(),
+  lines: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      costCentreCode: zod.string().nullish(),
+      memo: zod.string().nullish(),
+      debit: zod.number().describe("Amount in dollars (2dp)."),
+      credit: zod.number().describe("Amount in dollars (2dp)."),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  createdByEmail: zod.string(),
+});
+
+/**
+ * @summary Void a posted transaction by writing a reversing entry (bookkeeper, ops_manager, owner)
+ */
+export const VoidTransactionParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const voidTransactionBodyReasonMin = 3;
+
+export const VoidTransactionBody = zod.object({
+  reason: zod.string().min(voidTransactionBodyReasonMin),
+});
+
+export const VoidTransactionResponse = zod.object({
+  id: zod.string().uuid(),
+  postedDate: zod.coerce.date(),
+  description: zod.string(),
+  reference: zod
+    .string()
+    .nullish()
+    .describe("External ref (invoice no, receipt no, batch ID)."),
+  status: zod.enum(["posted", "voided"]),
+  voidedReason: zod.string().nullish(),
+  voidedAt: zod.coerce.date().nullish(),
+  reversesTransactionId: zod.string().uuid().nullish(),
+  sourceSubmissionId: zod.string().uuid().nullish(),
+  totalDebit: zod.number(),
+  totalCredit: zod.number(),
+  lines: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      costCentreCode: zod.string().nullish(),
+      memo: zod.string().nullish(),
+      debit: zod.number().describe("Amount in dollars (2dp)."),
+      credit: zod.number().describe("Amount in dollars (2dp)."),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  createdByEmail: zod.string(),
+});
+
+/**
+ * @summary List food-handler submissions (food_handler sees only own; staff see queue)
+ */
+export const ListSubmissionsQueryParams = zod.object({
+  status: zod.enum(["pending", "approved", "rejected"]).optional(),
+  mine: zod.coerce.boolean().optional(),
+});
+
+export const ListSubmissionsResponseItem = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["expense", "inventory_receipt"]),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  costCentreCode: zod.string(),
+  suggestedAccountCode: zod.string().nullish(),
+  occurredOn: zod.coerce.date(),
+  vendor: zod.string(),
+  amount: zod.number().describe("Total in dollars."),
+  description: zod.string(),
+  notes: zod.string().nullish(),
+  itemSku: zod.string().nullish(),
+  itemName: zod.string().nullish(),
+  quantity: zod.number().nullish(),
+  unit: zod.string().nullish(),
+  rejectedReason: zod.string().nullish(),
+  approvedTransactionId: zod.string().uuid().nullish(),
+  decidedAt: zod.coerce.date().nullish(),
+  decidedByEmail: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  submittedByEmail: zod.string(),
+  submittedByName: zod.string().nullish(),
+  attachments: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      originalFilename: zod.string(),
+      contentType: zod.string(),
+      fileSize: zod.number().nullish(),
+      storageRef: zod
+        .string()
+        .describe("Object reference, e.g. gcs:\/objects\/<id>"),
+      uploadedAt: zod.coerce.date(),
+    }),
+  ),
+});
+export const ListSubmissionsResponse = zod.array(ListSubmissionsResponseItem);
+
+/**
+ * @summary Submit a receipt or inventory log for review
+ */
+
+export const createSubmissionBodyAmountMin = 0;
+
+export const CreateSubmissionBody = zod.object({
+  kind: zod.enum(["expense", "inventory_receipt"]),
+  costCentreCode: zod.string().min(1),
+  suggestedAccountCode: zod.string().optional(),
+  occurredOn: zod.coerce.date(),
+  vendor: zod.string().min(1),
+  amount: zod.number().min(createSubmissionBodyAmountMin),
+  description: zod.string().min(1),
+  notes: zod.string().optional(),
+  itemSku: zod.string().optional(),
+  itemName: zod.string().optional(),
+  quantity: zod.number().optional(),
+  unit: zod.string().optional(),
+  attachments: zod
+    .array(
+      zod.object({
+        storageRef: zod.string(),
+        originalFilename: zod.string(),
+        contentType: zod.string(),
+        fileSize: zod.number().optional(),
+      }),
+    )
+    .optional(),
+});
+
+export const CreateSubmissionResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["expense", "inventory_receipt"]),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  costCentreCode: zod.string(),
+  suggestedAccountCode: zod.string().nullish(),
+  occurredOn: zod.coerce.date(),
+  vendor: zod.string(),
+  amount: zod.number().describe("Total in dollars."),
+  description: zod.string(),
+  notes: zod.string().nullish(),
+  itemSku: zod.string().nullish(),
+  itemName: zod.string().nullish(),
+  quantity: zod.number().nullish(),
+  unit: zod.string().nullish(),
+  rejectedReason: zod.string().nullish(),
+  approvedTransactionId: zod.string().uuid().nullish(),
+  decidedAt: zod.coerce.date().nullish(),
+  decidedByEmail: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  submittedByEmail: zod.string(),
+  submittedByName: zod.string().nullish(),
+  attachments: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      originalFilename: zod.string(),
+      contentType: zod.string(),
+      fileSize: zod.number().nullish(),
+      storageRef: zod
+        .string()
+        .describe("Object reference, e.g. gcs:\/objects\/<id>"),
+      uploadedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Approve a pending submission and post the resulting transaction (bookkeeper, ops_manager, owner)
+ */
+export const ApproveSubmissionParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const approveSubmissionBodyLinesItemDebitMin = 0;
+
+export const approveSubmissionBodyLinesItemCreditMin = 0;
+
+export const approveSubmissionBodyLinesMin = 2;
+
+export const ApproveSubmissionBody = zod.object({
+  postedDate: zod.coerce.date(),
+  description: zod.string().optional(),
+  reference: zod.string().optional(),
+  lines: zod
+    .array(
+      zod.object({
+        accountCode: zod.string().min(1),
+        costCentreCode: zod.string().optional(),
+        memo: zod.string().optional(),
+        debit: zod.number().min(approveSubmissionBodyLinesItemDebitMin),
+        credit: zod.number().min(approveSubmissionBodyLinesItemCreditMin),
+      }),
+    )
+    .min(approveSubmissionBodyLinesMin),
+});
+
+export const ApproveSubmissionResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["expense", "inventory_receipt"]),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  costCentreCode: zod.string(),
+  suggestedAccountCode: zod.string().nullish(),
+  occurredOn: zod.coerce.date(),
+  vendor: zod.string(),
+  amount: zod.number().describe("Total in dollars."),
+  description: zod.string(),
+  notes: zod.string().nullish(),
+  itemSku: zod.string().nullish(),
+  itemName: zod.string().nullish(),
+  quantity: zod.number().nullish(),
+  unit: zod.string().nullish(),
+  rejectedReason: zod.string().nullish(),
+  approvedTransactionId: zod.string().uuid().nullish(),
+  decidedAt: zod.coerce.date().nullish(),
+  decidedByEmail: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  submittedByEmail: zod.string(),
+  submittedByName: zod.string().nullish(),
+  attachments: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      originalFilename: zod.string(),
+      contentType: zod.string(),
+      fileSize: zod.number().nullish(),
+      storageRef: zod
+        .string()
+        .describe("Object reference, e.g. gcs:\/objects\/<id>"),
+      uploadedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Reject a pending submission with a reason
+ */
+export const RejectSubmissionParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const rejectSubmissionBodyReasonMin = 3;
+
+export const RejectSubmissionBody = zod.object({
+  reason: zod.string().min(rejectSubmissionBodyReasonMin),
+});
+
+export const RejectSubmissionResponse = zod.object({
+  id: zod.string().uuid(),
+  kind: zod.enum(["expense", "inventory_receipt"]),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  costCentreCode: zod.string(),
+  suggestedAccountCode: zod.string().nullish(),
+  occurredOn: zod.coerce.date(),
+  vendor: zod.string(),
+  amount: zod.number().describe("Total in dollars."),
+  description: zod.string(),
+  notes: zod.string().nullish(),
+  itemSku: zod.string().nullish(),
+  itemName: zod.string().nullish(),
+  quantity: zod.number().nullish(),
+  unit: zod.string().nullish(),
+  rejectedReason: zod.string().nullish(),
+  approvedTransactionId: zod.string().uuid().nullish(),
+  decidedAt: zod.coerce.date().nullish(),
+  decidedByEmail: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  submittedByEmail: zod.string(),
+  submittedByName: zod.string().nullish(),
+  attachments: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      originalFilename: zod.string(),
+      contentType: zod.string(),
+      fileSize: zod.number().nullish(),
+      storageRef: zod
+        .string()
+        .describe("Object reference, e.g. gcs:\/objects\/<id>"),
+      uploadedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Food-handler reminder/nudge view — last submission per handler
+ */
+export const GetHandlerActivityResponseItem = zod.object({
+  userId: zod.string().uuid(),
+  clerkUserId: zod.string().optional(),
+  email: zod.string(),
+  firstName: zod.string().nullish(),
+  lastName: zod.string().nullish(),
+  totalSubmissions: zod.number(),
+  pendingSubmissions: zod.number(),
+  lastSubmissionAt: zod.coerce.date().nullish(),
+  daysSinceLastSubmission: zod.number().nullish(),
+  lastNudgedAt: zod.coerce.date().nullish(),
+});
+export const GetHandlerActivityResponse = zod.array(
+  GetHandlerActivityResponseItem,
+);
+
+/**
+ * @summary Record a reminder nudge to a food handler (logs to audit_log)
+ */
+export const NudgeHandlerParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const NudgeHandlerBody = zod.object({
+  message: zod.string().optional(),
+});
+
+export const NudgeHandlerResponse = zod.object({
+  userId: zod.string().uuid(),
+  clerkUserId: zod.string().optional(),
+  email: zod.string(),
+  firstName: zod.string().nullish(),
+  lastName: zod.string().nullish(),
+  totalSubmissions: zod.number(),
+  pendingSubmissions: zod.number(),
+  lastSubmissionAt: zod.coerce.date().nullish(),
+  daysSinceLastSubmission: zod.number().nullish(),
+  lastNudgedAt: zod.coerce.date().nullish(),
+});
+
+/**
+ * @summary Top-level dashboard counts and totals
+ */
+export const GetBookkeeperDashboardResponse = zod.object({
+  totals: zod.object({
+    transactions: zod.number(),
+    postedThisMonth: zod.number(),
+    pendingSubmissionsCount: zod.number(),
+    costCentres: zod.number(),
+    accounts: zod.number(),
+  }),
+  byCostCentre: zod.array(
+    zod.object({
+      code: zod.string(),
+      name: zod.string(),
+      revenue: zod.number(),
+      costs: zod.number(),
+      net: zod.number(),
+      transactionCount: zod.number(),
+    }),
+  ),
+  byMonth: zod.array(
+    zod.object({
+      month: zod.string().describe("YYYY-MM"),
+      revenue: zod.number(),
+      costs: zod.number(),
+      net: zod.number(),
+    }),
+  ),
+  recentTransactions: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      postedDate: zod.coerce.date(),
+      description: zod.string(),
+      reference: zod
+        .string()
+        .nullish()
+        .describe("External ref (invoice no, receipt no, batch ID)."),
+      status: zod.enum(["posted", "voided"]),
+      voidedReason: zod.string().nullish(),
+      voidedAt: zod.coerce.date().nullish(),
+      reversesTransactionId: zod.string().uuid().nullish(),
+      sourceSubmissionId: zod.string().uuid().nullish(),
+      totalDebit: zod.number(),
+      totalCredit: zod.number(),
+      lines: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          accountCode: zod.string(),
+          accountName: zod.string(),
+          costCentreCode: zod.string().nullish(),
+          memo: zod.string().nullish(),
+          debit: zod.number().describe("Amount in dollars (2dp)."),
+          credit: zod.number().describe("Amount in dollars (2dp)."),
+        }),
+      ),
+      createdAt: zod.coerce.date(),
+      createdByEmail: zod.string(),
+    }),
+  ),
+  pendingSubmissions: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      kind: zod.enum(["expense", "inventory_receipt"]),
+      status: zod.enum(["pending", "approved", "rejected"]),
+      costCentreCode: zod.string(),
+      suggestedAccountCode: zod.string().nullish(),
+      occurredOn: zod.coerce.date(),
+      vendor: zod.string(),
+      amount: zod.number().describe("Total in dollars."),
+      description: zod.string(),
+      notes: zod.string().nullish(),
+      itemSku: zod.string().nullish(),
+      itemName: zod.string().nullish(),
+      quantity: zod.number().nullish(),
+      unit: zod.string().nullish(),
+      rejectedReason: zod.string().nullish(),
+      approvedTransactionId: zod.string().uuid().nullish(),
+      decidedAt: zod.coerce.date().nullish(),
+      decidedByEmail: zod.string().nullish(),
+      createdAt: zod.coerce.date(),
+      submittedByEmail: zod.string(),
+      submittedByName: zod.string().nullish(),
+      attachments: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          originalFilename: zod.string(),
+          contentType: zod.string(),
+          fileSize: zod.number().nullish(),
+          storageRef: zod
+            .string()
+            .describe("Object reference, e.g. gcs:\/objects\/<id>"),
+          uploadedAt: zod.coerce.date(),
+        }),
+      ),
+    }),
+  ),
+  staleHandlers: zod
+    .array(
+      zod.object({
+        userId: zod.string().uuid(),
+        clerkUserId: zod.string().optional(),
+        email: zod.string(),
+        firstName: zod.string().nullish(),
+        lastName: zod.string().nullish(),
+        totalSubmissions: zod.number(),
+        pendingSubmissions: zod.number(),
+        lastSubmissionAt: zod.coerce.date().nullish(),
+        daysSinceLastSubmission: zod.number().nullish(),
+        lastNudgedAt: zod.coerce.date().nullish(),
+      }),
+    )
+    .describe("Food handlers who haven't submitted in 14+ days."),
+});
+
+/**
+ * @summary P&L by cost-centre with channel revenue + cost breakdown
+ */
+export const GetBookkeeperPnlQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetBookkeeperPnlResponse = zod.object({
+  from: zod.coerce.date().nullable(),
+  to: zod.coerce.date().nullable(),
+  costCentres: zod.array(
+    zod.object({
+      code: zod.string(),
+      name: zod.string(),
+      parentEntity: zod.string().optional(),
+      revenue: zod.number(),
+      costs: zod.number(),
+      net: zod.number(),
+      revenueLines: zod.array(
+        zod.object({
+          accountCode: zod.string(),
+          accountName: zod.string(),
+          normalSide: zod.enum(["debit", "credit"]),
+          total: zod.number(),
+        }),
+      ),
+      costLines: zod.array(
+        zod.object({
+          accountCode: zod.string(),
+          accountName: zod.string(),
+          normalSide: zod.enum(["debit", "credit"]),
+          total: zod.number(),
+        }),
+      ),
+    }),
+  ),
+  agencyTotals: zod.object({
+    revenue: zod.number(),
+    costs: zod.number(),
+    net: zod.number(),
+  }),
+});
+
+/**
+ * @summary Audit log (owner only)
+ */
+export const listAuditLogQueryLimitDefault = 50;
+export const listAuditLogQueryLimitMax = 200;
+
+export const ListAuditLogQueryParams = zod.object({
+  limit: zod.coerce
+    .number()
+    .min(1)
+    .max(listAuditLogQueryLimitMax)
+    .default(listAuditLogQueryLimitDefault),
+});
+
+export const ListAuditLogResponseItem = zod.object({
+  id: zod.string().uuid(),
+  action: zod.string(),
+  entityType: zod.string(),
+  entityId: zod.string().nullish(),
+  actorEmail: zod.string(),
+  actorRole: zod
+    .enum(["owner", "ops_manager", "bookkeeper", "food_handler"])
+    .optional()
+    .describe(
+      "Role assigned in app_users (mirror of Clerk publicMetadata.role).",
+    ),
+  details: zod.record(zod.string(), zod.unknown()).nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAuditLogResponse = zod.array(ListAuditLogResponseItem);

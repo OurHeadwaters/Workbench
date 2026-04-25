@@ -342,7 +342,446 @@ export interface LibraryStats {
   topSubjects: LibraryStatsCount[];
   topProducers: LibraryStatsCount[];
   bucketBreakdown: LibraryStatsCount[];
-  recentEntries?: LibraryEntry[];
+}
+
+/**
+ * Role assigned in app_users (mirror of Clerk publicMetadata.role).
+ */
+export type BookkeeperRole =
+  (typeof BookkeeperRole)[keyof typeof BookkeeperRole];
+
+export const BookkeeperRole = {
+  owner: "owner",
+  ops_manager: "ops_manager",
+  bookkeeper: "bookkeeper",
+  food_handler: "food_handler",
+} as const;
+
+export interface BookkeeperMe {
+  id: string;
+  clerkUserId: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  role: BookkeeperRole;
+  isAuthenticated: boolean;
+  isOwner?: boolean;
+}
+
+export interface BookkeeperUser {
+  id: string;
+  clerkUserId: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  role: BookkeeperRole;
+  createdAt: string;
+  lastSeenAt?: string | null;
+}
+
+export interface UpdateBookkeeperUserRequest {
+  role: BookkeeperRole;
+}
+
+export interface CostCentre {
+  id: string;
+  /** Short code, e.g. SALT-01, DEERLAKE, HEADWATERS. */
+  code: string;
+  name: string;
+  /** Where the net rolls up, e.g. "Headwaters (agency P&L)". */
+  parentEntity: string;
+  /** Who files the close, e.g. "Bookkeeper". */
+  owner?: string | null;
+  description?: string | null;
+  color?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CreateCostCentreRequest {
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  name: string;
+  /** @minLength 1 */
+  parentEntity: string;
+  owner?: string;
+  description?: string;
+  color?: string;
+}
+
+export interface UpdateCostCentreRequest {
+  name?: string;
+  parentEntity?: string;
+  owner?: string;
+  description?: string;
+  color?: string;
+  isActive?: boolean;
+}
+
+export type AccountType = (typeof AccountType)[keyof typeof AccountType];
+
+export const AccountType = {
+  revenue: "revenue",
+  cost_of_sales: "cost_of_sales",
+  expense: "expense",
+  asset: "asset",
+  liability: "liability",
+  equity: "equity",
+  contra: "contra",
+} as const;
+
+export type AccountNormalSide =
+  (typeof AccountNormalSide)[keyof typeof AccountNormalSide];
+
+export const AccountNormalSide = {
+  debit: "debit",
+  credit: "credit",
+} as const;
+
+export interface Account {
+  id: string;
+  /** Account number, e.g. 4400.10, 5400, 6020. */
+  code: string;
+  name: string;
+  type: AccountType;
+  normalSide: AccountNormalSide;
+  /** When set, this account belongs to a cost-centre group (e.g. SALT-01). */
+  costCentreCode?: string | null;
+  /** Counter-account for allocation entries (e.g. 5400 mirrors to 6020). */
+  mirrorAccountCode?: string | null;
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type CreateAccountRequestType =
+  (typeof CreateAccountRequestType)[keyof typeof CreateAccountRequestType];
+
+export const CreateAccountRequestType = {
+  revenue: "revenue",
+  cost_of_sales: "cost_of_sales",
+  expense: "expense",
+  asset: "asset",
+  liability: "liability",
+  equity: "equity",
+  contra: "contra",
+} as const;
+
+export type CreateAccountRequestNormalSide =
+  (typeof CreateAccountRequestNormalSide)[keyof typeof CreateAccountRequestNormalSide];
+
+export const CreateAccountRequestNormalSide = {
+  debit: "debit",
+  credit: "credit",
+} as const;
+
+export interface CreateAccountRequest {
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  name: string;
+  type: CreateAccountRequestType;
+  normalSide: CreateAccountRequestNormalSide;
+  costCentreCode?: string;
+  mirrorAccountCode?: string;
+  notes?: string;
+}
+
+export type UpdateAccountRequestType =
+  (typeof UpdateAccountRequestType)[keyof typeof UpdateAccountRequestType];
+
+export const UpdateAccountRequestType = {
+  revenue: "revenue",
+  cost_of_sales: "cost_of_sales",
+  expense: "expense",
+  asset: "asset",
+  liability: "liability",
+  equity: "equity",
+  contra: "contra",
+} as const;
+
+export type UpdateAccountRequestNormalSide =
+  (typeof UpdateAccountRequestNormalSide)[keyof typeof UpdateAccountRequestNormalSide];
+
+export const UpdateAccountRequestNormalSide = {
+  debit: "debit",
+  credit: "credit",
+} as const;
+
+export interface UpdateAccountRequest {
+  name?: string;
+  type?: UpdateAccountRequestType;
+  normalSide?: UpdateAccountRequestNormalSide;
+  costCentreCode?: string | null;
+  mirrorAccountCode?: string | null;
+  notes?: string | null;
+  isActive?: boolean;
+}
+
+export interface TransactionLine {
+  id: string;
+  accountCode: string;
+  accountName: string;
+  costCentreCode?: string | null;
+  memo?: string | null;
+  /** Amount in dollars (2dp). */
+  debit: number;
+  /** Amount in dollars (2dp). */
+  credit: number;
+}
+
+export type TransactionStatus =
+  (typeof TransactionStatus)[keyof typeof TransactionStatus];
+
+export const TransactionStatus = {
+  posted: "posted",
+  voided: "voided",
+} as const;
+
+export interface Transaction {
+  id: string;
+  postedDate: string;
+  description: string;
+  /** External ref (invoice no, receipt no, batch ID). */
+  reference?: string | null;
+  status: TransactionStatus;
+  voidedReason?: string | null;
+  voidedAt?: string | null;
+  reversesTransactionId?: string | null;
+  sourceSubmissionId?: string | null;
+  totalDebit: number;
+  totalCredit: number;
+  lines: TransactionLine[];
+  createdAt: string;
+  createdByEmail: string;
+}
+
+export interface TransactionPage {
+  items: Transaction[];
+  total: number;
+}
+
+export interface CreateTransactionLine {
+  /** @minLength 1 */
+  accountCode: string;
+  costCentreCode?: string;
+  memo?: string;
+  /** @minimum 0 */
+  debit: number;
+  /** @minimum 0 */
+  credit: number;
+}
+
+export interface CreateTransactionRequest {
+  postedDate: string;
+  /** @minLength 1 */
+  description: string;
+  reference?: string;
+  /** @minItems 2 */
+  lines: CreateTransactionLine[];
+}
+
+export interface VoidTransactionRequest {
+  /** @minLength 3 */
+  reason: string;
+}
+
+export interface ReceiptAttachment {
+  id: string;
+  originalFilename: string;
+  contentType: string;
+  fileSize?: number | null;
+  /** Object reference, e.g. gcs:/objects/<id> */
+  storageRef: string;
+  uploadedAt: string;
+}
+
+export type SubmissionKind =
+  (typeof SubmissionKind)[keyof typeof SubmissionKind];
+
+export const SubmissionKind = {
+  expense: "expense",
+  inventory_receipt: "inventory_receipt",
+} as const;
+
+export type SubmissionStatus =
+  (typeof SubmissionStatus)[keyof typeof SubmissionStatus];
+
+export const SubmissionStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export interface Submission {
+  id: string;
+  kind: SubmissionKind;
+  status: SubmissionStatus;
+  costCentreCode: string;
+  suggestedAccountCode?: string | null;
+  occurredOn: string;
+  vendor: string;
+  /** Total in dollars. */
+  amount: number;
+  description: string;
+  notes?: string | null;
+  itemSku?: string | null;
+  itemName?: string | null;
+  quantity?: number | null;
+  unit?: string | null;
+  rejectedReason?: string | null;
+  approvedTransactionId?: string | null;
+  decidedAt?: string | null;
+  decidedByEmail?: string | null;
+  createdAt: string;
+  submittedByEmail: string;
+  submittedByName?: string | null;
+  attachments: ReceiptAttachment[];
+}
+
+export type CreateSubmissionRequestAttachmentsItem = {
+  storageRef: string;
+  originalFilename: string;
+  contentType: string;
+  fileSize?: number;
+};
+
+export interface CreateSubmissionRequest {
+  kind: SubmissionKind;
+  /** @minLength 1 */
+  costCentreCode: string;
+  suggestedAccountCode?: string;
+  occurredOn: string;
+  /** @minLength 1 */
+  vendor: string;
+  /** @minimum 0 */
+  amount: number;
+  /** @minLength 1 */
+  description: string;
+  notes?: string;
+  itemSku?: string;
+  itemName?: string;
+  quantity?: number;
+  unit?: string;
+  attachments?: CreateSubmissionRequestAttachmentsItem[];
+}
+
+export interface ApproveSubmissionRequest {
+  postedDate: string;
+  description?: string;
+  reference?: string;
+  /** @minItems 2 */
+  lines: CreateTransactionLine[];
+}
+
+export interface RejectSubmissionRequest {
+  /** @minLength 3 */
+  reason: string;
+}
+
+export interface HandlerActivity {
+  userId: string;
+  clerkUserId?: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  totalSubmissions: number;
+  pendingSubmissions: number;
+  lastSubmissionAt?: string | null;
+  daysSinceLastSubmission?: number | null;
+  lastNudgedAt?: string | null;
+}
+
+export interface NudgeHandlerRequest {
+  message?: string;
+}
+
+export interface DashboardCostCentreSummary {
+  code: string;
+  name: string;
+  revenue: number;
+  costs: number;
+  net: number;
+  transactionCount: number;
+}
+
+export interface DashboardMonth {
+  /** YYYY-MM */
+  month: string;
+  revenue: number;
+  costs: number;
+  net: number;
+}
+
+export type BookkeeperDashboardTotals = {
+  transactions: number;
+  postedThisMonth: number;
+  pendingSubmissionsCount: number;
+  costCentres: number;
+  accounts: number;
+};
+
+export interface BookkeeperDashboard {
+  totals: BookkeeperDashboardTotals;
+  byCostCentre: DashboardCostCentreSummary[];
+  byMonth: DashboardMonth[];
+  recentTransactions: Transaction[];
+  pendingSubmissions: Submission[];
+  /** Food handlers who haven't submitted in 14+ days. */
+  staleHandlers: HandlerActivity[];
+}
+
+export type PnlAccountLineNormalSide =
+  (typeof PnlAccountLineNormalSide)[keyof typeof PnlAccountLineNormalSide];
+
+export const PnlAccountLineNormalSide = {
+  debit: "debit",
+  credit: "credit",
+} as const;
+
+export interface PnlAccountLine {
+  accountCode: string;
+  accountName: string;
+  normalSide: PnlAccountLineNormalSide;
+  total: number;
+}
+
+export interface CostCentrePnl {
+  code: string;
+  name: string;
+  parentEntity?: string;
+  revenue: number;
+  costs: number;
+  net: number;
+  revenueLines: PnlAccountLine[];
+  costLines: PnlAccountLine[];
+}
+
+export type CostCentrePnlReportAgencyTotals = {
+  revenue: number;
+  costs: number;
+  net: number;
+};
+
+export interface CostCentrePnlReport {
+  from: string | null;
+  to: string | null;
+  costCentres: CostCentrePnl[];
+  agencyTotals: CostCentrePnlReportAgencyTotals;
+}
+
+export type AuditLogEntryDetails = { [key: string]: unknown } | null;
+
+export interface AuditLogEntry {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId?: string | null;
+  actorEmail: string;
+  actorRole?: BookkeeperRole;
+  details?: AuditLogEntryDetails;
+  createdAt: string;
 }
 
 export type ListLibraryEntriesParams = {
@@ -405,6 +844,66 @@ export type GetRecentActivityParams = {
   /**
    * @minimum 1
    * @maximum 50
+   */
+  limit?: number;
+};
+
+export type ListAccountsParams = {
+  /**
+   * Filter to accounts that belong to a cost-centre group.
+   */
+  costCentreCode?: string;
+};
+
+export type ListTransactionsParams = {
+  costCentreCode?: string;
+  accountCode?: string;
+  status?: ListTransactionsStatus;
+  from?: string;
+  to?: string;
+  search?: string;
+  /**
+   * @minimum 1
+   * @maximum 200
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
+};
+
+export type ListTransactionsStatus =
+  (typeof ListTransactionsStatus)[keyof typeof ListTransactionsStatus];
+
+export const ListTransactionsStatus = {
+  posted: "posted",
+  voided: "voided",
+} as const;
+
+export type ListSubmissionsParams = {
+  status?: ListSubmissionsStatus;
+  mine?: boolean;
+};
+
+export type ListSubmissionsStatus =
+  (typeof ListSubmissionsStatus)[keyof typeof ListSubmissionsStatus];
+
+export const ListSubmissionsStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export type GetBookkeeperPnlParams = {
+  from?: string;
+  to?: string;
+};
+
+export type ListAuditLogParams = {
+  /**
+   * @minimum 1
+   * @maximum 200
    */
   limit?: number;
 };

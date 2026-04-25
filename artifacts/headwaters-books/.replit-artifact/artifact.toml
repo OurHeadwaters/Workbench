@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/headwaters-books/"
+title = "Headwaters Books"
+version = "1.0.0"
+id = "artifacts/headwaters-books"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/headwaters-books/" ]
+localPort = 20502
+
+[services.development]
+run = "pnpm --filter @workspace/headwaters-books run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/headwaters-books", "run", "build" ]
+publicDir = "artifacts/headwaters-books/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20502"
+BASE_PATH = "/headwaters-books/"

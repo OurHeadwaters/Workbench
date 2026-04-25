@@ -14,6 +14,8 @@ tags:
     description: Object storage upload and serving endpoints.
   - name: library
     description: Northern Food Systems Research Library — entries, producers, subjects, project buckets, contributors, and tokenized share links.
+  - name: bookkeeper
+    description: Headwaters Books — role-aware ledger, cost-centres, transactions, food-handler submissions, and dashboards.
 paths:
   /healthz:
     get:
@@ -538,6 +540,478 @@ paths:
                 items:
                   $ref: '#/components/schemas/LibraryEntry'
 
+  /bookkeeper/me:
+    get:
+      tags: [bookkeeper]
+      operationId: getBookkeeperMe
+      summary: Current authenticated user with role
+      responses:
+        '200':
+          description: Current user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookkeeperMe'
+        '401':
+          description: Not signed in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /bookkeeper/users:
+    get:
+      tags: [bookkeeper]
+      operationId: listBookkeeperUsers
+      summary: List app users with roles (owner only)
+      responses:
+        '200':
+          description: Users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookkeeperUser'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /bookkeeper/users/{id}:
+    patch:
+      tags: [bookkeeper]
+      operationId: updateBookkeeperUser
+      summary: Change a user's role (owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookkeeperUserRequest'
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookkeeperUser'
+
+  /bookkeeper/cost-centres:
+    get:
+      tags: [bookkeeper]
+      operationId: listCostCentres
+      summary: List cost centres
+      responses:
+        '200':
+          description: Cost centres.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CostCentre'
+    post:
+      tags: [bookkeeper]
+      operationId: createCostCentre
+      summary: Create a cost centre (owner only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCostCentreRequest'
+      responses:
+        '200':
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCentre'
+
+  /bookkeeper/cost-centres/{id}:
+    patch:
+      tags: [bookkeeper]
+      operationId: updateCostCentre
+      summary: Update a cost centre (owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCostCentreRequest'
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCentre'
+
+  /bookkeeper/accounts:
+    get:
+      tags: [bookkeeper]
+      operationId: listAccounts
+      summary: List chart-of-accounts entries
+      parameters:
+        - in: query
+          name: costCentreCode
+          schema: { type: string }
+          description: Filter to accounts that belong to a cost-centre group.
+      responses:
+        '200':
+          description: Accounts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      tags: [bookkeeper]
+      operationId: createAccount
+      summary: Add an account (owner only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '200':
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+  /bookkeeper/accounts/{id}:
+    patch:
+      tags: [bookkeeper]
+      operationId: updateAccount
+      summary: Update an account (owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+  /bookkeeper/transactions:
+    get:
+      tags: [bookkeeper]
+      operationId: listTransactions
+      summary: List ledger transactions
+      parameters:
+        - in: query
+          name: costCentreCode
+          schema: { type: string }
+        - in: query
+          name: accountCode
+          schema: { type: string }
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [posted, voided]
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        '200':
+          description: Transactions page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionPage'
+    post:
+      tags: [bookkeeper]
+      operationId: createTransaction
+      summary: Post a balanced multi-line transaction (bookkeeper, ops_manager, owner)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '200':
+          description: Posted transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Unbalanced or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /bookkeeper/transactions/{id}:
+    get:
+      tags: [bookkeeper]
+      operationId: getTransaction
+      summary: Get a transaction with lines
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Transaction detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /bookkeeper/transactions/{id}/void:
+    post:
+      tags: [bookkeeper]
+      operationId: voidTransaction
+      summary: Void a posted transaction by writing a reversing entry (bookkeeper, ops_manager, owner)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoidTransactionRequest'
+      responses:
+        '200':
+          description: Reversing transaction created; original marked voided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+
+  /bookkeeper/submissions:
+    get:
+      tags: [bookkeeper]
+      operationId: listSubmissions
+      summary: List food-handler submissions (food_handler sees only own; staff see queue)
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+        - in: query
+          name: mine
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Submissions list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Submission'
+    post:
+      tags: [bookkeeper]
+      operationId: createSubmission
+      summary: Submit a receipt or inventory log for review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubmissionRequest'
+      responses:
+        '200':
+          description: Created submission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+
+  /bookkeeper/submissions/{id}/approve:
+    post:
+      tags: [bookkeeper]
+      operationId: approveSubmission
+      summary: Approve a pending submission and post the resulting transaction (bookkeeper, ops_manager, owner)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveSubmissionRequest'
+      responses:
+        '200':
+          description: Approved with linked transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+
+  /bookkeeper/submissions/{id}/reject:
+    post:
+      tags: [bookkeeper]
+      operationId: rejectSubmission
+      summary: Reject a pending submission with a reason
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectSubmissionRequest'
+      responses:
+        '200':
+          description: Rejected.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+
+  /bookkeeper/handlers/activity:
+    get:
+      tags: [bookkeeper]
+      operationId: getHandlerActivity
+      summary: Food-handler reminder/nudge view — last submission per handler
+      responses:
+        '200':
+          description: Handlers with activity stats.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HandlerActivity'
+
+  /bookkeeper/handlers/{id}/nudge:
+    post:
+      tags: [bookkeeper]
+      operationId: nudgeHandler
+      summary: Record a reminder nudge to a food handler (logs to audit_log)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NudgeHandlerRequest'
+      responses:
+        '200':
+          description: Nudge recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HandlerActivity'
+
+  /bookkeeper/dashboard:
+    get:
+      tags: [bookkeeper]
+      operationId: getBookkeeperDashboard
+      summary: Top-level dashboard counts and totals
+      responses:
+        '200':
+          description: Dashboard summary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookkeeperDashboard'
+
+  /bookkeeper/dashboard/pnl:
+    get:
+      tags: [bookkeeper]
+      operationId: getBookkeeperPnl
+      summary: P&L by cost-centre with channel revenue + cost breakdown
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: P&L by cost-centre.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCentrePnlReport'
+
+  /bookkeeper/audit:
+    get:
+      tags: [bookkeeper]
+      operationId: listAuditLog
+      summary: Audit log (owner only)
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+      responses:
+        '200':
+          description: Audit log entries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogEntry'
+
 components:
   schemas:
     HealthStatus:
@@ -963,7 +1437,466 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LibraryStatsCount'
-        recentEntries:
+
+    BookkeeperRole:
+      type: string
+      enum: [owner, ops_manager, bookkeeper, food_handler]
+      description: Role assigned in app_users (mirror of Clerk publicMetadata.role).
+
+    BookkeeperMe:
+      type: object
+      required: [id, clerkUserId, email, role, isAuthenticated]
+      properties:
+        id: { type: string, format: uuid }
+        clerkUserId: { type: string }
+        email: { type: string }
+        firstName: { type: string, nullable: true }
+        lastName: { type: string, nullable: true }
+        role:
+          $ref: '#/components/schemas/BookkeeperRole'
+        isAuthenticated: { type: boolean }
+        isOwner: { type: boolean }
+
+    BookkeeperUser:
+      type: object
+      required: [id, clerkUserId, email, role, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        clerkUserId: { type: string }
+        email: { type: string }
+        firstName: { type: string, nullable: true }
+        lastName: { type: string, nullable: true }
+        role:
+          $ref: '#/components/schemas/BookkeeperRole'
+        createdAt: { type: string, format: date-time }
+        lastSeenAt: { type: string, format: date-time, nullable: true }
+
+    UpdateBookkeeperUserRequest:
+      type: object
+      required: [role]
+      properties:
+        role:
+          $ref: '#/components/schemas/BookkeeperRole'
+
+    CostCentre:
+      type: object
+      required: [id, code, name, parentEntity, isActive, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        code:
+          type: string
+          description: Short code, e.g. SALT-01, DEERLAKE, HEADWATERS.
+        name: { type: string }
+        parentEntity:
+          type: string
+          description: Where the net rolls up, e.g. "Headwaters (agency P&L)".
+        owner:
+          type: string
+          nullable: true
+          description: Who files the close, e.g. "Bookkeeper".
+        description: { type: string, nullable: true }
+        color: { type: string, nullable: true }
+        isActive: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    CreateCostCentreRequest:
+      type: object
+      required: [code, name, parentEntity]
+      properties:
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        parentEntity: { type: string, minLength: 1 }
+        owner: { type: string }
+        description: { type: string }
+        color: { type: string }
+
+    UpdateCostCentreRequest:
+      type: object
+      properties:
+        name: { type: string }
+        parentEntity: { type: string }
+        owner: { type: string }
+        description: { type: string }
+        color: { type: string }
+        isActive: { type: boolean }
+
+    Account:
+      type: object
+      required: [id, code, name, type, normalSide, isActive, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        code:
+          type: string
+          description: Account number, e.g. 4400.10, 5400, 6020.
+        name: { type: string }
+        type:
+          type: string
+          enum: [revenue, cost_of_sales, expense, asset, liability, equity, contra]
+        normalSide:
+          type: string
+          enum: [debit, credit]
+        costCentreCode:
+          type: string
+          nullable: true
+          description: When set, this account belongs to a cost-centre group (e.g. SALT-01).
+        mirrorAccountCode:
+          type: string
+          nullable: true
+          description: Counter-account for allocation entries (e.g. 5400 mirrors to 6020).
+        notes: { type: string, nullable: true }
+        isActive: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    CreateAccountRequest:
+      type: object
+      required: [code, name, type, normalSide]
+      properties:
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        type:
+          type: string
+          enum: [revenue, cost_of_sales, expense, asset, liability, equity, contra]
+        normalSide:
+          type: string
+          enum: [debit, credit]
+        costCentreCode: { type: string }
+        mirrorAccountCode: { type: string }
+        notes: { type: string }
+
+    UpdateAccountRequest:
+      type: object
+      properties:
+        name: { type: string }
+        type:
+          type: string
+          enum: [revenue, cost_of_sales, expense, asset, liability, equity, contra]
+        normalSide:
+          type: string
+          enum: [debit, credit]
+        costCentreCode: { type: string, nullable: true }
+        mirrorAccountCode: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        isActive: { type: boolean }
+
+    TransactionLine:
+      type: object
+      required: [id, accountCode, accountName, debit, credit]
+      properties:
+        id: { type: string, format: uuid }
+        accountCode: { type: string }
+        accountName: { type: string }
+        costCentreCode: { type: string, nullable: true }
+        memo: { type: string, nullable: true }
+        debit:
+          type: number
+          description: Amount in dollars (2dp).
+        credit:
+          type: number
+          description: Amount in dollars (2dp).
+
+    Transaction:
+      type: object
+      required: [id, postedDate, description, status, totalDebit, totalCredit, lines, createdAt, createdByEmail]
+      properties:
+        id: { type: string, format: uuid }
+        postedDate: { type: string, format: date }
+        description: { type: string }
+        reference:
+          type: string
+          nullable: true
+          description: External ref (invoice no, receipt no, batch ID).
+        status:
+          type: string
+          enum: [posted, voided]
+        voidedReason: { type: string, nullable: true }
+        voidedAt: { type: string, format: date-time, nullable: true }
+        reversesTransactionId: { type: string, format: uuid, nullable: true }
+        sourceSubmissionId: { type: string, format: uuid, nullable: true }
+        totalDebit: { type: number }
+        totalCredit: { type: number }
+        lines:
           type: array
           items:
-            $ref: '#/components/schemas/LibraryEntry'
+            $ref: '#/components/schemas/TransactionLine'
+        createdAt: { type: string, format: date-time }
+        createdByEmail: { type: string }
+
+    TransactionPage:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        total: { type: integer }
+
+    CreateTransactionLine:
+      type: object
+      required: [accountCode, debit, credit]
+      properties:
+        accountCode: { type: string, minLength: 1 }
+        costCentreCode: { type: string }
+        memo: { type: string }
+        debit: { type: number, minimum: 0 }
+        credit: { type: number, minimum: 0 }
+
+    CreateTransactionRequest:
+      type: object
+      required: [postedDate, description, lines]
+      properties:
+        postedDate: { type: string, format: date }
+        description: { type: string, minLength: 1 }
+        reference: { type: string }
+        lines:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/CreateTransactionLine'
+
+    VoidTransactionRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 3 }
+
+    ReceiptAttachment:
+      type: object
+      required: [id, originalFilename, contentType, storageRef, uploadedAt]
+      properties:
+        id: { type: string, format: uuid }
+        originalFilename: { type: string }
+        contentType: { type: string }
+        fileSize: { type: integer, nullable: true }
+        storageRef: { type: string, description: "Object reference, e.g. gcs:/objects/<id>" }
+        uploadedAt: { type: string, format: date-time }
+
+    SubmissionKind:
+      type: string
+      enum: [expense, inventory_receipt]
+
+    Submission:
+      type: object
+      required: [id, kind, status, costCentreCode, occurredOn, vendor, amount, description, createdAt, submittedByEmail, attachments]
+      properties:
+        id: { type: string, format: uuid }
+        kind:
+          $ref: '#/components/schemas/SubmissionKind'
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        costCentreCode: { type: string }
+        suggestedAccountCode: { type: string, nullable: true }
+        occurredOn: { type: string, format: date }
+        vendor: { type: string }
+        amount:
+          type: number
+          description: Total in dollars.
+        description: { type: string }
+        notes: { type: string, nullable: true }
+        # inventory-only
+        itemSku: { type: string, nullable: true }
+        itemName: { type: string, nullable: true }
+        quantity: { type: number, nullable: true }
+        unit: { type: string, nullable: true }
+        # workflow
+        rejectedReason: { type: string, nullable: true }
+        approvedTransactionId: { type: string, format: uuid, nullable: true }
+        decidedAt: { type: string, format: date-time, nullable: true }
+        decidedByEmail: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        submittedByEmail: { type: string }
+        submittedByName: { type: string, nullable: true }
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptAttachment'
+
+    CreateSubmissionRequest:
+      type: object
+      required: [kind, costCentreCode, occurredOn, vendor, amount, description]
+      properties:
+        kind:
+          $ref: '#/components/schemas/SubmissionKind'
+        costCentreCode: { type: string, minLength: 1 }
+        suggestedAccountCode: { type: string }
+        occurredOn: { type: string, format: date }
+        vendor: { type: string, minLength: 1 }
+        amount: { type: number, minimum: 0 }
+        description: { type: string, minLength: 1 }
+        notes: { type: string }
+        itemSku: { type: string }
+        itemName: { type: string }
+        quantity: { type: number }
+        unit: { type: string }
+        attachments:
+          type: array
+          items:
+            type: object
+            required: [storageRef, originalFilename, contentType]
+            properties:
+              storageRef: { type: string }
+              originalFilename: { type: string }
+              contentType: { type: string }
+              fileSize: { type: integer }
+
+    ApproveSubmissionRequest:
+      type: object
+      required: [postedDate, lines]
+      properties:
+        postedDate: { type: string, format: date }
+        description: { type: string }
+        reference: { type: string }
+        lines:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/CreateTransactionLine'
+
+    RejectSubmissionRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 3 }
+
+    HandlerActivity:
+      type: object
+      required: [userId, email, totalSubmissions, pendingSubmissions]
+      properties:
+        userId: { type: string, format: uuid }
+        clerkUserId: { type: string }
+        email: { type: string }
+        firstName: { type: string, nullable: true }
+        lastName: { type: string, nullable: true }
+        totalSubmissions: { type: integer }
+        pendingSubmissions: { type: integer }
+        lastSubmissionAt: { type: string, format: date-time, nullable: true }
+        daysSinceLastSubmission: { type: integer, nullable: true }
+        lastNudgedAt: { type: string, format: date-time, nullable: true }
+
+    NudgeHandlerRequest:
+      type: object
+      properties:
+        message: { type: string }
+
+    DashboardCostCentreSummary:
+      type: object
+      required: [code, name, revenue, costs, net, transactionCount]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        revenue: { type: number }
+        costs: { type: number }
+        net: { type: number }
+        transactionCount: { type: integer }
+
+    DashboardMonth:
+      type: object
+      required: [month, revenue, costs, net]
+      properties:
+        month:
+          type: string
+          description: YYYY-MM
+        revenue: { type: number }
+        costs: { type: number }
+        net: { type: number }
+
+    BookkeeperDashboard:
+      type: object
+      required: [totals, byCostCentre, byMonth, recentTransactions, pendingSubmissions, staleHandlers]
+      properties:
+        totals:
+          type: object
+          required: [transactions, postedThisMonth, pendingSubmissionsCount, costCentres, accounts]
+          properties:
+            transactions: { type: integer }
+            postedThisMonth: { type: integer }
+            pendingSubmissionsCount: { type: integer }
+            costCentres: { type: integer }
+            accounts: { type: integer }
+        byCostCentre:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardCostCentreSummary'
+        byMonth:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardMonth'
+        recentTransactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        pendingSubmissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Submission'
+        staleHandlers:
+          type: array
+          description: Food handlers who haven't submitted in 14+ days.
+          items:
+            $ref: '#/components/schemas/HandlerActivity'
+
+    PnlAccountLine:
+      type: object
+      required: [accountCode, accountName, normalSide, total]
+      properties:
+        accountCode: { type: string }
+        accountName: { type: string }
+        normalSide:
+          type: string
+          enum: [debit, credit]
+        total: { type: number }
+
+    CostCentrePnl:
+      type: object
+      required: [code, name, revenue, costs, net, revenueLines, costLines]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        parentEntity: { type: string }
+        revenue: { type: number }
+        costs: { type: number }
+        net: { type: number }
+        revenueLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PnlAccountLine'
+        costLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PnlAccountLine'
+
+    CostCentrePnlReport:
+      type: object
+      required: [from, to, costCentres, agencyTotals]
+      properties:
+        from: { type: string, format: date, nullable: true }
+        to: { type: string, format: date, nullable: true }
+        costCentres:
+          type: array
+          items:
+            $ref: '#/components/schemas/CostCentrePnl'
+        agencyTotals:
+          type: object
+          required: [revenue, costs, net]
+          properties:
+            revenue: { type: number }
+            costs: { type: number }
+            net: { type: number }
+
+    AuditLogEntry:
+      type: object
+      required: [id, action, entityType, createdAt, actorEmail]
+      properties:
+        id: { type: string, format: uuid }
+        action: { type: string }
+        entityType: { type: string }
+        entityId: { type: string, nullable: true }
+        actorEmail: { type: string }
+        actorRole:
+          $ref: '#/components/schemas/BookkeeperRole'
+        details:
+          type: object
+          additionalProperties: true
+          nullable: true
+        createdAt: { type: string, format: date-time }

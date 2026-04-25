@@ -5,7 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { LibraryEntry } from "./libraryEntry";
 import type { LibraryStatsCount } from "./libraryStatsCount";
 
 export interface LibraryStats {
@@ -19,5 +18,4 @@ export interface LibraryStats {
   topSubjects: LibraryStatsCount[];
   topProducers: LibraryStatsCount[];
   bucketBreakdown: LibraryStatsCount[];
-  recentEntries?: LibraryEntry[];
 }

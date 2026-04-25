@@ -17,31 +17,58 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  Account,
+  ApproveSubmissionRequest,
+  AuditLogEntry,
+  BookkeeperDashboard,
+  BookkeeperMe,
+  BookkeeperUser,
   Contributor,
+  CostCentre,
+  CostCentrePnlReport,
+  CreateAccountRequest,
   CreateContributorRequest,
+  CreateCostCentreRequest,
   CreateEntryFromUrlRequest,
   CreateLibraryEntryRequest,
   CreateProducerRequest,
   CreateShareLinkRequest,
+  CreateSubmissionRequest,
+  CreateTransactionRequest,
   ErrorEnvelope,
+  GetBookkeeperPnlParams,
   GetRecentActivityParams,
+  HandlerActivity,
   HealthStatus,
   LibraryEntry,
   LibraryEntryPage,
   LibraryEntryUpsertResult,
   LibraryStats,
+  ListAccountsParams,
+  ListAuditLogParams,
   ListLibraryEntriesParams,
   ListProducersParams,
+  ListSubmissionsParams,
+  ListTransactionsParams,
+  NudgeHandlerRequest,
   Producer,
   ProducerDetail,
   ProjectBucketWithCount,
   PublicShareLink,
+  RejectSubmissionRequest,
   ShareLink,
   ShareLinkSummary,
   SubjectWithCount,
+  Submission,
+  Transaction,
+  TransactionPage,
+  UpdateAccountRequest,
+  UpdateBookkeeperUserRequest,
+  UpdateCostCentreRequest,
   UpdateLibraryEntryRequest,
   UploadUrlRequest,
   UploadUrlResponse,
+  VoidTransactionRequest,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -2083,6 +2110,1902 @@ export function useGetRecentActivity<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetRecentActivityQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Current authenticated user with role
+ */
+export const getGetBookkeeperMeUrl = () => {
+  return `/api/bookkeeper/me`;
+};
+
+export const getBookkeeperMe = async (
+  options?: RequestInit,
+): Promise<BookkeeperMe> => {
+  return customFetch<BookkeeperMe>(getGetBookkeeperMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBookkeeperMeQueryKey = () => {
+  return [`/api/bookkeeper/me`] as const;
+};
+
+export const getGetBookkeeperMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBookkeeperMe>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetBookkeeperMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBookkeeperMe>>> = ({
+    signal,
+  }) => getBookkeeperMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBookkeeperMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBookkeeperMe>>
+>;
+export type GetBookkeeperMeQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Current authenticated user with role
+ */
+
+export function useGetBookkeeperMe<
+  TData = Awaited<ReturnType<typeof getBookkeeperMe>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBookkeeperMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List app users with roles (owner only)
+ */
+export const getListBookkeeperUsersUrl = () => {
+  return `/api/bookkeeper/users`;
+};
+
+export const listBookkeeperUsers = async (
+  options?: RequestInit,
+): Promise<BookkeeperUser[]> => {
+  return customFetch<BookkeeperUser[]>(getListBookkeeperUsersUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListBookkeeperUsersQueryKey = () => {
+  return [`/api/bookkeeper/users`] as const;
+};
+
+export const getListBookkeeperUsersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listBookkeeperUsers>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listBookkeeperUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListBookkeeperUsersQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listBookkeeperUsers>>
+  > = ({ signal }) => listBookkeeperUsers({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listBookkeeperUsers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListBookkeeperUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listBookkeeperUsers>>
+>;
+export type ListBookkeeperUsersQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary List app users with roles (owner only)
+ */
+
+export function useListBookkeeperUsers<
+  TData = Awaited<ReturnType<typeof listBookkeeperUsers>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listBookkeeperUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListBookkeeperUsersQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Change a user's role (owner only)
+ */
+export const getUpdateBookkeeperUserUrl = (id: string) => {
+  return `/api/bookkeeper/users/${id}`;
+};
+
+export const updateBookkeeperUser = async (
+  id: string,
+  updateBookkeeperUserRequest: UpdateBookkeeperUserRequest,
+  options?: RequestInit,
+): Promise<BookkeeperUser> => {
+  return customFetch<BookkeeperUser>(getUpdateBookkeeperUserUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateBookkeeperUserRequest),
+  });
+};
+
+export const getUpdateBookkeeperUserMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBookkeeperUser>>,
+    TError,
+    { id: string; data: BodyType<UpdateBookkeeperUserRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateBookkeeperUser>>,
+  TError,
+  { id: string; data: BodyType<UpdateBookkeeperUserRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateBookkeeperUser"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateBookkeeperUser>>,
+    { id: string; data: BodyType<UpdateBookkeeperUserRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateBookkeeperUser(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateBookkeeperUserMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateBookkeeperUser>>
+>;
+export type UpdateBookkeeperUserMutationBody =
+  BodyType<UpdateBookkeeperUserRequest>;
+export type UpdateBookkeeperUserMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Change a user's role (owner only)
+ */
+export const useUpdateBookkeeperUser = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBookkeeperUser>>,
+    TError,
+    { id: string; data: BodyType<UpdateBookkeeperUserRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateBookkeeperUser>>,
+  TError,
+  { id: string; data: BodyType<UpdateBookkeeperUserRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateBookkeeperUserMutationOptions(options));
+};
+
+/**
+ * @summary List cost centres
+ */
+export const getListCostCentresUrl = () => {
+  return `/api/bookkeeper/cost-centres`;
+};
+
+export const listCostCentres = async (
+  options?: RequestInit,
+): Promise<CostCentre[]> => {
+  return customFetch<CostCentre[]>(getListCostCentresUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListCostCentresQueryKey = () => {
+  return [`/api/bookkeeper/cost-centres`] as const;
+};
+
+export const getListCostCentresQueryOptions = <
+  TData = Awaited<ReturnType<typeof listCostCentres>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listCostCentres>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListCostCentresQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listCostCentres>>> = ({
+    signal,
+  }) => listCostCentres({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listCostCentres>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListCostCentresQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listCostCentres>>
+>;
+export type ListCostCentresQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List cost centres
+ */
+
+export function useListCostCentres<
+  TData = Awaited<ReturnType<typeof listCostCentres>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listCostCentres>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListCostCentresQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a cost centre (owner only)
+ */
+export const getCreateCostCentreUrl = () => {
+  return `/api/bookkeeper/cost-centres`;
+};
+
+export const createCostCentre = async (
+  createCostCentreRequest: CreateCostCentreRequest,
+  options?: RequestInit,
+): Promise<CostCentre> => {
+  return customFetch<CostCentre>(getCreateCostCentreUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createCostCentreRequest),
+  });
+};
+
+export const getCreateCostCentreMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createCostCentre>>,
+    TError,
+    { data: BodyType<CreateCostCentreRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createCostCentre>>,
+  TError,
+  { data: BodyType<CreateCostCentreRequest> },
+  TContext
+> => {
+  const mutationKey = ["createCostCentre"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createCostCentre>>,
+    { data: BodyType<CreateCostCentreRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createCostCentre(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateCostCentreMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createCostCentre>>
+>;
+export type CreateCostCentreMutationBody = BodyType<CreateCostCentreRequest>;
+export type CreateCostCentreMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a cost centre (owner only)
+ */
+export const useCreateCostCentre = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createCostCentre>>,
+    TError,
+    { data: BodyType<CreateCostCentreRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createCostCentre>>,
+  TError,
+  { data: BodyType<CreateCostCentreRequest> },
+  TContext
+> => {
+  return useMutation(getCreateCostCentreMutationOptions(options));
+};
+
+/**
+ * @summary Update a cost centre (owner only)
+ */
+export const getUpdateCostCentreUrl = (id: string) => {
+  return `/api/bookkeeper/cost-centres/${id}`;
+};
+
+export const updateCostCentre = async (
+  id: string,
+  updateCostCentreRequest: UpdateCostCentreRequest,
+  options?: RequestInit,
+): Promise<CostCentre> => {
+  return customFetch<CostCentre>(getUpdateCostCentreUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateCostCentreRequest),
+  });
+};
+
+export const getUpdateCostCentreMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCostCentre>>,
+    TError,
+    { id: string; data: BodyType<UpdateCostCentreRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateCostCentre>>,
+  TError,
+  { id: string; data: BodyType<UpdateCostCentreRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateCostCentre"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateCostCentre>>,
+    { id: string; data: BodyType<UpdateCostCentreRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateCostCentre(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateCostCentreMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateCostCentre>>
+>;
+export type UpdateCostCentreMutationBody = BodyType<UpdateCostCentreRequest>;
+export type UpdateCostCentreMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a cost centre (owner only)
+ */
+export const useUpdateCostCentre = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCostCentre>>,
+    TError,
+    { id: string; data: BodyType<UpdateCostCentreRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateCostCentre>>,
+  TError,
+  { id: string; data: BodyType<UpdateCostCentreRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateCostCentreMutationOptions(options));
+};
+
+/**
+ * @summary List chart-of-accounts entries
+ */
+export const getListAccountsUrl = (params?: ListAccountsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/accounts?${stringifiedParams}`
+    : `/api/bookkeeper/accounts`;
+};
+
+export const listAccounts = async (
+  params?: ListAccountsParams,
+  options?: RequestInit,
+): Promise<Account[]> => {
+  return customFetch<Account[]>(getListAccountsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAccountsQueryKey = (params?: ListAccountsParams) => {
+  return [`/api/bookkeeper/accounts`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAccountsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAccounts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAccountsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAccounts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListAccountsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listAccounts>>> = ({
+    signal,
+  }) => listAccounts(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAccounts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAccountsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAccounts>>
+>;
+export type ListAccountsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List chart-of-accounts entries
+ */
+
+export function useListAccounts<
+  TData = Awaited<ReturnType<typeof listAccounts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAccountsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAccounts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAccountsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Add an account (owner only)
+ */
+export const getCreateAccountUrl = () => {
+  return `/api/bookkeeper/accounts`;
+};
+
+export const createAccount = async (
+  createAccountRequest: CreateAccountRequest,
+  options?: RequestInit,
+): Promise<Account> => {
+  return customFetch<Account>(getCreateAccountUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createAccountRequest),
+  });
+};
+
+export const getCreateAccountMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createAccount>>,
+    TError,
+    { data: BodyType<CreateAccountRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createAccount>>,
+  TError,
+  { data: BodyType<CreateAccountRequest> },
+  TContext
+> => {
+  const mutationKey = ["createAccount"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createAccount>>,
+    { data: BodyType<CreateAccountRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createAccount(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createAccount>>
+>;
+export type CreateAccountMutationBody = BodyType<CreateAccountRequest>;
+export type CreateAccountMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Add an account (owner only)
+ */
+export const useCreateAccount = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createAccount>>,
+    TError,
+    { data: BodyType<CreateAccountRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createAccount>>,
+  TError,
+  { data: BodyType<CreateAccountRequest> },
+  TContext
+> => {
+  return useMutation(getCreateAccountMutationOptions(options));
+};
+
+/**
+ * @summary Update an account (owner only)
+ */
+export const getUpdateAccountUrl = (id: string) => {
+  return `/api/bookkeeper/accounts/${id}`;
+};
+
+export const updateAccount = async (
+  id: string,
+  updateAccountRequest: UpdateAccountRequest,
+  options?: RequestInit,
+): Promise<Account> => {
+  return customFetch<Account>(getUpdateAccountUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateAccountRequest),
+  });
+};
+
+export const getUpdateAccountMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateAccount>>,
+    TError,
+    { id: string; data: BodyType<UpdateAccountRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateAccount>>,
+  TError,
+  { id: string; data: BodyType<UpdateAccountRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateAccount"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateAccount>>,
+    { id: string; data: BodyType<UpdateAccountRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateAccount(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateAccount>>
+>;
+export type UpdateAccountMutationBody = BodyType<UpdateAccountRequest>;
+export type UpdateAccountMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update an account (owner only)
+ */
+export const useUpdateAccount = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateAccount>>,
+    TError,
+    { id: string; data: BodyType<UpdateAccountRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateAccount>>,
+  TError,
+  { id: string; data: BodyType<UpdateAccountRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateAccountMutationOptions(options));
+};
+
+/**
+ * @summary List ledger transactions
+ */
+export const getListTransactionsUrl = (params?: ListTransactionsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/transactions?${stringifiedParams}`
+    : `/api/bookkeeper/transactions`;
+};
+
+export const listTransactions = async (
+  params?: ListTransactionsParams,
+  options?: RequestInit,
+): Promise<TransactionPage> => {
+  return customFetch<TransactionPage>(getListTransactionsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListTransactionsQueryKey = (
+  params?: ListTransactionsParams,
+) => {
+  return [`/api/bookkeeper/transactions`, ...(params ? [params] : [])] as const;
+};
+
+export const getListTransactionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listTransactions>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListTransactionsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listTransactions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListTransactionsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listTransactions>>
+  > = ({ signal }) => listTransactions(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listTransactions>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListTransactionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listTransactions>>
+>;
+export type ListTransactionsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List ledger transactions
+ */
+
+export function useListTransactions<
+  TData = Awaited<ReturnType<typeof listTransactions>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListTransactionsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listTransactions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListTransactionsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Post a balanced multi-line transaction (bookkeeper, ops_manager, owner)
+ */
+export const getCreateTransactionUrl = () => {
+  return `/api/bookkeeper/transactions`;
+};
+
+export const createTransaction = async (
+  createTransactionRequest: CreateTransactionRequest,
+  options?: RequestInit,
+): Promise<Transaction> => {
+  return customFetch<Transaction>(getCreateTransactionUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createTransactionRequest),
+  });
+};
+
+export const getCreateTransactionMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createTransaction>>,
+    TError,
+    { data: BodyType<CreateTransactionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createTransaction>>,
+  TError,
+  { data: BodyType<CreateTransactionRequest> },
+  TContext
+> => {
+  const mutationKey = ["createTransaction"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createTransaction>>,
+    { data: BodyType<CreateTransactionRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createTransaction(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateTransactionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createTransaction>>
+>;
+export type CreateTransactionMutationBody = BodyType<CreateTransactionRequest>;
+export type CreateTransactionMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Post a balanced multi-line transaction (bookkeeper, ops_manager, owner)
+ */
+export const useCreateTransaction = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createTransaction>>,
+    TError,
+    { data: BodyType<CreateTransactionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createTransaction>>,
+  TError,
+  { data: BodyType<CreateTransactionRequest> },
+  TContext
+> => {
+  return useMutation(getCreateTransactionMutationOptions(options));
+};
+
+/**
+ * @summary Get a transaction with lines
+ */
+export const getGetTransactionUrl = (id: string) => {
+  return `/api/bookkeeper/transactions/${id}`;
+};
+
+export const getTransaction = async (
+  id: string,
+  options?: RequestInit,
+): Promise<Transaction> => {
+  return customFetch<Transaction>(getGetTransactionUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetTransactionQueryKey = (id: string) => {
+  return [`/api/bookkeeper/transactions/${id}`] as const;
+};
+
+export const getGetTransactionQueryOptions = <
+  TData = Awaited<ReturnType<typeof getTransaction>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTransaction>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetTransactionQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTransaction>>> = ({
+    signal,
+  }) => getTransaction(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getTransaction>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetTransactionQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getTransaction>>
+>;
+export type GetTransactionQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Get a transaction with lines
+ */
+
+export function useGetTransaction<
+  TData = Awaited<ReturnType<typeof getTransaction>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTransaction>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetTransactionQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Void a posted transaction by writing a reversing entry (bookkeeper, ops_manager, owner)
+ */
+export const getVoidTransactionUrl = (id: string) => {
+  return `/api/bookkeeper/transactions/${id}/void`;
+};
+
+export const voidTransaction = async (
+  id: string,
+  voidTransactionRequest: VoidTransactionRequest,
+  options?: RequestInit,
+): Promise<Transaction> => {
+  return customFetch<Transaction>(getVoidTransactionUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(voidTransactionRequest),
+  });
+};
+
+export const getVoidTransactionMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof voidTransaction>>,
+    TError,
+    { id: string; data: BodyType<VoidTransactionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof voidTransaction>>,
+  TError,
+  { id: string; data: BodyType<VoidTransactionRequest> },
+  TContext
+> => {
+  const mutationKey = ["voidTransaction"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof voidTransaction>>,
+    { id: string; data: BodyType<VoidTransactionRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return voidTransaction(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type VoidTransactionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof voidTransaction>>
+>;
+export type VoidTransactionMutationBody = BodyType<VoidTransactionRequest>;
+export type VoidTransactionMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Void a posted transaction by writing a reversing entry (bookkeeper, ops_manager, owner)
+ */
+export const useVoidTransaction = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof voidTransaction>>,
+    TError,
+    { id: string; data: BodyType<VoidTransactionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof voidTransaction>>,
+  TError,
+  { id: string; data: BodyType<VoidTransactionRequest> },
+  TContext
+> => {
+  return useMutation(getVoidTransactionMutationOptions(options));
+};
+
+/**
+ * @summary List food-handler submissions (food_handler sees only own; staff see queue)
+ */
+export const getListSubmissionsUrl = (params?: ListSubmissionsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/submissions?${stringifiedParams}`
+    : `/api/bookkeeper/submissions`;
+};
+
+export const listSubmissions = async (
+  params?: ListSubmissionsParams,
+  options?: RequestInit,
+): Promise<Submission[]> => {
+  return customFetch<Submission[]>(getListSubmissionsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListSubmissionsQueryKey = (params?: ListSubmissionsParams) => {
+  return [`/api/bookkeeper/submissions`, ...(params ? [params] : [])] as const;
+};
+
+export const getListSubmissionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listSubmissions>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListSubmissionsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listSubmissions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListSubmissionsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSubmissions>>> = ({
+    signal,
+  }) => listSubmissions(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listSubmissions>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListSubmissionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listSubmissions>>
+>;
+export type ListSubmissionsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List food-handler submissions (food_handler sees only own; staff see queue)
+ */
+
+export function useListSubmissions<
+  TData = Awaited<ReturnType<typeof listSubmissions>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListSubmissionsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listSubmissions>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListSubmissionsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Submit a receipt or inventory log for review
+ */
+export const getCreateSubmissionUrl = () => {
+  return `/api/bookkeeper/submissions`;
+};
+
+export const createSubmission = async (
+  createSubmissionRequest: CreateSubmissionRequest,
+  options?: RequestInit,
+): Promise<Submission> => {
+  return customFetch<Submission>(getCreateSubmissionUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createSubmissionRequest),
+  });
+};
+
+export const getCreateSubmissionMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createSubmission>>,
+    TError,
+    { data: BodyType<CreateSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createSubmission>>,
+  TError,
+  { data: BodyType<CreateSubmissionRequest> },
+  TContext
+> => {
+  const mutationKey = ["createSubmission"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createSubmission>>,
+    { data: BodyType<CreateSubmissionRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createSubmission(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateSubmissionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createSubmission>>
+>;
+export type CreateSubmissionMutationBody = BodyType<CreateSubmissionRequest>;
+export type CreateSubmissionMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Submit a receipt or inventory log for review
+ */
+export const useCreateSubmission = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createSubmission>>,
+    TError,
+    { data: BodyType<CreateSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createSubmission>>,
+  TError,
+  { data: BodyType<CreateSubmissionRequest> },
+  TContext
+> => {
+  return useMutation(getCreateSubmissionMutationOptions(options));
+};
+
+/**
+ * @summary Approve a pending submission and post the resulting transaction (bookkeeper, ops_manager, owner)
+ */
+export const getApproveSubmissionUrl = (id: string) => {
+  return `/api/bookkeeper/submissions/${id}/approve`;
+};
+
+export const approveSubmission = async (
+  id: string,
+  approveSubmissionRequest: ApproveSubmissionRequest,
+  options?: RequestInit,
+): Promise<Submission> => {
+  return customFetch<Submission>(getApproveSubmissionUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(approveSubmissionRequest),
+  });
+};
+
+export const getApproveSubmissionMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveSubmission>>,
+    TError,
+    { id: string; data: BodyType<ApproveSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approveSubmission>>,
+  TError,
+  { id: string; data: BodyType<ApproveSubmissionRequest> },
+  TContext
+> => {
+  const mutationKey = ["approveSubmission"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approveSubmission>>,
+    { id: string; data: BodyType<ApproveSubmissionRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approveSubmission(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApproveSubmissionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approveSubmission>>
+>;
+export type ApproveSubmissionMutationBody = BodyType<ApproveSubmissionRequest>;
+export type ApproveSubmissionMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Approve a pending submission and post the resulting transaction (bookkeeper, ops_manager, owner)
+ */
+export const useApproveSubmission = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveSubmission>>,
+    TError,
+    { id: string; data: BodyType<ApproveSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof approveSubmission>>,
+  TError,
+  { id: string; data: BodyType<ApproveSubmissionRequest> },
+  TContext
+> => {
+  return useMutation(getApproveSubmissionMutationOptions(options));
+};
+
+/**
+ * @summary Reject a pending submission with a reason
+ */
+export const getRejectSubmissionUrl = (id: string) => {
+  return `/api/bookkeeper/submissions/${id}/reject`;
+};
+
+export const rejectSubmission = async (
+  id: string,
+  rejectSubmissionRequest: RejectSubmissionRequest,
+  options?: RequestInit,
+): Promise<Submission> => {
+  return customFetch<Submission>(getRejectSubmissionUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(rejectSubmissionRequest),
+  });
+};
+
+export const getRejectSubmissionMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectSubmission>>,
+    TError,
+    { id: string; data: BodyType<RejectSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof rejectSubmission>>,
+  TError,
+  { id: string; data: BodyType<RejectSubmissionRequest> },
+  TContext
+> => {
+  const mutationKey = ["rejectSubmission"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof rejectSubmission>>,
+    { id: string; data: BodyType<RejectSubmissionRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return rejectSubmission(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RejectSubmissionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof rejectSubmission>>
+>;
+export type RejectSubmissionMutationBody = BodyType<RejectSubmissionRequest>;
+export type RejectSubmissionMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Reject a pending submission with a reason
+ */
+export const useRejectSubmission = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectSubmission>>,
+    TError,
+    { id: string; data: BodyType<RejectSubmissionRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof rejectSubmission>>,
+  TError,
+  { id: string; data: BodyType<RejectSubmissionRequest> },
+  TContext
+> => {
+  return useMutation(getRejectSubmissionMutationOptions(options));
+};
+
+/**
+ * @summary Food-handler reminder/nudge view — last submission per handler
+ */
+export const getGetHandlerActivityUrl = () => {
+  return `/api/bookkeeper/handlers/activity`;
+};
+
+export const getHandlerActivity = async (
+  options?: RequestInit,
+): Promise<HandlerActivity[]> => {
+  return customFetch<HandlerActivity[]>(getGetHandlerActivityUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHandlerActivityQueryKey = () => {
+  return [`/api/bookkeeper/handlers/activity`] as const;
+};
+
+export const getGetHandlerActivityQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHandlerActivity>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHandlerActivity>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHandlerActivityQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHandlerActivity>>
+  > = ({ signal }) => getHandlerActivity({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHandlerActivity>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHandlerActivityQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHandlerActivity>>
+>;
+export type GetHandlerActivityQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Food-handler reminder/nudge view — last submission per handler
+ */
+
+export function useGetHandlerActivity<
+  TData = Awaited<ReturnType<typeof getHandlerActivity>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHandlerActivity>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHandlerActivityQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Record a reminder nudge to a food handler (logs to audit_log)
+ */
+export const getNudgeHandlerUrl = (id: string) => {
+  return `/api/bookkeeper/handlers/${id}/nudge`;
+};
+
+export const nudgeHandler = async (
+  id: string,
+  nudgeHandlerRequest: NudgeHandlerRequest,
+  options?: RequestInit,
+): Promise<HandlerActivity> => {
+  return customFetch<HandlerActivity>(getNudgeHandlerUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(nudgeHandlerRequest),
+  });
+};
+
+export const getNudgeHandlerMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nudgeHandler>>,
+    TError,
+    { id: string; data: BodyType<NudgeHandlerRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof nudgeHandler>>,
+  TError,
+  { id: string; data: BodyType<NudgeHandlerRequest> },
+  TContext
+> => {
+  const mutationKey = ["nudgeHandler"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof nudgeHandler>>,
+    { id: string; data: BodyType<NudgeHandlerRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return nudgeHandler(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NudgeHandlerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof nudgeHandler>>
+>;
+export type NudgeHandlerMutationBody = BodyType<NudgeHandlerRequest>;
+export type NudgeHandlerMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Record a reminder nudge to a food handler (logs to audit_log)
+ */
+export const useNudgeHandler = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof nudgeHandler>>,
+    TError,
+    { id: string; data: BodyType<NudgeHandlerRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof nudgeHandler>>,
+  TError,
+  { id: string; data: BodyType<NudgeHandlerRequest> },
+  TContext
+> => {
+  return useMutation(getNudgeHandlerMutationOptions(options));
+};
+
+/**
+ * @summary Top-level dashboard counts and totals
+ */
+export const getGetBookkeeperDashboardUrl = () => {
+  return `/api/bookkeeper/dashboard`;
+};
+
+export const getBookkeeperDashboard = async (
+  options?: RequestInit,
+): Promise<BookkeeperDashboard> => {
+  return customFetch<BookkeeperDashboard>(getGetBookkeeperDashboardUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBookkeeperDashboardQueryKey = () => {
+  return [`/api/bookkeeper/dashboard`] as const;
+};
+
+export const getGetBookkeeperDashboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBookkeeperDashboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetBookkeeperDashboardQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getBookkeeperDashboard>>
+  > = ({ signal }) => getBookkeeperDashboard({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperDashboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBookkeeperDashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBookkeeperDashboard>>
+>;
+export type GetBookkeeperDashboardQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Top-level dashboard counts and totals
+ */
+
+export function useGetBookkeeperDashboard<
+  TData = Awaited<ReturnType<typeof getBookkeeperDashboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBookkeeperDashboardQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary P&L by cost-centre with channel revenue + cost breakdown
+ */
+export const getGetBookkeeperPnlUrl = (params?: GetBookkeeperPnlParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/dashboard/pnl?${stringifiedParams}`
+    : `/api/bookkeeper/dashboard/pnl`;
+};
+
+export const getBookkeeperPnl = async (
+  params?: GetBookkeeperPnlParams,
+  options?: RequestInit,
+): Promise<CostCentrePnlReport> => {
+  return customFetch<CostCentrePnlReport>(getGetBookkeeperPnlUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBookkeeperPnlQueryKey = (
+  params?: GetBookkeeperPnlParams,
+) => {
+  return [
+    `/api/bookkeeper/dashboard/pnl`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetBookkeeperPnlQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBookkeeperPnl>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetBookkeeperPnlParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBookkeeperPnl>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetBookkeeperPnlQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getBookkeeperPnl>>
+  > = ({ signal }) => getBookkeeperPnl(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBookkeeperPnl>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBookkeeperPnlQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBookkeeperPnl>>
+>;
+export type GetBookkeeperPnlQueryError = ErrorType<unknown>;
+
+/**
+ * @summary P&L by cost-centre with channel revenue + cost breakdown
+ */
+
+export function useGetBookkeeperPnl<
+  TData = Awaited<ReturnType<typeof getBookkeeperPnl>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetBookkeeperPnlParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBookkeeperPnl>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBookkeeperPnlQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Audit log (owner only)
+ */
+export const getListAuditLogUrl = (params?: ListAuditLogParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/audit?${stringifiedParams}`
+    : `/api/bookkeeper/audit`;
+};
+
+export const listAuditLog = async (
+  params?: ListAuditLogParams,
+  options?: RequestInit,
+): Promise<AuditLogEntry[]> => {
+  return customFetch<AuditLogEntry[]>(getListAuditLogUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAuditLogQueryKey = (params?: ListAuditLogParams) => {
+  return [`/api/bookkeeper/audit`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAuditLogQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAuditLog>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAuditLogParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAuditLog>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListAuditLogQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listAuditLog>>> = ({
+    signal,
+  }) => listAuditLog(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAuditLog>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAuditLogQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAuditLog>>
+>;
+export type ListAuditLogQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Audit log (owner only)
+ */
+
+export function useListAuditLog<
+  TData = Awaited<ReturnType<typeof listAuditLog>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAuditLogParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAuditLog>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAuditLogQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
