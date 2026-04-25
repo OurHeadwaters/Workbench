@@ -1,0 +1,429 @@
+# Parr's Jars Monorepo — Raw Ground Truth Extraction
+## Pulled: April 25, 2026
+
+---
+
+## SECTION 1 — PRODUCT COPY (verbatim from code)
+
+**File:** `artifacts/parrsjars/src/data/constants.ts`
+
+```typescript
+// PRODUCTS ARRAY — verbatim
+
+{
+  id: "salty-garlic",
+  name: "Salty Garlic",
+  tagline: "The flavour-first garlic shaker.",
+  price: 12,
+  weight: "60g (2.1 oz)",
+  description: "Built on Himalayan and mineral-rich salt, then layered with garlic, onion, black pepper, smoked paprika, and parsley. Shake it into compound butter, spread it on sourdough toast, hit a piece of chicken before it goes in the pan, or stir it into greek yogurt or sour cream for a dip that disappears fast.",
+  ingredients: "Sea Salt, Garlic Powder, Onion Powder, Black Pepper, Smoked Paprika, Parsley",
+},
+{
+  id: "salty-onion-60",
+  name: "Salty Onion",
+  tagline: "The everyday workhorse.",
+  price: 12,
+  weight: "60g (2.1 oz)",
+  description: "Mineral-rich salt with chive, onion, smoked paprika, garlic, black pepper, parsley, and ground celery seed. This is the one that lives on the counter. Swirl it into sour cream, stir it into butter, shake it over meat before it hits the grill, or reach for it on sourdough toast — it fits everywhere.",
+  ingredients: "Sea Salt, Chive Powder, Onion Powder, Smoked Paprika, Garlic Powder, Black Pepper, Parsley, Ground Celery Seed",
+},
+{
+  id: "salty-finish",
+  name: "Salty Finish",
+  tagline: "The BBQ and all-protein blend.",
+  price: 12,
+  weight: "60g (2.1 oz)",
+  description: "Smoked sea salt with garlic, onion, smoked paprika, thyme, black pepper, and parsley — built for the BBQ and everything that comes off it. Chicken, beef, pork: shake it on before it goes down or right at the end. It's also the one to reach for on any egg dish — scrambled, fried, or a plate of eggs at the camp stove.",
+  ingredients: "Sea Salt, Garlic Powder, Onion Powder, Smoked Paprika, Thyme, Black Pepper, Parsley",
+},
+{
+  id: "cheezy-salt",
+  name: "Cheezy Salt",
+  tagline: "Nutritional yeast. Popcorn-approved.",
+  price: 12,
+  weight: "60g (2.1 oz)",
+  description: "Dairy-free and built around nutritional yeast — the ingredient that does the heavy lifting. Sea salt, onion, chive, black pepper, smoked paprika, garlic, and chili round it out. Shake it over a bowl of popcorn, crack some eggs and hit them at the end, or slice an avocado and let it land there. Oddly addictive.",
+  ingredients: "Sea Salt, Nutritional Yeast, Onion Powder, Chive Powder, Black Pepper, Smoked Paprika, Garlic Powder, Chili Powder",
+},
+{
+  id: "sampler-set",
+  name: "The Shaker Set",
+  tagline: "All four gourmet blends. One box.",
+  price: 45,
+  weight: "4 jars",
+  description: "Salty Garlic, Salty Onion, Salty Finish, and Cheezy Salt — the full gourmet lineup, packaged together. The easiest way to replace the shaker entirely, and our most-asked-for gift.",
+  ingredients: "See individual jars for full ingredient lists.",
+},
+
+// GIFT_BUNDLES — verbatim
+
+{
+  id: "bundle-trio",
+  name: "The Trio",
+  tagline: "Three jars, one ribbon. Easy yes.",
+  price: 32, jarCount: 3,
+  description: "Salty Garlic, Salty Onion, and Salty Finish — the gourmet starter trio that wins over the most skeptical kitchens.",
+  contents: ["Salty Garlic", "Salty Onion", "Salty Finish"],
+},
+{
+  id: "bundle-six",
+  name: "The Six-Pack",
+  tagline: "The full gourmet lineup, plus seconds of the favourites.",
+  price: 60, jarCount: 6,
+  description: "All four gourmet blends in one box, plus a second jar each of the two crowd favourites — Salty Garlic and Salty Finish. Built for households that already know one shaker is not enough.",
+  contents: ["Salty Garlic","Salty Garlic","Salty Onion","Salty Finish","Salty Finish","Cheezy Salt"],
+},
+{
+  id: "bundle-host",
+  name: "The Host Gift Box",
+  tagline: "Show up like you mean it.",
+  price: 38, jarCount: 3,
+  description: "A finishing-salt-forward gift trio: Salty Garlic, Salty Finish, and Cheezy Salt — packed gift-ready for the dinner you were invited to.",
+  contents: ["Salty Garlic", "Salty Finish", "Cheezy Salt"],
+},
+
+// BUILD_YOUR_OWN_BUNDLES — verbatim
+
+{
+  id: "byo-3", jarCount: 3, price: 32,
+  name: "Build your own — 3 jars",
+  tagline: "Pick any three. Same bundle price.",
+  description: "Choose any three jars from the gourmet salt line at the trio bundle price.",
+},
+{
+  id: "byo-6", jarCount: 6, price: 60,
+  name: "Build your own — 6 jars",
+  tagline: "Pick any six. Six-pack price.",
+  description: "Choose any six jars from the gourmet salt line — mix and match the four blends — at the six-pack bundle price.",
+},
+```
+
+**NUTRITION — label-grade ingredients and allergen statements (verbatim)**
+
+```typescript
+// SHARED_FACILITY_STATEMENT
+"Made in a small-batch workshop in Dryden, ON that also handles peanut butter on separate equipment. Not a nut-free facility. All blends are gluten-free and dairy-free."
+
+// Per-product (all from same file)
+Salty Garlic:
+  servingSize: "0.5 g (about 1/4 tsp)", servingsPerJar: "~120 servings per 60g jar"
+  ingredients: "Sea Salt, Garlic Powder, Onion Powder, Black Pepper, Smoked Paprika, Parsley."
+  allergens: "No declared allergens in the recipe. See shared-facility note below."
+  preparation: "Shake into compound butter, spread on sourdough toast with butter, hit chicken or any meat before it goes in the pan, or stir into greek yogurt or sour cream for an instant dip."
+  storage: "Store sealed in a cool, dry place. Shelf-stable indefinitely — salt does not spoil."
+
+Salty Onion:
+  servingSize: "0.5 g (about 1/4 tsp)", servingsPerJar: "~120 servings per 60g jar"
+  ingredients: "Sea Salt, Chive Powder, Onion Powder, Smoked Paprika, Garlic Powder, Black Pepper, Parsley, Ground Celery Seed."
+  allergens: "Contains celery (ground celery seed). See shared-facility note below."
+  preparation: "The one that lives on the counter. Swirl into sour cream or greek yogurt, stir into butter, shake over meat before the grill, or reach for it on sourdough toast with butter."
+  storage: "Store sealed in a cool, dry place. Shelf-stable indefinitely."
+
+Salty Finish:
+  servingSize: "0.5 g (about 1/4 tsp)", servingsPerJar: "~120 servings per 60g jar"
+  ingredients: "Sea Salt, Garlic Powder, Onion Powder, Smoked Paprika, Thyme, Black Pepper, Parsley."
+  allergens: "No declared allergens in the recipe. See shared-facility note below."
+  preparation: "Built for the BBQ — chicken, beef, pork, anything off the grill. Hit it on before or right at the end. Also excellent on any egg dish: scrambled, fried, or camp-stove eggs."
+  storage: "Store sealed in a cool, dry place. Shelf-stable indefinitely."
+
+Cheezy Salt:
+  servingSize: "0.5 g (about 1/4 tsp)", servingsPerJar: "~120 servings per 60g jar"
+  ingredients: "Sea Salt, Nutritional Yeast, Onion Powder, Chive Powder, Black Pepper, Smoked Paprika, Garlic Powder, Chili Powder."
+  allergens: "Dairy-free. Contains nutritional yeast (Saccharomyces cerevisiae). See shared-facility note below."
+  preparation: "Shake over a bowl of popcorn, hit eggs at the end of cooking, or slice an avocado and let it land there. Add at the end so the nutritional yeast keeps its colour."
+  storage: "Store sealed in a cool, dry place. Shelf-stable indefinitely."
+```
+
+**BUSINESS CONTACT (verbatim)**
+
+```typescript
+// File: artifacts/parrsjars/src/data/constants.ts
+export const BUSINESS = {
+  name: "Parr's Jars",
+  tagline: "Locally grown, owned & operated.",
+  email: "parrsjars@gmail.com",
+  phone: "(807) 220-3654",
+  address: "106-60 Princess St., Dryden, ON P8N 1C7",
+  region: "Northwestern Ontario — the 807",
+  coopUrl: "https://807foodcoop.ca",
+  instagram: "https://instagram.com/parrsjars",
+};
+```
+
+**IA TAGLINE (verbatim)**
+
+```typescript
+// File: artifacts/parrsjars/src/components/IATagline.tsx
+export const IA_SHORT = "AI? It's actually IA — an Implementation Agent.";
+export const IA_PARAGRAPH = "Most "AI" marketing today is chatbots and vibes. What you get from this workshop is an Implementation Agent — someone who actually ships the named tool you needed. The benefits platform, the grants finder, the operations app on the tablet behind the till. Real systems your team can point at on Monday morning.";
+```
+
+**STUDIO GRANT BLURB (verbatim)**
+
+```typescript
+// File: artifacts/studio/src/grantConfig.ts
+export const GRANT_BLURB = "Some projects may be up to 50% grant-funded — ask about options.";
+```
+
+**SERVICE PACKAGES (verbatim from constants.ts)**
+
+```typescript
+{
+  slug: "starter", name: "Starter Site",
+  promise: "A clean, dignified marketing site for a local business that earns trust on the first scroll.",
+  startingPrice: "$1,800",
+  inclusions: [
+    "Single landing page or up to 5 linked pages",
+    "Mobile-first layout, fast on rural connections",
+    "Plain-language copy polish, no template filler",
+    "Contact form wired to your inbox",
+    "Basic SEO and a Google Business handoff",
+  ],
+  timeline: "2–3 weeks",
+},
+{
+  slug: "operational", name: "Operational Tool",
+  promise: "A custom internal tool that lightens the mental load of running a business in the 807.",
+  startingPrice: "$4,500",
+  scalingNote: "from $4,500 · +modules priced individually",
+  inclusions: [
+    "One core workflow built around how you actually work — scheduling, intake, dispatch, inventory, route planning, or a weather/seasonality dashboard",
+    "Secure logins for you and your team",
+    "Clean data exports (CSV / spreadsheet) so nothing is locked in",
+    "Plain-English admin screens, no training manual required",
+    "Add-on modules quoted individually as you grow",
+    "30 days of post-launch tuning included",
+  ],
+  timeline: "4–8 weeks for the core build",
+},
+{
+  slug: "advanced", name: "Advanced / Blockchain Build",
+  promise: "Ambitious systems — blockchain, smart contracts, tokenized loyalty, on-chain provenance, novel infrastructure.",
+  startingPrice: "Quoted per project",
+  scalingNote: "Discovery sprint billed separately, credited toward the build",
+  inclusions: [
+    "Discovery sprint to pressure-test the idea before any commitment",
+    "Smart contract or on-chain integration (XRP Ledger, EVM, or comparable)",
+    "Self-custody, wallet, or tokenized loyalty flows",
+    "On-chain provenance, settlement, or audit trails where they earn their keep",
+    "Architecture written down in plain English so you own the thinking",
+    "Staged delivery with checkpoints — never a black box",
+  ],
+  timeline: "8–16+ weeks, scoped together",
+},
+```
+
+**EMAIL TEMPLATES — customer-facing copy (subject lines and key text)**
+
+All templates in `artifacts/api-server/src/lib/mailer.ts`:
+
+- Owner order alert subject: `"New paid order [SHIP] — {recipientName} — {total}"` or `"New paid order [PICKUP] — {spot} — {recipientName} — {total}"`
+- Customer confirmation subject: `"Thank you for your Parr's Jars order"`
+- Customer confirmation body opens: `"Hi {customerName}, Thank you for ordering from Parr's Jars. Your payment has been received and we'll get your jars packed and shipped soon."` (pickup variant: `"Your jars will be ready for local pickup. Parr will text {phone} to coordinate at {spot}."`)
+- Customer confirmation closes: `"If anything looks off, just reply to this email. — Parr's Jars"`
+- Gift delivered subject: `"Your Parr's Jars gift is on its way to {recipientFirstName}"`
+- Gift delivered body: `"Just a quick note — your Parr's Jars gift has been packed and sent on its way to {recipient}. It was packed gift-ready, no prices in the box, with your note tucked on top."` Closes: `"Thanks for sending salt instead of socks. — Parr's Jars"`
+- Gift insert footer: `"Replace the shaker. Real salt, real food, one shake. · parrsjars.ca"`
+- Packing slip footer: `"Questions? hello@parrsjars.ca · Replace the shaker."`
+
+Cart recovery templates in `artifacts/api-server/src/lib/recovery-email.ts`:
+- First recovery subject: `"You left some salt behind — here's a quick link back"`
+- First recovery opens: `"No pressure — but you started a Parr's Jars order and didn't quite finish. Your jars are still here whenever you're ready."`
+- Second recovery subject: `"Last call — your Parr's Jars cart is still waiting"`
+- Second recovery opens: `"Quick last note: the cart you started with us is still here. We'll let it go after this so we won't keep nudging."`
+
+SMS template (`artifacts/api-server/src/lib/sms.ts`):
+- New order SMS body: `"New order: {recipient}, {total}, {#items}"`
+- Test SMS body: `"Parr's Jars test SMS — Twilio is wired up. {ISO timestamp}"`
+
+---
+
+## SECTION 2 — SETUP.MD
+
+**Exists at:** `artifacts/parrsjars/SETUP.md` — NOT at the repo root. Complete and current. Full contents were extracted verbatim (too long to inline here but covers: all secrets + where to find each one, Resend domain verification step-by-step including DNS record types, Square webhook configuration, shipping tier config locations, smoke test procedure).
+
+---
+
+## SECTION 3 — SECRETS INVENTORY (names only)
+
+**Storefront (parrsjars):**
+- `SQUARE_ACCESS_TOKEN` — Square
+- `SQUARE_LOCATION_ID` — Square
+- `SQUARE_WEBHOOK_SIGNATURE_KEY` — Square
+- `SQUARE_ENVIRONMENT` — Square (value: "production" or "sandbox")
+- `SQUARE_SUPPORT_EMAIL` — Square
+- `SQUARE_WEBHOOK_URL` — Square
+- `ADMIN_PASSWORD` — internal (storefront admin dashboard)
+- `RESEND_API_KEY` — Resend
+- `DESIGN_LEADS_EMAIL` — Resend (recipient inbox)
+- `DESIGN_LEADS_FROM` — Resend (sender address)
+- `DESIGN_LEADS_TOKEN` — internal (bearer token for listing leads)
+- `OWNER_NOTIFICATION_EMAIL` — Resend (recipient)
+- `ORDER_NOTIFICATIONS_FROM` — Resend (sender override)
+- `OWNER_NOTIFICATION_PHONE` — Twilio (E.164 recipient)
+- `TWILIO_ACCOUNT_SID` — Twilio
+- `TWILIO_AUTH_TOKEN` — Twilio
+- `TWILIO_FROM_PHONE` — Twilio (sender number)
+- `STUDIO_LEADS_EMAIL` — Resend (studio contact form recipient)
+- `STUDIO_LEADS_FROM` — Resend (studio sender)
+- `CART_RECOVERY_TRIGGER_TOKEN` — internal
+- `CART_RECOVERY_TICK_MINUTES` — internal
+- `DISABLE_CART_RECOVERY_SCHEDULER` — internal
+- `PUBLIC_SITE_ORIGIN` — internal
+- `STOREFRONT_BASE_URL` — internal
+- `REVIEW_REQUEST_DELAY_DAYS` — internal
+- `OWNER_DASHBOARD_URL` — internal
+- `MOMENTUM_DASHBOARD_URL` — internal
+- `MOMENTUM_DIGEST_EMAIL` — internal/Resend
+- `MOMENTUM_DIGEST_SMS` — internal/Twilio
+- `MOMENTUM_DIGEST_TICK_MINUTES` — internal
+- `DISABLE_MOMENTUM_DIGEST_SCHEDULER` — internal
+
+**Books:**
+- `BOOKS_BOBBIE_PASSWORD` — internal
+- `BOOKS_MOM_PASSWORD` — internal
+
+**Meeting Companion:**
+- `VITE_MEETING_PASSWORD` — internal
+
+**Shared (all apps via API server):**
+- `DATABASE_URL` — PostgreSQL (Replit-managed)
+- `SESSION_SECRET` — internal (Express sessions)
+- `PORT` — Replit-managed
+- `NODE_ENV` — Replit-managed
+- `REPLIT_DOMAINS` — Replit-managed
+- `API_BASE_URL` — internal
+
+**OpenAI** — used by Meeting Companion and previously by Bright Side. Referenced via `@workspace/integrations-openai-ai-server` (Replit integration proxy, not a raw env var key visible in the code audit).
+
+---
+
+## SECTION 4 — LIVE DATA: PARR'S BOOKS
+
+**Schema (from database, verbatim):**
+
+```
+books_users:        id (serial PK), username (text), password_hash (text), display_name (text), created_at (timestamptz)
+books_accounts:     id (serial PK), code (text), name (text), type (text), tax_code (text default 'none'), active (bool default true), sort_order (int default 0)
+books_transactions: id (serial PK), date (date), description (text), account_id (int FK), amount_cents (int), is_credit (bool), notes (text nullable), source (text default 'manual'), cleared (bool), created_by_user_id (int nullable FK), deleted_at (timestamptz nullable), created_at (timestamptz), tax_code (text nullable)
+books_attachments:  id (serial PK), transaction_id (int FK cascade), original_filename (text), mime_type (text), data_url (text), uploaded_by_user_id (int nullable FK), uploaded_at (timestamptz)
+```
+
+**Row counts (live DB):**
+- books_users: **2**
+- books_accounts: **19**
+- books_transactions (active): **0**
+- books_transactions (soft-deleted): **0**
+- books_attachments: **0**
+
+**Most recent ledger entry:** NULL — no transactions have ever been entered.
+
+**Receipt attachment storage:** Stored as base64 data_url directly in the `books_attachments` table. Total size: 0 MB (0 attachments).
+
+**GST/HST export:** No export function exists in the app today. Tax codes are stored per-transaction and per-account, and are visible in the category report, but there is no "export for GST return" feature. That logic lives only in the report view (frontend rendered table) and the DB data — no CSV export of tax-coded transactions.
+
+---
+
+## SECTION 5 — LIVE DATA: STOREFRONT
+
+**Schema highlights (from database):**
+
+```
+orders: id, square_order_id, square_payment_id, customer_email, customer_name, recipient_name, gift_note, shipping_address (jsonb), items (jsonb), subtotal_cents, shipping_cents, total_cents, is_gift, paid_at, created_at, owner_notification_sent_at, fulfilled_at, review_invite_sent_at, fulfillment_method, pickup_spot, pickup_name, pickup_phone, giver_name, gift_delivered_notified_at, wrap_upgrade, deliver_by_date
+pending_checkouts: (mirrors orders structure, bridged from checkout to Square webhook)
+abandoned_carts: id, token, email, items (jsonb), subtotal_cents, status, first_reminder_sent_at, second_reminder_sent_at, opened_at, clicked_at, recovered_at, recovered_order_id, recovered_revenue_cents, unsubscribed_at, created_at, updated_at
+design_leads: id (uuid), created_at, status, name, business_name, email, phone, region, tier, problem, day_in_operation, wildest_dream, budget, timeline, work_style, update_frequency, preferred_channel, anything_else
+studio_leads: id (uuid), created_at, status, name, email, project, source, business_name, phone, urgency
+reviews: id, product_id, order_id, rating, comment, reviewer_first_name, hidden, created_at, updated_at
+```
+
+**Row counts (live DB):**
+- orders: **0**
+- pending_checkouts: **0**
+- abandoned_carts: **0**
+- design_leads: **0**
+- studio_leads: **0**
+- reviews: not directly queried but schema exists
+
+**Order history:** Last 30 days: 0. Last 90 days: 0. Lifetime: **0**. Most recent order: NULL. First order: NULL.
+
+**Order PDFs / receipts:** Generated on demand at runtime — packing slips, gift inserts, and batch packing runs are rendered as HTML server-side. Nothing is stored to disk or object storage.
+
+---
+
+## SECTION 6 — WHOLESALE & OPERATIONS FACTS (verbatim from code)
+
+```typescript
+// File: artifacts/parrsjars/src/data/constants.ts — WHOLESALE object, verbatim
+caseQuantity: 25
+minimumOpeningOrder: 4
+reorderMinimum: 2
+leadTimeWeeks: "2–3 weeks"
+region: "Ontario"
+shipping: "Ships from Dryden, ON via Canada Post / regional courier. Freight estimated per order; pickup welcome at the Princess St. workshop."
+packaging: "Glass jars with sealed shaker lids, hand-labeled, packed 25/case in a corrugated shipper. Cases stack two high."
+shelfLife: "Shelf-stable indefinitely when kept cool and dry — salt does not spoil. Lot code on each jar for traceability."
+certifications: "Made in a CFIA-style small-batch workshop in Dryden, ON. Shared facility with a peanut butter producer (separate equipment, food-handler certified, full sanitation protocol between runs) — not a nut-free facility. Full ingredient and allergen statements printed on every jar."
+paymentTerms: "Opening orders: prepaid (e-transfer, Square invoice, or cheque on pickup). Reorders: invoice on shipment, due on receipt."
+volumeTier: { threshold: 10, discountPercent: 5, label: "10+ cases per order: 5% off the case price." }
+issueDate: "April 2026"
+pricing: [
+  { id: "salty-garlic",   name: "Salty Garlic",  size: "60g", msrp: 12, wholesalePerJar: 8.50 },
+  { id: "salty-onion-60", name: "Salty Onion",   size: "60g", msrp: 12, wholesalePerJar: 8.50 },
+  { id: "salty-finish",   name: "Salty Finish",  size: "60g", msrp: 12, wholesalePerJar: 8.50 },
+  { id: "cheezy-salt",    name: "Cheezy Salt",   size: "60g", msrp: 12, wholesalePerJar: 8.50 },
+]
+```
+
+**Shipping tiers (verbatim, both frontend + server-authoritative copy match):**
+```
+1 jar:    $8.00
+2–3 jars: $12.00
+4–6 jars: $15.00
+7–12 jars: $18.00
+Free shipping threshold: $75.00
+Ontario postal codes only: prefixes K, L, M, N, P (validated by regex)
+```
+
+**Pickup address (from WHOLESALE.shipping):** Princess St. workshop, Dryden, ON
+
+**Stockists (verbatim from constants.ts):**
+```
+{ name: "807 Food Co-operative",        address: "Order online at 807foodcoop.ca",  type: "Retailer", note: "The easiest way to order online — full lineup, regional pickup." }
+{ name: "Village Trading Post",          address: "Northwestern Ontario",            type: "Retailer", note: "Local goods and trade — full salt lineup on the shelf." }
+{ name: "Petro-Canada / Mastrangelo Fuels", address: "Northwestern Ontario",        type: "Retailer", note: "Yes, the gas station. Stop in for fuel, leave with finishing salt." }
+{ name: "Hinterland & Co",              address: "Northwestern Ontario",            type: "Retailer", note: "Curated regional goods — full salt lineup on the shelf." }
+{ name: "Regional Farmers' Markets",    address: "Seasonal across the 807",         type: "Market",   note: "Catch us in person — sample everything before you buy." }
+```
+No phone numbers, specific addresses, or contact emails are stored for any stockist — just name, general location, and a note.
+
+---
+
+## SECTION 7 — CUSTODY & EXTERNAL SURFACES
+
+- **parrsjars.ca domain registration:** Unknown — no registrar or renewal date visible in any config file or env var.
+- **Resend account:** Unknown — RESEND_API_KEY is a secret (value not visible). Domain `parrsjars.ca` is referenced in SETUP.md as the intended verified sending domain. Actual verification status: unknown from code alone.
+- **Twilio account:** Unknown — credentials are secrets. SMS sender number is stored as `TWILIO_FROM_PHONE` (value not visible).
+- **Square account/location:** Unknown — `SQUARE_LOCATION_ID` and `SQUARE_ACCESS_TOKEN` are secrets. Webhook URL format from SETUP.md: `https://<your-published-domain>/api/square/webhook`. Events: `payment.updated`, `payment.created`, `order.updated`.
+- **Deployed URL:** The project has a Replit deployment infrastructure (`.replit` config present, artifact system configured). Whether it is currently published and serving a live `.replit.app` URL is unknown from code alone — Replit deployment status is not stored in repo files.
+- **Current traffic:** Unknown — no analytics, no access log visible in code. Database has zero orders, which suggests either no traffic or Square integration was never connected to production.
+
+---
+
+## SECTION 8 — ACTIVITY CHECK
+
+**Last real customer order:** NULL — zero orders in the database. The storefront has never received a paid order (or Square was never connected in production).
+
+**Last bookkeeping entry:** NULL — zero transactions in Books. The app has 2 user accounts and 19 chart of accounts entries but has never had a transaction entered.
+
+**Last code change per app (from git log):**
+- Parr's Jars (parrsjars): `2026-04-23` — "Scrub all grants and NWIC framing from Parr's Jars and Studio sites"
+- Parr's Books: `2026-04-23` — "Add live text preview alongside site copy edit boxes in the admin panel"
+- Meeting Companion: `2026-04-22` — "Filter workshop referral stats by date range"
+- Studio: `2026-04-23` — "Live grant blurb injection for share-an-idea meta tags"
+- API Server: `2026-04-25` — "Remove Bright Side (rec-therapy) from monorepo"
+
+All apps were actively developed within the last 48–72 hours.
+
+**Is anything being actively used by another human?** Based on database evidence: **no**. Zero orders, zero transactions, zero leads. Two user accounts exist in Books but have never entered any data. The project is in active development but has not yet crossed into operational use by customers or staff.
