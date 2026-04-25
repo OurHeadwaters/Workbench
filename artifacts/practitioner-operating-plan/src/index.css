@@ -79,6 +79,23 @@ body {
   box-sizing: border-box;
 }
 
+/* Checklist: same letter-paper sheet for desktop & print, but reflows
+   to a phone-friendly single column on small screens. */
+@media (max-width: 768px) {
+  .onepager-screen.checklist {
+    padding: 0;
+    background: #f4ede0;
+  }
+
+  .onepager-screen.checklist .onepager-sheet {
+    width: 100%;
+    min-height: auto;
+    padding: 16pt 14pt;
+    box-shadow: none;
+    background: #faf6ec;
+  }
+}
+
 @media print {
   @page {
     size: letter portrait;

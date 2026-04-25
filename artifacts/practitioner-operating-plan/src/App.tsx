@@ -4,6 +4,7 @@ import { Link, Route, Switch, useLocation } from "wouter";
 import { slides } from "@/slideLoader";
 import OnePager from "@/pages/OnePager";
 import BrandOnePager from "@/pages/BrandOnePager";
+import Checklist from "@/pages/Checklist";
 import Today from "@/pages/Today";
 import Week from "@/pages/Week";
 import WeekCloseOut from "@/pages/WeekCloseOut";
@@ -263,6 +264,9 @@ export default function App() {
   // OnePager and BrandOnePager keep their own self-contained chrome.
   if (location === "/onepager") return <OnePager />;
   if (location === "/brand") return <BrandOnePager />;
+
+  // Checklist is also a self-contained printable page (no app chrome).
+  if (location === "/checklist") return <Checklist />;
 
   return (
     <ToastProvider>
