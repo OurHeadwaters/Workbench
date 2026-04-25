@@ -7,6 +7,7 @@ import {
   siteCopyReframes,
   retainerExits,
   clientNoteTemplate,
+  politeNoTemplates,
   type WindDownAction,
 } from "@/data/studioWindDown";
 
@@ -38,7 +39,7 @@ export default function StudioWindDown() {
   const [checks, setChecks] = useState<Record<string, boolean>>(() =>
     loadChecks(),
   );
-  const [copied, setCopied] = useState<"copy" | "html" | "note" | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -73,7 +74,7 @@ export default function StudioWindDown() {
     if (typeof window !== "undefined") window.print();
   };
 
-  const copyText = async (text: string, key: "copy" | "html" | "note") => {
+  const copyText = async (text: string, key: string) => {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     try {
       await navigator.clipboard.writeText(text);
@@ -326,6 +327,58 @@ export default function StudioWindDown() {
             <span className="font-mono">{`{DATE_OR_NEXT_STEP_SENTENCE}`}</span>{" "}
             per client. Don't batch-send. Don't apologise for the change — name
             it, name the exit, and name the next concrete step.
+          </div>
+        </section>
+
+        {/* Polite-no templates for new inbound that isn't Carve-out A */}
+        <section className="mb-[10pt] print:mb-[4pt]">
+          <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#b85a3e] font-semibold mb-[2pt] print:text-[6.5pt] print:mb-[1pt]">
+            Polite-no templates — for inbound at inquiries@headwaters
+          </div>
+          <p className="font-body italic text-[8.5pt] text-[#6b7665] leading-[1.4] mb-[6pt] print:text-[6.5pt] print:leading-[1.2] print:mb-[2pt]">
+            Most mail at the Headwaters inquiries address won't be Carve-out A
+            — cold RFPs, "quick site for a friend", agency partnership pitches,
+            and the occasional close-but-not-quite. The redirect tells people
+            what we do; these tell the rest, warmly and once, that they aren't
+            that. Don't write a fresh reply each time.
+          </p>
+
+          <div className="space-y-[6pt] print:space-y-[3pt]">
+            {politeNoTemplates.map((tpl) => {
+              const copyKey = `no-${tpl.key}`;
+              return (
+                <div
+                  key={tpl.key}
+                  className="border border-[#c8bfa7] rounded-[3pt] p-[10pt] print:p-[4pt]"
+                  style={{ background: "#f4ede0" }}
+                >
+                  <div className="flex items-baseline justify-between gap-[8pt] mb-[3pt] print:mb-[1pt]">
+                    <div className="font-display text-[11pt] text-[#1f3d2e] font-semibold leading-tight print:text-[8.5pt]">
+                      {tpl.label}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => copyText(tpl.body, copyKey)}
+                      className="print-hide font-mono uppercase tracking-[0.16em] text-[8pt] px-[8pt] py-[4pt] rounded border border-[#1f3d2e] text-[#1f3d2e] hover:bg-[#ebe2d0] shrink-0"
+                    >
+                      {copied === copyKey ? "Copied" : "Copy template"}
+                    </button>
+                  </div>
+                  <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#b85a3e] font-semibold mb-[3pt] print:text-[6pt] print:mb-[1pt]">
+                    When to use
+                  </div>
+                  <p className="font-body text-[9pt] text-[#2a2520] leading-[1.45] mb-[5pt] print:text-[7pt] print:leading-[1.2] print:mb-[2pt]">
+                    {tpl.whenToUse}
+                  </p>
+                  <pre className="font-mono text-[8.5pt] leading-[1.5] text-[#2a2520] bg-[#ebe2d0] border border-[#c8bfa7] rounded-[3pt] p-[8pt] whitespace-pre-wrap print:text-[6.5pt] print:leading-[1.2] print:p-[3pt]">
+                    {tpl.body}
+                  </pre>
+                  <div className="mt-[3pt] font-body italic text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[6.5pt] print:leading-[1.2]">
+                    {tpl.guidance}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 

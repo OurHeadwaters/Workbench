@@ -206,6 +206,51 @@ export const retainerExits: RetainerExit[] = [
   },
 ];
 
+export type PoliteNoTemplate = {
+  key: "short" | "long";
+  label: string;
+  whenToUse: string;
+  body: string;
+  guidance: string;
+};
+
+export const politeNoTemplates: PoliteNoTemplate[] = [
+  {
+    key: "short",
+    label: "Short — cold or off-topic mail",
+    whenToUse:
+      "Cold RFPs, agency partnership pitches, recruiters, 'quick site for a friend', SEO outreach, anything that clearly isn't Carve-out A. One line, no apology, no door left ajar.",
+    body: `Hi — Headwaters only takes work with First Nations, co-ops, and Northern community organizations on public-interest infrastructure, and this isn't one of those. No reply needed.
+
+— Bobbie`,
+    guidance:
+      "Send it from the Headwaters inquiries address, not from your personal email. Don't add a 'but if anything changes…' line — the redirect already says what we do; this just confirms what we don't.",
+  },
+  {
+    key: "long",
+    label: "Longer — genuine inquiry that just isn't Carve-out A",
+    whenToUse:
+      "A real organization wrote a real note, took the redirect at its word, and is close-but-not-quite — e.g. a private business doing socially useful work, a non-profit outside the Northern / Indigenous / co-op frame, or a First Nation asking for something well outside infrastructure (a brand refresh, an event site). Worth twenty seconds of warmth and a useful pointer.",
+    body: `Subject: Thanks for writing — not a fit at Headwaters
+
+Hi {NAME},
+
+Thanks for the note, and for being concrete about what you're trying to make. I read the whole thing.
+
+Headwaters is narrow on purpose. The work we take on is public-interest infrastructure for First Nations, co-ops, and Northern community organizations — procurement dashboards, council packs, household-level pricing, the pieces that make a public process legible to the people inside it. We don't do general brand or marketing design, agency-of-record retainers, or one-off sites for private businesses, even good ones. What you're describing reads closer to those than to what we take on, so the honest answer is no.
+
+A more useful direction than us:
+
+  {REFERRAL_OR_POINTER}
+
+Wishing you well with it. No reply needed unless something here is wrong.
+
+— Bobbie`,
+    guidance:
+      "Replace {NAME} and {REFERRAL_OR_POINTER} per note — a named studio, a directory, or one sentence of plain advice (e.g. 'a local web shop will do this faster and cheaper than any agency'). If you can't think of a useful pointer in thirty seconds, drop the bullet entirely; a clean no beats a vague referral.",
+  },
+];
+
 export const clientNoteTemplate = `Subject: A change in how I'm working — Bobbie Parr Studio
 
 Hi {NAME},
