@@ -7,13 +7,13 @@ type Line = {
 const costLines: Line[] = [
   {
     label: "Cost basis (the team)",
-    amount: "$66,700 / mo",
+    amount: "$69,700 / mo",
     detail:
       "Practitioner, ops manager in Dryden, IT/Tech, bookkeeper, food handler (Headwaters-owned, embedded at the store Day 1), CD associate, junior analyst, life supports, tooling, recurring tech ops.",
   },
   {
     label: "Reinvestment (35% markup)",
-    amount: "$23,300 / mo",
+    amount: "$24,300 / mo",
     detail:
       "Tech CAPEX (~$60k yr-1), tooling subscriptions, training and R&D, and a pilot reserve so the model scales beyond Deer Lake.",
   },
@@ -109,7 +109,7 @@ export default function ServicePartner() {
                   Total bill to Deer Lake
                 </div>
                 <div className="font-display text-[2vw] font-semibold leading-none">
-                  $90,000 / mo
+                  $94,000 / mo
                 </div>
               </div>
               <div className="font-body text-[0.85vw] leading-[1.4] mt-[0.6vh] opacity-95">
