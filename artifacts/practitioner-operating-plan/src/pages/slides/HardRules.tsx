@@ -99,6 +99,9 @@ export default function HardRules() {
                 baseline two quarters in a row, salt and internal design
                 pause until the ratio is restored.
               </div>
+              <div className="mt-[0.8vh] font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted">
+                Fillable template → /hours
+              </div>
             </div>
           </div>
         </div>

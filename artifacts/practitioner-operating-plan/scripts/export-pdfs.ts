@@ -29,6 +29,11 @@ const PAGES: PageExport[] = [
     outputFile: "dad-lease-checklist.pdf",
     label: "Dad-lease CRA tooling checklist",
   },
+  {
+    route: "/hours",
+    outputFile: "headwaters-hours-by-pillar.pdf",
+    label: "Quarterly hours-by-pillar report",
+  },
 ];
 
 function resolveChromiumExecutable(): string | undefined {

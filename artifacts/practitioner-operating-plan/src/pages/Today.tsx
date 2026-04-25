@@ -252,6 +252,14 @@ export default function Today() {
               Studio wind-down (close bobbieparr.studio to new work) →
             </Link>
           </li>
+          <li>
+            <Link
+              href="/hours"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Quarterly hours-by-pillar report (Hard Rule 02) →
+            </Link>
+          </li>
         </ul>
       </section>
     </div>
