@@ -14,6 +14,7 @@ import Checklist from "@/pages/Checklist";
 import HoursByPillar from "@/pages/HoursByPillar";
 import LeaseTooling from "@/pages/LeaseTooling";
 import StudioWindDown from "@/pages/StudioWindDown";
+import InquiryTriage from "@/pages/InquiryTriage";
 import Today from "@/pages/Today";
 import Week from "@/pages/Week";
 import WeekCloseOut from "@/pages/WeekCloseOut";
@@ -348,6 +349,7 @@ export default function App() {
   if (location === "/hours") return <HoursByPillar />;
   if (location === "/lease-tooling") return <LeaseTooling />;
   if (location === "/studio-wind-down") return <StudioWindDown />;
+  if (location === "/inquiry-triage") return <InquiryTriage />;
 
   return (
     <ToastProvider>

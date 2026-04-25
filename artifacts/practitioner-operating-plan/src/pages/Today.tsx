@@ -260,6 +260,14 @@ export default function Today() {
               Quarterly hours-by-pillar report (Hard Rule 02) →
             </Link>
           </li>
+          <li>
+            <Link
+              href="/inquiry-triage"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Inquiry triage (is this a real Carve-out A lead?) →
+            </Link>
+          </li>
         </ul>
       </section>
     </div>
