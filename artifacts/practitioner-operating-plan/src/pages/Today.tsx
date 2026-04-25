@@ -260,6 +260,14 @@ export default function Today() {
           </li>
           <li>
             <Link
+              href="/codetry"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Codetry — metaphor as system architecture (definition) →
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/studio-wind-down"
               className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
             >
