@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 // (which requires PORT to be set for the dev server).
 export default defineConfig({
   test: {
-    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx", "scripts/**/*.test.ts"],
     environment: "node",
   },
 });
