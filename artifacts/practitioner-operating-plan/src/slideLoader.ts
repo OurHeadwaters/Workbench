@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import manifestJson from "@/data/slides-manifest.json";
 import { parseSlidesManifest, type SlideEntry } from "@/data/slidesManifestSchema";
+import { PHASES, type Phase } from "@/lib/phases";
 
 export interface LoadedSlide extends SlideEntry {
   Component: ComponentType;
@@ -25,6 +26,10 @@ function loadManifestSlides(): SlideEntry[] {
 
 const manifestSlides = loadManifestSlides();
 
+// `slides` keeps every entry in manifest-position order. This is the
+// canonical lookup the `/slide{N}` URL scheme reads from, and what the
+// workspace slides preview pane iterates. The two ordered views below
+// (lifestyle + operating) project from this same set.
 export const slides: LoadedSlide[] = [...manifestSlides]
   .sort((a, b) => a.position - b.position)
   .map((entry) => {
@@ -49,3 +54,36 @@ export const slides: LoadedSlide[] = [...manifestSlides]
       Component: mod.default,
     };
   });
+
+// Lifestyle Design Philosophy view: the original 38-slide ordering. The
+// five operating-plan phase openers are excluded so this view stays the
+// stable, unchanged reference the practitioner can come back to for the
+// inner-world read.
+export const lifestyleSlides: LoadedSlide[] = slides.filter(
+  (s) => !s.operatingOnly,
+);
+
+// Operating plan view: re-spined around Idea → Pitch → Contract →
+// Fulfillment → Impact. Within each phase, the phase opener comes first
+// (operatingOnly=true), then the original slides in their manifest
+// position order.
+export const operatingSlides: LoadedSlide[] = PHASES.flatMap((phase) => {
+  const inPhase = slides.filter((s) => s.phase === phase);
+  const opener = inPhase.find((s) => s.operatingOnly);
+  const rest = inPhase
+    .filter((s) => !s.operatingOnly)
+    .sort((a, b) => a.position - b.position);
+  return opener ? [opener, ...rest] : rest;
+});
+
+export function getOperatingSlidesForPhase(phase: Phase): LoadedSlide[] {
+  return operatingSlides.filter((s) => s.phase === phase);
+}
+
+export function getOperatingPhaseOpener(phase: Phase): LoadedSlide | undefined {
+  return operatingSlides.find((s) => s.phase === phase && s.operatingOnly);
+}
+
+export function getSlideByPosition(position: number): LoadedSlide | undefined {
+  return slides.find((s) => s.position === position);
+}

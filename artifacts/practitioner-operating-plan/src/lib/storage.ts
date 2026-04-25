@@ -1,7 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 
+import type { MilestoneId, MilestoneState, Phase } from "./phases";
+import { PHASE_ORDER } from "./phases";
+
 export const STORAGE_KEY = "pop:v1";
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 2;
 
 // Snapshot model is a faithful migration of the standalone Annual Plan
 // Check-in app: portfolio + Watershed ARR + owner take-home + XRP wildcard
@@ -33,6 +36,16 @@ export type AppState = {
   completedWeeks: Record<string, { completedAt: string }>;
   shiftedWeeks: Record<string, { shiftedTo: number }>;
   snapshots: Snapshot[];
+  // Deal-flow phase state. `currentPhase` is the active phase the
+  // practitioner is in — it only ever changes from an explicit user
+  // action (clicking a phase pill, or accepting the soft nudge).
+  // `milestones` is the toggle-set that produces the *suggested* phase,
+  // which is offered as a soft nudge but never moves `currentPhase` on
+  // its own. `dismissedPhaseSuggestion` records the suggested phase
+  // the practitioner said "no, stay where I am" to.
+  currentPhase: Phase;
+  milestones: MilestoneState;
+  dismissedPhaseSuggestion: Phase | null;
 };
 
 export const DEFAULT_STATE: AppState = {
@@ -43,23 +56,33 @@ export const DEFAULT_STATE: AppState = {
   completedWeeks: {},
   shiftedWeeks: {},
   snapshots: [],
+  currentPhase: "idea",
+  milestones: {},
+  dismissedPhaseSuggestion: null,
 };
 
 // Migrate a parsed payload of any prior schema version up to STORAGE_VERSION.
 // Add new `case` blocks here as the schema evolves.
 function migrate(parsed: { version: number } & Record<string, unknown>): AppState {
   let working = parsed;
-  switch (working.version) {
-    case 0:
-      // v0 -> v1: introduced weekCloseOuts/completedWeeks/shiftedWeeks/snapshots.
-      working = { ...working, version: 1 };
-      break;
-    case STORAGE_VERSION:
-      break;
-    default:
-      // Unknown future version — best-effort: trust and keep known keys.
-      break;
+  // v0 -> v1: introduced weekCloseOuts/completedWeeks/shiftedWeeks/snapshots.
+  if (working.version === 0) {
+    working = { ...working, version: 1 };
   }
+  // v1 -> v2: introduced currentPhase/milestones/dismissedPhaseSuggestion.
+  if (working.version === 1) {
+    working = {
+      ...working,
+      version: 2,
+      currentPhase: "idea",
+      milestones: {},
+      dismissedPhaseSuggestion: null,
+    };
+  }
+  // Unknown future version: best-effort — trust and keep known keys.
+  const rawPhase = working.currentPhase as Phase | undefined;
+  const safePhase: Phase =
+    rawPhase && rawPhase in PHASE_ORDER ? rawPhase : "idea";
   return {
     ...DEFAULT_STATE,
     ...working,
@@ -71,6 +94,10 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       (working.completedWeeks as AppState["completedWeeks"]) ?? {},
     shiftedWeeks: (working.shiftedWeeks as AppState["shiftedWeeks"]) ?? {},
     snapshots: (working.snapshots as AppState["snapshots"]) ?? [],
+    currentPhase: safePhase,
+    milestones: (working.milestones as MilestoneState) ?? {},
+    dismissedPhaseSuggestion:
+      (working.dismissedPhaseSuggestion as Phase | null) ?? null,
   };
 }
 
@@ -247,6 +274,45 @@ export function useAppStateActions() {
     setState({ ...DEFAULT_STATE });
   }, []);
 
+  // Set the active phase the practitioner is in. This is the only thing
+  // that ever moves the active phase — milestones never move it on
+  // their own. Setting it clears any pending dismissal so future
+  // suggestions can speak again.
+  const setCurrentPhase = useCallback((phase: Phase) => {
+    const s = getState();
+    setState({
+      ...s,
+      currentPhase: phase,
+      dismissedPhaseSuggestion: null,
+    });
+  }, []);
+
+  const setMilestone = useCallback(
+    (milestoneId: MilestoneId, checked: boolean) => {
+      const s = getState();
+      const next = { ...s.milestones };
+      if (checked) {
+        next[milestoneId] = true;
+      } else {
+        delete next[milestoneId];
+      }
+      // Toggling milestones invalidates any prior dismissal — the
+      // suggested phase may have moved, so let the soft nudge speak
+      // again. Crucially, we do *not* touch currentPhase here.
+      setState({
+        ...s,
+        milestones: next,
+        dismissedPhaseSuggestion: null,
+      });
+    },
+    [],
+  );
+
+  const dismissPhaseSuggestion = useCallback((phase: Phase) => {
+    const s = getState();
+    setState({ ...s, dismissedPhaseSuggestion: phase });
+  }, []);
+
   return {
     toggleStepDone,
     setWeekNote,
@@ -259,5 +325,8 @@ export function useAppStateActions() {
     addSnapshot,
     deleteSnapshot,
     resetAll,
+    setCurrentPhase,
+    setMilestone,
+    dismissPhaseSuggestion,
   };
 }

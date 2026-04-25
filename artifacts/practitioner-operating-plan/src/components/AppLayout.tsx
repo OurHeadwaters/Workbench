@@ -1,11 +1,33 @@
 import { Link, useLocation } from "wouter";
 import { type ReactNode } from "react";
 
-const NAV_ITEMS: Array<{ label: string; href: string; matches: (path: string) => boolean }> = [
+import { PhaseIndicator } from "./PhaseIndicator";
+
+const NAV_ITEMS: Array<{
+  label: string;
+  href: string;
+  matches: (path: string) => boolean;
+}> = [
   { label: "Today", href: "/today", matches: (p) => p === "/" || p.startsWith("/today") },
   { label: "Week", href: "/week", matches: (p) => p.startsWith("/week") },
   { label: "Year", href: "/year", matches: (p) => p.startsWith("/year") },
-  { label: "Plan", href: "/plan", matches: (p) => p.startsWith("/plan") || p.startsWith("/slide") || p === "/allslides" },
+  {
+    label: "Plan",
+    href: "/plan",
+    matches: (p) =>
+      p === "/plan" ||
+      p.startsWith("/plan/operating") ||
+      p.startsWith("/operating/") ||
+      p === "/allslides" ||
+      // Bare /slide{N} now belongs to the operating plan, since that's the
+      // default front door for the deck. Lifestyle has its own /lifestyle/* tree.
+      /^\/slide\d+$/.test(p),
+  },
+  {
+    label: "Lifestyle",
+    href: "/lifestyle",
+    matches: (p) => p === "/lifestyle" || p.startsWith("/lifestyle/"),
+  },
   { label: "One-Pager", href: "/onepager", matches: (p) => p.startsWith("/onepager") },
 ];
 
@@ -15,7 +37,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 antialiased">
       <header className="sticky top-0 z-40 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-3">
             <Link
               href="/today"
@@ -27,25 +49,28 @@ export function AppLayout({ children }: { children: ReactNode }) {
               2026
             </span>
           </div>
-          <nav className="flex items-center gap-1">
-            {NAV_ITEMS.map((item) => {
-              const active = item.matches(location);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={
-                    "rounded-md px-3 py-1.5 text-sm transition-colors " +
-                    (active
-                      ? "bg-stone-900 text-stone-50"
-                      : "text-stone-700 hover:bg-stone-200")
-                  }
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="flex items-center gap-2">
+            <nav className="flex items-center gap-1">
+              {NAV_ITEMS.map((item) => {
+                const active = item.matches(location);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={
+                      "rounded-md px-3 py-1.5 text-sm transition-colors " +
+                      (active
+                        ? "bg-stone-900 text-stone-50"
+                        : "text-stone-700 hover:bg-stone-200")
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+            <PhaseIndicator />
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>

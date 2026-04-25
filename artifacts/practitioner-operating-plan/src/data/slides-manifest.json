@@ -5,7 +5,8 @@
     "filepath": "src/pages/slides/Cover.tsx",
     "title": "Cover",
     "description": "Title slide for the Practitioner Operating Plan — the team and budget that make the yes sustainable.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b02",
@@ -13,7 +14,8 @@
     "filepath": "src/pages/slides/Inflection.tsx",
     "title": "Why this matters",
     "description": "Naming the contract as the inflection point and the question it forces — what does the yes have to look like to stay a yes?",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b03",
@@ -21,7 +23,8 @@
     "filepath": "src/pages/slides/PartIDivider.tsx",
     "title": "Part I — The life I'm building",
     "description": "Section divider entering the private voice: non-negotiables, daily rhythm, weekly rhythm, what a great week looks like.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b04",
@@ -29,7 +32,8 @@
     "filepath": "src/pages/slides/NonNegotiables.tsx",
     "title": "The non-negotiables",
     "description": "Five things that don't move: phone-free until 10am, 7–10am with the kids, work block 10:30 to 4/6, dinner already prepared, weekends mostly off.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b05",
@@ -37,7 +41,8 @@
     "filepath": "src/pages/slides/DailyRhythm.tsx",
     "title": "Daily rhythm — summer vs winter",
     "description": "Side-by-side daily rhythm for summer and winter, because winter is the part that breaks plans.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b06",
@@ -45,7 +50,8 @@
     "filepath": "src/pages/slides/WeeklyRhythm.tsx",
     "title": "Weekly rhythm and check-ins",
     "description": "The 11am and 4pm hand-offs with the on-site Dryden manager and the optional weekend deep-work block.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b07",
@@ -53,7 +59,8 @@
     "filepath": "src/pages/slides/GreatWeek.tsx",
     "title": "What a great week looks like",
     "description": "A narrative slide reflecting the practitioner's own words back to them — three tests for whether the week was actually good.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b08",
@@ -61,7 +68,8 @@
     "filepath": "src/pages/slides/PartIIDivider.tsx",
     "title": "Part II — The team that protects the calendar",
     "description": "Section divider entering the operating voice: the costed team, the 35% reinvestment markup, the bridge capital, the receipts.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b09",
@@ -69,7 +77,8 @@
     "filepath": "src/pages/slides/RoleOpsManager.tsx",
     "title": "Operations Manager (Dryden)",
     "description": "The phone-holder and time-protector, on-site in Dryden, dual-purpose for 807 ops and Deer Lake aggregation/distribution. 40 hrs/wk @ $40/hr ≈ $7,000/mo.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0a",
@@ -77,7 +86,8 @@
     "filepath": "src/pages/slides/RoleBookkeeper.tsx",
     "title": "Bookkeeper / Agency Admin",
     "description": "Invoicing, contracts, CRA, the back office of the agency — built once, used for years. 10 hrs/wk @ $40/hr ≈ $1,700/mo.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0b",
@@ -85,7 +95,8 @@
     "filepath": "src/pages/slides/RoleHousecleaner.tsx",
     "title": "Housecleaner",
     "description": "Recurring weekly clean — the mid-week mess reset taken off the parent and put on the schedule. 4 hrs/wk @ $30/hr ≈ $500/mo.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0c",
@@ -93,7 +104,8 @@
     "filepath": "src/pages/slides/RoleTutor.tsx",
     "title": "Tutor",
     "description": "Math, reading, structure — winter-weighted (~10 hrs/wk Nov–Apr, ~2 hrs/wk in summer). ≈ $900/mo annualised.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0d",
@@ -101,7 +113,8 @@
     "filepath": "src/pages/slides/RoleHandyman.tsx",
     "title": "Handyman-Housekeeper combo",
     "description": "Practical-first, parenting-intent second, framed as 'consider, don't commit' with explicit vetting requirements. 5 hrs/wk @ $30/hr ≈ $700/mo if engaged.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c01",
@@ -109,7 +122,8 @@
     "filepath": "src/pages/slides/PartIIIDivider.tsx",
     "title": "Part III — Hiring runbook",
     "description": "Section divider entering the hiring voice: how to actually find each of the five people, with sourcing channels in and around Dryden, screening questions, paid trial structures, and walk-away signals.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c02",
@@ -117,7 +131,8 @@
     "filepath": "src/pages/slides/HiringOpsManager.tsx",
     "title": "Hiring — Operations Manager",
     "description": "How to find the Dryden ops manager: Chamber and Job Bank, Confederation College alumni, regional logistics referrals, Facebook groups, bulletin boards. Screening questions, 2-week paid shadow-then-solo trial, walk-away signals, 30/60/90.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c03",
@@ -125,7 +140,8 @@
     "filepath": "src/pages/slides/HiringBookkeeper.tsx",
     "title": "Hiring — Bookkeeper",
     "description": "How to find the bookkeeper: CPB Canada directory, Northwestern Ontario CPAs, Chamber referrals, Indeed/LinkedIn remote-Canada search. Screening on CRA fluency, 1-month paid trial against fixed scope, walk-away signals, 30/60/90.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c04",
@@ -133,7 +149,8 @@
     "filepath": "src/pages/slides/HiringHousecleaner.tsx",
     "title": "Hiring — Housecleaner",
     "description": "How to find the weekly housecleaner: working-parent referrals first, Dryden Facebook groups and Kijiji second, bulletin boards, Molly Maid as paid backstop. Screening, 2-visit paid trial, walk-away signals, 30/60/90.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c05",
@@ -141,7 +158,8 @@
     "filepath": "src/pages/slides/HiringTutor.tsx",
     "title": "Hiring — Tutor",
     "description": "How to find the year-round tutor: Lakehead Faculty of Education, Confederation College EA program, Keewatin-Patricia DSB, Dryden retired teachers, OCT register, current-teacher referrals. Vulnerable Sector Check required, 4-session paid trial with kids voting, 30/60/90.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7c06",
@@ -149,7 +167,8 @@
     "filepath": "src/pages/slides/HiringHandyman.tsx",
     "title": "Hiring — Handyman-Housekeeper",
     "description": "How to find the handyman-housekeeper safely: referrals only, never an open posting. Explicit child-safety vetting protocol — Vulnerable Sector Check, three reference calls, never alone with kids for 90 days, open conversation with the kids, annual re-check. Two-week paid trial outside-then-inside-with-parent-present, heavy walk-away list, slower 30/60/90.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0e",
@@ -157,7 +176,8 @@
     "filepath": "src/pages/slides/Budget.tsx",
     "title": "Budget — three contract sizes (cost × 1.35)",
     "description": "Cost-basis composition with new $60k/$90k/$125k contract sizes. Bill = cost × 1.35; the 35% is a dedicated reinvestment line.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b16",
@@ -165,7 +185,8 @@
     "filepath": "src/pages/slides/CashFlow.tsx",
     "title": "Cash flow — bridging the 60-day pay cycle",
     "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX, naming the bridge capital required (~$89k / $175k / $245k) before the first invoice clears.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b17",
@@ -173,7 +194,8 @@
     "filepath": "src/pages/slides/Reinvestment.tsx",
     "title": "Reinvestment — what the 35% builds",
     "description": "Four destinations of the 35% markup: tech CAPEX (~$60k/yr — 9 servers, 6 privacy phones, computers), tooling subscriptions (~$2k/mo), training & R&D (~$3k/mo), and the pilot scale reserve (~$10k/mo accruing).",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b18",
@@ -181,7 +203,8 @@
     "filepath": "src/pages/slides/Accountability.tsx",
     "title": "Net-positive accountability",
     "description": "Five measures (procurement savings delivered, time returned to band staff, transparency tooling shipped & adopted, capacity built locally, year-end value-delivered audit) plus a forward-credit clause if the value delivered doesn't beat the markup.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "contract"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b0f",
@@ -189,7 +212,8 @@
     "filepath": "src/pages/slides/Winter.tsx",
     "title": "Winter contingency",
     "description": "What scales up, what gets dropped without guilt, and what stays exactly the same when the kids are stuck inside.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "fulfillment"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b10",
@@ -197,7 +221,8 @@
     "filepath": "src/pages/slides/AgencyVision.tsx",
     "title": "Agency vision",
     "description": "How this contract is the foundation — months 1–6, 6–12, and the year 2–3 picture of a small consultancy carrying multiple northern community contracts. Bridges into Part V (the template).",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c10",
@@ -205,7 +230,8 @@
     "filepath": "src/pages/slides/NamingTheAgency.tsx",
     "title": "Naming the agency: Headwaters",
     "description": "The inflection point — the dam-breaks framing, the brand structure (Headwaters parent → Watershed product + Deer Lake pilot + future engagements), and the one-line rationale that Headwaters has the open lanes while Watershed has the contested ones.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c11",
@@ -213,7 +239,8 @@
     "filepath": "src/pages/slides/BrandIPLandscape.tsx",
     "title": "Brand & IP landscape",
     "description": "Domains available vs. taken (WHOIS Apr 2026) and the indicative trademark picture for Watershed (191 marks, contested in Class 9/36) vs. Headwaters (76 marks, no active mark in Class 36 financial services or Class 9 consumer software).",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "f1c2a4e3-9d5b-4f87-8c2a-1e7d6b3a8c12",
@@ -221,7 +248,8 @@
     "filepath": "src/pages/slides/NamingActionItems.tsx",
     "title": "What the founder does this week",
     "description": "Sequenced personal-action checklist with registrar/registry links and costs: domains today, defensive registrations, CIPO trademark search, Google Workspace email, paid agent clearance opinion, and NUANS search before incorporating.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "idea"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b11",
@@ -229,7 +257,8 @@
     "filepath": "src/pages/slides/PartIVDivider.tsx",
     "title": "Part IV — For Dad",
     "description": "Section divider entering the contractor voice — the case for the rate, the case for the team, value delivered, and naming the deal.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "pitch"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b12",
@@ -237,7 +266,8 @@
     "filepath": "src/pages/slides/CaseForRate.tsx",
     "title": "The case for the rate",
     "description": "What $90k/month actually buys — operating system, transparency stack, and pilot reserve — versus what 'lean' actually costs (the contract and the next reserve waiting in line).",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "pitch"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b13",
@@ -245,7 +275,8 @@
     "filepath": "src/pages/slides/CaseForTeam.tsx",
     "title": "The case for the team",
     "description": "Single-point-of-failure 'lean' versus the structured team — saves $11k on paper / costs the contract, vs. costs $11k / buys the contract and the next one.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "pitch"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b14",
@@ -253,7 +284,8 @@
     "filepath": "src/pages/slides/ValueDelivered.tsx",
     "title": "Value delivered",
     "description": "Four deliverables for the rate: optimized food-price model, winter delivery execution, transparency stack + infrastructure that scales, and base stability.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "contract"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b15",
@@ -261,7 +293,8 @@
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
     "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$175k bridge ask.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "contract"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7b19",
@@ -269,7 +302,8 @@
     "filepath": "src/pages/slides/FeedbackWindow.tsx",
     "title": "The next two weeks",
     "description": "A two-week feedback and negotiating window between handing the deck over and naming the deal: opens Mon Apr 27, 2026 and closes when the contractor is back home from Deer Lake (~Sun May 10 / Mon May 11). Three beats — Week 1 read & react on the road, Week 2 talk it through, Closing day name the deal at the kitchen table — plus the founder posture that no guided execution work begins until the deal is named.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "contract"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d01",
@@ -277,7 +311,8 @@
     "filepath": "src/pages/slides/PartVDivider.tsx",
     "title": "Part V — Pilot to template",
     "description": "Section divider entering the scale voice: Deer Lake earns it, then so does every reserve. The template the practitioner builds for pilot #1 is the playbook the next reserve inherits.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "impact"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d02",
@@ -285,7 +320,8 @@
     "filepath": "src/pages/slides/PilotDeerLake.tsx",
     "title": "Why Deer Lake is Pilot #1",
     "description": "Three reasons Deer Lake is the right pilot: the right scale (~870 people), a council ready for transparency, and a practitioner with skin in the game and the structural plan to deliver.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "impact"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d03",
@@ -293,7 +329,8 @@
     "filepath": "src/pages/slides/Template.tsx",
     "title": "The six-module template",
     "description": "What gets templatized: operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, net-positive accountability. Each module is documented as we ship it for Deer Lake.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "impact"
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7d04",
@@ -301,6 +338,57 @@
     "filepath": "src/pages/slides/PathToScale.tsx",
     "title": "The path to scale",
     "description": "Five-year arc: Year 1 Deer Lake pilot, Year 2 second reserve at marginal cost, Year 3 three-to-five concurrent contracts, Year 5 open template that any practitioner can run.",
-    "speakerNotes": ""
+    "speakerNotes": "",
+    "phase": "impact"
+  },
+  {
+    "id": "a4d3c2b1-9876-4321-0fed-cba987654301",
+    "position": 39,
+    "filepath": "src/pages/slides/PhaseIdeaOpener.tsx",
+    "title": "Phase — Idea",
+    "description": "Operating-plan opener for the Idea phase: why this matters, what the agency is, what we're naming.",
+    "speakerNotes": "",
+    "phase": "idea",
+    "operatingOnly": true
+  },
+  {
+    "id": "a4d3c2b1-9876-4321-0fed-cba987654302",
+    "position": 40,
+    "filepath": "src/pages/slides/PhasePitchOpener.tsx",
+    "title": "Phase — Pitch",
+    "description": "Operating-plan opener for the Pitch phase: make the case for the rate and the team, then hand the deck over.",
+    "speakerNotes": "",
+    "phase": "pitch",
+    "operatingOnly": true
+  },
+  {
+    "id": "a4d3c2b1-9876-4321-0fed-cba987654303",
+    "position": 41,
+    "filepath": "src/pages/slides/PhaseContractOpener.tsx",
+    "title": "Phase — Contract",
+    "description": "Operating-plan opener for the Contract phase: lock the value-delivered terms, work the feedback window, name the deal.",
+    "speakerNotes": "",
+    "phase": "contract",
+    "operatingOnly": true
+  },
+  {
+    "id": "a4d3c2b1-9876-4321-0fed-cba987654304",
+    "position": 42,
+    "filepath": "src/pages/slides/PhaseFulfillmentOpener.tsx",
+    "title": "Phase — Fulfillment",
+    "description": "Operating-plan opener for the Fulfillment phase: protect the calendar, run the team, manage the cash, weather winter.",
+    "speakerNotes": "",
+    "phase": "fulfillment",
+    "operatingOnly": true
+  },
+  {
+    "id": "a4d3c2b1-9876-4321-0fed-cba987654305",
+    "position": 43,
+    "filepath": "src/pages/slides/PhaseImpactOpener.tsx",
+    "title": "Phase — Impact",
+    "description": "Operating-plan opener for the Impact phase: prove Deer Lake, document the template, plan the path to scale.",
+    "speakerNotes": "",
+    "phase": "impact",
+    "operatingOnly": true
   }
 ]

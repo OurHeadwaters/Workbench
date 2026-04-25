@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Route, Switch, useLocation } from "wouter";
 
-import { slides } from "@/slideLoader";
+import {
+  slides,
+  lifestyleSlides,
+  operatingSlides,
+  getOperatingPhaseOpener,
+  type LoadedSlide,
+} from "@/slideLoader";
 import OnePager from "@/pages/OnePager";
 import BrandOnePager from "@/pages/BrandOnePager";
 import Checklist from "@/pages/Checklist";
@@ -13,18 +19,52 @@ import CheckIn from "@/pages/CheckIn";
 import CheckInNewSnapshot from "@/pages/CheckInNewSnapshot";
 import CheckInHistory from "@/pages/CheckInHistory";
 import { AppLayout } from "@/components/AppLayout";
+import { PhaseIndicator } from "@/components/PhaseIndicator";
 import { ToastProvider } from "@/components/Toast";
+import { useAppState } from "@/lib/storage";
 
-function getSlideIndex(pathname: string): number {
-  const match = pathname.match(/^\/slide(\d+)$/);
+type SlideView = "operating" | "lifestyle";
+
+// Path layout for the deck:
+//   /plan                  → operating SlideViewer (default front door)
+//   /lifestyle             → Lifestyle Design Philosophy SlideViewer
+//   /slide{N}              → operating-order editor for slide N
+//   /lifestyle/slide{N}    → lifestyle-order editor for slide N
+//
+// `viewFromPath` decides which ordered list the editor (and the parent
+// SlideViewer iframe message bridge) should use for prev/next.
+function viewFromPath(pathname: string): SlideView {
+  return pathname.startsWith("/lifestyle") ? "lifestyle" : "operating";
+}
+
+function getSlideIndex(pathname: string, list: LoadedSlide[]): number {
+  const match = pathname.match(/\/slide(\d+)$/);
   if (!match) return -1;
   const position = parseInt(match[1], 10);
-  return slides.findIndex((s) => s.position === position);
+  return list.findIndex((s) => s.position === position);
 }
 
 function SlideEditor() {
   const [location, navigate] = useLocation();
-  const currentIndex = getSlideIndex(location);
+  const view = viewFromPath(location);
+  const list = view === "lifestyle" ? lifestyleSlides : operatingSlides;
+  const currentIndex = getSlideIndex(location, list);
+
+  const slideHrefFor = (s: LoadedSlide) =>
+    view === "lifestyle" ? `/lifestyle/slide${s.position}` : `/slide${s.position}`;
+
+  // If the URL points at a position that doesn't exist in this view's
+  // list (e.g. /lifestyle/slide39 for an operating-only phase opener),
+  // fall back to the first slide in the view rather than rendering blank.
+  useEffect(() => {
+    if (currentIndex !== -1) return;
+    const match = location.match(/\/slide\d+$/);
+    if (!match) return;
+    const fallback = list[0];
+    if (fallback) navigate(slideHrefFor(fallback), { replace: true });
+    // slideHrefFor is stable per view; navigate is from wouter and stable enough.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, location, view]);
 
   // In the workspace, the slide iframe is nested inside another iframe,
   // so window.parent !== window.parent.parent. In the deployed SlideViewer,
@@ -42,13 +82,13 @@ function SlideEditor() {
         event.preventDefault();
       }
       if ((event.key === "ArrowLeft" || event.key === "ArrowUp") && currentIndex > 0) {
-        navigate(`/slide${slides[currentIndex - 1].position}`);
+        navigate(slideHrefFor(list[currentIndex - 1]));
       }
       if (
         (event.key === "ArrowRight" || event.key === "ArrowDown" || event.key === " ") &&
-        currentIndex < slides.length - 1
+        currentIndex < list.length - 1
       ) {
-        navigate(`/slide${slides[currentIndex + 1].position}`);
+        navigate(slideHrefFor(list[currentIndex + 1]));
       }
     };
 
@@ -74,8 +114,8 @@ function SlideEditor() {
         return;
       }
 
-      if (currentIndex < slides.length - 1) {
-        navigate(`/slide${slides[currentIndex + 1].position}`);
+      if (currentIndex < list.length - 1) {
+        navigate(slideHrefFor(list[currentIndex + 1]));
       }
     };
 
@@ -104,9 +144,9 @@ function SlideEditor() {
 
       const fraction = touchStartX / window.innerWidth;
       if (fraction < 0.4 && currentIndex > 0) {
-        navigate(`/slide${slides[currentIndex - 1].position}`);
-      } else if (fraction >= 0.4 && currentIndex < slides.length - 1) {
-        navigate(`/slide${slides[currentIndex + 1].position}`);
+        navigate(slideHrefFor(list[currentIndex - 1]));
+      } else if (fraction >= 0.4 && currentIndex < list.length - 1) {
+        navigate(slideHrefFor(list[currentIndex + 1]));
       }
     };
 
@@ -120,11 +160,11 @@ function SlideEditor() {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [currentIndex, navigate]);
+  }, [currentIndex, list, navigate, view]);
 
   return (
     <div className="select-none">
-      {slides.map((slide, index) => (
+      {list.map((slide, index) => (
         <div
           key={slide.id}
           style={{ display: index === currentIndex ? "block" : "none" }}
@@ -154,13 +194,26 @@ function AllSlides() {
   );
 }
 
-// Full-bleed slide deck viewer used by the `/plan` route.
-function SlideViewer() {
+// Full-bleed slide deck viewer. Used by both `/plan` (operating) and
+// `/lifestyle` (Lifestyle Design Philosophy).
+function SlideViewer({ view }: { view: SlideView }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [dims, setDims] = useState(() => ({
     width: Math.min(window.innerWidth, window.innerHeight * (16 / 9)),
     height: Math.min(window.innerHeight, window.innerWidth * (9 / 16)),
   }));
+
+  const state = useAppState();
+  const activePhase = state.currentPhase;
+
+  // Operating view lands at the current phase's opener; lifestyle always
+  // starts at slide 1. This is what makes "open the book and you're at
+  // the phase you're standing in" work without slide 1 stealing the show.
+  const firstSlide = useMemo(() => {
+    if (view === "lifestyle") return lifestyleSlides[0];
+    const opener = getOperatingPhaseOpener(activePhase);
+    return opener ?? operatingSlides[0];
+  }, [view, activePhase]);
 
   useEffect(() => {
     const update = () => {
@@ -186,20 +239,34 @@ function SlideViewer() {
   }, []);
 
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  const firstPosition = slides.length > 0 ? slides[0].position : 1;
+  const firstPosition = firstSlide?.position ?? 1;
+  const slidePath =
+    view === "lifestyle"
+      ? `${base}/lifestyle/slide${firstPosition}`
+      : `${base}/slide${firstPosition}`;
 
   return (
     <div
-      className="slide-viewer h-screen w-screen overflow-hidden bg-black flex items-center justify-center"
+      className="slide-viewer relative h-screen w-screen overflow-hidden bg-black flex items-center justify-center"
       onClick={() => iframeRef.current?.focus()}
     >
       <iframe
         ref={iframeRef}
-        src={`${base}/slide${firstPosition}`}
+        src={slidePath}
         style={{ width: dims.width, height: dims.height, border: "none" }}
         onLoad={() => iframeRef.current?.focus()}
-        title="Slide viewer"
+        title={view === "lifestyle" ? "Lifestyle slides" : "Operating plan slides"}
       />
+      {/* Floating phase indicator so the practitioner can see and change
+          the active phase from inside the deck without having to leave
+          the full-bleed view. Click swallowed so the iframe doesn't steal
+          focus. */}
+      <div
+        className="absolute right-4 top-4 z-10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <PhaseIndicator variant="light" />
+      </div>
     </div>
   );
 }
@@ -244,6 +311,7 @@ export default function App() {
         typeof event.data.position === "number" &&
         slides.some((s) => s.position === event.data.position)
       ) {
+        // The workspace preview always uses the operating-order URL scheme.
         navigate(`/slide${event.data.position}`);
       }
     };
@@ -256,10 +324,17 @@ export default function App() {
   // the app chrome — they're consumed by the workspace preview iframe and
   // by the export pipeline respectively.
   if (location === "/allslides") return <AllSlides />;
-  if (getSlideIndex(location) !== -1) return <SlideEditor />;
+  if (
+    /^\/slide\d+$/.test(location) ||
+    /^\/lifestyle\/slide\d+$/.test(location)
+  ) {
+    return <SlideEditor />;
+  }
 
-  // Plan view also renders full-bleed (it embeds the slides iframe).
-  if (location === "/plan") return <SlideViewer />;
+  // Plan + Lifestyle SlideViewers also render full-bleed (they embed the
+  // slides iframe).
+  if (location === "/plan") return <SlideViewer view="operating" />;
+  if (location === "/lifestyle") return <SlideViewer view="lifestyle" />;
 
   // OnePager and BrandOnePager keep their own self-contained chrome.
   if (location === "/onepager") return <OnePager />;
