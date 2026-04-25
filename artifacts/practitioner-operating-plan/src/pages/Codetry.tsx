@@ -34,7 +34,7 @@ const constellation: ConstellationEntry[] = [
   },
   {
     name: "Dam Days and Shallows Zone 5",
-    role: "Private memory holder with an impromptu public share. Where thoughts go that don't fit any other zone — the rock you skip a few times to see how it lands. Default private; the share button lets a thought float to the shallows for all to see, shrouded in mystery from the depths below.",
+    role: "Wild / observation; the skipping-rock zone. Default private (Dam Days takes via watershed.replit.app + Expo mobile), with a share affordance that floats a thought to the Shallows, shrouded in mystery from the depths below. The cleanest demonstrations of metaphor-as-architecture: the rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name), the Channel produces Z0-through-5 reads of the user's own life (the app teaches the meta-pattern by being it), pseudonymity-as-architecture (Shallows handles derived deterministically from sessionToken+postId — the depths-below-the-shallows framing IS the one-way hash), typos as fingerprints (the Forge mandates verbatim preservation; the bound book quotes the user's own typos back as evidence). Plus the Forge bind-ready PDF (rescue-at-sea: Compass / Cast Off / Breakers / Adrift / Aboard) and the Dedication Wall ('for the ones who held the bucket').",
   },
   {
     name: "Brainstorm Library (pre-zone)",
