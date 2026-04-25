@@ -18,6 +18,7 @@ const rows: Row[] = [
   { label: "Regional Outreach Lead", sub: "Pilot #2 sourcing", a: null, b: null, c: 9000, isAdd: true },
   { label: "Trainer / Adoption Lead", sub: "Council + community training", a: null, b: null, c: 7500, isAdd: true },
   { label: "Life supports", sub: "Cleaner · tutor · handyman (loaded)", a: 2100, b: 2100, c: 2100 },
+  { label: "Facilities — aggregation hub", sub: "Dad-warehouse · $2,200 rent + utilities, all-in (garage + house-next-door priced as expansion options, not yet activated)", a: 3000, b: 3000, c: 3000 },
   { label: "Tooling, SaaS, insurance", sub: "Operating overhead", a: 1800, b: 2500, c: 3000 },
   { label: "Recurring tech ops", sub: "Cloud, phone plans, monitoring", a: 1800, b: 2200, c: 2500 },
   { label: "Buffer", sub: "Statutory + variance", a: 4200, b: 7400, c: 1500 },
@@ -26,9 +27,9 @@ const rows: Row[] = [
 const sumCol = (key: "a" | "b" | "c") =>
   rows.reduce((acc, r) => acc + (r[key] ?? 0), 0);
 
-const costA = sumCol("a"); // 44,400
-const costB = sumCol("b"); // 66,700
-const costC = sumCol("c"); // 92,600
+const costA = sumCol("a"); // 47,400
+const costB = sumCol("b"); // 69,700
+const costC = sumCol("c"); // 95,600
 
 const fmt = (n: number) => "$" + n.toLocaleString("en-US");
 const fmtK = (n: number) => "$" + Math.round(n / 1000) + "k";
@@ -80,8 +81,8 @@ export default function Budget() {
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"
               style={{ textWrap: "balance" }}
             >
-              Cost basis × 1.35.
-              <span className="italic font-normal text-accent"> The 35% is the lever that scales the model.</span>
+              Cost basis × 1.35 <span className="text-muted text-[1.6vw] align-middle">(target)</span>.
+              <span className="italic font-normal text-accent"> The 35% is the lever — actual % drifts as the cost basis grows.</span>
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw]">
@@ -252,7 +253,19 @@ export default function Budget() {
           annual receipts audit. Every dollar of it must be matched by{" "}
           <span className="text-primary font-semibold">measurable savings delivered to Deer Lake</span>{" "}
           (procurement, freight, labour returned). If we don't beat the markup,
-          we credit forward. That's the deal.
+          we credit forward. That's the deal.{" "}
+          <span className="text-text">
+            Aggregation hub line is the Dad-warehouse base ($2,200 rent + utilities, all-in);
+            related-party documentation, comparables, and the priced expansion options
+            (3-door garage, house-next-door) live in the{" "}
+            <a
+              href="/lease-tooling"
+              className="underline decoration-dotted underline-offset-2 text-primary"
+            >
+              /lease-tooling working doc
+            </a>
+            .
+          </span>
         </div>
       </div>
     </div>

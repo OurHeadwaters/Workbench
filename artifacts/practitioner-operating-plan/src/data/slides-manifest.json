@@ -184,7 +184,7 @@
     "position": 21,
     "filepath": "src/pages/slides/CashFlow.tsx",
     "title": "Cash flow — bridging the 60-day pay cycle",
-    "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX, naming the bridge capital required (~$89k / $175k / $245k) before the first invoice clears.",
+    "description": "12-month cumulative cash chart for all three contract sizes including day-one tech CAPEX and the new aggregation hub line, naming the bridge capital required (~$95k / $181k / $251k) before the first invoice clears.",
     "speakerNotes": "",
     "phase": "fulfillment"
   },
@@ -292,7 +292,7 @@
     "position": 33,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Naming the deal",
-    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$175k bridge ask.",
+    "description": "Closing slide naming the deal in Dad's language — 'no free lunches, capital deployed properly, value out the other end' — at $90k/mo on a 12-month engagement reviewed at month six, with ~$181k bridge ask.",
     "speakerNotes": "",
     "phase": "contract"
   },

@@ -94,7 +94,7 @@ export default function OnePager() {
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$26,500</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">C</td>
               </tr>
-              <tr className="border-b border-[#c8bfa7] align-top">
+              <tr className="border-b border-[#e3dac4] align-top">
                 <td className="py-[3pt] pr-[4pt] font-semibold">
                   Life supports + overhead + buffer
                 </td>
@@ -104,13 +104,21 @@ export default function OnePager() {
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$9,900</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
+              <tr className="border-b border-[#c8bfa7] align-top">
+                <td className="py-[3pt] pr-[4pt] font-semibold">Facilities — aggregation hub</td>
+                <td className="py-[3pt] pr-[4pt]">
+                  Dad-warehouse · $2,200 rent + utilities, all-in (garage + house-next-door priced as expansion options; see /lease-tooling)
+                </td>
+                <td className="py-[3pt] pr-[4pt] text-right font-semibold">$3,000</td>
+                <td className="py-[3pt] text-right text-[#6b7665]">A</td>
+              </tr>
               <tr className="font-semibold text-[#1f3d2e]">
                 <td className="py-[5pt] pr-[4pt]">Cost basis</td>
                 <td className="py-[5pt] pr-[4pt] font-normal text-[#6b7665] text-[8.5pt]">
                   A · floor → B · recommended → C · scale
                 </td>
                 <td className="py-[5pt] pr-[4pt] text-right" colSpan={2}>
-                  $44,400 / $66,700 / $92,600
+                  $47,400 / $69,700 / $95,600
                 </td>
               </tr>
             </tbody>
@@ -121,7 +129,7 @@ export default function OnePager() {
           <div
             className="font-mono uppercase tracking-[0.2em] text-[8.5pt] text-[#b85a3e] font-semibold mb-[5pt]"
           >
-            Bill = Cost × 1.35 — the 35% reinvestment markup
+            Bill scenarios — cost basis + reinvestment markup (35% target)
           </div>
           <table
             className="w-full text-[9pt] border-collapse"
@@ -131,7 +139,7 @@ export default function OnePager() {
               <tr className="border-b border-[#c8bfa7] text-left text-[#6b7665] font-semibold">
                 <th className="py-[3pt] pr-[4pt] w-[22%]">Scenario</th>
                 <th className="py-[3pt] pr-[4pt] w-[20%] text-right">Cost basis</th>
-                <th className="py-[3pt] pr-[4pt] w-[20%] text-right">Reinvestment (35%)</th>
+                <th className="py-[3pt] pr-[4pt] w-[20%] text-right">Reinvestment</th>
                 <th className="py-[3pt] pr-[4pt] w-[20%] text-right">Bill / month</th>
                 <th className="py-[3pt] w-[18%] text-right">Bridge needed</th>
               </tr>
@@ -139,31 +147,34 @@ export default function OnePager() {
             <tbody className="text-[#2a2520]">
               <tr className="border-b border-[#e3dac4]">
                 <td className="py-[3pt] pr-[4pt] font-semibold">A · floor</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$44,400</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$15,600</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$47,400</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$12,600 (27%)</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$60,000</td>
-                <td className="py-[3pt] text-right">~$89k</td>
+                <td className="py-[3pt] text-right">~$95k</td>
               </tr>
               <tr className="border-b border-[#e3dac4] bg-[#f0e6d2]">
                 <td className="py-[3pt] pr-[4pt] font-semibold">B · recommended</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$66,700</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$23,300</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$69,700</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$20,300 (29%)</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$90,000</td>
-                <td className="py-[3pt] text-right">~$175k</td>
+                <td className="py-[3pt] text-right">~$181k</td>
               </tr>
               <tr>
                 <td className="py-[3pt] pr-[4pt] font-semibold">C · scale</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$92,600</td>
-                <td className="py-[3pt] pr-[4pt] text-right">$32,400</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$95,600</td>
+                <td className="py-[3pt] pr-[4pt] text-right">$29,400 (31%)</td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$125,000</td>
-                <td className="py-[3pt] text-right">~$245k</td>
+                <td className="py-[3pt] text-right">~$251k</td>
               </tr>
             </tbody>
           </table>
           <div className="text-[8pt] text-[#6b7665] mt-[3pt] leading-[1.35]">
-            Bridge = M2 trough on a net-60 cycle (two months of cost basis +
-            day-one tech CAPEX of $0 / $40k / $60k). Recovered when the last
-            two invoices clear.
+            Cost basis includes the Dad-warehouse aggregation hub
+            ($3k/mo all-in; see /lease-tooling for the related-party
+            documentation). Bridge = M2 trough on a net-60 cycle (two months
+            of cost basis + day-one tech CAPEX of $0 / $42k / $60k).
+            Recovered when the last two invoices clear. 35% reinvestment is
+            the target; the actual % drifts as the cost basis grows.
           </div>
         </div>
 
@@ -220,10 +231,12 @@ export default function OnePager() {
               A monthly retainer of <span className="font-semibold">$90,000</span>{" "}
               against a 12-month engagement, reviewed at month 6, plus
               acknowledgement that{" "}
-              <span className="font-semibold">~$175,000 of bridge capital</span>{" "}
+              <span className="font-semibold">~$181,000 of bridge capital</span>{" "}
               is required on day one to cover team payroll plus tech CAPEX
-              before the first net-60 invoice clears. Bill = cost × 1.35; the
-              35% is a dedicated, audited reinvestment line.
+              (cost basis includes the Dad-warehouse aggregation hub at
+              $3k/mo all-in; see /lease-tooling) before the first net-60
+              invoice clears. 35% is the target reinvestment line — audited
+              annually; the actual % drifts as the cost basis grows.
             </div>
           </div>
           <div>

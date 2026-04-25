@@ -38,7 +38,7 @@ const scenarios: Scenario[] = [
     key: "A",
     label: "$60k contract",
     contract: 60000,
-    cost: 44400,
+    cost: 47400,
     capex: 0,
     stroke: "#6b7665",
   }),
@@ -46,7 +46,7 @@ const scenarios: Scenario[] = [
     key: "B",
     label: "$90k contract",
     contract: 90000,
-    cost: 66700,
+    cost: 69700,
     capex: 42000,
     stroke: "#b85a3e",
     recommended: true,
@@ -55,7 +55,7 @@ const scenarios: Scenario[] = [
     key: "C",
     label: "$125k contract",
     contract: 125000,
-    cost: 92600,
+    cost: 95600,
     capex: 60000,
     stroke: "#1f3d2e",
   }),
@@ -313,11 +313,11 @@ export default function CashFlow() {
                   }
                 >
                   {s.key === "A" &&
-                    "No tech CAPEX — runs on existing kit. Bridge clears around M11."}
+                    "No tech CAPEX — runs on existing kit. Bridge clears around M10."}
                   {s.key === "B" &&
-                    "$42k buys the day-one slice — 3 servers, 3 privacy phones, 5 computers, networking. Remaining year-1 stack (the rest of the 9-server / 6-phone build) funded from monthly reinvestment. Bridge clears around M9."}
+                    "$42k buys the day-one slice — 3 servers, 3 privacy phones, 5 computers, networking. Remaining year-1 stack (the rest of the 9-server / 6-phone build) funded from monthly reinvestment. Bridge clears around M11."}
                   {s.key === "C" &&
-                    "$60k buys the day-one slice — 6 servers, 6 phones, 8 computers, full rack. Remaining year-1 hardware funded from the (larger) monthly reinvestment. Bridge clears around M8."}
+                    "$60k buys the day-one slice — 6 servers, 6 phones, 8 computers, full rack. Remaining year-1 hardware funded from the (larger) monthly reinvestment. Bridge clears around M11."}
                 </div>
               </div>
             );
@@ -330,10 +330,18 @@ export default function CashFlow() {
           lost — working capital tied up in receivables, recovered when the
           last two invoices clear.{" "}
           <span className="text-primary font-semibold">
-            Recommended day-one ask: ~$175k of bridge capital
+            Recommended day-one ask: ~$181k of bridge capital
           </span>{" "}
           for the $90k scenario, so the team is paid and the infrastructure is
-          shipped before the first cheque lands.
+          shipped before the first cheque lands. Cost basis now includes the
+          aggregation hub line ($3k/mo, all-in) — see{" "}
+          <a
+            href="/lease-tooling"
+            className="underline decoration-dotted underline-offset-2 text-primary"
+          >
+            /lease-tooling
+          </a>{" "}
+          for the related-party documentation.
         </div>
       </div>
     </div>

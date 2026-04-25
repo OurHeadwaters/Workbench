@@ -17,8 +17,9 @@ export default function CaseForRate() {
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1.1vw] text-muted leading-[1.4]">
             $90k/mo pays for the structure that delivers the work and the
-            reinvestment that builds the next reserve's pilot. The 35% markup
-            isn't margin — it's the lever that scales the model.
+            reinvestment that builds the next reserve's pilot. 35% is the
+            target lever; with the new aggregation hub line in cost basis,
+            the recommended ask currently sits at ~29%.
           </div>
         </div>
 
@@ -109,12 +110,21 @@ export default function CaseForRate() {
               </div>
               <div className="font-body text-[0.95vw] text-text leading-[1.45]">
                 Of $90k:{" "}
-                <span className="font-semibold text-primary">~$66.7k</span> is
-                cost basis (the team that delivers). The other{" "}
-                <span className="font-semibold text-primary">~$23.3k</span>{" "}
-                (35% markup) is the reinvestment line — tech CAPEX, training,
+                <span className="font-semibold text-primary">~$69.7k</span> is
+                cost basis — the team that delivers, plus the{" "}
+                <a
+                  href="/lease-tooling"
+                  className="underline decoration-dotted underline-offset-2 text-primary"
+                >
+                  Dad-warehouse aggregation hub
+                </a>{" "}
+                ($3k/mo, all-in). The other{" "}
+                <span className="font-semibold text-primary">~$20.3k</span>{" "}
+                (~29% markup) is the reinvestment line — tech CAPEX, training,
                 pilot reserve. Audited annually against measurable savings
-                delivered to Deer Lake. Nothing disappears.
+                delivered to Deer Lake. Nothing disappears. The 35% target
+                comes back into reach when the contract steps to the next
+                phase or a second engagement lands.
               </div>
             </div>
           </div>

@@ -49,12 +49,13 @@ export default function Closing() {
               $90,000 a month
             </span>
             , twelve-month engagement, reviewed at month six.{" "}
-            <span className="font-semibold">~$66.7k cost basis</span> — the
-            team that delivers the work.{" "}
-            <span className="font-semibold">~$23.3k reinvestment</span> — tech
-            infrastructure, training, and the seed for pilot #2. Audited
+            <span className="font-semibold">~$69.7k cost basis</span> — the
+            team that delivers the work, plus the Dad-warehouse aggregation
+            hub.{" "}
+            <span className="font-semibold">~$20.3k reinvestment</span> (~29%) —
+            tech infrastructure, training, and the seed for pilot #2. Audited
             annually against savings delivered to Deer Lake. Day-one bridge
-            ask: <span className="font-semibold">~$175k</span>.
+            ask: <span className="font-semibold">~$181k</span>.
           </div>
         </div>
 
