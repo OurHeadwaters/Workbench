@@ -246,6 +246,14 @@ export default function Today() {
           </li>
           <li>
             <Link
+              href="/payback-memo"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Headwaters ↔ 807 payback memorandum (Slide II · 22) →
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/studio-wind-down"
               className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
             >

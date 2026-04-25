@@ -230,7 +230,18 @@ export default function PlatformBillPayback() {
           <span className="text-primary font-semibold">
             the upside the work created
           </span>{" "}
-          rather than from the operations the co-op needs to survive.
+          rather than from the operations the co-op needs to survive.{" "}
+          <span className="text-text">
+            Once the 807 board says yes, this slide becomes a signed
+            memorandum — see the{" "}
+            <a
+              href="/payback-memo"
+              className="underline decoration-dotted underline-offset-2 text-primary"
+            >
+              /payback-memo
+            </a>{" "}
+            working draft.
+          </span>
         </div>
       </div>
     </div>
