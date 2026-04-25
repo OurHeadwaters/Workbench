@@ -3,8 +3,10 @@ import { useEffect, useState, useCallback } from "react";
 import type { MilestoneId, MilestoneState, Phase } from "./phases";
 import { PHASE_ORDER } from "./phases";
 
+import type { CostReviewMap } from "./costReview";
+
 export const STORAGE_KEY = "pop:v1";
-export const STORAGE_VERSION = 4;
+export const STORAGE_VERSION = 5;
 
 // Per-batch bench swap. Keyed by week number string (matching how the
 // rest of this slice keys week-scoped state — weekNotes, completedWeeks,
@@ -91,6 +93,8 @@ export type AppState = {
   // for a specific batch week, an entry lands here keyed by that week
   // number string. See `BenchOverride` above.
   benchOverrides: Record<string, BenchOverride>;
+  // Cost Review verdicts, keyed by entry id from data/costRegistry.ts.
+  costReview: CostReviewMap;
 };
 
 export const DEFAULT_STATE: AppState = {
@@ -107,6 +111,7 @@ export const DEFAULT_STATE: AppState = {
   dailyThree: {},
   phaseThree: null,
   benchOverrides: {},
+  costReview: {},
 };
 
 // Migrate a parsed payload of any prior schema version up to STORAGE_VERSION.
@@ -144,6 +149,14 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       benchOverrides: {},
     };
   }
+  // v4 -> v5: introduced costReview (Cost Review walkthrough verdicts).
+  if (working.version === 4) {
+    working = {
+      ...working,
+      version: 5,
+      costReview: {},
+    };
+  }
   // Unknown future version: best-effort — trust and keep known keys.
   const rawPhase = working.currentPhase as Phase | undefined;
   const safePhase: Phase =
@@ -167,6 +180,7 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
     phaseThree: (working.phaseThree as PhaseThreeSlot | null) ?? null,
     benchOverrides:
       (working.benchOverrides as AppState["benchOverrides"]) ?? {},
+    costReview: (working.costReview as CostReviewMap) ?? {},
   };
 }
 
@@ -211,6 +225,11 @@ function setState(next: AppState): void {
   currentState = next;
   saveState(next);
   for (const l of listeners) l(next);
+}
+
+// Internal setter used by lib/costReview to share the listener fan-out.
+export function _setStateForCostReview(updater: (s: AppState) => AppState): void {
+  setState(updater(getState()));
 }
 
 if (typeof window !== "undefined") {

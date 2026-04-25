@@ -1,3 +1,6 @@
+import { useCostValue } from "../lib/costReview";
+import { CostReviewButton } from "../components/CostReviewButton";
+
 type RevenueLine = {
   label: string;
   detail: string;
@@ -45,6 +48,21 @@ const triggerBExcluded: RevenueLine[] = [
 ];
 
 export default function PaybackMemo() {
+  // Memo binds the same registry ids as the slide so a single approval
+  // walk re-flows both the pitch and the paper trail.
+  const principal = useCostValue("payback.principal");
+  const originalScope = useCostValue("payback.originalScope");
+  const replitHosting = useCostValue("payback.replitHosting");
+  const monthlyMin = useCostValue("payback.monthlyMin");
+  const monthlyMax = useCostValue("payback.monthlyMax");
+
+  const fmtMoney = (n: number) => "$" + n.toLocaleString("en-US");
+  const principalK = Math.round(principal / 1000);
+  const originalScopeApprox = "~$" + Math.round(originalScope / 1000) + ",000";
+  const replitText = "~$" + replitHosting.toLocaleString("en-US") + "+";
+  const monthlyMinDollars = monthlyMin.toLocaleString("en-US");
+  const monthlyMaxDollars = monthlyMax.toLocaleString("en-US");
+
   const onPrint = () => {
     if (typeof window !== "undefined") window.print();
   };
@@ -52,20 +70,23 @@ export default function PaybackMemo() {
   return (
     <div className="onepager-screen checklist">
       <div className="onepager-sheet">
+        <div className="print-hide absolute right-4 top-4 z-20">
+          <CostReviewButton variant="compact" />
+        </div>
         <div className="flex items-baseline justify-between border-b border-[#c8bfa7] pb-[8pt] mb-[10pt] print:pb-[5pt] print:mb-[6pt]">
           <div>
             <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[3pt] print:text-[7pt] print:mb-[2pt]">
               Memorandum of Understanding · Headwaters ↔ 807 Food Co-operative
             </div>
             <h1 className="font-display text-[19pt] leading-[1.05] tracking-tight text-[#1f3d2e] font-semibold print:text-[14pt]">
-              Repayment of the $22,000 owed to Headwaters under the 807 grant
+              Repayment of the {fmtMoney(principal)} owed to Headwaters under the 807 grant
               deliverable scope.
             </h1>
             <p className="mt-[4pt] font-body text-[9.5pt] text-[#2a2520] leading-[1.4] max-w-[44em] print:text-[8pt] print:leading-[1.25] print:mt-[2pt]">
               Operationalises the two-trigger structure presented to the 807
               board on Slide II · 22 (
               <span className="italic">
-                The $22k already spent — how we get paid back
+                The ${principalK}k already spent — how we get paid back
               </span>
               ). Once both boards have signed, this memorandum — not the slide
               — is the document either party relies on.
@@ -129,19 +150,19 @@ export default function PaybackMemo() {
             stream that the original creative contractor backed out of
             (marketing strategy, member-facing creative, outreach materials,
             storefront copy). Both streams together originally budgeted at
-            ~$40,000 across two contractors.
+            {" "}{originalScopeApprox} across two contractors.
           </p>
           <p>
             <span className="font-semibold">
               The principal owed by 807 to Headwaters is{" "}
-              <span className="font-mono">$22,000 CAD</span>
+              <span className="font-mono">{fmtMoney(principal)} CAD</span>
             </span>{" "}
             for both delivered streams.{" "}
             <span className="italic text-[#6b7665]">
-              Replit platform hosting (~$500+ project-to-date and continuing at
+              Replit platform hosting ({replitText} project-to-date and continuing at
               roughly the same rate while the platform stays live) accrues as a
               separate ledger line under §4 below and is paid back on the same
-              terms as the principal — it is not added to the $22,000 figure
+              terms as the principal — it is not added to the {fmtMoney(principal)} figure
               for the purposes of triggering or pacing repayment.
             </span>
           </p>
@@ -158,7 +179,7 @@ export default function PaybackMemo() {
             agreed in writing by the 807 board on the recommendation of its
             bookkeeper. The draw is sized so the line never threatens an
             operating month. Target range:{" "}
-            <span className="font-mono font-semibold">~$1,000–$1,500 / mo</span>{" "}
+            <span className="font-mono font-semibold">~${monthlyMinDollars}–${monthlyMaxDollars} / mo</span>{" "}
             over <span className="font-mono">12–24 months</span> once the
             trigger is met. The exact amount and term are set when the trigger
             fires, not now.
@@ -245,11 +266,11 @@ export default function PaybackMemo() {
           <p>
             Headwaters carries the Replit hosting cost for the platform on its
             own books while the platform is live. Project-to-date hosting
-            (~$500+) and any future hosting that continues to bill while this
+            ({replitText}) and any future hosting that continues to bill while this
             memorandum is in force is added to a{" "}
             <span className="font-semibold">separate ledger line</span> —
-            &ldquo;Replit hosting accrual&rdquo; — accompanying the $22,000
-            principal. When repayment begins under Trigger A or Trigger B,
+            &ldquo;Replit hosting accrual&rdquo; — accompanying the {fmtMoney(principal)}
+            {" "}principal. When repayment begins under Trigger A or Trigger B,
             principal is paid down first; the Replit accrual is paid down
             after principal on the same terms (flat monthly draw under
             Trigger A; 10% share under Trigger B).

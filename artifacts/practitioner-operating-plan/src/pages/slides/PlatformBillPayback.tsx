@@ -1,3 +1,6 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 type AuditRow = {
   label: string;
   sub: string;
@@ -5,40 +8,56 @@ type AuditRow = {
   emphasis?: boolean;
 };
 
-const auditRows: AuditRow[] = [
-  {
-    label: "Stream 1 · Business Development & Financial Support",
-    sub: "The CDP-contractor stream from the 807 grant proposal — three named deliverables: operational systems for the co-op (the transparency-stack platform layered over the existing Local Line + Square stand-up to close the gaps between them), business planning + revenue strategy, and an actionable roadmap as pilot funding ends. Carve-outs: accountant fees (~$6k) paid by the co-op directly, not in this bill; bookkeeper engagement vanished, absorbed by Headwaters. Originally a $20,000 grant line.",
-    amount: "incl.",
-  },
-  {
-    label: "Stream 2 · Marketing & Promotion (absorbed)",
-    sub: "The creative/marketing-contractor stream from the same grant. Original contractor backed out — Headwaters absorbed: marketing strategy, member-facing creative, outreach materials, storefront copy. Originally a separate $20,000 grant line.",
-    amount: "incl.",
-    emphasis: true,
-  },
-  {
-    label: "Replit hosting (project-to-date)",
-    sub: "Actuals — own line so the receipt is visible. Continues at roughly the same rate while the platform stays live.",
-    amount: "~$500+",
-  },
-];
-
 export default function PlatformBillPayback() {
+  const principal = useCostValue("payback.principal");
+  const originalScope = useCostValue("payback.originalScope");
+  const replitHosting = useCostValue("payback.replitHosting");
+  const monthlyMin = useCostValue("payback.monthlyMin");
+  const monthlyMax = useCostValue("payback.monthlyMax");
+  const accountantCarveOut = useCostValue("payback.accountantCarveOut");
+
+  const halfScope = Math.round(originalScope / 2);
+  const fmtScope = (n: number) => "$" + n.toLocaleString("en-US");
+  const fmtPrincipal = (n: number) => "$" + n.toLocaleString("en-US");
+  const fmtReplit = "~$" + replitHosting.toLocaleString("en-US") + "+";
+  const fmtCarveOut = "~$" + Math.round(accountantCarveOut / 1000) + "k";
+
+  const auditRows: AuditRow[] = [
+    {
+      label: "Stream 1 · Business Development & Financial Support",
+      sub: `The CDP-contractor stream from the 807 grant proposal — three named deliverables: operational systems for the co-op (the transparency-stack platform layered over the existing Local Line + Square stand-up to close the gaps between them), business planning + revenue strategy, and an actionable roadmap as pilot funding ends. Carve-outs: accountant fees (${fmtCarveOut}) paid by the co-op directly, not in this bill; bookkeeper engagement vanished, absorbed by Headwaters. Originally a ${fmtScope(halfScope)} grant line.`,
+      amount: "incl.",
+    },
+    {
+      label: "Stream 2 · Marketing & Promotion (absorbed)",
+      sub: `The creative/marketing-contractor stream from the same grant. Original contractor backed out — Headwaters absorbed: marketing strategy, member-facing creative, outreach materials, storefront copy. Originally a separate ${fmtScope(halfScope)} grant line.`,
+      amount: "incl.",
+      emphasis: true,
+    },
+    {
+      label: "Replit hosting (project-to-date)",
+      sub: "Actuals — own line so the receipt is visible. Continues at roughly the same rate while the platform stays live.",
+      amount: fmtReplit,
+    },
+  ];
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[1.5vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[0.8vh]">
-              II · The $22k already spent — how we get paid back
+              II · The ${Math.round(principal / 1000)}k already spent — how we get paid back
             </div>
             <h2
               className="font-display text-[2.6vw] leading-[1.05] tracking-tight text-primary font-medium"
               style={{ textWrap: "balance" }}
             >
               Headwaters is owed{" "}
-              <span className="font-mono font-semibold">$22,000</span> for the
+              <span className="font-mono font-semibold">{fmtPrincipal(principal)}</span> for the
               full 807 grant scope — both streams, delivered.
               <span className="italic font-normal text-accent">
                 {" "}
@@ -52,11 +71,11 @@ export default function PlatformBillPayback() {
             </div>
             <div className="font-body text-[0.95vw] text-text leading-[1.4]">
               The original grant budgeted{" "}
-              <span className="font-mono font-semibold">$40,000</span> across two
+              <span className="font-mono font-semibold">{fmtScope(originalScope)}</span> across two
               contractors. The marketing contractor backed out; Headwaters
               delivered both streams for{" "}
-              <span className="font-mono font-semibold">$22,000</span> total. The
-              board doesn&rsquo;t have $22k on hand, so we{" "}
+              <span className="font-mono font-semibold">{fmtPrincipal(principal)}</span> total. The
+              board doesn&rsquo;t have ${Math.round(principal / 1000)}k on hand, so we{" "}
               <span className="font-semibold text-primary">
                 tie payback to triggers
               </span>{" "}
@@ -72,7 +91,7 @@ export default function PlatformBillPayback() {
         >
           <div className="flex items-baseline justify-between mb-[0.4vh]">
             <div className="font-mono uppercase tracking-[0.22em] text-[0.82vw] text-accent font-semibold">
-              What the $22k bought · audit (full grant deliverable scope)
+              What the ${Math.round(principal / 1000)}k bought · audit (full grant deliverable scope)
             </div>
             <div className="font-mono text-[0.75vw] text-muted">
               ▼ named honestly, not buried in a footnote
@@ -115,12 +134,12 @@ export default function PlatformBillPayback() {
                 <td className="py-[0.5vh] pr-[0.8vw] text-text text-[0.78vw] leading-[1.35] align-top">
                   Full grant deliverable scope, both streams.{" "}
                   <span className="font-semibold text-primary">
-                    ~$40k of original grant scope, delivered for $22k
+                    ~${Math.round(originalScope / 1000)}k of original grant scope, delivered for ${Math.round(principal / 1000)}k
                   </span>{" "}
                   when the other contractor backed out.
                 </td>
                 <td className="py-[0.5vh] text-right font-display text-primary font-semibold text-[0.95vw] align-top">
-                  ~$22,000
+                  ~{fmtPrincipal(principal)}
                 </td>
               </tr>
             </tbody>
@@ -144,7 +163,7 @@ export default function PlatformBillPayback() {
               as a <span className="font-semibold">flat monthly draw</span> —
               size and term agreed by the board with the bookkeeper, sized so
               the line never threatens an operating month. Targeted at{" "}
-              <span className="font-mono font-semibold">~$1k–$1.5k / mo</span>{" "}
+              <span className="font-mono font-semibold">~${(monthlyMin / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 })}k–${(monthlyMax / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 })}k / mo</span>{" "}
               over 12–24 months once the trigger is met.
             </div>
             <div
@@ -169,7 +188,7 @@ export default function PlatformBillPayback() {
             </div>
             <div className="font-body text-[0.95vw] text-text leading-[1.45] flex-1">
               <span className="font-semibold">10% of new platform-enabled revenue</span>{" "}
-              flows to Headwaters until the $22k is cleared. Defined sources:
+              flows to Headwaters until the ${Math.round(principal / 1000)}k is cleared. Defined sources:
               dog treat sales, memberships, &ldquo;other&rdquo; new lines the
               platform and the absorbed marketing work unlock. Existing
               wholesale, custom-label, market, and grant income is{" "}
@@ -219,7 +238,7 @@ export default function PlatformBillPayback() {
         </div>
 
         <div className="mt-[1vh] font-body text-[0.82vw] text-muted leading-[1.35]">
-          The $22k is an{" "}
+          The ${Math.round(principal / 1000)}k is an{" "}
           <span className="text-text">honest number named honestly</span> — a
           year of build that already shipped, the marketing-and-promotion
           stream the other contractor was supposed to deliver and didn&rsquo;t,

@@ -1,6 +1,18 @@
+import { useCostValue } from "../../lib/costReview";
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringOpsManager() {
+  const omRate = useCostValue("rate.opsManager");
+  const benchRate = useCostValue("rate.benchSeat");
+  const { saltBenchAnnual } = useBudgetTotals();
+  const fmtKYr = (n: number) =>
+    "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
@@ -51,7 +63,7 @@ export default function HiringOpsManager() {
             <Row><b>Week 1 · Shadow.</b> 5 days alongside me. They take notes, I take calls. End-of-day debrief.</Row>
             <Row><b>Week 2 · Phone in their hand.</b> They run 11am / 4pm hand-offs. I'm reachable but not first.</Row>
             <Row><b>Decision day.</b> Friday of week 2. If yes, full role starts Monday. If no, paid out and parted clean.</Row>
-            <Row>Both weeks paid at $40/hr regardless of outcome. The trial is the interview.</Row>
+            <Row>Both weeks paid at ${omRate}/hr regardless of outcome. The trial is the interview.</Row>
           </Section>
 
           <Section title="Walk away if…" tone="danger">
@@ -102,7 +114,7 @@ export default function HiringOpsManager() {
                 <>
                   ~150 hrs/seat/yr
                   <span className="block font-mono text-[0.95vw] mt-[0.15vh] opacity-90">
-                    ×4 = ~600 hrs/yr · @ $30/hr
+                    ×4 = ~600 hrs/yr · @ ${benchRate}/hr
                   </span>
                 </>
               }
@@ -112,9 +124,9 @@ export default function HiringOpsManager() {
               label="Reconciles to"
               value={
                 <>
-                  $15,000 / yr
+                  {fmtKYr(saltBenchAnnual)} / yr
                   <span className="block font-mono text-[0.78vw] mt-[0.15vh] opacity-90">
-                    $10.5k channel-alloc · $4.5k overhead
+                    {fmtKYr(saltBenchAnnual * 0.7)} channel-alloc · {fmtKYr(saltBenchAnnual * 0.3)} overhead
                   </span>
                 </>
               }

@@ -1,11 +1,34 @@
+import { useCostValue } from "../../lib/costReview";
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
+const fmtMo = (n: number) => "$" + n.toLocaleString("en-US");
+const fmtKMo = (n: number) => "~$" + Math.round(n / 1000) + "k";
+const fmtKYr = (n: number) => "~$" + Math.round(n / 1000) + "k / yr";
+const fmtKMoPer = (n: number) => "~$" + Math.round(n / 1000) + "k / mo";
+
 export default function Reinvestment() {
+  // Reinvestment is *derived* live from the Budget walk: ask − cost basis.
+  // An edit to any scenario-B role line on Budget shrinks/expands this
+  // number on the next render without a second source of truth.
+  const { askReco, reinvestB: reinvestMonthly } = useBudgetTotals();
+  const techCapex = useCostValue("reinvest.techCapex.annual");
+  const tooling = useCostValue("reinvest.tooling.monthly");
+  const training = useCostValue("reinvest.training.monthly");
+  const reserve = useCostValue("reinvest.pilotReserve.monthly");
+  const reserveYr1 = useCostValue("reinvest.year1Reserve");
+  const markupPct = useCostValue("markup.target");
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              II · Reinvestment — what the 35% builds
+              II · Reinvestment — what the {markupPct}% builds
             </div>
             <h2
               className="font-display text-[3.4vw] leading-[1] tracking-tight text-primary font-medium"
@@ -16,8 +39,8 @@ export default function Reinvestment() {
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1vw] text-muted leading-[1.4]">
-            On the $90k recommended ask:{" "}
-            <span className="font-mono font-semibold text-primary">$23,300/mo</span>{" "}
+            On the ${Math.round(askReco / 1000)}k recommended ask:{" "}
+            <span className="font-mono font-semibold text-primary">{fmtMo(reinvestMonthly)}/mo</span>{" "}
             flows into a dedicated reinvestment account. Four destinations, all
             of them outlast the contract.
           </div>
@@ -33,7 +56,7 @@ export default function Reinvestment() {
                 01 · Tech CAPEX
               </div>
               <div className="font-display text-[1.5vw] text-primary font-semibold leading-none">
-                ~$60k / yr
+                {fmtKYr(techCapex)}
               </div>
             </div>
             <div className="font-display text-[1.5vw] text-primary font-medium leading-tight mb-[1vh]">
@@ -67,7 +90,7 @@ export default function Reinvestment() {
                 02 · Tooling subscriptions
               </div>
               <div className="font-display text-[1.5vw] text-primary font-semibold leading-none">
-                ~$2k / mo
+                {fmtKMoPer(tooling)}
               </div>
             </div>
             <div className="font-display text-[1.5vw] text-primary font-medium leading-tight mb-[1vh]">
@@ -97,7 +120,7 @@ export default function Reinvestment() {
                 03 · Training & R&D
               </div>
               <div className="font-display text-[1.5vw] text-primary font-semibold leading-none">
-                ~$3k / mo
+                {fmtKMoPer(training)}
               </div>
             </div>
             <div className="font-display text-[1.5vw] text-primary font-medium leading-tight mb-[1vh]">
@@ -133,7 +156,7 @@ export default function Reinvestment() {
                 className="font-display text-[1.5vw] font-semibold leading-none"
                 style={{ color: "#e9c8a8" }}
               >
-                ~$13k / mo accruing
+                {fmtKMo(reserve)} / mo accruing
               </div>
             </div>
             <div className="font-display text-[1.5vw] font-medium leading-tight mb-[1vh]">
@@ -143,8 +166,8 @@ export default function Reinvestment() {
               The biggest line. The whole point of the markup. Accumulated
               monthly so that when the second reserve says yes, the agency
               can say yes back without a 9-month bridge ask. Year-1 reserve:
-              ~$160k — enough to seed pilot #2 ahead of contract close, with
-              no community ever waiting on a fundraising cycle.
+              {" "}{fmtKMo(reserveYr1)} — enough to seed pilot #2 ahead of contract close,
+              with no community ever waiting on a fundraising cycle.
             </div>
             <div
               className="mt-[1vh] pt-[0.8vh] border-t font-mono text-[0.82vw] leading-[1.35]"

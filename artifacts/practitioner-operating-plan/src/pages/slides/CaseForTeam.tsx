@@ -1,6 +1,17 @@
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function CaseForTeam() {
+  const { costBasisA, saltBenchAnnual } = useBudgetTotals();
+  const benchRate = useCostValue("rate.benchSeat");
+  const fmtKMo = (n: number) => "~$" + Math.round(n / 1000) + "k/mo";
+  const fmtKYr = (n: number) => "~$" + Math.round(n / 1000) + "k/yr";
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -43,7 +54,7 @@ export default function CaseForTeam() {
               className="mt-[2vh] pt-[1.5vh] border-t font-mono uppercase tracking-[0.22em] text-[0.9vw] text-muted"
               style={{ borderColor: "var(--slide-rule)" }}
             >
-              Saves ~$50k/mo on paper. Costs the contract.
+              Saves {fmtKMo(costBasisA)} on paper. Costs the contract.
             </div>
           </div>
 
@@ -64,14 +75,14 @@ export default function CaseForTeam() {
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Two people who can answer the phone in Dryden, not one.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Books reconciled monthly. CRA filings boring, on time.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>Practitioner free to do the actual strategic work the contract pays for.</div></div>
-              <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>A 4-seat depot bench (T4A, $30/hr, ~600 hrs/yr) so the salt line never lands on the founder. Costed $15k/yr in the salt P&amp;L, not invisible.</div></div>
+              <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>A 4-seat depot bench (T4A, ${benchRate}/hr, ~600 hrs/yr) so the salt line never lands on the founder. Costed {fmtKYr(saltBenchAnnual)} in the salt P&amp;L, not invisible.</div></div>
               <div className="flex gap-[0.8vw]"><div style={{ color: "#e9c8a8" }} className="w-[1vw]">✓</div><div>The team that holds Deer Lake is the team that takes contract two.</div></div>
             </div>
             <div
               className="mt-[2vh] pt-[1.5vh] border-t font-mono uppercase tracking-[0.22em] text-[0.9vw]"
               style={{ borderColor: "rgba(244,237,224,0.3)", color: "#e9c8a8" }}
             >
-              Costs ~$50k/mo agency + $15k/yr bench. Buys the contract — and the next one.
+              Costs {fmtKMo(costBasisA)} agency + {fmtKYr(saltBenchAnnual)} bench. Buys the contract — and the next one.
             </div>
           </div>
         </div>

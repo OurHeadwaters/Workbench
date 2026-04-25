@@ -1,6 +1,13 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringBookkeeper() {
+  const rate = useCostValue("rate.bookkeeper");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
@@ -51,7 +58,7 @@ export default function HiringBookkeeper() {
             <Row><b>Scope.</b> Reconcile the prior 90 days. Build the month-end report template. File one HST cycle end-to-end.</Row>
             <Row><b>Cadence.</b> Weekly 30-min check-in. They send a Friday status note before the call.</Row>
             <Row><b>Decision day.</b> Day 30. If the books reconcile clean and the HST filed on time, the engagement continues. Otherwise paid out and ended.</Row>
-            <Row>Paid at $40/hr against a fixed scope cap so there's no incentive to drag.</Row>
+            <Row>Paid at ${rate}/hr against a fixed scope cap so there's no incentive to drag.</Row>
           </Section>
 
           <Section title="Walk away if…" tone="danger">

@@ -1,3 +1,6 @@
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 type Stage = {
   year: string;
   headline: string;
@@ -5,39 +8,53 @@ type Stage = {
   cost: string;
 };
 
-const stages: Stage[] = [
-  {
-    year: "Year 1",
-    headline: "Deer Lake pilot",
-    body: "Stand up the team, ship all six modules, deliver the contract, document everything as we go. The transparency stack is live by M9.",
-    cost: "1 contract · ~$1.08M annualised",
-  },
-  {
-    year: "Year 2",
-    headline: "Pilot #2 — second reserve",
-    body: "Marginal cost of the second contract is mostly just the practitioner's time. Back office, tech infrastructure, hiring runbook and accountability framework are already built. Pilot #2 doesn't wait for grants — it draws from year-1 reinvestment reserve.",
-    cost: "2 concurrent contracts · ~$2.0M annualised",
-  },
-  {
-    year: "Year 3",
-    headline: "3–5 contracts running concurrently",
-    body: "The agency is the deliverable. Two CD Associates run engagement-side; IT/Tech and senior engineer run the infrastructure. Each pilot ships the same six modules with reserve-specific adaptations.",
-    cost: "Up to 5 contracts · ~$5M+ annualised",
-  },
-  {
-    year: "Year 5",
-    headline: "The template is open",
-    body: "Other community development practitioners run their own pilots with the playbook — on our agency or independent. Reserves no longer have to invent the model from scratch. Transparency tooling is the new baseline expectation, not a luxury.",
-    cost: "Open template · scale uncapped",
-  },
-];
+// Annualised costs are derived from the live recommended ask so an edit
+// to that single number on Budget restages this whole slide.
+function buildStages(askReco: number): Stage[] {
+  const annualMillions = (n: number) =>
+    "~$" + (n / 1_000_000).toLocaleString("en-US", { maximumFractionDigits: 2 }) + "M";
+  const yr1 = askReco * 12;
+  const yr2 = askReco * 12 * 2;
+  const yr3 = askReco * 12 * 5;
+  return [
+    {
+      year: "Year 1",
+      headline: "Deer Lake pilot",
+      body: "Stand up the team, ship all six modules, deliver the contract, document everything as we go. The transparency stack is live by M9.",
+      cost: `1 contract · ${annualMillions(yr1)} annualised`,
+    },
+    {
+      year: "Year 2",
+      headline: "Pilot #2 — second reserve",
+      body: "Marginal cost of the second contract is mostly just the practitioner's time. Back office, tech infrastructure, hiring runbook and accountability framework are already built. Pilot #2 doesn't wait for grants — it draws from year-1 reinvestment reserve.",
+      cost: `2 concurrent contracts · ${annualMillions(yr2)} annualised`,
+    },
+    {
+      year: "Year 3",
+      headline: "3–5 contracts running concurrently",
+      body: "The agency is the deliverable. Two CD Associates run engagement-side; IT/Tech and senior engineer run the infrastructure. Each pilot ships the same six modules with reserve-specific adaptations.",
+      cost: `Up to 5 contracts · ${annualMillions(yr3)}+ annualised`,
+    },
+    {
+      year: "Year 5",
+      headline: "The template is open",
+      body: "Other community development practitioners run their own pilots with the playbook — on our agency or independent. Reserves no longer have to invent the model from scratch. Transparency tooling is the new baseline expectation, not a luxury.",
+      cost: "Open template · scale uncapped",
+    },
+  ];
+}
 
 export default function PathToScale() {
+  const { askReco } = useBudgetTotals();
+  const stages = buildStages(askReco);
   return (
     <div
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
     >
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div
         className="absolute -right-[10vw] top-[10vh] w-[40vw] h-[40vw] rounded-full"
         style={{ background: "rgba(184,90,62,0.16)" }}

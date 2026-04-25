@@ -1,6 +1,20 @@
+import { useCostValue } from "../../lib/costReview";
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleOpsManager() {
+  const benchRate = useCostValue("rate.benchSeat");
+  const omRate = useCostValue("rate.opsManager");
+  const omMonthly = useCostValue("role.monthly.opsManager");
+  const lowSkillFloor = useCostValue("rate.market.lowSkill");
+  const { saltBenchAnnual } = useBudgetTotals();
+  const fmtKYr = (n: number) =>
+    "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k/yr";
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -80,7 +94,7 @@ export default function RoleOpsManager() {
                 <div>
                   The salt batch — last week of every month, ~12 hrs of OM time
                   capped; the depot bench (4 casual / contracted, T4A · ~600
-                  hrs/yr · $30/hr · costed $15k/yr in the salt P&amp;L) does
+                  hrs/yr · ${benchRate}/hr · costed {fmtKYr(saltBenchAnnual)} in the salt P&amp;L) does
                   the picking and packing.{" "}
                   <span className="text-accent font-semibold">My hands never on a jar.</span>
                 </div>
@@ -112,11 +126,11 @@ export default function RoleOpsManager() {
                 Rate
               </div>
               <div className="font-display text-[2.6vw] text-primary font-medium leading-none">
-                $40 / hr
+                ${omRate} / hr
               </div>
               <div className="font-body text-[1.05vw] text-muted mt-[0.6vh] leading-[1.4]">
-                Inside my own benchmark: $25 buys low-skill, $35–$45 buys
-                capable. We pay $40 to actually attract real.
+                Inside my own benchmark: ${lowSkillFloor} buys low-skill, $35–$45 buys
+                capable. We pay ${omRate} to actually attract real.
               </div>
             </div>
 
@@ -131,7 +145,7 @@ export default function RoleOpsManager() {
                 Monthly
               </div>
               <div className="font-display text-[2.8vw] font-medium leading-none">
-                ~$7,000
+                ~${omMonthly.toLocaleString("en-US")}
               </div>
               <div className="font-body text-[1.05vw] mt-[0.6vh] leading-[1.4] opacity-85">
                 The single most expensive line. Everything else only works

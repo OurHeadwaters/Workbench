@@ -19,6 +19,7 @@ import { findCarriedFromPriorWeeks } from "../lib/carryover";
 import { StepCard } from "../components/StepCard";
 import { ThreeThings } from "../components/ThreeThings";
 import { WeekStreak } from "../components/WeekStreak";
+import { CostReviewButton } from "../components/CostReviewButton";
 
 const REMAINING_DAY_LABELS: Record<DayPlan["dayShort"], string> = {
   mon: "Monday",
@@ -74,12 +75,17 @@ export default function Today() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <p className="text-xs uppercase tracking-widest text-stone-500">
-          {phase.title} · Week {weekNumber} of 52
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-          {formatLongDate(todayISO)}
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-widest text-stone-500">
+              {phase.title} · Week {weekNumber} of 52
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
+              {formatLongDate(todayISO)}
+            </h1>
+          </div>
+          <CostReviewButton variant="primary" />
+        </div>
         <p className="max-w-2xl text-base text-stone-700">{week.theme}</p>
         {week.description && (
           <p className="max-w-2xl text-sm text-stone-600">{week.description}</p>

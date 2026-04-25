@@ -1,6 +1,11 @@
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringFoodHandler() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>

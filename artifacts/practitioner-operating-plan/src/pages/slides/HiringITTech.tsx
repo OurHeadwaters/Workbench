@@ -1,6 +1,14 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringITTech() {
+  const low = useCostValue("rate.itTechDayLow");
+  const high = useCostValue("rate.itTechDayHigh");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
@@ -52,7 +60,7 @@ export default function HiringITTech() {
             <Row><b>Day 1–2.</b> Stand up a single self-hosted service (price dashboard staging) on supplied hardware. Document as you go.</Row>
             <Row><b>Day 3–4.</b> Triage a deliberately misconfigured GrapheneOS phone + a flaky office switch. Note what they touch and what they leave alone.</Row>
             <Row><b>Day 5.</b> Hand back: a working service, a runbook the OM can follow, and a written triage log. No runbook = no hire.</Row>
-            <Row>Trial paid at the going day rate — $600–$900/day depending on level. Not "show us your portfolio for free."</Row>
+            <Row>Trial paid at the going day rate — ${low}–${high}/day depending on level. Not "show us your portfolio for free."</Row>
           </Section>
 
           <Section title="Walk away if…" tone="danger">

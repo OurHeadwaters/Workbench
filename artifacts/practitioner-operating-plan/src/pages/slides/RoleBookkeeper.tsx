@@ -1,6 +1,14 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleBookkeeper() {
+  const rate = useCostValue("rate.bookkeeper");
+  const monthly = useCostValue("role.monthly.bookkeeper");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -100,7 +108,7 @@ export default function RoleBookkeeper() {
                 Rate
               </div>
               <div className="font-display text-[2.6vw] text-primary font-medium leading-none">
-                $40 / hr
+                ${rate} / hr
               </div>
               <div className="font-body text-[1.05vw] text-muted mt-[0.6vh] leading-[1.4]">
                 Capable bookkeeper with small-business experience — not a
@@ -119,7 +127,7 @@ export default function RoleBookkeeper() {
                 Monthly
               </div>
               <div className="font-display text-[2.8vw] font-medium leading-none">
-                ~$1,700
+                ~${monthly.toLocaleString("en-US")}
               </div>
               <div className="font-body text-[1.05vw] mt-[0.6vh] leading-[1.4] opacity-85">
                 Cheapest insurance against the kind of mistake that costs a year

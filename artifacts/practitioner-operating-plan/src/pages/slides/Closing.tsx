@@ -1,9 +1,21 @@
+import { useBudgetTotals } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
+const fmtK1 = (n: number) =>
+  "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
+
 export default function Closing() {
+  const { askReco, costBasisB, reinvestB, reinvestBPct, bridgeB } =
+    useBudgetTotals();
+
   return (
     <div
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
     >
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div
         className="absolute -right-[10vw] -top-[10vh] w-[45vw] h-[45vw] rounded-full"
         style={{ background: "rgba(184,90,62,0.18)" }}
@@ -46,16 +58,17 @@ export default function Closing() {
             style={{ borderColor: "#e9c8a8" }}
           >
             <span className="font-semibold" style={{ color: "#e9c8a8" }}>
-              $90,000 a month
+              ${askReco.toLocaleString("en-US")} a month
             </span>
             , twelve-month engagement, reviewed at month six.{" "}
-            <span className="font-semibold">~$69.7k cost basis</span> — the
+            <span className="font-semibold">~{fmtK1(costBasisB)} cost basis</span> — the
             team that delivers the work, plus the Dad-warehouse aggregation
             hub.{" "}
-            <span className="font-semibold">~$20.3k reinvestment</span> (~29%) —
+            <span className="font-semibold">~{fmtK1(reinvestB)} reinvestment</span>{" "}
+            (~{reinvestBPct.toFixed(0)}%) —
             tech infrastructure, training, and the seed for pilot #2. Audited
             annually against savings delivered to Deer Lake. Day-one bridge
-            ask: <span className="font-semibold">~$181k</span>.
+            ask: <span className="font-semibold">~${Math.round(bridgeB / 1000)}k</span>.
           </div>
         </div>
 

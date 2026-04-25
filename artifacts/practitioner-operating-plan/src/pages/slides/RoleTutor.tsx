@@ -1,6 +1,14 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleTutor() {
+  const rate = useCostValue("rate.tutor");
+  const monthly = useCostValue("role.monthly.tutor");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -100,7 +108,7 @@ export default function RoleTutor() {
                 Rate
               </div>
               <div className="font-display text-[2.6vw] text-primary font-medium leading-none">
-                $35 / hr
+                ${rate} / hr
               </div>
               <div className="font-body text-[1.05vw] text-muted mt-[0.6vh] leading-[1.4]">
                 Mid-range capable. Worth a small premium for someone who shows
@@ -119,7 +127,7 @@ export default function RoleTutor() {
                 Monthly · annualised
               </div>
               <div className="font-display text-[2.8vw] font-medium leading-none">
-                ~$900
+                ~${monthly.toLocaleString("en-US")}
               </div>
               <div className="font-body text-[1.05vw] mt-[0.6vh] leading-[1.4] opacity-85">
                 Counted as a level monthly even though the hours swing — the

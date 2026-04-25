@@ -1,3 +1,6 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 type BenchMember = {
   name: string;
   base: string;
@@ -47,28 +50,45 @@ const bench: BenchMember[] = [
 ];
 
 type CostLine = {
+  id: string;
   label: string;
   amount: number;
   note: string;
 };
 
-const costLines: CostLine[] = [
-  { label: "Direct picking & packing", amount: 6360, note: "12 batches × 16 hrs × $30 + 4% allowance" },
-  { label: "Channel-allocated overflow", amount: 4140, note: "Q4 holiday surge + custom-label runs past 16 hrs" },
-  { label: "Standby + cancellation pay", amount: 1200, note: "1 standby shift / quarter × 4 hrs × $30" },
-  { label: "Quarterly refresher training", amount: 1600, note: "SOP + food-safe + batch dry-run with OM" },
-  { label: "Replacement screening", amount: 800, note: "~1 seat replaced / yr · paid trial + ref calls" },
-  { label: "Mileage pool + WSIB premium", amount: 900, note: "Sioux Lookout / Eagle River drives + Rate Group 957" },
-];
-
-const total = costLines.reduce((s, l) => s + l.amount, 0);
-
 const fmt = (n: number) => "$" + n.toLocaleString("en-US");
 const fmtK = (n: number) => "$" + Math.round(n / 1000) + "k";
 
 export default function SaltBench() {
+  // Bench costs are pulled live from the registry — the table, the
+  // header total, the green tot footer, and the per-channel/overhead
+  // split below all read off the same numbers, so an edit on any one
+  // line cascades through every roll-up on this slide.
+  const directPicking = useCostValue("salt.bench.directPicking");
+  const overflow = useCostValue("salt.bench.overflow");
+  const standby = useCostValue("salt.bench.standby");
+  const training = useCostValue("salt.bench.training");
+  const replacement = useCostValue("salt.bench.replacement");
+  const mileage = useCostValue("salt.bench.mileage");
+
+  const costLines: CostLine[] = [
+    { id: "salt.bench.directPicking", label: "Direct picking & packing", amount: directPicking, note: "12 batches × 16 hrs × $30 + 4% allowance" },
+    { id: "salt.bench.overflow", label: "Channel-allocated overflow", amount: overflow, note: "Q4 holiday surge + custom-label runs past 16 hrs" },
+    { id: "salt.bench.standby", label: "Standby + cancellation pay", amount: standby, note: "1 standby shift / quarter × 4 hrs × $30" },
+    { id: "salt.bench.training", label: "Quarterly refresher training", amount: training, note: "SOP + food-safe + batch dry-run with OM" },
+    { id: "salt.bench.replacement", label: "Replacement screening", amount: replacement, note: "~1 seat replaced / yr · paid trial + ref calls" },
+    { id: "salt.bench.mileage", label: "Mileage pool + WSIB premium", amount: mileage, note: "Sioux Lookout / Eagle River drives + Rate Group 957" },
+  ];
+
+  const total = costLines.reduce((s, l) => s + l.amount, 0);
+  const channelAllocated = directPicking + overflow;
+  const benchOverhead = total - channelAllocated;
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[3vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[1.4vh]">
           <div>
@@ -180,7 +200,7 @@ export default function SaltBench() {
               Bench cost · {fmt(total)}/yr · cost-centre SALT-01-LBR
             </div>
             <div className="font-mono text-[0.7vw] text-muted">
-              ties to the {fmtK(total)} line in the salt P&amp;L · $10.5k allocated to channels · $4.5k bench overhead
+              ties to the {fmtK(total)} line in the salt P&amp;L · {fmtK(channelAllocated)} allocated to channels · {fmtK(benchOverhead)} bench overhead
             </div>
           </div>
           <div className="grid grid-cols-2 gap-x-[1.5vw]">

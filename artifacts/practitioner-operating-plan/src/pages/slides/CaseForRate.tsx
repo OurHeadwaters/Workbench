@@ -1,6 +1,53 @@
+import { useAppState } from "../../lib/storage";
+import { COST_REGISTRY_BY_ID } from "../../data/costRegistry";
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
+const B_ROLE_IDS = [
+  "budget.b.practitioner",
+  "budget.b.opsManager",
+  "budget.b.itTech",
+  "budget.b.bookkeeper",
+  "budget.b.foodHandler",
+  "budget.b.cdAssociate",
+  "budget.b.juniorAnalyst",
+  "budget.b.lifeSupports",
+  "budget.b.aggregationHub",
+  "budget.b.tooling",
+  "budget.b.recurringTech",
+  "budget.b.buffer",
+];
+
+function resolveCost(
+  state: ReturnType<typeof useAppState>,
+  id: string,
+): number {
+  const review = state.costReview?.[id];
+  if (review?.status === "edited" && typeof review.editedValue === "number") {
+    return review.editedValue;
+  }
+  return COST_REGISTRY_BY_ID[id]?.defaultValue ?? 0;
+}
+
+const fmtK1 = (n: number) =>
+  "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
+
 export default function CaseForRate() {
+  const state = useAppState();
+  const askReco = resolveCost(state, "ask.recommended");
+  const costBasis = B_ROLE_IDS.reduce(
+    (acc, id) => acc + resolveCost(state, id),
+    0,
+  );
+  const reinvest = askReco - costBasis;
+  const reinvestPct = costBasis > 0 ? (reinvest / costBasis) * 100 : 0;
+  const markupPct = useCostValue("markup.target");
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -16,10 +63,10 @@ export default function CaseForRate() {
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1.1vw] text-muted leading-[1.4]">
-            $90k/mo pays for the structure that delivers the work and the
-            reinvestment that builds the next reserve's pilot. 35% is the
+            ${Math.round(askReco / 1000)}k/mo pays for the structure that delivers the work and the
+            reinvestment that builds the next reserve's pilot. {markupPct}% is the
             target lever; with the new aggregation hub line in cost basis,
-            the recommended ask currently sits at ~29%.
+            the recommended ask currently sits at ~{reinvestPct.toFixed(0)}%.
           </div>
         </div>
 
@@ -29,7 +76,7 @@ export default function CaseForRate() {
             style={{ background: "var(--slide-paper)" }}
           >
             <div className="font-mono uppercase tracking-[0.22em] text-[1vw] text-accent font-semibold mb-[1.5vh]">
-              What $90k / month actually buys
+              What ${Math.round(askReco / 1000)}k / month actually buys
             </div>
             <div className="space-y-[1.1vh] font-body text-[1.05vw] leading-[1.4] text-text">
               <div className="flex gap-[1vw]">
@@ -72,7 +119,7 @@ export default function CaseForRate() {
                 <div className="font-mono text-accent font-semibold w-[2vw] shrink-0">F.</div>
                 <div>
                   <span className="font-semibold text-primary">The next pilot, pre-funded</span> —
-                  35% reinvestment compounded into a reserve so the second community
+                  {markupPct}% reinvestment compounded into a reserve so the second community
                   doesn't wait nine months for a grant.
                 </div>
               </div>
@@ -109,8 +156,8 @@ export default function CaseForRate() {
                 The math, plainly
               </div>
               <div className="font-body text-[0.95vw] text-text leading-[1.45]">
-                Of $90k:{" "}
-                <span className="font-semibold text-primary">~$69.7k</span> is
+                Of ${Math.round(askReco / 1000)}k:{" "}
+                <span className="font-semibold text-primary">~{fmtK1(costBasis)}</span> is
                 cost basis — the team that delivers, plus the{" "}
                 <a
                   href="/lease-tooling"
@@ -119,10 +166,10 @@ export default function CaseForRate() {
                   Dad-warehouse aggregation hub
                 </a>{" "}
                 ($3k/mo, all-in). The other{" "}
-                <span className="font-semibold text-primary">~$20.3k</span>{" "}
-                (~29% markup) is the reinvestment line — tech CAPEX, training,
+                <span className="font-semibold text-primary">~{fmtK1(reinvest)}</span>{" "}
+                (~{reinvestPct.toFixed(0)}% markup) is the reinvestment line — tech CAPEX, training,
                 pilot reserve. Audited annually against measurable savings
-                delivered to Deer Lake. Nothing disappears. The 35% target
+                delivered to Deer Lake. Nothing disappears. The {markupPct}% target
                 comes back into reach when the contract steps to the next
                 phase or a second engagement lands.
               </div>

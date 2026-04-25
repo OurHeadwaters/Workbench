@@ -1,6 +1,15 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleHousecleaner() {
+  const rate = useCostValue("rate.housecleaner");
+  const monthly = useCostValue("role.monthly.housecleaner");
+  const lowSkillFloor = useCostValue("rate.market.lowSkill");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -101,10 +110,10 @@ export default function RoleHousecleaner() {
                 Rate
               </div>
               <div className="font-display text-[2.6vw] text-primary font-medium leading-none">
-                $30 / hr
+                ${rate} / hr
               </div>
               <div className="font-body text-[1.05vw] text-muted mt-[0.6vh] leading-[1.4]">
-                A modest premium over the $25 floor — buys reliability and the
+                A modest premium over the ${lowSkillFloor} floor — buys reliability and the
                 same person every week.
               </div>
             </div>
@@ -120,7 +129,7 @@ export default function RoleHousecleaner() {
                 Monthly
               </div>
               <div className="font-display text-[2.8vw] font-medium leading-none">
-                ~$500
+                ~${monthly.toLocaleString("en-US")}
               </div>
               <div className="font-body text-[1.05vw] mt-[0.6vh] leading-[1.4] opacity-85">
                 The cheapest line on the budget. Disproportionate return on the

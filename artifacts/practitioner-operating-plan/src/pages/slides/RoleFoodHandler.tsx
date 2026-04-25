@@ -1,6 +1,14 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleFoodHandler() {
+  const rate = useCostValue("rate.foodHandler");
+  const monthly = useCostValue("role.monthly.foodHandler");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -112,7 +120,7 @@ export default function RoleFoodHandler() {
                 Rate
               </div>
               <div className="font-display text-[2.6vw] text-primary font-medium leading-none">
-                ~$30 / hr
+                ~${rate} / hr
               </div>
               <div className="font-body text-[1.05vw] text-muted mt-[0.6vh] leading-[1.4]">
                 Loaded. Sits between the housecleaner rate and the ops manager
@@ -131,7 +139,7 @@ export default function RoleFoodHandler() {
                 Monthly
               </div>
               <div className="font-display text-[2.8vw] font-medium leading-none">
-                ~$5,000
+                ~${monthly.toLocaleString("en-US")}
               </div>
               <div className="font-body text-[1.05vw] mt-[0.6vh] leading-[1.4] opacity-85">
                 Absorbs the statutory buffer at the floor scenario and again

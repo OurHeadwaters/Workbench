@@ -1,6 +1,13 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringHousecleaner() {
+  const rate = useCostValue("rate.housecleaner");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
@@ -51,7 +58,7 @@ export default function HiringHousecleaner() {
             <Row><b>Visit 1.</b> Standard scope, parent home and visible. Walk-through at start, walk-through at end.</Row>
             <Row><b>Visit 2.</b> Same scope, parent home but unobtrusive. Note: same person, same time, same approach?</Row>
             <Row><b>Decision.</b> End of visit 2. Hire on the spot or pay out and try the next candidate.</Row>
-            <Row>Both visits paid at $30/hr. No "free first clean" — that signals the wrong relationship from day one.</Row>
+            <Row>Both visits paid at ${rate}/hr. No "free first clean" — that signals the wrong relationship from day one.</Row>
           </Section>
 
           <Section title="Walk away if…" tone="danger">

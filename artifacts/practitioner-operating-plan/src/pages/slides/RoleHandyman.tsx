@@ -1,6 +1,14 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function RoleHandyman() {
+  const rate = useCostValue("rate.handyman");
+  const monthly = useCostValue("role.monthly.handyman");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
@@ -108,7 +116,7 @@ export default function RoleHandyman() {
               Rate
             </div>
             <div className="font-display text-[2.2vw] text-primary font-medium leading-none">
-              $30 / hr
+              ${rate} / hr
             </div>
           </div>
           <div
@@ -122,7 +130,7 @@ export default function RoleHandyman() {
               Monthly · if engaged
             </div>
             <div className="font-display text-[2.2vw] font-medium leading-none">
-              ~$700
+              ~${monthly.toLocaleString("en-US")}
             </div>
           </div>
         </div>

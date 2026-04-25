@@ -1,6 +1,13 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringHandyman() {
+  const rate = useCostValue("rate.handyman");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
@@ -81,7 +88,7 @@ export default function HiringHandyman() {
             <Row><b>Ask.</b> Tell me about kids in your life. Frustrating kid behaviour — how do you handle it? When have you made a kid uncomfortable without meaning to?</Row>
             <Row><b>Week 1 paid trial.</b> Outside-only work. Eaves, snow, storm windows. Parent home throughout.</Row>
             <Row><b>Week 2 paid trial.</b> Indoor work only when parent is home and kids are in the next room. No exceptions.</Row>
-            <Row><b>Decision.</b> End of week 2. Both weeks paid at $30/hr regardless of outcome.</Row>
+            <Row><b>Decision.</b> End of week 2. Both weeks paid at ${rate}/hr regardless of outcome.</Row>
           </Section>
         </div>
 

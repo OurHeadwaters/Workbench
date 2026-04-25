@@ -1,3 +1,7 @@
+import { useAppState } from "../../lib/storage";
+import { resolveCost, ROLE_IDS } from "../../lib/budgetMath";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 type Scenario = {
   key: "A" | "B" | "C";
   label: string;
@@ -33,38 +37,54 @@ function buildScenario(args: {
   return { ...args, cum, bridge, ar };
 }
 
-const scenarios: Scenario[] = [
-  buildScenario({
-    key: "A",
-    label: "$60k contract",
-    contract: 60000,
-    cost: 47400,
-    capex: 0,
-    stroke: "#6b7665",
-  }),
-  buildScenario({
-    key: "B",
-    label: "$90k contract",
-    contract: 90000,
-    cost: 69700,
-    capex: 42000,
-    stroke: "#b85a3e",
-    recommended: true,
-  }),
-  buildScenario({
-    key: "C",
-    label: "$125k contract",
-    contract: 125000,
-    cost: 95600,
-    capex: 60000,
-    stroke: "#1f3d2e",
-  }),
-];
+// Cost basis per scenario is summed off the same per-role registry ids
+// the Budget table renders — that's how an edit to (e.g.) "Practitioner
+// / Lead · scenario B" propagates here without a second source of truth.
+const { A: A_ROLE_IDS, B: B_ROLE_IDS, C: C_ROLE_IDS } = ROLE_IDS;
 
 const fmt = (n: number) =>
   (n < 0 ? "−" : "") + "$" + Math.abs(Math.round(n / 1000)) + "k";
 
 export default function CashFlow() {
+  const state = useAppState();
+  const sumIds = (ids: readonly string[]) =>
+    ids.reduce((acc, id) => acc + resolveCost(state, id), 0);
+
+  const askFloor = resolveCost(state, "ask.floor");
+  const askReco = resolveCost(state, "ask.recommended");
+  const askScale = resolveCost(state, "ask.scale");
+  const capexB = resolveCost(state, "capex.b");
+  const capexC = resolveCost(state, "capex.c");
+
+  const scenarios: Scenario[] = [
+    buildScenario({
+      key: "A",
+      label: `$${Math.round(askFloor / 1000)}k contract`,
+      contract: askFloor,
+      cost: sumIds(A_ROLE_IDS),
+      capex: 0,
+      stroke: "#6b7665",
+    }),
+    buildScenario({
+      key: "B",
+      label: `$${Math.round(askReco / 1000)}k contract`,
+      contract: askReco,
+      cost: sumIds(B_ROLE_IDS),
+      capex: capexB,
+      stroke: "#b85a3e",
+      recommended: true,
+    }),
+    buildScenario({
+      key: "C",
+      label: `$${Math.round(askScale / 1000)}k contract`,
+      contract: askScale,
+      cost: sumIds(C_ROLE_IDS),
+      capex: capexC,
+      stroke: "#1f3d2e",
+    }),
+  ];
+
+  const bridgeB = scenarios[1].bridge;
   const W = 1000;
   const H = 360;
   const padL = 60;
@@ -85,6 +105,9 @@ export default function CashFlow() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[1.5vh]">
           <div>
@@ -330,9 +353,9 @@ export default function CashFlow() {
           lost — working capital tied up in receivables, recovered when the
           last two invoices clear.{" "}
           <span className="text-primary font-semibold">
-            Recommended day-one ask: ~$181k of bridge capital
+            Recommended day-one ask: ~${Math.round(bridgeB / 1000)}k of bridge capital
           </span>{" "}
-          for the $90k scenario, so the team is paid and the infrastructure is
+          for the {fmt(askReco)} scenario, so the team is paid and the infrastructure is
           shipped before the first cheque lands. Cost basis now includes the
           aggregation hub line ($3k/mo, all-in) — see{" "}
           <a

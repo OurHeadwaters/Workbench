@@ -1,6 +1,13 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 export default function HiringTutor() {
+  const rate = useCostValue("rate.tutor");
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4.5vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2.2vh]">
           <div>
@@ -53,7 +60,7 @@ export default function HiringTutor() {
             <Row><b>Session 3.</b> Parent observes from the next room. Tutor leads end-to-end.</Row>
             <Row><b>Session 4.</b> Parent out of the house. Lesson plan shared in advance, notes sent after.</Row>
             <Row><b>Decision.</b> Two inputs: the lesson plans and notes <i>and</i> the kids' honest read on whether they want this person back.</Row>
-            <Row>4 sessions paid at $35/hr regardless. Vulnerable Sector Check reimbursed on hire.</Row>
+            <Row>4 sessions paid at ${rate}/hr regardless. Vulnerable Sector Check reimbursed on hire.</Row>
           </Section>
 
           <Section title="Walk away if…" tone="danger">

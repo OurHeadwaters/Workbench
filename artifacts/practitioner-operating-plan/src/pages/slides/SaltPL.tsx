@@ -1,3 +1,6 @@
+import { useCostValue } from "../../lib/costReview";
+import { CostReviewButton } from "../../components/CostReviewButton";
+
 type ChannelRow = {
   name: string;
   rev: number;
@@ -8,69 +11,85 @@ type ChannelRow = {
   note: string;
 };
 
-const channels: ChannelRow[] = [
-  {
-    name: "Wholesale (12 retail accts)",
-    rev: 72000,
-    cogsPct: 22,
-    freightPct: 5,
-    packPct: 2,
-    laborShare: 5500,
-    note: "Volume + low pick cost. Anchor of the line.",
-  },
-  {
-    name: "Custom labels (events, ~6/yr)",
-    rev: 20000,
-    cogsPct: 18,
-    freightPct: 4,
-    packPct: 3,
-    laborShare: 1800,
-    note: "Premium pricing, paid up front, deposit clears before run.",
-  },
-  {
-    name: "DTC batch (~80 orders/mo)",
-    rev: 14000,
-    cogsPct: 25,
-    freightPct: 12,
-    packPct: 6,
-    laborShare: 2900,
-    note: "Highest pick/pack & freight per unit. Batch-only kept it viable.",
-  },
-  {
-    name: "Markets (PR, 2–3/yr)",
-    rev: 2000,
-    cogsPct: 30,
-    freightPct: 0,
-    packPct: 5,
-    laborShare: 300,
-    note: "PR / cost-recovery — counted as marketing spend, not contribution.",
-  },
-];
-
-const channelCm = (c: ChannelRow) => {
-  const variable = (c.rev * (c.cogsPct + c.freightPct + c.packPct)) / 100;
-  return c.rev - variable - c.laborShare;
-};
-const channelCmPct = (c: ChannelRow) => (channelCm(c) / c.rev) * 100;
-
 const fmt = (n: number) => "$" + n.toLocaleString("en-US");
 const fmtK = (n: number) => "$" + Math.round(n / 1000) + "k";
 
-const totalRev = channels.reduce((s, c) => s + c.rev, 0);
-const totalCogs = channels.reduce((s, c) => s + (c.rev * c.cogsPct) / 100, 0);
-const totalFreight = channels.reduce(
-  (s, c) => s + (c.rev * c.freightPct) / 100,
-  0,
-);
-const totalPack = channels.reduce((s, c) => s + (c.rev * c.packPct) / 100, 0);
-const totalLabor = channels.reduce((s, c) => s + c.laborShare, 0);
-const depotAlloc = 3600; // ~10% of $3,000/mo facility line, annualised
-const totalCost = totalCogs + totalFreight + totalPack + totalLabor + depotAlloc;
-const netContribution = totalRev - totalCost;
-
 export default function SaltPL() {
+  // Channel revenue and the depot allocation are reviewed per-cost-id;
+  // the cost-percentage breakdown stays as planning assumptions for now.
+  const wholesaleRev = useCostValue("salt.channel.wholesale");
+  const customLabelRev = useCostValue("salt.channel.customLabel");
+  const dtcRev = useCostValue("salt.channel.dtc");
+  const marketsRev = useCostValue("salt.channel.markets");
+  const depotAlloc = useCostValue("salt.depotAlloc");
+  const askReco = useCostValue("ask.recommended");
+
+  const channels: ChannelRow[] = [
+    {
+      name: "Wholesale (12 retail accts)",
+      rev: wholesaleRev,
+      cogsPct: 22,
+      freightPct: 5,
+      packPct: 2,
+      laborShare: 5500,
+      note: "Volume + low pick cost. Anchor of the line.",
+    },
+    {
+      name: "Custom labels (events, ~6/yr)",
+      rev: customLabelRev,
+      cogsPct: 18,
+      freightPct: 4,
+      packPct: 3,
+      laborShare: 1800,
+      note: "Premium pricing, paid up front, deposit clears before run.",
+    },
+    {
+      name: "DTC batch (~80 orders/mo)",
+      rev: dtcRev,
+      cogsPct: 25,
+      freightPct: 12,
+      packPct: 6,
+      laborShare: 2900,
+      note: "Highest pick/pack & freight per unit. Batch-only kept it viable.",
+    },
+    {
+      name: "Markets (PR, 2–3/yr)",
+      rev: marketsRev,
+      cogsPct: 30,
+      freightPct: 0,
+      packPct: 5,
+      laborShare: 300,
+      note: "PR / cost-recovery — counted as marketing spend, not contribution.",
+    },
+  ];
+
+  const channelCm = (c: ChannelRow) => {
+    const variable = (c.rev * (c.cogsPct + c.freightPct + c.packPct)) / 100;
+    return c.rev - variable - c.laborShare;
+  };
+  const channelCmPct = (c: ChannelRow) =>
+    c.rev > 0 ? (channelCm(c) / c.rev) * 100 : 0;
+
+  const totalRev = channels.reduce((s, c) => s + c.rev, 0);
+  const totalCogs = channels.reduce(
+    (s, c) => s + (c.rev * c.cogsPct) / 100,
+    0,
+  );
+  const totalFreight = channels.reduce(
+    (s, c) => s + (c.rev * c.freightPct) / 100,
+    0,
+  );
+  const totalPack = channels.reduce((s, c) => s + (c.rev * c.packPct) / 100, 0);
+  const totalLabor = channels.reduce((s, c) => s + c.laborShare, 0);
+  const totalCost =
+    totalCogs + totalFreight + totalPack + totalLabor + depotAlloc;
+  const netContribution = totalRev - totalCost;
+  const askAnnualK = (askReco * 12) / 1000;
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
+      <div className="absolute top-[1vh] right-[1.4vw] z-20">
+        <CostReviewButton variant="slide-corner" />
+      </div>
       <div className="absolute inset-0 px-[5vw] py-[4vh] flex flex-col">
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
@@ -189,12 +208,12 @@ export default function SaltPL() {
               Where it sits in the agency P&amp;L
             </div>
             <div className="font-body text-[0.95vw] text-text leading-[1.5]">
-              Recommended ask is <span className="font-semibold text-primary">$90k/mo · ~$1.08M/yr</span>{" "}
+              Recommended ask is <span className="font-semibold text-primary">${Math.round(askReco / 1000)}k/mo · ~${(askAnnualK / 1000).toFixed(2)}M/yr</span>{" "}
               of community-development revenue. The salt line adds{" "}
               <span className="font-semibold text-primary">~{fmtK(netContribution)} of net</span>{" "}
               on top — roughly{" "}
               <span className="font-semibold text-primary">
-                {((netContribution / 1080000) * 100).toFixed(1)}%
+                {((netContribution / (askAnnualK * 1000)) * 100).toFixed(1)}%
               </span>{" "}
               of agency revenue. Material enough to fund a depot bench rotation;
               small enough that no quarter is salt-dependent.
