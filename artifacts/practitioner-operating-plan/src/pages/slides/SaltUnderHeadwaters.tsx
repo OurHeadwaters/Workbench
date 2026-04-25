@@ -87,9 +87,9 @@ export default function SaltUnderHeadwaters() {
             <div className="font-body text-[1.05vw] text-text leading-[1.45]">
               <span className="font-semibold text-primary">DTC jar-shipping is batch-only.</span>{" "}
               No standing storefront expectation, no "ships in 2 days"
-              promise. Orders accumulate, the depot runs a batch on a
-              scheduled cadence, the wholesale and label channels carry the
-              steady volume.{" "}
+              promise. Orders accumulate, the depot runs a batch on a fixed
+              monthly cadence (next slide spells out the week), the wholesale
+              and label channels carry the steady volume.{" "}
               <span className="font-semibold text-primary">Farmers markets are sunset.</span>{" "}
               Up to 2–3 flagship appearances per year as PR, never as a
               sales channel — they are the most expensive dollar of revenue

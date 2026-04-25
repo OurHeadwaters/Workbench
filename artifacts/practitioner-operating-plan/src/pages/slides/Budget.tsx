@@ -266,6 +266,17 @@ export default function Budget() {
             </a>
             .
           </span>
+          <span className="block mt-[0.5vh] text-text">
+            <span className="font-mono uppercase tracking-[0.18em] text-[0.7vw] text-accent font-semibold mr-[0.5vw]">
+              + Salt line ·
+            </span>
+            Sits alongside as a separate cost-centre (
+            <span className="font-mono">SALT-01</span>): ~$108k revenue · ~$61k
+            net annual contribution · ~12 OM hrs/mo capped. Channel-by-channel
+            contribution margin (wholesale 63%, custom labels 66%, DTC batch
+            36%, markets PR / cost-recovery only) lives in the Part&nbsp;VI
+            salt P&amp;L slide; the operating runbook is the slide before it.
+          </span>
         </div>
       </div>
     </div>

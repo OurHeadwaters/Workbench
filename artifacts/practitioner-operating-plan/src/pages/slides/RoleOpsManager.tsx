@@ -73,6 +73,16 @@ export default function RoleOpsManager() {
                   Single point of failure → none.
                 </div>
               </div>
+              <div className="flex gap-[1vw]">
+                <div className="text-accent font-semibold w-[1.2vw] shrink-0">
+                  →
+                </div>
+                <div>
+                  The salt batch — last week of every month, ~12 hrs of OM time
+                  capped, casual-labour bench does the picking and packing.{" "}
+                  <span className="text-accent font-semibold">My hands never on a jar.</span>
+                </div>
+              </div>
             </div>
           </div>
 
