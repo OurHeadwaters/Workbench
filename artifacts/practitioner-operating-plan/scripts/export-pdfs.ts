@@ -24,6 +24,11 @@ const PAGES: PageExport[] = [
     outputFile: "headwaters-checklist.pdf",
     label: "Headwaters checklist",
   },
+  {
+    route: "/lease-tooling",
+    outputFile: "dad-lease-checklist.pdf",
+    label: "Dad-lease CRA tooling checklist",
+  },
 ];
 
 function resolveChromiumExecutable(): string | undefined {

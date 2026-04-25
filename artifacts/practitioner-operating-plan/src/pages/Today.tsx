@@ -219,6 +219,33 @@ export default function Today() {
           </div>
         </div>
       </section>
+
+      <section className="rounded-lg border border-stone-200 bg-white p-5">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-700">
+          Working docs
+        </h2>
+        <p className="mt-1 text-sm text-stone-600">
+          Single-page checklists for the work that lives outside the deck.
+        </p>
+        <ul className="mt-3 space-y-2 text-sm">
+          <li>
+            <Link
+              href="/checklist"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Headwaters naming &amp; registration →
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/lease-tooling"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Dad-lease CRA tooling →
+            </Link>
+          </li>
+        </ul>
+      </section>
     </div>
   );
 }

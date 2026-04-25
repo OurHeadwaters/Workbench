@@ -11,6 +11,7 @@ import {
 import OnePager from "@/pages/OnePager";
 import BrandOnePager from "@/pages/BrandOnePager";
 import Checklist from "@/pages/Checklist";
+import LeaseTooling from "@/pages/LeaseTooling";
 import Today from "@/pages/Today";
 import Week from "@/pages/Week";
 import WeekCloseOut from "@/pages/WeekCloseOut";
@@ -342,6 +343,7 @@ export default function App() {
 
   // Checklist is also a self-contained printable page (no app chrome).
   if (location === "/checklist") return <Checklist />;
+  if (location === "/lease-tooling") return <LeaseTooling />;
 
   return (
     <ToastProvider>
