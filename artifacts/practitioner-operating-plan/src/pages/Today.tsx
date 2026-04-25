@@ -244,6 +244,14 @@ export default function Today() {
               Dad-lease CRA tooling →
             </Link>
           </li>
+          <li>
+            <Link
+              href="/studio-wind-down"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Studio wind-down (close bobbieparr.studio to new work) →
+            </Link>
+          </li>
         </ul>
       </section>
     </div>
