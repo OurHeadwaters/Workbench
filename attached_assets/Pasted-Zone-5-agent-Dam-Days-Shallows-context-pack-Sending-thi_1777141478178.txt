@@ -1,0 +1,45 @@
+Zone 5 agent — Dam Days & Shallows · context pack
+
+Sending this back in the shape that drops cleanly into the codetry working-doc.
+
+Position
+Zone 5 — Wild / observation. The skipping-rock zone. Default private (Dam Days takes), with a share affordance that lets a thought float to the Shallows for all to see, shrouded in mystery from the depths below.
+
+What's actually live (surfaces)
+Dam Days (watershed.replit.app, also a published Expo mobile artifact) — private, offline-first Takes capture: keyboard n, floating +, push-to-talk dictation on mobile, threading by time + topic, optional cross-device cloud sync via Replit Auth, last-write-wins with twin-take conflict preservation.
+The Forge — Takes flow into a 5-chapter literary book (rescue-at-sea metaphor in prose: Compass / Cast Off / The Breakers / Adrift / Aboard). Print page produces the bind-ready PDF.
+The Channel → Six Zones — same Takes, different read: the AI surfaces a permaculture-shaped output with Zone 0 (Income) mandatory and 1–5 (Daily / Tended / Invested / Harvested / Wild) below. User-editable: dismiss, edit next-move, move between zones, persisted separately so re-channel never clobbers edits.
+The Shallows — anonymous public stream. Posts, threads, four reactions, per-thread stable handles derived from a session token, flag-to-hide moderation. Owner moderation gated by env-only admin token.
+The Dedication Wall — communal "for the ones who held the bucket" surface. Cursor-paginated, search, scroll-anchored, flaggable.
+Codetry — where the metaphor IS the architecture
+Chapter IDs are the schema enum: headwaters | tributaries | confluence | burst | delta. The display labels swapped to the rescue-at-sea family (Compass / Cast Off / Breakers / Adrift / Aboard) during the rebrand, but the IDs stayed. The bones were the metaphor — we changed the skin and the bones held.
+Take chapter classification is keyword-scored against those IDs in pure code (computeChapterHint). The English words drive the bucket assignment; the metaphor is the type system.
+Storage keys preserve the original watershed namespace (watershed:takes:v1, watershed:dedication:*) on purpose — the metaphor evolves at the prose layer; the ground at the data layer holds.
+Channel output mirrors the constellation itself — Zone 5's app produces Zone-0-through-5 reads of the user's own life. The app teaches the meta-pattern by being it.
+Shallows handles are derived deterministically from (sessionToken, postId), with reply-handle collisions resolved per-thread. Pseudonymity-as-architecture, not as policy.
+Worked examples (for the working-doc)
+The rebrand without a rewrite. Watershed → Dam Days touched display strings, prose, and the Forge prompt. It did not touch chapter IDs, storage keys, table names, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name.
+"Slowly at first, then all at once." Same line lives on the home page (web), the book cover (screen reader), and the print PDF. One epigraph, three surfaces, identical bytes.
+Typos as fingerprints. The Forge system prompt mandates verbatim artifact preservation. The book that gets generated quotes the user's own typos back at them as evidence. The metaphor "every drop is sacred" is implemented as // preserve typos, casing, weird spacing.
+The Shallows handle. A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The "depths below the shallows" framing is literally the session-hash one-way derivation.
+The four teachers, where they show up
+Spirko — offline-first storage, AsyncStorage on mobile, every mutation persists locally before any network attempt. If times get tough = if the network goes down, no take is lost.
+Salatin — the Takes flow's bias toward small, daily fragments; the Forge's literary humility ("never paraphrase, never clean up").
+Sauce — capture requires no account; the Shallows requires no account; the Channel requires no account. Sign-in is opt-in, only for cross-device sync. Build it on your terms.
+Freedom Cells — peer-to-peer pseudonymity in Shallows; the dedication wall as communal memory; the privacy-policy/data-safety drafted for store submission stays minimal on purpose.
+Solution-shaped (what Zone 5 solves)
+The fragments people lose to the void → captured into Takes.
+The "AI output you scroll past" problem → bound book + practical Zone 0 read.
+The friction of public-vs-private → default private, opt-in float to Shallows.
+The forgetting → dedication wall as durable communal artifact.
+Coordination handles for Zone 2
+Zone 2 (Practitioner Operating Plan) can read/write here through:
+
+/api/takes/sync — authoritative Take store. Schema includes text, chapterHint, pinned, threadBreak, threadJoin, updatedAt, baseUpdatedAt for conflict-aware writes. Last-write-wins with twin preservation.
+/api/channel — POST { fragments }, returns the strict 6-zone shape. Zone 2 could call this with deal-flow / weekly-steps fragments to get a Practitioner-side Zone 0/Income surfacing.
+Dedication wall API — GET/POST /api/dedications (paginated, searchable). Useful as a shared communal substrate the workbench can read.
+No event bus yet. If Zone 2 wants reactive coordination, this is the next thing to build — most likely a thin SSE channel keyed by userId, emitting take.created / take.updated / channel.refreshed.
+Known gaps the working-doc should record
+The "share this private take to the Shallows" affordance is not yet built — Zone 5's framing implies a one-tap float, the implementation has the two surfaces but no bridge between them. Filed.
+Chapter cover illustrations still depict watershed scenes (filenames preserved as IDs); rescue-at-sea cover art not yet generated.
+Mobile push doesn't yet send baseUpdatedAt, so mobile edits can't participate in twin-take conflict detection. Filed

@@ -1,0 +1,51 @@
+Zone 4 — Regen Revolution — context-pack
+(Your prompt cuts off at "Send back:" — I'm sending what a Zone 2 workbench would plausibly need from me. Tell me the shape you actually want and I'll re-cut.)
+
+Who I am
+Zone 4 agent. Conventional → regenerative track for industries, multi-year, sector-scale. Currently working a single sector — regen beef in Northwestern Ontario — through its single highest-leverage chokepoint.
+
+The chokepoint thesis (one sentence)
+The bottleneck for new regen cattle farmers in NWO is not pasture, not customers, not knowledge — it's abattoir capacity. So Zone 4's first move is operational software for the regional anchor abattoir, not anything farmer-facing.
+
+Live anchor artifact
+CCM Operations Tool (Cloverbelt Country Meats / Coleman Custom Meats coop, Oxdrift). Pilot users: Karen (operator) + Black Barn Farm (pilot producer, 2 animals Aug + Oct) + Lisa Koshel (co-pilot, 1 animal Aug; CCM board, recused on tool votes). End-customer pilot: Marie (Thunder Bay regen, in flight).
+Ops-side app + farmer self-serve portal with phone/email magic-code sign-in. Yield estimate → real packaged weights → variance feedback loop is live. Brute-force protection on sign-in is in.
+Backend: Express 5 / Drizzle / Postgres, OpenAPI codegen to React+Vite. pnpm monorepo.
+All discovery + interview notes filed under docs/regen-farming/abattoir/ — Karen, Black Barn, Lisa Koshel, plus regional landscape, rootwork bibliography, v0.1 spec (revised post-Karen), priorities-for-build, illustrative Local Line sample (real export still pending).
+Worked examples (citable in the codetry working-doc)
+Each of these is a place where naming changed structure, not decoration:
+
+"Per-customer share split" replacing "cut sheet management" as the v0.1 centerpiece. Pre-Karen strawman optimized a symptom. The real work was the math after the kill — 6–14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move.
+"Don't fix my book." Karen's line. We dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) removed a feature.
+"Failures land on the tool, not on her." Black Barn's tone note. Now an architectural constraint on every error state — operator-protective copy, not generic "something went wrong."
+"Make it easier for Karen to say no, not just easier to say yes." Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain.
+OMAFRA traceability as byproduct, not feature. The animal record was designed so the regulator's log falls out for free. Naming it "byproduct" prevented a parallel ledger from being built.
+Estimate → actual → variance loop. Karen records real packaged weights; the same UI that showed "≈" to the farmer flips to "Actual" when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent.
+Pre-zone parked thread. "Homestead-sitter / childcare app for farm families" — discovered during Black Barn discovery, deliberately not absorbed into Zone 4. Belongs in the Brainstorm Library until it finds its own zone (probably Zone 0, possibly Zone 5).
+Cross-zone seams I see from here
+Zone 1 / xBuckets ←→ Zone 4. Black Barn's Local Line export (pending) is real cash flow data from a Zone 4 pilot producer. If they're an xBuckets household, the same numbers feed both apps. Don't double-instrument; let one capture and the other read.
+Zone 3 / 807 Co-op ←→ Zone 4. Heavy overlap on end-customer base (Dryden + corridor). The CCM share-box pickup audience and the 807 members portal audience are largely the same people. Worth a shared anonymized customer ID convention before either app commits to its own.
+Zone 2 / Practitioner Workbench ←→ Zone 4. Deal-flow from CCM (sector contacts: Karen, Lisa, Dave, Tim, Marie, Lisa Koshel, the four other regional abattoirs) is operating-plan-relevant. I keep the interview notes; you keep the relationship cadence.
+Pre-zone / Brainstorm Library ←→ Zone 4. Homestead-sitter thread parked here. Plus a few latent threads: provincial inspection reform, butcher-pay/workforce, mobile abattoir routing. All real, all wrong-tool-from-here.
+Zone 5 / Shallows. Nothing live; one candidate skip-stone — "abattoir as commons, not service" — half-formed, not ready for any zone yet, may eventually float there.
+Coordination surface
+What Zone 2 can read without asking me:
+
+docs/regen-farming/abattoir/README.md — pilot status, current dates, what's next.
+docs/regen-farming/abattoir/interviews/ — every conversation in the same format.
+docs/regen-farming/abattoir/04-ccm-ops-tool-v0.1-spec.md — current spec, with strawman preserved for diff.
+docs/regen-farming/abattoir/data/blackbarn-priorities-for-build.md — one-paragraph build-facing summary (paste-ready).
+The project task list — every change here lands as a numbered task with a commit message.
+What I'll flag back to Zone 2 unprompted:
+
+Any new pilot recruit (producer or end-customer).
+Any cross-zone overlap I notice (esp. xBuckets/807 customer-ID conflicts).
+Any "this isn't Zone 4 work" finding that needs re-zoning.
+Any sector-scale signal change (another regional abattoir closes, OMAFRA rule change, etc.).
+What I'd like from Zone 2:
+
+Confirmation of the canonical name. Repo currently carries both Cloverbelt Country Meats (real coop) and Coleman Custom Meats (test/demo branding in the live UI). If those are intentionally separate (real pilot vs. demo facade), tell me; if one's a drift, tell me which to converge on.
+A standing answer on the customer-ID convention before the 807 app and the CCM portal both ship their own.
+Whether the homestead-sitter thread should be formally moved to the Brainstorm Library now or left as a footnote in the abattoir folder.
+Status one-liner
+Zone 4, Q2 2026: v0.1 of the anchor app is shipping; first pilot animals booked for late-August through the regional coop; farmer-facing tools deliberately deferred until the chokepoint moves.

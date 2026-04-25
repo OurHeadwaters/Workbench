@@ -1,0 +1,45 @@
+Bright Side — Zone 0 (centralized) context-pack
+Identity
+Zone: 0 — Dwelling, centralized delivery model. Pair with SaltBox (Zone 0, decentralized).
+What it is: a PHI-free, mobile-first, non-clinical companion app for residential-care staff (assisted living, memory care, LTC). Brand — cream #faf9f7, teal-600, Source Serif 4 — deliberately reads as a paper clipboard, not a hospital chart.
+Who it's for: high-turnover frontline staff (RTs, PSWs, activity directors). Core promise: an untrained person can pick it up mid-shift and not break anything.
+Working axiom on this zone: the institution can be a cultivated microclimate, not a wind tunnel. Every screen is a small wall against the wind.
+The four teachers, as they actually show up in Bright Side
+Spirko (TSP) — the staff is going to leave; the institution will too. PHI-free by construction, single-facility seed, plain Postgres, no third-party billing dependency. If times get tough, the tool still works.
+Salatin (Lunatic Farmer) — humble, durable copy. No clinical jargon, no cheesy gamification, no fake AI praise. The "vibe" nickname is opt-in and never auto-suggested.
+Sauce (LFTN) — "build the life you choose on your terms." Director controls (identity visibility, default checklists, planning page) sit in one place; floor staff aren't asked to make policy decisions during a shift.
+Freedom Cells — peer-to-peer at the unit scale. Shift Feed is hallway-to-hallway, no manager approval. Author owns their post for 30 minutes, then it belongs to the floor.
+Codetry hits (metaphor IS the architecture)
+These are the worked-examples worth locking into the doc — every one of them is a place where renaming the thing would change how the code is shaped.
+
+"Resident List" / clipboard — /unit-sheet is a swipeable cream paper card with a metal clip strip. The page literally is the RT's clipboard; bed rows have a sky-blue tab on the left like a page tab. The DB doesn't have a clipboard table, but the screen organization (header → activity notes → unit pages → bed rows) is the clipboard's layout.
+"Bright Side" itself — the side of the resident facing the light. bs_residents.joyBubbles (per-resident pop-on-tap items) and the /lobby MVP wall are the only place full names + photos surface. Everything else uses coded IDs / room numbers — i.e. you only see the bright side in the lit room.
+Joy Bubbles → MVPs → Yesterday's bright moments — daily reset, then the previous day floats up beneath today's headline grid. Carrying warmth into the next shift is in the data model (bs_resident_bubble_pops.popDate, ?date= query), not a UI flourish.
+RoomTab vs BedTab — same component shape, two colors. Amber RoomTab = "knock on this door" (for everywhere it matters which physical door). Sky BedTab = "this is a slot in the unit roster" (for the clipboard view). The color is the semantic.
+Transition runs — on_the_way → eyes_on → returned, with a separate amber needs_redirect that increments a counter rather than overwriting. The counter is the realism: redirecting someone with dementia three times in one walk is a fact, not a failure mode.
+Shift Feed PHI soft-warn — the server scans every post for phone numbers, DOBs, and resident-name pairs before save and asks the author to either edit or "Post anyway." The override is logged (counts only, never the snippet). The friction itself is the policy.
+Lobby display token — a separate 90-day "display" role role that staff mint once and pair to the TV. Signing out as staff doesn't unpair the TV; the public kiosk has no permission to read anything but the MVP wall. Trust boundary = role, not session.
+Template version history + locked template items — the default checklist for transitions has versioned snapshots, and items copied from the template carry a source: "template" provenance flag the server enforces against client tampering. You can rename or remove them, but the audit log captures it. Silent deletion of prep tasks is impossible by design.
+Planning pages — /internal/conference-planning is a generic slug-keyed operator notes surface (bs_planning_pages). Same shape can host any "thinking-out-loud" page without a schema change. Codetry: a workbench inside the floor app.
+Current scope (what's shipped, in zone-2 worked-example phrasing)
+Home: barriers list (auto-surfaced from unanswered shift-feed posts) + at-a-glance MVPs.
+Resident List (/unit-sheet) — swipeable per-unit roster, 30-bed default, bed CRUD, transition attendance + redirect counts.
+Resident Facesheet (/residents/:id) — humanized profile, joy bubbles, optional photo from phone camera, identity-visibility gate.
+Lobby (/lobby, /lobby/full) — MVP wall + yesterday strip + one-tap fullscreen, paired via long-lived display token.
+Shift Feed (/shift-feed) — hallway notes, per-device authorship, PHI soft-warn.
+Calendar + transition templates — multi-template per facility, per-event default, version history, locked template items.
+Director surface (/sector) — identity visibility, planning pages, template manager.
+Auth — two passwords (staff, director), no per-user accounts. Display role for kiosks.
+Currently queued / in flight (FYI for cross-zone planning)
+Per-device pairing/revocation admin for lobby displays.
+Bed-occupancy DB-level uniqueness (currently API-enforced).
+Tab-strip keyboard accessibility on /unit-sheet.
+Template-related: cancelled #44 (per-event-kind defaults) and #45 (template duplication) — Zone 2 should know these were intentionally dropped.
+How to coordinate with me going forward
+Where I live: this Replit project, artifacts bright-side (web), api-server, mockup-sandbox. Single-facility, FACILITY_ID = "default-facility". PostgreSQL.
+What's safe to ask me directly: any change scoped to centralized residential care — staff workflow, resident profiles, lobby, shift feed, transitions, director config.
+What needs a Zone-2 escalation first: anything cross-zone (e.g., shared resident identity with SaltBox, household-budget tie-ins from xBuckets, community pull from 807 Benefits). The metaphor breaks if Bright Side starts owning data that belongs in another zone.
+Naming discipline: if Zone 2 wants me to add or rename a surface, send the metaphor first and the spec second. "Activity notes" exists because it's notes for an activity, not a "transition checklist module." Renames here are real refactors.
+PHI guardrail: nothing leaves this app in a form that could re-identify a resident. Any cross-zone bridge has to go through coded IDs or aggregated counts.
+Cadence: I treat each task as an isolated unit (build → typecheck → e2e → code review → merge). Zone 2 can queue tasks here and I'll work them serially or in parallel as the dependencies allow.
+What I'd like back from Zone 2: (a) the canonical worded list of zones so my copy stays aligned, (b) a heads-up before xBuckets or 807 Benefits start expecting any data shape from here, (c) confirmation on whether SaltBox should share a residents table or stay fully separate (current default: separate).

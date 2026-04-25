@@ -1,0 +1,45 @@
+Context-Pack — Zones 0 & 1
+I'm running two artifacts in this monorepo, so I'll answer for both:
+
+Zone 0 — Dwelling → Saltbox (homeschool day companion, frontend-only, local-first)
+Zone 1 — Daily kitchen garden → Family Buckets (kid-allowance + courage sibling to xBuckets/Headwaters; XRPL-direct, non-custodial)
+Your prompt cut off after "Send back:" — I'm sending what a Zone 2 working-doc would actually consume. Tell me which slots you want trimmed or expanded.
+
+1. Worked examples (codetry — metaphor IS the architecture)
+Saltbox / Zone 0
+
+Lock-In Wins. 15 quiet minutes is enough to count. Ambient SVG ring, no MM:SS digits, no sound, no notification, no streak, no score. Saves to the keepsake as a Moment tagged lock-in. The timer is silent because "lock-in" is a state of attention, not a measured performance.
+Gentle Words. 6-line bank. ≤1×/day per surface (Home + Wrap-Up gated independently), Deakon's voice ≤1×/week. Scarcity is the design — a line loses its weight when it's shouted daily.
+Brave Moments. Amber Shield, one-tap capture from Home, surfaced per-child in the seasonal Family Recap (screen + printable). Courage is named, kept, and surfaced — never scored.
+Quote of the Day. Deterministic per calendar date (same quote all day, rotates next morning). Parents add their own; the Parr trampoline quote is in the starter set. The quote rests with the day — not refreshed on every render.
+Live Follow-Along. Opt-in only, passphrase as header (X-Share-Pass), lock-in count deliberately excluded from the share payload. Privacy is the default posture, not a setting.
+Family Buckets / Zone 1
+
+Bucket kinds. savings (target + cadence) and memory (entries + optional photo URL). Courage Bucket is the named memory preset. A bucket holds whatever you decide a bucket holds — the schema reflects that.
+Allowance modes. manual / auto_planner / auto_xrpl. The XRPL path queues a pending payout; the parent still signs in-wallet. Automation never bypasses the signing hand — XRPL stays non-custodial.
+Notifications. In-app inbox + opt-in email (Resend) + opt-in web-push (allowlisted browser endpoints, SSRF-guarded). Per-family channel preference, deep-link into the activity-page approval banner. The alert and the action live one tap apart.
+Wallet handoff (v1). pay-xrpl returns txjson + a deep link; parent pastes the resulting hash to confirm. Real Xaman swap is a known follow-up (#165, #173). The seam is real even when the transport is mocked.
+2. Naming-as-design — don't rename without a Zone 2 review
+xBuckets / Headwaters (Zone 1 household budget) is the parent metaphor. Family Buckets is the kid-allowance + courage extension, not a rename.
+Lock-In ≠ Focus Timer. Calling it a focus timer reintroduces measurement and would force the digits back.
+Memory bucket ≠ gallery or album. Bucket keeps it inside the Zone 1 metaphor — drops you channel.
+Moment (Saltbox keepsake) ≠ Note ≠ Entry. Three different objects in three different surfaces; collapsing them collapses the zones.
+3. Current state — live / in-flight / paused
+Live	In-flight	Notable follow-ups
+Saltbox (Z0)	Lock-In, Gentle Words, Brave Moments, Quote of the Day, Live Follow-Along, Recap	#155 Sunday brief courage prompt (impl)	#141–143 (lock-in polish + tests), #156–164 (quotes mgmt, courage UX)
+Family Buckets (Z1)	Buckets+Allowances+Activity, Auto scheduler, Notifications (in-app/email/push), Approval deep-link, Courage Bucket	#165 wallet sign-back, #166 wallet picker, #167 kid goals	#138 real Xaman, #168 Big Brother helper role, #173 Xaman API key in provider settings
+Pre-existing typecheck noise: artifacts/gather/src/lib/robit.ts lines 244, 352 — untouched across recent tasks; flag if Z2 wants it cleaned.
+
+4. Coordination hooks for Zone 2
+Stable contracts to cite: OpenAPI in lib/api-spec/openapi.yaml; drizzle schemas in lib/db/src/schema/*; orval-generated React hooks in lib/api-client-react. Anything Z2 references should pin to these — they regenerate cleanly on every merge.
+Data posture is by design. Saltbox is local-only (IndexedDB + localStorage). Family Buckets is server + Postgres. When a Zone 2 idea wants to graduate from one to the other, that's a deliberate architectural move — flag it, don't quietly bridge.
+Provider seam (Z1). artifacts/api-server/src/lib/provider.ts exposes a PaymentAdapter interface; default is xrpl-direct. Z2 can describe other adapters (custodial, second-chain, fiat) in working-doc terms and I can keep the seam shaped to receive them.
+How to ping me. Open a project task with the zone in the title (Z0 — … / Z1 — …) and link the working-doc section. I'll check existing follow-ups before duplicating.
+If you want this same shape from your other zone agents, the four headings (worked examples / naming / current state / coordination hooks) are the load-bearing ones — the rest is yours to shape.
+Updated environment
+Quick update to fold into the context-pack I just sent:
+
+Saltbox / Zone 0 — new worked example (just merged, #167):
+
+Per-child Goals + tips. Each kid card on /family carries their own goals; the Today dashboard surfaces one featured goal per child with a personality-aware tip-of-day and one-tap mark-done. Tips are scored against keyword + personality traits + interest-led preference (no streaks, no leaderboards). Codetry: the goal lives with the child, the tip meets them where they are.
+Three follow-ups to that are still in flight from other agents (#175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge), so Z2 may want to wait a tick before locking the Goals row in the working-doc — I'll send a delta once they land.

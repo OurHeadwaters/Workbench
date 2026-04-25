@@ -5,32 +5,40 @@ type ConstellationEntry = {
 
 const constellation: ConstellationEntry[] = [
   {
-    name: "Headwaters / Buckets",
-    role: "The dam infrastructure. Channels every drop of income into named pools. Non-custodial because you keep your own salt.",
+    name: "Saltbox Zone 0 (decentralized)",
+    role: "Homeschool day companion. Local-first per family — each household runs its own instance, nothing is shared because nothing needs to be. Worked examples: Lock-In Wins (15 quiet minutes is enough to count; no streaks, no scores), Gentle Words (a 6-line bank used sparingly so the words don't lose weight), Brave Moments (one-tap capture, surfaced in the seasonal Family Recap), Quote of the Day (deterministic per date), Live Follow-Along (opt-in only, lock-in count excluded from share payload), per-child Goals.",
   },
   {
-    name: "Dam Days and Shallows",
-    role: "The held-water gauge. Reads the slow days the system is doing its quiet work, and the shallow bays where life actually happens.",
+    name: "Bright Side Zone 0 (centralized)",
+    role: "Care institutions and centralized homes. The cultivated microclimate sheltered against the winds — the bright-frame name for the institutional dwelling. Awaiting agent context-pack.",
   },
   {
-    name: "SaltBox Zone 0",
-    role: "Motherhood, homeschooling, homebase. The saltbox-house itself: in permaculture Zone 0 is the dwelling, and its health is the precondition for water flowing out to every other zone.",
+    name: "Headwaters / xBuckets Zone 1 (parent)",
+    role: "Household budget. Non-custodial; channels every drop of income into named pools. The daily-balance constraint everything else must fit inside, or the system breaks down. The parent metaphor for Zone 1.",
   },
   {
-    name: "807 Benefits Zone 3",
-    role: "The honest baseline. What this climate truly offers without coddling.",
+    name: "Family Buckets Zone 1 (sibling)",
+    role: "Kid-allowance + courage extension of Headwaters. XRPL-direct, non-custodial. Bucket kinds savings + memory; Courage Bucket as named preset; allowance modes manual / auto_planner / auto_xrpl with the parent always signing in-wallet. Automation never bypasses the signing hand.",
+  },
+  {
+    name: "Practitioner Operating Plan Zone 2",
+    role: "Business / operating workbench (this site). Deal-flow, weekly steps, cost review, this codetry working-doc, cross-zone synthesis. Reads state from neighbor zones, writes back as memos, never mutates other zones.",
+  },
+  {
+    name: "Community Knowledge Hub / 807 Benefits Zone 3",
+    role: "Community production for Northwestern Ontario food systems — Dryden's 807 Food Co-op members portal. The honest baseline of what NWO actually offers without coddling. Awaiting agent context-pack for cadence and load-bearing surfaces.",
   },
   {
     name: "Regen Revolution Zone 4",
-    role: "The perennial layer. Work that builds soil over years, so cultivation can feed the river back instead of mining it.",
+    role: "Conventional-to-regenerative track for industries. Multi-year transition work at sector scale; soil-building so cultivation can feed the river back instead of mining it. Awaiting agent context-pack.",
   },
   {
-    name: "Bright Side Zone 5",
-    role: "The cultivated microclimate. What you can grow on top of regenerated Zone 4 soil, sheltered against Zone 3 winds.",
+    name: "Dam Days and Shallows Zone 5",
+    role: "Private memory holder with an impromptu public share. Where thoughts go that don't fit any other zone — the rock you skip a few times to see how it lands. Default private; the share button lets a thought float to the shallows for all to see, shrouded in mystery from the depths below.",
   },
   {
-    name: "Brainstorm Library",
-    role: "The seed bank. Where ideas are captured before they're sorted into a zone.",
+    name: "Brainstorm Library (pre-zone)",
+    role: "The seed bank. Where ideas live before they're sorted into a zone.",
   },
 ];
 
@@ -92,12 +100,12 @@ export default function Codetry() {
           <p>
             A codetry app is named the way a saltbox house is built — every
             beam carries weight.{" "}
-            <span className="italic">SaltBox Zone 0</span> is not a clever
-            rename of a homeschooling tracker. The name is the design
-            spec: it carries that the household is Zone 0, that this is
-            the saltbox-house itself, and that everything else in the
-            system flows from this center. Change the name and you have
-            changed the structure.
+            <span className="italic">Saltbox Zone 0</span> surfaces
+            day-to-day as a homeschool companion, but the name is the
+            design spec: it carries that the household is Zone 0, that
+            this is the saltbox-house itself, and that everything else
+            in the system flows from this center. Change the name and
+            you have changed the structure.
           </p>
 
           <Subhead>Different from code poetry</Subhead>
@@ -151,6 +159,16 @@ export default function Codetry() {
             Together, the constellation is one lifestyle map for charting
             a course in northwestern Ontario — drawn in the grammar of
             the land it&rsquo;s drawn for.
+          </p>
+
+          <p className="mt-[6pt] print:mt-[4pt] text-[8pt] text-[#6b7665] leading-[1.4] print:text-[7pt]">
+            <span className="font-mono uppercase tracking-[0.18em] text-[7pt] text-[#1f3d2e] mr-[4pt]">
+              Manifest
+            </span>
+            <span className="font-mono">/constellation.json</span>{" "}
+            &mdash; machine-readable mirror of the worked-examples list.
+            The constellation&rsquo;s other agents fetch this to stay
+            aligned on what is named and where.
           </p>
         </div>
 

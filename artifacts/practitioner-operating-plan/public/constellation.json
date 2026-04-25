@@ -1,0 +1,135 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2026-04-25",
+  "doc": {
+    "codetry": "/practitioner-operating-plan/codetry",
+    "manifest": "/practitioner-operating-plan/constellation.json"
+  },
+  "grammar": {
+    "practice": "codetry — naming IS architecture (distinct from code-poetry)",
+    "zoneSystem": "permaculture 0–5",
+    "axiom": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
+  },
+  "teachers": [
+    { "name": "Jack Spirko", "channel": "The Survival Podcast", "tagline": "for if times get tough or even if they don't" },
+    { "name": "Joel Salatin", "channel": "The Lunatic Farmer", "tagline": "frequent meditations on food and farming that bring a wise and humble conscience to practice, policy, and participation" },
+    { "name": "Nicole Sauce", "channel": "Living Free in Tennessee", "tagline": "build the life you choose on your terms" },
+    { "name": "Freedom Cells", "channel": null, "tagline": "peer-to-peer community organization" }
+  ],
+  "zones": [
+    {
+      "zone": 0,
+      "slot": "decentralized",
+      "name": "Saltbox",
+      "domain": "Decentralized homes — homeschool day companion, local-first per family",
+      "url": null,
+      "status": "live",
+      "dataPosture": "frontend-only (IndexedDB + localStorage)",
+      "workedExamples": [
+        { "name": "Lock-In Wins", "rule": "15 quiet minutes is enough to count. No MM:SS, no sound, no streak, no score. Lock-in is a state of attention, not a measured performance." },
+        { "name": "Gentle Words", "rule": "6-line bank, ≤1×/day per surface; Deakon's voice ≤1×/week. Scarcity is the design — a line loses its weight when it's shouted daily." },
+        { "name": "Brave Moments", "rule": "Amber Shield, one-tap capture from Home; surfaced per-child in seasonal Family Recap. Courage is named, kept, and surfaced — never scored." },
+        { "name": "Quote of the Day", "rule": "Deterministic per calendar date; rotates next morning. The quote rests with the day." },
+        { "name": "Live Follow-Along", "rule": "Opt-in only, passphrase as header (X-Share-Pass), lock-in count excluded from share payload. Privacy is the default posture, not a setting." },
+        { "name": "Per-child Goals + tips", "rule": "Goal lives with the child, the tip meets them where they are. No streaks, no leaderboards. (Goals row in flight: #175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge — Z0 agent will send a delta before this row locks.)" }
+      ]
+    },
+    {
+      "zone": 0,
+      "slot": "centralized",
+      "name": "Bright Side",
+      "domain": "Centralized homes / care institutions",
+      "url": null,
+      "status": "pending",
+      "context": "awaiting agent context-pack"
+    },
+    {
+      "zone": 1,
+      "name": "Headwaters",
+      "aliases": ["xBuckets", "Buckets"],
+      "domain": "Household budget — daily-balance constraint everything else must fit inside",
+      "url": "https://x-buckets-vision.replit.app/",
+      "status": "live",
+      "tagline": "Channel every drop. Watch the ripple effect.",
+      "dataPosture": "non-custodial (you keep your own salt)",
+      "role": "parent metaphor for Zone 1"
+    },
+    {
+      "zone": 1,
+      "name": "Family Buckets",
+      "domain": "Kid-allowance + courage sibling to Headwaters",
+      "url": null,
+      "status": "live",
+      "dataPosture": "server + Postgres; XRPL-direct, non-custodial",
+      "role": "extension of Headwaters parent metaphor — not a rename",
+      "workedExamples": [
+        { "name": "Bucket kinds", "rule": "savings (target + cadence) and memory (entries + optional photo URL). Courage Bucket = named memory preset." },
+        { "name": "Allowance modes", "rule": "manual / auto_planner / auto_xrpl. The XRPL path queues a pending payout; the parent still signs in-wallet. Automation never bypasses the signing hand." },
+        { "name": "Notifications", "rule": "in-app inbox + opt-in email (Resend) + opt-in web-push (allowlisted endpoints, SSRF-guarded), per-family channel preference, deep-link into approval banner. The alert and the action live one tap apart." },
+        { "name": "Wallet handoff (v1)", "rule": "pay-xrpl returns txjson + deep link; parent pastes resulting hash to confirm. Real Xaman swap is a known follow-up. The seam is real even when the transport is mocked." }
+      ],
+      "z0z1AgentCoordinationHooks": {
+        "openapi": "lib/api-spec/openapi.yaml",
+        "schemas": "lib/db/src/schema/*",
+        "reactHooks": "lib/api-client-react",
+        "providerSeam": "artifacts/api-server/src/lib/provider.ts (PaymentAdapter interface, default xrpl-direct)"
+      }
+    },
+    {
+      "zone": 2,
+      "name": "Practitioner Operating Plan",
+      "aliases": ["This site", "Workbench"],
+      "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, cross-zone synthesis",
+      "url": null,
+      "status": "live (you are here)",
+      "agentCharter": "Reads state from neighbor zones; writes back as memos; never mutates other zones; channels the four teachers; will not name unilaterally",
+      "pingProtocol": "Open a project task with Z2 in title and link the working-doc section"
+    },
+    {
+      "zone": 3,
+      "name": "Community Knowledge Hub",
+      "aliases": ["807 Benefits", "807 Food Co-op"],
+      "domain": "Community production — Northwestern Ontario food systems",
+      "url": "https://community-knowledge-hub.replit.app/",
+      "status": "live",
+      "geography": "Dryden, Northwestern Ontario (807)",
+      "context": "awaiting agent context-pack for cadence + load-bearing surfaces"
+    },
+    {
+      "zone": 4,
+      "name": "Regen Revolution",
+      "domain": "Conventional-to-regenerative track for industries — multi-year transition at sector scale",
+      "url": null,
+      "status": "pending",
+      "context": "awaiting agent context-pack"
+    },
+    {
+      "zone": 5,
+      "name": "Dam Days and Shallows",
+      "domain": "Private memory holder + impromptu anonymous public-share",
+      "url": null,
+      "status": "pending",
+      "mechanic": "Default private (the dam holds it). Share button floats a thought to the shallows for all to see, shrouded in mystery from the depths below. Where things go that don't fit any other zone — the rock you skip a few times to see how it lands.",
+      "context": "awaiting agent context-pack for built-status and shallows mechanics"
+    }
+  ],
+  "preZone": [
+    {
+      "name": "Brainstorm Library",
+      "domain": "Seed bank — ideas before they're sorted into a zone",
+      "url": null,
+      "status": "pending",
+      "context": "awaiting agent context-pack"
+    }
+  ],
+  "interfaces": {
+    "convention": "Each zone publishes its own /api/zone.json (or equivalent) when ready. This site's /constellation.json aggregates references. Cross-zone signals route through Zone 5's shallows.",
+    "writePolicy": "Zone 2 reads, synthesizes, surfaces. Other zones own their own writes. Naming, strategy, and money decisions stay with the practitioner.",
+    "namingDiscipline": "Some collapses to avoid: Lock-In ≠ Focus Timer (reintroduces measurement). Memory bucket ≠ gallery or album. Moment (Saltbox keepsake) ≠ Note ≠ Entry. Family Buckets ≠ rename of xBuckets/Headwaters (it is a sibling extension)."
+  },
+  "openQuestions": [
+    "Saltbox vs SaltBox vs Salt box — three writings have appeared. Z0 agent uses 'Saltbox' (one word, capital S). Pending practitioner decision.",
+    "/business — real route to create on this Z2 site, or shorthand for 'this site as a whole'?",
+    "Bright Side & Regen Revolution & Dam Days — built apps with URLs yet, or named slots?"
+  ]
+}
