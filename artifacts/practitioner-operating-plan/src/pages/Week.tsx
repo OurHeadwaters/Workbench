@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   dateForDayInWeek,
+  formatLongDate,
   formatShortDate,
   formatWeekRange,
   getCurrentWeekNumber,
@@ -13,6 +14,15 @@ import {
   getWeekPlan,
   type DayPlan,
 } from "../data/plan2026";
+import {
+  PRIMARY_HOURS_PER_BATCH,
+  STANDBY_HOURS,
+  STANDBY_PAID_PER_BATCH,
+  STANDBY_RATE,
+  getBatchDays,
+  getBatchForWeek,
+  getBenchSeat,
+} from "../data/saltBench";
 import { useAppState, useAppStateActions } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
 import { StepCard } from "../components/StepCard";
@@ -67,6 +77,14 @@ export default function Week() {
 
   // Day-1 roll-forward: shared with Today via lib/carryover.
   const carriedItems = findCarriedFromPriorWeeks(state, weekNumber);
+
+  // Salt batch panel: when this week is one of the named Q2 batch weeks,
+  // pull the primary + paid standby from the bench module so the calendar
+  // shows the bench rotation by name on its actual date.
+  const batch = getBatchForWeek(weekNumber);
+  const batchPrimary = batch ? getBenchSeat(batch.primary) : null;
+  const batchStandby = batch ? getBenchSeat(batch.standby) : null;
+  const batchDays = batch ? getBatchDays(batch) : [];
 
   const totalSteps =
     week.days?.reduce((acc, d) => acc + d.steps.length, 0) ?? 0;
@@ -139,6 +157,100 @@ export default function Week() {
           </p>
         )}
       </header>
+
+      {batch && batchPrimary && batchStandby && (
+        <section
+          className="space-y-3 rounded-lg border border-rose-200 bg-rose-50/60 p-4"
+          data-testid="section-salt-batch"
+        >
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="flex items-baseline gap-2">
+              <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-rose-900">
+                Salt batch this week
+              </h2>
+            </div>
+            <p className="text-xs text-rose-900/80">
+              {batch.monthLabel} batch · manifest {formatLongDate(batch.manifestISO)} · ships Fri
+            </p>
+          </div>
+          <div
+            className="grid gap-3 sm:grid-cols-2"
+            data-testid="salt-batch-roster"
+          >
+            <div
+              className="rounded-md border border-rose-200 bg-white p-3"
+              data-testid="salt-batch-primary"
+            >
+              <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
+                Primary · Tue + Wed
+              </p>
+              <p className="mt-1 text-sm font-semibold text-stone-900">
+                {batchPrimary.name}
+              </p>
+              <p className="text-xs text-stone-600">{batchPrimary.base}</p>
+              <p className="mt-1 font-mono text-xs text-stone-500">
+                {PRIMARY_HOURS_PER_BATCH} hrs casual · pick + pack
+              </p>
+            </div>
+            <div
+              className="rounded-md border border-rose-200 bg-white p-3"
+              data-testid="salt-batch-standby"
+            >
+              <p className="font-mono text-xs uppercase tracking-wider text-stone-500">
+                Standby (paid) · Fri ship day
+              </p>
+              <p className="mt-1 text-sm font-semibold text-stone-900">
+                {batchStandby.name}
+              </p>
+              <p className="text-xs text-stone-600">{batchStandby.base}</p>
+              <p className="mt-1 font-mono text-xs text-stone-500">
+                {STANDBY_HOURS} hrs × ${STANDBY_RATE} ={" "}
+                <span className="text-stone-900">${STANDBY_PAID_PER_BATCH}</span>{" "}
+                · paid even if not called
+              </p>
+            </div>
+          </div>
+          <ol
+            className="divide-y divide-rose-100 overflow-hidden rounded-md border border-rose-100 bg-white text-xs"
+            data-testid="salt-batch-days"
+          >
+            {batchDays.map((d) => {
+              const who =
+                d.who === "primary"
+                  ? batchPrimary.name
+                  : d.who === "standby"
+                    ? `${batchStandby.name} (standby)`
+                    : "OM only";
+              return (
+                <li
+                  key={d.dayShort}
+                  className="flex flex-wrap items-baseline justify-between gap-2 px-3 py-2"
+                  data-testid={`salt-batch-day-${d.dayShort}`}
+                >
+                  <span className="font-mono uppercase tracking-wider text-stone-500">
+                    {d.dayShort.toUpperCase()} {formatShortDate(d.dateISO)}
+                  </span>
+                  <span className="flex-1 text-stone-800">{d.block}</span>
+                  <span className="font-mono text-stone-700">
+                    {who}
+                    {d.hours > 0 && (
+                      <span className="text-stone-500">
+                        {" "}
+                        · {d.hours} hr{d.hours === 1 ? "" : "s"}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="text-xs text-rose-900/70">
+            Sourced from the SaltBench slide (VI · 02b). If the rotation
+            changes there, update <code>src/data/saltBench.ts</code>.
+          </p>
+        </section>
+      )}
 
       {!week.days && (
         <div className="rounded-lg border border-dashed border-stone-300 bg-white p-8 text-sm text-stone-600">

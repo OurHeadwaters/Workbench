@@ -1,9 +1,18 @@
 import { useMemo, useState } from "react";
 import { useLocation, Link } from "wouter";
 import { getWeekPlan, type Step } from "../data/plan2026";
+import {
+  PRIMARY_HOURS_PER_BATCH,
+  PRIMARY_PAID_PER_BATCH,
+  STANDBY_HOURS,
+  STANDBY_PAID_PER_BATCH,
+  STANDBY_RATE,
+  getBatchForWeek,
+  getBenchSeat,
+} from "../data/saltBench";
 import { useAppState, useAppStateActions } from "../lib/storage";
 import { findCarriedFromPriorWeeks } from "../lib/carryover";
-import { formatWeekRange, getCurrentWeekNumber } from "../lib/dateMath";
+import { formatLongDate, formatWeekRange, getCurrentWeekNumber } from "../lib/dateMath";
 import { useToast } from "../components/Toast";
 
 // Single-screen week close-out summary. Shows what was finished, what's
@@ -64,6 +73,15 @@ export default function WeekCloseOut() {
   }
 
   const isLastWeek = weekNumber >= 52;
+
+  // Salt batch close: if this week is one of the named Q2 batch weeks,
+  // pull the bench assignment so the standby paid shift surfaces here as
+  // its own line — that's the cost the bookkeeper books when the OM
+  // closes the week. Otherwise the standby cost lives only on the
+  // SaltBench cost table and slips out of the operating calendar.
+  const batch = getBatchForWeek(weekNumber);
+  const batchPrimary = batch ? getBenchSeat(batch.primary) : null;
+  const batchStandby = batch ? getBenchSeat(batch.standby) : null;
 
   function onConfirm() {
     const carried = undoneInWeek
@@ -150,6 +168,70 @@ export default function WeekCloseOut() {
           </p>
         </div>
       </section>
+
+      {batch && batchPrimary && batchStandby && (
+        <section
+          className="space-y-3 rounded-lg border border-rose-200 bg-rose-50/60 p-4"
+          data-testid="section-salt-batch-close"
+        >
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="flex items-baseline gap-2">
+              <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-rose-900">
+                Salt batch — bookkeeper close
+              </h2>
+            </div>
+            <p className="text-xs text-rose-900/80">
+              {batch.monthLabel} batch · manifested {formatLongDate(batch.manifestISO)} · shipped Fri
+            </p>
+          </div>
+          <ul
+            className="divide-y divide-rose-100 overflow-hidden rounded-md border border-rose-100 bg-white text-sm"
+            data-testid="salt-batch-close-lines"
+          >
+            <li
+              className="flex flex-wrap items-baseline justify-between gap-2 px-3 py-2"
+              data-testid="salt-batch-close-primary"
+            >
+              <span>
+                <span className="font-medium text-stone-900">
+                  Primary · {batchPrimary.name}
+                </span>
+                <span className="text-stone-500">
+                  {" "}
+                  · {PRIMARY_HOURS_PER_BATCH} hrs casual · pick + pack
+                </span>
+              </span>
+              <span className="font-mono text-stone-900">
+                ${PRIMARY_PAID_PER_BATCH.toLocaleString("en-US")}
+              </span>
+            </li>
+            <li
+              className="flex flex-wrap items-baseline justify-between gap-2 bg-amber-50/60 px-3 py-2"
+              data-testid="salt-batch-close-standby"
+            >
+              <span>
+                <span className="font-medium text-stone-900">
+                  Standby (paid) · {batchStandby.name}
+                </span>
+                <span className="text-stone-500">
+                  {" "}
+                  · {STANDBY_HOURS} hrs × ${STANDBY_RATE} · paid even if
+                  not called
+                </span>
+              </span>
+              <span className="font-mono text-stone-900">
+                ${STANDBY_PAID_PER_BATCH}
+              </span>
+            </li>
+          </ul>
+          <p className="text-xs text-rose-900/70">
+            Both lines book to <code>SALT-01-LBR</code>. The standby line is
+            visible here so the $1,200/yr standby cost on the SaltBench
+            slide doesn't slip out of the operating calendar.
+          </p>
+        </section>
+      )}
 
       {undoneInWeek.length > 0 ? (
         <section className="space-y-3">

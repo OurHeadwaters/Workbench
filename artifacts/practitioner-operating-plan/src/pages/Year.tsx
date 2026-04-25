@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { PHASES, getPhaseForWeek, getWeekPlan } from "../data/plan2026";
-import { formatWeekRange, getCurrentWeekNumber } from "../lib/dateMath";
+import {
+  Q2_BATCHES,
+  STANDBY_PAID_PER_BATCH,
+  getBenchSeat,
+  isBatchWeek,
+} from "../data/saltBench";
+import {
+  formatLongDate,
+  formatWeekRange,
+  getCurrentWeekNumber,
+} from "../lib/dateMath";
 import { useAppState, useAppStateActions } from "../lib/storage";
 
 // Phase color treatment for the 52-week grid.
@@ -85,14 +95,19 @@ export default function Year() {
             const isCurrent = wn === currentWeek;
             const completed = !!state.completedWeeks[String(wn)];
             const shift = state.shiftedWeeks[String(wn)];
+            const batchWeek = isBatchWeek(wn);
             return (
               <Link
                 key={wn}
                 href={`/week?w=${wn}`}
-                title={`Week ${wn} — ${phase.title}`}
+                title={
+                  batchWeek
+                    ? `Week ${wn} — ${phase.title} · salt batch week`
+                    : `Week ${wn} — ${phase.title}`
+                }
                 data-testid={`cell-week-${wn}`}
                 className={
-                  "flex aspect-square items-center justify-center rounded-md text-xs font-mono transition " +
+                  "relative flex aspect-square items-center justify-center rounded-md text-xs font-mono transition " +
                   `${colors.bg} ${colors.text} ` +
                   "hover:opacity-100 hover:shadow-sm " +
                   (isCurrent
@@ -103,6 +118,14 @@ export default function Year() {
                 }
               >
                 {wn}
+                {batchWeek && (
+                  <span
+                    aria-hidden="true"
+                    title="Salt batch week"
+                    data-testid={`marker-batch-${wn}`}
+                    className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-rose-500"
+                  />
+                )}
               </Link>
             );
           })}
@@ -119,7 +142,94 @@ export default function Year() {
               </span>
             );
           })}
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
+            <span>Salt batch week (Wk 17, 21, 25)</span>
+          </span>
         </div>
+      </section>
+
+      {/* Q2 salt batch calendar — bench rotation surfaced on the
+          operating calendar, not just on the SaltBench slide. Names +
+          dates here are sourced from src/data/saltBench.ts. */}
+      <section className="space-y-3" data-testid="section-q2-batches">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-700">
+            Q2 salt batch calendar
+          </h2>
+          <p className="text-xs text-stone-500">
+            Three batches · primary + paid standby per batch · ties to the
+            depot bench roster
+          </p>
+        </div>
+        <ol className="divide-y divide-stone-200 overflow-hidden rounded-lg border border-stone-200 bg-white">
+          {Q2_BATCHES.map((b) => {
+            const primary = getBenchSeat(b.primary);
+            const standby = getBenchSeat(b.standby);
+            return (
+              <li
+                key={b.weekNumber}
+                className="px-4 py-3 text-sm"
+                data-testid={`row-batch-wk${b.weekNumber}`}
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <Link
+                    href={`/week?w=${b.weekNumber}`}
+                    className="flex items-baseline gap-3 hover:underline"
+                  >
+                    <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
+                    <span className="font-mono text-xs text-stone-500">
+                      Wk {b.weekNumber}
+                    </span>
+                    <span className="font-medium text-stone-900">
+                      {b.monthLabel} batch · manifest {formatLongDate(b.manifestISO)} · ships Fri
+                    </span>
+                  </Link>
+                  <span className="font-mono text-xs text-stone-500">
+                    {formatWeekRange(b.weekNumber)}
+                  </span>
+                </div>
+                <dl className="mt-2 grid gap-2 pl-5 text-xs text-stone-700 sm:grid-cols-3">
+                  <div data-testid={`batch-${b.weekNumber}-primary`}>
+                    <dt className="font-mono uppercase tracking-wider text-stone-500">
+                      Primary · Tue + Wed
+                    </dt>
+                    <dd className="mt-0.5 text-stone-900">
+                      <span className="font-medium">{primary.name}</span>
+                      <span className="text-stone-500"> · {primary.base}</span>
+                    </dd>
+                  </div>
+                  <div data-testid={`batch-${b.weekNumber}-standby`}>
+                    <dt className="font-mono uppercase tracking-wider text-stone-500">
+                      Standby (paid) · Fri ship day
+                    </dt>
+                    <dd className="mt-0.5 text-stone-900">
+                      <span className="font-medium">{standby.name}</span>
+                      <span className="text-stone-500"> · {standby.base}</span>
+                    </dd>
+                  </div>
+                  <div data-testid={`batch-${b.weekNumber}-standbycost`}>
+                    <dt className="font-mono uppercase tracking-wider text-stone-500">
+                      Standby paid shift
+                    </dt>
+                    <dd className="mt-0.5 font-mono text-stone-900">
+                      ${STANDBY_PAID_PER_BATCH} · 4 hrs × $30 · paid even if
+                      not called
+                    </dd>
+                  </div>
+                </dl>
+              </li>
+            );
+          })}
+        </ol>
+        <p
+          className="text-xs text-stone-500"
+          data-testid="text-q2-standby-total"
+        >
+          Q2 standby cost · {Q2_BATCHES.length} batches × $
+          {STANDBY_PAID_PER_BATCH} = ${Q2_BATCHES.length * STANDBY_PAID_PER_BATCH}{" "}
+          (full-year line is $1,200 on the SaltBench cost table).
+        </p>
       </section>
 
       <section className="rounded-lg border border-stone-200 bg-white p-5">
