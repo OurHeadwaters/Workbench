@@ -51,10 +51,23 @@ export default function HardRules() {
               inside the kids' actual childhood.
             </div>
             <div
-              className="mt-auto pt-[1.2vh] border-t font-mono uppercase tracking-[0.22em] text-[0.85vw]"
-              style={{ borderColor: "rgba(244,237,224,0.3)", color: "#e9c8a8" }}
+              className="mt-auto pt-[1.2vh] border-t"
+              style={{ borderColor: "rgba(244,237,224,0.3)" }}
             >
-              If the depot can't run salt without the founder's hands, the salt run pauses.
+              <div
+                className="font-mono uppercase tracking-[0.22em] text-[0.78vw] font-semibold mb-[0.5vh]"
+                style={{ color: "#e9c8a8" }}
+              >
+                What enforces it
+              </div>
+              <div className="font-body text-[0.95vw] leading-[1.45] opacity-95">
+                The named 4-person depot bench (Part VI · 02b) and its
+                A→B→C→D rotation are the mechanism — populated by week 6 of
+                the OM&rsquo;s start, costed at $15k/yr in SALT-01-LBR. If the
+                bench can&rsquo;t run a batch, the batch slips on the
+                T-7/T-3/T-0 path. The rule never falls to the founder&rsquo;s
+                hands as the fallback.
+              </div>
             </div>
           </div>
 

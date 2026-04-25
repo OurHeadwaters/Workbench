@@ -212,12 +212,14 @@ export default function SaltPL() {
               What the net actually covers
             </div>
             <div className="font-body text-[0.95vw] leading-[1.5]">
-              The ~{fmtK(netContribution)}/yr net funds the casual-labour bench
-              that keeps Rule 01 enforceable — roughly{" "}
-              <span className="font-semibold">$15k/yr in pre-vetted depot
-              labour</span>{" "}
-              plus the residual flowing into the agency reinvestment line. The
-              salt line pays for the option not to need the founder's hands.
+              The ~{fmtK(netContribution)}/yr net funds the named depot bench
+              that keeps Rule 01 enforceable —{" "}
+              <span className="font-semibold">$15k/yr cost-centre SALT-01-LBR</span>{" "}
+              ({fmt(totalLabor)} of channel-allocated picking already in the
+              table above + $4.5k bench-level overhead — standby pay, refresher
+              training, replacement screening, WSIB, mileage). Roster, rotation
+              and paperwork on the previous slide. Residual flows into the
+              agency reinvestment line.
             </div>
           </div>
 

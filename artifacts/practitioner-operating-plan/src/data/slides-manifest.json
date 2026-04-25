@@ -396,8 +396,17 @@
     "phase": "impact"
   },
   {
-    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e06",
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e0a",
     "position": 45,
+    "filepath": "src/pages/slides/SaltBench.tsx",
+    "title": "Depot casual-labour bench",
+    "description": "The named, pre-vetted 4-person Dryden-area casual-labour bench the salt runbook leans on so Rule 01 holds. Seed roster (4 named members with bases, vetting notes, availability windows, and rotation slots), a written A→B→C→D rotation policy with paid standby, the bench cost broken out as a $15k/yr SALT-01-LBR cost-centre that ties back to the salt P&L, an OM runbook for adding/screening/paperwork (T4A + WSIB), and the explicit T-7/T-3/T-0/T+7 batch-slips path for the week the whole bench is unavailable.",
+    "speakerNotes": "",
+    "phase": "impact"
+  },
+  {
+    "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e06",
+    "position": 46,
     "filepath": "src/pages/slides/SaltPL.tsx",
     "title": "Salt P&L line",
     "description": "Annual P&L for the salt line by channel (wholesale, custom labels, DTC batch, sunset markets) — revenue, COGS, freight, packaging, allocated labour share, gross margin per channel, and the depot rent allocation. Net contribution sized against the recommended $90k/mo agency ask, with the explicit triggers that cut a channel.",
@@ -406,7 +415,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e03",
-    "position": 46,
+    "position": 47,
     "filepath": "src/pages/slides/DesignUnderHeadwaters.tsx",
     "title": "Design under Headwaters",
     "description": "Outside studio intake closes; design becomes the in-house Transparency Stack delivered inside community-development engagements. Two narrow carve-outs: mission-aligned regional work that's really Pilot #2 in disguise, and the studio site staying live as portfolio.",
@@ -415,7 +424,7 @@
   },
   {
     "id": "c0a8d2b1-3f7e-4a91-9c1a-8e6f2b4d7e04",
-    "position": 47,
+    "position": 48,
     "filepath": "src/pages/slides/HardRules.tsx",
     "title": "Two hard rules",
     "description": "The two non-negotiables that govern salt and internal design under Headwaters: founder's hands off jars and tables forever, and Deer Lake gets first call on the shared team's hours. Quarterly hours-by-pillar check enforces it.",
@@ -424,7 +433,7 @@
   },
   {
     "id": "a4d3c2b1-9876-4321-0fed-cba987654301",
-    "position": 48,
+    "position": 49,
     "filepath": "src/pages/slides/PhaseIdeaOpener.tsx",
     "title": "Phase — Idea",
     "description": "Operating-plan opener for the Idea phase: why this matters, what the agency is, what we're naming.",
@@ -434,7 +443,7 @@
   },
   {
     "id": "a4d3c2b1-9876-4321-0fed-cba987654302",
-    "position": 49,
+    "position": 50,
     "filepath": "src/pages/slides/PhasePitchOpener.tsx",
     "title": "Phase — Pitch",
     "description": "Operating-plan opener for the Pitch phase: make the case for the rate and the team, then hand the deck over.",
@@ -444,7 +453,7 @@
   },
   {
     "id": "a4d3c2b1-9876-4321-0fed-cba987654303",
-    "position": 50,
+    "position": 51,
     "filepath": "src/pages/slides/PhaseContractOpener.tsx",
     "title": "Phase — Contract",
     "description": "Operating-plan opener for the Contract phase: lock the value-delivered terms, work the feedback window, name the deal.",
@@ -454,7 +463,7 @@
   },
   {
     "id": "a4d3c2b1-9876-4321-0fed-cba987654304",
-    "position": 51,
+    "position": 52,
     "filepath": "src/pages/slides/PhaseFulfillmentOpener.tsx",
     "title": "Phase — Fulfillment",
     "description": "Operating-plan opener for the Fulfillment phase: protect the calendar, run the team, manage the cash, weather winter.",
@@ -464,7 +473,7 @@
   },
   {
     "id": "a4d3c2b1-9876-4321-0fed-cba987654305",
-    "position": 52,
+    "position": 53,
     "filepath": "src/pages/slides/PhaseImpactOpener.tsx",
     "title": "Phase — Impact",
     "description": "Operating-plan opener for the Impact phase: prove Deer Lake, document the template, plan the path to scale.",

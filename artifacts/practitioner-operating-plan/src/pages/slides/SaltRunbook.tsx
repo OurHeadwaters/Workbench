@@ -204,10 +204,12 @@ export default function SaltRunbook() {
             </div>
             <div className="font-body text-[0.9vw] leading-[1.4]">
               No step in this runbook reads "founder packs". If casual labour
-              calls in sick, the OM pulls from the depot bench. If the bench
-              is empty,{" "}
-              <span className="font-semibold">the batch slips</span> — it
-              never falls back to the founder's hands.
+              calls in sick, the OM pulls from the{" "}
+              <span className="font-semibold">named 4-person depot bench</span>{" "}
+              (next slide — roster, rotation, paperwork, $15k/yr cost). If
+              the whole bench is unavailable,{" "}
+              <span className="font-semibold">the batch slips</span> on the
+              T-7/T-3/T-0 path — never falls back to the founder's hands.
             </div>
           </div>
           <div>

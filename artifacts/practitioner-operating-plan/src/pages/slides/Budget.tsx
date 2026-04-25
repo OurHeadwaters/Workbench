@@ -278,10 +278,17 @@ export default function Budget() {
               SALT-01
             </a>
             ): ~$108k revenue · ~$61k net annual contribution · ~12 OM hrs/mo
-            capped. Channel-by-channel contribution margin (wholesale 63%,
-            custom labels 66%, DTC batch 36%, markets PR / cost-recovery only)
-            lives in the Part&nbsp;VI salt P&amp;L slide; the operating runbook
-            is the slide before it; the bookkeeper&rsquo;s{" "}
+            capped, plus a{" "}
+            <span className="font-semibold text-primary">$15k/yr named depot
+            bench</span>{" "}
+            (4 pre-vetted Dryden-area casuals on A→B→C→D rotation, cost-centre{" "}
+            <span className="font-mono">SALT-01-LBR</span>) — the mechanism
+            that keeps Rule 01 enforceable, costed in the salt P&amp;L not the
+            agency P&amp;L. Channel-by-channel contribution margin (wholesale
+            63%, custom labels 66%, DTC batch 36%, markets PR / cost-recovery
+            only) lives in the Part&nbsp;VI salt P&amp;L slide; the bench
+            roster and operating runbook are the slides around it; the
+            bookkeeper&rsquo;s{" "}
             <a
               href="/salt-monthly-close"
               className="underline decoration-dotted underline-offset-2 text-primary"
