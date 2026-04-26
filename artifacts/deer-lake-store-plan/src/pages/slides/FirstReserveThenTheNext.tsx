@@ -1,3 +1,273 @@
+import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
+
+// Defaults mirror the cross-reserve travel pass-through entries in
+// artifacts/practitioner-operating-plan/src/data/costRegistry.ts
+// (`crossReserve.travel.flightPerWeek`, `crossReserve.travel.lodgingPerNight`,
+// `crossReserve.travel.foodPerOnsiteDay`, plus the implicit 12-week / 30-day
+// install shape used to derive `crossReserve.travel.totalPerInstall` and
+// `crossReserve.year1.stickerPrice`). The receiving-reserve calculator below
+// reads these as starting values; user edits stay local to this slide and do
+// not mutate the registry.
+const DEFAULTS = {
+  flightPerReturn: 1000,
+  lodgingPerNight: 250,
+  foodPerDay: 100,
+  installWeeks: 12,
+  onsiteDays: 30,
+} as const;
+
+// These two stay constant in the calculator — the task scope is the
+// receiving-reserve travel corridor, not the practitioner fee structure.
+// They mirror `crossReserve.installRevenue.perReserve` (rounded to the
+// $148.5k planning number used elsewhere in the slide) and
+// `crossReserve.retainer.annual`.
+const INSTALL_FEE = 148_500;
+const Y1_RETAINER = 30_000;
+
+function roundToNearest(value: number, step: number) {
+  return Math.round(value / step) * step;
+}
+
+function formatMoney(value: number, step = 500) {
+  const rounded = roundToNearest(value, step);
+  return `$${rounded.toLocaleString("en-CA")}`;
+}
+
+function formatMoneyShort(value: number) {
+  // ~$22.5k style for the body summary line.
+  const rounded = roundToNearest(value, 500);
+  if (Math.abs(rounded) >= 1000) {
+    const k = rounded / 1000;
+    const formatted = Number.isInteger(k) ? k.toFixed(0) : k.toFixed(1);
+    return `~$${formatted}k`;
+  }
+  return `$${rounded.toLocaleString("en-CA")}`;
+}
+
+interface CalcInputProps {
+  label: string;
+  value: number;
+  onChange: (next: number) => void;
+  prefix?: string;
+  suffix?: string;
+  max: number;
+  ariaLabel: string;
+}
+
+function CalcInput({ label, value, onChange, prefix, suffix, max, ariaLabel }: CalcInputProps) {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const raw = event.target.value;
+    if (raw === "") {
+      onChange(0);
+      return;
+    }
+    const parsed = Number(raw);
+    if (Number.isNaN(parsed)) return;
+    if (parsed < 0) {
+      onChange(0);
+      return;
+    }
+    if (parsed > max) {
+      onChange(max);
+      return;
+    }
+    onChange(parsed);
+  };
+
+  // Stop arrow / space keys from bubbling up to the slide-level navigation
+  // handler in src/App.tsx — otherwise typing in the field would advance the
+  // slide.
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+  };
+
+  return (
+    <label className="flex items-center gap-[0.4vw] leading-[1.2]">
+      <span className="text-[0.78vw] whitespace-nowrap" style={{ color: "#e9c8a8" }}>
+        {label}
+      </span>
+      <span
+        className="inline-flex items-center rounded-[0.2vw] px-[0.35vw] py-[0.1vh]"
+        style={{
+          background: "rgba(255, 255, 255, 0.08)",
+          border: "0.05vw solid rgba(233, 200, 168, 0.35)",
+        }}
+      >
+        {prefix ? (
+          <span className="font-mono text-[0.75vw] mr-[0.15vw]" style={{ color: "#e9c8a8" }}>
+            {prefix}
+          </span>
+        ) : null}
+        <input
+          aria-label={ariaLabel}
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={max}
+          step={1}
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          onClick={(event) => event.stopPropagation()}
+          className="bg-transparent border-0 outline-none text-[0.85vw] font-semibold w-[2.6vw] text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          style={{ color: "var(--slide-bg)", fontVariantNumeric: "tabular-nums" }}
+        />
+        {suffix ? (
+          <span className="font-mono text-[0.75vw] ml-[0.15vw]" style={{ color: "#e9c8a8" }}>
+            {suffix}
+          </span>
+        ) : null}
+      </span>
+    </label>
+  );
+}
+
+function ReserveTwoCalculator() {
+  const [flight, setFlight] = useState<number>(DEFAULTS.flightPerReturn);
+  const [lodging, setLodging] = useState<number>(DEFAULTS.lodgingPerNight);
+  const [food, setFood] = useState<number>(DEFAULTS.foodPerDay);
+  const [installWeeks, setInstallWeeks] = useState<number>(DEFAULTS.installWeeks);
+  const [onsiteDays, setOnsiteDays] = useState<number>(DEFAULTS.onsiteDays);
+
+  const travelTotal = useMemo(
+    () => flight * installWeeks + lodging * onsiteDays + food * onsiteDays,
+    [flight, lodging, food, installWeeks, onsiteDays],
+  );
+
+  const y1AllIn = INSTALL_FEE + travelTotal + Y1_RETAINER;
+
+  const isDefault =
+    flight === DEFAULTS.flightPerReturn &&
+    lodging === DEFAULTS.lodgingPerNight &&
+    food === DEFAULTS.foodPerDay &&
+    installWeeks === DEFAULTS.installWeeks &&
+    onsiteDays === DEFAULTS.onsiteDays;
+
+  const reset = () => {
+    setFlight(DEFAULTS.flightPerReturn);
+    setLodging(DEFAULTS.lodgingPerNight);
+    setFood(DEFAULTS.foodPerDay);
+    setInstallWeeks(DEFAULTS.installWeeks);
+    setOnsiteDays(DEFAULTS.onsiteDays);
+  };
+
+  return (
+    <div
+      className="col-span-5 rounded-[0.4vw] px-[1.2vw] py-[1vh] flex flex-col"
+      style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
+    >
+      <div
+        className="flex items-baseline justify-between mb-[0.3vh]"
+        style={{ color: "#e9c8a8" }}
+      >
+        <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw]">
+          Reserve #2 · Y1 all-in
+        </div>
+        <div
+          className="font-display text-[1.6vw] font-medium"
+          style={{ color: "var(--slide-bg)", fontVariantNumeric: "tabular-nums" }}
+          aria-live="polite"
+        >
+          ~{formatMoney(y1AllIn, 500)}
+        </div>
+      </div>
+      <div
+        className="font-body text-[0.9vw] leading-[1.3] mb-[0.5vh]"
+        style={{ color: "var(--slide-bg)" }}
+      >
+        <span className="font-semibold">$148.5k install</span> +{" "}
+        <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+          {formatMoneyShort(travelTotal)} travel pass-through
+        </span>{" "}
+        + <span className="font-semibold">$30k Y1 retainer</span>.
+      </div>
+
+      <div
+        className="flex items-baseline justify-between mb-[0.35vh] gap-[0.6vw]"
+        style={{ color: "#e9c8a8" }}
+      >
+        <div className="font-mono uppercase tracking-[0.2em] text-[0.65vw] whitespace-nowrap">
+          Your corridor · edits stay on this slide
+        </div>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            reset();
+          }}
+          disabled={isDefault}
+          className="font-mono uppercase tracking-[0.16em] text-[0.6vw] rounded-[0.2vw] px-[0.4vw] py-[0.15vh] transition-opacity disabled:opacity-40 disabled:cursor-default cursor-pointer whitespace-nowrap"
+          style={{
+            color: "#e9c8a8",
+            border: "0.05vw solid rgba(233, 200, 168, 0.5)",
+            background: "rgba(255, 255, 255, 0.04)",
+          }}
+          aria-label="Reset corridor inputs to Deer Lake defaults"
+        >
+          ↻ Reset
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 gap-x-[0.6vw] gap-y-[0.35vh] mb-[0.5vh]">
+        <CalcInput
+          label="Flight"
+          prefix="$"
+          suffix="/return"
+          value={flight}
+          onChange={setFlight}
+          max={20000}
+          ariaLabel="Round-trip flight cost in dollars"
+        />
+        <CalcInput
+          label="Lodging"
+          prefix="$"
+          suffix="/night"
+          value={lodging}
+          onChange={setLodging}
+          max={5000}
+          ariaLabel="Lodging cost per on-site night in dollars"
+        />
+        <CalcInput
+          label="Food"
+          prefix="$"
+          suffix="/day"
+          value={food}
+          onChange={setFood}
+          max={2000}
+          ariaLabel="Food cost per on-site day in dollars"
+        />
+        <CalcInput
+          label="Install"
+          value={installWeeks}
+          onChange={setInstallWeeks}
+          suffix="wks"
+          max={52}
+          ariaLabel="Install length in weeks (one return flight per week)"
+        />
+        <CalcInput
+          label="On-site"
+          value={onsiteDays}
+          onChange={setOnsiteDays}
+          suffix="days"
+          max={365}
+          ariaLabel="Number of on-site days (also nights of lodging)"
+        />
+        <div
+          className="font-mono text-[0.7vw] leading-[1.2] self-center text-right whitespace-nowrap"
+          style={{ color: "#e9c8a8", fontVariantNumeric: "tabular-nums" }}
+        >
+          travel = {formatMoney(travelTotal, 100)}
+        </div>
+      </div>
+
+      <div className="font-body text-[0.7vw] leading-[1.3]" style={{ color: "#e9c8a8" }}>
+        Planning estimate ·{" "}
+        {isDefault ? "Deer Lake corridor defaults" : "your corridor"} · weeks × flight + days × (lodging + food).
+      </div>
+    </div>
+  );
+}
+
 export default function FirstReserveThenTheNext() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
@@ -69,35 +339,11 @@ export default function FirstReserveThenTheNext() {
               Practitioner revenue · per install
             </div>
             <div className="font-body text-[1vw] text-primary leading-[1.4]">
-              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee.</span>
+              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
             </div>
           </div>
 
-          <div
-            className="col-span-5 rounded-[0.4vw] px-[1.4vw] py-[1.3vh]"
-            style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
-          >
-            <div
-              className="flex items-baseline justify-between mb-[0.4vh]"
-              style={{ color: "#e9c8a8" }}
-            >
-              <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw]">
-                Reserve #2 · Y1 all-in
-              </div>
-              <div
-                className="font-display text-[1.6vw] font-medium"
-                style={{ color: "var(--slide-bg)", fontVariantNumeric: "tabular-nums" }}
-              >
-                ~$201,000
-              </div>
-            </div>
-            <div className="font-body text-[0.95vw] leading-[1.35] mb-[0.3vh]" style={{ color: "var(--slide-bg)" }}>
-              <span className="font-semibold">$148.5k install</span> + <span className="font-semibold">~$22.5k travel pass-through</span><sup className="text-[0.7em]">*</sup> + <span className="font-semibold">$30k Y1 retainer</span>.
-            </div>
-            <div className="font-body text-[0.78vw] leading-[1.3]" style={{ color: "#e9c8a8" }}>
-              <sup>*</sup> Planning estimate · Deer Lake corridor: ~$1,000/return × 12 wks + $250/night × 30 + $100/day × 30. Replace with your corridor's own cost.
-            </div>
-          </div>
+          <ReserveTwoCalculator />
         </div>
       </div>
     </div>
