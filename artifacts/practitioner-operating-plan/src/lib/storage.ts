@@ -6,7 +6,7 @@ import { PHASE_ORDER } from "./phases";
 import type { CostReviewMap } from "./costReview";
 
 export const STORAGE_KEY = "pop:v1";
-export const STORAGE_VERSION = 5;
+export const STORAGE_VERSION = 6;
 
 // Per-batch bench swap. Keyed by week number string (matching how the
 // rest of this slice keys week-scoped state — weekNotes, completedWeeks,
@@ -85,6 +85,11 @@ export type AppState = {
   // (a new day naturally has no entry and starts fresh; previous days
   // are archived in place for the yesterday + weekly views).
   dailyThree: Record<string, ThreeThingTriple>;
+  // Week-scoped 3 — three things to move *this week* forward. Keyed by
+  // the same week-number string the rest of this slice uses
+  // (weekNotes/completedWeeks). Mon→Sun rollover is automatic because
+  // a new week's key has no entry and reads as empty.
+  weeklyThree: Record<string, ThreeThingTriple>;
   // Phase-scoped 3 lives in a single slot. When the practitioner moves
   // to a different phase, the slot is treated as empty until they set
   // new ones — see lib/threeThings.ts for the readPhaseThree helper.
@@ -109,14 +114,18 @@ export const DEFAULT_STATE: AppState = {
   milestones: {},
   dismissedPhaseSuggestion: null,
   dailyThree: {},
+  weeklyThree: {},
   phaseThree: null,
   benchOverrides: {},
   costReview: {},
 };
 
 // Migrate a parsed payload of any prior schema version up to STORAGE_VERSION.
-// Add new `case` blocks here as the schema evolves.
-function migrate(parsed: { version: number } & Record<string, unknown>): AppState {
+// Add new `case` blocks here as the schema evolves. Exported for the
+// migration tests in lib/__tests__.
+export function migrate(
+  parsed: { version: number } & Record<string, unknown>,
+): AppState {
   let working = parsed;
   // v0 -> v1: introduced weekCloseOuts/completedWeeks/shiftedWeeks/snapshots.
   if (working.version === 0) {
@@ -157,6 +166,16 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
       costReview: {},
     };
   }
+  // v5 -> v6: introduced weeklyThree (week-scoped Three Things slot
+  // parallel to dailyThree + phaseThree). Only add the new key —
+  // never drop existing daily or phase data.
+  if (working.version === 5) {
+    working = {
+      ...working,
+      version: 6,
+      weeklyThree: {},
+    };
+  }
   // Unknown future version: best-effort — trust and keep known keys.
   const rawPhase = working.currentPhase as Phase | undefined;
   const safePhase: Phase =
@@ -177,6 +196,7 @@ function migrate(parsed: { version: number } & Record<string, unknown>): AppStat
     dismissedPhaseSuggestion:
       (working.dismissedPhaseSuggestion as Phase | null) ?? null,
     dailyThree: (working.dailyThree as AppState["dailyThree"]) ?? {},
+    weeklyThree: (working.weeklyThree as AppState["weeklyThree"]) ?? {},
     phaseThree: (working.phaseThree as PhaseThreeSlot | null) ?? null,
     benchOverrides:
       (working.benchOverrides as AppState["benchOverrides"]) ?? {},
@@ -446,6 +466,64 @@ export function useAppStateActions() {
     [],
   );
 
+  // Week-scoped writers — same shape as the daily writers, but keyed
+  // by week-number string. A new week's key has no entry and reads
+  // empty, which gives us automatic Mon→Sun rollover for free.
+  const setWeeklyThing = useCallback(
+    (weekKey: string, idx: number, text: string) => {
+      const s = getState();
+      const existing = s.weeklyThree[weekKey];
+      const next: ThreeThingTriple = existing
+        ? ([existing[0], existing[1], existing[2]] as ThreeThingTriple)
+        : ([
+            { text: "", done: false },
+            { text: "", done: false },
+            { text: "", done: false },
+          ] as ThreeThingTriple);
+      next[idx] = { ...next[idx], text };
+      setState({
+        ...s,
+        weeklyThree: { ...s.weeklyThree, [weekKey]: next },
+      });
+    },
+    [],
+  );
+
+  const toggleWeeklyThing = useCallback(
+    (weekKey: string, idx: number, done: boolean) => {
+      const s = getState();
+      const existing = s.weeklyThree[weekKey];
+      const next: ThreeThingTriple = existing
+        ? ([existing[0], existing[1], existing[2]] as ThreeThingTriple)
+        : ([
+            { text: "", done: false },
+            { text: "", done: false },
+            { text: "", done: false },
+          ] as ThreeThingTriple);
+      next[idx] = { ...next[idx], done };
+      setState({
+        ...s,
+        weeklyThree: { ...s.weeklyThree, [weekKey]: next },
+      });
+    },
+    [],
+  );
+
+  const resetWeeklyThree = useCallback((weekKey: string) => {
+    const s = getState();
+    setState({
+      ...s,
+      weeklyThree: {
+        ...s.weeklyThree,
+        [weekKey]: [
+          { text: "", done: false },
+          { text: "", done: false },
+          { text: "", done: false },
+        ],
+      },
+    });
+  }, []);
+
   // Phase-scoped writers stamp the current phase onto the slot. If the
   // slot was attached to a different phase, it's replaced wholesale —
   // that's how we keep stale phase items from leaking forward.
@@ -559,6 +637,9 @@ export function useAppStateActions() {
     dismissPhaseSuggestion,
     setDailyThing,
     toggleDailyThing,
+    setWeeklyThing,
+    toggleWeeklyThing,
+    resetWeeklyThree,
     setPhaseThing,
     togglePhaseThing,
     resetPhaseThree,

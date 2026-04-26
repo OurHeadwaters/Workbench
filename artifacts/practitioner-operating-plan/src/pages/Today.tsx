@@ -20,6 +20,7 @@ import { StepCard } from "../components/StepCard";
 import { ThreeThings } from "../components/ThreeThings";
 import { WeekStreak } from "../components/WeekStreak";
 import { CostReviewButton } from "../components/CostReviewButton";
+import { NowView } from "../components/NowView";
 
 const REMAINING_DAY_LABELS: Record<DayPlan["dayShort"], string> = {
   mon: "Monday",
@@ -73,7 +74,16 @@ export default function Today() {
   const doneToday = todaySteps.filter((s) => state.doneSteps[s.id]).length;
 
   return (
-    <div className="space-y-8">
+    <>
+      {/* Mobile-only Now view. Desktop layout below is unchanged.
+          Both layouts mount on first paint — visibility is gated by
+          Tailwind responsive classes only, so SSR/first-paint never
+          flashes the wrong layout regardless of JS readiness. */}
+      <div className="md:hidden" data-testid="today-mobile">
+        <NowView />
+      </div>
+
+      <div className="hidden space-y-8 md:block" data-testid="today-desktop">
       <header className="space-y-2">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
@@ -292,6 +302,7 @@ export default function Today() {
           </li>
         </ul>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

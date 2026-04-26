@@ -5,7 +5,12 @@ import type {
   ThreeThingTriple,
 } from "./storage";
 import type { Phase } from "./phases";
-import { addDays, getTodayISO, parseISODate } from "./dateMath";
+import {
+  addDays,
+  getCurrentWeekNumber,
+  getTodayISO,
+  parseISODate,
+} from "./dateMath";
 
 // Always return a length-3 triple. Storage may have nothing for a date
 // yet (or, defensively, a malformed shorter array from a future bug);
@@ -30,6 +35,22 @@ export function readPhaseThree(
     return { items: normalizeTriple(slot.items), matchesActive: true };
   }
   return { items: emptyTriple(), matchesActive: false };
+}
+
+// Always return a length-3 triple for the given week key. Mirrors the
+// daily/phase readers; the UI never sees missing slots.
+export function readWeekThree(
+  state: AppState,
+  weekKey: string,
+): ThreeThingTriple {
+  return normalizeTriple(state.weeklyThree[weekKey]);
+}
+
+// The week-key for "right now". Stays stable Mon→Sun and rolls over
+// automatically when the calendar week advances. Matches the
+// `String(weekNumber)` keying used by weekNotes/completedWeeks/etc.
+export function currentWeekKey(today: Date = new Date()): string {
+  return String(getCurrentWeekNumber(today));
 }
 
 export function normalizeTriple(
@@ -132,4 +153,56 @@ export function phaseSlotMatchesActive(
   activePhase: Phase,
 ): boolean {
   return !!slot && slot.phase === activePhase;
+}
+
+// "Now view" focal-card selector. Returns the next undone slot across
+// the three queues, in strict Day → Week → Phase priority. A slot is
+// "undone" if its `done` flag is false (regardless of whether the text
+// has been typed in yet — empty undone slots become a "what's the next
+// thing?" prompt in the UI). Returns null only when every slot in all
+// three queues is filled in *and* checked done — i.e. the practitioner
+// has actually committed to and completed all 9 things.
+export type NextUndoneKind = "day" | "week" | "phase";
+
+export type NextUndone = {
+  kind: NextUndoneKind;
+  idx: 0 | 1 | 2;
+  item: ThreeThingItem;
+};
+
+export function getNextUndone(
+  daily: ThreeThingTriple,
+  weekly: ThreeThingTriple,
+  phase: ThreeThingTriple,
+): NextUndone | null {
+  const queues: Array<{ kind: NextUndoneKind; items: ThreeThingTriple }> = [
+    { kind: "day", items: daily },
+    { kind: "week", items: weekly },
+    { kind: "phase", items: phase },
+  ];
+  for (const { kind, items } of queues) {
+    for (let i = 0; i < 3; i += 1) {
+      const item = items[i];
+      // A slot counts as "done for the practitioner" only when it has
+      // been filled in *and* checked. An empty done slot doesn't make
+      // sense, but if it ever happens (legacy data) we treat it as
+      // open so the prompt re-asks for input.
+      const filled = isItemActive(item);
+      const finished = filled && item.done;
+      if (!finished) {
+        return { kind, idx: i as 0 | 1 | 2, item };
+      }
+    }
+  }
+  return null;
+}
+
+// Pure helper for the desktop/mobile breakpoint switch on /today.
+// Tailwind's `md` breakpoint is 768px; anything below that uses the
+// mobile Now view. Exported (and unit-tested) so the same threshold
+// is referenceable from non-CSS code paths.
+export const MOBILE_BREAKPOINT_PX = 768;
+
+export function isMobileViewport(width: number): boolean {
+  return width < MOBILE_BREAKPOINT_PX;
 }

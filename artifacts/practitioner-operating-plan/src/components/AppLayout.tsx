@@ -40,7 +40,16 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 antialiased">
-      <header className="sticky top-0 z-40 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
+      {/* On /today the mobile Now view owns the screen — hide the
+          global nav/header below the md breakpoint so the focal card
+          isn't competing with chrome above the fold. The chrome lives
+          behind the Now view's own "more" chevron on mobile. */}
+      <header
+        className={
+          "sticky top-0 z-40 border-b border-stone-200 bg-stone-50/95 backdrop-blur" +
+          (onToday ? " hidden md:block" : "")
+        }
+      >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-3">
             <Link
@@ -78,8 +87,21 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       {!onToday && <TodayThreeBar />}
-      <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
-      <footer className="mx-auto mt-16 max-w-5xl px-6 pb-12 pt-8 text-xs text-stone-500">
+      <main
+        className={
+          onToday
+            ? "mx-auto max-w-5xl px-4 py-3 md:px-6 md:py-8"
+            : "mx-auto max-w-5xl px-6 py-8"
+        }
+      >
+        {children}
+      </main>
+      <footer
+        className={
+          "mx-auto mt-16 max-w-5xl px-6 pb-12 pt-8 text-xs text-stone-500" +
+          (onToday ? " hidden md:block" : "")
+        }
+      >
         State stored locally in this browser. No accounts, no servers.
       </footer>
     </div>

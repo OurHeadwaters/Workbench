@@ -79,6 +79,30 @@ body {
   box-sizing: border-box;
 }
 
+/* Now view (mobile /today) — focal-card slide-in.
+   Re-keyed on every focal-card change so the next item feels like it
+   slides into place rather than blinks. Honors prefers-reduced-motion. */
+@keyframes nowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-now-slide-in {
+  animation: nowSlideIn 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-now-slide-in {
+    animation: none;
+  }
+}
+
 /* Checklist: same letter-paper sheet for desktop & print, but reflows
    to a phone-friendly single column on small screens. */
 @media (max-width: 768px) {
