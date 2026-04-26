@@ -221,7 +221,7 @@ export const FAILURE_MODES: FailureMode[] = [
       {
         libraryFilename:
           "Pasted--Business-Plan-807-Food-Co-op-Inc-Dryden-ON-January-202_1777034303575.txt",
-        libraryTitle: "Business Plan — 807 Food Co-op Inc.",
+        libraryTitle: "Business Plan — Dryden corridor food co-op",
       },
     ],
   },
@@ -320,9 +320,9 @@ export const FAILURE_MODES: FailureMode[] = [
     title: "Underused regional infrastructure — the 'soft infrastructure' gap",
     theme: "supply-chain",
     summary:
-      "Lock City Dairies, the 807 Food Co-op, and Superior Seasons already have trucks, cold storage, and producer relationships sitting partially idle. What's missing is the coordination layer that would let one northern store plug into all three at once.",
+      "Lock City Dairies, the Dryden corridor co-op, and Superior Seasons already have trucks, cold storage, and producer relationships sitting partially idle. What's missing is the coordination layer that would let one northern store plug into all three at once.",
     evidence:
-      "Wallace Center's Values-Based Supply Chains framework names five attributes of resilient regional value chains; one of the most consistently missing in the north is the 'soft infrastructure' — the aggregator/coordinator role that connects existing physical assets together. The Northern Food Strategy and the Forge / Fledge regional gap assessments echo this: the trucks, the dairies, the kitchens, and the aggregators all exist in Northwestern Ontario, but they aren't coordinated into a single supply lane any individual store can rely on. Lock City Dairies already runs reefer freight across the region; the 807 co-op and Superior Seasons already aggregate small producers. A new northern store today has to negotiate each of those relationships separately — most don't, and default to a single big-box distributor instead.",
+      "Wallace Center's Values-Based Supply Chains framework names five attributes of resilient regional value chains; one of the most consistently missing in the north is the 'soft infrastructure' — the aggregator/coordinator role that connects existing physical assets together. The Northern Food Strategy and the Forge / Fledge regional gap assessments echo this: the trucks, the dairies, the kitchens, and the aggregators all exist in Northwestern Ontario, but they aren't coordinated into a single supply lane any individual store can rely on. Lock City Dairies already runs reefer freight across the region; the Dryden corridor co-op and Superior Seasons already aggregate small producers. A new northern store today has to negotiate each of those relationships separately — most don't, and default to a single big-box distributor instead.",
     figures: [],
     sources: [
       {
@@ -339,7 +339,7 @@ export const FAILURE_MODES: FailureMode[] = [
       {
         libraryFilename:
           "Pasted--Business-Plan-807-Food-Co-op-Inc-Dryden-ON-January-202_1777034303575.txt",
-        libraryTitle: "Business Plan — 807 Food Co-op Inc.",
+        libraryTitle: "Business Plan — Dryden corridor food co-op",
       },
     ],
   },
@@ -353,18 +353,18 @@ export const FAILURE_MODES: FailureMode[] = [
     title: "Thin staffing and single-driver risk",
     theme: "operations",
     summary:
-      "The 807 Food Co-op runs the existing Thunder Bay → Dryden lane with a 3-person team. One driver, one route, one hours-of-service ceiling — and no slack when someone is sick or the road closes.",
+      "The Dryden corridor co-op runs the existing Thunder Bay → Dryden lane with a 3-person team. One driver, one route, one hours-of-service ceiling — and no slack when someone is sick or the road closes.",
     evidence:
-      "The 807 business plan documents the operating reality on the existing northern corridor: a 3-person team running aggregation, retail, and the truck. Hours-of-service rules cap the single driver at 13 hours of driving per day, so any disruption (illness, weather, mechanical) instantly becomes a missed delivery. Conventional northern stores stack the same risk — a fly-in community with one store, one operator, and one inbound lane has no built-in redundancy. The Deer Lake plan explicitly mitigates this with a second truck on a separate schedule and a rotational fly-in staffing model so no single absence stops the store.",
+      "The Dryden corridor co-op's business plan documents the operating reality on the existing northern corridor: a 3-person team running aggregation, retail, and the truck. Hours-of-service rules cap the single driver at 13 hours of driving per day, so any disruption (illness, weather, mechanical) instantly becomes a missed delivery. Conventional northern stores stack the same risk — a fly-in community with one store, one operator, and one inbound lane has no built-in redundancy. The Deer Lake plan explicitly mitigates this by joining a family-run refrigerated route already running the corridor and adding a second truck on a separate schedule, so no single absence stops the store.",
     figures: [
-      { value: "3", label: "Person team running 807's existing operation" },
+      { value: "3", label: "Person team running the corridor co-op's operation" },
       { value: "13 h / day", label: "Hours-of-service ceiling per driver" },
     ],
     sources: [
       {
         libraryFilename:
           "Pasted--Business-Plan-807-Food-Co-op-Inc-Dryden-ON-January-202_1777034303575.txt",
-        libraryTitle: "Business Plan — 807 Food Co-op Inc.",
+        libraryTitle: "Business Plan — Dryden corridor food co-op",
       },
       {
         libraryFilename:
@@ -461,7 +461,7 @@ export const FAILURE_MODES: FailureMode[] = [
     summary:
       "Small producers can't meet the volume, packaging, and consolidated-invoice requirements of an institutional buyer alone. Without an aggregator, they never make it onto the shelf at all.",
     evidence:
-      "The NWO Food Hub Network proposal and Sustain Ontario's value-chain work both make the same observation: a small producer can grow excellent product and still never get onto an institutional or chain-grocery shelf, because the buyer needs one truck, one invoice, one liability cover, and a consistent weekly volume that's larger than any single producer can supply. The aggregator layer — picking up from a dozen small producers, consolidating, and presenting a single sell-sheet — is what unlocks shelf space. Existing northern stores buy from national distributors specifically because that aggregator role doesn't exist locally; building it (which 807 and Superior Seasons partially already do) is what would let regional product compete.",
+      "The NWO Food Hub Network proposal and Sustain Ontario's value-chain work both make the same observation: a small producer can grow excellent product and still never get onto an institutional or chain-grocery shelf, because the buyer needs one truck, one invoice, one liability cover, and a consistent weekly volume that's larger than any single producer can supply. The aggregator layer — picking up from a dozen small producers, consolidating, and presenting a single sell-sheet — is what unlocks shelf space. Existing northern stores buy from national distributors specifically because that aggregator role doesn't exist locally; building it (which the Dryden corridor co-op and Superior Seasons partially already do) is what would let regional product compete.",
     figures: [],
     sources: [
       {

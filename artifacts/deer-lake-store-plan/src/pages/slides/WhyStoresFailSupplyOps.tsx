@@ -16,7 +16,7 @@ export default function WhyStoresFailSupplyOps() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div className="max-w-[78%]">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              01b · Why current stores fail · Themes 02 + 03 of 04
+              Why current stores fail · Supply chain & operations
             </div>
             <h2 className="font-display text-[3.4vw] leading-[1.05] tracking-tight text-primary font-medium">
               Supply chain & operations.
@@ -37,8 +37,8 @@ export default function WhyStoresFailSupplyOps() {
         </div>
 
         <div className="flex-1 grid grid-cols-2 gap-[1.5vw] min-h-0">
-          <ThemeColumn number="02" label="Supply chain" modes={supply} tone="paper" />
-          <ThemeColumn number="03" label="Operations" modes={operations} tone="primary" />
+          <ThemeColumn label="Supply chain" modes={supply} tone="paper" />
+          <ThemeColumn label="Operations" modes={operations} tone="primary" />
         </div>
 
         <div className="mt-[2.5vh] pt-[1.5vh] border-t border-rule">
@@ -55,12 +55,10 @@ export default function WhyStoresFailSupplyOps() {
 }
 
 function ThemeColumn({
-  number,
   label,
   modes,
   tone,
 }: {
-  number: string;
   label: string;
   modes: FailureMode[];
   tone: "paper" | "primary";
@@ -75,20 +73,12 @@ function ThemeColumn({
       }}
     >
       <div className="flex items-baseline justify-between mb-[1.2vh] pb-[1.2vh] border-b border-rule/40">
-        <div>
-          <div
-            className="font-mono uppercase tracking-[0.22em] text-[1vw] mb-[0.3vh]"
-            style={{ opacity: isPrimary ? 0.75 : 1 }}
-          >
-            Theme {number}
-          </div>
-          <div
-            className={`font-display text-[2vw] font-medium leading-tight ${
-              isPrimary ? "" : "text-primary"
-            }`}
-          >
-            {label}
-          </div>
+        <div
+          className={`font-display text-[2.1vw] font-medium leading-tight ${
+            isPrimary ? "" : "text-primary"
+          }`}
+        >
+          {label}
         </div>
         <div
           className="font-display text-[2.4vw] font-semibold"

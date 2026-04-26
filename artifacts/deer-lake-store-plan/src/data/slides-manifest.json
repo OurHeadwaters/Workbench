@@ -12,7 +12,7 @@
     "position": 2,
     "filepath": "src/pages/slides/Cover.tsx",
     "title": "Cover",
-    "description": "Title slide for the Deer Lake Community General Store operational plan.",
+    "description": "Title slide for the Deer Lake Community General Store operational plan, delivered by Headwaters and written for the contractor and the band council to read together. Carries the V3 tagline: we've always known how to fix it, now we can.",
     "speakerNotes": ""
   },
   {
@@ -20,7 +20,7 @@
     "position": 3,
     "filepath": "src/pages/slides/ProblemOpportunity.tsx",
     "title": "The problem and the opportunity",
-    "description": "Why a community-owned store now: incumbent reality, leakage estimate, subsidy pass-through, and the community-owned alternative.",
+    "description": "Why a community-owned store now: incumbent reality, leakage estimate, subsidy pass-through, and the community-owned alternative. Lands on the V3 framing — Headwaters is paid for the operating system, not for the groceries; the store's grocery margin stays with the community.",
     "speakerNotes": ""
   },
   {
@@ -28,7 +28,7 @@
     "position": 4,
     "filepath": "src/pages/slides/WhyStoresFailMarket.tsx",
     "title": "Why current stores fail — market structure & ownership",
-    "description": "Theme 1 of the failure-mode synthesis: who owns the store, who decides what's on the shelf, and where the federal subsidy actually goes. Reads from the shared @workspace/why-stores-fail catalog with a per-slide Sources footer generated from sourcesFooterLine().",
+    "description": "First failure-surface slide drawn from the shared @workspace/why-stores-fail catalog: who owns the store, who decides what's on the shelf, and where the federal subsidy actually goes. Per-slide Sources footer generated from sourcesFooterLine().",
     "speakerNotes": ""
   },
   {
@@ -36,7 +36,7 @@
     "position": 5,
     "filepath": "src/pages/slides/WhyStoresFailSupplyOps.tsx",
     "title": "Why current stores fail — supply chain & operations",
-    "description": "Themes 2 + 3 of the failure-mode synthesis: how freight, hours-of-service rules, and a southern operating playbook break a northern store. Per-slide Sources footer generated from the shared catalog.",
+    "description": "Second failure-surface slide: how freight, hours-of-service rules, and a southern operating playbook break a northern store. Two-column layout (supply chain / operations) with named modes from the shared catalog and a per-slide Sources footer.",
     "speakerNotes": ""
   },
   {
@@ -44,7 +44,7 @@
     "position": 6,
     "filepath": "src/pages/slides/WhyStoresFailFinancing.tsx",
     "title": "Why current stores fail — producer & financing side",
-    "description": "Theme 4 of the failure-mode synthesis (producer wholesale lockout, capital access gap, processing infrastructure gap) plus the working community-owned counter-examples (Arctic Co-ops, Mistissini Meechum) and a per-slide Sources footer.",
+    "description": "Third failure-surface slide (producer wholesale lockout, capital access gap, processing infrastructure gap) plus the working community-owned counter-examples (Arctic Co-ops, Mistissini Meechum) and a per-slide Sources footer.",
     "speakerNotes": ""
   },
   {
@@ -52,47 +52,55 @@
     "position": 7,
     "filepath": "src/pages/slides/SupplyChain.tsx",
     "title": "Supply chain and distribution",
-    "description": "Three-lane supply model (807 producer lane, ice-road truck, air freight) and the curated shelf mix.",
+    "description": "Three-lane supply model — the family-run refrigerated route through Dryden that already moves food on this corridor every two weeks, the winter-road truck added for Dryden → Deer Lake, and air freight when the road is closed. Curated shelf mix from regional farms and big-brand distributors.",
     "speakerNotes": ""
   },
   {
     "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a04",
     "position": 8,
     "filepath": "src/pages/slides/StaffingModel.tsx",
-    "title": "The Outback staffing model",
-    "description": "Rotational fly-in staffing with band-provided housing, paired with a 12-month local-hire wind-down.",
+    "title": "Who works the store",
+    "description": "The band staffs and runs the store. Headwaters delivers the operating system. The store is designed to keep working when people don't show up — pods not roles, cross-trained as baseline, software covers the gaps, shifts as a market, calendar that bends around community life. Practitioner visits monthly; bookkeeping handled remotely; technical advisor on retainer.",
     "speakerNotes": ""
   },
   {
     "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a05",
     "position": 9,
     "filepath": "src/pages/slides/PosOps.tsx",
-    "title": "Day-1 POS and operations",
-    "description": "Square for Retail configuration, offline mode, subsidy pass-through automation, and the companion canvas mockup.",
+    "title": "The first morning",
+    "description": "Day-1 POS configuration, offline mode, subsidy pass-through automation, freight cost on the tag, and the manager screen — built by Headwaters as the same transparency stack the public price dashboard and household lookup are built on.",
     "speakerNotes": ""
   },
   {
     "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a06",
     "position": 10,
     "filepath": "src/pages/slides/FinancialsRole.tsx",
-    "title": "Financials, timeline, and role",
-    "description": "Planning-grade financial sketch, 6 to 9 month launch gantt, and the recommended 807 Store Launch Lead role with alternative.",
+    "title": "The numbers, the schedule, who runs it",
+    "description": "Planning-grade financial sketch (grocery spend, sales target, margin, opening cost, grant sources), 6 to 9 month launch gantt, and how the work splits — the band staffs and runs the store, Headwaters delivers software / tech stack at markup / training, the family-run refrigerated route handles the freight. The Headwaters operating fee is named honestly as TBD, sized in follow-up planning.",
     "speakerNotes": ""
   },
   {
     "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a08",
     "position": 11,
     "filepath": "src/pages/slides/ServicePartner.tsx",
-    "title": "Operations & technology partner",
-    "description": "What the band pays the operations & technology partner ($94k/mo = $69.7k cost basis + $24.3k 35% reinvestment) and what stays in the community when the contract ends — 9 servers, privacy phones, public price dashboard, household lookup, six-module playbook, and an annual value-delivered audit.",
+    "title": "What Headwaters delivers",
+    "description": "Three product layers — software the band owns, tech stack at markup, training programs — and what stays with Deer Lake on handoff: public price dashboard, household price lookup, the operating playbook, year-end value-delivered audit with the forward-credit clause. Total bill named as TBD pending follow-up sizing.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a0c",
+    "position": 12,
+    "filepath": "src/pages/slides/FirstReserveThenTheNext.tsx",
+    "title": "First reserve, then the next",
+    "description": "Deer Lake is the first reserve Headwaters delivers to. The software, training, and transparency stack are designed to be reused; marginal cost of the next reserve is mostly the practitioner's time. Carries the V3 thesis pull-quote: northern reserves need infrastructure as materially good as anything in the south, built on the foundation that's actually there — not less, different.",
     "speakerNotes": ""
   },
   {
     "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a07",
-    "position": 12,
+    "position": 13,
     "filepath": "src/pages/slides/RisksAsk.tsx",
     "title": "Risks and the ask",
-    "description": "Top six operational risks with mitigations, and the closing ask mirroring the existing 807 partnership pitch tone.",
+    "description": "The seven things most likely to go wrong with a northern store launch and how Headwaters handles each, including the V3-named risk that people don't always show up. Closing ask: an hour with the contractor, an honest opinion, and an introduction to the band council when the contractor is ready. Signed Headwaters; no free lunches, value out the other end, forward-credit clause in writing.",
     "speakerNotes": ""
   }
 ]

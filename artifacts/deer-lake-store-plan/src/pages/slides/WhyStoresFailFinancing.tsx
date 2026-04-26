@@ -16,7 +16,7 @@ export default function WhyStoresFailFinancing() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div className="max-w-[78%]">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              01c · Why current stores fail · Theme 04 of 04
+              Why current stores fail · Producer & financing side
             </div>
             <h2 className="font-display text-[3.6vw] leading-[1.05] tracking-tight text-primary font-medium">
               Producer & financing side.

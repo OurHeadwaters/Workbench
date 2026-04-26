@@ -4,7 +4,7 @@ export default function SupplyChain() {
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
         <div className="mb-[3vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-            02 · How groceries get here
+            How groceries get here
           </div>
           <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
             Three ways in.
@@ -17,13 +17,13 @@ export default function SupplyChain() {
             <div className="flex items-center gap-[0.6vw] mb-[1.2vh]">
               <div className="font-mono text-[1.05vw] text-accent font-semibold">WAY 1</div>
               <div className="flex-1 h-[1px] bg-rule" />
-              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">The truck we already run</div>
+              <div className="font-mono uppercase tracking-[0.18em] text-[1vw] text-muted">The truck already on the route</div>
             </div>
             <div className="font-display text-[1.7vw] leading-tight text-primary font-medium mb-[1vh]">
               Thunder Bay → Sioux Lookout → Dryden
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              807's own refrigerated truck and paid driver, already moving food on this route every two weeks. Becomes official in May 2026.
+              A family-run refrigerated truck and driver, already moving food on this corridor every two weeks. Deer Lake joins the route in May 2026.
             </div>
           </div>
 
@@ -83,10 +83,10 @@ export default function SupplyChain() {
             </div>
             <div>
               <div className="font-mono uppercase tracking-[0.18em] text-[1.05vw] mb-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                Fresh from 807's farms
+                Fresh from regional farms
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Slate River Dairy, Thunder Oak, Belluz, Sleepy G, plus eggs, meat and baked goods.
+                Slate River Dairy, Thunder Oak, Belluz, Sleepy G, plus eggs, meat and baked goods picked up on the same route.
               </div>
             </div>
             <div>

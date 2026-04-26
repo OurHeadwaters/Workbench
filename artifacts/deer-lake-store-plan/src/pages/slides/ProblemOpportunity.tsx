@@ -5,11 +5,11 @@ export default function ProblemOpportunity() {
         <div className="flex items-baseline justify-between mb-[2vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              01 · Where we are today
+              Where we are today
             </div>
             <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
               Deer Lake's grocery money is leaving.
-              <span className="italic font-normal text-accent"> Most of it can stay home.</span>
+              <span className="italic font-normal text-accent"> Most of it can stay home — the question is who delivers this and how.</span>
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0">
@@ -109,7 +109,7 @@ export default function ProblemOpportunity() {
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  807 sells groceries to the store at cost — we don't take a cut from Deer Lake. We get paid the same ~10% the producers on our route already pay us.
+                  Headwaters is paid for the operating system the store runs on — the software, the training, the tech stack — <span className="font-semibold">not</span> for the groceries. The store's grocery margin stays with the store and the community.
                 </div>
               </div>
               <div className="flex gap-[1vw]">

@@ -25,11 +25,16 @@ export default function Cover() {
               style={{ background: "var(--slide-accent)" }}
             />
             <div className="font-mono uppercase tracking-[0.25em] text-[1.1vw] opacity-90">
-              807 Food Co-operative Inc.
+              Headwaters
             </div>
           </div>
-          <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-80">
-            A plan for the store · Spring 2026
+          <div className="text-right">
+            <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-80">
+              A plan for the store · Spring 2026
+            </div>
+            <div className="font-display italic text-[1vw] opacity-75 mt-[0.4vh]">
+              We've always known how to fix it. Now we can.
+            </div>
           </div>
         </div>
 

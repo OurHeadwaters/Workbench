@@ -5,7 +5,7 @@ export default function PosOps() {
         <div className="flex items-baseline justify-between mb-[3vh]">
           <div>
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              04 · The first morning
+              The first morning
             </div>
             <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
               Walk on the job your first morning.
@@ -86,7 +86,7 @@ export default function PosOps() {
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.1vw] pt-[0.3vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
-                <div><span className="font-semibold">One screen for the manager</span>, built by 807 with the Deer Lake store's name on it: what's on the shelf, what's on the next truck, what to reorder today.</div>
+                <div><span className="font-semibold">One screen for the manager</span>, built by Headwaters with the Deer Lake store's name on it: what's on the shelf, what's on the next truck, what to reorder today. Same transparency stack as the public price dashboard and the household lookup — one set of records, one source of truth.</div>
               </div>
             </div>
           </div>
