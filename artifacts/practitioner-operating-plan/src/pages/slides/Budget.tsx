@@ -385,6 +385,29 @@ export default function Budget() {
           <span className="text-primary font-semibold">measurable savings delivered to Deer Lake</span>{" "}
           (procurement, freight, labour returned). If we don't beat the markup,
           we credit forward. That's the deal.{" "}
+          <span className="block mt-[0.5vh] text-text">
+            <span className="font-mono uppercase tracking-[0.18em] text-[0.7vw] text-accent font-semibold mr-[0.5vw]">
+              + Parity ·
+            </span>
+            Ops Manager and IT/Tech are paid at parity in every scenario
+            ($9.5k @ A · $9.5k @ B · $10k @ C). Both roles carry the agency's
+            day-to-day continuity and the felt-cost of losing either is the
+            same.{" "}
+            <span className="text-primary font-semibold">
+              In Scenario A the parity is funded inside the practitioner's own
+              line (-$1k);
+            </span>{" "}
+            in B and C the +$1k is absorbed by existing reinvestment margin —
+            no contract-size change required. People &amp; Retention design is
+            in{" "}
+            <a
+              href="/slide38"
+              className="underline decoration-dotted underline-offset-2 text-primary"
+            >
+              Part&nbsp;V·c
+            </a>
+            .
+          </span>{" "}
           <span className="text-text">
             Aggregation hub line is the Dad-warehouse base ($2,200 rent + utilities, all-in);
             related-party documentation, comparables, and the priced expansion options

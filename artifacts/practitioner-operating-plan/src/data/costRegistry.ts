@@ -177,10 +177,10 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "budget.b.opsManager",
     category: "Recommended-scenario roles",
     label: "Operations Manager",
-    defaultValue: 8500,
+    defaultValue: 9500,
     unit: "$/mo",
     context:
-      "Dryden, on-site. ~40 hrs/wk @ $40/hr loaded. The phone-holder.",
+      "Dryden, on-site. ~40 hrs/wk @ $40/hr loaded. The phone-holder. Parity-bumped to match IT/Tech ($9.5k) — both roles carry the agency's day-to-day continuity. The +$1k vs. the prior figure is absorbed by existing reinvestment margin.",
     slides: [SLIDE_BUDGET],
   },
   {
@@ -708,18 +708,20 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "budget.a.practitioner",
     category: "Floor scenario (A · $60k)",
     label: "A · Practitioner / Lead",
-    defaultValue: 14000,
+    defaultValue: 13000,
     unit: "$/mo",
-    context: "Floor scenario take.",
+    context:
+      "Floor scenario take. Drops $1k from the prior figure to fund the Ops Manager / IT-Tech parity bump (OM $8.5k → $9.5k). Cost basis at the floor is unchanged; the swap stays inside the practitioner's own line.",
     slides: [SLIDE_BUDGET],
   },
   {
     id: "budget.a.opsManager",
     category: "Floor scenario (A · $60k)",
     label: "A · Operations Manager",
-    defaultValue: 8500,
+    defaultValue: 9500,
     unit: "$/mo",
-    context: "Same OM at the floor.",
+    context:
+      "Parity-bumped at the floor to match IT/Tech ($9.5k). Funded by the practitioner's own $1k drop in this scenario, so the Scenario A cost basis is unchanged.",
     slides: [SLIDE_BUDGET],
   },
   {
@@ -800,9 +802,10 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "budget.c.opsManager",
     category: "Scale scenario (C · $125k)",
     label: "C · Operations Manager",
-    defaultValue: 9000,
+    defaultValue: 10000,
     unit: "$/mo",
-    context: "OM bumps slightly at scale.",
+    context:
+      "OM at scale, parity-bumped to match IT/Tech ($10k). The +$1k vs. the prior figure is absorbed by existing reinvestment margin in this scenario.",
     slides: [SLIDE_BUDGET],
   },
   {
