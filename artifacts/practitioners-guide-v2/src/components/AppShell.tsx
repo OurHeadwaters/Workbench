@@ -37,7 +37,7 @@ const NAV: NavItem[] = [
     accent: BUCKETS.brightside.accent,
   },
   { href: "/personal-cash", label: "Personal cash", icon: Wallet },
-  { href: "/compare", label: "Compare V2 / V3 / V4", icon: GitCompareArrows },
+  { href: "/compare", label: "Operating framework", icon: GitCompareArrows },
   { href: "/replication", label: "Replication", icon: Repeat },
 ];
 
@@ -73,7 +73,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 className="text-sm font-semibold text-foreground"
                 style={{ fontFamily: "var(--app-font-serif)" }}
               >
-                Practitioner's Guide V2
+                Practitioner's Guide
               </p>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                 Headwaters · Source of truth
@@ -125,7 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
 
       <footer className="border-t mt-12 py-6 text-center text-xs text-muted-foreground">
-        Headwaters · Practitioner's Guide V2 ·{" "}
+        Headwaters · Practitioner's Guide ·{" "}
         <span className="font-mono">{scenario.name}</span> ·{" "}
         Numbers tagged with the date the founder locked them.
       </footer>

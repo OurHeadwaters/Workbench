@@ -48,7 +48,7 @@ export function IndexPage() {
 
       <header id="index-after-prologue" className="scroll-mt-20">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Practitioner's Guide V2
+          Practitioner's Guide
         </p>
         <h1
           className="mt-2 text-3xl sm:text-4xl font-semibold leading-tight"
@@ -60,7 +60,7 @@ export function IndexPage() {
           A working source of truth, organized the way the founder thinks: Salts (Parr's Jars),
           Community Contracts (807 CDP + agency), and Software / Hardware / Training (Brightside).
           Every figure carries a "confirmed" tag with the date the founder locked it. V1 (the slides
-          deck) stays untouched as a reference.
+          deck) stays untouched as a reference; V3 is the locked default operating framework.
         </p>
         <div
           className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
@@ -158,15 +158,16 @@ export function IndexPage() {
               <GitCompareArrows className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold">Compare V2 / V3 / V4</p>
+              <p className="text-sm font-semibold">Operating framework workspace</p>
               <p className="text-xs text-muted-foreground">
-                Same numbers, three realities, side by side
+                V3 anchored on the left · alternative realities on tabs to the right
               </p>
             </div>
           </div>
           <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            Salts net, agency surplus, Brightside owner take, personal cash — V2 (full team), V3
-            (lean team), and V4 (right-priced) at a glance, so you can talk out which turn to make.
+            V3 is the locked default — same numbers as the rest of the guide. To the right, V4 is
+            pre-loaded as the first alternative reality and you can add new ones, edit each row,
+            lock what you've decided, and read the Δ-vs-V3 cell live as you talk a turn out.
           </p>
         </Link>
       </section>

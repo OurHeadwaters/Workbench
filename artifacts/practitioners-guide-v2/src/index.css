@@ -125,7 +125,7 @@
   --chart-2: 32 70% 42%;    /* Salts amber */
   --chart-3: 200 56% 32%;   /* Brightside deep blue */
   --chart-4: 12 64% 46%;    /* V3 alt — terracotta */
-  --chart-5: 195 28% 56%;   /* V2 cool tone */
+  --chart-5: 195 28% 56%;   /* legacy cool tone — kept for chart palette parity */
 
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --app-font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;

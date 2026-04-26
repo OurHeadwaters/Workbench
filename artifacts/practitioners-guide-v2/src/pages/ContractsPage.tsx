@@ -119,7 +119,7 @@ export function ContractsPage() {
             </tbody>
           </table>
           <p className="mt-3 text-xs text-muted-foreground">
-            Cash treatment in V2: bank the full <Num tag={cdp.scoping.tag}>{money(cdp.scoping.billTo807)}</Num> as a non-interest-bearing receivable. The <Num tag={cdp.scoping.tag}>{money(cdp.scoping.boardVoted)}</Num> at-risk piece is a footnote, not a haircut on the headline number.
+            Cash treatment: bank the full <Num tag={cdp.scoping.tag}>{money(cdp.scoping.billTo807)}</Num> as a non-interest-bearing receivable. The <Num tag={cdp.scoping.tag}>{money(cdp.scoping.boardVoted)}</Num> at-risk piece is a footnote, not a haircut on the headline number.
           </p>
         </SectionCard>
 
@@ -142,7 +142,7 @@ export function ContractsPage() {
         <div className="mt-4">
           <SectionCard
             title="Structured option (working concept)"
-            subtitle="Founder still shaping. V2 captures it as proposed, not as committed."
+            subtitle="Founder still shaping. Captured as proposed, not as committed."
             tag={cdp.structuredOption.tag}
             accent={b.accent}
           >

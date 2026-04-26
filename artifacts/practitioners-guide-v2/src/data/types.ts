@@ -272,7 +272,7 @@ export interface PersonalCash {
   tag: SourceTag;
 }
 
-export type ScenarioId = "v2" | "v3" | "v4";
+export type ScenarioId = "v3" | "v4";
 
 export interface Scenario {
   id: ScenarioId;

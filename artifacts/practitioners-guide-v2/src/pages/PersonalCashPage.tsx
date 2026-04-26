@@ -84,7 +84,7 @@ export function PersonalCashPage() {
               <td colSpan={3} className="pt-3"><div className="border-t border-dashed border-card-border" /></td>
             </tr>
             <tr className="text-muted-foreground">
-              <td className="py-2 pr-4 italic">Capital Recovery (Phase 1, months 1–3 in V2)</td>
+              <td className="py-2 pr-4 italic">Capital Recovery (Phase 1, retired in the first months of the engagement)</td>
               <td className="py-2 pr-4 text-right num italic">({money(p.capitalRecovery)})</td>
               <td className="py-2 pr-4 text-xs italic">Debt repayment to lender + family — NOT income</td>
             </tr>

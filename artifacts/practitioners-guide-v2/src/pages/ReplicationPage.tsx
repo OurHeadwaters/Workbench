@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useScenario, shouldOpenWithV4OnFirstVisit } from "@/lib/scenario";
+import { useScenario } from "@/lib/scenario";
 import { SectionCard } from "@/components/SectionCard";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { money, pct } from "@/lib/format";
@@ -12,30 +11,16 @@ import { Link } from "wouter";
  * second community without rebuilding the proposal each time.
  *
  * Two clear columns: what travels across communities vs. what swaps per
- * community. Uses the active scenario as the worked example.
- *
- * V4 is the worked-example default for this page on first visit (no prior
- * scenario stored). If the reader has explicitly chosen V2 or V3 elsewhere
- * in the app, that explicit choice is respected — we never overwrite it.
+ * community. Uses the active scenario as the worked example. The reader's
+ * explicit choice from the global toggle is always respected — V4 is offered
+ * as a one-click switch when reading on the V3 default, since V4's
+ * right-priced numbers make the worked-example math read more cleanly.
  *
  * Hosts the Positioning section as a callout — kept here (not on the Index
  * page) so the leverage argument lives next to the model that delivers it.
  */
 export function ReplicationPage() {
-  const { scenario, scenarioId, setScenarioId, scenarioWasExplicit } =
-    useScenario();
-
-  // First-visit default: open with V4 as the worked example. Only fires when
-  // the reader has no persisted explicit choice (scenarioWasExplicit=false)
-  // AND the current scenario is the global fallback v2. Persisted v2/v3
-  // choices remain untouched. Uses an effect so the swap survives SSR-safe
-  // initial render without flashing the wrong scenario.
-  useEffect(() => {
-    if (shouldOpenWithV4OnFirstVisit({ scenarioWasExplicit, scenarioId })) {
-      setScenarioId("v4");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { scenario, scenarioId, setScenarioId } = useScenario();
   const a = scenario.contracts.agency;
   const accent = scenario.accent;
   const accentSoft = scenario.accentSoft;
@@ -268,7 +253,7 @@ export function ReplicationPage() {
           </Link>{" "}
           and{" "}
           <Link href="/compare" className="underline hover:text-foreground" data-testid="link-compare-from-replication">
-            V2 ↔ V3 ↔ V4 compare <ArrowRight className="inline h-3 w-3" />
+            Operating framework workspace <ArrowRight className="inline h-3 w-3" />
           </Link>
           .
         </p>

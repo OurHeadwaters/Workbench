@@ -1,5 +1,5 @@
 /**
- * Footnotes are mostly shared verbatim across V2 and V3.
+ * Footnotes are shared verbatim across the live scenarios.
  * Where a footnote depends on the scenario (e.g. Brightside launch month),
  * the footnote text references the scenario's own field, not a hard-coded value.
  */
@@ -40,7 +40,7 @@ export const SALTS_FOOTNOTES: Footnote[] = [
     id: "dog-treat-cross",
     title: "Cross-bucket: dog-treat piecework (Salts ↔ 807 CDP)",
     body:
-      "If the 807 structured option lands, dog-treat piecework production by Parr's Jars in salt-batch whitespace becomes a potential new sub-line in Salts. V2 flags the cross-link; the founder still needs to size dog-treat volumes with 807 before committing.",
+      "If the 807 structured option lands, dog-treat piecework production by Parr's Jars in salt-batch whitespace becomes a potential new sub-line in Salts. The cross-link is flagged here; the founder still needs to size dog-treat volumes with 807 before committing.",
     crossLink: { label: "See 807 CDP — Structured option", href: "/contracts#cdp807" },
   },
 ];
@@ -56,7 +56,7 @@ export const CDP807_FOOTNOTES: Footnote[] = [
     id: "dog-treat-capacity",
     title: "Dog-treat capacity assumption",
     body:
-      "The dog-treat piece-work concept assumes Parr's Jars has spare batch-day capacity. Current salt cadence (every 6 weeks, ~12 hr sessions for 500 jars) suggests there is slack, but V2 should not commit to dog-treat volumes until the founder sizes them with 807.",
+      "The dog-treat piece-work concept assumes Parr's Jars has spare batch-day capacity. Current salt cadence (every 6 weeks, ~12 hr sessions for 500 jars) suggests there is slack, but the guide should not commit to dog-treat volumes until the founder sizes them with 807.",
     crossLink: { label: "See Salts — channels & cadence", href: "/salts" },
   },
 ];
@@ -72,25 +72,25 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
     id: "buyer-dependency",
     title: "Buyer dependency",
     body:
-      "If the buyer is 807, the personal-compensation lines and giving ratio carry political weight that should be visible in any conversation with 807. If the buyer is the founder's father, this is family capital cycling. V2 should not pretend the buyer is determined when it isn't.",
+      "If the buyer is 807, the personal-compensation lines and giving ratio carry political weight that should be visible in any conversation with 807. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
   },
   {
     id: "deer-lake-travel",
     title: "Deer Lake travel is a known unknown",
     body:
-      "V2 ships with a TBD placeholder; locking it requires the founder to estimate flight + lodging + per diem cadence honestly.",
+      "The guide ships with a TBD placeholder; locking it requires the founder to estimate flight + lodging + per diem cadence honestly.",
   },
   {
     id: "hiring-authority",
     title: "Hiring authority for Deer Lake store staff",
     body:
-      "Unresolved. V2 documents the open question rather than assume an answer. Regardless of authority: systems and training are Headwaters-only (not outsourced).",
+      "Unresolved. The guide documents the open question rather than assume an answer. Regardless of authority: systems and training are Headwaters-only (not outsourced).",
   },
   {
     id: "life-supports",
     title: "Life supports timing",
     body:
-      "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher surplus, which is why capital recovery clears purely in 3 months under Phase 1 (V2 baseline).",
+      "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher surplus, which is why capital recovery clears purely in 3 months under Phase 1.",
   },
   {
     id: "brightside-coupling",
@@ -112,7 +112,7 @@ export const BRIGHTSIDE_FOOTNOTES: Footnote[] = [
     id: "chain-deals-upside",
     title: "Chain deals are upside, not baseline",
     body:
-      "A regional operator win (5–50 facilities) could 2–3x the surplus. V2 captures the concept as a footnote, not as plan.",
+      "A regional operator win (5–50 facilities) could 2–3x the surplus. The guide captures the concept as a footnote, not as plan.",
   },
   {
     id: "homecare-shelved",

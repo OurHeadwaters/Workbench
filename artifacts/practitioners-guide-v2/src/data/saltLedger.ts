@@ -26,7 +26,7 @@ export interface LedgerExport {
  * Only locked (founder-confirmed) lines are emitted — non-locked rows are filtered out so
  * the spreadsheet matches the "every dollar locked line by line" promise.
  *
- * Salts is identical V2/V3 in this build, but the export accepts a scenario for forward-compat.
+ * Salts is identical across the live scenarios in this build, but the export accepts a scenario for forward-compat.
  */
 export function buildSaltLedger(scenario: Scenario): LedgerExport {
   const s = scenario.salts;
