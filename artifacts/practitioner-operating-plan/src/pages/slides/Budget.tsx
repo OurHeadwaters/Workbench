@@ -189,6 +189,7 @@ export default function Budget() {
       label: "Floor",
       contract: askFloor,
       cost: sumA,
+      loaded: loadedA,
       note: "Practitioner-side core (4 agency hires + Food Handler embedded at the store) + life + overhead. Buffer absorbed by the Food Handler line at the floor; no second engagement on the horizon.",
     },
     {
@@ -196,6 +197,7 @@ export default function Budget() {
       label: "Recommended ask",
       contract: askReco,
       cost: sumB,
+      loaded: loadedB,
       recommended: true,
       note: "Adds CD Associate + Junior Analyst. Pilot #2 is real by month 9.",
     },
@@ -204,6 +206,7 @@ export default function Budget() {
       label: "Scale",
       contract: askScale,
       cost: sumC,
+      loaded: loadedC,
       note: "Adds Sr. Engineer + Regional Outreach + Trainer. Buffer absorbed by Food Handler at scale too; three concurrent reserves by year two.",
     },
   ];
@@ -369,7 +372,9 @@ export default function Budget() {
         <div className="flex-1 grid grid-cols-3 gap-[1.2vw] min-h-0">
           {scenarios.map((s) => {
             const reinvest = s.contract - s.cost;
-            const reinvestPct = (reinvest / s.cost) * 100;
+            const reinvestPct = s.cost > 0 ? (reinvest / s.cost) * 100 : 0;
+            const netReinvest = s.contract - s.loaded;
+            const netReinvestPct = s.loaded > 0 ? (netReinvest / s.loaded) * 100 : 0;
             const isReco = !!s.recommended;
             return (
               <div
@@ -415,11 +420,25 @@ export default function Budget() {
                     <span className="font-mono font-semibold">{fmt(s.cost)}</span>
                   </div>
                   <div
+                    className="flex justify-between"
+                    style={
+                      isReco
+                        ? { color: "rgba(233,200,168,0.75)" }
+                        : { color: "var(--slide-muted)" }
+                    }
+                  >
+                    <span>+ Reinvestment vs. cost basis ({reinvestPct.toFixed(1)}%)</span>
+                    <span className="font-mono">{fmt(reinvest)}</span>
+                  </div>
+                  <div
                     className="flex justify-between font-semibold"
                     style={isReco ? { color: "#e9c8a8" } : { color: "var(--slide-accent)" }}
                   >
-                    <span>+ Reinvestment ({reinvestPct.toFixed(1)}%)</span>
-                    <span className="font-mono">{fmt(reinvest)}</span>
+                    <span>
+                      + Net reinvestment after People &amp; Retention (
+                      {netReinvestPct.toFixed(1)}%)
+                    </span>
+                    <span className="font-mono">{fmt(netReinvest)}</span>
                   </div>
                   <div
                     className="flex justify-between pt-[0.5vh] border-t font-display text-[1.1vw] font-semibold"
