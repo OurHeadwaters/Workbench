@@ -433,6 +433,10 @@ importers:
         version: 3.25.76
 
   artifacts/deer-lake-store-plan:
+    dependencies:
+      '@workspace/why-stores-fail':
+        specifier: workspace:*
+        version: link:../../lib/why-stores-fail
     devDependencies:
       '@replit/vite-plugin-cartographer':
         specifier: 'catalog:'
@@ -696,6 +700,9 @@ importers:
       '@workspace/object-storage-web':
         specifier: workspace:*
         version: link:../../lib/object-storage-web
+      '@workspace/why-stores-fail':
+        specifier: workspace:*
+        version: link:../../lib/why-stores-fail
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -1188,6 +1195,8 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
+
+  lib/why-stores-fail: {}
 
   scripts:
     dependencies:

@@ -15,6 +15,8 @@ import Contributors from "@/pages/contributors/index";
 import ShareLinks from "@/pages/share-links/index";
 import NeedsReview from "@/pages/needs-review";
 import PublicShare from "@/pages/share/[token]";
+import PublicWhyStoresFail from "@/pages/share/why-stores-fail";
+import WhyStoresFail from "@/pages/why-stores-fail";
 import Login from "@/pages/login";
 import Layout from "@/components/Layout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
@@ -31,6 +33,7 @@ function RequireOwner({ children }: { children: ReactNode }) {
 function Router() {
   return (
     <Switch>
+      <Route path="/share/:token/why-stores-fail" component={PublicWhyStoresFail} />
       <Route path="/share/:token" component={PublicShare} />
       <Route path="/login" component={Login} />
       <Route>
@@ -45,6 +48,9 @@ function Router() {
               <Route path="/producers/:slug" component={ProducerDetail} />
               <Route path="/subjects" component={Subjects} />
               <Route path="/buckets" component={Buckets} />
+              <Route path="/why-stores-fail">
+                <WhyStoresFail />
+              </Route>
               <Route path="/contributors" component={Contributors} />
               <Route path="/share-links" component={ShareLinks} />
               <Route path="/needs-review" component={NeedsReview} />
