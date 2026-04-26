@@ -299,7 +299,7 @@ export function ContractsPage() {
                 accent={b.accent}
               >
                 <p className="text-sm text-muted-foreground">
-                  All agency surplus retires the {money(a.capitalRecoveryAmount)} debt stack. {a.capitalRecoveryDescription} <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at the provisional surplus.
+                  All agency surplus retires the {money(a.capitalRecoveryAmount)} debt stack. {a.capitalRecoveryDescription} <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this scenario's monthly surplus.
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Booked as <strong>"Capital Recovery"</strong> — distinct line, separate from compensation, separate from owner draw. NOT new income to the founder.

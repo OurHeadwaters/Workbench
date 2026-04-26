@@ -257,8 +257,8 @@ export function ComparePage() {
           </li>
           <li>
             <strong className="text-foreground">Capital recovery speed.</strong> V2 retires the
-            $112k debt stack in a clean 3 months. V3 takes ~4+ months at the provisional fee, which
-            also pushes Brightside Launch Month from September into October.
+            $112k debt stack in a clean 3 months. V3 takes ~4 months at the locked $90k/mo fee,
+            which also pushes Brightside Launch Month from September into October.
           </li>
           <li>
             <strong className="text-foreground">War chest size.</strong> V2 builds Reserve / Innovation
@@ -266,9 +266,9 @@ export function ComparePage() {
             months produces a notably smaller war chest — particularly visible in Reserve and Giving.
           </li>
           <li>
-            <strong className="text-foreground">Personal cash unchanged in the default V3.</strong>{" "}
-            Practitioner salary held at $18k/mo. If you also lower the Practitioner pay under leaner
-            team, personal cash drops — flag that explicitly when locking V3.
+            <strong className="text-foreground">Personal cash unchanged under V3.</strong>{" "}
+            Practitioner salary stays locked at $18k/mo — the lean team trims other roles, not the
+            lead. Personal cash matches V2 at $361k over 18 months.
           </li>
         </ul>
       </SectionCard>

@@ -1,18 +1,17 @@
-import { provisional, tbd } from "./tags";
+import { confirmed, tbd } from "./tags";
 import type { Scenario } from "./types";
 import { SCENARIO_V2 } from "./v2";
 
 /**
  * V3 — Lean team scenario.
  *
- * STATUS: PROVISIONAL until founder locks the exact roster + fee.
- * The shape is confirmed:
- *   - Lean roster (drop two roles)
- *   - Lower agency fee ("$90k/mo or less, need to determine costs first")
+ * STATUS: LOCKED on 2026-04-26.
+ *   - 6-role roster (drops Transparency Stack Engineer + Junior Analyst from V2)
+ *   - $52k/mo payroll, $90k/mo agency fee
  *   - Salts and Brightside identical to V2 (only Community Contracts changes)
  *
- * Default proposal seeded here so the toggle has something to render.
- * Every V3 number tagged `provisional` so it visibly differs from V2's confirmed.
+ * Capital recovery slips from 3 mo (V2) to ~4.1 mo (V3), which pushes the
+ * Brightside Launch Month from September into October.
  */
 
 const v3Roster = [
@@ -40,10 +39,8 @@ const v3SurplusSepOnward = v3Fee - v3CostBasisSepOnward; // 25508
 // Capital recovery: 112k / 27608 = 4.06 mo. Spans Jun-Sep + spillover.
 // Months 1-3 (Jun-Aug, $27,608/mo): cumulative $82,824
 // Month 4 (Sep, $25,508): cumulative $108,332 — still short by $3,668
-// Month 5 (Oct): retire remaining $3,668 → ~$21,840 left over for Sep/Oct splits
-// The Brightside Launch Month must shift OR pre-launch must be funded differently.
-// Conservatively: assume capital recovery completes ~Oct, Brightside launch shifts to Oct.
-const v3CapitalRecoveryMonths = 4.1;
+// Month 5 (Oct): retire remaining $3,668 → ~$21,840 left over for Oct splits
+// → Brightside Launch Month shifts from Sept (V2) into Oct (V3).
 
 // Phase 3 surplus base (Sep+ structure). Months remaining for splits:
 // 18 mo total - 4 mo capital recovery - 1 mo Brightside Launch = 13 mo of Phase 3 splits
@@ -69,37 +66,37 @@ const v3Agency = {
   renegotiateMonth: 12,
   startDate: "June 1, 2026",
   buyerStatus: "TBD (father vs 807 — affects political weight, not the math)",
-  feeTag: provisional("Founder said '$90k/mo or less, need to determine costs first.' Locked once cost basis is reviewed."),
+  feeTag: confirmed("Locked at $90k/mo against the lean roster's cost basis ($52k payroll + $10.4–12.5k overheads)."),
 
   roster: v3Roster,
   payrollTotal: v3PayrollTotal,
-  rosterTag: provisional("Default proposal: drop Transparency Stack Engineer ($8.5k) and Junior Analyst / Field ($6.5k). Awaiting founder's exact roster."),
+  rosterTag: confirmed("Locked 6-role lean roster — drops Transparency Stack Engineer ($8.5k) and Junior Analyst / Field ($6.5k) from V2."),
 
   overheadsJunAug: v3OverheadsBase,
   overheadsJunAugTotal: v3OverheadsJunAugTotal,
   overheadsSepOnward: v3OverheadsSepOnward,
   overheadsSepOnwardTotal: v3OverheadsSepOnwardTotal,
-  overheadsTag: provisional("Held identical to V2 pending leaner-scope review of overhead lines."),
+  overheadsTag: confirmed("Held identical to V2 — leaner team uses the same overhead footprint."),
 
   costBasisJunAug: v3CostBasisJunAug,
   costBasisSepOnward: v3CostBasisSepOnward,
   monthlySurplusJunAug: v3SurplusJunAug,
   monthlySurplusSepOnward: v3SurplusSepOnward,
-  costBasisTag: provisional("Computed from provisional roster + fee."),
+  costBasisTag: confirmed("Computed from locked roster + fee."),
 
   capitalRecoveryAmount: 112000,
   capitalRecoveryDescription:
     "$72k outstanding business loan first, then $40k personal infusion from founder's husband, in that order.",
   capitalRecoveryMonths: 4,
   capitalRecoveryStartLabel: "Jun 2026",
-  capitalRecoveryEndLabel: "Mid-Oct 2026 (~4 months at provisional surplus)",
-  capitalRecoveryTag: provisional("Lower surplus extends recovery from 3 mo (V2) to ~4.1 mo (V3)."),
+  capitalRecoveryEndLabel: "Early Oct 2026 (~4.1 months at the locked surplus)",
+  capitalRecoveryTag: confirmed("Lower surplus extends recovery from 3 mo (V2) to ~4.1 mo (V3)."),
 
   brightsideLaunchMonthLabel: "October 2026 (shifted from Sept)",
   brightsidePrelaunchSpend: 28000,
   brightsideLaunchSurplus: v3SurplusSepOnward,
   brightsideLaunchRemainder: -2492,
-  brightsideLaunchTag: provisional("Brightside launch slips one month under V3. Even after the slip, October surplus alone (~$25.5k) doesn't cover the $28k pre-launch — overflow comes from November Reserve/Innovation/Giving."),
+  brightsideLaunchTag: confirmed("Brightside launch slips one month under V3. October surplus alone (~$25.5k) doesn't cover the $28k pre-launch — the $2.5k overflow comes out of November Reserve/Innovation/Giving."),
 
   phase3Months: v3Phase3Months,
   phase3MonthlySurplus: v3Phase3MonthlySurplus,
@@ -112,7 +109,7 @@ const v3Agency = {
   reserveTotal: v3Reserve18mo,
   innovationTotal: v3Innovation18mo,
   givingTotal: v3Giving18mo,
-  phase3Tag: provisional("Phase 3 window shrinks (~13 mo vs 14 mo V2) because capital recovery + launch take an extra month."),
+  phase3Tag: confirmed("Phase 3 window shrinks to ~13 mo (vs 14 mo V2) because capital recovery + launch take an extra month."),
 
   totals18mo: {
     revenue: v3Revenue18mo,
@@ -124,11 +121,11 @@ const v3Agency = {
     reserve: v3Reserve18mo,
     innovation: v3Innovation18mo,
     giving: v3Giving18mo,
-    tag: provisional("Computed from provisional fee + roster."),
+    tag: confirmed("Computed from locked fee + roster."),
   },
 
   practitionerSalary18mo: 324000,
-  practitionerSalaryTag: provisional("Practitioner salary held at $18k/mo × 18 = $324k. Subject to revision if leaner team also revises the lead role."),
+  practitionerSalaryTag: confirmed("Practitioner salary held at $18k/mo × 18 = $324k, same as V2 (lead role unchanged under lean team)."),
 
   reservePurposes: SCENARIO_V2.contracts.agency.reservePurposes,
   givingDirection: SCENARIO_V2.contracts.agency.givingDirection,
@@ -140,22 +137,20 @@ const v3Personal = {
   total18mo: 361000,
   perYear: 240667,
   capitalRecovery: 112000,
-  tag: provisional("Personal cash unchanged from V2 in default V3 (lead salary held). Drops if founder also lowers Practitioner pay under leaner team."),
+  tag: confirmed("Personal cash unchanged from V2 — lead salary held at $18k/mo under the locked lean team."),
 };
 
 export const SCENARIO_V3: Scenario = {
   id: "v3",
   name: "V3 — Lean team",
   short: "V3",
-  tagline: "Provisional · ~$90k/mo · 6-role team",
+  tagline: "$90k/mo agency · 6-role team",
   description:
-    "Leaner team (drops Transparency Stack Engineer + Junior Analyst), lower agency fee. Provisional until founder confirms exact roster and fee with cost basis in front of them. Salts and Brightside unchanged from V2.",
+    "Leaner team (drops Transparency Stack Engineer + Junior Analyst), $90k/mo agency fee. Locked against the resulting cost basis. Salts and Brightside unchanged from V2 — only Community Contracts and personal cash move when the team changes.",
   accent: "#B14A1F",
   accentSoft: "#FBE4D8",
   accentInk: "#5B2510",
-  status: "provisional",
-  statusNote:
-    "V3 numbers are PROVISIONAL — seeded from a default lean roster ($52k/mo payroll) and a $90k/mo fee placeholder. Awaiting founder's exact lean roster, then the fee can be locked against the resulting cost basis.",
+  status: "locked",
   salts: SCENARIO_V2.salts,
   contracts: { cdp807: SCENARIO_V2.contracts.cdp807, agency: v3Agency },
   brightside: SCENARIO_V2.brightside,
