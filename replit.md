@@ -38,6 +38,17 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 
 The practitioner-operating-plan deck has been **rebuilt from scratch as a 6-slide V3 deck** (`src/pages/slides/{Cover, SlabVsGrassland, TheSixPeople, ThreeRevenueLayers, YearOnePicture, Closing}.tsx`). The V3 reframe (per the founder's foundation doc): Headwaters is a **product company** (software + tech stack at markup + per-cohort training), not a services agency; Deer Lake staffs its own store; the lean roster is **6 people, not V2's 8**; the deck opens with the **Slab-vs-Grassland thesis** (one client / one slab vs. three product layers / many bands); words-only naming; no Brightside references. **All 6 V3 numbers locked with the founder** in `.local/v3-numbers.md` with full justifications: Hub Operator $8,500/mo loaded, technical advisor $2,500/mo retainer, training partner $1,500/mo + $5,500/cohort, casual local pod $15k/yr, Deer Lake recurring contract $35k/mo · $420k/yr, tech-stack hybrid pricing (SaaS pass-through at cost + tiered hardware kit 3/6/12 + $400/mo managed-services). **Year-1 cash gap is surfaced honestly** on slide 5 (`YearOnePicture.tsx`): revenue total $446,598 vs. V3 cost basis $573,800 = **($127,202) gap**, plus $112k of V2 Capital Recovery still standing. Tagline locked: *"We always knew how to fix it. Now we can."* Mission anchor: *"Total and complete operational flexibility for each and every reserve in Canada."* All V2 slide files have been deleted from `src/pages/slides/`. **Known follow-up debt**: `src/data/costRegistry.ts` still defines `SLIDE_*` constants pointing at deleted V2 slide filepaths; `pnpm run check-slide-refs` reports them as stale links and `vite` builds `/slide{N}` hrefs that 404. Non-deck pages (Today, Week, Year, OnePager, BrandOnePager, CheckIn, etc.) and their cost-review modals continue to function — the broken links are the slide-jump shortcuts inside cost-review entries. Cleanup is a separate task from the deck rebuild.
 
+## Codetry Handbook — constellation snapshot
+
+Part III of the Codetry Practitioner's Handbook (`artifacts/codetry-handbook`) is built from a *bundled snapshot* of the Practitioner Operating Plan's constellation manifest. The canonical source is `artifacts/practitioner-operating-plan/public/constellation.json`; the snapshot lives at `artifacts/codetry-handbook/data/constellation.ts` and is **auto-generated** — never edit it by hand.
+
+- Refresh the snapshot after any change to the canonical manifest:
+  - `pnpm --filter @workspace/codetry-handbook run sync-constellation`
+- Verify the snapshot is in sync (also runs as part of `typecheck` and `build`):
+  - `pnpm --filter @workspace/codetry-handbook run check-constellation`
+
+`pnpm --filter @workspace/codetry-handbook run typecheck` and `... run build` both fail with an actionable diff (on-disk vs canonical `version` / `lastUpdated`) when the two diverge, so Part III can't quietly go stale.
+
 ## Library schema
 
 Drizzle tables in `lib/db/src/schema/library.ts`:
