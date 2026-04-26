@@ -740,7 +740,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.dayRate.onsite",
     category: "Cross-reserve install",
     label: "On-site install day rate",
-    defaultValue: 3500,
+    defaultValue: CROSS_RESERVE_DEFAULTS.dayRate.onsite,
     unit: "$/day",
     context:
       "Premium-but-defensible vs. senior management consultant rates. Charged for every day the practitioner is on the receiving reserve installing the discipline. Travel/lodging/food are pass-through (pick the matching `crossReserve.travelPassthrough.*` example — ≈$11k drive-in, ≈$22.5k fly-in scheduled, ≈$43k winter-road / charter-heavy for a typical 12-week install), not in this rate.",
@@ -750,7 +750,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.dayRate.remote",
     category: "Cross-reserve install",
     label: "Remote prep + follow-up day rate",
-    defaultValue: 1800,
+    defaultValue: CROSS_RESERVE_DEFAULTS.dayRate.remote,
     unit: "$/day",
     context:
       "Pre-install scoping, curriculum adaptation, post-install discipline check-ins done from home. Lower than the on-site rate because the practitioner isn't away from Deer Lake.",
@@ -772,8 +772,7 @@ export const COST_REGISTRY: CostEntry[] = [
     label: "Typical 12-week install revenue per reserve",
     defaultValue: CROSS_RESERVE_DEFAULTS.installRevenuePerReserve,
     unit: "$/yr",
-    context:
-      "Derived: 30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through billed at cost on top of this fee — pick the example that matches the receiving reserve's access pattern (≈$11k drive-in via `crossReserve.travelPassthrough.driveIn`, ≈$22.5k fly-in scheduled via `crossReserve.travelPassthrough.example`, ≈$43k winter-road / charter-heavy via `crossReserve.travelPassthrough.winterRoad`) — and the $30k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above to move this.",
+    context: `Derived: ${CROSS_RESERVE_DEFAULTS.typicalInstall.onsiteDays} on-site days × $${CROSS_RESERVE_DEFAULTS.dayRate.onsite.toLocaleString("en-CA")} + ${CROSS_RESERVE_DEFAULTS.typicalInstall.remoteDays} remote days × $${CROSS_RESERVE_DEFAULTS.dayRate.remote.toLocaleString("en-CA")} = $${CROSS_RESERVE_DEFAULTS.installRevenuePerReserve.toLocaleString("en-CA")}. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through billed at cost on top of this fee — pick the example that matches the receiving reserve's access pattern (≈$11k drive-in via \`crossReserve.travelPassthrough.driveIn\`, ≈$22.5k fly-in scheduled via \`crossReserve.travelPassthrough.example\`, ≈$43k winter-road / charter-heavy via \`crossReserve.travelPassthrough.winterRoad\`) — and the $${(CROSS_RESERVE_DEFAULTS.retainerAnnual / 1000).toLocaleString("en-CA")}k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above (sourced from \`@workspace/cross-reserve-defaults\`) to move this.`,
     slides: [SLIDE_PATH],
     derived: true,
   },

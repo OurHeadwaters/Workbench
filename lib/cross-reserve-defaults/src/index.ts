@@ -17,11 +17,26 @@
  * manual sync.
  *
  * Values:
- *   - installRevenuePerReserve  — derived in the registry as
- *     30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200.
- *     The slide quotes this as the practitioner's headline install fee
- *     to a receiving reserve, on top of which travel pass-through is
- *     billed at cost and the annual retainer kicks in.
+ *   - dayRate.onsite            — premium-but-defensible practitioner
+ *     day rate charged for every day the practitioner is on the
+ *     receiving reserve installing the discipline. Travel/lodging/food
+ *     are pass-through, not in this rate.
+ *   - dayRate.remote            — pre-install scoping, curriculum
+ *     adaptation, and post-install discipline check-ins done from
+ *     home. Lower than the on-site rate because the practitioner
+ *     isn't away from Deer Lake.
+ *   - typicalInstall.onsiteDays — on-site day count assumed for the
+ *     headline 12-week install. Drives the install-revenue derivation.
+ *   - typicalInstall.remoteDays — remote prep + follow-up day count
+ *     assumed for the same headline install.
+ *   - installRevenuePerReserve  — computed here from
+ *     typicalInstall.onsiteDays × dayRate.onsite +
+ *     typicalInstall.remoteDays × dayRate.remote (= $148,200 at the
+ *     current defaults). Editing any of those four inputs flows
+ *     through automatically. The slide quotes this as the
+ *     practitioner's headline install fee to a receiving reserve, on
+ *     top of which travel pass-through is billed at cost and the
+ *     annual retainer kicks in.
  *   - retainerAnnual            — discipline-keeper retainer per active
  *     reserve, recurring while the practitioner remains the discipline
  *     owner there.
@@ -46,8 +61,29 @@ export interface CrossReserveTravelDefaults {
   foodPerOnsiteDay: number;
 }
 
+export interface CrossReserveDayRateDefaults {
+  /** Practitioner on-site install day rate ($/day). */
+  onsite: number;
+  /** Practitioner remote prep + follow-up day rate ($/day). */
+  remote: number;
+}
+
+export interface CrossReserveTypicalInstallDefaults {
+  /** On-site days assumed for the headline 12-week install. */
+  onsiteDays: number;
+  /** Remote prep + follow-up days assumed for the same install. */
+  remoteDays: number;
+}
+
 export interface CrossReserveDefaults {
-  /** Practitioner install revenue per receiving reserve, $/yr. */
+  /** Practitioner day rates (on-site vs. remote). */
+  dayRate: CrossReserveDayRateDefaults;
+  /** Day-count assumptions for the headline 12-week install. */
+  typicalInstall: CrossReserveTypicalInstallDefaults;
+  /**
+   * Practitioner install revenue per receiving reserve, $/yr. Derived
+   * from `dayRate` × `typicalInstall` — see `CROSS_RESERVE_DEFAULTS`.
+   */
   installRevenuePerReserve: number;
   /** Discipline-keeper retainer per active reserve, $/yr. */
   retainerAnnual: number;
@@ -55,8 +91,22 @@ export interface CrossReserveDefaults {
   travel: CrossReserveTravelDefaults;
 }
 
+const DAY_RATE: CrossReserveDayRateDefaults = {
+  onsite: 3_500,
+  remote: 1_800,
+};
+
+const TYPICAL_INSTALL: CrossReserveTypicalInstallDefaults = {
+  onsiteDays: 30,
+  remoteDays: 24,
+};
+
 export const CROSS_RESERVE_DEFAULTS: CrossReserveDefaults = {
-  installRevenuePerReserve: 148_200,
+  dayRate: DAY_RATE,
+  typicalInstall: TYPICAL_INSTALL,
+  installRevenuePerReserve:
+    TYPICAL_INSTALL.onsiteDays * DAY_RATE.onsite +
+    TYPICAL_INSTALL.remoteDays * DAY_RATE.remote,
   retainerAnnual: 30_000,
   travel: {
     flightPerWeek: 1_000,

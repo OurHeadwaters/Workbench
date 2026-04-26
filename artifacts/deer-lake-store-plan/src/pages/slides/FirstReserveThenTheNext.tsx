@@ -81,18 +81,23 @@ function readCorridorFromUrl(): CorridorInputs {
   };
 }
 
-// These two stay constant in the calculator — the task scope is the
+// These stay constant in the calculator — the task scope is the
 // receiving-reserve travel corridor, not the practitioner fee structure.
 // `crossReserve.installRevenue.perReserve` is the literal arithmetic
-// (30 × $3,500 + 24 × $1,800 = $148,200). The slide and the rest of
-// the deck quote this as the rounded $148.5k planning number — see the
-// context on that registry entry: "Slide rounds to ~$148.5k as a
-// planning number." We round up to the nearest $500 so the displayed
-// planning value tracks the canonical source automatically: change the
-// shared default and the planning headline follows on the next build.
+// (30 × on-site day rate + 24 × remote day rate = $148,200 at the
+// current defaults). The slide and the rest of the deck quote this as
+// the rounded $148.5k planning number — see the context on that
+// registry entry: "Slide rounds to ~$148.5k as a planning number." We
+// round up to the nearest $500 so the displayed planning value tracks
+// the canonical source automatically: change the shared default and
+// the planning headline follows on the next build. The day rates are
+// surfaced verbatim in the body copy below so the slide and the
+// `crossReserve.dayRate.{onsite,remote}` registry entries cannot drift.
 const INSTALL_FEE =
   Math.ceil(CROSS_RESERVE_DEFAULTS.installRevenuePerReserve / 500) * 500;
 const Y1_RETAINER = CROSS_RESERVE_DEFAULTS.retainerAnnual;
+const ONSITE_DAY_RATE = CROSS_RESERVE_DEFAULTS.dayRate.onsite;
+const REMOTE_DAY_RATE = CROSS_RESERVE_DEFAULTS.dayRate.remote;
 
 function roundToNearest(value: number, step: number) {
   return Math.round(value / step) * step;
@@ -539,7 +544,7 @@ export default function FirstReserveThenTheNext() {
               Practitioner revenue · per install
             </div>
             <div className="font-body text-[1vw] text-primary leading-[1.4]">
-              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>$3,500/on-site day · $1,800/remote day · {formatMoneyShort(Y1_RETAINER)}/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>{formatMoneyShort(INSTALL_FEE)} per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
+              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>${ONSITE_DAY_RATE.toLocaleString("en-CA")}/on-site day · ${REMOTE_DAY_RATE.toLocaleString("en-CA")}/remote day · {formatMoneyShort(Y1_RETAINER)}/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>{formatMoneyShort(INSTALL_FEE)} per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
             </div>
           </div>
 
