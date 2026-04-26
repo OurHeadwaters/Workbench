@@ -544,11 +544,13 @@ function PLRow({
   value,
   bold,
   tone,
+  tag,
 }: {
   label: string;
   value: number;
   bold?: boolean;
   tone?: "positive" | "muted";
+  tag?: SourceTag;
 }) {
   const cls = [
     "py-1.5 num",
@@ -561,11 +563,12 @@ function PLRow({
   ].join(" ");
   const sign = value < 0 ? "(" : "";
   const close = value < 0 ? ")" : "";
+  const formatted = `${sign}${money(Math.abs(value))}${close}`;
   return (
     <tr className="border-b border-card-border">
       <td className={`py-1.5 pr-4 ${bold ? "font-semibold" : ""}`}>{label}</td>
       <td className={`${cls} text-right`}>
-        {sign}{money(Math.abs(value))}{close}
+        <Num tag={tag}>{formatted}</Num>
       </td>
     </tr>
   );
