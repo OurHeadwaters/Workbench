@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
 
 import { COST_REGISTRY } from "../../data/costRegistry";
@@ -512,5 +515,155 @@ describe("OnePager — cross-reserve dollar headlines flow from shared defaults"
     expect(formatCompactK(retainer)).toBe("$35k");
     expect(formatPlanningK(y1Sticker ?? 0)).toBe("~$223.5k");
     expect(formatPlanningDollars(y1Sticker ?? 0)).toBe("~$223,500");
+  });
+});
+
+describe("Cross-reserve surfaces — no stale dollar literals on slide / page TSX files", () => {
+  // Tasks #239 and #243 closed the drift between the live cost registry
+  // and two specific surfaces (the install-shape constants on OnePager,
+  // then the install / travel / retainer / Y1 dollar headlines). The
+  // earlier "install-shape literals" scan above only walks the registry
+  // entries themselves; it does not cover the slide / page / one-pager
+  // TSX files where a future hand-typed "$148,200", "~$30k retainer",
+  // "$201,000", or "~$22,500 travel pass-through" could silently
+  // reintroduce the same drift.
+  //
+  // This scan walks every `.tsx` file under both decks' `pages/`
+  // directories and asserts each occurrence of a cross-reserve dollar
+  // headline is either inside a comment or accompanied on the same
+  // line by a registry-helper invocation (formatPlanningK /
+  // formatCompactK / formatPlanningDollars / getLiveCostValue /
+  // liveDerived / resolveCost / CROSS_RESERVE_DEFAULTS). A fresh bare
+  // literal in a new TSX surface fails this test loudly — stopping
+  // drift from sneaking back in via a future slide or marketing page.
+
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  // From src/lib/__tests__ up to repo root: ../../../../..
+  const REPO_ROOT = path.resolve(__dirname, "..", "..", "..", "..", "..");
+  const SCAN_DIRS = [
+    path.join(REPO_ROOT, "artifacts/practitioner-operating-plan/src/pages"),
+    path.join(REPO_ROOT, "artifacts/deer-lake-store-plan/src/pages"),
+  ];
+
+  // Hand-typed dollar literals that match the four cross-reserve
+  // headline shapes we've already had to chase down once. Adding a new
+  // one means extending this list (and the cost registry should
+  // probably grow a corresponding live entry too).
+  const PATTERNS: ReadonlyArray<{ name: string; re: RegExp }> = [
+    { name: "install fee (~$148,200 / $148,500)", re: /~?\$148[,.]?[25]00\b/g },
+    { name: "travel pass-through (~$22,500)", re: /~?\$22[,.]?500\b/g },
+    { name: "Y1 all-in sticker (~$201,000)", re: /~?\$201,?000\b/g },
+    { name: "first-year retainer (~$30k)", re: /~?\$30k\b/g },
+  ];
+
+  // Allow a literal on a line that also invokes one of the registry-
+  // helper APIs — this is the "documenting the live value alongside the
+  // helper call" pattern the rest of the suite relies on.
+  const REGISTRY_HELPER_RE =
+    /\b(?:formatPlanningK|formatCompactK|formatPlanningDollars|getLiveCostValue|liveDerived|resolveCost|CROSS_RESERVE_DEFAULTS)\b/;
+
+  function* walkTsxFiles(dir: string): Generator<string> {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      // Tests assert formatted strings on purpose; they are not
+      // user-facing surfaces so we exclude them from this scan.
+      if (entry.name === "__tests__" || entry.name === "node_modules") continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        yield* walkTsxFiles(full);
+      } else if (entry.isFile() && entry.name.endsWith(".tsx")) {
+        yield full;
+      }
+    }
+  }
+
+  // Build a per-character mask of `/* ... */` block-comment ranges so
+  // we can cheaply ask "is offset N inside a block comment?".
+  function buildBlockCommentMask(src: string): Uint8Array {
+    const mask = new Uint8Array(src.length);
+    let inBlock = false;
+    let i = 0;
+    while (i < src.length) {
+      if (!inBlock && src[i] === "/" && src[i + 1] === "*") {
+        mask[i] = 1;
+        mask[i + 1] = 1;
+        inBlock = true;
+        i += 2;
+        continue;
+      }
+      if (inBlock) {
+        mask[i] = 1;
+        if (src[i] === "*" && src[i + 1] === "/") {
+          mask[i + 1] = 1;
+          inBlock = false;
+          i += 2;
+          continue;
+        }
+      }
+      i++;
+    }
+    return mask;
+  }
+
+  function isInLineComment(line: string, matchIdx: number): boolean {
+    const idx = line.indexOf("//");
+    return idx >= 0 && idx < matchIdx;
+  }
+
+  it("every cross-reserve dollar literal is in a comment or alongside a registry-helper call", () => {
+    const violations: string[] = [];
+    let scanned = 0;
+    let scannedFiles = 0;
+
+    for (const dir of SCAN_DIRS) {
+      for (const file of walkTsxFiles(dir)) {
+        scannedFiles++;
+        const src = fs.readFileSync(file, "utf8");
+        const blockMask = buildBlockCommentMask(src);
+
+        for (const { re, name } of PATTERNS) {
+          for (const m of src.matchAll(re)) {
+            scanned++;
+            const idx = m.index ?? 0;
+
+            // Inside `/* ... */`?
+            if (blockMask[idx]) continue;
+
+            // Inside `// ...`?
+            const lineStart = src.lastIndexOf("\n", idx - 1) + 1;
+            const nextNl = src.indexOf("\n", idx);
+            const lineEnd = nextNl === -1 ? src.length : nextNl;
+            const line = src.slice(lineStart, lineEnd);
+            const matchIdxOnLine = idx - lineStart;
+            if (isInLineComment(line, matchIdxOnLine)) continue;
+
+            // Same line invokes a registry helper / shared default?
+            if (REGISTRY_HELPER_RE.test(line)) continue;
+
+            const lineNo = src.slice(0, idx).split("\n").length;
+            violations.push(
+              `${path.relative(REPO_ROOT, file)}:${lineNo} — bare literal "${m[0]}" matches ${name}; ` +
+                `derive it from the live registry (formatPlanningK/formatCompactK/formatPlanningDollars + ` +
+                `getLiveCostValue/liveDerived/resolveCost/CROSS_RESERVE_DEFAULTS) or move it into a comment.`,
+            );
+          }
+        }
+      }
+    }
+
+    expect(
+      violations,
+      `Hardcoded cross-reserve dollar literals found:\n  ${violations.join("\n  ")}`,
+    ).toEqual([]);
+
+    // Sanity floor: if both directories disappear or the patterns rot,
+    // the scan would silently pass with zero work. Lock in that we are
+    // actually walking real TSX files.
+    expect(scannedFiles).toBeGreaterThanOrEqual(20);
+    // And lock in that the scan is finding *something* — the existing
+    // `// $30k — round-nearest-1k…` comment in FirstReserveThenTheNext
+    // means the patterns themselves are at minimum matching one line.
+    expect(scanned).toBeGreaterThanOrEqual(1);
   });
 });
