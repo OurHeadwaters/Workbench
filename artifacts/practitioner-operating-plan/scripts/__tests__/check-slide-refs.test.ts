@@ -4,11 +4,14 @@ import { tmpdir } from "os";
 import path from "path";
 
 import {
+  checkCostRegistrySlideRefs,
   defaultPaths,
   parseEyebrowFromFile,
   runCheck,
   type CheckRunPaths,
 } from "../check-slide-refs";
+import type { CostEntry } from "../../src/data/costRegistry";
+import type { SlideEntry } from "../../src/data/slidesManifestSchema";
 
 function eyebrowDiv(text: string): string {
   return [
@@ -314,5 +317,96 @@ describe("runCheck against the real deck", () => {
     }
     expect(result.errors).toEqual([]);
     expect(result.slideCount).toBeGreaterThan(50);
+  });
+});
+
+describe("checkCostRegistrySlideRefs", () => {
+  function manifestEntry(
+    position: number,
+    filepath: string,
+    title: string,
+  ): SlideEntry {
+    return {
+      id: `00000000-0000-0000-0000-${String(position).padStart(12, "0")}`,
+      position,
+      filepath,
+      title,
+      description: title,
+      speakerNotes: "",
+      phase: "idea",
+    };
+  }
+
+  function registryEntry(
+    id: string,
+    href: string,
+    label: string,
+    manifestFile?: string,
+  ): CostEntry {
+    return {
+      id,
+      category: "Headline ask",
+      label: id,
+      defaultValue: 0,
+      unit: "$/mo",
+      context: "fixture",
+      slides: [{ href, label, ...(manifestFile ? { manifestFile } : {}) }],
+    };
+  }
+
+  it("passes when every registry href matches the manifest position", () => {
+    const manifest = [
+      manifestEntry(46, "src/pages/slides/Budget.tsx", "Budget"),
+      manifestEntry(52, "src/pages/slides/CaseForRate.tsx", "Case for rate"),
+    ];
+    const registry = [
+      registryEntry("ask", "/slide46", "Budget", "src/pages/slides/Budget.tsx"),
+      registryEntry(
+        "rate",
+        "/slide52",
+        "Case for rate",
+        "src/pages/slides/CaseForRate.tsx",
+      ),
+    ];
+    expect(checkCostRegistrySlideRefs(registry, manifest)).toEqual([]);
+  });
+
+  it("flags a stale slide(N, ...) constant after a manifest reorder", () => {
+    const manifest = [
+      manifestEntry(46, "src/pages/slides/Budget.tsx", "Budget"),
+    ];
+    // Registry still says /slide23 — this is exactly the drift the task
+    // calls out (Budget moved from 23 to 46).
+    const registry = [
+      registryEntry("ask", "/slide23", "Budget", "src/pages/slides/Budget.tsx"),
+    ];
+    const errors = checkCostRegistrySlideRefs(registry, manifest);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toMatch(/Stale cost-registry slide link/);
+    expect(errors[0].message).toMatch(/position 46/);
+    expect(errors[0].filepath).toBe("src/data/costRegistry.ts");
+  });
+
+  it("flags a manifestFile that no longer exists in the manifest", () => {
+    const manifest = [manifestEntry(46, "src/pages/slides/Budget.tsx", "Budget")];
+    const registry = [
+      registryEntry(
+        "rate",
+        "/slide52",
+        "Case for rate",
+        "src/pages/slides/CaseForRate.tsx",
+      ),
+    ];
+    const errors = checkCostRegistrySlideRefs(registry, manifest);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toMatch(/no manifest entry has that filepath/);
+  });
+
+  it("ignores non-slide pages (manifestFile unset)", () => {
+    const manifest = [manifestEntry(46, "src/pages/slides/Budget.tsx", "Budget")];
+    const registry = [
+      registryEntry("memo", "/payback-memo", "Payback memorandum"),
+    ];
+    expect(checkCostRegistrySlideRefs(registry, manifest)).toEqual([]);
   });
 });

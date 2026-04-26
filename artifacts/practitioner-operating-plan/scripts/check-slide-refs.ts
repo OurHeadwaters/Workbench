@@ -4,6 +4,11 @@ import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 
 import { parseSlidesManifest, type SlideEntry } from "../src/data/slidesManifestSchema";
+import {
+  COST_REGISTRY,
+  type CostEntry,
+  type CostSlide,
+} from "../src/data/costRegistry";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -422,6 +427,87 @@ function getSlideFilenames(slidesDir: string): string[] {
   return readdirSync(slidesDir).filter((name) => name.endsWith(".tsx"));
 }
 
+const SLIDE_HREF_RE = /^\/slide(\d+)$/;
+
+/**
+ * Verify every `slide(N, label, manifestFile)` constant in `costRegistry.ts`
+ * still points at the right slide. The cost-review modal renders these as
+ * "where this appears" links; if a manifest reorder shifts a slide's
+ * position, the registry's hrefs go stale and the modal silently sends
+ * users to the wrong slide.
+ *
+ * Exported for unit testing — pass a synthetic registry + manifest to
+ * exercise the drift detection without touching the real artifact.
+ */
+export function checkCostRegistrySlideRefs(
+  registry: ReadonlyArray<CostEntry>,
+  manifest: ReadonlyArray<SlideEntry>,
+): Issue[] {
+  const errors: Issue[] = [];
+  const manifestByFile = new Map<string, SlideEntry>();
+  for (const entry of manifest) {
+    manifestByFile.set(entry.filepath, entry);
+  }
+
+  const seen = new Set<string>();
+  for (const entry of registry) {
+    for (const slideRef of entry.slides) {
+      if (!slideRef.manifestFile) continue;
+      // Same `slide(...)` constant is shared across many entries; only
+      // report each unique (manifestFile, href) pair once.
+      const dedupeKey = `${slideRef.manifestFile}::${slideRef.href}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+
+      const hrefMatch = slideRef.href.match(SLIDE_HREF_RE);
+      if (!hrefMatch) {
+        errors.push({
+          level: "error",
+          filepath: "src/data/costRegistry.ts",
+          lineNumber: null,
+          message:
+            `Cost-registry slide link for "${slideRef.label}" has manifestFile ` +
+            `"${slideRef.manifestFile}" but a non-slide href "${slideRef.href}". ` +
+            `Either drop manifestFile (for non-slide pages) or fix the href.`,
+        });
+        continue;
+      }
+
+      const declaredPosition = parseInt(hrefMatch[1], 10);
+      const manifestEntry = manifestByFile.get(slideRef.manifestFile);
+      if (!manifestEntry) {
+        errors.push({
+          level: "error",
+          filepath: "src/data/costRegistry.ts",
+          lineNumber: null,
+          message:
+            `Cost-registry slide link for "${slideRef.label}" points at ` +
+            `"${slideRef.manifestFile}" but no manifest entry has that filepath. ` +
+            `Update the manifestFile string or remove the registry link.`,
+        });
+        continue;
+      }
+
+      if (manifestEntry.position !== declaredPosition) {
+        errors.push({
+          level: "error",
+          filepath: "src/data/costRegistry.ts",
+          lineNumber: null,
+          message:
+            `Stale cost-registry slide link "${slideRef.label}" → ${slideRef.href}. ` +
+            `Manifest places "${manifestEntry.title}" (${slideRef.manifestFile}) at ` +
+            `position ${manifestEntry.position}.`,
+          detail:
+            `Update the slide(${declaredPosition}, "${slideRef.label}", "${slideRef.manifestFile}") ` +
+            `call in src/data/costRegistry.ts to slide(${manifestEntry.position}, ...).`,
+        });
+      }
+    }
+  }
+
+  return errors;
+}
+
 export function runCheck(paths: CheckRunPaths = defaultPaths()): CheckResult {
   // Surface a sanity error if the slides directory is empty or unreadable.
   const knownFiles = getSlideFilenames(paths.slidesDir);
@@ -437,6 +523,14 @@ export function runCheck(paths: CheckRunPaths = defaultPaths()): CheckResult {
   checkNumberedReferences(records, paths, errors);
   checkPartReferences(records, paths, errors);
   checkAdjacentSlideReferences(records, paths, errors, reviews);
+
+  // Cost-registry check only runs against the real artifact (the imported
+  // `COST_REGISTRY` lives at a fixed path). Skip it for fixture runs that
+  // point at a different project root.
+  if (paths.projectRoot === DEFAULT_PROJECT_ROOT) {
+    const manifest = records.map((r) => r.entry);
+    errors.push(...checkCostRegistrySlideRefs(COST_REGISTRY, manifest));
+  }
 
   return { errors, warnings, reviews, slideCount: records.length };
 }

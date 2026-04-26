@@ -12,6 +12,14 @@ export type CostUnit =
 export type CostSlide = {
   href: string;
   label: string;
+  /**
+   * Optional canonical slide source path (relative to the artifact root),
+   * e.g. `"src/pages/slides/Budget.tsx"`. When present, the position
+   * encoded in `href` is cross-checked against `slides-manifest.json` by
+   * `scripts/check-slide-refs.ts`, which fails the build on drift.
+   * Pages that aren't deck slides (e.g. `/payback-memo`) leave this unset.
+   */
+  manifestFile?: string;
 };
 
 export type CostCategory =
@@ -50,29 +58,94 @@ export type CostEntry = {
   derived?: boolean;
 };
 
-const slide = (position: number, label: string): CostSlide => ({
+const slide = (
+  position: number,
+  label: string,
+  manifestFile: string,
+): CostSlide => ({
   href: `/slide${position}`,
   label,
+  manifestFile,
 });
 
-// Slide positions match src/data/slides-manifest.json.
-const SLIDE_BUDGET = slide(23, "Budget");
-const SLIDE_CASHFLOW = slide(24, "Cash flow");
-const SLIDE_PAYBACK_PITCH = slide(25, "Payback pitch");
-const SLIDE_REINVEST = slide(26, "Reinvestment");
-const SLIDE_RATE = slide(34, "Case for rate");
-const SLIDE_TEAM = slide(35, "Case for team");
-const SLIDE_CLOSING = slide(37, "Closing — naming the deal");
-const SLIDE_PATH = slide(42, "Path to scale");
-const SLIDE_SALT_BENCH = slide(49, "Salt bench");
-const SLIDE_SALT_PL = slide(50, "Salt P&L");
-const SLIDE_ROLE_OPS_MANAGER = slide(9, "Role — Ops Manager");
-const SLIDE_ROLE_BOOKKEEPER = slide(10, "Role — Bookkeeper");
-const SLIDE_ROLE_FOOD_HANDLER = slide(11, "Role — Food Handler");
-const SLIDE_ROLE_HOUSECLEANER = slide(12, "Role — Housecleaner");
-const SLIDE_ROLE_TUTOR = slide(13, "Role — Tutor");
-const SLIDE_ROLE_HANDYMAN = slide(14, "Role — Handyman");
-const SLIDE_PEOPLE_SIZING = slide(44, "People — sizing per scenario");
+// Slide positions match src/data/slides-manifest.json. The third arg is the
+// canonical manifest filepath; scripts/check-slide-refs.ts verifies that the
+// position above still matches the manifest entry for that file, so a future
+// reorder will fail the check rather than silently send users to the wrong
+// slide from the cost-review modal.
+const SLIDE_BUDGET = slide(46, "Budget", "src/pages/slides/Budget.tsx");
+const SLIDE_CASHFLOW = slide(47, "Cash flow", "src/pages/slides/CashFlow.tsx");
+const SLIDE_PAYBACK_PITCH = slide(
+  48,
+  "Payback pitch",
+  "src/pages/slides/PlatformBillPayback.tsx",
+);
+const SLIDE_REINVEST = slide(
+  49,
+  "Reinvestment",
+  "src/pages/slides/Reinvestment.tsx",
+);
+const SLIDE_RATE = slide(
+  52,
+  "Case for rate",
+  "src/pages/slides/CaseForRate.tsx",
+);
+const SLIDE_TEAM = slide(
+  53,
+  "Case for team",
+  "src/pages/slides/CaseForTeam.tsx",
+);
+const SLIDE_CLOSING = slide(
+  55,
+  "Closing — naming the deal",
+  "src/pages/slides/Closing.tsx",
+);
+const SLIDE_PATH = slide(
+  60,
+  "Path to scale",
+  "src/pages/slides/PathToScale.tsx",
+);
+const SLIDE_SALT_BENCH = slide(
+  67,
+  "Salt bench",
+  "src/pages/slides/SaltBench.tsx",
+);
+const SLIDE_SALT_PL = slide(68, "Salt P&L", "src/pages/slides/SaltPL.tsx");
+const SLIDE_ROLE_OPS_MANAGER = slide(
+  24,
+  "Role — Ops Manager",
+  "src/pages/slides/RoleOpsManager.tsx",
+);
+const SLIDE_ROLE_BOOKKEEPER = slide(
+  25,
+  "Role — Bookkeeper",
+  "src/pages/slides/RoleBookkeeper.tsx",
+);
+const SLIDE_ROLE_FOOD_HANDLER = slide(
+  26,
+  "Role — Food Handler",
+  "src/pages/slides/RoleFoodHandler.tsx",
+);
+const SLIDE_ROLE_HOUSECLEANER = slide(
+  27,
+  "Role — Housecleaner",
+  "src/pages/slides/RoleHousecleaner.tsx",
+);
+const SLIDE_ROLE_TUTOR = slide(
+  28,
+  "Role — Tutor",
+  "src/pages/slides/RoleTutor.tsx",
+);
+const SLIDE_ROLE_HANDYMAN = slide(
+  29,
+  "Role — Handyman",
+  "src/pages/slides/RoleHandyman.tsx",
+);
+const SLIDE_PEOPLE_SIZING = slide(
+  44,
+  "People — sizing per scenario",
+  "src/pages/slides/PeopleSizing.tsx",
+);
 const PAGE_PAYBACK_MEMO: CostSlide = {
   href: "/payback-memo",
   label: "Payback memorandum",
@@ -371,7 +444,9 @@ export const COST_REGISTRY: CostEntry[] = [
     unit: "$ one-time",
     context:
       "Accountant fees on the 807 grant proposal — billed to the co-op directly, NOT in this bill.",
-    slides: [slide(25, "Platform bill — payback")],
+    slides: [
+      slide(48, "Platform bill — payback", "src/pages/slides/PlatformBillPayback.tsx"),
+    ],
   },
 
   {
@@ -441,7 +516,10 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 40,
     unit: "$/hr",
     context: "Trial weeks paid at full rate. Drives the OM loaded monthly.",
-    slides: [slide(16, "Hiring — OM"), SLIDE_ROLE_OPS_MANAGER],
+    slides: [
+      slide(31, "Hiring — OM", "src/pages/slides/HiringOpsManager.tsx"),
+      SLIDE_ROLE_OPS_MANAGER,
+    ],
   },
   {
     id: "rate.bookkeeper",
@@ -450,7 +528,10 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 40,
     unit: "$/hr",
     context: "Paid against fixed scope cap.",
-    slides: [slide(17, "Hiring — Bookkeeper"), SLIDE_ROLE_BOOKKEEPER],
+    slides: [
+      slide(32, "Hiring — Bookkeeper", "src/pages/slides/HiringBookkeeper.tsx"),
+      SLIDE_ROLE_BOOKKEEPER,
+    ],
   },
   {
     id: "rate.itTechDayLow",
@@ -459,7 +540,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 600,
     unit: "$/day",
     context: "Trial day rate floor for the IT/Tech hire.",
-    slides: [slide(18, "Hiring — IT/Tech")],
+    slides: [slide(33, "Hiring — IT/Tech", "src/pages/slides/HiringITTech.tsx")],
   },
   {
     id: "rate.itTechDayHigh",
@@ -468,7 +549,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 900,
     unit: "$/day",
     context: "Trial day rate ceiling for senior IT/Tech.",
-    slides: [slide(18, "Hiring — IT/Tech")],
+    slides: [slide(33, "Hiring — IT/Tech", "src/pages/slides/HiringITTech.tsx")],
   },
   {
     id: "rate.tutor",
@@ -477,7 +558,10 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 35,
     unit: "$/hr",
     context: "Trial sessions paid regardless. Vulnerable Sector Check reimbursed on hire.",
-    slides: [slide(21, "Hiring — Tutor"), SLIDE_ROLE_TUTOR],
+    slides: [
+      slide(36, "Hiring — Tutor", "src/pages/slides/HiringTutor.tsx"),
+      SLIDE_ROLE_TUTOR,
+    ],
   },
   {
     id: "rate.housecleaner",
@@ -486,7 +570,10 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 30,
     unit: "$/hr",
     context: "Trial visits paid. No 'free first clean'.",
-    slides: [slide(20, "Hiring — Housecleaner"), SLIDE_ROLE_HOUSECLEANER],
+    slides: [
+      slide(35, "Hiring — Housecleaner", "src/pages/slides/HiringHousecleaner.tsx"),
+      SLIDE_ROLE_HOUSECLEANER,
+    ],
   },
   {
     id: "rate.handyman",
@@ -495,7 +582,10 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 30,
     unit: "$/hr",
     context: "Trial weeks paid regardless of outcome.",
-    slides: [slide(22, "Hiring — Handyman"), SLIDE_ROLE_HANDYMAN],
+    slides: [
+      slide(37, "Hiring — Handyman", "src/pages/slides/HiringHandyman.tsx"),
+      SLIDE_ROLE_HANDYMAN,
+    ],
   },
   {
     id: "rate.foodHandler",
