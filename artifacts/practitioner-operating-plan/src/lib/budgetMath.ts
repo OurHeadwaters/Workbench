@@ -1,3 +1,5 @@
+import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
+
 import { COST_REGISTRY_BY_ID } from "../data/costRegistry";
 import { useAppState } from "./storage";
 import type { AppState } from "./storage";
@@ -389,14 +391,21 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
 }
 
 // Cross-reserve install day-count constants (typical 12-week install
-// shape). Lifted to module scope so the install-revenue, Y2, and Y3
-// derivations all share one source of truth.
-export const CROSS_RESERVE_ONSITE_DAYS = 30;
-export const CROSS_RESERVE_REMOTE_DAYS = 24;
+// shape). Sourced from `@workspace/cross-reserve-defaults`
+// (`install.{weeks,onsiteDays,remoteDays}`) — the same package the
+// Deer Lake "First reserve, then the next" slide reads its calculator
+// defaults and body copy from. A single edit there flows through to
+// the install-revenue / Y2 / Y3 / travel-pass-through derivations
+// below and to that slide on the next build, so the two surfaces
+// cannot drift apart. The re-exports preserve the prior public API
+// (anything that previously imported these constants from
+// `budgetMath` keeps working).
+export const CROSS_RESERVE_ONSITE_DAYS = CROSS_RESERVE_DEFAULTS.install.onsiteDays;
+export const CROSS_RESERVE_REMOTE_DAYS = CROSS_RESERVE_DEFAULTS.install.remoteDays;
 // Used by the travel pass-through worked example (one round-trip flight
 // per install week). Matches the assumption baked into
 // `crossReserve.travel.flightPerWeek`.
-export const CROSS_RESERVE_INSTALL_WEEKS = 12;
+export const CROSS_RESERVE_INSTALL_WEEKS = CROSS_RESERVE_DEFAULTS.install.weeks;
 
 // ----------------------------------------------------------------------
 // Second-anchor / Y1 gap-closing math

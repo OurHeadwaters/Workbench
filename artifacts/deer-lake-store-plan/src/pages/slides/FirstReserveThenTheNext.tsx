@@ -3,6 +3,9 @@ import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } fr
 import {
   resolveCost,
   getLiveCostValue,
+  CROSS_RESERVE_INSTALL_WEEKS,
+  CROSS_RESERVE_ONSITE_DAYS,
+  CROSS_RESERVE_REMOTE_DAYS,
 } from "@workspace/practitioner-operating-plan/budgetMath";
 import { useAppState } from "@workspace/practitioner-operating-plan/storage";
 import type { AppState } from "@workspace/practitioner-operating-plan/storage";
@@ -23,14 +26,19 @@ function liveDerived(state: AppState, id: string): number {
   return v;
 }
 
-// 12-week / 30-on-site-day install shape is the same shape baked into
-// crossReserve.travel.totalPerInstall and crossReserve.year1.stickerPrice
-// in the cost registry. Holding it constant in the calculator keeps the
-// scope of this corridor panel exactly the receiving-reserve travel
-// inputs (flight / lodging / food per-diem) — the install length is a
-// scoping decision, not a corridor variable a chief would tune.
-const INSTALL_WEEKS = 12;
-const ON_SITE_DAYS = 30;
+// 12-week / 30-on-site / 24-remote install shape is the single source
+// of truth in `@workspace/cross-reserve-defaults`, re-exported through
+// the practitioner-operating-plan budgetMath module the registry uses.
+// Holding it constant in the calculator keeps the scope of this
+// corridor panel exactly the receiving-reserve travel inputs (flight /
+// lodging / food per-diem) — the install length is a scoping decision,
+// not a corridor variable a chief would tune. Sourcing the numbers
+// from the shared package means the body copy below ("12-week install
+// (~30 on-site + ~24 remote)"), the calculator's initial values, and
+// the registry derivations cannot drift apart.
+const INSTALL_WEEKS = CROSS_RESERVE_INSTALL_WEEKS;
+const ON_SITE_DAYS = CROSS_RESERVE_ONSITE_DAYS;
+const REMOTE_DAYS = CROSS_RESERVE_REMOTE_DAYS;
 
 // Per-field maxes mirror the bounds the CalcInput component clamps to. They
 // also bound what we'll accept from the URL querystring before falling back
@@ -632,7 +640,7 @@ export default function FirstReserveThenTheNext() {
               <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
                 {formatDollars(onsiteDayRate)}/on-site day · {formatDollars(remoteDayRate)}/remote day · {formatCompactK(retainerAnnual)}/yr retainer
               </span>
-              . A 12-week install (~30 on-site + ~24 remote) lands at{" "}
+              . A {INSTALL_WEEKS}-week install (~{ON_SITE_DAYS} on-site + ~{REMOTE_DAYS} remote) lands at{" "}
               <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
                 ~{formatPlanningK(installPerReserve)} per reserve
               </span>

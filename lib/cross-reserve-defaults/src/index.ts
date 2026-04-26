@@ -6,9 +6,18 @@
  *     entries in artifacts/practitioner-operating-plan/src/data/costRegistry.ts),
  *     where each value is wrapped with full provenance, derivation
  *     context, and the slide(s) it surfaces on.
+ *   - the same artifact's `budgetMath.ts`, which uses
+ *     `install.{weeks,onsiteDays,remoteDays}` as the day-count constants
+ *     that drive every cross-reserve derivation
+ *     (`crossReserve.installRevenue.perReserve`,
+ *     `crossReserve.year2.revenue`, `crossReserve.year3.revenue`, the
+ *     three `crossReserve.travelPassthrough.*` worked examples).
  *   - the Deer Lake Store deck "First reserve, then the next" slide,
  *     which seeds its receiving-reserve calculator with these as the
- *     starting numbers a candidate band council can edit live.
+ *     starting numbers a candidate band council can edit live, and
+ *     reads the same `install.*` and `dayRate.*` constants for the
+ *     slide-body copy ("$3,500/on-site day · $1,800/remote day · …
+ *     12-week install (~30 on-site + ~24 remote)").
  *
  * Both sides previously hardcoded these values in two places, with the
  * cost registry context strings explicitly naming themselves as the
@@ -25,24 +34,28 @@
  *     adaptation, and post-install discipline check-ins done from
  *     home. Lower than the on-site rate because the practitioner
  *     isn't away from Deer Lake.
- *   - typicalInstall.onsiteDays — on-site day count assumed for the
- *     headline 12-week install. Drives the install-revenue derivation.
- *   - typicalInstall.remoteDays — remote prep + follow-up day count
- *     assumed for the same headline install.
+ *   - install.weeks             — total install length, weeks. Drives
+ *     the per-week travel pass-through (one return flight per week).
+ *   - install.onsiteDays        — on-site days the practitioner spends
+ *     at the receiving reserve. Also the count of lodging nights and
+ *     food per-diem days in the travel pass-through examples, and the
+ *     on-site day-count behind the install-revenue derivation.
+ *   - install.remoteDays        — remote prep + follow-up days done
+ *     from home, billed at the lower remote day rate; the remote
+ *     day-count behind the install-revenue derivation.
  *   - installRevenuePerReserve  — computed here from
- *     typicalInstall.onsiteDays × dayRate.onsite +
- *     typicalInstall.remoteDays × dayRate.remote (= $148,200 at the
- *     current defaults). Editing any of those four inputs flows
- *     through automatically. The slide quotes this as the
- *     practitioner's headline install fee to a receiving reserve, on
- *     top of which travel pass-through is billed at cost and the
- *     annual retainer kicks in.
+ *     install.onsiteDays × dayRate.onsite +
+ *     install.remoteDays × dayRate.remote (= $148,200 at the current
+ *     defaults). Editing any of those four inputs flows through
+ *     automatically. The slide quotes this as the practitioner's
+ *     headline install fee to a receiving reserve, on top of which
+ *     travel pass-through is billed at cost and the annual retainer
+ *     kicks in.
  *   - retainerAnnual            — discipline-keeper retainer per active
  *     reserve, recurring while the practitioner remains the discipline
  *     owner there.
  *   - travel.flightPerWeek      — Wasaya / Bearskin round-trip per
- *     install week (one return flight per week of a typical 12-week
- *     install).
+ *     install week (one return flight per week of the typical install).
  *   - travel.lodgingPerNight    — northern guesthouse / band-house /
  *     contractor-camp nightly rate, charged per on-site night.
  *   - travel.foodPerOnsiteDay   — northern food cost per on-site day.
@@ -51,6 +64,15 @@
  * band council can edit them in the slide's calculator to model their
  * own corridor without touching the source numbers.
  */
+
+export interface CrossReserveInstallShape {
+  /** Total install length in weeks (drives per-week travel pass-through). */
+  weeks: number;
+  /** On-site days at the receiving reserve (also lodging-nights + food-days). */
+  onsiteDays: number;
+  /** Remote prep + follow-up days done from home, billed at remote day rate. */
+  remoteDays: number;
+}
 
 export interface CrossReserveTravelDefaults {
   /** Round-trip flight per install week (planning estimate, $). */
@@ -68,21 +90,15 @@ export interface CrossReserveDayRateDefaults {
   remote: number;
 }
 
-export interface CrossReserveTypicalInstallDefaults {
-  /** On-site days assumed for the headline 12-week install. */
-  onsiteDays: number;
-  /** Remote prep + follow-up days assumed for the same install. */
-  remoteDays: number;
-}
-
 export interface CrossReserveDefaults {
   /** Practitioner day rates (on-site vs. remote). */
   dayRate: CrossReserveDayRateDefaults;
-  /** Day-count assumptions for the headline 12-week install. */
-  typicalInstall: CrossReserveTypicalInstallDefaults;
+  /** Typical install shape — drives every cross-reserve derivation. */
+  install: CrossReserveInstallShape;
   /**
    * Practitioner install revenue per receiving reserve, $/yr. Derived
-   * from `dayRate` × `typicalInstall` — see `CROSS_RESERVE_DEFAULTS`.
+   * from `install.onsiteDays × dayRate.onsite + install.remoteDays ×
+   * dayRate.remote` — see `CROSS_RESERVE_DEFAULTS`.
    */
   installRevenuePerReserve: number;
   /** Discipline-keeper retainer per active reserve, $/yr. */
@@ -96,17 +112,18 @@ const DAY_RATE: CrossReserveDayRateDefaults = {
   remote: 1_800,
 };
 
-const TYPICAL_INSTALL: CrossReserveTypicalInstallDefaults = {
+const INSTALL: CrossReserveInstallShape = {
+  weeks: 12,
   onsiteDays: 30,
   remoteDays: 24,
 };
 
 export const CROSS_RESERVE_DEFAULTS: CrossReserveDefaults = {
   dayRate: DAY_RATE,
-  typicalInstall: TYPICAL_INSTALL,
+  install: INSTALL,
   installRevenuePerReserve:
-    TYPICAL_INSTALL.onsiteDays * DAY_RATE.onsite +
-    TYPICAL_INSTALL.remoteDays * DAY_RATE.remote,
+    INSTALL.onsiteDays * DAY_RATE.onsite +
+    INSTALL.remoteDays * DAY_RATE.remote,
   retainerAnnual: 30_000,
   travel: {
     flightPerWeek: 1_000,

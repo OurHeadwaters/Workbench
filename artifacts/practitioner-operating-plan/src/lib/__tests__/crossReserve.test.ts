@@ -1,8 +1,15 @@
 import { describe, it, expect } from "vitest";
+import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
 
 import { DEFAULT_STATE } from "../storage";
 import type { AppState } from "../storage";
-import { getLiveCostValue, resolveCost } from "../budgetMath";
+import {
+  CROSS_RESERVE_INSTALL_WEEKS,
+  CROSS_RESERVE_ONSITE_DAYS,
+  CROSS_RESERVE_REMOTE_DAYS,
+  getLiveCostValue,
+  resolveCost,
+} from "../budgetMath";
 
 function withEdit(state: AppState, id: string, value: number): AppState {
   return {
@@ -13,6 +20,50 @@ function withEdit(state: AppState, id: string, value: number): AppState {
     },
   };
 }
+
+describe("Cross-reserve install shape — shared package source of truth", () => {
+  // The 12-week / 30-on-site / 24-remote shape is canonical in
+  // `@workspace/cross-reserve-defaults`. budgetMath re-exports it as
+  // CROSS_RESERVE_INSTALL_WEEKS / ONSITE_DAYS / REMOTE_DAYS. The Deer
+  // Lake "First reserve, then the next" slide reads the same package
+  // for its calculator defaults and body copy. If a future edit
+  // changes the shared shape, the receiving-reserve revenue, Y2 / Y3
+  // composition, and travel-passthrough examples all move together —
+  // these tests pin that the wiring is in place so silent drift
+  // becomes a loud test failure.
+
+  it("budgetMath constants are sourced from the shared cross-reserve-defaults package", () => {
+    expect(CROSS_RESERVE_INSTALL_WEEKS).toBe(CROSS_RESERVE_DEFAULTS.install.weeks);
+    expect(CROSS_RESERVE_ONSITE_DAYS).toBe(CROSS_RESERVE_DEFAULTS.install.onsiteDays);
+    expect(CROSS_RESERVE_REMOTE_DAYS).toBe(CROSS_RESERVE_DEFAULTS.install.remoteDays);
+  });
+
+  it("shared install shape matches the V3-spec-locked planning numbers (12 / 30 / 24)", () => {
+    // If the planning shape is intentionally retuned, update these
+    // assertions and the registry context strings together.
+    expect(CROSS_RESERVE_DEFAULTS.install.weeks).toBe(12);
+    expect(CROSS_RESERVE_DEFAULTS.install.onsiteDays).toBe(30);
+    expect(CROSS_RESERVE_DEFAULTS.install.remoteDays).toBe(24);
+  });
+
+  it("travel pass-through example uses the shared install shape (weeks × flight + onsiteDays × (lodging + food))", () => {
+    // Belt-and-suspenders cross-check that the travelPassthrough.example
+    // derivation reads from the same shape constants the slide-side
+    // calculator defaults to, not a parallel hardcoded copy.
+    const live = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.example",
+    );
+    const flight = resolveCost(DEFAULT_STATE, "crossReserve.travel.flightPerWeek");
+    const lodging = resolveCost(DEFAULT_STATE, "crossReserve.travel.lodgingPerNight");
+    const food = resolveCost(DEFAULT_STATE, "crossReserve.travel.foodPerOnsiteDay");
+    const expected =
+      CROSS_RESERVE_DEFAULTS.install.weeks * flight +
+      CROSS_RESERVE_DEFAULTS.install.onsiteDays * lodging +
+      CROSS_RESERVE_DEFAULTS.install.onsiteDays * food;
+    expect(live).toBe(expected);
+  });
+});
 
 describe("Cross-reserve install — derived live values", () => {
   it("per-reserve install revenue = 30×on-site + 24×remote at default rates ($148,200)", () => {
