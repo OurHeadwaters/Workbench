@@ -242,6 +242,56 @@ export default function OnePager() {
           <div
             className="font-mono uppercase tracking-[0.2em] text-[8.5pt] text-[#b85a3e] font-semibold mb-[5pt]"
           >
+            What it costs the next reserve · cross-reserve pricing
+          </div>
+          <div
+            className="border border-[#c8bfa7] rounded-[3pt] p-[8pt]"
+            style={{ background: "#ebe2d0" }}
+          >
+            <div className="grid grid-cols-2 gap-[12pt] items-end">
+              <div>
+                <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
+                  Deer Lake · recurring software contract
+                </div>
+                <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  $420,000
+                  <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
+                    /yr · $35,000/mo · locked
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
+                  Reserve #2 · Y1 all-in sticker (planning estimate)
+                </div>
+                <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  ~$201,000
+                  <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
+                    install + travel + Y1 retainer
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="text-[8pt] text-[#6b7665] mt-[4pt] leading-[1.35]">
+              ~$148.5k install (12-week stint, ~30 on-site + ~24 remote days)
+              + ~$22.5k travel pass-through<sup className="text-[0.7em]">*</sup>
+              + $30k first-year retainer ≈ ~$201k Y1 all-in. Same headline as
+              the Deer Lake deck's <span className="italic">First reserve, then the next</span>{" "}
+              slide — kept here so the band council reads the symmetry to
+              Deer Lake's $420k/yr the moment they print.
+              <br />
+              <sup>*</sup> Planning estimate (Deer Lake corridor: ~$1,000/return ×
+              12 wks + $250/night × 30 + $100/day × 30). The receiving reserve
+              replaces this with their own corridor's costs; travel is
+              pass-through at cost, not in the practitioner's fee.
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-[10pt]">
+          <div
+            className="font-mono uppercase tracking-[0.2em] text-[8.5pt] text-[#b85a3e] font-semibold mb-[5pt]"
+          >
             Salt cost-centre · SALT-01 net contribution to the agency P&amp;L
           </div>
           <div
