@@ -121,18 +121,132 @@ runs on Expo's cloud regardless of whether the local CLI is still attached.
 
 The `preview` and `production` iOS profiles produce an `.ipa` for a real
 device (ad-hoc internal distribution or App Store / TestFlight). Apple
-requires a paid Apple Developer Program account (~$99/year) and the first
-build needs an interactive setup so EAS can register devices, generate a
-distribution certificate, and a provisioning profile:
+requires a paid Apple Developer Program account (~$99/year USD; ~$129/year
+CAD) and the first build needs a one-time interactive setup so EAS can
+register devices, generate a distribution certificate, and create a
+provisioning profile.
 
-```bash
-EXPO_TOKEN=... pnpm --filter @workspace/codetry-handbook exec eas credentials
-# Choose: iOS → preview → set up everything (signs in to your Apple account)
-```
+This setup **cannot** be done from this Replit workspace because Apple
+requires interactive sign-in with a 2FA code that gets pushed to a trusted
+Apple device. The steps below need to be run from a machine (Mac strongly
+preferred, but Linux/Windows works too — the EAS CLI handles the cert
+generation in the cloud) signed into the Apple ID that will own the app.
 
-After that one-time setup, subsequent `build:preview:ios` runs work
-non-interactively. Until then, use the `preview-simulator` profile above to
-verify the iOS bundle compiles and runs in Xcode's iOS Simulator.
+#### One-time runbook (do this once per Apple Developer account)
+
+1. **Enroll in the Apple Developer Program** at
+   https://developer.apple.com/programs/enroll/. Use the Apple ID that
+   will own the handbook on the App Store. For an organization (vs.
+   individual), Apple needs a D-U-N-S number — request one for free at
+   https://developer.apple.com/enroll/duns-lookup/. Approval is usually
+   1–2 business days.
+
+2. **Register the bundle id in the Apple Developer portal, then create
+   the App Store Connect app record.** Apple splits this in two:
+
+   a. Go to https://developer.apple.com/account/resources/identifiers/list
+      → *+* → *App IDs* → *App* → *Continue*. Description: "Codetry
+      Practitioner's Handbook". Bundle ID: *Explicit* →
+      `ca.codetry.handbook`. Leave all capabilities at their defaults
+      and click *Register*. (You can also let `eas credentials` create
+      this for you in step 5, but doing it by hand first avoids one
+      round-trip during the interactive flow.)
+
+   b. Then go to https://appstoreconnect.apple.com → *Apps* → *+* →
+      *New App*. Pick *iOS*, name it "Codetry Handbook" (or whatever
+      you'd like the public title to be), primary language English,
+      **bundle ID dropdown → select `ca.codetry.handbook`** (the entry
+      you just registered in step 2a), and SKU to anything memorable
+      (e.g. `codetry-handbook-1`). Don't fill in the rest yet — you
+      only need the app record to exist so TestFlight will accept the
+      build.
+
+3. **Install the EAS CLI on your machine** (skip if you already have a
+   recent one):
+   ```bash
+   npm install -g eas-cli
+   ```
+
+4. **Pull this repo down** (or just `cd` into the existing checkout) and
+   from the repo root run:
+   ```bash
+   pnpm install
+   pnpm --filter @workspace/codetry-handbook exec eas login
+   # log in as the Expo user that owns @headwaters7 — or run `eas whoami`
+   # first to confirm you're already signed in.
+   ```
+
+5. **Set up iOS credentials interactively.** From the repo root:
+   ```bash
+   pnpm --filter @workspace/codetry-handbook exec eas credentials
+   ```
+   Pick the prompts in this order:
+   - Platform → **iOS**
+   - Profile → **preview** (do this again later for **production** when
+     you're ready for the App Store)
+   - "What do you want to do?" → **Build credentials: Set up a new
+     build profile**
+   - When asked, let EAS **generate a new distribution certificate** and
+     **a new provisioning profile**.
+   - When asked for Apple credentials, sign in with the Apple ID you
+     enrolled in step 1 and paste the 2FA code from your Apple device.
+     EAS uploads the cert + profile to its servers and ties them to this
+     project — you only have to do this once.
+
+6. **Register the test device's UDID** so the ad-hoc `.ipa` will install
+   on it (skip if you'll only use TestFlight):
+   ```bash
+   pnpm --filter @workspace/codetry-handbook exec eas device:create
+   ```
+   Open the printed URL on the iPhone in Safari and follow the profile
+   install prompt; the UDID will appear in EAS within a minute.
+
+7. **Run the first iOS device build:**
+   ```bash
+   pnpm --filter @workspace/codetry-handbook run build:ios:preview
+   ```
+   Builds run on Expo's cloud and take ~15–25 minutes. Watch the live log
+   at the URL EAS prints (also under the
+   [project's builds dashboard](https://expo.dev/accounts/headwaters7/projects/codetry-handbook/builds)).
+   When it finishes, EAS gives you a `.ipa` download link **and** an
+   install link for the registered device.
+
+8. **(Optional) Push the build to TestFlight.** Once the `.ipa` exists:
+   ```bash
+   pnpm --filter @workspace/codetry-handbook exec eas submit \
+     --platform ios --latest
+   ```
+   Sign in to App Store Connect when prompted; the build will appear in
+   *TestFlight* → *iOS* under "Processing" within ~10 minutes, then
+   becomes installable via the TestFlight app once Apple finishes the
+   automated scan.
+
+After this one-time setup, every later `build:ios:preview` run works
+non-interactively from any machine (including this Replit workspace, since
+`EXPO_TOKEN` is already set as a secret) — the cert and provisioning
+profile live on Expo's servers.
+
+Until step 5 is done from outside this workspace, use the
+`preview-simulator` profile (see "Running builds" above) to verify the
+iOS bundle still compiles and runs against Xcode's iOS Simulator.
+
+#### On-device acceptance checks for the first iOS build
+
+Once the `.ipa` is on a real iPhone (via TestFlight invite or the EAS
+ad-hoc install link), confirm:
+
+- [ ] The saltbox icon appears on the home screen (cream background,
+      dark green roof) — not the default Expo placeholder.
+- [ ] Launching shows the cream `#f4ede0` splash with the saltbox, then
+      lands on the table of contents.
+- [ ] Tapping a chapter opens it and the back gesture returns to the TOC.
+- [ ] Bookmarking a chapter, force-quitting the app, and reopening shows
+      the bookmark still set.
+- [ ] Changing the font size in the reader settings persists across a
+      relaunch.
+- [ ] Putting the iPhone in airplane mode and reopening every chapter
+      still works (no spinner, no error). All content is bundled —
+      nothing should hit the network at runtime.
 
 ### First builds (already on EAS)
 
