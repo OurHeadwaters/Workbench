@@ -393,9 +393,9 @@ importers:
 
   artifacts/deer-lake-store-plan:
     dependencies:
-      '@workspace/cross-reserve-defaults':
+      '@workspace/practitioner-operating-plan':
         specifier: workspace:*
-        version: link:../../lib/cross-reserve-defaults
+        version: link:../practitioner-operating-plan
       '@workspace/why-stores-fail':
         specifier: workspace:*
         version: link:../../lib/why-stores-fail

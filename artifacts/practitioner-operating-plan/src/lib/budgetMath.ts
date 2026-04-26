@@ -365,6 +365,24 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
         CROSS_RESERVE_ONSITE_DAYS * foodPerDay
       );
     }
+    case "crossReserve.year1.stickerPrice": {
+      // Receiving-reserve Y1 all-in sticker = per-reserve install fee
+      // (live, derived from the day rates) + the fly-in scheduled
+      // travel pass-through example (live, derived from the per-component
+      // travel inputs) + the first-year discipline-keeper retainer (live).
+      // Composing it from the same components every other cross-reserve
+      // headline reads from means edits in the cost-review modal
+      // (day rates, per-component travel, retainer) flow into this
+      // headline without any second source of truth — and the slide-side
+      // "~$201k all-in" line on Three Revenue Layers and First Reserve
+      // Then The Next moves with them automatically.
+      const installPer =
+        getLiveCostValue(state, "crossReserve.installRevenue.perReserve") ?? 0;
+      const travelExample =
+        getLiveCostValue(state, "crossReserve.travelPassthrough.example") ?? 0;
+      const retainer = resolveCost(state, "crossReserve.retainer.annual");
+      return installPer + travelExample + retainer;
+    }
     default:
       return null;
   }

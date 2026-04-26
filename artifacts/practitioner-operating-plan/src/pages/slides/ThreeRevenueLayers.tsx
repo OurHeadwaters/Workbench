@@ -1,4 +1,76 @@
+import { resolveCost, getLiveCostValue } from "../../lib/budgetMath";
+import { useAppState } from "../../lib/storage";
+import type { AppState } from "../../lib/storage";
+
+// Same liveDerived helper pattern as PathToScale: any id we read from
+// getLiveCostValue here is meant to be live-bound, so a null result
+// means budgetMath drifted away from the registry — fail loudly in dev
+// instead of silently rendering a zero.
+function liveDerived(state: AppState, id: string): number {
+  const v = getLiveCostValue(state, id);
+  if (v == null) {
+    throw new Error(
+      `ThreeRevenueLayers: no live derivation for cost id "${id}". ` +
+        `Add a case in budgetMath.ts:getLiveCostValue or remove the binding.`,
+    );
+  }
+  return v;
+}
+
+// `$3,500`, `$30,000` — exact dollars with comma grouping. Used for the
+// raw day rates and retainer where the slide narrative quotes the
+// precise number a receiving-reserve council will see on an invoice.
+function formatDollars(value: number): string {
+  return "$" + Math.round(value).toLocaleString("en-US");
+}
+
+// `~$148.5k` / `~$22.5k` / `~$201k` — planning round-UP to the nearest
+// $500, then displayed as a "kibi" string with one decimal when needed.
+// Mirrors the original hand-typed planning literals on this slide:
+//   • install fee $148,200 → ceil to 148,500 → "~$148.5k"
+//   • travel pass-through $22,500 → already round, → "~$22.5k"
+//   • Y1 sticker $200,700 → ceil to 201,000 → "~$201k"
+// Round-up (not round-nearest) keeps the planning estimate
+// conservative when a band council reads it cold — they never see a
+// number lower than the live math would actually deliver. If any of the
+// underlying day rates / travel components / retainer move, the label
+// follows.
+function formatPlanningK(value: number): string {
+  const rounded = Math.ceil(value / 500) * 500;
+  const k = rounded / 1000;
+  const formatted = Number.isInteger(k) ? k.toFixed(0) : k.toFixed(1);
+  return `~$${formatted}k`;
+}
+
+// `$30k` — round-nearest-1k for the shorthand "$30k/yr ongoing" mention
+// of the recurring retainer. No ~ prefix because the retainer is a
+// single editable line, not a derivation.
+function formatCompactK(value: number): string {
+  const k = Math.round(value / 1000);
+  return `$${k}k`;
+}
+
 export default function ThreeRevenueLayers() {
+  // One subscription to live state — every cross-reserve dollar
+  // figure on this slide flows from it. Editing any of these entries
+  // in the cost-review modal updates the slide live (and the matching
+  // numbers on the Deer Lake store deck's "First reserve, then the
+  // next" slide, which reads the same registry via the workspace dep).
+  const state = useAppState();
+
+  const onsiteDayRate = resolveCost(state, "crossReserve.dayRate.onsite");
+  const remoteDayRate = resolveCost(state, "crossReserve.dayRate.remote");
+  const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
+  const installPerReserve = liveDerived(
+    state,
+    "crossReserve.installRevenue.perReserve",
+  );
+  const travelPassthrough = liveDerived(
+    state,
+    "crossReserve.travelPassthrough.example",
+  );
+  const y1StickerPrice = liveDerived(state, "crossReserve.year1.stickerPrice");
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
       <div className="relative z-10 w-full h-full px-[6vw] py-[6vh] flex flex-col">
@@ -78,10 +150,25 @@ export default function ThreeRevenueLayers() {
               /cohort · 3/yr in Deer Lake bundle · curriculum partner on retainer
             </div>
             <div className="font-body text-[1.15vw] leading-[1.45] text-text mb-[1.2vh]">
-              <span className="text-primary font-semibold">Cross-reserve install (premium):</span> the practitioner — not a Deer Lake grad — travels reserve to reserve to install the Codetry discipline. Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30,000/yr discipline-keeper retainer</span>. Travel, lodging, food are passed through at cost.
+              <span className="text-primary font-semibold">Cross-reserve install (premium):</span> the practitioner — not a Deer Lake grad — travels reserve to reserve to install the Codetry discipline. Receiving reserve pays{" "}
+              <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatDollars(onsiteDayRate)}/on-site day · {formatDollars(remoteDayRate)}/remote day · {formatDollars(retainerAnnual)}/yr discipline-keeper retainer
+              </span>
+              . Travel, lodging, food are passed through at cost.
             </div>
             <div className="font-body text-[1.15vw] leading-[1.5] text-text">
-              <span className="text-primary font-semibold">~$148,500 per new reserve install + $30k/yr ongoing.</span> Receiving reserve's Y1 sticker — install + ~$22.5k travel pass-through + retainer — lands at <span className="text-primary font-semibold">~$201k all-in</span> (see "First reserve, then the next" in the store plan). Successor is local <em>to each receiving reserve</em> — Deer Lake grads steward Deer Lake; they don't get sent on the road.
+              <span className="text-primary font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatPlanningK(installPerReserve)} per new reserve install + {formatCompactK(retainerAnnual)}/yr ongoing.
+              </span>{" "}
+              Receiving reserve's Y1 sticker — install +{" "}
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatPlanningK(travelPassthrough)}
+              </span>{" "}
+              travel pass-through + retainer — lands at{" "}
+              <span className="text-primary font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatPlanningK(y1StickerPrice)} all-in
+              </span>{" "}
+              (see "First reserve, then the next" in the store plan). Successor is local <em>to each receiving reserve</em> — Deer Lake grads steward Deer Lake; they don't get sent on the road.
             </div>
           </div>
         </div>

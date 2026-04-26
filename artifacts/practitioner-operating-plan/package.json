@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "exports": {
+    "./budgetMath": "./src/lib/budgetMath.ts",
+    "./storage": "./src/lib/storage.ts",
+    "./costRegistry": "./src/data/costRegistry.ts"
+  },
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "build": "BASE_PATH=/ PORT=5173 vite build --config vite.config.ts",

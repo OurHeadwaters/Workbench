@@ -1,27 +1,36 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
 
-// The travel-corridor planning defaults, the install fee, and the Y1
-// retainer below are sourced from `@workspace/cross-reserve-defaults`,
-// the same package the practitioner-operating-plan cost registry reads
-// (see `crossReserve.travel.*`, `crossReserve.installRevenue.perReserve`,
-// `crossReserve.retainer.annual`). Editing the shared package flows
-// through to both the registry and this slide on the next build, so
-// the two surfaces cannot drift apart. User edits in the calculator
-// below stay local to this slide and do not mutate the registry.
-const DEFAULTS = {
-  flightPerReturn: CROSS_RESERVE_DEFAULTS.travel.flightPerWeek,
-  lodgingPerNight: CROSS_RESERVE_DEFAULTS.travel.lodgingPerNight,
-  foodPerDay: CROSS_RESERVE_DEFAULTS.travel.foodPerOnsiteDay,
-  // The 12-week / 30-on-site-day install shape is the implicit Deer
-  // Lake corridor template encoded in the registry's derivation
-  // contexts (`crossReserve.travel.totalPerInstall`,
-  // `crossReserve.year1.stickerPrice`, the `*.travelPassthrough.*`
-  // examples). Not currently a separate registry entry, so it lives
-  // here as a calculator default.
-  installWeeks: 12,
-  onsiteDays: 30,
-} as const;
+import {
+  resolveCost,
+  getLiveCostValue,
+} from "@workspace/practitioner-operating-plan/budgetMath";
+import { useAppState } from "@workspace/practitioner-operating-plan/storage";
+import type { AppState } from "@workspace/practitioner-operating-plan/storage";
+
+// Same liveDerived helper pattern as PathToScale / ThreeRevenueLayers:
+// any id we read from getLiveCostValue here is meant to be live-bound,
+// so a null result means budgetMath drifted away from the registry —
+// fail loudly in dev instead of silently rendering a zero.
+function liveDerived(state: AppState, id: string): number {
+  const v = getLiveCostValue(state, id);
+  if (v == null) {
+    throw new Error(
+      `FirstReserveThenTheNext: no live derivation for cost id "${id}". ` +
+        `Add a case in the practitioner-operating-plan budgetMath.ts:` +
+        `getLiveCostValue or remove the binding.`,
+    );
+  }
+  return v;
+}
+
+// 12-week / 30-on-site-day install shape is the same shape baked into
+// crossReserve.travel.totalPerInstall and crossReserve.year1.stickerPrice
+// in the cost registry. Holding it constant in the calculator keeps the
+// scope of this corridor panel exactly the receiving-reserve travel
+// inputs (flight / lodging / food per-diem) — the install length is a
+// scoping decision, not a corridor variable a chief would tune.
+const INSTALL_WEEKS = 12;
+const ON_SITE_DAYS = 30;
 
 // Per-field maxes mirror the bounds the CalcInput component clamps to. They
 // also bound what we'll accept from the URL querystring before falling back
@@ -61,43 +70,25 @@ interface CorridorInputs {
   onsiteDays: number;
 }
 
-function readCorridorFromUrl(): CorridorInputs {
+// Read the corridor from the URL querystring at mount, falling back to the
+// live registry defaults passed in by the parent. Bad / out-of-range values
+// also fall back to the registry defaults (or get clamped to FIELD_MAX).
+// Defaults flow in from the cost registry (via resolveCost in the parent
+// component) so a chief opening a stale link picks up whatever the current
+// canonical numbers are, not a stale build-time literal.
+function readCorridorFromUrl(defaults: CorridorInputs): CorridorInputs {
   if (typeof window === "undefined") {
-    return {
-      flight: DEFAULTS.flightPerReturn,
-      lodging: DEFAULTS.lodgingPerNight,
-      food: DEFAULTS.foodPerDay,
-      installWeeks: DEFAULTS.installWeeks,
-      onsiteDays: DEFAULTS.onsiteDays,
-    };
+    return defaults;
   }
   const params = new URLSearchParams(window.location.search);
   return {
-    flight: parseQsNumber(params.get(QS_KEYS.flight), DEFAULTS.flightPerReturn, FIELD_MAX.flight),
-    lodging: parseQsNumber(params.get(QS_KEYS.lodging), DEFAULTS.lodgingPerNight, FIELD_MAX.lodging),
-    food: parseQsNumber(params.get(QS_KEYS.food), DEFAULTS.foodPerDay, FIELD_MAX.food),
-    installWeeks: parseQsNumber(params.get(QS_KEYS.weeks), DEFAULTS.installWeeks, FIELD_MAX.weeks),
-    onsiteDays: parseQsNumber(params.get(QS_KEYS.days), DEFAULTS.onsiteDays, FIELD_MAX.days),
+    flight: parseQsNumber(params.get(QS_KEYS.flight), defaults.flight, FIELD_MAX.flight),
+    lodging: parseQsNumber(params.get(QS_KEYS.lodging), defaults.lodging, FIELD_MAX.lodging),
+    food: parseQsNumber(params.get(QS_KEYS.food), defaults.food, FIELD_MAX.food),
+    installWeeks: parseQsNumber(params.get(QS_KEYS.weeks), defaults.installWeeks, FIELD_MAX.weeks),
+    onsiteDays: parseQsNumber(params.get(QS_KEYS.days), defaults.onsiteDays, FIELD_MAX.days),
   };
 }
-
-// These stay constant in the calculator — the task scope is the
-// receiving-reserve travel corridor, not the practitioner fee structure.
-// `crossReserve.installRevenue.perReserve` is the literal arithmetic
-// (30 × on-site day rate + 24 × remote day rate = $148,200 at the
-// current defaults). The slide and the rest of the deck quote this as
-// the rounded $148.5k planning number — see the context on that
-// registry entry: "Slide rounds to ~$148.5k as a planning number." We
-// round up to the nearest $500 so the displayed planning value tracks
-// the canonical source automatically: change the shared default and
-// the planning headline follows on the next build. The day rates are
-// surfaced verbatim in the body copy below so the slide and the
-// `crossReserve.dayRate.{onsite,remote}` registry entries cannot drift.
-const INSTALL_FEE =
-  Math.ceil(CROSS_RESERVE_DEFAULTS.installRevenuePerReserve / 500) * 500;
-const Y1_RETAINER = CROSS_RESERVE_DEFAULTS.retainerAnnual;
-const ONSITE_DAY_RATE = CROSS_RESERVE_DEFAULTS.dayRate.onsite;
-const REMOTE_DAY_RATE = CROSS_RESERVE_DEFAULTS.dayRate.remote;
 
 function roundToNearest(value: number, step: number) {
   return Math.round(value / step) * step;
@@ -117,6 +108,29 @@ function formatMoneyShort(value: number) {
     return `~$${formatted}k`;
   }
   return `$${rounded.toLocaleString("en-CA")}`;
+}
+
+// Planning round-UP to the nearest $500 then a kibi label — mirrors the
+// ThreeRevenueLayers slide so "$148.5k install" stays visually identical
+// across the two decks for a reader holding both side-by-side.
+function formatPlanningK(value: number) {
+  const rounded = Math.ceil(value / 500) * 500;
+  const k = rounded / 1000;
+  const formatted = Number.isInteger(k) ? k.toFixed(0) : k.toFixed(1);
+  return `$${formatted}k`;
+}
+
+// `$30k` — round-nearest-1k for the recurring retainer label.
+function formatCompactK(value: number) {
+  const k = Math.round(value / 1000);
+  return `$${k}k`;
+}
+
+// `$3,500` — exact dollars for the bottom-left card's day-rate / retainer
+// quote. Mirrors the formatDollars used on ThreeRevenueLayers so the two
+// decks read with the same precision.
+function formatDollars(value: number) {
+  return "$" + Math.round(value).toLocaleString("en-CA");
 }
 
 interface CalcInputProps {
@@ -197,11 +211,41 @@ function CalcInput({ label, value, onChange, prefix, suffix, max, ariaLabel }: C
   );
 }
 
-function ReserveTwoCalculator() {
+interface ReserveTwoCalculatorProps {
+  flightPerWeekDefault: number;
+  lodgingPerNightDefault: number;
+  foodPerDayDefault: number;
+  installFee: number;
+  y1Retainer: number;
+}
+
+function ReserveTwoCalculator({
+  flightPerWeekDefault,
+  lodgingPerNightDefault,
+  foodPerDayDefault,
+  installFee,
+  y1Retainer,
+}: ReserveTwoCalculatorProps) {
   // Lazy initializers so we read the share-link querystring exactly once on
-  // mount. Bad / out-of-range values fall back to the cost-registry defaults
-  // (or get clamped to FIELD_MAX) inside readCorridorFromUrl.
-  const initial = useMemo(readCorridorFromUrl, []);
+  // mount, falling back to the live registry defaults that the parent
+  // resolved via resolveCost. Bad / out-of-range URL values fall back to the
+  // same registry defaults (or get clamped to FIELD_MAX) inside
+  // readCorridorFromUrl.
+  const initial = useMemo(
+    () =>
+      readCorridorFromUrl({
+        flight: flightPerWeekDefault,
+        lodging: lodgingPerNightDefault,
+        food: foodPerDayDefault,
+        installWeeks: INSTALL_WEEKS,
+        onsiteDays: ON_SITE_DAYS,
+      }),
+    // We intentionally read defaults once at mount; live registry edits made
+    // afterward update the Reset target / isDefault check below, but they
+    // don't blow away values the user explicitly typed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
   const [flight, setFlight] = useState<number>(initial.flight);
   const [lodging, setLodging] = useState<number>(initial.lodging);
   const [food, setFood] = useState<number>(initial.food);
@@ -217,22 +261,28 @@ function ReserveTwoCalculator() {
     [flight, lodging, food, installWeeks, onsiteDays],
   );
 
-  const y1AllIn = INSTALL_FEE + travelTotal + Y1_RETAINER;
+  const y1AllIn = installFee + travelTotal + y1Retainer;
 
+  // "Default" = matches the live registry defaults at this moment. If
+  // the registry moves underneath us (a council edit in the cost-review
+  // modal), the locally-typed corridor stays where the user put it but
+  // the Reset button starts pointing at the new registry values, so a
+  // single click brings the calculator back in sync.
   const isDefault =
-    flight === DEFAULTS.flightPerReturn &&
-    lodging === DEFAULTS.lodgingPerNight &&
-    food === DEFAULTS.foodPerDay &&
-    installWeeks === DEFAULTS.installWeeks &&
-    onsiteDays === DEFAULTS.onsiteDays;
+    flight === flightPerWeekDefault &&
+    lodging === lodgingPerNightDefault &&
+    food === foodPerDayDefault &&
+    installWeeks === INSTALL_WEEKS &&
+    onsiteDays === ON_SITE_DAYS;
 
   // Sync corridor state -> URL querystring so the chief can copy the URL and
   // forward "here's our corridor's math" to a band manager. We only write the
-  // params that diverge from the cost-registry defaults — the URL stays clean
-  // when nothing has been customized, and Reset clears it back to no params.
-  // history.replaceState (instead of pushState) keeps the back button useful
-  // for slide navigation, and only mutating the search portion leaves the
-  // pathname untouched so wouter's slide route doesn't rematch.
+  // params that diverge from the live registry defaults — the URL stays clean
+  // when the user matches whatever the current canonical numbers are, and
+  // Reset clears it back to no params. history.replaceState (instead of
+  // pushState) keeps the back button useful for slide navigation, and only
+  // mutating the search portion leaves the pathname untouched so wouter's
+  // slide route doesn't rematch.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -243,11 +293,11 @@ function ReserveTwoCalculator() {
         params.set(key, String(value));
       }
     };
-    writeOrDelete(QS_KEYS.flight, flight, DEFAULTS.flightPerReturn);
-    writeOrDelete(QS_KEYS.lodging, lodging, DEFAULTS.lodgingPerNight);
-    writeOrDelete(QS_KEYS.food, food, DEFAULTS.foodPerDay);
-    writeOrDelete(QS_KEYS.weeks, installWeeks, DEFAULTS.installWeeks);
-    writeOrDelete(QS_KEYS.days, onsiteDays, DEFAULTS.onsiteDays);
+    writeOrDelete(QS_KEYS.flight, flight, flightPerWeekDefault);
+    writeOrDelete(QS_KEYS.lodging, lodging, lodgingPerNightDefault);
+    writeOrDelete(QS_KEYS.food, food, foodPerDayDefault);
+    writeOrDelete(QS_KEYS.weeks, installWeeks, INSTALL_WEEKS);
+    writeOrDelete(QS_KEYS.days, onsiteDays, ON_SITE_DAYS);
 
     const search = params.toString();
     const nextSearch = search ? `?${search}` : "";
@@ -255,14 +305,23 @@ function ReserveTwoCalculator() {
       const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
       window.history.replaceState(window.history.state, "", nextUrl);
     }
-  }, [flight, lodging, food, installWeeks, onsiteDays]);
+  }, [
+    flight,
+    lodging,
+    food,
+    installWeeks,
+    onsiteDays,
+    flightPerWeekDefault,
+    lodgingPerNightDefault,
+    foodPerDayDefault,
+  ]);
 
   const reset = () => {
-    setFlight(DEFAULTS.flightPerReturn);
-    setLodging(DEFAULTS.lodgingPerNight);
-    setFood(DEFAULTS.foodPerDay);
-    setInstallWeeks(DEFAULTS.installWeeks);
-    setOnsiteDays(DEFAULTS.onsiteDays);
+    setFlight(flightPerWeekDefault);
+    setLodging(lodgingPerNightDefault);
+    setFood(foodPerDayDefault);
+    setInstallWeeks(INSTALL_WEEKS);
+    setOnsiteDays(ON_SITE_DAYS);
   };
 
   // Auto-clear the "Copied!" / "Copy failed" confirmation after ~2s so the
@@ -355,7 +414,7 @@ function ReserveTwoCalculator() {
         style={{ color: "var(--slide-bg)" }}
       >
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-          {formatMoneyShort(INSTALL_FEE)} install
+          {formatPlanningK(installFee)} install
         </span>{" "}
         +{" "}
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -363,7 +422,7 @@ function ReserveTwoCalculator() {
         </span>{" "}
         +{" "}
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-          {formatMoneyShort(Y1_RETAINER)} Y1 retainer
+          {formatCompactK(y1Retainer)} Y1 retainer
         </span>
         .
       </div>
@@ -474,6 +533,31 @@ function ReserveTwoCalculator() {
 }
 
 export default function FirstReserveThenTheNext() {
+  // One subscription to the same live state the practitioner deck uses.
+  // The cost-review modal lives in @workspace/practitioner-operating-plan
+  // and writes through the same storage module — within a tab a fresh
+  // page load picks up the latest values, and across tabs the existing
+  // `storage` event listener in storage.ts fans changes out live so this
+  // slide and the Three Revenue Layers slide never drift apart.
+  const state = useAppState();
+
+  const onsiteDayRate = resolveCost(state, "crossReserve.dayRate.onsite");
+  const remoteDayRate = resolveCost(state, "crossReserve.dayRate.remote");
+  const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
+  const installPerReserve = liveDerived(
+    state,
+    "crossReserve.installRevenue.perReserve",
+  );
+  const flightPerWeek = resolveCost(state, "crossReserve.travel.flightPerWeek");
+  const lodgingPerNight = resolveCost(
+    state,
+    "crossReserve.travel.lodgingPerNight",
+  );
+  const foodPerOnsiteDay = resolveCost(
+    state,
+    "crossReserve.travel.foodPerOnsiteDay",
+  );
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
       <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
@@ -544,11 +628,25 @@ export default function FirstReserveThenTheNext() {
               Practitioner revenue · per install
             </div>
             <div className="font-body text-[1vw] text-primary leading-[1.4]">
-              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>${ONSITE_DAY_RATE.toLocaleString("en-CA")}/on-site day · ${REMOTE_DAY_RATE.toLocaleString("en-CA")}/remote day · {formatMoneyShort(Y1_RETAINER)}/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>{formatMoneyShort(INSTALL_FEE)} per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
+              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays{" "}
+              <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatDollars(onsiteDayRate)}/on-site day · {formatDollars(remoteDayRate)}/remote day · {formatCompactK(retainerAnnual)}/yr retainer
+              </span>
+              . A 12-week install (~30 on-site + ~24 remote) lands at{" "}
+              <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+                ~{formatPlanningK(installPerReserve)} per reserve
+              </span>
+              , plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
             </div>
           </div>
 
-          <ReserveTwoCalculator />
+          <ReserveTwoCalculator
+            flightPerWeekDefault={flightPerWeek}
+            lodgingPerNightDefault={lodgingPerNight}
+            foodPerDayDefault={foodPerOnsiteDay}
+            installFee={installPerReserve}
+            y1Retainer={retainerAnnual}
+          />
         </div>
       </div>
     </div>

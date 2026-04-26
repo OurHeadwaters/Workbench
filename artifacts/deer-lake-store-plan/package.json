@@ -11,7 +11,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@workspace/cross-reserve-defaults": "workspace:*",
+    "@workspace/practitioner-operating-plan": "workspace:*",
     "@workspace/why-stores-fail": "workspace:*"
   },
   "devDependencies": {

@@ -192,6 +192,40 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     }
   });
 
+  it("Y1 sticker price = install fee + fly-in scheduled travel + retainer (~$200,700 at defaults)", () => {
+    // Anchored derivation for the receiving-reserve "Y1 all-in" headline
+    // that appears on both ThreeRevenueLayers ("~$201k all-in") and
+    // FirstReserveThenTheNext (Reserve #2 calculator headline). At
+    // default rates: 148,200 install + 22,500 fly-in scheduled travel +
+    // 30,000 first-year retainer = 200,700. The slides round up to
+    // "~$201k" via formatPlanningK so a band council never sees a
+    // headline lower than the live math actually delivers.
+    const live = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.year1.stickerPrice",
+    );
+    expect(live).toBe(148200 + 22500 + 30000);
+    expect(live).toBe(200700);
+  });
+
+  it("Y1 sticker price recomposes when the day rates / travel / retainer move", () => {
+    // Bumping the on-site rate, the per-week flight cost, and the
+    // retainer should cascade through every component the sticker
+    // composes from. This is what makes the cost-review modal a single
+    // source of truth across both decks: editing any one of these
+    // entries moves the headline on Three Revenue Layers AND First
+    // Reserve Then The Next without any literal in either slide.
+    let state = withEdit(DEFAULT_STATE, "crossReserve.dayRate.onsite", 4000);
+    state = withEdit(state, "crossReserve.travel.flightPerWeek", 1200);
+    state = withEdit(state, "crossReserve.retainer.annual", 35000);
+    const live = getLiveCostValue(state, "crossReserve.year1.stickerPrice");
+    // install: 30 × 4,000 + 24 × 1,800 = 120,000 + 43,200 = 163,200
+    // travel:  12 × 1,200 + 30 × 250 + 30 × 100 = 14,400 + 7,500 + 3,000 = 24,900
+    // retainer: 35,000
+    // sticker: 163,200 + 24,900 + 35,000 = 223,100
+    expect(live).toBe(223100);
+  });
+
   it("travel pass-through example tracks edits to its per-component inputs", () => {
     // Bump the flight cost to $1,200 and food per-diem to $125. The
     // example should recompute deterministically from the components,
