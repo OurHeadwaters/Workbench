@@ -36,6 +36,7 @@ function RootLayoutNav() {
       <Stack.Screen name="contents" />
       <Stack.Screen name="bookmarks" />
       <Stack.Screen name="chapter/[id]" />
+      <Stack.Screen name="print/[id]" />
     </Stack>
   );
 }

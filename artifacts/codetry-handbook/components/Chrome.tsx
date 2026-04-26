@@ -100,6 +100,7 @@ export function BottomChrome({
   onIncreaseFont,
   onCycleTheme,
   onShare,
+  onPrint,
   onPrev,
   onNext,
   hasPrev,
@@ -110,6 +111,7 @@ export function BottomChrome({
   onIncreaseFont: () => void;
   onCycleTheme: () => void;
   onShare: () => void;
+  onPrint?: () => void;
   onPrev: () => void;
   onNext: () => void;
   hasPrev: boolean;
@@ -192,6 +194,16 @@ export function BottomChrome({
           color={c.foreground}
         />
       </Pressable>
+      {Platform.OS === "web" && onPrint ? (
+        <Pressable
+          onPress={onPrint}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityLabel="Print chapter"
+        >
+          <Ionicons name="print-outline" size={20} color={c.foreground} />
+        </Pressable>
+      ) : null}
       <View style={[styles.divider, { backgroundColor: c.chromeBorder }]} />
       <Pressable
         onPress={onPrev}

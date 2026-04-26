@@ -192,6 +192,27 @@ export default function ChapterScreen() {
     [addBookmark, bookmarks, chapter, removeBookmark],
   );
 
+  const onPrint = useCallback(() => {
+    if (!chapter) return;
+    if (Platform.OS !== "web") return;
+    const g: { window?: Window } | undefined =
+      typeof globalThis !== "undefined"
+        ? (globalThis as unknown as { window?: Window })
+        : undefined;
+    const win = g?.window;
+    const href = `/print/${chapter.id}`;
+    let opened = false;
+    try {
+      const handle = win?.open(href, "_blank", "noopener,noreferrer");
+      opened = !!handle;
+    } catch {
+      opened = false;
+    }
+    if (!opened) {
+      router.push({ pathname: "/print/[id]", params: { id: chapter.id } });
+    }
+  }, [chapter]);
+
   const onShare = useCallback(async () => {
     if (!chapter) return;
     const opener = chapter.blocks.find((b) => b.kind === "para");
@@ -354,6 +375,7 @@ export default function ChapterScreen() {
         onIncreaseFont={increaseFont}
         onCycleTheme={cycleTheme}
         onShare={onShare}
+        onPrint={onPrint}
         onPrev={goPrev}
         onNext={goNext}
         hasPrev={!!prev}
