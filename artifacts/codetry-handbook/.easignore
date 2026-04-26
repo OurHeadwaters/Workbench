@@ -1,0 +1,31 @@
+# EAS Build ignore — codetry-handbook artifact
+#
+# NOTE: Because this artifact lives in a pnpm workspace, EAS uploads from the
+# workspace root and reads the workspace-root `.easignore`. That file is the
+# operative one. This file is kept in sync with the artifact-relative entries
+# from the workspace `.easignore` so that anyone running `eas build` from a
+# version of EAS CLI that resolves the project root to this directory still
+# benefits from the same exclusions.
+#
+# Format is identical to .gitignore. Patterns are relative to this directory.
+
+# Web export from `expo export --platform web` — not used by native builds.
+static-build/
+
+# PWA serve script for the web export — not used by native builds.
+server/
+
+# Build helpers (constellation sync, dev server orchestration). They only
+# run on the developer machine before `eas build`, never on the EAS builder.
+scripts/
+
+# Local Expo dev cache.
+.expo/
+
+# Metro / babel / tsc caches.
+node_modules/.cache/
+.metro-cache/
+.metro-health-check*
+
+# Local typecheck artifacts.
+*.tsbuildinfo

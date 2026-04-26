@@ -1,0 +1,71 @@
+# EAS Build ignore
+#
+# Scope: this file is tuned for the only EAS-built artifact in the
+# workspace today, `@workspace/codetry-handbook` (artifacts/codetry-handbook).
+# If another artifact later starts using EAS Build, revisit the exclusions
+# below — in particular the per-artifact `artifacts/*/...` entries — so we
+# don't accidentally strip files that artifact needs on the EAS builder.
+#
+# When EAS Build uploads this project, it walks the entire pnpm workspace
+# (because the codetry-handbook artifact is part of one). Without this file
+# the upload was ~212 MB on every run because it dragged along every other
+# artifact, all of attached_assets/, plus the handbook's web/PWA outputs.
+# These exclusions strip everything that the Android/iOS native builders
+# don't need, dropping the archive well under 80 MB.
+#
+# Format is identical to .gitignore. Patterns are relative to the workspace
+# root (the directory EAS uploads). This file is read in addition to
+# .gitignore — anything already ignored by git stays ignored.
+
+# --- Other artifacts -------------------------------------------------------
+# None of these are imported by the codetry-handbook native build.
+artifacts/api-server/
+artifacts/check-in/
+artifacts/deer-lake-store-plan/
+artifacts/headwaters-books/
+artifacts/library/
+artifacts/mockup-sandbox/
+artifacts/practitioner-operating-plan/
+artifacts/practitioners-guide-v2/
+
+# --- Codetry handbook: web-only / build-time only --------------------------
+# Web export from `expo export --platform web`; not used by native builds.
+artifacts/codetry-handbook/static-build/
+# PWA serve script for the web export; not used by native builds.
+artifacts/codetry-handbook/server/
+# Build helpers (constellation sync, dev server orchestration) — they only
+# run on the developer machine before `eas build`, never on the EAS builder.
+artifacts/codetry-handbook/scripts/
+# Local Expo dev cache.
+artifacts/codetry-handbook/.expo/
+# Metro / babel / tsc caches that sometimes land inside node_modules.
+artifacts/codetry-handbook/node_modules/.cache/
+**/node_modules/.cache/
+**/.metro-cache/
+**/.metro-health-check*
+
+# --- Workspace-level assets that no package consumes at runtime ------------
+# 120+ MB of source PDFs / spreadsheets / photos used by the web artifacts
+# only. They are never bundled into the Expo app.
+attached_assets/
+# Generated PDFs / spreadsheets exported from the slide decks.
+exports/
+# Author-facing docs and notes.
+docs/
+EAGLE_STORY_COPY.md
+# Captured screenshots from the workspace tooling.
+screenshots/
+# Slide thumbnail caches (regenerated on demand by the slide builds).
+artifacts/*/src/data/.slide-thumbnails/
+# Test runner output.
+test-results/
+
+# --- Replit / agent metadata (not needed on EAS builders) ------------------
+.local/
+.cache/
+.agents/
+.replit-artifact/
+.replit
+.replitignore
+replit.md
+replit.nix
