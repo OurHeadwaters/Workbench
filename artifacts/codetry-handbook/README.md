@@ -119,6 +119,16 @@ runs on Expo's cloud regardless of whether the local CLI is still attached.
 
 ### iOS device builds need Apple Developer credentials
 
+> **Status (2026-04-26):** BLOCKED on Apple Developer Program enrollment.
+> No one on the project has paid Apple the ~$99/yr USD (~$129/yr CAD)
+> enrollment fee yet, so steps 1–8 below have not been started. Until step 1
+> is done, the only iOS build that can be produced from this workspace is
+> the simulator build (`build:ios:simulator`). Once enrollment + the
+> interactive `eas credentials` step (#5) are complete on a machine outside
+> Replit, every later `pnpm --filter @workspace/codetry-handbook run
+> build:ios:preview` will run non-interactively from anywhere — including
+> this workspace, since `EXPO_TOKEN` is already set.
+
 The `preview` and `production` iOS profiles produce an `.ipa` for a real
 device (ad-hoc internal distribution or App Store / TestFlight). Apple
 requires a paid Apple Developer Program account (~$99/year USD; ~$129/year
@@ -257,8 +267,9 @@ The first preview builds were produced on 2026-04-26 from the
 | ------------------------- | --------------------------------------- | ----------------------------------------------------------------- |
 | Android preview (`.apk`)  | `24ccd766-9dfa-4154-8a8e-47a069de3a1c`  | https://expo.dev/artifacts/eas/5xyPVwDbD19cLyCR4BPJNy.apk         |
 | iOS Simulator (`.tar.gz`) | `576a1264-0a07-49e4-a217-fd9af5a3363d`  | https://expo.dev/artifacts/eas/bN51CKcvSw2Vb9XWPKrt36.tar.gz      |
+| iOS device (`.ipa`)       | _pending_ — blocked on Apple Developer enrollment (see status note above) | _pending_                                                         |
 
-Both also live under the project's
+Both Android and Simulator builds also live under the project's
 [builds dashboard](https://expo.dev/accounts/headwaters7/projects/codetry-handbook/builds).
 EAS artifact URLs expire ~14 days after the build, after which the
 builds are still listed but you'd re-download from the dashboard or
@@ -266,8 +277,15 @@ re-run them.
 
 The iOS device (`.ipa`) preview build has **not** been produced yet
 because it requires the one-time Apple Developer credentials setup
-described above. The simulator build above proves the iOS bundle
-compiles and runs against Xcode's iOS Simulator end-to-end.
+described above (which itself is blocked on the paid Apple Developer
+Program enrollment — see the status callout in the "iOS device builds
+need Apple Developer credentials" section). The simulator build above
+proves the iOS bundle compiles and runs against Xcode's iOS Simulator
+end-to-end.
+
+When the iOS device build does land, update this table with the build
+ID and the EAS artifact URL printed at the end of `build:ios:preview`,
+and remove the status callout above.
 
 ### First-build gotchas we hit and fixed
 
