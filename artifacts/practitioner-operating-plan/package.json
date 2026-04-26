@@ -24,7 +24,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@workspace/cross-reserve-defaults": "workspace:*",
+    "@workspace/cross-reserve-corridor": "workspace:*",
     "@workspace/headwaters-pricing": "workspace:*"
   },
   "devDependencies": {

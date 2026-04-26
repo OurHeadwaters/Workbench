@@ -27,15 +27,26 @@ function liveDerived(state: AppState, id: string): number {
 }
 
 // 12-week / 30-on-site / 24-remote install shape is the single source
-// of truth in `@workspace/cross-reserve-defaults`, re-exported through
-// the practitioner-operating-plan budgetMath module the registry uses.
-// Holding it constant in the calculator keeps the scope of this
-// corridor panel exactly the receiving-reserve travel inputs (flight /
-// lodging / food per-diem) — the install length is a scoping decision,
-// not a corridor variable a chief would tune. Sourcing the numbers
-// from the shared package means the body copy below ("12-week install
-// (~30 on-site + ~24 remote)"), the calculator's initial values, and
-// the registry derivations cannot drift apart.
+// of truth in the shared `@workspace/cross-reserve-corridor` package
+// (`CORRIDOR_INSTALL_SHAPE.{installWeeks, onsiteDays, remoteDays}`),
+// re-exported through the practitioner-operating-plan budgetMath
+// module the registry uses. Holding it constant in the calculator
+// keeps the scope of this corridor panel exactly the receiving-reserve
+// travel inputs (flight / lodging / food per-diem) — the install
+// length is a scoping decision, not a corridor variable a chief
+// would tune. Sourcing the numbers from the shared package means the
+// body copy below ("12-week install (~30 on-site + ~24 remote)"),
+// the calculator's initial values, and the registry derivations
+// cannot drift apart. The drift-prevention story for the *tunable*
+// corridor values (day rates, retainer, install fee, travel per-diem
+// defaults) is even stronger: the `useAppState`-backed reads below
+// pick up live edits from the Practitioner Operating Plan's
+// cost-review modal, so the cost registry — which itself imports
+// from `@workspace/cross-reserve-corridor` — is the single source of
+// truth at runtime, not just at build time.
+// `scripts/check-corridor-defaults.ts` runs as part of `pnpm check`
+// and refuses to ship if this file regresses away from the
+// live-binding pattern.
 const INSTALL_WEEKS = CROSS_RESERVE_INSTALL_WEEKS;
 const ON_SITE_DAYS = CROSS_RESERVE_ONSITE_DAYS;
 const REMOTE_DAYS = CROSS_RESERVE_REMOTE_DAYS;

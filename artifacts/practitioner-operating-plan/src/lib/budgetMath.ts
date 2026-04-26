@@ -1,4 +1,4 @@
-import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
+import { CORRIDOR_INSTALL_SHAPE } from "@workspace/cross-reserve-corridor";
 
 import { COST_REGISTRY_BY_ID } from "../data/costRegistry";
 import { useAppState } from "./storage";
@@ -405,21 +405,18 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
 }
 
 // Cross-reserve install day-count constants (typical 12-week install
-// shape). Sourced from `@workspace/cross-reserve-defaults`
-// (`install.{weeks,onsiteDays,remoteDays}`) — the same package the
-// Deer Lake "First reserve, then the next" slide reads its calculator
-// defaults and body copy from. A single edit there flows through to
-// the install-revenue / Y2 / Y3 / travel-pass-through derivations
-// below and to that slide on the next build, so the two surfaces
-// cannot drift apart. The re-exports preserve the prior public API
-// (anything that previously imported these constants from
-// `budgetMath` keeps working).
-export const CROSS_RESERVE_ONSITE_DAYS = CROSS_RESERVE_DEFAULTS.install.onsiteDays;
-export const CROSS_RESERVE_REMOTE_DAYS = CROSS_RESERVE_DEFAULTS.install.remoteDays;
+// shape). Re-exported from the shared `@workspace/cross-reserve-corridor`
+// package so the install-revenue, Y2/Y3, travel-passthrough derivations,
+// and the Deer Lake "First reserve, then the next" calculator all share
+// one source of truth — edit the shape there and every consumer
+// recomputes together. The slide imports these names directly via the
+// `@workspace/practitioner-operating-plan/budgetMath` subpath export.
+export const CROSS_RESERVE_ONSITE_DAYS = CORRIDOR_INSTALL_SHAPE.onsiteDays;
+export const CROSS_RESERVE_REMOTE_DAYS = CORRIDOR_INSTALL_SHAPE.remoteDays;
 // Used by the travel pass-through worked example (one round-trip flight
 // per install week). Matches the assumption baked into
 // `crossReserve.travel.flightPerWeek`.
-export const CROSS_RESERVE_INSTALL_WEEKS = CROSS_RESERVE_DEFAULTS.install.weeks;
+export const CROSS_RESERVE_INSTALL_WEEKS = CORRIDOR_INSTALL_SHAPE.installWeeks;
 
 // ----------------------------------------------------------------------
 // Second-anchor / Y1 gap-closing math

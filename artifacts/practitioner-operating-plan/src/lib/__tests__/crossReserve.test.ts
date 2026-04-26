@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
+import {
+  CORRIDOR_ANNUAL_RETAINER,
+  CORRIDOR_INSTALL_REVENUE_EXACT,
+  CORRIDOR_INSTALL_SHAPE,
+} from "@workspace/cross-reserve-corridor";
 
 import { COST_REGISTRY } from "../../data/costRegistry";
 import { DEFAULT_STATE } from "../storage";
@@ -32,27 +36,29 @@ function withEdit(state: AppState, id: string, value: number): AppState {
 
 describe("Cross-reserve install shape — shared package source of truth", () => {
   // The 12-week / 30-on-site / 24-remote shape is canonical in
-  // `@workspace/cross-reserve-defaults`. budgetMath re-exports it as
-  // CROSS_RESERVE_INSTALL_WEEKS / ONSITE_DAYS / REMOTE_DAYS. The Deer
-  // Lake "First reserve, then the next" slide reads the same package
-  // for its calculator defaults and body copy. If a future edit
-  // changes the shared shape, the receiving-reserve revenue, Y2 / Y3
-  // composition, and travel-passthrough examples all move together —
-  // these tests pin that the wiring is in place so silent drift
-  // becomes a loud test failure.
+  // `@workspace/cross-reserve-corridor` (`CORRIDOR_INSTALL_SHAPE`).
+  // budgetMath re-exports it as CROSS_RESERVE_INSTALL_WEEKS /
+  // ONSITE_DAYS / REMOTE_DAYS, and the Deer Lake "First reserve, then
+  // the next" slide reads the same names through the
+  // `@workspace/practitioner-operating-plan/budgetMath` subpath export
+  // for its calculator scoping constants and body copy. If a future
+  // edit changes the shared shape, the receiving-reserve revenue,
+  // Y2 / Y3 composition, and travel-passthrough examples all move
+  // together — these tests pin that the wiring is in place so silent
+  // drift becomes a loud test failure.
 
-  it("budgetMath constants are sourced from the shared cross-reserve-defaults package", () => {
-    expect(CROSS_RESERVE_INSTALL_WEEKS).toBe(CROSS_RESERVE_DEFAULTS.install.weeks);
-    expect(CROSS_RESERVE_ONSITE_DAYS).toBe(CROSS_RESERVE_DEFAULTS.install.onsiteDays);
-    expect(CROSS_RESERVE_REMOTE_DAYS).toBe(CROSS_RESERVE_DEFAULTS.install.remoteDays);
+  it("budgetMath constants are sourced from the shared cross-reserve-corridor package", () => {
+    expect(CROSS_RESERVE_INSTALL_WEEKS).toBe(CORRIDOR_INSTALL_SHAPE.installWeeks);
+    expect(CROSS_RESERVE_ONSITE_DAYS).toBe(CORRIDOR_INSTALL_SHAPE.onsiteDays);
+    expect(CROSS_RESERVE_REMOTE_DAYS).toBe(CORRIDOR_INSTALL_SHAPE.remoteDays);
   });
 
   it("shared install shape matches the V3-spec-locked planning numbers (12 / 30 / 24)", () => {
     // If the planning shape is intentionally retuned, update these
     // assertions and the registry context strings together.
-    expect(CROSS_RESERVE_DEFAULTS.install.weeks).toBe(12);
-    expect(CROSS_RESERVE_DEFAULTS.install.onsiteDays).toBe(30);
-    expect(CROSS_RESERVE_DEFAULTS.install.remoteDays).toBe(24);
+    expect(CORRIDOR_INSTALL_SHAPE.installWeeks).toBe(12);
+    expect(CORRIDOR_INSTALL_SHAPE.onsiteDays).toBe(30);
+    expect(CORRIDOR_INSTALL_SHAPE.remoteDays).toBe(24);
   });
 
   it("travel pass-through example uses the shared install shape (weeks × flight + onsiteDays × (lodging + food))", () => {
@@ -67,9 +73,9 @@ describe("Cross-reserve install shape — shared package source of truth", () =>
     const lodging = resolveCost(DEFAULT_STATE, "crossReserve.travel.lodgingPerNight");
     const food = resolveCost(DEFAULT_STATE, "crossReserve.travel.foodPerOnsiteDay");
     const expected =
-      CROSS_RESERVE_DEFAULTS.install.weeks * flight +
-      CROSS_RESERVE_DEFAULTS.install.onsiteDays * lodging +
-      CROSS_RESERVE_DEFAULTS.install.onsiteDays * food;
+      CORRIDOR_INSTALL_SHAPE.installWeeks * flight +
+      CORRIDOR_INSTALL_SHAPE.onsiteDays * lodging +
+      CORRIDOR_INSTALL_SHAPE.onsiteDays * food;
     expect(live).toBe(expected);
   });
 });
@@ -364,7 +370,7 @@ describe("Cross-reserve registry copy — install-shape literals match the share
   // Several `crossReserve.*` registry entries name the install shape
   // inline in their label or context string ("12-week install",
   // "30 on-site days", "24 remote days", "12 weekly flights", etc.).
-  // If the canonical 12 / 30 / 24 shape in `@workspace/cross-reserve-defaults`
+  // If the canonical 12 / 30 / 24 shape in `@workspace/cross-reserve-corridor`
   // ever changes, those embedded literals would silently disagree with
   // every other surface that reads the shared package — exactly the
   // drift the rest of this suite is designed to prevent. This test
@@ -386,9 +392,9 @@ describe("Cross-reserve registry copy — install-shape literals match the share
   ];
 
   it("every crossReserve.* entry's label and context names the canonical install shape", () => {
-    const weeks = CROSS_RESERVE_DEFAULTS.install.weeks;
-    const onsiteDays = CROSS_RESERVE_DEFAULTS.install.onsiteDays;
-    const remoteDays = CROSS_RESERVE_DEFAULTS.install.remoteDays;
+    const weeks = CORRIDOR_INSTALL_SHAPE.installWeeks;
+    const onsiteDays = CORRIDOR_INSTALL_SHAPE.onsiteDays;
+    const remoteDays = CORRIDOR_INSTALL_SHAPE.remoteDays;
 
     let scanned = 0;
     for (const entry of COST_REGISTRY) {
@@ -440,8 +446,8 @@ describe("OnePager — cross-reserve dollar headlines flow from shared defaults"
   // drifted whenever the day rate / retainer / travel inputs moved.
   // OnePager.tsx now feeds each headline through the same
   // formatPlanningK / formatCompactK / formatPlanningDollars helpers
-  // ThreeRevenueLayers uses, reading the live values from
-  // CROSS_RESERVE_DEFAULTS / getLiveCostValue. These tests pin the
+  // ThreeRevenueLayers uses, reading the live values from the shared
+  // corridor constants / getLiveCostValue. These tests pin the
   // formatted strings at the no-edits default so the printable sheet
   // can never disagree with the live deck.
 
@@ -462,10 +468,10 @@ describe("OnePager — cross-reserve dollar headlines flow from shared defaults"
     );
 
     // Live numerics match the shared defaults / live derivations.
-    expect(installPerReserve).toBe(CROSS_RESERVE_DEFAULTS.installRevenuePerReserve);
+    expect(installPerReserve).toBe(CORRIDOR_INSTALL_REVENUE_EXACT);
     expect(installPerReserve).toBe(148200);
     expect(travelPassthrough).toBe(22500);
-    expect(retainer).toBe(CROSS_RESERVE_DEFAULTS.retainerAnnual);
+    expect(retainer).toBe(CORRIDOR_ANNUAL_RETAINER);
     expect(retainer).toBe(30000);
     expect(y1Sticker).toBe(200700);
 
@@ -533,7 +539,7 @@ describe("Cross-reserve surfaces — no stale dollar literals on slide / page TS
   // headline is either inside a comment or accompanied on the same
   // line by a registry-helper invocation (formatPlanningK /
   // formatCompactK / formatPlanningDollars / getLiveCostValue /
-  // liveDerived / resolveCost / CROSS_RESERVE_DEFAULTS). A fresh bare
+  // liveDerived / resolveCost / CORRIDOR_*). A fresh bare
   // literal in a new TSX surface fails this test loudly — stopping
   // drift from sneaking back in via a future slide or marketing page.
 
@@ -561,7 +567,7 @@ describe("Cross-reserve surfaces — no stale dollar literals on slide / page TS
   // helper APIs — this is the "documenting the live value alongside the
   // helper call" pattern the rest of the suite relies on.
   const REGISTRY_HELPER_RE =
-    /\b(?:formatPlanningK|formatCompactK|formatPlanningDollars|getLiveCostValue|liveDerived|resolveCost|CROSS_RESERVE_DEFAULTS)\b/;
+    /\b(?:formatPlanningK|formatCompactK|formatPlanningDollars|getLiveCostValue|liveDerived|resolveCost|CORRIDOR_[A-Z_]+)\b/;
 
   function* walkTsxFiles(dir: string): Generator<string> {
     if (!fs.existsSync(dir)) return;
@@ -645,7 +651,7 @@ describe("Cross-reserve surfaces — no stale dollar literals on slide / page TS
             violations.push(
               `${path.relative(REPO_ROOT, file)}:${lineNo} — bare literal "${m[0]}" matches ${name}; ` +
                 `derive it from the live registry (formatPlanningK/formatCompactK/formatPlanningDollars + ` +
-                `getLiveCostValue/liveDerived/resolveCost/CROSS_RESERVE_DEFAULTS) or move it into a comment.`,
+                `getLiveCostValue/liveDerived/resolveCost/CORRIDOR_*) or move it into a comment.`,
             );
           }
         }

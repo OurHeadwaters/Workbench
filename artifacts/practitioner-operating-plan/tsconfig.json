@@ -15,7 +15,7 @@
   },
   "references": [
     {
-      "path": "../../lib/cross-reserve-defaults"
+      "path": "../../lib/cross-reserve-corridor"
     },
     {
       "path": "../../lib/headwaters-pricing"
