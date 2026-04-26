@@ -39,11 +39,18 @@ export default function ProblemOpportunity() {
             <div className="font-display text-[1.95vw] leading-tight text-primary mb-[1.2vh] font-medium">
               One store, no other choice. The federal subsidy mostly stays with the owners — not on the shelf.
             </div>
-            <div className="border-l-[0.25vw] border-accent pl-[1vw] mb-[1.5vh] font-display italic text-[1.25vw] leading-[1.3] text-primary">
-              "Less like a local store — different clientele — more like a Walmart."
-              <div className="font-mono not-italic uppercase tracking-[0.18em] text-[0.85vw] text-muted mt-[0.3vh]">
-                Heard in Deer Lake
-              </div>
+            {/* See docs/spiritual-imagery-rule.md before editing this block. */}
+            <div
+              className="mb-[1.5vh] p-[1vw] rounded-[0.3vw] font-mono uppercase tracking-[0.16em] text-[0.95vw] leading-[1.4] text-muted"
+              style={{
+                border: "1px dashed var(--slide-accent)",
+                background: "rgba(184,90,62,0.06)",
+              }}
+            >
+              Needs guidance from elders / wisdom keepers — placeholder, not
+              for delivery. Will hold imagery + a sourced, attributed account
+              of how the current store feels to people in Deer Lake. See
+              docs/spiritual-imagery-flags.md.
             </div>
             <div className="space-y-[1.1vh] font-body text-[1.3vw] leading-[1.35]">
               <div className="flex gap-[1vw]">

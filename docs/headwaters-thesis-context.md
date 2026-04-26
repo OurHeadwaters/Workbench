@@ -67,3 +67,16 @@ What Deer Lake gives up: an on-call practitioner doing operations. They have to 
 ## Naming rule
 
 All slide, section, page, and document names use words only. No numbers, no letters, no initials, no Roman numerals. Editorial naming, not versioned naming.
+
+## Spiritual imagery rule
+
+Spiritual, cultural, and ceremonial content in any deck or companion material follows one rule: **imagery and the true stories that accompany it only — never invented words placed in anyone's mouth.**
+
+What this means in practice:
+
+- The deck may show imagery (a photograph, a landscape, an object) and may tell a true story that accompanies it, with a real source and attribution.
+- The deck may not invent or paraphrase the words of an Elder, Knowledge Keeper, or community member. No anonymous "Heard in [community]" quotes. No "as the Elders say" framings. No composite voices.
+- When something *would* need to be put into words — a teaching, a blessing, a community sentiment — the deck defers to elders and wisdom keepers rather than fill it in. Until those words are sourced and attributed, the slide leaves a visible `Needs guidance from elders / wisdom keepers` placeholder so the gap is obvious instead of being silently filled in.
+- The founder's own voice (attributed to the founder) is fine. Statistics from named sources are fine. Imagery on its own is fine. Invented voice attributed — even implicitly — to anyone else is not.
+
+The full statement and the running list of currently-flagged spots live at `docs/spiritual-imagery-rule.md` and `docs/spiritual-imagery-flags.md`. Read both before adding or editing spiritual or cultural material in either deck.
