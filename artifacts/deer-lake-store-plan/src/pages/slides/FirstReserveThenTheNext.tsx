@@ -202,6 +202,10 @@ function ReserveTwoCalculator() {
   const [food, setFood] = useState<number>(initial.food);
   const [installWeeks, setInstallWeeks] = useState<number>(initial.installWeeks);
   const [onsiteDays, setOnsiteDays] = useState<number>(initial.onsiteDays);
+  // "idle" | "copied" | "error" — drives the brief confirmation text on the
+  // share-link button. We reset back to "idle" after ~2s so the button label
+  // returns to its default state.
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
 
   const travelTotal = useMemo(
     () => flight * installWeeks + lodging * onsiteDays + food * onsiteDays,
@@ -256,6 +260,53 @@ function ReserveTwoCalculator() {
     setOnsiteDays(DEFAULTS.onsiteDays);
   };
 
+  // Auto-clear the "Copied!" / "Copy failed" confirmation after ~2s so the
+  // button settles back to its default label. Cleanup cancels the timer if
+  // the user clicks again before it fires.
+  useEffect(() => {
+    if (copyState === "idle") return;
+    const timer = window.setTimeout(() => setCopyState("idle"), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copyState]);
+
+  const copyShareLink = async () => {
+    if (typeof window === "undefined") return;
+    // Read window.location from inside the slide's own document. When the
+    // slide is mounted standalone at /slide12 this is the address-bar URL;
+    // when the deployed SlideViewer wraps us in an iframe, this is the
+    // inner-frame URL (the one with ?flight=...&lodging=... appended), which
+    // is exactly the URL we want a chief to be able to forward.
+    const url = window.location.href;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        setCopyState("copied");
+        return;
+      }
+      throw new Error("Clipboard API unavailable");
+    } catch {
+      // Fallback for older browsers / non-secure contexts where
+      // navigator.clipboard isn't available: a hidden textarea + execCommand.
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setCopyState(ok ? "copied" : "error");
+      } catch {
+        setCopyState("error");
+      }
+    }
+  };
+
+  const copyLabel =
+    copyState === "copied" ? "✓ Copied!" : copyState === "error" ? "Copy failed" : "⧉ Copy share link";
+
   return (
     <div
       className="col-span-5 rounded-[0.4vw] px-[1.2vw] py-[1vh] flex flex-col"
@@ -301,23 +352,42 @@ function ReserveTwoCalculator() {
         <div className="font-mono uppercase tracking-[0.2em] text-[0.65vw] whitespace-nowrap">
           Your corridor · edits stay on this slide
         </div>
-        <button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            reset();
-          }}
-          disabled={isDefault}
-          className="font-mono uppercase tracking-[0.16em] text-[0.6vw] rounded-[0.2vw] px-[0.4vw] py-[0.15vh] transition-opacity disabled:opacity-40 disabled:cursor-default cursor-pointer whitespace-nowrap"
-          style={{
-            color: "#e9c8a8",
-            border: "0.05vw solid rgba(233, 200, 168, 0.5)",
-            background: "rgba(255, 255, 255, 0.04)",
-          }}
-          aria-label="Reset corridor inputs to Deer Lake defaults"
-        >
-          ↻ Reset
-        </button>
+        <div className="flex items-center gap-[0.35vw]">
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              void copyShareLink();
+            }}
+            className="font-mono uppercase tracking-[0.16em] text-[0.6vw] rounded-[0.2vw] px-[0.4vw] py-[0.15vh] transition-opacity cursor-pointer whitespace-nowrap"
+            style={{
+              color: "#e9c8a8",
+              border: "0.05vw solid rgba(233, 200, 168, 0.5)",
+              background: "rgba(255, 255, 255, 0.04)",
+            }}
+            aria-label="Copy a share link with the current corridor inputs to the clipboard"
+            aria-live="polite"
+          >
+            {copyLabel}
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              reset();
+            }}
+            disabled={isDefault}
+            className="font-mono uppercase tracking-[0.16em] text-[0.6vw] rounded-[0.2vw] px-[0.4vw] py-[0.15vh] transition-opacity disabled:opacity-40 disabled:cursor-default cursor-pointer whitespace-nowrap"
+            style={{
+              color: "#e9c8a8",
+              border: "0.05vw solid rgba(233, 200, 168, 0.5)",
+              background: "rgba(255, 255, 255, 0.04)",
+            }}
+            aria-label="Reset corridor inputs to Deer Lake defaults"
+          >
+            ↻ Reset
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-x-[0.6vw] gap-y-[0.35vh] mb-[0.5vh]">
