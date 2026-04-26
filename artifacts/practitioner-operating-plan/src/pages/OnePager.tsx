@@ -1,3 +1,5 @@
+import { useCallback, useState } from "react";
+
 import {
   CROSS_RESERVE_INSTALL_WEEKS,
   CROSS_RESERVE_ONSITE_DAYS,
@@ -10,6 +12,7 @@ import {
   WHOLESALE_CM_FLOOR,
   useLatestSaltClose,
 } from "../lib/saltClose";
+import { regenerateOnePagerPdf } from "../lib/regenerateOnePagerPdf";
 import { useAppState } from "../lib/storage";
 import {
   formatPlanningK,
@@ -38,9 +41,83 @@ export default function OnePager() {
   const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
   const y1StickerPrice =
     getLiveCostValue(state, "crossReserve.year1.stickerPrice") ?? 0;
+
+  // Auto-regenerate the printable PDF with the practitioner's live
+  // cost-review edits. Posts the current AppState to the dev server's
+  // POST /api/onepager.pdf endpoint (vite-plugin-onepager-pdf.ts),
+  // which spins up puppeteer, seeds localStorage with the posted
+  // state via page.evaluateOnNewDocument, renders /onepager to a PDF
+  // buffer, and streams it back. We turn the response into a download
+  // — fresh PDF on disk, edits and all, no CLI step.
+  //
+  // If the endpoint isn't available (e.g. a static deploy without the
+  // dev plugin), we fall back to the last-built static PDF and surface
+  // the reason. import.meta.env.BASE_URL keeps the URL inside the
+  // artifact's path prefix; BASE_URL already ends in "/".
+  const baseUrl = import.meta.env.BASE_URL;
+  type DownloadStatus =
+    | { kind: "idle" }
+    | { kind: "rendering" }
+    | { kind: "error"; message: string };
+  const [downloadStatus, setDownloadStatus] = useState<DownloadStatus>({
+    kind: "idle",
+  });
+  const onDownloadPdf = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    setDownloadStatus({ kind: "rendering" });
+    try {
+      const blob = await regenerateOnePagerPdf(state, { baseUrl });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "practitioner-operating-plan-onepager.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setDownloadStatus({ kind: "idle" });
+    } catch (err) {
+      setDownloadStatus({
+        kind: "error",
+        message:
+          (err as Error).message ||
+          "Could not regenerate the PDF. Use the last-built sheet below as a fallback.",
+      });
+    }
+  }, [baseUrl, state]);
+
   return (
     <div className="onepager-screen">
       <div className="onepager-sheet">
+        <div className="print-hide flex items-center justify-end gap-[8pt] mb-[10pt] text-[8pt]">
+          <a
+            href={`${baseUrl}practitioner-operating-plan-onepager.pdf`}
+            download="practitioner-operating-plan-onepager.pdf"
+            className="font-mono uppercase tracking-[0.16em] px-[8pt] py-[4pt] rounded border border-[#c8bfa7] text-[#6b7665] hover:bg-[#ebe2d0]"
+          >
+            Last-built PDF
+          </a>
+          <button
+            type="button"
+            onClick={onDownloadPdf}
+            disabled={downloadStatus.kind === "rendering"}
+            className="font-mono uppercase tracking-[0.16em] px-[8pt] py-[4pt] rounded border border-[#1f3d2e] text-[#1f3d2e] hover:bg-[#ebe2d0] disabled:opacity-50 disabled:cursor-progress"
+            title="Renders a fresh printable PDF with your current cost-review edits baked in and downloads it."
+          >
+            {downloadStatus.kind === "rendering"
+              ? "Rendering PDF…"
+              : "Download PDF with my edits"}
+          </button>
+        </div>
+        {downloadStatus.kind === "error" ? (
+          <div
+            className="print-hide text-[8pt] text-[#7a3030] mb-[8pt] leading-[1.4]"
+            role="status"
+          >
+            Couldn't auto-regenerate ({downloadStatus.message}). Use the
+            "Last-built PDF" link above as a fallback.
+          </div>
+        ) : null}
         <div className="flex items-baseline justify-between border-b border-[#c8bfa7] pb-[8pt] mb-[12pt]">
           <div>
             <div

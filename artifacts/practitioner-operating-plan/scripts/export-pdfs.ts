@@ -1,11 +1,12 @@
 /// <reference types="node" />
-import { execFileSync, spawn } from "child_process";
+import { spawn } from "child_process";
 import { createServer } from "http";
-import { mkdir, readFile, stat } from "fs/promises";
+import { mkdir, readFile, stat, writeFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import puppeteer from "puppeteer-core";
+import { loadAppStateOverride, type LoadAppStateResult } from "./seedAppState";
+import { renderOnePagerToPdf } from "./renderOnePagerPdf";
 
 type PageExport = {
   route: string;
@@ -35,21 +36,6 @@ const PAGES: PageExport[] = [
     label: "Quarterly hours-by-pillar report",
   },
 ];
-
-function resolveChromiumExecutable(): string | undefined {
-  const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;
-  if (fromEnv) return fromEnv;
-  for (const candidate of ["chromium", "google-chrome", "chrome"]) {
-    try {
-      const found = execFileSync("which", [candidate], { encoding: "utf8" })
-        .trim();
-      if (found) return found;
-    } catch {
-      // Not found; try the next candidate.
-    }
-  }
-  return undefined;
-}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -169,65 +155,36 @@ async function startStaticServer(): Promise<{
   };
 }
 
-async function renderPdfs(port: number): Promise<void> {
-  const executablePath = resolveChromiumExecutable();
-  if (!executablePath) {
-    throw new Error(
-      "Could not find a Chromium executable. Install `chromium` as a system dependency, " +
-        "or set PUPPETEER_EXECUTABLE_PATH to a Chrome/Chromium binary.",
+async function renderPdfs(
+  port: number,
+  appStateOverride: LoadAppStateResult,
+): Promise<void> {
+  if (appStateOverride) {
+    console.log(
+      `[export-pdfs] Seeding puppeteer localStorage from ${appStateOverride.sourcePath}`,
     );
   }
-  console.log(`[export-pdfs] Using Chromium at ${executablePath}`);
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-    ],
-  });
+  await mkdir(outputDir, { recursive: true });
 
-  try {
-    await mkdir(outputDir, { recursive: true });
+  for (const pageSpec of PAGES) {
+    const url = `http://127.0.0.1:${port}${pageSpec.route}`;
+    const outputPath = path.join(outputDir, pageSpec.outputFile);
+    console.log(`[export-pdfs] Rendering ${pageSpec.label} from ${url} ...`);
 
-    for (const pageSpec of PAGES) {
-      const url = `http://127.0.0.1:${port}${pageSpec.route}`;
-      const outputPath = path.join(outputDir, pageSpec.outputFile);
-      console.log(
-        `[export-pdfs] Rendering ${pageSpec.label} from ${url} ...`,
-      );
-
-      const page = await browser.newPage();
-      try {
-        await page.goto(url, { waitUntil: "networkidle0", timeout: 60_000 });
-        await page.emulateMediaType("print");
-        // Make sure any web fonts (if added later) are fully loaded before printing.
-        await page.evaluate(async () => {
-          if ("fonts" in document) {
-            await (document as Document & {
-              fonts: { ready: Promise<unknown> };
-            }).fonts.ready;
-          }
-        });
-
-        await page.pdf({
-          path: outputPath,
-          format: "letter",
-          printBackground: true,
-          preferCSSPageSize: true,
-        });
-
-        console.log(
-          `[export-pdfs] Wrote ${path.relative(projectRoot, outputPath)}`,
-        );
-      } finally {
-        await page.close();
-      }
-    }
-  } finally {
-    await browser.close();
+    // Each page gets its own browser instance so the same shared
+    // renderer used by the dev-time auto-regenerate trigger
+    // (vite-plugin-onepager-pdf.ts) is exercised end-to-end here too.
+    // Modest cost — Chromium boots once per page in a build that runs
+    // a handful of times per deploy.
+    const buffer = await renderOnePagerToPdf({
+      pageUrl: url,
+      appState: appStateOverride?.state ?? null,
+    });
+    await writeFile(outputPath, buffer);
+    console.log(
+      `[export-pdfs] Wrote ${path.relative(projectRoot, outputPath)}`,
+    );
   }
 }
 
@@ -239,6 +196,12 @@ function shouldSkipBuild(): boolean {
 }
 
 async function main() {
+  // Resolve the practitioner's --app-state override up front so a
+  // typo / missing file fails before we spin up vite + puppeteer.
+  const appStateOverride = loadAppStateOverride({
+    argv: process.argv.slice(2),
+    env: process.env,
+  });
   if (shouldSkipBuild()) {
     console.log("[export-pdfs] Skipping internal build (SKIP_BUILD set).");
   } else {
@@ -246,7 +209,7 @@ async function main() {
   }
   const server = await startStaticServer();
   try {
-    await renderPdfs(server.port);
+    await renderPdfs(server.port, appStateOverride);
   } finally {
     await server.close();
   }
