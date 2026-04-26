@@ -24,7 +24,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@workspace/cross-reserve-defaults": "workspace:*"
+    "@workspace/cross-reserve-defaults": "workspace:*",
+    "@workspace/headwaters-pricing": "workspace:*"
   },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "catalog:",

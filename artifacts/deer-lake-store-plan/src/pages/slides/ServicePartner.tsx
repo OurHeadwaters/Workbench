@@ -1,3 +1,8 @@
+import {
+  REINVESTMENT_BUCKETS,
+  formatBucketAmountY1,
+} from "@workspace/headwaters-pricing";
+
 type Layer = {
   label: string;
   headline: string;
@@ -21,12 +26,14 @@ type AccountabilityMeasure = {
   detail: string;
 };
 
-const reinvestBuckets: ReinvestBucket[] = [
-  { label: "Tech CAPEX", amount: "~$60k Y1", detail: "self-hosted servers, privacy phones, work computers, networking" },
-  { label: "Tooling subs", amount: "~$24k Y1", detail: "transparency dashboard hosting, GIS, secure comms, payroll" },
-  { label: "Training & R&D", amount: "~$36k Y1", detail: "Indigenous-services certifications, conferences, playbook hours" },
-  { label: "Pilot reserve", amount: "~$172k Y1", detail: "held in a separate account; seeds the next reserve so they don't wait for grants" },
-];
+// Sourced from @workspace/headwaters-pricing so the four bucket amounts
+// stay locked to the Practitioner one-pager's "What the 35% reinvestment
+// buys" table. Edit the amounts/labels there, not here.
+const reinvestBuckets: ReinvestBucket[] = REINVESTMENT_BUCKETS.map((b) => ({
+  label: b.label,
+  amount: formatBucketAmountY1(b.year1Amount),
+  detail: b.shortDescription,
+}));
 
 const accountabilityMeasures: AccountabilityMeasure[] = [
   { label: "Procurement savings delivered", detail: "vs. the baseline the current store charges" },

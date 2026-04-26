@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import {
+  REINVESTMENT_BUCKETS,
+  REINVESTMENT_TOTAL_YEAR1,
+  formatBucketAmount,
+  formatBucketAmountY1,
+} from "@workspace/headwaters-pricing";
 
 /**
  * Locked-number guard tests for the Deer Lake Store Operational Plan deck.
@@ -8,11 +14,14 @@ import path from "node:path";
  * Mirrors the pattern in
  * artifacts/practitioner-operating-plan/src/data/__tests__/lockedNumbers.test.ts.
  *
- * What this file enforces (per task #248):
+ * What this file enforces (per task #248, simplified by task #252):
  *
- *   1. The four reinvestment-bucket dollar amounts in BOTH ServicePartner.tsx
- *      and the Practitioner deck's OnePager.tsx sum to ~$24.3k/mo × 12 =
- *      $291.6k/yr. (60 + 24 + 36 + 172 = 292; rounded headline is 291.6.)
+ *   1. The four reinvestment-bucket dollar amounts come from a single
+ *      shared module (`@workspace/headwaters-pricing`) and sum to
+ *      ≈ $24.3k/mo × 12 = $291.6k/yr. ServicePartner.tsx and OnePager.tsx
+ *      both render from that module instead of from local literals — so
+ *      these tests now check the shared values directly and confirm the
+ *      rendered strings derived from them still appear in both surfaces.
  *
  *   2. For each of the three pricing tiers (A · floor, B · recommended,
  *      C · scale): bill ≈ cost basis × 1.35 within tolerance. Bills are
@@ -57,15 +66,6 @@ function readOnePager(): string {
   return readFileSync(ONE_PAGER_PATH, "utf-8");
 }
 
-// Locked source-of-truth values. Drifting any of these in the JSX without
-// updating the others (or vice versa) trips one of the assertions below.
-const REINVEST_BUCKETS = {
-  techCapex: 60_000,
-  toolingSubs: 24_000,
-  trainingRnD: 36_000,
-  pilotReserve: 172_000,
-} as const;
-
 const TIERS = {
   A: { label: "floor",       costBasis:  48_200, bill:  60_000, bridge:  96_000, dayOneCapex:      0 },
   B: { label: "recommended", costBasis:  69_700, bill:  90_000, bridge: 181_000, dayOneCapex: 42_000 },
@@ -75,33 +75,44 @@ const TIERS = {
 const REINVEST_PER_MONTH = 24_300; // $24.3k/mo headline in ServicePartner.tsx
 const REINVEST_PER_YEAR = REINVEST_PER_MONTH * 12; // = $291,600
 
-describe("Deer Lake deck — reinvestment buckets reconcile to the $24.3k/mo headline", () => {
-  it("the four bucket amounts sum to ≈ $24.3k/mo × 12 = $291.6k/yr", () => {
-    const sum =
-      REINVEST_BUCKETS.techCapex +
-      REINVEST_BUCKETS.toolingSubs +
-      REINVEST_BUCKETS.trainingRnD +
-      REINVEST_BUCKETS.pilotReserve;
+describe("Headwaters reinvestment-bucket source-of-truth", () => {
+  it("exposes exactly four buckets with stable ids", () => {
+    const ids = REINVESTMENT_BUCKETS.map((b) => b.id);
+    expect(ids).toEqual(["techCapex", "toolingSubs", "trainingRnD", "pilotReserve"]);
+  });
+
+  it("the shared total reconciles to the $24.3k/mo × 12 = $291.6k/yr headline", () => {
     // 60 + 24 + 36 + 172 = 292 (k); headline rounds to 291.6 (k).
-    expect(sum).toBe(292_000);
-    expect(Math.abs(sum - REINVEST_PER_YEAR)).toBeLessThanOrEqual(1_000);
+    expect(REINVESTMENT_TOTAL_YEAR1).toBe(292_000);
+    expect(Math.abs(REINVESTMENT_TOTAL_YEAR1 - REINVEST_PER_YEAR)).toBeLessThanOrEqual(1_000);
   });
 
-  it("ServicePartner.tsx renders all four bucket amounts verbatim", () => {
+  it("ServicePartner.tsx imports from the shared module (not local literals)", () => {
     const servicePartner = readDeckSlide("ServicePartner.tsx");
-    expect(servicePartner).toContain('amount: "~$60k Y1"');
-    expect(servicePartner).toContain('amount: "~$24k Y1"');
-    expect(servicePartner).toContain('amount: "~$36k Y1"');
-    expect(servicePartner).toContain('amount: "~$172k Y1"');
+    expect(servicePartner).toContain('from "@workspace/headwaters-pricing"');
+    expect(servicePartner).toContain("REINVESTMENT_BUCKETS");
+    // Drift guard: the previously-hardcoded "amount: " literals must not
+    // be reintroduced — they were exactly the failure mode this refactor
+    // closes. Old code carried lines like `amount: "~$60k Y1"`.
+    for (const bucket of REINVESTMENT_BUCKETS) {
+      const formatted = formatBucketAmountY1(bucket.year1Amount);
+      expect(servicePartner).not.toContain(`amount: "${formatted}"`);
+    }
   });
 
-  it("OnePager.tsx renders all four bucket amounts verbatim", () => {
+  it("OnePager.tsx imports from the shared module (not local literals)", () => {
     const onePager = readOnePager();
-    // Each bucket appears as a right-aligned table cell like ">~$60k<".
-    expect(onePager).toContain(">~$60k<");
-    expect(onePager).toContain(">~$24k<");
-    expect(onePager).toContain(">~$36k<");
-    expect(onePager).toContain(">~$172k<");
+    expect(onePager).toContain('from "@workspace/headwaters-pricing"');
+    expect(onePager).toContain("REINVESTMENT_BUCKETS");
+    // The previously-hardcoded long labels must no longer appear as raw
+    // JSX literals — drift was only possible because they were typed twice.
+    expect(onePager).not.toContain('font-semibold">Tech CAPEX</td>');
+    expect(onePager).not.toContain('font-semibold">Tooling subscriptions</td>');
+    // Same guard for the right-aligned amount cells (e.g. ">~$60k<").
+    for (const bucket of REINVESTMENT_BUCKETS) {
+      const formatted = formatBucketAmount(bucket.year1Amount);
+      expect(onePager).not.toContain(`text-right">${formatted}</td>`);
+    }
   });
 
   it("ServicePartner.tsx prints the $24.3k/mo reinvestment headline", () => {
@@ -109,6 +120,12 @@ describe("Deer Lake deck — reinvestment buckets reconcile to the $24.3k/mo hea
     expect(servicePartner).toContain("$24.3k/mo");
     expect(servicePartner).toContain("$69.7k/mo cost basis");
     expect(servicePartner).toContain("~$94k/mo cost-of-delivery");
+  });
+
+  it("formatBucketAmount produces the '~$Nk' shape both surfaces use", () => {
+    expect(formatBucketAmount(60_000)).toBe("~$60k");
+    expect(formatBucketAmount(172_000)).toBe("~$172k");
+    expect(formatBucketAmountY1(60_000)).toBe("~$60k Y1");
   });
 });
 

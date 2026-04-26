@@ -393,6 +393,9 @@ importers:
 
   artifacts/deer-lake-store-plan:
     dependencies:
+      '@workspace/headwaters-pricing':
+        specifier: workspace:*
+        version: link:../../lib/headwaters-pricing
       '@workspace/practitioner-operating-plan':
         specifier: workspace:*
         version: link:../practitioner-operating-plan
@@ -864,6 +867,9 @@ importers:
       '@workspace/cross-reserve-defaults':
         specifier: workspace:*
         version: link:../../lib/cross-reserve-defaults
+      '@workspace/headwaters-pricing':
+        specifier: workspace:*
+        version: link:../../lib/headwaters-pricing
     devDependencies:
       '@replit/vite-plugin-cartographer':
         specifier: 'catalog:'
@@ -1163,6 +1169,8 @@ importers:
       drizzle-kit:
         specifier: ^0.31.9
         version: 0.31.9
+
+  lib/headwaters-pricing: {}
 
   lib/object-storage-web:
     dependencies:

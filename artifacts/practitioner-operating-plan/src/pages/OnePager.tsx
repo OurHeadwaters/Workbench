@@ -1,6 +1,11 @@
 import { useCallback, useState } from "react";
 
 import {
+  REINVESTMENT_BUCKETS,
+  formatBucketAmount,
+} from "@workspace/headwaters-pricing";
+
+import {
   CROSS_RESERVE_INSTALL_WEEKS,
   CROSS_RESERVE_ONSITE_DAYS,
   CROSS_RESERVE_REMOTE_DAYS,
@@ -326,27 +331,29 @@ export default function OnePager() {
                 <th className="py-[3pt] w-[56%]">What it ships</th>
               </tr>
             </thead>
+            {/*
+              Bucket rows are sourced from @workspace/headwaters-pricing so
+              the four amounts stay locked to the Deer Lake Store deck's
+              ServicePartner slide. Edit the amounts/labels there, not here.
+            */}
             <tbody className="text-[#2a2520]">
-              <tr className="border-b border-[#e3dac4]">
-                <td className="py-[3pt] pr-[4pt] font-semibold">Tech CAPEX</td>
-                <td className="py-[3pt] pr-[4pt] text-right">~$60k</td>
-                <td className="py-[3pt]">9 self-hosted servers, 6 privacy phones, 8 work computers, networking</td>
-              </tr>
-              <tr className="border-b border-[#e3dac4]">
-                <td className="py-[3pt] pr-[4pt] font-semibold">Tooling subscriptions</td>
-                <td className="py-[3pt] pr-[4pt] text-right">~$24k</td>
-                <td className="py-[3pt]">Transparency dashboard hosting, GIS, secure comms, project ops, payroll</td>
-              </tr>
-              <tr className="border-b border-[#e3dac4]">
-                <td className="py-[3pt] pr-[4pt] font-semibold">Training & R&D</td>
-                <td className="py-[3pt] pr-[4pt] text-right">~$36k</td>
-                <td className="py-[3pt]">Indigenous-services certifications, conferences, documented playbook hours</td>
-              </tr>
-              <tr>
-                <td className="py-[3pt] pr-[4pt] font-semibold">Pilot #2 reserve</td>
-                <td className="py-[3pt] pr-[4pt] text-right">~$172k</td>
-                <td className="py-[3pt]">Held in a separate account; seeds the next reserve so they don't wait for grants</td>
-              </tr>
+              {REINVESTMENT_BUCKETS.map((bucket, index) => {
+                const isLast = index === REINVESTMENT_BUCKETS.length - 1;
+                return (
+                  <tr
+                    key={bucket.id}
+                    className={isLast ? undefined : "border-b border-[#e3dac4]"}
+                  >
+                    <td className="py-[3pt] pr-[4pt] font-semibold">
+                      {bucket.longLabel}
+                    </td>
+                    <td className="py-[3pt] pr-[4pt] text-right">
+                      {formatBucketAmount(bucket.year1Amount)}
+                    </td>
+                    <td className="py-[3pt]">{bucket.longDescription}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

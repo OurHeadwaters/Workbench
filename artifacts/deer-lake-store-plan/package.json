@@ -13,6 +13,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@workspace/headwaters-pricing": "workspace:*",
     "@workspace/practitioner-operating-plan": "workspace:*",
     "@workspace/why-stores-fail": "workspace:*"
   },

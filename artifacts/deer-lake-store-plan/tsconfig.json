@@ -18,6 +18,9 @@
       "path": "../../lib/cross-reserve-defaults"
     },
     {
+      "path": "../../lib/headwaters-pricing"
+    },
+    {
       "path": "../../lib/why-stores-fail"
     }
   ]
