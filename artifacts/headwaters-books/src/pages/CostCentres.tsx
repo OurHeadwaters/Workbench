@@ -79,6 +79,18 @@ export default function CostCentres() {
         <div>
           <h1 className="text-3xl font-serif font-bold text-foreground">Cost Centres</h1>
           <p className="text-muted-foreground mt-1">Agency tracking divisions and reporting units.</p>
+          <p className="text-xs text-muted-foreground mt-2 italic max-w-2xl">
+            Not the same primitive as the Practitioner cost-registry. When both appear together, use the long forms &mdash;{" "}
+            <a
+              href="/practitioner-operating-plan/constellation.json"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-dotted underline-offset-2 hover:text-foreground"
+            >
+              see glossary
+            </a>
+            .
+          </p>
         </div>
         {isOwner && (
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>

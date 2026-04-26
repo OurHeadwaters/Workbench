@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "lastUpdated": "2026-04-26",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
@@ -21,6 +21,40 @@
     "zoneSystem": "permaculture 0–5",
     "axiom": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
   },
+  "glossary": [
+    {
+      "term": "cost (financial primitives across artifacts)",
+      "rationale": "Two distinct primitives both named with the bare word 'cost'. They live in different artifacts, with different shapes, storage layers, and audiences. Today the artifacts don't cross-reference each other, so the bare word works in its own context. The moment they do (e.g. a future bridge that posts approved registry figures into Cost Centres), a reader holding both will silently fuse them. This entry heads that off on paper before the first cross-reference site needs it; the convention is cheap now and a schema-level rename later.",
+      "primitives": [
+        {
+          "name": "Headwaters Books cost centre",
+          "shortForm": "cost centre",
+          "artifact": "Headwaters Books",
+          "livesAt": "artifacts/headwaters-books/src/pages/CostCentres.tsx · API CostCentre entity · cost_centres table",
+          "shape": "named bookkeeping bucket where real expenses land for tracking and reporting (code, name, parentEntity, owner, isActive)",
+          "storageLayer": "server-backed (Postgres via Drizzle, behind the API)",
+          "audience": "the bookkeeper closing the books",
+          "verb": "post — a real expense lands in a cost centre"
+        },
+        {
+          "name": "Practitioner cost-registry entry",
+          "shortForm": "cost registry · cost-registry entry",
+          "artifact": "Practitioner Operating Plan",
+          "livesAt": "artifacts/practitioner-operating-plan/src/data/costRegistry.ts (~70 dollar figures) · src/components/CostReviewModal.tsx",
+          "shape": "canonical planned figure with id, value, narrative, and per-entry status (pending review / approved / edited) — the source-of-truth dictionary the slides resolve against via resolveCost()",
+          "storageLayer": "browser localStorage under 'pop:v1' (no backend, no auth)",
+          "audience": "the practitioner walking the cost review",
+          "verb": "approve / edit — a planned figure changes status"
+        }
+      ],
+      "convention": "When both appear in the same surface (a doc, a slide, a wiring layer), use the long forms — 'Practitioner cost-registry entry' and 'Headwaters Books cost centre' — never the bare word 'cost'. Within a single artifact's interior copy, the short form is fine; the long form is the cross-reference contract.",
+      "drift": {
+        "status": "forward-looking — no active drift today",
+        "trigger": "the first wiring that crosses the artifact boundary (e.g. posting an approved cost-registry figure into a Headwaters Books cost centre)",
+        "auditEntry": "Headwaters Books group · 'cost centre vs. cost registry (cross-artifact name collision)' on /practitioner-operating-plan/codetry-test"
+      }
+    }
+  ],
   "teachers": [
     { "name": "Jack Spirko", "channel": "The Survival Podcast", "tagline": "for if times get tough or even if they don't" },
     { "name": "Joel Salatin", "channel": "The Lunatic Farmer", "tagline": "frequent meditations on food and farming that bring a wise and humble conscience to practice, policy, and participation" },
