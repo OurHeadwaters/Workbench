@@ -192,10 +192,22 @@ async function buildWebExport(basePath) {
   return { webOutputDir, exportBaseUrl };
 }
 
+const HANDBOOK_ICON_FILES = [
+  "icon.png",
+  "icon-192.png",
+  "icon-512.png",
+  "icon-maskable-512.png",
+];
+
 function copyHandbookIcon(webOutputDir) {
-  const src = path.join(projectRoot, "assets", "images", "icon.png");
-  const dest = path.join(webOutputDir, "icon.png");
-  fs.copyFileSync(src, dest);
+  for (const filename of HANDBOOK_ICON_FILES) {
+    const src = path.join(projectRoot, "assets", "images", filename);
+    const dest = path.join(webOutputDir, filename);
+    if (!fs.existsSync(src)) {
+      exitWithError(`Missing handbook icon source: ${src}`);
+    }
+    fs.copyFileSync(src, dest);
+  }
 }
 
 function writeManifest(webOutputDir, exportBaseUrl) {
@@ -209,9 +221,15 @@ function writeManifest(webOutputDir, exportBaseUrl) {
   const scope = (exportBaseUrl || "") + "/";
   const startUrl = scope;
   const iconUrl = scope + "icon.png";
+  const icon192Url = scope + "icon-192.png";
+  const icon512Url = scope + "icon-512.png";
+  const iconMaskable512Url = scope + "icon-maskable-512.png";
   const filled = template
     .replace(/__SCOPE__/g, scope)
     .replace(/__START_URL__/g, startUrl)
+    .replace(/__ICON_192_URL__/g, icon192Url)
+    .replace(/__ICON_512_URL__/g, icon512Url)
+    .replace(/__ICON_MASKABLE_512_URL__/g, iconMaskable512Url)
     .replace(/__ICON_URL__/g, iconUrl);
   fs.writeFileSync(
     path.join(webOutputDir, "manifest.webmanifest"),
@@ -229,7 +247,9 @@ function writeServiceWorker(webOutputDir, exportBaseUrl, cacheVersion) {
   const precache = new Set();
   precache.add(scope);
   precache.add(scope + "manifest.webmanifest");
-  precache.add(scope + "icon.png");
+  for (const filename of HANDBOOK_ICON_FILES) {
+    precache.add(scope + filename);
+  }
 
   for (const file of allFiles) {
     const rel = path.relative(webOutputDir, file).split(path.sep).join("/");
@@ -264,7 +284,9 @@ function patchIndexHtml(webOutputDir, exportBaseUrl) {
 
   const headInjection = `
   <link rel="manifest" href="${scope}manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="${scope}icon.png" />
+  <link rel="apple-touch-icon" href="${scope}icon-512.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="${scope}icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="${scope}icon-512.png" />
   <link rel="icon" type="image/png" sizes="1024x1024" href="${scope}icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />

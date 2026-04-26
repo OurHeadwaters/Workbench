@@ -14,16 +14,28 @@
   "categories": ["books", "education", "reference"],
   "icons": [
     {
-      "src": "__ICON_URL__",
-      "sizes": "1024x1024",
+      "src": "__ICON_192_URL__",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "__ICON_512_URL__",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "__ICON_MASKABLE_512_URL__",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "__ICON_URL__",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ]
 }
