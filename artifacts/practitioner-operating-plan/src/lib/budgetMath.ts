@@ -46,6 +46,60 @@ const C_ROLE_IDS = [
   "budget.c.recurringTech",
 ] as const;
 
+export const PEOPLE_BUCKET_KEYS = [
+  "costOfLiving",
+  "resilience",
+  "retention",
+  "appreciation",
+  "growth",
+] as const;
+export type PeopleBucketKey = (typeof PEOPLE_BUCKET_KEYS)[number];
+
+const A_PEOPLE_BUCKET_IDS = PEOPLE_BUCKET_KEYS.map(
+  (k) => `people.a.${k}`,
+) as readonly string[];
+const B_PEOPLE_BUCKET_IDS = PEOPLE_BUCKET_KEYS.map(
+  (k) => `people.b.${k}`,
+) as readonly string[];
+const C_PEOPLE_BUCKET_IDS = PEOPLE_BUCKET_KEYS.map(
+  (k) => `people.c.${k}`,
+) as readonly string[];
+
+// "Base payroll" = the loaded salary lines that the People & Retention
+// buckets sit on top of. Mirrors PeopleSizing's PAYROLL_IDS — kept here
+// so the Budget slide's "% of base payroll" reads against the same
+// denominator the PeopleSizing slide reports against.
+const A_BASE_PAYROLL_IDS = [
+  "budget.a.practitioner",
+  "budget.a.opsManager",
+  "budget.a.itTech",
+  "budget.a.bookkeeper",
+  "budget.a.foodHandler",
+] as const;
+
+const B_BASE_PAYROLL_IDS = [
+  "budget.b.practitioner",
+  "budget.b.opsManager",
+  "budget.b.itTech",
+  "budget.b.bookkeeper",
+  "budget.b.foodHandler",
+  "budget.b.cdAssociate",
+  "budget.b.juniorAnalyst",
+] as const;
+
+const C_BASE_PAYROLL_IDS = [
+  "budget.c.practitioner",
+  "budget.c.opsManager",
+  "budget.c.itTech",
+  "budget.c.bookkeeper",
+  "budget.c.foodHandler",
+  "budget.c.cdAssociate",
+  "budget.c.juniorAnalyst",
+  "budget.c.seniorEngineer",
+  "budget.c.regionalOutreach",
+  "budget.c.trainer",
+] as const;
+
 const SALT_BENCH_IDS = [
   "salt.bench.directPicking",
   "salt.bench.overflow",
@@ -85,6 +139,15 @@ export type BudgetTotals = {
    */
   bridgeB: number;
   saltBenchAnnual: number;
+  peopleBucketsA: number;
+  peopleBucketsB: number;
+  peopleBucketsC: number;
+  loadedCostA: number;
+  loadedCostB: number;
+  loadedCostC: number;
+  basePayrollA: number;
+  basePayrollB: number;
+  basePayrollC: number;
 };
 
 export function computeBudgetTotals(state: AppState): BudgetTotals {
@@ -100,6 +163,15 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
   const reinvestBPct = costBasisB > 0 ? (reinvestB / costBasisB) * 100 : 0;
   const bridgeB = costBasisB * 2 + capexB;
   const saltBenchAnnual = sumIds(state, SALT_BENCH_IDS);
+  const peopleBucketsA = sumIds(state, A_PEOPLE_BUCKET_IDS);
+  const peopleBucketsB = sumIds(state, B_PEOPLE_BUCKET_IDS);
+  const peopleBucketsC = sumIds(state, C_PEOPLE_BUCKET_IDS);
+  const loadedCostA = costBasisA + peopleBucketsA;
+  const loadedCostB = costBasisB + peopleBucketsB;
+  const loadedCostC = costBasisC + peopleBucketsC;
+  const basePayrollA = sumIds(state, A_BASE_PAYROLL_IDS);
+  const basePayrollB = sumIds(state, B_BASE_PAYROLL_IDS);
+  const basePayrollC = sumIds(state, C_BASE_PAYROLL_IDS);
   return {
     askFloor,
     askReco,
@@ -113,6 +185,15 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
     reinvestBPct,
     bridgeB,
     saltBenchAnnual,
+    peopleBucketsA,
+    peopleBucketsB,
+    peopleBucketsC,
+    loadedCostA,
+    loadedCostB,
+    loadedCostC,
+    basePayrollA,
+    basePayrollB,
+    basePayrollC,
   };
 }
 
@@ -158,6 +239,24 @@ export const ROLE_IDS = {
   A: A_ROLE_IDS,
   B: B_ROLE_IDS,
   C: C_ROLE_IDS,
+};
+
+// Shared with PeopleSizing.tsx — the loaded salary lines that the
+// People & Retention buckets sit on top of, used for the "% of base
+// payroll" denominator in both places.
+export const BASE_PAYROLL_IDS = {
+  A: A_BASE_PAYROLL_IDS,
+  B: B_BASE_PAYROLL_IDS,
+  C: C_BASE_PAYROLL_IDS,
+};
+
+// Shared with PeopleSizing.tsx — the per-scenario People & Retention
+// bucket registry ids (cost-of-living, resilience, retention,
+// appreciation, growth).
+export const PEOPLE_BUCKET_IDS = {
+  A: A_PEOPLE_BUCKET_IDS,
+  B: B_PEOPLE_BUCKET_IDS,
+  C: C_PEOPLE_BUCKET_IDS,
 };
 
 export { SALT_BENCH_IDS };

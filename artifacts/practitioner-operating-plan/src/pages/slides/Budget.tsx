@@ -3,6 +3,7 @@ import { useCostValue } from "../../lib/costReview";
 import { useAppState } from "../../lib/storage";
 import { COST_REGISTRY_BY_ID } from "../../data/costRegistry";
 import { CostReviewButton } from "../../components/CostReviewButton";
+import { useBudgetTotals } from "../../lib/budgetMath";
 
 // Resolve a cost id without calling a hook — for use inside loops where
 // the count of ids depends on the row data. The single `useAppState`
@@ -155,6 +156,27 @@ export default function Budget() {
   const sumB = resolved.reduce((acc, r) => acc + (r.b ?? 0), 0) + buffer;
   const sumC = resolved.reduce((acc, r) => acc + (r.c ?? 0), 0);
 
+  const totals = useBudgetTotals();
+  const peopleA = totals.peopleBucketsA;
+  const peopleB = totals.peopleBucketsB;
+  const peopleC = totals.peopleBucketsC;
+  // Loaded cost = role lines + buckets. Use the helper so this stays
+  // in sync with anything else (cash flow, path to scale) that picks
+  // the same total off `BudgetTotals` later.
+  const loadedA = totals.loadedCostA;
+  const loadedB = totals.loadedCostB;
+  const loadedC = totals.loadedCostC;
+  // % is reported against base payroll (the loaded salary lines the
+  // buckets sit on top of), matching PeopleSizing's "~15% of base
+  // payroll" framing — not the full cost basis, which would include
+  // overhead/facilities/buffer and read misleadingly low.
+  const peoplePctA =
+    totals.basePayrollA > 0 ? (peopleA / totals.basePayrollA) * 100 : 0;
+  const peoplePctB =
+    totals.basePayrollB > 0 ? (peopleB / totals.basePayrollB) * 100 : 0;
+  const peoplePctC =
+    totals.basePayrollC > 0 ? (peopleC / totals.basePayrollC) * 100 : 0;
+
   const askFloor = useCostValue("ask.floor");
   const askReco = useCostValue("ask.recommended");
   const askScale = useCostValue("ask.scale");
@@ -289,6 +311,54 @@ export default function Budget() {
                 </td>
                 <td className="py-[0.55vh] pr-[0.6vw] text-right font-display text-primary font-semibold text-[1vw]">
                   {fmt(sumC)}
+                </td>
+                <td />
+              </tr>
+              <tr className="border-t" style={{ borderColor: "var(--slide-rule)" }}>
+                <td className="py-[0.4vh] pr-[0.6vw] text-text">
+                  <div className="font-semibold">+ People &amp; Retention buckets / mo</div>
+                </td>
+                <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono text-accent font-semibold">
+                  {fmt(peopleA)}{" "}
+                  <span className="text-muted text-[0.72vw] font-normal">
+                    ({peoplePctA.toFixed(1)}%)
+                  </span>
+                </td>
+                <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono text-accent font-semibold">
+                  {fmt(peopleB)}{" "}
+                  <span className="text-muted text-[0.72vw] font-normal">
+                    ({peoplePctB.toFixed(1)}%)
+                  </span>
+                </td>
+                <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono text-accent font-semibold">
+                  {fmt(peopleC)}{" "}
+                  <span className="text-muted text-[0.72vw] font-normal">
+                    ({peoplePctC.toFixed(1)}%)
+                  </span>
+                </td>
+                <td className="py-[0.4vh] text-muted text-[0.78vw] leading-[1.25]">
+                  % of base payroll · target ~15% · sits on top of role lines (
+                  <a
+                    href="/slide38"
+                    className="underline decoration-dotted underline-offset-2 text-primary"
+                  >
+                    Part&nbsp;V·c
+                  </a>
+                  )
+                </td>
+              </tr>
+              <tr className="border-t-2" style={{ borderColor: "var(--slide-primary)" }}>
+                <td className="py-[0.5vh] pr-[0.6vw] font-display text-primary font-semibold text-[0.95vw]">
+                  Loaded cost (basis + buckets)
+                </td>
+                <td className="py-[0.5vh] pr-[0.6vw] text-right font-display text-primary font-semibold text-[0.95vw]">
+                  {fmt(loadedA)}
+                </td>
+                <td className="py-[0.5vh] pr-[0.6vw] text-right font-display text-primary font-semibold text-[0.95vw]">
+                  {fmt(loadedB)}
+                </td>
+                <td className="py-[0.5vh] pr-[0.6vw] text-right font-display text-primary font-semibold text-[0.95vw]">
+                  {fmt(loadedC)}
                 </td>
                 <td />
               </tr>

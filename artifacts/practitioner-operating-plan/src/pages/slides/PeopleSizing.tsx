@@ -1,97 +1,61 @@
 import { useAppState } from "../../lib/storage";
-import { resolveCost } from "../../lib/budgetMath";
+import {
+  resolveCost,
+  BASE_PAYROLL_IDS,
+  PEOPLE_BUCKET_KEYS,
+  type PeopleBucketKey,
+} from "../../lib/budgetMath";
 import { CostReviewButton } from "../../components/CostReviewButton";
 
-const PAYROLL_IDS = {
-  A: [
-    "budget.a.practitioner",
-    "budget.a.opsManager",
-    "budget.a.itTech",
-    "budget.a.bookkeeper",
-    "budget.a.foodHandler",
-  ],
-  B: [
-    "budget.b.practitioner",
-    "budget.b.opsManager",
-    "budget.b.itTech",
-    "budget.b.bookkeeper",
-    "budget.b.foodHandler",
-    "budget.b.cdAssociate",
-    "budget.b.juniorAnalyst",
-  ],
-  C: [
-    "budget.c.practitioner",
-    "budget.c.opsManager",
-    "budget.c.itTech",
-    "budget.c.bookkeeper",
-    "budget.c.foodHandler",
-    "budget.c.cdAssociate",
-    "budget.c.juniorAnalyst",
-    "budget.c.seniorEngineer",
-    "budget.c.regionalOutreach",
-    "budget.c.trainer",
-  ],
-} as const;
+// Single source of truth — the same arrays the Budget slide uses for
+// its "% of base payroll" denominator (see budgetMath.ts).
+const PAYROLL_IDS = BASE_PAYROLL_IDS;
 
-type BucketRow = {
-  label: string;
-  hint: string;
-  targetPct: number;
-  ids: { a: string; b: string; c: string };
-};
-
-const bucketRows: BucketRow[] = [
-  {
+// Display data + per-bucket sub-targets for each bucket, keyed off the
+// same PEOPLE_BUCKET_KEYS that drive the registry id derivation in
+// budgetMath. Bucket membership lives in budgetMath; only the
+// labels / hints / per-bucket sub-targets live here.
+const BUCKET_DISPLAY: Record<
+  PeopleBucketKey,
+  { label: string; hint: string; targetPct: number }
+> = {
+  costOfLiving: {
     label: "02 · Cost-of-living offset",
     hint: "Grocery share · fuel · winter heat · phone",
     targetPct: 7.0,
-    ids: {
-      a: "people.a.costOfLiving",
-      b: "people.b.costOfLiving",
-      c: "people.c.costOfLiving",
-    },
   },
-  {
+  resilience: {
     label: "03 · Resilience",
     hint: "HSA · sick bank · family leave · mental-health stipend",
     targetPct: 3.25,
-    ids: {
-      a: "people.a.resilience",
-      b: "people.b.resilience",
-      c: "people.c.resilience",
-    },
   },
-  {
+  retention: {
     label: "04 · Retention milestones",
     hint: "RRSP step-up · anniversary cash · sabbatical · equipment transfer",
     targetPct: 2.25,
-    ids: {
-      a: "people.a.retention",
-      b: "people.b.retention",
-      c: "people.c.retention",
-    },
   },
-  {
+  appreciation: {
     label: "05 · Appreciation",
     hint: "Crew meal · gear allowance · paid birthday · spot bonuses",
     targetPct: 1.5,
-    ids: {
-      a: "people.a.appreciation",
-      b: "people.b.appreciation",
-      c: "people.c.appreciation",
-    },
   },
-  {
+  growth: {
     label: "06 · Growth",
     hint: "Tuition / certs · paid mentorship time",
     targetPct: 0.75,
-    ids: {
-      a: "people.a.growth",
-      b: "people.b.growth",
-      c: "people.c.growth",
-    },
   },
-];
+};
+
+const bucketRows = PEOPLE_BUCKET_KEYS.map((key) => ({
+  label: BUCKET_DISPLAY[key].label,
+  hint: BUCKET_DISPLAY[key].hint,
+  targetPct: BUCKET_DISPLAY[key].targetPct,
+  ids: {
+    a: `people.a.${key}`,
+    b: `people.b.${key}`,
+    c: `people.c.${key}`,
+  },
+}));
 
 const DRIFT_TOLERANCE_PT = 1;
 
