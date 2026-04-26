@@ -318,17 +318,49 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       return 2 * installPer + 4 * retainer;
     }
     case "crossReserve.travelPassthrough.example": {
-      // Worked rolled-up example of the receiving-reserve pass-through.
-      // Stays in lockstep with the existing per-component planning
-      // entries so the cost-review modal never surfaces two conflicting
-      // pass-through totals: 12 weekly flights + 30 lodging nights + 30
-      // food per-diem days. Pass-through is reimbursed cost — never
-      // folded into the practitioner's fee or any Y2/Y3 revenue line.
+      // Worked rolled-up example of the receiving-reserve pass-through
+      // for the fly-in scheduled (Wasaya/Bearskin) corridor. Stays in
+      // lockstep with the existing per-component planning entries so the
+      // cost-review modal never surfaces two conflicting pass-through
+      // totals: 12 weekly flights + 30 lodging nights + 30 food
+      // per-diem days. Pass-through is reimbursed cost — never folded
+      // into the practitioner's fee or any Y2/Y3 revenue line.
       const flightPerWeek = resolveCost(state, "crossReserve.travel.flightPerWeek");
       const lodgingPerNight = resolveCost(state, "crossReserve.travel.lodgingPerNight");
       const foodPerDay = resolveCost(state, "crossReserve.travel.foodPerOnsiteDay");
       return (
         CROSS_RESERVE_INSTALL_WEEKS * flightPerWeek +
+        CROSS_RESERVE_ONSITE_DAYS * lodgingPerNight +
+        CROSS_RESERVE_ONSITE_DAYS * foodPerDay
+      );
+    }
+    case "crossReserve.travelPassthrough.driveIn": {
+      // Drive-in / all-weather-road variant of the pass-through example.
+      // Same 12-week / 30-on-site-day install shape as the fly-in case
+      // but with vehicle-allowance transport (no scheduled-airline
+      // ticket) and southern-rate lodging / food. Inline constants
+      // mirror what the context string spells out so the cost-review
+      // modal stays self-explanatory; same no-double-counting rule —
+      // never added to any fee or Y2/Y3 revenue line.
+      const drivePerWeek = 400; // ≈600 km RT × $0.67/km vehicle allowance
+      const lodgingPerNight = 150; // regional motel / contractor Airbnb
+      const foodPerDay = 60; // regional grocery, NOT Northern Store
+      return (
+        CROSS_RESERVE_INSTALL_WEEKS * drivePerWeek +
+        CROSS_RESERVE_ONSITE_DAYS * lodgingPerNight +
+        CROSS_RESERVE_ONSITE_DAYS * foodPerDay
+      );
+    }
+    case "crossReserve.travelPassthrough.winterRoad": {
+      // Winter-road-only / charter-heavy variant. Same 12-week /
+      // 30-on-site-day install shape but with charter-dominated
+      // transport (no scheduled service) and deeper-north lodging /
+      // food pricing. Same no-double-counting rule.
+      const transportPerWeek = 2500; // charter rotations + winter-road truck mix
+      const lodgingPerNight = 300; // premium contractor camp / band-house
+      const foodPerDay = 130; // deeper-north Northern Store mark-up
+      return (
+        CROSS_RESERVE_INSTALL_WEEKS * transportPerWeek +
         CROSS_RESERVE_ONSITE_DAYS * lodgingPerNight +
         CROSS_RESERVE_ONSITE_DAYS * foodPerDay
       );

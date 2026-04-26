@@ -119,22 +119,47 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     expect(y3).toBe(1536400);
   });
 
-  it("travel pass-through example is a defensible round number ($22,500), reconciles with the per-component model, and is NOT double-counted in fee revenue", () => {
+  it("all three travel pass-through examples (drive-in / fly-in scheduled / winter-road-charter) are defensible round numbers, reconcile with their per-component derivations, and are NOT double-counted in fee revenue", () => {
     // The pass-through is reimbursed cost the receiving reserve pays
     // directly — not fee income to the practitioner. It must stay out of
     // the per-install fee, the Y2/Y3 cross-reserve totals, and the Y2/Y3
     // headlines, otherwise we'd be selling reimbursement-of-cost as
-    // revenue. It must also match the existing per-component planning
-    // estimates so the cost-review modal never surfaces two conflicting
-    // pass-through numbers. This test fails loudly on either.
-    const passthroughLive = getLiveCostValue(
+    // revenue. The three access-type examples (drive-in, fly-in
+    // scheduled, winter-road / charter-heavy) all share that rule, so
+    // adding any of them to the headline would be double-counting. The
+    // fly-in case must also match the existing editable per-component
+    // planning estimates so the cost-review modal never surfaces two
+    // conflicting pass-through numbers. This test fails loudly on either.
+
+    const driveInLive = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.driveIn",
+    );
+    const flyInLive = getLiveCostValue(
       DEFAULT_STATE,
       "crossReserve.travelPassthrough.example",
     );
-    // 12 × $1,000 + 30 × $250 + 30 × $100 = 12,000 + 7,500 + 3,000 = 22,500
-    expect(passthroughLive).toBe(22500);
-    // Reconciles with the existing per-component default total.
-    expect(passthroughLive).toBe(
+    const winterRoadLive = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.winterRoad",
+    );
+
+    // Drive-in: 12 × $400 + 30 × $150 + 30 × $60 = 4,800 + 4,500 + 1,800 = 11,100
+    expect(driveInLive).toBe(11100);
+    // Fly-in scheduled: 12 × $1,000 + 30 × $250 + 30 × $100 = 12,000 + 7,500 + 3,000 = 22,500
+    expect(flyInLive).toBe(22500);
+    // Winter-road / charter-heavy: 12 × $2,500 + 30 × $300 + 30 × $130 = 30,000 + 9,000 + 3,900 = 42,900
+    expect(winterRoadLive).toBe(42900);
+
+    // The lookup is monotonic by access difficulty: drive-in is the
+    // floor, fly-in scheduled is the middle case, winter-road / charter
+    // is the ceiling. Locking this ordering in keeps the modal copy
+    // honest if anyone later tunes a single number in isolation.
+    expect(driveInLive).toBeLessThan(flyInLive ?? 0);
+    expect(flyInLive).toBeLessThan(winterRoadLive ?? 0);
+
+    // The fly-in case stays wired to the editable per-component total.
+    expect(flyInLive).toBe(
       resolveCost(DEFAULT_STATE, "crossReserve.travel.totalPerInstall"),
     );
 
@@ -147,15 +172,24 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     const y2 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year2");
     const y3 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year3");
 
-    // Per-install fee revenue is purely day-rate; no travel folded in.
+    // Per-install fee revenue is purely day-rate; no travel of any
+    // access-type variant folded in.
     expect(installPer).toBe(148200);
     // Y2 cross-reserve is exactly 2 installs + 2 retainers — no travel.
     expect(crossY2).toBe(2 * 148200 + 2 * 30000);
     // Y3 cross-reserve is exactly 2 installs + 4 retainers — no travel.
     expect(crossY3).toBe(2 * 148200 + 4 * 30000);
-    // And the headlines reconcile to Deer Lake + cross-reserve only.
+    // And the headlines reconcile to Deer Lake + cross-reserve only —
+    // none of the three pass-through examples leaks into either year.
     expect(y2).toBe(1080000 + (crossY2 ?? 0));
     expect(y3).toBe(1080000 + (crossY3 ?? 0));
+    // Belt-and-suspenders: explicitly check the headlines are not
+    // accidentally inflated by any of the three pass-through lookups.
+    for (const passthrough of [driveInLive, flyInLive, winterRoadLive]) {
+      expect(installPer).not.toBe(148200 + (passthrough ?? 0));
+      expect(crossY2).not.toBe(2 * 148200 + 2 * 30000 + 2 * (passthrough ?? 0));
+      expect(crossY3).not.toBe(2 * 148200 + 4 * 30000 + 2 * (passthrough ?? 0));
+    }
   });
 
   it("travel pass-through example tracks edits to its per-component inputs", () => {

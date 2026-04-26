@@ -727,10 +727,13 @@ export const COST_REGISTRY: CostEntry[] = [
   // while the practitioner remains the discipline owner there. Travel,
   // lodging, and food are passed through to the receiving reserve at
   // cost and are deliberately NOT modelled in the fee revenue lines —
-  // see `crossReserve.travelPassthrough.example` below for the rolled-up
-  // dollar figure (~$22.5k for a typical 12-week fly-in install) and the
+  // see the three `crossReserve.travelPassthrough.*` rolled-up examples
+  // below (drive-in ≈ $11k, fly-in scheduled ≈ $22.5k, winter-road /
+  // charter-heavy ≈ $43k for a typical 12-week install — pick the one
+  // that matches the receiving reserve's access pattern) and the
   // `crossReserve.travel.*` entries further down for the per-component
-  // assumptions a receiving band council can budget against.
+  // assumptions behind the fly-in case a receiving band council can
+  // budget against.
   {
     id: "crossReserve.dayRate.onsite",
     category: "Cross-reserve install",
@@ -738,7 +741,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 3500,
     unit: "$/day",
     context:
-      "Premium-but-defensible vs. senior management consultant rates. Charged for every day the practitioner is on the receiving reserve installing the discipline. Travel/lodging/food are pass-through (see `crossReserve.travelPassthrough.example` — ~$22.5k for a typical 12-week fly-in install), not in this rate.",
+      "Premium-but-defensible vs. senior management consultant rates. Charged for every day the practitioner is on the receiving reserve installing the discipline. Travel/lodging/food are pass-through (pick the matching `crossReserve.travelPassthrough.*` example — ≈$11k drive-in, ≈$22.5k fly-in scheduled, ≈$43k winter-road / charter-heavy for a typical 12-week install), not in this rate.",
     slides: [SLIDE_PATH],
   },
   {
@@ -768,18 +771,40 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 148200,
     unit: "$/yr",
     context:
-      "Derived: 30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through (~$22.5k for a typical 12-week fly-in install — see `crossReserve.travelPassthrough.example`) billed at cost on top of this fee, and the $30k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above to move this.",
+      "Derived: 30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through billed at cost on top of this fee — pick the example that matches the receiving reserve's access pattern (≈$11k drive-in via `crossReserve.travelPassthrough.driveIn`, ≈$22.5k fly-in scheduled via `crossReserve.travelPassthrough.example`, ≈$43k winter-road / charter-heavy via `crossReserve.travelPassthrough.winterRoad`) — and the $30k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above to move this.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+  {
+    id: "crossReserve.travelPassthrough.driveIn",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · drive-in / all-weather-road reserve (12-week install)",
+    defaultValue: 11100,
+    unit: "$ one-time",
+    context:
+      "Planning number for a receiving reserve on the all-weather road network (e.g. Eagle Lake, Wabigoon, Couchiching — the practitioner drives themselves from the southern hub). Derived: 12 weekly round-trip drives × $400 (≈600 km RT × CRA-style $0.67/km vehicle allowance) = $4,800 + 30 on-site nights × $150 (regional motel / contractor Airbnb, NOT northern guesthouse rates) = $4,500 + 30 on-site days × $60 (regional grocery, NOT Northern Store mark-up) = $1,800, totalling $11,100. Materially lower than the fly-in case because there's no scheduled-airline ticket and southern food / lodging supply is competitive. Pick this when the receiving reserve sits on the all-weather road. Billed at cost to the receiving reserve on top of the day-rate fee — explicitly NOT included in `crossReserve.installRevenue.perReserve`, `crossReserve.year2.revenue`, or `crossReserve.year3.revenue`, so there is no double-counting in the headline.",
     slides: [SLIDE_PATH],
     derived: true,
   },
   {
     id: "crossReserve.travelPassthrough.example",
     category: "Cross-reserve install",
-    label: "Travel pass-through · typical 12-week fly-in install (worked example)",
+    label: "Travel pass-through · fly-in scheduled (Wasaya/Bearskin) reserve (12-week install)",
     defaultValue: 22500,
     unit: "$ one-time",
     context:
-      "Worked rolled-up example so the receiving band council can budget for the pass-through up front instead of being surprised by it mid-install. Derived from the per-component planning estimates below: 12 weekly round-trip flights × $1,000 (`crossReserve.travel.flightPerWeek` — Bearskin/Wasaya from Dryden/Sioux Lookout) = $12,000 + 30 on-site nights × $250 (`crossReserve.travel.lodgingPerNight` — northern guesthouse / band-house) = $7,500 + 30 on-site days × $100 (`crossReserve.travel.foodPerOnsiteDay` — Northern Store food costs) = $3,000, totalling $22,500. Reconciles with `crossReserve.travel.totalPerInstall` and the pass-through line in `crossReserve.year1.stickerPrice`. Billed at cost to the receiving reserve on top of the day-rate fee — explicitly NOT included in `crossReserve.installRevenue.perReserve`, `crossReserve.year2.revenue`, or `crossReserve.year3.revenue`, so there is no double-counting in the headline. Drive-in or all-weather-road reserves will be materially lower; winter-road-only or charter-dependent reserves can run higher.",
+      "Planning number for a receiving reserve served by scheduled NAN-territory airlines (Wasaya / Bearskin from Dryden / Sioux Lookout / Thunder Bay) with a band-run guesthouse and northern per-diem food. The middle-of-the-road case and the one wired to the editable per-component lines below so a receiving band council can replace the planning estimates with their own corridor's actual numbers. Derived from those components: 12 weekly round-trip flights × $1,000 (`crossReserve.travel.flightPerWeek`) = $12,000 + 30 on-site nights × $250 (`crossReserve.travel.lodgingPerNight` — northern guesthouse / band-house) = $7,500 + 30 on-site days × $100 (`crossReserve.travel.foodPerOnsiteDay` — Northern Store food costs) = $3,000, totalling $22,500. Reconciles with `crossReserve.travel.totalPerInstall` and the pass-through line in `crossReserve.year1.stickerPrice`. Billed at cost to the receiving reserve on top of the day-rate fee — explicitly NOT included in `crossReserve.installRevenue.perReserve`, `crossReserve.year2.revenue`, or `crossReserve.year3.revenue`, so there is no double-counting in the headline.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+  {
+    id: "crossReserve.travelPassthrough.winterRoad",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · winter-road / charter-heavy reserve (12-week install)",
+    defaultValue: 42900,
+    unit: "$ one-time",
+    context:
+      "Planning number for a receiving reserve with no year-round scheduled air service — accessible only by winter road (Jan–Mar) plus charter the rest of the year (e.g. Pikangikum, Webequie, Wapekeka outside winter-road season). Derived: 12 install weeks × $2,500 average transport (mix of ~6 charter rotations at ~$4,500/leg + winter-road truck weeks at ~$300 fuel/wear) = $30,000 + 30 on-site nights × $300 (premium contractor camp / band-house at deeper-north pricing) = $9,000 + 30 on-site days × $130 (deeper-north Northern Store mark-up) = $3,900, totalling $42,900. Materially higher than the scheduled fly-in case because charter capacity, not ticket price, sets the corridor cost. Pick this when the receiving reserve has no scheduled air service. Billed at cost to the receiving reserve on top of the day-rate fee — explicitly NOT included in `crossReserve.installRevenue.perReserve`, `crossReserve.year2.revenue`, or `crossReserve.year3.revenue`, so there is no double-counting in the headline.",
     slides: [SLIDE_PATH],
     derived: true,
   },
@@ -897,7 +922,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 356400,
     unit: "$/yr",
     context:
-      "Derived: 2 new reserve installs × $148,200 + 2 first-year retainers × $30,000 = $356,400. Stacks on top of the $1.08M Deer Lake contract to make the $1,436,400 Year-2 headline. Travel pass-through (~$22.5k per fly-in install — see `crossReserve.travelPassthrough.example`) is reimbursed at cost by each receiving reserve and is deliberately NOT in this number — it would be double-counting fee income. Edit the cross-reserve day rates or the retainer to move this.",
+      "Derived: 2 new reserve installs × $148,200 + 2 first-year retainers × $30,000 = $356,400. Stacks on top of the $1.08M Deer Lake contract to make the $1,436,400 Year-2 headline. Travel pass-through (≈$11k drive-in / ≈$22.5k fly-in scheduled / ≈$43k winter-road or charter-heavy per install — see the three `crossReserve.travelPassthrough.*` examples) is reimbursed at cost by each receiving reserve and is deliberately NOT in this number — folding any of the three lookups in would be double-counting fee income. Edit the cross-reserve day rates or the retainer to move this.",
     slides: [SLIDE_PATH],
     derived: true,
   },
@@ -908,7 +933,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 416400,
     unit: "$/yr",
     context:
-      "Derived: 2 new reserve installs × $148,200 + 4 active retainers × $30,000 = $416,400. Retainer income compounds as more reserves go live. Stacks on top of the $1.08M Deer Lake contract to make the $1,496,400 Year-3 headline. Travel pass-through (~$22.5k per new fly-in install — see `crossReserve.travelPassthrough.example`) is reimbursed at cost by each receiving reserve and is deliberately NOT in this number; only the 2 new installs incur it in Y3 (the 2 prior reserves are in retainer mode).",
+      "Derived: 2 new reserve installs × $148,200 + 4 active retainers × $30,000 = $416,400. Retainer income compounds as more reserves go live. Stacks on top of the $1.08M Deer Lake contract to make the $1,496,400 Year-3 headline. Travel pass-through (≈$11k drive-in / ≈$22.5k fly-in scheduled / ≈$43k winter-road or charter-heavy per new install — see the three `crossReserve.travelPassthrough.*` examples) is reimbursed at cost by each receiving reserve and is deliberately NOT in this number; only the 2 new installs incur it in Y3 (the 2 prior reserves are in retainer mode).",
     slides: [SLIDE_PATH],
     derived: true,
   },
