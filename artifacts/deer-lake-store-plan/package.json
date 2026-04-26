@@ -8,7 +8,9 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "validate-slides": "pnpm exec tsx scripts/validate-slides.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@workspace/practitioner-operating-plan": "workspace:*",
@@ -28,6 +30,7 @@
     "tailwindcss": "catalog:",
     "tsx": "catalog:",
     "vite": "catalog:",
+    "vitest": "^4.1.5",
     "wouter": "catalog:",
     "zod": "catalog:"
   }
