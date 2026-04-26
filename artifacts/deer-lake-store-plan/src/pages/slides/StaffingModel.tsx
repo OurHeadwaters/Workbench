@@ -108,7 +108,7 @@ export default function StaffingModel() {
               <span className="font-semibold">Practitioner</span> — software, training delivery, monthly Deer Lake visit. Carries the relationship and the codebase.
             </div>
             <div>
-              <span className="font-semibold">Dryden hub operator</span> — based at the Dryden shop. Salt + piecework + Deer Lake order coordination + phone. Absorbs Food Handler and Ops Manager from earlier drafts.
+              <span className="font-semibold">Dryden hub operator</span> — based at the Dryden shop. Salt + piecework + Deer Lake order coordination + phone. V3 fold of V2's Food Handler and Ops Manager (the Practitioner Operating Plan OnePager A·floor keeps the two lines broken out so the contractor's CFO can audit the floor totals line-by-line; same work, presented for two different audiences).
             </div>
             <div>
               <span className="font-semibold">Bookkeeper, part-time, remote</span> — reconciliation, monthly close, payroll prep. Off the store's payroll.

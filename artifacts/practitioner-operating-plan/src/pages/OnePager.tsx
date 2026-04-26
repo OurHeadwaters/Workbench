@@ -185,7 +185,7 @@ export default function OnePager() {
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
                 <td className="py-[3pt] pr-[4pt] font-semibold">Operations Manager</td>
-                <td className="py-[3pt] pr-[4pt]">Phone, depot, day-of fires; 807 ops + Deer Lake distribution</td>
+                <td className="py-[3pt] pr-[4pt]">Phone, depot, day-of fires; 807 ops + Deer Lake distribution <span className="text-[7.5pt] text-[#6b7665] italic">(folds with the Food Handler line below into the slides' $8.5k Hub Operator headline; broken out here so the A·floor cost basis is auditable line-by-line)</span></td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$8,500</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
@@ -203,7 +203,7 @@ export default function OnePager() {
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
                 <td className="py-[3pt] pr-[4pt] font-semibold">Food Handler</td>
-                <td className="py-[3pt] pr-[4pt]">Headwaters-owned, embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen/shop tidy, food &amp; supplies inventory <span className="text-[7.5pt] text-[#6b7665] italic">(Practitioner deck V3 framing folds this into the $8.5k Hub Operator headline; broken out here so the A·floor cost basis is auditable)</span></td>
+                <td className="py-[3pt] pr-[4pt]">Headwaters-owned, embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen/shop tidy, food &amp; supplies inventory <span className="text-[7.5pt] text-[#6b7665] italic">(folds with the Operations Manager line above into the slides' $8.5k Hub Operator headline; broken out here so the A·floor cost basis is auditable line-by-line)</span></td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$5,000</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>

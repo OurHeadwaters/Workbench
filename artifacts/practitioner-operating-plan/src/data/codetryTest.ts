@@ -99,13 +99,13 @@ export const codetryTest: CodetryTestGroup[] = [
       {
         name: "Hub Operator",
         livesAt:
-          "src/pages/slides/StaffingModel.tsx (Deer Lake) · src/pages/slides/TheSixPeople.tsx · OnePager Food Handler line",
+          "src/pages/slides/StaffingModel.tsx (Deer Lake) · src/pages/slides/TheSixPeople.tsx · OnePager Operations Manager + Food Handler lines · costRegistry.ts ADR (Floor scenario block comment)",
         renameCandidate: "warehouse worker · logistics coordinator · Dryden hand",
         whatWouldChange:
           "'Hub' is the noun that makes the role coherent — the role operates the Dryden aggregation hub. Without 'hub' the duties (salt + piecework + Deer Lake order coordination + phone) read as an unrelated list. 'Warehouse worker' loses the operating-system-level coordination. 'Logistics coordinator' loses the on-the-floor batching. 'Dryden hand' loses both. The fold (Hub Operator absorbs the V2 Food Handler + Operations Manager roles) only makes sense because the hub is the single thing being operated.",
-        verdict: "drift",
+        verdict: "load-bearing",
         followUp:
-          "The slide says 'Hub Operator' (folded), the OnePager keeps a separate '$5,000 Food Handler' line so the A·floor agency cost basis adds up cleanly. Two surfaces, two vocabularies. Recommend: keep the slide canonical (the fold is real), add an explicit OnePager note that the Food Handler line is the same role under its pre-fold name for cost-basis arithmetic — or fold the OnePager line and re-derive A·floor against the merged Hub Operator number.",
+          "Resolved (Task #254, 2026-04). The earlier drift verdict came from two surfaces speaking different words for the same work: the slides (TheSixPeople in this deck, StaffingModel in the Deer Lake deck) call it 'Hub Operator' at $8.5k loaded — a V3 fold of V2's Food Handler + Operations Manager — while the OnePager A·floor table keeps Operations Manager ($8.5k) and Food Handler ($5k) as separate cost-basis lines. Decision: keep separate-with-explanation. The slides carry the lean-roster narrative (where the noun does structural work — operates the hub); the printed OnePager has to give the contractor's CFO an auditable $/line breakdown at the floor. All three surfaces now carry cross-reference notes pointing at the others (TheSixPeople → OnePager + ADR, Deer Lake StaffingModel → OnePager, OnePager OM + Food Handler rows → slide). The registry contract is recorded as a block comment in costRegistry.ts at the Floor scenario (A) section: Hub Operator (folded) == budget.a.opsManager + budget.a.foodHandler. A·floor cost basis ($48,200) is unchanged; rows stay separate in the registry, fold only at presentation time. The ADR also flags a separate registry/print drift to clean up later: budget.a.opsManager carries $9,500 in the registry but the OnePager still prints $8,500 — out of scope for this fold ADR, belongs to a future OnePager hardcoded-numbers reconciliation pass.",
       },
       {
         name: "Layer One · Layer Two · Layer Three",

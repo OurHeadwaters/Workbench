@@ -980,6 +980,54 @@ export const COST_REGISTRY: CostEntry[] = [
   },
 
   // -------- Floor scenario (A) --------------------------------------
+  //
+  // ADR · Hub Operator vs Food Handler vocabulary fork (resolved 2026-04)
+  // -------------------------------------------------------------------
+  // Context: the Codetry-test audit (Task #244) flagged a "drift" verdict
+  // on the Hub Operator role. The slides (TheSixPeople in this deck,
+  // StaffingModel in the Deer Lake deck) call the role "Hub Operator" at
+  // a single $8,500/mo loaded headline — a V3 fold of the V2 Food
+  // Handler + Operations Manager work into one Dryden-based human. The
+  // OnePager A·floor table keeps Operations Manager and Food Handler as
+  // two separate cost-basis lines so the $48,200 floor totals are
+  // auditable line-by-line.
+  //
+  // Decision (Task #254): keep separate-with-explanation. The two
+  // surfaces speak to different audiences:
+  //   • the slides carry the lean-roster narrative ("V3 fits in six
+  //     people, not eight") — Hub Operator is the right name there
+  //     because the noun does the structural work (operates the hub);
+  //   • the printed OnePager has to give the contractor's CFO an
+  //     auditable $/line breakdown, so OM and Food Handler stay broken
+  //     out at the floor.
+  // Both surfaces carry an explicit cross-reference note pointing at
+  // the other so a reader holding both does not silently fork the
+  // vocabulary. The A·floor cost basis ($48,200) is unchanged.
+  //
+  // Numbers note (intentional, not a bug): the slide shows the Hub
+  // Operator headline at $8.5k loaded; the OnePager A·floor table shows
+  // Operations Manager at $8.5k *and* Food Handler at $5k (two distinct
+  // people at the floor). The slide is a V3 lean-roster narrative where
+  // one person carries the folded role; the OnePager A·floor models a
+  // walk-away scenario where Headwaters embeds a dedicated Food Handler
+  // at the Deer Lake store from Day 1 in addition to the Dryden Ops
+  // Manager. Same role *name* in V2/V3 framing, different *staffing
+  // count* at the floor — that's why both lines sit on the OnePager but
+  // collapse on the slide.
+  //
+  // Registry-vs-OnePager numbers footnote (separate drift, not in scope
+  // here): the registry's `budget.a.opsManager` carries $9,500 (parity-
+  // bumped to match IT/Tech), absorbed by a $1k drop in
+  // `budget.a.practitioner`. The printed OnePager A·floor table still
+  // shows OM at $8,500. That's a registry/print drift that postdates
+  // this fold ADR and belongs to a separate reconciliation pass on the
+  // OnePager hardcoded numbers — not relitigated here.
+  //
+  // If a future surface needs to fold these into a single Hub Operator
+  // line, the registry contract is: Hub Operator (folded) ==
+  // budget.a.opsManager + budget.a.foodHandler. Keep the registry rows
+  // separate; only fold at presentation time.
+  // -------------------------------------------------------------------
   {
     id: "budget.a.practitioner",
     category: "Floor scenario (A · $60k)",
