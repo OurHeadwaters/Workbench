@@ -126,6 +126,17 @@ export default function Codetry() {
             the poem lives <span className="italic">as</span> the
             architecture, and the source is what makes it run.
           </p>
+          <p className="mt-[4pt] print:mt-[3pt] text-[8pt] text-[#6b7665] leading-[1.4] print:text-[7pt]">
+            <span className="font-mono uppercase tracking-[0.18em] text-[7pt] text-[#1f3d2e] mr-[4pt]">
+              Companion
+            </span>
+            <span className="font-mono">
+              /practitioner-operating-plan/codetry-vs-literate
+            </span>{" "}
+            &mdash; the same distinction drawn against literate
+            programming on a single square sheet, for readers who already
+            know what literate programming is.
+          </p>
 
           <Subhead>The saltbox principle</Subhead>
           <p>
