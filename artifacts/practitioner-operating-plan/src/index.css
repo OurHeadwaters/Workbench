@@ -149,3 +149,132 @@ body {
     display: none !important;
   }
 }
+
+/* Square sheet: 1:1 frame holding the Codetry vs. Literate Programming
+   comparison. Looks like a paper zine on screen, prints to a single
+   square sheet on letter. Header + footer strips sit above and below
+   the square; the square itself holds the comparison. */
+.square-screen {
+  background: #d6cdb8;
+  min-height: 100vh;
+  width: 100%;
+  padding: 4vh 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.square-page {
+  width: 8in;
+  background: #faf6ec;
+  padding: 0.32in 0;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-body-family);
+  color: var(--slide-ink);
+  box-sizing: border-box;
+  /* Named page so the @page rule below applies only to this sheet
+     and doesn't override the 0.4in margins the existing one-pager
+     pages (OnePager, PaybackMemo, Codetry, etc.) rely on. */
+  page: square-sheet;
+}
+
+.square-header,
+.square-footer {
+  padding: 0 0.32in;
+}
+
+.square-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  background: #faf6ec;
+  border-top: 1px solid var(--slide-rule);
+  border-bottom: 1px solid var(--slide-rule);
+  margin: 0.2in 0;
+  box-sizing: border-box;
+}
+
+.square-spine {
+  background: var(--slide-rule);
+}
+
+.square-col {
+  padding: 0.28in 0.3in;
+  display: flex;
+  flex-direction: column;
+  gap: 0.14in;
+  box-sizing: border-box;
+  break-inside: avoid;
+}
+
+.square-row {
+  break-inside: avoid;
+}
+
+/* Graceful min-width fallback — not the design target, but the square
+   shouldn't blow out the viewport on a phone. The square itself holds
+   its 1:1 ratio; the page chrome around it tightens up. */
+@media (max-width: 720px) {
+  .square-screen {
+    padding: 0;
+    background: #f4ede0;
+  }
+
+  .square-page {
+    width: 100%;
+    box-shadow: none;
+    padding: 16pt 0;
+  }
+
+  .square-header,
+  .square-footer {
+    padding: 0 14pt;
+  }
+
+  .square-frame {
+    margin: 14pt 0;
+  }
+
+  .square-col {
+    padding: 14pt 12pt;
+    gap: 10pt;
+  }
+}
+
+@media print {
+  /* Named-page rule scoped to .square-page only, so OnePager,
+     PaybackMemo, Codetry, etc. keep their 0.4in margin from the
+     unnamed @page block above. */
+  @page square-sheet {
+    size: letter portrait;
+    margin: 0.25in;
+  }
+
+  .square-screen {
+    background: #ffffff !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    align-items: flex-start;
+  }
+
+  .square-page {
+    width: 8in !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .square-frame {
+    background: #ffffff !important;
+    margin: 0.18in 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .square-col {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

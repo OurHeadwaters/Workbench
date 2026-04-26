@@ -1,10 +1,20 @@
 {
-  "version": "0.5.0",
-  "lastUpdated": "2026-04-25",
+  "version": "0.5.1",
+  "lastUpdated": "2026-04-26",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
     "manifest": "/practitioner-operating-plan/constellation.json"
   },
+  "companions": [
+    {
+      "id": "codetry-vs-literate",
+      "title": "Codetry vs. Literate Programming",
+      "url": "/practitioner-operating-plan/codetry-vs-literate",
+      "kind": "square-sheet",
+      "audience": "the remnant — readers who already know what literate programming is",
+      "purpose": "single 1:1 square sheet holding the Codetry / literate-programming comparison side by side; chrome-free, print-friendly, linkable from anywhere in the constellation"
+    }
+  ],
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
