@@ -1,11 +1,12 @@
-import { useAppState } from "../../lib/storage";
-import { resolveCost, ROLE_IDS } from "../../lib/budgetMath";
+import { useBudgetTotals } from "../../lib/budgetMath";
 import { CostReviewButton } from "../../components/CostReviewButton";
 
 type Scenario = {
   key: "A" | "B" | "C";
   label: string;
   contract: number;
+  costBasis: number;
+  peopleBuckets: number;
   cost: number;
   capex: number;
   cum: number[];
@@ -19,49 +20,57 @@ function buildScenario(args: {
   key: Scenario["key"];
   label: string;
   contract: number;
-  cost: number;
+  costBasis: number;
+  peopleBuckets: number;
   capex: number;
   stroke: string;
   recommended?: boolean;
 }): Scenario {
+  // The runway projection uses *loaded* monthly outflow (role lines +
+  // People & Retention buckets) so payroll-bucket spend doesn't slip
+  // out of the bridge math. The card still surfaces the two pieces
+  // separately so the contractor's CFO can read where the number came
+  // from.
+  const cost = args.costBasis + args.peopleBuckets;
   const cum: number[] = [];
   let running = 0;
   for (let m = 1; m <= 12; m++) {
     const inflow = m >= 3 ? args.contract : 0;
-    const outflow = args.cost + (m === 1 ? args.capex : 0);
+    const outflow = cost + (m === 1 ? args.capex : 0);
     running += inflow - outflow;
     cum.push(running);
   }
   const bridge = -Math.min(...cum);
   const ar = args.contract * 2;
-  return { ...args, cum, bridge, ar };
+  return { ...args, cost, cum, bridge, ar };
 }
-
-// Cost basis per scenario is summed off the same per-role registry ids
-// the Budget table renders — that's how an edit to (e.g.) "Practitioner
-// / Lead · scenario B" propagates here without a second source of truth.
-const { A: A_ROLE_IDS, B: B_ROLE_IDS, C: C_ROLE_IDS } = ROLE_IDS;
 
 const fmt = (n: number) =>
   (n < 0 ? "−" : "") + "$" + Math.abs(Math.round(n / 1000)) + "k";
 
 export default function CashFlow() {
-  const state = useAppState();
-  const sumIds = (ids: readonly string[]) =>
-    ids.reduce((acc, id) => acc + resolveCost(state, id), 0);
-
-  const askFloor = resolveCost(state, "ask.floor");
-  const askReco = resolveCost(state, "ask.recommended");
-  const askScale = resolveCost(state, "ask.scale");
-  const capexB = resolveCost(state, "capex.b");
-  const capexC = resolveCost(state, "capex.c");
+  const totals = useBudgetTotals();
+  const {
+    askFloor,
+    askReco,
+    askScale,
+    costBasisA,
+    costBasisB,
+    costBasisC,
+    peopleBucketsA,
+    peopleBucketsB,
+    peopleBucketsC,
+    capexB,
+    capexC,
+  } = totals;
 
   const scenarios: Scenario[] = [
     buildScenario({
       key: "A",
       label: `$${Math.round(askFloor / 1000)}k contract`,
       contract: askFloor,
-      cost: sumIds(A_ROLE_IDS),
+      costBasis: costBasisA,
+      peopleBuckets: peopleBucketsA,
       capex: 0,
       stroke: "#6b7665",
     }),
@@ -69,7 +78,8 @@ export default function CashFlow() {
       key: "B",
       label: `$${Math.round(askReco / 1000)}k contract`,
       contract: askReco,
-      cost: sumIds(B_ROLE_IDS),
+      costBasis: costBasisB,
+      peopleBuckets: peopleBucketsB,
       capex: capexB,
       stroke: "#b85a3e",
       recommended: true,
@@ -78,7 +88,8 @@ export default function CashFlow() {
       key: "C",
       label: `$${Math.round(askScale / 1000)}k contract`,
       contract: askScale,
-      cost: sumIds(C_ROLE_IDS),
+      costBasis: costBasisC,
+      peopleBuckets: peopleBucketsC,
       capex: capexC,
       stroke: "#1f3d2e",
     }),
@@ -310,7 +321,26 @@ export default function CashFlow() {
                   </div>
                   <div className="flex justify-between">
                     <span>Cost basis / mo</span>
-                    <span className="font-mono font-semibold">−${(s.cost / 1000).toFixed(0)}k</span>
+                    <span className="font-mono font-semibold">−${(s.costBasis / 1000).toFixed(0)}k</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>People &amp; Retention / mo</span>
+                    <span className="font-mono font-semibold">
+                      {s.peopleBuckets > 0
+                        ? `−$${(s.peopleBuckets / 1000).toFixed(1)}k`
+                        : "—"}
+                    </span>
+                  </div>
+                  <div
+                    className="flex justify-between pt-[0.3vh] border-t border-dotted"
+                    style={
+                      isReco
+                        ? { borderColor: "rgba(244,237,224,0.35)" }
+                        : { borderColor: "var(--slide-rule)" }
+                    }
+                  >
+                    <span>Loaded outflow / mo</span>
+                    <span className="font-mono font-semibold">−${(s.cost / 1000).toFixed(1)}k</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Day-one tech CAPEX</span>
@@ -348,15 +378,17 @@ export default function CashFlow() {
         </div>
 
         <div className="mt-[0.8vh] font-body text-[0.82vw] text-muted leading-[1.35]">
-          Bridge needed = the M2 trough — two months of cost basis plus any
-          day-one tech CAPEX, all spent before any net-60 invoice clears. Not
-          lost — working capital tied up in receivables, recovered when the
-          last two invoices clear.{" "}
+          Bridge needed = the M2 trough — two months of <em>loaded</em>{" "}
+          monthly outflow (cost basis + People &amp; Retention buckets) plus
+          any day-one tech CAPEX, all spent before any net-60 invoice
+          clears. Not lost — working capital tied up in receivables,
+          recovered when the last two invoices clear.{" "}
           <span className="text-primary font-semibold">
             Recommended day-one ask: ~${Math.round(bridgeB / 1000)}k of bridge capital
           </span>{" "}
-          for the {fmt(askReco)} scenario, so the team is paid and the infrastructure is
-          shipped before the first cheque lands. Cost basis now includes the
+          for the {fmt(askReco)} scenario, so the team is paid (including the
+          payroll-bucket commitments) and the infrastructure is shipped
+          before the first cheque lands. Cost basis now includes the
           aggregation hub line ($3k/mo, all-in) — see{" "}
           <a
             href="/lease-tooling"

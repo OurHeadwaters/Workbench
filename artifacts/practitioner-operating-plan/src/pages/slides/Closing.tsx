@@ -5,7 +5,7 @@ const fmtK1 = (n: number) =>
   "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
 
 export default function Closing() {
-  const { askReco, costBasisB, reinvestB, reinvestBPct, bridgeB } =
+  const { askReco, costBasisB, reinvestB, reinvestBPct, loadedBridgeB } =
     useBudgetTotals();
 
   return (
@@ -68,7 +68,8 @@ export default function Closing() {
             (~{reinvestBPct.toFixed(0)}%) —
             tech infrastructure, training, and the seed for pilot #2. Audited
             annually against savings delivered to Deer Lake. Day-one bridge
-            ask: <span className="font-semibold">~${Math.round(bridgeB / 1000)}k</span>.
+            ask: <span className="font-semibold">~${Math.round(loadedBridgeB / 1000)}k</span>{" "}
+            (two months of loaded outflow + day-one CAPEX).
           </div>
         </div>
 

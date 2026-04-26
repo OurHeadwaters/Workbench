@@ -6,34 +6,44 @@ type Stage = {
   headline: string;
   body: string;
   cost: string;
+  loaded?: string;
 };
 
-// Annualised costs are derived from the live recommended ask so an edit
-// to that single number on Budget restages this whole slide.
-function buildStages(askReco: number): Stage[] {
+// Annualised totals are derived from the live recommended ask + the
+// live loaded monthly cost so an edit to either on Budget restages
+// this whole slide. Headline = revenue (the contract size); loaded =
+// what the org actually pays out (cost basis + People & Retention
+// buckets), so the year totals reconcile with the Cash Flow slide.
+function buildStages(askReco: number, loadedCostB: number): Stage[] {
   const annualMillions = (n: number) =>
     "~$" + (n / 1_000_000).toLocaleString("en-US", { maximumFractionDigits: 2 }) + "M";
   const yr1 = askReco * 12;
   const yr2 = askReco * 12 * 2;
   const yr3 = askReco * 12 * 5;
+  const loadedYr1 = loadedCostB * 12;
+  const loadedYr2 = loadedCostB * 12 * 2;
+  const loadedYr3 = loadedCostB * 12 * 5;
   return [
     {
       year: "Year 1",
       headline: "Deer Lake pilot",
       body: "Stand up the team, ship all six modules, deliver the contract, document everything as we go. The transparency stack is live by M9.",
       cost: `1 contract · ${annualMillions(yr1)} annualised`,
+      loaded: `Loaded outflow · ${annualMillions(loadedYr1)}`,
     },
     {
       year: "Year 2",
       headline: "Pilot #2 — second reserve",
       body: "Marginal cost of the second contract is mostly just the practitioner's time. Back office, tech infrastructure, hiring runbook and accountability framework are already built. Pilot #2 doesn't wait for grants — it draws from year-1 reinvestment reserve.",
       cost: `2 concurrent contracts · ${annualMillions(yr2)} annualised`,
+      loaded: `Loaded outflow · ${annualMillions(loadedYr2)}`,
     },
     {
       year: "Year 3",
       headline: "3–5 contracts running concurrently",
       body: "The agency is the deliverable. Two CD Associates run engagement-side; IT/Tech and senior engineer run the infrastructure. Each pilot ships the same six modules with reserve-specific adaptations.",
       cost: `Up to 5 contracts · ${annualMillions(yr3)}+ annualised`,
+      loaded: `Loaded outflow · ${annualMillions(loadedYr3)}+`,
     },
     {
       year: "Year 5",
@@ -45,8 +55,8 @@ function buildStages(askReco: number): Stage[] {
 }
 
 export default function PathToScale() {
-  const { askReco } = useBudgetTotals();
-  const stages = buildStages(askReco);
+  const { askReco, loadedCostB } = useBudgetTotals();
+  const stages = buildStages(askReco, loadedCostB);
   return (
     <div
       className="relative w-screen h-screen overflow-hidden"
@@ -118,7 +128,10 @@ export default function PathToScale() {
                 className="mt-[1vh] pt-[0.8vh] border-t font-mono text-[0.78vw] leading-[1.35]"
                 style={{ borderColor: "rgba(244,237,224,0.25)", color: "#e9c8a8" }}
               >
-                {s.cost}
+                <div>{s.cost}</div>
+                {s.loaded && (
+                  <div className="opacity-70 mt-[0.3vh]">{s.loaded}</div>
+                )}
               </div>
               {i < stages.length - 1 && (
                 <div

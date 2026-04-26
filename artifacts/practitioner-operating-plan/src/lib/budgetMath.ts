@@ -133,11 +133,21 @@ export type BudgetTotals = {
   reinvestB: number;
   reinvestBPct: number;
   /**
-   * Day-one bridge for Scenario B = two months of cost basis + day-one CAPEX.
-   * Indigenous-services contracts pay net-60, so months 1–2 have no inflows;
-   * the trough is at end of month 2. Same model used by `CashFlow.tsx`.
+   * Day-one bridge for Scenario B = two months of *cost basis* + day-one
+   * CAPEX. Kept for any view that wants the unloaded (role-line-only)
+   * trough; the runway math the contractor's CFO reads now uses
+   * `loadedBridgeB`, which folds in the People & Retention buckets the
+   * org actually pays out each month.
    */
   bridgeB: number;
+  /**
+   * Day-one bridge for Scenario B at *loaded* cost = two months of
+   * (role lines + People & Retention buckets) + day-one CAPEX. This is
+   * the number the Cash Flow projection plots and the Closing slide
+   * surfaces, so the bridge ask reconciles with what actually leaves
+   * the bank account in months 1–2.
+   */
+  loadedBridgeB: number;
   saltBenchAnnual: number;
   peopleBucketsA: number;
   peopleBucketsB: number;
@@ -169,6 +179,11 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
   const loadedCostA = costBasisA + peopleBucketsA;
   const loadedCostB = costBasisB + peopleBucketsB;
   const loadedCostC = costBasisC + peopleBucketsC;
+  // Bridge ask the contractor's CFO actually has to underwrite — two
+  // months of *loaded* outflow (role lines + People & Retention buckets)
+  // plus day-one CAPEX. Using costBasisB here would silently exclude
+  // the ~$8.8k/mo of bucket spend the practitioner has committed to.
+  const loadedBridgeB = loadedCostB * 2 + capexB;
   const basePayrollA = sumIds(state, A_BASE_PAYROLL_IDS);
   const basePayrollB = sumIds(state, B_BASE_PAYROLL_IDS);
   const basePayrollC = sumIds(state, C_BASE_PAYROLL_IDS);
@@ -184,6 +199,7 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
     reinvestB,
     reinvestBPct,
     bridgeB,
+    loadedBridgeB,
     saltBenchAnnual,
     peopleBucketsA,
     peopleBucketsB,
@@ -218,7 +234,10 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
     case "summary.costBasis.c":
       return t.costBasisC;
     case "bridge.b.headline":
-      return t.bridgeB;
+      // Surface the *loaded* bridge — the number the Cash Flow slide
+      // and the Closing slide both quote — so the cost-review modal
+      // and the slide UI reconcile.
+      return t.loadedBridgeB;
     case "pathToScale.year1":
       return t.askReco * 12;
     case "pathToScale.year2":

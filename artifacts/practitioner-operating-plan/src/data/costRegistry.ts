@@ -375,10 +375,10 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "bridge.b.headline",
     category: "Day-one bridge & CAPEX",
     label: "Day-one bridge ask (Scenario B)",
-    defaultValue: 181000,
+    defaultValue: 201000,
     unit: "$ one-time",
     context:
-      "Two months of cost basis + day-one tech CAPEX. Computed live as costBasisB × 2 + capexB. Edit the underlying role lines or capex.b to move this number.",
+      "Two months of *loaded* monthly outflow (role lines + People & Retention buckets) + day-one tech CAPEX. Computed live as loadedCostB × 2 + capexB so the bridge ask matches what the Cash Flow projection actually plots. Edit the underlying role lines, people.b.* buckets, or capex.b to move this number.",
     slides: [SLIDE_CASHFLOW, SLIDE_CLOSING],
     derived: true,
   },
