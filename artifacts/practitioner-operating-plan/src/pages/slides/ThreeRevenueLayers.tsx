@@ -66,22 +66,22 @@ export default function ThreeRevenueLayers() {
 
           <div className="bg-paper px-[1.8vw] py-[2.5vh] flex flex-col rounded-[6px]">
             <div className="font-mono uppercase tracking-[0.2em] text-[0.95vw] text-primary mb-[0.8vh] font-semibold">
-              Layer Three · Training
+              Layer Three · Training & cross-reserve install
             </div>
             <div className="font-display text-[2.1vw] leading-[1.05] text-primary mb-[1.5vh]">
-              Per-cohort delivery
+              In-Deer-Lake cohorts + premium installs at the next reserves
             </div>
             <div className="font-display font-semibold text-[3vw] text-primary leading-[1] mb-[0.4vh]" style={{ fontVariantNumeric: "tabular-nums" }}>
               $5,500
             </div>
-            <div className="font-mono text-[1vw] text-muted mb-[2vh]">
-              /cohort · 3/yr in Deer Lake bundle
+            <div className="font-mono text-[1vw] text-muted mb-[1.5vh]">
+              /cohort · 3/yr in Deer Lake bundle · curriculum partner on retainer
             </div>
-            <div className="font-body text-[1.2vw] leading-[1.5] text-text mb-[1.5vh]">
-              Same per-cohort price sells directly to other northern band stores. Curriculum partner is on retainer.
+            <div className="font-body text-[1.15vw] leading-[1.45] text-text mb-[1.2vh]">
+              <span className="text-primary font-semibold">Cross-reserve install (premium):</span> the practitioner — not a Deer Lake grad — travels reserve to reserve to install the Codetry discipline. Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30,000/yr discipline-keeper retainer</span>. Travel, lodging, food are passed through at cost.
             </div>
-            <div className="font-body text-[1.2vw] leading-[1.5] text-text">
-              <span className="text-primary font-semibold">Successor is local.</span> Travel cost falls out as the trainer becomes someone from Deer Lake.
+            <div className="font-body text-[1.15vw] leading-[1.5] text-text">
+              <span className="text-primary font-semibold">~$148,500 per new reserve install + $30k/yr ongoing.</span> Successor is local <em>to each receiving reserve</em>, after the practitioner has installed the discipline there — Deer Lake grads steward Deer Lake; they don't get sent on the road.
             </div>
           </div>
         </div>

@@ -93,7 +93,7 @@ export default function TheSixPeople() {
               $1,500<span className="text-[1.1vw] text-muted font-normal"> /mo + $5,500/cohort</span>
             </div>
             <div className="font-body text-[1.15vw] leading-[1.45] text-text">
-              Indigenous educator voice. Three cohorts a year. Successor is local — train-the-trainer is the design, not a stretch goal.
+              Indigenous educator voice. Three cohorts a year in Deer Lake; co-runs every cross-reserve install. Successor is local <em>to each receiving reserve</em> — the practitioner stays the cross-reserve trainer.
             </div>
           </div>
 

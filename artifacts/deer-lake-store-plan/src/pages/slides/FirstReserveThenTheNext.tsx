@@ -42,10 +42,10 @@ export default function FirstReserveThenTheNext() {
           <div className="rounded-[0.4vw] p-[1.8vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1vw] text-accent font-semibold mb-[1vh]">THE TRAINING</div>
             <div className="font-display text-[1.65vw] leading-tight text-primary font-medium mb-[1vh]">
-              Same modules. Same practitioners. Customised to each community.
+              The practitioner travels reserve to reserve. Deer Lake grads steward Deer Lake.
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.45]">
-              The practitioner taught the people who took it; the curriculum belongs to them. An Indigenous education partner co-runs the program. The next reserve doesn't start from scratch — they start from what worked here, adapted to who they are.
+              The practitioner is the cross-reserve discipline-keeper — the one who shows up at reserve #2, #3, #4 to install Codetry until it's the norm there. Deer Lake graduates are the local stewards of <em>their own</em> store's discipline; they don't get sent on the road. An Indigenous education partner co-runs every install. The next reserve doesn't start from scratch — they start from what worked here, adapted to who they are.
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export default function FirstReserveThenTheNext() {
             What it means in dollars
           </div>
           <div className="col-span-8 font-body text-[1.15vw] text-primary leading-[1.45]">
-            <span className="font-semibold">Marginal cost of the next reserve is mostly the practitioner's time.</span> The software, the training, and the transparency stack don't get rebuilt — they get adapted. That's the leverage.
+            <span className="font-semibold">Software is reusable; the practitioner's install is paid premium.</span> The receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr discipline-keeper retainer</span>. A typical 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, and food are passed through to the receiving reserve at cost — not part of the fee.</span>
           </div>
         </div>
       </div>

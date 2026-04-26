@@ -41,7 +41,7 @@ const productLayers: Layer[] = [
     label: "Software",
     headline: "Built by the practitioner. Owned by the band. Reused on the next reserve.",
     detail:
-      "The till, the price dashboard, the household lookup, the offline-first stack, the bookkeeping pipeline — Deer Lake owns the source code and the data. Marginal cost of the next community is mostly the practitioner's time to adapt it.",
+      "The till, the price dashboard, the household lookup, the offline-first stack, the bookkeeping pipeline — Deer Lake owns the source code and the data. The next reserve doesn't pay to rebuild the software; they pay the practitioner — at a premium day rate — to install the discipline that makes it work.",
   },
   {
     label: "Tech stack at markup",

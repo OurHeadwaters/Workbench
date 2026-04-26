@@ -274,10 +274,43 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       return t.askReco * 12 * 2;
     case "pathToScale.year3":
       return t.askReco * 12 * 5;
+    case "crossReserve.installRevenue.perReserve": {
+      // Derived: 30 on-site days × on-site rate + 24 remote days × remote rate.
+      // Edits to either day rate flow through here so the per-reserve install
+      // headline ($148,200 at default rates) recomputes for the cost-review
+      // modal and any future on-slide live binding.
+      const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
+      const remote = resolveCost(state, "crossReserve.dayRate.remote");
+      return CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
+    }
+    case "crossReserve.year2.revenue": {
+      // Derived: 2 new installs + 2 first-year retainers (the two reserves
+      // installed in Y2). Component of pathToScale.year2; not additive.
+      const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
+      const remote = resolveCost(state, "crossReserve.dayRate.remote");
+      const retainer = resolveCost(state, "crossReserve.retainer.annual");
+      const installPer = CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
+      return 2 * installPer + 2 * retainer;
+    }
+    case "crossReserve.year3.revenue": {
+      // Derived: 2 new installs + 4 active retainers (2 from Y2 + 2 new).
+      // Retainer income compounds as more reserves go live.
+      const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
+      const remote = resolveCost(state, "crossReserve.dayRate.remote");
+      const retainer = resolveCost(state, "crossReserve.retainer.annual");
+      const installPer = CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
+      return 2 * installPer + 4 * retainer;
+    }
     default:
       return null;
   }
 }
+
+// Cross-reserve install day-count constants (typical 12-week install
+// shape). Lifted to module scope so the install-revenue, Y2, and Y3
+// derivations all share one source of truth.
+export const CROSS_RESERVE_ONSITE_DAYS = 30;
+export const CROSS_RESERVE_REMOTE_DAYS = 24;
 
 export function useLiveCostValue(id: string): number | null {
   const state = useAppState();

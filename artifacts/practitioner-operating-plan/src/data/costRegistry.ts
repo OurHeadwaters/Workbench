@@ -38,6 +38,7 @@ export type CostCategory =
   | "Hourly rates"
   | "Role monthly profiles"
   | "Salt economics"
+  | "Cross-reserve install"
   | "Path to scale";
 
 export type CostEntry = {
@@ -716,7 +717,66 @@ export const COST_REGISTRY: CostEntry[] = [
     slides: [SLIDE_SALT_PL],
   },
 
-  // -------- Path to scale (derived from ask.recommended × 12 × N) ---
+  // -------- Cross-reserve install (Layer Three premium revenue) -----
+  // The practitioner is the touring discipline-keeper. Receiving reserves
+  // pay a premium day rate to install Codetry plus an annual retainer
+  // while the practitioner remains the discipline owner there. Travel,
+  // lodging, and food are passed through to the receiving reserve at
+  // cost and are deliberately NOT modelled here — they are not part of
+  // the fee.
+  {
+    id: "crossReserve.dayRate.onsite",
+    category: "Cross-reserve install",
+    label: "On-site install day rate",
+    defaultValue: 3500,
+    unit: "$/day",
+    context:
+      "Premium-but-defensible vs. senior management consultant rates. Charged for every day the practitioner is on the receiving reserve installing the discipline. Travel/lodging/food are pass-through, not in this rate.",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.dayRate.remote",
+    category: "Cross-reserve install",
+    label: "Remote prep + follow-up day rate",
+    defaultValue: 1800,
+    unit: "$/day",
+    context:
+      "Pre-install scoping, curriculum adaptation, post-install discipline check-ins done from home. Lower than the on-site rate because the practitioner isn't away from Deer Lake.",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.retainer.annual",
+    category: "Cross-reserve install",
+    label: "Discipline-keeper retainer per active reserve",
+    defaultValue: 30000,
+    unit: "$/yr",
+    context:
+      "Recurring while the practitioner remains the discipline owner at that reserve (post-install). Covers monthly check-ins, escalations, and the discipline audit. Drops off when the receiving reserve takes ownership.",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.installRevenue.perReserve",
+    category: "Cross-reserve install",
+    label: "Typical 12-week install revenue per reserve",
+    defaultValue: 148200,
+    unit: "$/yr",
+    context:
+      "Derived: 30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through (not counted) and the $30k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above to move this.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+
+  // -------- Path to scale (derived) ---------------------------------
+  // V3 framing: Year 2 / Year 3 are NOT just "more Deer-Lake-shaped
+  // contracts." The cross-reserve install line (above) is what makes
+  // those numbers real — premium day-rate installs at reserves #2/#3,
+  // plus the recurring discipline-keeper retainer at every reserve the
+  // practitioner has installed at. The dollar numbers below stay on
+  // the same askReco × 12 × N spine the existing slide quotes (so the
+  // path-to-scale headline numbers don't move), but the underlying
+  // story has shifted: in Year 2, ~$297k of that comes from cross-
+  // reserve install revenue (2 reserves) on top of Deer Lake; in
+  // Year 3, retainer income compounds on top of further installs.
   {
     id: "pathToScale.year1",
     category: "Path to scale",
@@ -724,28 +784,51 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 1080000,
     unit: "$/yr",
     context:
-      "1 contract @ recommended monthly × 12. Edit ask.recommended to move this.",
+      "1 contract @ recommended monthly × 12. Edit ask.recommended to move this. No cross-reserve install revenue in Y1 — practitioner is still bedding in Deer Lake.",
     slides: [SLIDE_PATH],
     derived: true,
   },
   {
     id: "pathToScale.year2",
     category: "Path to scale",
-    label: "Year 2 — two concurrent contracts annualised",
+    label: "Year 2 — Deer Lake + 2 cross-reserve installs annualised",
     defaultValue: 2160000,
     unit: "$/yr",
     context:
-      "Recommended monthly × 12 × 2. Marginal cost of pilot #2 is mostly the practitioner's time.",
+      "Recommended monthly × 12 × 2. The second 'contract-equivalent' is built from cross-reserve work — 2 installs × ~$148.5k + 2 × $30k retainer ≈ $357k of premium install revenue on top of Deer Lake's $1.08M. The practitioner is the trainer, not a Deer Lake grad.",
     slides: [SLIDE_PATH],
     derived: true,
   },
   {
     id: "pathToScale.year3",
     category: "Path to scale",
-    label: "Year 3 — up to 5 concurrent contracts annualised",
+    label: "Year 3 — Deer Lake + compounding cross-reserve installs",
     defaultValue: 5400000,
     unit: "$/yr",
-    context: "Recommended monthly × 12 × 5. The agency is the deliverable.",
+    context:
+      "Recommended monthly × 12 × 5. Cross-reserve revenue compounds: 2 new installs/yr × ~$148.5k + 4 active retainers × $30k ≈ $417k+ recurring on top of Deer Lake. The agency is the deliverable; the touring practitioner is the spine of it.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+  {
+    id: "crossReserve.year2.revenue",
+    category: "Path to scale",
+    label: "Year 2 — cross-reserve install revenue (component of Y2)",
+    defaultValue: 356400,
+    unit: "$/yr",
+    context:
+      "Derived: 2 new reserve installs × $148,200 + 2 first-year retainers × $30,000 = $356,400. Funds the Year-2 headline alongside the Deer Lake contract; not additive on top of pathToScale.year2.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+  {
+    id: "crossReserve.year3.revenue",
+    category: "Path to scale",
+    label: "Year 3 — cross-reserve install revenue (component of Y3)",
+    defaultValue: 416400,
+    unit: "$/yr",
+    context:
+      "Derived: 2 new reserve installs × $148,200 + 4 active retainers × $30,000 = $416,400. Retainer income compounds as more reserves go live. Not additive on top of pathToScale.year3 — it's what makes that headline real.",
     slides: [SLIDE_PATH],
     derived: true,
   },
