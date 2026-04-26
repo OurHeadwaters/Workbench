@@ -18,6 +18,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
 
 SplashScreen.preventAutoHideAsync();
@@ -67,6 +68,7 @@ export default function RootLayout() {
             <KeyboardProvider>
               <ReaderStateProvider>
                 <RootLayoutNav />
+                <UpdateAvailableBanner />
               </ReaderStateProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
