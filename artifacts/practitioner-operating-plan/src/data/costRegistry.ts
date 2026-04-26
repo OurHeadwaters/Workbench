@@ -766,6 +766,65 @@ export const COST_REGISTRY: CostEntry[] = [
     derived: true,
   },
 
+  // -------- Cross-reserve travel pass-through (receiving-reserve view) ----
+  // Pass-through, billed at cost — NOT part of the practitioner's fee.
+  // These are Deer-Lake-corridor planning estimates a chief at a candidate
+  // reserve #2 reading the deck cold can replace with their own corridor's
+  // numbers. They feed the receiving-reserve Y1 sticker-price panel on the
+  // "First reserve, then the next" slide.
+  {
+    id: "crossReserve.travel.flightPerWeek",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · round-trip flight (per install week)",
+    defaultValue: 1000,
+    unit: "$ one-time",
+    context:
+      "Bearskin / Wasaya round-trip from a southern hub (Dryden / Sioux Lookout) to a fly-in reserve. Planning estimate — receiving reserve replaces with their own corridor's actual cost. Assumed one return flight per install week (12 weeks).",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.travel.lodgingPerNight",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · lodging per on-site night",
+    defaultValue: 250,
+    unit: "$/day",
+    context:
+      "Northern guesthouse / band-house / contractor-camp nightly rate, planning estimate. Charged per on-site night (~30 nights for a 12-week install).",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.travel.foodPerOnsiteDay",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · food per on-site day",
+    defaultValue: 100,
+    unit: "$/day",
+    context:
+      "Northern food costs per on-site day. Planning estimate — receiving reserve replaces with their own actuals (Northern Store / band-store pricing varies).",
+    slides: [SLIDE_PATH],
+  },
+  {
+    id: "crossReserve.travel.totalPerInstall",
+    category: "Cross-reserve install",
+    label: "Travel pass-through · total per 12-week install",
+    defaultValue: 22500,
+    unit: "$ one-time",
+    context:
+      "Derived: 12 weekly flights × $1,000 + 30 on-site nights × $250 + 30 on-site days × $100 = $22,500. Pass-through to the receiving reserve at cost; NOT in the practitioner's fee. Planning estimate — replace with the receiving reserve's corridor numbers.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+  {
+    id: "crossReserve.year1.stickerPrice",
+    category: "Cross-reserve install",
+    label: "Receiving reserve · Y1 all-in sticker price (planning estimate)",
+    defaultValue: 201000,
+    unit: "$/yr",
+    context:
+      "Derived: install fee (~$148,500) + travel pass-through (~$22,500) + first-year retainer ($30,000) ≈ $201,000. The headline number a chief at reserve #2 sees when reading the deck cold — the symmetry to Deer Lake's $420k/yr. Planning estimate; pass-through replaced by the receiving reserve's own corridor costs.",
+    slides: [SLIDE_PATH],
+    derived: true,
+  },
+
   // -------- Path to scale (derived) ---------------------------------
   // V3 framing: Year 2 / Year 3 are NOT "more Deer-Lake-shaped
   // contracts" stacked on top of each other. The shape is *one*

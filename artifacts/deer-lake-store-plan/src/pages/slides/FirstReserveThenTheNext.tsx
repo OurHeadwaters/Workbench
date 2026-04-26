@@ -60,15 +60,43 @@ export default function FirstReserveThenTheNext() {
           </div>
         </div>
 
-        <div
-          className="rounded-[0.4vw] px-[2vw] py-[1.6vh] grid grid-cols-12 gap-[2vw] items-baseline"
-          style={{ background: "var(--slide-paper)", borderLeft: "0.4vw solid var(--slide-accent)" }}
-        >
-          <div className="col-span-4 font-mono uppercase tracking-[0.22em] text-[1.05vw] text-accent">
-            What it means in dollars
+        <div className="grid grid-cols-12 gap-[1.2vw]">
+          <div
+            className="col-span-7 rounded-[0.4vw] px-[1.6vw] py-[1.3vh]"
+            style={{ background: "var(--slide-paper)", borderLeft: "0.4vw solid var(--slide-accent)" }}
+          >
+            <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-accent mb-[0.5vh]">
+              Practitioner revenue · per install
+            </div>
+            <div className="font-body text-[1vw] text-primary leading-[1.4]">
+              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee.</span>
+            </div>
           </div>
-          <div className="col-span-8 font-body text-[1.15vw] text-primary leading-[1.45]">
-            <span className="font-semibold">Software is reusable; the practitioner's install is paid premium.</span> The receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr discipline-keeper retainer</span>. A typical 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, and food are passed through to the receiving reserve at cost — not part of the fee.</span>
+
+          <div
+            className="col-span-5 rounded-[0.4vw] px-[1.4vw] py-[1.3vh]"
+            style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
+          >
+            <div
+              className="flex items-baseline justify-between mb-[0.4vh]"
+              style={{ color: "#e9c8a8" }}
+            >
+              <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw]">
+                Reserve #2 · Y1 all-in
+              </div>
+              <div
+                className="font-display text-[1.6vw] font-medium"
+                style={{ color: "var(--slide-bg)", fontVariantNumeric: "tabular-nums" }}
+              >
+                ~$201,000
+              </div>
+            </div>
+            <div className="font-body text-[0.95vw] leading-[1.35] mb-[0.3vh]" style={{ color: "var(--slide-bg)" }}>
+              <span className="font-semibold">$148.5k install</span> + <span className="font-semibold">~$22.5k travel pass-through</span><sup className="text-[0.7em]">*</sup> + <span className="font-semibold">$30k Y1 retainer</span>.
+            </div>
+            <div className="font-body text-[0.78vw] leading-[1.3]" style={{ color: "#e9c8a8" }}>
+              <sup>*</sup> Planning estimate · Deer Lake corridor: ~$1,000/return × 12 wks + $250/night × 30 + $100/day × 30. Replace with your corridor's own cost.
+            </div>
           </div>
         </div>
       </div>

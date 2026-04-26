@@ -81,7 +81,7 @@ export default function ThreeRevenueLayers() {
               <span className="text-primary font-semibold">Cross-reserve install (premium):</span> the practitioner — not a Deer Lake grad — travels reserve to reserve to install the Codetry discipline. Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30,000/yr discipline-keeper retainer</span>. Travel, lodging, food are passed through at cost.
             </div>
             <div className="font-body text-[1.15vw] leading-[1.5] text-text">
-              <span className="text-primary font-semibold">~$148,500 per new reserve install + $30k/yr ongoing.</span> Successor is local <em>to each receiving reserve</em>, after the practitioner has installed the discipline there — Deer Lake grads steward Deer Lake; they don't get sent on the road.
+              <span className="text-primary font-semibold">~$148,500 per new reserve install + $30k/yr ongoing.</span> Receiving reserve's Y1 sticker — install + ~$22.5k travel pass-through + retainer — lands at <span className="text-primary font-semibold">~$201k all-in</span> (see "First reserve, then the next" in the store plan). Successor is local <em>to each receiving reserve</em> — Deer Lake grads steward Deer Lake; they don't get sent on the road.
             </div>
           </div>
         </div>
