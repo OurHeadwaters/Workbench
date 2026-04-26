@@ -55,6 +55,15 @@ export default function PathToScale() {
   const crossY2 = liveDerived(state, "crossReserve.year2.revenue");
   const crossY3 = liveDerived(state, "crossReserve.year3.revenue");
   const installPer = liveDerived(state, "crossReserve.installRevenue.perReserve");
+  // Travel pass-through (~$22.5k for a typical 12-week fly-in install).
+  // Receiving reserves reimburse this at cost, so it is *not* in
+  // crossReserve.year2/3.revenue or in the Y2/Y3 totals above. Surfaced
+  // explicitly so a council reading this slide alone has a defensible
+  // budget number for the install trip.
+  const travelPassthroughPerInstall = resolveCost(
+    state,
+    "crossReserve.travelPassthrough.example",
+  );
 
   // Y1 is by definition the Deer Lake-only line (askReco × 12 — see
   // costRegistry pathToScale.year1 context), so reusing it as the
@@ -179,6 +188,14 @@ export default function PathToScale() {
               <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
                 2 × {exactDollars(installPer)} install + 2 × {exactDollars(retainerAnnual)} first-year retainer.
               </div>
+              <div className="flex items-baseline justify-between text-muted">
+                <span className="font-body text-[0.9vw] italic">
+                  + 2 × {exactDollars(travelPassthroughPerInstall)} travel pass-through, billed at cost
+                </span>
+                <span className="font-mono text-[0.78vw] uppercase tracking-[0.16em]">
+                  not in fee
+                </span>
+              </div>
             </div>
           </div>
 
@@ -234,6 +251,14 @@ export default function PathToScale() {
               </div>
               <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
                 2 × {exactDollars(installPer)} install + 4 × {exactDollars(retainerAnnual)} active retainer.
+              </div>
+              <div className="flex items-baseline justify-between text-muted">
+                <span className="font-body text-[0.9vw] italic">
+                  + 2 × {exactDollars(travelPassthroughPerInstall)} travel pass-through, billed at cost
+                </span>
+                <span className="font-mono text-[0.78vw] uppercase tracking-[0.16em]">
+                  not in fee
+                </span>
               </div>
             </div>
           </div>
