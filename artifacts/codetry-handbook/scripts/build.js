@@ -86,6 +86,7 @@ function prepareDirectories(timestamp) {
     path.join(staticBuild, timestamp, "_expo", "static", "js", "android"),
     path.join(staticBuild, "ios"),
     path.join(staticBuild, "android"),
+    path.join(staticBuild, "web"),
   ];
 
   for (const dir of dirs) {
@@ -93,6 +94,195 @@ function prepareDirectories(timestamp) {
   }
 
   console.log("Build:", timestamp);
+}
+
+function walkFiles(root) {
+  const results = [];
+  function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile()) results.push(full);
+    }
+  }
+  if (fs.existsSync(root)) walk(root);
+  return results;
+}
+
+function findExpoCli() {
+  // Prefer the resolved JS entry so we can spawn it with `node` directly.
+  // The `.bin/expo` shim is a shell script, which does not parse with node.
+  const candidates = [
+    path.join(projectRoot, "node_modules", "expo", "bin", "cli"),
+    path.join(workspaceRoot, "node_modules", "expo", "bin", "cli"),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+function killProcessOnPort(port) {
+  // We try `fuser` first (always present on Replit), then `lsof` as a fallback,
+  // then `pkill` matching the metro entry. Any failure is fine — we just want
+  // to make sure port `port` is free before re-spawning the bundler.
+  return new Promise((resolve) => {
+    const cmd =
+      `fuser -k -n tcp ${port} 2>/dev/null || ` +
+      `lsof -ti tcp:${port} 2>/dev/null | xargs -r kill -9 || ` +
+      `pkill -9 -f "expo start" 2>/dev/null || true`;
+    const proc = spawn("sh", ["-c", cmd], { stdio: "ignore" });
+    proc.on("close", () => resolve());
+    proc.on("error", () => resolve());
+  });
+}
+
+async function buildWebExport(basePath) {
+  console.log("\n=== Building PWA web export ===");
+
+  // Metro on 8081 conflicts with `expo export` which spawns its own bundler.
+  if (metroProcess) {
+    console.log("Stopping Expo Go Metro before web export...");
+    metroProcess.kill();
+    metroProcess = null;
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await killProcessOnPort(8081);
+  }
+
+  const webOutputDir = path.join(projectRoot, "static-build", "web");
+  if (fs.existsSync(webOutputDir)) {
+    fs.rmSync(webOutputDir, { recursive: true });
+  }
+  fs.mkdirSync(webOutputDir, { recursive: true });
+
+  // expo's `experiments.baseUrl` requires no trailing slash.
+  const exportBaseUrl = basePath.replace(/\/+$/, "") || "";
+
+  const expoCli = findExpoCli();
+  if (!expoCli) {
+    exitWithError(
+      "Could not find the expo CLI binary. Run `pnpm install` first.",
+    );
+  }
+
+  await new Promise((resolve, reject) => {
+    const env = {
+      ...process.env,
+      EXPO_PUBLIC_BASE_URL: exportBaseUrl,
+      // Make sure the dev server doesn't get reused.
+      CI: "1",
+    };
+    const proc = spawn(
+      "node",
+      [expoCli, "export", "--platform", "web", "--output-dir", webOutputDir],
+      {
+        stdio: "inherit",
+        cwd: projectRoot,
+        env,
+      },
+    );
+    proc.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`expo export exited with code ${code}`));
+    });
+    proc.on("error", reject);
+  });
+
+  console.log("Web export complete");
+  return { webOutputDir, exportBaseUrl };
+}
+
+function copyHandbookIcon(webOutputDir) {
+  const src = path.join(projectRoot, "assets", "images", "icon.png");
+  const dest = path.join(webOutputDir, "icon.png");
+  fs.copyFileSync(src, dest);
+}
+
+function writeManifest(webOutputDir, exportBaseUrl) {
+  const templatePath = path.join(
+    projectRoot,
+    "server",
+    "pwa",
+    "manifest-template.json",
+  );
+  const template = fs.readFileSync(templatePath, "utf-8");
+  const scope = (exportBaseUrl || "") + "/";
+  const startUrl = scope;
+  const iconUrl = scope + "icon.png";
+  const filled = template
+    .replace(/__SCOPE__/g, scope)
+    .replace(/__START_URL__/g, startUrl)
+    .replace(/__ICON_URL__/g, iconUrl);
+  fs.writeFileSync(
+    path.join(webOutputDir, "manifest.webmanifest"),
+    filled,
+  );
+  console.log("Wrote manifest.webmanifest");
+}
+
+function writeServiceWorker(webOutputDir, exportBaseUrl, cacheVersion) {
+  const templatePath = path.join(projectRoot, "server", "pwa", "sw-template.js");
+  const template = fs.readFileSync(templatePath, "utf-8");
+  const scope = (exportBaseUrl || "") + "/";
+
+  const allFiles = walkFiles(webOutputDir);
+  const precache = new Set();
+  precache.add(scope);
+  precache.add(scope + "manifest.webmanifest");
+  precache.add(scope + "icon.png");
+
+  for (const file of allFiles) {
+    const rel = path.relative(webOutputDir, file).split(path.sep).join("/");
+    if (rel === "sw.js" || rel === "register-sw.js") continue;
+    if (rel === "metadata.json") continue;
+    precache.add(scope + rel);
+  }
+
+  const precacheArr = Array.from(precache).sort();
+  const filled = template
+    .replace(/__CACHE_VERSION__/g, cacheVersion)
+    .replace(/__BASE_PATH__/g, scope)
+    .replace(/__NAVIGATION_FALLBACK__/g, scope)
+    .replace(/__PRECACHE_LIST__/g, JSON.stringify(precacheArr, null, 2));
+
+  fs.writeFileSync(path.join(webOutputDir, "sw.js"), filled);
+  console.log(`Wrote sw.js (precaching ${precacheArr.length} entries)`);
+}
+
+function patchIndexHtml(webOutputDir, exportBaseUrl) {
+  const indexPath = path.join(webOutputDir, "index.html");
+  if (!fs.existsSync(indexPath)) {
+    exitWithError("Web export did not produce index.html");
+  }
+  let html = fs.readFileSync(indexPath, "utf-8");
+  const scope = (exportBaseUrl || "") + "/";
+
+  const registerScript = fs.readFileSync(
+    path.join(projectRoot, "server", "pwa", "register-sw.js"),
+    "utf-8",
+  );
+
+  const headInjection = `
+  <link rel="manifest" href="${scope}manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="${scope}icon.png" />
+  <link rel="icon" type="image/png" sizes="1024x1024" href="${scope}icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Handbook" />
+  <meta name="application-name" content="Codetry Handbook" />
+  <meta name="description" content="An offline reader for the Codetry Practitioner's Handbook." />
+`;
+
+  // Insert into <head> right before </head>.
+  html = html.replace("</head>", `${headInjection}</head>`);
+
+  // Insert SW registration before </body>.
+  const swSnippet = `\n<script>window.__CODETRY_BASE_PATH__=${JSON.stringify(scope)};</script>\n<script>${registerScript}</script>\n`;
+  html = html.replace("</body>", `${swSnippet}</body>`);
+
+  fs.writeFileSync(indexPath, html);
+  console.log("Patched index.html with PWA hooks");
 }
 
 function clearMetroCache() {
@@ -556,7 +746,18 @@ async function main() {
   console.log("Updating manifests and creating landing page...");
   updateManifests(manifests, timestamp, baseUrl, assetsByHash);
 
+  // Web PWA export: produce a static web bundle and add a service worker
+  // + web app manifest so the handbook can be installed to the home screen
+  // and opened with no network.
+  const webBasePath = basePath || "";
+  const { webOutputDir, exportBaseUrl } = await buildWebExport(webBasePath);
+  copyHandbookIcon(webOutputDir);
+  writeManifest(webOutputDir, exportBaseUrl);
+  writeServiceWorker(webOutputDir, exportBaseUrl, timestamp);
+  patchIndexHtml(webOutputDir, exportBaseUrl);
+
   console.log("Build complete! Deploy to:", baseUrl);
+  console.log(`PWA root: ${baseUrl}${exportBaseUrl}/`);
 
   if (metroProcess) {
     metroProcess.kill();

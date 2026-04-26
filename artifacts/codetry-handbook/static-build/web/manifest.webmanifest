@@ -1,0 +1,29 @@
+{
+  "name": "Codetry Practitioner's Handbook",
+  "short_name": "Handbook",
+  "description": "An offline reader for the Codetry Practitioner's Handbook — keeps the book on your phone the way you'd keep a paperback in a bag.",
+  "start_url": "/codetry-handbook/",
+  "scope": "/codetry-handbook/",
+  "id": "/codetry-handbook/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4ede0",
+  "theme_color": "#1f3d2e",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["books", "education", "reference"],
+  "icons": [
+    {
+      "src": "/codetry-handbook/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/codetry-handbook/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
