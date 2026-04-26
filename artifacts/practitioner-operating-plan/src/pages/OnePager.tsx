@@ -2,12 +2,20 @@ import {
   CROSS_RESERVE_INSTALL_WEEKS,
   CROSS_RESERVE_ONSITE_DAYS,
   CROSS_RESERVE_REMOTE_DAYS,
+  getLiveCostValue,
+  resolveCost,
 } from "../lib/budgetMath";
 import {
   SALT_PLANNING_BASELINE,
   WHOLESALE_CM_FLOOR,
   useLatestSaltClose,
 } from "../lib/saltClose";
+import { useAppState } from "../lib/storage";
+import {
+  formatPlanningK,
+  formatCompactK,
+  formatPlanningDollars,
+} from "../lib/formatPlanning";
 
 const fmtMoney = (n: number) => {
   const sign = n < 0 ? "-" : "";
@@ -16,6 +24,20 @@ const fmtMoney = (n: number) => {
 
 export default function OnePager() {
   const latestSaltClose = useLatestSaltClose();
+  // Cross-reserve dollar headlines flow from the same registry / shared
+  // defaults every other surface reads — see ThreeRevenueLayers and the
+  // Deer Lake "First reserve, then the next" slide. Editing the day
+  // rates, retainer, or any travel pass-through component in the
+  // cost-review modal moves these one-pager headlines too, so the
+  // printed sheet can never quietly drift from the live deck.
+  const state = useAppState();
+  const installPerReserve =
+    getLiveCostValue(state, "crossReserve.installRevenue.perReserve") ?? 0;
+  const travelPassthrough =
+    getLiveCostValue(state, "crossReserve.travelPassthrough.example") ?? 0;
+  const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
+  const y1StickerPrice =
+    getLiveCostValue(state, "crossReserve.year1.stickerPrice") ?? 0;
   return (
     <div className="onepager-screen">
       <div className="onepager-sheet">
@@ -270,7 +292,7 @@ export default function OnePager() {
                   Reserve #2 · Y1 all-in sticker (planning estimate)
                 </div>
                 <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                  ~$201,000
+                  {formatPlanningDollars(y1StickerPrice)}
                   <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
                     install + travel + Y1 retainer
                   </span>
@@ -278,9 +300,9 @@ export default function OnePager() {
               </div>
             </div>
             <div className="text-[8pt] text-[#6b7665] mt-[4pt] leading-[1.35]">
-              ~$148.5k install ({CROSS_RESERVE_INSTALL_WEEKS}-week stint, ~{CROSS_RESERVE_ONSITE_DAYS} on-site + ~{CROSS_RESERVE_REMOTE_DAYS} remote days)
-              + ~$22.5k travel pass-through<sup className="text-[0.7em]">*</sup>
-              + $30k first-year retainer ≈ ~$201k Y1 all-in. Same headline as
+              {formatPlanningK(installPerReserve)} install ({CROSS_RESERVE_INSTALL_WEEKS}-week stint, ~{CROSS_RESERVE_ONSITE_DAYS} on-site + ~{CROSS_RESERVE_REMOTE_DAYS} remote days)
+              + {formatPlanningK(travelPassthrough)} travel pass-through<sup className="text-[0.7em]">*</sup>
+              + {formatCompactK(retainerAnnual)} first-year retainer ≈ {formatPlanningK(y1StickerPrice)} Y1 all-in. Same headline as
               the Deer Lake deck's <span className="italic">First reserve, then the next</span>{" "}
               slide — kept here so the band council reads the symmetry to
               Deer Lake's $420k/yr the moment they print.

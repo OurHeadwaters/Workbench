@@ -11,6 +11,11 @@ import {
   getLiveCostValue,
   resolveCost,
 } from "../budgetMath";
+import {
+  formatPlanningK,
+  formatCompactK,
+  formatPlanningDollars,
+} from "../formatPlanning";
 
 function withEdit(state: AppState, id: string, value: number): AppState {
   return {
@@ -419,5 +424,93 @@ describe("Cross-reserve registry copy — install-shape literals match the share
     // scan would silently pass with zero matches. Lock in that the
     // current crop of inline references is at least covered.
     expect(scanned).toBeGreaterThanOrEqual(15);
+  });
+});
+
+describe("OnePager — cross-reserve dollar headlines flow from shared defaults", () => {
+  // The printable OnePager quotes four monetary headlines in its
+  // "What it costs the next reserve" panel: install fee, travel
+  // pass-through, first-year retainer, and the rolled-up Y1 all-in
+  // sticker. They previously lived as bare literals
+  // ("~$148.5k install", "~$22.5k travel pass-through",
+  // "$30k first-year retainer", "~$201k Y1 all-in") and silently
+  // drifted whenever the day rate / retainer / travel inputs moved.
+  // OnePager.tsx now feeds each headline through the same
+  // formatPlanningK / formatCompactK / formatPlanningDollars helpers
+  // ThreeRevenueLayers uses, reading the live values from
+  // CROSS_RESERVE_DEFAULTS / getLiveCostValue. These tests pin the
+  // formatted strings at the no-edits default so the printable sheet
+  // can never disagree with the live deck.
+
+  it("install / travel / retainer / Y1 headlines reconcile at default state", () => {
+    // Live values OnePager.tsx reads.
+    const installPerReserve = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.installRevenue.perReserve",
+    );
+    const travelPassthrough = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.example",
+    );
+    const retainer = resolveCost(DEFAULT_STATE, "crossReserve.retainer.annual");
+    const y1Sticker = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.year1.stickerPrice",
+    );
+
+    // Live numerics match the shared defaults / live derivations.
+    expect(installPerReserve).toBe(CROSS_RESERVE_DEFAULTS.installRevenuePerReserve);
+    expect(installPerReserve).toBe(148200);
+    expect(travelPassthrough).toBe(22500);
+    expect(retainer).toBe(CROSS_RESERVE_DEFAULTS.retainerAnnual);
+    expect(retainer).toBe(30000);
+    expect(y1Sticker).toBe(200700);
+
+    // Formatted headlines exactly reproduce the prior literals
+    // ("~$148.5k", "~$22.5k", "$30k", "~$201k", "~$201,000") so the
+    // default rendered output is unchanged.
+    expect(formatPlanningK(installPerReserve ?? 0)).toBe("~$148.5k");
+    expect(formatPlanningK(travelPassthrough ?? 0)).toBe("~$22.5k");
+    expect(formatCompactK(retainer)).toBe("$30k");
+    expect(formatPlanningK(y1Sticker ?? 0)).toBe("~$201k");
+    expect(formatPlanningDollars(y1Sticker ?? 0)).toBe("~$201,000");
+  });
+
+  it("OnePager headlines move when the shared day rate / retainer / travel inputs are edited", () => {
+    // Bump the on-site rate, the per-week flight cost, and the retainer.
+    // Every OnePager headline that derives from these inputs must
+    // recompose — proving the panel reads the same live registry the
+    // cost-review modal writes to, with no parallel hardcoded source.
+    let state = withEdit(DEFAULT_STATE, "crossReserve.dayRate.onsite", 4000);
+    state = withEdit(state, "crossReserve.travel.flightPerWeek", 1200);
+    state = withEdit(state, "crossReserve.retainer.annual", 35000);
+
+    const installPerReserve = getLiveCostValue(
+      state,
+      "crossReserve.installRevenue.perReserve",
+    );
+    const travelPassthrough = getLiveCostValue(
+      state,
+      "crossReserve.travelPassthrough.example",
+    );
+    const retainer = resolveCost(state, "crossReserve.retainer.annual");
+    const y1Sticker = getLiveCostValue(state, "crossReserve.year1.stickerPrice");
+
+    // install: 30 × 4,000 + 24 × 1,800 = 163,200
+    // travel:  12 × 1,200 + 30 × 250 + 30 × 100 = 24,900
+    // retainer: 35,000
+    // sticker: 163,200 + 24,900 + 35,000 = 223,100
+    expect(installPerReserve).toBe(163200);
+    expect(travelPassthrough).toBe(24900);
+    expect(retainer).toBe(35000);
+    expect(y1Sticker).toBe(223100);
+
+    // Formatted headlines move with the live values — none stay pinned
+    // to the old "~$148.5k / ~$22.5k / $30k / ~$201k" literals.
+    expect(formatPlanningK(installPerReserve ?? 0)).toBe("~$163.5k");
+    expect(formatPlanningK(travelPassthrough ?? 0)).toBe("~$25k");
+    expect(formatCompactK(retainer)).toBe("$35k");
+    expect(formatPlanningK(y1Sticker ?? 0)).toBe("~$223.5k");
+    expect(formatPlanningDollars(y1Sticker ?? 0)).toBe("~$223,500");
   });
 });
