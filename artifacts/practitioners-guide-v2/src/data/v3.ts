@@ -129,6 +129,7 @@ const v3Agency = {
 
   reservePurposes: SCENARIO_V2.contracts.agency.reservePurposes,
   givingDirection: SCENARIO_V2.contracts.agency.givingDirection,
+  renegotiationTriggers: [],
 };
 
 const v3Personal = {

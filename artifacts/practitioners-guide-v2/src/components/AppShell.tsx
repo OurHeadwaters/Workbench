@@ -11,6 +11,7 @@ import {
   Cpu,
   Wallet,
   GitCompareArrows,
+  Repeat,
 } from "lucide-react";
 
 interface NavItem {
@@ -36,7 +37,8 @@ const NAV: NavItem[] = [
     accent: BUCKETS.brightside.accent,
   },
   { href: "/personal-cash", label: "Personal cash", icon: Wallet },
-  { href: "/compare", label: "Compare V2 ↔ V3", icon: GitCompareArrows },
+  { href: "/compare", label: "Compare V2 / V3 / V4", icon: GitCompareArrows },
+  { href: "/replication", label: "Replication", icon: Repeat },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {

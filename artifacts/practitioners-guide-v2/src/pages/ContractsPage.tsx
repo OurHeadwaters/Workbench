@@ -199,6 +199,53 @@ export function ContractsPage() {
           {a.termMonths}-month engagement starting {a.startDate}, renegotiated at month {a.renegotiateMonth}. Buyer: {a.buyerStatus}.
         </p>
 
+        {a.renegotiationTriggers.length > 0 ? (
+          <div className="mb-6">
+            <SectionCard
+              title={`Pre-baked renegotiation triggers · ${a.renegotiationTriggers.length}`}
+              subtitle={`Step changes the contract takes at the renegotiation point — pre-baked so the founder is not negotiating from scratch at month ${a.renegotiateMonth}. Each row names the condition, the evidence required, and the fee + lead-draw step.`}
+              tag={a.feeTag}
+              accent={b.accent}
+            >
+              <div className="overflow-x-auto -mx-2 px-2">
+                <table className="w-full text-sm min-w-[640px]" data-testid="renegotiation-triggers-table">
+                  <thead className="text-left text-muted-foreground">
+                    <tr className="border-b border-card-border">
+                      <th className="py-2 pr-4 font-medium">Step</th>
+                      <th className="py-2 pr-4 font-medium">Condition</th>
+                      <th className="py-2 pr-4 font-medium text-right num">Fee → $/mo</th>
+                      <th className="py-2 pr-4 font-medium text-right num">Lead draw → $/mo</th>
+                      <th className="py-2 pr-4 font-medium">Evidence required</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {a.renegotiationTriggers.map((t) => (
+                      <tr
+                        key={t.step}
+                        className="border-b border-card-border align-top"
+                        data-testid={`renegotiation-trigger-${t.step.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                      >
+                        <td className="py-2 pr-4 font-medium">{t.step}</td>
+                        <td className="py-2 pr-4 text-muted-foreground">{t.condition}</td>
+                        <td className="py-2 pr-4 text-right num font-medium">
+                          <Num tag={a.feeTag}>{money(t.feeStepTo)}</Num>
+                        </td>
+                        <td className="py-2 pr-4 text-right num font-medium">
+                          <Num tag={a.practitionerSalaryTag}>{money(t.drawStepTo)}</Num>
+                        </td>
+                        <td className="py-2 pr-4 text-xs text-muted-foreground">{t.evidenceRequired}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Triggers describe what the contract <strong>steps to</strong> when the condition is met — they are not folded into the published 18-month totals on this page. Published numbers reflect the base fee ({money(a.fee)}/mo) and lead draw ({money(a.roster[0].monthlyLoaded)}/mo) for all {a.termMonths} months.
+              </p>
+            </SectionCard>
+          </div>
+        ) : null}
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <MoneyKpi
             label="Monthly fee"

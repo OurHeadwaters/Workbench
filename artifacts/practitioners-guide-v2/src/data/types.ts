@@ -183,6 +183,27 @@ export interface AgencyScenario {
 
   reservePurposes: string[];
   givingDirection: string;
+
+  /**
+   * Pre-baked renegotiation triggers — surfaced on the Contracts page next
+   * to the renegotiation-month line. Empty list for V2/V3 (no published
+   * triggers); populated for V4 to make the renegotiation step legible
+   * without negotiating it from scratch later.
+   */
+  renegotiationTriggers: RenegotiationTrigger[];
+}
+
+export interface RenegotiationTrigger {
+  /** Short label, e.g. "Month 12 renegotiation". */
+  step: string;
+  /** Plain-language pre-condition, e.g. "Brightside is live AND Karen's tool in daily use". */
+  condition: string;
+  /** Fee the contract steps to once the condition is met. */
+  feeStepTo: number;
+  /** Lead draw the founder steps to once the condition is met. */
+  drawStepTo: number;
+  /** What's required to prove the condition objectively. */
+  evidenceRequired: string;
 }
 
 export interface BrightsideScenario {
@@ -251,7 +272,7 @@ export interface PersonalCash {
   tag: SourceTag;
 }
 
-export type ScenarioId = "v2" | "v3";
+export type ScenarioId = "v2" | "v3" | "v4";
 
 export interface Scenario {
   id: ScenarioId;

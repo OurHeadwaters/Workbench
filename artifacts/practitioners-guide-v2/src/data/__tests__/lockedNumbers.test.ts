@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { SCENARIO_V2 } from "../v2";
 import { SCENARIO_V3 } from "../v3";
+import { SCENARIO_V4 } from "../v4";
+import { SCENARIOS, SCENARIO_ORDER } from "../scenarios";
 
 /**
  * Locked-number guard tests.
@@ -571,5 +573,268 @@ describe("V2 ↔ V3 invariants — Salts and Brightside are identical", () => {
     // relabel still trips the assertion.
     expect(SCENARIO_V3.status).toBe("locked");
     expect(SCENARIO_V2.status).toBe("locked");
+  });
+});
+
+describe("V4 right-priced agency line — locked headline numbers", () => {
+  // Source of truth: .local/tasks/task-174.md
+  const agency = SCENARIO_V4.contracts.agency;
+
+  it("engagement structure: $105k/mo fee, 18-month term, renegotiated at month 12", () => {
+    expect(agency.fee).toBe(105000);
+    expect(agency.termMonths).toBe(18);
+    expect(agency.renegotiateMonth).toBe(12);
+    expect(agency.startDate).toBe("June 1, 2026");
+  });
+
+  it("payroll: 6 lean roles totalling $52,000/mo (same roster as V3)", () => {
+    expect(agency.roster).toHaveLength(6);
+    expect(agency.payrollTotal).toBe(52000);
+    expect(agency.roster.reduce((s, r) => s + r.monthlyLoaded, 0)).toBe(52000);
+    expect(agency.payrollTotal).toBe(SCENARIO_V3.contracts.agency.payrollTotal);
+  });
+
+  it("roster role names match the locked 6-role lean roster (same as V3)", () => {
+    const roles = agency.roster.map((r) => r.role);
+    expect(roles).toEqual([
+      "Practitioner / Lead",
+      "IT / Tech",
+      "Operations Manager (Dryden)",
+      "Community Development Associate",
+      "Food Handler (Dryden depot)",
+      "Bookkeeper / Admin",
+    ]);
+  });
+
+  it("overheads: held identical to V2/V3 ($10,392 Jun–Aug, $12,492 Sep+)", () => {
+    expect(agency.overheadsJunAugTotal).toBe(10392);
+    expect(agency.overheadsSepOnwardTotal).toBe(12492);
+    expect(agency.overheadsJunAugTotal).toBe(SCENARIO_V2.contracts.agency.overheadsJunAugTotal);
+    expect(agency.overheadsSepOnwardTotal).toBe(SCENARIO_V2.contracts.agency.overheadsSepOnwardTotal);
+  });
+
+  it("cost basis: $62,392 / $64,492; surplus $42,608 / $40,508", () => {
+    expect(agency.costBasisJunAug).toBe(62392);
+    expect(agency.costBasisSepOnward).toBe(64492);
+    expect(agency.monthlySurplusJunAug).toBe(42608);
+    expect(agency.monthlySurplusSepOnward).toBe(40508);
+    expect(agency.fee - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
+    expect(agency.fee - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
+  });
+
+  it("Sep-onward gross margin lands in the 35–40% target band (38.6%)", () => {
+    const marginPct = (agency.monthlySurplusSepOnward / agency.fee) * 100;
+    expect(marginPct).toBeGreaterThanOrEqual(35);
+    expect(marginPct).toBeLessThanOrEqual(45);
+    expect(Math.round(marginPct * 10) / 10).toBe(38.6);
+  });
+
+  it("capital recovery: $112k retired in 3 months (Jun–Aug 2026, V2-style cadence)", () => {
+    expect(agency.capitalRecoveryAmount).toBe(112000);
+    expect(agency.capitalRecoveryMonths).toBe(3);
+    expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
+    expect(agency.capitalRecoveryEndLabel).toContain("Aug 2026");
+  });
+
+  it("Brightside Launch Month: September 2026 (returns from V3's Oct slip), $28k spend, $12,508 remainder", () => {
+    expect(agency.brightsideLaunchMonthLabel).toBe("September 2026");
+    expect(agency.brightsidePrelaunchSpend).toBe(28000);
+    expect(agency.brightsideLaunchSurplus).toBe(40508);
+    expect(agency.brightsideLaunchRemainder).toBe(12508);
+    expect(
+      agency.brightsideLaunchSurplus - agency.brightsidePrelaunchSpend,
+    ).toBe(agency.brightsideLaunchRemainder);
+  });
+
+  it("Phase 3 split is 50/25/25 across 14 months (matching V2's window)", () => {
+    expect(agency.reservePct).toBe(50);
+    expect(agency.innovationPct).toBe(25);
+    expect(agency.givingPct).toBe(25);
+    expect(agency.reservePct + agency.innovationPct + agency.givingPct).toBe(100);
+    expect(agency.phase3Months).toBe(14);
+    expect(agency.phase3MonthlySurplus).toBe(40508);
+    expect(agency.reserveMonthly).toBe(20254);
+    expect(agency.innovationMonthly).toBe(10127);
+    expect(agency.givingMonthly).toBe(10127);
+    expect(agency.reserveMonthly + agency.innovationMonthly + agency.givingMonthly).toBe(
+      agency.phase3MonthlySurplus,
+    );
+  });
+
+  it("Phase 3 totals: $283,556 Reserve / $141,778 Innovation / $141,778 Giving", () => {
+    expect(agency.reserveTotal).toBe(283556);
+    expect(agency.innovationTotal).toBe(141778);
+    expect(agency.givingTotal).toBe(141778);
+  });
+
+  it("practitioner salary unchanged: $324,000 across 18 months ($18k/mo × 18)", () => {
+    expect(agency.practitionerSalary18mo).toBe(324000);
+    expect(agency.practitionerSalary18mo).toBe(SCENARIO_V2.contracts.agency.practitionerSalary18mo);
+    expect(agency.roster[0].role).toBe("Practitioner / Lead");
+    expect(agency.roster[0].monthlyLoaded).toBe(18000);
+    expect(agency.roster[0].monthlyLoaded * agency.termMonths).toBe(
+      agency.practitionerSalary18mo,
+    );
+  });
+
+  it("reserve purposes and giving direction inherited from V2 unchanged", () => {
+    expect(agency.reservePurposes).toBe(SCENARIO_V2.contracts.agency.reservePurposes);
+    expect(agency.givingDirection).toBe(SCENARIO_V2.contracts.agency.givingDirection);
+  });
+});
+
+describe("V4 18-month surplus deployment math — adds up to $735,444", () => {
+  const agency = SCENARIO_V4.contracts.agency;
+  const totals = agency.totals18mo;
+
+  it("revenue: $105k × 18 = $1,890,000", () => {
+    expect(totals.revenue).toBe(1890000);
+    expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("payroll: $52k × 18 = $936,000 (same as V3)", () => {
+    expect(totals.payroll).toBe(936000);
+    expect(agency.payrollTotal * agency.termMonths).toBe(totals.payroll);
+    expect(totals.payroll).toBe(SCENARIO_V3.contracts.agency.totals18mo.payroll);
+  });
+
+  it("overheads: 3 × $10,392 + 15 × $12,492 = $218,556 (same as V2/V3)", () => {
+    expect(totals.overheads).toBe(218556);
+    expect(
+      3 * agency.overheadsJunAugTotal + 15 * agency.overheadsSepOnwardTotal,
+    ).toBe(totals.overheads);
+    expect(totals.overheads).toBe(SCENARIO_V2.contracts.agency.totals18mo.overheads);
+  });
+
+  it("surplus deployed: $1,890,000 − $936,000 − $218,556 = $735,444", () => {
+    expect(totals.surplusDeployed).toBe(735444);
+    expect(totals.revenue - totals.payroll - totals.overheads).toBe(735444);
+  });
+
+  it("V4 surplus exceeds V3 by $270,000 (the price-discipline delta on the same roster)", () => {
+    // 18 × $15,000 fee delta = $270,000 more surplus deployed at the same payroll.
+    expect(totals.surplusDeployed - SCENARIO_V3.contracts.agency.totals18mo.surplusDeployed).toBe(270000);
+  });
+
+  it("V4 surplus exceeds V2 by $90,000 (lean roster savings net of fee-vs-V2 trim)", () => {
+    // V2 fee $115k vs V4 $105k = $10k/mo less revenue × 18 = $180k less revenue.
+    // V2 payroll $67k vs V4 $52k = $15k/mo savings × 18 = $270k less payroll.
+    // Net: $90k more surplus on V4.
+    expect(totals.surplusDeployed - SCENARIO_V2.contracts.agency.totals18mo.surplusDeployed).toBe(90000);
+  });
+
+  it("deployment components reconcile to surplus within ~$30k (Aug trickle + Sep launch remainder)", () => {
+    const componentsSum =
+      totals.capitalRecovery +
+      totals.brightsidePrelaunch +
+      totals.reserve +
+      totals.innovation +
+      totals.giving;
+    // Components ($707,112) understate the $735,444 surplus by ~$28,332 — the
+    // sum of August's $15,824 cap-recovery trickle and September's $12,508
+    // post-Brightside-launch leftover. Both flow into the splits in
+    // subsequent months but are not separately broken out in totals18mo.
+    expect(Math.abs(totals.surplusDeployed - componentsSum)).toBeLessThanOrEqual(30000);
+  });
+});
+
+describe("V4 personal compensation — unchanged from V2/V3 baseline", () => {
+  const personal = SCENARIO_V4.personal;
+
+  it("$324k agency salary + $37k Brightside owner take = $361k total (same as V2/V3)", () => {
+    expect(personal.agencySalary18mo).toBe(324000);
+    expect(personal.brightsideOwnerTake).toBe(37000);
+    expect(personal.total18mo).toBe(361000);
+    expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
+      personal.total18mo,
+    );
+    expect(personal.perYear).toBe(240667);
+    expect(personal.total18mo).toBe(SCENARIO_V2.personal.total18mo);
+    expect(personal.total18mo).toBe(SCENARIO_V3.personal.total18mo);
+  });
+
+  it("$112k Capital Recovery flagged as debt repayment, NOT income", () => {
+    expect(personal.capitalRecovery).toBe(112000);
+    expect(personal.total18mo).not.toBe(
+      personal.agencySalary18mo +
+        personal.brightsideOwnerTake +
+        personal.capitalRecovery,
+    );
+  });
+});
+
+describe("V4 renegotiation triggers — structured field, not prose", () => {
+  const triggers = SCENARIO_V4.contracts.agency.renegotiationTriggers;
+
+  it("V4 publishes at least one renegotiation trigger (V2 and V3 publish none)", () => {
+    expect(triggers.length).toBeGreaterThanOrEqual(1);
+    expect(SCENARIO_V2.contracts.agency.renegotiationTriggers).toEqual([]);
+    expect(SCENARIO_V3.contracts.agency.renegotiationTriggers).toEqual([]);
+  });
+
+  it("V4 publishes exactly 2 triggers (month-12 renegotiation + month-18 renewal)", () => {
+    expect(triggers.length).toBe(2);
+  });
+
+  it("each trigger has the structured shape: step, condition, feeStepTo, drawStepTo, evidenceRequired", () => {
+    for (const t of triggers) {
+      expect(typeof t.step).toBe("string");
+      expect(t.step.length).toBeGreaterThan(0);
+      expect(typeof t.condition).toBe("string");
+      expect(t.condition.length).toBeGreaterThan(0);
+      expect(typeof t.feeStepTo).toBe("number");
+      expect(t.feeStepTo).toBeGreaterThan(SCENARIO_V4.contracts.agency.fee);
+      expect(typeof t.drawStepTo).toBe("number");
+      expect(t.drawStepTo).toBeGreaterThanOrEqual(SCENARIO_V4.contracts.agency.roster[0].monthlyLoaded);
+      expect(typeof t.evidenceRequired).toBe("string");
+      expect(t.evidenceRequired.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("triggers escalate monotonically (later trigger steps to a higher fee + draw)", () => {
+    for (let i = 1; i < triggers.length; i++) {
+      expect(triggers[i].feeStepTo).toBeGreaterThanOrEqual(triggers[i - 1].feeStepTo);
+      expect(triggers[i].drawStepTo).toBeGreaterThanOrEqual(triggers[i - 1].drawStepTo);
+    }
+  });
+
+  it("month-18 renewal lifts lead draw into the $20–22k band the founder asked for", () => {
+    const renewal = triggers[triggers.length - 1];
+    expect(renewal.drawStepTo).toBeGreaterThanOrEqual(20000);
+    expect(renewal.drawStepTo).toBeLessThanOrEqual(22000);
+  });
+});
+
+describe("V4 ↔ V2/V3 invariants — Salts, Brightside, 807 are identical objects", () => {
+  it("Salts bucket is the exact same object across V2, V3, and V4", () => {
+    expect(SCENARIO_V4.salts).toBe(SCENARIO_V2.salts);
+    expect(SCENARIO_V4.salts).toBe(SCENARIO_V3.salts);
+  });
+
+  it("Brightside bucket is the exact same object across V2, V3, and V4", () => {
+    expect(SCENARIO_V4.brightside).toBe(SCENARIO_V2.brightside);
+    expect(SCENARIO_V4.brightside).toBe(SCENARIO_V3.brightside);
+  });
+
+  it("807 CDP grant bucket is the exact same object across V2, V3, and V4", () => {
+    expect(SCENARIO_V4.contracts.cdp807).toBe(SCENARIO_V2.contracts.cdp807);
+    expect(SCENARIO_V4.contracts.cdp807).toBe(SCENARIO_V3.contracts.cdp807);
+  });
+
+  it("V4 Agency line legitimately differs from both V2 and V3", () => {
+    expect(SCENARIO_V4.contracts.agency.fee).not.toBe(SCENARIO_V2.contracts.agency.fee);
+    expect(SCENARIO_V4.contracts.agency.fee).not.toBe(SCENARIO_V3.contracts.agency.fee);
+    expect(SCENARIO_V4.status).toBe("locked");
+  });
+});
+
+describe("Scenario registry — V4 is wired in alongside V2 and V3", () => {
+  it("SCENARIOS contains exactly v2, v3, v4", () => {
+    expect(Object.keys(SCENARIOS).sort()).toEqual(["v2", "v3", "v4"]);
+    expect(SCENARIOS.v4).toBe(SCENARIO_V4);
+  });
+
+  it("SCENARIO_ORDER lists v2, v3, v4 in that order (toggle reads left-to-right)", () => {
+    expect(SCENARIO_ORDER).toEqual(["v2", "v3", "v4"]);
   });
 });

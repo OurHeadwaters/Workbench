@@ -231,6 +231,7 @@ const v2Agency = {
   ],
   givingDirection:
     "NW Ontario organizations and reserves, starting with the Dryden–Deer Lake corridor as the first targets.",
+  renegotiationTriggers: [],
 };
 
 const v2Brightside = {

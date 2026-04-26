@@ -4,7 +4,7 @@ import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { BUCKETS } from "@/data/buckets";
 import { money } from "@/lib/format";
-import { Salad, Handshake, Cpu, Wallet, GitCompareArrows, ArrowRight } from "lucide-react";
+import { Salad, Handshake, Cpu, Wallet, GitCompareArrows, ArrowRight, Repeat } from "lucide-react";
 
 export function IndexPage() {
   const { scenario } = useScenario();
@@ -158,15 +158,43 @@ export function IndexPage() {
               <GitCompareArrows className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold">Compare V2 ↔ V3</p>
+              <p className="text-sm font-semibold">Compare V2 / V3 / V4</p>
               <p className="text-xs text-muted-foreground">
-                Same numbers, two realities, side by side
+                Same numbers, three realities, side by side
               </p>
             </div>
           </div>
           <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            Salts net, agency surplus, Brightside owner take, personal cash — V2 (full team) vs V3
-            (lean team) at a glance, so you can talk out which turn to make.
+            Salts net, agency surplus, Brightside owner take, personal cash — V2 (full team), V3
+            (lean team), and V4 (right-priced) at a glance, so you can talk out which turn to make.
+          </p>
+        </Link>
+      </section>
+
+      <section>
+        <Link
+          href="/replication"
+          className="block rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow"
+          style={{ borderTopColor: "#3B2A6E", borderTopWidth: "4px" }}
+          data-testid="card-replication"
+        >
+          <div className="flex items-center gap-2.5">
+            <div
+              className="h-9 w-9 rounded-md grid place-items-center"
+              style={{ backgroundColor: "#E6E1F2", color: "#1F1640" }}
+            >
+              <Repeat className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Replication — taking the engagement to the next community</p>
+              <p className="text-xs text-muted-foreground">What travels · what swaps · the positioning narrative</p>
+            </div>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            The model written down: the role roster, the fee → margin formula, the pre-baked
+            renegotiation triggers, the year-end value-delivered audit, and the positioning
+            narrative — alongside the things that swap per community (capital recovery, local
+            stable force, travel cadence, capex). V4 is the worked example.
           </p>
         </Link>
       </section>
