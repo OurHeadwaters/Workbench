@@ -14,6 +14,7 @@
     "build:android:preview": "pnpm exec eas build --platform android --profile preview --non-interactive",
     "build:ios:preview": "pnpm exec eas build --platform ios --profile preview --non-interactive",
     "build:ios:simulator": "pnpm exec eas build --platform ios --profile preview-simulator --non-interactive",
+    "refresh:preview:android": "node scripts/refresh-preview-apk.js",
     "serve": "node server/serve.js",
     "sync-constellation": "node scripts/sync-constellation.js",
     "check-constellation": "node scripts/sync-constellation.js --check",

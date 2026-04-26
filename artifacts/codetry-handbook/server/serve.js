@@ -16,10 +16,22 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
+const {
+  fetchLatestFinishedPreviewBuild,
+  buildAgeMs,
+  EAS_ARTIFACT_TTL_MS,
+} = require("./eas-builds");
+
 const STATIC_ROOT = path.resolve(__dirname, "..", "static-build");
 const TEMPLATE_PATH = path.resolve(__dirname, "templates", "landing-page.html");
 const WEB_ROOT = path.join(STATIC_ROOT, "web");
 const basePath = (process.env.BASE_PATH || "/").replace(/\/+$/, "");
+
+// In-memory cache for the latest preview APK URL. We don't want every QR scan
+// to hit the EAS GraphQL API, but we also need the link to refresh on the
+// order of minutes after a new build finishes.
+const APK_LOOKUP_CACHE_TTL_MS = 5 * 60 * 1000;
+let cachedApkLookup = null; // { build, fetchedAt }
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -82,14 +94,101 @@ function serveLandingPage(req, res, landingPageTemplate, appName) {
   const host = req.headers["x-forwarded-host"] || req.headers["host"];
   const baseUrl = `${protocol}://${host}`;
   const expsUrl = `${host}`;
+  // Stable, never-expiring URL practitioners can scan to install the latest
+  // preview APK on Android. The redirect target inside `/install/apk` is
+  // refreshed automatically (see scripts/refresh-preview-apk.js).
+  const apkUrl = `${baseUrl}${basePath}/install/apk`;
 
   const html = landingPageTemplate
     .replace(/BASE_URL_PLACEHOLDER/g, baseUrl)
     .replace(/EXPS_URL_PLACEHOLDER/g, expsUrl)
+    .replace(/APK_URL_PLACEHOLDER/g, apkUrl)
     .replace(/APP_NAME_PLACEHOLDER/g, appName);
 
   res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
   res.end(html);
+}
+
+async function getLatestPreviewApkBuild() {
+  const now = Date.now();
+  if (cachedApkLookup && now - cachedApkLookup.fetchedAt < APK_LOOKUP_CACHE_TTL_MS) {
+    return cachedApkLookup.build;
+  }
+  const build = await fetchLatestFinishedPreviewBuild({
+    platform: "ANDROID",
+    buildProfile: "preview",
+  });
+  cachedApkLookup = { build, fetchedAt: now };
+  return build;
+}
+
+function plainText(res, status, body) {
+  res.writeHead(status, { "content-type": "text/plain; charset=utf-8" });
+  res.end(body);
+}
+
+async function serveApkRedirect(req, res) {
+  if (!process.env.EXPO_TOKEN) {
+    return plainText(
+      res,
+      503,
+      "EXPO_TOKEN is not configured on this server, so the latest preview APK " +
+        "cannot be looked up. Add EXPO_TOKEN as a secret " +
+        "(https://expo.dev/accounts/headwaters7/settings/access-tokens) and redeploy.",
+    );
+  }
+
+  let build;
+  try {
+    build = await getLatestPreviewApkBuild();
+  } catch (err) {
+    console.error("[/install/apk] EAS lookup failed:", err);
+    // Don't poison the cache on failure.
+    cachedApkLookup = null;
+    return plainText(
+      res,
+      502,
+      "Could not look up the latest preview APK from EAS. " +
+        "Check the server logs and confirm EXPO_TOKEN is valid.",
+    );
+  }
+
+  if (!build || !build.buildUrl) {
+    return plainText(
+      res,
+      503,
+      "No finished preview Android build is available yet. " +
+        "Run `pnpm --filter @workspace/codetry-handbook run build:preview:android` " +
+        "to publish one.",
+    );
+  }
+
+  const ageMs = buildAgeMs(build);
+  if (ageMs >= EAS_ARTIFACT_TTL_MS) {
+    // Force a re-lookup on the next request — a fresh build may have landed
+    // between cache populations.
+    cachedApkLookup = null;
+    return plainText(
+      res,
+      503,
+      "The latest preview build (" +
+        build.id +
+        ", finished " +
+        build.completedAt +
+        ") is older than 14 days, so its APK download link has likely expired. " +
+        "Run `pnpm --filter @workspace/codetry-handbook run refresh:preview:android` " +
+        "(or wait for the next scheduled refresh) to publish a new one.",
+    );
+  }
+
+  res.writeHead(302, {
+    location: build.buildUrl,
+    "cache-control": "no-store",
+    // Surface a small bit of debugging context without leaking secrets.
+    "x-eas-build-id": build.id,
+    "x-eas-build-completed-at": build.completedAt || "",
+  });
+  res.end();
 }
 
 function writeFile(filePath, res) {
@@ -169,6 +268,13 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // Stable redirect that always points at the latest finished preview APK on
+  // EAS. Practitioners scan this once and the link keeps working forever, even
+  // as individual EAS artifact URLs expire after ~14 days.
+  if (pathname === "/install/apk" || pathname === "/install/apk.html") {
+    return serveApkRedirect(req, res);
+  }
+
   // Expo Go install / QR landing page is now on a dedicated route so the
   // root URL can serve the installable PWA.
   if (
@@ -210,6 +316,7 @@ const server = http.createServer((req, res) => {
 const port = parseInt(process.env.PORT || "3000", 10);
 server.listen(port, "0.0.0.0", () => {
   console.log(`Serving Codetry handbook on port ${port}`);
-  console.log(`  PWA:           ${basePath || ""}/`);
-  console.log(`  Expo Go page:  ${basePath || ""}/install`);
+  console.log(`  PWA:               ${basePath || ""}/`);
+  console.log(`  Expo Go page:      ${basePath || ""}/install`);
+  console.log(`  Latest preview APK: ${basePath || ""}/install/apk`);
 });

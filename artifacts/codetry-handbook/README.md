@@ -272,8 +272,10 @@ The first preview builds were produced on 2026-04-26 from the
 Both Android and Simulator builds also live under the project's
 [builds dashboard](https://expo.dev/accounts/headwaters7/projects/codetry-handbook/builds).
 EAS artifact URLs expire ~14 days after the build, after which the
-builds are still listed but you'd re-download from the dashboard or
-re-run them.
+builds are still listed but the direct download link 404s. The
+**stable preview APK URL** below is what practitioners should scan
+or open — it always resolves to the most recent finished preview
+build, so individual EAS expiries are invisible to them.
 
 The iOS device (`.ipa`) preview build has **not** been produced yet
 because it requires the one-time Apple Developer credentials setup
@@ -286,6 +288,111 @@ end-to-end.
 When the iOS device build does land, update this table with the build
 ID and the EAS artifact URL printed at the end of `build:ios:preview`,
 and remove the status callout above.
+
+### Stable preview APK URL — the link that never goes dead
+
+The deployed handbook serves a stable redirect at:
+
+```
+https://<your-deploy>.replit.app/codetry-handbook/install/apk
+```
+
+This URL is what you put on a poster, in an email, or behind the QR code
+on the `/install` landing page. It is intentionally never expiring — the
+server resolves it on every request:
+
+1. The redirect handler in `server/serve.js` calls the EAS GraphQL API
+   (`https://api.expo.dev/graphql`) with the `EXPO_TOKEN` secret to find
+   the most recent **finished** `preview` build for Android.
+2. The handler 302-redirects to that build's signed `buildUrl`.
+3. If the latest build is older than 14 days (i.e. EAS has expired its
+   artifact link), the handler returns a 503 with a clear message instead
+   of redirecting somewhere broken. That's the signal to run the refresh
+   script (next section) to kick off a new build.
+4. Lookups are cached in memory for 5 minutes so a poster QR scan storm
+   doesn't pound EAS.
+
+Hitting `/install/apk` from a browser also reveals the underlying build
+through `X-EAS-Build-Id` / `X-EAS-Build-Completed-At` response headers,
+which is handy when debugging "is the link pointing where I think it is?"
+
+The `/install` landing page already uses this URL — both the on-page
+"Download APK" button and the QR code render `/install/apk`, not the
+EAS artifact URL directly.
+
+### Keeping the preview APK fresh (cron / scheduled deployment)
+
+The redirect above keeps working as long as a finished preview build
+exists that EAS hasn't expired yet. The 14-day expiry on EAS artifact
+URLs means we need a new build at least every two weeks. That's the
+job of:
+
+```bash
+pnpm --filter @workspace/codetry-handbook run refresh:preview:android
+```
+
+What it does (`scripts/refresh-preview-apk.js`):
+
+1. Reads `EXPO_TOKEN` and asks EAS for the most recent finished
+   Android `preview` build.
+2. If that build is **younger than 10 days** (override with
+   `PREVIEW_MAX_AGE_DAYS`, must be < 14), exits 0 with "no rebuild
+   needed". Running the script more often than the threshold is
+   cheap and idempotent.
+3. Otherwise it kicks off `eas build --platform android --profile
+   preview --non-interactive --no-wait`. EAS runs the build on its
+   cloud (~15–25 min). The next time `/install/apk` is requested
+   after the build finishes, the 5-minute server-side cache expires,
+   the new build is found, and the redirect target updates itself.
+
+Pass `--force` to rebuild regardless of age (useful after a code
+change that you want exposed via the preview link without waiting):
+
+```bash
+pnpm --filter @workspace/codetry-handbook run refresh:preview:android -- --force
+```
+
+**Recommended schedule:** weekly. To wire that up as a Replit
+scheduled deployment:
+
+1. In the project sidebar, open *Deploy* → *New deployment* → pick
+   **Scheduled** as the deployment type.
+2. **Schedule:** every Monday at 09:00 (or any cadence ≤ 10 days).
+3. **Build command:** leave blank (the script doesn't need a build
+   step — `node` and `pnpm` are already on the deploy image).
+4. **Run command:**
+   ```bash
+   pnpm --filter @workspace/codetry-handbook run refresh:preview:android
+   ```
+5. **Secrets:** the deployment automatically inherits `EXPO_TOKEN`
+   from the project secrets. Confirm it's listed under the deploy's
+   *Environment* tab before publishing.
+6. **(Optional but recommended) Pin the EAS project ID.** Both the
+   redirect handler and the refresh script read `EXPO_PROJECT_ID` from
+   the environment and fall back to a hardcoded default
+   (`ccfff076-0500-4aa5-be7d-2d71e7953ad2`) baked in `server/eas-builds.js`.
+   To remove that drift risk if the project is ever recreated under a
+   different ID, set `EXPO_PROJECT_ID` explicitly in the scheduled
+   deployment's *Environment* tab (and on the production web deploy that
+   serves `/install/apk`) to the same value shown on the
+   [project dashboard](https://expo.dev/accounts/headwaters7/projects/codetry-handbook).
+
+That's the whole loop: the cron script guarantees there's always a
+recent build, the redirect URL guarantees the link practitioners
+have on their phones still works.
+
+#### Verifying the link is healthy
+
+Quick check against the deployed site:
+
+```bash
+curl -sI https://<your-deploy>.replit.app/codetry-handbook/install/apk
+```
+
+Expect `HTTP/2 302` plus a `location:` header pointing at
+`https://expo.dev/artifacts/eas/<hash>.apk` and an `x-eas-build-id`
+header. Any 5xx response means EAS is unreachable or the latest
+build has expired — run the refresh script.
 
 ### First-build gotchas we hit and fixed
 

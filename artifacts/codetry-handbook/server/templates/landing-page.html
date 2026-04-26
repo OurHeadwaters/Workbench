@@ -182,6 +182,10 @@
         border-radius: 8px;
         padding: 12px;
       }
+      .qr-code-light {
+        background: #fafafa;
+        border: 1px solid #ddd;
+      }
       .qr-code canvas {
         width: 100%;
         height: 100%;
@@ -338,16 +342,33 @@
 
       <div class="content" id="content">
         <h1>APP_NAME_PLACEHOLDER</h1>
-        <p class="subtitle">Preview this app on your phone</p>
+        <p class="subtitle">Install on a phone</p>
 
         <div class="steps-container">
-          <div class="step">
+          <div class="step qr-section">
             <div class="step-header">
-              <div class="step-number">1</div>
-              <h2 class="step-title">Download Expo Go</h2>
+              <div class="step-number">A</div>
+              <h2 class="step-title">Install the APK (Android)</h2>
             </div>
             <p class="step-description">
-              Expo Go is a free app to test mobile apps
+              Scan with the camera, or open the link below.
+              The download is always the latest signed preview build —
+              the address never changes.
+            </p>
+            <div class="qr-code" id="apk-qr-code"></div>
+            <a href="APK_URL_PLACEHOLDER" class="open-button"
+              >Download APK</a
+            >
+          </div>
+
+          <div class="step">
+            <div class="step-header">
+              <div class="step-number">B</div>
+              <h2 class="step-title">Preview in Expo Go</h2>
+            </div>
+            <p class="step-description">
+              Expo Go is a free app to test mobile apps before they ship to
+              the stores.
             </p>
             <div class="store-buttons" id="store-buttons">
               <a
@@ -377,16 +398,8 @@
                 Google Play
               </a>
             </div>
-          </div>
-
-          <div class="step qr-section">
-            <div class="step-header">
-              <div class="step-number">2</div>
-              <h2 class="step-title">Scan QR Code</h2>
-            </div>
-            <p class="step-description">Use your phone's camera or Expo Go</p>
-            <div class="qr-code" id="qr-code"></div>
-            <a href="exps://EXPS_URL_PLACEHOLDER" class="open-button"
+            <div class="qr-code qr-code-light" id="qr-code"></div>
+            <a href="exps://EXPS_URL_PLACEHOLDER" class="store-button"
               >Open in Expo Go</a
             >
           </div>
@@ -407,6 +420,7 @@
           (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
         const deepLink = "exps://EXPS_URL_PLACEHOLDER";
+        const apkUrl = "APK_URL_PLACEHOLDER";
 
         // Adjust store buttons based on platform
         const appStoreBtn = document.getElementById("app-store-btn");
@@ -421,39 +435,32 @@
           storeButtonsContainer.insertBefore(playStoreBtn, appStoreBtn);
         }
 
-        const qrCode = new QRCodeStyling({
-          width: 400,
-          height: 400,
-          data: deepLink,
-          dotsOptions: {
-            color: "#333333",
-            type: "rounded",
-          },
-          backgroundOptions: {
-            color: "#ffffff",
-          },
-          cornersSquareOptions: {
-            type: "extra-rounded",
-          },
-          cornersDotOptions: {
-            type: "dot",
-          },
-          qrOptions: {
-            errorCorrectionLevel: "H",
-          },
-        });
-
-        qrCode.append(document.getElementById("qr-code"));
-
-        if (isAndroid || isIOS) {
-          loadingEl.style.display = "block";
-          contentEl.style.display = "none";
-          window.location.href = deepLink;
-          setTimeout(function () {
-            loadingEl.style.display = "none";
-            contentEl.style.display = "block";
-          }, 500);
+        function makeQr(data, opts) {
+          return new QRCodeStyling(
+            Object.assign(
+              {
+                width: 400,
+                height: 400,
+                data: data,
+                dotsOptions: { color: "#333333", type: "rounded" },
+                backgroundOptions: { color: "#ffffff" },
+                cornersSquareOptions: { type: "extra-rounded" },
+                cornersDotOptions: { type: "dot" },
+                qrOptions: { errorCorrectionLevel: "H" },
+              },
+              opts || {},
+            ),
+          );
         }
+
+        // Expo Go QR (used for previewing in Expo Go)
+        const expoGoQr = makeQr(deepLink);
+        expoGoQr.append(document.getElementById("qr-code"));
+
+        // Stable APK QR — points at our own /install/apk redirect, which
+        // looks up the latest finished preview build on EAS at request time.
+        const apkQr = makeQr(apkUrl);
+        apkQr.append(document.getElementById("apk-qr-code"));
       })();
     </script>
   </body>
