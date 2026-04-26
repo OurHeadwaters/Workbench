@@ -90,7 +90,11 @@ const SLIDE_REINVEST = slide(49, "Reinvestment");
 const SLIDE_RATE = slide(52, "Case for rate");
 const SLIDE_TEAM = slide(53, "Case for team");
 const SLIDE_CLOSING = slide(55, "Closing — naming the deal");
-const SLIDE_PATH = slide(60, "Path to scale");
+// Path to scale — live deck home for Y1/Y2/Y3 composition (the
+// CFO-readable breakout slide). manifestFile is set so
+// scripts/check-slide-refs.ts fails the build if the slide moves
+// position in the manifest without this constant being updated.
+const SLIDE_PATH = slide(7, "Path to scale", "src/pages/slides/PathToScale.tsx");
 const SLIDE_SALT_BENCH = slide(67, "Salt bench");
 const SLIDE_SALT_PL = slide(68, "Salt P&L");
 const SLIDE_ROLE_OPS_MANAGER = slide(24, "Role — Ops Manager");

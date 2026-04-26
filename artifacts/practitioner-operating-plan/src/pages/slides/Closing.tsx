@@ -17,7 +17,7 @@ export default function Closing() {
               style={{ background: "#e9c8a8" }}
             />
             <div className="font-mono uppercase tracking-[0.28em] text-[1.05vw] opacity-85">
-              Mission anchor · 05
+              Mission anchor · 06
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-70">
