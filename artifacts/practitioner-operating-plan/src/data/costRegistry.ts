@@ -21,6 +21,9 @@ export type CostCategory =
   | "Recommended-scenario overheads"
   | "Floor scenario (A · $60k)"
   | "Scale scenario (C · $125k)"
+  | "People & Retention — A · floor"
+  | "People & Retention — B · recommended"
+  | "People & Retention — C · scale"
   | "Day-one bridge & CAPEX"
   | "Reinvestment math"
   | "Headwaters payback"
@@ -69,6 +72,7 @@ const SLIDE_ROLE_FOOD_HANDLER = slide(11, "Role — Food Handler");
 const SLIDE_ROLE_HOUSECLEANER = slide(12, "Role — Housecleaner");
 const SLIDE_ROLE_TUTOR = slide(13, "Role — Tutor");
 const SLIDE_ROLE_HANDYMAN = slide(14, "Role — Handyman");
+const SLIDE_PEOPLE_SIZING = slide(44, "People — sizing per scenario");
 const PAGE_PAYBACK_MEMO: CostSlide = {
   href: "/payback-memo",
   label: "Payback memorandum",
@@ -915,6 +919,162 @@ export const COST_REGISTRY: CostEntry[] = [
     unit: "$/mo",
     context: "Larger cloud + phone footprint at scale.",
     slides: [SLIDE_BUDGET],
+  },
+
+  // -------- People & Retention buckets — A · floor ------------------
+  {
+    id: "people.a.costOfLiving",
+    category: "People & Retention — A · floor",
+    label: "A · 02 Cost-of-living offset",
+    defaultValue: 2800,
+    unit: "$/mo",
+    context:
+      "Floor-scenario monthly employer cost for crew-wide cost-of-living supports — grocery share, fuel, winter heat, phone. Sized to roll up with buckets 03–06 to ~15% of base payroll.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.a.resilience",
+    category: "People & Retention — A · floor",
+    label: "A · 03 Resilience",
+    defaultValue: 1300,
+    unit: "$/mo",
+    context:
+      "HSA, sick bank, family leave, mental-health stipend at the floor. The line that keeps a bad month from becoming a resignation.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.a.retention",
+    category: "People & Retention — A · floor",
+    label: "A · 04 Retention milestones",
+    defaultValue: 900,
+    unit: "$/mo",
+    context:
+      "RRSP step-up, anniversary cash, sabbatical, equipment transfer accruals at the floor.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.a.appreciation",
+    category: "People & Retention — A · floor",
+    label: "A · 05 Appreciation",
+    defaultValue: 600,
+    unit: "$/mo",
+    context:
+      "Crew meal, gear allowance, paid birthday, spot bonuses at the floor.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.a.growth",
+    category: "People & Retention — A · floor",
+    label: "A · 06 Growth",
+    defaultValue: 300,
+    unit: "$/mo",
+    context:
+      "Tuition / certs and paid mentorship time at the floor. Smallest of the five buckets — the one that grows fastest as the crew matures.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+
+  // -------- People & Retention buckets — B · recommended ------------
+  {
+    id: "people.b.costOfLiving",
+    category: "People & Retention — B · recommended",
+    label: "B · 02 Cost-of-living offset",
+    defaultValue: 4200,
+    unit: "$/mo",
+    context:
+      "Recommended-scenario monthly employer cost for crew-wide cost-of-living supports — grocery share, fuel, winter heat, phone.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.b.resilience",
+    category: "People & Retention — B · recommended",
+    label: "B · 03 Resilience",
+    defaultValue: 1900,
+    unit: "$/mo",
+    context:
+      "HSA, sick bank, family leave, mental-health stipend at the recommended team size.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.b.retention",
+    category: "People & Retention — B · recommended",
+    label: "B · 04 Retention milestones",
+    defaultValue: 1300,
+    unit: "$/mo",
+    context:
+      "RRSP step-up, anniversary cash, sabbatical, equipment transfer accruals for the recommended crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.b.appreciation",
+    category: "People & Retention — B · recommended",
+    label: "B · 05 Appreciation",
+    defaultValue: 900,
+    unit: "$/mo",
+    context:
+      "Crew meal, gear allowance, paid birthday, spot bonuses across the recommended crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.b.growth",
+    category: "People & Retention — B · recommended",
+    label: "B · 06 Growth",
+    defaultValue: 500,
+    unit: "$/mo",
+    context:
+      "Tuition / certs and paid mentorship time across the recommended crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+
+  // -------- People & Retention buckets — C · scale ------------------
+  {
+    id: "people.c.costOfLiving",
+    category: "People & Retention — C · scale",
+    label: "C · 02 Cost-of-living offset",
+    defaultValue: 6400,
+    unit: "$/mo",
+    context:
+      "Scale-scenario monthly employer cost for crew-wide cost-of-living supports across the larger team.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.c.resilience",
+    category: "People & Retention — C · scale",
+    label: "C · 03 Resilience",
+    defaultValue: 2900,
+    unit: "$/mo",
+    context:
+      "HSA, sick bank, family leave, mental-health stipend at scale.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.c.retention",
+    category: "People & Retention — C · scale",
+    label: "C · 04 Retention milestones",
+    defaultValue: 2000,
+    unit: "$/mo",
+    context:
+      "RRSP step-up, anniversary cash, sabbatical, equipment transfer accruals across the scale crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.c.appreciation",
+    category: "People & Retention — C · scale",
+    label: "C · 05 Appreciation",
+    defaultValue: 1400,
+    unit: "$/mo",
+    context:
+      "Crew meal, gear allowance, paid birthday, spot bonuses across the scale crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
+  },
+  {
+    id: "people.c.growth",
+    category: "People & Retention — C · scale",
+    label: "C · 06 Growth",
+    defaultValue: 700,
+    unit: "$/mo",
+    context:
+      "Tuition / certs and paid mentorship time across the scale crew.",
+    slides: [SLIDE_PEOPLE_SIZING],
   },
 
 ];

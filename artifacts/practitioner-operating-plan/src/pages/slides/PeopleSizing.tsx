@@ -33,49 +33,57 @@ const PAYROLL_IDS = {
   ],
 } as const;
 
-type Row = {
+type BucketRow = {
   label: string;
   hint: string;
-  a: number;
-  b: number;
-  c: number;
+  ids: { a: string; b: string; c: string };
 };
 
-const rows: Row[] = [
+const bucketRows: BucketRow[] = [
   {
     label: "02 · Cost-of-living offset",
     hint: "Grocery share · fuel · winter heat · phone",
-    a: 2800,
-    b: 4200,
-    c: 6400,
+    ids: {
+      a: "people.a.costOfLiving",
+      b: "people.b.costOfLiving",
+      c: "people.c.costOfLiving",
+    },
   },
   {
     label: "03 · Resilience",
     hint: "HSA · sick bank · family leave · mental-health stipend",
-    a: 1300,
-    b: 1900,
-    c: 2900,
+    ids: {
+      a: "people.a.resilience",
+      b: "people.b.resilience",
+      c: "people.c.resilience",
+    },
   },
   {
     label: "04 · Retention milestones",
     hint: "RRSP step-up · anniversary cash · sabbatical · equipment transfer",
-    a: 900,
-    b: 1300,
-    c: 2000,
+    ids: {
+      a: "people.a.retention",
+      b: "people.b.retention",
+      c: "people.c.retention",
+    },
   },
   {
     label: "05 · Appreciation",
     hint: "Crew meal · gear allowance · paid birthday · spot bonuses",
-    a: 600,
-    b: 900,
-    c: 1400,
+    ids: {
+      a: "people.a.appreciation",
+      b: "people.b.appreciation",
+      c: "people.c.appreciation",
+    },
   },
   {
     label: "06 · Growth",
     hint: "Tuition / certs · paid mentorship time",
-    a: 300,
-    b: 500,
-    c: 700,
+    ids: {
+      a: "people.a.growth",
+      b: "people.b.growth",
+      c: "people.c.growth",
+    },
   },
 ];
 
@@ -89,9 +97,16 @@ export default function PeopleSizing() {
   const payrollB = sumIds(PAYROLL_IDS.B);
   const payrollC = sumIds(PAYROLL_IDS.C);
 
-  const totalA = rows.reduce((acc, r) => acc + r.a, 0);
-  const totalB = rows.reduce((acc, r) => acc + r.b, 0);
-  const totalC = rows.reduce((acc, r) => acc + r.c, 0);
+  const resolved = bucketRows.map((r) => ({
+    label: r.label,
+    hint: r.hint,
+    a: resolveCost(state, r.ids.a),
+    b: resolveCost(state, r.ids.b),
+    c: resolveCost(state, r.ids.c),
+  }));
+  const totalA = resolved.reduce((acc, r) => acc + r.a, 0);
+  const totalB = resolved.reduce((acc, r) => acc + r.b, 0);
+  const totalC = resolved.reduce((acc, r) => acc + r.c, 0);
 
   const pct = (n: number, d: number) => (d > 0 ? (n / d) * 100 : 0);
 
@@ -117,10 +132,10 @@ export default function PeopleSizing() {
           <div className="text-right pl-[3vw] shrink-0 max-w-[26vw] font-body text-[0.95vw] text-muted leading-[1.4]">
             Per-scenario monthly employer cost.{" "}
             <span className="text-primary font-semibold">
-              Bucket totals reactive to the slide's static figures;
+              Every bucket, base payroll &amp; % reflect cost-review edits
             </span>{" "}
-            base payroll &amp; % reflect any cost-review edits to the
-            underlying salary lines.
+            — buckets sit in the registry alongside the salary lines they
+            sit on top of.
           </div>
         </div>
 
@@ -150,7 +165,7 @@ export default function PeopleSizing() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {resolved.map((r) => (
                 <tr
                   key={r.label}
                   className="border-t"
@@ -290,10 +305,10 @@ export default function PeopleSizing() {
         </div>
 
         <div className="mt-[1vh] font-body text-[0.78vw] text-muted leading-[1.35]">
-          Bucket figures are illustrative monthly sizing — kept static on
-          the slide. Base payroll &amp; the % column are computed live
-          from the role lines on the Budget slide, so any cost-review
-          edits propagate here.
+          Bucket figures are illustrative monthly sizing — every cell is
+          a registry entry, so the practitioner and CFO can revise any
+          bucket × scenario in cost review and the totals + % column
+          recompute live alongside the role lines on the Budget slide.
         </div>
       </div>
     </div>
