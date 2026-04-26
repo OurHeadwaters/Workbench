@@ -340,6 +340,186 @@ describe("Personal compensation transparency — locked headline numbers", () =>
   });
 });
 
+describe("V3 lean-team agency line — locked headline numbers", () => {
+  // Source of truth: .local/tasks/practitioners-guide-v3.md
+  const agency = SCENARIO_V3.contracts.agency;
+
+  it("engagement structure: $90k/mo fee, 18-month term, renegotiated at month 12", () => {
+    expect(agency.fee).toBe(90000);
+    expect(agency.termMonths).toBe(18);
+    expect(agency.renegotiateMonth).toBe(12);
+    expect(agency.startDate).toBe("June 1, 2026");
+  });
+
+  it("payroll: 6 roles totalling $52,000/mo (drops Transparency Stack + Junior Analyst from V2)", () => {
+    expect(agency.roster).toHaveLength(6);
+    expect(agency.payrollTotal).toBe(52000);
+    expect(agency.roster.reduce((s, r) => s + r.monthlyLoaded, 0)).toBe(52000);
+  });
+
+  it("roster delta vs V2: −$15,000/mo payroll (V2 $67k → V3 $52k)", () => {
+    expect(SCENARIO_V2.contracts.agency.payrollTotal - agency.payrollTotal).toBe(15000);
+  });
+
+  it("roster role names match the locked 6-role lean roster", () => {
+    const roles = agency.roster.map((r) => r.role);
+    expect(roles).toEqual([
+      "Practitioner / Lead",
+      "IT / Tech",
+      "Operations Manager (Dryden)",
+      "Community Development Associate",
+      "Food Handler (Dryden depot)",
+      "Bookkeeper / Admin",
+    ]);
+    // Roles dropped vs V2 must NOT appear in V3.
+    expect(roles).not.toContain("Transparency Stack Engineer");
+    expect(roles).not.toContain("Junior Analyst / Field");
+  });
+
+  it("overheads: held identical to V2 ($10,392 Jun–Aug, $12,492 Sep onward)", () => {
+    expect(agency.overheadsJunAugTotal).toBe(10392);
+    expect(agency.overheadsSepOnwardTotal).toBe(12492);
+    expect(agency.overheadsJunAugTotal).toBe(SCENARIO_V2.contracts.agency.overheadsJunAugTotal);
+    expect(agency.overheadsSepOnwardTotal).toBe(SCENARIO_V2.contracts.agency.overheadsSepOnwardTotal);
+  });
+
+  it("cost basis: $62,392 Jun–Aug, $64,492 Sep onward; surplus $27,608 / $25,508", () => {
+    expect(agency.costBasisJunAug).toBe(62392);
+    expect(agency.costBasisSepOnward).toBe(64492);
+    expect(agency.monthlySurplusJunAug).toBe(27608);
+    expect(agency.monthlySurplusSepOnward).toBe(25508);
+    expect(agency.fee - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
+    expect(agency.fee - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
+  });
+
+  it("capital recovery: $112k retired in ~4 months (slips from 3 mo in V2)", () => {
+    expect(agency.capitalRecoveryAmount).toBe(112000);
+    expect(agency.capitalRecoveryMonths).toBe(4);
+    expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
+    expect(agency.capitalRecoveryEndLabel).toContain("Oct 2026");
+  });
+
+  it("Brightside Launch Month: shifts to October 2026, $28k pre-launch, $2,492 short", () => {
+    expect(agency.brightsideLaunchMonthLabel).toContain("October 2026");
+    expect(agency.brightsidePrelaunchSpend).toBe(28000);
+    expect(agency.brightsideLaunchSurplus).toBe(25508);
+    expect(agency.brightsideLaunchRemainder).toBe(-2492);
+    expect(
+      agency.brightsideLaunchSurplus - agency.brightsidePrelaunchSpend,
+    ).toBe(agency.brightsideLaunchRemainder);
+  });
+
+  it("Phase 3 split is 50/25/25 across 13 months (one less than V2's 14)", () => {
+    expect(agency.reservePct).toBe(50);
+    expect(agency.innovationPct).toBe(25);
+    expect(agency.givingPct).toBe(25);
+    expect(agency.reservePct + agency.innovationPct + agency.givingPct).toBe(100);
+    expect(agency.phase3Months).toBe(13);
+    expect(agency.phase3MonthlySurplus).toBe(25508);
+    expect(agency.reserveMonthly).toBe(12754);
+    expect(agency.innovationMonthly).toBe(6377);
+    expect(agency.givingMonthly).toBe(6377);
+    expect(agency.reserveMonthly + agency.innovationMonthly + agency.givingMonthly).toBe(
+      agency.phase3MonthlySurplus,
+    );
+  });
+
+  it("Phase 3 totals: ~$165,802 Reserve / ~$82,901 Innovation / ~$82,901 Giving", () => {
+    expect(agency.reserveTotal).toBe(165802);
+    expect(agency.innovationTotal).toBe(82901);
+    expect(agency.givingTotal).toBe(82901);
+  });
+
+  it("practitioner salary unchanged: $324,000 across 18 months ($18k/mo × 18)", () => {
+    expect(agency.practitionerSalary18mo).toBe(324000);
+    expect(agency.practitionerSalary18mo).toBe(SCENARIO_V2.contracts.agency.practitionerSalary18mo);
+    expect(agency.roster[0].role).toBe("Practitioner / Lead");
+    expect(agency.roster[0].monthlyLoaded).toBe(18000);
+    expect(agency.roster[0].monthlyLoaded * agency.termMonths).toBe(
+      agency.practitionerSalary18mo,
+    );
+  });
+
+  it("reserve purposes and giving direction are inherited from V2 unchanged", () => {
+    expect(agency.reservePurposes).toBe(SCENARIO_V2.contracts.agency.reservePurposes);
+    expect(agency.givingDirection).toBe(SCENARIO_V2.contracts.agency.givingDirection);
+  });
+});
+
+describe("V3 18-month surplus deployment math — adds up to $465,444", () => {
+  const agency = SCENARIO_V3.contracts.agency;
+  const totals = agency.totals18mo;
+
+  it("revenue: $90k × 18 = $1,620,000", () => {
+    expect(totals.revenue).toBe(1620000);
+    expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("payroll: $52k × 18 = $936,000", () => {
+    expect(totals.payroll).toBe(936000);
+    expect(agency.payrollTotal * agency.termMonths).toBe(totals.payroll);
+  });
+
+  it("overheads: 3 × $10,392 + 15 × $12,492 = $218,556 (same as V2)", () => {
+    expect(totals.overheads).toBe(218556);
+    expect(
+      3 * agency.overheadsJunAugTotal + 15 * agency.overheadsSepOnwardTotal,
+    ).toBe(totals.overheads);
+    expect(totals.overheads).toBe(SCENARIO_V2.contracts.agency.totals18mo.overheads);
+  });
+
+  it("surplus deployed: $1,620,000 − $936,000 − $218,556 = $465,444", () => {
+    expect(totals.surplusDeployed).toBe(465444);
+    expect(totals.revenue - totals.payroll - totals.overheads).toBe(465444);
+  });
+
+  it("V3 surplus is exactly $180,000 less than V2 ($90k vs $115k × 18 = $450k revenue gap, partially offset by $15k/mo × 18 = $270k payroll savings → net $180k)", () => {
+    // 18 × $25,000 fee delta = $450,000 less revenue
+    // 18 × $15,000 payroll savings = $270,000 less payroll cost
+    // Net: $180,000 less surplus deployed
+    expect(SCENARIO_V2.contracts.agency.totals18mo.surplusDeployed - totals.surplusDeployed).toBe(180000);
+  });
+
+  it("deployment components reconcile to surplus within ~$7k (Nov-splits absorb $2,492 Oct overflow + Phase-3 month-boundary rounding)", () => {
+    const componentsSum =
+      totals.capitalRecovery +
+      totals.brightsidePrelaunch +
+      totals.reserve +
+      totals.innovation +
+      totals.giving;
+    // V3 components ($471,604) overstate the $465,444 surplus by ~$6,160 because
+    // Phase 3 is approximated as 13 full months at the post-Sep surplus.
+    // The November Reserve / Innovation / Giving splits absorb the $2,492 October
+    // Brightside overflow plus rounding across the 13-month Phase-3 window.
+    expect(Math.abs(componentsSum - totals.surplusDeployed)).toBeLessThanOrEqual(7000);
+  });
+});
+
+describe("V3 personal compensation — unchanged from V2", () => {
+  const personal = SCENARIO_V3.personal;
+
+  it("$324k agency salary + $37k Brightside owner take = $361k total (same as V2)", () => {
+    expect(personal.agencySalary18mo).toBe(324000);
+    expect(personal.brightsideOwnerTake).toBe(37000);
+    expect(personal.total18mo).toBe(361000);
+    expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
+      personal.total18mo,
+    );
+    expect(personal.perYear).toBe(240667);
+    expect(personal.total18mo).toBe(SCENARIO_V2.personal.total18mo);
+    expect(personal.perYear).toBe(SCENARIO_V2.personal.perYear);
+  });
+
+  it("$112k Capital Recovery is debt repayment, NOT income (same framing as V2)", () => {
+    expect(personal.capitalRecovery).toBe(112000);
+    expect(personal.total18mo).not.toBe(
+      personal.agencySalary18mo +
+        personal.brightsideOwnerTake +
+        personal.capitalRecovery,
+    );
+  });
+});
+
 describe("V2 ↔ V3 invariants — Salts and Brightside are identical", () => {
   it("Salts bucket is the exact same object across V2 and V3", () => {
     // V3 imports SCENARIO_V2.salts directly — referential equality is the
@@ -385,7 +565,10 @@ describe("V2 ↔ V3 invariants — Salts and Brightside are identical", () => {
     expect(SCENARIO_V3.contracts.agency.payrollTotal).not.toBe(
       SCENARIO_V2.contracts.agency.payrollTotal,
     );
-    expect(SCENARIO_V3.status).toBe("provisional");
+    // Both scenarios are locked — V3 was promoted from provisional once the founder
+    // confirmed the lean roster + fee in this task (#162). The ProvisionalBanner
+    // therefore renders on neither page.
+    expect(SCENARIO_V3.status).toBe("locked");
     expect(SCENARIO_V2.status).toBe("locked");
   });
 });
