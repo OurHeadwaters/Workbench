@@ -5,6 +5,7 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable"],
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
@@ -12,13 +13,5 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "references": [
-    {
-      "path": "../../lib/cross-reserve-corridor"
-    },
-    {
-      "path": "../../lib/headwaters-pricing"
-    }
-  ]
+  }
 }
