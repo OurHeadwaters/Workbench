@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { DEFAULT_STATE } from "../storage";
 import type { AppState } from "../storage";
-import { getLiveCostValue } from "../budgetMath";
+import { getLiveCostValue, resolveCost } from "../budgetMath";
 
 function withEdit(state: AppState, id: string, value: number): AppState {
   return {
@@ -117,6 +117,59 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     // y3 = 1,080,000 + (2 × 148,200 + 4 × 40,000) = 1,080,000 + 456,400 = 1,536,400
     expect(y2).toBe(1456400);
     expect(y3).toBe(1536400);
+  });
+
+  it("travel pass-through example is a defensible round number ($22,500), reconciles with the per-component model, and is NOT double-counted in fee revenue", () => {
+    // The pass-through is reimbursed cost the receiving reserve pays
+    // directly — not fee income to the practitioner. It must stay out of
+    // the per-install fee, the Y2/Y3 cross-reserve totals, and the Y2/Y3
+    // headlines, otherwise we'd be selling reimbursement-of-cost as
+    // revenue. It must also match the existing per-component planning
+    // estimates so the cost-review modal never surfaces two conflicting
+    // pass-through numbers. This test fails loudly on either.
+    const passthroughLive = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.example",
+    );
+    // 12 × $1,000 + 30 × $250 + 30 × $100 = 12,000 + 7,500 + 3,000 = 22,500
+    expect(passthroughLive).toBe(22500);
+    // Reconciles with the existing per-component default total.
+    expect(passthroughLive).toBe(
+      resolveCost(DEFAULT_STATE, "crossReserve.travel.totalPerInstall"),
+    );
+
+    const installPer = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.installRevenue.perReserve",
+    );
+    const crossY2 = getLiveCostValue(DEFAULT_STATE, "crossReserve.year2.revenue");
+    const crossY3 = getLiveCostValue(DEFAULT_STATE, "crossReserve.year3.revenue");
+    const y2 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year2");
+    const y3 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year3");
+
+    // Per-install fee revenue is purely day-rate; no travel folded in.
+    expect(installPer).toBe(148200);
+    // Y2 cross-reserve is exactly 2 installs + 2 retainers — no travel.
+    expect(crossY2).toBe(2 * 148200 + 2 * 30000);
+    // Y3 cross-reserve is exactly 2 installs + 4 retainers — no travel.
+    expect(crossY3).toBe(2 * 148200 + 4 * 30000);
+    // And the headlines reconcile to Deer Lake + cross-reserve only.
+    expect(y2).toBe(1080000 + (crossY2 ?? 0));
+    expect(y3).toBe(1080000 + (crossY3 ?? 0));
+  });
+
+  it("travel pass-through example tracks edits to its per-component inputs", () => {
+    // Bump the flight cost to $1,200 and food per-diem to $125. The
+    // example should recompute deterministically from the components,
+    // proving it stays in lockstep with the per-component model.
+    const state = withEdit(
+      withEdit(DEFAULT_STATE, "crossReserve.travel.flightPerWeek", 1200),
+      "crossReserve.travel.foodPerOnsiteDay",
+      125,
+    );
+    const live = getLiveCostValue(state, "crossReserve.travelPassthrough.example");
+    // 12 × $1,200 + 30 × $250 + 30 × $125 = 14,400 + 7,500 + 3,750 = 25,650
+    expect(live).toBe(25650);
   });
 
   it("Y2 / Y3 reconcile as the literal sum of their named components", () => {

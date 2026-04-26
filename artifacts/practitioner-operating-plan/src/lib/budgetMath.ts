@@ -317,6 +317,22 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       const installPer = CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
       return 2 * installPer + 4 * retainer;
     }
+    case "crossReserve.travelPassthrough.example": {
+      // Worked rolled-up example of the receiving-reserve pass-through.
+      // Stays in lockstep with the existing per-component planning
+      // entries so the cost-review modal never surfaces two conflicting
+      // pass-through totals: 12 weekly flights + 30 lodging nights + 30
+      // food per-diem days. Pass-through is reimbursed cost — never
+      // folded into the practitioner's fee or any Y2/Y3 revenue line.
+      const flightPerWeek = resolveCost(state, "crossReserve.travel.flightPerWeek");
+      const lodgingPerNight = resolveCost(state, "crossReserve.travel.lodgingPerNight");
+      const foodPerDay = resolveCost(state, "crossReserve.travel.foodPerOnsiteDay");
+      return (
+        CROSS_RESERVE_INSTALL_WEEKS * flightPerWeek +
+        CROSS_RESERVE_ONSITE_DAYS * lodgingPerNight +
+        CROSS_RESERVE_ONSITE_DAYS * foodPerDay
+      );
+    }
     default:
       return null;
   }
@@ -327,6 +343,10 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
 // derivations all share one source of truth.
 export const CROSS_RESERVE_ONSITE_DAYS = 30;
 export const CROSS_RESERVE_REMOTE_DAYS = 24;
+// Used by the travel pass-through worked example (one round-trip flight
+// per install week). Matches the assumption baked into
+// `crossReserve.travel.flightPerWeek`.
+export const CROSS_RESERVE_INSTALL_WEEKS = 12;
 
 export function useLiveCostValue(id: string): number | null {
   const state = useAppState();
