@@ -68,7 +68,7 @@ export const constellation: ConstellationSnapshot = {
     {
       "name": "Freedom Cells",
       "channel": null,
-      "tagline": "peer-to-peer community organization"
+      "tagline": "peer-to-peer community organization, co-founded by Derrick Broze and John Bush"
     }
   ],
   "zones": [

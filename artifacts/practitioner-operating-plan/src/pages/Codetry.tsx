@@ -210,7 +210,8 @@ export default function Codetry() {
             &ldquo;build the life you choose on your terms&rdquo;
           </span>
           ; and the peer-to-peer community-organization logic of the
-          Freedom Cells movement. The working axiom across all of them
+          Freedom Cells movement (Derrick Broze and John Bush). The
+          working axiom across all of them
           is that{" "}
           <span className="italic">
             there is no shortage of problems, but when we look for
