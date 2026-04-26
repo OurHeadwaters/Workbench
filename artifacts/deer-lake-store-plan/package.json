@@ -15,6 +15,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@workspace/cross-reserve-corridor": "workspace:*",
     "@workspace/headwaters-pricing": "workspace:*",
     "@workspace/practitioner-operating-plan": "workspace:*",
     "@workspace/why-stores-fail": "workspace:*"

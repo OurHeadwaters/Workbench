@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
 
+import { CORRIDOR_DEFAULTS } from "@workspace/cross-reserve-corridor";
 import {
   resolveCost,
   getLiveCostValue,
@@ -282,17 +283,20 @@ function ReserveTwoCalculator({
 
   const y1AllIn = installFee + travelTotal + y1Retainer;
 
-  // "Default" = matches the live registry defaults at this moment. If
-  // the registry moves underneath us (a council edit in the cost-review
-  // modal), the locally-typed corridor stays where the user put it but
-  // the Reset button starts pointing at the new registry values, so a
-  // single click brings the calculator back in sync.
+  // "Default" = matches the canonical corridor defaults shipped in
+  // `@workspace/cross-reserve-corridor` (`CORRIDOR_DEFAULTS` + the
+  // install-shape constants re-exported through budgetMath). The Reset
+  // button restores those same shared values, so this check stays in
+  // lock-step with what Reset does — and a single edit to
+  // `lib/cross-reserve-corridor/src/index.ts` flows through to both
+  // the disabled state of the button and the values it restores, with
+  // no further edits needed in this slide.
   const isDefault =
-    flight === flightPerWeekDefault &&
-    lodging === lodgingPerNightDefault &&
-    food === foodPerDayDefault &&
-    installWeeks === INSTALL_WEEKS &&
-    onsiteDays === ON_SITE_DAYS;
+    flight === CORRIDOR_DEFAULTS.flightPerReturn &&
+    lodging === CORRIDOR_DEFAULTS.lodgingPerNight &&
+    food === CORRIDOR_DEFAULTS.foodPerDay &&
+    installWeeks === CORRIDOR_DEFAULTS.installWeeks &&
+    onsiteDays === CORRIDOR_DEFAULTS.onsiteDays;
 
   // Sync corridor state -> URL querystring so the chief can copy the URL and
   // forward "here's our corridor's math" to a band manager. We only write the
@@ -335,12 +339,21 @@ function ReserveTwoCalculator({
     foodPerDayDefault,
   ]);
 
+  // Reset restores the canonical shared corridor defaults from
+  // `@workspace/cross-reserve-corridor`. We deliberately bypass the
+  // live registry props here — those carry any council edits made in
+  // the cost-review modal, which is exactly what someone hitting Reset
+  // is trying to back out of. Sourcing every restored value from
+  // `CORRIDOR_DEFAULTS` (and never an inline literal) means a single
+  // edit to `lib/cross-reserve-corridor/src/index.ts` flows through to
+  // both first render and Reset behaviour, with no slide-local edits
+  // required. `scripts/check-corridor-defaults.ts` enforces this.
   const reset = () => {
-    setFlight(flightPerWeekDefault);
-    setLodging(lodgingPerNightDefault);
-    setFood(foodPerDayDefault);
-    setInstallWeeks(INSTALL_WEEKS);
-    setOnsiteDays(ON_SITE_DAYS);
+    setFlight(CORRIDOR_DEFAULTS.flightPerReturn);
+    setLodging(CORRIDOR_DEFAULTS.lodgingPerNight);
+    setFood(CORRIDOR_DEFAULTS.foodPerDay);
+    setInstallWeeks(CORRIDOR_DEFAULTS.installWeeks);
+    setOnsiteDays(CORRIDOR_DEFAULTS.onsiteDays);
   };
 
   // Auto-clear the "Copied!" / "Copy failed" confirmation after ~2s so the

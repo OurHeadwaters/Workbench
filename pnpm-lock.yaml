@@ -393,6 +393,9 @@ importers:
 
   artifacts/deer-lake-store-plan:
     dependencies:
+      '@workspace/cross-reserve-corridor':
+        specifier: workspace:*
+        version: link:../../lib/cross-reserve-corridor
       '@workspace/headwaters-pricing':
         specifier: workspace:*
         version: link:../../lib/headwaters-pricing
