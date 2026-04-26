@@ -13,6 +13,21 @@
 //                    name back or to follow the new word everywhere.
 //
 // AUDIT ONLY. No production renames are wired into anything by this file.
+//
+// CADENCE — the audit is a recurring posture (handbook §4.3), not a
+// one-shot snapshot. `lastReviewed` is the ISO date the practitioner
+// last walked the whole sheet end to end. The Year page surfaces it as
+// a quarterly ritual; the audit page reads it into the header eyebrow.
+// Bump this value any time entries are added, removed, or re-trialed.
+//
+// ADDING A NEW ENTRY — when a new canonical name lands (a new registry
+// id, a new slide title, a new shared vocabulary), append a new entry
+// to the right artifact group with: name, livesAt (every surface it
+// appears on), renameCandidate (what you tried to rename it to),
+// whatWouldChange (the structural cost of accepting the rename), and a
+// verdict. Bump `lastReviewed` in the same commit.
+
+export const lastReviewed = "2026-04-26";
 
 export type Verdict = "load-bearing" | "decorative" | "drift";
 

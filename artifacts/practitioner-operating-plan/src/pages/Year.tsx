@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { codetryTest, lastReviewed as codetryTestLastReviewed } from "../data/codetryTest";
 import { PHASES, getPhaseForWeek, getWeekPlan } from "../data/plan2026";
 import {
   BATCHES,
@@ -370,6 +371,9 @@ export default function Year() {
         )}
       </section>
 
+      <CodetryTestRitualCard />
+
+
       {/* Detail list with mark-complete / shift controls per week. */}
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-700">
@@ -546,3 +550,144 @@ export default function Year() {
     </div>
   );
 }
+
+// Codetry test — quarterly ritual that surfaces the canonical-names
+// audit on the Year page. The audit itself lives at /codetry-test;
+// this card is the recurring trigger so the audit doesn't silently
+// go stale (handbook §4.3 — "the test isn't a one-time thing — it's
+// a posture"). Last-reviewed date and tally are read live from
+// src/data/codetryTest.ts so editing the data file is the only place
+// the practitioner has to update.
+function CodetryTestRitualCard() {
+  const tally = codetryTest.reduce(
+    (acc, group) => {
+      for (const entry of group.entries) {
+        acc[entry.verdict] += 1;
+        acc.total += 1;
+      }
+      return acc;
+    },
+    { "load-bearing": 0, decorative: 0, drift: 0, total: 0 } as {
+      "load-bearing": number;
+      decorative: number;
+      drift: number;
+      total: number;
+    },
+  );
+
+  const reviewedDate = new Date(`${codetryTestLastReviewed}T00:00:00Z`);
+  const reviewedLabel = reviewedDate.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  const today = new Date();
+  const daysSince = Math.max(
+    0,
+    Math.floor(
+      (today.getTime() - reviewedDate.getTime()) / (1000 * 60 * 60 * 24),
+    ),
+  );
+  // Quarterly cadence — flag when the audit has been untouched for
+  // more than ~13 weeks. Soft warning, not a blocker.
+  const quarterlyDue = daysSince >= 91;
+
+  return (
+    <section
+      className="rounded-lg border border-stone-200 bg-white p-5"
+      data-testid="section-codetry-test-ritual"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-700">
+            Codetry test
+          </h2>
+          <p className="mt-1 text-sm text-stone-600">
+            Quarterly cadence. Re-walk the canonical-names audit so
+            vocabulary drift gets caught on a rhythm, not by accident.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/codetry-test"
+            className="rounded-md border border-stone-700 bg-stone-900 px-3 py-1.5 text-sm text-stone-50 hover:bg-stone-800"
+            data-testid="link-codetry-test"
+          >
+            Open the audit
+          </Link>
+        </div>
+      </div>
+      <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-4">
+        <div className="rounded-md border border-stone-200 bg-stone-50 px-3 py-2">
+          <dt className="font-mono uppercase tracking-wider text-stone-500">
+            Last reviewed
+          </dt>
+          <dd
+            className="mt-1 text-sm font-medium text-stone-900"
+            data-testid="text-codetry-test-last-reviewed"
+          >
+            {reviewedLabel}
+          </dd>
+          <dd className="mt-0.5 text-xs text-stone-500">
+            {daysSince === 0
+              ? "today"
+              : daysSince === 1
+                ? "1 day ago"
+                : `${daysSince} days ago`}
+          </dd>
+        </div>
+        <div className="rounded-md border border-stone-200 bg-stone-50 px-3 py-2">
+          <dt className="font-mono uppercase tracking-wider text-stone-500">
+            Load-bearing
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-stone-900">
+            {tally["load-bearing"]} / {tally.total}
+          </dd>
+          <dd className="mt-0.5 text-xs text-stone-500">
+            names holding weight
+          </dd>
+        </div>
+        <div className="rounded-md border border-stone-200 bg-stone-50 px-3 py-2">
+          <dt className="font-mono uppercase tracking-wider text-stone-500">
+            Decorative
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-stone-900">
+            {tally.decorative}
+          </dd>
+          <dd className="mt-0.5 text-xs text-stone-500">propose a fix</dd>
+        </div>
+        <div className="rounded-md border border-stone-200 bg-stone-50 px-3 py-2">
+          <dt className="font-mono uppercase tracking-wider text-stone-500">
+            Drift
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-stone-900">
+            {tally.drift}
+          </dd>
+          <dd className="mt-0.5 text-xs text-stone-500">resolve on purpose</dd>
+        </div>
+      </dl>
+      {quarterlyDue ? (
+        <p
+          className="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+          data-testid="text-codetry-test-due"
+        >
+          Quarterly review due — last walked {daysSince} days ago.
+          Open the audit, re-trial each name, then bump{" "}
+          <span className="font-mono">lastReviewed</span> in{" "}
+          <span className="font-mono">src/data/codetryTest.ts</span>.
+        </p>
+      ) : (
+        <p className="mt-3 text-xs text-stone-500">
+          New canonical name landed since last review? Add an entry in{" "}
+          <span className="font-mono text-stone-700">
+            src/data/codetryTest.ts
+          </span>{" "}
+          and bump{" "}
+          <span className="font-mono text-stone-700">lastReviewed</span>.
+        </p>
+      )}
+    </section>
+  );
+}
+

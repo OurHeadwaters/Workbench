@@ -1,4 +1,5 @@
-import { codetryTest, type Verdict } from "@/data/codetryTest";
+import { codetryTest, lastReviewed, type Verdict } from "@/data/codetryTest";
+import { formatLongDate } from "@/lib/dateMath";
 
 const verdictLabel: Record<Verdict, string> = {
   "load-bearing": "load-bearing",
@@ -38,7 +39,8 @@ export default function CodetryTest() {
         <div className="flex items-baseline justify-between border-b border-[#c8bfa7] pb-[8pt] mb-[10pt] print:pb-[5pt] print:mb-[6pt]">
           <div>
             <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[3pt] print:text-[7pt] print:mb-[2pt]">
-              Working doc · Codetry Handbook §4.2 applied
+              Working doc · Codetry Handbook §4.2 applied · Last
+              reviewed {formatLongDate(lastReviewed)}
             </div>
             <h1 className="font-display text-[26pt] leading-[1.0] tracking-tight text-[#1f3d2e] font-semibold print:text-[20pt]">
               The Codetry Test
@@ -241,6 +243,33 @@ export default function CodetryTest() {
           <span className="italic">decorative</span> or{" "}
           <span className="italic">drift</span>, the next move belongs in
           a follow-up task &mdash; not a quiet rename.
+        </div>
+
+        <div className="mt-[10pt] pt-[8pt] border-t border-[#c8bfa7] text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[7.5pt] print:mt-[7pt] print:pt-[5pt] print:break-inside-avoid">
+          <span className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#1f3d2e] mr-[4pt] print:text-[6.5pt]">
+            Adding a new entry
+          </span>
+          When a new canonical name lands &mdash; a new registry id,
+          a new slide title, a new shared piece of vocabulary &mdash;
+          open{" "}
+          <span className="font-mono text-[#1f3d2e]">
+            src/data/codetryTest.ts
+          </span>{" "}
+          and append an entry to the right artifact group. Each entry
+          needs five things: the <span className="italic">name</span>,
+          where it <span className="italic">lives</span> (every
+          surface it appears on), the{" "}
+          <span className="italic">rename</span> you trialed, what
+          would actually <span className="italic">change</span> if the
+          rename were accepted, and a{" "}
+          <span className="italic">verdict</span>. Bump{" "}
+          <span className="font-mono text-[#1f3d2e]">lastReviewed</span>{" "}
+          in the same commit so the eyebrow date and the Year-page
+          ritual stay honest. Per handbook §4.3 (&ldquo;the test
+          isn&rsquo;t a one-time thing &mdash; it&rsquo;s a
+          posture&rdquo;), the audit gets re-walked at least quarterly
+          from the Year page even when no new entries have been
+          added.
         </div>
       </div>
     </div>
