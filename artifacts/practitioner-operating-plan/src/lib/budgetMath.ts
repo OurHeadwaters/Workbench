@@ -269,11 +269,25 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       // and the slide UI reconcile.
       return t.loadedBridgeB;
     case "pathToScale.year1":
+      // Y1 = one Deer Lake contract, no cross-reserve revenue yet.
       return t.askReco * 12;
-    case "pathToScale.year2":
-      return t.askReco * 12 * 2;
-    case "pathToScale.year3":
-      return t.askReco * 12 * 5;
+    case "pathToScale.year2": {
+      // Y2 = Deer Lake contract + cross-reserve install revenue
+      // (2 installs × per-reserve install + 2 first-year retainers).
+      // Composed from real components instead of askReco × 12 × N so
+      // the headline reconciles with the cross-reserve story the deck
+      // tells. Falls back through getLiveCostValue, so any edits to
+      // ask.recommended, the day rates, or the retainer flow through.
+      const crossY2 = getLiveCostValue(state, "crossReserve.year2.revenue") ?? 0;
+      return t.askReco * 12 + crossY2;
+    }
+    case "pathToScale.year3": {
+      // Y3 = Deer Lake contract + cross-reserve install revenue
+      // (2 new installs + 4 active retainers — retainers compound as
+      // more reserves go live). Same composition logic as Y2.
+      const crossY3 = getLiveCostValue(state, "crossReserve.year3.revenue") ?? 0;
+      return t.askReco * 12 + crossY3;
+    }
     case "crossReserve.installRevenue.perReserve": {
       // Derived: 30 on-site days × on-site rate + 24 remote days × remote rate.
       // Edits to either day rate flow through here so the per-reserve install
@@ -285,7 +299,8 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
     }
     case "crossReserve.year2.revenue": {
       // Derived: 2 new installs + 2 first-year retainers (the two reserves
-      // installed in Y2). Component of pathToScale.year2; not additive.
+      // installed in Y2). Stacks on top of the Deer Lake contract to make
+      // pathToScale.year2.
       const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
       const remote = resolveCost(state, "crossReserve.dayRate.remote");
       const retainer = resolveCost(state, "crossReserve.retainer.annual");
@@ -294,7 +309,8 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
     }
     case "crossReserve.year3.revenue": {
       // Derived: 2 new installs + 4 active retainers (2 from Y2 + 2 new).
-      // Retainer income compounds as more reserves go live.
+      // Retainer income compounds as more reserves go live. Stacks on top
+      // of the Deer Lake contract to make pathToScale.year3.
       const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
       const remote = resolveCost(state, "crossReserve.dayRate.remote");
       const retainer = resolveCost(state, "crossReserve.retainer.annual");

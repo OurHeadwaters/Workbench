@@ -72,3 +72,66 @@ describe("Cross-reserve install — derived live values", () => {
     expect(liveY3).toBe(416400);
   });
 });
+
+describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", () => {
+  // V3 framing: Y2 and Y3 are NOT askReco × 12 × N (more concurrent
+  // contracts). They're one Deer Lake contract that holds steady, with
+  // cross-reserve install + retainer revenue stacking on top. These
+  // tests lock in that composition so any future drift fails loudly.
+
+  it("Y1 = askReco × 12 = $1,080,000 (Deer Lake only, no cross-reserve)", () => {
+    const live = getLiveCostValue(DEFAULT_STATE, "pathToScale.year1");
+    expect(live).toBe(1080000);
+  });
+
+  it("Y2 = $1,080,000 Deer Lake + $356,400 cross-reserve = $1,436,400", () => {
+    const live = getLiveCostValue(DEFAULT_STATE, "pathToScale.year2");
+    expect(live).toBe(1436400);
+  });
+
+  it("Y3 = $1,080,000 Deer Lake + $416,400 cross-reserve = $1,496,400", () => {
+    const live = getLiveCostValue(DEFAULT_STATE, "pathToScale.year3");
+    expect(live).toBe(1496400);
+  });
+
+  it("Y2 / Y3 recompute when ask.recommended is edited (Deer Lake leg moves)", () => {
+    // Bump the Deer Lake monthly to $100k/mo. The cross-reserve leg is
+    // unaffected (it depends on day rates + retainer, not on the ask).
+    const state = withEdit(DEFAULT_STATE, "ask.recommended", 100000);
+    const y2 = getLiveCostValue(state, "pathToScale.year2");
+    const y3 = getLiveCostValue(state, "pathToScale.year3");
+    // y2 = 100,000 × 12 + 356,400 = 1,200,000 + 356,400 = 1,556,400
+    // y3 = 100,000 × 12 + 416,400 = 1,200,000 + 416,400 = 1,616,400
+    expect(y2).toBe(1556400);
+    expect(y3).toBe(1616400);
+  });
+
+  it("Y2 / Y3 recompute when the cross-reserve retainer is edited (recurring leg moves)", () => {
+    // Bump the discipline-keeper retainer to $40k/yr. Deer Lake leg is
+    // unaffected; the cross-reserve component grows by 2 × $10k in Y2
+    // and 4 × $10k in Y3.
+    const state = withEdit(DEFAULT_STATE, "crossReserve.retainer.annual", 40000);
+    const y2 = getLiveCostValue(state, "pathToScale.year2");
+    const y3 = getLiveCostValue(state, "pathToScale.year3");
+    // y2 = 1,080,000 + (2 × 148,200 + 2 × 40,000) = 1,080,000 + 376,400 = 1,456,400
+    // y3 = 1,080,000 + (2 × 148,200 + 4 × 40,000) = 1,080,000 + 456,400 = 1,536,400
+    expect(y2).toBe(1456400);
+    expect(y3).toBe(1536400);
+  });
+
+  it("Y2 / Y3 reconcile as the literal sum of their named components", () => {
+    // The whole point of the new composition: a CFO can read the Y2/Y3
+    // headline as Deer Lake + cross-reserve, with no hand-waving. This
+    // test pins down that identity.
+    const askReco =
+      getLiveCostValue(DEFAULT_STATE, "pathToScale.year1") ?? 0;
+    const crossY2 =
+      getLiveCostValue(DEFAULT_STATE, "crossReserve.year2.revenue") ?? 0;
+    const crossY3 =
+      getLiveCostValue(DEFAULT_STATE, "crossReserve.year3.revenue") ?? 0;
+    const y2 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year2");
+    const y3 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year3");
+    expect(y2).toBe(askReco + crossY2);
+    expect(y3).toBe(askReco + crossY3);
+  });
+});

@@ -767,16 +767,19 @@ export const COST_REGISTRY: CostEntry[] = [
   },
 
   // -------- Path to scale (derived) ---------------------------------
-  // V3 framing: Year 2 / Year 3 are NOT just "more Deer-Lake-shaped
-  // contracts." The cross-reserve install line (above) is what makes
-  // those numbers real — premium day-rate installs at reserves #2/#3,
-  // plus the recurring discipline-keeper retainer at every reserve the
-  // practitioner has installed at. The dollar numbers below stay on
-  // the same askReco × 12 × N spine the existing slide quotes (so the
-  // path-to-scale headline numbers don't move), but the underlying
-  // story has shifted: in Year 2, ~$297k of that comes from cross-
-  // reserve install revenue (2 reserves) on top of Deer Lake; in
-  // Year 3, retainer income compounds on top of further installs.
+  // V3 framing: Year 2 / Year 3 are NOT "more Deer-Lake-shaped
+  // contracts" stacked on top of each other. The shape is *one*
+  // Deer Lake contract that holds steady, with cross-reserve install
+  // revenue (premium day-rate installs at reserves #2/#3) and
+  // recurring discipline-keeper retainers stacking on top. The
+  // headline totals below are the literal sum of those components,
+  // so a CFO can trace every dollar:
+  //   Y1 = askReco × 12                                  ≈ $1.08M
+  //   Y2 = askReco × 12 + crossReserve.year2.revenue     ≈ $1.44M
+  //   Y3 = askReco × 12 + crossReserve.year3.revenue     ≈ $1.50M
+  // Edit ask.recommended, the cross-reserve day rates, or the
+  // discipline-keeper retainer to move these — the live derivation in
+  // budgetMath.ts (`getLiveCostValue`) recomputes from those inputs.
   {
     id: "pathToScale.year1",
     category: "Path to scale",
@@ -784,18 +787,18 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 1080000,
     unit: "$/yr",
     context:
-      "1 contract @ recommended monthly × 12. Edit ask.recommended to move this. No cross-reserve install revenue in Y1 — practitioner is still bedding in Deer Lake.",
+      "1 contract @ recommended monthly × 12 = $1,080,000. No cross-reserve install revenue in Y1 — practitioner is still bedding in Deer Lake. Edit ask.recommended to move this.",
     slides: [SLIDE_PATH],
     derived: true,
   },
   {
     id: "pathToScale.year2",
     category: "Path to scale",
-    label: "Year 2 — Deer Lake + 2 cross-reserve installs annualised",
-    defaultValue: 2160000,
+    label: "Year 2 — Deer Lake + 2 cross-reserve installs",
+    defaultValue: 1436400,
     unit: "$/yr",
     context:
-      "Recommended monthly × 12 × 2. The second 'contract-equivalent' is built from cross-reserve work — 2 installs × ~$148.5k + 2 × $30k retainer ≈ $357k of premium install revenue on top of Deer Lake's $1.08M. The practitioner is the trainer, not a Deer Lake grad.",
+      "Composition: $1,080,000 Deer Lake (askReco × 12) + $356,400 cross-reserve (2 installs × $148,200 + 2 first-year retainers × $30,000) = $1,436,400. The practitioner is the trainer, not a Deer Lake grad. Edit ask.recommended, the cross-reserve day rates, or the retainer to move this.",
     slides: [SLIDE_PATH],
     derived: true,
   },
@@ -803,10 +806,10 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "pathToScale.year3",
     category: "Path to scale",
     label: "Year 3 — Deer Lake + compounding cross-reserve installs",
-    defaultValue: 5400000,
+    defaultValue: 1496400,
     unit: "$/yr",
     context:
-      "Recommended monthly × 12 × 5. Cross-reserve revenue compounds: 2 new installs/yr × ~$148.5k + 4 active retainers × $30k ≈ $417k+ recurring on top of Deer Lake. The agency is the deliverable; the touring practitioner is the spine of it.",
+      "Composition: $1,080,000 Deer Lake (askReco × 12) + $416,400 cross-reserve (2 new installs × $148,200 + 4 active retainers × $30,000) = $1,496,400. Retainer income compounds as more reserves go live. The agency is the deliverable; the touring practitioner is the spine of it.",
     slides: [SLIDE_PATH],
     derived: true,
   },
@@ -817,7 +820,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 356400,
     unit: "$/yr",
     context:
-      "Derived: 2 new reserve installs × $148,200 + 2 first-year retainers × $30,000 = $356,400. Funds the Year-2 headline alongside the Deer Lake contract; not additive on top of pathToScale.year2.",
+      "Derived: 2 new reserve installs × $148,200 + 2 first-year retainers × $30,000 = $356,400. Stacks on top of the $1.08M Deer Lake contract to make the $1,436,400 Year-2 headline. Edit the cross-reserve day rates or the retainer to move this.",
     slides: [SLIDE_PATH],
     derived: true,
   },
@@ -828,7 +831,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 416400,
     unit: "$/yr",
     context:
-      "Derived: 2 new reserve installs × $148,200 + 4 active retainers × $30,000 = $416,400. Retainer income compounds as more reserves go live. Not additive on top of pathToScale.year3 — it's what makes that headline real.",
+      "Derived: 2 new reserve installs × $148,200 + 4 active retainers × $30,000 = $416,400. Retainer income compounds as more reserves go live. Stacks on top of the $1.08M Deer Lake contract to make the $1,496,400 Year-3 headline.",
     slides: [SLIDE_PATH],
     derived: true,
   },
