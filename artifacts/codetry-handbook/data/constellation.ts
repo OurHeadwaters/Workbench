@@ -42,7 +42,7 @@ export type ConstellationSnapshot = {
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "lastUpdated": "2026-04-26",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
