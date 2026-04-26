@@ -8,9 +8,7 @@ import { SALTS_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, num } from "@/lib/format";
 import { buildSaltLedger } from "@/data/saltLedger";
-import { exportLedgerCsv, exportLedgerXlsx } from "@/lib/exportLedger";
-import { Button } from "@/components/ui/button";
-import { Download, FileSpreadsheet } from "lucide-react";
+import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
 import type { SourceTag } from "@/data/tags";
 
 export function SaltsPage() {
@@ -18,31 +16,34 @@ export function SaltsPage() {
   const s = scenario.salts;
   const b = BUCKETS.salts;
 
-  const handleCsv = () => exportLedgerCsv(buildSaltLedger(scenario));
-  const handleXlsx = () => exportLedgerXlsx(buildSaltLedger(scenario));
-
   return (
     <div className="space-y-6" data-testid="page-salts">
       <ProvisionalBanner />
 
-      <header>
-        <p
-          className="text-xs font-medium uppercase tracking-[0.2em]"
-          style={{ color: b.accent }}
-        >
-          {b.name} · {b.tagline}
-        </p>
-        <h1
-          className="mt-2 text-3xl font-semibold"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          Sustainable on family hands.
-        </h1>
-        <p className="mt-3 text-muted-foreground max-w-3xl">
-          One blended per-jar COGS today (founder will break out per-blend later). Four channels,
-          1,190 jars/yr steady state, $1,298/yr net. The economic story is honest only when you
-          carry the shadow-labour line.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p
+            className="text-xs font-medium uppercase tracking-[0.2em]"
+            style={{ color: b.accent }}
+          >
+            {b.name} · {b.tagline}
+          </p>
+          <h1
+            className="mt-2 text-3xl font-semibold"
+            style={{ fontFamily: "var(--app-font-serif)" }}
+          >
+            Sustainable on family hands.
+          </h1>
+          <p className="mt-3 text-muted-foreground max-w-3xl">
+            One blended per-jar COGS today (founder will break out per-blend later). Four channels,
+            1,190 jars/yr steady state, $1,298/yr net. The economic story is honest only when you
+            carry the shadow-labour line.
+          </p>
+        </div>
+        <ExportLedgerButtons
+          buildLedger={() => buildSaltLedger(scenario)}
+          testIdPrefix="salts"
+        />
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -127,26 +128,6 @@ export function SaltsPage() {
         subtitle="Annual, steady-state. Wholesale baseline reflects 9-case backlog from existing accounts."
         tag={s.channelTotals.tag}
         accent={b.accent}
-        rightSlot={
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCsv}
-              data-testid="export-csv"
-            >
-              <Download className="h-3.5 w-3.5" /> CSV
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleXlsx}
-              data-testid="export-xlsx"
-            >
-              <FileSpreadsheet className="h-3.5 w-3.5" /> xlsx
-            </Button>
-          </div>
-        }
       >
         <div className="overflow-x-auto -mx-2 px-2">
           <table className="w-full text-sm min-w-[640px]">

@@ -36,3 +36,22 @@ export function formatTagDate(iso: string): string {
   ];
   return `${months[m - 1]} ${d}, ${y}`;
 }
+
+/**
+ * Compact human-readable summary of a tag, suitable for spreadsheet metadata
+ * and sheet headers. Mirrors what the on-page ConfirmedTag component shows.
+ */
+export function tagSummary(tag: SourceTag): string {
+  if (tag.kind === "confirmed") {
+    return `Confirmed ${formatTagDate(tag.date)}`;
+  }
+  if (tag.kind === "provisional") {
+    return tag.reason ? `Provisional — ${tag.reason}` : "Provisional";
+  }
+  return tag.reason ? `TBD — ${tag.reason}` : "TBD";
+}
+
+/** Only locked rows belong in board-pack exports. */
+export function isLocked(tag: SourceTag): boolean {
+  return tag.kind === "confirmed";
+}

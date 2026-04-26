@@ -6,6 +6,8 @@ import { FootnoteList } from "@/components/FootnoteList";
 import { BRIGHTSIDE_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
+import { buildBrightsideLedger } from "@/data/brightsideLedger";
+import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
 
 export function BrightsidePage() {
   const { scenario } = useScenario();
@@ -16,24 +18,30 @@ export function BrightsidePage() {
     <div className="space-y-6" data-testid="page-brightside">
       <ProvisionalBanner />
 
-      <header>
-        <p
-          className="text-xs font-medium uppercase tracking-[0.2em]"
-          style={{ color: b.accent }}
-        >
-          {b.name} · Brightside RT-LTC
-        </p>
-        <h1
-          className="mt-2 text-3xl font-semibold"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          Recreation Therapy software for Long-Term Care.
-        </h1>
-        <p className="mt-3 text-muted-foreground max-w-3xl">
-          Mobile-first SaaS. Founder builds, founder sells. No incremental headcount beyond the
-          contract engineer. Hardware is BYOD on customer-owned tablets — no separate SKU.
-          Home-care market shelved with a clear reactivation criterion.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p
+            className="text-xs font-medium uppercase tracking-[0.2em]"
+            style={{ color: b.accent }}
+          >
+            {b.name} · Brightside RT-LTC
+          </p>
+          <h1
+            className="mt-2 text-3xl font-semibold"
+            style={{ fontFamily: "var(--app-font-serif)" }}
+          >
+            Recreation Therapy software for Long-Term Care.
+          </h1>
+          <p className="mt-3 text-muted-foreground max-w-3xl">
+            Mobile-first SaaS. Founder builds, founder sells. No incremental headcount beyond the
+            contract engineer. Hardware is BYOD on customer-owned tablets — no separate SKU.
+            Home-care market shelved with a clear reactivation criterion.
+          </p>
+        </div>
+        <ExportLedgerButtons
+          buildLedger={() => buildBrightsideLedger(scenario)}
+          testIdPrefix="brightside"
+        />
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

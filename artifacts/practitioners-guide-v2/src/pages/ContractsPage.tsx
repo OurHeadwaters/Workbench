@@ -9,6 +9,8 @@ import { CDP807_FOOTNOTES, AGENCY_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
 import { tbd, type SourceTag } from "@/data/tags";
+import { buildContractsLedger } from "@/data/contractsLedger";
+import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
@@ -20,26 +22,32 @@ export function ContractsPage() {
     <div className="space-y-8" data-testid="page-contracts">
       <ProvisionalBanner />
 
-      <header>
-        <p
-          className="text-xs font-medium uppercase tracking-[0.2em]"
-          style={{ color: b.accent }}
-        >
-          {b.name} · two sub-lines
-        </p>
-        <h1
-          className="mt-2 text-3xl font-semibold"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          Real money in flight, plus the agency aspiration.
-        </h1>
-        <p className="mt-3 text-muted-foreground max-w-3xl">
-          Sub-line 1 is the 807 CDP grant — a real receivable,{" "}
-          <Num tag={cdp.scoping.tag}>$0</Num> cash collected so far. Sub-line 2 is the{" "}
-          <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}, with
-          a strict three-phase surplus deployment: capital recovery first, Brightside launch second,
-          then Reserve / Innovation / Giving.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p
+            className="text-xs font-medium uppercase tracking-[0.2em]"
+            style={{ color: b.accent }}
+          >
+            {b.name} · two sub-lines
+          </p>
+          <h1
+            className="mt-2 text-3xl font-semibold"
+            style={{ fontFamily: "var(--app-font-serif)" }}
+          >
+            Real money in flight, plus the agency aspiration.
+          </h1>
+          <p className="mt-3 text-muted-foreground max-w-3xl">
+            Sub-line 1 is the 807 CDP grant — a real receivable,{" "}
+            <Num tag={cdp.scoping.tag}>$0</Num> cash collected so far. Sub-line 2 is the{" "}
+            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}, with
+            a strict three-phase surplus deployment: capital recovery first, Brightside launch second,
+            then Reserve / Innovation / Giving.
+          </p>
+        </div>
+        <ExportLedgerButtons
+          buildLedger={() => buildContractsLedger(scenario)}
+          testIdPrefix="contracts"
+        />
       </header>
 
       {/* ============ 807 CDP ============ */}
