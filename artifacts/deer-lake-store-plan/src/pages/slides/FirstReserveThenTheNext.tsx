@@ -1,17 +1,24 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
 
-// Defaults mirror the cross-reserve travel pass-through entries in
-// artifacts/practitioner-operating-plan/src/data/costRegistry.ts
-// (`crossReserve.travel.flightPerWeek`, `crossReserve.travel.lodgingPerNight`,
-// `crossReserve.travel.foodPerOnsiteDay`, plus the implicit 12-week / 30-day
-// install shape used to derive `crossReserve.travel.totalPerInstall` and
-// `crossReserve.year1.stickerPrice`). The receiving-reserve calculator below
-// reads these as starting values; user edits stay local to this slide and do
-// not mutate the registry.
+// The travel-corridor planning defaults, the install fee, and the Y1
+// retainer below are sourced from `@workspace/cross-reserve-defaults`,
+// the same package the practitioner-operating-plan cost registry reads
+// (see `crossReserve.travel.*`, `crossReserve.installRevenue.perReserve`,
+// `crossReserve.retainer.annual`). Editing the shared package flows
+// through to both the registry and this slide on the next build, so
+// the two surfaces cannot drift apart. User edits in the calculator
+// below stay local to this slide and do not mutate the registry.
 const DEFAULTS = {
-  flightPerReturn: 1000,
-  lodgingPerNight: 250,
-  foodPerDay: 100,
+  flightPerReturn: CROSS_RESERVE_DEFAULTS.travel.flightPerWeek,
+  lodgingPerNight: CROSS_RESERVE_DEFAULTS.travel.lodgingPerNight,
+  foodPerDay: CROSS_RESERVE_DEFAULTS.travel.foodPerOnsiteDay,
+  // The 12-week / 30-on-site-day install shape is the implicit Deer
+  // Lake corridor template encoded in the registry's derivation
+  // contexts (`crossReserve.travel.totalPerInstall`,
+  // `crossReserve.year1.stickerPrice`, the `*.travelPassthrough.*`
+  // examples). Not currently a separate registry entry, so it lives
+  // here as a calculator default.
   installWeeks: 12,
   onsiteDays: 30,
 } as const;
@@ -76,11 +83,16 @@ function readCorridorFromUrl(): CorridorInputs {
 
 // These two stay constant in the calculator — the task scope is the
 // receiving-reserve travel corridor, not the practitioner fee structure.
-// They mirror `crossReserve.installRevenue.perReserve` (rounded to the
-// $148.5k planning number used elsewhere in the slide) and
-// `crossReserve.retainer.annual`.
-const INSTALL_FEE = 148_500;
-const Y1_RETAINER = 30_000;
+// `crossReserve.installRevenue.perReserve` is the literal arithmetic
+// (30 × $3,500 + 24 × $1,800 = $148,200). The slide and the rest of
+// the deck quote this as the rounded $148.5k planning number — see the
+// context on that registry entry: "Slide rounds to ~$148.5k as a
+// planning number." We round up to the nearest $500 so the displayed
+// planning value tracks the canonical source automatically: change the
+// shared default and the planning headline follows on the next build.
+const INSTALL_FEE =
+  Math.ceil(CROSS_RESERVE_DEFAULTS.installRevenuePerReserve / 500) * 500;
+const Y1_RETAINER = CROSS_RESERVE_DEFAULTS.retainerAnnual;
 
 function roundToNearest(value: number, step: number) {
   return Math.round(value / step) * step;
@@ -268,11 +280,18 @@ function ReserveTwoCalculator() {
         className="font-body text-[0.9vw] leading-[1.3] mb-[0.5vh]"
         style={{ color: "var(--slide-bg)" }}
       >
-        <span className="font-semibold">$148.5k install</span> +{" "}
+        <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+          {formatMoneyShort(INSTALL_FEE)} install
+        </span>{" "}
+        +{" "}
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
           {formatMoneyShort(travelTotal)} travel pass-through
         </span>{" "}
-        + <span className="font-semibold">$30k Y1 retainer</span>.
+        +{" "}
+        <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
+          {formatMoneyShort(Y1_RETAINER)} Y1 retainer
+        </span>
+        .
       </div>
 
       <div
@@ -432,7 +451,7 @@ export default function FirstReserveThenTheNext() {
               Practitioner revenue · per install
             </div>
             <div className="font-body text-[1vw] text-primary leading-[1.4]">
-              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold">$3,500/on-site day · $1,800/remote day · $30k/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold">~$148.5k per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
+              <span className="font-semibold">Software is reusable; the install is paid premium.</span> Receiving reserve pays <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>$3,500/on-site day · $1,800/remote day · {formatMoneyShort(Y1_RETAINER)}/yr retainer</span>. A 12-week install (~30 on-site + ~24 remote) lands at <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>{formatMoneyShort(INSTALL_FEE)} per reserve</span>, plus the recurring retainer. <span className="text-muted">Travel, lodging, food are passed through at cost — not in the fee. Try your own corridor's numbers in the panel on the right.</span>
             </div>
           </div>
 

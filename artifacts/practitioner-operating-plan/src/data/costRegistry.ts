@@ -1,6 +1,13 @@
 // Cost registry — every dollar figure the founder must approve.
 // Ordered by importance for the walkthrough.
 
+// Cross-reserve install + travel-corridor planning defaults are owned
+// by `@workspace/cross-reserve-defaults` so the Deer Lake "First reserve,
+// then the next" slide and the registry entries below cannot drift
+// apart. A single edit in that package flows through to both surfaces
+// on the next build — see lib/cross-reserve-defaults/src/index.ts.
+import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
+
 export type CostUnit =
   | "$/mo"
   | "$/yr"
@@ -753,7 +760,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.retainer.annual",
     category: "Cross-reserve install",
     label: "Discipline-keeper retainer per active reserve",
-    defaultValue: 30000,
+    defaultValue: CROSS_RESERVE_DEFAULTS.retainerAnnual,
     unit: "$/yr",
     context:
       "Recurring while the practitioner remains the discipline owner at that reserve (post-install). Covers monthly check-ins, escalations, and the discipline audit. Drops off when the receiving reserve takes ownership.",
@@ -763,7 +770,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.installRevenue.perReserve",
     category: "Cross-reserve install",
     label: "Typical 12-week install revenue per reserve",
-    defaultValue: 148200,
+    defaultValue: CROSS_RESERVE_DEFAULTS.installRevenuePerReserve,
     unit: "$/yr",
     context:
       "Derived: 30 on-site days × $3,500 + 24 remote days × $1,800 = $148,200. Slide rounds to ~$148.5k as a planning number. Plus travel pass-through billed at cost on top of this fee — pick the example that matches the receiving reserve's access pattern (≈$11k drive-in via `crossReserve.travelPassthrough.driveIn`, ≈$22.5k fly-in scheduled via `crossReserve.travelPassthrough.example`, ≈$43k winter-road / charter-heavy via `crossReserve.travelPassthrough.winterRoad`) — and the $30k/yr retainer kicking in afterwards. Edit the on-site / remote / retainer day rates above to move this.",
@@ -814,7 +821,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.travel.flightPerWeek",
     category: "Cross-reserve install",
     label: "Travel pass-through · round-trip flight (per install week)",
-    defaultValue: 1000,
+    defaultValue: CROSS_RESERVE_DEFAULTS.travel.flightPerWeek,
     unit: "$ one-time",
     context:
       "Bearskin / Wasaya round-trip from a southern hub (Dryden / Sioux Lookout) to a fly-in reserve. Planning estimate — receiving reserve replaces with their own corridor's actual cost. Assumed one return flight per install week (12 weeks).",
@@ -824,7 +831,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.travel.lodgingPerNight",
     category: "Cross-reserve install",
     label: "Travel pass-through · lodging per on-site night",
-    defaultValue: 250,
+    defaultValue: CROSS_RESERVE_DEFAULTS.travel.lodgingPerNight,
     unit: "$/day",
     context:
       "Northern guesthouse / band-house / contractor-camp nightly rate, planning estimate. Charged per on-site night (~30 nights for a 12-week install).",
@@ -834,7 +841,7 @@ export const COST_REGISTRY: CostEntry[] = [
     id: "crossReserve.travel.foodPerOnsiteDay",
     category: "Cross-reserve install",
     label: "Travel pass-through · food per on-site day",
-    defaultValue: 100,
+    defaultValue: CROSS_RESERVE_DEFAULTS.travel.foodPerOnsiteDay,
     unit: "$/day",
     context:
       "Northern food costs per on-site day. Planning estimate — receiving reserve replaces with their own actuals (Northern Store / band-store pricing varies).",

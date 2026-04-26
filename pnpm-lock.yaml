@@ -393,6 +393,9 @@ importers:
 
   artifacts/deer-lake-store-plan:
     dependencies:
+      '@workspace/cross-reserve-defaults':
+        specifier: workspace:*
+        version: link:../../lib/cross-reserve-defaults
       '@workspace/why-stores-fail':
         specifier: workspace:*
         version: link:../../lib/why-stores-fail
@@ -854,6 +857,10 @@ importers:
         version: 3.25.76
 
   artifacts/practitioner-operating-plan:
+    dependencies:
+      '@workspace/cross-reserve-defaults':
+        specifier: workspace:*
+        version: link:../../lib/cross-reserve-defaults
     devDependencies:
       '@replit/vite-plugin-cartographer':
         specifier: 'catalog:'
@@ -1126,6 +1133,8 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.25.76
+
+  lib/cross-reserve-defaults: {}
 
   lib/db:
     dependencies:

@@ -14,6 +14,9 @@
     },
     {
       "path": "./lib/why-stores-fail"
+    },
+    {
+      "path": "./lib/cross-reserve-defaults"
     }
   ]
 }

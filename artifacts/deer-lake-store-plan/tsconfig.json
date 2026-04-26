@@ -15,6 +15,9 @@
   },
   "references": [
     {
+      "path": "../../lib/cross-reserve-defaults"
+    },
+    {
       "path": "../../lib/why-stores-fail"
     }
   ]
