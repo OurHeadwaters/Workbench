@@ -70,29 +70,117 @@ offline.
 
 ## Shipping a native binary with EAS
 
-The repo includes `eas.json` with three profiles (`development`, `preview`,
-`production`). To build native binaries:
+The handbook is linked to an Expo project:
+
+- **EAS project ID:** `ccfff076-0500-4aa5-be7d-2d71e7953ad2`
+- **Owner / slug:** `@headwaters7/codetry-handbook`
+- **Dashboard:** https://expo.dev/accounts/headwaters7/projects/codetry-handbook
+- **iOS / Android bundle id:** `ca.codetry.handbook`
+
+The project ID is committed in `app.config.js` (it's not a secret) and the
+owner is set to `headwaters7`, so any machine with valid Expo credentials
+will build against the same project.
+
+`eas.json` has four profiles:
+
+| Profile             | Use                                                               |
+| ------------------- | ----------------------------------------------------------------- |
+| `development`       | Dev client (local Expo Go-style); iOS simulator allowed.          |
+| `preview`           | Internal distribution: APK on Android, ad-hoc / TestFlight on iOS.|
+| `preview-simulator` | Same as `preview` but produces an iOS Simulator `.app`.           |
+| `production`        | Store-ready: Android `.aab`, iOS App Store build.                 |
+
+### Authenticating
+
+You need either an interactive `eas login` or an `EXPO_TOKEN` env var (an
+access token from
+https://expo.dev/accounts/headwaters7/settings/access-tokens). The Replit
+project sets `EXPO_TOKEN` as a secret so EAS commands run from this
+workspace authenticate automatically.
+
+### Running builds
 
 ```bash
-# One-time setup, on a machine with the Expo account credentials:
-pnpm exec eas login
-pnpm exec eas init                    # links the app to an EAS project ID
-pnpm exec eas credentials             # configure code-signing, keystore, etc.
-
-# Internal preview builds (APK / TestFlight):
+# Internal preview builds (APK / .ipa):
 pnpm --filter @workspace/codetry-handbook run build:preview:android
 pnpm --filter @workspace/codetry-handbook run build:preview:ios
+
+# iOS Simulator build (no Apple Developer account needed):
+pnpm --filter @workspace/codetry-handbook exec eas build \
+  --platform ios --profile preview-simulator --non-interactive
 
 # Production store-ready builds:
 pnpm --filter @workspace/codetry-handbook run build:android
 pnpm --filter @workspace/codetry-handbook run build:ios
 ```
 
-Set `EAS_PROJECT_ID` in the environment (or paste it under
-`expo.extra.eas.projectId` after running `eas init`) so the EAS CLI can find
-the project. Bundle identifiers default to `ca.codetry.handbook` for both
-iOS and Android — change them in `app.config.js` before the first
-production build if you need a different reverse-DNS owner.
+Add `--no-wait` to fire and forget — EAS prints a build URL and the build
+runs on Expo's cloud regardless of whether the local CLI is still attached.
+
+### iOS device builds need Apple Developer credentials
+
+The `preview` and `production` iOS profiles produce an `.ipa` for a real
+device (ad-hoc internal distribution or App Store / TestFlight). Apple
+requires a paid Apple Developer Program account (~$99/year) and the first
+build needs an interactive setup so EAS can register devices, generate a
+distribution certificate, and a provisioning profile:
+
+```bash
+EXPO_TOKEN=... pnpm --filter @workspace/codetry-handbook exec eas credentials
+# Choose: iOS → preview → set up everything (signs in to your Apple account)
+```
+
+After that one-time setup, subsequent `build:preview:ios` runs work
+non-interactively. Until then, use the `preview-simulator` profile above to
+verify the iOS bundle compiles and runs in Xcode's iOS Simulator.
+
+### First builds (already on EAS)
+
+The first preview builds were produced on 2026-04-26 from the
+`headwaters7` Expo account:
+
+| Platform                  | Build ID                                | Artifact                                                          |
+| ------------------------- | --------------------------------------- | ----------------------------------------------------------------- |
+| Android preview (`.apk`)  | `24ccd766-9dfa-4154-8a8e-47a069de3a1c`  | https://expo.dev/artifacts/eas/5xyPVwDbD19cLyCR4BPJNy.apk         |
+| iOS Simulator (`.tar.gz`) | `576a1264-0a07-49e4-a217-fd9af5a3363d`  | https://expo.dev/artifacts/eas/bN51CKcvSw2Vb9XWPKrt36.tar.gz      |
+
+Both also live under the project's
+[builds dashboard](https://expo.dev/accounts/headwaters7/projects/codetry-handbook/builds).
+EAS artifact URLs expire ~14 days after the build, after which the
+builds are still listed but you'd re-download from the dashboard or
+re-run them.
+
+The iOS device (`.ipa`) preview build has **not** been produced yet
+because it requires the one-time Apple Developer credentials setup
+described above. The simulator build above proves the iOS bundle
+compiles and runs against Xcode's iOS Simulator end-to-end.
+
+### First-build gotchas we hit and fixed
+
+- `eas.json` cannot use `""` as an env value — use omission or a real
+  string. We removed the empty `EXPO_PUBLIC_BASE_URL` from the `base` profile.
+- With `appVersionSource: "remote"`, EAS owns `versionCode` / `buildNumber`
+  remotely and warns about the local fields in `app.config.js`. They've been
+  removed.
+- iOS builds prompt for `ITSAppUsesNonExemptEncryption` in App Store
+  Connect; we now declare `ios.infoPlist.ITSAppUsesNonExemptEncryption =
+  false` so App Store Connect won't block submission.
+- The `preview` profile names the channel `preview`, but the `expo-updates`
+  package isn't installed yet, so EAS prints a warning. Channel routing only
+  matters once OTA updates ship — see "Follow-ups" below.
+
+### Verifying the build on-device
+
+Once a build finishes:
+
+- **Android:** EAS hosts a signed `.apk` at the build URL. Download it on
+  the test phone, allow installs from the browser, tap to install. Confirm:
+  the saltbox icon appears, the reader opens to the table of contents,
+  bookmarking a chapter survives a hard close, font-size changes persist,
+  and turning the device to airplane mode still lets every chapter open.
+- **iOS:** internal builds install via TestFlight invite or
+  ad-hoc / UDID-registered device through the EAS install link. Same
+  on-device checks as Android.
 
 The native build inherits the same Expo project, the same constants, the
 same fonts, and the same `codetry-handbook:v1` AsyncStorage namespace as the

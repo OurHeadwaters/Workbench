@@ -19,11 +19,12 @@ module.exports = {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "ca.codetry.handbook",
-      buildNumber: "1",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       package: "ca.codetry.handbook",
-      versionCode: 1,
       adaptiveIcon: {
         foregroundImage: "./assets/images/icon.png",
         backgroundColor: "#f4ede0",
@@ -57,8 +58,10 @@ module.exports = {
     },
     extra: {
       eas: {
-        projectId: process.env.EAS_PROJECT_ID,
+        projectId:
+          process.env.EAS_PROJECT_ID || "ccfff076-0500-4aa5-be7d-2d71e7953ad2",
       },
     },
+    owner: "headwaters7",
   },
 };
