@@ -20,6 +20,10 @@ author = "agent"
 task = "workflow.run"
 args = "test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "typecheck"
+
 [[workflows.workflow]]
 name = "test"
 author = "agent"
@@ -27,6 +31,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test && pnpm --filter @workspace/check-in run test && pnpm --filter @workspace/deer-lake-store-plan run test"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "typecheck"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm run typecheck:gated"
 
 [workflows.workflow.metadata]
 isValidation = true

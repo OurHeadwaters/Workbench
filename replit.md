@@ -18,7 +18,9 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 ## Key Commands
 
-- `pnpm run typecheck` — full typecheck across all packages
+- `pnpm run typecheck` — full typecheck across all packages (target state; currently red on the four artifacts listed below)
+- `pnpm run typecheck:gated` — typecheck the lib build + the artifacts that are currently green (`scripts`, `api-server`, `codetry-handbook`, `practitioner-operating-plan`); registered as the **`typecheck` validation step** so type drift in any of those packages blocks task completion. As a red artifact below gets fixed, add its filter to `typecheck:gated` until it can be replaced wholesale by `typecheck`.
+  - Currently red and excluded from the gate (tracked separately as tech-debt): `headwaters-books`, `library`, `practitioners-guide-v2`, `deer-lake-store-plan`.
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
