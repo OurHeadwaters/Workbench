@@ -88,13 +88,50 @@ describe("Slide deck — V2 numbers carried into V3 (must match V2 spec)", () =>
 });
 
 describe("Slide deck — V3-specific headline numbers (locked for the V3 deck only)", () => {
-  it("Deer Lake recurring contract is $420,000/yr ($35,000/mo)", () => {
+  it("Deer Lake Layer-1 software-only contract is $420,000/yr ($35,000/mo) — single source of truth in costRegistry", () => {
     // V3 software-layer anchor: Layer One revenue.
+    //
+    // The "$35k/mo current" vs "$90k/mo recommended ask" tension is
+    // resolved as: $35k/mo is the Layer 1 software-only contract signed
+    // today (formal scope: software access + security baseline). $90k/mo
+    // is the upgrade ask for a full-stack agency engagement on the V3
+    // cost basis, which absorbs / replaces the Layer-1 line. Both
+    // figures live, but for distinct deliverables — and Layer 1 derives
+    // from one registry entry so the slides + OnePager can never drift
+    // apart again. See `contract.layer1.software.monthly` in
+    // costRegistry.ts and `ask.recommended` for the upgrade-ask side.
+    expect(COST_REGISTRY_BY_ID["contract.layer1.software.monthly"]?.defaultValue).toBe(35000);
+    expect(COST_REGISTRY_BY_ID["contract.layer1.software.annual"]?.defaultValue).toBe(420000);
+
     const threeLayers = readSlide("ThreeRevenueLayers.tsx");
     const yearOne = readSlide("YearOnePicture.tsx");
-    expect(threeLayers).toContain("$420,000");
-    expect(threeLayers).toContain("$35,000/mo");
-    expect(yearOne).toContain("$420,000");
+
+    // After the reconciliation refactor, the slide source MUST NOT
+    // hardcode "$420,000" or "$35,000/mo" — both must derive from
+    // `contract.layer1.software.monthly` via resolveCost / liveDerived.
+    // If a future edit reintroduces a literal, it can quietly drift
+    // from the registry; this guard makes that impossible.
+    expect(threeLayers).not.toMatch(/"\$420,000"|>\$420,000<|>\$35,000\/mo</);
+    expect(yearOne).not.toMatch(/"\$420,000"|>\$420,000</);
+    expect(threeLayers).toMatch(/contract\.layer1\.software\.(monthly|annual)/);
+    expect(yearOne).toMatch(/contract\.layer1\.software\.(monthly|annual)/);
+
+    // The Layer-1 framing must also be present in both slides so a
+    // future edit can't quietly turn the $35k contract back into "the
+    // Deer Lake contract" with no scope qualifier — that ambiguity is
+    // exactly what created the original $35k-vs-$90k confusion.
+    expect(threeLayers).toMatch(/Layer 1 software-only/i);
+    expect(yearOne).toMatch(/Layer.?1 software-only/i);
+  });
+
+  it("Recommended-ask upgrade is labelled as the full-stack agency engagement that absorbs Layer 1", () => {
+    // The $90k/mo recommended ask is a different deliverable from the
+    // $35k/mo Layer-1 software-only contract. Both decks must say so
+    // out loud, otherwise a council reader flipping between decks will
+    // read the figures as contradictory rather than as an upgrade path.
+    const threeLayers = readSlide("ThreeRevenueLayers.tsx");
+    expect(threeLayers).toMatch(/full-stack agency engagement/i);
+    expect(threeLayers).toMatch(/absorbs.{0,40}Layer-?1/i);
   });
 
   it("Tech stack managed-services Y1 revenue is $4,800 ($400/mo × 12)", () => {

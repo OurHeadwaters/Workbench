@@ -109,6 +109,7 @@ const SLIDE_BUDGET = slide(4, "Six-people roster", "src/pages/slides/TheSixPeopl
 const SLIDE_CASHFLOW = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
 const SLIDE_PAYBACK_PITCH = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
 const SLIDE_REINVEST = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
+const SLIDE_LAYER1 = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
 const SLIDE_RATE = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
 const SLIDE_TEAM = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
 const SLIDE_CLOSING = slide(9, "Closing", "src/pages/slides/Closing.tsx");
@@ -130,14 +131,53 @@ const PAGE_PAYBACK_MEMO: CostSlide = {
 
 export const COST_REGISTRY: CostEntry[] = [
   // -------- Headline ask --------------------------------------------
+  // Two distinct contract figures live side-by-side here on purpose:
+  //   • `contract.layer1.software.monthly` ($35k/mo) — the *signed*
+  //     Layer-1 software-only deliverable Deer Lake is paying today
+  //     (license, ongoing dev, practitioner advisory, monthly visit,
+  //     Dryden Hub coordination, three training cohorts). This is the
+  //     real security baseline for the practitioner and the team's
+  //     core; YearOnePicture surfaces it explicitly as such.
+  //   • `ask.recommended` ($90k/mo) — the *recommended* full-stack
+  //     agency engagement on the V3 cost basis (six-people roster +
+  //     IT/Tech + Food Handler + bookkeeper + overheads + 35%
+  //     reinvestment). This is the upgrade ask: it absorbs / replaces
+  //     the $35k Layer-1 contract once Dad funds the bridge and the
+  //     band council picks a tier. It is *not* in addition to the
+  //     $35k baseline — the deck arc is "today's $35k → tomorrow's
+  //     $90k full-stack", not "$35k + $90k".
+  // Both surfaces in both decks read these registry entries via
+  // resolveCost / getLiveCostValue, so the canonical numbers move
+  // together if either is edited in the cost-review modal.
+  {
+    id: "contract.layer1.software.monthly",
+    category: "Headline ask",
+    label: "Layer 1 software-only contract — current (signed today)",
+    defaultValue: 35000,
+    unit: "$/mo",
+    context:
+      "The signed Deer Lake software-only contract today: license, ongoing dev, practitioner advisory, monthly visit, Dryden Hub coordination, three training cohorts. Real security baseline for the practitioner and the team's core. Does NOT, by itself, fund the V3 cost basis (six-people roster + IT/Tech + Food Handler + overheads) — that is the recommended-ask upgrade in `ask.recommended`. The $90k/mo full-stack agency engagement absorbs / replaces this $35k Layer-1 contract; it is never billed in addition to it.",
+    slides: [SLIDE_LAYER1, SLIDE_CASHFLOW, SLIDE_PATH],
+  },
+  {
+    id: "contract.layer1.software.annual",
+    category: "Headline ask",
+    label: "Layer 1 software-only contract — current annualised",
+    defaultValue: 420000,
+    unit: "$/yr",
+    context:
+      "Derived: contract.layer1.software.monthly × 12 = $420,000/yr. The Layer-1 anchor on Three Revenue Layers and the symmetry the cross-reserve sticker price (~$201k Y1 all-in) points at on Path to Scale. Edit the monthly to move this.",
+    slides: [SLIDE_LAYER1, SLIDE_CASHFLOW, SLIDE_PATH],
+    derived: true,
+  },
   {
     id: "ask.recommended",
     category: "Headline ask",
-    label: "Recommended monthly contract (Scenario B)",
+    label: "Recommended full-stack agency engagement — Scenario B (upgrade ask)",
     defaultValue: 90000,
     unit: "$/mo",
     context:
-      "The number on the table — what you're asking Dad to fund. $1.08M/yr annualised. Everything else in the deck either rolls up to or back from this.",
+      "The V3 upgrade ask — what you're asking Dad to fund. Full-stack agency engagement: six-people roster + IT/Tech + Food Handler + bookkeeper + overheads + 35% reinvestment, on a $69.7k cost basis. $1.08M/yr annualised. ABSORBS the $35k/mo Layer-1 software contract (`contract.layer1.software.monthly`) — it is the upgrade path for the same client, not a parallel charge. Everything else in the deck either rolls up to or back from this.",
     slides: [SLIDE_BUDGET, SLIDE_CASHFLOW, SLIDE_RATE, SLIDE_CLOSING],
   },
   {
@@ -864,7 +904,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 201000,
     unit: "$/yr",
     context:
-      "Derived: install fee (~$148,500) + travel pass-through (~$22,500) + first-year retainer ($30,000) ≈ $201,000. The headline number a chief at reserve #2 sees when reading the deck cold — the symmetry to Deer Lake's $420k/yr. Planning estimate; pass-through replaced by the receiving reserve's own corridor costs.",
+      "Derived: install fee (~$148,500) + travel pass-through (~$22,500) + first-year retainer ($30,000) ≈ $201,000. The headline number a chief at reserve #2 sees when reading the deck cold — the symmetry to Deer Lake's Layer-1 software contract ($420k/yr; see `contract.layer1.software.annual`). Planning estimate; pass-through replaced by the receiving reserve's own corridor costs.",
     slides: [SLIDE_PATH],
     derived: true,
   },

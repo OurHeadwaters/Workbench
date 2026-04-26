@@ -41,6 +41,15 @@ export default function OnePager() {
   const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
   const y1StickerPrice =
     getLiveCostValue(state, "crossReserve.year1.stickerPrice") ?? 0;
+  // Layer-1 software contract — single source of truth in costRegistry.
+  // Editing `contract.layer1.software.monthly` in the cost-review modal
+  // moves the OnePager headline + the matching numbers on Three Revenue
+  // Layers / Year One Picture / Path to Scale together.
+  const layer1Monthly = resolveCost(state, "contract.layer1.software.monthly");
+  const layer1Annual =
+    getLiveCostValue(state, "contract.layer1.software.annual") ??
+    layer1Monthly * 12;
+  const askRecommendedMonthly = resolveCost(state, "ask.recommended");
 
   // Auto-regenerate the printable PDF with the practitioner's live
   // cost-review edits. Posts the current AppState to the dev server's
@@ -355,12 +364,12 @@ export default function OnePager() {
             <div className="grid grid-cols-2 gap-[12pt] items-end">
               <div>
                 <div className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#6b7665]">
-                  Deer Lake · recurring software contract
+                  Deer Lake · Layer 1 software-only contract (signed today)
                 </div>
                 <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                  $420,000
+                  {fmtMoney(layer1Annual)}
                   <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
-                    /yr · $35,000/mo · current contract (recommended ask: $90k/mo)
+                    /yr · {fmtMoney(layer1Monthly)}/mo · upgrade ask: {fmtMoney(askRecommendedMonthly)}/mo full-stack agency (absorbs this line)
                   </span>
                 </div>
               </div>
@@ -382,7 +391,7 @@ export default function OnePager() {
               + {formatCompactK(retainerAnnual)} first-year retainer ≈ {formatPlanningK(y1StickerPrice)} Y1 all-in. Same headline as
               the Deer Lake deck's <span className="italic">First reserve, then the next</span>{" "}
               slide — kept here so the band council reads the symmetry to
-              Deer Lake's $420k/yr the moment they print.
+              Deer Lake's Layer-1 software contract ({fmtMoney(layer1Annual)}/yr) the moment they print.
               <br />
               <sup>*</sup> Planning estimate (Deer Lake corridor: ~$1,000/return ×
               {" "}{CROSS_RESERVE_INSTALL_WEEKS} wks + $250/night × {CROSS_RESERVE_ONSITE_DAYS} + $100/day × {CROSS_RESERVE_ONSITE_DAYS}). The receiving reserve

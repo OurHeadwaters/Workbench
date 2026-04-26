@@ -153,10 +153,10 @@ export default function ServicePartner() {
         <div className="rounded-[0.4vw] p-[1.4vw] grid grid-cols-12 gap-[1.4vw]" style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}>
           <div className="col-span-5">
             <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] mb-[0.4vh]" style={{ color: "#e9c8a8" }}>
-              Headwaters pricing spine · what the 35% reinvestment buys
+              Headwaters pricing spine · full-stack agency engagement · what the 35% reinvestment buys
             </div>
             <div className="font-body text-[0.85vw] leading-[1.4] mb-[0.6vh] opacity-95">
-              <span className="font-semibold">$69.7k/mo cost basis</span> + <span className="font-semibold">$24.3k/mo (35%) reinvestment</span> = <span className="font-semibold">~$94k/mo cost-of-delivery</span>. <span className="opacity-85">Total bill to Deer Lake TBD pending council pick (floor $60k → recommended $90k → scale $125k).</span>
+              <span className="font-semibold">$69.7k/mo cost basis</span> + <span className="font-semibold">$24.3k/mo (35%) reinvestment</span> = <span className="font-semibold">~$94k/mo cost-of-delivery</span>. <span className="opacity-85">Total bill to Deer Lake TBD pending council pick (floor $60k → recommended $90k → scale $125k). Replaces today's $35k/mo Layer-1 software-only contract — same client, same software, full-stack team and accountability around it.</span>
             </div>
             <div className="grid grid-cols-2 gap-x-[0.8vw] gap-y-[0.3vh] font-body text-[0.72vw] leading-[1.35] opacity-90" style={{ fontVariantNumeric: "tabular-nums" }}>
               {reinvestBuckets.map((b) => (

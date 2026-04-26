@@ -53,6 +53,11 @@ export default function PathToScale() {
 
   const askRecommendedMonthly = resolveCost(state, "ask.recommended");
   const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
+  // Layer-1 software contract figures pulled from the registry so the
+  // "today's signed contract" footnote on the Y1 card cannot drift
+  // from Three Revenue Layers, Year One Picture, or the OnePager.
+  const layer1Monthly = resolveCost(state, "contract.layer1.software.monthly");
+  const layer1Annual = liveDerived(state, "contract.layer1.software.annual");
 
   const y1 = liveDerived(state, "pathToScale.year1");
   const y2 = liveDerived(state, "pathToScale.year2");
@@ -137,8 +142,8 @@ export default function PathToScale() {
                   {exactDollars(deerLake)}
                 </span>
               </div>
-              <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-                ask.recommended × 12 — the upgraded V3 cost-basis ask. Today's signed contract is $35,000/mo (~$420k/yr); see Three Revenue Layers for how the bundle is currently priced.
+              <div className="font-body text-[0.95vw] text-muted leading-[1.45]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                ask.recommended × 12 — the upgraded V3 cost-basis ask (full-stack agency engagement). Today's signed contract is {exactDollars(layer1Monthly)}/mo (~{compactDollars(layer1Annual)}/yr) Layer-1 software-only; see Three Revenue Layers for how the bundle is currently priced. The recommended ask absorbs / replaces this Layer-1 line.
               </div>
             </div>
           </div>

@@ -259,6 +259,13 @@ export function useBudgetTotals(): BudgetTotals {
 export function getLiveCostValue(state: AppState, id: string): number | null {
   const t = computeBudgetTotals(state);
   switch (id) {
+    case "contract.layer1.software.annual":
+      // Layer-1 software-only contract annualised: monthly × 12. Edits
+      // to `contract.layer1.software.monthly` in the cost-review modal
+      // flow through to every $420k/yr surface (Three Revenue Layers,
+      // Year One Picture, Path to Scale narration, OnePager) without
+      // the slides ever needing to hardcode the annualised number.
+      return resolveCost(state, "contract.layer1.software.monthly") * 12;
     case "summary.costBasis.a":
       return t.costBasisA;
     case "summary.costBasis.b":

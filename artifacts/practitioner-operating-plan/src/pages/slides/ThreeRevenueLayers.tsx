@@ -33,6 +33,16 @@ export default function ThreeRevenueLayers() {
   // next" slide, which reads the same registry via the workspace dep).
   const state = useAppState();
 
+  // Layer-1 software contract — single source of truth in costRegistry.
+  // monthly is editable in the cost-review modal; annualised is derived
+  // (monthly × 12) so the two figures cannot drift on this slide.
+  const layer1Monthly = resolveCost(state, "contract.layer1.software.monthly");
+  const layer1Annual = liveDerived(state, "contract.layer1.software.annual");
+  // Recommended-ask upgrade — read live so the "absorbs Layer 1" line
+  // moves if the cost-review modal edits ask.recommended.
+  const askRecommendedMonthly = resolveCost(state, "ask.recommended");
+  const askRecommendedAnnual = askRecommendedMonthly * 12;
+
   const onsiteDayRate = resolveCost(state, "crossReserve.dayRate.onsite");
   const remoteDayRate = resolveCost(state, "crossReserve.dayRate.remote");
   const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
@@ -77,10 +87,10 @@ export default function ThreeRevenueLayers() {
               Deer Lake recurring contract
             </div>
             <div className="font-display font-semibold text-[3vw] text-primary leading-[1] mb-[0.4vh]" style={{ fontVariantNumeric: "tabular-nums" }}>
-              $420,000
+              {formatDollars(layer1Annual)}
             </div>
-            <div className="font-mono text-[1vw] text-muted mb-[2vh]">
-              /yr · $35,000/mo · current contract
+            <div className="font-mono text-[1vw] text-muted mb-[2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>
+              /yr · {formatDollars(layer1Monthly)}/mo · Layer 1 software-only · signed today
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text mb-[1.5vh]">
               Bundled deliverable: license, ongoing dev, practitioner advisory, monthly visit, Dryden Hub coordination, three training cohorts.
@@ -89,7 +99,7 @@ export default function ThreeRevenueLayers() {
               <span className="text-primary font-semibold">Software is owned by the band</span> and reused across every band that adopts it.
             </div>
             <div className="font-body text-[0.9vw] leading-[1.45] text-muted mt-[0.8vh] italic">
-              Recommended ask on the V3 cost basis is $90k/mo (~$1.08M/yr) — see the Deer Lake deck's <span className="not-italic">Service Partner</span> / <span className="not-italic">Risks &amp; Ask</span> for the upgraded-tier rationale.
+              <span className="text-primary not-italic font-semibold">Upgrade ask on the V3 cost basis: <span style={{ fontVariantNumeric: "tabular-nums" }}>{formatDollars(askRecommendedMonthly)}/mo (~${(askRecommendedAnnual / 1_000_000).toFixed(2)}M/yr)</span> full-stack agency engagement</span> — absorbs / replaces this Layer-1 contract, doesn't stack on top of it. See the Deer Lake deck's <span className="not-italic">Service Partner</span> / <span className="not-italic">Risks &amp; Ask</span> for the upgraded-tier rationale.
             </div>
           </div>
 

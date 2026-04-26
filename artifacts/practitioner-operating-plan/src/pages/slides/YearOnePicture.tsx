@@ -1,4 +1,21 @@
+import { resolveCost, getLiveCostValue } from "../../lib/budgetMath";
+import { useAppState } from "../../lib/storage";
+
+function formatDollars(value: number): string {
+  return "$" + Math.round(value).toLocaleString("en-US");
+}
+
 export default function YearOnePicture() {
+  // Layer-1 software contract — single source of truth in costRegistry.
+  // The "current contract is a real security baseline" narrative below
+  // reads from these so the figure cannot drift from Three Revenue
+  // Layers, Path to Scale narration, or the OnePager.
+  const state = useAppState();
+  const layer1Monthly = resolveCost(state, "contract.layer1.software.monthly");
+  const layer1Annual =
+    getLiveCostValue(state, "contract.layer1.software.annual") ??
+    layer1Monthly * 12;
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
       <div className="relative z-10 w-full h-full px-[6vw] py-[6vh] flex flex-col">
@@ -27,8 +44,8 @@ export default function YearOnePicture() {
               Revenue & cost reconciliation
             </div>
             <div className="flex items-center justify-between border-b border-dashed border-rule py-[1.1vh]">
-              <span className="font-body text-[1.25vw] text-text">Deer Lake recurring contract</span>
-              <span className="font-display text-[1.55vw] text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>$420,000</span>
+              <span className="font-body text-[1.25vw] text-text">Layer 1 software-only contract <span className="text-muted text-[0.95vw]">(signed today)</span></span>
+              <span className="font-display text-[1.55vw] text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatDollars(layer1Annual)}</span>
             </div>
             <div className="flex items-center justify-between border-b border-dashed border-rule py-[1.1vh]">
               <span className="font-body text-[1.25vw] text-text">Tech-stack managed-services fee (Tier 2)</span>
@@ -68,8 +85,8 @@ export default function YearOnePicture() {
             <div className="font-body text-[1.15vw] text-text leading-[1.5] mt-[2vh] mb-[1.5vh]">
               And <span className="font-semibold text-primary">$112,000 of Capital Recovery</span> from V2 is still standing — debt to lender and family that V3 has not begun to retire.
             </div>
-            <div className="font-body italic text-[1.15vw] text-text leading-[1.5] mt-auto">
-              The $35,000/mo current Deer Lake contract is a real security baseline for the practitioner and the team's core. It does not, by itself, fund Headwaters at the V3 cost basis.
+            <div className="font-body italic text-[1.15vw] text-text leading-[1.5] mt-auto" style={{ fontVariantNumeric: "tabular-nums" }}>
+              The {formatDollars(layer1Monthly)}/mo Layer-1 software-only contract is a real security baseline for the practitioner and the team's core. It does not, by itself, fund Headwaters at the V3 cost basis — that's what the recommended-ask upgrade closes.
             </div>
           </div>
         </div>

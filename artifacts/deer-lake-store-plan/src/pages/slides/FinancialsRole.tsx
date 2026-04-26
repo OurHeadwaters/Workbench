@@ -128,7 +128,7 @@ export default function FinancialsRole() {
             </div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.10)" }}>
-              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] mb-[0.5vh]" style={{ color: "#e9c8a8" }}>Cost basis · reinvestment · bill · bridge</div>
+              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] mb-[0.5vh]" style={{ color: "#e9c8a8" }}>Cost basis · reinvestment · bill · bridge — full-stack agency engagement (replaces today's $35k/mo Layer-1 software-only contract)</div>
               <div className="font-mono text-[0.78vw] leading-[1.55] opacity-95" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <div className="grid grid-cols-12 gap-x-[0.4vw] pb-[0.3vh] opacity-70 border-b" style={{ borderColor: "rgba(244,237,224,0.18)" }}>
                   <div className="col-span-3">tier</div>
