@@ -380,6 +380,221 @@ export const CROSS_RESERVE_REMOTE_DAYS = 24;
 // `crossReserve.travel.flightPerWeek`.
 export const CROSS_RESERVE_INSTALL_WEEKS = 12;
 
+// ----------------------------------------------------------------------
+// Second-anchor / Y1 gap-closing math
+// ----------------------------------------------------------------------
+// The "Year One Picture" slide surfaces a $127,202 Y1 cash gap (Deer
+// Lake $35k/mo against the V3 cost basis of $47,817/mo) plus $112k of
+// standing V2 capital recovery. These are the V3-spec-locked headline
+// numbers (also pinned in costRegistry.ts copy + lockedNumbers.test.ts);
+// exporting them here lets the second-anchor slide reconcile against
+// the same gap figure rather than re-typing it. If the Y1 picture
+// changes, both slides move together.
+export const Y1_HONEST_REVENUE = 446598;
+export const Y1_HONEST_COST_BASIS = 573800;
+export const Y1_HONEST_GAP = Y1_HONEST_COST_BASIS - Y1_HONEST_REVENUE;
+
+// A typical cross-reserve install is 12 weeks ≈ 3 months. Used by the
+// second-anchor timing strip to figure out (a) whether an install
+// landing in month M completes inside Y1, and (b) how many months of
+// retainer the receiving reserve pays in Y1 once install completes.
+export const SECOND_ANCHOR_INSTALL_DURATION_MONTHS = 3;
+
+// Tier-2 managed-services illustrative ARPU range — the same $300–800/mo
+// range the V3 deck quotes for SMB / band-office subscriptions.
+// Centralised here so the slide and any tests/audits read the same band.
+export const TIER2_ARPU_LOW = 300;
+export const TIER2_ARPU_MID = 500;
+export const TIER2_ARPU_HIGH = 800;
+// "Realistic" near-term portfolio shape — what the practitioner can
+// land in Y1 alongside Deer Lake without a second touring engagement.
+export const TIER2_REALISTIC_SUBS_LOW = 4;
+export const TIER2_REALISTIC_SUBS_HIGH = 6;
+
+export type SecondAnchorTiming = {
+  /** Calendar month of Y1 the second anchor's install kicks off (1–12). */
+  landMonth: number;
+  /** True when install completes on or before month 12. */
+  installCompletedInY1: boolean;
+  /** Install revenue recognised inside Y1 (full price if completed; pro-rated otherwise). */
+  installInflow: number;
+  /** How many months of retainer the receiving reserve pays inside Y1 (after install completes). */
+  retainerMonthsActive: number;
+  /** Retainer revenue recognised inside Y1 = (retainer / 12) × retainerMonthsActive. */
+  retainerInflow: number;
+  /** Sum of installInflow + retainerInflow. */
+  totalInflow: number;
+  /** gap − totalInflow. Negative means Y1 closes with a surplus. */
+  remainingGap: number;
+  /** True when totalInflow ≥ Y1_HONEST_GAP (the second anchor closes the gap). */
+  closesGap: boolean;
+};
+
+export type SecondAnchorScenarios = {
+  gap: number;
+  installPerReserve: number;
+  retainerAnnual: number;
+  installDurationMonths: number;
+  /**
+   * Shape #1: a single 12-week install lands late enough in Y1 that
+   * no retainer is recognised in Y1 (or the receiving reserve simply
+   * defers the retainer). The install fee on its own carries the gap.
+   * Y2 carry-in from this anchor is $0 unless a retainer is signed.
+   */
+  scenarioInstallOnly: {
+    inflow: number;
+    surplus: number;
+    y2Carry: number;
+  };
+  /**
+   * Shape #2: install lands at M6 (mid-year baseline). Install completes
+   * by M9, retainer pro-rates for the remaining 3 months of Y1. Closes
+   * the gap and seeds a Y2 retainer floor of one full annual retainer.
+   */
+  scenarioInstallPlusRetainer: {
+    landMonth: number;
+    installInflow: number;
+    retainerMonthsActive: number;
+    retainerInflow: number;
+    totalInflow: number;
+    surplus: number;
+    y2Carry: number;
+  };
+  /**
+   * Shape #3: replace the cross-reserve install with a Tier-2 portfolio
+   * of SMB/band-office managed-services subscriptions. The slide shows
+   * what a "realistic" 4–6-sub portfolio actually contributes, and what
+   * subscription count would actually be needed at mid-/high-ARPU to
+   * fully close the same Y1 gap.
+   */
+  scenarioTier2Stack: {
+    arpuLow: number;
+    arpuMid: number;
+    arpuHigh: number;
+    realisticSubsLow: number;
+    realisticSubsHigh: number;
+    /** 4 subs × $300/mo × 12 — the bottom of the realistic portfolio. */
+    realisticInflowLow: number;
+    /** 6 subs × $800/mo × 12 — the top of the realistic portfolio. */
+    realisticInflowHigh: number;
+    /** Subs needed at $500/mo to fully cover the gap inside Y1. */
+    subsNeededAtMid: number;
+    /** Subs needed at $800/mo to fully cover the gap inside Y1. */
+    subsNeededAtHigh: number;
+    /** Y2 carry — annualised subscription run-rate (low end of realistic portfolio). */
+    y2CarryLow: number;
+    /** Y2 carry — annualised subscription run-rate (high end of realistic portfolio). */
+    y2CarryHigh: number;
+  };
+  /** Timing sensitivity: install + retainer landing at M3, M6, or M9. */
+  timing: SecondAnchorTiming[];
+};
+
+function timingFor(
+  landMonth: number,
+  installPerReserve: number,
+  retainer: number,
+  durationMonths: number,
+  gap: number,
+): SecondAnchorTiming {
+  const installEndMonth = landMonth + durationMonths;
+  const installCompletedInY1 = installEndMonth <= 12;
+  // If the install runs past month 12, recognise only the fraction of
+  // install days that landed inside Y1 (linear pro-rate over the
+  // 12-week shape).
+  const monthsOfInstallInY1 = Math.max(
+    0,
+    Math.min(durationMonths, 12 - landMonth),
+  );
+  const installFraction = installCompletedInY1
+    ? 1
+    : monthsOfInstallInY1 / durationMonths;
+  const installInflow = installPerReserve * installFraction;
+  const retainerMonthsActive = installCompletedInY1
+    ? Math.max(0, 12 - installEndMonth)
+    : 0;
+  const retainerInflow = (retainer / 12) * retainerMonthsActive;
+  const totalInflow = installInflow + retainerInflow;
+  return {
+    landMonth,
+    installCompletedInY1,
+    installInflow,
+    retainerMonthsActive,
+    retainerInflow,
+    totalInflow,
+    remainingGap: gap - totalInflow,
+    closesGap: totalInflow >= gap,
+  };
+}
+
+export function computeSecondAnchorScenarios(
+  state: AppState,
+): SecondAnchorScenarios {
+  const onsite = resolveCost(state, "crossReserve.dayRate.onsite");
+  const remote = resolveCost(state, "crossReserve.dayRate.remote");
+  const retainer = resolveCost(state, "crossReserve.retainer.annual");
+  const installPerReserve =
+    CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
+  const durationMonths = SECOND_ANCHOR_INSTALL_DURATION_MONTHS;
+  const gap = Y1_HONEST_GAP;
+
+  const m6 = timingFor(6, installPerReserve, retainer, durationMonths, gap);
+
+  const scenarioInstallOnly = {
+    inflow: installPerReserve,
+    surplus: installPerReserve - gap,
+    y2Carry: 0,
+  };
+
+  const scenarioInstallPlusRetainer = {
+    landMonth: 6,
+    installInflow: m6.installInflow,
+    retainerMonthsActive: m6.retainerMonthsActive,
+    retainerInflow: m6.retainerInflow,
+    totalInflow: m6.totalInflow,
+    surplus: m6.totalInflow - gap,
+    y2Carry: retainer,
+  };
+
+  const realisticInflowLow =
+    TIER2_REALISTIC_SUBS_LOW * TIER2_ARPU_LOW * 12;
+  const realisticInflowHigh =
+    TIER2_REALISTIC_SUBS_HIGH * TIER2_ARPU_HIGH * 12;
+  const scenarioTier2Stack = {
+    arpuLow: TIER2_ARPU_LOW,
+    arpuMid: TIER2_ARPU_MID,
+    arpuHigh: TIER2_ARPU_HIGH,
+    realisticSubsLow: TIER2_REALISTIC_SUBS_LOW,
+    realisticSubsHigh: TIER2_REALISTIC_SUBS_HIGH,
+    realisticInflowLow,
+    realisticInflowHigh,
+    subsNeededAtMid: Math.ceil(gap / (TIER2_ARPU_MID * 12)),
+    subsNeededAtHigh: Math.ceil(gap / (TIER2_ARPU_HIGH * 12)),
+    y2CarryLow: realisticInflowLow,
+    y2CarryHigh: realisticInflowHigh,
+  };
+
+  return {
+    gap,
+    installPerReserve,
+    retainerAnnual: retainer,
+    installDurationMonths: durationMonths,
+    scenarioInstallOnly,
+    scenarioInstallPlusRetainer,
+    scenarioTier2Stack,
+    timing: [
+      timingFor(3, installPerReserve, retainer, durationMonths, gap),
+      timingFor(6, installPerReserve, retainer, durationMonths, gap),
+      timingFor(9, installPerReserve, retainer, durationMonths, gap),
+    ],
+  };
+}
+
+export function useSecondAnchorScenarios(): SecondAnchorScenarios {
+  const state = useAppState();
+  return computeSecondAnchorScenarios(state);
+}
+
 export function useLiveCostValue(id: string): number | null {
   const state = useAppState();
   return getLiveCostValue(state, id);

@@ -94,7 +94,7 @@ const SLIDE_CLOSING = slide(55, "Closing — naming the deal");
 // CFO-readable breakout slide). manifestFile is set so
 // scripts/check-slide-refs.ts fails the build if the slide moves
 // position in the manifest without this constant being updated.
-const SLIDE_PATH = slide(7, "Path to scale", "src/pages/slides/PathToScale.tsx");
+const SLIDE_PATH = slide(8, "Path to scale", "src/pages/slides/PathToScale.tsx");
 const SLIDE_SALT_BENCH = slide(67, "Salt bench");
 const SLIDE_SALT_PL = slide(68, "Salt P&L");
 const SLIDE_ROLE_OPS_MANAGER = slide(24, "Role — Ops Manager");
