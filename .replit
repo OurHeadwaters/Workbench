@@ -29,7 +29,7 @@ isValidation = true
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test"
+args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test && pnpm --filter @workspace/check-in run test"
 
 [agent]
 stack = "PNPM_WORKSPACE"

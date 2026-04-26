@@ -566,8 +566,9 @@ describe("V2 ↔ V3 invariants — Salts and Brightside are identical", () => {
       SCENARIO_V2.contracts.agency.payrollTotal,
     );
     // Both scenarios are locked — V3 was promoted from provisional once the founder
-    // confirmed the lean roster + fee in this task (#162). The ProvisionalBanner
-    // therefore renders on neither page.
+    // confirmed the lean roster + fee in task #162. The ProvisionalBanner therefore
+    // renders on neither page. Re-pinning to the literal so any future demotion or
+    // relabel still trips the assertion.
     expect(SCENARIO_V3.status).toBe("locked");
     expect(SCENARIO_V2.status).toBe("locked");
   });
