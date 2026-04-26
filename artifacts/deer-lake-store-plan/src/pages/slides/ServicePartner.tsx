@@ -25,7 +25,7 @@ const reinvestBuckets: ReinvestBucket[] = [
   { label: "Tech CAPEX", amount: "~$60k Y1", detail: "self-hosted servers, privacy phones, work computers, networking" },
   { label: "Tooling subs", amount: "~$24k Y1", detail: "transparency dashboard hosting, GIS, secure comms, payroll" },
   { label: "Training & R&D", amount: "~$36k Y1", detail: "Indigenous-services certifications, conferences, playbook hours" },
-  { label: "Pilot reserve", amount: "~$160k Y1", detail: "held in a separate account; seeds the next reserve so they don't wait for grants" },
+  { label: "Pilot reserve", amount: "~$172k Y1", detail: "held in a separate account; seeds the next reserve so they don't wait for grants" },
 ];
 
 const accountabilityMeasures: AccountabilityMeasure[] = [

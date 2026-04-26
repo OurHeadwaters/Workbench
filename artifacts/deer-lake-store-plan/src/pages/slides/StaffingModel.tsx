@@ -43,7 +43,7 @@ export default function StaffingModel() {
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">PODS, NOT ROLES</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              Everyone can cover the floor
+              Everyone can cover the sales floor
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
               The till, the cooler, the stockroom, the daily books at a basic level. When two people don't show up on a Tuesday, the store still opens.

@@ -57,7 +57,7 @@ export default function Closing() {
           </div>
           <div className="text-right">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] opacity-75 mb-[1vh]">
-              Founder
+              Practitioner
             </div>
             <div className="font-display italic text-[1.6vw] opacity-95">
               April 2026

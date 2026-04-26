@@ -18,13 +18,13 @@ export default function TheSixPeople() {
           The six people.
         </h1>
         <div className="font-display italic text-[1.55vw] text-muted mb-[3vh] max-w-[68vw]">
-          Same work as V2, but no double-payment. Food Handler and Ops Manager fold into the Hub Operator. Housecleaner, Handyman, and Tutor are not Headwaters' to staff. Recurring people: <span className="text-primary font-semibold not-italic">$33,000/mo</span>. Variable amortized: <span className="text-primary font-semibold not-italic">$2,625/mo</span>.
+          Same work as V2, but no double-payment. Food Handler and Ops Manager fold into the Hub Operator headline (the OnePager keeps Food Handler broken out as a $5,000 line so the A·floor agency cost basis adds up cleanly — same role, different framing). Housecleaner, Handyman, and Tutor are not Headwaters' to staff. Recurring people: <span className="text-primary font-semibold not-italic">$33,000/mo</span>. Variable amortized: <span className="text-primary font-semibold not-italic">$2,625/mo</span>.
         </div>
 
         <div className="grid grid-cols-3 gap-[1.6vw] flex-1">
           <div className="bg-paper border-t-[3px] border-primary px-[1.5vw] py-[2vh] flex flex-col">
             <div className="font-mono uppercase tracking-[0.18em] text-[0.85vw] text-muted mb-[0.6vh]">
-              01 · Founder
+              01 · Lead
             </div>
             <div className="font-display text-[1.85vw] leading-[1.05] text-primary mb-[0.8vh]">
               Practitioner

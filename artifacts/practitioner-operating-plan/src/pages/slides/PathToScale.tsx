@@ -119,10 +119,13 @@ export default function PathToScale() {
               {compactDollars(y1)}
             </div>
             <div
-              className="font-mono text-[1vw] text-muted mb-[2vh]"
+              className="font-mono text-[1vw] text-muted"
               style={{ fontVariantNumeric: "tabular-nums" }}
             >
               {exactDollars(y1)} /yr
+            </div>
+            <div className="font-mono uppercase tracking-[0.18em] text-[0.7vw] text-accent mb-[2vh] mt-[0.4vh]">
+              scenario math · not the signed contract
             </div>
             <div className="mt-auto border-t border-dashed border-rule pt-[1.2vh] space-y-[0.6vh]">
               <div className="flex items-baseline justify-between">
@@ -135,7 +138,7 @@ export default function PathToScale() {
                 </span>
               </div>
               <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-                ask.recommended × 12 — locked.
+                ask.recommended × 12 — the upgraded V3 cost-basis ask. Today's signed contract is $35,000/mo (~$420k/yr); see Three Revenue Layers for how the bundle is currently priced.
               </div>
             </div>
           </div>

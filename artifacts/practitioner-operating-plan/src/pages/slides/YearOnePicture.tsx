@@ -69,7 +69,7 @@ export default function YearOnePicture() {
               And <span className="font-semibold text-primary">$112,000 of Capital Recovery</span> from V2 is still standing — debt to lender and family that V3 has not begun to retire.
             </div>
             <div className="font-body italic text-[1.15vw] text-text leading-[1.5] mt-auto">
-              The $35k Deer Lake contract is a real security floor for the practitioner and the team's core. It does not, by itself, fund Headwaters at the V3 cost basis.
+              The $35,000/mo current Deer Lake contract is a real security baseline for the practitioner and the team's core. It does not, by itself, fund Headwaters at the V3 cost basis.
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function YearOnePicture() {
             Paths to close it · pick one before the deck goes live
           </div>
           <div className="font-body text-[1.05vw] text-text">
-            Phased hiring · Band #2 ramping by month 9 · founder carrying part of comp · structural change
+            Phased hiring · Band #2 ramping by month 9 · practitioner carrying part of comp · structural change
           </div>
         </div>
       </div>

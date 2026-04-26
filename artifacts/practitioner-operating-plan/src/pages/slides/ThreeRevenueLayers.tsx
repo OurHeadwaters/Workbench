@@ -80,13 +80,16 @@ export default function ThreeRevenueLayers() {
               $420,000
             </div>
             <div className="font-mono text-[1vw] text-muted mb-[2vh]">
-              /yr · $35,000/mo · locked
+              /yr · $35,000/mo · current contract
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text mb-[1.5vh]">
               Bundled deliverable: license, ongoing dev, practitioner advisory, monthly visit, Dryden Hub coordination, three training cohorts.
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text">
               <span className="text-primary font-semibold">Software is owned by the band</span> and reused across every band that adopts it.
+            </div>
+            <div className="font-body text-[0.9vw] leading-[1.45] text-muted mt-[0.8vh] italic">
+              Recommended ask on the V3 cost basis is $90k/mo (~$1.08M/yr) — see the Deer Lake deck's <span className="not-italic">Service Partner</span> / <span className="not-italic">Risks &amp; Ask</span> for the upgraded-tier rationale.
             </div>
           </div>
 
@@ -98,13 +101,13 @@ export default function ThreeRevenueLayers() {
               Hybrid pricing, tiered hardware
             </div>
             <div className="font-display font-semibold text-[3vw] text-accent leading-[1] mb-[0.4vh]" style={{ fontVariantNumeric: "tabular-nums" }}>
-              ~$5,000
+              $4,800
             </div>
             <div className="font-mono text-[1vw] text-muted mb-[2vh]">
-              /yr Y1 · scales hard with bands
+              /yr Y1 · recurring fee only · scales hard with bands
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text mb-[1.5vh]">
-              Pass-through SaaS at cost + tiered hardware kit (3 / 6 / 12 devices, scales with team) + $400/mo managed-services fee.
+              $400/mo managed-services fee. Pass-through SaaS billed at cost; tiered hardware kit (3 / 6 / 12 devices, scales with team) billed at cost when issued — both excluded from the headline.
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text">
               <span className="text-primary font-semibold">Loss is baked into the kit pricing.</span> Stuff gets lent and goes missing — the system honours that, not the other way around.

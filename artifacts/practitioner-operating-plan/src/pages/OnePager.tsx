@@ -194,7 +194,7 @@ export default function OnePager() {
               </tr>
               <tr className="border-b border-[#e3dac4] align-top">
                 <td className="py-[3pt] pr-[4pt] font-semibold">Food Handler</td>
-                <td className="py-[3pt] pr-[4pt]">Headwaters-owned, embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen/shop tidy, food &amp; supplies inventory</td>
+                <td className="py-[3pt] pr-[4pt]">Headwaters-owned, embedded at the Deer Lake store from Day 1: salt batches, 807-branded piecework, kitchen/shop tidy, food &amp; supplies inventory <span className="text-[7.5pt] text-[#6b7665] italic">(Practitioner deck V3 framing folds this into the $8.5k Hub Operator headline; broken out here so the A·floor cost basis is auditable)</span></td>
                 <td className="py-[3pt] pr-[4pt] text-right font-semibold">$5,000</td>
                 <td className="py-[3pt] text-right text-[#6b7665]">A</td>
               </tr>
@@ -335,7 +335,7 @@ export default function OnePager() {
               </tr>
               <tr>
                 <td className="py-[3pt] pr-[4pt] font-semibold">Pilot #2 reserve</td>
-                <td className="py-[3pt] pr-[4pt] text-right">~$160k</td>
+                <td className="py-[3pt] pr-[4pt] text-right">~$172k</td>
                 <td className="py-[3pt]">Held in a separate account; seeds the next reserve so they don't wait for grants</td>
               </tr>
             </tbody>
@@ -360,7 +360,7 @@ export default function OnePager() {
                 <div className="font-display text-[16pt] leading-tight text-[#1f3d2e] font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
                   $420,000
                   <span className="text-[8pt] font-normal text-[#6b7665] ml-[3pt]">
-                    /yr · $35,000/mo · locked
+                    /yr · $35,000/mo · current contract (recommended ask: $90k/mo)
                   </span>
                 </div>
               </div>

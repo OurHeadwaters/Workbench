@@ -83,7 +83,7 @@ export default function SecondAnchorScenarios() {
               <Row label="Y2 carry-in" value={fmtMoney0(s2.y2Carry) + "/yr"} accent />
             </div>
             <div className="mt-auto pt-[1vh] font-body text-[0.95vw] text-text leading-[1.4]">
-              Closes Y1 with a margin <em>and</em> seeds a {fmtMoney0(s2.y2Carry)}/yr Y2 floor. This is the shape the path-to-scale model assumes.
+              Closes Y1 with a margin <em>and</em> seeds a {fmtMoney0(s2.y2Carry)}/yr Y2 income floor. This is the shape the path-to-scale model assumes.
             </div>
           </div>
 
@@ -153,7 +153,7 @@ export default function SecondAnchorScenarios() {
         <div className="border-t border-rule pt-[1vh] flex items-start justify-between gap-[2vw]">
           <div className="font-body text-[0.9vw] text-muted leading-[1.45] max-w-[58vw]">
             <span className="font-mono uppercase tracking-[0.2em] text-[0.75vw] text-primary mr-[0.5vw]">What this slide is not:</span>
-            it doesn't pick <em>which</em> reserve the second anchor is (see Pilot #2 candidate-scoring), it doesn't redo the Y2/Y3 path-to-scale headlines (those compose this same install + retainer over multiple years), and it isn't the receiving band's sticker-price view (covered by the reserve-#2 cost slide). It's also not the answer to the $40k day-one bridge or to contractor payment slippage — those address the <em>capital</em> and <em>timing</em> legs of the gap, not the <em>revenue</em> leg this slide answers.
+            it doesn't pick <em>which</em> reserve the second anchor is (see Pilot #2 candidate-scoring), it doesn't redo the Y2/Y3 path-to-scale headlines (those compose this same install + retainer over multiple years), and it isn't the receiving band's sticker-price view (covered by the reserve-#2 cost slide). It's also not the answer to the ~$181k day-one bridge or to contractor payment slippage — those address the <em>capital</em> and <em>timing</em> legs of the gap, not the <em>revenue</em> leg this slide answers.
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[0.8vw] text-muted text-right whitespace-nowrap">
             Year One · gap close · option 1 of N

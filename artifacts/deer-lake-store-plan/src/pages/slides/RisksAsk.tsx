@@ -92,7 +92,7 @@ export default function RisksAsk() {
                 The deal, named honestly
               </div>
               <div className="font-body text-[0.82vw] leading-[1.35] opacity-95">
-                Recommended tier: <span className="font-semibold">$90k/mo bill on a $69.7k cost basis</span>, 35% reinvestment audited annually. Day-one ask: <span className="font-semibold">~$181k bridge capital</span> for team payroll + tech CAPEX before the first 60-day ISC invoice clears. Tier and bridge selection <span className="font-semibold">TBD pending council conversation</span>. Precedent: the $22k payback memo on file.
+                Recommended tier: <span className="font-semibold">$90k/mo bill on a $69.7k cost basis</span>, 35% reinvestment audited annually. Day-one ask: <span className="font-semibold">~$181k bridge capital</span> for team payroll + tech CAPEX before the first 60-day Indigenous Services Canada (ISC) invoice clears. Tier and bridge selection <span className="font-semibold">TBD pending council conversation</span>. Precedent: the $22k payback memo on file.
               </div>
             </div>
 

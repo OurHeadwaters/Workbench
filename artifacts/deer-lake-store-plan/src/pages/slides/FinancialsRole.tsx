@@ -41,7 +41,7 @@ export default function FinancialsRole() {
               </div>
               <div>
                 <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">Where the opening money comes from</div>
-                <div className="text-text text-[0.82vw] leading-[1.3]">Federal/regional grants (FedNor NODP, Community Futures, ISC CCP), LFFC partnership, band contribution.</div>
+                <div className="text-text text-[0.82vw] leading-[1.3]">Federal/regional grants (FedNor's Northern Ontario Development Program, Community Futures, Indigenous Services Canada's Community Capital Program), LFFC (Local Food and Farm Co-operatives) partnership, band contribution.</div>
               </div>
             </div>
           </div>
@@ -156,14 +156,14 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="font-body text-[0.72vw] leading-[1.4] opacity-80 mt-[0.5vh]">
-                35% reinvestment target audited yearly. Bridge = M2 trough on the 60-day ISC pay cycle. Tier selection TBD pending council conversation. Precedent for written commitments: the $22k payback memo from V2.
+                35% reinvestment target audited yearly. Bridge = M2 trough on the 60-day Indigenous Services Canada (ISC) pay cycle. Tier selection TBD pending council conversation. Precedent for written commitments: the $22k payback memo from V2.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.85vw]" style={{ background: "rgba(244,237,224,0.04)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] opacity-75">The freight</div>
               <div className="font-body text-[0.82vw] leading-[1.35] mt-[0.2vh] opacity-90">
-                Family-run refrigerated route through Dryden, on the same corridor Deer Lake's truck already uses. Not a Headwaters line item.
+                A family-run refrigerated route through Dryden, on the same corridor Deer Lake's truck already uses. Not a Headwaters line item.
               </div>
             </div>
           </div>
