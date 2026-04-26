@@ -271,12 +271,30 @@ function ReserveTwoCalculator() {
 
   const copyShareLink = async () => {
     if (typeof window === "undefined") return;
-    // Read window.location from inside the slide's own document. When the
-    // slide is mounted standalone at /slide12 this is the address-bar URL;
-    // when the deployed SlideViewer wraps us in an iframe, this is the
-    // inner-frame URL (the one with ?flight=...&lodging=... appended), which
-    // is exactly the URL we want a chief to be able to forward.
-    const url = window.location.href;
+    // Build a share URL that opens the wrapped SlideViewer (deck chrome:
+    // slide selector, prev/next nav, progress) and pre-selects this slide,
+    // forwarding the corridor querystring through to the iframe so the
+    // calculator hydrates with the same numbers. The bare /slide12 page
+    // remains a working fallback for direct visits.
+    //
+    // Same-origin trick: this slide and the SlideViewer are served from the
+    // same artifact origin, so window.location.origin is the right host
+    // whether we're standalone at /slide12 or nested inside SlideViewer.
+    // window.location.pathname always carries the artifact base + /slide{N},
+    // so we can recover this slide's position without hardcoding it.
+    const positionMatch = window.location.pathname.match(/\/slide(\d+)(?:\/|$)/);
+    const position = positionMatch ? positionMatch[1] : "12";
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+    const sourceParams = new URLSearchParams(window.location.search);
+    sourceParams.delete("slide");
+    const shareParams = new URLSearchParams();
+    shareParams.set("slide", position);
+    for (const [key, value] of sourceParams) {
+      shareParams.set(key, value);
+    }
+
+    const url = `${window.location.origin}${base}/?${shareParams.toString()}`;
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);

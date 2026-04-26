@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 
 import { slides } from "@/slideLoader";
@@ -174,7 +174,29 @@ function SlideViewer() {
   }, []);
 
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  const firstPosition = slides.length > 0 ? slides[0].position : 1;
+
+  // Honor share links of the shape `${base}/?slide=N&...` — the `slide` param
+  // picks which slide the deck opens to, and any other querystring values are
+  // forwarded into the iframe so a wrapped slide can hydrate its state (e.g.
+  // the corridor calculator on slide 12 reading `?flight=...&lodging=...`).
+  // Computed once at mount so subsequent renders never reload the iframe.
+  const initialSrc = useMemo(() => {
+    const firstPosition = slides.length > 0 ? slides[0].position : 1;
+    const parentParams = new URLSearchParams(window.location.search);
+    const slideParam = parentParams.get("slide");
+    parentParams.delete("slide");
+
+    let position = firstPosition;
+    if (slideParam !== null) {
+      const parsed = parseInt(slideParam, 10);
+      if (Number.isFinite(parsed) && slides.some((s) => s.position === parsed)) {
+        position = parsed;
+      }
+    }
+
+    const forwarded = parentParams.toString();
+    return `${base}/slide${position}${forwarded ? `?${forwarded}` : ""}`;
+  }, [base]);
 
   return (
     <div
@@ -183,7 +205,7 @@ function SlideViewer() {
     >
       <iframe
         ref={iframeRef}
-        src={`${base}/slide${firstPosition}`}
+        src={initialSrc}
         style={{ width: dims.width, height: dims.height, border: "none" }}
         onLoad={() => iframeRef.current?.focus()}
         title="Slide viewer"
