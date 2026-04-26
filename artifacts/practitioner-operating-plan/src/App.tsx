@@ -13,6 +13,7 @@ import BrandOnePager from "@/pages/BrandOnePager";
 import Checklist from "@/pages/Checklist";
 import HoursByPillar from "@/pages/HoursByPillar";
 import Codetry from "@/pages/Codetry";
+import CodetryTest from "@/pages/CodetryTest";
 import CodetryVsLiterate from "@/pages/CodetryVsLiterate";
 import LeaseTooling from "@/pages/LeaseTooling";
 import PaybackMemo from "@/pages/PaybackMemo";
@@ -356,6 +357,7 @@ export default function App() {
   if (location === "/payback-memo") return <PaybackMemo />;
   if (location === "/salt-coa") return <SaltCoA />;
   if (location === "/codetry") return <Codetry />;
+  if (location === "/codetry-test") return <CodetryTest />;
   if (location === "/codetry-vs-literate") return <CodetryVsLiterate />;
   if (location === "/salt-monthly-close") return <SaltMonthlyClose />;
   if (location === "/studio-wind-down") return <StudioWindDown />;

@@ -137,6 +137,21 @@ export default function Codetry() {
             programming on a single square sheet, for readers who already
             know what literate programming is.
           </p>
+          <p className="mt-[4pt] print:mt-[3pt] text-[8pt] text-[#6b7665] leading-[1.4] print:text-[7pt]">
+            <span className="font-mono uppercase tracking-[0.18em] text-[7pt] text-[#1f3d2e] mr-[4pt]">
+              Audit
+            </span>
+            <a
+              href="/practitioner-operating-plan/codetry-test"
+              className="font-mono text-[#1f3d2e] underline decoration-[#c8bfa7] underline-offset-2 hover:decoration-[#1f3d2e] print:no-underline"
+            >
+              /practitioner-operating-plan/codetry-test
+            </a>{" "}
+            &mdash; §4.2 of the handbook (&ldquo;Test the name by trying
+            to rename it&rdquo;) applied to the canonical names settled
+            across the three financial artifacts. Per-entry verdict
+            (load-bearing / decorative / drift) and footer tally.
+          </p>
 
           <Subhead>The saltbox principle</Subhead>
           <p>
