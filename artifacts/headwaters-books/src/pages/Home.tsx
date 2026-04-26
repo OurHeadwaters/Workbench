@@ -1,11 +1,13 @@
 import { Link } from "wouter";
 import { SignedIn, SignedOut } from "@/lib/clerkGates";
 import { Button } from "@/components/ui/button";
+import { EaglePrologue } from "@/components/EaglePrologue";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="w-full p-6 flex items-center justify-between">
+      <EaglePrologue continueId="home-after-prologue" />
+      <header id="home-after-prologue" className="w-full p-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img src="/logo.svg" alt="Headwaters" className="w-8 h-8 text-primary" />
           <span className="font-serif font-bold text-xl text-foreground">Headwaters</span>

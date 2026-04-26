@@ -1,9 +1,10 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ScenarioProvider } from "@/lib/scenario";
 import { AppShell } from "@/components/AppShell";
+import { EaglePrologue } from "@/components/EaglePrologue";
 import { IndexPage } from "@/pages/IndexPage";
 import { SaltsPage } from "@/pages/SaltsPage";
 import { ContractsPage } from "@/pages/ContractsPage";
@@ -28,12 +29,22 @@ function Router() {
   );
 }
 
+// On the index route, the eagle prologue is hoisted above AppShell so the
+// image is truly full-bleed (not pinned inside the main column beside the
+// sidebar). Other routes show only AppShell + their content.
+function PrologueGate() {
+  const [location] = useLocation();
+  if (location !== "/") return null;
+  return <EaglePrologue continueId="index-after-prologue" />;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ScenarioProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <PrologueGate />
             <AppShell>
               <Router />
             </AppShell>

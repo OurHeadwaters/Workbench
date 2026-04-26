@@ -46,7 +46,7 @@ export function IndexPage() {
     <div className="space-y-8" data-testid="page-index">
       <ProvisionalBanner />
 
-      <header>
+      <header id="index-after-prologue" className="scroll-mt-20">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           Practitioner's Guide V2
         </p>

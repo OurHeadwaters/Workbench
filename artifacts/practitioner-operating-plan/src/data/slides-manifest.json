@@ -1,7 +1,16 @@
 [
   {
-    "id": "v3-0001-cover-aaaa-aaaa-aaaaaaaaaaa1",
+    "id": "v3-0000-prologue-aaaa-aaaa-aaaaaaaaaa0",
     "position": 1,
+    "filepath": "src/pages/slides/Prologue.tsx",
+    "title": "Prologue — The eagle answered",
+    "description": "Opens the deck with the eagle story. Full-bleed eagle image, story in the deck's serif, closing line set apart. Same prologue appears in the Deer Lake Store deck and at the top of Headwaters Books and the Practitioner's Guide V2 home pages — one moment, four pieces.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0001-cover-aaaa-aaaa-aaaaaaaaaaa1",
+    "position": 2,
     "filepath": "src/pages/slides/Cover.tsx",
     "title": "Cover",
     "description": "V3 cover — Headwaters as a product company for Northern Indigenous food systems. Six numbers locked, tagline previewed.",
@@ -10,7 +19,7 @@
   },
   {
     "id": "v3-0002-slab-aaaa-aaaa-aaaaaaaaaaa2",
-    "position": 2,
+    "position": 3,
     "filepath": "src/pages/slides/SlabVsGrassland.tsx",
     "title": "Slab vs grassland",
     "description": "Foundation thesis — V2 was a slab (one client, one contract, brittle). V3 is a grassland (three product layers, many bands, rooted).",
@@ -19,7 +28,7 @@
   },
   {
     "id": "v3-0003-six-aaaa-aaaa-aaaaaaaaaaaa3",
-    "position": 3,
+    "position": 4,
     "filepath": "src/pages/slides/TheSixPeople.tsx",
     "title": "The six people",
     "description": "V3 lean roster — six roles, locked monthly numbers. Where V2 had eight, V3 has six; same work, no double-payment.",
@@ -28,7 +37,7 @@
   },
   {
     "id": "v3-0004-rev-aaaa-aaaa-aaaaaaaaaaaa4",
-    "position": 4,
+    "position": 5,
     "filepath": "src/pages/slides/ThreeRevenueLayers.tsx",
     "title": "Three revenue layers",
     "description": "Software (Deer Lake $420k/yr), Tech Stack at Markup (hybrid pricing, tiered hardware, ~$5k Y1), Training ($5,500/cohort, 3/yr in Deer Lake bundle).",
@@ -37,7 +46,7 @@
   },
   {
     "id": "v3-0005-y1-aaaa-aaaa-aaaaaaaaaaaaa5",
-    "position": 5,
+    "position": 6,
     "filepath": "src/pages/slides/YearOnePicture.tsx",
     "title": "Year One — surfaced honestly",
     "description": "Honest Year-1 cash picture: revenue $446,598 vs cost $573,800 = ($127,202) gap, plus $112k Capital Recovery from V2 still standing. Paths to close it listed.",
@@ -46,7 +55,7 @@
   },
   {
     "id": "v3-0006-close-aaaa-aaaa-aaaaaaaaaaa6",
-    "position": 6,
+    "position": 7,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Closing",
     "description": "Mission anchor + tagline closing. 'We always knew how to fix it. Now we can.' on dark forest-green field.",

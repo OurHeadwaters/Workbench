@@ -12,6 +12,12 @@ uri = "file://artifacts/practitioner-operating-plan/public/hero-morning-desk.png
 type = "image"
 title = "morning desk dawn"
 
+[[generated]]
+id = "uJFmyO6jQnUZgQkamPmJw"
+uri = "file://attached_assets/generated_images/eagle-prologue.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"
