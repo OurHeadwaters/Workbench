@@ -74,36 +74,48 @@ const slide = (
   return entry;
 };
 
-// V3 deck rebuild (April 2026): the V2 deck of ~50 slides was replaced
-// with a 6-slide V3 deck (Cover, SlabVsGrassland, TheSixPeople,
-// ThreeRevenueLayers, YearOnePicture, Closing). The cost-review modal
-// shortcuts below kept their `position` numbers as legacy bookmarks but
-// no longer cross-reference deleted V2 slide files. Rewiring each
-// shortcut to a live V3 slide (or removing the slide-jump entirely) is
-// tracked as separate follow-up work; check-slide-refs only validates
-// entries that still pass a manifestFile, so omitting it here is the
-// supported way to mark "no live deck home for this cost".
-const SLIDE_BUDGET = slide(46, "Budget");
-const SLIDE_CASHFLOW = slide(47, "Cash flow");
-const SLIDE_PAYBACK_PITCH = slide(48, "Payback pitch");
-const SLIDE_REINVEST = slide(49, "Reinvestment");
-const SLIDE_RATE = slide(52, "Case for rate");
-const SLIDE_TEAM = slide(53, "Case for team");
-const SLIDE_CLOSING = slide(55, "Closing — naming the deal");
-// Path to scale — live deck home for Y1/Y2/Y3 composition (the
-// CFO-readable breakout slide). manifestFile is set so
-// scripts/check-slide-refs.ts fails the build if the slide moves
-// position in the manifest without this constant being updated.
+// with a 9-slide V3 deck (Prologue, Cover, SlabVsGrassland, TheSixPeople,
+// ThreeRevenueLayers, YearOnePicture, SecondAnchorScenarios, PathToScale,
+// Closing). The cost-review modal's "Where this appears" links route
+// through these constants; every one points at a real V3 slide so the
+// modal never strands a click.
+//
+// manifestFile is set on every constant so scripts/check-slide-refs.ts
+// (`checkCostRegistrySlideRefs`) fails the build if any slide moves
+// position in the manifest without these constants being updated to
+// match.
+//
+// V3 home assignments:
+//   • TheSixPeople (pos 4) — lean roster, locked role monthly numbers
+//     → all role/team/budget/people-sizing references
+//   • ThreeRevenueLayers (pos 5) — software/hardware/training mix,
+//     salts P&L, 807 grant net cash, reinvestment math
+//     → reinvestment + salt references
+//   • YearOnePicture (pos 6) — honest Y1 revenue/cost picture, the
+//     gap that justifies the rate, payback context
+//     → cash flow / rate / payback-pitch references
+//   • PathToScale (pos 8) — Y1/Y2/Y3 CFO-readable composition
+//     → path-to-scale references
+//   • Closing (pos 9) — the asking moment
+//     → closing references
+const SLIDE_BUDGET = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_CASHFLOW = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
+const SLIDE_PAYBACK_PITCH = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
+const SLIDE_REINVEST = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
+const SLIDE_RATE = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
+const SLIDE_TEAM = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_CLOSING = slide(9, "Closing", "src/pages/slides/Closing.tsx");
 const SLIDE_PATH = slide(8, "Path to scale", "src/pages/slides/PathToScale.tsx");
-const SLIDE_SALT_BENCH = slide(67, "Salt bench");
-const SLIDE_SALT_PL = slide(68, "Salt P&L");
-const SLIDE_ROLE_OPS_MANAGER = slide(24, "Role — Ops Manager");
-const SLIDE_ROLE_BOOKKEEPER = slide(25, "Role — Bookkeeper");
-const SLIDE_ROLE_FOOD_HANDLER = slide(26, "Role — Food Handler");
-const SLIDE_ROLE_HOUSECLEANER = slide(27, "Role — Housecleaner");
-const SLIDE_ROLE_TUTOR = slide(28, "Role — Tutor");
-const SLIDE_ROLE_HANDYMAN = slide(29, "Role — Handyman");
-const SLIDE_PEOPLE_SIZING = slide(44, "People — sizing per scenario");
+const SLIDE_SALT_BENCH = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
+const SLIDE_SALT_PL = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
+const SLIDE_ROLE_OPS_MANAGER = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_BOOKKEEPER = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_FOOD_HANDLER = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_HOUSECLEANER = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_TUTOR = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_HANDYMAN = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_ROLE_IT_TECH = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
+const SLIDE_PEOPLE_SIZING = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
 const PAGE_PAYBACK_MEMO: CostSlide = {
   href: "/payback-memo",
   label: "Payback memorandum",
@@ -402,9 +414,7 @@ export const COST_REGISTRY: CostEntry[] = [
     unit: "$ one-time",
     context:
       "Accountant fees on the 807 grant proposal — billed to the co-op directly, NOT in this bill.",
-    slides: [
-      slide(48, "Platform bill — payback"),
-    ],
+    slides: [SLIDE_PAYBACK_PITCH],
   },
 
   {
@@ -474,10 +484,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 40,
     unit: "$/hr",
     context: "Trial weeks paid at full rate. Drives the OM loaded monthly.",
-    slides: [
-      slide(31, "Hiring — OM"),
-      SLIDE_ROLE_OPS_MANAGER,
-    ],
+    slides: [SLIDE_ROLE_OPS_MANAGER],
   },
   {
     id: "rate.bookkeeper",
@@ -486,10 +493,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 40,
     unit: "$/hr",
     context: "Paid against fixed scope cap.",
-    slides: [
-      slide(32, "Hiring — Bookkeeper"),
-      SLIDE_ROLE_BOOKKEEPER,
-    ],
+    slides: [SLIDE_ROLE_BOOKKEEPER],
   },
   {
     id: "rate.itTechDayLow",
@@ -498,7 +502,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 600,
     unit: "$/day",
     context: "Trial day rate floor for the IT/Tech hire.",
-    slides: [slide(33, "Hiring — IT/Tech")],
+    slides: [SLIDE_ROLE_IT_TECH],
   },
   {
     id: "rate.itTechDayHigh",
@@ -507,7 +511,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 900,
     unit: "$/day",
     context: "Trial day rate ceiling for senior IT/Tech.",
-    slides: [slide(33, "Hiring — IT/Tech")],
+    slides: [SLIDE_ROLE_IT_TECH],
   },
   {
     id: "rate.tutor",
@@ -516,10 +520,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 35,
     unit: "$/hr",
     context: "Trial sessions paid regardless. Vulnerable Sector Check reimbursed on hire.",
-    slides: [
-      slide(36, "Hiring — Tutor"),
-      SLIDE_ROLE_TUTOR,
-    ],
+    slides: [SLIDE_ROLE_TUTOR],
   },
   {
     id: "rate.housecleaner",
@@ -528,10 +529,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 30,
     unit: "$/hr",
     context: "Trial visits paid. No 'free first clean'.",
-    slides: [
-      slide(35, "Hiring — Housecleaner"),
-      SLIDE_ROLE_HOUSECLEANER,
-    ],
+    slides: [SLIDE_ROLE_HOUSECLEANER],
   },
   {
     id: "rate.handyman",
@@ -540,10 +538,7 @@ export const COST_REGISTRY: CostEntry[] = [
     defaultValue: 30,
     unit: "$/hr",
     context: "Trial weeks paid regardless of outcome.",
-    slides: [
-      slide(37, "Hiring — Handyman"),
-      SLIDE_ROLE_HANDYMAN,
-    ],
+    slides: [SLIDE_ROLE_HANDYMAN],
   },
   {
     id: "rate.foodHandler",

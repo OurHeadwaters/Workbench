@@ -457,27 +457,39 @@ function WalkthroughBody({
         </div>
       </div>
 
-      {entry.slides.length > 0 && (
-        <div className="rounded-lg border border-stone-200 bg-stone-100/60 p-3">
-          <p className="text-[11px] font-medium uppercase tracking-widest text-stone-500">
-            Appears on
-          </p>
-          <ul className="mt-1.5 flex flex-wrap gap-2">
-            {entry.slides.map((s) => (
-              <li key={s.href}>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md border border-stone-300 bg-white px-2 py-1 text-xs text-stone-700 hover:bg-stone-50"
-                >
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {entry.slides.length > 0 && (() => {
+        // Multiple registry constants can collapse onto the same V3 slide
+        // (e.g. SLIDE_BUDGET, SLIDE_TEAM, SLIDE_ROLE_* all → TheSixPeople).
+        // Dedupe by href so the link list stays tidy and React doesn't
+        // warn on duplicate keys.
+        const seen = new Set<string>();
+        const uniqueSlides = entry.slides.filter((s) => {
+          if (seen.has(s.href)) return false;
+          seen.add(s.href);
+          return true;
+        });
+        return (
+          <div className="rounded-lg border border-stone-200 bg-stone-100/60 p-3">
+            <p className="text-[11px] font-medium uppercase tracking-widest text-stone-500">
+              Appears on
+            </p>
+            <ul className="mt-1.5 flex flex-wrap gap-2">
+              {uniqueSlides.map((s) => (
+                <li key={s.href}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-md border border-stone-300 bg-white px-2 py-1 text-xs text-stone-700 hover:bg-stone-50"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })()}
     </div>
   );
 }
