@@ -36,6 +36,7 @@ const PAYROLL_IDS = {
 type BucketRow = {
   label: string;
   hint: string;
+  targetPct: number;
   ids: { a: string; b: string; c: string };
 };
 
@@ -43,6 +44,7 @@ const bucketRows: BucketRow[] = [
   {
     label: "02 · Cost-of-living offset",
     hint: "Grocery share · fuel · winter heat · phone",
+    targetPct: 7.0,
     ids: {
       a: "people.a.costOfLiving",
       b: "people.b.costOfLiving",
@@ -52,6 +54,7 @@ const bucketRows: BucketRow[] = [
   {
     label: "03 · Resilience",
     hint: "HSA · sick bank · family leave · mental-health stipend",
+    targetPct: 3.25,
     ids: {
       a: "people.a.resilience",
       b: "people.b.resilience",
@@ -61,6 +64,7 @@ const bucketRows: BucketRow[] = [
   {
     label: "04 · Retention milestones",
     hint: "RRSP step-up · anniversary cash · sabbatical · equipment transfer",
+    targetPct: 2.25,
     ids: {
       a: "people.a.retention",
       b: "people.b.retention",
@@ -70,6 +74,7 @@ const bucketRows: BucketRow[] = [
   {
     label: "05 · Appreciation",
     hint: "Crew meal · gear allowance · paid birthday · spot bonuses",
+    targetPct: 1.5,
     ids: {
       a: "people.a.appreciation",
       b: "people.b.appreciation",
@@ -79,6 +84,7 @@ const bucketRows: BucketRow[] = [
   {
     label: "06 · Growth",
     hint: "Tuition / certs · paid mentorship time",
+    targetPct: 0.75,
     ids: {
       a: "people.a.growth",
       b: "people.b.growth",
@@ -87,7 +93,55 @@ const bucketRows: BucketRow[] = [
   },
 ];
 
+const DRIFT_TOLERANCE_PT = 1;
+
 const fmt = (n: number) => "$" + n.toLocaleString("en-US");
+
+function PctChip({
+  pct,
+  target,
+  bucket,
+}: {
+  pct: number;
+  target: number;
+  bucket: string;
+}) {
+  const drift = pct - target;
+  const off = Math.abs(drift) > DRIFT_TOLERANCE_PT;
+  const driftLabel =
+    (drift >= 0 ? "+" : "−") + Math.abs(drift).toFixed(1) + "pt";
+  const tooltip =
+    bucket +
+    " · target ~" +
+    target.toFixed(2).replace(/\.?0+$/, "") +
+    "% of base payroll · live " +
+    pct.toFixed(1) +
+    "% (" +
+    driftLabel +
+    " vs target)";
+  if (!off) {
+    return (
+      <span
+        title={tooltip}
+        className="font-mono text-[0.7vw] text-muted block mt-[0.1vh] tabular-nums"
+      >
+        {pct.toFixed(1)}%
+      </span>
+    );
+  }
+  return (
+    <span
+      title={tooltip}
+      className="font-mono text-[0.68vw] font-semibold inline-block mt-[0.2vh] px-[0.35vw] py-[0.05vh] rounded-[0.25vw] tabular-nums"
+      style={{
+        background: "rgba(184, 90, 62, 0.16)",
+        color: "var(--slide-accent)",
+      }}
+    >
+      {pct.toFixed(1)}% · {driftLabel}
+    </span>
+  );
+}
 
 export default function PeopleSizing() {
   const state = useAppState();
@@ -100,6 +154,7 @@ export default function PeopleSizing() {
   const resolved = bucketRows.map((r) => ({
     label: r.label,
     hint: r.hint,
+    targetPct: r.targetPct,
     a: resolveCost(state, r.ids.a),
     b: resolveCost(state, r.ids.b),
     c: resolveCost(state, r.ids.c),
@@ -168,7 +223,7 @@ export default function PeopleSizing() {
               {resolved.map((r) => (
                 <tr
                   key={r.label}
-                  className="border-t"
+                  className="border-t align-top"
                   style={{ borderColor: "var(--slide-rule)" }}
                 >
                   <td className="py-[0.4vh] pr-[0.6vw] text-text">
@@ -176,15 +231,34 @@ export default function PeopleSizing() {
                   </td>
                   <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono">
                     {fmt(r.a)}
+                    <PctChip
+                      pct={pct(r.a, payrollA)}
+                      target={r.targetPct}
+                      bucket={r.label}
+                    />
                   </td>
                   <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono">
                     {fmt(r.b)}
+                    <PctChip
+                      pct={pct(r.b, payrollB)}
+                      target={r.targetPct}
+                      bucket={r.label}
+                    />
                   </td>
                   <td className="py-[0.4vh] pr-[0.6vw] text-right font-mono">
                     {fmt(r.c)}
+                    <PctChip
+                      pct={pct(r.c, payrollC)}
+                      target={r.targetPct}
+                      bucket={r.label}
+                    />
                   </td>
                   <td className="py-[0.4vh] text-muted text-[0.78vw] leading-[1.25]">
-                    {r.hint}
+                    <div>{r.hint}</div>
+                    <div className="text-[0.7vw] text-muted/80 mt-[0.1vh]">
+                      Target ~{r.targetPct.toFixed(2).replace(/\.?0+$/, "")}% of
+                      base payroll
+                    </div>
                   </td>
                 </tr>
               ))}
