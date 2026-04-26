@@ -5,8 +5,16 @@ const fmtK1 = (n: number) =>
   "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
 
 export default function Closing() {
-  const { askReco, costBasisB, reinvestB, reinvestBPct, loadedBridgeB } =
-    useBudgetTotals();
+  const {
+    askReco,
+    costBasisB,
+    peopleBucketsB,
+    loadedCostB,
+    capexB,
+    reinvestB,
+    reinvestBPct,
+    loadedBridgeB,
+  } = useBudgetTotals();
 
   return (
     <div
@@ -63,13 +71,19 @@ export default function Closing() {
             , twelve-month engagement, reviewed at month six.{" "}
             <span className="font-semibold">~{fmtK1(costBasisB)} cost basis</span> — the
             team that delivers the work, plus the Dad-warehouse aggregation
-            hub.{" "}
+            hub —{" "}
+            <span className="font-semibold">+ ~{fmtK1(peopleBucketsB)}/mo People &amp; Retention</span>{" "}
+            (cost-of-living, resilience, retention, appreciation, growth) ={" "}
+            <span className="font-semibold" style={{ color: "#e9c8a8" }}>
+              ~{fmtK1(loadedCostB)}/mo loaded outflow
+            </span>
+            .{" "}
             <span className="font-semibold">~{fmtK1(reinvestB)} reinvestment</span>{" "}
             (~{reinvestBPct.toFixed(0)}%) —
             tech infrastructure, training, and the seed for pilot #2. Audited
             annually against savings delivered to Deer Lake. Day-one bridge
             ask: <span className="font-semibold">~${Math.round(loadedBridgeB / 1000)}k</span>{" "}
-            (two months of loaded outflow + day-one CAPEX).
+            = ~{fmtK1(loadedCostB)} × 2 + ~{fmtK1(capexB)} day-one CAPEX.
           </div>
         </div>
 
