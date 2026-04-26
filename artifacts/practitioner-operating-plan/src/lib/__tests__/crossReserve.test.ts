@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { CROSS_RESERVE_DEFAULTS } from "@workspace/cross-reserve-defaults";
 
+import { COST_REGISTRY } from "../../data/costRegistry";
 import { DEFAULT_STATE } from "../storage";
 import type { AppState } from "../storage";
 import {
@@ -348,5 +349,75 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     const y3 = getLiveCostValue(DEFAULT_STATE, "pathToScale.year3");
     expect(y2).toBe(askReco + crossY2);
     expect(y3).toBe(askReco + crossY3);
+  });
+});
+
+describe("Cross-reserve registry copy — install-shape literals match the shared defaults", () => {
+  // Several `crossReserve.*` registry entries name the install shape
+  // inline in their label or context string ("12-week install",
+  // "30 on-site days", "24 remote days", "12 weekly flights", etc.).
+  // If the canonical 12 / 30 / 24 shape in `@workspace/cross-reserve-defaults`
+  // ever changes, those embedded literals would silently disagree with
+  // every other surface that reads the shared package — exactly the
+  // drift the rest of this suite is designed to prevent. This test
+  // scans every crossReserve.* entry's label and context for week /
+  // on-site / remote literals and asserts each one matches the shared
+  // shape, so the cost-review modal cannot quietly go stale.
+  const WEEK_PATTERNS: readonly RegExp[] = [
+    /(\d+)-week install/g, // "12-week install"
+    /(\d+) install weeks/g, // "12 install weeks"
+    /(\d+) weekly/g, // "12 weekly flights / drives / round-trip ..."
+    /\((\d+) weeks\)/g, // "(12 weeks)"
+  ];
+  const ONSITE_PATTERNS: readonly RegExp[] = [
+    /(\d+) on-site (?:days|nights)/g, // "30 on-site days", "30 on-site nights"
+    /\(~?(\d+) nights for/g, // "(~30 nights for a 12-week install)"
+  ];
+  const REMOTE_PATTERNS: readonly RegExp[] = [
+    /(\d+) remote days/g, // "24 remote days"
+  ];
+
+  it("every crossReserve.* entry's label and context names the canonical install shape", () => {
+    const weeks = CROSS_RESERVE_DEFAULTS.install.weeks;
+    const onsiteDays = CROSS_RESERVE_DEFAULTS.install.onsiteDays;
+    const remoteDays = CROSS_RESERVE_DEFAULTS.install.remoteDays;
+
+    let scanned = 0;
+    for (const entry of COST_REGISTRY) {
+      if (!entry.id.startsWith("crossReserve.")) continue;
+      const text = `${entry.label} ${entry.context ?? ""}`;
+      for (const pat of WEEK_PATTERNS) {
+        for (const m of text.matchAll(pat)) {
+          scanned++;
+          expect(
+            Number(m[1]),
+            `${entry.id}: "${m[0]}" should embed install.weeks (${weeks})`,
+          ).toBe(weeks);
+        }
+      }
+      for (const pat of ONSITE_PATTERNS) {
+        for (const m of text.matchAll(pat)) {
+          scanned++;
+          expect(
+            Number(m[1]),
+            `${entry.id}: "${m[0]}" should embed install.onsiteDays (${onsiteDays})`,
+          ).toBe(onsiteDays);
+        }
+      }
+      for (const pat of REMOTE_PATTERNS) {
+        for (const m of text.matchAll(pat)) {
+          scanned++;
+          expect(
+            Number(m[1]),
+            `${entry.id}: "${m[0]}" should embed install.remoteDays (${remoteDays})`,
+          ).toBe(remoteDays);
+        }
+      }
+    }
+    // Sanity floor: if the registry stops naming the install shape at
+    // all (e.g. someone strips every example down to bare numbers), the
+    // scan would silently pass with zero matches. Lock in that the
+    // current crop of inline references is at least covered.
+    expect(scanned).toBeGreaterThanOrEqual(15);
   });
 });

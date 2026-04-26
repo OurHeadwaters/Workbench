@@ -1,4 +1,9 @@
 import {
+  CROSS_RESERVE_INSTALL_WEEKS,
+  CROSS_RESERVE_ONSITE_DAYS,
+  CROSS_RESERVE_REMOTE_DAYS,
+} from "../lib/budgetMath";
+import {
   SALT_PLANNING_BASELINE,
   WHOLESALE_CM_FLOOR,
   useLatestSaltClose,
@@ -273,7 +278,7 @@ export default function OnePager() {
               </div>
             </div>
             <div className="text-[8pt] text-[#6b7665] mt-[4pt] leading-[1.35]">
-              ~$148.5k install (12-week stint, ~30 on-site + ~24 remote days)
+              ~$148.5k install ({CROSS_RESERVE_INSTALL_WEEKS}-week stint, ~{CROSS_RESERVE_ONSITE_DAYS} on-site + ~{CROSS_RESERVE_REMOTE_DAYS} remote days)
               + ~$22.5k travel pass-through<sup className="text-[0.7em]">*</sup>
               + $30k first-year retainer ≈ ~$201k Y1 all-in. Same headline as
               the Deer Lake deck's <span className="italic">First reserve, then the next</span>{" "}
@@ -281,7 +286,7 @@ export default function OnePager() {
               Deer Lake's $420k/yr the moment they print.
               <br />
               <sup>*</sup> Planning estimate (Deer Lake corridor: ~$1,000/return ×
-              12 wks + $250/night × 30 + $100/day × 30). The receiving reserve
+              {" "}{CROSS_RESERVE_INSTALL_WEEKS} wks + $250/night × {CROSS_RESERVE_ONSITE_DAYS} + $100/day × {CROSS_RESERVE_ONSITE_DAYS}). The receiving reserve
               replaces this with their own corridor's costs; travel is
               pass-through at cost, not in the practitioner's fee.
             </div>

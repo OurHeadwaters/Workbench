@@ -1,4 +1,7 @@
-import { useSecondAnchorScenarios } from "@/lib/budgetMath";
+import {
+  CROSS_RESERVE_INSTALL_WEEKS,
+  useSecondAnchorScenarios,
+} from "@/lib/budgetMath";
 
 const fmtMoney0 = (n: number) =>
   `$${Math.round(n).toLocaleString("en-US")}`;
@@ -34,7 +37,7 @@ export default function SecondAnchorScenarios() {
           One second anchor inside Year One closes the {fmtMoney0(s.gap)} gap.
         </h1>
         <div className="font-display italic text-[1.2vw] text-muted mb-[1.8vh] max-w-[78vw]">
-          Three concrete shapes for that anchor — installed, retained, or stacked — each derived from the same cross-reserve install pricing the deck already publishes ({fmtMoney0(s.installPerReserve)} per 12-week install, {fmtMoney0(s.retainerAnnual)}/yr retainer).
+          Three concrete shapes for that anchor — installed, retained, or stacked — each derived from the same cross-reserve install pricing the deck already publishes ({fmtMoney0(s.installPerReserve)} per {CROSS_RESERVE_INSTALL_WEEKS}-week install, {fmtMoney0(s.retainerAnnual)}/yr retainer).
         </div>
 
         <div className="grid grid-cols-3 gap-[1.3vw] mb-[1.5vh]">
@@ -44,7 +47,7 @@ export default function SecondAnchorScenarios() {
               Shape A · Single install
             </div>
             <div className="font-display text-[1.55vw] leading-[1.05] text-primary mb-[1vh]">
-              One 12-week install, no retainer in Y1
+              One {CROSS_RESERVE_INSTALL_WEEKS}-week install, no retainer in Y1
             </div>
             <div className="font-display font-semibold text-[2.4vw] text-primary leading-[1] mb-[0.4vh]" style={{ fontVariantNumeric: "tabular-nums" }}>
               {fmtMoney0(s1.inflow)}
@@ -116,7 +119,7 @@ export default function SecondAnchorScenarios() {
               How late can the second anchor land? (Shape B, install + retainer)
             </div>
             <div className="font-mono text-[0.85vw] text-muted">
-              12-week install · retainer kicks in once install completes
+              {CROSS_RESERVE_INSTALL_WEEKS}-week install · retainer kicks in once install completes
             </div>
           </div>
           <div className="grid grid-cols-3 gap-[1.5vw]">
@@ -143,7 +146,7 @@ export default function SecondAnchorScenarios() {
             })}
           </div>
           <div className="mt-[1vh] font-body italic text-[0.95vw] text-muted leading-[1.4]">
-            Past M9, the 12-week install can't complete inside Y1; install revenue starts to spill into Y2 and the gap doesn't fully close on this slide alone.
+            Past M9, the {CROSS_RESERVE_INSTALL_WEEKS}-week install can't complete inside Y1; install revenue starts to spill into Y2 and the gap doesn't fully close on this slide alone.
           </div>
         </div>
 

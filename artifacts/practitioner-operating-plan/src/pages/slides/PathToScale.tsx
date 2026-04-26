@@ -1,4 +1,9 @@
-import { getLiveCostValue, resolveCost } from "../../lib/budgetMath";
+import {
+  CROSS_RESERVE_ONSITE_DAYS,
+  CROSS_RESERVE_REMOTE_DAYS,
+  getLiveCostValue,
+  resolveCost,
+} from "../../lib/budgetMath";
 import { useAppState } from "../../lib/storage";
 import { formatCostValue } from "../../data/costRegistry";
 
@@ -270,7 +275,7 @@ export default function PathToScale() {
           </div>
           <div className="font-body text-[1.05vw] text-text">
             Deer Lake = ask.recommended ({formatCostValue(askRecommendedMonthly, "$/mo")}) × 12 ·
-            install = 30 on-site + 24 remote days · retainer {exactDollars(retainerAnnual)}/yr
+            install = {CROSS_RESERVE_ONSITE_DAYS} on-site + {CROSS_RESERVE_REMOTE_DAYS} remote days · retainer {exactDollars(retainerAnnual)}/yr
           </div>
         </div>
       </div>
