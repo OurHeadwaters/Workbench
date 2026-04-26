@@ -316,7 +316,9 @@ describe("runCheck against the real deck", () => {
       console.error(result.errors);
     }
     expect(result.errors).toEqual([]);
-    expect(result.slideCount).toBeGreaterThan(50);
+    // V3 deck rebuild (April 2026): the V2 deck of ~50 slides was
+    // replaced with a 6-slide V3 deck. Lower bound updated from >50.
+    expect(result.slideCount).toBeGreaterThanOrEqual(6);
   });
 });
 

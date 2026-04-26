@@ -13,7 +13,7 @@ export default function Cover() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(95deg, rgba(31,61,46,0.93) 0%, rgba(31,61,46,0.82) 38%, rgba(31,61,46,0.45) 68%, rgba(31,61,46,0.10) 100%)",
+            "linear-gradient(95deg, rgba(31,61,46,0.96) 0%, rgba(31,61,46,0.88) 42%, rgba(31,61,46,0.55) 72%, rgba(31,61,46,0.18) 100%)",
         }}
       />
 
@@ -25,29 +25,29 @@ export default function Cover() {
               style={{ background: "var(--slide-accent)" }}
             />
             <div className="font-mono uppercase tracking-[0.25em] text-[1.1vw] opacity-90">
-              Practitioner Operating Plan
+              Practitioner Operating Plan · Foundation V3
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-80">
-            Working draft · Spring 2026
+            April 2026 · Six numbers locked
           </div>
         </div>
 
-        <div className="max-w-[78vw]">
+        <div className="max-w-[80vw]">
           <div className="font-mono uppercase tracking-[0.3em] text-[1.2vw] opacity-80 mb-[2vh]">
-            Two voices · one deck — the practitioner, then the contractor
+            Headwaters is a product company
           </div>
           <h1
-            className="font-display font-medium text-[7vw] leading-[0.96] tracking-tight"
+            className="font-display font-medium text-[6.6vw] leading-[0.96] tracking-tight"
             style={{ textWrap: "balance" }}
           >
-            Saying yes
+            Headwaters builds.
             <span className="block italic font-normal" style={{ color: "#e9c8a8" }}>
-              without breaking what matters.
+              The band runs.
             </span>
           </h1>
-          <div className="mt-[3vh] font-display italic text-[2.2vw] opacity-95">
-            The team, the budget, and the days that hold this contract together.
+          <div className="mt-[3vh] font-display italic text-[2.1vw] opacity-95 max-w-[60vw]">
+            A product company for Northern Indigenous food systems. Software, tech stack, training — tested in the conditions they ship into, owned by the bands that adopt them.
           </div>
         </div>
 
@@ -57,21 +57,17 @@ export default function Cover() {
               className="h-[1px] mb-[2vh] w-[18vw]"
               style={{ background: "rgba(244,237,224,0.5)" }}
             />
-            <div className="font-body text-[1.4vw] leading-[1.5] opacity-95">
-              The contract only works if the days with the kids stay sacred and
-              the work doesn't sit on one phone, one inbox, one tired person.
-              This is what that costs — and what it builds.
+            <div className="font-body text-[1.35vw] leading-[1.5] opacity-95">
+              Six locked numbers. One Year-1 cash gap, surfaced honestly. The thesis, the lean roster, the three revenue layers, and the mission this work is for.
             </div>
           </div>
           <div className="text-right">
-            <div className="font-mono uppercase tracking-[0.25em] text-[1.1vw] opacity-75 mb-[1vh]">
-              Audience
+            <div className="font-mono uppercase tracking-[0.25em] text-[1vw] opacity-75 mb-[1vh]">
+              Closing line
             </div>
-            <div className="font-display text-[1.7vw] leading-tight">
-              Me. My team. My dad.
-              <div className="font-body font-light text-[1.05vw] opacity-80 mt-[0.4vh]">
-                In that order.
-              </div>
+            <div className="font-display italic text-[1.9vw] leading-tight" style={{ color: "#e9c8a8" }}>
+              "We always knew how to fix it.
+              <div className="mt-[0.4vh]">Now we can."</div>
             </div>
           </div>
         </div>

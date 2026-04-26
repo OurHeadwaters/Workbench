@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/practitioners-guide-v2/"
+title = "Practitioner's Guide V2"
+version = "1.0.0"
+id = "artifacts/practitioners-guide-v2"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/practitioners-guide-v2/" ]
+localPort = 25674
+
+[services.development]
+run = "pnpm --filter @workspace/practitioners-guide-v2 run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/practitioners-guide-v2", "run", "build" ]
+publicDir = "artifacts/practitioners-guide-v2/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25674"
+BASE_PATH = "/practitioners-guide-v2/"
