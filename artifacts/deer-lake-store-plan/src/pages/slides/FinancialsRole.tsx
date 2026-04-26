@@ -156,7 +156,7 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="font-body text-[0.72vw] leading-[1.4] opacity-80 mt-[0.5vh]">
-                35% reinvestment target audited yearly. Bridge = M2 trough on the 60-day Indigenous Services Canada (ISC) pay cycle. Tier selection TBD pending council conversation. Precedent for written commitments: the $22k payback memo from V2.
+                35% reinvestment target audited yearly. Bridge = M2 trough on the 60-day Indigenous Services Canada (ISC) pay cycle (two months of cost basis + day-one tech CAPEX of $0 / $42k / $60k). Recovered when the last two invoices clear. Tier selection TBD pending council conversation. Precedent for written commitments: the $22k payback memo from V2.
               </div>
             </div>
 
