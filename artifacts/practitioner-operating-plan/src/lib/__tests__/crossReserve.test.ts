@@ -291,6 +291,49 @@ describe("Path to scale — Y2 / Y3 composed from Deer Lake + cross-reserve", ()
     expect(live).toBe(25650);
   });
 
+  it("travel.totalPerInstall stays equal to travelPassthrough.example at default state and recomposes together when a component is edited", () => {
+    // The two registry entries surface the same rolled-up pass-through
+    // headline ($22,500 at defaults). They MUST recompute from the same
+    // shared install shape × per-component inputs so the cost-review
+    // modal can never show the user two different "total per install"
+    // numbers — and so the baked defaultValue can't go stale once a
+    // user edits a flight / lodging / food component.
+
+    // 1. At default state both equal the documented $22,500.
+    const baselineTotal = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travel.totalPerInstall",
+    );
+    const baselineExample = getLiveCostValue(
+      DEFAULT_STATE,
+      "crossReserve.travelPassthrough.example",
+    );
+    expect(baselineTotal).toBe(22500);
+    expect(baselineTotal).toBe(baselineExample);
+
+    // 2. Edit a component (flight per week ⇒ $1,200, food/day ⇒ $125)
+    //    and confirm both entries move together to the new value.
+    const state = withEdit(
+      withEdit(DEFAULT_STATE, "crossReserve.travel.flightPerWeek", 1200),
+      "crossReserve.travel.foodPerOnsiteDay",
+      125,
+    );
+    const editedTotal = getLiveCostValue(
+      state,
+      "crossReserve.travel.totalPerInstall",
+    );
+    const editedExample = getLiveCostValue(
+      state,
+      "crossReserve.travelPassthrough.example",
+    );
+    // 12 × $1,200 + 30 × $250 + 30 × $125 = 14,400 + 7,500 + 3,750 = 25,650
+    expect(editedTotal).toBe(25650);
+    expect(editedTotal).toBe(editedExample);
+    // And — critically — the live total no longer matches the stale
+    // baked $22,500 default once a component is edited.
+    expect(editedTotal).not.toBe(22500);
+  });
+
   it("Y2 / Y3 reconcile as the literal sum of their named components", () => {
     // The whole point of the new composition: a CFO can read the Y2/Y3
     // headline as Deer Lake + cross-reserve, with no hand-waving. This

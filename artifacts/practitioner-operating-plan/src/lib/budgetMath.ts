@@ -319,6 +319,7 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       const installPer = CROSS_RESERVE_ONSITE_DAYS * onsite + CROSS_RESERVE_REMOTE_DAYS * remote;
       return 2 * installPer + 4 * retainer;
     }
+    case "crossReserve.travel.totalPerInstall":
     case "crossReserve.travelPassthrough.example": {
       // Worked rolled-up example of the receiving-reserve pass-through
       // for the fly-in scheduled (Wasaya/Bearskin) corridor. Stays in
@@ -327,6 +328,12 @@ export function getLiveCostValue(state: AppState, id: string): number | null {
       // totals: 12 weekly flights + 30 lodging nights + 30 food
       // per-diem days. Pass-through is reimbursed cost — never folded
       // into the practitioner's fee or any Y2/Y3 revenue line.
+      //
+      // `crossReserve.travel.totalPerInstall` is the same rolled-up
+      // headline surfaced as a standalone registry entry — it falls
+      // through to the same derivation so the two cannot disagree in
+      // the cost-review modal even after the user edits a component
+      // input or the shared install shape changes.
       const flightPerWeek = resolveCost(state, "crossReserve.travel.flightPerWeek");
       const lodgingPerNight = resolveCost(state, "crossReserve.travel.lodgingPerNight");
       const foodPerDay = resolveCost(state, "crossReserve.travel.foodPerOnsiteDay");
