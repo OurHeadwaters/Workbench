@@ -339,6 +339,18 @@ const partIV: Part = {
           text:
             "A name that survives this test is a name a system can be built on. A name that doesn't is a label.",
         },
+        { kind: "rule" },
+        { kind: "subhead", text: "From the field" },
+        {
+          kind: "para",
+          text:
+            "In the practitioner operating plan workbench there is a page called */codetry-test*. It is this chapter, made operational. The practitioner walks every load-bearing name in the constellation's three financial artifacts down the rename test and writes the verdict next to it: *load-bearing*, *decorative*, or *drift*. Each entry records the rename tried, what would change if the rename were taken seriously, and — where the verdict is drift — the follow-up that resolves it. The page is print-friendly, so the audit can sit on the wall, and it carries a *last reviewed* date so the next walk-through has a starting line.",
+        },
+        {
+          kind: "small",
+          text:
+            "Open /codetry-test alongside this chapter to see the test running on real names.",
+        },
       ],
     },
     {
@@ -362,6 +374,33 @@ const partIV: Part = {
           kind: "para",
           text:
             "The practitioner's job is to catch the slippage early and name it as slippage. Not as a brand violation. As a structural issue. *We started saying user. Did we mean to? If we meant to, what changes about the thing being built?* If the answer is *nothing changes*, the team was tired and the right move is to put the original word back in everyone's mouth. If the answer is *something does change*, then the team has been telling the practitioner something the practitioner hadn't yet heard, and the discipline is to follow the new word back to the structure it implies and decide on purpose.",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "From the field — drift caught at the gate" },
+        {
+          kind: "para",
+          text:
+            "The constellation carries a version number. This handbook keeps an offline copy of the constellation so it can sit on a phone in a fishing camp with no signal. When the constellation gained a new entry — a glossary line that named two distinct meanings of the bare word *cost* and asked the practitioner to use the long forms when both meanings were in the same room — its version moved. The handbook's offline copy did not.",
+        },
+        {
+          kind: "para",
+          text:
+            "A check built into the handbook's build refused to ship until the offline copy caught up. The practitioner reached to publish a routine update and the publish failed. The error printed the version on each side, the path to the file that needed regenerating, and the one-line command that would resolve it. The fix took the time it takes to read the message.",
+        },
+        {
+          kind: "para",
+          text:
+            "The check did its job. The metaphor and the offline mirror of the metaphor are not allowed to disagree, and the system enforced that. The lesson worth keeping is the timing. The slippage was small, the fix was a single command, and the cost was still paid at the most expensive moment — at the gate, with the practitioner already reaching for the publish button. Drift detection works wherever it is installed. It is cheaper installed earlier.",
+        },
+        {
+          kind: "pull",
+          text:
+            "Drift caught at the gate is drift caught. Drift caught at the bench is drift caught cheaply.",
+        },
+        {
+          kind: "para",
+          text:
+            "The instruments that catch drift — the audit pages, the long-form glossaries, the build-time checks, the cross-deck assertions — are taken up again, as a family, in §4.6.",
         },
       ],
     },
