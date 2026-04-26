@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
 
 // Defaults mirror the cross-reserve travel pass-through entries in
 // artifacts/practitioner-operating-plan/src/data/costRegistry.ts
@@ -15,6 +15,64 @@ const DEFAULTS = {
   installWeeks: 12,
   onsiteDays: 30,
 } as const;
+
+// Per-field maxes mirror the bounds the CalcInput component clamps to. They
+// also bound what we'll accept from the URL querystring before falling back
+// to defaults.
+const FIELD_MAX = {
+  flight: 20_000,
+  lodging: 5_000,
+  food: 2_000,
+  weeks: 52,
+  days: 365,
+} as const;
+
+// Querystring keys used for the share-link encoding. Kept short on purpose so
+// the URL a chief copy-pastes into an email stays readable.
+const QS_KEYS = {
+  flight: "flight",
+  lodging: "lodging",
+  food: "food",
+  weeks: "weeks",
+  days: "days",
+} as const;
+
+function parseQsNumber(raw: string | null, fallback: number, max: number): number {
+  if (raw === null || raw === "") return fallback;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) return fallback;
+  if (parsed < 0) return fallback;
+  if (parsed > max) return max;
+  return parsed;
+}
+
+interface CorridorInputs {
+  flight: number;
+  lodging: number;
+  food: number;
+  installWeeks: number;
+  onsiteDays: number;
+}
+
+function readCorridorFromUrl(): CorridorInputs {
+  if (typeof window === "undefined") {
+    return {
+      flight: DEFAULTS.flightPerReturn,
+      lodging: DEFAULTS.lodgingPerNight,
+      food: DEFAULTS.foodPerDay,
+      installWeeks: DEFAULTS.installWeeks,
+      onsiteDays: DEFAULTS.onsiteDays,
+    };
+  }
+  const params = new URLSearchParams(window.location.search);
+  return {
+    flight: parseQsNumber(params.get(QS_KEYS.flight), DEFAULTS.flightPerReturn, FIELD_MAX.flight),
+    lodging: parseQsNumber(params.get(QS_KEYS.lodging), DEFAULTS.lodgingPerNight, FIELD_MAX.lodging),
+    food: parseQsNumber(params.get(QS_KEYS.food), DEFAULTS.foodPerDay, FIELD_MAX.food),
+    installWeeks: parseQsNumber(params.get(QS_KEYS.weeks), DEFAULTS.installWeeks, FIELD_MAX.weeks),
+    onsiteDays: parseQsNumber(params.get(QS_KEYS.days), DEFAULTS.onsiteDays, FIELD_MAX.days),
+  };
+}
 
 // These two stay constant in the calculator — the task scope is the
 // receiving-reserve travel corridor, not the practitioner fee structure.
@@ -123,11 +181,15 @@ function CalcInput({ label, value, onChange, prefix, suffix, max, ariaLabel }: C
 }
 
 function ReserveTwoCalculator() {
-  const [flight, setFlight] = useState<number>(DEFAULTS.flightPerReturn);
-  const [lodging, setLodging] = useState<number>(DEFAULTS.lodgingPerNight);
-  const [food, setFood] = useState<number>(DEFAULTS.foodPerDay);
-  const [installWeeks, setInstallWeeks] = useState<number>(DEFAULTS.installWeeks);
-  const [onsiteDays, setOnsiteDays] = useState<number>(DEFAULTS.onsiteDays);
+  // Lazy initializers so we read the share-link querystring exactly once on
+  // mount. Bad / out-of-range values fall back to the cost-registry defaults
+  // (or get clamped to FIELD_MAX) inside readCorridorFromUrl.
+  const initial = useMemo(readCorridorFromUrl, []);
+  const [flight, setFlight] = useState<number>(initial.flight);
+  const [lodging, setLodging] = useState<number>(initial.lodging);
+  const [food, setFood] = useState<number>(initial.food);
+  const [installWeeks, setInstallWeeks] = useState<number>(initial.installWeeks);
+  const [onsiteDays, setOnsiteDays] = useState<number>(initial.onsiteDays);
 
   const travelTotal = useMemo(
     () => flight * installWeeks + lodging * onsiteDays + food * onsiteDays,
@@ -142,6 +204,37 @@ function ReserveTwoCalculator() {
     food === DEFAULTS.foodPerDay &&
     installWeeks === DEFAULTS.installWeeks &&
     onsiteDays === DEFAULTS.onsiteDays;
+
+  // Sync corridor state -> URL querystring so the chief can copy the URL and
+  // forward "here's our corridor's math" to a band manager. We only write the
+  // params that diverge from the cost-registry defaults — the URL stays clean
+  // when nothing has been customized, and Reset clears it back to no params.
+  // history.replaceState (instead of pushState) keeps the back button useful
+  // for slide navigation, and only mutating the search portion leaves the
+  // pathname untouched so wouter's slide route doesn't rematch.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const writeOrDelete = (key: string, value: number, dflt: number) => {
+      if (value === dflt) {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
+    };
+    writeOrDelete(QS_KEYS.flight, flight, DEFAULTS.flightPerReturn);
+    writeOrDelete(QS_KEYS.lodging, lodging, DEFAULTS.lodgingPerNight);
+    writeOrDelete(QS_KEYS.food, food, DEFAULTS.foodPerDay);
+    writeOrDelete(QS_KEYS.weeks, installWeeks, DEFAULTS.installWeeks);
+    writeOrDelete(QS_KEYS.days, onsiteDays, DEFAULTS.onsiteDays);
+
+    const search = params.toString();
+    const nextSearch = search ? `?${search}` : "";
+    if (nextSearch !== window.location.search) {
+      const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
+      window.history.replaceState(window.history.state, "", nextUrl);
+    }
+  }, [flight, lodging, food, installWeeks, onsiteDays]);
 
   const reset = () => {
     setFlight(DEFAULTS.flightPerReturn);
