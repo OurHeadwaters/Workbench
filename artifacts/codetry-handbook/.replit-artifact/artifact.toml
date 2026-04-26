@@ -1,0 +1,27 @@
+kind = "mobile"
+previewPath = "/codetry-handbook/"
+title = "Codetry Practitioner's Handbook"
+version = "1.0.0"
+id = "artifacts/codetry-handbook"
+router = "expo-domain"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+ensurePreviewReachable = "/status"
+name = "expo"
+paths = [ "/codetry-handbook/" ]
+localPort = 25432
+
+[services.development]
+run = "pnpm --filter @workspace/codetry-handbook run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/codetry-handbook", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/codetry-handbook", "run", "serve" ]
+
+[services.env]
+PORT = "25432"
+BASE_PATH = "/codetry-handbook/"

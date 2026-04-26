@@ -3,7 +3,8 @@
   "lastUpdated": "2026-04-26",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
-    "manifest": "/practitioner-operating-plan/constellation.json"
+    "manifest": "/practitioner-operating-plan/constellation.json",
+    "handbook": "/codetry-handbook/"
   },
   "companions": [
     {

@@ -1,0 +1,309 @@
+import { router } from "expo-router";
+import React from "react";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { useReader } from "@/contexts/ReaderState";
+import { useColors } from "@/hooks/useColors";
+import { CHAPTERS, getChapter, PARTS } from "@/data/handbook";
+import { constellation } from "@/data/constellation";
+
+const SERIF = "Lora_400Regular";
+const SERIF_ITALIC = "Lora_400Regular_Italic";
+const SERIF_BOLD = "Lora_700Bold";
+const MONO = "JetBrainsMono_500Medium";
+
+export default function FrontPage() {
+  const c = useColors();
+  const insets = useSafeAreaInsets();
+  const { lastRead, bookmarks } = useReader();
+  const webTop = Platform.OS === "web" ? 67 : 0;
+  const webBottom = Platform.OS === "web" ? 34 : 0;
+
+  const lastChapter = lastRead ? getChapter(lastRead.chapterId) : undefined;
+  const firstChapter = CHAPTERS[0];
+
+  const beginLabel = lastChapter
+    ? `Continue · ${lastChapter.number} ${lastChapter.title}`
+    : `Begin reading · ${firstChapter.number} ${firstChapter.title}`;
+
+  const beginTarget = lastChapter ? lastChapter.id : firstChapter.id;
+
+  return (
+    <View style={[styles.root, { backgroundColor: c.background }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scroll,
+          {
+            paddingTop: Math.max(insets.top, webTop) + 24,
+            paddingBottom: Math.max(insets.bottom, webBottom) + 32,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text
+          style={[
+            styles.eyebrow,
+            { color: c.mutedForeground, fontFamily: MONO },
+          ]}
+        >
+          A FIELD MANUAL
+        </Text>
+        <Text
+          style={[
+            styles.title,
+            { color: c.foreground, fontFamily: SERIF_BOLD },
+          ]}
+        >
+          Codetry
+        </Text>
+        <Text
+          style={[
+            styles.subtitle,
+            { color: c.foreground, fontFamily: SERIF_ITALIC },
+          ]}
+        >
+          A Practitioner's Handbook
+        </Text>
+        <View style={[styles.rule, { backgroundColor: c.rule }]} />
+        <Text
+          style={[
+            styles.epigraph,
+            { color: c.pullQuote, fontFamily: SERIF_ITALIC },
+          ]}
+        >
+          {constellation.grammar.axiom}
+        </Text>
+        <Text
+          style={[
+            styles.byline,
+            { color: c.mutedForeground, fontFamily: MONO },
+          ]}
+        >
+          {`v${constellation.version} · ${constellation.lastUpdated} · offline-readable`}
+        </Text>
+
+        <View style={{ height: 36 }} />
+
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/chapter/[id]",
+              params: { id: beginTarget },
+            })
+          }
+          style={({ pressed }) => [
+            styles.primaryBtn,
+            {
+              backgroundColor: c.primary,
+              opacity: pressed ? 0.85 : 1,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              color: c.primaryForeground,
+              fontFamily: MONO,
+              fontSize: 13,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+            }}
+          >
+            {beginLabel}
+          </Text>
+        </Pressable>
+
+        <View style={styles.row}>
+          <Pressable
+            onPress={() => router.push("/contents")}
+            style={({ pressed }) => [
+              styles.secondaryBtn,
+              {
+                borderColor: c.foreground,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Contents
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => router.push("/bookmarks")}
+            style={({ pressed }) => [
+              styles.secondaryBtn,
+              {
+                borderColor: c.foreground,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Bookmarks · {bookmarks.length}
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={{ height: 48 }} />
+
+        <Text
+          style={[
+            styles.eyebrow,
+            { color: c.mutedForeground, fontFamily: MONO },
+          ]}
+        >
+          IN FIVE PARTS
+        </Text>
+        {PARTS.map((p) => (
+          <View key={p.roman} style={styles.partRow}>
+            <Text
+              style={[
+                styles.partRoman,
+                { color: c.mutedForeground, fontFamily: MONO },
+              ]}
+            >
+              {p.roman}
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[
+                  styles.partTitle,
+                  { color: c.foreground, fontFamily: SERIF_BOLD },
+                ]}
+              >
+                {p.title}
+              </Text>
+              <Text
+                style={[
+                  styles.partBlurb,
+                  { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+                ]}
+              >
+                {p.blurb}
+              </Text>
+            </View>
+          </View>
+        ))}
+
+        <View style={{ height: 32 }} />
+        <Text
+          style={[
+            styles.colophon,
+            { color: c.mutedForeground, fontFamily: SERIF },
+          ]}
+        >
+          Drawn from the Practitioner Operating Plan's constellation manifest. The
+          discipline travels; the examples don't.
+        </Text>
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  scroll: { paddingHorizontal: 28 },
+  eyebrow: {
+    fontSize: 11,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 56,
+    lineHeight: 60,
+    letterSpacing: -1,
+  },
+  subtitle: {
+    fontSize: 22,
+    lineHeight: 30,
+    marginTop: 4,
+  },
+  rule: {
+    height: 1,
+    width: 56,
+    marginTop: 24,
+    marginBottom: 24,
+    opacity: 0.7,
+  },
+  epigraph: {
+    fontSize: 17,
+    lineHeight: 26,
+  },
+  byline: {
+    fontSize: 11,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    marginTop: 18,
+  },
+  primaryBtn: {
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+  },
+  row: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 12,
+  },
+  secondaryBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  partRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 16,
+    paddingVertical: 14,
+  },
+  partRoman: {
+    fontSize: 13,
+    width: 28,
+    paddingTop: 4,
+    letterSpacing: 1,
+  },
+  partTitle: {
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  partBlurb: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 2,
+  },
+  colophon: {
+    fontSize: 14,
+    lineHeight: 22,
+    fontStyle: "italic",
+  },
+});
