@@ -11,8 +11,8 @@ export default function Closing() {
     peopleBucketsB,
     loadedCostB,
     capexB,
-    reinvestB,
-    reinvestBPct,
+    loadedReinvestB,
+    loadedReinvestBPct,
     loadedBridgeB,
   } = useBudgetTotals();
 
@@ -78,11 +78,12 @@ export default function Closing() {
               ~{fmtK1(loadedCostB)}/mo loaded outflow
             </span>
             .{" "}
-            <span className="font-semibold">~{fmtK1(reinvestB)} reinvestment</span>{" "}
-            (~{reinvestBPct.toFixed(0)}%) —
-            tech infrastructure, training, and the seed for pilot #2. Audited
-            annually against savings delivered to Deer Lake. Day-one bridge
-            ask: <span className="font-semibold">~${Math.round(loadedBridgeB / 1000)}k</span>{" "}
+            <span className="font-semibold">~{fmtK1(loadedReinvestB)} free for reinvestment</span>{" "}
+            (~{loadedReinvestBPct.toFixed(0)}% of loaded payroll, after the People
+            &amp; Retention buckets are paid) — tech infrastructure, training,
+            and the seed for pilot #2. Audited annually against savings
+            delivered to Deer Lake. Day-one bridge ask:{" "}
+            <span className="font-semibold">~${Math.round(loadedBridgeB / 1000)}k</span>{" "}
             = ~{fmtK1(loadedCostB)} × 2 + ~{fmtK1(capexB)} day-one CAPEX.
           </div>
         </div>

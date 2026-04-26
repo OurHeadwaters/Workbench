@@ -1,46 +1,26 @@
-import { useAppState } from "../../lib/storage";
-import { COST_REGISTRY_BY_ID } from "../../data/costRegistry";
 import { useCostValue } from "../../lib/costReview";
+import { useBudgetTotals } from "../../lib/budgetMath";
 import { CostReviewButton } from "../../components/CostReviewButton";
-
-const B_ROLE_IDS = [
-  "budget.b.practitioner",
-  "budget.b.opsManager",
-  "budget.b.itTech",
-  "budget.b.bookkeeper",
-  "budget.b.foodHandler",
-  "budget.b.cdAssociate",
-  "budget.b.juniorAnalyst",
-  "budget.b.lifeSupports",
-  "budget.b.aggregationHub",
-  "budget.b.tooling",
-  "budget.b.recurringTech",
-  "budget.b.buffer",
-];
-
-function resolveCost(
-  state: ReturnType<typeof useAppState>,
-  id: string,
-): number {
-  const review = state.costReview?.[id];
-  if (review?.status === "edited" && typeof review.editedValue === "number") {
-    return review.editedValue;
-  }
-  return COST_REGISTRY_BY_ID[id]?.defaultValue ?? 0;
-}
 
 const fmtK1 = (n: number) =>
   "$" + (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
 
 export default function CaseForRate() {
-  const state = useAppState();
-  const askReco = resolveCost(state, "ask.recommended");
-  const costBasis = B_ROLE_IDS.reduce(
-    (acc, id) => acc + resolveCost(state, id),
-    0,
-  );
-  const reinvest = askReco - costBasis;
-  const reinvestPct = costBasis > 0 ? (reinvest / costBasis) * 100 : 0;
+  // Pull both the gross markup (ask − cost basis) and the loaded
+  // reinvestment (ask − loaded cost) off the shared totals helper, so
+  // this slide reconciles with Budget, Reinvestment, and Closing
+  // instead of recomputing in isolation. The top-right narrative
+  // compares the *gross* % to the markup target; "The math, plainly"
+  // panel quotes the *loaded* number, which is what actually funds the
+  // Reinvestment slide's Four Destinations.
+  const {
+    askReco,
+    costBasisB: costBasis,
+    reinvestB: reinvest,
+    reinvestBPct: reinvestPct,
+    loadedReinvestB,
+    loadedReinvestBPct,
+  } = useBudgetTotals();
   const markupPct = useCostValue("markup.target");
 
   return (
@@ -165,10 +145,14 @@ export default function CaseForRate() {
                 >
                   Dad-warehouse aggregation hub
                 </a>{" "}
-                ($3k/mo, all-in). The other{" "}
+                ($3k/mo, all-in). The gross markup on top is{" "}
                 <span className="font-semibold text-primary">~{fmtK1(reinvest)}</span>{" "}
-                (~{reinvestPct.toFixed(0)}% markup) is the reinvestment line — tech CAPEX, training,
-                pilot reserve. Audited annually against measurable savings
+                (~{reinvestPct.toFixed(0)}%); the People &amp; Retention buckets are
+                paid out of that pool first, leaving{" "}
+                <span className="font-semibold text-primary">~{fmtK1(loadedReinvestB)}</span>{" "}
+                (~{loadedReinvestBPct.toFixed(0)}% of loaded payroll) as the
+                actual reinvestment line — tech CAPEX, training, pilot
+                reserve. Audited annually against measurable savings
                 delivered to Deer Lake. Nothing disappears. The {markupPct}% target
                 comes back into reach when the contract steps to the next
                 phase or a second engagement lands.

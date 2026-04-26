@@ -8,10 +8,13 @@ const fmtKYr = (n: number) => "~$" + Math.round(n / 1000) + "k / yr";
 const fmtKMoPer = (n: number) => "~$" + Math.round(n / 1000) + "k / mo";
 
 export default function Reinvestment() {
-  // Reinvestment is *derived* live from the Budget walk: ask − cost basis.
-  // An edit to any scenario-B role line on Budget shrinks/expands this
-  // number on the next render without a second source of truth.
-  const { askReco, reinvestB: reinvestMonthly } = useBudgetTotals();
+  // Reinvestment headline is *derived* live from the Budget walk:
+  // ask − loaded cost (role lines + People & Retention buckets). The
+  // Four Destinations below are funded from this truly-free pool, so
+  // we quote the loaded number — not the gross "ask − cost basis"
+  // markup, which double-counts the bucket spend that's already paid
+  // out elsewhere in the cash flow.
+  const { askReco, loadedReinvestB: reinvestMonthly } = useBudgetTotals();
   const techCapex = useCostValue("reinvest.techCapex.annual");
   const tooling = useCostValue("reinvest.tooling.monthly");
   const training = useCostValue("reinvest.training.monthly");
@@ -39,7 +42,8 @@ export default function Reinvestment() {
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw] font-body text-[1vw] text-muted leading-[1.4]">
-            On the ${Math.round(askReco / 1000)}k recommended ask:{" "}
+            On the ${Math.round(askReco / 1000)}k recommended ask, after loaded
+            payroll (role lines + People &amp; Retention buckets):{" "}
             <span className="font-mono font-semibold text-primary">{fmtMo(reinvestMonthly)}/mo</span>{" "}
             flows into a dedicated reinvestment account. Four destinations, all
             of them outlast the contract.

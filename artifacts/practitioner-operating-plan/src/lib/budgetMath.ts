@@ -130,8 +130,28 @@ export type BudgetTotals = {
   costBasisC: number;
   capexB: number;
   capexC: number;
+  /**
+   * Gross "markup" line for Scenario B = ask − role-line cost basis.
+   * This is what shows up on the Budget slide as "Reinvestment vs.
+   * cost basis" and what CFO-facing math has historically reported.
+   * It *overstates* what's free for tech CAPEX / training / pilot
+   * reserve, because the People & Retention buckets (~$8.8k/mo) come
+   * out of this same pool — see `loadedReinvestB` for the truly-free
+   * number the Closing and Reinvestment slides quote.
+   */
   reinvestB: number;
   reinvestBPct: number;
+  /**
+   * Net free cash for reinvestment in Scenario B = ask − loaded cost
+   * (role lines + People & Retention buckets). This is what's actually
+   * left to fund the Four Destinations on the Reinvestment slide
+   * (tech CAPEX, tooling, training, pilot reserve) once loaded payroll
+   * is honoured. The Closing and Reinvestment slides quote this so
+   * they reconcile with the Cash Flow projection, which already pays
+   * the buckets out of monthly outflow.
+   */
+  loadedReinvestB: number;
+  loadedReinvestBPct: number;
   /**
    * Day-one bridge for Scenario B = two months of *cost basis* + day-one
    * CAPEX. Kept for any view that wants the unloaded (role-line-only)
@@ -179,6 +199,14 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
   const loadedCostA = costBasisA + peopleBucketsA;
   const loadedCostB = costBasisB + peopleBucketsB;
   const loadedCostC = costBasisC + peopleBucketsC;
+  // Net free cash for reinvestment after the People & Retention
+  // buckets are paid (the buckets sit on the same outflow stream that
+  // funds the Four Destinations on the Reinvestment slide). This is
+  // the figure the Closing slide and Reinvestment slide quote so they
+  // reconcile with the Cash Flow projection.
+  const loadedReinvestB = Math.max(0, askReco - loadedCostB);
+  const loadedReinvestBPct =
+    loadedCostB > 0 ? (loadedReinvestB / loadedCostB) * 100 : 0;
   // Bridge ask the contractor's CFO actually has to underwrite — two
   // months of *loaded* outflow (role lines + People & Retention buckets)
   // plus day-one CAPEX. Using costBasisB here would silently exclude
@@ -198,6 +226,8 @@ export function computeBudgetTotals(state: AppState): BudgetTotals {
     capexC,
     reinvestB,
     reinvestBPct,
+    loadedReinvestB,
+    loadedReinvestBPct,
     bridgeB,
     loadedBridgeB,
     saltBenchAnnual,
