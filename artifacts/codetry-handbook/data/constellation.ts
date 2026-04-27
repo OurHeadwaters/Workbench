@@ -42,8 +42,8 @@ export type ConstellationSnapshot = {
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.2",
-  "lastUpdated": "2026-04-26",
+  "version": "0.5.3",
+  "lastUpdated": "2026-04-27",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
@@ -110,10 +110,11 @@ export const constellation: ConstellationSnapshot = {
       "zone": 0,
       "slot": "centralized",
       "name": "Bright Side",
-      "domain": "Centralized homes / care institutions",
+      "domain": "Centralized homes / care institutions — long-term care recreation therapy",
       "url": null,
-      "status": "pending",
-      "context": "awaiting agent context-pack"
+      "status": "in development — pilot probe Q4 2026",
+      "tagline": "What's the fence to peek over?",
+      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently."
     },
     {
       "zone": 1,

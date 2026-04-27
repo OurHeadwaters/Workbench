@@ -1,6 +1,6 @@
 {
-  "version": "0.5.2",
-  "lastUpdated": "2026-04-26",
+  "version": "0.5.3",
+  "lastUpdated": "2026-04-27",
   "doc": {
     "codetry": "/practitioner-operating-plan/codetry",
     "manifest": "/practitioner-operating-plan/constellation.json",
@@ -86,10 +86,41 @@
       "zone": 0,
       "slot": "centralized",
       "name": "Bright Side",
-      "domain": "Centralized homes / care institutions",
+      "domain": "Centralized homes / care institutions — long-term care recreation therapy",
       "url": null,
-      "status": "pending",
-      "context": "awaiting agent context-pack",
+      "status": "in development — pilot probe Q4 2026",
+      "tagline": "What's the fence to peek over?",
+      "dataPosture": "PHI-free by design — codedId aliases (no DOB, no diagnosis, no chart numbers); mobile-first PWA + native wrappers; multi-tenant",
+      "role": "centralized counterpart to Saltbox at Zone 0 — institutional dwelling unit as the household primitive",
+      "revenueModel": {
+        "primary": "Per-facility SaaS — $199/mo at v1, $349/mo at v1.1 (real auth + audit + family-facing), $500 one-time setup, $3/resident/mo overage above 60",
+        "firstCustomer": {
+          "shape": "Three-facility bundle under one signer — all-or-nothing",
+          "facilities": [
+            "Princess Court (Dryden) — 96 beds",
+            "Patricia Gardens (Dryden) — 40 beds",
+            "Kenora District Homes for the Aged (Kenora) — 40 beds"
+          ],
+          "decisionDate": "October 2026 (60-day free pilot, first paid month ~December 2026)",
+          "bundleOverage": "$108/mo from Princess Court only — Patricia Gardens and KDHA are under the 60-bed threshold"
+        },
+        "scenarios": {
+          "bundleSaysNo": { "y1": "$0", "y2": "$0", "sunkCost": "build hours + free-pilot delivery on three sites" },
+          "bundleConverts": { "y1": "$5,025", "y2": "$13,860", "twoYearTotal": "$18,885" }
+        },
+        "deferred": [
+          "Paid training engagements — post-Y1, only on demand",
+          "Multi-facility chain pricing — Y2+, only if a regional operator initiates"
+        ],
+        "explicitlyNot": [
+          "perpetual licenses",
+          "hardware",
+          "speculative affiliate deals"
+        ],
+        "killCriterion": "Bundle says no AND no second-region prospect by mid-2027",
+        "graduationToRevenueLayer": "ARR clears $50k or a chain LOI lands"
+      },
+      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
       "proposedInterfaces": {
         "fromZ1Headwaters": "household primitive as shared unit of account for institutional dwelling units"
       }
@@ -110,6 +141,36 @@
         "switch": "VITE_TENANT_MODE"
       },
       "role": "parent metaphor for Zone 1; household primitive available for Zone 0",
+      "revenueModel": {
+        "primary": "Premium subs via Stripe (web) + RevenueCat (native) — $12/mo or $99/yr (annual anchored to YNAB / Monarch / Copilot category price)",
+        "launchTier": "$179 lifetime, time-boxed launch event only, capped at first 100 buyers — never offered as a default purchase option",
+        "personas": {
+          "enthusiast": "D2C self-custody power user — the only Y1 cash line",
+          "creditUnionMember": "B2B2C — one Northwestern Ontario CU outreach probe with binary outcome by Q1 2027; shelved if no bite",
+          "advisorClient": "B2B2C managed by FA — deferred this cycle"
+        },
+        "premiumGates": {
+          "first": "Family Mode — strongest paywall trigger (second household member arriving is the 'is this ours' moment)",
+          "second": "Drip Harvester — power-user feature, narrower audience"
+        },
+        "scenarios": {
+          "conservativeY1": { "premiumARR": "$1,050", "assumptions": "1,000 MAU end-of-year, 1.0% free→paid, $105 blended ARPU/yr (70/30 annual/monthly mix)" },
+          "conservativeY2": { "premiumARR": "$4,000" },
+          "targetY1": { "premiumARR": "$7,875", "assumptions": "5,000 MAU end-of-year, 1.5% conversion, organic growth via XRPL community" },
+          "targetY2": { "premiumARR": "$34,650", "plusCUUpside": "$0 or +$5,000 from local CU probe", "plusLifetimeLaunch": "optional one-time +$5–10k", "combinedTarget": "~$42k" }
+        },
+        "deferredToZero": {
+          "dripHarvesterTakeRate": "$0 in plan until US fintech-lawyer memo confirms non-custodial fee structure ($1.5–3.5k for the memo); non-custodial reduces money-transmitter exposure but does not automatically clear FinCEN swap-relay scrutiny or state-by-state crypto regs",
+          "whiteLabelSKU": "Y3+ — only after first CU is converted as a reference",
+          "apiAccess": "Y3+ — not modelable now"
+        },
+        "killedByBrand": [
+          "sponsored buckets",
+          "affiliate-to-onramps",
+          "data/insights products"
+        ],
+        "killCriterion": "If Premium ARR < $5k by end of Y2 AND the local CU probe returns no bite, shelve formal-product work and maintain as enthusiast hobby release"
+      },
       "workedExamples": [
         { "name": "Headwaters", "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up." },
         { "name": "Buckets", "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking." },
