@@ -1,4 +1,6 @@
 import { AppShell } from "@/components/AppShell";
+import { isPlannerPath } from "@/lib/paths";
+import { useRoute } from "@/lib/route";
 
 import Prologue from "@/sections/Prologue";
 import WhatItIs from "@/sections/WhatItIs";
@@ -10,6 +12,8 @@ import WhatStays from "@/sections/WhatStays";
 import Ask from "@/sections/Ask";
 import Recap from "@/sections/Recap";
 
+import PlannerApp from "@/planner/PlannerApp";
+
 /**
  * The walkthrough is a single continuous scroll, framed by the v2-style
  * AppShell (sticky branded header at the top, small footer at the
@@ -17,12 +21,17 @@ import Recap from "@/sections/Recap";
  * first viewport; once the contractor scrolls past it, the sticky header
  * pins to the top and the document begins.
  *
- * Each section is a self-contained `<section id="...">` with its own
- * background — keeping things this way means the recap can bleed full-
- * width with its dark evergreen background while the rest of the read
- * stays on warm oat paper.
+ * The /planner sub-route renders the Phase Planner — same artifact, same
+ * palette, same shell pattern, different surface. Walkthrough = read.
+ * Planner = decide.
  */
 export default function App() {
+  const { pathname } = useRoute();
+
+  if (isPlannerPath(pathname)) {
+    return <PlannerApp />;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
       <Prologue />

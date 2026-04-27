@@ -60,10 +60,13 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
     - A guard script `scripts/check-corridor-defaults.ts` prevents reintroduction of local numeric literals for corridor keys.
 
 - **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**:
-    - React + Vite reading surface for the contractor to flip through in council meetings.
-    - Mirrors the Practitioner's Guide v2 mobile shell pattern: full-bleed eagle prologue hoisted above the shell, then a sticky branded header (`AppShell.tsx`) over a continuous-scroll stack of nine sections (`prologue`, `what-it-is`, `why-current-fails`, `cold-chain`, `who-works`, `first-morning`, `what-stays`, `ask`, `recap`).
+    - React + Vite. Hosts two sibling surfaces sharing palette and shell: the **walkthrough** (council read) at `/` and the **Phase Planner** (contractor decision tool) at `/planner`.
+    - Walkthrough mirrors the Practitioner's Guide v2 mobile shell pattern: full-bleed eagle prologue hoisted above the shell, then a sticky branded header (`AppShell.tsx`) over a continuous-scroll stack of nine sections (`prologue`, `what-it-is`, `why-current-fails`, `cold-chain`, `who-works`, `first-morning`, `what-stays`, `ask`, `recap`).
     - No swipe-deck, no fixed bottom chrome — anchor IDs + global `scroll-behavior: smooth` make in-page jumps (header brand → top, header chip → recap, prologue Continue → first content section) feel uniform.
     - Recap section bleeds full-width with the deep evergreen background so the contractor can screenshot it as a one-screen summary.
+    - **Phase Planner (`src/planner/`)** — mobile-first decision tool with five user-adjustable date anchors (contract-one start, cold-chain pilot start, LFIF intake, council decision, ISC decision), three preset scenarios (optimistic / realistic / slippage), two stacked Gantt strips (Phase 1 design+pilot+application, Phase 2 build+handover), a derived "What falls out" panel of downstream dates (LFIF/FedNor/funding-secured/doors-open/NNC enrolment/first claim paid), and an evergreen Nov-2026 council-decision callout. State persisted in `localStorage` namespace `dlpp:v1`. Uses native `<input type="date">` for touch-friendly anchor editing. Pure UTC date math in `src/planner/dates.ts` keeps the timeline timezone-stable.
+    - Tiny client-side router in `src/lib/route.ts` (custom `useRoute()` hook with `popstate` + custom event, no react-router) switches between walkthrough and planner without a full reload. `src/lib/paths.ts` centralises route constants so both shells link cleanly to each other.
+    - Hosted at `/deer-lake-walkthrough/` and `/deer-lake-walkthrough/planner` because the project is at the artifact cap (9 of 7) and a fresh artifact could not be created — the planner is a sibling surface, not a separate product.
 
 - **`artifacts/api-server`**:
     - Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects).
