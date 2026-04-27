@@ -1,66 +1,86 @@
-# Workspace
+# Overview
 
-## Overview
+This project is a pnpm workspace monorepo using TypeScript, designed to support various applications related to the "Northern Food Systems Research Library" and operational planning for a product company. The overarching goal is to provide tools and platforms for research, knowledge sharing, and strategic planning, with a strong emphasis on decentralization, permaculture principles, and operational flexibility for Indigenous communities in Canada.
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+Key capabilities include:
+- A React + Vite "Northern Food Systems Research Library" with drag-and-drop functionality, URL ingestion, SHA-256 file deduplication, tokenized share-links, and a needs-review queue.
+- An Express 5 API for library data management and secure storage operations.
+- A hybrid app and slide deck for practitioner operating plans, focusing on a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps, cost review mechanisms, and a "Codetry" philosophy grounding.
+- An Expo (React Native + web) reader for the "Codetry Practitioner's Handbook," installable as a PWA, Expo Go app, or native binary, ensuring offline access.
 
-## Stack
+The project embodies a vision of empowering communities through accessible knowledge and self-sufficient operational models, moving away from traditional agency-based services towards a product-centric approach that prioritizes local control and value delivery.
 
+# User Preferences
+
+I prefer iterative development with clear validation steps. If a typecheck fails on a critical package, it should block task completion. I need to be able to regenerate API hooks and Zod schemas on demand. Database schema changes should be easy to push in development. I want to ensure that specific hardcoded values for corridor keys are not accidentally reintroduced into the Deer Lake store plan. I also require a mechanism to automatically update a bundled snapshot of the constellation manifest in the Codetry Handbook whenever the canonical source changes, and for typecheck/build processes to fail if these diverge, showing an actionable diff.
+
+# System Architecture
+
+The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and TypeScript 5.9.
+
+**Monorepo Tools & Build:**
 - **Monorepo tool**: pnpm workspaces
-- **Node.js version**: 24
 - **Package manager**: pnpm
-- **TypeScript version**: 5.9
+- **Build**: esbuild (CJS bundle)
+- **Typechecking**: `pnpm run typecheck:gated` for critical paths, with `pnpm run typecheck` for the full workspace.
+
+**API & Data Layer:**
 - **API framework**: Express 5
 - **Database**: PostgreSQL + Drizzle ORM
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
 
-## Key Commands
+**UI/UX & Feature Specifications:**
 
-- `pnpm run typecheck` — full typecheck across all packages (target state; currently red on the four artifacts listed below)
-- `pnpm run typecheck:gated` — typecheck the lib build + the artifacts that are currently green (`scripts`, `api-server`, `codetry-handbook`, `practitioner-operating-plan`); registered as the **`typecheck` validation step** so type drift in any of those packages blocks task completion. As a red artifact below gets fixed, add its filter to `typecheck:gated` until it can be replaced wholesale by `typecheck`.
-  - Currently red and excluded from the gate (tracked separately as tech-debt): `headwaters-books`, `library`, `practitioners-guide-v2`, `deer-lake-store-plan`.
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- `pnpm --filter @workspace/api-server run dev` — run API server locally
+- **Northern Food Systems Research Library (`artifacts/library`)**:
+    - Built with React + Vite.
+    - Features SHA-256 file deduplication, URL paste ingestion (Microlink for metadata, Cheerio for fallback), tokenized contributor share-links, a needs-review queue, search/filter, and stable per-entry URLs.
+    - Public `/share/:token` upload portal.
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+- **Practitioner Operating Plan (`artifacts/practitioner-operating-plan`)**:
+    - Hybrid app + slides deck, rebuilt as a 6-slide V3 deck focusing on a product company model (software + tech stack + training).
+    - Core deal-flow: Idea → Pitch → Contract → Fulfillment → Impact.
+    - Routes include `/today`, `/week`, `/year` (working surfaces), `/plan` (operating slide viewer), `/lifestyle` (lifestyle philosophy viewer), `/slide{N}` (operating editor), `/lifestyle/slide{N}` (lifestyle editor), `/allslides` (export).
+    - All user state (checked steps, week notes, snapshots, cost-review approvals) stored in browser `localStorage` (`pop:v1`).
+    - Integrated cost review system with `useCostValue`, `useCostReview` hooks, and a modal for approving/editing costs.
+    - `/codetry` page defines the "metaphor-as-architecture" practice, crediting Jack Spirko, Joel Salatin, Nicole Sauce, and the Freedom Cells movement as foundational influences for design decisions (solution-shaped, regen-ag/permaculture, peer-to-peer).
+    - Constellation definition (`public/constellation.json`) lists locked permaculture zones (0-5) and serves as a machine-readable manifest.
+    - Slide cross-reference guardrail (`pnpm run check-slide-refs`) to prevent broken links after deck reorders.
 
-## Artifacts
+- **Codetry Practitioner's Handbook (`artifacts/codetry-handbook`)**:
+    - Expo (React Native + web) reader.
+    - Installable as a PWA (cache-first service worker, version-keyed cache, precaching), Expo Go app, and native binaries (iOS/Android).
+    - `app.config.js` uses `EXPO_PUBLIC_BASE_URL` for base path configuration across environments.
+    - `AsyncStorage` namespace `codetry-handbook:v1` for persistent reader state across platforms (web maps to `localStorage`).
+    - Part III of the handbook is built from an auto-generated, bundled snapshot of the constellation manifest from `practitioner-operating-plan`, with build-time validation to prevent staleness.
 
-- **`artifacts/api-server`** — Express 5 API. Mounts `/api/library` (CRUD + stats/recent/from-url/share-links/needs-review) and `/api/storage` (presigned uploads + public-objects). The public-objects route has a local-filesystem fallback for `attached_assets/<filename>` so seeded entries can be served without re-uploading to object storage.
-- **`artifacts/library`** — React + Vite "Northern Food Systems Research Library" at `/library/`. Drag-and-drop research library for Bobbie's NWO food-systems work (Deer Lake co-op store, LFIF cold-transport pilot, 807/NWO Hub). Features: SHA-256 file dedup, paste-URL ingestion (Microlink for metadata + screenshot, cheerio fallback), tokenized contributor share-links, needs-review queue, search/filter, stable per-entry URLs, public `/share/:token` upload portal.
-- **`artifacts/deer-lake-store-plan`** — Slides deck for the Deer Lake store operational plan (8 slides). Includes an "Operations & Technology Partner" slide describing the $90k/mo agency engagement (cost basis + 35% reinvestment) and what stays with the band (servers, privacy phones, public price dashboard, household lookup, six-module playbook, year-end value-delivered audit). The cross-reserve corridor calculator on slide 12 (`FirstReserveThenTheNext.tsx`) sources its defaults — flight/lodging/food/day-rates/install shape/retainer — from the workspace package `@workspace/cross-reserve-corridor` (`lib/cross-reserve-corridor`), which is the single source of truth shared with `practitioner-operating-plan`'s cost registry. A guard script `scripts/check-corridor-defaults.ts` runs as part of `pnpm --filter @workspace/deer-lake-store-plan run check` and fails the build if a local numeric literal for any corridor key is reintroduced into the slide.
-- **`artifacts/practitioner-operating-plan`** — Hybrid app + slides deck. The front door is now a Today / Week / Year working surface (`/today`, `/week`, `/year`), and the deck (`/plan` operating + `/lifestyle` philosophy) and printable one-pager (`/onepager`) are linked from the top nav. The 2026 plan is encoded in `src/data/plan2026.ts` as four phases (Foundation, Team Assembly, Pilot Execution, Year-End Audit) and 52 weeks; the current week + next two are detailed step-by-step. Each step has optional copy-AI-prompt and copy-Replit-task-brief buttons. The Year tab houses the annual check-in (dashboard, new snapshot, history) — the same green/yellow/red plan-curve logic from the standalone `artifacts/check-in` app, ported in. **The deck is now re-spined around a deal-flow: Idea → Pitch → Contract → Fulfillment → Impact** (see `src/lib/phases.ts`). `/plan` lands at the current phase's section-opener slide, not slide 1; `/lifestyle` preserves the original 38-slide ordering as a stable Lifestyle Design Philosophy view. Five new operating-only opener slides at positions 39–43 (one per phase) are excluded from the lifestyle view. A `PhaseIndicator` in the global nav shows the active phase, lets the practitioner manually override it, and exposes a milestone checklist (pitch sent / verbal yes / contract signed / first invoice paid / first impact moment) that auto-suggests phase advancement as a soft nudge — manual override always wins. Phase override + milestones + dismissed suggestions persist in `localStorage` under `pop:v1` (schema v2). Routes: `/plan` (operating SlideViewer), `/lifestyle` (lifestyle SlideViewer), `/slide{N}` (operating-order editor), `/lifestyle/slide{N}` (lifestyle-order editor), `/allslides` (export). All user state (checked steps, week notes, snapshots, dismissed carry-overs, closed weeks, phase state, **and cost-review approvals**) lives in browser localStorage under the single key `pop:v1`; no backend, no auth. Unfinished steps from past weeks roll forward as "Carried over" on Today. **Cost review walkthrough**: ~70 dollar figures across the deck (Budget, CashFlow, Reinvestment, CaseForRate, Closing, SaltBench, SaltPL, PlatformBillPayback, PaybackMemo) are registered in `src/data/costRegistry.ts` with id/label/defaultValue/unit/context/slides[]/rank. Storage migrates v4→v5 to add `costReview: Record<id, {status, editedValue?, notes?, reviewedAt}>`. Hooks: `useCostValue(id)` returns the live value (edited override or default), plus `useCostReview(id)`, `useCostReviewActions()`, `useCostReviewSummary()`. The modal (`CostReviewModal.tsx`) walks one item at a time in importance order with Approve/Edit/Skip + private notes, plus a Summary view filterable by status. Entry button (`CostReviewButton.tsx`) appears on Today (header, primary variant) and on each cost-bearing slide (corner, slide-corner variant). Edits propagate immediately to all slides via `useCostValue`. **`/codetry` is a printable working-doc definition page** (`src/pages/Codetry.tsx`, linked from Today's Working docs) for the metaphor-as-architecture practice the constellation is built in. Its Grounding section credits the four teachers whose work shapes every design decision: **Jack Spirko (*The Survival Podcast*), Joel Salatin (*The Lunatic Farmer*), Nicole Sauce (*Living Free in Tennessee*), and the Freedom Cells movement (Derrick Broze and John Bush).** These voices are to be channeled when shaping new apps, naming choices, or strategy decisions across any artifact in this constellation — solution-shaped (Spirko axiom: *"there is no shortage of problems, but when we look for solutions it all becomes a little easier"*), regen-ag/permaculture as foundation not metaphor, peer-to-peer over centralized. **Locked permaculture zones 0–5 (April 2026)**: Z0 = Saltbox (decentralized homes, homeschool day companion, local-first) + Bright Side (centralized homes, care institutions); Z1 = Headwaters/xBuckets (household budget, non-custodial; live at x-buckets-vision.replit.app) + Family Buckets (kid-allowance + courage sibling, XRPL-direct); Z2 = this site (the workbench); Z3 = Community Knowledge Hub / 807 Benefits (Dryden 807 Food Co-op members portal; live at community-knowledge-hub.replit.app); Z4 = Regen Revolution (conventional-to-regenerative track for industries); Z5 = Dam Days and Shallows (private memory holder + impromptu anonymous public-share); pre-zone = Brainstorm Library (seed bank). The locked roster is mirrored in `public/constellation.json` (served at `/practitioner-operating-plan/constellation.json`) as a machine-readable manifest other constellation agents fetch to stay aligned. Pending agent context-packs: Bright Side, CKH (cadence detail), Regen Revolution, Dam Days, Brainstorm Library. The standalone `artifacts/check-in` artifact is intentionally left running for the moment. **Slide cross-reference guardrail**: `pnpm --filter @workspace/practitioner-operating-plan run check` (or `pnpm --filter ... run check-slide-refs` directly) walks every slide under `src/pages/slides`, parses each eyebrow (`V · 03 — …`, `Part VIII · …`), and fails the build on stale cross-refs after a deck reorder — missing `(Part X · NN)` targets, missing `Part X` / `Parts X–Y` references, eyebrow numbering that doesn't match the manifest's part-contiguous order, and `(next slide)` / `(previous slide)` calls on the first/last slide. Plain `(next slide)` / `(previous slide)` hits are surfaced as a non-failing review list with the adjacent slide's title so a human can spot-check narrative breakage.
-- **`artifacts/codetry-handbook`** — Expo (React Native + web) reader for the Codetry Practitioner's Handbook. **Installable as a true offline app on three surfaces**: (1) **PWA** — `scripts/build.js` runs `expo export --platform web` into `static-build/web/`, then writes `manifest.webmanifest` (cream `#f4ede0` / ink `#1f3d2e` theme, saltbox `icon.png`, `start_url`/`scope` = `/codetry-handbook/`, standalone display) and `sw.js` (cache-first service worker, version-keyed cache name `codetry-handbook-<timestamp>`, precaches every file walked under `static-build/web/`, navigation fallback to `index.html`); patches the exported `index.html` with manifest link, apple/PWA meta tags, and an inline service-worker registration. (2) **Expo Go** — landing page moved from root to `/install` so the QR-scan flow still works for Bobbie's devices. (3) **Native binaries** — `eas.json` defines development/preview/production profiles for iOS/Android with bundle id `ca.codetry.handbook`; `package.json` exposes `build:web`, `build:android`, `build:ios` (+ preview variants). `app.config.js` (converted from `app.json`) reads `EXPO_PUBLIC_BASE_URL` to set `experiments.baseUrl` so the same code works at the Expo dev domain root and at the `/codetry-handbook/` Replit preview subpath. `server/serve.js` serves the PWA at root with correct MIME types (`.webmanifest` → `application/manifest+json`, `service-worker-allowed: /` header on `sw.js`, no-cache on `index.html`/`sw.js`/manifest, immutable cache on hashed `_expo/static/*`); the `/manifest` Expo Go endpoint is preserved for requests carrying the `expo-platform` header. **AsyncStorage namespace `codetry-handbook:v1`** in `contexts/ReaderState.tsx` is preserved across all three surfaces (web maps to `localStorage` automatically). README at `artifacts/codetry-handbook/README.md` documents install + publish flows for all three paths.
-- **`artifacts/mockup-sandbox`** — Internal design canvas.
+- **Deer Lake Store Plan (`artifacts/deer-lake-store-plan`)**:
+    - Slides deck for operational plan, including financial models.
+    - Sources default values for its cross-reserve corridor calculator from `@workspace/cross-reserve-corridor`.
+    - A guard script `scripts/check-corridor-defaults.ts` prevents reintroduction of local numeric literals for corridor keys.
 
-## Practitioner Operating Plan — V3 deck rebuild (April 2026)
+- **`artifacts/api-server`**:
+    - Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects).
+    - Public-objects route includes a local-filesystem fallback for `attached_assets/<filename>`.
 
-The practitioner-operating-plan deck has been **rebuilt from scratch as a 6-slide V3 deck** (`src/pages/slides/{Cover, SlabVsGrassland, TheSixPeople, ThreeRevenueLayers, YearOnePicture, Closing}.tsx`). The V3 reframe (per the founder's foundation doc): Headwaters is a **product company** (software + tech stack at markup + per-cohort training), not a services agency; Deer Lake staffs its own store; the lean roster is **6 people, not V2's 8**; the deck opens with the **Slab-vs-Grassland thesis** (one client / one slab vs. three product layers / many bands); words-only naming; no Brightside references. **All 6 V3 numbers locked with the founder** in `.local/v3-numbers.md` with full justifications: Hub Operator $8,500/mo loaded, technical advisor $2,500/mo retainer, training partner $1,500/mo + $5,500/cohort, casual local pod $15k/yr, Deer Lake recurring contract $35k/mo · $420k/yr, tech-stack hybrid pricing (SaaS pass-through at cost + tiered hardware kit 3/6/12 + $400/mo managed-services). **Year-1 cash gap is surfaced honestly** on slide 5 (`YearOnePicture.tsx`): revenue total $446,598 vs. V3 cost basis $573,800 = **($127,202) gap**, plus $112k of V2 Capital Recovery still standing. Tagline locked: *"We always knew how to fix it. Now we can."* Mission anchor: *"Total and complete operational flexibility for each and every reserve in Canada."* All V2 slide files have been deleted from `src/pages/slides/`. **Known follow-up debt**: `src/data/costRegistry.ts` still defines `SLIDE_*` constants pointing at deleted V2 slide filepaths; `pnpm run check-slide-refs` reports them as stale links and `vite` builds `/slide{N}` hrefs that 404. Non-deck pages (Today, Week, Year, OnePager, BrandOnePager, CheckIn, etc.) and their cost-review modals continue to function — the broken links are the slide-jump shortcuts inside cost-review entries. Cleanup is a separate task from the deck rebuild.
+- **`artifacts/mockup-sandbox`**: Internal design canvas.
 
-## Codetry Handbook — constellation snapshot
+**Database Schema (`lib/db/src/schema/library.ts`):**
+- `subjects`, `project_buckets`, `producers`, `contributors` (taxonomies).
+- `library_entries` (unique partial index on `content_hash`).
+- `entry_subjects`, `entry_buckets`.
+- `share_links` (tokenized contributor upload portals).
 
-Part III of the Codetry Practitioner's Handbook (`artifacts/codetry-handbook`) is built from a *bundled snapshot* of the Practitioner Operating Plan's constellation manifest. The canonical source is `artifacts/practitioner-operating-plan/public/constellation.json`; the snapshot lives at `artifacts/codetry-handbook/data/constellation.ts` and is **auto-generated** — never edit it by hand.
+**Seeding:**
+- `pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` provides an idempotent seed for development, cataloging files in `attached_assets/` and provisioning sample data.
 
-- Refresh the snapshot after any change to the canonical manifest:
-  - `pnpm --filter @workspace/codetry-handbook run sync-constellation`
-- Verify the snapshot is in sync (also runs as part of `typecheck` and `build`):
-  - `pnpm --filter @workspace/codetry-handbook run check-constellation`
+# External Dependencies
 
-`pnpm --filter @workspace/codetry-handbook run typecheck` and `... run build` both fail with an actionable diff (on-disk vs canonical `version` / `lastUpdated`) when the two diverge, so Part III can't quietly go stale.
-
-## Library schema
-
-Drizzle tables in `lib/db/src/schema/library.ts`:
-- `subjects`, `project_buckets`, `producers`, `contributors` — taxonomies
-- `library_entries` (unique partial idx on `content_hash`), `entry_subjects`, `entry_buckets`
-- `share_links` — tokenized contributor upload portals
-
-## Seed
-
-`pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` — idempotent seed that catalogues all 88 files in `attached_assets/`, creates the producer/subject/bucket/contributor taxonomies, and provisions a sample share-link for Jen Springett. Producer notes:
-- `Crazy Good Spices` is flagged `uncertain` (operating status unknown)
-- `Shumaka Dust` substitutes for it in current planning
+- **Microlink**: Used by the library for URL metadata and screenshot generation during ingestion.
+- **Cheerio**: Used as a fallback for URL metadata parsing in the library.
+- **Expo**: For building the Codetry Practitioner's Handbook as a cross-platform application (PWA, Expo Go, native iOS/Android).
+- **PostgreSQL**: Primary database for the API and library data.
+- **Drizzle ORM**: Object-relational mapper for database interactions.
+- **Express 5**: Web application framework for the API server.
+- **Zod**: Schema declaration and validation library.
+- **Orval**: API client code generator from OpenAPI specifications.
