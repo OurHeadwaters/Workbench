@@ -188,10 +188,39 @@ test.describe("Deer Lake Phase Planner", () => {
     await expect(page.getByTestId("peg-lfifIntake")).toHaveCount(0);
     await expect(page.getByTestId("peg-iscDecision")).toHaveCount(0);
 
-    // Council peg label changed for self-fund
+    // Council peg label changed for self-fund (scoped to date-pegs to avoid
+    // colliding with the identically-worded Phase 1 gate label).
     await expect(
-      page.getByText("Council commits to private spend"),
+      page.getByTestId("date-pegs").getByText("Council commits to private spend"),
     ).toBeVisible();
+
+    // Phase 1 strip — locate by mode-specific section title, then assert
+    // bar presence/absence and gate set per task requirements.
+    const phase1 = page
+      .locator("section")
+      .filter({ hasText: "Phase 1 · Design + pilot + council vote" });
+    await expect(phase1).toHaveCount(1);
+    await expect(phase1.getByText("Co-design with community")).toBeVisible();
+    await expect(phase1.getByText("Cold-chain pilot (90-day data)")).toBeVisible();
+    await expect(
+      phase1.getByText("NNC enrolment readiness (POS, SKU, baseline)"),
+    ).toBeVisible();
+    // Grant-mode-only bars must be absent in self-fund Phase 1
+    await expect(
+      phase1.getByText("Application prep + letters of intent"),
+    ).toHaveCount(0);
+    await expect(phase1.getByText("Grant decision windows")).toHaveCount(0);
+    // Phase 1 gates: council + truck-LFIF + funding-secured trigger.
+    // LFIF intake / ISC decision gates from grants mode must be absent.
+    await expect(
+      phase1.getByText("Council commits to private spend"),
+    ).toBeVisible();
+    await expect(
+      phase1.getByText("Truck LFIF intake (807 partnership)"),
+    ).toBeVisible();
+    await expect(phase1.getByText("Funding-secured trigger")).toBeVisible();
+    await expect(phase1.getByText("LFIF intake — file")).toHaveCount(0);
+    await expect(phase1.getByText("ISC decision")).toHaveCount(0);
 
     // Off-ramp text mode-specific
     const offramp = page.getByTestId("offramp");
@@ -207,9 +236,11 @@ test.describe("Deer Lake Phase Planner", () => {
     await expect(
       keyDates.getByText("Truck arrives (807 partnership)"),
     ).toBeVisible();
-    await expect(keyDates.getByText("LFIF decision")).toHaveCount(0);
-    await expect(keyDates.getByText("FedNor decision")).toHaveCount(0);
-    await expect(keyDates.getByText("Applications filed")).toHaveCount(0);
+    // Exact match — the self-fund key-dates DOES include "Truck LFIF decision",
+    // so a substring match would falsely find "LFIF decision".
+    await expect(keyDates.getByText("LFIF decision", { exact: true })).toHaveCount(0);
+    await expect(keyDates.getByText("FedNor decision", { exact: true })).toHaveCount(0);
+    await expect(keyDates.getByText("Applications filed", { exact: true })).toHaveCount(0);
 
     // Save round-trips the mode
     await page.getByTestId("scenario-save").click();
