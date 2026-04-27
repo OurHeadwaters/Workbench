@@ -914,9 +914,41 @@ const partVI: Part = {
             "What the discipline owes itself in return is unfinished. A token-level rename test that flags drift the type checker and the tokeniser both miss. A corpus-level practice — share the named work openly, refuse the autoformatter's translation, keep the metaphor alive in the public training set. A clearer answer to the question of whether codetry is fundamentally a human-reader discipline whose machine-readability is a happy side effect, or a discipline that should be re-grounded for a tokenised reading layer. None of those answers are written yet. This chapter exists so the question has a home in the handbook rather than living only in the practitioner's head.",
         },
         {
+          kind: "subhead",
+          text: "Foundational to literate programming, not parallel to it.",
+        },
+        {
+          kind: "para",
+          text:
+            "There is a move waiting in this chapter the rest of the handbook has been polite about. §2.2 frames literate programming as the nearest sibling discipline, and §5.2 places it in the lineage codetry honours its work from — both framings are true, and both are too generous to codetry's modesty about its own role. Codetry is, in the harder sense, *foundational* to successful literate programming: not a sibling, but a precondition. Knuth's discipline weaves prose and source into a single document so the reader can follow the reasoning in the medium where the work actually lives — but the woven program only does what its prose says it does to the extent that the *names* inside the source carry the metaphor the prose claims they carry. Without the codetry move, the prose narrates one architecture and the names enact another, and *literate programming* degrades into prose *about* code that has already drifted away from the prose. The rename test of §4.2 is what makes the weave hold; without it, the document is honest about its reasoning and dishonest about its execution at the same time, and the discipline that was supposed to verify by exposing the reasoning ends up exposing reasoning the code no longer obeys.",
+        },
+        {
+          kind: "subhead",
+          text: "Name is the layer between type and token.",
+        },
+        {
+          kind: "para",
+          text:
+            "It is worth being precise about where the discipline actually stands. *Type* lives in the compiler — the layer §2.4 already names — and is enforced by a machine that does not read English. *Token* lives in the model, the layer this chapter has been circling, and is enforced by a tokeniser that does not read meaning. *Name* sits in the space between them, and is the only layer in the stack where a human author is still the deciding party: the compiler will check what the name is *of*, the tokeniser will fragment what the name is *spelled like*, and only the author chooses what the name *is*. If name is treated as decoration on top of type — as the type system's pet, renameable on a whim because the type is what carries the truth — the in-between layer collapses upward, and the discipline has nothing to do that §2.4 does not already do. If name is treated as raw material for the tokeniser to chew — as fuel for the statistical reader, valuable only in proportion to how often the cluster `[\"Salt\", \"box\"]` appears in the corpus — the in-between layer collapses downward, and the discipline has nothing to do that the model's pre-training does not already do. The codetry claim is that the in-between layer is real, that it is the load-bearing one, and that it is the only place where authorship of the system's nouns is still possible at all.",
+        },
+        {
           kind: "callout",
           text:
-            "Tokenisation shreds the noun. The discipline's answer is not yet written. This chapter is a place to keep the question — and to return to it as tokenisation, training corpora, and the practice itself change shape.",
+            "Type is the compiler's. Token is the model's. Name is the only layer the human author still owns — and the discipline has nowhere to stand if that layer is not defended.",
+        },
+        {
+          kind: "subhead",
+          text: "The token has two meanings, and both rhyme.",
+        },
+        {
+          kind: "para",
+          text:
+            "The chapter has so far used *token* in the narrow sense the tokeniser gives it: a sub-word fragment, a `[\"Salt\", \"box\"]` cluster, a unit the model reads in the place a word used to be. The word has a second meaning the discipline cannot pretend not to know about. *Token* in the on-chain sense — the unit a community's nouns are turned into when its assets, memberships, votes, or shares of a co-op are placed on a blockchain — is the same word doing structurally analogous work in another domain, and the same hazard rhymes across both. When a community's nouns are tokenised on-chain without a name-layer discipline, the resulting governance primitives are legible only to the people fluent in the substrate: the wallet UIs, the contract addresses, the function signatures, the gas-priced enactments of decisions whose underlying nouns the community never named for itself. That is the precise definition of *technocracy*: rule by those who can read the layer the rest of the community can't. Codetry's bet on the noun is, by extension, a bet against technocratic capture of community-owned systems — the §1.0 hedge against language drift, generalised one floor up to where the drifted words are the ones with formal authority attached. Without *name* as widely-adopted architecture in the blockchain world, the on-chain token does to a community's *governance* what the LLM token does to its prose: shears the load-bearing noun into fragments only the substrate can read, then reassembles it into a primitive the substrate can act on. The discipline has no ready answer to that move yet, either.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Tokenisation shreds the noun — the model's tokenisation, and the chain's. The discipline's answer, on both fronts, is not yet written. This chapter is a place to keep the question — and to return to it as the tokenisers, the training corpora, the on-chain primitives, and the practice itself change shape.",
         },
       ],
     },
