@@ -1012,6 +1012,203 @@ paths:
                 items:
                   $ref: '#/components/schemas/AuditLogEntry'
 
+  /wordpile/me:
+    get:
+      tags: [wordpile]
+      operationId: getWordpileMe
+      summary: Current authenticated wordpile user
+      responses:
+        '200':
+          description: Current user info.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileMe'
+        '401':
+          description: Not signed in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /wordpile/sync:
+    post:
+      tags: [wordpile]
+      operationId: syncWordpile
+      summary: Bootstrap sync — upload local snapshot and receive merged state
+      description: |
+        Upserts the supplied piles + words for the signed-in user (server is
+        the merge winner on conflict — local entries with a newer updatedAt
+        replace the server row, otherwise the server row stays). Returns the
+        full merged state.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncWordpileRequest'
+      responses:
+        '200':
+          description: Full merged state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileSnapshot'
+        '401':
+          description: Not signed in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /wordpile/piles:
+    get:
+      tags: [wordpile]
+      operationId: listWordpilePiles
+      summary: List the signed-in user's piles (with words)
+      responses:
+        '200':
+          description: All piles.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileSnapshot'
+        '401':
+          description: Not signed in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    post:
+      tags: [wordpile]
+      operationId: createWordpilePile
+      summary: Create a pile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWordpilePileRequest'
+      responses:
+        '200':
+          description: Created pile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpilePile'
+
+  /wordpile/piles/{pileId}:
+    patch:
+      tags: [wordpile]
+      operationId: updateWordpilePile
+      summary: Rename a pile
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWordpilePileRequest'
+      responses:
+        '200':
+          description: Updated pile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpilePile'
+    delete:
+      tags: [wordpile]
+      operationId: deleteWordpilePile
+      summary: Delete a pile (and all its words)
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+
+  /wordpile/piles/{pileId}/words:
+    post:
+      tags: [wordpile]
+      operationId: createWordpileWord
+      summary: Add a word to a pile
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWordpileWordRequest'
+      responses:
+        '200':
+          description: Word entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileWord'
+
+  /wordpile/piles/{pileId}/words/{wordId}:
+    patch:
+      tags: [wordpile]
+      operationId: updateWordpileWord
+      summary: Update a word
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: wordId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWordpileWordRequest'
+      responses:
+        '200':
+          description: Updated word.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileWord'
+    delete:
+      tags: [wordpile]
+      operationId: deleteWordpileWord
+      summary: Delete a word
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: wordId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+
 components:
   schemas:
     HealthStatus:
@@ -1900,3 +2097,101 @@ components:
           additionalProperties: true
           nullable: true
         createdAt: { type: string, format: date-time }
+
+    OkResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok: { type: boolean }
+
+    WordpileMe:
+      type: object
+      required: [isAuthenticated]
+      properties:
+        isAuthenticated: { type: boolean }
+        userId: { type: string, nullable: true }
+        email: { type: string, nullable: true }
+
+    WordpileWord:
+      type: object
+      required: [id, pileId, word, note, bucket, saferAlternative, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        pileId: { type: string, format: uuid }
+        word: { type: string }
+        note: { type: string }
+        bucket:
+          type: string
+          enum: [unsorted, load, interior, avoid]
+        saferAlternative: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    WordpilePile:
+      type: object
+      required: [id, name, createdAt, updatedAt, words]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/WordpileWord'
+
+    WordpileSnapshot:
+      type: object
+      required: [piles]
+      properties:
+        piles:
+          type: array
+          items:
+            $ref: '#/components/schemas/WordpilePile'
+
+    CreateWordpilePileRequest:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 1 }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    UpdateWordpilePileRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+
+    CreateWordpileWordRequest:
+      type: object
+      required: [id, word]
+      properties:
+        id: { type: string, format: uuid }
+        word: { type: string, minLength: 1 }
+        note: { type: string }
+        bucket:
+          type: string
+          enum: [unsorted, load, interior, avoid]
+        saferAlternative: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    UpdateWordpileWordRequest:
+      type: object
+      properties:
+        word: { type: string, minLength: 1 }
+        note: { type: string }
+        bucket:
+          type: string
+          enum: [unsorted, load, interior, avoid]
+        saferAlternative: { type: string }
+
+    SyncWordpileRequest:
+      type: object
+      required: [piles]
+      properties:
+        piles:
+          type: array
+          items:
+            $ref: '#/components/schemas/WordpilePile'

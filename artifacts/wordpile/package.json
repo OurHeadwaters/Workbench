@@ -27,5 +27,8 @@
     "vite": "catalog:",
     "vitest": "^4.1.5",
     "wouter": "catalog:"
+  },
+  "dependencies": {
+    "@clerk/react": "^6.4.3"
   }
 }

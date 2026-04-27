@@ -2490,3 +2490,229 @@ export const ListAuditLogResponseItem = zod.object({
   createdAt: zod.coerce.date(),
 });
 export const ListAuditLogResponse = zod.array(ListAuditLogResponseItem);
+
+/**
+ * @summary Current authenticated wordpile user
+ */
+export const GetWordpileMeResponse = zod.object({
+  isAuthenticated: zod.boolean(),
+  userId: zod.string().nullish(),
+  email: zod.string().nullish(),
+});
+
+/**
+ * Upserts the supplied piles + words for the signed-in user (server is
+the merge winner on conflict — local entries with a newer updatedAt
+replace the server row, otherwise the server row stays). Returns the
+full merged state.
+
+ * @summary Bootstrap sync — upload local snapshot and receive merged state
+ */
+export const SyncWordpileBody = zod.object({
+  piles: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+      words: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          pileId: zod.string().uuid(),
+          word: zod.string(),
+          note: zod.string(),
+          bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+          saferAlternative: zod.string(),
+          createdAt: zod.coerce.date(),
+          updatedAt: zod.coerce.date(),
+        }),
+      ),
+    }),
+  ),
+});
+
+export const SyncWordpileResponse = zod.object({
+  piles: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+      words: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          pileId: zod.string().uuid(),
+          word: zod.string(),
+          note: zod.string(),
+          bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+          saferAlternative: zod.string(),
+          createdAt: zod.coerce.date(),
+          updatedAt: zod.coerce.date(),
+        }),
+      ),
+    }),
+  ),
+});
+
+/**
+ * @summary List the signed-in user's piles (with words)
+ */
+export const ListWordpilePilesResponse = zod.object({
+  piles: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      name: zod.string(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+      words: zod.array(
+        zod.object({
+          id: zod.string().uuid(),
+          pileId: zod.string().uuid(),
+          word: zod.string(),
+          note: zod.string(),
+          bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+          saferAlternative: zod.string(),
+          createdAt: zod.coerce.date(),
+          updatedAt: zod.coerce.date(),
+        }),
+      ),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a pile
+ */
+
+export const CreateWordpilePileBody = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string().min(1),
+  createdAt: zod.coerce.date().optional(),
+  updatedAt: zod.coerce.date().optional(),
+});
+
+export const CreateWordpilePileResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  words: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      pileId: zod.string().uuid(),
+      word: zod.string(),
+      note: zod.string(),
+      bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+      saferAlternative: zod.string(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Rename a pile
+ */
+export const UpdateWordpilePileParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+});
+
+export const UpdateWordpilePileBody = zod.object({
+  name: zod.string().min(1).optional(),
+});
+
+export const UpdateWordpilePileResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  words: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      pileId: zod.string().uuid(),
+      word: zod.string(),
+      note: zod.string(),
+      bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+      saferAlternative: zod.string(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Delete a pile (and all its words)
+ */
+export const DeleteWordpilePileParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+});
+
+export const DeleteWordpilePileResponse = zod.object({
+  ok: zod.boolean(),
+});
+
+/**
+ * @summary Add a word to a pile
+ */
+export const CreateWordpileWordParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+});
+
+export const CreateWordpileWordBody = zod.object({
+  id: zod.string().uuid(),
+  word: zod.string().min(1),
+  note: zod.string().optional(),
+  bucket: zod.enum(["unsorted", "load", "interior", "avoid"]).optional(),
+  saferAlternative: zod.string().optional(),
+  createdAt: zod.coerce.date().optional(),
+  updatedAt: zod.coerce.date().optional(),
+});
+
+export const CreateWordpileWordResponse = zod.object({
+  id: zod.string().uuid(),
+  pileId: zod.string().uuid(),
+  word: zod.string(),
+  note: zod.string(),
+  bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+  saferAlternative: zod.string(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update a word
+ */
+export const UpdateWordpileWordParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+  wordId: zod.coerce.string().uuid(),
+});
+
+export const UpdateWordpileWordBody = zod.object({
+  word: zod.string().min(1).optional(),
+  note: zod.string().optional(),
+  bucket: zod.enum(["unsorted", "load", "interior", "avoid"]).optional(),
+  saferAlternative: zod.string().optional(),
+});
+
+export const UpdateWordpileWordResponse = zod.object({
+  id: zod.string().uuid(),
+  pileId: zod.string().uuid(),
+  word: zod.string(),
+  note: zod.string(),
+  bucket: zod.enum(["unsorted", "load", "interior", "avoid"]),
+  saferAlternative: zod.string(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a word
+ */
+export const DeleteWordpileWordParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+  wordId: zod.coerce.string().uuid(),
+});
+
+export const DeleteWordpileWordResponse = zod.object({
+  ok: zod.boolean(),
+});

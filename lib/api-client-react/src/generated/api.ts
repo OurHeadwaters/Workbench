@@ -35,6 +35,8 @@ import type {
   CreateShareLinkRequest,
   CreateSubmissionRequest,
   CreateTransactionRequest,
+  CreateWordpilePileRequest,
+  CreateWordpileWordRequest,
   ErrorEnvelope,
   GetBookkeeperPnlParams,
   GetRecentActivityParams,
@@ -51,6 +53,7 @@ import type {
   ListSubmissionsParams,
   ListTransactionsParams,
   NudgeHandlerRequest,
+  OkResponse,
   Producer,
   ProducerDetail,
   ProjectBucketWithCount,
@@ -60,15 +63,22 @@ import type {
   ShareLinkSummary,
   SubjectWithCount,
   Submission,
+  SyncWordpileRequest,
   Transaction,
   TransactionPage,
   UpdateAccountRequest,
   UpdateBookkeeperUserRequest,
   UpdateCostCentreRequest,
   UpdateLibraryEntryRequest,
+  UpdateWordpilePileRequest,
+  UpdateWordpileWordRequest,
   UploadUrlRequest,
   UploadUrlResponse,
   VoidTransactionRequest,
+  WordpileMe,
+  WordpilePile,
+  WordpileSnapshot,
+  WordpileWord,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -4013,3 +4023,777 @@ export function useListAuditLog<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Current authenticated wordpile user
+ */
+export const getGetWordpileMeUrl = () => {
+  return `/api/wordpile/me`;
+};
+
+export const getWordpileMe = async (
+  options?: RequestInit,
+): Promise<WordpileMe> => {
+  return customFetch<WordpileMe>(getGetWordpileMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetWordpileMeQueryKey = () => {
+  return [`/api/wordpile/me`] as const;
+};
+
+export const getGetWordpileMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWordpileMe>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWordpileMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetWordpileMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWordpileMe>>> = ({
+    signal,
+  }) => getWordpileMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getWordpileMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetWordpileMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWordpileMe>>
+>;
+export type GetWordpileMeQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Current authenticated wordpile user
+ */
+
+export function useGetWordpileMe<
+  TData = Awaited<ReturnType<typeof getWordpileMe>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWordpileMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetWordpileMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Upserts the supplied piles + words for the signed-in user (server is
+the merge winner on conflict — local entries with a newer updatedAt
+replace the server row, otherwise the server row stays). Returns the
+full merged state.
+
+ * @summary Bootstrap sync — upload local snapshot and receive merged state
+ */
+export const getSyncWordpileUrl = () => {
+  return `/api/wordpile/sync`;
+};
+
+export const syncWordpile = async (
+  syncWordpileRequest: SyncWordpileRequest,
+  options?: RequestInit,
+): Promise<WordpileSnapshot> => {
+  return customFetch<WordpileSnapshot>(getSyncWordpileUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(syncWordpileRequest),
+  });
+};
+
+export const getSyncWordpileMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncWordpile>>,
+    TError,
+    { data: BodyType<SyncWordpileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof syncWordpile>>,
+  TError,
+  { data: BodyType<SyncWordpileRequest> },
+  TContext
+> => {
+  const mutationKey = ["syncWordpile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof syncWordpile>>,
+    { data: BodyType<SyncWordpileRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return syncWordpile(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SyncWordpileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof syncWordpile>>
+>;
+export type SyncWordpileMutationBody = BodyType<SyncWordpileRequest>;
+export type SyncWordpileMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Bootstrap sync — upload local snapshot and receive merged state
+ */
+export const useSyncWordpile = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncWordpile>>,
+    TError,
+    { data: BodyType<SyncWordpileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof syncWordpile>>,
+  TError,
+  { data: BodyType<SyncWordpileRequest> },
+  TContext
+> => {
+  return useMutation(getSyncWordpileMutationOptions(options));
+};
+
+/**
+ * @summary List the signed-in user's piles (with words)
+ */
+export const getListWordpilePilesUrl = () => {
+  return `/api/wordpile/piles`;
+};
+
+export const listWordpilePiles = async (
+  options?: RequestInit,
+): Promise<WordpileSnapshot> => {
+  return customFetch<WordpileSnapshot>(getListWordpilePilesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListWordpilePilesQueryKey = () => {
+  return [`/api/wordpile/piles`] as const;
+};
+
+export const getListWordpilePilesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listWordpilePiles>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listWordpilePiles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListWordpilePilesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listWordpilePiles>>
+  > = ({ signal }) => listWordpilePiles({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listWordpilePiles>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListWordpilePilesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listWordpilePiles>>
+>;
+export type ListWordpilePilesQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary List the signed-in user's piles (with words)
+ */
+
+export function useListWordpilePiles<
+  TData = Awaited<ReturnType<typeof listWordpilePiles>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listWordpilePiles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListWordpilePilesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a pile
+ */
+export const getCreateWordpilePileUrl = () => {
+  return `/api/wordpile/piles`;
+};
+
+export const createWordpilePile = async (
+  createWordpilePileRequest: CreateWordpilePileRequest,
+  options?: RequestInit,
+): Promise<WordpilePile> => {
+  return customFetch<WordpilePile>(getCreateWordpilePileUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createWordpilePileRequest),
+  });
+};
+
+export const getCreateWordpilePileMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWordpilePile>>,
+    TError,
+    { data: BodyType<CreateWordpilePileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createWordpilePile>>,
+  TError,
+  { data: BodyType<CreateWordpilePileRequest> },
+  TContext
+> => {
+  const mutationKey = ["createWordpilePile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createWordpilePile>>,
+    { data: BodyType<CreateWordpilePileRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createWordpilePile(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateWordpilePileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createWordpilePile>>
+>;
+export type CreateWordpilePileMutationBody =
+  BodyType<CreateWordpilePileRequest>;
+export type CreateWordpilePileMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a pile
+ */
+export const useCreateWordpilePile = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWordpilePile>>,
+    TError,
+    { data: BodyType<CreateWordpilePileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createWordpilePile>>,
+  TError,
+  { data: BodyType<CreateWordpilePileRequest> },
+  TContext
+> => {
+  return useMutation(getCreateWordpilePileMutationOptions(options));
+};
+
+/**
+ * @summary Rename a pile
+ */
+export const getUpdateWordpilePileUrl = (pileId: string) => {
+  return `/api/wordpile/piles/${pileId}`;
+};
+
+export const updateWordpilePile = async (
+  pileId: string,
+  updateWordpilePileRequest: UpdateWordpilePileRequest,
+  options?: RequestInit,
+): Promise<WordpilePile> => {
+  return customFetch<WordpilePile>(getUpdateWordpilePileUrl(pileId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateWordpilePileRequest),
+  });
+};
+
+export const getUpdateWordpilePileMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWordpilePile>>,
+    TError,
+    { pileId: string; data: BodyType<UpdateWordpilePileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateWordpilePile>>,
+  TError,
+  { pileId: string; data: BodyType<UpdateWordpilePileRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateWordpilePile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateWordpilePile>>,
+    { pileId: string; data: BodyType<UpdateWordpilePileRequest> }
+  > = (props) => {
+    const { pileId, data } = props ?? {};
+
+    return updateWordpilePile(pileId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateWordpilePileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateWordpilePile>>
+>;
+export type UpdateWordpilePileMutationBody =
+  BodyType<UpdateWordpilePileRequest>;
+export type UpdateWordpilePileMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Rename a pile
+ */
+export const useUpdateWordpilePile = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWordpilePile>>,
+    TError,
+    { pileId: string; data: BodyType<UpdateWordpilePileRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateWordpilePile>>,
+  TError,
+  { pileId: string; data: BodyType<UpdateWordpilePileRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateWordpilePileMutationOptions(options));
+};
+
+/**
+ * @summary Delete a pile (and all its words)
+ */
+export const getDeleteWordpilePileUrl = (pileId: string) => {
+  return `/api/wordpile/piles/${pileId}`;
+};
+
+export const deleteWordpilePile = async (
+  pileId: string,
+  options?: RequestInit,
+): Promise<OkResponse> => {
+  return customFetch<OkResponse>(getDeleteWordpilePileUrl(pileId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteWordpilePileMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWordpilePile>>,
+    TError,
+    { pileId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWordpilePile>>,
+  TError,
+  { pileId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteWordpilePile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWordpilePile>>,
+    { pileId: string }
+  > = (props) => {
+    const { pileId } = props ?? {};
+
+    return deleteWordpilePile(pileId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteWordpilePileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWordpilePile>>
+>;
+
+export type DeleteWordpilePileMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a pile (and all its words)
+ */
+export const useDeleteWordpilePile = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWordpilePile>>,
+    TError,
+    { pileId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWordpilePile>>,
+  TError,
+  { pileId: string },
+  TContext
+> => {
+  return useMutation(getDeleteWordpilePileMutationOptions(options));
+};
+
+/**
+ * @summary Add a word to a pile
+ */
+export const getCreateWordpileWordUrl = (pileId: string) => {
+  return `/api/wordpile/piles/${pileId}/words`;
+};
+
+export const createWordpileWord = async (
+  pileId: string,
+  createWordpileWordRequest: CreateWordpileWordRequest,
+  options?: RequestInit,
+): Promise<WordpileWord> => {
+  return customFetch<WordpileWord>(getCreateWordpileWordUrl(pileId), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createWordpileWordRequest),
+  });
+};
+
+export const getCreateWordpileWordMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWordpileWord>>,
+    TError,
+    { pileId: string; data: BodyType<CreateWordpileWordRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createWordpileWord>>,
+  TError,
+  { pileId: string; data: BodyType<CreateWordpileWordRequest> },
+  TContext
+> => {
+  const mutationKey = ["createWordpileWord"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createWordpileWord>>,
+    { pileId: string; data: BodyType<CreateWordpileWordRequest> }
+  > = (props) => {
+    const { pileId, data } = props ?? {};
+
+    return createWordpileWord(pileId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateWordpileWordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createWordpileWord>>
+>;
+export type CreateWordpileWordMutationBody =
+  BodyType<CreateWordpileWordRequest>;
+export type CreateWordpileWordMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Add a word to a pile
+ */
+export const useCreateWordpileWord = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWordpileWord>>,
+    TError,
+    { pileId: string; data: BodyType<CreateWordpileWordRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createWordpileWord>>,
+  TError,
+  { pileId: string; data: BodyType<CreateWordpileWordRequest> },
+  TContext
+> => {
+  return useMutation(getCreateWordpileWordMutationOptions(options));
+};
+
+/**
+ * @summary Update a word
+ */
+export const getUpdateWordpileWordUrl = (pileId: string, wordId: string) => {
+  return `/api/wordpile/piles/${pileId}/words/${wordId}`;
+};
+
+export const updateWordpileWord = async (
+  pileId: string,
+  wordId: string,
+  updateWordpileWordRequest: UpdateWordpileWordRequest,
+  options?: RequestInit,
+): Promise<WordpileWord> => {
+  return customFetch<WordpileWord>(getUpdateWordpileWordUrl(pileId, wordId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateWordpileWordRequest),
+  });
+};
+
+export const getUpdateWordpileWordMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWordpileWord>>,
+    TError,
+    {
+      pileId: string;
+      wordId: string;
+      data: BodyType<UpdateWordpileWordRequest>;
+    },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateWordpileWord>>,
+  TError,
+  { pileId: string; wordId: string; data: BodyType<UpdateWordpileWordRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateWordpileWord"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateWordpileWord>>,
+    {
+      pileId: string;
+      wordId: string;
+      data: BodyType<UpdateWordpileWordRequest>;
+    }
+  > = (props) => {
+    const { pileId, wordId, data } = props ?? {};
+
+    return updateWordpileWord(pileId, wordId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateWordpileWordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateWordpileWord>>
+>;
+export type UpdateWordpileWordMutationBody =
+  BodyType<UpdateWordpileWordRequest>;
+export type UpdateWordpileWordMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a word
+ */
+export const useUpdateWordpileWord = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWordpileWord>>,
+    TError,
+    {
+      pileId: string;
+      wordId: string;
+      data: BodyType<UpdateWordpileWordRequest>;
+    },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateWordpileWord>>,
+  TError,
+  { pileId: string; wordId: string; data: BodyType<UpdateWordpileWordRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateWordpileWordMutationOptions(options));
+};
+
+/**
+ * @summary Delete a word
+ */
+export const getDeleteWordpileWordUrl = (pileId: string, wordId: string) => {
+  return `/api/wordpile/piles/${pileId}/words/${wordId}`;
+};
+
+export const deleteWordpileWord = async (
+  pileId: string,
+  wordId: string,
+  options?: RequestInit,
+): Promise<OkResponse> => {
+  return customFetch<OkResponse>(getDeleteWordpileWordUrl(pileId, wordId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteWordpileWordMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWordpileWord>>,
+    TError,
+    { pileId: string; wordId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWordpileWord>>,
+  TError,
+  { pileId: string; wordId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteWordpileWord"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWordpileWord>>,
+    { pileId: string; wordId: string }
+  > = (props) => {
+    const { pileId, wordId } = props ?? {};
+
+    return deleteWordpileWord(pileId, wordId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteWordpileWordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWordpileWord>>
+>;
+
+export type DeleteWordpileWordMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a word
+ */
+export const useDeleteWordpileWord = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWordpileWord>>,
+    TError,
+    { pileId: string; wordId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWordpileWord>>,
+  TError,
+  { pileId: string; wordId: string },
+  TContext
+> => {
+  return useMutation(getDeleteWordpileWordMutationOptions(options));
+};

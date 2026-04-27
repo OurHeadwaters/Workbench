@@ -75,10 +75,12 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
 - **`artifacts/mockup-sandbox`**: Internal design canvas.
 
 - **Wordpile (`artifacts/wordpile`)**:
-    - Standalone React + Vite + Tailwind v4 web tool routed at `/wordpile/`, no backend, all state in `localStorage` (`wordpile:v1` for piles/words; `wordpile:draft:<pileId>` for per-pile draft text).
+    - React + Vite + Tailwind v4 web tool routed at `/wordpile/`. Local cache in `localStorage` (`wordpile:v1` for piles/words; `wordpile:draft:<pileId>` for per-pile draft text). Optional cloud sync via Clerk + Postgres so a signed-in practitioner sees the same piles on every device.
     - Per-community word inventory with three buckets (load-bearing / interior / avoid) plus an "unsorted" bucket; supports free-entry, paste-to-extract, in-place editing, and safer-alternative copy on avoid words.
     - "Check my draft" view tokenizes a pasted draft and inline-flags avoid words (with safer alternatives in tooltips), highlights load-bearing words used, and lists missing load-bearing words.
-    - Wouter routing: `/wordpile/`, `/wordpile/pile/:id`, `/wordpile/pile/:id/check`. Visual identity matches the Codetry Handbook (cream `#f4ede0`, ink `#1f3d2e`, Lora serif, JetBrains Mono).
+    - Wouter routing: `/wordpile/`, `/wordpile/pile/:id`, `/wordpile/pile/:id/check`, `/wordpile/sign-in`, `/wordpile/sign-up`. Visual identity matches the Codetry Handbook (cream `#f4ede0`, ink `#1f3d2e`, Lora serif, JetBrains Mono).
+    - Auth/sync model: anonymous users keep using `localStorage` as the source of truth. On sign-in, the local snapshot is POSTed to `/api/wordpile/sync` (last-write-wins by `updatedAt`, never deletes server rows) and replaced with the merged server result; subsequent mutations write locally first and fire-and-forget to the API. Sign-out clears the local cache. ClerkProvider only mounts when `VITE_CLERK_PUBLISHABLE_KEY` is set; otherwise the app falls back to the previous local-only experience.
+    - Backend routes live in `artifacts/api-server/src/routes/wordpile.ts` (`/me`, `/sync`, `/piles` CRUD, `/piles/:pileId/words` CRUD); all but `/me` require a Clerk session and are scoped by `clerkUserId`. Schema in `lib/db/src/schema/wordpile.ts` (`wordpile_piles`, `wordpile_words`, UUID PKs, FK cascade).
     - Reachable from a "COMPANION TOOLS · Wordpile" tile on the Codetry Handbook front page.
     - Note: localPort is pinned to `25433` because manually-created artifacts must reuse a port already mapped in `.replit` `[[ports]]` (cannot edit `.replit`).
 

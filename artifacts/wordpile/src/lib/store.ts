@@ -1,10 +1,16 @@
 /**
  * WordpileStore — single source of truth for all wordpile data.
  *
- * v1 ships against browser localStorage with a versioned key. This module
- * is the only place that talks to localStorage; swapping the storage
- * backend later (e.g. an authenticated REST client) means rewriting the
- * three private helpers (`read`, `write`, `subscribe`) and nothing else.
+ * Storage:
+ *   - Anonymous: localStorage at `wordpile:v1`. Source of truth.
+ *   - Signed-in: localStorage acts as an offline cache; the server
+ *     (/api/wordpile/*) is the source of truth. The app calls
+ *     `WordpileStore.replaceAll(...)` once after sign-in with the
+ *     server-merged snapshot, then every subsequent mutation does an
+ *     optimistic local write followed by a fire-and-forget API push.
+ *
+ * Mutations stay synchronous so the UI doesn't need to change. The cloud
+ * push happens asynchronously in `cloudSync.ts` and never throws.
  */
 import {
   EMPTY_DATA,
@@ -13,6 +19,7 @@ import {
   type WordEntry,
   type WordpileData,
 } from "@/data/types";
+import * as cloud from "./cloudSync";
 
 const STORAGE_KEY = "wordpile:v1";
 const STORAGE_EVENT = "wordpile:changed";
@@ -79,7 +86,22 @@ function newId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  // Fallback for ancient browsers — UUID-shaped but not cryptographically
+  // strong. The server only checks shape (UUID v4 regex), so this still
+  // round-trips. We never expect to hit this path in practice.
+  const r = () => Math.floor(Math.random() * 16).toString(16);
+  return (
+    Array.from({ length: 8 }, r).join("") +
+    "-" +
+    Array.from({ length: 4 }, r).join("") +
+    "-4" +
+    Array.from({ length: 3 }, r).join("") +
+    "-" +
+    ((Math.floor(Math.random() * 4) + 8).toString(16) +
+      Array.from({ length: 3 }, r).join("")) +
+    "-" +
+    Array.from({ length: 12 }, r).join("")
+  );
 }
 
 export const WordpileStore = {
@@ -101,6 +123,36 @@ export const WordpileStore = {
     };
   },
 
+  // -- Cloud-sync hooks ------------------------------------------------
+  // Called by App.tsx once the Clerk user is known. Pass null when signed
+  // out — that disables the cloud push side effects without touching
+  // anything else.
+  setCloudUser(userId: string | null) {
+    cloud.setCloudUser(userId);
+  },
+
+  // Replace the entire in-memory + cached snapshot. Used after the
+  // sign-in /sync bootstrap. Preserves the user's currently-selected pile
+  // when possible so they don't lose context across sign-in.
+  replaceAll(data: WordpileData) {
+    const prevSelected = read().selectedPileId;
+    const selectedPileId =
+      prevSelected && data.piles[prevSelected]
+        ? prevSelected
+        : data.selectedPileId;
+    write({ ...data, selectedPileId });
+  },
+
+  // Wipe all local state (used on sign-out so the next anonymous user on
+  // this browser doesn't see the previous user's piles in the cache).
+  clearLocal() {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(STORAGE_KEY);
+    }
+    cachedSnapshot = EMPTY_DATA;
+    emit();
+  },
+
   // -- Pile-level ------------------------------------------------------
   createPile(name: string): CommunityPile {
     const trimmed = name.trim();
@@ -119,15 +171,18 @@ export const WordpileStore = {
       pileOrder: [...data.pileOrder, pile.id],
       selectedPileId: pile.id,
     }));
+    cloud.pushCreatePile(pile);
     return pile;
   },
 
   renamePile(pileId: string, name: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
+    let didChange = false;
     update((data) => {
       const p = data.piles[pileId];
       if (!p) return data;
+      didChange = true;
       return {
         ...data,
         piles: {
@@ -136,11 +191,14 @@ export const WordpileStore = {
         },
       };
     });
+    if (didChange) cloud.pushRenamePile(pileId, trimmed);
   },
 
   deletePile(pileId: string) {
+    let didDelete = false;
     update((data) => {
       if (!data.piles[pileId]) return data;
+      didDelete = true;
       const nextPiles = { ...data.piles };
       delete nextPiles[pileId];
       const nextOrder = data.pileOrder.filter((id) => id !== pileId);
@@ -154,9 +212,11 @@ export const WordpileStore = {
             : data.selectedPileId,
       };
     });
+    if (didDelete) cloud.pushDeletePile(pileId);
   },
 
   selectPile(pileId: string | null) {
+    // Selection is purely a client-side preference — never synced.
     update((data) => ({ ...data, selectedPileId: pileId }));
   },
 
@@ -197,6 +257,7 @@ export const WordpileStore = {
         },
       };
     });
+    if (created) cloud.pushAddWord(pileId, created);
     return created;
   },
 
@@ -205,19 +266,25 @@ export const WordpileStore = {
     wordId: string,
     patch: Partial<Pick<WordEntry, "word" | "note" | "bucket" | "saferAlternative">>,
   ) {
+    let didUpdate = false;
+    let normalisedWord: string | undefined;
     update((data) => {
       const pile = data.piles[pileId];
       if (!pile) return data;
-      const next = pile.words.map((w) =>
-        w.id === wordId
-          ? {
-              ...w,
-              ...patch,
-              word: patch.word !== undefined ? patch.word.trim().toLowerCase() : w.word,
-              updatedAt: Date.now(),
-            }
-          : w,
-      );
+      const next = pile.words.map((w) => {
+        if (w.id !== wordId) return w;
+        didUpdate = true;
+        if (patch.word !== undefined) {
+          normalisedWord = patch.word.trim().toLowerCase();
+        }
+        return {
+          ...w,
+          ...patch,
+          word: normalisedWord ?? w.word,
+          updatedAt: Date.now(),
+        };
+      });
+      if (!didUpdate) return data;
       return {
         ...data,
         piles: {
@@ -226,24 +293,35 @@ export const WordpileStore = {
         },
       };
     });
+    if (didUpdate) {
+      cloud.pushUpdateWord(pileId, wordId, {
+        ...patch,
+        ...(normalisedWord !== undefined ? { word: normalisedWord } : {}),
+      });
+    }
   },
 
   deleteWord(pileId: string, wordId: string) {
+    let didDelete = false;
     update((data) => {
       const pile = data.piles[pileId];
       if (!pile) return data;
+      const next = pile.words.filter((w) => w.id !== wordId);
+      if (next.length === pile.words.length) return data;
+      didDelete = true;
       return {
         ...data,
         piles: {
           ...data.piles,
           [pileId]: {
             ...pile,
-            words: pile.words.filter((w) => w.id !== wordId),
+            words: next,
             updatedAt: Date.now(),
           },
         },
       };
     });
+    if (didDelete) cloud.pushDeleteWord(pileId, wordId);
   },
 
   moveWord(pileId: string, wordId: string, bucket: Bucket) {

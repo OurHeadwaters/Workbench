@@ -4,6 +4,7 @@ import storageRouter from "./storage";
 import libraryRouter from "./library";
 import checkinRouter from "./checkin";
 import bookkeeperRouter from "./bookkeeper";
+import wordpileRouter from "./wordpile";
 
 const router: IRouter = Router();
 
@@ -12,5 +13,6 @@ router.use(storageRouter);
 router.use("/library", libraryRouter);
 router.use("/check-in", checkinRouter);
 router.use("/bookkeeper", bookkeeperRouter);
+router.use("/wordpile", wordpileRouter);
 
 export default router;

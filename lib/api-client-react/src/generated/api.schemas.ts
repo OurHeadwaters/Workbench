@@ -784,6 +784,105 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+export interface OkResponse {
+  ok: boolean;
+}
+
+export interface WordpileMe {
+  isAuthenticated: boolean;
+  userId?: string | null;
+  email?: string | null;
+}
+
+export type WordpileWordBucket =
+  (typeof WordpileWordBucket)[keyof typeof WordpileWordBucket];
+
+export const WordpileWordBucket = {
+  unsorted: "unsorted",
+  load: "load",
+  interior: "interior",
+  avoid: "avoid",
+} as const;
+
+export interface WordpileWord {
+  id: string;
+  pileId: string;
+  word: string;
+  note: string;
+  bucket: WordpileWordBucket;
+  saferAlternative: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WordpilePile {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  words: WordpileWord[];
+}
+
+export interface WordpileSnapshot {
+  piles: WordpilePile[];
+}
+
+export interface CreateWordpilePileRequest {
+  id: string;
+  /** @minLength 1 */
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UpdateWordpilePileRequest {
+  /** @minLength 1 */
+  name?: string;
+}
+
+export type CreateWordpileWordRequestBucket =
+  (typeof CreateWordpileWordRequestBucket)[keyof typeof CreateWordpileWordRequestBucket];
+
+export const CreateWordpileWordRequestBucket = {
+  unsorted: "unsorted",
+  load: "load",
+  interior: "interior",
+  avoid: "avoid",
+} as const;
+
+export interface CreateWordpileWordRequest {
+  id: string;
+  /** @minLength 1 */
+  word: string;
+  note?: string;
+  bucket?: CreateWordpileWordRequestBucket;
+  saferAlternative?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type UpdateWordpileWordRequestBucket =
+  (typeof UpdateWordpileWordRequestBucket)[keyof typeof UpdateWordpileWordRequestBucket];
+
+export const UpdateWordpileWordRequestBucket = {
+  unsorted: "unsorted",
+  load: "load",
+  interior: "interior",
+  avoid: "avoid",
+} as const;
+
+export interface UpdateWordpileWordRequest {
+  /** @minLength 1 */
+  word?: string;
+  note?: string;
+  bucket?: UpdateWordpileWordRequestBucket;
+  saferAlternative?: string;
+}
+
+export interface SyncWordpileRequest {
+  piles: WordpilePile[];
+}
+
 export type ListLibraryEntriesParams = {
   search?: string;
   /**

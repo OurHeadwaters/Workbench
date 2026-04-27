@@ -1167,6 +1167,10 @@ importers:
         version: 3.25.76
 
   artifacts/wordpile:
+    dependencies:
+      '@clerk/react':
+        specifier: ^6.4.3
+        version: 6.4.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@replit/vite-plugin-cartographer':
         specifier: 'catalog:'
