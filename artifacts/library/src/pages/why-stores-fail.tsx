@@ -3,9 +3,12 @@ import { Link } from "wouter";
 import {
   FAILURE_MODES,
   FAILURE_MODE_THEMES,
+  FAILURE_MODE_VOICES,
   COUNTER_EXAMPLES,
   failureModesByTheme,
+  driftGapTotals,
   type FailureMode,
+  type FailureModeVoice,
 } from "@workspace/why-stores-fail";
 import {
   useListLibraryEntries,
@@ -19,6 +22,7 @@ import {
   AlertTriangle,
   ArrowRight,
   CheckCircle2,
+  Languages,
   Lightbulb,
   Quote,
 } from "lucide-react";
@@ -52,6 +56,7 @@ export default function WhyStoresFailPage({ readOnly = false }: WhyStoresFailPag
   }, [data?.entries]);
 
   const grouped = useMemo(() => failureModesByTheme(), []);
+  const driftGaps = useMemo(() => driftGapTotals(FAILURE_MODES), []);
 
   return (
     <div className="space-y-12 animate-in fade-in duration-500 pb-16">
@@ -83,6 +88,50 @@ export default function WhyStoresFailPage({ readOnly = false }: WhyStoresFailPag
               </Badge>
             </a>
           ))}
+        </div>
+
+        <div
+          className="mt-4 rounded-lg border border-border bg-muted/30 px-4 py-3 flex flex-wrap items-start gap-x-6 gap-y-2"
+          data-testid="drift-gap-summary"
+        >
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold">
+            <Languages className="h-3.5 w-3.5" />
+            Drift gaps
+          </div>
+          <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 text-sm">
+            <div>
+              <span
+                className="font-serif text-lg font-bold text-accent"
+                data-testid="drift-gap-missing-community"
+              >
+                {driftGaps.missingCommunityName}
+              </span>
+              <span className="text-muted-foreground">
+                {" "}
+                of {driftGaps.total} failure modes have{" "}
+                <span className="text-foreground font-medium">
+                  no community name
+                </span>{" "}
+                — phenomena the community can't yet see or discuss.
+              </span>
+            </div>
+            <div>
+              <span
+                className="font-serif text-lg font-bold text-accent"
+                data-testid="drift-gap-missing-industry"
+              >
+                {driftGaps.missingIndustryName}
+              </span>
+              <span className="text-muted-foreground">
+                {" "}
+                have{" "}
+                <span className="text-foreground font-medium">
+                  no industry name
+                </span>{" "}
+                — phenomena research has missed.
+              </span>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -221,6 +270,8 @@ function FailureModeCard({
           </div>
         )}
 
+        <DriftMap mode={mode} />
+
         <div className="pt-3 border-t border-border/50 space-y-2">
           <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground font-semibold">
             Sources
@@ -270,5 +321,74 @@ function FailureModeCard({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+/**
+ * Drift map: a compact table showing the noun each industry voice uses for
+ * the same phenomenon. Rows where no name exists in that voice are explicitly
+ * rendered as "no name yet" rather than hidden, so the absence is visible.
+ */
+function DriftMap({ mode }: { mode: FailureMode }) {
+  const byVoice = new Map<FailureModeVoice, { name: string | null; sourceRef?: number }>();
+  for (const row of mode.names) {
+    byVoice.set(row.voice, { name: row.name, sourceRef: row.sourceRef });
+  }
+
+  return (
+    <div
+      className="pt-3 border-t border-border/50 space-y-2"
+      data-testid={`drift-map-${mode.id}`}
+    >
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground font-semibold">
+        <Languages className="h-3.5 w-3.5" />
+        Names for this
+      </div>
+      <div className="rounded-md border border-border/60 overflow-hidden bg-muted/20">
+        <table className="w-full text-sm">
+          <tbody>
+            {FAILURE_MODE_VOICES.map((voice) => {
+              const row = byVoice.get(voice.id);
+              const name = row?.name ?? null;
+              const isAbsent = name === null;
+              const src =
+                row?.sourceRef !== undefined ? mode.sources[row.sourceRef] : undefined;
+              return (
+                <tr
+                  key={voice.id}
+                  className="border-b last:border-b-0 border-border/40"
+                  data-testid={`drift-map-${mode.id}-row-${voice.id}`}
+                  data-name-absent={isAbsent ? "true" : "false"}
+                >
+                  <td
+                    className="py-1.5 px-3 text-xs uppercase tracking-wider text-muted-foreground font-semibold align-top w-[180px]"
+                    title={voice.description}
+                  >
+                    {voice.label}
+                  </td>
+                  <td className="py-1.5 px-3 align-top">
+                    {isAbsent ? (
+                      <span className="text-muted-foreground italic opacity-70">
+                        no name yet
+                      </span>
+                    ) : (
+                      <span className="text-foreground">
+                        "{name}"
+                        {src && (
+                          <span className="text-muted-foreground italic text-xs">
+                            {" "}
+                            — {src.upstream || src.libraryTitle}
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

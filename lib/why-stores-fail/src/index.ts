@@ -49,6 +49,82 @@ export interface FailureModeSource {
   upstream?: string;
 }
 
+/**
+ * The set of "voices" a phenomenon can be named in. Each voice is one of the
+ * industries / vantage points that has its own vocabulary for the same
+ * underlying thing. Kept fixed and small so the drift map is comparable across
+ * failure modes — and so an absence in any column is visible.
+ */
+export type FailureModeVoice =
+  | "community"
+  | "federal"
+  | "logistics"
+  | "academic"
+  | "distributor"
+  | "producer"
+  | "retailer";
+
+export interface FailureModeVoiceMeta {
+  id: FailureModeVoice;
+  /** Short label rendered in the drift-map row, e.g. "Federal program". */
+  label: string;
+  /** One-line plain-language description of this voice. */
+  description: string;
+}
+
+export const FAILURE_MODE_VOICES: FailureModeVoiceMeta[] = [
+  {
+    id: "community",
+    label: "Community",
+    description: "What people in Deer Lake (and other fly-in towns) actually call it.",
+  },
+  {
+    id: "federal",
+    label: "Federal program",
+    description:
+      "What program auditors at NNC, ESDC, CFIA, or Statistics Canada call it.",
+  },
+  {
+    id: "logistics",
+    label: "Logistics / freight",
+    description: "What carriers and dispatchers call it on the corridor.",
+  },
+  {
+    id: "academic",
+    label: "Academic",
+    description:
+      "What feasibility studies, value-chain researchers, and co-op scholars call it.",
+  },
+  {
+    id: "distributor",
+    label: "Distributor",
+    description: "What aggregators and wholesalers call it on the order side.",
+  },
+  {
+    id: "producer",
+    label: "Producer",
+    description: "What small farms, harvesters, and makers call it.",
+  },
+  {
+    id: "retailer",
+    label: "Retailer",
+    description: "What chain-grocery operators call it inside the trade.",
+  },
+];
+
+/**
+ * One row of a failure mode's drift map: the noun a single voice uses for the
+ * phenomenon. `name === null` is a first-class value meaning "no name yet" —
+ * an absence we want visible, not hidden.
+ */
+export interface FailureModeName {
+  voice: FailureModeVoice;
+  /** The noun this voice uses, or null if no name exists in the source material. */
+  name: string | null;
+  /** Optional 0-based index into the failure mode's `sources` array. */
+  sourceRef?: number;
+}
+
 export interface FailureMode {
   id: string;
   shortName: string;
@@ -74,6 +150,14 @@ export interface FailureMode {
   evidence: string;
   figures: FailureModeFigure[];
   sources: FailureModeSource[];
+  /**
+   * Drift map: the noun each industry voice uses for this same phenomenon.
+   * One entry per voice in `FAILURE_MODE_VOICES`. Voices where no name exists
+   * in the cited source material are present with `name: null` so the absence
+   * is visible — both blanks ("no community name", "no industry name") are
+   * findings in their own right.
+   */
+  names: FailureModeName[];
 }
 
 export interface FailureModeThemeMeta {
@@ -158,6 +242,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "Building a NWO Food Hub Network — project overview",
       },
     ],
+    names: [
+      { voice: "community", name: "the store" },
+      { voice: "federal", name: "single-eligible-retailer community", sourceRef: 0 },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "monopoly retail concentration", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "captive market" },
+    ],
   },
   {
     id: "subsidy-capture",
@@ -188,6 +281,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "LFIF — Final Project Report",
       },
     ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: "retailer pass-through gap", sourceRef: 0 },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "subsidy incidence", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "margin retention" },
+    ],
   },
   {
     id: "capital-leakage",
@@ -215,6 +317,15 @@ export const FAILURE_MODES: FailureMode[] = [
           "Pasted-Local-Food-Infrastructure-Fund-Final-Project-Report-Com_1777035717477.txt",
         libraryTitle: "LFIF — Final Project Report",
       },
+    ],
+    names: [
+      { voice: "community", name: "money flying south" },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "local-food multiplier leakage", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "intercompany remittance" },
     ],
   },
   {
@@ -247,6 +358,15 @@ export const FAILURE_MODES: FailureMode[] = [
           "Pasted--Business-Plan-807-Food-Co-op-Inc-Dryden-ON-January-202_1777034303575.txt",
         libraryTitle: "Business Plan — Dryden corridor food co-op",
       },
+    ],
+    names: [
+      { voice: "community", name: "no say in the store" },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "absence of multi-stakeholder governance", sourceRef: 1 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: "no producer-member seat", sourceRef: 0 },
+      { voice: "retailer", name: "outside-owned banner store" },
     ],
   },
 
@@ -284,6 +404,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "Erb Distribution — 2023 reference",
       },
     ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: "hours-of-service ceiling", sourceRef: 0 },
+      { voice: "logistics", name: "long northern leg", sourceRef: 0 },
+      { voice: "academic", name: "high cost-per-loaded-mile", sourceRef: 0 },
+      { voice: "distributor", name: "cold-chain freight premium", sourceRef: 2 },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "freight burden in landed cost" },
+    ],
   },
   {
     id: "single-trailer-fragility",
@@ -316,6 +445,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "Supply Chain Resilience Analysis — overview & key outcomes",
       },
     ],
+    names: [
+      { voice: "community", name: "the produce truck didn't come" },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: "single-asset corridor", sourceRef: 0 },
+      { voice: "academic", name: "single point of failure", sourceRef: 2 },
+      { voice: "distributor", name: "single-reefer dependency", sourceRef: 1 },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "no redundant inbound lane" },
+    ],
   },
   {
     id: "no-backhaul",
@@ -342,6 +480,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "NWO Food Hub Network — project narrative (revised)",
         upstream: "Wallace Center, Values-Based Supply Chains framework",
       },
+    ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: "deadhead miles", sourceRef: 0 },
+      { voice: "academic", name: "asymmetric freight flow", sourceRef: 1 },
+      { voice: "distributor", name: "0% backhaul fill", sourceRef: 0 },
+      { voice: "producer", name: "no southbound aggregation", sourceRef: 1 },
+      { voice: "retailer", name: "round-trip cost on inbound" },
     ],
   },
   {
@@ -373,6 +520,15 @@ export const FAILURE_MODES: FailureMode[] = [
           "Pasted--Business-Plan-807-Food-Co-op-Inc-Dryden-ON-January-202_1777034303575.txt",
         libraryTitle: "Business Plan — Dryden corridor food co-op",
       },
+    ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: "uncoordinated regional assets", sourceRef: 1 },
+      { voice: "academic", name: "missing soft infrastructure", sourceRef: 1 },
+      { voice: "distributor", name: "no aggregator layer", sourceRef: 2 },
+      { voice: "producer", name: "no value-chain coordinator", sourceRef: 1 },
+      { voice: "retailer", name: "default to single distributor" },
     ],
   },
 
@@ -407,6 +563,15 @@ export const FAILURE_MODES: FailureMode[] = [
         upstream: "Transport Canada hours-of-service regulations",
       },
     ],
+    names: [
+      { voice: "community", name: "if the driver is sick" },
+      { voice: "federal", name: "single-driver hours-of-service ceiling", sourceRef: 1 },
+      { voice: "logistics", name: "no relief driver", sourceRef: 0 },
+      { voice: "academic", name: "operational fragility" },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "no backup crew" },
+    ],
   },
   {
     id: "shrink-and-stockouts",
@@ -434,6 +599,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryFilename: "ENGLISH_Distributor_Guide_(2)_1777039787270.pdf",
         libraryTitle: "Distributor Guide (English)",
       },
+    ],
+    names: [
+      { voice: "community", name: "the shelf goes bare" },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: "winter-road order cadence", sourceRef: 1 },
+      { voice: "academic", name: "order-cycle / route mismatch", sourceRef: 0 },
+      { voice: "distributor", name: "over-order then spoilage", sourceRef: 2 },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "shrink and stock-outs" },
     ],
   },
   {
@@ -463,6 +637,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "Growing Local Food Literacy — Tipsheet",
       },
     ],
+    names: [
+      { voice: "community", name: "the price up here" },
+      { voice: "federal", name: "Northern Food Basket gap", sourceRef: 0 },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "cost-of-living differential", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "low average basket size" },
+    ],
   },
   {
     id: "haccp-processing-gap",
@@ -487,6 +670,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryFilename: "Eat_the_Fish__1777039787271.docx",
         libraryTitle: "Eat the Fish — initiative notes",
       },
+    ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: "no HACCP-certified facility", sourceRef: 0 },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "processing infrastructure gap", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: "no certified cut-and-pack floor", sourceRef: 1 },
+      { voice: "retailer", name: "import-only frozen aisle" },
     ],
   },
 
@@ -522,6 +714,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "Onboarding New Suppliers",
       },
     ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "missing aggregator layer", sourceRef: 0 },
+      { voice: "distributor", name: "below minimum order quantity", sourceRef: 2 },
+      { voice: "producer", name: "shut out of wholesale", sourceRef: 0 },
+      { voice: "retailer", name: "one truck, one invoice rule", sourceRef: 0 },
+    ],
   },
   {
     id: "capital-access-gap",
@@ -555,6 +756,15 @@ export const FAILURE_MODES: FailureMode[] = [
         libraryTitle: "LFIF — Final Project Report",
       },
     ],
+    names: [
+      { voice: "community", name: "the bank says no" },
+      { voice: "federal", name: "capex-only program coverage", sourceRef: 2 },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "patient-capital gap", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: "no working-capital line", sourceRef: 1 },
+      { voice: "retailer", name: null },
+    ],
   },
   {
     id: "people-trap",
@@ -586,6 +796,15 @@ export const FAILURE_MODES: FailureMode[] = [
           "Pasted-Guidelines-and-Sample-Bylaw-Language-for-Multi-stakehol_1777035050884.txt",
         libraryTitle: "Multi-stakeholder co-op — bylaw guidelines & sample language",
       },
+    ],
+    names: [
+      { voice: "community", name: null },
+      { voice: "federal", name: null },
+      { voice: "logistics", name: null },
+      { voice: "academic", name: "PeopleTrap (revenue-share capture)", sourceRef: 0 },
+      { voice: "distributor", name: null },
+      { voice: "producer", name: null },
+      { voice: "retailer", name: "revenue-share management contract", sourceRef: 0 },
     ],
   },
 ];
@@ -637,6 +856,41 @@ export function sourcesFooterLine(modes: FailureMode[]): string {
     }
   }
   return titles.join(" · ");
+}
+
+/**
+ * True if this failure mode has no community-voice name in its drift map —
+ * i.e. the phenomenon is one the community can't see or discuss in its own
+ * vocabulary yet. Treated as a finding in its own right.
+ */
+export function isMissingCommunityName(mode: FailureMode): boolean {
+  const row = mode.names.find((n) => n.voice === "community");
+  return !row || row.name === null;
+}
+
+/**
+ * True if this failure mode has no industry-voice name at all — i.e. every
+ * non-community voice (federal, logistics, academic, distributor, producer,
+ * retailer) is "no name yet". These are phenomena research has missed
+ * entirely.
+ */
+export function isMissingIndustryName(mode: FailureMode): boolean {
+  return mode.names
+    .filter((n) => n.voice !== "community")
+    .every((n) => n.name === null);
+}
+
+/** Two drift-gap totals computed across all failure modes. */
+export function driftGapTotals(modes: FailureMode[] = FAILURE_MODES): {
+  missingCommunityName: number;
+  missingIndustryName: number;
+  total: number;
+} {
+  return {
+    missingCommunityName: modes.filter(isMissingCommunityName).length,
+    missingIndustryName: modes.filter(isMissingIndustryName).length,
+    total: modes.length,
+  };
 }
 
 function shortSourceLabel(src: FailureModeSource): string {
