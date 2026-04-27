@@ -13,7 +13,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { GestureHandlerRootView as RawGestureHandlerRootView } from "react-native-gesture-handler";
+
+const GestureHandlerRootView = RawGestureHandlerRootView as React.ComponentType<{
+  style?: { flex: number };
+  children?: React.ReactNode;
+}>;
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 

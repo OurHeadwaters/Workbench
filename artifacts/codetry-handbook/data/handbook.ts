@@ -105,7 +105,7 @@ const partII: Part = {
   roman: "II",
   title: "Adjacent Disciplines",
   blurb:
-    "Two older disciplines codetry gets confused with — both honoured, both doing different work.",
+    "Three older disciplines codetry gets confused with — all honoured, all doing different work.",
   chapters: [
     {
       id: "2-1",
@@ -170,6 +170,62 @@ const partII: Part = {
           kind: "para",
           text:
             "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and it sits across the room from codetry doing related but separate work. Both are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself.",
+        },
+      ],
+    },
+    {
+      id: "2-3",
+      number: "2.3",
+      partRoman: "II",
+      partLabel: "II · Adjacent Disciplines",
+      title: "Different from DDD and Conway's Law",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The third discipline codetry gets confused with — and the one that has the deepest pull on readers from the mainstream software-engineering tradition — is the lineage that runs from Conway's Law to domain-driven design. Melvin Conway named the law in 1968: any system reflects the communication structure of the organisation that built it. Eric Evans named domain-driven design in his 2003 book; Vaughn Vernon, the ThoughtWorks crowd, and the bounded-context, ubiquitous-language vocabulary that came after are all in this room.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry shares ancestry with both. All three accept the same uncomfortable premise: structure outside the code shapes structure inside the code, and pretending otherwise is how systems quietly go wrong.",
+        },
+        {
+          kind: "subhead",
+          text: "Conway's Law observes the mirror.",
+        },
+        {
+          kind: "para",
+          text:
+            "Conway's move was descriptive. He noticed that the shape of a team prints itself onto the shape of its software, whether anyone meant it to or not. The discipline that grew from that — inverse Conway, team topologies — is the practice of arranging the org chart on purpose so the system you get is the system you wanted.",
+        },
+        {
+          kind: "subhead",
+          text: "Domain-driven design works the mirror.",
+        },
+        {
+          kind: "para",
+          text:
+            "DDD takes the next step and says: name the model after the language the domain experts already use. The *ubiquitous language* is meant to live in the conversation, the whiteboard, and the code at once. Bounded contexts mark where one such language ends and another begins. Done well, this is real respect for the world the software is for.",
+        },
+        {
+          kind: "subhead",
+          text: "Codetry takes the stricter stance.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry agrees that the language outside the code should be the language inside the code, and then asks a harder question: *whose language?* DDD typically lands on the domain expert — the analyst, the consultant, the senior engineer who has just spent a week in workshops tidying the vocabulary up. Codetry insists the noun must come from the community itself, in the form the community already uses it, before any tidying.",
+        },
+        {
+          kind: "para",
+          text:
+            "Which means translation away from that noun — even into a cleaner, more general, more reusable noun — is treated as *drift*, not as cleanup. The moment a *saltbox* becomes a *household container* in the schema, the architecture has slipped, even if every test still passes. The codetry-test exists because that slip is invisible to the type checker and obvious to the person who handed you the word.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Conway and DDD ask whose org shapes the system. Codetry asks whose word survives the schema — and treats every translation away from it as drift.",
         },
       ],
     },
