@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/deer-lake-walkthrough/"
+title = "Deer Lake Walkthrough"
+version = "1.0.0"
+id = "artifacts/deer-lake-walkthrough"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/deer-lake-walkthrough/" ]
+localPort = 24089
+
+[services.development]
+run = "pnpm --filter @workspace/deer-lake-walkthrough run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/deer-lake-walkthrough", "run", "build" ]
+publicDir = "artifacts/deer-lake-walkthrough/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24089"
+BASE_PATH = "/deer-lake-walkthrough/"
