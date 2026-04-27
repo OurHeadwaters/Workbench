@@ -105,6 +105,15 @@ export default function ChapterScreen() {
     [],
   );
 
+  const onPressRef = useCallback(
+    (target: string) => {
+      if (Platform.OS !== "web")
+        Haptics.selectionAsync().catch(() => {});
+      goTo(target);
+    },
+    [goTo],
+  );
+
   const goPrev = useCallback(() => {
     if (prev) {
       if (Platform.OS !== "web")
@@ -348,6 +357,7 @@ export default function ChapterScreen() {
                 fontScale={fontScale}
                 onLongPress={onLongPressBlock}
                 bookmarked={bookmarked}
+                onPressRef={onPressRef}
               />
             );
           })}

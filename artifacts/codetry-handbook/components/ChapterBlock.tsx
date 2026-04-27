@@ -16,11 +16,13 @@ export function ChapterBlock({
   fontScale,
   onLongPress,
   bookmarked,
+  onPressRef,
 }: {
   block: Block;
   fontScale: number;
   onLongPress?: (excerpt: string) => void;
   bookmarked?: boolean;
+  onPressRef?: (chapterId: string) => void;
 }) {
   const c = useColors();
   const baseSize = 17 * fontScale;
@@ -28,6 +30,12 @@ export function ChapterBlock({
   const smallSize = 13 * fontScale;
   const subheadSize = 15 * fontScale;
   const pullSize = baseSize * 1.05;
+  const refStyle = {
+    color: c.foreground,
+    fontFamily: SERIF_BOLD,
+    textDecorationLine: "underline" as const,
+    textDecorationColor: c.muted,
+  };
 
   switch (block.kind) {
     case "para": {
@@ -60,6 +68,8 @@ export function ChapterBlock({
               },
             ]}
             italicStyle={{ fontFamily: SERIF_ITALIC }}
+            onPressRef={onPressRef}
+            refStyle={refStyle}
           />
         </Pressable>
       );
@@ -78,6 +88,8 @@ export function ChapterBlock({
               marginBottom: 4,
               letterSpacing: 0.2,
             }}
+            onPressRef={onPressRef}
+            refStyle={refStyle}
           />
         </View>
       );
@@ -134,6 +146,8 @@ export function ChapterBlock({
               lineHeight,
             }}
             italicStyle={{ fontFamily: SERIF_ITALIC }}
+            onPressRef={onPressRef}
+            refStyle={refStyle}
           />
         </View>
       );
