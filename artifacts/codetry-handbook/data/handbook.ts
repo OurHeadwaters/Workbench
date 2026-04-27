@@ -216,7 +216,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Both disciplines insist that words around the code do load-bearing work. They are doing different jobs.",
+            "Both disciplines insist that words around the code do load-bearing work. What each one names as the load-bearing word, and where each one places the unit of care, is the contrast worth drawing here; §6.1 returns to the relationship between the two disciplines once that contrast is on the page, and finds it less symmetric than this chapter first allows.",
         },
         {
           kind: "subhead",
@@ -239,7 +239,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and it sits across the room from codetry doing related but separate work. Both are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself.",
+            "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in adjacent rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry, which makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
         },
       ],
     },
@@ -801,7 +801,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Donald Knuth's WEB and CWEB; Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. Document is the source; code is woven from prose. The closest sibling discipline to codetry, doing different work — verifying by exposing the reasoning rather than by making the metaphor inspectable.",
+            "Donald Knuth's WEB and CWEB; Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. Document is the source; code is woven from prose. The discipline closest to codetry in this lineage — and, on the reading §6.1 lands on, the discipline codetry sits one floor underneath rather than across the room from: literate programming verifies by exposing the reasoning, but the woven program only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims, and holding those names is the move codetry is for.",
         },
         { kind: "subhead", text: "The earlier book (2017)" },
         {
