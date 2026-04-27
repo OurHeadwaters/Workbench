@@ -3,7 +3,7 @@ import { SectionCard } from "@/components/SectionCard";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { money, pct } from "@/lib/format";
 import { confirmed } from "@/data/tags";
-import { Compass, Repeat, Settings2, Quote, ArrowRight } from "lucide-react";
+import { Compass, Repeat, Settings2, Quote, ArrowRight, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 
 /**
@@ -107,6 +107,67 @@ export function ReplicationPage() {
               recovered capital, one tool that pays for itself, and a Reserve /
               Innovation / Giving split the value-delivered audit defends each
               year.
+            </p>
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* ============ LITERATE-PROGRAMMING EXPANSION ============ */}
+      <SectionCard
+        title="Literate programming is back — and Codetry is what closes the gap"
+        subtitle="Founder's voice. Why the practitioner model is the missing half of the literate-programming revival."
+        tag={confirmed("Framing locked April 2026 — three challenges named, with the practitioner as the human-shaped answer to each.")}
+        accent={accent}
+      >
+        <div className="flex items-start gap-3">
+          <BookOpen
+            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
+            style={{ color: accentInk }}
+          />
+          <div
+            className="flex-1 min-w-0 space-y-5 text-base leading-relaxed"
+            style={{ fontFamily: "var(--app-font-serif)", color: "hsl(var(--foreground))" }}
+          >
+            <p>
+              Literate programming is back — modern tools let one person hold
+              a system the way ten used to — and AI codegen has made
+              fluent-looking code cheap, which quietly moved the bottleneck
+              from typing to judgment.
+            </p>
+
+            <div className="space-y-4">
+              <Challenge
+                n="01"
+                title="Judgment doesn't go away — it relocates."
+                body="The tools wrote the boilerplate. They didn't decide what to build, what to call it, what to leave out, or what to refuse. Prompt engineering, validation, and architecture are still human work, and they're harder now because the output looks polished even when it's wrong. The practitioner is the one carrying that judgment — paid by name to make the calls, not just the keystrokes."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+              />
+              <Challenge
+                n="02"
+                title="Fluent isn't the same as legible."
+                body="Ship enough generated code without owning it and you end up with a system nobody — including the author — can read. The practitioner's deliverable can't be that. It has to be legible to the band council, the contractor's CFO, and the next practitioner who picks it up. That readership is a forcing function: if the band can't follow what the system does and what it cost, it isn't done."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+              />
+              <Challenge
+                n="03"
+                title="Not every project needs this depth."
+                body="A weekend script doesn't need a literate-programming practice around it; an 18-month engagement that touches a community's food system does. Contract size, defined scope, and the year-end value-delivered audit are what keep the depth proportional to the stakes. Small jobs stay small. The practitioner model only shows up where the legibility is worth paying for."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+              />
+            </div>
+
+            <p
+              className="text-sm text-muted-foreground border-t pt-4"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+            >
+              <strong className="text-foreground">Honest caveat:</strong>{" "}
+              Codetry doesn't <em>solve</em> the judgment problem. It
+              relocates it onto a named, accountable, paid person — which is
+              the version of the problem a band council, a contractor, and a
+              bookkeeper can actually act on.
             </p>
           </div>
         </div>
@@ -265,6 +326,43 @@ export function ReplicationPage() {
       >
         <ConfirmedTag tag={confirmed("Replication model locked alongside V4.")} className="mr-2" />
         The replication chapter is the model written down — it does not introduce a new sales site or pricing calculator. Per-community parameter calculators live in the operating-plan slides.
+      </div>
+    </div>
+  );
+}
+
+function Challenge({
+  n,
+  title,
+  body,
+  accentInk,
+  accentSoft,
+}: {
+  n: string;
+  title: string;
+  body: string;
+  accentInk: string;
+  accentSoft: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        className="mt-0.5 inline-flex h-7 w-9 items-center justify-center rounded-md text-xs font-semibold tracking-wider flex-shrink-0"
+        style={{ backgroundColor: accentSoft, color: accentInk }}
+        aria-hidden
+      >
+        {n}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p
+          className="text-base font-semibold text-foreground"
+          style={{ fontFamily: "var(--app-font-serif)" }}
+        >
+          {title}
+        </p>
+        <p className="mt-1 text-[0.95rem] text-muted-foreground leading-relaxed">
+          {body}
+        </p>
       </div>
     </div>
   );
