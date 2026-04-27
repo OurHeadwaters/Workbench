@@ -96,7 +96,7 @@ function ModeCard({ mode, index }: { mode: FailureMode; index: number }) {
           isPrimary ? "opacity-95" : "text-primary"
         }`}
       >
-        {mode.plainSummary ?? mode.summary}
+        {mode.summary}
       </div>
     </div>
   );

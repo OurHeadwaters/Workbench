@@ -123,7 +123,7 @@ function ThemeColumn({
                   isPrimary ? "opacity-85" : "text-muted"
                 }`}
               >
-                {mode.plainSummary ?? mode.summary}
+                {mode.summary}
               </div>
             </div>
           );
