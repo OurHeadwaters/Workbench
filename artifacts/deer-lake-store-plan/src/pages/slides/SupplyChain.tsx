@@ -37,7 +37,7 @@ export default function SupplyChain() {
               Dryden → Deer Lake (winter road truck)
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              A second truck built for the winter road. Paid for by the federal Local Food Infrastructure Fund when it opens up again, with our partner Local Food and Farm Co-operatives. We keep it separate from the Thunder Bay truck on purpose. If one truck breaks down, the other still runs.
+              A second truck built for the winter road. Paid for by the federal Local Food Infrastructure Fund (a grant program for food projects) when it opens up again. Our partner on it is Local Food and Farm Co-operatives. We keep it separate from the Thunder Bay truck on purpose. If one truck breaks down, the other still runs.
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export default function SupplyChain() {
                 Everyday staples by the pallet
               </div>
               <div className="font-body text-[1.15vw] leading-[1.4] opacity-95">
-                Sysco Canada, GFS Canada, and Federated Co-operatives bring the everyday items in by the pallet. Buying in big amounts keeps the price low.
+                Sysco Canada, Gordon Food Service, and Federated Co-operatives bring the everyday items in by the pallet. Buying in big amounts keeps the price low.
               </div>
             </div>
             <div>

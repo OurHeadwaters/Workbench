@@ -114,7 +114,7 @@ export default function StaffingModel() {
               <span className="font-semibold">Bookkeeper, part-time, remote.</span> Matches the records. Closes the month. Prepares payroll. Not on the store's payroll.
             </div>
             <div>
-              <span className="font-semibold">Technical advisor on retainer.</span> Reviews the software every three months. Checks any code that touches money before it goes live. Backup so the store does not depend on one person.
+              <span className="font-semibold">A technical advisor we keep on call.</span> Reviews the software every three months. Checks any code that touches money before it goes live. Backup so the store does not depend on one person.
             </div>
             <div>
               <span className="font-semibold">Training partner.</span> An Indigenous educator. Runs three groups of trainees a year. Trains the trainers from the start.

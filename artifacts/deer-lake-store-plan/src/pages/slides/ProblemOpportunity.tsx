@@ -56,7 +56,7 @@ export default function ProblemOpportunity() {
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  Most Ontario First Nations you can only reach by plane have just one grocery store. That is the highest of any province in Canada. <span className="font-semibold">Deer Lake is one of them.</span>{" "}
+                  In Ontario, most fly-in First Nations have just one grocery store — the most of any province in Canada. <span className="font-semibold">Deer Lake is one of them.</span>{" "}
                   <span className="font-mono text-[0.95vw] text-muted">(87 of every 100)</span>
                 </div>
               </div>
@@ -70,7 +70,7 @@ export default function ProblemOpportunity() {
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-accent text-[1.2vw] pt-[0.4vh] shrink-0">→</div>
                 <div>
-                  When there is only one store in town, most of the federal grocery help money never reaches the shelf. The store keeps the rest. <span className="font-mono text-[0.95vw] text-muted">(58¢ on the shelf, 42¢ kept by the store, per dollar from Nutrition North, the federal grocery help program for the north)</span>
+                  When there is only one store in town, most of the federal grocery help money never reaches the shelf. The store keeps the rest. <span className="font-mono text-[0.95vw] text-muted">(58¢ reaches the shelf. 42¢ stays with the store.)</span>
                 </div>
               </div>
               <div className="flex gap-[1vw]">
@@ -106,7 +106,7 @@ export default function ProblemOpportunity() {
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.2vw] pt-[0.4vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
                 <div>
-                  This is not an experiment. <span className="font-semibold">Arctic Co-operatives Ltd.</span> already runs 32 community-owned stores up north. The <span className="font-semibold">Meechum store in Mistissini</span> serves a Cree community of 4,000 people.
+                  This is not an experiment. <span className="font-semibold">Arctic Co-operatives</span> already runs 32 community-owned stores up north. The <span className="font-semibold">Meechum store in Mistissini</span> serves a Cree community of 4,000 people.
                 </div>
               </div>
               <div className="flex gap-[1vw]">

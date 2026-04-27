@@ -41,7 +41,14 @@ export default function FinancialsRole() {
               </div>
               <div>
                 <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">Where the opening money comes from</div>
-                <div className="text-text text-[0.82vw] leading-[1.35] mt-[0.2vh]">Federal and regional grants. FedNor (the federal economic agency for northern Ontario) runs the Northern Ontario Development Program. Community Futures and the Indigenous Services Canada Community Capital Program also help. Plus a partnership with Local Food and Farm Co-operatives. Plus a contribution from the band.</div>
+                <div className="text-text text-[0.82vw] leading-[1.35] mt-[0.2vh]">Federal and regional grants:</div>
+                <ul className="text-text text-[0.78vw] leading-[1.35] mt-[0.2vh] pl-[0.9vw] list-disc space-y-[0.2vh]">
+                  <li>FedNor (the federal economic agency for northern Ontario) — through its Northern Ontario Development Program.</li>
+                  <li>Community Futures — small-business loans for the region.</li>
+                  <li>Indigenous Services Canada Community Capital Program.</li>
+                  <li>A partnership with Local Food and Farm Co-operatives.</li>
+                  <li>A contribution from the band.</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -76,7 +83,7 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-[0.4vw] items-center">
-                <div className="col-span-4 text-text">Quiet trial run</div>
+                <div className="col-span-4 text-text">Soft opening · invited shoppers only</div>
                 <div className="col-span-8 h-[1.4vh] rounded-sm relative bg-rule">
                   <div className="absolute h-full rounded-sm" style={{ left: "44%", width: "8%", background: "var(--slide-accent)" }} />
                 </div>
@@ -156,7 +163,7 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="font-body text-[0.72vw] leading-[1.4] opacity-80 mt-[0.5vh]">
-                We put 35% of what you pay back into building the store. An outside accountant checks this every year. The "gap money" covers two months of our costs plus the day-one equipment we buy ($0, $42k, or $60k). We get the gap money back when the last two invoices clear. (Indigenous Services Canada is the federal department that pays the band. They take about 60 days to pay each invoice.) Which plan to pick is up to the council. We have a written payback promise on file from last time, for $22,000.
+                We put 35% of what you pay back into building the store. An outside accountant checks this every year. The "gap money" covers two months of our costs plus the day-one equipment we buy ($0, $42k, or $60k). We get the gap money back when the last two bills get paid. (Indigenous Services Canada is the federal department that pays the band. They take about 60 days to pay each invoice.) Which plan to pick is up to the council. We have a written payback promise on file from last time, for $22,000.
               </div>
             </div>
 

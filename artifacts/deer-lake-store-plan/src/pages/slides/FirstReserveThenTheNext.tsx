@@ -560,6 +560,9 @@ function ReserveTwoCalculator({
         Planning estimate ·{" "}
         {isDefault ? "Deer Lake corridor defaults" : "your corridor"} · weeks × flight + days × (lodging + food).
       </div>
+      <div className="font-body text-[0.65vw] leading-[1.3] opacity-80 mt-[0.15vh]" style={{ color: "#e9c8a8" }}>
+        In plain words: one return flight per install week, plus lodging and food for each on-site day.
+      </div>
     </div>
   );
 }

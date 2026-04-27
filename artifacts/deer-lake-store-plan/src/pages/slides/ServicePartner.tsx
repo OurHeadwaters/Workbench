@@ -97,7 +97,7 @@ export default function ServicePartner() {
       <div className="absolute inset-0 px-[5vw] py-[3.5vh] flex flex-col">
         <div className="mb-[1.4vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[0.95vw] text-muted mb-[0.6vh]">
-            What Headwaters delivers · we charge our cost plus 35% put back in
+            What Headwaters delivers · we charge our cost plus a 35% top-up that we put back into the store
           </div>
           <h2 className="font-display text-[3vw] leading-[1] tracking-tight text-primary font-medium">
             Three things the band buys.
@@ -163,7 +163,7 @@ export default function ServicePartner() {
               How Headwaters charges · the full team · what the 35% put back in pays for
             </div>
             <div className="font-body text-[0.85vw] leading-[1.4] mb-[0.6vh] opacity-95">
-              <span className="font-semibold">$69,700 a month is what it costs us</span> + <span className="font-semibold">$24,300 a month (35%) we put back in</span> = <span className="font-semibold">about $94,000 a month total</span>. <span className="opacity-85">What Deer Lake is billed depends on which plan the council picks (floor $60,000 → recommended $90,000 → scale $125,000). This replaces today's $35,000-a-month software-only contract. Same client. Same software. Now with a full team and accountability around it.</span>
+              It costs us <span className="font-semibold">$69,700 a month</span> to run. We add <span className="font-semibold">$24,300 a month (35%)</span> — that's the top-up we put back into the store. The total is <span className="font-semibold">about $94,000 a month</span>. <span className="opacity-85">What Deer Lake is billed depends on which plan the council picks (floor $60,000 → recommended $90,000 → scale $125,000). This replaces today's $35,000-a-month software-only contract. Same client. Same software. Now with a full team and accountability around it.</span>
             </div>
             <div className="grid grid-cols-2 gap-x-[0.8vw] gap-y-[0.3vh] font-body text-[0.72vw] leading-[1.35] opacity-90" style={{ fontVariantNumeric: "tabular-nums" }}>
               {reinvestBuckets.map((b) => (

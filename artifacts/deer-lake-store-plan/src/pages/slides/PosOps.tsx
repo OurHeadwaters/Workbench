@@ -78,7 +78,7 @@ export default function PosOps() {
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.1vw] pt-[0.3vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
-                <div><span className="font-semibold">The Nutrition North claim builds itself</span> from the daily sales. A manager checks it once a week. The store sends it once a month. The books are ready for review any time.</div>
+                <div><span className="font-semibold">The federal grocery help money claim builds itself</span> from the daily sales. A manager checks it once a week. The store sends it once a month. The books are ready for review any time.</div>
               </div>
               <div className="flex gap-[1vw]">
                 <div className="font-mono text-[1.1vw] pt-[0.3vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
