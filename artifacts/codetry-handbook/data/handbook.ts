@@ -1029,6 +1029,23 @@ export function getChapter(id: string | undefined): Chapter | undefined {
   return CHAPTERS.find((c) => c.id === id);
 }
 
+export function getPart(roman: string | undefined): Part | undefined {
+  if (!roman) return undefined;
+  return PARTS.find((p) => p.roman === roman);
+}
+
+export function chapterOpening(chapter: Chapter, max = 180): string {
+  const firstPara = chapter.blocks.find((b) => b.kind === "para");
+  if (!firstPara || firstPara.kind !== "para") return "";
+  return chapterExcerpt(firstPara.text, max);
+}
+
+export function chapterSmallLine(chapter: Chapter): string | undefined {
+  const small = chapter.blocks.find((b) => b.kind === "small");
+  if (!small || small.kind !== "small") return undefined;
+  return small.text;
+}
+
 export function getNeighbors(id: string): {
   prev: Chapter | undefined;
   next: Chapter | undefined;

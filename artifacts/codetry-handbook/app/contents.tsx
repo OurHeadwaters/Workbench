@@ -73,9 +73,10 @@ export default function Contents() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {PARTS.map((p) => (
-          <View key={p.roman} style={styles.partBlock}>
-            <View style={styles.partHead}>
+        {PARTS.map((p) => {
+          const hasLanding = p.roman === "VI";
+          const headContent = (
+            <>
               <Text
                 style={[
                   styles.roman,
@@ -104,66 +105,99 @@ export default function Contents() {
                 >
                   {p.blurb}
                 </Text>
-              </View>
-            </View>
-            <View style={[styles.rule, { backgroundColor: c.rule }]} />
-            {p.chapters.map((ch) => {
-              const isLast = lastRead?.chapterId === ch.id;
-              const isBookmarked = bookmarkedChapters.has(ch.id);
-              return (
-                <Pressable
-                  key={ch.id}
-                  onPress={() =>
-                    router.push({
-                      pathname: "/chapter/[id]",
-                      params: { id: ch.id },
-                    })
-                  }
-                  style={({ pressed }) => [
-                    styles.chapterRow,
-                    pressed && { opacity: 0.6 },
-                  ]}
-                >
+                {hasLanding ? (
                   <Text
                     style={[
-                      styles.chapterNum,
+                      styles.partLink,
                       { color: c.mutedForeground, fontFamily: MONO },
                     ]}
                   >
-                    {ch.number}
+                    {`Open Part ${p.roman} as a set →`}
                   </Text>
-                  <View style={{ flex: 1 }}>
+                ) : null}
+              </View>
+            </>
+          );
+          return (
+            <View key={p.roman} style={styles.partBlock}>
+              {hasLanding ? (
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: "/part/[roman]",
+                      params: { roman: p.roman },
+                    })
+                  }
+                  style={({ pressed }) => [
+                    styles.partHead,
+                    pressed && { opacity: 0.65 },
+                  ]}
+                  accessibilityLabel={`Open Part ${p.roman} landing page`}
+                >
+                  {headContent}
+                </Pressable>
+              ) : (
+                <View style={styles.partHead}>{headContent}</View>
+              )}
+              <View style={[styles.rule, { backgroundColor: c.rule }]} />
+              {p.chapters.map((ch) => {
+                const isLast = lastRead?.chapterId === ch.id;
+                const isBookmarked = bookmarkedChapters.has(ch.id);
+                return (
+                  <Pressable
+                    key={ch.id}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/chapter/[id]",
+                        params: { id: ch.id },
+                      })
+                    }
+                    style={({ pressed }) => [
+                      styles.chapterRow,
+                      pressed && { opacity: 0.6 },
+                    ]}
+                  >
                     <Text
                       style={[
-                        styles.chapterTitle,
-                        { color: c.foreground, fontFamily: SERIF },
+                        styles.chapterNum,
+                        { color: c.mutedForeground, fontFamily: MONO },
                       ]}
                     >
-                      {ch.title}
+                      {ch.number}
                     </Text>
-                  </View>
-                  <View style={styles.markers}>
-                    {isBookmarked ? (
-                      <Ionicons
-                        name="bookmark"
-                        size={14}
-                        color={c.foreground}
-                      />
-                    ) : null}
-                    {isLast ? (
-                      <View
+                    <View style={{ flex: 1 }}>
+                      <Text
                         style={[
-                          styles.dot,
-                          { backgroundColor: c.foreground },
+                          styles.chapterTitle,
+                          { color: c.foreground, fontFamily: SERIF },
                         ]}
-                      />
-                    ) : null}
-                  </View>
-                </Pressable>
-              );
-            })}
-          </View>
-        ))}
+                      >
+                        {ch.title}
+                      </Text>
+                    </View>
+                    <View style={styles.markers}>
+                      {isBookmarked ? (
+                        <Ionicons
+                          name="bookmark"
+                          size={14}
+                          color={c.foreground}
+                        />
+                      ) : null}
+                      {isLast ? (
+                        <View
+                          style={[
+                            styles.dot,
+                            { backgroundColor: c.foreground },
+                          ]}
+                        />
+                      ) : null}
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -206,6 +240,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     marginTop: 2,
+  },
+  partLink: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+    marginTop: 8,
   },
   rule: {
     height: 1,

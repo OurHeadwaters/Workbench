@@ -283,6 +283,13 @@ export default function ChapterScreen() {
   const chapterBookmarkActive = !!chapterBookmark;
   const total = CHAPTERS.length;
   const progressPct = total > 1 ? Math.round((index / (total - 1)) * 100) : 0;
+  const hasPartLanding = chapter.partRoman === "VI";
+  const goToPartLanding = useCallback(() => {
+    router.push({
+      pathname: "/part/[roman]",
+      params: { roman: chapter.partRoman },
+    });
+  }, [chapter.partRoman]);
 
   return (
     <View
@@ -347,6 +354,26 @@ export default function ChapterScreen() {
 
           <View style={{ height: 24 }} />
           <View style={[styles.endRule, { backgroundColor: c.rule }]} />
+          {hasPartLanding ? (
+            <Pressable
+              onPress={goToPartLanding}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.partLandingLink,
+                pressed && { opacity: 0.6 },
+              ]}
+              accessibilityLabel={`Back to Part ${chapter.partRoman}`}
+            >
+              <Text
+                style={[
+                  styles.partLandingText,
+                  { color: c.foreground, fontFamily: MONO },
+                ]}
+              >
+                {`← Back to ${chapter.partLabel}`}
+              </Text>
+            </Pressable>
+          ) : null}
           <Text
             style={[
               styles.endLine,
@@ -365,7 +392,9 @@ export default function ChapterScreen() {
         partLabel={chapter.partLabel}
         chapterNumber={chapter.number}
         bookmarkActive={chapterBookmarkActive}
-        onBack={() => router.push("/contents")}
+        onBack={() =>
+          hasPartLanding ? goToPartLanding() : router.push("/contents")
+        }
         onToggleBookmark={onToggleChapterBookmark}
       />
 
@@ -415,6 +444,15 @@ const styles = StyleSheet.create({
   },
   endLine: {
     fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  partLandingLink: {
+    paddingVertical: 4,
+    marginBottom: 10,
+  },
+  partLandingText: {
+    fontSize: 12,
     letterSpacing: 1.4,
     textTransform: "uppercase",
   },
