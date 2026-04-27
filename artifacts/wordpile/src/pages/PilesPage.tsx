@@ -1,8 +1,17 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { Archive, ArrowRight, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import {
+  Archive,
+  ArrowRight,
+  Link as LinkIcon,
+  Pencil,
+  Plus,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { useWordpile } from "@/lib/useStore";
 import { WordpileStore, parseAnyImport } from "@/lib/store";
+import { decodePileShare, readShareFragment } from "@/lib/shareLink";
 import type { AnyPileImport, PileBundleExport, PileExport } from "@/data/types";
 
 export function PilesPage() {
@@ -18,6 +27,7 @@ export function PilesPage() {
   );
   const [bundleSelection, setBundleSelection] = useState<boolean[]>([]);
   const [importFileName, setImportFileName] = useState<string>("");
+  const [importSource, setImportSource] = useState<"file" | "link">("file");
   const [importMode, setImportMode] = useState<"new" | "merge">("new");
   const [importNewName, setImportNewName] = useState<string>("");
   const [importMergeId, setImportMergeId] = useState<string>("");
@@ -25,6 +35,60 @@ export function PilesPage() {
   const piles = data.pileOrder
     .map((id) => data.piles[id])
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+  // If we landed here with a `#data=...` share fragment, decode it once
+  // and pre-populate the import preview. We strip the fragment afterwards
+  // so a refresh doesn't re-prompt — and so users don't accidentally
+  // re-share the URL with the payload still attached.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const encoded = readShareFragment(window.location.hash);
+    if (!encoded) return;
+    let cancelled = false;
+    void decodePileShare(encoded).then((result) => {
+      if (cancelled) return;
+      if (typeof window !== "undefined") {
+        const cleanUrl =
+          window.location.pathname + window.location.search;
+        window.history.replaceState(null, "", cleanUrl);
+      }
+      if (!result.ok) {
+        setImportPayload(null);
+        setImportFileName("");
+        setImportSource("link");
+        setImportError(
+          result.reason === "too-large"
+            ? "That share link is too long for this browser to load. Ask the sender to export the pile as a file instead."
+            : result.reason === "unsupported"
+              ? "This browser can't open share links. Try a newer browser, or ask the sender for the .wordpile.json file."
+              : "That share link doesn't look like a wordpile. It may have been truncated or edited.",
+        );
+        return;
+      }
+      setImportPayload(result.payload);
+      setImportFileName(`${result.payload.pile.name} (shared link)`);
+      setImportSource("link");
+      setImportNewName(result.payload.pile.name);
+      setImportMode("new");
+      setImportMergeId("");
+      setImportError(null);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // We only want this to fire on first mount — the fragment is consumed
+    // and stripped, so re-running would do nothing useful.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Refresh the merge target default once piles arrive from a sign-in
+  // bootstrap (the share link arrives anonymously, before the cloud sync
+  // has hydrated, so the dropdown could otherwise be empty).
+  useEffect(() => {
+    if (importPayload && importMergeId === "" && piles.length > 0) {
+      setImportMergeId(piles[0].id);
+    }
+  }, [importPayload, importMergeId, piles]);
 
   function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -45,6 +109,7 @@ export function PilesPage() {
     setImportBundle(null);
     setBundleSelection([]);
     setImportFileName("");
+    setImportSource("file");
     setImportMode("new");
     setImportNewName("");
     setImportMergeId("");
@@ -74,6 +139,7 @@ export function PilesPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     setImportError(null);
+    setImportSource("file");
     try {
       const text = await file.text();
       const parsed = parseAnyImport(text);
@@ -236,6 +302,14 @@ export function PilesPage() {
               <Archive size={12} /> Back up all piles
             </button>
           )}
+          <span
+            className="eyebrow"
+            style={{ color: "var(--color-stone)" }}
+            title="Or paste a share link in your address bar — it will open here."
+          >
+            <LinkIcon size={11} style={{ display: "inline", marginRight: 4 }} />
+            Share links open here automatically
+          </span>
           {importFileName && !importPayload && !importBundle && !importError && (
             <span className="eyebrow">{importFileName}</span>
           )}
@@ -270,7 +344,11 @@ export function PilesPage() {
             data-testid="panel-import-preview"
           >
             <div>
-              <p className="eyebrow mb-1">Importing from {importFileName}</p>
+              <p className="eyebrow mb-1">
+                {importSource === "link"
+                  ? "Importing from share link"
+                  : `Importing from ${importFileName}`}
+              </p>
               <p className="text-sm" style={{ color: "var(--color-stone)" }}>
                 <strong>{importPayload.pile.name}</strong> ·{" "}
                 {importPayload.pile.words.length} word

@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
-import { Download, Plus, ScanText, Pencil, Trash2 } from "lucide-react";
+import {
+  Check,
+  Download,
+  Link as LinkIcon,
+  Pencil,
+  Plus,
+  ScanText,
+  Trash2,
+} from "lucide-react";
 import { usePile } from "@/lib/useStore";
 import { WordpileStore } from "@/lib/store";
+import { buildShareUrl, encodePileShare } from "@/lib/shareLink";
 import {
   BUCKETS,
   BUCKET_BLURB,
@@ -19,6 +28,58 @@ export function PileEditorPage() {
   const [newWord, setNewWord] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState("");
+  const [shareStatus, setShareStatus] = useState<
+    | { kind: "idle" }
+    | { kind: "copied" }
+    | { kind: "error"; message: string }
+  >({ kind: "idle" });
+
+  async function handleCopyShareLink() {
+    if (!pile) return;
+    setShareStatus({ kind: "idle" });
+    const payload = WordpileStore.serializePile(pile.id);
+    if (!payload) {
+      setShareStatus({ kind: "error", message: "Couldn't read this pile." });
+      return;
+    }
+    const result = await encodePileShare(payload);
+    if (!result.ok) {
+      const message =
+        result.reason === "too-large"
+          ? "This pile is too big to fit in a share link. Use Export to send it as a file instead."
+          : result.reason === "unsupported"
+            ? "This browser can't build share links. Try a newer browser, or use Export."
+            : "Couldn't build a share link for this pile.";
+      setShareStatus({ kind: "error", message });
+      return;
+    }
+    const url = buildShareUrl(result.encoded);
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // Fallback for older browsers / insecure contexts: select-and-copy
+        // via a temporary textarea.
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      setShareStatus({ kind: "copied" });
+      window.setTimeout(() => {
+        setShareStatus((s) => (s.kind === "copied" ? { kind: "idle" } : s));
+      }, 2500);
+    } catch {
+      setShareStatus({
+        kind: "error",
+        message: "Couldn't copy to your clipboard. Long-press the link instead.",
+      });
+    }
+  }
 
   if (!pile) {
     return (
@@ -147,11 +208,47 @@ export function PileEditorPage() {
         >
           <Download size={12} /> Export
         </button>
+        <button
+          className="btn-ghost"
+          onClick={handleCopyShareLink}
+          data-testid="button-copy-share-link"
+          title="Copy a link that opens this pile on someone else's device — no file download needed."
+        >
+          {shareStatus.kind === "copied" ? (
+            <>
+              <Check size={12} /> Link copied
+            </>
+          ) : (
+            <>
+              <LinkIcon size={12} /> Copy share link
+            </>
+          )}
+        </button>
         <span className="ml-2 eyebrow">
           {pile.words.length} word{pile.words.length === 1 ? "" : "s"} in this
           pile
         </span>
       </div>
+      {shareStatus.kind === "error" && (
+        <div
+          className="mb-6 rounded p-3 text-sm"
+          style={{
+            backgroundColor: "var(--color-paper)",
+            border: "1px solid var(--color-avoid)",
+            color: "var(--color-avoid)",
+          }}
+          data-testid="text-share-link-error"
+        >
+          {shareStatus.message}
+          <button
+            className="btn-ghost ml-2"
+            onClick={() => setShareStatus({ kind: "idle" })}
+            style={{ color: "inherit" }}
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-col gap-4 mb-10">
         <section

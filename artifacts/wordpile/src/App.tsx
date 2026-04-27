@@ -17,6 +17,7 @@ function Router({ clerkEnabled }: { clerkEnabled: boolean }) {
   return (
     <Switch>
       <Route path="/" component={PilesPage} />
+      <Route path="/import" component={PilesPage} />
       <Route path="/pile/:pileId" component={PileEditorPage} />
       <Route path="/pile/:pileId/check" component={CheckDraftPage} />
       {clerkEnabled && (
