@@ -102,5 +102,13 @@
     "title": "Risks and the ask",
     "description": "The seven things most likely to go wrong with a northern store launch and how Headwaters handles each, including the V3-named risk that people don't always show up. Closing ask: an hour with the contractor, an honest opinion, and an introduction to the band council when the contractor is ready. Signed Headwaters; no free lunches, value out the other end, forward-credit clause in writing.",
     "speakerNotes": ""
+  },
+  {
+    "id": "b1c4a8d2-3f7e-4a91-9c1a-8e6f2b4d7a0d",
+    "position": 14,
+    "filepath": "src/pages/slides/BandCouncilSummary.tsx",
+    "title": "The whole plan on one page — for council",
+    "description": "Closing one-screen recap built so a council member can read it in under a minute and walk into a meeting with it. Three columns: what the store is in plain words (community-owned, leakage of $1.6–$2.0M, 84¢-on-the-shelf, family-run cold truck, Headwaters takes no cut of groceries, Arctic Co-ops / Mistissini precedent); the numbers ($400–700k to open, $90k/mo recommended plan, ~$181k day-one gap money, 17–20 jobs); and who runs what plus the one-line ask (band runs the store, Headwaters delivers the operating system, one hour + honest opinion + introduction). Same action+result voice as the rest of the deck. Designed to be the page you tear off and carry into the council meeting.",
+    "speakerNotes": ""
   }
 ]
