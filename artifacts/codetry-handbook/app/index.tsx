@@ -175,7 +175,7 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          IN FIVE PARTS
+          IN SIX PARTS
         </Text>
         {PARTS.map((p) => (
           <View key={p.roman} style={styles.partRow}>

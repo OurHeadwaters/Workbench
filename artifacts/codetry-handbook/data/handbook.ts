@@ -713,7 +713,76 @@ const partV: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partI, partII, partIII, partIV, partV];
+const partVI: Part = {
+  roman: "VI",
+  title: "Open Questions",
+  blurb:
+    "A handbook needs a place where the questions live before they have answers. The chapters in this part are written to be returned to. Each one names a thing the discipline is being asked that the discipline has not yet finished thinking through.",
+  chapters: [
+    {
+      id: "6-1",
+      number: "6.1",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "Tokenization, and what it does to the noun",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · returned to as the answer changes.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry's thesis is that the noun carries the architectural weight. The handbook so far has assumed a human reader: a person whose eye lands on the word *saltbox* and loads the metaphor in one beat. That assumption is becoming partial. The reader codetry's code now has to share itself with — increasingly, the dominant reader by volume — is a model that does not see the word at all. It sees a sequence of sub-word fragments. The question this chapter exists to keep open is what tokenization does to a discipline whose load-bearing material is the whole noun.",
+        },
+        {
+          kind: "para",
+          text:
+            "The lineage to honour is short and recent. Sennrich, Haddow, and Birch's 2016 paper introduced byte-pair encoding to neural machine translation. SentencePiece generalised it. The GPT line and its descendants made it the default reading layer of the industry. Andrej Karpathy's diagnostic posts on tokenisation made the strange visible — the way `\" the\"` and `\"the\"` are different tokens, the way leading whitespace re-shapes meaning, the way numbers fragment in ways no human reader would tolerate. The discipline of tokenisation and the discipline of codetry both treat sub-word patterns as structural, but from opposite directions. Tokenisation extracts statistical structure out of fragments. Codetry composes structural meaning into a whole.",
+        },
+        {
+          kind: "subhead",
+          text: "The challenge is real.",
+        },
+        {
+          kind: "para",
+          text:
+            "Tokenisation is the most aggressive *translate the noun* operation that exists. It is sharper than the boundary translations of §2.3 and stricter than the type-level abstractions of §2.4 because it operates *below the word*. *Saltbox* becomes `[\"Salt\", \"box\"]`. *Headwaters* may become `[\"Head\", \"waters\"]` or `[\"He\", \"ad\", \"waters\"]` depending on what the tokeniser learned. *Watershed* fragments. *Codetry*, being a coined word, fragments hardest of all. The load-bearing weight of a noun-as-noun does not survive the token layer. To the model reading the code, the word is no longer a word.",
+        },
+        {
+          kind: "subhead",
+          text: "The challenge is asymmetric.",
+        },
+        {
+          kind: "para",
+          text:
+            "The fragmenting breaks the noun into pieces. It does not break the relationship between the noun and the structure underneath. Models train on enormous bodies of code in which well-named symbols predict well-shaped implementations. The token cluster `[\"Salt\", \"box\"]` appearing inside a class definition correlates, statistically, with properties consistent with the saltbox metaphor — not because the model knows what a saltbox is, but because it has read enough saltbox-named code to associate the cluster with metaphor-consistent downstream patterns. Codetry survives the token layer through a back door: it makes the noun-to-structure correlation denser and more reliable than generic naming does, and that density is exactly what statistical reading is good at. The discipline does not survive the way it survives a human reader; it survives because the corpus does the recognising on the model's behalf.",
+        },
+        {
+          kind: "subhead",
+          text: "Where it actually breaks.",
+        },
+        {
+          kind: "para",
+          text:
+            "Two places, both worth naming early. The first is the rename test of §4.2. To a human, *Saltbox* → *HouseholdContainer* surfaces drift in one beat — the metaphor dies on contact. To a tokeniser, the rename is one token cluster swapped for another; the model will happily continue with whatever the new cluster's neighbourhood predicts. The discipline's enforcement mechanism does not survive at the token layer. This is the §2.4 problem one floor down: drift the tokeniser cannot see. The second is corpus-dependence. The back-door survival described above holds only as long as the training corpus retains enough metaphor-respectful code to keep the statistical pattern alive. If the corpus drifts toward generic naming — through autoformatters that strip metaphor, AI-generated boilerplate that defaults to the average word, or *clean code* conventions that punish poetry — the back door narrows. Codetry's machine-readability is, at present, an ecosystem position rather than a self-sufficient property.",
+        },
+        {
+          kind: "para",
+          text:
+            "What the discipline owes itself in return is unfinished. A token-level rename test that flags drift the type checker and the tokeniser both miss. A corpus-level practice — share the named work openly, refuse the autoformatter's translation, keep the metaphor alive in the public training set. A clearer answer to the question of whether codetry is fundamentally a human-reader discipline whose machine-readability is a happy side effect, or a discipline that should be re-grounded for a tokenised reading layer. None of those answers are written yet. This chapter exists so the question has a home in the handbook rather than living only in the practitioner's head.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Tokenisation shreds the noun. The discipline's answer is not yet written. This chapter is a place to keep the question — and to return to it as tokenisation, training corpora, and the practice itself change shape.",
+        },
+      ],
+    },
+  ],
+};
+
+export const PARTS: Part[] = [partI, partII, partIII, partIV, partV, partVI];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
