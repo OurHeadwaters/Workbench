@@ -14,11 +14,11 @@ export default function RisksAsk() {
 
         <div className="flex-1 grid grid-cols-12 gap-[2vw] min-h-0">
           <div className="col-span-7 rounded-[0.4vw] p-[2vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="flex items-baseline justify-between mb-[1.4vh]">
-              <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted">
+            <div className="flex items-baseline justify-between gap-[1.5vw] mb-[1.4vh]">
+              <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted min-w-0 flex-1">
                 The seven things most likely to go wrong, and how we would handle each one
               </div>
-              <div className="font-mono text-[1vw] text-muted">Full list at the back</div>
+              <div className="font-mono text-[1vw] text-muted shrink-0">Full list at the back</div>
             </div>
 
             <div className="grid grid-cols-12 gap-x-[1.2vw] gap-y-[1vh] font-body text-[0.95vw] leading-[1.4]">
