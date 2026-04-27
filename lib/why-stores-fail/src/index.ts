@@ -158,16 +158,16 @@ export const FAILURE_MODES: FailureMode[] = [
     evidence:
       "Nutrition North Canada is paid directly to retailers, not households, on the assumption that retailers will pass it through as lower shelf prices. In practice, in single-store communities the pass-through rate sits around 58¢ on the dollar — with the remaining 42¢ absorbed by the retailer as margin. The North West Company, which operates the dominant Northern Store chain, receives more than half of the total $144.8M annual federal Nutrition North spend. There is no public per-store accounting, so families cannot see what was subsidised or by how much. Adding a second, community-owned store has been shown to push pass-through up to roughly 84¢ on the dollar — about 26¢ more per dollar reaching the shelf — because the dominant operator now has to compete.",
     figures: [
-      { value: "58¢", label: "Of every Nutrition North $1 that reaches the shelf today" },
+      { value: "58¢", label: "Of every $1 of federal grocery help that reaches the shelf today" },
       { value: "84¢", label: "Pass-through once a second community-owned store exists" },
-      { value: "$144.8M", label: "Annual federal Nutrition North budget" },
+      { value: "$144.8M", label: "Annual federal grocery help budget" },
       { value: ">50%", label: "Of that budget captured by North West Co. alone" },
     ],
     sources: [
       {
         libraryFilename: "FINALPilotResearchReportDucharmeNelson_1777036795393.pdf",
         libraryTitle: "Final Pilot Research Report — Ducharme & Nelson",
-        upstream: "Nutrition North Canada program data; AANDC retailer reports",
+        upstream: "Federal grocery help program data; AANDC retailer reports",
       },
       {
         libraryFilename:
