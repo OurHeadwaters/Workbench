@@ -670,6 +670,77 @@ const partIV: Part = {
         },
       ],
     },
+    {
+      id: "4-7",
+      number: "4.7",
+      partRoman: "IV",
+      partLabel: "IV · The Practice",
+      title: "Teaching codetry to communities",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "Sooner or later the practitioner has to explain codetry to a room of people who did not come to learn a software discipline. They came to talk about a store, a clinic, a road, a co-op. The practitioner's job in that room is not to teach codetry as theory. It is to surface the principle the room has been using its whole life and put a name on it, so the work that follows can be done together.",
+        },
+        {
+          kind: "para",
+          text:
+            "The example to teach with is architecture itself. Not architecture as analogy — architecture as *source*. The principle codetry generalises into the world of words is the same principle that holds when the material is wood, concrete, or hempcrete: some parts carry the load, others do not, and the parts that carry the load cannot be quietly renamed without the structure shifting underneath. The audience already knows this. They have spent their lives in buildings. The teaching move is not to introduce a new idea. It is to make a familiar idea visible in a place they had not yet looked: the words.",
+        },
+        {
+          kind: "subhead",
+          text: "The shape of the teaching",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "Point at the room. *What is holding this roof up? What happens if you take that wall out?* Everyone knows. Nobody needs the vocabulary taught. The room already speaks the language of *load-bearing*, *foundation*, *what holds the thing up*.",
+            "Cross the threshold once. *In the things you and I build out of words — a store name, a grant proposal, a co-op's bylaws, a clinic's intake form — there are also load-bearing parts. They look the same as the decorative parts on the page. They are not the same.* This is the only sentence that does the abstract work. After it, return immediately to the concrete.",
+            "Do the rename test on a word the room cares about. Not *saltbox*. Theirs. Take the name of their store, their road, their proposal, their committee, and try to rename it on the table in front of them. *Watch what cracks.* Let the room feel the difference between a rename that changes nothing and a rename that takes the structure with it.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "The flinch is the proof.",
+        },
+        {
+          kind: "para",
+          text:
+            "If the room flinches when the practitioner offers to rename their thing — a small physical recoil, a sharp *no, that's not what we are* — the principle has been transmitted. The flinch is the audience verifying for itself that the word was load-bearing. No further explanation is required. The discipline has not been taught at the audience; it has been recovered from the audience and named in their hearing.",
+        },
+        {
+          kind: "para",
+          text:
+            "If there is no flinch — if the rename lands and nothing in the room reacts — the word was decoration, and the practitioner has just done a piece of useful diagnostic work in public. Either is a good outcome. Both are codetry.",
+        },
+        {
+          kind: "subhead",
+          text: "Why hempcrete teaches better than concrete",
+        },
+        {
+          kind: "para",
+          text:
+            "Concrete teaches load-bearing, but it teaches only one thing at once. Hempcrete teaches the codetry-specific point: a single material can be *load-bearing and insulating and breathable and community-buildable and locally legal* all at the same time. One name, multiple structural jobs. That is exactly what a load-bearing noun does in software. *Saltbox* carries climate-response and household-defaultness and vernacular-respect in one word. *Headwaters* carries source-of-the-water and small-and-upstream and what-flows-from-here in one word. The community member who has thought about hempcrete versus concrete already understands that picking the material is itself an architectural decision, not a budget decision. *Picking the word* then reads as the same kind of decision, not as marketing.",
+        },
+        {
+          kind: "para",
+          text:
+            "Where the room already has live opinions on the material — and in northern Ontario, hempcrete is a real conversation, not a hypothetical — the teaching recruits engagement that already exists rather than generating it from scratch.",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "The first room" },
+        {
+          kind: "para",
+          text:
+            "The teaching is most honest when the example is also a real decision the room is about to make. A naming session for an actual store, an actual clinic, an actual road. The practitioner walks the room through the three moves above on the room's own live problem, and what comes out the other side is not a workshop demonstration. It is the community doing codetry on themselves, with a name that is going to go on a sign, on a building, on a grant cover page. The discipline is transmitted in the same hour the work gets done.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Don't teach codetry as theory. Show the audience the principle they have already been using in buildings, then let them feel it on a word they care about. The flinch is the proof; the named decision is the receipt.",
+        },
+      ],
+    },
   ],
 };
 
