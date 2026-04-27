@@ -12,17 +12,28 @@ import { useAppState } from "@workspace/practitioner-operating-plan/storage";
 import type { AppState } from "@workspace/practitioner-operating-plan/storage";
 
 // Same liveDerived helper pattern as PathToScale / ThreeRevenueLayers:
-// any id we read from getLiveCostValue here is meant to be live-bound,
-// so a null result means budgetMath drifted away from the registry —
-// fail loudly in dev instead of silently rendering a zero.
-function liveDerived(state: AppState, id: string): number {
+// any id we read from getLiveCostValue here is meant to be live-bound.
+// Originally this threw when budgetMath drifted away from the registry,
+// but throwing here would take the whole deck down with no on-screen
+// error if the cross-package binding ever broke (tracked as task #311).
+// We now log loudly in dev and fall back to 0 instead. The slide
+// renders the fallback as "—" / "TBD" downstream so a reader sees a
+// clearly degraded card rather than a blank deck. The per-slide error
+// boundary wrapping each slide in src/App.tsx catches anything that
+// still throws (e.g. the registry import itself failing) and shows a
+// readable in-deck message on this one slide while the rest of the
+// deck stays navigable.
+function liveDerived(state: AppState, id: string): number | null {
   const v = getLiveCostValue(state, id);
   if (v == null) {
-    throw new Error(
-      `FirstReserveThenTheNext: no live derivation for cost id "${id}". ` +
-        `Add a case in the practitioner-operating-plan budgetMath.ts:` +
-        `getLiveCostValue or remove the binding.`,
-    );
+    if (import.meta.env.DEV) {
+      console.error(
+        `FirstReserveThenTheNext: no live derivation for cost id "${id}". ` +
+          `Add a case in the practitioner-operating-plan budgetMath.ts:` +
+          `getLiveCostValue or remove the binding.`,
+      );
+    }
+    return null;
   }
   return v;
 }
@@ -236,6 +247,10 @@ interface ReserveTwoCalculatorProps {
   lodgingPerNightDefault: number;
   foodPerDayDefault: number;
   installFee: number;
+  // False when the cross-package live derivation for installFee is
+  // unavailable. The calculator then renders the install line and the
+  // year-1 total as "TBD" rather than misleading "$0k" amounts.
+  installFeeAvailable: boolean;
   y1Retainer: number;
 }
 
@@ -244,6 +259,7 @@ function ReserveTwoCalculator({
   lodgingPerNightDefault,
   foodPerDayDefault,
   installFee,
+  installFeeAvailable,
   y1Retainer,
 }: ReserveTwoCalculatorProps) {
   // Lazy initializers so we read the share-link querystring exactly once on
@@ -438,7 +454,7 @@ function ReserveTwoCalculator({
           style={{ color: "var(--slide-bg)", fontVariantNumeric: "tabular-nums" }}
           aria-live="polite"
         >
-          ~{formatMoney(y1AllIn, 500)}
+          {installFeeAvailable ? `~${formatMoney(y1AllIn, 500)}` : "TBD"}
         </div>
       </div>
       <div
@@ -446,7 +462,7 @@ function ReserveTwoCalculator({
         style={{ color: "var(--slide-bg)" }}
       >
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-          {formatPlanningK(installFee)} install
+          {installFeeAvailable ? `${formatPlanningK(installFee)} install` : "TBD install"}
         </span>{" "}
         +{" "}
         <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -579,10 +595,15 @@ export default function FirstReserveThenTheNext() {
   const onsiteDayRate = resolveCost(state, "crossReserve.dayRate.onsite");
   const remoteDayRate = resolveCost(state, "crossReserve.dayRate.remote");
   const retainerAnnual = resolveCost(state, "crossReserve.retainer.annual");
-  const installPerReserve = liveDerived(
+  // Falls back to 0 if the cross-package live derivation is missing
+  // (see liveDerived above). The card downstream renders "TBD" instead
+  // of a misleading "$0k" when this is the case.
+  const installPerReserveRaw = liveDerived(
     state,
     "crossReserve.installRevenue.perReserve",
   );
+  const installPerReserve = installPerReserveRaw ?? 0;
+  const installPerReserveAvailable = installPerReserveRaw !== null;
   const flightPerWeek = resolveCost(state, "crossReserve.travel.flightPerWeek");
   const lodgingPerNight = resolveCost(
     state,
@@ -669,7 +690,9 @@ export default function FirstReserveThenTheNext() {
               </span>
               . A {INSTALL_WEEKS}-week install (~{ON_SITE_DAYS} on-site + ~{REMOTE_DAYS} remote) lands at{" "}
               <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                ~{formatPlanningK(installPerReserve)} per reserve
+                {installPerReserveAvailable
+                  ? `~${formatPlanningK(installPerReserve)} per reserve`
+                  : "TBD per reserve (sized in follow-up planning)"}
               </span>
               . Plus yearly support. <span className="text-muted">Travel passed through at cost. Try your own numbers on the right.</span>
             </div>
@@ -680,6 +703,7 @@ export default function FirstReserveThenTheNext() {
             lodgingPerNightDefault={lodgingPerNight}
             foodPerDayDefault={foodPerOnsiteDay}
             installFee={installPerReserve}
+            installFeeAvailable={installPerReserveAvailable}
             y1Retainer={retainerAnnual}
           />
         </div>

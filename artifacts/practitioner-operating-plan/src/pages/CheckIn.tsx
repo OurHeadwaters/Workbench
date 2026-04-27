@@ -1,17 +1,22 @@
-import { useMemo } from "react";
+import { useMemo, type ComponentType } from "react";
 import { Link } from "wouter";
 import {
   CartesianGrid,
-  Legend,
-  Line,
+  Legend as LegendRaw,
+  Line as LineRaw,
   LineChart,
-  ReferenceDot,
+  ReferenceDot as ReferenceDotRaw,
   ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
+  Tooltip as TooltipRaw,
+  XAxis as XAxisRaw,
+  YAxis as YAxisRaw,
+  type LegendProps,
+  type LineProps,
+  type ReferenceDotProps,
+  type TooltipProps,
+  type XAxisProps,
+  type YAxisProps,
 } from "recharts";
-import { useAppState } from "../lib/storage";
 import {
   ASSUMED_REAL_RETURN,
   PLAN_CURVE,
@@ -34,7 +39,26 @@ import {
   formatUsdCompact,
   formatXrpPrice,
 } from "../lib/format";
-import type { Snapshot } from "../lib/storage";
+import { useAppState, type Snapshot } from "../lib/storage";
+
+// Recharts 2.15.x ships type definitions that don't conform to React 19's
+// stricter JSX element-class checks (typeof X is no longer assignable to
+// ComponentType without a `props` field), so importing the components
+// directly trips TS2607/TS2786 across the chart below. The runtime
+// components are unchanged — they're React class components, just no longer
+// recognised as such by the upstream types — so we cast them at the import
+// site to component types React 19 accepts. This keeps the chart code below
+// using the canonical recharts JSX form and keeps the workspace typecheck
+// green so a future deer-lake-store-plan build doesn't regress on a stale
+// recharts type bug.
+const XAxis = XAxisRaw as unknown as ComponentType<XAxisProps>;
+const YAxis = YAxisRaw as unknown as ComponentType<YAxisProps>;
+const Tooltip = TooltipRaw as unknown as ComponentType<
+  TooltipProps<number | string, string>
+>;
+const Legend = LegendRaw as unknown as ComponentType<LegendProps>;
+const Line = LineRaw as unknown as ComponentType<LineProps>;
+const ReferenceDot = ReferenceDotRaw as unknown as ComponentType<ReferenceDotProps>;
 
 const PACE_BG: Record<PaceColor, string> = {
   green: "bg-emerald-100 text-emerald-900 border-emerald-300",
