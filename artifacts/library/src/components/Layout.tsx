@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network } from "lucide-react";
+import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { href: "/subjects", label: "Subjects", icon: Tag },
   { href: "/why-stores-fail", label: "Why Stores Fail", icon: AlertTriangle },
   { href: "/phenomena", label: "Phenomena", icon: Network },
+  { href: "/reverse-test", label: "Reverse Test", icon: Repeat },
   { href: "/contributors", label: "Contributors", icon: Users },
   { href: "/share-links", label: "Share Links", icon: LinkIcon },
 ];

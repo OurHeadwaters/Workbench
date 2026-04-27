@@ -18,6 +18,7 @@ import PublicShare from "@/pages/share/[token]";
 import PublicWhyStoresFail from "@/pages/share/why-stores-fail";
 import WhyStoresFail from "@/pages/why-stores-fail";
 import Phenomena, { PhenomenonDetailPage } from "@/pages/phenomena";
+import ReverseTest from "@/pages/reverse-test";
 import Login from "@/pages/login";
 import Layout from "@/components/Layout";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
@@ -54,6 +55,9 @@ function Router() {
               </Route>
               <Route path="/phenomena" component={Phenomena} />
               <Route path="/phenomena/:id" component={PhenomenonDetailPage} />
+              <Route path="/reverse-test">
+                <ReverseTest />
+              </Route>
               <Route path="/contributors" component={Contributors} />
               <Route path="/share-links" component={ShareLinks} />
               <Route path="/needs-review" component={NeedsReview} />

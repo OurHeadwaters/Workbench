@@ -1049,6 +1049,181 @@ export const COUNTER_EXAMPLES: CounterExample[] = [
   },
 ];
 
+// ──────────────────────────────────────────────────────────────────────
+// Reverse codetry test on the academic sources we cite
+// ──────────────────────────────────────────────────────────────────────
+//
+// The codetry §4.2 rename test, run in reverse on a citation:
+//   1. Take a passage as the academic / government source originally writes it.
+//   2. Substitute the academic noun with the community noun.
+//   3. Ask whether the recommendation still parses and what changes.
+//
+// Where the recommendation no longer parses, or where renaming surfaces an
+// absent actor the academic frame had quietly assumed away, that drift is a
+// finding back to the research community in its own right. This block holds
+// the seed data; the /reverse-test page in the library renders it.
+
+export interface ReverseSubstitution {
+  /** The phrase as it appears in the original academic source. */
+  academicNoun: string;
+  /** The phrase a Deer Lake reader would actually use for the same thing. */
+  communityNoun: string;
+}
+
+export interface ReverseTestSourceRef {
+  /**
+   * id of the FailureMode whose `sources` list cites this entry — gives the
+   * reverse test a back-link into the catalog so a reader can see what the
+   * source was originally invoked to support.
+   */
+  failureModeId: string;
+  /**
+   * `originalFilename` of a library entry on disk. The /reverse-test page
+   * resolves this to a real library entry id and links to /entries/:id, so a
+   * reader can verify the substitution against the underlying file.
+   */
+  libraryFilename: string | null;
+  /** Display title — used in the source line and as fallback if no entry id. */
+  libraryTitle: string;
+  /** Optional upstream academic / government reference embedded in the entry. */
+  upstream?: string;
+}
+
+export interface ReverseTest {
+  /** Stable kebab-case identifier. */
+  id: string;
+  /**
+   * Short headline framing the noun-swap, in the form
+   * "'<academic phrase>' → '<community phrase>'".
+   */
+  title: string;
+  /** Pointer back to the source being reverse-tested. */
+  sourceRef: ReverseTestSourceRef;
+  /** The passage in the academic source's own register. */
+  originalPassage: string;
+  /** The same passage with the community nouns substituted in. */
+  renamedPassage: string;
+  /**
+   * Paragraph explaining what changes when you rename — does the
+   * recommendation still parse, does an absent actor become obvious, does
+   * a policy lever evaporate?
+   */
+  finding: string;
+  /**
+   * One-sentence version of the finding — surfaced in the scan-list at the
+   * top of the page so all reverse tests are skimmable without opening each.
+   */
+  oneSentenceFinding: string;
+  /** Word-pair substitutions that produced the renamed passage. */
+  substitutions: ReverseSubstitution[];
+}
+
+export const REVERSE_TESTS: ReverseTest[] = [
+  {
+    id: "backhaul-asset-utilization",
+    title:
+      "“Asset utilization inefficiency in northern logistics corridors” → “the empty truck going home with our grocery money”",
+    sourceRef: {
+      failureModeId: "no-backhaul",
+      libraryFilename:
+        "Pasted-Supply-Chain-Resilience-Analysis-Overview-Key-Outcomes-_1777034738054.txt",
+      libraryTitle: "Supply Chain Resilience Analysis — overview & key outcomes",
+      upstream: "Transport Canada hours-of-service regulations",
+    },
+    originalPassage:
+      "Asset utilization inefficiency in northern logistics corridors imposes elevated per-loaded-mile costs on inbound refrigerated freight. Optimization of backhaul fill rates through inter-modal coordination and third-party aggregation is identified as a primary lever for cost reduction across the regional food system.",
+    renamedPassage:
+      "The empty truck going home with our grocery money costs us more per case on the way up — the loaded trip has to pay for both directions. The fix is to put something on the truck for the ride back: fish, finished goods, anything. To make that happen on a regular schedule, somebody local has to be paid to call the producers and the truck operator every week.",
+    finding:
+      "Two things change when you swap the nouns. First, “inter-modal coordination” stops parsing. There is no rail or barge alternative on a fly-in corridor — “intermodal” is a southern Ontario word, and the recommendation literally does not apply here. The academic frame inherited the lever from a southern logistics literature it didn't bother to localise. Second, the absent actor becomes obvious: “third-party aggregation” is doing the work of hiding a person. The renamed passage forces a salary line into view — somebody, locally, paid, making the southbound calls every week. The original quietly assumed that role into existence.",
+    oneSentenceFinding:
+      "Renaming surfaces a recommendation that doesn't apply (“inter-modal coordination” has no referent on a fly-in corridor) and an absent actor the original assumed into existence (the person paid to make the southbound calls).",
+    substitutions: [
+      {
+        academicNoun: "asset utilization inefficiency in northern logistics corridors",
+        communityNoun: "the empty truck going home with our grocery money",
+      },
+      {
+        academicNoun: "inter-modal coordination",
+        communityNoun: "(no equivalent — there is no road or rail alternative)",
+      },
+      {
+        academicNoun: "third-party aggregation",
+        communityNoun: "one person, paid, to call the producers and the truck every week",
+      },
+    ],
+  },
+  {
+    id: "subsidy-pass-through",
+    title:
+      "“Retailer pass-through optimization” → “how much of the help money actually reaches the shelf”",
+    sourceRef: {
+      failureModeId: "subsidy-capture",
+      libraryFilename: "FINALPilotResearchReportDucharmeNelson_1777036795393.pdf",
+      libraryTitle: "Final Pilot Research Report — Ducharme & Nelson",
+      upstream: "Federal grocery help program data; AANDC retailer reports",
+    },
+    originalPassage:
+      "Retailer pass-through of the Nutrition North Canada subsidy remains a key area for ongoing policy optimization. Enhanced retailer reporting requirements, audit transparency, and store-level disaggregation of subsidy receipt would strengthen program evaluation and accountability.",
+    renamedPassage:
+      "How much of the help money actually reaches the shelf is something the families paying for groceries cannot see today. In one-store towns, only 58¢ of each dollar makes it to the shelf — the store keeps the other 42¢. Better reports about the 42¢ would not change it. A second store would.",
+    finding:
+      "Renaming preserves the recommendation — “enhanced reporting and audit transparency” — but strips it of its claim to be a fix. Reporting describes the leak more clearly; it does not close it. The rename also surfaces the missing actor the original avoided naming: a competitor. With one store in town, the operator has no reason to pass the subsidy through, no matter how thoroughly the receipt is audited. The academic frame stays inside policy levers (reporting, audit, disaggregation) because the structural recommendation — “introduce a competing community-owned store” — sits outside what a federal program can hand out as a tool. The drift here isn't dishonesty; it's the genre forcing the recommendation toward what the program can do, not what would actually move the 42¢.",
+    oneSentenceFinding:
+      "Renaming surfaces the missing actor — a competing community-owned store — and shows the paper's audit-and-disclosure recommendations don't move the 42¢ that never reaches the shelf.",
+    substitutions: [
+      {
+        academicNoun: "retailer pass-through optimization",
+        communityNoun: "how much of the help money actually reaches the shelf",
+      },
+      {
+        academicNoun: "enhanced retailer reporting requirements",
+        communityNoun: "better reports about a 42¢ leak that nobody is making the store close",
+      },
+      {
+        academicNoun: "program evaluation and accountability",
+        communityNoun: "audits that confirm what families already know — the price is too high",
+      },
+    ],
+  },
+  {
+    id: "soft-infrastructure-attribute",
+    title:
+      "“Soft infrastructure attribute of resilient value chains” → “one person, paid, to make the calls”",
+    sourceRef: {
+      failureModeId: "soft-infrastructure-gap",
+      libraryFilename:
+        "Pasted-Building-a-Northwestern-Ontario-Food-Hub-Network-Projec_1777034364227.txt",
+      libraryTitle: "Building a NWO Food Hub Network — project overview",
+      upstream:
+        "Wallace Center, Values-Based Supply Chains framework (5 attributes)",
+    },
+    originalPassage:
+      "Resilient regional value chains exhibit five attributes; in Northwestern Ontario, the most consistently absent is the soft infrastructure layer performing aggregator-coordinator functions across producers, distributors, and retail outlets. Capacity-building investments targeting this attribute are recommended.",
+    renamedPassage:
+      "What the region's food chain is missing is one person, paid, whose job every week is to call the dairy in Sault Ste. Marie, the truck on the corridor, and the store in Deer Lake, and tie them together. Nobody is paid to do that today, so it doesn't get done.",
+    finding:
+      "The recommendation survives the rename — investing in this role really is the right answer — but the rename does the thing the framework quietly avoided: it names a salary. “Capacity-building investments targeting the soft infrastructure attribute” absorbs a person into a budget line, and budget lines get cut without anyone noticing the work has stopped. “One person, paid, to make the calls” makes the cut visible. It also forces the next question — paid by whom, on what cycle, when the founding grant runs out? — which the framework leaves to an unnamed funder. The academic noun was true; it was just expensive in what it left implicit.",
+    oneSentenceFinding:
+      "Renaming makes the salary visible — and forces the question the framework leaves unanswered: who pays the person to make the calls when the founding grant runs out?",
+    substitutions: [
+      {
+        academicNoun: "soft infrastructure layer",
+        communityNoun: "one person, paid, to make the calls",
+      },
+      {
+        academicNoun: "aggregator-coordinator functions",
+        communityNoun: "phoning the dairy, the truck, and the store every week",
+      },
+      {
+        academicNoun: "capacity-building investments targeting this attribute",
+        communityNoun:
+          "a salary line for that one person, with a named funder past year one",
+      },
+    ],
+  },
+];
+
 /** Convenience: failure modes grouped by theme, in display order. */
 export function failureModesByTheme(): Record<FailureModeTheme, FailureMode[]> {
   const out: Record<FailureModeTheme, FailureMode[]> = {

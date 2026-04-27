@@ -29,6 +29,7 @@ import {
   Lightbulb,
   Network,
   Quote,
+  Repeat,
 } from "lucide-react";
 
 interface WhyStoresFailPageProps {
@@ -155,6 +156,23 @@ export default function WhyStoresFailPage({ readOnly = false }: WhyStoresFailPag
             </div>
           </div>
         </div>
+
+        {!readOnly && (
+          <div className="pt-2">
+            <Link href="/reverse-test">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                data-testid="link-reverse-test"
+              >
+                <Repeat className="h-4 w-4" />
+                See the research-side critique — reverse test on the sources we cite
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
       </header>
 
       {FAILURE_MODE_THEMES.filter(
