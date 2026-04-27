@@ -1,5 +1,5 @@
 import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
+import { OTPInput, OTPInputContext, type RenderProps } from "input-otp"
 import { Minus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -32,7 +32,13 @@ const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
+  // React 19's @types/react bundle resolves `useContext(OTPInputContext)` as
+  // `unknown` here (input-otp 1.4.x exports `Context<RenderProps>` from a
+  // bundled re-export of an inlined `react` namespace, so the @types/react
+  // useContext overload fails to recognise it as a `Context<T>`). Assert the
+  // type so downstream consumers keep working without depending on the
+  // upstream package republishing its types.
+  const inputOTPContext = React.useContext(OTPInputContext) as RenderProps
   const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
 
   return (

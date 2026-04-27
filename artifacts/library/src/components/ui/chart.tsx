@@ -3,6 +3,38 @@ import * as RechartsPrimitive from "recharts"
 
 import { cn } from "@/lib/utils"
 
+// Recharts 2.15.x ships type definitions that don't conform to React 19's
+// stricter JSX element-class checks (`typeof X` is no longer assignable to
+// ComponentType without a `props` field), so referencing the components via
+// `typeof RechartsPrimitive.Tooltip` etc. trips TS2344/TS2607/TS2786 across
+// this file. The runtime components are unchanged — they're React class
+// components, just no longer recognised as such by the upstream types — so
+// we cast them at the import site to component types React 19 accepts. This
+// mirrors the pattern in
+// artifacts/practitioner-operating-plan/src/pages/CheckIn.tsx and keeps the
+// gated workspace typecheck green so a fresh chart added in this app can't
+// silently regress on a stale recharts type bug.
+type RechartsResponsiveContainerProps = React.PropsWithChildren<{
+  width?: string | number
+  height?: string | number
+  aspect?: number
+  minWidth?: string | number
+  minHeight?: string | number
+  maxHeight?: number
+  debounce?: number
+  id?: string | number
+  className?: string
+  onResize?: (width: number, height: number) => void
+}>
+const ResponsiveContainer =
+  RechartsPrimitive.ResponsiveContainer as unknown as React.ComponentType<RechartsResponsiveContainerProps>
+const Tooltip = RechartsPrimitive.Tooltip as unknown as React.ComponentType<
+  RechartsPrimitive.TooltipProps<number | string, string>
+>
+const Legend = RechartsPrimitive.Legend as unknown as React.ComponentType<
+  RechartsPrimitive.LegendProps
+>
+
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
 
@@ -36,9 +68,7 @@ const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     config: ChartConfig
-    children: React.ComponentProps<
-      typeof RechartsPrimitive.ResponsiveContainer
-    >["children"]
+    children: React.ComponentProps<typeof ResponsiveContainer>["children"]
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
@@ -56,9 +86,9 @@ const ChartContainer = React.forwardRef<
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>
+        <ResponsiveContainer>
           {children}
-        </RechartsPrimitive.ResponsiveContainer>
+        </ResponsiveContainer>
       </div>
     </ChartContext.Provider>
   )
@@ -98,11 +128,11 @@ ${colorConfig
   )
 }
 
-const ChartTooltip = RechartsPrimitive.Tooltip
+const ChartTooltip = Tooltip
 
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+  React.ComponentProps<typeof Tooltip> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean
       hideIndicator?: boolean
@@ -256,7 +286,7 @@ const ChartTooltipContent = React.forwardRef<
 )
 ChartTooltipContent.displayName = "ChartTooltip"
 
-const ChartLegend = RechartsPrimitive.Legend
+const ChartLegend = Legend
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,

@@ -1,11 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import Uppy from "@uppy/core";
 import type { UppyFile, UploadResult } from "@uppy/core";
-import DashboardModal from "@uppy/react/dashboard-modal";
+import DashboardModalRaw, {
+  type DashboardModalProps,
+} from "@uppy/react/dashboard-modal";
 import "@uppy/core/css/style.min.css";
 import "@uppy/dashboard/css/style.min.css";
 import AwsS3 from "@uppy/aws-s3";
+
+// React 19's @types/react no longer treats `typeof <ClassComponent>` as
+// `JSXElementConstructor` unless the class declares a `props` field, so the
+// `DashboardModal` class shipped by @uppy/react 5.x trips TS2607/TS2786 when
+// used as JSX. The runtime is unchanged — it's still a valid React class
+// component — so we cast it to a `ComponentType` at the import site, mirroring
+// the recharts cast pattern in
+// artifacts/practitioner-operating-plan/src/pages/CheckIn.tsx. This keeps the
+// gated workspace typecheck green for any artifact that pulls in
+// `ObjectUploader`.
+const DashboardModal = DashboardModalRaw as unknown as ComponentType<
+  DashboardModalProps<Record<string, unknown>, Record<string, unknown>> & {
+    proudlyDisplayPoweredByUppy?: boolean;
+  }
+>;
 
 interface ObjectUploaderProps {
   maxNumberOfFiles?: number;
