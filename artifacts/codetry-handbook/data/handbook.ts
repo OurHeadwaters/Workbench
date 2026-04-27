@@ -30,8 +30,78 @@ export type Part = {
 const partI: Part = {
   roman: "I",
   title: "The Discipline",
-  blurb: "What codetry is, in three short chapters.",
+  blurb: "Why codetry exists, and what it is, in four short chapters.",
   chapters: [
+    {
+      id: "1-0",
+      number: "1.0",
+      partRoman: "I",
+      partLabel: "I · The Discipline",
+      title: "Why codetry exists",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "Before the mechanics — the naming, the drift detection, the saltbox principle, the naming session — it is worth saying plainly what this discipline is hedging against, and what it is not claiming to do.",
+        },
+        {
+          kind: "subhead",
+          text: "The hedge.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry is a hedge. It hedges against the slow ways a community's own words get taken from it inside the systems built in its name. Knowledge creeps: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck. Language drifts: *the books* becomes *the ledger* becomes *the financial management module*, and the original noun is no longer in the room. LLMs tokenize: a load-bearing noun gets sheared into sub-word fragments and reassembled as something more generic, more poolable, more average. Consultants and SaaS vendors translate: the community's vocabulary is rewritten into the vendor's data model on the way to a contract, and the contract is what survives.",
+        },
+        {
+          kind: "para",
+          text:
+            "None of these moves announces itself as a loss. Each one feels like cleanup, like progress, like professionalism. The discipline exists because the loss is real anyway, and because by the time it is visible at the surface — in a screen, a report, a policy — the substrate it was built on has already shifted.",
+        },
+        {
+          kind: "subhead",
+          text: "Practice is not governance.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry serves *practice*. Practice is what people already do — the relational, kinship-anchored, often invisible work of keeping a household, a homeschool, a co-op, a season, a territory. Practice doesn't need permission to exist; it is already there before the software arrives.",
+        },
+        {
+          kind: "para",
+          text:
+            "Governance is something else. Governance is formal authority — Chief and Council, hereditary leadership, treaty relationships, band council resolutions, election cycles, the legal and political channels through which a community speaks for itself. Governance has its own carriers, its own language, its own time.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry does not produce governance. It does not design it, replace it, route around it, or stand in for it. On a reserve in particular, conflating the two is a political mistake the practitioner must not make. The discipline protects the substrate any genuine local governance has to be built out of: if the community's words survive, the community can govern itself in its own terms; if the words drift, governance ends up being conducted in someone else's language, which is the same thing as someone else governing.",
+        },
+        {
+          kind: "subhead",
+          text: "What the practitioner is, and is not.",
+        },
+        {
+          kind: "para",
+          text:
+            "The practitioner is a steward of practice. Not a designer of governance. Not a consultant arriving with a framework. Not an author writing the community's story back to it.",
+        },
+        {
+          kind: "para",
+          text:
+            "The work is small and specific. The practitioner listens for the noun the community already uses. They refuse to translate it into something cleaner. They verify, when in doubt, against the human who handed them the word — not against the literature, not against the model, not against their own better idea. The discipline is built so that this is enough.",
+        },
+        {
+          kind: "subhead",
+          text: "The thesis, in one sentence.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Codetry is a verification discipline that keeps the structural language of a system rooted in the community that owns it, so that knowledge cannot creep, drift, or be tokenized away. It does not produce decentralized governance. It protects the substrate any genuine local governance has to be built out of: if the community's words survive, the community can govern itself in its own terms; if the words drift, governance ends up being conducted in someone else's language, which is the same thing as someone else governing.",
+        },
+      ],
+    },
     {
       id: "1-1",
       number: "1.1",
