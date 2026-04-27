@@ -64,7 +64,7 @@ export default function Cover() {
             />
             <div className="font-body text-[1.45vw] leading-[1.5] opacity-95">
               More of Deer Lake's grocery money stays in Deer Lake.
-              Fewer trips to Winnipeg. A store that feels like the community's
+              Fewer trips to Winnipeg. A store that feels like home
               from the day it opens.
             </div>
           </div>

@@ -16,22 +16,22 @@ export default function WhyStoresFailFinancing() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div className="max-w-[78%]">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              Why current stores fail · Producer & financing side
+              Why most northern stores fail · the small farms and the money
             </div>
             <h2 className="font-display text-[3.6vw] leading-[1.05] tracking-tight text-primary font-medium">
-              Producer & financing side.
+              Small farms and harvesters who could supply it.
               <span className="italic font-normal text-accent">
                 {" "}
-                Why the small farms and harvesters who could supply it never get a chance.
+                Why they never get a chance.
               </span>
             </h2>
           </div>
-          <div className="text-right shrink-0 pl-[2vw]">
-            <div className="font-display text-[4vw] leading-none text-accent font-semibold">
-              {modes.length}
+          <div className="text-right shrink-0 pl-[2vw] max-w-[24vw]">
+            <div className="font-display text-[1.6vw] leading-tight text-primary font-medium">
+              Ways stores break here
             </div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.95vw] text-muted mt-[0.6vh]">
-              named failure modes
+              <span className="text-accent font-semibold">{modes.length}</span> named in this group
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function WhyStoresFailFinancing() {
               It doesn't have to fail
             </div>
             <div className="font-display text-[1.5vw] leading-tight text-primary font-medium">
-              Two working counter-examples — both community-owned.
+              Two stores already make it work. Both are owned by the community.
             </div>
           </div>
           {COUNTER_EXAMPLES.map((ex) => (

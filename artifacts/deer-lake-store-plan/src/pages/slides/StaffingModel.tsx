@@ -14,10 +14,10 @@ export default function StaffingModel() {
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[34vw]">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted mb-[0.6vh]">
-              The honest design constraint
+              The honest design rule
             </div>
             <div className="font-body text-[1.25vw] text-primary leading-[1.35]">
-              Hunting season, funerals, hockey tournaments, bad weather days. Northern stores collapse when the operating model assumes everyone shows up every day. This one assumes the opposite.
+              Hunting season. Funerals. Hockey tournaments. Bad weather days. Most northern stores fall apart because they need everyone to show up every day. This one is built the other way.
             </div>
           </div>
         </div>
@@ -31,52 +31,52 @@ export default function StaffingModel() {
               Whose store this is
             </div>
             <div className="font-display text-[1.5vw] leading-tight text-primary font-medium">
-              The band runs the store. Headwaters delivers the operating system.
+              The band runs the store. Headwaters delivers the software, the training, and the tools.
             </div>
           </div>
           <div className="font-body text-[1vw] text-text leading-[1.45] max-w-[52vw]">
-            Hiring, scheduling, day-to-day decisions, ownership — the band's. Software, training, the transparency stack, monthly visits — Headwaters'. The freight on the route — the family-run refrigerated truck already operating Thunder Bay → Sioux Lookout → Dryden every two weeks. <span className="text-primary font-semibold">Nobody flies in to run the store. Nobody needs to.</span>
+            Hiring, scheduling, day-to-day decisions, ownership. Those belong to the band. Software, training, open-records tools, monthly visits. Those come from Headwaters. The shipping comes from the family-run cold truck. That truck already runs Thunder Bay to Sioux Lookout to Dryden every two weeks. <span className="text-primary font-semibold">Nobody flies in to run the store. Nobody needs to.</span>
           </div>
         </div>
 
         <div className="flex-1 grid grid-cols-5 gap-[1.2vw] min-h-0 mb-[2vh]">
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">PODS, NOT ROLES</div>
+            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">EVERYONE LEARNS EVERY JOB</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              Everyone can cover the sales floor
+              Everyone can cover the store floor
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              The till, the cooler, the stockroom, the daily books at a basic level. When two people don't show up on a Tuesday, the store still opens.
+              The till, the cooler, the stockroom, the daily books at a basic level. If two people do not show up on a Tuesday, the store still opens.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">CASUAL LOCAL POD</div>
+            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">LOCAL ON-CALL GROUP</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              Paid by the job, on call
+              Paid by the job, called in when needed
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              A small group of community members called in for batch days, market tables, big restocks. Local employment line. No imported labour. No flown-in embed.
+              A small group of community members called in for big restock days and market tables. The work goes to local people. No outside workers brought in. No one flown in to live here and run the store.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">SOFTWARE COVERS THE GAPS</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              The store runs when nobody's there
+              The store keeps running when nobody is on the floor
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              Reorder rules, end-of-day, freight tracking, daily books — automated where they can be. The till works offline. The manager doesn't need to be in the building to know what's happening.
+              Reordering, closing the day, tracking shipments, daily books. The software does as much of this as it can. The till works without internet. The manager does not need to be in the building to know what is happening.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">SHIFT AS A MARKET</div>
+            <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">SHIFTS GO TO WHO PICKS THEM UP</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
               Open shifts go to whoever picks them up
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              The board posts what needs covering and what it pays. People grab what fits their week. Nobody is on the hook for a shift they couldn't make — and the store doesn't go dark waiting for them.
+              The board lists open shifts and what each shift pays. People pick up the ones that fit their week. Nobody is forced into a shift they could not make. The store does not stay closed waiting for someone.
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function StaffingModel() {
               Built around community life
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              Hunting season, funerals, hockey tournaments, treaty days. Hours flex by default — nothing about the store assumes a southern work week.
+              Hunting season. Funerals. Hockey tournaments. Treaty days. The hours bend around community life. The store does not run on a southern work week.
             </div>
           </div>
         </div>
@@ -100,27 +100,27 @@ export default function StaffingModel() {
               The Headwaters team that delivers
             </div>
             <div className="font-display text-[1.25vw] leading-tight font-medium">
-              On the ground often enough to keep it real, not so often the band starts depending on us.
+              On the ground often enough to stay close to the work. Not so often the band starts to need us.
             </div>
           </div>
           <div className="col-span-9 grid grid-cols-3 gap-x-[1.2vw] gap-y-[0.5vh] font-body text-[0.78vw] leading-[1.35] opacity-95">
             <div>
-              <span className="font-semibold">Practitioner</span> — software, training delivery, monthly Deer Lake visit. Carries the relationship and the codebase.
+              <span className="font-semibold">Headwaters specialist.</span> Builds the software. Delivers the training. Visits Deer Lake every month.
             </div>
             <div>
-              <span className="font-semibold">Dryden hub operator</span> — based at the Dryden shop. Salt + piecework + Deer Lake order coordination + phone. V3 fold of V2's Food Handler and Ops Manager (the Practitioner Operating Plan OnePager A·floor keeps the two lines broken out so the contractor's CFO can audit the floor totals line-by-line; same work, presented for two different audiences).
+              <span className="font-semibold">Dryden hub worker.</span> Based at our Dryden shop. Pay is part salary, part by the job. Handles the Deer Lake orders and the phone.
             </div>
             <div>
-              <span className="font-semibold">Bookkeeper, part-time, remote</span> — reconciliation, monthly close, payroll prep. Off the store's payroll.
+              <span className="font-semibold">Bookkeeper, part-time, remote.</span> Matches the records. Closes the month. Prepares payroll. Not on the store's payroll.
             </div>
             <div>
-              <span className="font-semibold">Technical advisor on retainer</span> — quarterly architecture review, code review on money-touching merges. Hedge against solo-developer risk.
+              <span className="font-semibold">Technical advisor on retainer.</span> Reviews the software every three months. Checks any code that touches money before it goes live. Backup so the store does not depend on one person.
             </div>
             <div>
-              <span className="font-semibold">Training &amp; curriculum partner</span> — Indigenous educator voice. Three cohorts a year. Train-the-trainer is the design, not a stretch goal.
+              <span className="font-semibold">Training partner.</span> An Indigenous educator. Runs three groups of trainees a year. Trains the trainers from the start.
             </div>
             <div>
-              <span className="font-semibold">Casual local pod in Deer Lake</span> — paid by the job for batch days and market tables. Local employment line. No flown-in embed.
+              <span className="font-semibold">Local Deer Lake group.</span> Paid by the job for big days and market tables. The jobs stay local. Nobody is flown in to live here.
             </div>
           </div>
         </div>

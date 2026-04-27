@@ -16,7 +16,7 @@ export default function RisksAsk() {
           <div className="col-span-7 rounded-[0.4vw] p-[2vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="flex items-baseline justify-between mb-[1.4vh]">
               <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted">
-                The seven things most likely to go wrong — and how we'd handle each one
+                The seven things most likely to go wrong, and how we would handle each one
               </div>
               <div className="font-mono text-[1vw] text-muted">Full list at the back</div>
             </div>
@@ -42,7 +42,7 @@ export default function RisksAsk() {
 
               <div className="col-span-1 font-mono text-accent text-[1.05vw] pt-[0.2vh]">04</div>
               <div className="col-span-5 text-primary font-semibold">The current store fights back on price</div>
-              <div className="col-span-6 text-muted">A store the community owns is something the current store can never copy — that's our edge</div>
+              <div className="col-span-6 text-muted">A store the community owns is something the current store can never copy. That is our edge.</div>
 
               <div className="col-span-12 h-px bg-rule" />
 
@@ -53,8 +53,8 @@ export default function RisksAsk() {
               <div className="col-span-12 h-px bg-rule" />
 
               <div className="col-span-1 font-mono text-accent text-[1.05vw] pt-[0.2vh]">06</div>
-              <div className="col-span-5 text-primary font-semibold">People don't show up — hunting season, funerals, weather</div>
-              <div className="col-span-6 text-muted">The store is built around that · software runs the back end · cross-trained pods cover each other · the schedule bends around community life by default</div>
+              <div className="col-span-5 text-primary font-semibold">People do not show up. Hunting season, funerals, weather.</div>
+              <div className="col-span-6 text-muted">The store is built around that · software runs the back end · everyone is trained on every job so they can cover each other · the schedule bends around community life by default</div>
 
               <div className="col-span-12 h-px bg-rule" />
 
@@ -75,39 +75,39 @@ export default function RisksAsk() {
             <div className="space-y-[0.5vh] font-body text-[0.85vw] leading-[1.35] opacity-95">
               <div className="flex gap-[0.6vw]">
                 <div className="font-mono text-[0.85vw] pt-[0.1vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
-                <div>An hour with the contractor, in person if possible — no slides, just a conversation.</div>
+                <div>One hour with the contractor. In person if possible. No slides. Just a conversation.</div>
               </div>
               <div className="flex gap-[0.6vw]">
                 <div className="font-mono text-[0.85vw] pt-[0.1vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
-                <div>A straight answer on where this plan is right and where it's wrong.</div>
+                <div>A straight answer on where this plan is right and where it is wrong.</div>
               </div>
               <div className="flex gap-[0.6vw]">
                 <div className="font-mono text-[0.85vw] pt-[0.1vh] shrink-0" style={{ color: "#e9c8a8" }}>→</div>
-                <div>An introduction to the band council when the contractor decides the time is right — never before.</div>
+                <div>An introduction to the band council when the contractor decides the time is right. Never before.</div>
               </div>
             </div>
 
             <div className="mt-[1vh] rounded-[0.3vw] px-[0.9vw] py-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] mb-[0.3vh]" style={{ color: "#e9c8a8" }}>
-                The deal, named honestly
+                The deal, in plain words
               </div>
               <div className="font-body text-[0.82vw] leading-[1.35] opacity-95">
-                Recommended tier: <span className="font-semibold">$90k/mo bill on a $69.7k cost basis</span> for the full-stack agency engagement (replaces today's $35k/mo Layer-1 software-only contract — same client, expanded scope), 35% reinvestment audited annually. Day-one ask: <span className="font-semibold">~$181k bridge capital</span> for team payroll + tech CAPEX before the first 60-day Indigenous Services Canada (ISC) invoice clears. Tier and bridge selection <span className="font-semibold">TBD pending council conversation</span>. Precedent: the $22k payback memo on file.
+                Recommended plan: <span className="font-semibold">we bill $90,000 a month. It costs us $69,700 a month.</span> This is for the full Headwaters team. It replaces today's $35,000-a-month software-only contract. Same client. Same software. With the full team and accountability around it. We put 35% of what you pay back into building the store. An outside reviewer checks this every year. Day-one ask: <span className="font-semibold">about $181,000 in money to cover the gap</span>. The gap is the team payroll and the day-one equipment we buy, before the first invoice from the band gets paid. (Indigenous Services Canada, the federal department that pays the band, takes about 60 days to pay each invoice.) Which plan to pick and how big the gap money is, that is up to the council. We have a written payback promise on file from last time, for $22,000.
               </div>
             </div>
 
             <div className="mt-[1vh] pt-[0.8vh] border-t" style={{ borderColor: "rgba(244,237,224,0.25)" }}>
               <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] opacity-70 mb-[0.3vh]">
-                Net-positive accountability · five measures
+                Five things we have to deliver
               </div>
               <div className="font-body text-[0.78vw] leading-[1.35] opacity-90">
-                Procurement savings delivered · time returned to band staff · transparency tools shipped &amp; adopted · capacity built locally · year-end value-delivered audit. <span className="opacity-80">If the value delivered doesn't beat what we charged, we credit it forward in writing.</span>
+                Money saved on buying. Time saved for band staff. Open-records tools delivered and used. Local skill built up. Year-end check by an outside reviewer. <span className="opacity-80">If what we delivered is worth less than what we charged, we credit the difference back. In writing.</span>
               </div>
               <div className="font-body text-[0.75vw] leading-[1.35] opacity-75 mt-[0.4vh]">
-                Not asking for: cash up front · a piece of the band's ownership · supplier exclusivity.
+                We are not asking for: cash up front. A piece of the band's ownership. Supplier exclusivity.
               </div>
               <div className="font-display italic text-[0.82vw] mt-[0.6vh]" style={{ color: "#e9c8a8" }}>
-                — Headwaters · no free lunches · capital deployed properly · Deer Lake earns it · then so does every reserve
+                — Headwaters. The work is paid for. The value comes back. Deer Lake earns it. Then every reserve does.
               </div>
             </div>
           </div>

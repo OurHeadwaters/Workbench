@@ -16,29 +16,29 @@ export default function WhyStoresFailSupplyOps() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div className="max-w-[78%]">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              Why current stores fail · Supply chain & operations
+              Why most northern stores fail · getting groceries here & running the store
             </div>
             <h2 className="font-display text-[3.4vw] leading-[1.05] tracking-tight text-primary font-medium">
-              Supply chain & operations.
+              Getting groceries here. Running the store.
               <span className="italic font-normal text-accent">
                 {" "}
-                How freight breaks the shelf and a southern playbook breaks the store.
+                Both can break a northern store fast.
               </span>
             </h2>
           </div>
-          <div className="text-right shrink-0 pl-[2vw]">
-            <div className="font-display text-[4vw] leading-none text-accent font-semibold">
-              {supply.length + operations.length}
+          <div className="text-right shrink-0 pl-[2vw] max-w-[24vw]">
+            <div className="font-display text-[1.6vw] leading-tight text-primary font-medium">
+              Ways stores break here
             </div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.95vw] text-muted mt-[0.6vh]">
-              named failure modes
+              <span className="text-accent font-semibold">{supply.length + operations.length}</span> named in this group
             </div>
           </div>
         </div>
 
         <div className="flex-1 grid grid-cols-2 gap-[1.5vw] min-h-0">
-          <ThemeColumn label="Supply chain" modes={supply} tone="paper" />
-          <ThemeColumn label="Operations" modes={operations} tone="primary" />
+          <ThemeColumn label="Getting groceries here" modes={supply} tone="paper" />
+          <ThemeColumn label="Running the store" modes={operations} tone="primary" />
         </div>
 
         <div className="mt-[2.5vh] pt-[1.5vh] border-t border-rule">

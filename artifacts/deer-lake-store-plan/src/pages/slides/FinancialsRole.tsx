@@ -18,37 +18,37 @@ export default function FinancialsRole() {
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[0.6vh]">THE NUMBERS</div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.85vw] text-muted mb-[0.8vh]">Early estimates · firmed up before any money is spent</div>
 
-            <div className="space-y-[0.8vh] font-body text-[0.92vw] leading-[1.3]">
+            <div className="space-y-[0.9vh] font-body text-[0.92vw] leading-[1.3]">
               <div>
-                <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">What Deer Lake spends on groceries each year</div>
-                <div className="font-display text-[1.4vw] text-primary font-semibold leading-tight">~$1.6–2.0M / yr</div>
-                <div className="text-muted text-[0.85vw]">About 870 people, at northern prices</div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">How much Deer Lake spends on groceries each year</div>
+                <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>$1.6 to $2.0 million a year</div>
+                <div className="text-muted text-[0.82vw] mt-[0.1vh]">About 870 people, at northern prices</div>
               </div>
               <div>
-                <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">What we aim to sell in year one</div>
-                <div className="font-display text-[1.4vw] text-primary font-semibold leading-tight">30–40%</div>
-                <div className="text-muted text-[0.85vw]">Of the community's grocery spending</div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">How much we plan to sell in year one</div>
+                <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>30 to 40 percent</div>
+                <div className="text-muted text-[0.82vw] mt-[0.1vh]">Of all the groceries the community buys</div>
               </div>
               <div>
-                <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">What the store keeps on each dollar of sales</div>
-                <div className="font-display text-[1.4vw] text-primary font-semibold leading-tight">22–28%</div>
-                <div className="text-muted text-[0.85vw]">Less than the current store — on purpose, so prices are lower</div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">What the store keeps on each dollar of sales</div>
+                <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>22 to 28 cents on the dollar</div>
+                <div className="text-muted text-[0.82vw] mt-[0.1vh]">Less than the current store keeps. We chose this on purpose so prices are lower.</div>
               </div>
               <div>
-                <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">What it costs to open the doors</div>
-                <div className="font-display text-[1.4vw] text-primary font-semibold leading-tight">$400–700k</div>
-                <div className="text-muted text-[0.85vw]">Build-out, freezers, shelving, first round of stock, signage</div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">What it costs to open the doors</div>
+                <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>$400,000 to $700,000</div>
+                <div className="text-muted text-[0.82vw] mt-[0.1vh]">Build-out, freezers, shelving, first round of stock, signage</div>
               </div>
               <div>
-                <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] text-muted">Where the opening money comes from</div>
-                <div className="text-text text-[0.82vw] leading-[1.3]">Federal/regional grants (FedNor's Northern Ontario Development Program, Community Futures, Indigenous Services Canada's Community Capital Program), LFFC (Local Food and Farm Co-operatives) partnership, band contribution.</div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">Where the opening money comes from</div>
+                <div className="text-text text-[0.82vw] leading-[1.35] mt-[0.2vh]">Federal and regional grants. FedNor (the federal economic agency for northern Ontario) runs the Northern Ontario Development Program. Community Futures and the Indigenous Services Canada Community Capital Program also help. Plus a partnership with Local Food and Farm Co-operatives. Plus a contribution from the band.</div>
               </div>
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col min-h-0 overflow-hidden" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[0.6vh]">THE SCHEDULE</div>
-            <div className="font-mono uppercase tracking-[0.18em] text-[0.85vw] text-muted mb-[1.6vh]">From signing on to handing the keys to a Deer Lake manager</div>
+            <div className="font-mono uppercase tracking-[0.18em] text-[0.85vw] text-muted mb-[1.6vh]">From signing on to passing the store to a Deer Lake manager</div>
 
             <div className="space-y-[1vh] font-body text-[0.95vw] leading-[1.3]">
               <div className="grid grid-cols-12 gap-[0.4vw] items-center">
@@ -70,7 +70,7 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-[0.4vw] items-center">
-                <div className="col-span-4 text-text">Train Deer Lake staff (continuous)</div>
+                <div className="col-span-4 text-text">Keep training Deer Lake staff (all the way through)</div>
                 <div className="col-span-8 h-[1.4vh] rounded-sm relative bg-rule">
                   <div className="absolute h-full rounded-sm" style={{ left: "20%", width: "78%", background: "var(--slide-muted)" }} />
                 </div>
@@ -88,13 +88,13 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-[0.4vw] items-center">
-                <div className="col-span-4 text-text">First 90 days — sort out the bumps</div>
+                <div className="col-span-4 text-text">First 90 days. Sort out the rough spots.</div>
                 <div className="col-span-8 h-[1.4vh] rounded-sm relative bg-rule">
                   <div className="absolute h-full rounded-sm" style={{ left: "58%", width: "30%", background: "var(--slide-primary)" }} />
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-[0.4vw] items-center">
-                <div className="col-span-4 text-text">Hand the store to a Deer Lake manager</div>
+                <div className="col-span-4 text-text">Pass the store to a Deer Lake manager</div>
                 <div className="col-span-8 h-[1.4vh] rounded-sm relative bg-rule">
                   <div className="absolute h-full rounded-sm" style={{ left: "84%", width: "16%", background: "var(--slide-primary)" }} />
                 </div>
@@ -111,30 +111,30 @@ export default function FinancialsRole() {
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col min-h-0 overflow-hidden" style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}>
             <div className="font-mono text-[0.95vw] font-semibold mb-[0.6vh]" style={{ color: "#e9c8a8" }}>WHO RUNS IT · WHAT HEADWATERS CHARGES</div>
-            <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] opacity-75 mb-[1vh]">Two jobs drawn cleanly · cost basis × 1.35 reinvestment markup</div>
+            <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] opacity-75 mb-[1vh]">Two jobs split clearly · cost plus 35% reinvestment</div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>Inside the store</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">The band staffs and runs it.</span> Contractor or store manager hired by the band, plus the casual local pod paid by the job. Pods, not roles.
+                <span className="font-semibold">The band hires and runs everyone inside.</span> The contractor or store manager works for the band. Plus the local on-call group, paid by the job. Everyone learns every job.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>What Headwaters delivers</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">Software, the tech stack, training. That's it.</span> No headcount on the floor. Practitioner visits monthly.
+                <span className="font-semibold">Software, the tools, and training. That is all.</span> Nobody from Headwaters works on the store floor. The Headwaters specialist visits once a month.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.10)" }}>
-              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] mb-[0.5vh]" style={{ color: "#e9c8a8" }}>Cost basis · reinvestment · bill · bridge — full-stack agency engagement (replaces today's $35k/mo Layer-1 software-only contract)</div>
+              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] mb-[0.5vh]" style={{ color: "#e9c8a8" }}>Three plans for the council to pick from. Replaces today's $35,000 a month software-only contract.</div>
               <div className="font-mono text-[0.78vw] leading-[1.55] opacity-95" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <div className="grid grid-cols-12 gap-x-[0.4vw] pb-[0.3vh] opacity-70 border-b" style={{ borderColor: "rgba(244,237,224,0.18)" }}>
-                  <div className="col-span-3">tier</div>
-                  <div className="col-span-3 text-right">cost</div>
-                  <div className="col-span-3 text-right">bill</div>
-                  <div className="col-span-3 text-right">bridge</div>
+                  <div className="col-span-3">plan</div>
+                  <div className="col-span-3 text-right">our cost</div>
+                  <div className="col-span-3 text-right">what we charge</div>
+                  <div className="col-span-3 text-right">gap money</div>
                 </div>
                 <div className="grid grid-cols-12 gap-x-[0.4vw] pt-[0.3vh]">
                   <div className="col-span-3">A · floor</div>
@@ -156,14 +156,14 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="font-body text-[0.72vw] leading-[1.4] opacity-80 mt-[0.5vh]">
-                35% reinvestment target audited yearly. Bridge = M2 trough on the 60-day Indigenous Services Canada (ISC) pay cycle (two months of cost basis + day-one tech CAPEX of $0 / $42k / $60k). Recovered when the last two invoices clear. Tier selection TBD pending council conversation. Precedent for written commitments: the $22k payback memo from V2.
+                We put 35% of what you pay back into building the store. An outside accountant checks this every year. The "gap money" covers two months of our costs plus the day-one equipment we buy ($0, $42k, or $60k). We get the gap money back when the last two invoices clear. (Indigenous Services Canada is the federal department that pays the band. They take about 60 days to pay each invoice.) Which plan to pick is up to the council. We have a written payback promise on file from last time, for $22,000.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.85vw]" style={{ background: "rgba(244,237,224,0.04)" }}>
-              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] opacity-75">The freight</div>
+              <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw] opacity-75">Shipping</div>
               <div className="font-body text-[0.82vw] leading-[1.35] mt-[0.2vh] opacity-90">
-                A family-run refrigerated route through Dryden, on the same corridor Deer Lake's truck already uses. Not a Headwaters line item.
+                A family-run cold truck route through Dryden. It uses the same road Deer Lake's truck already uses. Headwaters does not charge for this.
               </div>
             </div>
           </div>

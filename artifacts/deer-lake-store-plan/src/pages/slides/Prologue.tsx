@@ -40,18 +40,18 @@ export default function Prologue() {
         <div className="max-w-[72vw] mx-auto w-full text-center">
           <div className="font-display text-[2.05vw] leading-[1.55] opacity-95 space-y-[1.6vh]" style={{ textWrap: "balance" }}>
             <p>
-              I was drafting this plan standing out on my deck, observing nature, and I asked myself:{" "}
+              I was writing this plan out on my deck, watching nature. I asked myself a question:{" "}
               <span className="italic" style={{ color: "#e9c8a8" }}>is this the right direction?</span>
             </p>
             <p>
-              At that moment an eagle appeared overhead. I said, "well hello!" — and he lowered with force, and slowly stayed above me.
+              At that moment an eagle appeared above me. I said, "well hello!" He came down low and slowly stayed above me.
             </p>
             <p>
-              I asked again, this time to him:{" "}
+              I asked the question again, this time to him:{" "}
               <span className="italic" style={{ color: "#e9c8a8" }}>is this the right direction?</span>
             </p>
             <p>
-              He soared in a circle formation, then flew out of sight.
+              He flew in a slow circle. Then he flew out of sight.
             </p>
           </div>
         </div>

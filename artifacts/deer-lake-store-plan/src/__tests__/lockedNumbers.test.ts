@@ -115,11 +115,14 @@ describe("Headwaters reinvestment-bucket source-of-truth", () => {
     }
   });
 
-  it("ServicePartner.tsx prints the $24.3k/mo reinvestment headline", () => {
+  it("ServicePartner.tsx prints the $24,300/mo reinvestment headline", () => {
+    // Phrasing was rewritten for ESL readability (Task #275); the locked
+    // numbers themselves must still appear so this test catches numeric drift.
     const servicePartner = readDeckSlide("ServicePartner.tsx");
-    expect(servicePartner).toContain("$24.3k/mo");
-    expect(servicePartner).toContain("$69.7k/mo cost basis");
-    expect(servicePartner).toContain("~$94k/mo cost-of-delivery");
+    expect(servicePartner).toContain("$24,300 a month");
+    expect(servicePartner).toContain("$69,700 a month");
+    expect(servicePartner).toContain("about $94,000 a month");
+    expect(servicePartner).toContain("(35%)");
   });
 
   it("formatBucketAmount produces the '~$Nk' shape both surfaces use", () => {
@@ -196,10 +199,14 @@ describe("Deer Lake deck — FinancialsRole tier table matches the locked number
   });
 
   it("calls out the 35% reinvestment / 60-day ISC pay cycle / $22k payback memo precedent", () => {
+    // Phrasing was rewritten for ESL readability (Task #275); the locked
+    // anchors (35% reinvestment, ~60-day ISC pay cycle, $22k payback memo
+    // precedent) must still appear in the new prose.
     const src = financialsRole();
-    expect(src).toContain("35% reinvestment");
-    expect(src).toContain("60-day Indigenous Services Canada (ISC) pay cycle");
-    expect(src).toContain("$22k payback memo");
+    expect(src).toContain("35% of what you pay back into building the store");
+    expect(src).toContain("Indigenous Services Canada");
+    expect(src).toContain("60 days");
+    expect(src).toContain("$22,000");
   });
 });
 
@@ -251,10 +258,15 @@ describe("Cross-deck — Practitioner OnePager tier table agrees with Financials
   it("RisksAsk repeats the recommended-tier $90k/$69.7k/~$181k headline consistently", () => {
     // RisksAsk.tsx is the closing slide and the most likely place a
     // founder-facing typo would slip the recommended tier out of sync.
+    // Phrasing was rewritten for ESL readability (Task #275); the locked
+    // recommended-tier numbers ($90k bill, $69.7k cost basis, ~$181k bridge
+    // on a 60-day ISC pay cycle) must still appear in the new prose.
     const risksAsk = readDeckSlide("RisksAsk.tsx");
-    expect(risksAsk).toContain("$90k/mo bill on a $69.7k cost basis");
-    expect(risksAsk).toContain("~$181k bridge capital");
-    expect(risksAsk).toContain("60-day Indigenous Services Canada (ISC) invoice");
+    expect(risksAsk).toContain("$90,000 a month");
+    expect(risksAsk).toContain("$69,700 a month");
+    expect(risksAsk).toContain("about $181,000");
+    expect(risksAsk).toContain("Indigenous Services Canada");
+    expect(risksAsk).toContain("60 days");
   });
 });
 

@@ -36,58 +36,58 @@ const reinvestBuckets: ReinvestBucket[] = REINVESTMENT_BUCKETS.map((b) => ({
 }));
 
 const accountabilityMeasures: AccountabilityMeasure[] = [
-  { label: "Procurement savings delivered", detail: "vs. the baseline the current store charges" },
-  { label: "Time returned to band staff", detail: "hours back from manual reorder, manual close, manual reporting" },
-  { label: "Transparency tools shipped & adopted", detail: "public dashboard + household lookup live and in use" },
-  { label: "Capacity built locally", detail: "named band staff trained to run each module without us" },
-  { label: "Year-end value-delivered audit", detail: "third-party · forward-credit clause in writing" },
+  { label: "Money saved on buying", detail: "compared to what the current store charges" },
+  { label: "Time saved for band staff", detail: "hours saved from doing reorders, closing, and reporting by hand" },
+  { label: "Open-records tools delivered and used", detail: "public price page and household lookup are live and being used" },
+  { label: "Local skill built up", detail: "named band staff trained to run each part of the system on their own" },
+  { label: "Year-end check on what we delivered", detail: "outside reviewer · pay-back-the-difference clause in writing" },
 ];
 
 const productLayers: Layer[] = [
   {
     label: "Software",
-    headline: "Built by the practitioner. Owned by the band. Reused on the next reserve.",
+    headline: "Built by Headwaters. Owned by the band. Used again on the next reserve.",
     detail:
-      "The till, the price dashboard, the household lookup, the offline-first stack, the bookkeeping pipeline — Deer Lake owns the source code and the data. The next reserve doesn't pay to rebuild the software; they pay the practitioner — at a premium day rate — to install the discipline that makes it work.",
+      "The till, the price page, the household lookup, the system that works offline, the bookkeeping pipeline. Deer Lake owns the code and the data. The next reserve does not pay to build the software again. They pay the Headwaters specialist a premium day rate to install the standards that make it work.",
   },
   {
-    label: "Tech stack at markup",
-    headline: "POS, accounting, comms, logistics — integrated, tested up north, resold.",
+    label: "Tools, bundled and resold",
+    headline: "Till, accounting, communications, logistics. Tested up north. Bundled together.",
     detail:
-      "We don't pretend to invent what already exists. We resell the underlying tools the practitioner has tested in northern conditions, integrated into a working system. The markup sits there transparently — no hidden margin in the operating fee.",
+      "We do not invent what already exists. We resell the tools that we have tested up here. We bundle them into a system that works. Our markup sits in the open. There is no hidden charge in the monthly fee.",
   },
   {
     label: "Training programs",
-    headline: "Teach band staff to run the system on their own rhythm.",
+    headline: "Teach band staff to run the system at their own pace.",
     detail:
-      "Practitioner-led modules with an Indigenous education partner. The curriculum belongs to the people who took it. No imported labour. No flown-in embed. The store works after we leave because the people running it know how it works.",
+      "Modules taught by the Headwaters specialist, with an Indigenous education partner. The course belongs to the people who took it. No outside workers brought in. No one flown in to live here. The store keeps working after we leave because the people running it know how it works.",
   },
 ];
 
 const staysItems: StaysItem[] = [
   {
-    label: "Public price dashboard",
-    amount: "Live by month 3 · adopted by month 6",
+    label: "Public price page",
+    amount: "Live by month 3 · being used by month 6",
     detail:
-      "Anyone in Deer Lake can see what the store paid, what it's selling at, and what the margin is — line by line. The transparency the council has been asking for.",
+      "Anyone in Deer Lake can see what the store paid, what it sells at, and what the store keeps. Line by line. The openness the council has been asking for.",
   },
   {
     label: "Household price lookup",
     amount: "Live by month 9",
     detail:
-      "Family-by-family monthly grocery costs vs. baseline, with subsidy pass-through visible. The council can defend pricing to anyone who asks.",
+      "Each family can see what they spent on groceries this month, compared to the baseline. The federal grocery help money shows up clearly. The council can defend the prices to anyone who asks.",
   },
   {
-    label: "The operating playbook",
-    amount: "Documented as we go",
+    label: "The written guide for running the store",
+    amount: "Written down as we go",
     detail:
-      "Operating plan, hiring runbook, financial model, transparency stack, tech infrastructure, accountability framework. Written down as we build it so the band runs the store after we hand off — not from memory.",
+      "How to run the store. How to hire. The financial model. The open-records system. The technology. The accountability rules. All written down as we build them. The band runs the store from the written guide. Not from memory.",
   },
   {
-    label: "Year-end value-delivered audit",
-    amount: "Independent · annual · forward-credit clause",
+    label: "Year-end check on what we delivered",
+    amount: "Outside reviewer · once a year · pay-back-the-difference clause",
     detail:
-      "Third-party review against what we charged. If the value delivered to Deer Lake doesn't beat the operating fee, we credit the difference forward against next year's contract. In writing.",
+      "An outside reviewer checks what we delivered against what we charged. If what we delivered to Deer Lake is worth less than what we charged, we credit the difference back against next year's contract. In writing.",
   },
 ];
 
@@ -97,7 +97,7 @@ export default function ServicePartner() {
       <div className="absolute inset-0 px-[5vw] py-[3.5vh] flex flex-col">
         <div className="mb-[1.4vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[0.95vw] text-muted mb-[0.6vh]">
-            What Headwaters delivers · cost basis × 1.35 reinvestment markup
+            What Headwaters delivers · we charge our cost plus 35% put back in
           </div>
           <h2 className="font-display text-[3vw] leading-[1] tracking-tight text-primary font-medium">
             Three things the band buys.
@@ -107,9 +107,9 @@ export default function ServicePartner() {
 
         <div className="grid grid-cols-12 gap-[1.4vw] mb-[1.4vh]" style={{ height: "44vh" }}>
           <div className="col-span-5 rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
-            <div className="font-mono text-[0.92vw] text-accent font-semibold mb-[0.5vh]">THE THREE LAYERS</div>
+            <div className="font-mono text-[0.92vw] text-accent font-semibold mb-[0.5vh]">THE THREE THINGS WE DELIVER</div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] text-muted mb-[1vh]">
-              What the operating fee covers
+              What the monthly fee pays for
             </div>
 
             <div className="space-y-[1vh] flex-1 min-h-0">
@@ -132,7 +132,7 @@ export default function ServicePartner() {
           <div className="col-span-7 rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.92vw] text-accent font-semibold mb-[0.5vh]">WHAT STAYS WITH DEER LAKE</div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] text-muted mb-[1vh]">
-              Owned by the band · transferable on handoff · paper trail in writing
+              Owned by the band · we sign it over when we leave · written down on paper
             </div>
 
             <div className="grid grid-cols-2 gap-[0.9vw] flex-1 min-h-0">
@@ -160,22 +160,22 @@ export default function ServicePartner() {
         <div className="rounded-[0.4vw] p-[1.4vw] grid grid-cols-12 gap-[1.4vw]" style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}>
           <div className="col-span-5">
             <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] mb-[0.4vh]" style={{ color: "#e9c8a8" }}>
-              Headwaters pricing spine · full-stack agency engagement · what the 35% reinvestment buys
+              How Headwaters charges · the full team · what the 35% put back in pays for
             </div>
             <div className="font-body text-[0.85vw] leading-[1.4] mb-[0.6vh] opacity-95">
-              <span className="font-semibold">$69.7k/mo cost basis</span> + <span className="font-semibold">$24.3k/mo (35%) reinvestment</span> = <span className="font-semibold">~$94k/mo cost-of-delivery</span>. <span className="opacity-85">Total bill to Deer Lake TBD pending council pick (floor $60k → recommended $90k → scale $125k). Replaces today's $35k/mo Layer-1 software-only contract — same client, same software, full-stack team and accountability around it.</span>
+              <span className="font-semibold">$69,700 a month is what it costs us</span> + <span className="font-semibold">$24,300 a month (35%) we put back in</span> = <span className="font-semibold">about $94,000 a month total</span>. <span className="opacity-85">What Deer Lake is billed depends on which plan the council picks (floor $60,000 → recommended $90,000 → scale $125,000). This replaces today's $35,000-a-month software-only contract. Same client. Same software. Now with a full team and accountability around it.</span>
             </div>
             <div className="grid grid-cols-2 gap-x-[0.8vw] gap-y-[0.3vh] font-body text-[0.72vw] leading-[1.35] opacity-90" style={{ fontVariantNumeric: "tabular-nums" }}>
               {reinvestBuckets.map((b) => (
                 <div key={b.label}>
-                  <span className="font-semibold">{b.label} {b.amount}</span> — {b.detail}
+                  <span className="font-semibold">{b.label} {b.amount}.</span> {b.detail}
                 </div>
               ))}
             </div>
           </div>
           <div className="col-span-7">
             <div className="font-mono uppercase tracking-[0.18em] text-[0.78vw] mb-[0.4vh]" style={{ color: "#e9c8a8" }}>
-              Five net-positive accountability measures · forward-credit clause
+              Five things we have to deliver · pay-back-the-difference clause
             </div>
             <div className="grid grid-cols-5 gap-[0.6vw] mb-[0.5vh]">
               {accountabilityMeasures.map((m, i) => (
@@ -187,7 +187,7 @@ export default function ServicePartner() {
               ))}
             </div>
             <div className="font-body text-[0.78vw] leading-[1.4] opacity-90">
-              Year-end audit by an independent third party against the operating fee. <span className="font-semibold">If the value delivered to Deer Lake doesn't beat what we charged, we credit the difference forward against next year's contract. In writing.</span>
+              An outside reviewer checks our work once a year against what we charged. <span className="font-semibold">If what we delivered to Deer Lake is worth less than what we charged, we credit the difference back against next year's contract. In writing.</span>
             </div>
           </div>
         </div>
