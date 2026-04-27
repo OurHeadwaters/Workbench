@@ -461,7 +461,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "Every project arrives wrapped in a noun the community already uses. A co-op committee says *the books*. A homeschool circle says *the day*. A band council says *the territory*. An extension agent says *the season*. The community has already named the thing.",
+            "Every project arrives wrapped in a noun the community already uses. A co-op committee says *the books*. A homeschool circle says *the day*. A trapline keeper says *the territory*. An extension agent says *the season*. The community has already named the thing.",
         },
         {
           kind: "para",
@@ -979,6 +979,11 @@ const partVI: Part = {
             "§6.1 closed by naming a second tokenisation, structurally analogous to the first: the *token* the chain mints when a community's assets, memberships, votes, or shares of a co-op are placed on a blockchain. The argument there ended on a hazard rather than an answer — that without a name-layer discipline, on-chain primitives become legible only to the people fluent in the substrate, which is the precise definition of technocracy. That paragraph deserves a chapter of its own. It is not a tail to the LLM-tokenisation argument; it is a separate open question, in the same shape, that the discipline owes itself a place to keep returning to. This is that place.",
         },
         {
+          kind: "para",
+          text:
+            "The §1.0 distinction holds here without amendment. Codetry serves practice, not governance, and the chapter is not arguing that the discipline should expand to design what a community does with its votes, its shares, or its council seat. The hazard is to the noun *substrate* such governance is laid over once that substrate goes on-chain, and the open question is the same §1.0 hedge — protect the words the community already uses — asked at a layer where the words enact authority rather than describe practice. Whether that hedge is held by codetry, by a successor trade (§6.3), or by neither is part of what is open here.",
+        },
+        {
           kind: "subhead",
           text: "What the on-chain hazard actually is.",
         },
@@ -1023,7 +1028,7 @@ const partVI: Part = {
         {
           kind: "callout",
           text:
-            "Open question, kept open. The discipline does not yet have a name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §6.1 named. This chapter exists to be returned to — when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down.",
+            "Open question, kept open. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §6.1 named. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §6.3 takes up — codetry feeding it as one tributary, not extending itself into governance — is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down.",
         },
       ],
     },
