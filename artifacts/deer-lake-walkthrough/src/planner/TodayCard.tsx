@@ -1,11 +1,24 @@
-import { TODAY, fmtShort } from "./dates";
+import { TODAY, type ScenarioMode, fmtShort } from "./dates";
 
 /**
- * The opening card. States today plainly, then the load-bearing federal
- * date the whole calendar hangs off. Sets context before the user touches
- * anything.
+ * The opening card. States today plainly, then the load-bearing date the
+ * whole calendar hangs off (different in each mode). Sets context before
+ * the user touches anything.
  */
-export function TodayCard({ doorsOpen, totalMonths }: { doorsOpen: string; totalMonths: number }) {
+export function TodayCard({
+  mode,
+  doorsOpen,
+  totalMonths,
+}: {
+  mode: ScenarioMode;
+  doorsOpen: string;
+  totalMonths: number;
+}) {
+  const subhead =
+    mode === "self-fund"
+      ? "Council vote could happen this summer."
+      : "LFIF intake opens this fall.";
+
   return (
     <section
       className="w-full"
@@ -26,8 +39,9 @@ export function TodayCard({ doorsOpen, totalMonths }: { doorsOpen: string; total
           <span
             className="italic font-normal block mt-2 text-[24px]"
             style={{ color: "var(--color-accent-warm)" }}
+            data-testid="today-subhead"
           >
-            LFIF intake opens this fall.
+            {subhead}
           </span>
         </h1>
 

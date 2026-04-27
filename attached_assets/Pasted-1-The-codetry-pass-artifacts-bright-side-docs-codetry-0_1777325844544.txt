@@ -1,0 +1,19 @@
+1. The codetry pass — artifacts/bright-side/docs/codetry/004-the-beat-sheet-and-the-gather.md
+Renamed the file (old 004-the-newspaper-... is gone). Marked DRAFT — 2026-04-27 (rev. 2) with a one-line note pointing at the swap. Two renames, not three: Handoff → gather, Unit → Beat. Sheet stays in the bright-side vocabulary, meaning re-anchored to the screenwriter's beat sheet. The "Open operator questions" list shrank to five (the manage-floors copy is now an A/B between sectors, not a three-way). Added a closing section, "Why 'beat sheet' beat 'newspaper'", that captures the grammar-test reasoning and the recognised-vs-manufactured compound argument — useful as the worked example the manual will lean on.
+
+2. The manual-update prompt — .local/prompts/2026-04-27-codetry-manual-update.md (rev. 2)
+Replaced compound-decomposition with recognised-compound preference as item #2. The diagnostic, the worked example, the "Why X beat Y" doc-section convention all get specified there. Metaphor-cluster section now reflects "two renames, not three" with the principle line "the beat sheet outlines today's beats; the staff gather around it at shift change" as the test sentence. Added a note to the DRAFT-subtype section about mid-flight rev. bumps (which is what happened today). Added a beat sheet / Beat casing rule to the voice section. Other four patterns (un-fusing, Path A/B fork, deferred → enforced, DRAFT subtype) unchanged.
+
+3. The deducing prompt — .local/prompts/2026-04-27-codetry-deduction.md (new)
+A different deliverable from the manual update. This one asks an analyst-shaped agent to reason out from today's events to inferences about codetry-the-methodology — including pushback on the manual-update prompt itself. Ten open questions, framed as deductions to draw rather than summaries to write, including:
+
+What the "newspaper → beat sheet" swap actually revealed (recognised vs manufactured compounds; English-as-explanation vs ask-the-operator-to-learn).
+Whether the codetry workflow's actual shape is linear or iterative, and what part of today's iteration was waste vs productive search.
+The grammar-test diagnostic — is it a gallery of cheap diagnostics the manual should maintain alongside the doc-shape spec?
+Whether the methodology has a structural leaning on Path A/B forks or genuinely stays operator-deferential.
+Whether behavioural falsifiability (a staff member can point at the noun and the verb cold) is general or specific to un-fusing moves.
+A "psychological shape" question on deferred → enforced: are early gate translators paying interest on a debt the manual hasn't named?
+What didn't change in the methodology today — strength or rigidity?
+Whether the DRAFT subtype is the methodology's most powerful and most under-documented move.
+A forced-ranking close: "if I were updating the manual, here's the one structural change (not addition) I'd make based on today." One change, max.
+The prompt explicitly tells the agent to push back where a "pattern" wasn't actually a pattern, name new ones I missed, and confess where the chat transcript would have helped. Also tells it the manual-update prompt is also today's output and is fair game for deduction.

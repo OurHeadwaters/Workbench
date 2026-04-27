@@ -1,0 +1,75 @@
+Headwaters — handoff brief: April 27 work on the promotional video
+Context
+This is a pnpm monorepo with two product artifacts:
+
+artifacts/xbuckets/ — the main Headwaters PWA (non-custodial XRPL stablecoin envelope-budgeting app)
+artifacts/xbuckets-video/ — a 44-second promotional video served as a separate web artifact at the path /xbuckets-video/
+All of today's work was scoped to xbuckets-video/. Nothing in the main xbuckets/ web app was touched. Any test failures you see in the Earn tab, payday banner, or drip harvester suites are pre-existing and unrelated to today's changes.
+
+The video artifact is a React + Vite + Framer Motion single-page app that auto-loops a 7-scene narrative driven by useVideoPlayer (timeline) and useAmbientAudio (voice + Web Audio graph). Each scene swaps a backdrop video, a text overlay, and a dancer silhouette. The whole thing autoplays in an iframe in the deployed preview pane.
+
+Three big changes landed today
+1. New voice take with dramatic silences
+The voice track was swapped from a continuous read to public/audio/voiceover-echo-rap-1_8x-paused.mp3 (38.3 seconds total). It's a soft male rap at 1.8× speed with deliberate silences between four verses at roughly 0 s, 9 s, 23 s, and 36 s of voice time.
+
+Because the voice now has long pauses, two timing-driven systems were re-synced to match:
+
+src/components/video/DancerOverlay.tsx — the phase windows that crossfade Dancer A (solo reach) and Dancer B (trio unison) were re-aligned to the new verse boundaries. The overlay reads voiceAudio.currentTime directly to stay locked.
+src/components/video/KineticLyrics.tsx had its lyric cues retimed for the same reason — but see point 3 below; that file no longer exists.
+The video itself is still 44 s of total scene duration (src/lib/videoConfig.ts). That means the last ~5–6 s after the voice ends play in silence, which feels like a gap. Open follow-up: layer in a soft pad / swell / drone from ~36–43 s so the closer scene (where the "Make Waves" CTA reveals) doesn't land in dead air. The right place to schedule this is inside useAmbientAudio in src/lib/video/ambient-audio.ts.
+
+2. Stripped the video chrome down to one CTA
+The video used to have a row of four buttons across the bottom (Copy link, X, Telegram, WhatsApp), an Export .mp4 button on the bottom-left, a "44 sec · 7 scenes" badge top-left, and a CC toggle top-right. All of that is gone. What's left:
+
+A single centered "Make Waves" button (src/components/video/MakeWavesButton.tsx). It's invisible for the first ~38 seconds, fades in over 700 ms when currentScene >= 6 (the closer scene starting around 38.5 s), and copies window.location.origin + import.meta.env.BASE_URL on click. It uses navigator.clipboard.writeText with a textarea + execCommand('copy') fallback for sandboxed iframe contexts. After copy it flips to "Link copied!" with a checkmark, then resets cleanly when the closer scene leaves on the next loop. data-export-ignore keeps it out of any future MP4 capture; aria-hidden + tabIndex={-1} keep it out of the keyboard tab order while invisible.
+A 12-pixel mute icon in the top-right corner (functional necessity for muting in a quiet room — deliberately tiny so it doesn't compete with the CTA).
+An 8-pixel pulsing "tap for sound" dot in the bottom-right corner that only renders if the muted-autoplay path actually failed.
+The audio visualizer dashes and the thin progress bar at the bottom edge.
+App.tsx is now literally just <VideoTemplate />. The old forwardRef + useImperativeHandle({ restart }) plumbing in VideoTemplate.tsx was removed because nothing called it.
+
+3. Audio autoplay fix + a major dead-code cleanup
+This is the most important part of the handoff.
+
+The bug. For weeks the audio refused to autoplay in the deployed iframe even after several rounds of "broaden the unlock listeners" attempts. The previous code attached unlock handlers like this:
+
+['pointerdown','pointermove','pointerover','touchstart','mousedown',
+ 'mousemove','click','keydown','wheel','scroll','focus','focusin']
+  .forEach(evt => document.addEventListener(evt, handler, { once: true }));
+document.addEventListener('visibilitychange', handler);
+The fatal flaw: once: true plus events that DO NOT count as user activation in Chrome's autoplay policy. pointermove, pointerover, mousemove, focus, focusin, scroll, and visibilitychange all fire WITHOUT a real user gesture — and the visibilitychange event fires the moment an iframe becomes visible, before the user has done anything. Because the listeners were once: true, the very first stray non-gesture event would (a) fire the handler, (b) call ctx.resume() which silently rejected because there was no real activation, (c) detach every listener in the same call. After that, no real click could ever unlock audio. The corner "tap to start" dot was a dead button — its handler had already self-removed seconds before the user noticed.
+
+The fix. The new src/lib/video/ambient-audio.ts does this instead:
+
+Listens only on events that actually qualify as user activation: pointerdown, mousedown, touchstart, touchend, click, keydown, wheel. No pointermove, no mousemove, no pointerover, no focus, no focusin, no scroll, no visibilitychange in the unlock list.
+No once: true. The listeners self-detach only after performUnlock() has awaited ctx.resume() AND verified ctx.state === 'running'. If the resume didn't take, listeners stay attached and the next real gesture can still unlock.
+performUnlock() is async — it awaits the resume promise before declaring success, so a half-resumed context never burns the unlock attempt.
+If you ever need to add a new gesture-trigger entry point, never add events that fire without user activation, and never use once: true without verifying the unlock actually succeeded. Both mistakes are now load-bearing rules to avoid for this code.
+
+The cleanup. ambient-audio.ts went from 933 lines to ~330 — about a 65% reduction. Everything sitting behind the long-disabled ENABLE_PROCEDURAL_MUSIC = false flag was deleted: a kick / snare / hi-hat scheduler, sub-bass and piano-stab and brass-swell synth functions, the BPM/beat-phase/chord-timeline tables, an oscillator chord pad, an LFO modulator, a high-shelf filter, a music bus, a duck-gain envelope, the per-scene chord-morph effect, plus the SceneAudioProfile type and the fadeIn / fadeOut controls that had no callers. The orphaned captions component src/components/video/KineticLyrics.tsx was also deleted — it had no importers after the CC toggle was removed.
+
+What's left in the audio pipeline is the bare minimum:
+
+HTMLAudioElement → MediaElementSource → voiceGain → outputGain (the unlock gate)
+                                                  → AnalyserNode → ctx.destination
+Public API of useAmbientAudio is unchanged for its three call sites (VideoTemplate, DancerOverlay, AudioVisualizer): it still returns { muted, toggleMute, getAnalyser, getVoiceAudio, tryStart }. The currentScene parameter is accepted but no longer needed internally — kept for backward compatibility with any future scene-driven audio work.
+
+Files most relevant to a fresh agent
+artifacts/xbuckets-video/src/lib/video/ambient-audio.ts — the entire audio pipeline (~330 lines now)
+artifacts/xbuckets-video/src/components/video/VideoTemplate.tsx — orchestration root; mounts backdrops, scenes, CTA, sound toggle, hint dot, visualizer, progress bar
+artifacts/xbuckets-video/src/components/video/MakeWavesButton.tsx — the new centered CTA
+artifacts/xbuckets-video/src/components/video/DancerOverlay.tsx — verse-aligned dancer crossfades; reads voiceAudio.currentTime directly
+artifacts/xbuckets-video/src/lib/videoConfig.ts — the 44 s scene-duration table
+artifacts/xbuckets-video/public/audio/voiceover-echo-rap-1_8x-paused.mp3 — the active 38.3 s voice file, served at /xbuckets-video/audio/voiceover-echo-rap-1_8x-paused.mp3
+artifacts/xbuckets-video/src/App.tsx — now just <VideoTemplate />
+Verified state
+Full workspace typecheck: passing
+Format check on touched files: passing
+The video dev workflow restarts cleanly and renders scene 1 with no console errors
+The pre-existing test failures all live in the xbuckets/ web app (Earn tab payday banner gating, drip harvester pool cards, agent setup sheet, an api-server email-boundary timeout). None of those tests touch the video artifact.
+Known follow-ups (not done; surfaced for the next agent)
+Fill the silent tail of the video with a soft ambient bed. Voice ends at ~38.3 s but video runs to 44 s; the closer scene with the "Make Waves" CTA reveals into silence. Schedule a low-volume pad/swell/drone from ~36 s to ~43 s in ambient-audio.ts. Probably a separate <audio> element with its own gain, or a small synth that's NOT subject to the same ENABLE_PROCEDURAL_MUSIC history.
+Verify the autoplay fix in the deployed environment from a few real browsers. The fix is correct against Chrome's published autoplay policy, but I couldn't validate end-to-end in a real iframe under deployment because headless browsers run with --autoplay-policy=no-user-gesture-required and don't exercise the gesture-unlock path. If the user reports it still doesn't trigger on first click, instrument performUnlock() with a temporary console.log of ctx.state before and after await ctx.resume() to confirm whether the gesture is reaching the handler at all.
+Decide whether currentScene should stay in useAmbientAudio's options. It's accepted but unused internally now. Either remove it (and update the three call sites) or wire it back up if scene-driven audio modulation comes back.
+What is explicitly out of scope
+The main xbuckets/ web app — no files there were modified today. The two project tasks currently in flight (#872 captain's-log expansion and #873 lake/drip metaphor cleanup) are web-app work; they don't interact with anything above.
+Stripe / api-server — no changes. The Invalid API Key provided: sk_live_*** warning that shows in the api-server logs is pre-existing and unrelated.

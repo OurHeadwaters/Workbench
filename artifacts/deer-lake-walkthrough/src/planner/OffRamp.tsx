@@ -1,17 +1,27 @@
-import { fmtMonthYear } from "./dates";
+import { fmtMonthYear, type ScenarioMode } from "./dates";
 
 /**
- * The off-ramp callout. The council's real decision moment is the
- * council-decision date — by then the band has 90 days of pilot data,
- * the design work, and the application package. The decision is not
- * "build the store," it's "commit to filing the application package."
+ * The off-ramp callout — the council's real decision moment.
+ *
+ * Grants mode: the date is when council says yes (or no) to filing the
+ * application package. The decision is not "build the store," it's
+ * "commit to filing the package."
+ *
+ * Self-fund mode: the date is when council votes to spend reserve
+ * capital. Earlier than the grant path. The trade is honest — money
+ * now for an earlier doors-open. The truck application still files
+ * Fall 2026 but doesn't gate the store.
  */
 export function OffRamp({
+  mode,
   councilDecision,
   fundingSecured,
+  truckLfifIntake,
 }: {
+  mode: ScenarioMode;
   councilDecision: string;
   fundingSecured: string;
+  truckLfifIntake: string;
 }) {
   return (
     <section className="w-full" style={{ background: "var(--color-bg)" }}>
@@ -23,6 +33,7 @@ export function OffRamp({
             color: "var(--color-bg)",
             borderColor: "var(--color-accent-warm)",
           }}
+          data-testid="offramp"
         >
           <div
             className="mono text-[10px] uppercase tracking-[0.22em] mb-3"
@@ -36,16 +47,39 @@ export function OffRamp({
           >
             {fmtMonthYear(councilDecision)} council decision gate.
           </h2>
-          <p className="serif text-[15px] leading-[1.55] mt-4 opacity-90">
-            By this date the band has 90 days of pilot data, the design
-            work, and the application package in hand. The decision is
-            not <em>build the store</em>. It is <em>commit to filing
-            the application package</em>.
-          </p>
-          <p className="serif text-[15px] leading-[1.55] mt-3 opacity-90">
-            Contract two then activates on the funding-secured trigger
-            in {fmtMonthYear(fundingSecured)} — not before.
-          </p>
+          {mode === "self-fund" ? (
+            <>
+              <p className="serif text-[15px] leading-[1.55] mt-4 opacity-90">
+                The decision is not <em>file the application package</em>.
+                It is <em>spend reserve capital now</em> for an earlier
+                doors-open. By this date the band has 90 days of pilot
+                data and the design work in hand — no federal cycle to
+                wait on.
+              </p>
+              <p className="serif text-[15px] leading-[1.55] mt-3 opacity-90">
+                Contract two activates on the funding-secured trigger
+                in {fmtMonthYear(fundingSecured)}. The 807-partnership
+                LFIF for the ice-road truck still files in
+                {" "}
+                {fmtMonthYear(truckLfifIntake)} — but it gates only the
+                vehicle, not the store.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="serif text-[15px] leading-[1.55] mt-4 opacity-90">
+                By this date the band has 90 days of pilot data, the
+                design work, and the application package in hand. The
+                decision is not <em>build the store</em>. It is
+                {" "}
+                <em>commit to filing the application package</em>.
+              </p>
+              <p className="serif text-[15px] leading-[1.55] mt-3 opacity-90">
+                Contract two then activates on the funding-secured
+                trigger in {fmtMonthYear(fundingSecured)} — not before.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </section>

@@ -1,9 +1,13 @@
+import type { ScenarioMode } from "./dates";
 import { SCENARIOS, SCENARIO_ORDER, type ScenarioId } from "./scenarios";
 
 /**
- * Three pills + caption + save button. Tapping a pill snaps the anchors
+ * Four pills + caption + save button. Tapping a pill snaps the anchors
  * to that scenario's preset. The save button writes whatever the user
  * has currently dialed in to localStorage as "their version."
+ *
+ * When the user has drifted off a preset, the caption falls back to a
+ * mode-appropriate placeholder rather than a stale grant-mode caption.
  */
 export function ScenarioPicker({
   current,
@@ -11,15 +15,18 @@ export function ScenarioPicker({
   onSave,
   savedAt,
   isDirty,
+  mode,
 }: {
   current: ScenarioId | null;
   onPick: (id: ScenarioId) => void;
   onSave: () => void;
   savedAt: string | null;
   isDirty: boolean;
+  mode: ScenarioMode;
 }) {
-  const captionId =
-    current ?? (SCENARIO_ORDER[1] satisfies ScenarioId);
+  const fallbackId: ScenarioId =
+    mode === "self-fund" ? "selfFund" : "realistic";
+  const captionId = current ?? fallbackId;
   const caption = SCENARIOS[captionId].caption;
 
   return (

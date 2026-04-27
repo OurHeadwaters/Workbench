@@ -1,25 +1,83 @@
-import { type Derived, fmtShort } from "./dates";
+import { type Derived, type ScenarioMode, fmtShort } from "./dates";
 
 /**
  * Read-only panel of the dates that *fall out of* the anchor choices.
  * The contractor can screenshot this before the meeting; everything
  * here is downstream math, not user input.
+ *
+ * Mode-aware: grants mode lists the federal decision dates; self-fund
+ * mode swaps those for the truck-LFIF cycle and arrival dates.
  */
-export function KeyDates({ d }: { d: Derived }) {
+export function KeyDates({ d, mode }: { d: Derived; mode: ScenarioMode }) {
   const rows: Array<{ label: string; value: string; tone?: "warm" }> = [
     { label: "90 days of pilot data", value: fmtShort(d.pilotData90) },
-    { label: "Applications filed", value: fmtShort(d.applicationsFiled) },
-    { label: "LFIF decision", value: fmtShort(d.lfifDecision) },
-    { label: "FedNor decision", value: fmtShort(d.fedNorDecision) },
-    { label: "Funding-secured trigger", value: fmtShort(d.fundingSecured), tone: "warm" },
-    { label: "Contract two activates", value: fmtShort(d.contractTwoActivates) },
+  ];
+
+  if (mode === "self-fund") {
+    if (d.truckLfifIntake) {
+      rows.push({
+        label: "Truck LFIF intake (807 partnership)",
+        value: fmtShort(d.truckLfifIntake),
+      });
+    }
+    if (d.truckLfifDecision) {
+      rows.push({
+        label: "Truck LFIF decision",
+        value: fmtShort(d.truckLfifDecision),
+      });
+    }
+  } else {
+    if (d.applicationsFiled) {
+      rows.push({
+        label: "Applications filed",
+        value: fmtShort(d.applicationsFiled),
+      });
+    }
+    if (d.lfifDecision) {
+      rows.push({ label: "LFIF decision", value: fmtShort(d.lfifDecision) });
+    }
+    if (d.fedNorDecision) {
+      rows.push({
+        label: "FedNor decision",
+        value: fmtShort(d.fedNorDecision),
+      });
+    }
+  }
+
+  rows.push(
+    {
+      label: "Funding-secured trigger",
+      value: fmtShort(d.fundingSecured),
+      tone: "warm",
+    },
+    {
+      label: "Contract two activates",
+      value: fmtShort(d.contractTwoActivates),
+    },
     { label: "Build M1", value: fmtShort(d.buildM1) },
     { label: "Soft opening", value: fmtShort(d.buildSoftOpen) },
     { label: "Doors open", value: fmtShort(d.doorsOpen), tone: "warm" },
-    { label: "Handover to Deer Lake manager", value: fmtShort(d.buildHandover) },
+    {
+      label: "Handover to Deer Lake manager",
+      value: fmtShort(d.buildHandover),
+    },
+  );
+
+  if (mode === "self-fund" && d.truckArrives) {
+    rows.push({
+      label: "Truck arrives (807 partnership)",
+      value: fmtShort(d.truckArrives),
+    });
+  }
+
+  rows.push(
     { label: "NNC enrolment filed", value: fmtShort(d.nncFiled) },
-    { label: "First NNC claim paid", value: fmtShort(d.nncFirstClaim), tone: "warm" },
-  ];
+    {
+      label: "First NNC claim paid",
+      value: fmtShort(d.nncFirstClaim),
+      tone: "warm",
+    },
+  );
 
   return (
     <section className="w-full" style={{ background: "var(--color-bg)" }}>

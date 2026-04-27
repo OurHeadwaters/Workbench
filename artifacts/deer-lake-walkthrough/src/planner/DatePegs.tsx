@@ -1,30 +1,32 @@
 import {
-  ANCHOR_HINTS,
-  ANCHOR_LABELS,
+  anchorHint,
+  anchorLabel,
+  anchorOrder,
   type AnchorKey,
   type Anchors,
+  type ScenarioMode,
 } from "./dates";
-
-const ORDER: AnchorKey[] = [
-  "contractOneStart",
-  "coldChainPilotStart",
-  "lfifIntake",
-  "councilDecision",
-  "iscDecision",
-];
 
 /**
  * Adjustable anchor list. Native <input type="date"> opens the OS picker
  * on a phone — best touch UX for date-picking, no custom drag widget
  * needed. Each row is its own card so it's tappable on a small screen.
+ *
+ * Mode-aware: grant mode shows five pegs, self-fund mode shows four
+ * (drops LFIF-intake and ISC-decision, adds the truck-LFIF window). The
+ * council-decision peg's label and hint also change between modes since
+ * the same date carries different meaning.
  */
 export function DatePegs({
+  mode,
   anchors,
   onChange,
 }: {
+  mode: ScenarioMode;
   anchors: Anchors;
   onChange: (key: AnchorKey, value: string) => void;
 }) {
+  const order = anchorOrder(mode);
   return (
     <section className="w-full" style={{ background: "var(--color-bg)" }}>
       <div className="mx-auto max-w-[36rem] px-6 py-6">
@@ -41,10 +43,11 @@ export function DatePegs({
           Tap a date to change it. Everything downstream updates.
         </p>
         <div className="flex flex-col gap-2.5" data-testid="date-pegs">
-          {ORDER.map((key) => (
+          {order.map((key) => (
             <PegRow
               key={key}
               anchorKey={key}
+              mode={mode}
               value={anchors[key]}
               onChange={(v) => onChange(key, v)}
             />
@@ -57,10 +60,12 @@ export function DatePegs({
 
 function PegRow({
   anchorKey,
+  mode,
   value,
   onChange,
 }: {
   anchorKey: AnchorKey;
+  mode: ScenarioMode;
   value: string;
   onChange: (v: string) => void;
 }) {
@@ -77,13 +82,13 @@ function PegRow({
           className="serif text-[14px] font-semibold leading-tight"
           style={{ color: "var(--color-primary)" }}
         >
-          {ANCHOR_LABELS[anchorKey]}
+          {anchorLabel(anchorKey, mode)}
         </p>
         <p
           className="serif text-[12px] italic mt-0.5"
           style={{ color: "var(--color-muted)" }}
         >
-          {ANCHOR_HINTS[anchorKey]}
+          {anchorHint(anchorKey, mode)}
         </p>
       </div>
       <input

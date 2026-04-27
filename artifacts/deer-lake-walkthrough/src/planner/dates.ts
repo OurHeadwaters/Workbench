@@ -1,41 +1,90 @@
 /**
  * Pure date math for the Deer Lake Phase Planner.
  *
- * Five user-adjustable anchors drive every other date in the project.
- * The planner trades complexity for legibility — there is no calendar
- * arithmetic engine, just day arithmetic against ISO YYYY-MM-DD strings.
+ * The planner is mode-aware. Two modes drive everything:
+ *   - "grants"     — the federal stack (LFIF + FedNor + ISC) gates
+ *                    the funding-secured trigger. Five anchors apply.
+ *   - "self-fund"  — band reserve capital. The council vote on private
+ *                    spend is the trigger. The only grant in play is the
+ *                    LFIF window for the 807-partnership ice-road truck,
+ *                    which doesn't gate the store. Four anchors apply.
  *
- * Today (in the project's working environment) is April 27, 2026. The
- * Fall 2026 LFIF intake window is the load-bearing date the whole
- * timeline hangs on.
+ * Day-only arithmetic over UTC keeps the timeline timezone-stable.
  */
+
+export type ScenarioMode = "grants" | "self-fund";
 
 export type AnchorKey =
   | "contractOneStart"
   | "coldChainPilotStart"
   | "lfifIntake"
   | "councilDecision"
-  | "iscDecision";
+  | "iscDecision"
+  | "truckLfifIntake";
 
 export type Anchors = Record<AnchorKey, string>;
 
 export const TODAY: string = "2026-04-27";
 
-export const ANCHOR_LABELS: Record<AnchorKey, string> = {
+/** Default truck LFIF intake injected when older saved state lacks it. */
+export const DEFAULT_TRUCK_LFIF_INTAKE = "2026-10-15";
+
+const ANCHOR_LABELS: Record<AnchorKey, string> = {
   contractOneStart: "Contract one starts",
   coldChainPilotStart: "Cold-chain pilot starts",
   lfifIntake: "LFIF intake opens",
   councilDecision: "Council commits to applications",
   iscDecision: "ISC Community Capital decision",
+  truckLfifIntake: "Truck LFIF intake (807 partnership)",
 };
 
-export const ANCHOR_HINTS: Record<AnchorKey, string> = {
+const ANCHOR_HINTS: Record<AnchorKey, string> = {
   contractOneStart: "Design phase + grant prep begins.",
   coldChainPilotStart: "Pilot truck running with the existing store.",
   lfifIntake: "Load-bearing federal date. Drives everything downstream.",
   councilDecision: "Council says yes to filing the application package.",
   iscDecision: "Longest grant cycle. Often gates the trigger.",
+  truckLfifIntake: "Fall 2026 LFIF window. Funds the ice-road truck only.",
 };
+
+/**
+ * Per-mode label override — the same anchor key can carry different
+ * meaning in self-fund mode (e.g. "Council commits" stops meaning
+ * "council says yes to filing the application package" and starts
+ * meaning "council votes to spend reserve capital").
+ */
+export function anchorLabel(key: AnchorKey, mode: ScenarioMode): string {
+  if (mode === "self-fund" && key === "councilDecision") {
+    return "Council commits to private spend";
+  }
+  return ANCHOR_LABELS[key];
+}
+
+export function anchorHint(key: AnchorKey, mode: ScenarioMode): string {
+  if (mode === "self-fund" && key === "councilDecision") {
+    return "Council votes to spend reserve capital — no grant package needed.";
+  }
+  return ANCHOR_HINTS[key];
+}
+
+/** Visible anchor list for a given mode. */
+export function anchorOrder(mode: ScenarioMode): AnchorKey[] {
+  if (mode === "self-fund") {
+    return [
+      "contractOneStart",
+      "coldChainPilotStart",
+      "councilDecision",
+      "truckLfifIntake",
+    ];
+  }
+  return [
+    "contractOneStart",
+    "coldChainPilotStart",
+    "lfifIntake",
+    "councilDecision",
+    "iscDecision",
+  ];
+}
 
 // Day-only arithmetic, no timezone games. UTC keeps things deterministic.
 export function addDays(iso: string, days: number): string {
@@ -85,10 +134,8 @@ export function fmtMonthYear(iso: string): string {
 }
 
 export type Derived = {
+  // Always computed
   pilotData90: string;
-  applicationsFiled: string;
-  lfifDecision: string;
-  fedNorDecision: string;
   fundingSecured: string;
   contractTwoActivates: string;
   buildM1: string;
@@ -98,14 +145,46 @@ export type Derived = {
   nncFiled: string;
   nncFirstClaim: string;
   totalMonths: number;
+  // Grants-mode only
+  applicationsFiled?: string;
+  lfifDecision?: string;
+  fedNorDecision?: string;
+  // Self-fund-mode only
+  truckLfifIntake?: string;
+  truckLfifDecision?: string;
+  truckArrives?: string;
 };
 
-export function derive(a: Anchors): Derived {
+export function derive(a: Anchors, mode: ScenarioMode): Derived {
   const pilotData90 = addDays(a.coldChainPilotStart, 90);
-  const applicationsFiled = a.lfifIntake;
-  const lfifDecision = addDays(a.lfifIntake, 150);
-  const fedNorDecision = addDays(applicationsFiled, 150);
-  const fundingSecured = maxDate([lfifDecision, fedNorDecision, a.iscDecision]);
+
+  let fundingSecured: string;
+  const grantOnly: Partial<Derived> = {};
+  const selfFundOnly: Partial<Derived> = {};
+
+  if (mode === "self-fund") {
+    // Council commits private capital → 30 days of cash-flow setup,
+    // contractor lock, and procurement framework before construction
+    // can begin. No federal cycle in the gating path.
+    fundingSecured = addDays(a.councilDecision, 30);
+    const truckLfifIntake = a.truckLfifIntake;
+    const truckLfifDecision = addDays(truckLfifIntake, 150);
+    // ~90 days from grant award to vehicle delivery is conservative
+    // for a Class 7 cold-chain truck with ice-road kit.
+    const truckArrives = addDays(truckLfifDecision, 90);
+    selfFundOnly.truckLfifIntake = truckLfifIntake;
+    selfFundOnly.truckLfifDecision = truckLfifDecision;
+    selfFundOnly.truckArrives = truckArrives;
+  } else {
+    const applicationsFiled = a.lfifIntake;
+    const lfifDecision = addDays(a.lfifIntake, 150);
+    const fedNorDecision = addDays(applicationsFiled, 150);
+    fundingSecured = maxDate([lfifDecision, fedNorDecision, a.iscDecision]);
+    grantOnly.applicationsFiled = applicationsFiled;
+    grantOnly.lfifDecision = lfifDecision;
+    grantOnly.fedNorDecision = fedNorDecision;
+  }
+
   const contractTwoActivates = addDays(fundingSecured, 30);
   const buildM1 = contractTwoActivates;
   const buildSoftOpen = addDays(buildM1, 120);
@@ -117,9 +196,6 @@ export function derive(a: Anchors): Derived {
 
   return {
     pilotData90,
-    applicationsFiled,
-    lfifDecision,
-    fedNorDecision,
     fundingSecured,
     contractTwoActivates,
     buildM1,
@@ -129,6 +205,8 @@ export function derive(a: Anchors): Derived {
     nncFiled,
     nncFirstClaim,
     totalMonths,
+    ...grantOnly,
+    ...selfFundOnly,
   };
 }
 
