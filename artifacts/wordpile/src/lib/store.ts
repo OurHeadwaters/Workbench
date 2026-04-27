@@ -15,9 +15,12 @@
 import {
   BUCKETS,
   EMPTY_DATA,
+  type AnyPileImport,
   type Bucket,
   type CommunityPile,
+  type PileBundleExport,
   type PileExport,
+  type PileExportPayload,
   type PileExportWord,
   type WordEntry,
   type WordpileData,
@@ -336,26 +339,31 @@ export const WordpileStore = {
   serializePile(pileId: string): PileExport | null {
     const pile = read().piles[pileId];
     if (!pile) return null;
-    const draft =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem(DRAFT_KEY_PREFIX + pileId) ?? ""
-        : "";
-    const payload: PileExport = {
+    return {
       format: "wordpile-export",
       formatVersion: 1,
       exportedAt: Date.now(),
-      pile: {
-        name: pile.name,
-        words: pile.words.map((w) => ({
-          word: w.word,
-          bucket: w.bucket,
-          note: w.note,
-          saferAlternative: w.saferAlternative,
-        })),
-      },
+      pile: pileToPayload(pile),
     };
-    if (draft.trim()) payload.pile.draft = draft;
-    return payload;
+  },
+
+  /**
+   * Serialize every pile (in pileOrder) into a single bundle payload.
+   * Each pile carries its own optional draft, so a fresh-device import
+   * round-trips identically to a per-pile export of every pile.
+   */
+  serializeAllPiles(): PileBundleExport {
+    const data = read();
+    const piles = data.pileOrder
+      .map((id) => data.piles[id])
+      .filter((p): p is CommunityPile => Boolean(p))
+      .map(pileToPayload);
+    return {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: Date.now(),
+      piles,
+    };
   },
 
   /**
@@ -449,7 +457,58 @@ export const WordpileStore = {
     }
     return pile;
   },
+
+  /**
+   * Import every (or a chosen subset of) pile inside a bundle as fresh
+   * piles. Each entry becomes a brand-new pile with a brand-new id, so
+   * importing into a device that already has piles is non-destructive.
+   *
+   * `selectedIndexes` filters which entries (by their position in the
+   * bundle) get imported. Omit it to restore everything.
+   *
+   * Returns the list of created piles.
+   */
+  importBundle(
+    payload: PileBundleExport,
+    options: { selectedIndexes?: number[] } = {},
+  ): CommunityPile[] {
+    const wanted =
+      options.selectedIndexes !== undefined
+        ? new Set(options.selectedIndexes)
+        : null;
+    const created: CommunityPile[] = [];
+    payload.piles.forEach((entry, index) => {
+      if (wanted && !wanted.has(index)) return;
+      const single: PileExport = {
+        format: "wordpile-export",
+        formatVersion: 1,
+        exportedAt: payload.exportedAt,
+        pile: entry,
+      };
+      const pile = WordpileStore.importPile(single);
+      if (pile) created.push(pile);
+    });
+    return created;
+  },
 };
+
+function pileToPayload(pile: CommunityPile): PileExportPayload {
+  const draft =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem(DRAFT_KEY_PREFIX + pile.id) ?? ""
+      : "";
+  const payload: PileExportPayload = {
+    name: pile.name,
+    words: pile.words.map((w) => ({
+      word: w.word,
+      bucket: w.bucket,
+      note: w.note,
+      saferAlternative: w.saferAlternative,
+    })),
+  };
+  if (draft.trim()) payload.draft = draft;
+  return payload;
+}
 
 function normalizeImportWord(raw: unknown): PileExportWord {
   const r = (raw ?? {}) as Record<string, unknown>;
@@ -493,6 +552,58 @@ export function parsePileExport(raw: string): PileExport | null {
       draft: typeof pile.draft === "string" ? pile.draft : undefined,
     },
   };
+}
+
+/**
+ * Parse an unknown JSON string and validate that it matches the bundle
+ * (multi-pile backup) schema. Returns null on any structural problem.
+ */
+export function parsePileBundle(raw: string): PileBundleExport | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  return coerceBundle(parsed);
+}
+
+function coerceBundle(parsed: unknown): PileBundleExport | null {
+  if (!parsed || typeof parsed !== "object") return null;
+  const obj = parsed as Record<string, unknown>;
+  if (obj.format !== "wordpile-bundle") return null;
+  if (obj.formatVersion !== 1) return null;
+  if (!Array.isArray(obj.piles)) return null;
+  const piles: PileExportPayload[] = [];
+  for (const raw of obj.piles) {
+    if (!raw || typeof raw !== "object") continue;
+    const p = raw as Record<string, unknown>;
+    if (typeof p.name !== "string" || !p.name.trim()) continue;
+    if (!Array.isArray(p.words)) continue;
+    const words = p.words.map(normalizeImportWord).filter((w) => w.word);
+    const entry: PileExportPayload = { name: p.name.trim(), words };
+    if (typeof p.draft === "string") entry.draft = p.draft;
+    piles.push(entry);
+  }
+  return {
+    format: "wordpile-bundle",
+    formatVersion: 1,
+    exportedAt: typeof obj.exportedAt === "number" ? obj.exportedAt : Date.now(),
+    piles,
+  };
+}
+
+/**
+ * Try to parse a file's contents as either a single-pile export or a
+ * multi-pile bundle. Returns a discriminated union so the import UI can
+ * branch on the result.
+ */
+export function parseAnyImport(raw: string): AnyPileImport | null {
+  const bundle = parsePileBundle(raw);
+  if (bundle) return { kind: "bundle", payload: bundle };
+  const single = parsePileExport(raw);
+  if (single) return { kind: "pile", payload: single };
+  return null;
 }
 
 export type WordpileStoreType = typeof WordpileStore;

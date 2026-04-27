@@ -67,3 +67,14 @@ export interface PileExport {
   exportedAt: number;
   pile: PileExportPayload;
 }
+
+export interface PileBundleExport {
+  format: "wordpile-bundle";
+  formatVersion: 1;
+  exportedAt: number;
+  piles: PileExportPayload[];
+}
+
+export type AnyPileImport =
+  | { kind: "pile"; payload: PileExport }
+  | { kind: "bundle"; payload: PileBundleExport };

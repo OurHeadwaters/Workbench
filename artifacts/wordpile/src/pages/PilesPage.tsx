@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { ArrowRight, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Archive, ArrowRight, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { useWordpile } from "@/lib/useStore";
-import { WordpileStore, parsePileExport } from "@/lib/store";
-import type { PileExport } from "@/data/types";
+import { WordpileStore, parseAnyImport } from "@/lib/store";
+import type { AnyPileImport, PileBundleExport, PileExport } from "@/data/types";
 
 export function PilesPage() {
   const data = useWordpile();
@@ -13,6 +13,10 @@ export function PilesPage() {
   const [editingName, setEditingName] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [importPayload, setImportPayload] = useState<PileExport | null>(null);
+  const [importBundle, setImportBundle] = useState<PileBundleExport | null>(
+    null,
+  );
+  const [bundleSelection, setBundleSelection] = useState<boolean[]>([]);
   const [importFileName, setImportFileName] = useState<string>("");
   const [importMode, setImportMode] = useState<"new" | "merge">("new");
   const [importNewName, setImportNewName] = useState<string>("");
@@ -38,6 +42,8 @@ export function PilesPage() {
 
   function resetImport() {
     setImportPayload(null);
+    setImportBundle(null);
+    setBundleSelection([]);
     setImportFileName("");
     setImportMode("new");
     setImportNewName("");
@@ -46,34 +52,65 @@ export function PilesPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
+  function applyParsedImport(parsed: AnyPileImport, fileName: string) {
+    if (parsed.kind === "bundle") {
+      setImportBundle(parsed.payload);
+      setBundleSelection(parsed.payload.piles.map(() => true));
+      setImportPayload(null);
+      setImportFileName(fileName);
+      setImportMode("new");
+      return;
+    }
+    setImportPayload(parsed.payload);
+    setImportBundle(null);
+    setBundleSelection([]);
+    setImportFileName(fileName);
+    setImportNewName(parsed.payload.pile.name);
+    setImportMode("new");
+    setImportMergeId(piles[0]?.id ?? "");
+  }
+
   async function handleFilePicked(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setImportError(null);
     try {
       const text = await file.text();
-      const parsed = parsePileExport(text);
+      const parsed = parseAnyImport(text);
       if (!parsed) {
         setImportPayload(null);
+        setImportBundle(null);
         setImportFileName(file.name);
         setImportError(
-          "That file isn't a wordpile export. Expected a .wordpile.json file with a pile inside.",
+          "That file isn't a wordpile export. Expected a .wordpile.json or .wordpile-bundle.json file.",
         );
         return;
       }
-      setImportPayload(parsed);
-      setImportFileName(file.name);
-      setImportNewName(parsed.pile.name);
-      setImportMode("new");
-      setImportMergeId(piles[0]?.id ?? "");
+      applyParsedImport(parsed, file.name);
     } catch {
       setImportPayload(null);
+      setImportBundle(null);
       setImportFileName(file.name);
       setImportError("Couldn't read that file.");
     }
   }
 
   function handleConfirmImport() {
+    if (importBundle) {
+      const indexes = bundleSelection
+        .map((on, i) => (on ? i : -1))
+        .filter((i) => i >= 0);
+      if (indexes.length === 0) {
+        setImportError("Pick at least one pile to import.");
+        return;
+      }
+      const created = WordpileStore.importBundle(importBundle, {
+        selectedIndexes: indexes,
+      });
+      resetImport();
+      if (created.length === 1) navigate(`/pile/${created[0].id}`);
+      return;
+    }
     if (!importPayload) return;
     if (importMode === "merge") {
       const target = piles.find((p) => p.id === importMergeId);
@@ -95,6 +132,33 @@ export function PilesPage() {
     });
     resetImport();
     if (created) navigate(`/pile/${created.id}`);
+  }
+
+  function handleBackupAll() {
+    const bundle = WordpileStore.serializeAllPiles();
+    const json = JSON.stringify(bundle, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date(bundle.exportedAt)
+      .toISOString()
+      .slice(0, 10);
+    a.href = url;
+    a.download = `wordpile-${stamp}.wordpile-bundle.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  function toggleBundleEntry(index: number) {
+    setBundleSelection((prev) =>
+      prev.map((on, i) => (i === index ? !on : on)),
+    );
+  }
+
+  function setAllBundleSelected(value: boolean) {
+    setBundleSelection((prev) => prev.map(() => value));
   }
 
   return (
@@ -157,11 +221,22 @@ export function PilesPage() {
             className="btn-ghost"
             onClick={() => fileInputRef.current?.click()}
             data-testid="button-import-pile"
-            title="Load a .wordpile.json file another practitioner shared with you."
+            title="Load a .wordpile.json or .wordpile-bundle.json file."
           >
-            <Upload size={12} /> Import a pile from a file
+            <Upload size={12} /> Import from a file
           </button>
-          {importFileName && !importPayload && !importError && (
+          {piles.length > 0 && (
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={handleBackupAll}
+              data-testid="button-backup-all"
+              title="Download every pile (and its draft) as a single .wordpile-bundle.json backup."
+            >
+              <Archive size={12} /> Back up all piles
+            </button>
+          )}
+          {importFileName && !importPayload && !importBundle && !importError && (
             <span className="eyebrow">{importFileName}</span>
           )}
         </div>
@@ -266,6 +341,101 @@ export function PilesPage() {
                 className="btn-ghost"
                 onClick={resetImport}
                 data-testid="button-cancel-import"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+        {importBundle && (
+          <div
+            className="mt-3 rounded p-4 flex flex-col gap-3"
+            style={{
+              backgroundColor: "var(--color-paper)",
+              border: "1px solid var(--color-rule)",
+            }}
+            data-testid="panel-bundle-preview"
+          >
+            <div>
+              <p className="eyebrow mb-1">
+                Restoring backup from {importFileName}
+              </p>
+              <p className="text-sm" style={{ color: "var(--color-stone)" }}>
+                {importBundle.piles.length} pile
+                {importBundle.piles.length === 1 ? "" : "s"} in this backup.
+                Pick which ones to bring in — each becomes a new pile, so
+                nothing on this device gets overwritten.
+              </p>
+            </div>
+            {importBundle.piles.length === 0 ? (
+              <p className="text-sm" style={{ color: "var(--color-stone)" }}>
+                This backup is empty.
+              </p>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    onClick={() => setAllBundleSelected(true)}
+                    data-testid="button-bundle-select-all"
+                  >
+                    Select all
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    onClick={() => setAllBundleSelected(false)}
+                    data-testid="button-bundle-select-none"
+                  >
+                    None
+                  </button>
+                </div>
+                <ul
+                  className="flex flex-col gap-1"
+                  style={{
+                    maxHeight: 260,
+                    overflowY: "auto",
+                    borderTop: "1px solid var(--color-rule)",
+                    borderBottom: "1px solid var(--color-rule)",
+                    paddingTop: 6,
+                    paddingBottom: 6,
+                  }}
+                >
+                  {importBundle.piles.map((p, i) => (
+                    <li key={`${p.name}-${i}`}>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={bundleSelection[i] ?? false}
+                          onChange={() => toggleBundleEntry(i)}
+                          data-testid={`checkbox-bundle-${i}`}
+                        />
+                        <strong>{p.name}</strong>
+                        <span style={{ color: "var(--color-stone)" }}>
+                          · {p.words.length} word
+                          {p.words.length === 1 ? "" : "s"}
+                          {p.draft ? " · draft" : ""}
+                        </span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <div className="flex gap-2">
+              <button
+                className="btn-primary"
+                onClick={handleConfirmImport}
+                disabled={importBundle.piles.length === 0}
+                data-testid="button-confirm-bundle-import"
+              >
+                Restore selected piles
+              </button>
+              <button
+                className="btn-ghost"
+                onClick={resetImport}
+                data-testid="button-cancel-bundle-import"
               >
                 Cancel
               </button>

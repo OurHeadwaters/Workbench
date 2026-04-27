@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { PileExport } from "@/data/types";
+import type {
+  AnyPileImport,
+  PileBundleExport,
+  PileExport,
+} from "@/data/types";
 import type { WordpileStoreType } from "./store";
 
 // Each test imports a fresh copy of the store module so the module-level
@@ -8,10 +12,17 @@ import type { WordpileStoreType } from "./store";
 async function freshStore(): Promise<{
   WordpileStore: WordpileStoreType;
   parsePileExport: (raw: string) => PileExport | null;
+  parsePileBundle: (raw: string) => PileBundleExport | null;
+  parseAnyImport: (raw: string) => AnyPileImport | null;
 }> {
   vi.resetModules();
   const mod = await import("./store");
-  return { WordpileStore: mod.WordpileStore, parsePileExport: mod.parsePileExport };
+  return {
+    WordpileStore: mod.WordpileStore,
+    parsePileExport: mod.parsePileExport,
+    parsePileBundle: mod.parsePileBundle,
+    parseAnyImport: mod.parseAnyImport,
+  };
 }
 
 // Hoisted at module scope so vitest's mock-hoisting picks it up before the
@@ -421,5 +432,199 @@ describe("WordpileStore — cloud delete propagation", () => {
     cloudMocks.pushDeleteWord.mockClear();
     WordpileStore.deleteWord(pile.id, "nonexistent-word-id");
     expect(cloudMocks.pushDeleteWord).not.toHaveBeenCalled();
+  });
+});
+
+describe("WordpileStore — serializeAllPiles / importBundle (round-trip)", () => {
+  let WordpileStore: WordpileStoreType;
+  let parsePileBundle: (raw: string) => PileBundleExport | null;
+  let parseAnyImport: (raw: string) => AnyPileImport | null;
+
+  // Stub a minimal localStorage so the store's draft handling (gated on
+  // `typeof window !== "undefined"`) exercises its real code path inside
+  // the node test environment.
+  function stubWindow() {
+    const store = new Map<string, string>();
+    (globalThis as any).window = {
+      localStorage: {
+        getItem: (k: string) => (store.has(k) ? store.get(k)! : null),
+        setItem: (k: string, v: string) => store.set(k, String(v)),
+        removeItem: (k: string) => store.delete(k),
+        clear: () => store.clear(),
+      },
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+    };
+  }
+
+  function unstubWindow() {
+    delete (globalThis as any).window;
+  }
+
+  beforeEach(async () => {
+    stubWindow();
+    ({ WordpileStore, parsePileBundle, parseAnyImport } = await freshStore());
+  });
+
+  it("serializes every pile (in pileOrder) with words and drafts", () => {
+    const a = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(a.id, { word: "harvest", bucket: "load" });
+    const b = WordpileStore.createPile("Bearskin Lake");
+    WordpileStore.addWord(b.id, { word: "stakeholder", bucket: "avoid" });
+    window.localStorage.setItem(
+      "wordpile:draft:" + b.id,
+      "Some draft text the practitioner saved.",
+    );
+
+    const bundle = WordpileStore.serializeAllPiles();
+    expect(bundle.format).toBe("wordpile-bundle");
+    expect(bundle.formatVersion).toBe(1);
+    expect(bundle.piles).toHaveLength(2);
+    expect(bundle.piles[0].name).toBe("Deer Lake");
+    expect(bundle.piles[0].words[0].word).toBe("harvest");
+    expect(bundle.piles[0].draft).toBeUndefined();
+    expect(bundle.piles[1].name).toBe("Bearskin Lake");
+    expect(bundle.piles[1].draft).toBe(
+      "Some draft text the practitioner saved.",
+    );
+    unstubWindow();
+  });
+
+  it("returns an empty bundle when no piles exist", () => {
+    const bundle = WordpileStore.serializeAllPiles();
+    expect(bundle.piles).toEqual([]);
+  });
+
+  it("round-trips: bundle export → JSON parse → fresh-device import yields identical pile list", async () => {
+    // Device 1: build state.
+    const a = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(a.id, { word: "harvest", bucket: "load" });
+    WordpileStore.addWord(a.id, { word: "elder" });
+    const b = WordpileStore.createPile("Bearskin Lake");
+    WordpileStore.addWord(b.id, { word: "stakeholder", bucket: "avoid" });
+    WordpileStore.updateWord(
+      b.id,
+      WordpileStore.getSnapshot().piles[b.id].words[0].id,
+      { saferAlternative: "community member" },
+    );
+    window.localStorage.setItem(
+      "wordpile:draft:" + b.id,
+      "Draft prose for Bearskin.",
+    );
+
+    const bundle = WordpileStore.serializeAllPiles();
+    const json = JSON.stringify(bundle);
+
+    // Device 2: fresh module + cleared storage.
+    window.localStorage.clear();
+    const fresh = await freshStore();
+    const parsed = fresh.parsePileBundle(json);
+    expect(parsed).not.toBeNull();
+    const created = fresh.WordpileStore.importBundle(parsed!);
+    expect(created).toHaveLength(2);
+
+    const snap = fresh.WordpileStore.getSnapshot();
+    const names = snap.pileOrder.map((id) => snap.piles[id].name);
+    expect(names).toEqual(["Deer Lake", "Bearskin Lake"]);
+
+    const deerLake = created.find((p) => p.name === "Deer Lake")!;
+    expect(deerLake.words.map((w) => w.word).sort()).toEqual([
+      "elder",
+      "harvest",
+    ]);
+
+    const bearskin = created.find((p) => p.name === "Bearskin Lake")!;
+    const stakeholder = bearskin.words.find((w) => w.word === "stakeholder");
+    expect(stakeholder?.bucket).toBe("avoid");
+    expect(stakeholder?.saferAlternative).toBe("community member");
+    expect(
+      window.localStorage.getItem("wordpile:draft:" + bearskin.id),
+    ).toBe("Draft prose for Bearskin.");
+  });
+
+  it("respects selectedIndexes when importing a subset", () => {
+    const bundle: PileBundleExport = {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [
+        { name: "Pile One", words: [] },
+        { name: "Pile Two", words: [] },
+        { name: "Pile Three", words: [] },
+      ],
+    };
+    const created = WordpileStore.importBundle(bundle, {
+      selectedIndexes: [0, 2],
+    });
+    expect(created.map((p) => p.name)).toEqual(["Pile One", "Pile Three"]);
+    const snap = WordpileStore.getSnapshot();
+    expect(snap.pileOrder).toHaveLength(2);
+  });
+
+  it("imports nothing when an empty selection is supplied", () => {
+    const bundle: PileBundleExport = {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [{ name: "Pile One", words: [] }],
+    };
+    const created = WordpileStore.importBundle(bundle, { selectedIndexes: [] });
+    expect(created).toEqual([]);
+    expect(WordpileStore.getSnapshot().pileOrder).toEqual([]);
+  });
+
+  it("parseAnyImport detects a bundle vs a single-pile export", () => {
+    const bundleRaw = JSON.stringify({
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [{ name: "Deer Lake", words: [{ word: "harvest", bucket: "load" }] }],
+    });
+    const pileRaw = JSON.stringify({
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: { name: "Deer Lake", words: [{ word: "harvest", bucket: "load" }] },
+    });
+    expect(parseAnyImport(bundleRaw)?.kind).toBe("bundle");
+    expect(parseAnyImport(pileRaw)?.kind).toBe("pile");
+    expect(parseAnyImport("garbage")).toBeNull();
+  });
+
+  it("parsePileBundle rejects malformed payloads", () => {
+    expect(parsePileBundle("not json")).toBeNull();
+    expect(
+      parsePileBundle(
+        JSON.stringify({ format: "wordpile-export", formatVersion: 1, pile: {} }),
+      ),
+    ).toBeNull();
+    expect(
+      parsePileBundle(
+        JSON.stringify({ format: "wordpile-bundle", formatVersion: 2, piles: [] }),
+      ),
+    ).toBeNull();
+    expect(
+      parsePileBundle(
+        JSON.stringify({ format: "wordpile-bundle", formatVersion: 1 }),
+      ),
+    ).toBeNull();
+  });
+
+  it("parsePileBundle drops malformed pile entries but keeps the rest", () => {
+    const raw = JSON.stringify({
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 1,
+      piles: [
+        { name: "Good", words: [{ word: "harvest" }] },
+        { name: "", words: [] }, // dropped: blank name
+        { name: "No Words" }, // dropped: no words array
+        { name: "Also Good", words: [{ word: "elder", bucket: "garbage" }] },
+      ],
+    });
+    const bundle = parsePileBundle(raw)!;
+    expect(bundle.piles.map((p) => p.name)).toEqual(["Good", "Also Good"]);
+    expect(bundle.piles[1].words[0].bucket).toBe("unsorted");
   });
 });
