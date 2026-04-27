@@ -809,6 +809,227 @@ export const FAILURE_MODES: FailureMode[] = [
   },
 ];
 
+// ────────────────────────────────────────────────────────────────────
+// Cross-industry phenomena
+// ────────────────────────────────────────────────────────────────────
+
+/**
+ * A `Phenomenon` is the structural object that sits *underneath* several
+ * data points published by industries that don't talk to each other. The
+ * 0% backhaul fill rate (Transport Canada), the 58¢-on-the-dollar subsidy
+ * pass-through (federal program audit), the 1.4–2.6× local-food multiplier
+ * (academic), the ~$1.6M/yr Deer Lake grocery leakage (community
+ * economics), and the empty return legs on existing reefer routes
+ * (distributor schedules) are five separate published findings — but they
+ * are five views of one object: empty trucks going home with money that
+ * should have stayed in Deer Lake.
+ *
+ * The phenomenon's canonical title is the *community* noun, because it's
+ * the community who has been described from the outside and never given
+ * the right to name what is happening to them.
+ *
+ * Each data point points at the failure mode + the specific source within
+ * that failure mode where it lives, so the phenomena layer composes on
+ * top of the existing drift-map data without duplicating it.
+ */
+export interface PhenomenonDataPoint {
+  /** Which industry voice published this data point. */
+  voice: FailureModeVoice;
+  /** What that industry calls this thing in its own vocabulary. */
+  industryName: string;
+  /** The number or finding that voice publishes. */
+  figure: FailureModeFigure;
+  /** The failure mode + index into its `sources` array where this came from. */
+  sourceRef: { failureModeId: string; sourceIndex: number };
+}
+
+export interface Phenomenon {
+  id: string;
+  /** The Deer Lake / community noun for this phenomenon — the canonical title. */
+  communityName: string;
+  /** Plain-language one-liner: what the phenomenon actually is. */
+  summary: string;
+  /**
+   * One sentence explaining why nobody has noticed: each industry has
+   * published its own data point in its own vocabulary, but no one has
+   * linked them — so no one has named the underlying object.
+   */
+  unownedBecause: string;
+  /** Side-by-side data points from each industry that describes the same thing. */
+  dataPoints: PhenomenonDataPoint[];
+  /** IDs of failure modes this phenomenon cuts across. */
+  failureModeRefs: string[];
+}
+
+export const PHENOMENA: Phenomenon[] = [
+  {
+    id: "empty-truck-going-home",
+    communityName: "the empty truck going home",
+    summary:
+      "Trucks come up loaded with our groceries, drop everything at the store, and roll back south empty. The money that should buy something on the way home — local fish, value-added product, payroll for someone here — leaves on that empty truck instead.",
+    unownedBecause:
+      "Transport Canada owns the backhaul number, federal grocery-help auditors own the pass-through number, academics own the local-multiplier number, and community economists own the leakage figure — none of those four desks talks to the other three, so no one has noticed they are five readings of the same empty trailer.",
+    dataPoints: [
+      {
+        voice: "logistics",
+        industryName: "deadhead miles / 0% backhaul fill",
+        figure: { value: "0%", label: "Backhaul fill rate on the current corridor" },
+        sourceRef: { failureModeId: "no-backhaul", sourceIndex: 0 },
+      },
+      {
+        voice: "federal",
+        industryName: "retailer pass-through gap",
+        figure: { value: "58¢", label: "Of every $1 of grocery help that reaches the shelf" },
+        sourceRef: { failureModeId: "subsidy-capture", sourceIndex: 0 },
+      },
+      {
+        voice: "academic",
+        industryName: "local-food multiplier leakage",
+        figure: { value: "1.4–2.6×", label: "Local-food multiplier when retail is community-owned" },
+        sourceRef: { failureModeId: "capital-leakage", sourceIndex: 0 },
+      },
+      {
+        voice: "community",
+        industryName: "money flying south",
+        figure: { value: "~$1.6M / yr", label: "Deer Lake grocery $ leaving the community" },
+        sourceRef: { failureModeId: "capital-leakage", sourceIndex: 0 },
+      },
+      {
+        voice: "distributor",
+        industryName: "no southbound aggregation",
+        figure: { value: "1 direction", label: "Loaded north, empty south on existing reefer routes" },
+        sourceRef: { failureModeId: "no-backhaul", sourceIndex: 1 },
+      },
+    ],
+    failureModeRefs: ["no-backhaul", "subsidy-capture", "capital-leakage"],
+  },
+  {
+    id: "shelf-goes-bare-when-road-closes",
+    communityName: "when the road closes, the shelf goes bare",
+    summary:
+      "One refrigerated truck, one driver who can only legally drive 13 hours a day, one road in. When any of those three pieces is interrupted, the produce aisle empties — and stays empty for a week — because the order cycle was built for a southern store with daily deliveries.",
+    unownedBecause:
+      "Transport Canada owns the driver-hours rule, the federal infrastructure fund owns the single-trailer architecture, southern distributors own the reorder logic — and the community owns the empty shelf. Each piece is named by a different industry, so the cascade that produces the empty shelf has never been written down as one phenomenon.",
+    dataPoints: [
+      {
+        voice: "federal",
+        industryName: "hours-of-service ceiling",
+        figure: { value: "13 h / day", label: "Single-driver legal driving ceiling" },
+        sourceRef: { failureModeId: "distribution-cost-per-km", sourceIndex: 0 },
+      },
+      {
+        voice: "logistics",
+        industryName: "single-asset corridor",
+        figure: { value: "1 reefer", label: "Trailer the corridor currently depends on" },
+        sourceRef: { failureModeId: "single-trailer-fragility", sourceIndex: 0 },
+      },
+      {
+        voice: "distributor",
+        industryName: "winter-road order cadence mismatch",
+        figure: { value: "1–2 wk", label: "Gap between deliveries on winter-road / air freight" },
+        sourceRef: { failureModeId: "shrink-and-stockouts", sourceIndex: 2 },
+      },
+      {
+        voice: "academic",
+        industryName: "order-cycle / route mismatch",
+        figure: { value: "over → bare", label: "Over-order ahead of closure, then mid-month stock-out" },
+        sourceRef: { failureModeId: "shrink-and-stockouts", sourceIndex: 0 },
+      },
+      {
+        voice: "community",
+        industryName: "the produce truck didn't come",
+        figure: { value: "1 wk", label: "How long the produce aisle stays empty after a missed run" },
+        sourceRef: { failureModeId: "single-trailer-fragility", sourceIndex: 0 },
+      },
+    ],
+    failureModeRefs: [
+      "distribution-cost-per-km",
+      "single-trailer-fragility",
+      "shrink-and-stockouts",
+    ],
+  },
+  {
+    id: "pay-the-store-to-keep-us-captive",
+    communityName: "we pay the store to keep us captive",
+    summary:
+      "There is one store. Federal money is paid to that store to lower prices, but the store keeps almost half of it. Families buy smaller baskets because prices are high, and the store points at those small baskets to justify keeping prices high. The federal cheque, the high price, and the small basket are the same loop — and the loop only stays closed because there is no second store.",
+    unownedBecause:
+      "Statistics Canada owns the Northern Food Basket number, the federal grocery-help program owns the pass-through audit, academic retail researchers own the monopoly-concentration figure, and Deer Lake households own the actual receipt at the till — but no published study has put the four numbers on the same page and shown them as one closed loop.",
+    dataPoints: [
+      {
+        voice: "federal",
+        industryName: "single-eligible-retailer community",
+        figure: { value: "87%", label: "Ontario fly-in communities served by one store" },
+        sourceRef: { failureModeId: "one-store-monopoly", sourceIndex: 0 },
+      },
+      {
+        voice: "federal",
+        industryName: "retailer pass-through gap",
+        figure: { value: "58¢ → 84¢", label: "Pass-through today vs with a second community-owned store" },
+        sourceRef: { failureModeId: "subsidy-capture", sourceIndex: 0 },
+      },
+      {
+        voice: "federal",
+        industryName: "Northern Food Basket gap",
+        figure: { value: "$680 / mo", label: "Family-of-four grocery cost gap vs southern Ontario" },
+        sourceRef: { failureModeId: "cost-of-living-gap", sourceIndex: 0 },
+      },
+      {
+        voice: "academic",
+        industryName: "monopoly retail concentration",
+        figure: { value: ">50%", label: "Of federal grocery-help spend captured by a single chain" },
+        sourceRef: { failureModeId: "subsidy-capture", sourceIndex: 0 },
+      },
+      {
+        voice: "retailer",
+        industryName: "low average basket size",
+        figure: { value: "low → fat", label: "Small baskets used to justify keeping margins high" },
+        sourceRef: { failureModeId: "cost-of-living-gap", sourceIndex: 0 },
+      },
+      {
+        voice: "community",
+        industryName: "the store",
+        figure: { value: "1 store", label: "Number of options families have in town" },
+        sourceRef: { failureModeId: "one-store-monopoly", sourceIndex: 0 },
+      },
+    ],
+    failureModeRefs: ["one-store-monopoly", "subsidy-capture", "cost-of-living-gap"],
+  },
+];
+
+/**
+ * Resolve a phenomenon data point's `sourceRef` to the underlying failure
+ * mode + library source. Returns null if the failure mode or source index
+ * is missing — callers should treat that as a seed-data bug.
+ */
+export function resolvePhenomenonSource(
+  dp: PhenomenonDataPoint,
+  modes: FailureMode[] = FAILURE_MODES,
+): { mode: FailureMode; source: FailureModeSource } | null {
+  const mode = modes.find((m) => m.id === dp.sourceRef.failureModeId);
+  if (!mode) return null;
+  const source = mode.sources[dp.sourceRef.sourceIndex];
+  if (!source) return null;
+  return { mode, source };
+}
+
+/** Phenomena that cut across a given failure mode. */
+export function phenomenaForFailureMode(
+  failureModeId: string,
+  phenomena: Phenomenon[] = PHENOMENA,
+): Phenomenon[] {
+  return phenomena.filter((p) => p.failureModeRefs.includes(failureModeId));
+}
+
+/** Failure modes that a phenomenon cuts across, in catalog order. */
+export function failureModesForPhenomenon(
+  phenomenon: Phenomenon,
+  modes: FailureMode[] = FAILURE_MODES,
+): FailureMode[] {
+  const set = new Set(phenomenon.failureModeRefs);
+  return modes.filter((m) => set.has(m.id));
+}
+
 /** Working counter-examples to balance the synthesis. */
 export interface CounterExample {
   name: string;

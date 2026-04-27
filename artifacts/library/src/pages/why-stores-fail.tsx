@@ -5,8 +5,10 @@ import {
   FAILURE_MODE_THEMES,
   FAILURE_MODE_VOICES,
   COUNTER_EXAMPLES,
+  PHENOMENA,
   failureModesByTheme,
   driftGapTotals,
+  phenomenaForFailureMode,
   type FailureMode,
   type FailureModeVoice,
 } from "@workspace/why-stores-fail";
@@ -22,8 +24,10 @@ import {
   AlertTriangle,
   ArrowRight,
   CheckCircle2,
+  EyeOff,
   Languages,
   Lightbulb,
+  Network,
   Quote,
 } from "lucide-react";
 
@@ -74,6 +78,24 @@ export default function WhyStoresFailPage({ readOnly = false }: WhyStoresFailPag
           backing this page is the same one the Deer Lake Store deck reads from,
           so the deck and the library can never drift.
         </p>
+        {!readOnly && PHENOMENA.length > 0 && (
+          <Link href="/phenomena">
+            <div
+              className="inline-flex items-center gap-2 rounded-md border border-accent/40 bg-accent/5 px-3 py-2 text-sm text-foreground hover-elevate cursor-pointer"
+              data-testid="why-stores-fail-phenomena-callout"
+            >
+              <EyeOff className="h-4 w-4 text-accent" />
+              <span>
+                Several of the figures below are one phenomenon described
+                differently —{" "}
+                <span className="font-semibold text-accent">
+                  see the {PHENOMENA.length} cross-industry phenomena
+                </span>
+              </span>
+              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+            </div>
+          </Link>
+        )}
         <div className="flex flex-wrap gap-2 pt-2">
           {FAILURE_MODE_THEMES.map((theme) => (
             <a key={theme.id} href={`#${theme.id}`}>
@@ -272,6 +294,8 @@ function FailureModeCard({
 
         <DriftMap mode={mode} />
 
+        <PhenomenaBackLinks modeId={mode.id} readOnly={readOnly} />
+
         <div className="pt-3 border-t border-border/50 space-y-2">
           <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground font-semibold">
             Sources
@@ -321,6 +345,65 @@ function FailureModeCard({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+/**
+ * Reciprocal links: each Failure Mode card lists the cross-industry
+ * phenomena it is part of, so a reader landing on a failure mode can see
+ * "this same thing also shows up under these other industries' nouns".
+ */
+function PhenomenaBackLinks({
+  modeId,
+  readOnly,
+}: {
+  modeId: string;
+  readOnly: boolean;
+}) {
+  const phenomena = phenomenaForFailureMode(modeId);
+  if (phenomena.length === 0) return null;
+  return (
+    <div
+      className="pt-3 border-t border-border/50 space-y-2"
+      data-testid={`failure-mode-phenomena-${modeId}`}
+    >
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground font-semibold">
+        <Network className="h-3.5 w-3.5" />
+        Part of phenomena
+      </div>
+      <ul className="flex flex-wrap gap-2">
+        {phenomena.map((p) => {
+          const inner = (
+            <Badge
+              variant="outline"
+              className={
+                readOnly
+                  ? "bg-accent/5 border-accent/40 font-normal"
+                  : "bg-accent/5 border-accent/40 hover:bg-accent/10 cursor-pointer font-normal"
+              }
+              data-testid={`failure-mode-phenomena-${modeId}-badge-${p.id}`}
+            >
+              <EyeOff className="h-3 w-3 mr-1.5 text-accent" />
+              "{p.communityName}"
+            </Badge>
+          );
+          return (
+            <li key={p.id}>
+              {readOnly ? (
+                inner
+              ) : (
+                <Link
+                  href={`/phenomena/${p.id}`}
+                  data-testid={`failure-mode-phenomena-${modeId}-link-${p.id}`}
+                >
+                  {inner}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 

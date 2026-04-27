@@ -2,9 +2,10 @@ import { Link } from "wouter";
 import { useGetLibraryStats, useGetRecentActivity } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, FileText, Users, FolderOpen, Tag, ArrowRight, UploadCloud, type LucideIcon } from "lucide-react";
+import { AlertTriangle, FileText, Users, FolderOpen, Tag, ArrowRight, UploadCloud, EyeOff, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EntryCard } from "@/components/EntryCard";
+import { PHENOMENA } from "@workspace/why-stores-fail";
 
 export default function Home() {
   const { data: stats, isLoading } = useGetLibraryStats();
@@ -62,29 +63,65 @@ export default function Home() {
         <StatCard title="Subjects" value={stats.totalSubjects} icon={Tag} href="/subjects" />
       </div>
 
-      <Link href="/why-stores-fail">
-        <Card className="hover-elevate cursor-pointer transition-all border-secondary/40 bg-gradient-to-br from-secondary/5 to-accent/5 hover:border-secondary group">
-          <CardContent className="p-6 flex items-start gap-5">
-            <div className="rounded-xl bg-secondary/10 text-secondary p-3 shrink-0">
-              <AlertTriangle className="h-6 w-6" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1">
-                Synthesis · drawn from the library
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Link href="/why-stores-fail">
+          <Card className="hover-elevate cursor-pointer transition-all border-secondary/40 bg-gradient-to-br from-secondary/5 to-accent/5 hover:border-secondary group h-full">
+            <CardContent className="p-6 flex items-start gap-5">
+              <div className="rounded-xl bg-secondary/10 text-secondary p-3 shrink-0">
+                <AlertTriangle className="h-6 w-6" />
               </div>
-              <CardTitle className="text-xl font-serif text-primary group-hover:text-secondary transition-colors mb-2">
-                Why Northern Stores Fail
-              </CardTitle>
-              <CardDescription className="text-base leading-relaxed">
-                A named catalog of every failure mode in the current
-                northern-store model — with the evidence and the source it came
-                from. Same dataset the Deer Lake Store deck reads from.
-              </CardDescription>
-            </div>
-            <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0 mt-1" />
-          </CardContent>
-        </Card>
-      </Link>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1">
+                  Synthesis · drawn from the library
+                </div>
+                <CardTitle className="text-xl font-serif text-primary group-hover:text-secondary transition-colors mb-2">
+                  Why Northern Stores Fail
+                </CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  A named catalog of every failure mode in the current
+                  northern-store model — with the evidence and the source it came
+                  from. Same dataset the Deer Lake Store deck reads from.
+                </CardDescription>
+              </div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0 mt-1" />
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/phenomena">
+          <Card
+            className="hover-elevate cursor-pointer transition-all border-accent/40 bg-gradient-to-br from-accent/5 to-secondary/5 hover:border-accent group h-full"
+            data-testid="home-phenomena-card"
+          >
+            <CardContent className="p-6 flex items-start gap-5">
+              <div className="rounded-xl bg-accent/10 text-accent p-3 shrink-0">
+                <EyeOff className="h-6 w-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1">
+                  Cross-industry · the link is the finding
+                </div>
+                <CardTitle className="text-xl font-serif text-primary group-hover:text-accent transition-colors mb-2">
+                  <span
+                    className="font-serif font-bold text-accent"
+                    data-testid="home-phenomena-count"
+                  >
+                    {PHENOMENA.length}
+                  </span>{" "}
+                  phenomena nobody owns
+                </CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Headline numbers from Transport Canada, federal program
+                  audits, academic researchers, and the community turn out to
+                  describe one structural object. The link itself is the
+                  finding.
+                </CardDescription>
+              </div>
+              <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0 mt-1" />
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
