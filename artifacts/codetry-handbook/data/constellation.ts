@@ -160,6 +160,10 @@ export const constellation: ConstellationSnapshot = {
         {
           "name": "Payday Planner",
           "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving."
+        },
+        {
+          "name": "Scaffolding pretending to be engine",
+          "rule": "Roughly 600 lines of procedural-music machinery — kick/snare scheduler, synth functions, chord timeline, LFO, music bus, per-scene chord-morph effect — sat behind ENABLE_PROCEDURAL_MUSIC = false for months in the Headwaters promo video's audio file, shaping how the file read and what future contributors thought the system did. Named as 'feature behind a flag' it was untouchable; named honestly as scaffolding pretending to be engine, it could be deleted, and ambient-audio.ts collapsed from 933 lines to ~330 with no change in runtime behavior. A flag that has been off long enough to forget why it was added is not a feature toggle — it is a name lying about the system's intent, and the honest move is to delete it."
         }
       ]
     },

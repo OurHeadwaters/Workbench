@@ -179,7 +179,8 @@
         { "name": "Community Well", "rule": "monthly pooled tips that round-distribute to community proposals. A well everyone draws from and contributes to; the monthly snapshot/round cycle is the well refilling." },
         { "name": "Giving Well", "rule": "user-to-user tip pool for charitable giving. Same well metaphor at the household scale." },
         { "name": "Surplus Pool", "rule": "where Payday overflow goes once envelopes are full. Pool, not 'extra savings account' — water seeking level. (In flight: #794)" },
-        { "name": "Payday Planner", "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving." }
+        { "name": "Payday Planner", "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving." },
+        { "name": "Scaffolding pretending to be engine", "rule": "Roughly 600 lines of procedural-music machinery — kick/snare scheduler, synth functions, chord timeline, LFO, music bus, per-scene chord-morph effect — sat behind ENABLE_PROCEDURAL_MUSIC = false for months in the Headwaters promo video's audio file, shaping how the file read and what future contributors thought the system did. Named as 'feature behind a flag' it was untouchable; named honestly as scaffolding pretending to be engine, it could be deleted, and ambient-audio.ts collapsed from 933 lines to ~330 with no change in runtime behavior. A flag that has been off long enough to forget why it was added is not a feature toggle — it is a name lying about the system's intent, and the honest move is to delete it." }
       ],
       "inFlight": [
         { "id": 793, "title": "Spring: six-stage bamboo progression", "status": "implemented, awaiting approval" },

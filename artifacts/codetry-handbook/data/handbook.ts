@@ -512,6 +512,16 @@ const partIV: Part = {
           text:
             "A name that survives this test is a name a system can be built on. A name that doesn't is a label.",
         },
+        {
+          kind: "examples",
+          items: [
+            {
+              name: "User-gesture listeners",
+              rule:
+                "A list called *unlockListeners* gated something the code never named — the rule that only events counting as a user gesture may unlock audio — and quietly grew to include *pointermove*, *focus*, and *visibilitychange*, none of which require a real gesture; combined with a one-shot flag, the first stray event silently burned the only unlock attempt and the audio refused to autoplay for weeks. Rename to *userGestureListeners* and ask whether those entries still hold: they don't, and the load-bearing rule the original name had hidden surfaces in the same breath. The honest fix is to name the rule out loud and keep the listeners attached until a real gesture is confirmed to have unlocked the system.",
+            },
+          ],
+        },
         { kind: "rule" },
         { kind: "subhead", text: "From the field" },
         {
