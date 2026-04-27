@@ -952,6 +952,71 @@ const partVI: Part = {
         },
       ],
     },
+    {
+      id: "6-2",
+      number: "6.2",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "Name as architecture, when the noun goes on-chain",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · returned to as the answer changes.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.1 closed by naming a second tokenisation, structurally analogous to the first: the *token* the chain mints when a community's assets, memberships, votes, or shares of a co-op are placed on a blockchain. The argument there ended on a hazard rather than an answer — that without a name-layer discipline, on-chain primitives become legible only to the people fluent in the substrate, which is the precise definition of technocracy. That paragraph deserves a chapter of its own. It is not a tail to the LLM-tokenisation argument; it is a separate open question, in the same shape, that the discipline owes itself a place to keep returning to. This is that place.",
+        },
+        {
+          kind: "subhead",
+          text: "What the on-chain hazard actually is.",
+        },
+        {
+          kind: "para",
+          text:
+            "The on-chain version of the §6.1 problem is not that the chain is hostile to names. It is that the chain's load-bearing identifiers are addresses and signatures — a contract is `0x` followed by forty hex characters; an interface is `transfer(address,uint256)`; a vote is a transaction whose meaning is whatever the function dispatched at that address happens to do. Names exist on top of this layer as conveniences: an ENS record, a token symbol, a label in a wallet UI, a string field inside a contract that the contract itself does not have to honour. The relationship between *name* and *primitive* on-chain is the inverse of the codetry relationship — the primitive is authoritative, the name is a label on top of it, and the label is replaceable without the primitive shifting underneath. The §2.4 collapse — *the type is what carries the truth, the name is just decoration* — is the chain's default state, not its failure mode.",
+        },
+        {
+          kind: "para",
+          text:
+            "What this does to a community whose governance has been placed on such a substrate is exactly what §6.1 named. The members can read *the token*, *the vote*, *the share* in their own kitchen-language. The chain reads `0xa0b8...`, `castVote(uint256,uint8)`, `balanceOf(address)`. When the two readings disagree — when the wallet UI says *yes* and the contract dispatches *no*, when the documentation calls a primitive *the council seat* and the bytecode treats it as a transferable ERC-721 — the chain's reading is the one that enacts. The community's noun loses, quietly, on every disagreement. The drift is invisible to anyone who is not fluent in the substrate, which is most of the community by design. That is the technocratic failure §6.1 named, made concrete.",
+        },
+        {
+          kind: "subhead",
+          text: "What a name-layer discipline would have to do.",
+        },
+        {
+          kind: "para",
+          text:
+            "It is worth being honest about how little of this is settled. A name-layer discipline for on-chain governance would, at minimum, have to answer three questions the codetry move already answers in source code, and re-answers under harder constraints here. *Who authors the name.* In source code the answer is the practitioner sitting with the community at the kitchen table; on-chain it is unclear whether the name lives in the contract's metadata, in a registry the community controls, in a wallet UI the community does not control, or in a governance document the chain cannot read. *What the name is bound to.* In source code the binding is enforced by the rename test of §4.2 — change the name, and the metaphor breaks loud enough to hear. On-chain, the binding between *the council seat* and the ERC-721 dispatched at `0xa0b8...` is conventional rather than enforced; nothing in the substrate fails when the two drift. *How the name survives a fork.* Source code forks rarely and visibly; chains fork routinely, and a community whose governance noun is *the share* may wake up to find two chains, two contracts, two `share` tokens, and no discipline that says which of the two carries the noun the community originally named.",
+        },
+        {
+          kind: "callout",
+          text:
+            "On-chain, *type is the chain's, token is the chain's, and name has nowhere obvious to live*. The §6.1 stack — type, name, token — collapses into two layers, both belonging to the substrate. The name layer is the one the discipline would have to build.",
+        },
+        {
+          kind: "subhead",
+          text: "Why this is its own chapter and not a footnote.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.1 is about what tokenisation does to a noun the practitioner *wrote*. This chapter is about what tokenisation does to a noun the community *enacts authority through*, which is a different stake. The first hazard is that the discipline's reading public shifts from human to model and the noun-as-architecture move has to survive a statistical reader; the second hazard is that the community's reading public shifts from member to substrate and the noun-as-architecture move has to survive a *technocratic* reader — one whose fluency in the layer is itself the asymmetry of power. The first is a question about whether codetry's machine-readability holds. The second is a question about whether codetry's *bet against drift* — the §1.0 hedge — extends to the layer where drifted words have formal authority attached. They rhyme. They are not the same chapter.",
+        },
+        {
+          kind: "para",
+          text:
+            "There is a temptation, when the answer is unknown, to fold the question back into a chapter that has more developed material around it. §6.1 is the more developed chapter — it has the rename-test analogy, the corpus-dependence argument, the type/name/token stack — and it would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes, not so they can be domesticated as tails on the chapters that almost-but-not-quite address them. When a name-layer discipline for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the primitive — the place to record it is here, not appended to §6.1.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Open question, kept open. The discipline does not yet have a name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §6.1 named. This chapter exists to be returned to — when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down.",
+        },
+      ],
+    },
   ],
 };
 
