@@ -21,14 +21,27 @@ import {
  * workspace, where the founder can clone it, lock individual rows, and use
  * it as the starting point for new scenarios.
  *
+ * 2026-04-27 update — Tithe-shaped giving.
+ *   Same restructure as V3: Giving moves from a residual Phase 3 split share
+ *   (25% of surplus) to a top-of-waterfall first claim on revenue (10% off
+ *   the top). Cascade against the locked $105k fee:
+ *     - Tithe: $10,500/mo → $189,000 over 18 months (was $141,778 residual).
+ *     - Post-tithe surplus: $32,108/mo Jun–Aug, $30,008/mo Sep onward.
+ *     - Capital recovery extends 3 mo → 4 mo (Jun–Sep 2026).
+ *     - Brightside Launch Month slips Sep 2026 → Oct 2026.
+ *     - Phase 3 shrinks 14 mo → 13 mo (Nov 2026 – Nov 2027).
+ *     - Phase 3 split renormalises 50/25/25 → 75/25 Reserve / Innovation.
+ *
+ *   Operating margin (pre-tithe, the structural "right-priced" metric) is
+ *   unchanged at 38.6% Sep onward — fee minus operating cost basis still
+ *   lands in the 35–40% target band. The post-tithe surplus margin is
+ *   ~28.6%; that's the new headline for "what's actually available for
+ *   capital + reserve + innovation after the tithe."
+ *
  * The pricing story:
  *   - Same lean 6-role roster as V3 (the locked default). Payroll $52k/mo.
- *   - Fee lifted from V3's $90k/mo to $105k/mo so the Sep-onward gross
- *     margin lands at ~38.6% (target band: 35–40%).
- *   - Capital recovery clears in the V2-style 3 months (Jun–Aug) because the
- *     surplus is back above the V2 surplus level.
- *   - Brightside Launch Month returns to September 2026 (the October slip in
- *     V3 was a symptom of underpricing, not a structural feature).
+ *   - Fee at $105k/mo so the Sep-onward operating margin lands at ~38.6%
+ *     (target band: 35–40%) before the tithe is taken.
  *   - Lead draw stays at $18k/mo for the published 18 months. The
  *     renegotiation triggers below describe how the draw and fee step at
  *     month 12 once Brightside is live and the value-delivered audit lands.
@@ -46,32 +59,43 @@ const v4Roster = [
 const v4PayrollTotal = v4Roster.reduce((s, r) => s + r.monthlyLoaded, 0); // 52,000
 
 const v4Fee = 105000;
+
+// Tithe — top of the waterfall. 10% off the top, first claim on revenue.
+const v4TithePct = 10;
+const v4TitheMonthly = v4Fee * 0.10; // 10,500
+const v4Tithe18mo = v4TitheMonthly * 18; // 189,000
+
 const v4CostBasisJunAug = v4PayrollTotal + SHARED_OVERHEADS_JUN_AUG_TOTAL; // 62,392
 const v4CostBasisSepOnward = v4PayrollTotal + SHARED_OVERHEADS_SEP_ONWARD_TOTAL; // 64,492
-const v4SurplusJunAug = v4Fee - v4CostBasisJunAug; // 42,608  → 40.6% margin
-const v4SurplusSepOnward = v4Fee - v4CostBasisSepOnward; // 40,508 → 38.6% margin
 
-// Capital recovery: $112k / $42,608 ≈ 2.63 mo.
-//   Month 1 (Jun): cum 42,608
-//   Month 2 (Jul): cum 85,216
-//   Month 3 (Aug): cum 127,824 — done; ~$15,824 trickle to splits.
+// Surplus is post-tithe: fee − tithe − cost basis.
+const v4SurplusJunAug = v4Fee - v4TitheMonthly - v4CostBasisJunAug; // 32,108
+const v4SurplusSepOnward = v4Fee - v4TitheMonthly - v4CostBasisSepOnward; // 30,008
 
-// Phase 3: Oct 2026 onward. 18 mo total − 3 mo cap recovery − 1 mo Brightside
-// launch = 14 mo of Phase 3 splits at the post-Sep surplus rate.
-const v4Phase3Months = 14;
-const v4Phase3MonthlySurplus = v4SurplusSepOnward; // 40,508
-const v4ReserveMonthly = v4Phase3MonthlySurplus * 0.5; // 20,254
-const v4InnovationMonthly = v4Phase3MonthlySurplus * 0.25; // 10,127
-const v4GivingMonthly = v4Phase3MonthlySurplus * 0.25; // 10,127
+// Capital recovery: $112,000 against the post-tithe surplus.
+//   Months 1–3 (Jun–Aug at $32,108/mo): cumulative $96,324
+//   Month 4 (Sep at $30,008/mo): retire remaining $15,676 → ~$14,332 spillover
+// → Capital recovery: 4 months (Jun–Sep 2026)
+// → Brightside Launch Month slips Sep → Oct 2026
+// → Phase 3: 13 mo (Nov 2026 → Nov 2027) at the post-tithe Sep-onward rate.
+const v4Phase3Months = 13;
+const v4Phase3MonthlySurplus = v4SurplusSepOnward; // 30,008
+
+// Phase 3 split renormalises 50/25/25 → 75/25 Reserve / Innovation
+// (the old 25 giving slice goes to Reserve, consistent with the "redirect
+// to Reserve war chest" pattern).
+const v4ReservePct = 75;
+const v4InnovationPct = 25;
+const v4ReserveMonthly = v4Phase3MonthlySurplus * 0.75; // 22,506
+const v4InnovationMonthly = v4Phase3MonthlySurplus * 0.25; // 7,502
 
 const v4Revenue18mo = v4Fee * 18; // 1,890,000
 const v4Payroll18mo = v4PayrollTotal * 18; // 936,000
 const v4Overheads18mo = 3 * SHARED_OVERHEADS_JUN_AUG_TOTAL + 15 * SHARED_OVERHEADS_SEP_ONWARD_TOTAL; // 218,556
-const v4Surplus18mo = v4Revenue18mo - v4Payroll18mo - v4Overheads18mo;
-// = 1,890,000 − 936,000 − 218,556 = 735,444
-const v4Reserve18mo = Math.round(v4ReserveMonthly * v4Phase3Months); // 283,556
-const v4Innovation18mo = Math.round(v4InnovationMonthly * v4Phase3Months); // 141,778
-const v4Giving18mo = Math.round(v4GivingMonthly * v4Phase3Months); // 141,778
+const v4Surplus18mo = v4Revenue18mo - v4Tithe18mo - v4Payroll18mo - v4Overheads18mo;
+// = 1,890,000 − 189,000 − 936,000 − 218,556 = 546,444
+const v4Reserve18mo = Math.round(v4ReserveMonthly * v4Phase3Months); // 22,506 × 13 = 292,578
+const v4Innovation18mo = Math.round(v4InnovationMonthly * v4Phase3Months); // 7,502 × 13 = 97,526
 
 /**
  * Renegotiation triggers — the structured field that makes the renegotiation
@@ -108,7 +132,7 @@ const v4Agency = {
   startDate: "June 1, 2026",
   buyerStatus: "TBD (father vs 807 — affects political weight, not the math)",
   feeTag: confirmed(
-    "Right-priced against the lean 6-role roster — lifts the Sep-onward gross margin to ~38.6% (target band 35–40%).",
+    "Right-priced against the lean 6-role roster — Sep-onward operating margin (pre-tithe) lands at ~38.6% (target band 35–40%).",
   ),
 
   roster: v4Roster,
@@ -121,41 +145,43 @@ const v4Agency = {
   overheadsSepOnwardTotal: SHARED_OVERHEADS_SEP_ONWARD_TOTAL,
   overheadsTag: confirmed("Roster-shaped, not fee-shaped — held identical across every scenario."),
 
+  tithePct: v4TithePct,
+  titheMonthly: v4TitheMonthly,
+  titheTotal: v4Tithe18mo,
+
   costBasisJunAug: v4CostBasisJunAug,
   costBasisSepOnward: v4CostBasisSepOnward,
   monthlySurplusJunAug: v4SurplusJunAug,
   monthlySurplusSepOnward: v4SurplusSepOnward,
-  costBasisTag: confirmed("Computed from locked roster + fee."),
+  costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
   capitalRecoveryAmount: 112000,
   capitalRecoveryDescription:
     "$72k outstanding business loan first, then $40k personal infusion from founder's husband, in that order.",
-  capitalRecoveryMonths: 3,
+  capitalRecoveryMonths: 4,
   capitalRecoveryStartLabel: "Jun 2026",
-  capitalRecoveryEndLabel: "End of Aug 2026 (~$15.8k late-Aug trickle to splits)",
-  capitalRecoveryTag: confirmed("Recovery clears in 3 mo at the right-priced surplus."),
+  capitalRecoveryEndLabel: "End of Sep 2026 (~$14,332 Sep spillover after recovery completes)",
+  capitalRecoveryTag: confirmed("Recovery clears in 4 mo at the post-tithe right-priced surplus (3 mo before tithe; tithe-first adds one month)."),
 
-  brightsideLaunchMonthLabel: "September 2026",
+  brightsideLaunchMonthLabel: "October 2026 (slipped one month from the V4-pre-tithe September target)",
   brightsidePrelaunchSpend: 28000,
   brightsideLaunchSurplus: v4SurplusSepOnward,
-  brightsideLaunchRemainder: v4SurplusSepOnward - 28000, // 12,508
-  brightsideLaunchTag: confirmed("Sep surplus ($40,508) covers the $28k pre-launch with $12,508 left over for Reserve / Innovation / Giving."),
+  brightsideLaunchRemainder: v4SurplusSepOnward - 28000, // 2,008
+  brightsideLaunchTag: confirmed("Oct surplus ($30,008) covers the $28k pre-launch with $2,008 left over for the Reserve / Innovation Phase 3 split."),
 
   phase3Months: v4Phase3Months,
   phase3MonthlySurplus: v4Phase3MonthlySurplus,
-  reservePct: 50,
-  innovationPct: 25,
-  givingPct: 25,
+  reservePct: v4ReservePct,
+  innovationPct: v4InnovationPct,
   reserveMonthly: v4ReserveMonthly,
   innovationMonthly: v4InnovationMonthly,
-  givingMonthly: v4GivingMonthly,
   reserveTotal: v4Reserve18mo,
   innovationTotal: v4Innovation18mo,
-  givingTotal: v4Giving18mo,
-  phase3Tag: confirmed("14-mo Phase 3 window at the post-Sep surplus, sized to the right-priced fee."),
+  phase3Tag: confirmed("13-mo Phase 3 window (Nov 2026 → Nov 2027) at the post-tithe Sep-onward surplus. Split renormalises 50/25/25 → 75/25 Reserve / Innovation."),
 
   totals18mo: {
     revenue: v4Revenue18mo,
+    tithe: v4Tithe18mo,
     payroll: v4Payroll18mo,
     overheads: v4Overheads18mo,
     surplusDeployed: v4Surplus18mo,
@@ -163,8 +189,7 @@ const v4Agency = {
     brightsidePrelaunch: 28000,
     reserve: v4Reserve18mo,
     innovation: v4Innovation18mo,
-    giving: v4Giving18mo,
-    tag: confirmed("Computed from locked fee + roster."),
+    tag: confirmed("Computed from locked fee + roster, with tithe taken first."),
   },
 
   practitionerSalary18mo: 324000,
@@ -192,9 +217,9 @@ export const SCENARIO_V4: Scenario = {
   id: "v4",
   name: "V4 — Right-priced",
   short: "V4",
-  tagline: "$105k/mo agency · 6-role team · ~38.6% margin",
+  tagline: "$105k/mo agency · 6-role team · ~38.6% operating margin · tithe-first",
   description:
-    "Right-priced engagement against the same lean 6-role roster as V3. Fee lifted to $105k/mo so the Sep-onward gross margin lands in the 35–40% band the founder needs for an 18-month commitment. Capital recovery clears in 3 months (Jun–Aug) and Brightside launch returns to September 2026. Renegotiation triggers describe the month-12 step in the founder's voice — pre-baked, not negotiated from scratch later. Also seeded as the first alternative-reality tab on the Compare page.",
+    "Right-priced engagement against the same lean 6-role roster as V3. Fee at $105k/mo so the Sep-onward operating margin (pre-tithe) lands in the 35–40% band. Tithe-first deployment: 10% off the top to Giving, then capital recovery (4 mo Jun–Sep 2026), then Brightside launch (October 2026), then 13 months of Reserve / Innovation. Renegotiation triggers describe the month-12 step in the founder's voice — pre-baked, not negotiated from scratch later. Also seeded as the first alternative-reality tab on the Compare page.",
   accent: "#3B2A6E",
   accentSoft: "#E6E1F2",
   accentInk: "#1F1640",

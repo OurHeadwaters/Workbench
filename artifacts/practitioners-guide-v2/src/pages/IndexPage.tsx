@@ -27,7 +27,7 @@ export function IndexPage() {
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
       headlineLabel: "18-mo surplus deployed",
-      blurb: `807 CDP grant ($22k receivable, $1.5k cost) and ${money(a.fee)}/mo agency aspiration over ${a.termMonths} months. No ongoing owner take from agency surplus — capital recovery, then Brightside launch, then Reserve / Innovation / Giving.`,
+      blurb: `807 CDP grant ($22k receivable, $1.5k cost) and ${money(a.fee)}/mo agency aspiration over ${a.termMonths} months. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first), then capital recovery, then Brightside launch, then Reserve / Innovation.`,
       tag: a.totals18mo.tag,
     },
     {

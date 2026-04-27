@@ -20,17 +20,28 @@ import {
  * scenario set. The V2 milestone now lives as a "How we got here" note on
  * the Compare / operating-framework page.
  *
+ * 2026-04-27 update — Tithe-shaped giving.
+ *   Giving moved from a residual Phase 3 split share (25% of post-cap-recovery
+ *   surplus) to a top-of-waterfall first claim on revenue (10% off the top,
+ *   paid first, before cost basis or capital recovery). Dave Ramsey discipline:
+ *   the tithe is what you decided, not what was left.
+ *
+ *   Cascade against the locked $90k fee:
+ *     - Tithe: $9,000/mo → $162,000 over 18 months (was $82,901 residual).
+ *     - Post-tithe surplus: $18,608/mo Jun–Aug, $16,508/mo Sep onward.
+ *     - Capital recovery extends from 4 mo → ~7 mo (Jun–Dec 2026).
+ *     - Brightside Launch Month slips from October 2026 → January 2027.
+ *     - Phase 3 shrinks from 13 mo → 10 mo (Feb–Nov 2027).
+ *     - Phase 3 split renormalises 50/25/25 → 75/25 Reserve / Innovation
+ *       (the old 25 giving slice goes to Reserve, consistent with the
+ *       existing "redirect to Reserve war chest" pattern).
+ *
  * Roster:
  *   - 6-role roster: Practitioner / Lead, IT / Tech, Operations Manager,
  *     Community Development Associate, Food Handler, Bookkeeper.
  *   - $52k/mo payroll, $90k/mo agency fee.
  *   - Salts and Brightside identical to every other scenario — they describe
  *     the world, not the engagement shape.
- *
- * Capital recovery clears in ~4.1 months, which pushes the Brightside Launch
- * Month from September into October. V4 (right-priced alt reality on the
- * Compare page) shows what happens when the fee is lifted to bring the
- * cadence back to the V2-style 3-month recovery.
  */
 
 const v3Roster = [
@@ -45,32 +56,48 @@ const v3Roster = [
 const v3PayrollTotal = v3Roster.reduce((s, r) => s + r.monthlyLoaded, 0); // 52000
 
 const v3Fee = 90000;
-const v3CostBasisJunAug = v3PayrollTotal + SHARED_OVERHEADS_JUN_AUG_TOTAL; // 62392
-const v3CostBasisSepOnward = v3PayrollTotal + SHARED_OVERHEADS_SEP_ONWARD_TOTAL; // 64492
-const v3SurplusJunAug = v3Fee - v3CostBasisJunAug; // 27608
-const v3SurplusSepOnward = v3Fee - v3CostBasisSepOnward; // 25508
 
-// Capital recovery: 112k / 27608 = 4.06 mo. Spans Jun-Sep + spillover.
-//   Months 1-3 (Jun-Aug, $27,608/mo): cumulative $82,824
-//   Month 4 (Sep, $25,508): cumulative $108,332 — still short by $3,668
-//   Month 5 (Oct): retire remaining $3,668 → ~$21,840 left over for Oct splits
-// → Brightside Launch Month shifts from Sept (V2 baseline) into Oct under V3.
+// Tithe — top of the waterfall. 10% off the top, first claim on revenue,
+// paid before any cost basis or capital allocation.
+const v3TithePct = 10;
+const v3TitheMonthly = v3Fee * 0.10; // 9,000
+const v3Tithe18mo = v3TitheMonthly * 18; // 162,000
 
-// Phase 3: 18 mo total - 4 mo capital recovery - 1 mo Brightside Launch = 13 mo.
-const v3Phase3Months = 13;
-const v3Phase3MonthlySurplus = v3SurplusSepOnward; // 25508
-const v3ReserveMonthly = v3Phase3MonthlySurplus * 0.5; // 12754
-const v3InnovationMonthly = v3Phase3MonthlySurplus * 0.25; // 6377
-const v3GivingMonthly = v3Phase3MonthlySurplus * 0.25; // 6377
+const v3CostBasisJunAug = v3PayrollTotal + SHARED_OVERHEADS_JUN_AUG_TOTAL; // 62,392
+const v3CostBasisSepOnward = v3PayrollTotal + SHARED_OVERHEADS_SEP_ONWARD_TOTAL; // 64,492
+
+// Surplus is post-tithe: fee − tithe − cost basis.
+const v3SurplusJunAug = v3Fee - v3TitheMonthly - v3CostBasisJunAug; // 18,608
+const v3SurplusSepOnward = v3Fee - v3TitheMonthly - v3CostBasisSepOnward; // 16,508
+
+// Capital recovery: $112,000 against the post-tithe surplus.
+//   Months 1–3 (Jun–Aug at $18,608/mo): cumulative $55,824
+//   Month 4 (Sep at $16,508/mo): cumulative $72,332
+//   Month 5 (Oct at $16,508/mo): cumulative $88,840
+//   Month 6 (Nov at $16,508/mo): cumulative $105,348
+//   Month 7 (Dec at $16,508/mo): retire remaining $6,652 → ~$9,856 spillover
+// → Capital recovery: 7 months (Jun → early Dec 2026)
+// → Brightside Launch Month slips to Jan 2027 (Jan's $16,508 surplus + Dec's
+//   ~$9,856 spillover ≈ $26,364, leaving ~$1,636 absorbed by Feb's splits).
+// → Phase 3: Feb 2027 → Nov 2027 = 10 months at the post-tithe Sep-onward rate.
+
+const v3Phase3Months = 10;
+const v3Phase3MonthlySurplus = v3SurplusSepOnward; // 16,508
+
+// Phase 3 split renormalises to 75/25 — the old 25 giving slice goes to Reserve,
+// consistent with the existing "redirect to Reserve war chest" pattern.
+const v3ReservePct = 75;
+const v3InnovationPct = 25;
+const v3ReserveMonthly = v3Phase3MonthlySurplus * 0.75; // 12,381
+const v3InnovationMonthly = v3Phase3MonthlySurplus * 0.25; // 4,127
 
 const v3Revenue18mo = v3Fee * 18; // 1,620,000
 const v3Payroll18mo = v3PayrollTotal * 18; // 936,000
 const v3Overheads18mo = 3 * SHARED_OVERHEADS_JUN_AUG_TOTAL + 15 * SHARED_OVERHEADS_SEP_ONWARD_TOTAL; // 218,556
-const v3Surplus18mo = v3Revenue18mo - v3Payroll18mo - v3Overheads18mo;
-// = 1,620,000 - 936,000 - 218,556 = 465,444
-const v3Reserve18mo = Math.round(v3ReserveMonthly * v3Phase3Months);
-const v3Innovation18mo = Math.round(v3InnovationMonthly * v3Phase3Months);
-const v3Giving18mo = Math.round(v3GivingMonthly * v3Phase3Months);
+const v3Surplus18mo = v3Revenue18mo - v3Tithe18mo - v3Payroll18mo - v3Overheads18mo;
+// = 1,620,000 − 162,000 − 936,000 − 218,556 = 303,444
+const v3Reserve18mo = Math.round(v3ReserveMonthly * v3Phase3Months); // 123,810
+const v3Innovation18mo = Math.round(v3InnovationMonthly * v3Phase3Months); // 41,270
 
 const v3Agency = {
   fee: v3Fee,
@@ -90,41 +117,43 @@ const v3Agency = {
   overheadsSepOnwardTotal: SHARED_OVERHEADS_SEP_ONWARD_TOTAL,
   overheadsTag: confirmed("Roster-shaped, not fee-shaped — held identical across every scenario."),
 
+  tithePct: v3TithePct,
+  titheMonthly: v3TitheMonthly,
+  titheTotal: v3Tithe18mo,
+
   costBasisJunAug: v3CostBasisJunAug,
   costBasisSepOnward: v3CostBasisSepOnward,
   monthlySurplusJunAug: v3SurplusJunAug,
   monthlySurplusSepOnward: v3SurplusSepOnward,
-  costBasisTag: confirmed("Computed from locked roster + fee."),
+  costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
   capitalRecoveryAmount: 112000,
   capitalRecoveryDescription:
     "$72k outstanding business loan first, then $40k personal infusion from founder's husband, in that order.",
-  capitalRecoveryMonths: 4,
+  capitalRecoveryMonths: 7,
   capitalRecoveryStartLabel: "Jun 2026",
-  capitalRecoveryEndLabel: "Early Oct 2026 (~4.1 months at the locked surplus)",
-  capitalRecoveryTag: confirmed("Lower surplus extends recovery to ~4.1 mo under the locked $90k fee."),
+  capitalRecoveryEndLabel: "Early Dec 2026 (~6.8 months at the post-tithe surplus, with ~$9,856 December spillover into Brightside Launch)",
+  capitalRecoveryTag: confirmed("Tithe-first cuts the monthly surplus, extending recovery from 4 mo to ~7 mo at the locked $90k fee."),
 
-  brightsideLaunchMonthLabel: "October 2026 (one month past the original September target)",
+  brightsideLaunchMonthLabel: "January 2027 (slipped three months from the V3-pre-tithe October target)",
   brightsidePrelaunchSpend: 28000,
   brightsideLaunchSurplus: v3SurplusSepOnward,
-  brightsideLaunchRemainder: -2492,
-  brightsideLaunchTag: confirmed("Brightside launch slips one month under V3. October surplus alone (~$25.5k) doesn't cover the $28k pre-launch — the $2.5k overflow comes out of November Reserve / Innovation / Giving."),
+  brightsideLaunchRemainder: v3SurplusSepOnward - 28000, // -11,492
+  brightsideLaunchTag: confirmed("Brightside launch slips to January 2027 with the tithe in place. Jan's $16,508 surplus alone is short of the $28k pre-launch by $11,492; ~$9,856 of that is covered by the late-December capital-recovery spillover, leaving ~$1,636 absorbed by February's Reserve / Innovation splits."),
 
   phase3Months: v3Phase3Months,
   phase3MonthlySurplus: v3Phase3MonthlySurplus,
-  reservePct: 50,
-  innovationPct: 25,
-  givingPct: 25,
+  reservePct: v3ReservePct,
+  innovationPct: v3InnovationPct,
   reserveMonthly: v3ReserveMonthly,
   innovationMonthly: v3InnovationMonthly,
-  givingMonthly: v3GivingMonthly,
   reserveTotal: v3Reserve18mo,
   innovationTotal: v3Innovation18mo,
-  givingTotal: v3Giving18mo,
-  phase3Tag: confirmed("Phase 3 window is ~13 mo because capital recovery + launch take an extra month under the locked fee."),
+  phase3Tag: confirmed("Phase 3 window shrinks to 10 mo (Feb–Nov 2027) under the tithe-first structure. Split renormalises 50/25/25 → 75/25 Reserve / Innovation; the old 25 giving slice goes to Reserve."),
 
   totals18mo: {
     revenue: v3Revenue18mo,
+    tithe: v3Tithe18mo,
     payroll: v3Payroll18mo,
     overheads: v3Overheads18mo,
     surplusDeployed: v3Surplus18mo,
@@ -132,8 +161,7 @@ const v3Agency = {
     brightsidePrelaunch: 28000,
     reserve: v3Reserve18mo,
     innovation: v3Innovation18mo,
-    giving: v3Giving18mo,
-    tag: confirmed("Computed from locked fee + roster."),
+    tag: confirmed("Computed from locked fee + roster, with tithe taken first."),
   },
 
   practitionerSalary18mo: 324000,
@@ -157,9 +185,9 @@ export const SCENARIO_V3: Scenario = {
   id: "v3",
   name: "V3 — Lean team",
   short: "V3",
-  tagline: "$90k/mo agency · 6-role team",
+  tagline: "$90k/mo agency · 6-role team · tithe-first",
   description:
-    "The locked default operating framework. Lean 6-role team, $90k/mo agency fee, V2-style three-phase surplus deployment. Salts and Brightside are scenario-neutral — only the team and the fee move when the engagement shape changes.",
+    "The locked default operating framework. Lean 6-role team, $90k/mo agency fee, tithe-first surplus deployment: 10% off the top to Giving, then capital recovery, then Brightside launch, then Reserve / Innovation. Salts and Brightside are scenario-neutral — only the team and the fee move when the engagement shape changes.",
   accent: "#B14A1F",
   accentSoft: "#FBE4D8",
   accentInk: "#5B2510",

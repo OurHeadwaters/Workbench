@@ -139,12 +139,24 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
     ],
   };
 
-  // Phase 3 has its own tag; capital recovery and brightside launch each have theirs.
-  // Use the most-restrictive (totals18mo) tag as the sheet header so a single line
-  // captures the provenance of the whole 18-month picture.
+  // Phase 3 has its own tag; capital recovery, brightside launch, and the
+  // top-of-waterfall tithe each have theirs. Use the most-restrictive
+  // (totals18mo) tag as the sheet header so a single line captures the
+  // provenance of the whole 18-month picture.
   const phasesRows: (string | number)[][] = [
     ["Phase", "Window", "Amount", "Notes", "Confirmed"],
   ];
+  // Tithe — top of waterfall, first claim on revenue. Always emit when the
+  // fee tag is locked (the tithe is a function of fee × tithe %).
+  if (isLocked(a.feeTag)) {
+    phasesRows.push([
+      `Tithe — Giving (${a.tithePct}% off the top)`,
+      `${a.termMonths} months @ ${a.titheMonthly}/mo`,
+      a.titheTotal,
+      "First claim on revenue — paid before cost basis or any capital allocation.",
+      tagSummary(a.feeTag),
+    ]);
+  }
   if (isLocked(a.capitalRecoveryTag)) {
     phasesRows.push([
       "Phase 1 — Capital Recovery",
@@ -165,10 +177,10 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
   }
   if (isLocked(a.phase3Tag)) {
     phasesRows.push([
-      "Phase 3 — Reserve / Innovation / Giving",
+      "Phase 3 — Reserve / Innovation",
       `${a.phase3Months} months @ ${a.phase3MonthlySurplus}/mo`,
       a.phase3MonthlySurplus * a.phase3Months,
-      "50/25/25 split",
+      `${a.reservePct}/${a.innovationPct} split (renormalised when Giving moved to tithe-first)`,
       tagSummary(a.phase3Tag),
     ]);
     phasesRows.push([]);
@@ -181,7 +193,6 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
       a.innovationTotal,
       "",
     ]);
-    phasesRows.push(["Giving", a.givingPct, a.givingMonthly, a.givingTotal, ""]);
   }
   const phases: LedgerSheet = {
     name: "Agency — surplus phases",
@@ -195,15 +206,15 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
     rows: [
       ["Line", "$"],
       [`Revenue (${a.fee} × ${a.termMonths})`, a.totals18mo.revenue],
+      [`Tithe — Giving (${a.tithePct}% off the top, first claim)`, -a.totals18mo.tithe],
       [`Payroll (${a.payrollTotal} × ${a.termMonths})`, -a.totals18mo.payroll],
       ["Overheads (3 mo Jun–Aug + 15 mo Sep+)", -a.totals18mo.overheads],
-      ["Total surplus deployed", a.totals18mo.surplusDeployed],
+      ["Total surplus deployed (post-tithe)", a.totals18mo.surplusDeployed],
       [],
       ["↳ Capital Recovery (Phase 1)", a.totals18mo.capitalRecovery],
       ["↳ Brightside one-time pre-launch (Phase 2)", a.totals18mo.brightsidePrelaunch],
       ["↳ Reserve (Phase 3)", a.totals18mo.reserve],
       ["↳ Innovation / R&D (Phase 3)", a.totals18mo.innovation],
-      ["↳ Giving (Phase 3)", a.totals18mo.giving],
     ],
   };
 

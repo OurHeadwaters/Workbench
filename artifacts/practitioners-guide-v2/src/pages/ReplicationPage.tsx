@@ -26,7 +26,7 @@ export function ReplicationPage() {
   const accentSoft = scenario.accentSoft;
   const accentInk = scenario.accentInk;
 
-  const grossMarginPct = ((a.fee - a.costBasisSepOnward) / a.fee) * 100;
+  const operatingMarginPct = ((a.fee - a.costBasisSepOnward) / a.fee) * 100;
 
   return (
     <div className="space-y-8" data-testid="page-replication">
@@ -102,11 +102,11 @@ export function ReplicationPage() {
               That intersection is rare, and the price reflects it.
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
-              Said plainly: it's a 35–40% gross margin against a{" "}
-              {a.roster.length}-role team I run end to end — the rest is
+              Said plainly: it's a 35–40% operating margin (pre-tithe) against a{" "}
+              {a.roster.length}-role team I run end to end — 10% off the top
+              goes to Giving (tithe-first, before anything else), the rest is
               recovered capital, one tool that pays for itself, and a Reserve /
-              Innovation / Giving split the value-delivered audit defends each
-              year.
+              Innovation split the value-delivered audit defends each year.
             </p>
           </div>
         </div>
@@ -200,11 +200,11 @@ export function ReplicationPage() {
             />
             <TravelItem
               title="Fee → margin formula"
-              body={`Fee is set so the post-Sep gross margin lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(grossMarginPct, 1)} margin.`}
+              body={`Fee is set so the post-Sep operating margin (pre-tithe) lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(operatingMarginPct, 1)} margin. The tithe (10% off the top) is a separate discipline above the surplus waterfall.`}
             />
             <TravelItem
               title="Three-phase surplus deployment"
-              body="Capital recovery first. Launch one tool that pays for itself second. Reserve / Innovation / Giving (50/25/25) third. Order is non-negotiable — the discipline is what makes the war chest real."
+              body="Tithe (10% of revenue, off the top) first. Capital recovery second. Launch one tool that pays for itself third. Reserve / Innovation (75/25) fourth. Order is non-negotiable — Giving is what you decided, not what was left, and the discipline is what makes the war chest real."
             />
             <TravelItem
               title="Pre-baked renegotiation triggers"

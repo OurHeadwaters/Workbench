@@ -336,7 +336,9 @@ export function ComparePage() {
               ($67k payroll + ~$12.5k overheads), so the steady-state engagement threw off roughly
               <span className="font-medium text-foreground"> $35.5k/mo of Phase&nbsp;3 surplus</span>{" "}
               — split 50/25/25 into Reserve, Innovation, and Giving against the same shared
-              buckets V3 still uses today.
+              buckets V3 uses today. (V3 has since moved Giving from a 25% Phase 3 slice to a
+              tithe-first 10% off the top — see the Contracts page; the V2 50/25/25 framing here
+              describes V2 as it shipped.)
             </p>
             <p>
               V2 was retired from the live scenario set on April 26, 2026 once the founder settled

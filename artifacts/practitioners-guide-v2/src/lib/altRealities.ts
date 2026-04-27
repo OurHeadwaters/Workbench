@@ -33,17 +33,18 @@ export const PGV2_ALT_REALITIES_KEY = "pgv2.altRealities";
 /** Compact key for a metric. Stable across versions; safe to store. */
 export type MetricKey =
   | "agencyFee"
+  | "agencyTitheMonthly"
   | "agencyPayroll"
   | "agencyCostBasisSep"
   | "agencyMonthlySurplusSep"
   | "agencyCapitalRecoveryMonths"
   | "agency18moRevenue"
+  | "agency18moTithe"
   | "agency18moPayroll"
   | "agency18moOverheads"
   | "agency18moSurplusDeployed"
   | "agency18moReserve"
   | "agency18moInnovation"
-  | "agency18moGiving"
   | "personalTotal18mo"
   | "personalPerYear";
 
@@ -77,6 +78,14 @@ export const METRICS: MetricDef[] = [
     label: "Monthly fee",
     unit: "money",
     fromScenario: (s) => s.contracts.agency.fee,
+  },
+  {
+    key: "agencyTitheMonthly",
+    bucket: "Agency — monthly",
+    label: "Monthly tithe (10% of fee)",
+    unit: "money",
+    hint: "Top of waterfall, first claim on revenue",
+    fromScenario: (s) => s.contracts.agency.titheMonthly,
   },
   {
     key: "agencyPayroll",
@@ -115,6 +124,14 @@ export const METRICS: MetricDef[] = [
     fromScenario: (s) => s.contracts.agency.totals18mo.revenue,
   },
   {
+    key: "agency18moTithe",
+    bucket: "Agency — 18-month totals",
+    label: "Tithe — Giving (10% off the top)",
+    unit: "money",
+    hint: "First claim on revenue, before cost basis or capital recovery",
+    fromScenario: (s) => s.contracts.agency.totals18mo.tithe,
+  },
+  {
     key: "agency18moPayroll",
     bucket: "Agency — 18-month totals",
     label: "Payroll",
@@ -138,7 +155,7 @@ export const METRICS: MetricDef[] = [
   {
     key: "agency18moReserve",
     bucket: "Agency — Phase 3 splits",
-    label: "Reserve (50%)",
+    label: "Reserve (75%)",
     unit: "money",
     fromScenario: (s) => s.contracts.agency.totals18mo.reserve,
   },
@@ -148,13 +165,6 @@ export const METRICS: MetricDef[] = [
     label: "Innovation (25%)",
     unit: "money",
     fromScenario: (s) => s.contracts.agency.totals18mo.innovation,
-  },
-  {
-    key: "agency18moGiving",
-    bucket: "Agency — Phase 3 splits",
-    label: "Giving (25%)",
-    unit: "money",
-    fromScenario: (s) => s.contracts.agency.totals18mo.giving,
   },
   {
     key: "personalTotal18mo",
@@ -210,7 +220,7 @@ export function buildDefaultState(): AltRealityState {
     id: "v4-seed",
     name: "V4 — Right-priced",
     note:
-      "Same lean roster as V3, fee lifted to $105k/mo so the Sep-onward gross margin lands at the 38.6% band.",
+      "Same lean roster as V3, fee lifted to $105k/mo so the Sep-onward operating margin (pre-tithe) lands at the 38.6% band.",
     rows,
   };
   return { realities: [reality], activeId: reality.id };

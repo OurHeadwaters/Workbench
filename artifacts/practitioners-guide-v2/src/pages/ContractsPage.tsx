@@ -39,9 +39,10 @@ export function ContractsPage() {
           <p className="mt-3 text-muted-foreground max-w-3xl">
             Sub-line 1 is the 807 CDP grant — a real receivable,{" "}
             <Num tag={cdp.scoping.tag}>$0</Num> cash collected so far. Sub-line 2 is the{" "}
-            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}, with
-            a strict three-phase surplus deployment: capital recovery first, Brightside launch second,
-            then Reserve / Innovation / Giving.
+            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}.
+            Surplus deployment is tithe-first: <Num tag={a.feeTag}>{pct(a.tithePct)}</Num> of revenue
+            (<Num tag={a.feeTag}>{money(a.titheMonthly)}</Num>/mo) goes to Giving off the top, then
+            capital recovery, then Brightside launch, then Reserve / Innovation.
           </p>
         </div>
         <ExportLedgerButtons
@@ -246,7 +247,7 @@ export function ContractsPage() {
           </div>
         ) : null}
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
           <MoneyKpi
             label="Monthly fee"
             value={a.fee}
@@ -254,6 +255,15 @@ export function ContractsPage() {
             tag={a.feeTag}
             accent={b.accent}
             testId="kpi-agency-fee"
+          />
+          <MoneyKpi
+            label={`Tithe (${pct(a.tithePct)}, off the top)`}
+            value={a.titheMonthly}
+            unit="/mo"
+            tag={a.feeTag}
+            accent={b.accent}
+            hint={`First claim on revenue · 18-mo total ${money(a.titheTotal)}`}
+            testId="kpi-agency-tithe"
           />
           <MoneyKpi
             label="Cost basis (Sep+)"
@@ -266,7 +276,7 @@ export function ContractsPage() {
             testId="kpi-agency-cost-basis"
           />
           <MoneyKpi
-            label="Monthly surplus (Sep+)"
+            label="Post-tithe surplus (Sep+)"
             value={a.monthlySurplusSepOnward}
             unit="/mo"
             tag={a.costBasisTag}
@@ -274,12 +284,15 @@ export function ContractsPage() {
             hint={`Jun–Aug: ${money(a.monthlySurplusJunAug)}/mo`}
             testId="kpi-agency-surplus"
           />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <MoneyKpi
             label="18-mo surplus deployed"
             value={a.totals18mo.surplusDeployed}
             tag={a.totals18mo.tag}
             tone="positive"
             accent={b.accent}
+            hint="Capital recovery + Brightside + Reserve / Innovation, after the tithe"
             testId="kpi-agency-18mo"
           />
         </div>
@@ -341,12 +354,26 @@ export function ContractsPage() {
 
         <div className="mt-6">
           <SectionCard
-            title="Surplus deployment — three phases"
-            subtitle="Strict order: capital recovery → Brightside launch → Reserve / Innovation / Giving."
+            title="Surplus deployment — tithe first, then three phases"
+            subtitle={`Strict order: Tithe (${pct(a.tithePct)} off the top) → capital recovery → Brightside launch → Reserve / Innovation. Giving is what you decided, not what was left.`}
             tag={a.totals18mo.tag}
             accent={b.accent}
           >
             <div className="space-y-4">
+              <PhaseBlock
+                index={0}
+                title={`Tithe · ${pct(a.tithePct)} of revenue, off the top`}
+                tag={a.feeTag}
+                accent={b.accent}
+              >
+                <p className="text-sm text-muted-foreground">
+                  Giving is the first claim on revenue, paid before cost basis or any capital allocation. <strong className="text-foreground">{money(a.titheMonthly)}/mo</strong> for {a.termMonths} months = <strong className="text-foreground">{money(a.titheTotal)}</strong> over the engagement.
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Dave Ramsey discipline: the tithe is what you decided, not what was left. Locked the moment the fee is locked — capital recovery, Brightside, and Reserve / Innovation absorb the cost of that decision.
+                </p>
+              </PhaseBlock>
+
               <PhaseBlock
                 index={1}
                 title={`Capital Recovery (pure) · ${a.capitalRecoveryStartLabel} → ${a.capitalRecoveryEndLabel}`}
@@ -354,7 +381,7 @@ export function ContractsPage() {
                 accent={b.accent}
               >
                 <p className="text-sm text-muted-foreground">
-                  All agency surplus retires the {money(a.capitalRecoveryAmount)} debt stack. {a.capitalRecoveryDescription} <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this scenario's monthly surplus.
+                  All post-tithe agency surplus retires the {money(a.capitalRecoveryAmount)} debt stack. {a.capitalRecoveryDescription} <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this scenario's post-tithe monthly surplus.
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   Booked as <strong>"Capital Recovery"</strong> — distinct line, separate from compensation, separate from owner draw. NOT new income to the founder.
@@ -368,17 +395,17 @@ export function ContractsPage() {
                 accent={b.accent}
               >
                 <p className="text-sm text-muted-foreground">
-                  The agency surplus this month funds Brightside's pre-launch one-time costs in a single concentrated month: {money(a.brightsidePrelaunchSpend)}.
+                  The post-tithe agency surplus this month funds Brightside's pre-launch one-time costs in a single concentrated month: {money(a.brightsidePrelaunchSpend)}.
                 </p>
                 <p className="mt-2 text-sm">
                   Surplus available: <strong>{money(a.brightsideLaunchSurplus)}</strong> · Pre-launch spend: <strong>{money(a.brightsidePrelaunchSpend)}</strong> · Remainder: <strong className={a.brightsideLaunchRemainder >= 0 ? "text-[hsl(167_60%_22%)]" : "text-destructive"}>{money(a.brightsideLaunchRemainder)}</strong>
-                  {a.brightsideLaunchRemainder >= 0 ? " splits 50/25/25" : " — overrun comes out of next month's splits"}.
+                  {a.brightsideLaunchRemainder >= 0 ? ` splits ${a.reservePct}/${a.innovationPct}` : " — overrun comes out of next month's splits"}.
                 </p>
               </PhaseBlock>
 
               <PhaseBlock
                 index={3}
-                title={`Reserve-heavy split (50/25/25) · ${a.phase3Months} months`}
+                title={`Reserve / Innovation split (${a.reservePct}/${a.innovationPct}) · ${a.phase3Months} months`}
                 tag={a.phase3Tag}
                 accent={b.accent}
               >
@@ -394,11 +421,10 @@ export function ContractsPage() {
                   <tbody>
                     <SplitRow label="Reserve" pctVal={a.reservePct} monthly={a.reserveMonthly} total={a.reserveTotal} />
                     <SplitRow label="Innovation / R&D" pctVal={a.innovationPct} monthly={a.innovationMonthly} total={a.innovationTotal} />
-                    <SplitRow label="Giving" pctVal={a.givingPct} monthly={a.givingMonthly} total={a.givingTotal} />
                   </tbody>
                 </table>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Founder retains explicit option to shift more toward Innovation when it suits.
+                  Renormalised from 50/25/25 → {a.reservePct}/{a.innovationPct} when Giving moved to a tithe-first claim — the old 25 giving slice consolidated into Reserve. Founder retains explicit option to shift more toward Innovation when it suits.
                 </p>
               </PhaseBlock>
             </div>
@@ -413,10 +439,10 @@ export function ContractsPage() {
               ))}
             </ol>
           </SectionCard>
-          <SectionCard title="Giving — directional intent" accent={b.accent}>
+          <SectionCard title="Giving — directional intent (where the tithe goes)" accent={b.accent}>
             <p className="text-sm text-muted-foreground">{a.givingDirection}</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              Giving as % of contract value: <strong className="text-foreground">{pct((a.givingTotal / a.totals18mo.revenue) * 100, 1)}</strong>
+              Tithe rate: <strong className="text-foreground">{pct(a.tithePct)} of revenue</strong> · Locked monthly: <strong className="text-foreground">{money(a.titheMonthly)}</strong> · 18-mo total: <strong className="text-foreground">{money(a.titheTotal)}</strong>
             </p>
           </SectionCard>
         </div>
@@ -431,15 +457,15 @@ export function ContractsPage() {
             <table className="w-full text-sm">
               <tbody>
                 <PLRow label={`Revenue (${money(a.fee)} × ${a.termMonths})`} value={a.totals18mo.revenue} bold />
+                <PLRow label={`Tithe — Giving (${pct(a.tithePct)} off the top, first claim)`} value={-a.totals18mo.tithe} />
                 <PLRow label={`Payroll (${money(a.payrollTotal)} × ${a.termMonths})`} value={-a.totals18mo.payroll} />
                 <PLRow label="Overheads (3 mo Jun–Aug + 15 mo Sep+)" value={-a.totals18mo.overheads} />
-                <PLRow label="Total surplus deployed" value={a.totals18mo.surplusDeployed} bold tone="positive" />
+                <PLRow label="Total surplus deployed (post-tithe)" value={a.totals18mo.surplusDeployed} bold tone="positive" />
                 <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
                 <PLRow label="↳ Capital Recovery (Phase 1)" value={a.totals18mo.capitalRecovery} tone="muted" />
                 <PLRow label="↳ Brightside one-time pre-launch (Phase 2)" value={a.totals18mo.brightsidePrelaunch} tone="muted" />
                 <PLRow label="↳ Reserve (Phase 3)" value={a.totals18mo.reserve} tone="muted" />
                 <PLRow label="↳ Innovation / R&D (Phase 3)" value={a.totals18mo.innovation} tone="muted" />
-                <PLRow label="↳ Giving (Phase 3)" value={a.totals18mo.giving} tone="muted" />
               </tbody>
             </table>
           </SectionCard>

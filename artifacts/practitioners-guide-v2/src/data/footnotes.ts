@@ -64,15 +64,15 @@ export const CDP807_FOOTNOTES: Footnote[] = [
 export const AGENCY_FOOTNOTES: Footnote[] = [
   {
     id: "giving-ratio",
-    title: "Giving ratio honesty",
+    title: "Giving is tithe-shaped — first claim, not residual",
     body:
-      "The ~6.1% giving / contract ratio is honest math. The \"no owner take from agency\" structure did not increase community giving vs. the original 30/30/20/20 split — it redirected what would have been ongoing owner profit into the Reserve war chest. The founder chose this knowingly: salary protected, everyone made whole, build the future.",
+      "Giving is a flat 10% of revenue, taken first, before cost basis or capital recovery. Dave Ramsey discipline: the tithe is what you decided, not what was left. The earlier framing (Giving as a 25% slice of Phase 3 surplus) made the giving line elastic — it shrank if the fee shrank, slipped if capital recovery slipped, and competed with Reserve and Innovation for the same residual dollars. Tithe-first removes all three failure modes: the giving number is locked the moment the fee is locked, and the rest of the waterfall (capital recovery → Brightside → Reserve / Innovation) absorbs the cost of that decision. Phase 3 split renormalises 50/25/25 → 75/25 Reserve / Innovation as a result; the old 25 giving slice is consolidated into Reserve, consistent with the existing \"redirect to Reserve war chest\" pattern.",
   },
   {
     id: "buyer-dependency",
     title: "Buyer dependency",
     body:
-      "If the buyer is 807, the personal-compensation lines and giving ratio carry political weight that should be visible in any conversation with 807. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
+      "If the buyer is 807, the personal-compensation lines and the tithe-first deployment structure carry political weight that should be visible in any conversation with 807. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
   },
   {
     id: "deer-lake-travel",
@@ -90,13 +90,13 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
     id: "life-supports",
     title: "Life supports timing",
     body:
-      "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher surplus, which is why capital recovery clears purely in 3 months under Phase 1.",
+      "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher post-tithe surplus, which is why capital recovery clears faster in those early months.",
   },
   {
     id: "brightside-coupling",
-    title: "Cross-bucket: September agency surplus is fully claimed by Brightside",
+    title: "Cross-bucket: agency surplus funds Brightside Launch Month",
     body:
-      "If Brightside's pre-launch costs (engineer / audit / legal) overrun the locked $28k cap, the overrun comes out of October's Reserve / Innovation / Giving splits — not from the founder personally and not from the agency cost basis.",
+      "If Brightside's pre-launch costs (engineer / audit / legal) overrun the locked $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — not from the tithe, not from the founder personally, and not from the agency cost basis. The tithe is structurally protected because it sits above the entire surplus waterfall.",
     crossLink: { label: "See Brightside — pre-launch cost basis", href: "/brightside" },
   },
 ];
@@ -130,7 +130,7 @@ export const BRIGHTSIDE_FOOTNOTES: Footnote[] = [
     id: "agency-funding-coupling",
     title: "Cross-bucket: funded from agency surplus",
     body:
-      "Brightside's pre-launch one-time spend ($28k) is funded from agency surplus in the same month (Brightside Launch Month). If the agency engagement is delayed, Brightside launch is delayed in lockstep. If pre-launch costs overrun the $28k cap, the overrun comes out of the following month's Reserve / Innovation / Giving splits.",
+      "Brightside's pre-launch one-time spend ($28k) is funded from post-tithe agency surplus in the same month (Brightside Launch Month). If the agency engagement is delayed, Brightside launch is delayed in lockstep. If pre-launch costs overrun the $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — the tithe sits above the surplus waterfall and is unaffected.",
     crossLink: { label: "See Agency — Brightside Launch Month", href: "/contracts#agency" },
   },
   {

@@ -194,51 +194,67 @@ describe("V3 lean-team agency line — locked headline numbers", () => {
     expect(agency.overheadsSepOnwardTotal).toBe(12492);
   });
 
-  it("cost basis: $62,392 Jun–Aug, $64,492 Sep onward; surplus $27,608 / $25,508", () => {
+  it("tithe is 10% of revenue, top of waterfall: $9,000/mo, $162,000 over 18 months", () => {
+    expect(agency.tithePct).toBe(10);
+    expect(agency.titheMonthly).toBe(9000);
+    expect(agency.titheTotal).toBe(162000);
+    expect(agency.fee * 0.10).toBe(agency.titheMonthly);
+    expect(agency.titheMonthly * agency.termMonths).toBe(agency.titheTotal);
+  });
+
+  it("cost basis: $62,392 Jun–Aug, $64,492 Sep onward; post-tithe surplus $18,608 / $16,508", () => {
     expect(agency.costBasisJunAug).toBe(62392);
     expect(agency.costBasisSepOnward).toBe(64492);
-    expect(agency.monthlySurplusJunAug).toBe(27608);
-    expect(agency.monthlySurplusSepOnward).toBe(25508);
-    expect(agency.fee - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
-    expect(agency.fee - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
+    expect(agency.monthlySurplusJunAug).toBe(18608);
+    expect(agency.monthlySurplusSepOnward).toBe(16508);
+    // Surplus is post-tithe: fee − tithe − cost basis.
+    expect(agency.fee - agency.titheMonthly - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
+    expect(agency.fee - agency.titheMonthly - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
   });
 
-  it("capital recovery: $112k retired in ~4 months at the underpriced $90k/mo fee", () => {
+  it("capital recovery: $112k retired in ~7 months at the post-tithe $90k/mo fee", () => {
     expect(agency.capitalRecoveryAmount).toBe(112000);
-    expect(agency.capitalRecoveryMonths).toBe(4);
+    expect(agency.capitalRecoveryMonths).toBe(7);
     expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
-    expect(agency.capitalRecoveryEndLabel).toContain("Oct 2026");
+    expect(agency.capitalRecoveryEndLabel).toContain("Dec 2026");
   });
 
-  it("Brightside Launch Month: October 2026, $28k pre-launch, $2,492 short", () => {
-    expect(agency.brightsideLaunchMonthLabel).toContain("October 2026");
+  it("Brightside Launch Month: January 2027 (slipped three months by tithe-first), $28k spend, $11,492 short", () => {
+    expect(agency.brightsideLaunchMonthLabel).toContain("January 2027");
     expect(agency.brightsidePrelaunchSpend).toBe(28000);
-    expect(agency.brightsideLaunchSurplus).toBe(25508);
-    expect(agency.brightsideLaunchRemainder).toBe(-2492);
+    expect(agency.brightsideLaunchSurplus).toBe(16508);
+    expect(agency.brightsideLaunchRemainder).toBe(-11492);
     expect(
       agency.brightsideLaunchSurplus - agency.brightsidePrelaunchSpend,
     ).toBe(agency.brightsideLaunchRemainder);
   });
 
-  it("Phase 3 split is 50/25/25 across 13 months", () => {
-    expect(agency.reservePct).toBe(50);
+  it("Phase 3 split renormalises 50/25/25 → 75/25 (Reserve / Innovation only) across 10 months", () => {
+    expect(agency.reservePct).toBe(75);
     expect(agency.innovationPct).toBe(25);
-    expect(agency.givingPct).toBe(25);
-    expect(agency.reservePct + agency.innovationPct + agency.givingPct).toBe(100);
-    expect(agency.phase3Months).toBe(13);
-    expect(agency.phase3MonthlySurplus).toBe(25508);
-    expect(agency.reserveMonthly).toBe(12754);
-    expect(agency.innovationMonthly).toBe(6377);
-    expect(agency.givingMonthly).toBe(6377);
-    expect(agency.reserveMonthly + agency.innovationMonthly + agency.givingMonthly).toBe(
+    expect(agency.reservePct + agency.innovationPct).toBe(100);
+    expect(agency.phase3Months).toBe(10);
+    expect(agency.phase3MonthlySurplus).toBe(16508);
+    expect(agency.reserveMonthly).toBe(12381);
+    expect(agency.innovationMonthly).toBe(4127);
+    expect(agency.reserveMonthly + agency.innovationMonthly).toBe(
       agency.phase3MonthlySurplus,
     );
+    // Giving is no longer a Phase 3 split share — it's a tithe-first claim.
+    expect(agency).not.toHaveProperty("givingPct");
+    expect(agency).not.toHaveProperty("givingMonthly");
+    expect(agency).not.toHaveProperty("givingTotal");
   });
 
-  it("Phase 3 totals: ~$165,802 Reserve / ~$82,901 Innovation / ~$82,901 Giving", () => {
-    expect(agency.reserveTotal).toBe(165802);
-    expect(agency.innovationTotal).toBe(82901);
-    expect(agency.givingTotal).toBe(82901);
+  it("Phase 3 totals: $123,810 Reserve / $41,270 Innovation (Giving is taken at the top, not at Phase 3)", () => {
+    expect(agency.reserveTotal).toBe(123810);
+    expect(agency.innovationTotal).toBe(41270);
+  });
+
+  it("Phase 3 invariants: totals derive from monthly × months exactly; phase3MonthlySurplus matches Sep-onward post-tithe surplus", () => {
+    expect(agency.reserveTotal).toBe(agency.reserveMonthly * agency.phase3Months);
+    expect(agency.innovationTotal).toBe(agency.innovationMonthly * agency.phase3Months);
+    expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
   });
 
   it("practitioner salary: $324,000 across 18 months ($18k/mo × 18)", () => {
@@ -250,7 +266,7 @@ describe("V3 lean-team agency line — locked headline numbers", () => {
     );
   });
 
-  it("reserve has all four declared purposes, giving is NW Ontario / Dryden–Deer Lake", () => {
+  it("reserve has all four declared purposes; tithe (Giving) direction is NW Ontario / Dryden–Deer Lake", () => {
     expect(agency.reservePurposes).toBe(SHARED_RESERVE_PURPOSES);
     expect(agency.reservePurposes).toHaveLength(4);
     expect(agency.givingDirection).toBe(SHARED_GIVING_DIRECTION);
@@ -259,13 +275,19 @@ describe("V3 lean-team agency line — locked headline numbers", () => {
   });
 });
 
-describe("V3 18-month surplus deployment math — adds up to $465,444", () => {
+describe("V3 18-month surplus deployment math — tithe-first, adds up to $303,444", () => {
   const agency = SCENARIO_V3.contracts.agency;
   const totals = agency.totals18mo;
 
   it("revenue: $90k × 18 = $1,620,000", () => {
     expect(totals.revenue).toBe(1620000);
     expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("tithe: 10% of revenue × 18 mo = $162,000 (top of the waterfall)", () => {
+    expect(totals.tithe).toBe(162000);
+    expect(totals.revenue * 0.10).toBe(totals.tithe);
+    expect(totals.tithe).toBe(agency.titheTotal);
   });
 
   it("payroll: $52k × 18 = $936,000", () => {
@@ -280,19 +302,23 @@ describe("V3 18-month surplus deployment math — adds up to $465,444", () => {
     ).toBe(totals.overheads);
   });
 
-  it("surplus deployed: $1,620,000 − $936,000 − $218,556 = $465,444", () => {
-    expect(totals.surplusDeployed).toBe(465444);
-    expect(totals.revenue - totals.payroll - totals.overheads).toBe(465444);
+  it("surplus deployed (post-tithe): $1,620,000 − $162,000 − $936,000 − $218,556 = $303,444", () => {
+    expect(totals.surplusDeployed).toBe(303444);
+    expect(totals.revenue - totals.tithe - totals.payroll - totals.overheads).toBe(303444);
   });
 
-  it("deployment components reconcile to surplus within ~$7k (Nov-splits absorb $2,492 Oct overflow + Phase-3 month-boundary rounding)", () => {
+  it("deployment components reconcile to post-tithe surplus within ~$7k (Brightside-launch overrun absorbed by Feb splits + month-boundary rounding)", () => {
     const componentsSum =
       totals.capitalRecovery +
       totals.brightsidePrelaunch +
       totals.reserve +
-      totals.innovation +
-      totals.giving;
+      totals.innovation;
     expect(Math.abs(componentsSum - totals.surplusDeployed)).toBeLessThanOrEqual(7000);
+  });
+
+  it("Giving is no longer a Phase 3 deployment slice (totals18mo.giving is removed in favour of totals18mo.tithe)", () => {
+    expect(totals).not.toHaveProperty("giving");
+    expect(totals).toHaveProperty("tithe");
   });
 });
 
@@ -407,58 +433,81 @@ describe("V4 right-priced agency line — locked headline numbers", () => {
     expect(agency.overheadsSepOnwardTotal).toBe(SHARED_OVERHEADS_SEP_ONWARD_TOTAL);
   });
 
-  it("cost basis: $62,392 / $64,492; surplus $42,608 / $40,508", () => {
-    expect(agency.costBasisJunAug).toBe(62392);
-    expect(agency.costBasisSepOnward).toBe(64492);
-    expect(agency.monthlySurplusJunAug).toBe(42608);
-    expect(agency.monthlySurplusSepOnward).toBe(40508);
-    expect(agency.fee - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
-    expect(agency.fee - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
+  it("tithe is 10% of revenue, top of waterfall: $10,500/mo, $189,000 over 18 months", () => {
+    expect(agency.tithePct).toBe(10);
+    expect(agency.titheMonthly).toBe(10500);
+    expect(agency.titheTotal).toBe(189000);
+    expect(agency.fee * 0.10).toBe(agency.titheMonthly);
+    expect(agency.titheMonthly * agency.termMonths).toBe(agency.titheTotal);
   });
 
-  it("Sep-onward gross margin lands in the 35–40% target band (38.6%)", () => {
-    const marginPct = (agency.monthlySurplusSepOnward / agency.fee) * 100;
+  it("cost basis: $62,392 / $64,492; post-tithe surplus $32,108 / $30,008", () => {
+    expect(agency.costBasisJunAug).toBe(62392);
+    expect(agency.costBasisSepOnward).toBe(64492);
+    expect(agency.monthlySurplusJunAug).toBe(32108);
+    expect(agency.monthlySurplusSepOnward).toBe(30008);
+    // Surplus is post-tithe.
+    expect(agency.fee - agency.titheMonthly - agency.costBasisJunAug).toBe(agency.monthlySurplusJunAug);
+    expect(agency.fee - agency.titheMonthly - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
+  });
+
+  it("Sep-onward operating margin (pre-tithe) lands in the 35–40% target band (38.6%) — that's the structural right-priced metric", () => {
+    // Operating margin = fee minus operating cost basis only. The tithe is a
+    // policy decision sitting above the surplus waterfall and does not count
+    // against the engagement's "right-priced" margin.
+    const marginPct = ((agency.fee - agency.costBasisSepOnward) / agency.fee) * 100;
     expect(marginPct).toBeGreaterThanOrEqual(35);
     expect(marginPct).toBeLessThanOrEqual(45);
     expect(Math.round(marginPct * 10) / 10).toBe(38.6);
   });
 
-  it("capital recovery: $112k retired in 3 months (Jun–Aug 2026)", () => {
-    expect(agency.capitalRecoveryAmount).toBe(112000);
-    expect(agency.capitalRecoveryMonths).toBe(3);
-    expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
-    expect(agency.capitalRecoveryEndLabel).toContain("Aug 2026");
+  it("post-tithe surplus margin is ~28.6% (the headline for what's actually deployable after Giving)", () => {
+    const postTithePct = (agency.monthlySurplusSepOnward / agency.fee) * 100;
+    expect(Math.round(postTithePct * 10) / 10).toBe(28.6);
   });
 
-  it("Brightside Launch Month: September 2026 (right-priced surplus retires capital before Sep), $28k spend, $12,508 remainder", () => {
-    expect(agency.brightsideLaunchMonthLabel).toBe("September 2026");
+  it("capital recovery: $112k retired in 4 months (Jun–Sep 2026) at the post-tithe surplus", () => {
+    expect(agency.capitalRecoveryAmount).toBe(112000);
+    expect(agency.capitalRecoveryMonths).toBe(4);
+    expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
+    expect(agency.capitalRecoveryEndLabel).toContain("Sep 2026");
+  });
+
+  it("Brightside Launch Month: October 2026 (slipped one month by tithe-first), $28k spend, $2,008 remainder", () => {
+    expect(agency.brightsideLaunchMonthLabel).toContain("October 2026");
     expect(agency.brightsidePrelaunchSpend).toBe(28000);
-    expect(agency.brightsideLaunchSurplus).toBe(40508);
-    expect(agency.brightsideLaunchRemainder).toBe(12508);
+    expect(agency.brightsideLaunchSurplus).toBe(30008);
+    expect(agency.brightsideLaunchRemainder).toBe(2008);
     expect(
       agency.brightsideLaunchSurplus - agency.brightsidePrelaunchSpend,
     ).toBe(agency.brightsideLaunchRemainder);
   });
 
-  it("Phase 3 split is 50/25/25 across 14 months", () => {
-    expect(agency.reservePct).toBe(50);
+  it("Phase 3 split renormalises 50/25/25 → 75/25 (Reserve / Innovation only) across 13 months", () => {
+    expect(agency.reservePct).toBe(75);
     expect(agency.innovationPct).toBe(25);
-    expect(agency.givingPct).toBe(25);
-    expect(agency.reservePct + agency.innovationPct + agency.givingPct).toBe(100);
-    expect(agency.phase3Months).toBe(14);
-    expect(agency.phase3MonthlySurplus).toBe(40508);
-    expect(agency.reserveMonthly).toBe(20254);
-    expect(agency.innovationMonthly).toBe(10127);
-    expect(agency.givingMonthly).toBe(10127);
-    expect(agency.reserveMonthly + agency.innovationMonthly + agency.givingMonthly).toBe(
+    expect(agency.reservePct + agency.innovationPct).toBe(100);
+    expect(agency.phase3Months).toBe(13);
+    expect(agency.phase3MonthlySurplus).toBe(30008);
+    expect(agency.reserveMonthly).toBe(22506);
+    expect(agency.innovationMonthly).toBe(7502);
+    expect(agency.reserveMonthly + agency.innovationMonthly).toBe(
       agency.phase3MonthlySurplus,
     );
+    expect(agency).not.toHaveProperty("givingPct");
+    expect(agency).not.toHaveProperty("givingMonthly");
+    expect(agency).not.toHaveProperty("givingTotal");
   });
 
-  it("Phase 3 totals: $283,556 Reserve / $141,778 Innovation / $141,778 Giving", () => {
-    expect(agency.reserveTotal).toBe(283556);
-    expect(agency.innovationTotal).toBe(141778);
-    expect(agency.givingTotal).toBe(141778);
+  it("Phase 3 totals: $292,578 Reserve / $97,526 Innovation (Giving taken at the top as tithe)", () => {
+    expect(agency.reserveTotal).toBe(292578);
+    expect(agency.innovationTotal).toBe(97526);
+  });
+
+  it("Phase 3 invariants: totals derive from monthly × months exactly; phase3MonthlySurplus matches Sep-onward post-tithe surplus", () => {
+    expect(agency.reserveTotal).toBe(agency.reserveMonthly * agency.phase3Months);
+    expect(agency.innovationTotal).toBe(agency.innovationMonthly * agency.phase3Months);
+    expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
   });
 
   it("practitioner salary unchanged: $324,000 across 18 months ($18k/mo × 18)", () => {
@@ -476,13 +525,19 @@ describe("V4 right-priced agency line — locked headline numbers", () => {
   });
 });
 
-describe("V4 18-month surplus deployment math — adds up to $735,444", () => {
+describe("V4 18-month surplus deployment math — tithe-first, adds up to $546,444", () => {
   const agency = SCENARIO_V4.contracts.agency;
   const totals = agency.totals18mo;
 
   it("revenue: $105k × 18 = $1,890,000", () => {
     expect(totals.revenue).toBe(1890000);
     expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("tithe: 10% of revenue × 18 mo = $189,000 (top of the waterfall)", () => {
+    expect(totals.tithe).toBe(189000);
+    expect(totals.revenue * 0.10).toBe(totals.tithe);
+    expect(totals.tithe).toBe(agency.titheTotal);
   });
 
   it("payroll: $52k × 18 = $936,000 (same as V3)", () => {
@@ -499,24 +554,34 @@ describe("V4 18-month surplus deployment math — adds up to $735,444", () => {
     expect(totals.overheads).toBe(SCENARIO_V3.contracts.agency.totals18mo.overheads);
   });
 
-  it("surplus deployed: $1,890,000 − $936,000 − $218,556 = $735,444", () => {
-    expect(totals.surplusDeployed).toBe(735444);
-    expect(totals.revenue - totals.payroll - totals.overheads).toBe(735444);
+  it("surplus deployed (post-tithe): $1,890,000 − $189,000 − $936,000 − $218,556 = $546,444", () => {
+    expect(totals.surplusDeployed).toBe(546444);
+    expect(totals.revenue - totals.tithe - totals.payroll - totals.overheads).toBe(546444);
   });
 
-  it("V4 surplus exceeds V3 by $270,000 (the price-discipline delta on the same roster)", () => {
-    // 18 × $15,000 fee delta = $270,000 more surplus deployed at the same payroll.
-    expect(totals.surplusDeployed - SCENARIO_V3.contracts.agency.totals18mo.surplusDeployed).toBe(270000);
+  it("V4 post-tithe surplus exceeds V3 by $243,000 (price-discipline delta on the same roster, after the larger tithe)", () => {
+    // 18 × $15,000 fee delta = $270,000 more revenue.
+    // 18 × $1,500 tithe delta = $27,000 more giving.
+    // Net surplus delta = $270,000 − $27,000 = $243,000.
+    expect(totals.surplusDeployed - SCENARIO_V3.contracts.agency.totals18mo.surplusDeployed).toBe(243000);
   });
 
-  it("deployment components reconcile to surplus within ~$30k (Aug trickle + Sep launch remainder)", () => {
+  it("V4 tithe exceeds V3 tithe by $27,000 (10% of the $270k revenue delta)", () => {
+    expect(totals.tithe - SCENARIO_V3.contracts.agency.totals18mo.tithe).toBe(27000);
+  });
+
+  it("deployment components reconcile to post-tithe surplus within ~$30k (Sep cap-recovery trickle + Oct launch remainder)", () => {
     const componentsSum =
       totals.capitalRecovery +
       totals.brightsidePrelaunch +
       totals.reserve +
-      totals.innovation +
-      totals.giving;
+      totals.innovation;
     expect(Math.abs(totals.surplusDeployed - componentsSum)).toBeLessThanOrEqual(30000);
+  });
+
+  it("Giving is no longer a Phase 3 deployment slice (totals18mo.giving is removed in favour of totals18mo.tithe)", () => {
+    expect(totals).not.toHaveProperty("giving");
+    expect(totals).toHaveProperty("tithe");
   });
 });
 

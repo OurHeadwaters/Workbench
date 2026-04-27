@@ -133,8 +133,22 @@ export interface AgencyScenario {
   overheadsSepOnwardTotal: number;
   overheadsTag: SourceTag;
 
+  /**
+   * Tithe — top-of-waterfall first claim on revenue. 10% off the top, paid
+   * before cost basis or any capital allocation. Dave Ramsey discipline:
+   * the tithe is what you decided, not what was left. Reframed from a
+   * residual Phase 3 split share on 2026-04-27.
+   */
+  tithePct: number;
+  titheMonthly: number;
+  titheTotal: number;
+
   costBasisJunAug: number;
   costBasisSepOnward: number;
+  /**
+   * Monthly surplus AFTER tithe — fee minus tithe minus operating cost basis.
+   * The surplus that flows into capital recovery → Brightside launch → Phase 3.
+   */
   monthlySurplusJunAug: number;
   monthlySurplusSepOnward: number;
   costBasisTag: SourceTag;
@@ -154,27 +168,27 @@ export interface AgencyScenario {
 
   phase3Months: number;
   phase3MonthlySurplus: number;
+  /** Phase 3 split is now Reserve / Innovation only — Giving is taken at the top as a tithe. */
   reservePct: number;
   innovationPct: number;
-  givingPct: number;
   reserveMonthly: number;
   innovationMonthly: number;
-  givingMonthly: number;
   reserveTotal: number;
   innovationTotal: number;
-  givingTotal: number;
   phase3Tag: SourceTag;
 
   totals18mo: {
     revenue: number;
+    /** 18-month tithe total — 10% of revenue, paid first. */
+    tithe: number;
     payroll: number;
     overheads: number;
+    /** Surplus AFTER tithe + payroll + overheads. */
     surplusDeployed: number;
     capitalRecovery: number;
     brightsidePrelaunch: number;
     reserve: number;
     innovation: number;
-    giving: number;
     tag: SourceTag;
   };
 
@@ -182,6 +196,7 @@ export interface AgencyScenario {
   practitionerSalaryTag: SourceTag;
 
   reservePurposes: string[];
+  /** Where the Tithe goes — community-development direction shared across V3 and V4. */
   givingDirection: string;
 
   /**
