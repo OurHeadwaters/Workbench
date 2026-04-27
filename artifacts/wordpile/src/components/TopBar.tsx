@@ -1,6 +1,7 @@
 import { useLocation, Link } from "wouter";
-import { Layers, Cloud, CloudOff, LogOut } from "lucide-react";
+import { Layers, CloudOff, LogOut } from "lucide-react";
 import { useAuth, useUser, useClerk, ClerkLoaded } from "@clerk/react";
+import { SyncStatusPill } from "@/components/SyncStatusPill";
 
 // `clerkEnabled` is required (not optional) so callers can't accidentally
 // render this component without declaring whether Clerk is wired up. When
@@ -84,14 +85,14 @@ function SignedInBar() {
     "Signed in";
   return (
     <div className="flex items-center gap-3">
+      <SyncStatusPill />
       <span
-        className="inline-flex items-center gap-2 text-sm"
+        className="hidden sm:inline text-sm"
         style={{ color: "var(--color-stone)" }}
         data-testid="text-current-user"
-        title="Your piles are syncing to your account"
+        title="Signed in to your account"
       >
-        <Cloud size={14} strokeWidth={1.6} />
-        <span className="hidden sm:inline">{email}</span>
+        {email}
       </span>
       <button
         type="button"
