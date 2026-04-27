@@ -16,22 +16,22 @@ export default function WhyStoresFailSupplyOps() {
         <div className="flex items-baseline justify-between mb-[2.5vh]">
           <div className="max-w-[78%]">
             <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
-              Why most northern stores fail · getting groceries here & running the store
+              Why northern stores fail · getting it here & running it
             </div>
             <h2 className="font-display text-[3.4vw] leading-[1.05] tracking-tight text-primary font-medium">
               Getting groceries here. Running the store.
               <span className="italic font-normal text-accent">
                 {" "}
-                Both can break a northern store fast.
+                Either one can break it.
               </span>
             </h2>
           </div>
           <div className="text-right shrink-0 pl-[2vw] max-w-[24vw]">
             <div className="font-display text-[1.6vw] leading-tight text-primary font-medium">
-              Ways stores break here
+              Ways stores break
             </div>
             <div className="font-mono uppercase tracking-[0.18em] text-[0.95vw] text-muted mt-[0.6vh]">
-              <span className="text-accent font-semibold">{supply.length + operations.length}</span> named in this group
+              <span className="text-accent font-semibold">{supply.length + operations.length}</span> in this group
             </div>
           </div>
         </div>

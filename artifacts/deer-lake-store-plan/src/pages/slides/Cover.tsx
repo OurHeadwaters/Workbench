@@ -30,7 +30,7 @@ export default function Cover() {
           </div>
           <div className="text-right">
             <div className="font-mono uppercase tracking-[0.22em] text-[1vw] opacity-80">
-              A plan for the store · Spring 2026
+              Spring 2026
             </div>
             <div className="font-display italic text-[1vw] opacity-75 mt-[0.4vh]">
               We've always known how to fix it. Now we can.
@@ -52,7 +52,7 @@ export default function Cover() {
             </span>
           </h1>
           <div className="mt-[3vh] font-display italic text-[2.4vw] opacity-95">
-            A plan for the contractor and the band council to read together
+            A plan to read together. Contractor and council.
           </div>
         </div>
 
@@ -63,9 +63,8 @@ export default function Cover() {
               style={{ background: "rgba(244,237,224,0.5)" }}
             />
             <div className="font-body text-[1.45vw] leading-[1.5] opacity-95">
-              More of Deer Lake's grocery money stays in Deer Lake.
-              Fewer trips to Winnipeg. A store that feels like home
-              from the day it opens.
+              More grocery money stays home.
+              A store that feels like home from day one.
             </div>
           </div>
           <div className="text-right">
@@ -75,7 +74,7 @@ export default function Cover() {
             <div className="font-display text-[1.8vw] leading-tight">
               The contractor running the store
               <div className="font-body font-light text-[1.1vw] opacity-80 mt-[0.4vh]">
-                An operating plan you don't have to write yourself · Deer Lake, Ontario
+                An operating plan you don't have to write yourself
               </div>
             </div>
           </div>

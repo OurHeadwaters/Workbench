@@ -33,7 +33,7 @@ export default function Prologue() {
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-75">
-            Is this the right direction?
+            Founder's voice
           </div>
         </div>
 

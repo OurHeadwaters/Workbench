@@ -617,7 +617,7 @@ export default function FirstReserveThenTheNext() {
             What I believe
           </div>
           <div className="font-display italic text-[2vw] leading-[1.3]">
-            Northern reserves need things that work as well as anything down south. Built on what is actually here. With materials and methods that fit the place.
+            Northern reserves need things that work as well as anything down south. Built on what's here.
             <span className="not-italic font-medium"> Not less. Different.</span>
           </div>
         </div>
@@ -626,20 +626,20 @@ export default function FirstReserveThenTheNext() {
           <div className="rounded-[0.4vw] p-[1.8vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1vw] text-accent font-semibold mb-[1vh]">THE SOFTWARE</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              Built once. Owned by the band that bought it. Used again on the next reserve.
+              Built once. Owned by the band. Used again on the next reserve.
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              The till, the price page, the household lookup, the system that works offline, the bookkeeping pipeline. The code and the data stay with the band that ordered it. The next community starts day one with a working system. Not a slide deck.
+              Till, price page, household lookup, offline mode, bookkeeping. The next community starts day one with a working system.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.8vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1vw] text-accent font-semibold mb-[1vh]">THE TRAINING</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">
-              The Headwaters specialist travels from reserve to reserve. Deer Lake people look after Deer Lake.
+              The specialist travels. Deer Lake people look after Deer Lake.
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              The Headwaters specialist is the one who carries the standards from store to store. They show up at reserve number two, number three, number four. They install Codetry, our way of running a store, until it is normal there too. The Deer Lake people who finish the training look after their own store. They are not sent on the road. An Indigenous education partner runs every install with us. The next reserve does not start from scratch. They start from what worked here.
+              The Headwaters specialist carries the standards from store to store. Deer Lake people who finish training look after their own store. They are not sent on the road.
             </div>
           </div>
 
@@ -649,7 +649,7 @@ export default function FirstReserveThenTheNext() {
               The patterns travel. The pay-back-the-difference promise travels.
             </div>
             <div className="font-body text-[1vw] text-muted leading-[1.45]">
-              Public price page. Household lookup. Year-end check by an outside reviewer. The pay-back-the-difference clause. The way of saying "you can see what we charged and what we delivered". That is the part the next council can hold us to from day one.
+              Public price page. Household lookup. Year-end review. Pay-back-the-difference clause. The next council holds us to it from day one.
             </div>
           </div>
         </div>
@@ -663,15 +663,15 @@ export default function FirstReserveThenTheNext() {
               What Headwaters earns · per install
             </div>
             <div className="font-body text-[0.95vw] text-primary leading-[1.45]">
-              <span className="font-semibold">The software is built once and used again. The install is paid at a premium rate.</span> The receiving reserve pays{" "}
+              <span className="font-semibold">Software built once. Install paid at premium rate.</span> The receiving reserve pays{" "}
               <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                {formatDollars(onsiteDayRate)} an on-site day · {formatDollars(remoteDayRate)} a remote day · {formatCompactK(retainerAnnual)} a year for ongoing support
+                {formatDollars(onsiteDayRate)}/on-site day · {formatDollars(remoteDayRate)}/remote day · {formatCompactK(retainerAnnual)}/year support
               </span>
-              . A {INSTALL_WEEKS}-week install (about {ON_SITE_DAYS} days on-site and {REMOTE_DAYS} days remote) lands at{" "}
+              . A {INSTALL_WEEKS}-week install (~{ON_SITE_DAYS} on-site + ~{REMOTE_DAYS} remote) lands at{" "}
               <span className="font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                about {formatPlanningK(installPerReserve)} per reserve
+                ~{formatPlanningK(installPerReserve)} per reserve
               </span>
-              . Plus the yearly support fee. <span className="text-muted">Flights, lodging, food are passed through at our actual cost. They are not in the fee. Try your own travel costs in the panel on the right.</span>
+              . Plus yearly support. <span className="text-muted">Travel passed through at cost. Try your own numbers on the right.</span>
             </div>
           </div>
 

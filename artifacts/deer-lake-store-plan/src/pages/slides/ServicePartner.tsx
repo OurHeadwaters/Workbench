@@ -46,48 +46,48 @@ const accountabilityMeasures: AccountabilityMeasure[] = [
 const productLayers: Layer[] = [
   {
     label: "Software",
-    headline: "Built by Headwaters. Owned by the band. Used again on the next reserve.",
+    headline: "Built by Headwaters. Owned by the band.",
     detail:
-      "The till, the price page, the household lookup, the system that works offline, the bookkeeping pipeline. Deer Lake owns the code and the data. The next reserve does not pay to build the software again. They pay the Headwaters specialist a premium day rate to install the standards that make it work.",
+      "Till, price page, household lookup, offline mode, bookkeeping. Deer Lake owns the code and the data.",
   },
   {
     label: "Tools, bundled and resold",
-    headline: "Till, accounting, communications, logistics. Tested up north. Bundled together.",
+    headline: "Tested up north. Bundled together.",
     detail:
-      "We do not invent what already exists. We resell the tools that we have tested up here. We bundle them into a system that works. Our markup sits in the open. There is no hidden charge in the monthly fee.",
+      "We resell tools we've tested up here. Markup sits in the open. No hidden charge in the monthly fee.",
   },
   {
     label: "Training programs",
-    headline: "Teach band staff to run the system at their own pace.",
+    headline: "Band staff learn to run the system.",
     detail:
-      "Modules taught by the Headwaters specialist, with an Indigenous education partner. The course belongs to the people who took it. No outside workers brought in. No one flown in to live here. The store keeps working after we leave because the people running it know how it works.",
+      "Headwaters specialist with an Indigenous education partner. The store keeps working after we leave.",
   },
 ];
 
 const staysItems: StaysItem[] = [
   {
     label: "Public price page",
-    amount: "Live by month 3 · being used by month 6",
+    amount: "Live by month 3 · used by month 6",
     detail:
-      "Anyone in Deer Lake can see what the store paid, what it sells at, and what the store keeps. Line by line. The openness the council has been asking for.",
+      "Anyone in Deer Lake can see what the store paid, what it sells at, and what it keeps. Line by line.",
   },
   {
     label: "Household price lookup",
     amount: "Live by month 9",
     detail:
-      "Each family can see what they spent on groceries this month, compared to the baseline. The federal grocery help money shows up clearly. The council can defend the prices to anyone who asks.",
+      "Each family sees what they spent this month vs. the baseline. The federal help shows up clearly.",
   },
   {
     label: "The written guide for running the store",
     amount: "Written down as we go",
     detail:
-      "How to run the store. How to hire. The financial model. The open-records system. The technology. The accountability rules. All written down as we build them. The band runs the store from the written guide. Not from memory.",
+      "How to run, hire, keep books, use the open-records system. The band runs from the guide, not from memory.",
   },
   {
     label: "Year-end check on what we delivered",
-    amount: "Outside reviewer · once a year · pay-back-the-difference clause",
+    amount: "Outside reviewer · pay-back-the-difference clause",
     detail:
-      "An outside reviewer checks what we delivered against what we charged. If what we delivered to Deer Lake is worth less than what we charged, we credit the difference back against next year's contract. In writing.",
+      "If what we delivered is worth less than what we charged, we credit the difference back. In writing.",
   },
 ];
 
@@ -163,7 +163,7 @@ export default function ServicePartner() {
               How Headwaters charges · the full team · what the 35% put back in pays for
             </div>
             <div className="font-body text-[0.85vw] leading-[1.4] mb-[0.6vh] opacity-95">
-              It costs us <span className="font-semibold">$69,700 a month</span> to run. We add <span className="font-semibold">$24,300 a month (35%)</span> — that's the top-up we put back into the store. The total is <span className="font-semibold">about $94,000 a month</span>. <span className="opacity-85">What Deer Lake is billed depends on which plan the council picks (floor $60,000 → recommended $90,000 → scale $125,000). This replaces today's $35,000-a-month software-only contract. Same client. Same software. Now with a full team and accountability around it.</span>
+              It costs us <span className="font-semibold">$69,700 a month</span>. We add <span className="font-semibold">$24,300 a month (35%)</span> back into the store. Total <span className="font-semibold">about $94,000 a month</span>. <span className="opacity-85">Council picks the plan: floor $60,000 → recommended $90,000 → scale $125,000. Replaces today's $35,000-a-month software-only contract.</span>
             </div>
             <div className="grid grid-cols-2 gap-x-[0.8vw] gap-y-[0.3vh] font-body text-[0.72vw] leading-[1.35] opacity-90" style={{ fontVariantNumeric: "tabular-nums" }}>
               {reinvestBuckets.map((b) => (

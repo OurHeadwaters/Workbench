@@ -14,10 +14,10 @@ export default function StaffingModel() {
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[34vw]">
             <div className="font-mono uppercase tracking-[0.22em] text-[1.05vw] text-muted mb-[0.6vh]">
-              The honest design rule
+              The design rule
             </div>
             <div className="font-body text-[1.25vw] text-primary leading-[1.35]">
-              Hunting season. Funerals. Hockey tournaments. Bad weather days. Most northern stores fall apart because they need everyone to show up every day. This one is built the other way.
+              Most northern stores fall apart because they need everyone to show up every day. This one is built the other way.
             </div>
           </div>
         </div>
@@ -31,11 +31,11 @@ export default function StaffingModel() {
               Whose store this is
             </div>
             <div className="font-display text-[1.5vw] leading-tight text-primary font-medium">
-              The band runs the store. Headwaters delivers the software, the training, and the tools.
+              The band runs the store. Headwaters delivers the software and training.
             </div>
           </div>
           <div className="font-body text-[1vw] text-text leading-[1.45] max-w-[52vw]">
-            Hiring, scheduling, day-to-day decisions, ownership. Those belong to the band. Software, training, open-records tools, monthly visits. Those come from Headwaters. The shipping comes from the family-run cold truck. That truck already runs Thunder Bay to Sioux Lookout to Dryden every two weeks. <span className="text-primary font-semibold">Nobody flies in to run the store. Nobody needs to.</span>
+            Hiring, scheduling, daily decisions, ownership: the band. Software, training, monthly visits: Headwaters. Shipping: the family cold truck already on the route. <span className="text-primary font-semibold">Nobody flies in to run the store.</span>
           </div>
         </div>
 
@@ -43,10 +43,10 @@ export default function StaffingModel() {
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">EVERYONE LEARNS EVERY JOB</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              Everyone can cover the store floor
+              Anyone can cover the floor
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              The till, the cooler, the stockroom, the daily books at a basic level. If two people do not show up on a Tuesday, the store still opens.
+              Till, cooler, stockroom, daily books. If two people don't show up Tuesday, the store still opens.
             </div>
           </div>
 
@@ -56,17 +56,17 @@ export default function StaffingModel() {
               Paid by the job, called in when needed
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              A small group of community members called in for big restock days and market tables. The work goes to local people. No outside workers brought in. No one flown in to live here and run the store.
+              Community members on call for big restock days and market tables. The work stays local.
             </div>
           </div>
 
           <div className="rounded-[0.4vw] p-[1.4vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[0.95vw] text-accent font-semibold mb-[1vh]">SOFTWARE COVERS THE GAPS</div>
             <div className="font-display text-[1.4vw] leading-tight text-primary font-medium mb-[1vh]">
-              The store keeps running when nobody is on the floor
+              The store runs when nobody is on the floor
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              Reordering, closing the day, tracking shipments, daily books. The software does as much of this as it can. The till works without internet. The manager does not need to be in the building to know what is happening.
+              Reordering, closing the day, tracking shipments, daily books. The till works without internet.
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export default function StaffingModel() {
               Open shifts go to whoever picks them up
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              The board lists open shifts and what each shift pays. People pick up the ones that fit their week. Nobody is forced into a shift they could not make. The store does not stay closed waiting for someone.
+              The board lists open shifts and what each one pays. People pick the ones that fit their week.
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function StaffingModel() {
               Built around community life
             </div>
             <div className="font-body text-[0.95vw] text-muted leading-[1.45]">
-              Hunting season. Funerals. Hockey tournaments. Treaty days. The hours bend around community life. The store does not run on a southern work week.
+              Hunting season. Funerals. Hockey tournaments. Treaty days. Hours bend around community life.
             </div>
           </div>
         </div>
@@ -97,30 +97,30 @@ export default function StaffingModel() {
         >
           <div className="col-span-3">
             <div className="font-mono uppercase tracking-[0.22em] text-[0.85vw] mb-[0.4vh]" style={{ color: "#e9c8a8" }}>
-              The Headwaters team that delivers
+              The Headwaters team
             </div>
             <div className="font-display text-[1.25vw] leading-tight font-medium">
-              On the ground often enough to stay close to the work. Not so often the band starts to need us.
+              Close to the work. Not so close the band starts to need us.
             </div>
           </div>
           <div className="col-span-9 grid grid-cols-3 gap-x-[1.2vw] gap-y-[0.5vh] font-body text-[0.78vw] leading-[1.35] opacity-95">
             <div>
-              <span className="font-semibold">Headwaters specialist.</span> Builds the software. Delivers the training. Visits Deer Lake every month.
+              <span className="font-semibold">Headwaters specialist.</span> Builds the software. Visits Deer Lake monthly.
             </div>
             <div>
-              <span className="font-semibold">Dryden hub worker.</span> Based at our Dryden shop. Pay is part salary, part by the job. Handles the Deer Lake orders and the phone.
+              <span className="font-semibold">Dryden hub worker.</span> Handles Deer Lake orders and the phone.
             </div>
             <div>
-              <span className="font-semibold">Bookkeeper, part-time, remote.</span> Matches the records. Closes the month. Prepares payroll. Not on the store's payroll.
+              <span className="font-semibold">Bookkeeper, remote.</span> Closes the month. Prepares payroll.
             </div>
             <div>
-              <span className="font-semibold">A technical advisor we keep on call.</span> Reviews the software every three months. Checks any code that touches money before it goes live. Backup so the store does not depend on one person.
+              <span className="font-semibold">Technical advisor on call.</span> Reviews the software quarterly. Checks any code that touches money.
             </div>
             <div>
-              <span className="font-semibold">Training partner.</span> An Indigenous educator. Runs three groups of trainees a year. Trains the trainers from the start.
+              <span className="font-semibold">Training partner.</span> An Indigenous educator. Trains the trainers from day one.
             </div>
             <div>
-              <span className="font-semibold">Local Deer Lake group.</span> Paid by the job for big days and market tables. The jobs stay local. Nobody is flown in to live here.
+              <span className="font-semibold">Local on-call group.</span> Paid by the job. Jobs stay local.
             </div>
           </div>
         </div>
