@@ -105,7 +105,7 @@ const partII: Part = {
   roman: "II",
   title: "Adjacent Disciplines",
   blurb:
-    "Three older disciplines codetry gets confused with — all honoured, all doing different work.",
+    "Four older disciplines codetry gets confused with — all honoured, all doing different work.",
   chapters: [
     {
       id: "2-1",
@@ -226,6 +226,53 @@ const partII: Part = {
           kind: "callout",
           text:
             "Conway and DDD ask whose org shapes the system. Codetry asks whose word survives the schema — and treats every translation away from it as drift.",
+        },
+      ],
+    },
+    {
+      id: "2-4",
+      number: "2.4",
+      partRoman: "II",
+      partLabel: "II · Adjacent Disciplines",
+      title: "Different from type-driven design",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The fourth discipline codetry gets confused with — and the one that has the strongest pull on readers from the typed-functional tradition — is type-driven design and its rallying cry, *make illegal states unrepresentable*. Yaron Minsky's essays out of Jane Street, Richard Feldman's Elm work, and Scott Wlaschin's *Domain Modeling Made Functional* are all in this room. The conviction is the same across the lineage: the model is the architecture, and the model is whatever the type system lets you say.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry shares that conviction. Both disciplines accept that the model carries the weight, and both refuse the older arrangement where the model is a thin layer of records and the architecture lives in the procedures around them.",
+        },
+        {
+          kind: "subhead",
+          text: "Type-driven design puts the load on the type.",
+        },
+        {
+          kind: "para",
+          text:
+            "The discipline pushes every invariant the domain demands into the type signature. A non-empty list is its own type. A validated email is its own type. An *Order* that has been *Paid* is structurally different from an *Order* that has not, so the function that ships it cannot be called on the unpaid one. The type checker becomes the first reader of the domain, and the bugs that slip past it are the only bugs left.",
+        },
+        {
+          kind: "subhead",
+          text: "Codetry puts the load on the name.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry agrees that the model carries the architecture, and then asks the harder question: *whose word is on the type?* A perfectly typed `HouseholdContainer` with a non-empty `Items` list and an immutable `CreatedAt` is, by every type-driven measure, a beautiful model. It is also, by codetry's measure, drifted — because the community said *saltbox*, and the type system has quietly translated the word into something more general on the way to making the invariants legible. The illegal state was made unrepresentable; the load-bearing noun was made unrecognisable.",
+        },
+        {
+          kind: "para",
+          text:
+            "Type-driven design verifies the model against the compiler. Codetry verifies the model against the person who handed you the word. Both are *don't trust; verify* moves; they verify against different witnesses.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Type-driven design makes illegal states unrepresentable. Codetry makes drifted nouns unshippable — and treats a perfectly typed model with the wrong word as drift the type checker can't see.",
         },
       ],
     },
