@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React from "react";
 import {
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -167,7 +168,56 @@ export default function FrontPage() {
           </Pressable>
         </View>
 
-        <View style={{ height: 48 }} />
+        <View style={{ height: 28 }} />
+
+        <Text
+          style={[
+            styles.eyebrow,
+            { color: c.mutedForeground, fontFamily: MONO },
+          ]}
+        >
+          COMPANION TOOLS
+        </Text>
+        <Pressable
+          onPress={() => Linking.openURL("/wordpile/")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              Wordpile
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              Per-community word inventory: load-bearing, interior, avoid.
+              Check drafts against the pile.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
+
+        <View style={{ height: 32 }} />
 
         <Text
           style={[
@@ -305,5 +355,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     fontStyle: "italic",
+  },
+  toolRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  toolTitle: {
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  toolBlurb: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 2,
+  },
+  toolArrow: {
+    fontSize: 18,
+    letterSpacing: 1,
   },
 });

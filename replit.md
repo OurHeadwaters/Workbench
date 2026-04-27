@@ -71,6 +71,14 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
 
 - **`artifacts/mockup-sandbox`**: Internal design canvas.
 
+- **Wordpile (`artifacts/wordpile`)**:
+    - Standalone React + Vite + Tailwind v4 web tool routed at `/wordpile/`, no backend, all state in `localStorage` (`wordpile:v1` for piles/words; `wordpile:draft:<pileId>` for per-pile draft text).
+    - Per-community word inventory with three buckets (load-bearing / interior / avoid) plus an "unsorted" bucket; supports free-entry, paste-to-extract, in-place editing, and safer-alternative copy on avoid words.
+    - "Check my draft" view tokenizes a pasted draft and inline-flags avoid words (with safer alternatives in tooltips), highlights load-bearing words used, and lists missing load-bearing words.
+    - Wouter routing: `/wordpile/`, `/wordpile/pile/:id`, `/wordpile/pile/:id/check`. Visual identity matches the Codetry Handbook (cream `#f4ede0`, ink `#1f3d2e`, Lora serif, JetBrains Mono).
+    - Reachable from a "COMPANION TOOLS · Wordpile" tile on the Codetry Handbook front page.
+    - Note: localPort is pinned to `25433` because manually-created artifacts must reuse a port already mapped in `.replit` `[[ports]]` (cannot edit `.replit`).
+
 **Database Schema (`lib/db/src/schema/library.ts`):**
 - `subjects`, `project_buckets`, `producers`, `contributors` (taxonomies).
 - `library_entries` (unique partial index on `content_hash`).

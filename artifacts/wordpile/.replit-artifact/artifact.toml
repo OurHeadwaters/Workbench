@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/wordpile/"
+title = "Wordpile"
+version = "1.0.0"
+id = "artifacts/wordpile"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/wordpile/" ]
+localPort = 25433
+
+[services.development]
+run = "pnpm --filter @workspace/wordpile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/wordpile", "run", "build" ]
+publicDir = "artifacts/wordpile/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25433"
+BASE_PATH = "/wordpile/"
