@@ -14,6 +14,19 @@ async function freshStore(): Promise<{
   return { WordpileStore: mod.WordpileStore, parsePileExport: mod.parsePileExport };
 }
 
+// Hoisted at module scope so vitest's mock-hoisting picks it up before the
+// store module evaluates its `import * as cloud from "./cloudSync"` line.
+// Used by the "cloud delete propagation" suite below.
+const cloudMocks = vi.hoisted(() => ({
+  setCloudUser: vi.fn(),
+  pushCreatePile: vi.fn(),
+  pushRenamePile: vi.fn(),
+  pushDeletePile: vi.fn(),
+  pushAddWord: vi.fn(),
+  pushUpdateWord: vi.fn(),
+  pushDeleteWord: vi.fn(),
+}));
+
 describe("WordpileStore — snapshot stability", () => {
   let WordpileStore: WordpileStoreType;
 
@@ -198,10 +211,9 @@ describe("WordpileStore — deleteWord", () => {
 
 describe("WordpileStore — serializePile / importPile (round-trip)", () => {
   let WordpileStore: WordpileStoreType;
-  let parsePileExport: (raw: string) => PileExport | null;
 
   beforeEach(async () => {
-    ({ WordpileStore, parsePileExport } = await freshStore());
+    ({ WordpileStore } = await freshStore());
   });
 
   it("exports a pile with all word fields, then re-imports as a new pile", () => {
@@ -363,5 +375,51 @@ describe("parsePileExport", () => {
     const parsed = parsePileExport(raw)!;
     expect(parsed.pile.words.map((w) => w.word)).toEqual(["fish", "elder"]);
     expect(parsed.pile.words[0].bucket).toBe("unsorted");
+  });
+});
+
+// These tests pin down the behaviour the cross-device delete relies on:
+// every successful local delete must also fire a cloud DELETE so the row
+// is removed from Postgres and doesn't reappear on the next /sync from
+// another device. We mock cloudSync so we can assert what was called
+// without standing up a server.
+describe("WordpileStore — cloud delete propagation", () => {
+  let WordpileStore: WordpileStoreType;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    for (const fn of Object.values(cloudMocks)) fn.mockClear();
+    vi.doMock("./cloudSync", () => cloudMocks);
+    const mod = await import("./store");
+    WordpileStore = mod.WordpileStore;
+  });
+
+  it("calls cloud.pushDeletePile when a pile is removed", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    cloudMocks.pushDeletePile.mockClear();
+    WordpileStore.deletePile(pile.id);
+    expect(cloudMocks.pushDeletePile).toHaveBeenCalledTimes(1);
+    expect(cloudMocks.pushDeletePile).toHaveBeenCalledWith(pile.id);
+  });
+
+  it("does not call cloud.pushDeletePile when the pile does not exist", () => {
+    WordpileStore.deletePile("nonexistent-pile-id");
+    expect(cloudMocks.pushDeletePile).not.toHaveBeenCalled();
+  });
+
+  it("calls cloud.pushDeleteWord when a word is removed", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    const word = WordpileStore.addWord(pile.id, { word: "bannock" })!;
+    cloudMocks.pushDeleteWord.mockClear();
+    WordpileStore.deleteWord(pile.id, word.id);
+    expect(cloudMocks.pushDeleteWord).toHaveBeenCalledTimes(1);
+    expect(cloudMocks.pushDeleteWord).toHaveBeenCalledWith(pile.id, word.id);
+  });
+
+  it("does not call cloud.pushDeleteWord when the word does not exist", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    cloudMocks.pushDeleteWord.mockClear();
+    WordpileStore.deleteWord(pile.id, "nonexistent-word-id");
+    expect(cloudMocks.pushDeleteWord).not.toHaveBeenCalled();
   });
 });
