@@ -1017,6 +1017,61 @@ const partVI: Part = {
         },
       ],
     },
+    {
+      id: "6-3",
+      number: "6.3",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "Name as a trade, practiced through the wisdom keepers",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · returned to as the answer changes.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.2 closed by saying the discipline does not yet have a name-layer practice for on-chain governance primitives, and that the chapter exists to be returned to when a community's practice of authoring the noun-as-primitive becomes specific enough to write down. The chapter before this one named the *site* and the *wall*. The chapter that follows it has to name the *worker* — what kind of work building a name-layer practice would actually be, and who would do it. If the name layer is the one the discipline would have to build (§6.2), the prior question is what shape the building would take: a credential, a role inside an existing profession, a community elder's extra duty, or a *trade* in the older sense of the word. This chapter is a place to keep the question of the shape of the work itself.",
+        },
+        {
+          kind: "subhead",
+          text: "A trade, in the sense bricklaying is a trade.",
+        },
+        {
+          kind: "para",
+          text:
+            "A trade is what emerges when several industries' outputs only cohere in a *built thing*, and the built thing only holds if one pair of hands knows how all of them behave under load. Bricklaying is the example worth keeping in front of this chapter. The bricklayer is not a brick-maker, not a chemist, not a structural engineer, and not a site planner — but the trade absorbed enough brick chemistry, mortar chemistry, structural reading, site interface, and apprenticeship pedagogy that the wall it builds holds. A name-layer trade would absorb in the same shape, from at least four tributaries. *Codetry*: the rename test of §4.2, the discipline of choosing a metaphor that constrains the system rather than decorates it, the refusal to let the name collapse upward into the type or downward into the token. *Literate programming*, framed by §6.1 as the precondition the practice rests on rather than the sibling working in the next room: document-as-source, prose as the medium of work, names inside the source carrying the metaphor the prose claims they carry. *Wisdom keeping*: the only existing profession that already does multi-generation name maintenance — knowing who named a place, what the name binds to, what happens to the name when the river reroutes, the clan splits, or the treaty is broken. *Community development*: the practice of asking who is in the room when a noun gets coined, who is not, and what the downstream cost of those absences is. None of those four are the trade. The trade is where their outputs cohere in a wall — the wall being the names a community's institutions and on-chain primitives are bound to, authored and maintained with the intent that those names survive the substrate they were laid on.",
+        },
+        {
+          kind: "subhead",
+          text: "Through the wisdom keepers, not by them.",
+        },
+        {
+          kind: "para",
+          text:
+            "There is a temptation, when naming a practice that has to survive seven generations, to assign the practice to the people who already carry that horizon — the wisdom keepers, the elders, the lineage holders themselves. The temptation should be refused, for the same reason a bricklaying trade is not assigned to master masons: the master mason is not the one laying courses anymore. The master walks the job and catches the wandering line at three courses, not thirty. *By* the wisdom keepers makes the trade their job, which dumps a fresh technical apprenticeship — chains, schemas, registries, fork mechanics, source control, literate-programming tooling — on people already carrying full loads, and risks the trade dying with the keepers because the technical surface moves faster than any one generation can absorb. *Through* the wisdom keepers makes them the source of authority and review, while the day-to-day craft is the apprentice's hands: younger, with the chain literacy and the tooling already in their fingers, but accountable to a master who can say *that name does not sit right with what we know about that creek* and send the apprentice back to relay the course. That is the only version of the trade that scales past the keepers themselves, and it is the only version in which the seven-generation horizon survives the generation that opens it.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The substrate is the site, not the material. Chains are the soil; the names are the wall. The trade is what builds walls that outlast the chain they were laid on.",
+        },
+        {
+          kind: "subhead",
+          text: "Calibrated to seven generations, which means refusing the substrate currently in fashion.",
+        },
+        {
+          kind: "para",
+          text:
+            "A bricklayer's wall is expected to outlast its builder by a century or more. Software's working assumption is that the substrate gets rewritten within a decade, which is why every existing software role is calibrated to the platform currently in fashion — the framework, the chain, the model, the cloud. A name-layer trade calibrated to seven generations would have to refuse that calibration. Not because the substrate is unimportant — §6.2 spent its length making the opposite case — but because the trade's job is to author names that *survive* the substrate, not to specialise in any one of them. The lineage that pedagogy would inherit from is therefore not computer science. The closer analogues are older. *Cartography*: place names that outlast the empires that drew the maps. *Constitutional drafting*: the bind between *the assembly* and the institution it names, across the generations the institution is supposed to last. *Oral lineage itself*: the discipline that already knows how to carry a noun across centuries by holding the practice of who tells it next. §5.2 honours literate programming as the closest sibling in the *technical* lineage codetry sits inside, and that placement is correct for that lineage. The trade lineage — the one a name-layer profession would inherit its pedagogy from — is older than the technical one, and §6.3 is the chapter that owes it the acknowledgement.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Open question, kept open. The trade has no first apprentice yet. Bricklaying did not become a trade by manifesto; it became one because someone laid a course, then a thousand more, under someone who kept calling out the wandering line. The chapter stays open until the apprenticeship begins, and is the place to record what it looks like when it does.",
+        },
+      ],
+    },
   ],
 };
 
