@@ -16,11 +16,12 @@ export default function Recap() {
   ];
 
   return (
-    <div
-      className="min-h-full w-full"
+    <section
+      id="recap"
+      className="w-full scroll-mt-20"
       style={{ background: "var(--color-primary)", color: "var(--color-bg)" }}
     >
-      <div className="mx-auto max-w-[36rem] px-6 pt-20 pb-24 flex flex-col">
+      <div className="mx-auto max-w-[36rem] px-6 pt-14 pb-20 flex flex-col">
         <div
           className="mono text-[10.5px] uppercase tracking-[0.22em] mb-2"
           style={{ color: "var(--color-accent)" }}
@@ -69,6 +70,6 @@ export default function Recap() {
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

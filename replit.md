@@ -59,6 +59,12 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
     - Sources default values for its cross-reserve corridor calculator from `@workspace/cross-reserve-corridor`.
     - A guard script `scripts/check-corridor-defaults.ts` prevents reintroduction of local numeric literals for corridor keys.
 
+- **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**:
+    - React + Vite reading surface for the contractor to flip through in council meetings.
+    - Mirrors the Practitioner's Guide v2 mobile shell pattern: full-bleed eagle prologue hoisted above the shell, then a sticky branded header (`AppShell.tsx`) over a continuous-scroll stack of nine sections (`prologue`, `what-it-is`, `why-current-fails`, `cold-chain`, `who-works`, `first-morning`, `what-stays`, `ask`, `recap`).
+    - No swipe-deck, no fixed bottom chrome — anchor IDs + global `scroll-behavior: smooth` make in-page jumps (header brand → top, header chip → recap, prologue Continue → first content section) feel uniform.
+    - Recap section bleeds full-width with the deep evergreen background so the contractor can screenshot it as a one-screen summary.
+
 - **`artifacts/api-server`**:
     - Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects).
     - Public-objects route includes a local-filesystem fallback for `attached_assets/<filename>`.

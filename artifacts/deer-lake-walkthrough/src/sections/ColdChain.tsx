@@ -6,11 +6,12 @@ import { Reveal } from "@/components/Reveal";
  */
 export default function ColdChain() {
   return (
-    <div
-      className="min-h-full w-full"
+    <section
+      id="cold-chain"
+      className="w-full scroll-mt-20"
       style={{ background: "var(--color-bg)" }}
     >
-      <div className="mx-auto max-w-[36rem] px-6 pt-24 pb-32 flex flex-col">
+      <div className="mx-auto max-w-[36rem] px-6 pt-12 pb-16 flex flex-col">
       <div
         className="mono text-[11px] uppercase tracking-[0.22em] mb-3"
         style={{ color: "var(--color-accent-warm)" }}
@@ -153,6 +154,6 @@ export default function ColdChain() {
         </Reveal>
       </div>
       </div>
-    </div>
+    </section>
   );
 }

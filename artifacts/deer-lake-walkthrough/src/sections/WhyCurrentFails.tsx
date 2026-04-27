@@ -10,12 +10,13 @@ const base = import.meta.env.BASE_URL;
  */
 export default function WhyCurrentFails() {
   return (
-    <div
-      className="min-h-full w-full"
+    <section
+      id="why-current-fails"
+      className="w-full scroll-mt-20"
       style={{ background: "var(--color-bg)" }}
     >
       <div className="mx-auto max-w-[36rem] flex flex-col">
-        <div className="relative w-full pt-20" aria-hidden={false}>
+        <div className="relative w-full pt-10" aria-hidden={false}>
           <div
             className="relative w-full overflow-hidden"
             style={{
@@ -39,7 +40,7 @@ export default function WhyCurrentFails() {
           </div>
         </div>
 
-        <div className="px-6 pt-7 pb-32">
+        <div className="px-6 pt-7 pb-16">
           <div
             className="mono text-[11px] uppercase tracking-[0.22em] mb-3"
             style={{ color: "var(--color-accent-warm)" }}
@@ -108,6 +109,6 @@ export default function WhyCurrentFails() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

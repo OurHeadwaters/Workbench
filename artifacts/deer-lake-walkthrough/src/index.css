@@ -39,24 +39,28 @@
   --font-mono: var(--font-mono);
 }
 
+html {
+  /* In-page anchor jumps (header brand → #prologue, header chip → #recap,
+   * Continue button → #what-it-is) animate the same way regardless of how
+   * they were triggered. */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
 html,
 body,
 #root {
   margin: 0;
   padding: 0;
-  height: 100%;
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-body {
-  /* On iOS, allow the page to scroll within sections — not the whole shell —
-   * so the swipe-to-flip gesture stays clean. */
-  overscroll-behavior-y: contain;
 }
 
 * {
