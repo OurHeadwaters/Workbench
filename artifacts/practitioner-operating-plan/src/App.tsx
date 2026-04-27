@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Route, Switch, useLocation } from "wouter";
 
+import { SlideErrorBoundary } from "@/SlideErrorBoundary";
 import {
   slides,
   lifestyleSlides,
@@ -179,7 +180,12 @@ function SlideEditor() {
           key={slide.id}
           style={{ display: index === currentIndex ? "block" : "none" }}
         >
-          <slide.Component />
+          <SlideErrorBoundary
+            slideTitle={slide.title}
+            slidePosition={slide.position}
+          >
+            <slide.Component />
+          </SlideErrorBoundary>
         </div>
       ))}
     </div>
@@ -196,7 +202,12 @@ function AllSlides() {
           style={{ width: "1920px", height: "1080px" }}
         >
           <div className="h-full w-full [&_.h-screen]:!h-full [&_.w-screen]:!w-full">
-            <slide.Component />
+            <SlideErrorBoundary
+              slideTitle={slide.title}
+              slidePosition={slide.position}
+            >
+              <slide.Component />
+            </SlideErrorBoundary>
           </div>
         </div>
       ))}

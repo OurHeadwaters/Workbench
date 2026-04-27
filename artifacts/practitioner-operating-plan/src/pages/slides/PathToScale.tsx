@@ -8,23 +8,27 @@ import { useAppState } from "../../lib/storage";
 import { formatCostValue } from "../../data/costRegistry";
 
 // Resolve a derived registry total (one of the `getLiveCostValue`
-// switch arms) for a known id. We throw rather than fall back to a
-// default — every id used on this slide is meant to be live-bound, so
-// a null result means budgetMath drifted away from the registry and
-// the slide should fail loudly in dev instead of silently rendering
-// stale numbers.
+// switch arms) for a known id. If the registry drifts away from
+// budgetMath we no longer throw — that took the whole deck down with
+// a blank/white screen on the sibling Deer Lake deck. Instead we log
+// loudly to the dev console and return NaN so the formatters below
+// render a visible "TBD" placeholder. The per-slide error boundary
+// in App.tsx is the safety net for any other render-time crashes.
 function liveDerived(state: ReturnType<typeof useAppState>, id: string): number {
   const v = getLiveCostValue(state, id);
   if (v == null) {
-    throw new Error(
-      `PathToScale: no live derivation for cost id "${id}". ` +
-        `Add a case in budgetMath.ts:getLiveCostValue or remove the binding.`,
+    console.error(
+      `[PathToScale] no live derivation for cost id "${id}". ` +
+        `Add a case in budgetMath.ts:getLiveCostValue or remove the binding. ` +
+        `Rendering "TBD" in its place.`,
     );
+    return Number.NaN;
   }
   return v;
 }
 
 function compactDollars(value: number): string {
+  if (!Number.isFinite(value)) return "TBD";
   if (value >= 1_000_000) {
     const m = value / 1_000_000;
     // 2 decimals when under 10M (e.g. $1.08M), 1 decimal otherwise.
@@ -38,6 +42,7 @@ function compactDollars(value: number): string {
 }
 
 function exactDollars(value: number): string {
+  if (!Number.isFinite(value)) return "TBD";
   return "$" + Math.round(value).toLocaleString("en-US");
 }
 

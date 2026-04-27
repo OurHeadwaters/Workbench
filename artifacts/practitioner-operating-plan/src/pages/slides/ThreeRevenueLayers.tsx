@@ -4,16 +4,20 @@ import type { AppState } from "../../lib/storage";
 import { formatPlanningK, formatCompactK } from "../../lib/formatPlanning";
 
 // Same liveDerived helper pattern as PathToScale: any id we read from
-// getLiveCostValue here is meant to be live-bound, so a null result
-// means budgetMath drifted away from the registry — fail loudly in dev
-// instead of silently rendering a zero.
+// getLiveCostValue here is meant to be live-bound. We no longer throw
+// on a null — that took the whole sibling Deer Lake deck down with a
+// blank/white screen. Instead we log loudly to the dev console and
+// return NaN so the formatters below print a visible "TBD" placeholder.
+// The per-slide error boundary in App.tsx catches anything else.
 function liveDerived(state: AppState, id: string): number {
   const v = getLiveCostValue(state, id);
   if (v == null) {
-    throw new Error(
-      `ThreeRevenueLayers: no live derivation for cost id "${id}". ` +
-        `Add a case in budgetMath.ts:getLiveCostValue or remove the binding.`,
+    console.error(
+      `[ThreeRevenueLayers] no live derivation for cost id "${id}". ` +
+        `Add a case in budgetMath.ts:getLiveCostValue or remove the binding. ` +
+        `Rendering "TBD" in its place.`,
     );
+    return Number.NaN;
   }
   return v;
 }
@@ -22,7 +26,18 @@ function liveDerived(state: AppState, id: string): number {
 // raw day rates and retainer where the slide narrative quotes the
 // precise number a receiving-reserve council will see on an invoice.
 function formatDollars(value: number): string {
+  if (!Number.isFinite(value)) return "TBD";
   return "$" + Math.round(value).toLocaleString("en-US");
+}
+
+// Wrap the shared planning formatters so a NaN sentinel from a missing
+// live binding renders as "TBD" instead of "~$NaNk".
+function safePlanningK(value: number): string {
+  return Number.isFinite(value) ? formatPlanningK(value) : "TBD";
+}
+
+function safeCompactK(value: number): string {
+  return Number.isFinite(value) ? formatCompactK(value) : "TBD";
 }
 
 export default function ThreeRevenueLayers() {
@@ -146,15 +161,15 @@ export default function ThreeRevenueLayers() {
             </div>
             <div className="font-body text-[1.15vw] leading-[1.5] text-text">
               <span className="text-primary font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                {formatPlanningK(installPerReserve)} per new reserve install + {formatCompactK(retainerAnnual)}/yr ongoing.
+                {safePlanningK(installPerReserve)} per new reserve install + {safeCompactK(retainerAnnual)}/yr ongoing.
               </span>{" "}
               Receiving reserve's Y1 sticker — install +{" "}
               <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                {formatPlanningK(travelPassthrough)}
+                {safePlanningK(travelPassthrough)}
               </span>{" "}
               travel pass-through + retainer — lands at{" "}
               <span className="text-primary font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-                {formatPlanningK(y1StickerPrice)} all-in
+                {safePlanningK(y1StickerPrice)} all-in
               </span>{" "}
               (see "First reserve, then the next" in the store plan). Successor is local <em>to each receiving reserve</em> — Deer Lake grads steward Deer Lake; they don't get sent on the road.
             </div>
