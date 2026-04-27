@@ -13,9 +13,12 @@
  * push happens asynchronously in `cloudSync.ts` and never throws.
  */
 import {
+  BUCKETS,
   EMPTY_DATA,
   type Bucket,
   type CommunityPile,
+  type PileExport,
+  type PileExportWord,
   type WordEntry,
   type WordpileData,
 } from "@/data/types";
@@ -23,6 +26,7 @@ import * as cloud from "./cloudSync";
 
 const STORAGE_KEY = "wordpile:v1";
 const STORAGE_EVENT = "wordpile:changed";
+const DRAFT_KEY_PREFIX = "wordpile:draft:";
 
 type Listener = () => void;
 
@@ -327,6 +331,168 @@ export const WordpileStore = {
   moveWord(pileId: string, wordId: string, bucket: Bucket) {
     this.updateWord(pileId, wordId, { bucket });
   },
+
+  // -- Import / export -------------------------------------------------
+  serializePile(pileId: string): PileExport | null {
+    const pile = read().piles[pileId];
+    if (!pile) return null;
+    const draft =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem(DRAFT_KEY_PREFIX + pileId) ?? ""
+        : "";
+    const payload: PileExport = {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: Date.now(),
+      pile: {
+        name: pile.name,
+        words: pile.words.map((w) => ({
+          word: w.word,
+          bucket: w.bucket,
+          note: w.note,
+          saferAlternative: w.saferAlternative,
+        })),
+      },
+    };
+    if (draft.trim()) payload.pile.draft = draft;
+    return payload;
+  },
+
+  /**
+   * Import a parsed payload. If `mergeIntoPileId` is provided, the words
+   * are folded into that pile (case-insensitive de-dupe — existing words
+   * win). Otherwise a brand-new pile is created using `nameOverride` if
+   * given, else the exported name.
+   *
+   * Returns the resulting pile, or null if the target merge pile doesn't
+   * exist.
+   */
+  importPile(
+    payload: PileExport,
+    options: { mergeIntoPileId?: string; nameOverride?: string } = {},
+  ): CommunityPile | null {
+    const exportedWords = payload.pile.words.map(normalizeImportWord);
+    const now = Date.now();
+
+    if (options.mergeIntoPileId) {
+      const targetId = options.mergeIntoPileId;
+      let result: CommunityPile | null = null;
+      update((data) => {
+        const target = data.piles[targetId];
+        if (!target) return data;
+        const existing = new Set(target.words.map((w) => w.word));
+        const additions: WordEntry[] = [];
+        for (const ew of exportedWords) {
+          if (existing.has(ew.word)) continue;
+          existing.add(ew.word);
+          additions.push({
+            id: newId(),
+            word: ew.word,
+            bucket: ew.bucket,
+            note: ew.note,
+            saferAlternative: ew.saferAlternative,
+            createdAt: now,
+            updatedAt: now,
+          });
+        }
+        const merged: CommunityPile = {
+          ...target,
+          words: [...target.words, ...additions],
+          updatedAt: now,
+        };
+        result = merged;
+        return {
+          ...data,
+          piles: { ...data.piles, [targetId]: merged },
+        };
+      });
+      return result;
+    }
+
+    // Create a fresh pile.
+    const name = (options.nameOverride ?? payload.pile.name).trim();
+    if (!name) return null;
+    const seen = new Set<string>();
+    const words: WordEntry[] = [];
+    for (const ew of exportedWords) {
+      if (seen.has(ew.word)) continue;
+      seen.add(ew.word);
+      words.push({
+        id: newId(),
+        word: ew.word,
+        bucket: ew.bucket,
+        note: ew.note,
+        saferAlternative: ew.saferAlternative,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+    const pile: CommunityPile = {
+      id: newId(),
+      name,
+      createdAt: now,
+      updatedAt: now,
+      words,
+    };
+    update((data) => ({
+      ...data,
+      piles: { ...data.piles, [pile.id]: pile },
+      pileOrder: [...data.pileOrder, pile.id],
+      selectedPileId: pile.id,
+    }));
+    if (
+      typeof window !== "undefined" &&
+      typeof payload.pile.draft === "string" &&
+      payload.pile.draft.trim()
+    ) {
+      window.localStorage.setItem(DRAFT_KEY_PREFIX + pile.id, payload.pile.draft);
+    }
+    return pile;
+  },
 };
+
+function normalizeImportWord(raw: unknown): PileExportWord {
+  const r = (raw ?? {}) as Record<string, unknown>;
+  const word = String(r.word ?? "").trim().toLowerCase();
+  const bucket = (BUCKETS as readonly string[]).includes(String(r.bucket))
+    ? (r.bucket as Bucket)
+    : "unsorted";
+  const note = typeof r.note === "string" ? r.note : "";
+  const saferAlternative =
+    typeof r.saferAlternative === "string" ? r.saferAlternative : "";
+  return { word, bucket, note, saferAlternative };
+}
+
+/**
+ * Parse an unknown JSON string and validate that it matches the
+ * wordpile export schema. Returns null on any structural problem.
+ */
+export function parsePileExport(raw: string): PileExport | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== "object") return null;
+  const obj = parsed as Record<string, unknown>;
+  if (obj.format !== "wordpile-export") return null;
+  if (obj.formatVersion !== 1) return null;
+  const pile = obj.pile as Record<string, unknown> | undefined;
+  if (!pile || typeof pile !== "object") return null;
+  if (typeof pile.name !== "string" || !pile.name.trim()) return null;
+  if (!Array.isArray(pile.words)) return null;
+  const words = pile.words.map(normalizeImportWord).filter((w) => w.word);
+  return {
+    format: "wordpile-export",
+    formatVersion: 1,
+    exportedAt: typeof obj.exportedAt === "number" ? obj.exportedAt : Date.now(),
+    pile: {
+      name: pile.name.trim(),
+      words,
+      draft: typeof pile.draft === "string" ? pile.draft : undefined,
+    },
+  };
+}
 
 export type WordpileStoreType = typeof WordpileStore;

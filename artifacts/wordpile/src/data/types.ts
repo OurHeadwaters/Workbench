@@ -47,3 +47,23 @@ export const EMPTY_DATA: WordpileData = {
   pileOrder: [],
   selectedPileId: null,
 };
+
+export interface PileExportWord {
+  word: string;
+  bucket: Bucket;
+  note: string;
+  saferAlternative: string;
+}
+
+export interface PileExportPayload {
+  name: string;
+  words: PileExportWord[];
+  draft?: string;
+}
+
+export interface PileExport {
+  format: "wordpile-export";
+  formatVersion: 1;
+  exportedAt: number;
+  pile: PileExportPayload;
+}

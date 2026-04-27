@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { ArrowRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { useWordpile } from "@/lib/useStore";
-import { WordpileStore } from "@/lib/store";
+import { WordpileStore, parsePileExport } from "@/lib/store";
+import type { PileExport } from "@/data/types";
 
 export function PilesPage() {
   const data = useWordpile();
@@ -10,6 +11,13 @@ export function PilesPage() {
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [importPayload, setImportPayload] = useState<PileExport | null>(null);
+  const [importFileName, setImportFileName] = useState<string>("");
+  const [importMode, setImportMode] = useState<"new" | "merge">("new");
+  const [importNewName, setImportNewName] = useState<string>("");
+  const [importMergeId, setImportMergeId] = useState<string>("");
+  const [importError, setImportError] = useState<string | null>(null);
   const piles = data.pileOrder
     .map((id) => data.piles[id])
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
@@ -26,6 +34,67 @@ export function PilesPage() {
     if (editingName.trim()) WordpileStore.renamePile(id, editingName);
     setEditingId(null);
     setEditingName("");
+  }
+
+  function resetImport() {
+    setImportPayload(null);
+    setImportFileName("");
+    setImportMode("new");
+    setImportNewName("");
+    setImportMergeId("");
+    setImportError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function handleFilePicked(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportError(null);
+    try {
+      const text = await file.text();
+      const parsed = parsePileExport(text);
+      if (!parsed) {
+        setImportPayload(null);
+        setImportFileName(file.name);
+        setImportError(
+          "That file isn't a wordpile export. Expected a .wordpile.json file with a pile inside.",
+        );
+        return;
+      }
+      setImportPayload(parsed);
+      setImportFileName(file.name);
+      setImportNewName(parsed.pile.name);
+      setImportMode("new");
+      setImportMergeId(piles[0]?.id ?? "");
+    } catch {
+      setImportPayload(null);
+      setImportFileName(file.name);
+      setImportError("Couldn't read that file.");
+    }
+  }
+
+  function handleConfirmImport() {
+    if (!importPayload) return;
+    if (importMode === "merge") {
+      const target = piles.find((p) => p.id === importMergeId);
+      if (!target) {
+        setImportError("Pick a pile to merge into.");
+        return;
+      }
+      WordpileStore.importPile(importPayload, { mergeIntoPileId: target.id });
+      resetImport();
+      navigate(`/pile/${target.id}`);
+      return;
+    }
+    if (!importNewName.trim()) {
+      setImportError("Give the new pile a name.");
+      return;
+    }
+    const created = WordpileStore.importPile(importPayload, {
+      nameOverride: importNewName,
+    });
+    resetImport();
+    if (created) navigate(`/pile/${created.id}`);
   }
 
   return (
@@ -74,6 +143,135 @@ export function PilesPage() {
             Create pile
           </button>
         </form>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            onChange={handleFilePicked}
+            style={{ display: "none" }}
+            data-testid="input-import-file"
+          />
+          <button
+            type="button"
+            className="btn-ghost"
+            onClick={() => fileInputRef.current?.click()}
+            data-testid="button-import-pile"
+            title="Load a .wordpile.json file another practitioner shared with you."
+          >
+            <Upload size={12} /> Import a pile from a file
+          </button>
+          {importFileName && !importPayload && !importError && (
+            <span className="eyebrow">{importFileName}</span>
+          )}
+        </div>
+        {importError && (
+          <div
+            className="mt-3 rounded p-3 text-sm"
+            style={{
+              backgroundColor: "var(--color-paper)",
+              border: "1px solid var(--color-avoid)",
+              color: "var(--color-avoid)",
+            }}
+            data-testid="text-import-error"
+          >
+            {importError}
+            <button
+              className="btn-ghost ml-2"
+              onClick={resetImport}
+              style={{ color: "inherit" }}
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+        {importPayload && (
+          <div
+            className="mt-3 rounded p-4 flex flex-col gap-3"
+            style={{
+              backgroundColor: "var(--color-paper)",
+              border: "1px solid var(--color-rule)",
+            }}
+            data-testid="panel-import-preview"
+          >
+            <div>
+              <p className="eyebrow mb-1">Importing from {importFileName}</p>
+              <p className="text-sm" style={{ color: "var(--color-stone)" }}>
+                <strong>{importPayload.pile.name}</strong> ·{" "}
+                {importPayload.pile.words.length} word
+                {importPayload.pile.words.length === 1 ? "" : "s"}
+                {importPayload.pile.draft ? " · includes a saved draft" : ""}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="radio"
+                  name="import-mode"
+                  checked={importMode === "new"}
+                  onChange={() => setImportMode("new")}
+                  data-testid="radio-import-new"
+                />
+                Create a new pile
+              </label>
+              {importMode === "new" && (
+                <input
+                  className="input"
+                  style={{ maxWidth: 360, marginLeft: 22 }}
+                  value={importNewName}
+                  onChange={(e) => setImportNewName(e.target.value)}
+                  placeholder="Name for the new pile"
+                  data-testid="input-import-new-name"
+                />
+              )}
+              {piles.length > 0 && (
+                <>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="import-mode"
+                      checked={importMode === "merge"}
+                      onChange={() => setImportMode("merge")}
+                      data-testid="radio-import-merge"
+                    />
+                    Merge into an existing pile
+                  </label>
+                  {importMode === "merge" && (
+                    <select
+                      className="input"
+                      style={{ maxWidth: 360, marginLeft: 22 }}
+                      value={importMergeId}
+                      onChange={(e) => setImportMergeId(e.target.value)}
+                      data-testid="select-import-merge-target"
+                    >
+                      {piles.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <button
+                className="btn-primary"
+                onClick={handleConfirmImport}
+                data-testid="button-confirm-import"
+              >
+                {importMode === "merge" ? "Merge into pile" : "Create pile"}
+              </button>
+              <button
+                className="btn-ghost"
+                onClick={resetImport}
+                data-testid="button-cancel-import"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       <section>

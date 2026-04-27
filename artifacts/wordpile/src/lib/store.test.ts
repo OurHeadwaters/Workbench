@@ -1,20 +1,24 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import type { PileExport } from "@/data/types";
 import type { WordpileStoreType } from "./store";
 
 // Each test imports a fresh copy of the store module so the module-level
 // cachedSnapshot/listeners don't leak across tests. The store guards on
 // `typeof window` so it runs cleanly in the node test environment.
-async function freshStore(): Promise<WordpileStoreType> {
+async function freshStore(): Promise<{
+  WordpileStore: WordpileStoreType;
+  parsePileExport: (raw: string) => PileExport | null;
+}> {
   vi.resetModules();
   const mod = await import("./store");
-  return mod.WordpileStore;
+  return { WordpileStore: mod.WordpileStore, parsePileExport: mod.parsePileExport };
 }
 
 describe("WordpileStore — snapshot stability", () => {
   let WordpileStore: WordpileStoreType;
 
   beforeEach(async () => {
-    WordpileStore = await freshStore();
+    ({ WordpileStore } = await freshStore());
   });
 
   it("returns the same reference across consecutive calls (no mutation)", () => {
@@ -47,7 +51,7 @@ describe("WordpileStore — createPile", () => {
   let WordpileStore: WordpileStoreType;
 
   beforeEach(async () => {
-    WordpileStore = await freshStore();
+    ({ WordpileStore } = await freshStore());
   });
 
   it("creates a pile, registers it in pileOrder, and selects it", () => {
@@ -84,7 +88,7 @@ describe("WordpileStore — addWord", () => {
   let pileId: string;
 
   beforeEach(async () => {
-    WordpileStore = await freshStore();
+    ({ WordpileStore } = await freshStore());
     pileId = WordpileStore.createPile("Deer Lake").id;
   });
 
@@ -136,7 +140,7 @@ describe("WordpileStore — moveWord", () => {
   let wordId: string;
 
   beforeEach(async () => {
-    WordpileStore = await freshStore();
+    ({ WordpileStore } = await freshStore());
     pileId = WordpileStore.createPile("Deer Lake").id;
     wordId = WordpileStore.addWord(pileId, { word: "bannock" })!.id;
   });
@@ -163,7 +167,7 @@ describe("WordpileStore — deleteWord", () => {
   let pileId: string;
 
   beforeEach(async () => {
-    WordpileStore = await freshStore();
+    ({ WordpileStore } = await freshStore());
     pileId = WordpileStore.createPile("Deer Lake").id;
   });
 
@@ -189,5 +193,175 @@ describe("WordpileStore — deleteWord", () => {
     expect(WordpileStore.getSnapshot().piles[pileId].words).toHaveLength(
       before.piles[pileId].words.length,
     );
+  });
+});
+
+describe("WordpileStore — serializePile / importPile (round-trip)", () => {
+  let WordpileStore: WordpileStoreType;
+  let parsePileExport: (raw: string) => PileExport | null;
+
+  beforeEach(async () => {
+    ({ WordpileStore, parsePileExport } = await freshStore());
+  });
+
+  it("exports a pile with all word fields, then re-imports as a new pile", () => {
+    const source = WordpileStore.createPile("Deer Lake");
+    const w1 = WordpileStore.addWord(source.id, { word: "harvest", bucket: "load" })!;
+    WordpileStore.updateWord(source.id, w1.id, { note: "primary verb" });
+    const w2 = WordpileStore.addWord(source.id, {
+      word: "stakeholder",
+      bucket: "avoid",
+    })!;
+    WordpileStore.updateWord(source.id, w2.id, {
+      saferAlternative: "community member",
+    });
+    WordpileStore.addWord(source.id, { word: "elder" });
+
+    const payload = WordpileStore.serializePile(source.id);
+    expect(payload).not.toBeNull();
+    expect(payload!.format).toBe("wordpile-export");
+    expect(payload!.formatVersion).toBe(1);
+    expect(payload!.pile.name).toBe("Deer Lake");
+    expect(payload!.pile.words).toHaveLength(3);
+
+    const imported = WordpileStore.importPile(payload!, {
+      nameOverride: "Deer Lake Copy",
+    });
+    expect(imported).not.toBeNull();
+    expect(imported!.id).not.toBe(source.id);
+    expect(imported!.name).toBe("Deer Lake Copy");
+    expect(imported!.words).toHaveLength(3);
+    const stakeholder = imported!.words.find((w) => w.word === "stakeholder");
+    expect(stakeholder?.bucket).toBe("avoid");
+    expect(stakeholder?.saferAlternative).toBe("community member");
+    const harvest = imported!.words.find((w) => w.word === "harvest");
+    expect(harvest?.bucket).toBe("load");
+    expect(harvest?.note).toBe("primary verb");
+  });
+
+  it("returns null when serializing a missing pile", () => {
+    expect(WordpileStore.serializePile("missing")).toBeNull();
+  });
+
+  it("merges into an existing pile without duplicating words (existing wins)", () => {
+    const target = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(target.id, {
+      word: "harvest",
+      bucket: "load",
+      note: "kept",
+    });
+
+    const payload: PileExport = {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: {
+        name: "Other Community",
+        words: [
+          // duplicate by case — should be skipped, original "kept" note preserved.
+          { word: "Harvest", bucket: "avoid", note: "overwritten?", saferAlternative: "" },
+          { word: "fish", bucket: "load", note: "new", saferAlternative: "" },
+        ],
+      },
+    };
+    const result = WordpileStore.importPile(payload, { mergeIntoPileId: target.id });
+    expect(result).not.toBeNull();
+    expect(result!.id).toBe(target.id);
+    expect(result!.words).toHaveLength(2);
+    const harvest = result!.words.find((w) => w.word === "harvest");
+    expect(harvest?.note).toBe("kept");
+    expect(harvest?.bucket).toBe("load");
+    const fish = result!.words.find((w) => w.word === "fish");
+    expect(fish?.bucket).toBe("load");
+    expect(fish?.note).toBe("new");
+  });
+
+  it("returns null when merging into a non-existent pile", () => {
+    const payload: PileExport = {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: { name: "x", words: [] },
+    };
+    expect(
+      WordpileStore.importPile(payload, { mergeIntoPileId: "missing" }),
+    ).toBeNull();
+  });
+});
+
+describe("parsePileExport", () => {
+  let parsePileExport: (raw: string) => PileExport | null;
+
+  beforeEach(async () => {
+    ({ parsePileExport } = await freshStore());
+  });
+
+  it("accepts a well-formed export and normalizes word casing", () => {
+    const raw = JSON.stringify({
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 1700000000000,
+      pile: {
+        name: "Deer Lake",
+        words: [
+          { word: "Harvest", bucket: "load", note: "x", saferAlternative: "" },
+        ],
+      },
+    });
+    const parsed = parsePileExport(raw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.pile.name).toBe("Deer Lake");
+    expect(parsed!.pile.words[0].word).toBe("harvest");
+  });
+
+  it("rejects non-JSON input", () => {
+    expect(parsePileExport("not json")).toBeNull();
+  });
+
+  it("rejects payloads with the wrong format marker", () => {
+    expect(
+      parsePileExport(
+        JSON.stringify({ format: "something-else", formatVersion: 1, pile: {} }),
+      ),
+    ).toBeNull();
+  });
+
+  it("rejects payloads missing pile.name or pile.words", () => {
+    expect(
+      parsePileExport(
+        JSON.stringify({
+          format: "wordpile-export",
+          formatVersion: 1,
+          pile: { words: [] },
+        }),
+      ),
+    ).toBeNull();
+    expect(
+      parsePileExport(
+        JSON.stringify({
+          format: "wordpile-export",
+          formatVersion: 1,
+          pile: { name: "x" },
+        }),
+      ),
+    ).toBeNull();
+  });
+
+  it("normalizes invalid bucket values to 'unsorted' and drops blank words", () => {
+    const raw = JSON.stringify({
+      format: "wordpile-export",
+      formatVersion: 1,
+      pile: {
+        name: "x",
+        words: [
+          { word: "fish", bucket: "garbage" },
+          { word: "", bucket: "load" },
+          { word: "elder" },
+        ],
+      },
+    });
+    const parsed = parsePileExport(raw)!;
+    expect(parsed.pile.words.map((w) => w.word)).toEqual(["fish", "elder"]);
+    expect(parsed.pile.words[0].bucket).toBe("unsorted");
   });
 });

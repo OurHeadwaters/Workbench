@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
-import { Plus, ScanText, Pencil, Trash2 } from "lucide-react";
+import { Download, Plus, ScanText, Pencil, Trash2 } from "lucide-react";
 import { usePile } from "@/lib/useStore";
 import { WordpileStore } from "@/lib/store";
 import {
@@ -139,6 +139,14 @@ export function PileEditorPage() {
         >
           <ScanText size={14} /> Check a draft
         </Link>
+        <button
+          className="btn-ghost"
+          onClick={() => downloadPileExport(pile.id)}
+          data-testid="button-export-pile"
+          title="Download this pile as a .wordpile.json file you can hand to another practitioner."
+        >
+          <Download size={12} /> Export
+        </button>
         <span className="ml-2 eyebrow">
           {pile.words.length} word{pile.words.length === 1 ? "" : "s"} in this
           pile
@@ -220,4 +228,29 @@ export function PileEditorPage() {
       </section>
     </div>
   );
+}
+
+function slugify(name: string): string {
+  return (
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || "pile"
+  );
+}
+
+function downloadPileExport(pileId: string) {
+  const payload = WordpileStore.serializePile(pileId);
+  if (!payload) return;
+  const json = JSON.stringify(payload, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${slugify(payload.pile.name)}.wordpile.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
