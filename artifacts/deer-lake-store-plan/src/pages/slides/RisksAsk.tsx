@@ -104,7 +104,7 @@ export default function RisksAsk() {
                 Money saved. Staff time saved. Open-records tools used. Local skill built. Year-end review. <span className="opacity-80">Worth less than what we charged? We credit the difference back. In writing.</span>
               </div>
               <div className="font-body text-[0.75vw] leading-[1.35] opacity-75 mt-[0.4vh]">
-                Not asking for: cash up front · a piece of the band's ownership · an exclusive-buying lock-in.
+                Not asking for: cash up front · a piece of the band's ownership · an agreement that locks the store into buying only from us.
               </div>
               <div className="font-display italic text-[0.82vw] mt-[0.6vh]" style={{ color: "#e9c8a8" }}>
                 — Headwaters. The work is paid for. The value comes back. Deer Lake earns it. Then every reserve does.

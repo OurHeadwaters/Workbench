@@ -116,13 +116,18 @@ describe("Headwaters reinvestment-bucket source-of-truth", () => {
   });
 
   it("ServicePartner.tsx prints the $24,300/mo reinvestment headline", () => {
-    // Phrasing was rewritten for ESL readability (Task #275); the locked
-    // numbers themselves must still appear so this test catches numeric drift.
+    // Phrasing was rewritten for ESL readability (Task #275) and again for
+    // read-aloud plain language (Task #284 — the equation-style sentence
+    // became a three-sentence block). The locked numbers themselves must
+    // still appear so this test catches numeric drift.
     const servicePartner = readDeckSlide("ServicePartner.tsx");
     expect(servicePartner).toContain("$24,300 a month");
     expect(servicePartner).toContain("$69,700 a month");
     expect(servicePartner).toContain("about $94,000 a month");
-    expect(servicePartner).toContain("(35%)");
+    // 35% is the reinvestment percentage anchor. Asserted without the
+    // surrounding parenthetical so this guard survives sentence-form
+    // rewrites of the headline.
+    expect(servicePartner).toContain("35%");
   });
 
   it("formatBucketAmount produces the '~$Nk' shape both surfaces use", () => {

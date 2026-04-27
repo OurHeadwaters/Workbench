@@ -41,11 +41,11 @@ export default function FinancialsRole() {
               <div>
                 <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">Where the opening money comes from</div>
                 <ul className="text-text text-[0.78vw] leading-[1.35] mt-[0.2vh] pl-[0.9vw] list-disc space-y-[0.2vh]">
-                  <li>FedNor (Northern Ontario Development Program).</li>
-                  <li>Community Futures.</li>
-                  <li>Indigenous Services Canada Community Capital.</li>
-                  <li>Local Food and Farm Co-operatives.</li>
-                  <li>Band contribution.</li>
+                  <li><span className="font-semibold">FedNor</span> — the federal economic agency for northern Ontario. Runs the Northern Ontario Development Program.</li>
+                  <li><span className="font-semibold">Community Futures</span> — local development corporations that lend to small business.</li>
+                  <li><span className="font-semibold">Indigenous Services Canada Community Capital</span> — a federal program that helps fund community-owned businesses.</li>
+                  <li><span className="font-semibold">Local Food and Farm Co-operatives</span> — our partner on the federal food-infrastructure grant.</li>
+                  <li><span className="font-semibold">Band contribution</span> — Deer Lake's own share.</li>
                 </ul>
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function FinancialsRole() {
                 </div>
               </div>
               <div className="font-body text-[0.72vw] leading-[1.4] opacity-80 mt-[0.5vh]">
-                We put 35% of what you pay back into building the store. An outside accountant checks this every year. The "gap money" covers two months of our costs plus day-one equipment ($0 / $42k / $60k). We get it back when the last two band invoices clear. Indigenous Services Canada (the federal department that pays the band) takes about 60 days. Council picks the plan. Written payback promise on file from last time, $22,000.
+                We put 35% of what you pay back into building the store. An outside accountant checks this every year. The "gap money" covers two months of our costs plus day-one equipment ($0 / $42k / $60k). We get it back when the last two band bills get paid. Indigenous Services Canada (the federal department that pays the band) takes about 60 days. Council picks the plan. Written payback promise on file from last time, $22,000.
               </div>
             </div>
 

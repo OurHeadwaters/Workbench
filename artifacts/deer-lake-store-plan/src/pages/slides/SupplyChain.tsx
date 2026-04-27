@@ -37,7 +37,7 @@ export default function SupplyChain() {
               Dryden → Deer Lake (winter road)
             </div>
             <div className="font-body text-[1.05vw] text-muted leading-[1.4]">
-              A second truck for the winter road. Paid for by the federal Local Food Infrastructure Fund. Kept separate on purpose. If one truck breaks down, the other still runs.
+              A second truck for the winter road. Paid for by the federal Local Food Infrastructure Fund (a grant program for food projects). Kept separate on purpose. If one truck breaks down, the other still runs.
             </div>
           </div>
 

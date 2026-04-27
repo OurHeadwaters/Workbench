@@ -163,7 +163,7 @@ export default function ServicePartner() {
               How Headwaters charges · the full team · what the 35% put back in pays for
             </div>
             <div className="font-body text-[0.85vw] leading-[1.4] mb-[0.6vh] opacity-95">
-              It costs us <span className="font-semibold">$69,700 a month</span>. We add <span className="font-semibold">$24,300 a month (35%)</span> back into the store. Total <span className="font-semibold">about $94,000 a month</span>. <span className="opacity-85">Council picks the plan: floor $60,000 → recommended $90,000 → scale $125,000. Replaces today's $35,000-a-month software-only contract.</span>
+              It costs us <span className="font-semibold">$69,700 a month</span> to run. We add <span className="font-semibold">$24,300 a month</span> — that's the 35% we put back into the store. The total is <span className="font-semibold">about $94,000 a month</span>. <span className="opacity-85">Council picks the plan: floor $60,000 → recommended $90,000 → scale $125,000. Replaces today's $35,000-a-month software-only contract.</span>
             </div>
             <div className="grid grid-cols-2 gap-x-[0.8vw] gap-y-[0.3vh] font-body text-[0.72vw] leading-[1.35] opacity-90" style={{ fontVariantNumeric: "tabular-nums" }}>
               {reinvestBuckets.map((b) => (
