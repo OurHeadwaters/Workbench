@@ -14,12 +14,33 @@ import {
   type WordpilePileRow,
   type WordpileWordRow,
 } from "@workspace/db";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, lt } from "drizzle-orm";
 
 // Tombstone kinds. Kept as a narrow string union and reused in the helper
 // below so a typo can't silently insert e.g. kind="words" (plural) and
 // quietly fail the lookup later.
 type TombstoneKind = "pile" | "word";
+
+// How long a tombstone has to stick around before /sync will sweep it.
+//
+// Why 90 days?
+//   - Tombstones only need to outlast the last device that might still
+//     be holding the deleted id in its local cache. Once every active
+//     device has confirmed it knows about the deletion (which happens
+//     the first time that device hits /sync after the delete), the
+//     tombstone has nothing left to protect — its only job was to keep
+//     a stale upload from resurrecting the row.
+//   - 90 days comfortably covers the worst-case "phone left at the
+//     back of a drawer over a long trip" offline window. A device
+//     that returns later than that with a stale snapshot will simply
+//     re-insert the deleted ids — a graceful failure mode for an edge
+//     case rare enough to be worth the table-size win.
+//   - On the other end, 90 days keeps the table small enough that even
+//     a power user churning thousands of words a year tops out at a
+//     few thousand live tombstones at any one moment, which is well
+//     within what the (clerkUserId, kind, id) PK index can serve in a
+//     single millisecond.
+const TOMBSTONE_RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
 
 const router: IRouter = Router();
 
@@ -249,6 +270,29 @@ router.post("/sync", withAuth, async (req, res) => {
   const { clerkUserId } = req.wordpileUser!;
   const body = (req.body ?? {}) as { piles?: unknown };
   const incoming = Array.isArray(body.piles) ? body.piles : [];
+
+  // Lazy garbage collection: drop this user's tombstones that are older
+  // than the retention window before we read them. Done on every /sync
+  // because:
+  //   - it avoids standing up a separate cron / scheduler just for one
+  //     table,
+  //   - the cost scales with how often the user actually syncs (idle
+  //     accounts pay nothing), and
+  //   - the same request that benefits from a smaller tombstone table
+  //     (a power user mid-session) is the one that pays the cleanup.
+  // The sweep is intentionally outside the merge transaction below — a
+  // transient DB error losing the sweep is harmless (the next /sync
+  // tries again), and decoupling it from the merge keeps the hot path
+  // straightforward.
+  const cutoff = new Date(Date.now() - TOMBSTONE_RETENTION_MS);
+  await db
+    .delete(wordpileDeletionsTable)
+    .where(
+      and(
+        eq(wordpileDeletionsTable.clerkUserId, clerkUserId),
+        lt(wordpileDeletionsTable.deletedAt, cutoff),
+      ),
+    );
 
   // Pull the existing rows once so we can decide insert-vs-update without
   // hammering the DB inside the loop.

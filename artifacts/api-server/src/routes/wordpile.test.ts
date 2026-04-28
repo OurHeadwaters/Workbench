@@ -29,7 +29,8 @@ const {
     type Pred =
       | { kind: "eq"; col: Col; val: unknown }
       | { kind: "and"; args: Pred[] }
-      | { kind: "inArray"; col: Col; vals: unknown[] };
+      | { kind: "inArray"; col: Col; vals: unknown[] }
+      | { kind: "lt"; col: Col; val: unknown };
     type Order = { kind: "asc"; col: Col };
 
     const PILES: Row[] = [];
@@ -84,6 +85,7 @@ const {
       col,
       vals,
     });
+    const lt = (col: Col, val: unknown): Pred => ({ kind: "lt", col, val });
     const asc = (col: Col): Order => ({ kind: "asc", col });
 
     function rowMatches(row: Row, pred: Pred | null): boolean {
@@ -95,6 +97,17 @@ const {
           return pred.args.every((p) => rowMatches(row, p));
         case "inArray":
           return pred.vals.includes(row[pred.col.__c]);
+        case "lt": {
+          // Date-vs-Date is the only comparison the route actually uses
+          // (deletedAt < cutoff in the tombstone GC). We special-case
+          // it so a millisecond-precise comparison runs even though
+          // `<` on Date objects coerces via valueOf.
+          const v = row[pred.col.__c];
+          if (v instanceof Date && pred.val instanceof Date) {
+            return v.getTime() < pred.val.getTime();
+          }
+          return (v as number) < (pred.val as number);
+        }
       }
     }
 
@@ -323,7 +336,7 @@ const {
       wordpilePilesTable,
       wordpileWordsTable,
       wordpileDeletionsTable,
-      fakeDrizzle: { eq, and, asc, inArray },
+      fakeDrizzle: { eq, and, asc, inArray, lt },
       fakeDb,
     };
   });
@@ -1050,6 +1063,146 @@ describe("POST /sync tombstones (deletes outlast a stale device)", () => {
     expect(piles).toHaveLength(1);
     expect(piles[0]?.id).toBe(PILE_A);
     expect(piles[0]?.name).toBe("renamed after delete");
+  });
+
+  it("/sync sweeps tombstones older than the 90-day retention window", async () => {
+    // Set up two tombstones for user_a: one fresh (within retention,
+    // must survive) and one ancient (must be swept). We also park a
+    // tombstone on user_b at the same ancient time to verify the
+    // sweep is scoped to the calling user — a noisy user_a should
+    // never delete tombstones that belong to user_b.
+    setUser("user_a");
+    await req("POST", "/api/wordpile/piles", {
+      id: PILE_A,
+      name: "fresh delete",
+      createdAt: T_OLD,
+      updatedAt: T_OLD,
+    });
+    await req("DELETE", `/api/wordpile/piles/${PILE_A}`);
+
+    await req("POST", "/api/wordpile/piles", {
+      id: PILE_B,
+      name: "ancient delete",
+      createdAt: T_OLD,
+      updatedAt: T_OLD,
+    });
+    await req("DELETE", `/api/wordpile/piles/${PILE_B}`);
+
+    setUser("user_b");
+    await req("POST", "/api/wordpile/piles", {
+      id: PILE_C,
+      name: "B's ancient delete",
+      createdAt: T_OLD,
+      updatedAt: T_OLD,
+    });
+    await req("DELETE", `/api/wordpile/piles/${PILE_C}`);
+
+    // Rewrite the deletedAt timestamps directly: PILE_B and PILE_C are
+    // pushed to ~120 days ago (beyond the 90-day window); PILE_A's
+    // tombstone stays at "now" (well within the window).
+    const ANCIENT = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000);
+    for (const t of wordpileDeletionsTable.__store) {
+      if (t.id === PILE_B || t.id === PILE_C) t.deletedAt = ANCIENT;
+    }
+    expect(wordpileDeletionsTable.__store).toHaveLength(3);
+
+    // user_a's /sync triggers the lazy sweep for user_a only.
+    setUser("user_a");
+    const sync = await req("POST", "/api/wordpile/sync", { piles: [] });
+    expect(sync.status).toBe(200);
+
+    // PILE_B's ancient tombstone is gone; PILE_A's fresh one survives;
+    // user_b's ancient tombstone is untouched (the sweep is per-user).
+    const remaining = wordpileDeletionsTable.__store.map((t) => ({
+      user: t.clerkUserId,
+      id: t.id,
+    }));
+    expect(remaining).toEqual(
+      expect.arrayContaining([
+        { user: "user_a", id: PILE_A },
+        { user: "user_b", id: PILE_C },
+      ]),
+    );
+    expect(remaining).toHaveLength(2);
+  });
+
+  it("a swept tombstone no longer blocks resurrection (the GC actually frees the id)", async () => {
+    // End-to-end proof that the sweep does the thing it promises:
+    // once the retention window has elapsed, the next /sync from a
+    // device that still remembers the deleted pile *will* resurrect
+    // it. This is the documented graceful-failure mode for the
+    // "device left in a drawer for months" edge case.
+    await req("POST", "/api/wordpile/piles", {
+      id: PILE_A,
+      name: "A's pile",
+      createdAt: T_OLD,
+      updatedAt: T_OLD,
+    });
+    await req("DELETE", `/api/wordpile/piles/${PILE_A}`);
+
+    // Age the tombstone past the retention window.
+    const ANCIENT = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000);
+    for (const t of wordpileDeletionsTable.__store) {
+      t.deletedAt = ANCIENT;
+    }
+
+    const sync = await req("POST", "/api/wordpile/sync", {
+      piles: [
+        {
+          id: PILE_A,
+          name: "A's pile",
+          createdAt: T_OLD,
+          updatedAt: T_OLD,
+          words: [],
+        },
+      ],
+    });
+    expect(sync.status).toBe(200);
+    const piles = (
+      sync.body as { piles: Array<{ id: string; name: string }> }
+    ).piles;
+    expect(piles.map((p) => p.id)).toEqual([PILE_A]);
+    // And the tombstone itself is gone from the table.
+    expect(wordpileDeletionsTable.__store).toHaveLength(0);
+  });
+
+  it("a fresh tombstone (within retention) still blocks resurrection after a sync sweep runs", async () => {
+    // Companion to the GC test: confirm the sweep doesn't accidentally
+    // take out tombstones that are still doing useful work. Even
+    // though /sync runs the sweep on every call, a stale device's
+    // upload of a pile we deleted yesterday must still be refused.
+    await req("POST", "/api/wordpile/piles", {
+      id: PILE_A,
+      name: "A's pile",
+      createdAt: T_OLD,
+      updatedAt: T_OLD,
+    });
+    await req("DELETE", `/api/wordpile/piles/${PILE_A}`);
+
+    // Backdate the tombstone to ~1 day ago — well inside the 90-day
+    // window — so the sweep has every chance to misfire if its
+    // boundary check is wrong.
+    const YESTERDAY = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    for (const t of wordpileDeletionsTable.__store) {
+      t.deletedAt = YESTERDAY;
+    }
+
+    const sync = await req("POST", "/api/wordpile/sync", {
+      piles: [
+        {
+          id: PILE_A,
+          name: "A's pile",
+          createdAt: T_OLD,
+          updatedAt: T_OLD,
+          words: [],
+        },
+      ],
+    });
+    expect(sync.status).toBe(200);
+    expect((sync.body as { piles: unknown[] }).piles).toEqual([]);
+    // The tombstone is still present, ready to refuse the next stale
+    // upload too.
+    expect(wordpileDeletionsTable.__store).toHaveLength(1);
   });
 
   it("tombstones are scoped per user — A's delete doesn't block B's identical id", async () => {
