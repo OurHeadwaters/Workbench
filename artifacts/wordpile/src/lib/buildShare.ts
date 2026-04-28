@@ -282,22 +282,216 @@ export function renderShareImage(input: ShareInput): string | null {
 }
 
 /**
+ * Render the structure to a PNG Blob. Returns null only when the runtime
+ * is missing or the canvas can't encode (very old browsers). Used by the
+ * Web Share / Clipboard paths, which both want a binary blob.
+ */
+export function renderShareBlob(input: ShareInput): Promise<Blob | null> {
+  if (typeof document === "undefined") return Promise.resolve(null);
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return Promise.resolve(null);
+  drawScene(ctx, input);
+  return new Promise((resolve) => {
+    if (typeof canvas.toBlob === "function") {
+      canvas.toBlob((blob) => resolve(blob), "image/png");
+    } else {
+      resolve(null);
+    }
+  });
+}
+
+/**
+ * Slug derived from the pile name for filenames / share titles.
+ * Falls back to "wordpile" when the name reduces to nothing.
+ */
+function sharedFileName(pileName: string): string {
+  const safeName =
+    pileName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40) || "wordpile";
+  const stamp = new Date().toISOString().slice(0, 10);
+  return `${safeName}-build-${stamp}.png`;
+}
+
+/**
+ * Build a short, human-friendly caption that travels with the image when
+ * shared. We highlight the load-bearing words because those are the
+ * "holding it up" lesson — trim is decorative and would dilute the line.
+ */
+export function buildShareCaption(input: ShareInput): string {
+  const loadWords = input.frame
+    .filter((p): p is SharePiece => !!p && p.bucket === "load")
+    .map((p) => p.word.trim())
+    .filter((w) => w.length > 0);
+  const pile = input.pileName.trim() || "Wordpile";
+
+  if (loadWords.length === 0) {
+    const placed =
+      input.frame.filter((p) => !!p).length + input.trim.length;
+    if (placed === 0) {
+      return `Working build from ${pile}.`;
+    }
+    return `Working build from ${pile} — ${placed} ${
+      placed === 1 ? "piece" : "pieces"
+    } placed so far.`;
+  }
+
+  const noun = loadWords.length === 1 ? "word" : "words";
+  return `Built from ${pile} — ${loadWords.length} load-bearing ${noun} holding it up: ${loadWords.join(
+    ", ",
+  )}.`;
+}
+
+/**
+ * Build the ordered list of ClipboardItem payloads to try, in order
+ * from richest to most conservative. The first entry attaches both the
+ * image and the caption (`text/plain`) so apps that support multi-MIME
+ * paste — Slack, Teams, modern email clients — receive the teaching
+ * one-liner alongside the image. Older Safari / Firefox builds reject
+ * multi-MIME items, so we fall back to image-only.
+ *
+ * Exported for unit tests; callers should normally use shareBuildImage.
+ */
+export function buildClipboardItems(
+  imageBlob: Blob,
+  caption: string,
+): ClipboardItem[] {
+  const items: ClipboardItem[] = [];
+  if (caption.trim().length > 0) {
+    const captionBlob = new Blob([caption], { type: "text/plain" });
+    items.push(
+      new ClipboardItem({
+        "image/png": imageBlob,
+        "text/plain": captionBlob,
+      }),
+    );
+  }
+  items.push(new ClipboardItem({ "image/png": imageBlob }));
+  return items;
+}
+
+/**
+ * Outcome of a share attempt. Lets the UI surface the right confirmation
+ * (e.g. "Copied to clipboard" vs "Image saved").
+ */
+export type ShareOutcome =
+  | { kind: "shared" }
+  | { kind: "copied" }
+  | { kind: "downloaded" }
+  | { kind: "cancelled" }
+  | { kind: "failed"; reason: string };
+
+/**
  * Convenience wrapper that triggers a browser download of the PNG.
  * Filename is derived from the pile name and current date.
  */
 export function downloadShareImage(input: ShareInput) {
   const dataUrl = renderShareImage(input);
   if (!dataUrl) return;
-  const safeName = input.pileName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 40) || "wordpile";
-  const stamp = new Date().toISOString().slice(0, 10);
   const a = document.createElement("a");
   a.href = dataUrl;
-  a.download = `${safeName}-build-${stamp}.png`;
+  a.download = sharedFileName(input.pileName);
   document.body.appendChild(a);
   a.click();
   a.remove();
+}
+
+/**
+ * The full share chain: try the system share sheet first (mobile), fall
+ * back to copying the image to the clipboard, and fall back again to a
+ * plain download. Returns an outcome the UI can use to confirm.
+ *
+ * The caption travels with the share payload via the `text` field on
+ * `navigator.share` and is attached as a `text/plain` part of the
+ * ClipboardItem on the clipboard path (with a single-MIME image-only
+ * retry for browsers that don't accept multi-MIME ClipboardItems).
+ */
+export async function shareBuildImage(input: ShareInput): Promise<ShareOutcome> {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return { kind: "failed", reason: "no-runtime" };
+  }
+  const blob = await renderShareBlob(input);
+  if (!blob) {
+    return { kind: "failed", reason: "no-image" };
+  }
+  const filename = sharedFileName(input.pileName);
+  const caption = buildShareCaption(input);
+  const title = `${input.pileName.trim() || "Wordpile"} build`;
+
+  // 1) Web Share API with a file attachment — best on mobile.
+  const nav = window.navigator as Navigator & {
+    canShare?: (data: ShareData) => boolean;
+  };
+  if (typeof File === "function" && typeof nav.share === "function") {
+    try {
+      const file = new File([blob], filename, { type: "image/png" });
+      const shareData: ShareData = { files: [file], title, text: caption };
+      const canShareFiles =
+        typeof nav.canShare === "function" ? nav.canShare(shareData) : true;
+      if (canShareFiles) {
+        try {
+          await nav.share(shareData);
+          return { kind: "shared" };
+        } catch (err) {
+          // AbortError = user dismissed the sheet. Don't fall through to
+          // an unwanted clipboard write or download in that case.
+          if (
+            err &&
+            typeof err === "object" &&
+            "name" in err &&
+            (err as { name?: string }).name === "AbortError"
+          ) {
+            return { kind: "cancelled" };
+          }
+          // Otherwise fall through to clipboard / download fallbacks.
+        }
+      }
+    } catch {
+      // File constructor or canShare threw — try the next fallback.
+    }
+  }
+
+  // 2) Clipboard image copy — desktop browsers that support ClipboardItem.
+  const clipboard = nav.clipboard as
+    | (Clipboard & { write?: (items: ClipboardItem[]) => Promise<void> })
+    | undefined;
+  if (
+    clipboard &&
+    typeof clipboard.write === "function" &&
+    typeof ClipboardItem !== "undefined"
+  ) {
+    const items = buildClipboardItems(blob, caption);
+    for (const item of items) {
+      try {
+        await clipboard.write([item]);
+        return { kind: "copied" };
+      } catch {
+        // Try the next, more conservative payload (image-only).
+      }
+    }
+  }
+
+  // 3) Last-resort: trigger a regular download.
+  try {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    // Give the browser a tick to start the download before revoking.
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return { kind: "downloaded" };
+  } catch (err) {
+    return {
+      kind: "failed",
+      reason: err instanceof Error ? err.message : "download-failed",
+    };
+  }
 }

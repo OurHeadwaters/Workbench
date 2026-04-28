@@ -1330,6 +1330,27 @@ h1, h2, h3, h4, h5, h6 {
   outline: none;
 }
 
+/* ----- Share status toast (under the toolbar) ----- */
+
+.build-share-toast {
+  margin: 10px 0 -2px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.35;
+  border: 1px solid var(--color-rule);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  animation: stacker-celebrate-in 220ms ease;
+}
+
+.build-share-toast-warn {
+  border-color: rgba(122, 46, 46, 0.45);
+  background-color: rgba(122, 46, 46, 0.08);
+  color: var(--color-avoid, #7a2e2e);
+}
+
 /* ----- Onboard overlay ----- */
 
 .build-onboard-overlay {

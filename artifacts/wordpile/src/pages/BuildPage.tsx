@@ -9,6 +9,7 @@ import {
   HelpCircle,
   CheckCircle2,
   Circle,
+  Share2,
 } from "lucide-react";
 import { usePile } from "@/lib/useStore";
 import { WordpileStore } from "@/lib/store";
@@ -35,7 +36,11 @@ import {
   type BuildStats,
   EMPTY_STATS,
 } from "@/lib/buildStats";
-import { downloadShareImage } from "@/lib/buildShare";
+import {
+  downloadShareImage,
+  shareBuildImage,
+  type ShareOutcome,
+} from "@/lib/buildShare";
 
 /**
  * Verdict surfaced after an Unsorted word gets placed in the prototype.
@@ -88,8 +93,14 @@ export function BuildPage() {
     null,
   );
   const [showArchiveNote, setShowArchiveNote] = useState(false);
+  const [shareStatus, setShareStatus] = useState<{
+    tone: "info" | "warn";
+    text: string;
+  } | null>(null);
+  const [sharing, setSharing] = useState(false);
   const stackerRef = useRef<StackerSnapshotHandle>(null);
   const lastSavedStatsRef = useRef<BuildStats>(EMPTY_STATS);
+  const shareStatusTimerRef = useRef<number | null>(null);
 
   // One-time vote archival.
   useEffect(() => {
@@ -265,7 +276,18 @@ export function BuildPage() {
     }
   }
 
-  function handleShare() {
+  function flashShareStatus(text: string, tone: "info" | "warn" = "info") {
+    setShareStatus({ tone, text });
+    if (shareStatusTimerRef.current !== null) {
+      window.clearTimeout(shareStatusTimerRef.current);
+    }
+    shareStatusTimerRef.current = window.setTimeout(() => {
+      setShareStatus(null);
+      shareStatusTimerRef.current = null;
+    }, 4000);
+  }
+
+  function handleSaveImage() {
     if (!stackerRef.current) return;
     const snap = stackerRef.current.getSnapshot();
     downloadShareImage({
@@ -274,7 +296,56 @@ export function BuildPage() {
       trim: snap.trim,
       standing,
     });
+    flashShareStatus("Image saved to your downloads.");
   }
+
+  async function handleShare() {
+    if (!stackerRef.current || sharing) return;
+    const snap = stackerRef.current.getSnapshot();
+    setSharing(true);
+    let outcome: ShareOutcome;
+    try {
+      outcome = await shareBuildImage({
+        pileName: pile?.name ?? "Wordpile",
+        frame: snap.frame,
+        trim: snap.trim,
+        standing,
+      });
+    } finally {
+      setSharing(false);
+    }
+    switch (outcome.kind) {
+      case "shared":
+        flashShareStatus("Shared.");
+        break;
+      case "copied":
+        flashShareStatus("Image copied — paste it into Slack, Teams, or email.");
+        break;
+      case "downloaded":
+        flashShareStatus("Sharing isn't available here, so the image was downloaded instead.");
+        break;
+      case "cancelled":
+        // User dismissed the share sheet — stay silent.
+        break;
+      case "failed":
+        flashShareStatus(
+          "Couldn't share the image. Try Save image instead.",
+          "warn",
+        );
+        break;
+    }
+  }
+
+  // Clean up the toast timer on unmount so we don't try to update an
+  // unmounted component if the user navigates away mid-flash.
+  useEffect(() => {
+    return () => {
+      if (shareStatusTimerRef.current !== null) {
+        window.clearTimeout(shareStatusTimerRef.current);
+        shareStatusTimerRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
@@ -391,6 +462,17 @@ export function BuildPage() {
             type="button"
             className="btn-secondary whitespace-nowrap"
             onClick={handleShare}
+            disabled={run.framePlaced + run.trimPlaced === 0 || sharing}
+            data-testid="button-build-share-out"
+            title="Share this build to a coalition partner or paste it into Slack/Teams/email"
+            aria-busy={sharing}
+          >
+            <Share2 size={14} /> {sharing ? "Sharing…" : "Share"}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary whitespace-nowrap"
+            onClick={handleSaveImage}
             disabled={run.framePlaced + run.trimPlaced === 0}
             data-testid="button-build-share"
             title="Save a picture of your build"
@@ -412,6 +494,17 @@ export function BuildPage() {
           votes={archivedVotes}
           onDismiss={dismissArchiveNote}
         />
+      )}
+
+      {shareStatus && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`build-share-toast build-share-toast-${shareStatus.tone}`}
+          data-testid="text-share-status"
+        >
+          {shareStatus.text}
+        </div>
       )}
 
       {words.length === 0 ? (
