@@ -9,6 +9,7 @@ import { SignedIn, SignedOut, RedirectToSignIn } from "@/lib/clerkGates";
 import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import Standby from "@/pages/Standby";
 import Dashboard from "@/pages/Dashboard";
 import TransactionNew from "@/pages/TransactionNew";
 import TransactionDetail from "@/pages/TransactionDetail";
@@ -109,6 +110,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/standby" component={Standby} />
       <Route path="/sign-in/*?">
         <div className="min-h-screen flex items-center justify-center bg-background">
           <SignIn routing="path" path={`${basePath}/sign-in`} />

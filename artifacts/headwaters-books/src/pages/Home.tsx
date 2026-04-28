@@ -54,8 +54,15 @@ export default function Home() {
         </SignedIn>
       </main>
 
-      <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto">
-        &copy; {new Date().getFullYear()} Headwaters Food Systems Agency.
+      <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
+        <div>
+          <Link href="/standby">
+            <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
+              The Standby — Z3 pilot dashboard
+            </span>
+          </Link>
+        </div>
+        <div>&copy; {new Date().getFullYear()} Headwaters Food Systems Agency.</div>
       </footer>
     </div>
   );
