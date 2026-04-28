@@ -237,8 +237,11 @@ const tables = dbModule as unknown as {
   bookkeeperUsersTable: FakeTable;
   bookkeeperCostCentresTable: FakeTable;
   bookkeeperAccountsTable: FakeTable;
+  bookkeeperTransactionsTable: FakeTable;
+  bookkeeperTransactionLinesTable: FakeTable;
   bookkeeperSubmissionsTable: FakeTable;
   bookkeeperReceiptAttachmentsTable: FakeTable;
+  bookkeeperInventoryReceiptsTable: FakeTable;
   bookkeeperAuditLogTable: FakeTable;
 };
 
@@ -341,8 +344,11 @@ beforeEach(() => {
     "bookkeeperUsersTable",
     "bookkeeperCostCentresTable",
     "bookkeeperAccountsTable",
+    "bookkeeperTransactionsTable",
+    "bookkeeperTransactionLinesTable",
     "bookkeeperSubmissionsTable",
     "bookkeeperReceiptAttachmentsTable",
+    "bookkeeperInventoryReceiptsTable",
     "bookkeeperAuditLogTable",
   ];
   for (const k of tableKeys) {
@@ -902,6 +908,354 @@ describe("bookkeeper route — submission scoping", () => {
         }),
       });
       expect(res.status).toBe(401);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// Tests for the most consequential write paths in the bookkeeping ledger:
+// posting a balanced double-entry transaction, and approving a pending
+// submission (which posts a transaction on the submitter's behalf and
+// links the two records together). Bugs in either path can silently
+// corrupt the books, so the assertions below check both the happy-path
+// state changes (rows inserted, status flipped, audit row written) and
+// the rejection paths (unbalanced, missing account, wrong role).
+
+function seedAccount(
+  code: string,
+  name: string,
+  normalSide: "debit" | "credit",
+): void {
+  tables.bookkeeperAccountsTable.__store.push({
+    id: `acct-${code}`,
+    code,
+    name,
+    type: normalSide === "debit" ? "expense" : "asset",
+    normalSide,
+    costCentreCode: null,
+    mirrorAccountCode: null,
+    notes: null,
+    isActive: true,
+    createdAt: new Date(),
+  });
+}
+
+describe("bookkeeper route — POST /transactions", () => {
+  it("balanced POST inserts the parent transaction, its lines, and an audit row", async () => {
+    const h = await startHarness();
+    try {
+      signIn({
+        clerkUserId: "user_bk",
+        email: "bk@example.com",
+        role: "bookkeeper",
+      });
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const res = await fetch(`${h.base}/api/bookkeeper/transactions`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          postedDate: "2026-04-15",
+          description: "Pens & pencils",
+          reference: "RCPT-42",
+          lines: [
+            { accountCode: "5100", debit: 12.5, credit: 0, memo: "supplies" },
+            { accountCode: "1000", debit: 0, credit: 12.5 },
+          ],
+        }),
+      });
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        id: string;
+        status: string;
+        totalDebit: number;
+        totalCredit: number;
+        lines: { accountCode: string; debit: number; credit: number }[];
+        createdByEmail: string;
+      };
+      expect(body.status).toBe("posted");
+      expect(body.totalDebit).toBe(12.5);
+      expect(body.totalCredit).toBe(12.5);
+      expect(body.lines).toHaveLength(2);
+      expect(body.createdByEmail).toBe("bk@example.com");
+
+      // Parent row persisted with the actor stamped on it.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(1);
+      const parent = tables.bookkeeperTransactionsTable.__store[0]!;
+      expect(parent.id).toBe(body.id);
+      expect(parent.description).toBe("Pens & pencils");
+      expect(parent.reference).toBe("RCPT-42");
+      expect(parent.status).toBe("posted");
+      expect(parent.createdByEmail).toBe("bk@example.com");
+
+      // Both lines persisted, in order, and pointing at the parent.
+      const lines = tables.bookkeeperTransactionLinesTable.__store
+        .filter((l) => l.transactionId === parent.id)
+        .sort((a, b) => Number(a.lineOrder) - Number(b.lineOrder));
+      expect(lines).toHaveLength(2);
+      expect(lines[0]!.accountCode).toBe("5100");
+      expect(lines[1]!.accountCode).toBe("1000");
+
+      // Audit trail records the create event against the new txn id.
+      const audit = tables.bookkeeperAuditLogTable.__store.find(
+        (r) => r.action === "transaction.create",
+      );
+      expect(audit).toBeDefined();
+      expect(audit!.entityId).toBe(parent.id);
+      expect(audit!.actorEmail).toBe("bk@example.com");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects an unbalanced POST with 400 and writes nothing to the ledger", async () => {
+    const h = await startHarness();
+    try {
+      signIn({
+        clerkUserId: "user_bk",
+        email: "bk@example.com",
+        role: "bookkeeper",
+      });
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const res = await fetch(`${h.base}/api/bookkeeper/transactions`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          postedDate: "2026-04-15",
+          description: "Off-balance",
+          lines: [
+            { accountCode: "5100", debit: 10, credit: 0 },
+            { accountCode: "1000", debit: 0, credit: 5 },
+          ],
+        }),
+      });
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toMatch(/balance/i);
+
+      // Crucially, neither the parent nor any lines were persisted.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(0);
+      expect(tables.bookkeeperTransactionLinesTable.__store).toHaveLength(0);
+      // And no audit row was written for the rejected attempt.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.find(
+          (r) => r.action === "transaction.create",
+        ),
+      ).toBeUndefined();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects a POST referencing a non-existent account code with 400", async () => {
+    const h = await startHarness();
+    try {
+      signIn({
+        clerkUserId: "user_bk",
+        email: "bk@example.com",
+        role: "bookkeeper",
+      });
+      // Only seed one of the two account codes referenced below.
+      seedAccount("5100", "Office Supplies", "debit");
+
+      const res = await fetch(`${h.base}/api/bookkeeper/transactions`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          postedDate: "2026-04-15",
+          description: "Bad account ref",
+          lines: [
+            { accountCode: "5100", debit: 5, credit: 0 },
+            { accountCode: "1000", debit: 0, credit: 5 },
+          ],
+        }),
+      });
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      // The error names the missing code so the user can fix it.
+      expect(body.error).toMatch(/1000/);
+
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(0);
+      expect(tables.bookkeeperTransactionLinesTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("bookkeeper route — POST /submissions/:id/approve", () => {
+  // Helper: have a food_handler post a pending expense submission and
+  // return the new submission id. Caller is expected to re-sign-in as
+  // the approver afterwards.
+  async function seedPendingSubmission(
+    base: string,
+    overrides: Record<string, unknown> = {},
+  ): Promise<string> {
+    signIn({
+      clerkUserId: "user_alice",
+      email: "alice@example.com",
+      role: "food_handler",
+    });
+    const body = {
+      kind: "expense",
+      costCentreCode: "CC-001",
+      occurredOn: "2026-04-10",
+      vendor: "Acme",
+      amount: 25,
+      description: "lunch meeting",
+      ...overrides,
+    };
+    const res = await fetch(`${base}/api/bookkeeper/submissions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status !== 200) {
+      throw new Error(
+        `seedPendingSubmission failed: ${res.status} ${await res.text()}`,
+      );
+    }
+    const json = (await res.json()) as { id: string };
+    return json.id;
+  }
+
+  it("transitions status from pending → approved, posts the linked transaction, and stamps decidedBy", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      // Sanity: the submission starts in pending with no decided-by stamp.
+      const before = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(before?.status).toBe("pending");
+      expect(before?.approvedTransactionId ?? null).toBeNull();
+      expect(before?.decidedByEmail ?? null).toBeNull();
+
+      // Now sign in as a bookkeeper and approve.
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            reference: "AP-001",
+            lines: [
+              { accountCode: "5100", debit: 25, credit: 0 },
+              { accountCode: "1000", debit: 0, credit: 25 },
+            ],
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        id: string;
+        status: string;
+        approvedTransactionId: string;
+        decidedByEmail: string;
+        decidedAt: string | null;
+      };
+      expect(body.id).toBe(submissionId);
+      expect(body.status).toBe("approved");
+      expect(body.decidedByEmail).toBe("bea@example.com");
+      expect(body.decidedAt).not.toBeNull();
+      expect(body.approvedTransactionId).toBeTruthy();
+
+      // The submission row in the DB reflects the same final state.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("approved");
+      expect(after?.decidedByEmail).toBe("bea@example.com");
+      expect(after?.decidedById).toBeTruthy();
+      expect(after?.decidedAt).toBeInstanceOf(Date);
+      expect(after?.approvedTransactionId).toBe(body.approvedTransactionId);
+
+      // Exactly one transaction was posted, linked back to the submission.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(1);
+      const txn = tables.bookkeeperTransactionsTable.__store[0]!;
+      expect(txn.id).toBe(body.approvedTransactionId);
+      expect(txn.sourceSubmissionId).toBe(submissionId);
+      expect(txn.status).toBe("posted");
+      expect(txn.createdByEmail).toBe("bea@example.com");
+
+      // Both transaction lines were persisted under that txn id.
+      const lines = tables.bookkeeperTransactionLinesTable.__store.filter(
+        (l) => l.transactionId === txn.id,
+      );
+      expect(lines).toHaveLength(2);
+
+      // Audit trail records the approve event.
+      const audit = tables.bookkeeperAuditLogTable.__store.find(
+        (r) =>
+          r.action === "submission.approve" && r.entityId === submissionId,
+      );
+      expect(audit).toBeDefined();
+      expect(audit!.actorEmail).toBe("bea@example.com");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects approval from a food_handler with 403, leaves the submission pending, and posts no transaction", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      // Alice (the submitter) is still a food_handler — she cannot
+      // approve her own (or anyone's) submission, even with a perfectly
+      // balanced line set.
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            lines: [
+              { accountCode: "5100", debit: 25, credit: 0 },
+              { accountCode: "1000", debit: 0, credit: 25 },
+            ],
+          }),
+        },
+      );
+      expect(res.status).toBe(403);
+
+      // Submission unchanged — still pending, no decided-by, no linked txn.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("pending");
+      expect(after?.approvedTransactionId ?? null).toBeNull();
+      expect(after?.decidedByEmail ?? null).toBeNull();
+
+      // No transaction was posted as a side-effect of the rejected call.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(0);
+      expect(tables.bookkeeperTransactionLinesTable.__store).toHaveLength(0);
+      // No approve audit row either.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.find(
+          (r) => r.action === "submission.approve",
+        ),
+      ).toBeUndefined();
     } finally {
       await h.close();
     }
