@@ -1,0 +1,252 @@
+# Codetry Test 005 — Drip Harvester reads as DeFi noise
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (Earn surface)
+**App:** xbuckets PWA, Earn tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the Earn tab as it ships — Drip Harvester intro card,
+fleet card, AMM pool index, LP-position card, sweep toast, learn modules
+**Files:**
+
+- `artifacts/xbuckets/src/pages/EarnTab.tsx`
+- `artifacts/xbuckets/src/copy.en.ts` (the `earn` block)
+- `artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/`
+  (Variant 0 control, Variant A vocab sweep, Variant B register honesty,
+  Variant C flow ribbon)
+
+---
+
+## The finding (one line)
+
+The Earn surface speaks two languages at once. The locked Zone 1 water
+vocabulary (Test 002) covers four of the words on screen. The other
+seventeen are imported from DevOps, naval, finance, and crypto-Twitter
+registers — and the cold reader has to translate every one of them to
+understand what the screen does.
+
+## What was on screen (before)
+
+A cold read of the Earn tab as it ships today (Variant 0 in
+`earn-drip-test/Variant0Control.tsx`) surfaces seventeen distinct
+defects on a single screen. They cluster into four foreign registers:
+
+**DevOps / robot register** — *agent*, *fleet*, *deploy*. The Drip
+Harvester is talked about as if it were a CI runner: "Deploy my Drip
+Harvester", "Drip Harvester Fleet", "2 harvesters deployed", "Deploy
+another agent". The user-facing object is a wallet that earns money;
+the words make it sound like a server.
+
+**DeFi / protocol register** — *AMM pools*, *LP Position*, *LP tokens*,
+*pool shares*, *Est. APR*, *trading fees*, *swap*. Six raw protocol
+nouns that have no analogue in the locked Zone 1 map and that no
+non-crypto user knows the meaning of without translation.
+
+**Broom register** — *sweep*, *auto-sweeps*, *sweep threshold*,
+*Routing drip to cistern*. The Drip Harvester *drips*. Drips do not
+sweep. The broom is a third metaphor on a surface where one (water)
+already does all the work.
+
+**Crypto-Twitter register** — *no rug pulls*, *no moonshots*, *24/7*.
+The defensiveness of these phrases ("we're one of the good ones")
+imports the very anxiety they're trying to allay.
+
+And one violation of the locked Zone 1 map itself: the surface uses
+**cistern** ("cistern", "savings cisterns", "Routing drip to cistern…")
+where Test 002 locked the word to **Bucket**.
+
+The defects are visible at first read. The screen is doing what Test
+003 named (a "register collision" — two metaphors competing for the
+same words) on a much larger scale than the wallet chip ever was.
+
+## The intervention
+
+Four variants were built side-by-side on the canvas:
+
+- **Variant 0 (control)** — the live surface, faithfully transcribed
+  from `EarnTab.tsx` and `copy.en.ts`, with each defect tagged in the
+  margin so the seventeen-defect catalogue is visible at a glance.
+- **Variant A (vocabulary sweep)** — every word the locked map does
+  not sanction is replaced by a word that does, or by plain English
+  where no locked word exists. One new noun is coined: **Park toll** for
+  the swap fee a Park collects (the metaphor: a toll-booth on the path
+  through the Park).
+- **Variant B (register honesty)** — Variant 0's wording is kept, with
+  every foreign-register word given a quiet inline gloss into the locked
+  vocabulary on first appearance. The hypothesis: name the second
+  register so the reader stops translating in their head.
+- **Variant C (flow ribbon)** — Variant 0's wording is kept, with a
+  single flow ribbon added at the top of the surface that names the four
+  stations the money passes through (Reservoir → Drip Harvester →
+  Private Park → Bucket). The hypothesis: the deeper defect is missing
+  topology, not noisy words — if the chain is legible, the words at each
+  station tolerate noise.
+
+### What graduates from Variant A
+
+The Variant A vocabulary sweep ships into `copy.en.ts` for the strings
+the cold-read defects landed on:
+
+- **Drip Harvester is the only word for the actor.** The agent / fleet /
+  deploy register is removed. "Deploy my Drip Harvester" → "Set up my
+  Drip Harvester". "Deploy another agent" → "Set up another Drip
+  Harvester". "Drip Harvester Fleet" → "Drip Harvesters". "2 harvesters
+  deployed" → "2 running". "Destroy harvester" → "Stop this Drip
+  Harvester".
+- **Private Park is the destination, not "AMM pool" or "liquidity
+  pool".** "AMM pools" header → "Private Parks". "LP Position" → "Parked
+  in [Park]". "LP tokens / pool shares" → "Your share of the Park".
+- **Park toll is the new noun for the swap fee.** Coined in this test
+  and added to the locked map. The metaphor: a Park collects a small toll
+  every time someone exchanges through it; the Drip Harvester's earnings
+  are its share of those tolls. "Fee per swap" → "Park toll per swap".
+  "Trading fees" → "Park tolls". "Based on current pool trading fee" →
+  "Based on the current Park toll · actual drip varies with traffic".
+- **Pool labels swept to Park labels.** The user-facing pool surface is
+  re-mapped to the Park metaphor: "Select pool" → "Pick a Park". "Pool
+  size" → "Park size". "No pool yet" → "No Park yet". "Pool not live
+  yet" → "Park not live yet". The internal field names (`poolSizeLabel`,
+  `poolNoPoolYet`, etc.) keep their old keys; only the strings change.
+- **APR reframed to plain monthly dollars.** The LP-position card no
+  longer shows "Est. APR" as a percentage. It now shows a "Drip rate"
+  card reading "$X / month per $100 parked" — the same number the APR
+  bar used to display, but expressed in the unit a household actually
+  budgets in. The daily card likewise becomes "Today's drip" / "RLUSD so
+  far". The deposit preview cards become "Daily drip" and "Monthly
+  drip".
+- **Channel ownership held.** A drip-ready breakdown row that read
+  "Channelled to savings" became "Drips to savings" — the locked map
+  reserves *Channel* for Reservoir → Buckets, and the Drip Harvester
+  has its own verb (drip) for the Park → Bucket move.
+- **Drip is the only verb for the move from Drip Harvester to Bucket.**
+  Sweep / auto-sweep / harvest threshold are removed. "Auto-sweeps to
+  Vacation when ≥ $25" → "Drips to Vacation when earnings ≥ $25". "Sweep
+  toast" → "Drip-ready toast". The animation copy "Routing drip to
+  cistern…" → "Dripping to your bucket…".
+- **Bucket replaces cistern wherever cistern crept in.** "Drips
+  automatically into your chosen savings cistern" → "Drips automatically
+  into your chosen savings bucket". "All savings cisterns have a Drip
+  Harvester at work" → "All savings buckets have a Drip Harvester at
+  work".
+- **The crypto-Twitter defensiveness is dropped.** "No moonshots, no
+  rug pulls, just steady fee drip into your buckets" → "Stablecoin pairs
+  only — so the drip stays steady, season after season."
+
+### What does **not** graduate (this round)
+
+- **The flow ribbon (Variant C).** It belongs on the surface. It
+  belongs in production. It is the same intervention that graduated
+  from Test 001 to the Payday tab, and it would do the same work here.
+  But it is a heavier production change — a new component on the Earn
+  surface with its own placement / layout / responsive concerns —
+  and it is recorded as a follow-up task rather than landing in this
+  vocabulary-sweep batch.
+- **Variant B (register honesty).** Predicted-rejected before the
+  test, in the spirit of Test 003. Doubling the word count to gloss the
+  second register is honest about the collision but does not resolve it.
+  Recorded as rejected.
+- **The deeper structural defects** in the LP-position card — the
+  impermanent-loss disclosure, the multi-card density, and the absence
+  of a "what happens if the Park toll drops" cadence — survive this
+  test even though the *labels* (APR, pool, fee) were swept. Card-layout
+  work is recorded as a follow-up task.
+
+## The rule discovered
+
+> **Vocabulary defects compound where the metaphor is most asked
+> to do work.** Test 001 cleaned a screen where two CTAs collided
+> on one word. Test 002 locked a zone where a few words drifted
+> across surfaces. Test 005 cleans a screen where the locked map
+> was dropped entirely and four foreign registers rushed in to
+> fill the gap. The rule is the same — one word, one referent —
+> but the cost of dropping it scales with the number of registers
+> that get to colonise the silence.
+
+Or, more sharply: **silence about the metaphor is permission for
+DeFi.** The Earn surface inherited "agent / fleet / deploy / LP / AMM
+/ sweep / 24/7 / no rug pulls" not because anyone designed it that way
+but because nobody held the locked map there. Foreign registers fill
+unmapped territory the same way weeds fill unplanted soil.
+
+## Falsifiable claim
+
+If the Variant A graduation holds, then a cold-read of the Earn tab
+should describe what the screen does using only the locked Zone 1
+words plus *Drip Harvester* and *Park toll* (the two new sanctioned
+nouns). Conversely, if a cold reader still reaches for "deploy" or
+"LP" or "sweep" to describe what they see, the graduation has not
+held and the test is falsified.
+
+## Status
+
+- Four variants built on canvas under
+  `artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/`.
+- **Variant A graduated** to `copy.en.ts` (Earn block) and the
+  affected JSX strings in `EarnTab.tsx`. Critical strings mirrored to
+  `copy.fr.ts`. The first graduation pass was caught by code review as
+  partial — APR/pool/trading-fee phrasing and the "Channelled to
+  savings" locked-word violation still leaked. A second sweep finished
+  the job: APR reframed to "$X / month per $100 parked", pool labels
+  swept to Park labels, channel-ownership restored to drip.
+- **Park toll** added to the locked Zone 1 word map
+  (`docs/codetry/002-zone-1-words-locked.md`) — the only new noun
+  coined this round.
+- **Variant C (flow ribbon for Earn)** recorded as a follow-up task
+  for production.
+- **Variant B (register honesty)** recorded as rejected.
+- **Side note on the practice.** This was the first codetry test to
+  graduate twice in one session — once as a draft, then again after
+  code-review caught defect leakage. The pattern is a useful one to
+  name: *the locked map is the test*, and "graduated" is only true
+  when a strict surface scan finds no leaks.
+- **Third-pass leak (caught from the live surface, not from review).**
+  A user looking at the live Drip Harvester card on a phone caught one
+  more finance-vocabulary leak the two graduations had missed:
+  `notFundedYetPrefix` read "Not funded yet · will drip to —", which
+  the user reported as "Not funded = stalled" — i.e. the word *funded*
+  is borrowed from finance and reads as broken/halted, not as the
+  empty-and-waiting state it actually represents. Replaced with
+  "No RLUSD parked yet · will drip to —" (EN) / "Aucun RLUSD garé ·
+  gouttera vers —" (FR), so the negation mirrors the funded copy
+  ("[Park] Park · drips to [Bucket]") in the locked verb (*park* /
+  *garer*) instead of the borrowed one (*fund*). This reinforces the
+  rule: **the strict surface scan must include the user's pocket, not
+  just the diff** — a vocabulary defect can survive code review and
+  only surface when someone reads the live phone screen with cold
+  eyes.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Earn — Drip Harvester reads as DeFi noise
+zone:      1 (Headwaters / xBuckets — Earn surface)
+date:      2026-04-27
+artefacts: artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/
+graduated: Variant A (vocabulary sweep) → copy.en.ts + EarnTab.tsx
+rule:      vocabulary defects compound where the metaphor is most asked to work
+status:    graduated — first formal codetry test on the Earn surface
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today the Earn tab spoke seventeen words it had no business
+> speaking. Agent. Fleet. Deploy. AMM. LP. APR. Pool shares. Sweep.
+> 24/7. No rug pulls. The locked map was right there in `copy.en.ts`,
+> being honoured on the Payday tab and the Reservoir hero and the
+> lessons — and dropped the moment the surface touched DeFi. Four
+> registers rushed in to fill the silence.**
+>
+> Rule: vocabulary defects compound where the metaphor is most asked to
+> do work. Silence about the metaphor is permission for DeFi.
+>
+> Variant A swept the surface. The Drip Harvester is just a Drip
+> Harvester now. Pools became Parks (already in the lessons; only the
+> screen was holding out). Sweep became Drip. APR became "about $X per
+> $100 / month from Park tolls". And one new word — *Park toll* — joined
+> the locked map.
+>
+> The map stays small enough to teach in a single breath. *Park toll*
+> is the fourteenth word in it.
+>
+> *(default: private. share to the shallows? — y / n)*

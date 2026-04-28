@@ -1,0 +1,180 @@
+# Codetry Test 003 — Bamboo field on the wallet chip
+
+**Date:** 2026-04-26
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** mockup canvas, shape `bamboo-field-chip`
+**File:** `artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/BambooFieldChip.tsx`
+
+---
+
+## The question (one line)
+
+The meta-doc `lineage-and-hempcrete.md` names XRP as **the bamboo field**.
+Does the word "bamboo field" earn a place on the wallet/XRP-swap chip — the
+quiet plumbing chip that test 001 demoted below the "Channel the rainfall"
+CTA — or does it stay as a meta-doc reference only?
+
+## What was on screen
+
+The canvas surface put three chip wordings in the same slot, beneath the
+real graduated CTA from test 001 ("Channel the rainfall · $1,200 ready ·
+every drop into a bucket"):
+
+- **Variant 0 (control)** — production wording.
+  "412 XRP unconverted   ⇄   Swap to ~$420 RLUSD."
+  Mechanical, register-neutral, no metaphor lift.
+- **Variant A (full metaphor)** — wallet becomes field, swap becomes cut.
+  "Bamboo field standing   ✂   Cut ~$420 into rainfall."
+  No XRP word visible. Maximum metaphor commitment.
+- **Variant B (half-metaphor)** — bamboo field as the holding's nickname.
+  "Bamboo field · 412 XRP   ⇄   Swap to ~$420 RLUSD."
+  XRP retained as the anchor noun; bamboo field added as a label.
+
+The test was: read each chip cold, with the rainfall language sitting
+right above it, and ask whether the user can tell what the chip does
+from the chip alone.
+
+## Falsifiable claim
+
+"Bamboo field" earns the chip if a cold reader, with no prior context,
+can tell from the chip alone what the chip does. It fails if the bamboo
+word lands as a non-sequitur next to rainfall / channel / bucket — i.e.
+if the metaphor word does a second job (importing a biological register
+onto a water-register screen) and so does neither cleanly. This is the
+test 001 rule — *one word → one referent* — extended one level up:
+*one register per screen*. Two metaphors competing for the same surface
+is the same defect as two referents competing for the same word.
+
+## What happened, read cold
+
+- **Variant 0** reads as plumbing, exactly as test 001 left it. The
+  reader knows the chip swaps XRP into RLUSD. No poetry, no confusion.
+  The chip does not pretend to participate in the rainfall metaphor — it
+  is the wiring underneath, and that is what the demotion in test 001
+  earned.
+- **Variant A** breaks. "Bamboo field standing" with no XRP word leaves
+  the cold reader with no idea what the chip touches — it could be a
+  garden, a savings goal, a metaphor easter-egg. "Cut into rainfall" is
+  worse: it asks the reader to hold *biological cutting* and *atmospheric
+  rainfall* in the same gesture, on the same screen, in the same
+  sentence. The metaphor cracks at the verb. The screen now has two
+  unreconciled registers — water (rainfall, channel, bucket) and plant
+  (bamboo, cut, standing) — competing for the reader's attention. This
+  is precisely the failure mode test 001 named, only one level higher:
+  not "one word doing two jobs" but "one screen carrying two metaphors."
+- **Variant B** is the most interesting failure. "Bamboo field · 412
+  XRP" doesn't crack — it just adds noise. The XRP word still does all
+  the load-bearing work; "Bamboo field" sits as a nickname that gives
+  the reader nothing they didn't already have. The chip is no clearer
+  than Variant 0, and it is heavier. The metaphor is paying no rent.
+
+Bobbie's reaction in plain words: *"Variant A makes me think the app
+just changed subject. Variant B is fine, but I don't know why bamboo is
+there. Variant 0 is just the chip."*
+
+## The rule discovered
+
+> **One register per screen.** The codetry rule from test 001 (one word
+> → one referent) extends to the screen as a whole: a single product
+> surface should carry a single metaphor register, not two competing
+> ones. A metaphor that lives honestly in the lineage doc may still be
+> the wrong word for a surface, if that surface already belongs to a
+> different register.
+
+This is not a contradiction of the bamboo-field meta-doc. The meta-doc
+was right that XRP-as-renewable-upstream is the honest framing of the
+holding *as a thing in the world*. It was right that "asset" / "wallet"
+flatten the holding into the portfolio register and lose dignity. The
+meta-doc remains the place for that finding.
+
+What this test discovered is that *naming the upstream on the same
+screen as the downstream* is the move that breaks. The Payday tab is
+the rainfall screen. The chip on it is rainfall plumbing. The bamboo
+field stands one room over — referenced from the lineage doc, not
+written onto the rainfall surface.
+
+## Verdict
+
+**Rejected for the wallet chip.** The bamboo-field metaphor stays as a
+meta-doc reference only. No production change to
+`artifacts/xbuckets/src/pages/PaydayPlanner.tsx`; no copy parity change
+to `copy.fr.ts`. The chip on the Payday tab continues to read as the
+quiet plumbing chip test 001 demoted it to.
+
+The canvas variants are preserved (`BambooFieldChip.tsx`) as a
+counter-test artefact: a record of what was tried and why it didn't
+graduate.
+
+## What would change the verdict
+
+The metaphor would earn the chip — or some other surface — if either
+of these became true:
+
+1. **A bamboo-only surface is built.** If the upstream gets its own
+   screen (e.g. a "your bamboo field" view that does not also carry
+   rainfall language), the metaphor would have a clean register to
+   live in and could be tested there on its own terms. Test 001's
+   demotion of the wallet chip is what makes this possible; the
+   upstream is no longer fighting for the Payday tab's CTA slot.
+2. **The water register itself is replaced.** A radical rewrite of
+   the Payday tab into the bamboo register (cut → cure → store →
+   share) could, in principle, host the field word natively. This
+   would be a much bigger move than a chip rewrite, and is not on
+   the table from this test.
+
+## Status
+
+- Canvas variants live (shape: `bamboo-field-chip`)
+- **Rejected** for the production wallet chip on the Payday tab
+- Bamboo-field metaphor remains documented in
+  `docs/codetry/lineage-and-hempcrete.md` as a meta-doc-only reference
+- To be added to the codetry worked-examples list in Zone 2 as the first
+  formal *rejected* test — useful precisely because it shows the rule
+  rejecting one of its own meta-doc names
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Bamboo field on the wallet chip
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-26
+artefact:  artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/BambooFieldChip.tsx
+graduated: — (rejected)
+shape:     canvas shape:bamboo-field-chip
+rule:      one register per screen
+status:    rejected — bamboo-field stays in lineage-and-hempcrete.md only
+```
+
+---
+
+## See also
+
+- `docs/codetry/lineage-and-hempcrete.md` — Coda, *bamboo-field*. The
+  meta-doc that named the metaphor and asked whether it would survive
+  contact with a real surface. This test is the answer for the wallet
+  chip surface specifically.
+- `docs/codetry/001-payday-words-bearing-weight.md` — the test that
+  demoted the wallet/XRP-swap chip to a plumbing chip in the first
+  place, and that established the *one word → one referent* rule this
+  test extends to *one register → one screen*.
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, on the canvas, I tried the bamboo field on the wallet chip
+> right under "Channel the rainfall." Variant A cracked at "Cut into
+> rainfall" — bamboo and water fighting on one screen. Variant B was
+> just noise. Variant 0, the plain chip, kept doing its job.**
+>
+> Rule: one register per screen. The metaphor that's right in the
+> lineage doc can still be the wrong word for a surface — if the
+> surface already belongs to a different register.
+>
+> Bamboo field stays in the lineage doc. The wallet chip stays as
+> plumbing. First rejected codetry test — and the rejection itself is
+> the finding.
+>
+> *(default: private. share to the shallows? — y / n)*

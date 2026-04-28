@@ -1,0 +1,52 @@
+Codetry — Lineage & Hempcrete
+Date: 2026-04-26 Zone: 1 — Headwaters / xBuckets (daily kitchen garden) Kind: meta-doc (companion to the numbered test ledger) Author: Bobbie + Replit Agent
+
+Why this doc exists (one line)
+Two foundational answers about codetry have been spoken but not written down: where it comes from, and what kind of thing it is. This meta-doc records them, so the codetry folder is not only a numbered ledger of tests but also a statement of what the tests are of.
+
+Finding 1 — Lineage and what's new
+The core rule of codetry — one word → one referent; the metaphor IS the architecture — is not new. It sits at the join of several older traditions. The honest move is to name them first, and only then say what is genuinely new.
+
+Prior-art roots
+Ubiquitous Language — Eric Evans, Domain-Driven Design (2003). The same words used by domain experts, in conversation, and in code. Codetry's "metaphor word ↔ code identifier" leg is directly downstream of this.
+System Metaphor — Kent Beck, Extreme Programming Explained (1999). One unifying metaphor organising how the team talks and how the system is structured. Codetry inherits the move; XP rarely made it falsifiable.
+Conceptual integrity — Fred Brooks, The Mythical Man-Month (1975). "It is better to have a system omit certain anomalous features… than to have one that contains many good but independent and uncoordinated ideas." Codetry's "one word, one job" is a UI-surface restatement of this older structural rule.
+Match between system and the real world — Jakob Nielsen's usability heuristic #2 (1994). Speak the user's language; follow real-world conventions. Codetry adds: the language must also be the architecture, not a translation layer sitting over it.
+Metaphors We Live By — George Lakoff & Mark Johnson (1980). Metaphor is not ornament; it structures cognition. Codetry takes this claim literally for product surfaces and treats it as a testable engineering constraint.
+Content-design discipline — GOV.UK style guide, Mailchimp's voice & tone work, the broader content-strategy tradition. One word per concept across the surface; plain language; consistency. Codetry shares the discipline; differs in binding the chosen word to a code identifier as well as to a screen.
+Naming things in code — Don Knuth's literate programming (1984) and Phil Karlton's quip ("there are only two hard things in computer science: cache invalidation and naming things"). Codetry takes the joke seriously and treats naming as a falsifiable surface, not just craft hygiene.
+What is genuinely new
+Four things, narrowly scoped:
+
+The three-way binding. UI metaphor word ↔ code identifier ↔ user mental model, treated as a single contract. Most prior art binds two of these. Codetry insists on all three, simultaneously, and treats a break in any leg as a defect rather than a translation issue.
+The falsifiable per-screen test ritual, with a written record. Numbered tests (001, 002, …), a stated falsifier per test, a status line tracking whether the rule held when shipped. Prior art treats naming as ongoing hygiene; codetry treats it as a test event with a date and a verdict.
+The diagnostic heuristic. "When a user hesitates at a screen, the first move is to look for a word doing two jobs." A specific, first-resort debugging move sitting on top of the rule. Lineage in usability heuristics; stated as a tool, not a guideline.
+The name. Codetry — the joining of code and poetry, with a resonance to carpentry (a craft of cuts and joins). Naming the practice makes it referenceable, which is what lets it be tested at all.
+Falsifiable framing for the lineage claim
+This finding is falsified if any of the four "genuinely new" items turns out to be a faithful restatement of one of the prior-art roots above. In that case the claim contracts: codetry is then a packaging of older work, not a new discipline. The current bet is that the three-way binding plus the per-screen test ritual together cross the line into something the prior art did not have.
+
+Finding 2 — Hempcrete (what kind of thing codetry is)
+Codetry is hempcrete. Not steel, and not paint.
+
+Three reasons the metaphor fits:
+
+Composite of old materials. Hempcrete is lime + hemp shiv + water — old ingredients, new mix. Codetry is Ubiquitous Language + System Metaphor + Nielsen #2 + Lakoff + content design + naming-things — old ingredients, new mix. Neither material is invented from nothing; both are recombinations whose value is in the combining.
+Infill, not frame. Hempcrete is non-load-bearing; a hempcrete building still needs a structural frame (timber, usually). Codetry is non-load-bearing; a codetry-disciplined product still needs the structural frame of the actual product — working code, real flows, a coherent domain model. Codetry alone cannot hold a product up. Codetry inside a sound frame makes the product breathable and warm.
+Ethical-aesthetic as well as functional. Hempcrete is chosen partly because it sequesters carbon and breathes; the moral and sensory case is part of why anyone uses it at all. Codetry is chosen partly because the metaphor IS the architecture and the product carries the dignity of meaning what it says. The aesthetic is part of the spec, not a finish applied at the end.
+Where the metaphor strains
+Measurability. Hempcrete has R-values, vapour permeability figures, compressive-strength numbers — hard properties on a spec sheet. Codetry has softer properties: "the words bear weight," "ambiguity at decision points drops." The closest thing codetry has to a spec sheet is the falsifiable-test ritual itself — numbered tests, written falsifiers, status lines. That is the R-value substitute, and it is honestly weaker than a real R-value.
+Vernacular, not framework. Hempcrete is a regional building tradition, not a universal answer to construction. Codetry is tuned to this product (Headwaters / xBuckets), in this register (water metaphor; payday cadence; kitchen-garden zone). It works because it fits here. It does not claim to scale to every product, and the attempt to generalise it would likely break the very thing that makes it work.
+The strongest defensible claim (one sentence)
+Codetry is a new discipline that makes an old principle — the metaphor IS the architecture — operational and testable at the UI surface, one word and one referent at a time.
+
+Coda — and while we're naming materials: bamboo-field
+A short applied note, not a third finding. Once you accept codetry is hempcrete (the practice), the next honest question is what to call the upstream the product actually draws from. In Headwaters that upstream is XRP, and the right word for it — by the same naming discipline this doc is about — is the bamboo field.
+
+Why the metaphor fits:
+
+Renewable upstream. A bamboo field is a working crop that quietly regrows. You walk past it most days without noticing. On payday, you cut some — the swap to RLUSD — and the cut bamboo becomes rainfall that fills the reservoir. The field is not the wall of the building; it is part of what the building is downstream of.
+Vernacular crop, not financial instrument. Calling XRP "the bamboo field" refuses the portfolio register. It frames the holding the same way a kitchen garden frames a tomato plant: a working part of the household, not an asset class. That matches the Zone 1 voice, and it keeps the dignity-of-meaning-what-it-says rule that the hempcrete finding names.
+Standing, not flowing, not held. Rainfall flows. The reservoir holds a worked-out amount. The bamboo field stands. Three different states, three different words — the same one-word-one-referent rule that test 001 discovered, applied one step further upstream than 001 reached.
+Where the metaphor strains: real bamboo establishes over years and is famously hard to remove (rhizomes). XRP swings in hours, and a holding can crash on you in ways a grove cannot. The metaphor is true on regeneration and vernacular; looser on cadence and reversibility. Naming the leak here is itself the codetry move — the same move the hempcrete finding makes for R-values. We bound every metaphor we use.
+
+This coda is applied codetry, not a third foundational finding about the practice. Whether bamboo field survives contact with a real user on the wallet/swap surface is a question for a future numbered test, not for this meta-doc.

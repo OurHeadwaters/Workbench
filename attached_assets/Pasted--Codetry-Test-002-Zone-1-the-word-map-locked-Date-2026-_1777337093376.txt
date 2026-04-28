@@ -1,0 +1,231 @@
+# Codetry Test 002 — Zone 1: the word map locked
+
+**Date:** 2026-04-26
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, every surface
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the whole Zone 1 constellation (Payday tab, Buckets, Earn, Coach lessons, Daily Drops, Bridge sheet, Reservoir hero)
+**Files:**
+
+- `artifacts/xbuckets/src/copy.en.ts`
+- `artifacts/xbuckets/src/copy.fr.ts`
+- `artifacts/xbuckets/src/lib/constants.content.ts`
+- `artifacts/xbuckets/src/tenantConfig.ts`
+- `artifacts/xbuckets/src/components/DashboardHero.tsx`
+- `artifacts/xbuckets/src/components/DashboardHeroCard.tsx`
+
+---
+
+## The finding (one line)
+
+Test 001 proved the rule on a single screen. Test 002 holds the rule across
+the whole zone — every metaphor word in Zone 1 now points to exactly one
+thing in the architecture, and the map is small enough to teach in a single
+breath.
+
+## What was on screen (before)
+
+Test 001 cleaned up the Payday tab itself. But the rest of Zone 1 still
+spoke a slightly different dialect:
+
+- "Reservoir" was used three different ways — the stablecoin wallet
+  (correct, per Test 001), the long-term savings vehicle ("The Reservoir
+  Fills Slowly"), and the emergency fund ("Don't Drain the Emergency
+  Reservoir", "Protect the Reservoir from Evaporation").
+- "Channel" was used four different ways — the bucket-distribution act
+  (correct), the **Bridge** sheet ("Channel this rainfall", "Channel this
+  through the bridge"), the **Drainage** lesson ("Debt Channeling", "while
+  you are draining debt"), and the **Park** routing in Earn ("the Drip
+  Harvester channels idle RLUSD into liquidity pools").
+- "Compound Rainfall" was the lesson title for tax-advantaged compounding,
+  but the body actually described two different referents — a weather
+  pattern (Cloud Cover) and a tax-sheltered vehicle (Glacier).
+- The hero label field was named `masterBucketLabel` in code — a holdover
+  that no longer matched the surface word "Reservoir".
+
+Three words doing eleven jobs. The rule was the right one; we hadn't held
+it the whole way.
+
+## The intervention
+
+Lock the word map for the whole zone. One word, one referent, in EN and
+FR, in every surface, in every lesson, and in the code that names the
+fields.
+
+### Locked Zone 1 word map
+
+| Word               | Refers to                                                                | FR                  |
+| ------------------ | ------------------------------------------------------------------------ | ------------------- |
+| Rainfall           | Income arriving this payday (paycheck + side gig combined)               | Pluie               |
+| Siphon             | Auto-bills drawn before income reaches the Reservoir                     | Siphon              |
+| Reservoir          | The stablecoin wallet — what's left after the siphon                     | Réservoir           |
+| Channel _(verb)_   | Distributing the Reservoir into named Buckets (act of "every drop")      | Canaliser           |
+| Bucket             | A named envelope (Groceries, Rent share, Transit, …)                     | Compartiment        |
+| Cloud Cover        | Compound interest — the weather that keeps producing rain                | Couverture nuageuse |
+| Rain Barrel        | Emergency fund — short-term reserve for surprises                        | Baril de pluie      |
+| Aquifer            | Long-term savings — the deep reserve that fills slowly                   | Aquifère            |
+| Glacier            | Tax-advantaged accounts (RRSP, TFSA) — savings the tax authority leaves alone | Glacier        |
+| Watershed          | Diversified income streams (one fragile stream → many resilient ones)    | Bassin versant      |
+| Bridge _(verb)_    | Above-tap-cap transfers (the Abundance Bridge sheet)                     | Traverser le pont   |
+| Public Lake        | Regulated / credit-union yield product (advisor-mode Earn destination)   | Lac public          |
+| Private Lake       | DeFi liquidity pool (enthusiast-mode Earn destination, self-custody)     | Lac privé           |
+| Lake current       | The small fee paid into a Private/Public Lake each time a swap flows through it; the Drip Harvester's earnings are its share of those currents (renamed from "Park toll" by Task #849) | Courant du lac      |
+| Fill _(verb)_      | The act of putting idle RLUSD into a Lake (renamed from "park" by Task #849) | Remplir         |
+| Drainage           | Debt payoff — the opposite move from Channel                             | Drainage            |
+
+### What changed in the rewrite
+
+- **Bridge sheet** — `bridge.title`, `bridge.subtitle`, `triggerCta`, and
+  `successTitle` no longer use "channel". EN: "Bridge this rainfall",
+  "Bridge this →", "Bridged across". FR: "Traverser le pont avec cette
+  pluie", "Traverser le pont →", "Pont traversé".
+- **Drainage lesson** — `debt-channeling` lesson renamed to `debt-drainage`
+  ("Debt Drainage"); CU mirror `cu-debt-channeling` → `cu-debt-drainage`
+  ("Draining Debt Out"). The bodies were rewritten so debt repayment is
+  Drainage (opening valves), and the daily drop "The Debt Channel Runs
+  Uphill" became "Drainage Runs Against the Pressure". The act of
+  Channel is reserved for Reservoir → Buckets only.
+- **Cloud Cover lesson** — `compound-rainfall` lesson renamed to
+  `cloud-cover` ("Cloud Cover"); CU mirror `cu-compound-rainfall` →
+  `cu-cloud-cover`. The third step now introduces **Glacier** explicitly
+  as the tax-sheltered vehicle (RRSP/TFSA), separating compounding
+  (the weather) from where it happens (the vehicle).
+- **Aquifer / Rain Barrel separation** — the lesson "Weather-Proofing the
+  Reservoir" became "Weather-Proofing the Aquifer", and its three layers
+  are now Rain Barrel (starter buffer), Aquifer (3–6 month reserve), and
+  Watershed (multiple income streams). Daily drops "The Reservoir Fills
+  Slowly" → "The Aquifer Fills Slowly"; "Protect the Reservoir from
+  Evaporation" → "Protect the Rain Barrel from Evaporation"; "Don't
+  Drain the Emergency Reservoir" → "Don't Drain the Rain Barrel".
+- **Watershed for diversified streams** — "Three is a reservoir" copy
+  (US + CU side-income card) becomes "Three is a Watershed". The daily
+  drop on multiple income streams now reads "A Watershed of multiple
+  income streams isn't complicated — it's resilient."
+- **Public Lake / Private Lake split in Earn** — the advisor-mode body
+  (`advisorAfterPaydayBody`) now points users to a **Public Lake** ("a
+  regulated yield product your credit union manages"). The enthusiast-mode
+  Drip Harvester body (`afterPaydayBody`, `noPaydayBody`, the "What is a
+  liquidity pool?" learn module, and both whatsNew bodies) introduces
+  **Private Lake** as the self-custody DeFi liquidity pool, with "fill"
+  as the verb for idle RLUSD. (Originally introduced as "Public Park /
+  Private Park / park" by Test 002; renamed to the Lake vocabulary by
+  Task #849 so it sits cleanly inside the watershed metaphor — water
+  flows through channels, collects in your Lake, and Currents from the
+  Lake drip back into your Buckets.)
+- **Reservoir field rename** — `masterBucketLabel` / `masterBucketSubtitle`
+  on `TenantConfig` and in all three tenant configs (sim, enthusiast,
+  advisor) renamed to `reservoirLabel` / `reservoirSubtitle`. Surface
+  string "The Reservoir" is unchanged. Consumers updated:
+  `DashboardHero.tsx`, `DashboardHeroCard.tsx`, and the two component
+  tests.
+- **Post-siphon help body** — "rainfall that's still unallocated" → "the
+  reservoir that's still unallocated" (Rainfall is the act of arriving,
+  the leftover after Siphon is the Reservoir).
+
+### What did NOT change
+
+- The Channel verb is preserved everywhere it correctly refers to
+  Reservoir → Bucket distribution: "Channel the rainfall", "Channeled
+  this payday", `channelRainfallButton`, the brand tagline "Channel Every
+  Drop". One word, one referent — and the referent is bucket
+  distribution.
+- "Reservoir" is preserved everywhere it correctly refers to the
+  stablecoin wallet (the dashboard hero, the flow ribbon, `revealTitle:
+  "Your reservoir is filling"`).
+
+### Stray "park" verbs — decision (Task #851)
+
+After Task #849 renamed the LP "Park" metaphor to "Lake", three
+surface strings still used "park" as a generic everyday verb. The
+question was whether to leave them as a deliberately generic exception
+or rephrase them so "park" never appears on a Zone 1 surface at all.
+
+**Decision: rephrase.** The locked map is easier to defend if the
+surface contains zero instances of the retired metaphor word. A reader
+who encounters "park" on any screen has no way to know whether it is
+the (now-renamed) LP destination, a different metaphor we haven't met
+yet, or the plain English verb — and that ambiguity is exactly the
+cost the locked map is supposed to avoid. So:
+
+- `copy.en.ts` `savingsAllocExtra.headroomDescription` —
+  "park it for later" → "set it aside for later". (FR already read
+  "gardez-le pour plus tard" / "keep it for later" — no change needed.)
+- `constants.content.ts` Step 3 tip in the CU Aquifer ladder
+  (line ~180) — "park this fund there" → "keep this fund there".
+- `constants.content.ts` Step 3 tip in the US Aquifer ladder
+  (line ~455) — "park this fund there" → "keep this fund there".
+
+**Allowed exception (no UI impact):**
+`artifacts/api-server/src/routes/spend.ts` — the `"parking"` keyword in
+the Transport category's keyword list refers to literal parking-lot
+fees (a noun for vehicle storage) used to match transactions to the
+Transport bucket. It is not a metaphor word, never appears on a
+surface, and removing it would break transaction categorisation.
+
+## The rule discovered
+
+> **One word → one referent, held across the whole zone.** Test 001 named
+> the rule on one screen. Test 002 is what it costs to honour the rule
+> across a constellation. Where one word was doing two jobs, we coined or
+> recovered a second word so each job has a name of its own.
+
+## Falsifiable claim
+
+If the locked map holds, then a new user reading any Zone 1 surface should
+be able to describe the architecture using the same nouns the lessons
+teach — without translation. Conversely, if a user encounters a word and
+asks "which one do you mean?", the locked map has been broken at that
+surface.
+
+This test is falsified if any Zone 1 surface (Payday, Buckets, Earn,
+Bridge, Coach lesson, Daily Drop, Reservoir hero) uses one of the locked
+words for a referent it doesn't own — or if a referent in the architecture
+has no locked word and the surface has to invent one.
+
+## Status
+
+- Word map locked in EN + FR copy, lesson content, daily drops, and
+  tenant config field names.
+- All 846 unit tests pass after snapshot regeneration; typecheck clean.
+- Two automated assertions updated to match the new surface strings:
+  `BridgeSheet.test.tsx` ("Bridge this rainfall"), `DashboardHero.test.tsx`
+  and `DashboardHeroCard.test.tsx` (`reservoirLabel`/`reservoirSubtitle`).
+- `appUtils.test.ts.snap` regenerated to capture the renamed lesson IDs
+  and rewritten bodies.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Zone 1 — the word map locked
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-26
+artefacts: artifacts/xbuckets/src/copy.en.ts
+           artifacts/xbuckets/src/copy.fr.ts
+           artifacts/xbuckets/src/lib/constants.content.ts
+           artifacts/xbuckets/src/tenantConfig.ts
+graduated: shipped — every Zone 1 surface
+rule:      one word → one referent, held across the whole zone
+status:    graduated — second formal codetry test, locks the Zone 1 dialect
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today the word map for Zone 1 went from "mostly held" to "locked".
+> The Reservoir is the wallet. The Aquifer is the deep reserve. The Rain
+> Barrel is the emergency fund. The Glacier is the tax shelter. Cloud
+> Cover is the compounding. Watershed is the diversified streams. Channel
+> is the act of distributing the Reservoir into Buckets. Bridge is the
+> above-cap transfer. Drainage is debt payoff. Public Lake is the
+> regulated yield. Private Lake is the DeFi liquidity pool. Lake current
+> is the swap fee. Fill is the verb for idle RLUSD entering a Lake.**
+>
+> Rule: one word → one referent, held across the whole zone. Test 001
+> named the rule. Test 002 paid its cost — by coining or recovering a
+> word for every job that didn't have one.
+>
+> The map is small enough to teach in a single breath. That's the
+> measure: if the map can't be taught in a breath, it isn't locked.
+>
+> *(default: private. share to the shallows? — y / n)*

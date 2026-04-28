@@ -1,0 +1,197 @@
+# Codetry Test 001 — Payday: words bearing weight
+
+**Date:** 2026-04-26
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** mockup canvas, shape `rain-test-a`
+**File:** `artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/RainIsIncome.tsx`
+
+---
+
+## The finding (one line)
+
+When three CTAs share one metaphor, the words stop bearing weight. The user
+reads the screen and freezes — the rain language no longer points to anything
+specific because it points at three things at once.
+
+## What was on screen (before)
+
+The Payday tab surfaced three actions, side by side, all dressed in water
+language with no priority signal:
+
+1. **"Let's make it rain"** — the hero CTA that executed the pour.
+2. **"Convert XRP → RLUSD"** — funded the reservoir (wallet swap).
+3. **"Full rain / 90% / 75% / 50% / Custom"** — a percentage chip that
+   scaled how much of the plan to pour.
+
+Three actions, one metaphor, no hierarchy. Bobbie's reaction in plain words:
+*"I didn't know what action to take."* The rain word was being asked to do
+three jobs and so did none of them.
+
+## The intervention (Variant A on canvas)
+
+Collapse the rain word back to a single referent. Give every other step in
+the flow its own word, and let each word carry exactly one job.
+
+- **"Today's rainfall"** card replaces the percentage chips. The figure
+  is the actual combined income for *this* payday — not a percent of plan.
+  Stream rows (Paycheck $1,500, Side gig $340) sum to the rainfall total
+  ($1,840) and are editable via a "Wobble" toggle. Rainfall is fluid by
+  nature; the input acknowledges that.
+- **Flow ribbon** makes the sequence visible: Rainfall → Siphon →
+  Reservoir, with dollar values ($1,840 → −$640 → $1,200). Each node has
+  one icon, one number, one label.
+- **"Channel the rainfall"** is now the only CTA. Subhead: *"$1,200 ready ·
+  every drop into a bucket."*
+- **Wallet / XRP swap** demoted to a quiet plumbing chip below the CTA —
+  it is plumbing, not a competing call.
+
+## The rule discovered
+
+> **One word → one referent.** In codetry, every metaphor word in the
+> surface UI must point to exactly one thing in the architecture. The
+> moment a word names two actions, it names neither.
+
+Word map after the test (no overlaps):
+
+| Word       | Refers to                                                      |
+| ---------- | -------------------------------------------------------------- |
+| Rainfall   | Income arriving this payday (paycheck + side gig combined)     |
+| Siphon     | Bills auto-paid out of the rainfall before the reservoir       |
+| Reservoir  | The stablecoin wallet — what's left after the siphon           |
+| Channel    | The act of distributing reservoir → buckets ("every drop")     |
+| Bucket     | A named envelope (Groceries, Rent share, Transit, …)           |
+
+Each word, one job. None overlap. The metaphor IS the architecture, end to
+end, with no slack between word and referent.
+
+## Falsifiable claim
+
+If we hold one-word-one-referent across the constellation, ambiguity at
+decision points should drop. Conversely: when a user hesitates at a
+screen, the diagnostic move is to look first for a word doing two jobs.
+
+This test is falsified if Bobbie or another user, looking at Variant A
+without prior context, still cannot tell from the words alone what the
+single next action is.
+
+## Status
+
+- Variant A live on canvas (shape: `rain-test-a`)
+- Variants B (rain-as-funding) and C (numbered ritual) preserved alongside
+  as counter-tests
+- **Graduated** into the real Payday tab on 2026-04-26:
+  `artifacts/xbuckets/src/pages/PaydayPlanner.tsx` — chip cluster removed,
+  `RainfallFlowRibbon` (Rainfall → Siphon → Reservoir) inserted, drought
+  scaling demoted to a "Wobble targets" text-link escape hatch, CTA renamed
+  to "Channel the rainfall", surplus eyebrow rewritten to "STEP 2 ·
+  CHANNELLED INTO BUCKETS", FR copy parity in `copy.fr.ts`. End-to-end
+  verified on mobile viewport.
+- To be added to the codetry worked-examples list in Zone 2
+
+## Later sightings
+
+Two short notes added after graduation. Both are downstream sightings of the
+same rule on the same screen, but they tell quite different stories about
+how locked vocabulary survives — or doesn't — in normal day-to-day work.
+
+### Sighting 1 — the catch in the wild (2026-04-26)
+
+After the graduation, Bobbie pulled up a fresh screenshot of the live Payday
+tab and read the catchment-plan card line by line. The middle row read
+**"Stays in bank (bills)"**. The number was right; the word wasn't. *Bank*
+is a banking-vocabulary word. The locked Zone 1 word for "money leaving the
+rainfall before it reaches the reservoir" is **Siphon** (Test 002). The
+banking word had quietly slipped onto a water-vocabulary surface — exactly
+the kind of micro-defect Test 001's rule is meant to catch.
+
+The fix was a one-line rename in two parallel surfaces — `PaydayTab.tsx`
+and `PaydayPlanner.tsx` — both reading **"Siphoned out for bills"** instead.
+End to end the maintenance took less than a minute. The rule did its job:
+the diagnostic move ("when a word feels off, look for one doing two jobs
+or one belonging to a different register") found the defect immediately,
+and the locked word map (Test 002) provided the exact replacement word with
+no design discussion needed.
+
+The point of the sighting is that the rule lives in upkeep, not just at
+variant-time. Most of codetry's day-to-day work isn't running new tests on
+the canvas — it's catching small drift in production copy and routing it
+back to the locked map.
+
+### Sighting 2 — the rebase that silently un-did the fix (2026-04-26)
+
+The more interesting half. Two days after Sighting 1, while drafting Test
+001a's appendix, a search of the codebase showed the **planner** surface
+(`PaydayPlanner.tsx` line 1223) still reading **"Stays in bank (bills)"**.
+The wording fix had only stuck on the tab. The planner had been silently
+restored to the older copy.
+
+What happened: Task #806 (the calm rest view) was branched from a
+pre-rebase tree that pre-dated Sighting 1. When that branch landed, it
+rebased onto the post-graduation main — and the rebase produced a tangled
+conflict in the catchment-plan card, which was resolved by pulling the
+planner card forward from the pre-rebase branch. That branch had never
+seen the Sighting-1 fix, so the older banking word came back along with
+the rest of the card. Nothing in the merge process flagged it. The
+locked word map exists in `docs/codetry/002-zone-1-words-locked.md`,
+not in any check the merge tool ran.
+
+The lesson the sighting forces:
+
+> **Locked vocabulary drifts on merges unless something machine-checked
+> holds it.** The map being written down in a doc is necessary but not
+> sufficient. The word map needs at least one mechanical witness — a
+> forbidden-strings unit test, an ESLint rule, a copy-snapshot diff, or
+> all three — that fails the build when a banned word appears on a
+> surface it doesn't own.
+
+This sighting is what graduates the rule from "discipline a person holds"
+to "contract the toolchain enforces." A discipline degrades on every
+rebase, every long branch, every fast merge. A contract doesn't.
+
+The fix here was a one-line edit (planner regression undone, parity with
+the tab restored) plus a single new lock-in unit test in
+`PaydayPlannerRestView.test.tsx` that asserts the catchment card reads
+"Siphoned out for bills" and not anything containing "Stays in bank". One
+test isn't a guard for the whole locked map — but it's the smallest
+possible mechanical witness, and now that surface is held.
+
+### Follow-up
+
+A general machine-enforced guard for the locked Zone 1 word map is a
+candidate next test (forbidden-strings unit test, lint rule, or
+copy-snapshot diff). Proposed as a separate follow-up; not implemented
+in 001a.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Payday — words bearing weight
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-26
+artefact:  artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/RainIsIncome.tsx
+graduated: artifacts/xbuckets/src/pages/PaydayPlanner.tsx (RainfallFlowRibbon)
+shape:     canvas shape:rain-test-a
+rule:      one word → one referent
+status:    graduated — first formal codetry test, shipped to production Payday tab
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, in the Payday tab, the rain stopped meaning anything because it
+> was meaning three things at once. Three CTAs all called it down. I froze.**
+>
+> Rule: one word → one referent. Otherwise the words are just decoration
+> and codetry collapses into code-poetry.
+>
+> Fix on the canvas — Variant A. Rain stays as income only. Siphon takes
+> the bills. Reservoir takes what's left. Channel pours into buckets.
+> Each word has exactly one job. The words bear weight again.
+>
+> First formal codetry test. The rule was already there; the test gave it
+> a name.
+>
+> *(default: private. share to the shallows? — y / n)*

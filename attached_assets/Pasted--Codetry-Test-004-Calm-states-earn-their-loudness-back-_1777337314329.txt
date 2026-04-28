@@ -1,0 +1,237 @@
+# Codetry Test 004 — Calm states earn their loudness back
+
+**Date:** 2026-04-26
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the live Payday tab — two precedents already shipped in
+production, named here for the first time
+**Files:**
+
+- `artifacts/xbuckets/src/pages/PaydayPlanner.tsx` (Wobble targets escape
+  hatch around line 1605; Tinker disclosure wiring around line 750)
+- `artifacts/xbuckets/src/components/PaydayRestCard.tsx` (Tinker button
+  render around line 237)
+
+---
+
+## The finding (one line)
+
+Two independent design moves on the same screen — Test 001's "Wobble
+targets" escape hatch and Task #806's "Tinker with the plan" disclosure —
+arrived at the same shape: a calm primary surface with the loud controls
+retreating behind a quiet, summonable text-link. Two unrelated authors
+converging on one shape isn't a coincidence; it's a rule asking to be
+named.
+
+## What was on screen (the convergence itself)
+
+Both surfaces were designed for different reasons by different motions of
+the work, and yet the silhouette they cut on the screen is identical.
+
+### Precedent 1 — Wobble targets (Test 001)
+
+When Test 001 collapsed the percentage-chip cluster ("Full rain / 90% /
+75% / 50% / Custom") and replaced it with a single "Channel the rainfall"
+CTA, the *ability* to dial down spending targets when rainfall was short
+still had to live somewhere. The old chip cluster solved this by always
+being loud — five buttons sitting peer-of-CTA across the top of the
+catchment plan.
+
+The graduation chose differently. The custom-scale control retreated
+behind a single quiet text-link sitting under the flow ribbon
+(`PaydayPlanner.tsx` ~ line 1631):
+
+```tsx
+<button …
+  className="text-[12px] font-black uppercase tracking-[0.14em]
+             underline underline-offset-2 transition
+             text-white/55 hover:text-white/85">
+  {COPY.paydayExecute.customScaleButton}   {/* "Wobble targets" */}
+</button>
+```
+
+When tapped, the wobble panel unfolds in place and the user can dial. The
+default surface stays calm: one CTA, one ribbon, one short hint. The
+loudness is *summoned* on demand, not pre-loud.
+
+### Precedent 2 — Tinker with the plan (Task #806)
+
+When Task #806 introduced the "all funded" rest view — the calm state
+that holds the screen between the moment the cycle is funded and the next
+payday — the same question recurred at one register higher: what happens
+to the *active controls* (Rainfall card, Auto-bills, Catchment Plan)
+when the cycle no longer needs them?
+
+The old surface answered: leave them visible. Funded or not, the planner
+stayed loud. The Task #806 graduation answered differently. The
+PaydayRestCard takes the screen, and a single quiet disclosure button
+sits at its foot (`PaydayRestCard.tsx` ~ line 237):
+
+```tsx
+<button …
+  aria-expanded={tinkerOpen}
+  aria-controls="payday-planner-disclosure"
+  className="… text-sm font-black text-white/75
+             transition hover:border-cyan-300/40 hover:text-cyan-200">
+  <span>{COPY.paydayRest.tinkerLabel}</span>   {/* "Tinker with the plan" */}
+  {tinkerOpen ? <ChevronDown … /> : <ChevronRight … />}
+</button>
+```
+
+The wired controls aren't gone — they're conditionally rendered exactly
+when the user asks for them (`PaydayPlanner.tsx` line 764):
+
+```tsx
+{(!showRestView || tinkerOpen) && (
+  <>
+    {/* Income card, Auto-bills, Catchment Plan */}
+  </>
+)}
+```
+
+Same shape: calm primary surface (the rest card), quiet text-link with a
+chevron, summon-on-demand panel. Same silhouette, drawn at a different
+register. Different author intent, different originating task, different
+copy — and yet the geometry is the same to the pixel.
+
+### The convergence is the data
+
+Two independent design decisions, made months apart for unrelated reasons
+on the same screen, settled on the same physical shape:
+
+1. **calm primary surface holds the screen by default**
+2. **the loud controls don't disappear — they retreat one click away**
+3. **the access affordance is a quiet text-link, not a peer CTA**
+4. **the summoned panel unfolds in place, doesn't navigate away**
+
+When two unrelated motions of the work converge on the same shape, the
+shape is doing something the authors haven't yet named. This codetry
+test is the naming.
+
+## The intervention
+
+There is no code change here. The intervention is the act of recognition:
+seeing that the two surfaces are instances of one rule, and writing the
+rule down so the next surface that needs the same shape can reach for it
+deliberately rather than rediscover it accidentally.
+
+## The rule discovered
+
+> **Surface state mirrors cycle state, and calm states earn their
+> loudness back.** A calm state is the default surface for any
+> architectural state that doesn't require user action. The loud
+> controls don't disappear — they retreat behind a quiet, named
+> disclosure that the user can summon on demand. The default is calm;
+> loudness has to earn itself back by being asked for.
+
+This is a different rule family from one-word-one-referent (Test 001) and
+one-register-per-screen (Test 003). Those rules govern the *vocabulary*
+of the surface — which words appear, in which dialect. This rule governs
+the *temperature* of the surface — which controls appear, at what
+loudness, given the architectural state behind the screen.
+
+The two families compose:
+
+- **Vocabulary rules** answer *which words?* on a screen.
+- **Temperature rules** answer *which controls, how loud?* on a screen.
+
+A surface can satisfy one family and break the other. A locked
+vocabulary doesn't help if every control is shouting at peer volume; a
+calm layout doesn't help if the words are doing two jobs each. Both
+families have to hold for the surface to feel right.
+
+## Falsifiable claim
+
+This rule is falsified if either of the following holds on a Zone 1
+surface:
+
+1. A surface is in a calm architectural state (no user action required —
+   cycle funded, plan complete, nothing pending) and still presents loud
+   active controls by default. *Failure mode A: pre-loud.*
+2. A surface hides a loud control so successfully that a power user who
+   knows the control exists cannot find it within one tap from the calm
+   default. *Failure mode B: hidden, not retreated.*
+
+The diagnostic move when a calm screen feels wrong: ask whether it is
+pre-loud (controls in your face when they don't need to be) or
+*so*-calm-it's-hostile (controls actually unreachable). The rule sits
+between those two failure modes. Retreat, not removal.
+
+## Status
+
+**Graduated on arrival.** Unlike Tests 001–003, this rule was not
+discovered on the canvas and then graduated to production — it was
+*shipped twice* in production before being named, by two unrelated
+tasks, and only then recognised as a single rule. The codetry test here
+is the naming, not the shipping.
+
+- Precedent 1 — Wobble targets escape hatch — shipped in the Test 001
+  graduation (`PaydayPlanner.tsx`, RainfallFlowRibbon block).
+- Precedent 2 — Tinker with the plan disclosure — shipped in Task #806
+  (PaydayRestCard, the calm "all funded" rest view).
+- This doc — the recognition + naming — adds no production code or copy.
+
+## See also
+
+- `docs/codetry/001-payday-words-bearing-weight.md` — the test that
+  produced the Wobble targets escape hatch as a side-effect of demoting
+  the percentage-chip cluster. Vocabulary rule (one word → one
+  referent). The temperature rule named here is *complementary*, not a
+  replacement: Test 001 governs which words appear; Test 004 governs
+  which controls appear at what loudness.
+- `docs/codetry/003-bamboo-field-on-wallet-chip.md` — the
+  one-register-per-screen rule. Same complementarity: 003 governs the
+  metaphor register of the surface; 004 governs the temperature of the
+  controls on it.
+- `docs/codetry/002-zone-1-words-locked.md` — the locked Zone 1 word
+  map. The temperature rule does not change which words a surface uses,
+  but it does decide whether those words appear pre-loud or summoned.
+
+## What this rule does not cover
+
+- The locked-vocabulary machine guard (forbidden-strings test, lint
+  rule, copy-snapshot diff) raised by Test 001a's Sighting 2. That is a
+  vocabulary-rule enforcement question. Separate concern, separate task.
+- An audit of the rest of the app for places this rule is *not yet*
+  held. Candidate follow-up (a Test 004a or 004-audit), but explicitly
+  out of scope here. This task is the naming; the audit is its own
+  motion.
+- A formal taxonomy of "calm" vs "loud" — those are working words for
+  now, anchored by the two precedents. If a future surface needs a
+  third or fourth temperature it will be on that test to coin and
+  defend the additional word.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Calm states earn their loudness back
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-26
+artefacts: artifacts/xbuckets/src/pages/PaydayPlanner.tsx (Wobble targets, line ~1605)
+           artifacts/xbuckets/src/components/PaydayRestCard.tsx (Tinker disclosure, line ~237)
+graduated: shipped on arrival — recognised in production after two independent precedents
+shape:     calm primary surface + quiet text-link + summon-on-demand panel
+rule:      surface state mirrors cycle state — calm states earn their loudness back
+status:    graduated on arrival — first temperature-family rule, first rule named from a convergence
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, looking at the Payday tab, I noticed the Wobble-targets
+> text-link under the flow ribbon and the Tinker-with-the-plan
+> disclosure under the rest card cut the same silhouette on the screen.
+> Two unrelated tasks. Two different motions of the work. One shape.**
+>
+> Rule: surface state mirrors cycle state, and calm states earn their
+> loudness back. The default is calm. Loud controls retreat behind a
+> quiet text-link the user can summon on demand. They don't disappear;
+> they wait until asked.
+>
+> First temperature-family rule. First rule named from a convergence —
+> shipped twice in production before being recognised. The test isn't
+> the shipping; the test is the recognition.
+>
+> *(default: private. share to the shallows? — y / n)*
