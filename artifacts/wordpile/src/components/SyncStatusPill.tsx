@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import { Cloud, CloudOff, Loader2, AlertTriangle } from "lucide-react";
 import {
   getSyncSnapshot,
+  retryNow,
   subscribeSyncStatus,
   type SyncSnapshot,
 } from "@/lib/cloudSync";
@@ -95,6 +96,42 @@ export function SyncStatusPill() {
     snap.status === "offline" || snap.status === "error"
       ? "var(--color-ink)"
       : "var(--color-stone)";
+
+  // The pill becomes a "Retry now" button only when retrying could
+  // actually accomplish something: the queue has work and we're either
+  // offline or in a transient error. The sticky-error subcase
+  // (pendingCount === 0, unsyncedFailures > 0) deliberately stays
+  // non-interactive because flushQueue can't recover those — its own
+  // copy is `Refresh the page or sign out and back in to reconcile`.
+  const canRetry =
+    snap.pendingCount > 0 &&
+    (snap.status === "offline" || snap.status === "error");
+
+  if (canRetry) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void retryNow();
+        }}
+        className="inline-flex items-center gap-2 text-sm rounded px-1 -mx-1 cursor-pointer hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+        style={{ color: tone }}
+        data-testid="button-sync-retry"
+        data-sync-status={snap.status}
+        title={`${view.title} Click to retry now.`}
+      >
+        <Icon
+          size={14}
+          strokeWidth={1.6}
+          className={view.spin ? "animate-spin" : undefined}
+          aria-hidden
+        />
+        <span className="hidden sm:inline">{view.label} · Retry now</span>
+        <span className="sr-only sm:hidden">{view.label}, retry now</span>
+      </button>
+    );
+  }
+
   return (
     <span
       className="inline-flex items-center gap-2 text-sm"

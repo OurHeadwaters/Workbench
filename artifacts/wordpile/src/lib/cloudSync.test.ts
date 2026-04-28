@@ -255,6 +255,88 @@ describe("cloudSync — sync snapshot", () => {
     expect(snap.unsyncedFailures).toBe(0);
   });
 
+  it("retryNow() flushes the queue even when navigator.onLine is false", async () => {
+    // Scenario: user made a change, the network actually came back, but
+    // navigator.onLine is still falsely reporting offline (captive
+    // portals do this all the time). Without a forced retry the queue
+    // sits indefinitely.
+    vi.stubGlobal("navigator", { onLine: false });
+    const cs = await freshCloudSync();
+    cs.setCloudUser("user-1");
+
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    cs.pushCreatePile({
+      id: "00000000-0000-4000-8000-000000000010",
+      name: "Forced retry pile",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      words: [],
+    });
+    await flushMicrotasks();
+
+    // Background flush stayed away because the browser thinks we're
+    // offline — exactly the situation the pill button is meant to cure.
+    expect(fetchMock).not.toHaveBeenCalled();
+    let snap = cs.getSyncSnapshot();
+    expect(snap.status).toBe("offline");
+    expect(snap.pendingCount).toBe(1);
+
+    // User clicks the pill. retryNow forces past the offline guard and
+    // drains the queue against the (actually fine) network.
+    await cs.retryNow();
+    await flushMicrotasks();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    snap = cs.getSyncSnapshot();
+    expect(snap.pendingCount).toBe(0);
+    expect(snap.status).toBe("idle");
+  });
+
+  it("retryNow() is a no-op when the queue is empty or already in flight", async () => {
+    const cs = await freshCloudSync();
+    cs.setCloudUser("user-1");
+
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    // Empty queue: no fetch should be made and we stay idle.
+    await cs.retryNow();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(cs.getSyncSnapshot().status).toBe("idle");
+
+    // In-flight guard: hold a fetch open, kick a mutation so the loop
+    // is mid-await, then call retryNow — it must NOT fire a second
+    // overlapping fetch.
+    let resolve!: (res: Response) => void;
+    const pending = new Promise<Response>((r) => {
+      resolve = r;
+    });
+    fetchMock.mockReturnValueOnce(pending);
+
+    cs.pushCreatePile({
+      id: "00000000-0000-4000-8000-000000000011",
+      name: "Pile in flight",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      words: [],
+    });
+    await flushMicrotasks();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(cs.getSyncSnapshot().status).toBe("saving");
+
+    await cs.retryNow();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    // Let the in-flight request finish so the test exits cleanly.
+    resolve(new Response(null, { status: 204 }));
+    await flushMicrotasks();
+    expect(cs.getSyncSnapshot().status).toBe("idle");
+  });
+
   it("retries on next mutation after a transient 5xx failure", async () => {
     const cs = await freshCloudSync();
     cs.setCloudUser("user-1");

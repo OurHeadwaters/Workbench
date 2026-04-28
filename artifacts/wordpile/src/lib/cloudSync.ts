@@ -287,10 +287,16 @@ async function attempt(op: QueuedOp): Promise<AttemptResult> {
   }
 }
 
-async function flushQueue(): Promise<void> {
+async function flushQueue({ force = false }: { force?: boolean } = {}): Promise<void> {
   if (inFlight) return;
   if (pendingQueue.length === 0) return;
-  if (isOffline()) {
+  // The `force` flag exists so a user-initiated "Retry now" can attempt
+  // the queue even when `navigator.onLine` is lying (captive portals,
+  // VPN flaps, the browser just hasn't noticed connectivity returned).
+  // Background callers — mutations and the `online` event — leave it
+  // false so we keep the same "don't waste fetches when we know we're
+  // offline" behaviour as before.
+  if (!force && isOffline()) {
     refreshSnapshot();
     return;
   }
@@ -302,7 +308,7 @@ async function flushQueue(): Promise<void> {
   refreshSnapshot();
   let bailedForGenChange = false;
   try {
-    while (pendingQueue.length > 0 && !isOffline()) {
+    while (pendingQueue.length > 0 && (force || !isOffline())) {
       const op = pendingQueue[0];
       const result = await attempt(op);
       if (syncGeneration !== gen) {
@@ -353,6 +359,26 @@ function enqueue(op: QueuedOp) {
   pendingQueue.push(op);
   refreshSnapshot();
   void flushQueue();
+}
+
+// User-initiated "Retry now" — hooked up to the sync-status pill when it's
+// in the `error` or `offline` state. Three guards before we actually kick
+// the queue:
+//
+//   1. No-op when nothing's queued. The caller (the pill) gates clicks on
+//      pending count too, but we double-check here so any future call site
+//      gets the same contract.
+//   2. No-op when a flush is already in flight. The pill is in `saving`
+//      then anyway, so the user can't get here through the UI, but again
+//      we keep the guard so the function is safe to call from anywhere.
+//   3. We force `flushQueue` past its `navigator.onLine === false`
+//      short-circuit. The whole point of this affordance is to override
+//      the browser's connectivity guess — if the user knows the network
+//      is fine, we should at least try.
+export async function retryNow(): Promise<void> {
+  if (inFlight) return;
+  if (pendingQueue.length === 0) return;
+  await flushQueue({ force: true });
 }
 
 // ---------------------------------------------------------------------------
