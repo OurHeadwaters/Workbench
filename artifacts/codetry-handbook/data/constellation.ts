@@ -42,8 +42,8 @@ export type ConstellationSnapshot = {
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.3",
-  "lastUpdated": "2026-04-27",
+  "version": "0.5.4",
+  "lastUpdated": "2026-04-28",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
@@ -135,7 +135,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Buckets",
-          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking."
+          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket — the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked Zone 1 word map."
         },
         {
           "name": "XRP Spring",
@@ -143,7 +143,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Drip Harvester",
-          "rule": "AMM liquidity-pool yield. Small steady drops collected over time. The verb 'harvest' carries patience and seasonality; 'Auto-Compound' would have erased both."
+          "rule": "two senses, both held by Test 008's resolution. As a noun: an earner wallet that holds RLUSD before it is parked in a Lake — the station between Reservoir and Private Lake on the Earn flow ribbon. As a verb: the move that drips Lake earnings into a Bucket once a sweep threshold is reached. The verb 'harvest' carries patience and seasonality; 'Auto-Compound' would have erased both."
         },
         {
           "name": "Community Well",
@@ -160,6 +160,70 @@ export const constellation: ConstellationSnapshot = {
         {
           "name": "Payday Planner",
           "rule": "the moment the spring refills. Allocation flow follows water's priority order: must-pay buckets first, then comfort buckets, then Surplus Pool, then giving."
+        },
+        {
+          "name": "Rainfall",
+          "rule": "income arriving this payday — paycheck plus side gig combined, before anything is taken out. The act of arriving, not the leftover; the leftover is the Reservoir."
+        },
+        {
+          "name": "Siphon",
+          "rule": "auto-bills drawn out of the rainfall before it reaches the Reservoir. The locked verb for money leaving rainfall before it reaches the wallet — replaces 'bank' wherever it had crept in (Test 001 Sighting 1)."
+        },
+        {
+          "name": "Reservoir",
+          "rule": "the stablecoin wallet — what's left after the Siphon. The locked noun for the wallet itself; the field name in code is `reservoirLabel`, no longer `masterBucketLabel`. The wallet/XRP-swap chip honours this lock end-to-end after Tests 009 and 010."
+        },
+        {
+          "name": "Channel (verb)",
+          "rule": "distributing the Reservoir into named Buckets — the act of 'every drop into a bucket'. Reserved for Reservoir → Bucket only; the Bridge sheet uses 'Bridge' for above-cap transfers, the Drainage lesson uses 'Drainage' for debt payoff, and the Drip Harvester uses 'drip' for Lake → Bucket."
+        },
+        {
+          "name": "Cloud Cover",
+          "rule": "compound interest — the weather that keeps producing rain. Separated from the vehicle (Glacier) where it happens; the lesson formerly called 'Compound Rainfall' was re-named to introduce both nouns explicitly."
+        },
+        {
+          "name": "Rain Barrel",
+          "rule": "emergency fund — the short-term reserve for surprises. The first layer of the Aquifer ladder; the daily drops about not draining the emergency fund were re-pointed from 'Reservoir' to 'Rain Barrel' to honour Test 002's lock."
+        },
+        {
+          "name": "Aquifer",
+          "rule": "long-term savings — the deep reserve that fills slowly. The 3–6 month layer of the savings ladder; replaces 'Reservoir' wherever the lessons were using it for long-term savings."
+        },
+        {
+          "name": "Glacier",
+          "rule": "tax-advantaged accounts (RRSP, TFSA) — savings the tax authority leaves alone. The vehicle Cloud Cover compounds inside; named explicitly so compounding (the weather) is no longer conflated with where it happens (the vehicle)."
+        },
+        {
+          "name": "Watershed",
+          "rule": "diversified income streams — one fragile stream becomes many resilient ones. Distinct from the former xBuckets product name 'Watershed' (still active at the URL/storage layer); here the noun refers to multiple income streams the household draws from. 'Three is a Watershed' replaces 'Three is a reservoir' across the side-income card and daily drops."
+        },
+        {
+          "name": "Bridge (verb)",
+          "rule": "above-tap-cap transfers — the Abundance Bridge sheet. The locked verb for transfers that exceed the daily cap; the Bridge sheet was rewritten to use 'Bridge this rainfall' / 'Bridge this →' / 'Bridged across' instead of 'Channel', preserving Channel for Reservoir → Bucket only."
+        },
+        {
+          "name": "Public Lake",
+          "rule": "regulated / credit-union yield product — the advisor-mode Earn destination. Half of the Park-rename pair (Public Park / Private Park were renamed to Public Lake / Private Lake by Task #849 so the destination sits cleanly inside the watershed metaphor)."
+        },
+        {
+          "name": "Private Lake",
+          "rule": "DeFi liquidity pool — the enthusiast-mode Earn destination, self-custody. The Earn flow ribbon's third station after Reservoir and Drip Harvester; replaces 'AMM pool' / 'liquidity pool' on every user-facing surface (Test 005)."
+        },
+        {
+          "name": "Lake current",
+          "rule": "the small fee paid into a Public/Private Lake each time a swap flows through it; the Drip Harvester's earnings are its share of those currents. Renamed from 'Park toll' by Task #849; the metaphor is that water flows through channels, collects in your Lake, and Currents from the Lake drip back into your Buckets."
+        },
+        {
+          "name": "Fill (verb)",
+          "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 — the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any Zone 1 surface (decision logged in Test 002, Task #851)."
+        },
+        {
+          "name": "Drainage",
+          "rule": "debt payoff — the opposite move from Channel. The locked noun for paying down debt; the lesson formerly called 'Debt Channeling' was renamed 'Debt Drainage' so 'Channel' could be reserved for Reservoir → Bucket only (Test 002)."
+        },
+        {
+          "name": "Park toll",
+          "rule": "the swap fee a Park collects when someone exchanges through it; the Drip Harvester's earnings are its share of those tolls. Coined in Test 005 as the new noun replacing 'fee per swap' / 'trading fees' on the Earn surface — later renamed to 'Lake current' by Task #849 when the Park metaphor itself was renamed to Lake. Recorded here as the original sanctioned noun from Test 005's vocabulary sweep."
         },
         {
           "name": "Scaffolding pretending to be engine",

@@ -279,6 +279,11 @@ const partII: Part = {
             "DDD takes the next step and says: name the model after the language the domain experts already use. The *ubiquitous language* is meant to live in the conversation, the whiteboard, and the code at once. Bounded contexts mark where one such language ends and another begins. Done well, this is real respect for the world the software is for.",
         },
         {
+          kind: "para",
+          text:
+            "The relationship between codetry and DDD is taken up again, less politely, in §5.2: DDD is not only a sibling discipline but one of the *roots* codetry sits on top of, and the *ubiquitous language* clause is the closest single phrase in the prior literature to the move codetry asks of every individual noun.",
+        },
+        {
           kind: "subhead",
           text: "Codetry takes the stricter stance.",
         },
@@ -498,6 +503,11 @@ const partIV: Part = {
             "Imagine the same system with a generic noun in the same slot. *Buckets* becomes *Categories*. *The territory* becomes *The Service Area*. *Calm* becomes *Easy*. *Stuck* becomes *Overdue*. Hold the rest of the system constant and read what changes.",
         },
         {
+          kind: "small",
+          text:
+            "From the ledger — Tests 001, 002, 009, and 010 (the two 010 entries — shortfall CTA and swap-sheet header) all turn on the rename test of this chapter. §7.1 catches *bank* trying to displace the watershed verbs on the Payday CTA. §7.2 locks the Zone 1 word map and rejects three specific generic-noun renames at once. §7.9 graduates *Top up reservoir from XRP* on the demoted swap chip by running this test against the production wording *Convert XRP → RLUSD*. The two §7.10 entries — *Top up reservoir from XRP · cover the shortfall* on the loud amber CTA, and *Top up your reservoir* on the swap-sheet header — extend the same test to a loud surface and to a transactional sheet's title-level register. See §7 for the full ledger.",
+        },
+        {
           kind: "callout",
           text:
             "If renaming the thing changes the structure, the name was load-bearing. If renaming changes nothing, the name was decoration.",
@@ -585,6 +595,11 @@ const partIV: Part = {
           text:
             "The instruments that catch drift — the audit pages, the long-form glossaries, the build-time checks, the cross-deck assertions — are taken up again, as a family, in §4.6.",
         },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §7.1 (Codetry Test 001) is this chapter at work on a single button: two sightings on the Payday CTA, one of *bank* trying to displace *channel*, the other of a stale *Surplus Pool* parenthetical drifting in a daily drop, both caught by reading the surfaces cold and naming the slip as a slip. The two sightings are the cleanest worked example of *catch the slippage early and name it as slippage* the handbook has on hand.",
+        },
       ],
     },
     {
@@ -649,6 +664,11 @@ const partIV: Part = {
           text:
             "When the practitioner is choosing the medium for a codetry build, the question is not *what is the most modern stack.* The question is *what medium will let the names hold.* Sometimes that is software. Sometimes that is not. The discipline is the same either way.",
         },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §7.3 (Codetry Test 003) and §7.5 (Codetry Test 005) both run this distinction at the surface level. §7.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the Zone 1 water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §7.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, recorded in this entry) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Zone 1 watershed dialect.",
+        },
       ],
     },
     {
@@ -677,6 +697,11 @@ const partIV: Part = {
           kind: "pull",
           text:
             "If the name keeps its promise the next time someone uses it, the verification holds. If the name has to be explained, the verification has failed and the work is to find the name that doesn't.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §7.2 (Test 002), §7.4 (Test 004), and the §7.6/§7.8 pair (Test 006 and the second-numbered Test 008) read as a working family of verification instruments. §7.2 is the locked Zone 1 word map itself — the table the rename test of §4.2 runs against. §7.4 names the temperature rule (calm states earn their loudness) — the verification that a name's typographic volume matches the work the name is doing. §7.6 and §7.8 install the Drip Harvester sense-distinction across Earn surfaces — verification by pinning down two senses of one noun rather than letting the bare word drift between them.",
         },
       ],
     },
@@ -765,7 +790,7 @@ const teacherList: Block[] = constellation.teachers.map((t) => ({
 const partV: Part = {
   roman: "V",
   title: "Grounding",
-  blurb: "The four teachers, the axiom, the lineage, and the colophon.",
+  blurb: "The four teachers, the axiom, the lineage, the hempcrete chapter, and the colophon.",
   chapters: [
     {
       id: "5-1",
@@ -799,7 +824,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Codetry sits in a lineage of disciplines that take naming seriously.",
+            "Codetry sits in a lineage of disciplines that take naming seriously. The roots are deeper than the prior chapter implied — most of what codetry does load-bearingly was already practised, in pieces, by people who were not calling it codetry. This chapter names the roots honestly and then names the smaller thing that is genuinely new on top of them.",
         },
         { kind: "subhead", text: "Code poetry (1980s →)" },
         {
@@ -825,11 +850,140 @@ const partV: Part = {
           text:
             "The older line that codetry's verification belongs to. Show your work in the medium where the work actually lives. For codetry, the medium is the name on the button.",
         },
+        { kind: "subhead", text: "Domain-driven design (Evans, 2003)" },
+        {
+          kind: "para",
+          text:
+            "Eric Evans' *Domain-Driven Design* and the bounded-context, ubiquitous-language vocabulary it seeded. DDD's *ubiquitous language* is the closest single phrase in the prior literature to what codetry asks of a name: a word that has to live in the conversation, the whiteboard, and the code at once, with no translation step in between. §2.3 already named DDD as a sibling discipline to codetry; this chapter names it as a *root*. The rename test of §4.2 is the same move DDD's bounded-context boundary already half-described — codetry's contribution is to make the test sharp at the level of the individual noun rather than the bounded context, and to apply it outside enterprise software, in community institutions where the *domain experts* are the people who live in the place.",
+        },
+        { kind: "subhead", text: "Beck and the XP/agile vocabulary (1999 →)" },
+        {
+          kind: "para",
+          text:
+            "Kent Beck's *Extreme Programming Explained* and the agile lineage that grew from it built one of the most consequential pieces of codetry-shaped work in the prior literature without naming it as such: the metaphor *system metaphor* itself. XP's original twelve practices included *system metaphor* as a load-bearing element — the team agrees on a shared overarching metaphor for the system, and the metaphor disciplines naming throughout. The practice quietly fell out of fashion in the agile mainstream (it was the first XP practice most teams dropped), but the underlying claim — that a single chosen metaphor can constrain a system's structure across a whole codebase — is the bet codetry generalises into community institutions.",
+        },
+        { kind: "subhead", text: "Brooks and *No Silver Bullet* (1986)" },
+        {
+          kind: "para",
+          text:
+            "Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* drew the line codetry's whole verification standard rests on. Brooks distinguished between *essence* — the irreducible conceptual structure of the software — and *accident* — the parts that exist only because of the substrate. Codetry's claim that *the metaphor must be inspectable in the name itself* (§4.6) is a claim about *essence*: the name is not an accident of the substrate (a label, a string field, a UI affordance), it is part of the system's essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended. Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident, which is the line codetry walks across.",
+        },
+        { kind: "subhead", text: "Nielsen, heuristic #2 — *match between system and the real world* (1994)" },
+        {
+          kind: "para",
+          text:
+            "Jakob Nielsen's second usability heuristic: *the system should speak the users' language, with words, phrases, and concepts familiar to the user.* The HCI tradition has carried this rule for thirty years and it is the most under-cited root of codetry. Nielsen's framing is descriptive (a usability principle, evaluated heuristically); codetry's contribution is to make it constructive (a design discipline whose load-bearing test is the rename of §4.2) and to extend it from interface copy into the *system structure* the names enact. Heuristic #2 is what made the move legible to UX practitioners; codetry says the same move has architectural consequences the UX framing did not yet claim.",
+        },
+        { kind: "subhead", text: "Lakoff and Johnson — *Metaphors We Live By* (1980)" },
+        {
+          kind: "para",
+          text:
+            "George Lakoff and Mark Johnson's *Metaphors We Live By* is the philosophical root underneath the entire discipline. Their claim — that conceptual metaphor is not decorative language but the substrate of human cognition, and that the metaphors a community lives by shape what that community can think — is the claim codetry treats as a working assumption. The reason renaming *Buckets* to *Categories* lets the UI quietly suggest balances can grow by clicking (§4.2) is the Lakoff/Johnson claim playing out at software scale: the metaphor was structuring thought, the new word structures different thought, and the system shifts to match. Codetry is what the Lakoff/Johnson observation looks like once it is treated as a constraint on building, not just a description of speaking.",
+        },
+        { kind: "subhead", text: "GOV.UK content design and the Mailchimp voice tradition" },
+        {
+          kind: "para",
+          text:
+            "The two clearest practical traditions in the prior literature for *holding a vocabulary across a system* are GOV.UK's content design discipline (Sarah Richards' *Content Design* and the GOV.UK style guide that followed) and the long line of voice-and-tone style guides that Mailchimp's open-sourced voice guide popularised. Both treat the words on the surface as load-bearing — a benefit form that uses the wrong noun for *household income* fails for users in ways that a redesigned visual layout cannot fix — and both build organisational discipline around protecting that vocabulary. Codetry's contribution is to extend the same protection one floor deeper, into the *names in the source code* that the surface words rest on, so the discipline is not lost the moment the work crosses from the content team to the engineering team.",
+        },
+        { kind: "subhead", text: "Knuth and the Karlton line — *the two hard things*" },
+        {
+          kind: "para",
+          text:
+            "Phil Karlton's line — *there are only two hard things in computer science: cache invalidation and naming things* — has been a folk axiom of the field for thirty years. The line is usually quoted as a joke. It is also a complete inheritance: the field has *known*, in its own folk wisdom, that naming is one of the two genuinely hard problems, and has built almost no discipline around it. Codetry is what it would look like to take the second half of Karlton's line as seriously as the field has taken the first half. (Knuth's literate programming, named above, is the largest existing piece of work in the field that did take it seriously — most of the rest of the lineage in this chapter sits between Karlton's joke and Knuth's discipline.)",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "What is genuinely new on top of those roots" },
+        {
+          kind: "para",
+          text:
+            "The honest claim is small. Almost everything codetry asks a practitioner to do has been asked, in pieces, by one of the disciplines named above. What codetry adds is four specific moves the prior literature did not put together, named here so the reader can hold the discipline at its actual size:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "*A constructive rename test for individual nouns.* Nielsen's heuristic #2 evaluates the match between system and real-world language descriptively. DDD's bounded-context boundary tests vocabulary at the context level. Codetry's §4.2 rename test is the same family of move, sharpened to the individual noun and made constructive: hold the rest of the system constant, swap the word, read what shifts. The test is small enough to fit on a workbench page and falsifiable enough to settle a disagreement at the kitchen table.",
+            "*The discipline applied outside enterprise software.* DDD's *domain experts* are usually a product manager and three subject-matter specialists in a corporate setting. Codetry's *domain experts* are the people who live in the place — the fishing camp, the food co-op, the neighbourhood clinic — and the *ubiquitous language* is whatever they already say to each other before a software person enters the room. The discipline is the same; the room it is practised in is older and slower than the one DDD was written for.",
+            "*Drift detection as a continuous practice, not a project phase.* Lakoff/Johnson observed that conceptual metaphor shifts under social pressure; codetry's §4.3 and §4.6 install that observation as a routine check — audit pages, build-time version checks, vocabulary sweeps run on a cadence. The closest prior practice is the GOV.UK / Mailchimp style-guide tradition; codetry extends the cadence into source code and version control so the metaphor and the system cannot disagree without something visibly breaking.",
+            "*Verification by inspection of the name on the surface.* The XP system-metaphor practice, the literate-programming weave, and the Brooks essence/accident line each get to the edge of this claim without making it. Codetry makes it explicit: the verification standard is that a user reading the name on the button can predict what happens when they press it, because the metaphor the name carries is enacted by the system underneath. Verification lives in the place the user already looks. This is the move §4.6 names and the falsifier the rest of the practice is built around.",
+          ],
+        },
+        {
+          kind: "callout",
+          text:
+            "Codetry's claim is that those four moves, taken together as a single discipline rather than scattered across the prior literature, are worth a name. The roots above are worth more than the new layer. The honest framing is: a small load-bearing rearrangement on top of decades of work the field did not yet know to call by one name.",
+        },
+        { kind: "subhead", text: "Falsifier for the lineage claim" },
+        {
+          kind: "para",
+          text:
+            "The lineage above is falsifiable. If a discipline already in the prior literature can be shown to do all four moves named in *what is genuinely new* — the constructive rename test at the noun level, the application outside enterprise software, drift detection as a continuous practice, and verification by inspection of the surface name — codetry is not a new discipline; it is a renaming of that one. The practitioner who finds the prior discipline that does all four is owed the credit and this chapter owes them the rewrite. Until then, the four moves taken together is the smallest claim this handbook is willing to make on its own behalf.",
+        },
       ],
     },
     {
       id: "5-3",
       number: "5.3",
+      partRoman: "V",
+      partLabel: "V · Grounding",
+      title: "What kind of thing codetry is (Hempcrete)",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The metaphor that runs through the whole discipline is architectural. *Load-bearing*, *foundation*, *the wall*, *the room*, *the surface* — every one of those words enters the handbook borrowed from a building. This chapter is the one place the borrowing gets explicit and the practitioner names the *kind* of building they have in mind: not the steel-and-glass office tower, not the suburban stick-frame house, but a hempcrete wall — a composite of a structural frame with an insulating, breathable infill. Codetry is a hempcrete discipline.",
+        },
+        { kind: "subhead", text: "What hempcrete actually is, briefly." },
+        {
+          kind: "para",
+          text:
+            "Hempcrete is a composite building material made from the woody core of the hemp plant (*hurd* or *shiv*) bound with a lime-based binder. It is not a structural material on its own. It is laid as an infill around a load-bearing frame — typically timber — and once cured, it provides insulation, hygrothermal regulation (it breathes water vapour rather than trapping it), fire resistance, and a wall that quietly continues to absorb carbon over its working life. The material is older than concrete by centuries in some regional traditions and newer than concrete by a century in its modern revival; it sits in the interesting place where the deepest possible historical roots and the most current decarbonisation conversation meet.",
+        },
+        { kind: "subhead", text: "Why the metaphor fits codetry, three ways." },
+        {
+          kind: "para",
+          text:
+            "*A composite, not a monolith.* Hempcrete is two things doing two jobs: the timber frame holds the load; the hemp-and-lime infill holds the climate. Neither alone is the wall. Codetry is the same shape: the *names* hold the metaphor; the *system* holds the mechanics; neither alone is the discipline. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent error in software discourse is to argue about which single material is *the* right material (the type system as the only truth, the documentation as the only truth, the test suite as the only truth); the codetry move, like the hempcrete move, is to refuse the choice and put the materials in the relationship that makes the wall work.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Infill, not facade.* Hempcrete sits *inside* the wall — between the structural studs of the frame, breathing in both directions, doing its work in the body of the building. It is not a cladding bolted on the outside for appearance. The codetry name is the same: it is not a label sprayed on the outside of a system that was designed without it. It is the load-distributing infill that lives between the structural type and the surface affordance, and the system only works the way the room expects it to because the infill is doing its job *inside* the wall. Strip the infill and the frame still stands — but the wall stops regulating, the room stops being habitable in the same way, and the mechanics that were quietly held by the composite now have to be shouted by signage and policy.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Ethical-aesthetic, not just technical.* Hempcrete is chosen, where it is chosen, for a bundle of reasons that no one of which is sufficient: it works thermally, it sequesters carbon, it is locally grown, it is non-toxic, it ages honestly, it is beautiful in a way that pre-cast concrete is not. The choice is technical and ethical and aesthetic at the same time, and the practitioner who tries to defend it on any one of those grounds alone will sound like they are leaving the other reasons out. Codetry has the same compound character. The rename test of §4.2 is technical (it catches drift the type system misses); the protection of community vocabulary is ethical (the people who live in the place are the ones whose words the system runs on); the insistence that the name on the button keep its promise is aesthetic (the wall is honest about what it is). The discipline does not survive being reduced to any one of those grounds. The hempcrete metaphor is the shortest sentence the handbook has for that.",
+        },
+        { kind: "subhead", text: "Where the strain on the metaphor is honest." },
+        {
+          kind: "para",
+          text:
+            "Hempcrete is not perfect. It needs a frame to hold any real load; it cures slowly; the modern revival is small relative to the cement industry it would have to displace; the lime binder is less ecologically clean than the hemp suggests; in some climates the hygrothermal advantages diminish. Codetry has analogous strains: it needs an existing system to hold any real load (the discipline is not a build pattern, it is a discipline applied to a build); the practice cures slowly (a renamed system takes weeks of conversation to settle into the team's mouths, §4.3); the discipline is small relative to the architectural and product-management traditions it would have to displace; the rename test depends on a practitioner who can tell load-bearing from decorative, and that practitioner's judgment is itself a binder whose composition matters. The metaphor is not flattering by accident. The hempcrete wall is the kind of wall the practitioner is trying to build *because* it is honest about what it can and cannot carry.",
+        },
+        { kind: "subhead", text: "The one-sentence claim." },
+        {
+          kind: "callout",
+          text:
+            "Codetry is hempcrete: a composite discipline whose *names* are the breathing infill laid between the structural frame of *type* and the surface skin of *affordance*, doing the climate-regulating, carbon-sequestering, ethical-aesthetic work that no single layer in the system was holding before.",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "Coda — the bamboo field." },
+        {
+          kind: "para",
+          text:
+            "There is a second material the practice keeps reaching for, alongside hempcrete, that the handbook has been politely vague about until now. It is *bamboo* — specifically, the bamboo field of the xBuckets XRP-spring artwork, where six growth stages of a planted grove serve as the visual register for savings accumulating above the network reserve. The bamboo metaphor is doing the same kind of work as the hempcrete one (a living material chosen for a bundle of technical, ecological, and aesthetic reasons that no one of which is sufficient), but in a different room: where hempcrete is the metaphor for the *discipline*, bamboo is a *register* the discipline carries on a particular surface. The two are not interchangeable. §7.3 records the test that ruled out bamboo as a register on the wallet/XRP-swap chip — bamboo is the right material for the spring artwork and the wrong material for the swap chip, and the test that drew that line is one of the load-bearing entries in the test ledger §7 collects.",
+        },
+        {
+          kind: "small",
+          text:
+            "Cross-reference: §7.3 (Codetry Test 003 — bamboo-field on the wallet chip) for the test that named *one register per screen* and rejected the bamboo register on a surface the water register had already claimed.",
+        },
+      ],
+    },
+    {
+      id: "5-4",
+      number: "5.4",
       partRoman: "V",
       partLabel: "V · Grounding",
       title: "Colophon",
@@ -1090,7 +1244,598 @@ const partVI: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partI, partII, partIII, partIV, partV, partVI];
+
+const partVII: Part = {
+  roman: "VII",
+  title: "The Codetry Test Ledger",
+  blurb:
+    "Eleven worked codetry tests, in chronological order. Each one is a small piece of the practice — a question about a name, what was on the screen before, the intervention tried, the rule discovered, the falsifier the rule lives or dies by, and the verdict. The ledger is here so the discipline can be inspected against its own examples rather than only against its rules.",
+  chapters: [
+    {
+      id: "7-1",
+      number: "7.1",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 001 — Payday: words bearing weight",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: graduated." },
+        { kind: "subhead", text: "The finding." },
+        {
+          kind: "para",
+          text:
+            "The first formal codetry test. The xBuckets Payday tab surfaced three CTAs all dressed in the same water language with no priority signal. The rain word was being asked to do three jobs and so did none of them.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Three actions, one metaphor, no hierarchy: *Let's make it rain* (the hero), *Convert XRP → RLUSD* (the wallet/swap chip beside it at peer-of-CTA volume), and a *Full rain / 90% / 75% / 50% / Custom* percentage chip cluster that scaled how much of the plan to pour. A user, asked to read the screen cold, froze: which CTA do I tap, and what does *full rain* mean if *let's make it rain* is also a button?",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Variant A on the canvas collapsed the rain word back to a single referent and gave every other step in the flow its own word: a *Today's rainfall* card replaces the percentage chips, a flow ribbon makes Rainfall → Siphon → Reservoir visible with dollar values at each node, *Channel the rainfall · $1,200 ready · every drop into a bucket* becomes the only CTA, and the wallet/XRP-swap chip is demoted to plumbing typography below it. Each word, one job. None overlap.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "One word → one referent. In codetry, every metaphor word in the surface UI must point to exactly one thing in the architecture. The moment a word names two actions, it names neither.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If holding one-word-one-referent across the constellation reduces ambiguity at decision points, then a user looking at Variant A without prior context should be able to tell from the words alone what the single next action is. Falsified if the user still cannot.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly displacing the locked Zone 1 verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces restored *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately, and the locked map of §7.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently un-did the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)* — Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently restored the older banking word. Nothing in the merge process flagged it. The fix here was to restore the locked word and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
+        },
+        {
+          kind: "callout",
+          text:
+            "A discipline degrades on every rebase, every long branch, every fast merge. A contract doesn't. The locked map needs at least one machine-checked witness on every surface it owns.",
+        },
+      ],
+    },
+    {
+      id: "7-2",
+      number: "7.2",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 002 — Zone 1: the word map locked",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets, every surface · status: graduated." },
+        { kind: "subhead", text: "The finding." },
+        {
+          kind: "para",
+          text:
+            "Test 001 proved the rule on a single screen. Test 002 paid the cost of holding the rule across the whole zone. *Reservoir* had been used three different ways (the wallet, the long-term savings vehicle, the emergency fund); *Channel* had been used four different ways (bucket distribution, the Bridge sheet, the Drainage lesson, the Earn routing); *Compound Rainfall* was the lesson title for tax-advantaged compounding, but the body actually described two referents (a weather pattern and a tax-sheltered vehicle); the hero label field was named `masterBucketLabel` in code, a holdover that no longer matched the surface word. Three words doing eleven jobs.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Across every Zone 1 surface (Payday tab, Earn tab, Buckets tab, lessons, hero card, settings), the same loose vocabulary leaked into different jobs on different surfaces. The Bridge sheet used *channel*; the debt lesson used *channel*; the Earn routing used *channel*; the bucket distribution used *channel*. Same word, four meanings. Same problem for *reservoir*. The locked map did not yet exist, and the absence was where the drift lived.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Lock the word map for the whole zone — one word, one referent, in EN and FR, in every surface, in every lesson, and in the code field-names. Where one word was doing two jobs, a second word was coined or recovered so each job has a name of its own. The Bridge sheet was rewritten to use *Bridge* (not *Channel*); the debt-channeling lesson became *debt-drainage*; the *compound-rainfall* lesson became *cloud-cover* and introduced *Glacier* explicitly as the tax-sheltered vehicle; the *Reservoir* field was renamed in `TenantConfig` from `masterBucketLabel` to `reservoirLabel`. A separate decision recorded in the test (Task #851) rephrased three remaining surface uses of the bare verb *park* to *set aside* / *keep* so the retired metaphor word never appears on a Zone 1 surface at all.",
+        },
+        { kind: "subhead", text: "The locked map." },
+        {
+          kind: "list",
+          items: [
+            "Rainfall — the income arriving on payday from work or other sources",
+            "Siphon — the verb that diverts a portion of rainfall toward bills before any bucket fills",
+            "Reservoir — the wallet that holds RLUSD between rainfall and channelling into buckets",
+            "Channel (verb) — the move from Reservoir into Buckets on payday, never used for anything else",
+            "Bucket — a single named savings goal the household assigns rainfall to",
+            "Cloud Cover — tax-sheltered compounding (formerly *Compound Rainfall*); the weather, not the vehicle",
+            "Rain Barrel — a household's working emergency-fund bucket, distinct from Reservoir",
+            "Aquifer — the long-horizon savings vehicle below working-life buckets",
+            "Glacier — the tax-sheltered long-horizon vehicle (TFSA / RRSP / equivalent) sitting under Cloud Cover",
+            "Watershed — the whole household-finance system viewed as one catchment area",
+            "Bridge (verb) — the cross-currency move on the Bridge sheet, never *Channel*",
+            "Public Lake — a public AMM pool",
+            "Private Lake — a tenant-curated AMM pool routed to by a Drip Harvester",
+            "Lake current — the swap fee a Lake collects (renamed from *Park toll* by Task #849)",
+            "Fill (verb) — the move from Reservoir into a Lake (parking RLUSD to earn Lake currents)",
+            "Drainage — the verb for paying down debt, never *Channel*",
+          ],
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "One word → one referent, held across the whole zone. Test 001 named the rule on one screen. Test 002 is what it costs to honour the rule across a constellation.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If the locked map holds, a new user reading any Zone 1 surface should be able to describe the architecture using the same nouns the lessons teach — without translation. Falsified if a user encounters a word and asks *which one do you mean?* The map is small enough to teach in a single breath, and that is the measure: if the map cannot be taught in a breath, it is not locked.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. The 16 locked nouns above have been honoured across `copy.en.ts` / `copy.fr.ts`, the lesson modules, and the field-names in `TenantConfig`. All 16 also appear as worked-example entries on the Zone 1 page of the constellation map (the companion artifact), each with the rule that holds it in place.",
+        },
+      ],
+    },
+    {
+      id: "7-3",
+      number: "7.3",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 003 — Bamboo field on the wallet chip",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: rejected." },
+        { kind: "subhead", text: "The question." },
+        {
+          kind: "para",
+          text:
+            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.3) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Three chip wordings were tried on the canvas, sitting beneath the real graduated CTA from Test 001. Variant 0 (control): *412 XRP unconverted ⇄ Swap to ~$420 RLUSD* — mechanical, register-neutral. Variant A (full metaphor): *Bamboo field standing ✂ Cut ~$420 into rainfall* — wallet becomes field, swap becomes cut, no XRP word visible. Variant B (half-metaphor): *Bamboo field · 412 XRP ⇄ Swap to ~$420 RLUSD* — XRP retained as anchor noun, bamboo field added as label.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "The test was: read each chip cold, with the rainfall language sitting right above it, and ask whether the user can tell what the chip does from the chip alone. Variant 0 reads as plumbing, exactly as Test 001 left it. Variant A breaks: *Bamboo field standing* leaves the cold reader with no idea what the chip touches, and *Cut into rainfall* asks the reader to hold biological cutting and atmospheric rainfall in the same gesture — the metaphor cracks at the verb. The screen now has two unreconciled registers (water and plant) competing for the reader's attention. Variant B is the most interesting failure: *Bamboo field · 412 XRP* doesn't crack, it just adds noise. The XRP word still does all the load-bearing work; *Bamboo field* sits as a nickname that gives the reader nothing they didn't already have.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "One register per screen. The Test 001 rule (one word → one referent) extends to the screen as a whole: a single product surface should carry a single metaphor register, not two competing ones. A metaphor that lives honestly in the lineage doc may still be the wrong word for a surface, if that surface already belongs to a different register.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "*Bamboo field* earns the chip if a cold reader, with no prior context, can tell from the chip alone what the chip does. It fails if the bamboo word lands as a non-sequitur next to rainfall / channel / bucket — i.e. if the metaphor word does a second job and so does neither cleanly.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.3). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§5.3 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
+      ],
+    },
+    {
+      id: "7-4",
+      number: "7.4",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 004 — Calm states earn their loudness back",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: graduated on arrival." },
+        { kind: "subhead", text: "The finding." },
+        {
+          kind: "para",
+          text:
+            "The first temperature-family rule, and the first rule named from a *convergence* rather than from a single test. Two independent design moves on the same screen — Test 001's *Wobble targets* escape hatch and Task #806's *Tinker with the plan* disclosure — arrived at the same shape: a calm primary surface with the loud controls retreating behind a quiet, summonable text-link. Two unrelated authors converging on one shape isn't a coincidence; it's a rule asking to be named.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Both surfaces cut the same silhouette. *Precedent 1 — Wobble targets* (Test 001 graduation): the percentage-chip cluster was retired, and the custom-scale control retreated behind a single quiet text-link sitting under the flow ribbon (`PaydayPlanner.tsx` ~line 1631). When tapped, the wobble panel unfolds in place and the user can dial. *Precedent 2 — Tinker with the plan* (Task #806): the *all funded* rest view takes the screen, and a single quiet disclosure button sits at its foot (`PaydayRestCard.tsx` ~line 237); the wired controls are conditionally rendered exactly when the user asks for them. Same shape: calm primary surface, quiet text-link with a chevron, summon-on-demand panel — different originating task, different copy, identical geometry.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "There is no code change here. The intervention is the act of recognition: seeing that the two surfaces are instances of one rule, and writing the rule down so the next surface that needs the same shape can reach for it deliberately rather than rediscover it accidentally.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Surface state mirrors cycle state, and calm states earn their loudness back. A calm state is the default surface for any architectural state that doesn't require user action. The loud controls don't disappear — they retreat behind a quiet, named disclosure that the user can summon on demand. The default is calm; loudness has to earn itself back by being asked for.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is a different rule family from one-word-one-referent (§7.1) and one-register-per-screen (§7.3). Those rules govern the *vocabulary* of the surface — which words appear, in which dialect. This rule governs the *temperature* of the surface — which controls appear, at what loudness, given the architectural state behind the screen. The two families compose: a locked vocabulary doesn't help if every control is shouting at peer volume; a calm layout doesn't help if the words are doing two jobs each. Both have to hold for the surface to feel right.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "Falsified if a Zone 1 surface in a calm architectural state still presents loud active controls by default (failure mode A: pre-loud), or if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default (failure mode B: hidden, not retreated). The rule sits between those two failure modes — *retreat, not removal*.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated on arrival. Unlike Tests 001–003, this rule was not discovered on the canvas and then graduated to production — it was *shipped twice* in production before being named, by two unrelated tasks, and only then recognised as a single rule. The codetry test here is the naming, not the shipping. No production code or copy ships from this test.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.1 (Test 001) — the vocabulary rule the Wobble-targets escape hatch shipped from. §7.3 (Test 003) — the one-register-per-screen rule, complementary to the temperature rule named here." },
+      ],
+    },
+    {
+      id: "7-5",
+      number: "7.5",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 005 — Drip Harvester reads as DeFi noise",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated." },
+        { kind: "subhead", text: "The finding." },
+        {
+          kind: "para",
+          text:
+            "The Earn surface speaks two languages at once. The locked Zone 1 water vocabulary (§7.2) covers four of the words on screen. The other seventeen are imported from DevOps, naval, finance, and crypto-Twitter registers — and the cold reader has to translate every one of them to understand what the screen does.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "A cold read of the Earn tab as it shipped surfaced seventeen distinct vocabulary defects on a single screen, clustered into four foreign registers. *DevOps / robot register* — *agent*, *fleet*, *deploy*, *Drip Harvester Fleet*, *2 harvesters deployed*, *Deploy another agent*. *DeFi / protocol register* — *AMM pools*, *LP Position*, *LP tokens*, *pool shares*, *Est. APR*, *trading fees*, *swap*. *Broom register* — *sweep*, *auto-sweeps*, *sweep threshold*, *Routing drip to cistern*. *Crypto-Twitter register* — *no rug pulls*, *no moonshots*, *24/7*. And one direct violation of the Zone 1 lock: the surface used *cistern* where Test 002 locked the word to *Bucket*.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Four canvas variants were built. Variant A (vocabulary sweep) replaces every word the locked map does not sanction — *Drip Harvester* becomes the only word for the actor (DevOps register dropped); *Private Park* becomes the destination noun (later renamed to *Private Lake* by Task #849, recorded here); *Park toll* (later *Lake current*) is coined as the new noun for the swap fee a Park collects; pool labels sweep to Park labels; APR is reframed to plain monthly dollars (*$X / month per $100 parked*); the channel verb is restored to its locked use (*drips to savings*, not *channelled to savings*); *drip* becomes the only verb for the Drip Harvester → Bucket move; *bucket* replaces *cistern* wherever cistern crept in; the crypto-Twitter defensiveness is dropped. Variant B (register honesty — gloss the foreign words inline) was predicted-rejected and rejected. Variant C (a flow ribbon at the top of the Earn tab) was scoped out as a heavier production change and recorded as a follow-up test.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Vocabulary defects compound where the metaphor is most asked to do work. Silence about the metaphor is permission for DeFi.",
+        },
+        {
+          kind: "para",
+          text:
+            "Foreign registers fill unmapped territory the same way weeds fill unplanted soil. The Earn surface inherited the agent/fleet/deploy/LP/AMM/sweep register not because anyone designed it that way but because nobody held the locked map there.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If the Variant A graduation holds, a cold-read of the Earn tab should describe what the screen does using only the locked Zone 1 words plus *Drip Harvester* and *Park toll* (the two new sanctioned nouns). Falsified if a cold reader still reaches for *deploy* or *LP* or *sweep* to describe what they see.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`; critical strings mirrored to `copy.fr.ts`. *Park toll* added to the locked Zone 1 map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage (APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked the first time). A third leak — *Not funded yet* on the Drip Harvester card, where *funded* read as *broken/halted* to a household reader — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.2 (Test 002) — the locked map this test was held to. §7.6 (Test 006) — the flow-ribbon follow-up scoped out of this test. §7.7 (Test 007) — the structural test that found the LP-position card had survived this vocabulary sweep." },
+      ],
+    },
+    {
+      id: "7-6",
+      number: "7.6",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 006 — Earn flow ribbon graduates (three stations)",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, later superseded by §7.8." },
+        { kind: "subhead", text: "The claim." },
+        {
+          kind: "para",
+          text:
+            "If a flow ribbon at the top of the Payday tab kept three CTAs from fighting for one word, then a flow ribbon at the top of the Earn tab will keep four foreign DeFi registers from filling the silence around the topology of how a Drip Harvester actually moves money.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "After the §7.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Zone 1 water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implicit. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "An `<EarnFlowRibbon />` component was added to `EarnTab.tsx` and rendered near the top of the surface. It shipped with three nodes connected by chevrons: *Reservoir → Private Park → Buckets*, with the Drip Harvester drawn as a small badge sitting on the Park → Buckets edge — *not* as its own node. The Test 006 reasoning was that the Drip Harvester is *the verb that moves Park earnings into a Bucket* and so does not deserve a station on a topology picture. Active state on the Park node when at least one Drip Harvester is running; pulse on the Drip Harvester badge when a sweep is ready.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Topology earns its place at the top of the surface when the stations the money passes through cannot be inferred from the cards below. Anywhere the metaphor is asked to do work across more than one card, the surface earns a flow ribbon at its top.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If Variant C's graduation holds, a cold reader landing on the Earn tab should be able to point at the ribbon and say, in one sentence, where their money currently sits and where it will move to next — even before reading any of the cards beneath it. A second falsifier: if a cold reader treats the ribbon as decoration (skips it on first read) or asks *why is this picture here?*, the visual weight is wrong and the ribbon needs to be louder, not softer.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated, then superseded by §7.8 (Test 008). Two cold reads after Test 006 shipped found the three-station design hid the Drip Harvester's noun-sense behind its verb-sense and lost the reader's ability to point at the earner wallet on the topology picture. §7.8 restored the four-station ribbon and added a position read-out underneath. Test 006 is preserved here for the practice record — including the moment the rule held and the moment it didn't.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.5 (Test 005) — Variant C of which this test graduated. §7.8 (Test 008) — supersedes this three-station design with a four-station ribbon and a position read-out." },
+      ],
+    },
+    {
+      id: "7-7",
+      number: "7.7",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 007 — The LP-position card survived the vocabulary sweep",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface, LP-position card · status: graduated." },
+        { kind: "subhead", text: "The finding." },
+        {
+          kind: "para",
+          text:
+            "The vocabulary sweep from §7.5 cleaned every word on the LP-position card and left the card itself untouched — and the layout it had been hiding behind those words turned out to be three structural defects stacked on top of each other.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "*Defect 1 — no impermanent-loss disclosure on the card.* The card promised a steady drip and never told the household what happens if RLUSD and XRP drift apart in price. The honest *you might end up with less RLUSD than you parked* lived in a Learn accordion three taps away. *Defect 2 — multi-card density.* Six visual blocks fought for the same square inch of attention with no hierarchy and no answer to *what should the eye look at first when this card loads?* *Defect 3 — no toll-drop cadence.* *Drip rate $0.27 / month* read as a constant — a number stamped on the card the way an interest rate is stamped on a bond — but the Park toll moves with trading volume, and a household coming back to a $0.13 drip rate in two weeks had no reference point for telling normal weather from something wrong.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Variant A (hierarchy + IL + toll history) graduates. A single hero block opens the card (*Drip earned so far · +$2.40 RLUSD* / *next drip at $25.00*, with the progress bar directly under it and a one-line footer *10% of the way · then $22.50 lands in Vacation*); two stats survive in a sub-row below (*Parked* and *Drip rate*), with *Your share* and *Today's drip* cut as DeFi-derived metrics the household never asked for; a `TollBand` helper sits under the sub-row showing the Park toll as a band labelled honestly as a *typical range* (production does not yet snapshot tolls over time, so the band is derived from the current toll ±35%, with a follow-up to record real history); an amber IL heads-up earns the bottom of the card next to the parked money, with a link out to the Learn module §7.5 already rewrote to be honest. Variant B (stability band) and Variant C (single story) recorded as rejected.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "A vocabulary sweep cleans words; it does not clean layout. Clean words on a noisy card still read as a noisy card. Vocabulary tests do not graduate layout; layout tests do.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If the graduation holds, a cold reader on the LP-position card should (1) read the hero block and know within one sentence what they parked, what they have earned, and how far they are from the next drip; (2) see the IL warning without scrolling past it or tapping into Learn; and (3) describe the drip rate as *about $0.27 a month right now, but it moves with the toll* rather than as a constant. Falsified if a cold reader still says *I see four numbers, I don't know which one matters* or quotes the rate with no qualifier.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant A shipped to the LP-position branch of `JoinPoolSection` in `EarnTab.tsx` and the new `lp*` copy keys in `copy.en.ts` (mirrored in `copy.fr.ts`). The new `TollBand` helper lives in `EarnTab.tsx` next to `RISK_STYLE`. Real Park-toll history is recorded as a follow-up task; Variant A ships an honest *typical range* band today. *Side note on the practice.* The Earn surface now has two distinct kinds of test — *what does the surface say* (§7.5's vocabulary sweep) and *what does the surface put first* (this test's hierarchy + disclosure). They catch different defects on the same card.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.5 (Test 005) — the vocabulary sweep that this test found the layout had survived. §7.8 (Test 008) — the parallel structural test on the Earn flow ribbon." },
+      ],
+    },
+    {
+      id: "7-8",
+      number: "7.8",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 008 — The Earn flow ribbon becomes four stations",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, supersedes §7.6." },
+        { kind: "subhead", text: "The claim." },
+        {
+          kind: "para",
+          text:
+            "If the ribbon is supposed to answer *where in the system am I?* then every station the money passes through has to be a thing the reader can point at — the Drip Harvester is one of those things, so it graduates from a verb on an arrow (§7.6) to its own circle in the chain, and the ribbon grows a one-line position read-out underneath that names where the household actually is.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card — and drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station; §7.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Two changes from §7.6, both restoring something the canvas Variant C of §7.5 already had. *Four nodes, not three.* The Drip Harvester gets its own circle on the ribbon, between Reservoir and Private Lake, with the sub-label *earner wallet*. The §7.6 reasoning (Drip Harvester is a verb, not a noun) was true and irrelevant: the Drip Harvester *is* a verb (the move from Lake to Bucket) **and also** a wallet (the place RLUSD sits while the move is happening). The ribbon is a topology, and topology asks *what are the places?*, not *what are the verbs?* The verb sense survives in the prose under the ribbon. *A one-line position read-out under the ribbon* names the most forward station the household has actually reached: four states, each later state implying all earlier ones.",
+        },
+        { kind: "subhead", text: "The position read-out." },
+        {
+          kind: "list",
+          items: [
+            "No Drip Harvester yet — *Your reservoir is the only stop with anything in it — set up a Drip Harvester to push the drip forward.*",
+            "Drip Harvester set up, nothing parked — *Your Drip Harvester is set up but nothing's parked yet — fill a Private Lake with idle RLUSD to start collecting Lake currents.*",
+            "Parked RLUSD, harvester earning — *You've parked RLUSD in a Private Lake — your Drip Harvester is earning Lake currents.*",
+            "Sweep ready — *Your Drip Harvester has earned enough — the next drip is ready to land in a Bucket.*",
+          ],
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Topology is a noun-game. Every station the money passes through must be drawn as a station, even when the same thing is also a verb in the prose. Put the noun on the ribbon; let the verb live in the sentence underneath. Corollary: topology earns position when it names where the reader currently is, not just what the chain looks like — the ribbon stops being a static diagram and becomes a status line.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "If the graduation holds, a cold reader landing on the Earn tab should be able to (1) point at four labelled circles and say *this is where my money goes through*, (2) point at the highlighted circles and say *this is where it currently is*, and (3) read the sentence under the ribbon and say what happens next — without scrolling past the ribbon. Falsified if a cold reader still asks *where is the Drip Harvester?* after looking at the ribbon, or if the *empty* state of the read-out is read as *broken* rather than as *you are at the start of the chain*.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant C (canvas) restored as the live ribbon: four nodes, Drip Harvester between Reservoir and Lake. Position read-out shipped under the ribbon, EN in `copy.en.ts`, FR mirror in `copy.fr.ts`. Active-station emphasis upgraded from a 2px ring to a saturated tone-fill + ring. Drip Harvester pulse on sweep-ready preserved from §7.6, now on the Drip Harvester station itself rather than on the Lake → Buckets edge. §7.6 superseded; its `flowEdgeHarvester` string removed.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.6 (Test 006) — the previous (three-station) shipping of this same intervention, kept in the ledger because the moment a rule held wrong is part of the practice record. §7.7 (Test 007) — the parallel structural test on the LP-position card." },
+      ],
+    },
+    {
+      id: "7-9",
+      number: "7.9",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 009 — Water-register wordings on the wallet chip",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Payday tab · status: graduated." },
+        { kind: "subhead", text: "The question." },
+        {
+          kind: "para",
+          text:
+            "§7.3 ruled out the bamboo-field metaphor on the wallet/XRP-swap chip on the grounds of *one register per screen* — bamboo (biological) was fighting rainfall (water) on the same surface. The rejection was clean, but it only proved bamboo doesn't belong here. It did not prove that the production wording — *Convert XRP → RLUSD* — is the best the chip can be. This test asks: can the chip speak the same water register the rest of the screen already uses, without inflating itself back to peer-of-CTA volume?",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Three water-register variants were tried alongside Variant 0 (*412 XRP unconverted ⇄ Swap to ~$420 RLUSD*). Variant A: *Top up reservoir from XRP · ~$420* — verbal-only, *Reservoir* doing the wallet work the locked map of §7.2 says it should. Variant B: *Add to reservoir · 412 XRP ⇄ $420* — same locked word, slightly cooler verb, with the explicit ⇄ arrow and concrete numbers retained. Variant C: *412 XRP standing by · refill reservoir* — the calmest verb, source-leads, action-follows.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Each variant rendered at the actual production typography (10px white/25 underlined text-link, sitting under the *Channel the rainfall* CTA) and read cold. The question was double: does the chip still tell the user mechanically what it does, *and* does it remain demoted relative to the hero CTA above it.",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Demotion by typography is not the same as demotion by vocabulary. The locked map (§7.2) covers vocabulary; the temperature rule (§7.4) covers loudness. A chip can be typographically quiet and still break the screen's register — and that break can hide for cycles precisely because the typography says *don't look here*.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "A water-register wording earns the chip if both hold: (1) *mechanical clarity preserved* — a cold reader can still tell from the chip alone what the chip does, specifically that XRP gets exchanged for stablecoins added to the wallet (the same falsifier as §7.3); and (2) *demotion preserved* — at the actual production typography (10px white/25 underlined text-link), the new wording does not feel louder than the control, i.e. it does not pull the eye away from the *Channel the rainfall* CTA above it.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant A — *Top up reservoir from XRP* — ships as the new wording, same typography, same demoted text-link, same surface position. The chip remains plumbing; it now also speaks the locked Zone 1 dialect. Variant B is rejected for unnecessary visual weight (the arrow + numbers buy nothing the locked dialect doesn't already give). Variant C is rejected for losing mechanical precision (poetic but uninformative — a cold reader can't tell the chip swaps).",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.3 (Test 003) — rejected the bamboo-field metaphor on the same chip on the grounds of *one register per screen*. §7.10 / §7.11 (Test 010) — the loud-twin and the deeper-room moves of the same closing-out arc on this surface stack." },
+      ],
+    },
+    {
+      id: "7-10",
+      number: "7.10",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 010 — Water-register wordings on the shortfall CTA",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets wallet-confirm sheet · status: graduated." },
+        { kind: "subhead", text: "The question." },
+        {
+          kind: "para",
+          text:
+            "§7.9 graduated the *demoted* XRP-swap chip from *Convert XRP → RLUSD* to *Top up reservoir from XRP*, finally bringing it into the locked Zone 1 water dialect. That chip has a *loud* twin — the prominent amber CTA in the wallet-confirm sheet that appears when the wallet is short of plan total. It still said *Convert XRP → RLUSD to cover shortfall*. Same action, same destination, same protocol-noun register-break. This test asks: can the loud chip speak the same dialect as its quiet sibling without losing the urgency the amber card is built to express?",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Three variants alongside Variant 0 (*Convert XRP → RLUSD to cover shortfall*). Variant A — *Top up reservoir from XRP* (a direct port of §7.9's graduate). Variant B — *Top up reservoir from XRP · cover the shortfall* (§7.9's graduate as the action, then a separator, then the urgency tail naming what the amber card is shouting about). Variant C — *Refill reservoir from XRP · cover the shortfall* (same shape as B but with *refill* instead of *top up*).",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Each variant rendered in the actual amber-CTA treatment of the wallet-confirm sheet, with the surrounding amber alert text intact, and read cold. The question was: does the new dialect rhyme with the quiet sibling on the Payday tab *and* still read as the answer to the alert above it, not as an aside that happens to live in the same card?",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "When a chip has a *quiet* sibling and a *loud* sibling that do the same thing, the loud one should rhyme with the quiet one in dialect, then add whatever the loud surface needs. Test 003's *one register per screen* held even on a typographically demoted surface (§7.9); this test extends it to a *loud* surface — the amber CTA was hiding behind its urgency the way the demoted chip was hiding behind its typography.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "A water-register wording earns the loud amber CTA if both hold: (1) *mechanical clarity preserved* (same falsifier as §7.3 and §7.9); and (2) *urgency preserved* — the cold reader still understands this is a *fix-the-shortfall* action, not a casual top-up. The chip should read as the answer to the amber alert above it, not as an aside that happens to live in the same card.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant B — *Top up reservoir from XRP · cover the shortfall* — ships, same amber CTA treatment, same surface position, same icon. Variant A is rejected for dropping *shortfall* and leaving the urgency in the amber card alone with no echo on the chip. Variant C is rejected for *refill* implying a state of fullness the reservoir never had this cycle (the same word §7.9 had already flagged as wrong-temperature on the demoted twin). Variant B's structure — *(§7.9's exact graduate) · (purpose-of-this-surface)* — gives the two chips a shared spine, mirroring the existing graduated hero CTA from §7.1 (*Channel the rainfall · $1,200 ready · every drop into a bucket*).",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.9 (Test 009) — the quiet sibling on the Payday tab whose dialect this loud twin now rhymes with. §7.11 (the second-filed Test 010) — the deeper-room move on the swap-sheet header that closes out the arc this test opened." },
+      ],
+    },
+    {
+      id: "7-11",
+      number: "7.11",
+      partRoman: "VII",
+      partLabel: "VII · The Codetry Test Ledger",
+      title: "Test 010 (second entry) — Water-register wording on the swap-sheet header",
+      blocks: [
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets ConvertXrpSheet · status: graduated." },
+        {
+          kind: "callout",
+          text:
+            "Numbering note. This is the second entry filed as *Test 010* in the ledger, and it has been left at its original number rather than renumbered to 011 — both because the duplicate is itself part of the practice record (two tests on the same wallet/XRP-swap stack landed on the same date and were filed as 010 in error, and the ledger preserves that), and because the first 010 (§7.10) and this entry (§7.11) are the loud-twin and the deeper-room moves of one closing-out arc on the same surface stack and read better as a pair than as 010 / 011 across a renumbering boundary. Future ledger entries are expected to start at 011, leaving §7.10 / §7.11 as the one anomaly the numbering preserves.",
+        },
+        { kind: "subhead", text: "The question." },
+        {
+          kind: "para",
+          text:
+            "§7.9 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §7.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right — but it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
+        },
+        { kind: "subhead", text: "What was on screen." },
+        {
+          kind: "para",
+          text:
+            "Four variants. Variant 0 (control): eyebrow *Tap the Headwaters* (already in dialect, locked by §7.2), title *Convert XRP → RLUSD* (protocol). Variant A: title *Top up your reservoir* — pure dialect, mirrors §7.9's graduated verb. Variant B: title *Refill the reservoir from your headwaters* — both locked nouns, most poetic. Variant C: title *Top up your reservoir* with a small grey subheading *XRP → RLUSD* underneath — hybrid.",
+        },
+        { kind: "subhead", text: "The intervention." },
+        {
+          kind: "para",
+          text:
+            "Each variant rendered as the live `ConvertXrpSheet` would render it, with the body line-items (XRP balance, RLUSD to receive, slippage in XRP, *Convert in Xaman* on the CTA) intact. The question: at the title level, does dialect or protocol read as honest *given the rest of the sheet already names the assets*?",
+        },
+        { kind: "subhead", text: "The rule discovered." },
+        {
+          kind: "pull",
+          text:
+            "Register zoning works vertically as well as horizontally. Test 002 zones registers across screens (§7.2); this test shows the same kind of zoning *inside* a single component: the title-level register can speak dialect while the line-item register speaks protocol, as long as each register lives at the level it is best at. Dialect names the *kind of action*; protocol names the *assets the action moves*; the CTA verb names *what the wallet will sign*. Three registers, three jobs, one sheet, no register-break.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is not a new general rule — it is §7.2's locked map applied with one extra grain of resolution: not just *which words* per screen, but *which words at which level inside a screen*. Worth naming because it unblocks a class of cases (transactional sheets with poetic frames) where the *moment of honesty needs protocol* fear was load-bearing for the conservative call in §7.9.",
+        },
+        { kind: "subhead", text: "Falsifiable claim." },
+        {
+          kind: "para",
+          text:
+            "A water-register sheet title earns the surface if both hold: (1) *transactional clarity preserved* — a cold reader, having tapped the chip on the Payday tab, can still tell from the sheet header alone that this is the XRP-to-RLUSD swap they just opened, without having to scroll to the line-items to confirm; and (2) *honest at sign-time* — the title sits inside the locked dialect without making the moment of signing feel evasive about which assets are moving. Protocol nouns are still present on the surface — in the line-items below the title and on the CTA — so dialect at the title level is *demotion of mechanics*, not *withholding* of them.",
+        },
+        { kind: "subhead", text: "Status." },
+        {
+          kind: "para",
+          text:
+            "Graduated. Variant A — *Top up your reservoir* — ships as the new title, same eyebrow, same body line-items, same CTA. The chip-tap → sheet-open transition is now a *handoff* in one language, not a gear-change between two. Variant B is rejected for stuttering with its own eyebrow (*Headwaters* appears twice inside ten words). Variant C is rejected for replicating, badly, the title/body register separation the sheet already does well.",
+        },
+        { kind: "subhead", text: "See also." },
+        { kind: "small", text: "§7.9 (Test 009) — the chip whose graduation this test extends one surface deeper. §7.10 (the first-filed Test 010) — the loud-twin chip on the wallet-confirm sheet that opened the arc this test closes." },
+      ],
+    },
+  ],
+};
+
+export const PARTS: Part[] = [partI, partII, partIII, partIV, partV, partVI, partVII];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
