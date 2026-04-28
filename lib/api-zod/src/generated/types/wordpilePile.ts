@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { WordpileBuildVotes } from "./wordpileBuildVotes";
 import type { WordpileWord } from "./wordpileWord";
 
 export interface WordpilePile {
@@ -13,4 +14,5 @@ export interface WordpilePile {
   createdAt: Date;
   updatedAt: Date;
   words: WordpileWord[];
+  buildVotes?: WordpileBuildVotes;
 }

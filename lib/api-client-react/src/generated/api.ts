@@ -75,6 +75,7 @@ import type {
   UploadUrlRequest,
   UploadUrlResponse,
   VoidTransactionRequest,
+  WordpileBuildVotes,
   WordpileMe,
   WordpilePile,
   WordpileSnapshot,
@@ -4522,6 +4523,93 @@ export const useDeleteWordpilePile = <
   TContext
 > => {
   return useMutation(getDeleteWordpilePileMutationOptions(options));
+};
+
+/**
+ * @summary Set the absolute Build-page vote tally for a pile (LWW)
+ */
+export const getPutWordpileBuildVotesUrl = (pileId: string) => {
+  return `/api/wordpile/piles/${pileId}/build-votes`;
+};
+
+export const putWordpileBuildVotes = async (
+  pileId: string,
+  wordpileBuildVotes: WordpileBuildVotes,
+  options?: RequestInit,
+): Promise<WordpileBuildVotes> => {
+  return customFetch<WordpileBuildVotes>(getPutWordpileBuildVotesUrl(pileId), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(wordpileBuildVotes),
+  });
+};
+
+export const getPutWordpileBuildVotesMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof putWordpileBuildVotes>>,
+    TError,
+    { pileId: string; data: BodyType<WordpileBuildVotes> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof putWordpileBuildVotes>>,
+  TError,
+  { pileId: string; data: BodyType<WordpileBuildVotes> },
+  TContext
+> => {
+  const mutationKey = ["putWordpileBuildVotes"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof putWordpileBuildVotes>>,
+    { pileId: string; data: BodyType<WordpileBuildVotes> }
+  > = (props) => {
+    const { pileId, data } = props ?? {};
+
+    return putWordpileBuildVotes(pileId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PutWordpileBuildVotesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putWordpileBuildVotes>>
+>;
+export type PutWordpileBuildVotesMutationBody = BodyType<WordpileBuildVotes>;
+export type PutWordpileBuildVotesMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Set the absolute Build-page vote tally for a pile (LWW)
+ */
+export const usePutWordpileBuildVotes = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof putWordpileBuildVotes>>,
+    TError,
+    { pileId: string; data: BodyType<WordpileBuildVotes> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof putWordpileBuildVotes>>,
+  TError,
+  { pileId: string; data: BodyType<WordpileBuildVotes> },
+  TContext
+> => {
+  return useMutation(getPutWordpileBuildVotesMutationOptions(options));
 };
 
 /**

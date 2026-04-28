@@ -60,6 +60,31 @@ function isBucket(v: unknown): v is Bucket {
   return typeof v === "string" && (VALID_BUCKETS as readonly string[]).includes(v);
 }
 
+// Build-page prototype variants. Kept narrow so a typo can't quietly
+// stash garbage in `build_votes_last_choice` (the column is free-form
+// text — the application layer is the gate).
+type BuildVariant = "stacker" | "blocks" | "planks";
+const VALID_BUILD_VARIANTS: readonly BuildVariant[] = [
+  "stacker",
+  "blocks",
+  "planks",
+];
+function isBuildVariant(v: unknown): v is BuildVariant {
+  return (
+    typeof v === "string" &&
+    (VALID_BUILD_VARIANTS as readonly string[]).includes(v)
+  );
+}
+
+// Coerce an unknown count to a non-negative integer. We don't trust the
+// client to refrain from sending floats / negatives — the column is an
+// `int` and a bad write would either crash the driver or store nonsense.
+function safeCount(v: unknown): number {
+  if (typeof v !== "number" || !Number.isFinite(v)) return 0;
+  const n = Math.floor(v);
+  return n < 0 ? 0 : n;
+}
+
 // Cheap UUID v4-ish guard. We only check shape — Postgres will reject anything
 // the driver can't coerce, but rejecting early lets us return 400 instead of
 // surfacing a DB error.
@@ -98,6 +123,15 @@ function serializePile(
     createdAt: pile.createdAt.toISOString(),
     updatedAt: pile.updatedAt.toISOString(),
     words: words.map(serializeWord),
+    buildVotes: {
+      stacker: pile.buildVotesStacker,
+      blocks: pile.buildVotesBlocks,
+      planks: pile.buildVotesPlanks,
+      lastChoice: isBuildVariant(pile.buildVotesLastChoice)
+        ? pile.buildVotesLastChoice
+        : null,
+      updatedAt: pile.buildVotesUpdatedAt.toISOString(),
+    },
   };
 }
 
@@ -347,6 +381,27 @@ router.post("/sync", withAuth, async (req, res) => {
 
     const existing = existingPileById.get(p.id);
 
+    // Pull the (optional) buildVotes blob off the incoming pile. We
+    // accept it as nested fields so the wire shape matches what the
+    // dedicated /build-votes endpoint takes. Old clients won't send
+    // this field at all — in that case `incomingVotes` stays null and
+    // we just leave the server's existing tally alone.
+    const rawVotes =
+      p.buildVotes && typeof p.buildVotes === "object"
+        ? (p.buildVotes as Record<string, unknown>)
+        : null;
+    const incomingVotes = rawVotes
+      ? {
+          stacker: safeCount(rawVotes.stacker),
+          blocks: safeCount(rawVotes.blocks),
+          planks: safeCount(rawVotes.planks),
+          lastChoice: isBuildVariant(rawVotes.lastChoice)
+            ? rawVotes.lastChoice
+            : null,
+          updatedAt: parseDate(rawVotes.updatedAt) ?? new Date(0),
+        }
+      : null;
+
     if (!existing) {
       await db.insert(wordpilePilesTable).values({
         id: p.id,
@@ -354,12 +409,44 @@ router.post("/sync", withAuth, async (req, res) => {
         name: p.name,
         createdAt: incomingCreated,
         updatedAt: incomingUpdated,
+        // Carry the votes with the freshly-inserted row so a brand-new
+        // device that bootstraps with anonymous-only votes keeps them.
+        ...(incomingVotes
+          ? {
+              buildVotesStacker: incomingVotes.stacker,
+              buildVotesBlocks: incomingVotes.blocks,
+              buildVotesPlanks: incomingVotes.planks,
+              buildVotesLastChoice: incomingVotes.lastChoice,
+              buildVotesUpdatedAt: incomingVotes.updatedAt,
+            }
+          : {}),
       });
-    } else if (incomingUpdated.getTime() > existing.updatedAt.getTime()) {
-      await db
-        .update(wordpilePilesTable)
-        .set({ name: p.name, updatedAt: incomingUpdated })
-        .where(eq(wordpilePilesTable.id, p.id));
+    } else {
+      if (incomingUpdated.getTime() > existing.updatedAt.getTime()) {
+        await db
+          .update(wordpilePilesTable)
+          .set({ name: p.name, updatedAt: incomingUpdated })
+          .where(eq(wordpilePilesTable.id, p.id));
+      }
+      // Vote tally LWW is independent of the rest of the pile — the
+      // user could rename their pile from device A while voting on it
+      // from device B and we want both writes to land.
+      if (
+        incomingVotes &&
+        incomingVotes.updatedAt.getTime() >
+          existing.buildVotesUpdatedAt.getTime()
+      ) {
+        await db
+          .update(wordpilePilesTable)
+          .set({
+            buildVotesStacker: incomingVotes.stacker,
+            buildVotesBlocks: incomingVotes.blocks,
+            buildVotesPlanks: incomingVotes.planks,
+            buildVotesLastChoice: incomingVotes.lastChoice,
+            buildVotesUpdatedAt: incomingVotes.updatedAt,
+          })
+          .where(eq(wordpilePilesTable.id, p.id));
+      }
     }
 
     // Words. Same shape as above. The pileId on incoming words is trusted
@@ -630,6 +717,74 @@ router.patch("/piles/:pileId/words/:wordId", withAuth, async (req, res) => {
     .where(eq(wordpilePilesTable.id, pileId));
 
   res.json(serializeWord(updated));
+});
+
+// ----------------------- build-votes route -----------------------
+//
+// Single endpoint that writes the absolute Build-page vote tally for a
+// pile. The cloudSync queue serialises pushes for one device so race
+// conditions inside a single browser are impossible; cross-device races
+// are resolved by `updatedAt` LWW the same way `/sync` resolves them.
+//
+// We deliberately do not bump `wordpile_piles.updated_at` here — vote
+// activity shouldn't perturb the "recently active pile" sort or trigger
+// an unrelated `/sync` to overwrite a concurrent rename. The vote tally
+// has its own `build_votes_updated_at` column for that purpose.
+router.put("/piles/:pileId/build-votes", withAuth, async (req, res) => {
+  const { clerkUserId } = req.wordpileUser!;
+  const pileId = String(req.params.pileId);
+  const pile = await findOwnedPile(clerkUserId, pileId);
+  if (!pile) {
+    res.status(404).json({ error: "Pile not found" });
+    return;
+  }
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const incomingUpdated = parseDate(body.updatedAt) ?? new Date();
+  // LWW guard: if the server already has a newer tally (a different
+  // device pushed more recently), refuse the stale write rather than
+  // silently clobbering it. Returning the current state lets the client
+  // reconcile by replacing its local copy.
+  if (incomingUpdated.getTime() <= pile.buildVotesUpdatedAt.getTime()) {
+    res.json({
+      stacker: pile.buildVotesStacker,
+      blocks: pile.buildVotesBlocks,
+      planks: pile.buildVotesPlanks,
+      lastChoice: isBuildVariant(pile.buildVotesLastChoice)
+        ? pile.buildVotesLastChoice
+        : null,
+      updatedAt: pile.buildVotesUpdatedAt.toISOString(),
+    });
+    return;
+  }
+  const stacker = safeCount(body.stacker);
+  const blocks = safeCount(body.blocks);
+  const planks = safeCount(body.planks);
+  const lastChoice = isBuildVariant(body.lastChoice) ? body.lastChoice : null;
+
+  const [updated] = await db
+    .update(wordpilePilesTable)
+    .set({
+      buildVotesStacker: stacker,
+      buildVotesBlocks: blocks,
+      buildVotesPlanks: planks,
+      buildVotesLastChoice: lastChoice,
+      buildVotesUpdatedAt: incomingUpdated,
+    })
+    .where(eq(wordpilePilesTable.id, pileId))
+    .returning();
+  if (!updated) {
+    res.status(500).json({ error: "Failed to update build votes" });
+    return;
+  }
+  res.json({
+    stacker: updated.buildVotesStacker,
+    blocks: updated.buildVotesBlocks,
+    planks: updated.buildVotesPlanks,
+    lastChoice: isBuildVariant(updated.buildVotesLastChoice)
+      ? updated.buildVotesLastChoice
+      : null,
+    updatedAt: updated.buildVotesUpdatedAt.toISOString(),
+  });
 });
 
 // ----------------------- short-link routes -----------------------

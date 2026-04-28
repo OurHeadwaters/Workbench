@@ -16,7 +16,26 @@
  *     their change hasn't reached the cloud yet, and we retry on the next
  *     mutation or when the browser fires an `online` event.
  */
-import type { CommunityPile, WordEntry, WordpileData } from "@/data/types";
+import {
+  EMPTY_BUILD_VOTES,
+  type BuildVariant,
+  type BuildVotes,
+  type CommunityPile,
+  type WordEntry,
+  type WordpileData,
+} from "@/data/types";
+
+const VALID_BUILD_VARIANTS: readonly BuildVariant[] = [
+  "stacker",
+  "blocks",
+  "planks",
+];
+function isBuildVariant(v: unknown): v is BuildVariant {
+  return (
+    typeof v === "string" &&
+    (VALID_BUILD_VARIANTS as readonly string[]).includes(v)
+  );
+}
 
 // We assume same-origin: the wordpile bundle and the api-server are reachable
 // through the same Replit-managed proxy host, so cookies attach automatically.
@@ -76,12 +95,20 @@ interface WireWord {
   createdAt: string;
   updatedAt: string;
 }
+interface WireBuildVotes {
+  stacker: number;
+  blocks: number;
+  planks: number;
+  lastChoice: BuildVariant | null;
+  updatedAt: string;
+}
 interface WirePile {
   id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
   words: WireWord[];
+  buildVotes?: WireBuildVotes;
 }
 interface WireSnapshot {
   piles: WirePile[];
@@ -94,6 +121,16 @@ function pileToWire(p: CommunityPile): WirePile {
     createdAt: isoFromMs(p.createdAt),
     updatedAt: isoFromMs(p.updatedAt),
     words: p.words.map((w) => wordToWire(w, p.id)),
+    buildVotes: {
+      stacker: p.buildVotes.stacker,
+      blocks: p.buildVotes.blocks,
+      planks: p.buildVotes.planks,
+      lastChoice: p.buildVotes.lastChoice,
+      // Send epoch-zero for piles that have never been voted on, which
+      // matches the server-side default and guarantees the server's
+      // existing tally always wins LWW for them.
+      updatedAt: isoFromMs(p.buildVotes.updatedAt),
+    },
   };
 }
 function wordToWire(w: WordEntry, pileId: string): WireWord {
@@ -110,6 +147,20 @@ function wordToWire(w: WordEntry, pileId: string): WireWord {
 }
 
 function wireToPile(p: WirePile): CommunityPile {
+  // Old server payloads may omit `buildVotes` — treat missing as "no
+  // votes yet" with epoch timestamp so any local vote will win LWW.
+  const wireVotes = p.buildVotes;
+  const buildVotes: BuildVotes = wireVotes
+    ? {
+        stacker: Math.max(0, Math.floor(Number(wireVotes.stacker) || 0)),
+        blocks: Math.max(0, Math.floor(Number(wireVotes.blocks) || 0)),
+        planks: Math.max(0, Math.floor(Number(wireVotes.planks) || 0)),
+        lastChoice: isBuildVariant(wireVotes.lastChoice)
+          ? wireVotes.lastChoice
+          : null,
+        updatedAt: msFromIso(wireVotes.updatedAt),
+      }
+    : { ...EMPTY_BUILD_VOTES };
   return {
     id: p.id,
     name: p.name,
@@ -124,6 +175,7 @@ function wireToPile(p: WirePile): CommunityPile {
       createdAt: msFromIso(w.createdAt),
       updatedAt: msFromIso(w.updatedAt),
     })),
+    buildVotes,
   };
 }
 
@@ -175,7 +227,7 @@ export interface SyncSnapshot {
 }
 
 interface QueuedOp {
-  method: "POST" | "PATCH" | "DELETE";
+  method: "POST" | "PUT" | "PATCH" | "DELETE";
   path: string;
   body?: unknown;
 }
@@ -523,5 +575,25 @@ export function pushDeleteWord(pileId: string, wordId: string) {
   enqueue({
     method: "DELETE",
     path: `/piles/${encodeURIComponent(pileId)}/words/${encodeURIComponent(wordId)}`,
+  });
+}
+
+// Push the absolute Build-page vote tally for a pile. The PUT semantics
+// match the server: it's an LWW write keyed on `updatedAt`, so callers
+// must include a fresh timestamp (the store does this for them). Multiple
+// rapid votes coalesce naturally because the queue serialises and each
+// PUT carries the latest absolute counts — there's no risk of a stale
+// op overwriting a newer one even if the queue gets backed up.
+export function pushBuildVotes(pileId: string, votes: BuildVotes) {
+  enqueue({
+    method: "PUT",
+    path: `/piles/${encodeURIComponent(pileId)}/build-votes`,
+    body: {
+      stacker: votes.stacker,
+      blocks: votes.blocks,
+      planks: votes.planks,
+      lastChoice: votes.lastChoice,
+      updatedAt: isoFromMs(votes.updatedAt),
+    },
   });
 }

@@ -2508,6 +2508,12 @@ full merged state.
 
  * @summary Bootstrap sync — upload local snapshot and receive merged state
  */
+export const syncWordpileBodyPilesItemBuildVotesStackerMin = 0;
+
+export const syncWordpileBodyPilesItemBuildVotesBlocksMin = 0;
+
+export const syncWordpileBodyPilesItemBuildVotesPlanksMin = 0;
+
 export const SyncWordpileBody = zod.object({
   piles: zod.array(
     zod.object({
@@ -2527,9 +2533,37 @@ export const SyncWordpileBody = zod.object({
           updatedAt: zod.coerce.date(),
         }),
       ),
+      buildVotes: zod
+        .object({
+          stacker: zod
+            .number()
+            .min(syncWordpileBodyPilesItemBuildVotesStackerMin),
+          blocks: zod
+            .number()
+            .min(syncWordpileBodyPilesItemBuildVotesBlocksMin),
+          planks: zod
+            .number()
+            .min(syncWordpileBodyPilesItemBuildVotesPlanksMin),
+          lastChoice: zod
+            .union([
+              zod.literal("stacker"),
+              zod.literal("blocks"),
+              zod.literal("planks"),
+              zod.literal(null),
+            ])
+            .nullable(),
+          updatedAt: zod.coerce.date(),
+        })
+        .optional(),
     }),
   ),
 });
+
+export const syncWordpileResponsePilesItemBuildVotesStackerMin = 0;
+
+export const syncWordpileResponsePilesItemBuildVotesBlocksMin = 0;
+
+export const syncWordpileResponsePilesItemBuildVotesPlanksMin = 0;
 
 export const SyncWordpileResponse = zod.object({
   piles: zod.array(
@@ -2550,6 +2584,28 @@ export const SyncWordpileResponse = zod.object({
           updatedAt: zod.coerce.date(),
         }),
       ),
+      buildVotes: zod
+        .object({
+          stacker: zod
+            .number()
+            .min(syncWordpileResponsePilesItemBuildVotesStackerMin),
+          blocks: zod
+            .number()
+            .min(syncWordpileResponsePilesItemBuildVotesBlocksMin),
+          planks: zod
+            .number()
+            .min(syncWordpileResponsePilesItemBuildVotesPlanksMin),
+          lastChoice: zod
+            .union([
+              zod.literal("stacker"),
+              zod.literal("blocks"),
+              zod.literal("planks"),
+              zod.literal(null),
+            ])
+            .nullable(),
+          updatedAt: zod.coerce.date(),
+        })
+        .optional(),
     }),
   ),
 });
@@ -2557,6 +2613,12 @@ export const SyncWordpileResponse = zod.object({
 /**
  * @summary List the signed-in user's piles (with words)
  */
+export const listWordpilePilesResponsePilesItemBuildVotesStackerMin = 0;
+
+export const listWordpilePilesResponsePilesItemBuildVotesBlocksMin = 0;
+
+export const listWordpilePilesResponsePilesItemBuildVotesPlanksMin = 0;
+
 export const ListWordpilePilesResponse = zod.object({
   piles: zod.array(
     zod.object({
@@ -2576,6 +2638,28 @@ export const ListWordpilePilesResponse = zod.object({
           updatedAt: zod.coerce.date(),
         }),
       ),
+      buildVotes: zod
+        .object({
+          stacker: zod
+            .number()
+            .min(listWordpilePilesResponsePilesItemBuildVotesStackerMin),
+          blocks: zod
+            .number()
+            .min(listWordpilePilesResponsePilesItemBuildVotesBlocksMin),
+          planks: zod
+            .number()
+            .min(listWordpilePilesResponsePilesItemBuildVotesPlanksMin),
+          lastChoice: zod
+            .union([
+              zod.literal("stacker"),
+              zod.literal("blocks"),
+              zod.literal("planks"),
+              zod.literal(null),
+            ])
+            .nullable(),
+          updatedAt: zod.coerce.date(),
+        })
+        .optional(),
     }),
   ),
 });
@@ -2590,6 +2674,12 @@ export const CreateWordpilePileBody = zod.object({
   createdAt: zod.coerce.date().optional(),
   updatedAt: zod.coerce.date().optional(),
 });
+
+export const createWordpilePileResponseBuildVotesStackerMin = 0;
+
+export const createWordpilePileResponseBuildVotesBlocksMin = 0;
+
+export const createWordpilePileResponseBuildVotesPlanksMin = 0;
 
 export const CreateWordpilePileResponse = zod.object({
   id: zod.string().uuid(),
@@ -2608,6 +2698,22 @@ export const CreateWordpilePileResponse = zod.object({
       updatedAt: zod.coerce.date(),
     }),
   ),
+  buildVotes: zod
+    .object({
+      stacker: zod.number().min(createWordpilePileResponseBuildVotesStackerMin),
+      blocks: zod.number().min(createWordpilePileResponseBuildVotesBlocksMin),
+      planks: zod.number().min(createWordpilePileResponseBuildVotesPlanksMin),
+      lastChoice: zod
+        .union([
+          zod.literal("stacker"),
+          zod.literal("blocks"),
+          zod.literal("planks"),
+          zod.literal(null),
+        ])
+        .nullable(),
+      updatedAt: zod.coerce.date(),
+    })
+    .optional(),
 });
 
 /**
@@ -2620,6 +2726,12 @@ export const UpdateWordpilePileParams = zod.object({
 export const UpdateWordpilePileBody = zod.object({
   name: zod.string().min(1).optional(),
 });
+
+export const updateWordpilePileResponseBuildVotesStackerMin = 0;
+
+export const updateWordpilePileResponseBuildVotesBlocksMin = 0;
+
+export const updateWordpilePileResponseBuildVotesPlanksMin = 0;
 
 export const UpdateWordpilePileResponse = zod.object({
   id: zod.string().uuid(),
@@ -2638,6 +2750,22 @@ export const UpdateWordpilePileResponse = zod.object({
       updatedAt: zod.coerce.date(),
     }),
   ),
+  buildVotes: zod
+    .object({
+      stacker: zod.number().min(updateWordpilePileResponseBuildVotesStackerMin),
+      blocks: zod.number().min(updateWordpilePileResponseBuildVotesBlocksMin),
+      planks: zod.number().min(updateWordpilePileResponseBuildVotesPlanksMin),
+      lastChoice: zod
+        .union([
+          zod.literal("stacker"),
+          zod.literal("blocks"),
+          zod.literal("planks"),
+          zod.literal(null),
+        ])
+        .nullable(),
+      updatedAt: zod.coerce.date(),
+    })
+    .optional(),
 });
 
 /**
@@ -2649,6 +2777,55 @@ export const DeleteWordpilePileParams = zod.object({
 
 export const DeleteWordpilePileResponse = zod.object({
   ok: zod.boolean(),
+});
+
+/**
+ * @summary Set the absolute Build-page vote tally for a pile (LWW)
+ */
+export const PutWordpileBuildVotesParams = zod.object({
+  pileId: zod.coerce.string().uuid(),
+});
+
+export const putWordpileBuildVotesBodyStackerMin = 0;
+
+export const putWordpileBuildVotesBodyBlocksMin = 0;
+
+export const putWordpileBuildVotesBodyPlanksMin = 0;
+
+export const PutWordpileBuildVotesBody = zod.object({
+  stacker: zod.number().min(putWordpileBuildVotesBodyStackerMin),
+  blocks: zod.number().min(putWordpileBuildVotesBodyBlocksMin),
+  planks: zod.number().min(putWordpileBuildVotesBodyPlanksMin),
+  lastChoice: zod
+    .union([
+      zod.literal("stacker"),
+      zod.literal("blocks"),
+      zod.literal("planks"),
+      zod.literal(null),
+    ])
+    .nullable(),
+  updatedAt: zod.coerce.date(),
+});
+
+export const putWordpileBuildVotesResponseStackerMin = 0;
+
+export const putWordpileBuildVotesResponseBlocksMin = 0;
+
+export const putWordpileBuildVotesResponsePlanksMin = 0;
+
+export const PutWordpileBuildVotesResponse = zod.object({
+  stacker: zod.number().min(putWordpileBuildVotesResponseStackerMin),
+  blocks: zod.number().min(putWordpileBuildVotesResponseBlocksMin),
+  planks: zod.number().min(putWordpileBuildVotesResponsePlanksMin),
+  lastChoice: zod
+    .union([
+      zod.literal("stacker"),
+      zod.literal("blocks"),
+      zod.literal("planks"),
+      zod.literal(null),
+    ])
+    .nullable(),
+  updatedAt: zod.coerce.date(),
 });
 
 /**

@@ -38,6 +38,7 @@ const cloudMocks = vi.hoisted(() => ({
   pushAddWord: vi.fn(),
   pushUpdateWord: vi.fn(),
   pushDeleteWord: vi.fn(),
+  pushBuildVotes: vi.fn(),
   bootstrapSync: vi.fn(),
 }));
 
@@ -523,6 +524,101 @@ describe("WordpileStore — cloud delete propagation", () => {
   });
 });
 
+// Build-page votes have to behave like every other mutation: optimistic
+// local update + queued cloud push. Plus two flavour-specific things —
+// the pile's `updatedAt` must not change (vote activity isn't an edit),
+// and the legacy localStorage migration must run once and only once.
+describe("WordpileStore — Build-page votes", () => {
+  let WordpileStore: WordpileStoreType;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    for (const fn of Object.values(cloudMocks)) fn.mockClear();
+    vi.doMock("./cloudSync", () => cloudMocks);
+    const mod = await import("./store");
+    WordpileStore = mod.WordpileStore;
+  });
+
+  it("createPile starts with an empty vote tally", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    expect(pile.buildVotes).toEqual({
+      stacker: 0,
+      blocks: 0,
+      planks: 0,
+      lastChoice: null,
+      updatedAt: 0,
+    });
+  });
+
+  it("castBuildVote increments the chosen variant and queues a cloud push", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    cloudMocks.pushBuildVotes.mockClear();
+    WordpileStore.castBuildVote(pile.id, "blocks");
+    const updated = WordpileStore.getSnapshot().piles[pile.id];
+    expect(updated.buildVotes.blocks).toBe(1);
+    expect(updated.buildVotes.stacker).toBe(0);
+    expect(updated.buildVotes.planks).toBe(0);
+    expect(updated.buildVotes.lastChoice).toBe("blocks");
+    expect(updated.buildVotes.updatedAt).toBeGreaterThan(0);
+    expect(cloudMocks.pushBuildVotes).toHaveBeenCalledTimes(1);
+    expect(cloudMocks.pushBuildVotes).toHaveBeenCalledWith(
+      pile.id,
+      updated.buildVotes,
+    );
+  });
+
+  it("castBuildVote does NOT bump the pile's updatedAt", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    const before = WordpileStore.getSnapshot().piles[pile.id].updatedAt;
+    WordpileStore.castBuildVote(pile.id, "stacker");
+    const after = WordpileStore.getSnapshot().piles[pile.id].updatedAt;
+    expect(after).toBe(before);
+  });
+
+  it("castBuildVote is a no-op when the pile is unknown", () => {
+    WordpileStore.castBuildVote("not-a-real-pile", "stacker");
+    expect(cloudMocks.pushBuildVotes).not.toHaveBeenCalled();
+  });
+
+  it("adoptLegacyBuildVotes sums onto the current tally and stamps a fresh timestamp", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    // Pre-load some "server already had these" votes by casting once.
+    WordpileStore.castBuildVote(pile.id, "stacker");
+    cloudMocks.pushBuildVotes.mockClear();
+    const tBefore = Date.now();
+    WordpileStore.adoptLegacyBuildVotes(pile.id, {
+      stacker: 2,
+      blocks: 1,
+      planks: 0,
+      lastChoice: "blocks",
+    });
+    const updated = WordpileStore.getSnapshot().piles[pile.id];
+    expect(updated.buildVotes.stacker).toBe(3);
+    expect(updated.buildVotes.blocks).toBe(1);
+    expect(updated.buildVotes.planks).toBe(0);
+    // Migrating-in choice wins over the previous one.
+    expect(updated.buildVotes.lastChoice).toBe("blocks");
+    expect(updated.buildVotes.updatedAt).toBeGreaterThanOrEqual(tBefore);
+    expect(cloudMocks.pushBuildVotes).toHaveBeenCalledTimes(1);
+  });
+
+  it("adoptLegacyBuildVotes is a no-op when there are no legacy votes", () => {
+    const pile = WordpileStore.createPile("Deer Lake");
+    cloudMocks.pushBuildVotes.mockClear();
+    const before = WordpileStore.getSnapshot().piles[pile.id].buildVotes;
+    WordpileStore.adoptLegacyBuildVotes(pile.id, {
+      stacker: 0,
+      blocks: 0,
+      planks: 0,
+      lastChoice: null,
+    });
+    const after = WordpileStore.getSnapshot().piles[pile.id].buildVotes;
+    // Reference equality — the snapshot wasn't perturbed.
+    expect(after).toBe(before);
+    expect(cloudMocks.pushBuildVotes).not.toHaveBeenCalled();
+  });
+});
+
 // `reconcileWithCloud` is the wrapper the sync-status pill calls when the
 // queue has drained but at least one mutation was permanently rejected
 // (sticky-failure subkind). It POSTs the local snapshot to /sync via
@@ -972,6 +1068,13 @@ describe("findSimilarLocalPile", () => {
       createdAt: now,
       updatedAt: now,
       words: wordEntries,
+      buildVotes: {
+        stacker: 0,
+        blocks: 0,
+        planks: 0,
+        lastChoice: null,
+        updatedAt: 0,
+      },
     };
   }
 

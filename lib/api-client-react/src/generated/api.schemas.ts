@@ -815,12 +815,34 @@ export interface WordpileWord {
   updatedAt: string;
 }
 
+export type WordpileBuildVotesLastChoice =
+  | (typeof WordpileBuildVotesLastChoice)[keyof typeof WordpileBuildVotesLastChoice]
+  | null;
+
+export const WordpileBuildVotesLastChoice = {
+  stacker: "stacker",
+  blocks: "blocks",
+  planks: "planks",
+} as const;
+
+export interface WordpileBuildVotes {
+  /** @minimum 0 */
+  stacker: number;
+  /** @minimum 0 */
+  blocks: number;
+  /** @minimum 0 */
+  planks: number;
+  lastChoice: WordpileBuildVotesLastChoice;
+  updatedAt: string;
+}
+
 export interface WordpilePile {
   id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
   words: WordpileWord[];
+  buildVotes?: WordpileBuildVotes;
 }
 
 export interface WordpileSnapshot {

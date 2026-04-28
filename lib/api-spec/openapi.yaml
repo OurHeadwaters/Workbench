@@ -1137,6 +1137,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/OkResponse'
 
+  /wordpile/piles/{pileId}/build-votes:
+    put:
+      tags: [wordpile]
+      operationId: putWordpileBuildVotes
+      summary: Set the absolute Build-page vote tally for a pile (LWW)
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WordpileBuildVotes'
+      responses:
+        '200':
+          description: The current tally on the server (either the just-written
+            value, or the existing one if the request lost the LWW comparison).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordpileBuildVotes'
+
   /wordpile/piles/{pileId}/words:
     post:
       tags: [wordpile]
@@ -2127,6 +2152,19 @@ components:
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
 
+    WordpileBuildVotes:
+      type: object
+      required: [stacker, blocks, planks, lastChoice, updatedAt]
+      properties:
+        stacker: { type: integer, minimum: 0 }
+        blocks: { type: integer, minimum: 0 }
+        planks: { type: integer, minimum: 0 }
+        lastChoice:
+          type: string
+          nullable: true
+          enum: [stacker, blocks, planks, null]
+        updatedAt: { type: string, format: date-time }
+
     WordpilePile:
       type: object
       required: [id, name, createdAt, updatedAt, words]
@@ -2139,6 +2177,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/WordpileWord'
+        buildVotes:
+          $ref: '#/components/schemas/WordpileBuildVotes'
 
     WordpileSnapshot:
       type: object

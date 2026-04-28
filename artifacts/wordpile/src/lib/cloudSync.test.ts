@@ -79,6 +79,13 @@ function makePile(id: string, name = id): CommunityPile {
     createdAt: 1,
     updatedAt: 1,
     words: [],
+    buildVotes: {
+      stacker: 0,
+      blocks: 0,
+      planks: 0,
+      lastChoice: null,
+      updatedAt: 0,
+    },
   };
 }
 

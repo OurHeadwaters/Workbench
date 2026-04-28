@@ -47,11 +47,26 @@ const {
       // so route code can't accidentally rely on a looser invariant than
       // production.
       __pk: ["id"] as readonly string[],
+      // Defaults applied at insert time so route code that omits these
+      // columns (e.g. legacy callers that don't know about build votes
+      // yet) gets the same shape Postgres would supply.
+      __defaults: {
+        buildVotesStacker: 0,
+        buildVotesBlocks: 0,
+        buildVotesPlanks: 0,
+        buildVotesLastChoice: null as string | null,
+        buildVotesUpdatedAt: new Date(0),
+      } as Record<string, unknown>,
       id: { __c: "id" } as Col,
       clerkUserId: { __c: "clerkUserId" } as Col,
       name: { __c: "name" } as Col,
       createdAt: { __c: "createdAt" } as Col,
       updatedAt: { __c: "updatedAt" } as Col,
+      buildVotesStacker: { __c: "buildVotesStacker" } as Col,
+      buildVotesBlocks: { __c: "buildVotesBlocks" } as Col,
+      buildVotesPlanks: { __c: "buildVotesPlanks" } as Col,
+      buildVotesLastChoice: { __c: "buildVotesLastChoice" } as Col,
+      buildVotesUpdatedAt: { __c: "buildVotesUpdatedAt" } as Col,
     };
     const wordpileWordsTable = {
       __store: WORDS,
@@ -199,7 +214,11 @@ const {
             returning() {
               const out: Row[] = [];
               for (const v of arr) {
-                const row: Row = { ...v };
+                // Apply table-level defaults first so explicit columns
+                // in the insert payload still override them.
+                const defaults =
+                  (table as { __defaults?: Row }).__defaults ?? {};
+                const row: Row = { ...defaults, ...v };
                 if (table === wordpileWordsTable) {
                   if (row.note === undefined) row.note = "";
                   if (row.bucket === undefined) row.bucket = "unsorted";
@@ -209,6 +228,9 @@ const {
                 }
                 row.createdAt = coerceDate(row.createdAt);
                 row.updatedAt = coerceDate(row.updatedAt);
+                if (table === wordpilePilesTable) {
+                  row.buildVotesUpdatedAt = coerceDate(row.buildVotesUpdatedAt);
+                }
                 // Enforce the real schema's primary-key uniqueness.
                 // Postgres would raise a unique violation here; we raise
                 // a synchronous Error with the same shape so the route's
@@ -1710,5 +1732,293 @@ describe("short links", () => {
       });
       expect(retry.status).toBe(201);
     });
+  });
+});
+
+// ----------------------- build-votes ------------------------
+//
+// The dedicated PUT endpoint for Build-page prototype votes. Verifies:
+//   * auth gating + ownership scoping mirror the rest of the wordpile API
+//   * absolute (not delta) writes land on the row
+//   * LWW: a stale `updatedAt` returns the server's current tally
+//     instead of overwriting it
+//   * the pile's own `updatedAt` is NOT bumped, so vote activity doesn't
+//     disturb the recently-active sort or stomp a concurrent rename
+//   * /sync round-trips buildVotes via LWW the same way it handles
+//     piles + words
+
+describe("PUT /piles/:pileId/build-votes", () => {
+  const olderUpdatedAt = new Date("2026-04-01T00:00:00Z");
+  const newerUpdatedAt = new Date("2026-04-15T00:00:00Z");
+
+  beforeEach(() => {
+    wordpilePilesTable.__store.push({
+      id: PILE_A,
+      clerkUserId: "user_a",
+      name: "Pile A",
+      createdAt: new Date("2026-03-01T00:00:00Z"),
+      updatedAt: new Date("2026-03-01T00:00:00Z"),
+      buildVotesStacker: 0,
+      buildVotesBlocks: 0,
+      buildVotesPlanks: 0,
+      buildVotesLastChoice: null,
+      buildVotesUpdatedAt: new Date(0),
+    });
+  });
+
+  it("requires auth", async () => {
+    const { status } = await req(
+      "PUT",
+      `/api/wordpile/piles/${PILE_A}/build-votes`,
+      {
+        stacker: 1,
+        blocks: 0,
+        planks: 0,
+        lastChoice: "stacker",
+        updatedAt: newerUpdatedAt.toISOString(),
+      },
+    );
+    expect(status).toBe(401);
+  });
+
+  it("404s when another user tries to write to a pile they don't own", async () => {
+    setUser("user_b");
+    const { status } = await req(
+      "PUT",
+      `/api/wordpile/piles/${PILE_A}/build-votes`,
+      {
+        stacker: 1,
+        blocks: 0,
+        planks: 0,
+        lastChoice: "stacker",
+        updatedAt: newerUpdatedAt.toISOString(),
+      },
+    );
+    expect(status).toBe(404);
+    // Server tally untouched.
+    const row = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    expect(row.buildVotesStacker).toBe(0);
+  });
+
+  it("writes the absolute tally and echoes it back", async () => {
+    setUser("user_a");
+    const { status, body } = await req(
+      "PUT",
+      `/api/wordpile/piles/${PILE_A}/build-votes`,
+      {
+        stacker: 3,
+        blocks: 2,
+        planks: 1,
+        lastChoice: "blocks",
+        updatedAt: newerUpdatedAt.toISOString(),
+      },
+    );
+    expect(status).toBe(200);
+    expect(body).toEqual({
+      stacker: 3,
+      blocks: 2,
+      planks: 1,
+      lastChoice: "blocks",
+      updatedAt: newerUpdatedAt.toISOString(),
+    });
+    const row = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    expect(row.buildVotesStacker).toBe(3);
+    expect(row.buildVotesBlocks).toBe(2);
+    expect(row.buildVotesPlanks).toBe(1);
+    expect(row.buildVotesLastChoice).toBe("blocks");
+  });
+
+  it("does not bump the pile's updatedAt — votes shouldn't move the recency sort", async () => {
+    setUser("user_a");
+    const before = (
+      wordpilePilesTable.__store.find((r) => r.id === PILE_A)!
+        .updatedAt as Date
+    ).getTime();
+    await req("PUT", `/api/wordpile/piles/${PILE_A}/build-votes`, {
+      stacker: 1,
+      blocks: 0,
+      planks: 0,
+      lastChoice: "stacker",
+      updatedAt: newerUpdatedAt.toISOString(),
+    });
+    const after = (
+      wordpilePilesTable.__store.find((r) => r.id === PILE_A)!
+        .updatedAt as Date
+    ).getTime();
+    expect(after).toBe(before);
+  });
+
+  it("LWW: a stale updatedAt is rejected and the response carries the server's current tally", async () => {
+    // Server already at (5, 0, 0) with newerUpdatedAt timestamp.
+    const row = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    row.buildVotesStacker = 5;
+    row.buildVotesLastChoice = "stacker";
+    row.buildVotesUpdatedAt = newerUpdatedAt;
+
+    setUser("user_a");
+    const { status, body } = await req(
+      "PUT",
+      `/api/wordpile/piles/${PILE_A}/build-votes`,
+      {
+        stacker: 1,
+        blocks: 9,
+        planks: 9,
+        lastChoice: "planks",
+        updatedAt: olderUpdatedAt.toISOString(),
+      },
+    );
+    expect(status).toBe(200);
+    expect(body).toEqual({
+      stacker: 5,
+      blocks: 0,
+      planks: 0,
+      lastChoice: "stacker",
+      updatedAt: newerUpdatedAt.toISOString(),
+    });
+    // And the server row didn't move.
+    const after = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    expect(after.buildVotesStacker).toBe(5);
+    expect(after.buildVotesBlocks).toBe(0);
+  });
+
+  it("clamps invalid count fields to safe non-negative integers", async () => {
+    setUser("user_a");
+    const { status, body } = await req(
+      "PUT",
+      `/api/wordpile/piles/${PILE_A}/build-votes`,
+      {
+        stacker: -3,
+        blocks: 1.7,
+        planks: "nope",
+        lastChoice: "not-a-variant",
+        updatedAt: newerUpdatedAt.toISOString(),
+      },
+    );
+    expect(status).toBe(200);
+    expect(body).toEqual({
+      stacker: 0,
+      blocks: 1,
+      planks: 0,
+      lastChoice: null,
+      updatedAt: newerUpdatedAt.toISOString(),
+    });
+  });
+});
+
+describe("POST /sync — buildVotes round-trip", () => {
+  it("server's newer buildVotes tally wins over a stale incoming one", async () => {
+    wordpilePilesTable.__store.push({
+      id: PILE_A,
+      clerkUserId: "user_a",
+      name: "Pile A",
+      createdAt: new Date("2026-03-01T00:00:00Z"),
+      updatedAt: new Date("2026-03-01T00:00:00Z"),
+      buildVotesStacker: 7,
+      buildVotesBlocks: 0,
+      buildVotesPlanks: 0,
+      buildVotesLastChoice: "stacker",
+      buildVotesUpdatedAt: new Date("2026-04-15T00:00:00Z"),
+    });
+    setUser("user_a");
+    const { status, body } = await req("POST", "/api/wordpile/sync", {
+      piles: [
+        {
+          id: PILE_A,
+          name: "Pile A",
+          createdAt: "2026-03-01T00:00:00Z",
+          updatedAt: "2026-03-01T00:00:00Z",
+          words: [],
+          buildVotes: {
+            stacker: 1,
+            blocks: 0,
+            planks: 0,
+            lastChoice: "stacker",
+            // Older than the server's tally, so this should lose LWW.
+            updatedAt: "2026-04-01T00:00:00Z",
+          },
+        },
+      ],
+    });
+    expect(status).toBe(200);
+    const piles = (body as { piles: Array<{ buildVotes?: unknown }> }).piles;
+    expect(piles).toHaveLength(1);
+    expect(piles[0].buildVotes).toEqual({
+      stacker: 7,
+      blocks: 0,
+      planks: 0,
+      lastChoice: "stacker",
+      updatedAt: "2026-04-15T00:00:00.000Z",
+    });
+  });
+
+  it("incoming newer buildVotes tally overwrites the server's", async () => {
+    wordpilePilesTable.__store.push({
+      id: PILE_A,
+      clerkUserId: "user_a",
+      name: "Pile A",
+      createdAt: new Date("2026-03-01T00:00:00Z"),
+      updatedAt: new Date("2026-03-01T00:00:00Z"),
+      buildVotesStacker: 1,
+      buildVotesBlocks: 1,
+      buildVotesPlanks: 0,
+      buildVotesLastChoice: "stacker",
+      buildVotesUpdatedAt: new Date("2026-04-01T00:00:00Z"),
+    });
+    setUser("user_a");
+    const { status } = await req("POST", "/api/wordpile/sync", {
+      piles: [
+        {
+          id: PILE_A,
+          name: "Pile A",
+          createdAt: "2026-03-01T00:00:00Z",
+          updatedAt: "2026-03-01T00:00:00Z",
+          words: [],
+          buildVotes: {
+            stacker: 9,
+            blocks: 4,
+            planks: 2,
+            lastChoice: "planks",
+            updatedAt: "2026-04-15T00:00:00Z",
+          },
+        },
+      ],
+    });
+    expect(status).toBe(200);
+    const row = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    expect(row.buildVotesStacker).toBe(9);
+    expect(row.buildVotesBlocks).toBe(4);
+    expect(row.buildVotesPlanks).toBe(2);
+    expect(row.buildVotesLastChoice).toBe("planks");
+  });
+
+  it("incoming pile with no buildVotes leaves the server's tally alone", async () => {
+    wordpilePilesTable.__store.push({
+      id: PILE_A,
+      clerkUserId: "user_a",
+      name: "Pile A",
+      createdAt: new Date("2026-03-01T00:00:00Z"),
+      updatedAt: new Date("2026-03-01T00:00:00Z"),
+      buildVotesStacker: 4,
+      buildVotesBlocks: 0,
+      buildVotesPlanks: 0,
+      buildVotesLastChoice: "stacker",
+      buildVotesUpdatedAt: new Date("2026-04-15T00:00:00Z"),
+    });
+    setUser("user_a");
+    const { status } = await req("POST", "/api/wordpile/sync", {
+      piles: [
+        {
+          id: PILE_A,
+          name: "Pile A",
+          createdAt: "2026-03-01T00:00:00Z",
+          updatedAt: "2026-03-01T00:00:00Z",
+          words: [],
+        },
+      ],
+    });
+    expect(status).toBe(200);
+    const row = wordpilePilesTable.__store.find((r) => r.id === PILE_A)!;
+    expect(row.buildVotesStacker).toBe(4);
+    expect(row.buildVotesLastChoice).toBe("stacker");
   });
 });

@@ -3,6 +3,7 @@ import {
   pgTable,
   text,
   uuid,
+  integer,
   timestamp,
   index,
   primaryKey,
@@ -30,6 +31,33 @@ export const wordpilePilesTable = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    // Build-page vote counters. The Build page lets a practitioner try
+    // three prototype variants (Stacker / Block builder / Falling planks)
+    // against this pile's words and vote for whichever felt best — the
+    // tally lives on the pile so it cloud-syncs alongside the words.
+    //
+    // Stored as four columns rather than a JSONB blob so a future report
+    // can `SUM(build_votes_*)` across all of a user's piles without
+    // having to parse JSON in SQL.
+    //
+    // The "last choice" is just the most recently-voted variant — the
+    // BuildPage uses it to highlight the current selection. NULL means
+    // the user has never voted on this pile.
+    buildVotesStacker: integer("build_votes_stacker").notNull().default(0),
+    buildVotesBlocks: integer("build_votes_blocks").notNull().default(0),
+    buildVotesPlanks: integer("build_votes_planks").notNull().default(0),
+    buildVotesLastChoice: text("build_votes_last_choice"),
+    // LWW timestamp for the vote tally. Defaults to epoch so any
+    // client-side write (which always carries a real `Date.now()`) is
+    // unambiguously newer than the column-default that pre-existing
+    // rows inherit at migration time. Without this, freshly-migrated
+    // rows would hold a `defaultNow()` timestamp that could outrun a
+    // legacy localStorage migration carrying older votes.
+    buildVotesUpdatedAt: timestamp("build_votes_updated_at", {
+      withTimezone: true,
+    })
+      .notNull()
+      .default(sql`'epoch'::timestamptz`),
   },
   (t) => ({
     ownerIdx: index("wordpile_piles_owner_idx").on(t.clerkUserId),

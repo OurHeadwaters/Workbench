@@ -14,9 +14,12 @@
  */
 import {
   BUCKETS,
+  EMPTY_BUILD_VOTES,
   EMPTY_DATA,
   type AnyPileImport,
   type Bucket,
+  type BuildVariant,
+  type BuildVotes,
   type CommunityPile,
   type PileBundleExport,
   type PileExport,
@@ -52,10 +55,22 @@ function loadFromStorage(): WordpileData {
   try {
     const parsed = JSON.parse(raw) as Partial<WordpileData>;
     if (parsed.version !== 1 || !parsed.piles) return EMPTY_DATA;
+    // Backfill buildVotes for piles persisted before the field existed.
+    // Defaulting to zeros + epoch keeps the LWW invariant: when this
+    // device next syncs, the server's tally (or another device's) wins
+    // unless the user has already cast a vote in this session.
+    const piles: Record<string, CommunityPile> = {};
+    for (const [id, p] of Object.entries(parsed.piles)) {
+      piles[id] = {
+        ...(p as CommunityPile),
+        buildVotes:
+          (p as CommunityPile).buildVotes ?? { ...EMPTY_BUILD_VOTES },
+      };
+    }
     return {
       version: 1,
-      piles: parsed.piles,
-      pileOrder: parsed.pileOrder ?? Object.keys(parsed.piles),
+      piles,
+      pileOrder: parsed.pileOrder ?? Object.keys(piles),
       selectedPileId: parsed.selectedPileId ?? null,
     };
   } catch {
@@ -188,6 +203,7 @@ export const WordpileStore = {
       createdAt: now,
       updatedAt: now,
       words: [],
+      buildVotes: { ...EMPTY_BUILD_VOTES },
     };
     update((data) => ({
       ...data,
@@ -242,6 +258,83 @@ export const WordpileStore = {
   selectPile(pileId: string | null) {
     // Selection is purely a client-side preference — never synced.
     update((data) => ({ ...data, selectedPileId: pileId }));
+  },
+
+  // -- Build-page votes -----------------------------------------------
+  // Increment the tally for `choice` on `pileId` by 1, mark it as the
+  // user's most recent pick, and queue an LWW push to the cloud. The
+  // pile's own `updatedAt` is left alone — vote activity isn't a real
+  // edit and shouldn't disturb the recently-active sort.
+  castBuildVote(pileId: string, choice: BuildVariant) {
+    let nextVotes: BuildVotes | null = null;
+    update((data) => {
+      const pile = data.piles[pileId];
+      if (!pile) return data;
+      const current = pile.buildVotes ?? EMPTY_BUILD_VOTES;
+      const updated: BuildVotes = {
+        stacker: current.stacker + (choice === "stacker" ? 1 : 0),
+        blocks: current.blocks + (choice === "blocks" ? 1 : 0),
+        planks: current.planks + (choice === "planks" ? 1 : 0),
+        lastChoice: choice,
+        updatedAt: Date.now(),
+      };
+      nextVotes = updated;
+      return {
+        ...data,
+        piles: {
+          ...data.piles,
+          [pileId]: { ...pile, buildVotes: updated },
+        },
+      };
+    });
+    if (nextVotes) cloud.pushBuildVotes(pileId, nextVotes);
+  },
+
+  // One-shot migration of votes that were stranded in localStorage
+  // before this field existed on the pile. Sums the legacy counts onto
+  // whatever's already on the pile (which may have come down from the
+  // server moments earlier) and stamps `Date.now()` so the merged total
+  // wins the next LWW comparison. Caller is responsible for removing
+  // the legacy localStorage entry after this returns.
+  adoptLegacyBuildVotes(
+    pileId: string,
+    legacy: { stacker: number; blocks: number; planks: number; lastChoice: BuildVariant | null },
+  ) {
+    let merged: BuildVotes | null = null;
+    update((data) => {
+      const pile = data.piles[pileId];
+      if (!pile) return data;
+      const current = pile.buildVotes ?? EMPTY_BUILD_VOTES;
+      // Bail if the legacy bucket is empty — nothing to migrate, and we
+      // don't want to bump the timestamp for no reason (which would
+      // pointlessly clobber a peer's tally over LWW).
+      if (
+        legacy.stacker <= 0 &&
+        legacy.blocks <= 0 &&
+        legacy.planks <= 0 &&
+        legacy.lastChoice === null
+      ) {
+        return data;
+      }
+      const next: BuildVotes = {
+        stacker: current.stacker + Math.max(0, Math.floor(legacy.stacker)),
+        blocks: current.blocks + Math.max(0, Math.floor(legacy.blocks)),
+        planks: current.planks + Math.max(0, Math.floor(legacy.planks)),
+        // Prefer the migrating-in choice so the UI reflects what the
+        // user picked locally; fall back to whatever was already there.
+        lastChoice: legacy.lastChoice ?? current.lastChoice,
+        updatedAt: Date.now(),
+      };
+      merged = next;
+      return {
+        ...data,
+        piles: {
+          ...data.piles,
+          [pileId]: { ...pile, buildVotes: next },
+        },
+      };
+    });
+    if (merged) cloud.pushBuildVotes(pileId, merged);
   },
 
   // -- Word-level ------------------------------------------------------
@@ -494,6 +587,7 @@ export const WordpileStore = {
       createdAt: now,
       updatedAt: now,
       words,
+      buildVotes: { ...EMPTY_BUILD_VOTES },
     };
     update((data) => ({
       ...data,

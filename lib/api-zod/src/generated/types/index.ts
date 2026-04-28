@@ -115,6 +115,8 @@ export * from "./updateWordpileWordRequestBucket";
 export * from "./uploadUrlRequest";
 export * from "./uploadUrlResponse";
 export * from "./voidTransactionRequest";
+export * from "./wordpileBuildVotes";
+export * from "./wordpileBuildVotesLastChoice";
 export * from "./wordpileMe";
 export * from "./wordpilePile";
 export * from "./wordpileSnapshot";
