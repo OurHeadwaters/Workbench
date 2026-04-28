@@ -218,6 +218,45 @@ export default function FrontPage() {
         </Pressable>
         <View style={{ height: 12 }} />
         <Pressable
+          onPress={() => router.push("/standby")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              The Standby — household checklist
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              The Z0 saltbox read of The Standby. Same rungs and nouns the
+              co-op uses — water, fuel, meds, kid-care, contact tree.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
           onPress={() => Linking.openURL("/wordpile/")}
           style={({ pressed }) => [
             styles.toolRow,
