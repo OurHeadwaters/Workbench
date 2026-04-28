@@ -150,6 +150,23 @@ export const WordpileStore = {
     write({ ...data, selectedPileId });
   },
 
+  // Re-run the /sync bootstrap with the current local snapshot and swap
+  // the in-memory state for the merged result. This is the same recipe
+  // App.tsx runs at sign-in, hoisted here so the sync-status pill can
+  // expose it as a one-click "Try reconcile again" recovery for the
+  // sticky-failure subkind (queue is empty, but at least one mutation
+  // was permanently rejected and `unsyncedFailures > 0`). The pill keeps
+  // its own UI in-flight state; this method just reports whether the
+  // reconciliation reached the server. On failure cloudSync already
+  // refreshes its snapshot so the pill stays in error and tells the
+  // user to try again.
+  async reconcileWithCloud(): Promise<boolean> {
+    const merged = await cloud.bootstrapSync(read());
+    if (!merged) return false;
+    WordpileStore.replaceAll(merged);
+    return true;
+  },
+
   // Wipe all local state (used on sign-out so the next anonymous user on
   // this browser doesn't see the previous user's piles in the cache).
   clearLocal() {

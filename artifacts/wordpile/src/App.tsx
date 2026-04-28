@@ -6,7 +6,6 @@ import { PileEditorPage } from "@/pages/PileEditorPage";
 import { CheckDraftPage } from "@/pages/CheckDraftPage";
 import { TopBar } from "@/components/TopBar";
 import { WordpileStore } from "@/lib/store";
-import { bootstrapSync } from "@/lib/cloudSync";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
   | string
@@ -105,10 +104,11 @@ function CloudSyncBridge() {
         WordpileStore.clearLocal();
       }
       WordpileStore.setCloudUser(next);
-      const localSnapshot = WordpileStore.getSnapshot();
-      void bootstrapSync(localSnapshot).then((merged) => {
-        if (merged) WordpileStore.replaceAll(merged);
-      });
+      // Same recipe the sync pill exposes for sticky-failure recovery —
+      // POST our local snapshot, replace in-memory state with the merged
+      // result. Failures are handled inside cloudSync (it bumps the
+      // pill into an error state with the "Try reconcile again" button).
+      void WordpileStore.reconcileWithCloud();
     } else {
       // Sign-out. Stop pushing to the cloud, clear local cache, return to
       // anonymous mode with an empty slate.

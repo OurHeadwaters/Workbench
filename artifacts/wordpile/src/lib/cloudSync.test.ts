@@ -282,6 +282,72 @@ describe("cloudSync — drop on permanent 4xx", () => {
     expect(snap.unsyncedFailures).toBe(0);
     expect(snap.status).toBe("error");
   });
+
+  it("keeps the sticky-error subkind when bootstrapSync fails", async () => {
+    // First force a sticky failure so the pill is in the queue-empty /
+    // unsyncedFailures > 0 subkind that the "Try reconcile again" button
+    // handles.
+    const { cloud, fetchMock } = await setup();
+    cloud.setCloudUser("user-1");
+    fetchMock.mockResolvedValueOnce(status(409));
+    cloud.pushCreatePile(makePile("p1"));
+    await settle();
+    const before = cloud.getSyncSnapshot();
+    expect(before.status).toBe("error");
+    expect(before.unsyncedFailures).toBe(1);
+    expect(before.pendingCount).toBe(0);
+
+    // Now the user clicks "Try reconcile again" but the server is still
+    // unhappy — POST /sync 503s. The bootstrap helper must:
+    //   - Return null (caller knows recovery didn't happen).
+    //   - NOT clear unsyncedFailures (the original drop is still real).
+    //   - Refresh lastErrorAt so the pill knows we just tried and failed,
+    //     and stays in error so the user can try again.
+    fetchMock.mockResolvedValueOnce(status(503));
+    const merged = await cloud.bootstrapSync({
+      version: 1,
+      piles: {},
+      pileOrder: [],
+      selectedPileId: null,
+    });
+    expect(merged).toBeNull();
+    const after = cloud.getSyncSnapshot();
+    expect(after.status).toBe("error");
+    expect(after.unsyncedFailures).toBe(1);
+    expect(after.pendingCount).toBe(0);
+    expect(after.lastErrorAt).not.toBeNull();
+    expect(after.lastErrorAt).toBeGreaterThanOrEqual(before.lastErrorAt ?? 0);
+  });
+
+  it("clears the sticky failure when bootstrapSync succeeds", async () => {
+    const { cloud, fetchMock } = await setup();
+    cloud.setCloudUser("user-1");
+    // Force a sticky failure to recover from.
+    fetchMock.mockResolvedValueOnce(status(409));
+    cloud.pushCreatePile(makePile("p1"));
+    await settle();
+    expect(cloud.getSyncSnapshot().status).toBe("error");
+
+    // bootstrapSync goes through the `api()` helper which calls
+    // `res.json()` on success — provide a fake Response that includes
+    // it. (The harness's ok()/status() helpers omit json() because the
+    // queue path never reads a body.)
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({ piles: [] }),
+    });
+    const merged = await cloud.bootstrapSync({
+      version: 1,
+      piles: {},
+      pileOrder: [],
+      selectedPileId: null,
+    });
+    expect(merged).not.toBeNull();
+    const snap = cloud.getSyncSnapshot();
+    expect(snap.unsyncedFailures).toBe(0);
+    expect(snap.status).toBe("idle");
+  });
 });
 
 describe("cloudSync — sync-status snapshot transitions", () => {

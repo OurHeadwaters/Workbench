@@ -36,6 +36,7 @@ const cloudMocks = vi.hoisted(() => ({
   pushAddWord: vi.fn(),
   pushUpdateWord: vi.fn(),
   pushDeleteWord: vi.fn(),
+  bootstrapSync: vi.fn(),
 }));
 
 describe("WordpileStore — snapshot stability", () => {
@@ -432,6 +433,75 @@ describe("WordpileStore — cloud delete propagation", () => {
     cloudMocks.pushDeleteWord.mockClear();
     WordpileStore.deleteWord(pile.id, "nonexistent-word-id");
     expect(cloudMocks.pushDeleteWord).not.toHaveBeenCalled();
+  });
+});
+
+// `reconcileWithCloud` is the wrapper the sync-status pill calls when the
+// queue has drained but at least one mutation was permanently rejected
+// (sticky-failure subkind). It POSTs the local snapshot to /sync via
+// cloudSync.bootstrapSync and replaces the in-memory state with the
+// merged result. We mock cloudSync to keep the test pure.
+describe("WordpileStore — reconcileWithCloud", () => {
+  let WordpileStore: WordpileStoreType;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    for (const fn of Object.values(cloudMocks)) fn.mockClear();
+    vi.doMock("./cloudSync", () => cloudMocks);
+    const mod = await import("./store");
+    WordpileStore = mod.WordpileStore;
+  });
+
+  it("swaps the in-memory snapshot for the merged server result on success", async () => {
+    // Local state the user built up before reconciling.
+    const local = WordpileStore.createPile("Local-only");
+    expect(WordpileStore.getSnapshot().piles[local.id]).toBeTruthy();
+
+    // Server "wins" with a different pile (e.g. created on another
+    // device). bootstrapSync would resolve to that merged snapshot;
+    // after reconcileWithCloud the store should mirror it exactly,
+    // dropping the local-only id.
+    cloudMocks.bootstrapSync.mockResolvedValueOnce({
+      version: 1,
+      piles: {
+        "00000000-0000-4000-8000-000000000aaa": {
+          id: "00000000-0000-4000-8000-000000000aaa",
+          name: "From the server",
+          createdAt: 1,
+          updatedAt: 2,
+          words: [],
+        },
+      },
+      pileOrder: ["00000000-0000-4000-8000-000000000aaa"],
+      selectedPileId: "00000000-0000-4000-8000-000000000aaa",
+    });
+
+    const ok = await WordpileStore.reconcileWithCloud();
+    expect(ok).toBe(true);
+    expect(cloudMocks.bootstrapSync).toHaveBeenCalledTimes(1);
+    const next = WordpileStore.getSnapshot();
+    expect(next.piles[local.id]).toBeUndefined();
+    expect(next.piles["00000000-0000-4000-8000-000000000aaa"]?.name).toBe(
+      "From the server",
+    );
+    expect(next.pileOrder).toEqual(["00000000-0000-4000-8000-000000000aaa"]);
+  });
+
+  it("leaves local state untouched when the bootstrap call fails", async () => {
+    // The pill needs to know the recovery didn't happen (so it can stay
+    // in error and let the user try again). The store must not blank out
+    // the user's local data on a failed reconciliation — they'd lose
+    // everything they typed since the last successful sync.
+    const local = WordpileStore.createPile("Still here");
+    const before = WordpileStore.getSnapshot();
+
+    cloudMocks.bootstrapSync.mockResolvedValueOnce(null);
+    const ok = await WordpileStore.reconcileWithCloud();
+    expect(ok).toBe(false);
+    const after = WordpileStore.getSnapshot();
+    // Reference equality is enough — the snapshot wasn't replaced.
+    expect(after).toBe(before);
+    expect(after.piles[local.id]?.name).toBe("Still here");
   });
 });
 

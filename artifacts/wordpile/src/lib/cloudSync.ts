@@ -428,14 +428,28 @@ export async function fetchMe(): Promise<{
 // One-shot bootstrap: send the current local snapshot, receive the merged
 // state. Caller is responsible for replacing the in-memory snapshot with
 // the result before resuming normal mutations.
+//
+// Used in two places:
+//   1. App.tsx CloudSyncBridge — fires once when the Clerk user resolves.
+//   2. The "Try reconcile again" affordance on the sync pill — when a
+//      previous mutation was permanently rejected (sticky failure subkind),
+//      this is the recovery path the user can trigger themselves without
+//      reloading.
+//
+// On failure we deliberately bump `lastErrorAt` and refresh the snapshot
+// so the pill stays in (and re-announces) the error state — without this,
+// a failed bootstrap would silently leave the previous timestamp in place,
+// hiding the fact that the user just tried to recover and it didn't work.
+// Note we don't bump `unsyncedFailures` here: that counter tracks dropped
+// queued mutations, not bootstrap attempts, so the sticky-error subkind
+// stays exactly the same shape across retries.
 export async function bootstrapSync(
   local: WordpileData,
 ): Promise<WordpileData | null> {
   const result = await api<WireSnapshot>("POST", "/sync", snapshotToWire(local));
   if (!result) {
-    // Bootstrap itself failed — surface as an error state, but only if
-    // there are queued ops the user might be worrying about. Either way
-    // log it and let the caller decide how to react.
+    lastErrorAt = Date.now();
+    refreshSnapshot();
     return null;
   }
   // Treat a successful bootstrap as a "synced" event so the pill reads

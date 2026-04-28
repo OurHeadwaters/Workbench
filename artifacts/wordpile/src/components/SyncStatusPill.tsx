@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Cloud, CloudOff, Loader2, AlertTriangle } from "lucide-react";
 import {
   getSyncSnapshot,
@@ -6,6 +6,7 @@ import {
   subscribeSyncStatus,
   type SyncSnapshot,
 } from "@/lib/cloudSync";
+import { WordpileStore } from "@/lib/store";
 
 // Subscribes to the cloudSync sync-status snapshot. The third argument
 // (server snapshot) matches the client snapshot — there's no SSR for this
@@ -48,7 +49,8 @@ function describe(snap: SyncSnapshot): PillView {
     // Two distinct error subkinds. If the queue still has work, it's a
     // transient error and we'll retry on the next mutation / online event.
     // If the queue has drained and we still have failures, those changes
-    // are NOT going to retry — they need a refresh / re-sync to recover.
+    // are NOT going to retry — but the user can re-pull from the server
+    // with one click via reconcileWithCloud (the same recipe sign-in uses).
     if (pendingCount > 0) {
       const noun = pendingCount === 1 ? "change" : "changes";
       return {
@@ -61,7 +63,7 @@ function describe(snap: SyncSnapshot): PillView {
     const noun = unsyncedFailures === 1 ? "change" : "changes";
     return {
       label: "Some changes didn't save",
-      title: `${unsyncedFailures} ${noun} were rejected by the server and won't retry on their own. Refresh the page or sign out and back in to reconcile.`,
+      title: `${unsyncedFailures} ${noun} were rejected by the server and won't retry on their own. Reconcile with the server to fetch the latest saved state for your account.`,
       Icon: AlertTriangle,
       spin: false,
     };
@@ -87,6 +89,12 @@ function formatRelative(ts: number): string {
 
 export function SyncStatusPill() {
   const snap = useSyncSnapshot();
+  // Local in-flight flag for the reconcile path. cloudSync's `inFlight`
+  // tracks queued-op fetches, not the bootstrap call, so we need our own
+  // gate to (a) disable the button while the request is outstanding and
+  // (b) show "Reconciling…" copy. Reset implicitly when the snapshot
+  // flips out of the sticky-error state on success.
+  const [reconciling, setReconciling] = useState(false);
   const view = describe(snap);
   const Icon = view.Icon;
   // Errored / offline states get a warmer, more prominent ink colour so the
@@ -97,15 +105,21 @@ export function SyncStatusPill() {
       ? "var(--color-ink)"
       : "var(--color-stone)";
 
-  // The pill becomes a "Retry now" button only when retrying could
-  // actually accomplish something: the queue has work and we're either
-  // offline or in a transient error. The sticky-error subcase
-  // (pendingCount === 0, unsyncedFailures > 0) deliberately stays
-  // non-interactive because flushQueue can't recover those — its own
-  // copy is `Refresh the page or sign out and back in to reconcile`.
+  // Two interactive branches:
+  //   - "Retry now" (queued work present): re-runs flushQueue, forced
+  //     past navigator.onLine. Recovers from transient/offline errors.
+  //   - "Try reconcile again" (sticky-error subkind: queue empty,
+  //     unsyncedFailures > 0): re-pulls the merged server snapshot via
+  //     bootstrapSync and swaps in-memory state. Recovers from
+  //     permanent rejections (4xx) where the queued op is gone and
+  //     there's nothing left to flush — only a server snapshot to fetch.
   const canRetry =
     snap.pendingCount > 0 &&
     (snap.status === "offline" || snap.status === "error");
+  const canReconcile =
+    snap.status === "error" &&
+    snap.pendingCount === 0 &&
+    snap.unsyncedFailures > 0;
 
   if (canRetry) {
     return (
@@ -128,6 +142,44 @@ export function SyncStatusPill() {
         />
         <span className="hidden sm:inline">{view.label} · Retry now</span>
         <span className="sr-only sm:hidden">{view.label}, retry now</span>
+      </button>
+    );
+  }
+
+  if (canReconcile) {
+    const ReconcileIcon = reconciling ? Loader2 : view.Icon;
+    const label = reconciling
+      ? "Reconciling…"
+      : `${view.label} · Try reconcile again`;
+    return (
+      <button
+        type="button"
+        disabled={reconciling}
+        onClick={() => {
+          if (reconciling) return;
+          setReconciling(true);
+          void WordpileStore.reconcileWithCloud().finally(() => {
+            setReconciling(false);
+          });
+        }}
+        className="inline-flex items-center gap-2 text-sm rounded px-1 -mx-1 cursor-pointer hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-wait disabled:no-underline"
+        style={{ color: tone }}
+        data-testid="button-sync-reconcile"
+        data-sync-status={snap.status}
+        title={
+          reconciling
+            ? "Re-pulling the latest saved state for your account."
+            : `${view.title} Click to fetch the latest saved state for your account.`
+        }
+      >
+        <ReconcileIcon
+          size={14}
+          strokeWidth={1.6}
+          className={reconciling ? "animate-spin" : undefined}
+          aria-hidden
+        />
+        <span className="hidden sm:inline">{label}</span>
+        <span className="sr-only sm:hidden">{label}</span>
       </button>
     );
   }
