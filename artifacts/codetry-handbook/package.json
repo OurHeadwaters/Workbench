@@ -18,7 +18,7 @@
     "serve": "node server/serve.js",
     "sync-constellation": "node scripts/sync-constellation.js",
     "check-constellation": "node scripts/sync-constellation.js --check",
-    "typecheck": "node scripts/sync-constellation.js --check && tsc -p tsconfig.json --noEmit",
+    "typecheck": "node scripts/sync-constellation.js --check && node scripts/regenerate-router-types.js && tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
