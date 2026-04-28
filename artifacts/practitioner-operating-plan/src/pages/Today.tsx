@@ -278,6 +278,15 @@ export default function Today() {
           </li>
           <li>
             <Link
+              href="/naming-diff"
+              className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
+            >
+              Naming Diff — catch a load-bearing noun drifting between
+              two versions →
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/studio-wind-down"
               className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-700"
             >

@@ -16,6 +16,7 @@ import HoursByPillar from "@/pages/HoursByPillar";
 import Codetry from "@/pages/Codetry";
 import CodetryTest from "@/pages/CodetryTest";
 import CodetryVsLiterate from "@/pages/CodetryVsLiterate";
+import NamingDiff from "@/pages/NamingDiff";
 import LeaseTooling from "@/pages/LeaseTooling";
 import PaybackMemo from "@/pages/PaybackMemo";
 import SaltCoA from "@/pages/SaltCoA";
@@ -370,6 +371,9 @@ export default function App() {
   if (location === "/codetry") return <Codetry />;
   if (location === "/codetry-test") return <CodetryTest />;
   if (location === "/codetry-vs-literate") return <CodetryVsLiterate />;
+  // /naming-diff is intentionally NOT routed here — it lives inside
+  // AppLayout (the workbench surface) so it picks up the same chrome
+  // and nav as Today / Week / Year.
   if (location === "/salt-monthly-close") return <SaltMonthlyClose />;
   if (location === "/studio-wind-down") return <StudioWindDown />;
   if (location === "/inquiry-triage") return <InquiryTriage />;
@@ -382,6 +386,7 @@ export default function App() {
           <Route path="/week/close-out" component={WeekCloseOut} />
           <Route path="/week" component={Week} />
           <Route path="/year" component={Year} />
+          <Route path="/naming-diff" component={NamingDiff} />
           <Route path="/year/check-in" component={CheckIn} />
           <Route path="/year/check-in/new" component={CheckInNewSnapshot} />
           <Route path="/year/check-in/history" component={CheckInHistory} />
