@@ -25,6 +25,9 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
+import { initNetworkWatcher } from "@/lib/saveStatus";
+
+initNetworkWatcher();
 
 SplashScreen.preventAutoHideAsync();
 

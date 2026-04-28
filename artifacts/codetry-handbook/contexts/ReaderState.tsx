@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import { useColorScheme } from "react-native";
 
+import { storage } from "@/lib/storage";
+
 export type ThemeMode = "system" | "light" | "dark";
 export type ResolvedTheme = "light" | "dark";
 
@@ -112,29 +114,31 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     };
   }, []);
 
+  // Writes route through `storage` so the SyncStatusPill reflects them.
+  // Rejections stay swallowed; the pill is the failure surface.
   const setThemeMode = useCallback((m: ThemeMode) => {
     setThemeModeState(m);
-    AsyncStorage.setItem(KEYS.themeMode, m).catch(() => {});
+    storage.setItem(KEYS.themeMode, m).catch(() => {});
   }, []);
 
   const cycleTheme = useCallback(() => {
     const order: ThemeMode[] = ["system", "light", "dark"];
     setThemeModeState((prev) => {
       const next = order[(order.indexOf(prev) + 1) % order.length];
-      AsyncStorage.setItem(KEYS.themeMode, next).catch(() => {});
+      storage.setItem(KEYS.themeMode, next).catch(() => {});
       return next;
     });
   }, []);
 
   const writeFontStep = useCallback((step: number) => {
     setFontStep(step);
-    AsyncStorage.setItem(KEYS.fontScale, String(step)).catch(() => {});
+    storage.setItem(KEYS.fontScale, String(step)).catch(() => {});
   }, []);
 
   const increaseFont = useCallback(() => {
     setFontStep((prev) => {
       const next = Math.min(FONT_STEPS.length - 1, prev + 1);
-      AsyncStorage.setItem(KEYS.fontScale, String(next)).catch(() => {});
+      storage.setItem(KEYS.fontScale, String(next)).catch(() => {});
       return next;
     });
   }, []);
@@ -142,14 +146,14 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const decreaseFont = useCallback(() => {
     setFontStep((prev) => {
       const next = Math.max(0, prev - 1);
-      AsyncStorage.setItem(KEYS.fontScale, String(next)).catch(() => {});
+      storage.setItem(KEYS.fontScale, String(next)).catch(() => {});
       return next;
     });
   }, []);
 
   const persistBookmarks = useCallback((next: Bookmark[]) => {
     setBookmarks(next);
-    AsyncStorage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
+    storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
   }, []);
 
   const addBookmark = useCallback(
@@ -161,9 +165,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
           { ...b, id, createdAt: Date.now() },
           ...prev,
         ];
-        AsyncStorage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(
-          () => {},
-        );
+        storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
         return next;
       });
     },
@@ -173,9 +175,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const removeBookmark = useCallback((id: string) => {
     setBookmarks((prev) => {
       const next = prev.filter((b) => b.id !== id);
-      AsyncStorage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(
-        () => {},
-      );
+      storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
       return next;
     });
   }, []);
@@ -190,12 +190,12 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
 
   const setLastRead = useCallback((r: LastRead) => {
     setLastReadState(r);
-    AsyncStorage.setItem(KEYS.lastRead, JSON.stringify(r)).catch(() => {});
+    storage.setItem(KEYS.lastRead, JSON.stringify(r)).catch(() => {});
   }, []);
 
   const clearLastRead = useCallback(() => {
     setLastReadState(null);
-    AsyncStorage.removeItem(KEYS.lastRead).catch(() => {});
+    storage.removeItem(KEYS.lastRead).catch(() => {});
   }, []);
 
   const theme: ResolvedTheme =

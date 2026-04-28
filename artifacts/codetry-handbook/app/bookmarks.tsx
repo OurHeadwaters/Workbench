@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 
@@ -77,7 +78,9 @@ export default function Bookmarks() {
         >
           Bookmarks
         </Text>
-        <View style={styles.iconBtn} />
+        <View style={styles.syncSlot}>
+          <SyncStatusPill showLabel />
+        </View>
       </View>
 
       {bookmarks.length === 0 ? (
@@ -189,6 +192,12 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     justifyContent: "center",
+  },
+  syncSlot: {
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
   },
   scroll: { paddingHorizontal: 24, paddingTop: 8 },
   row: {

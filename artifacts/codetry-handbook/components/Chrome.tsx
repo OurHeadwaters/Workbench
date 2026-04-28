@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 
@@ -75,6 +76,9 @@ export function TopChrome({
         >
           {chapterNumber}
         </Text>
+      </View>
+      <View style={styles.syncSlot}>
+        <SyncStatusPill />
       </View>
       <Pressable
         onPress={onToggleBookmark}
@@ -269,6 +273,12 @@ const styles = StyleSheet.create({
     minWidth: 36,
     height: 36,
     borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
+  },
+  syncSlot: {
+    height: 36,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 6,

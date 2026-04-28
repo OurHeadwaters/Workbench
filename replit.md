@@ -53,6 +53,7 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
     - `app.config.js` uses `EXPO_PUBLIC_BASE_URL` for base path configuration across environments.
     - `AsyncStorage` namespace `codetry-handbook:v1` for persistent reader state across platforms (web maps to `localStorage`).
     - Part III of the handbook is built from an auto-generated, bundled snapshot of the constellation manifest from `practitioner-operating-plan`, with build-time validation to prevent staleness.
+    - Save-status pill (`lib/saveStatus.ts`, `lib/storage.ts`, `components/SyncStatusPill.tsx`): every persisted write goes through a `trackSave`-instrumented AsyncStorage wrapper, so the chrome can show `idle | saving | offline | error` exactly like the Wordpile web pill (icon-only in `TopChrome` on the chapter screen, full label on the bookmarks header). `initNetworkWatcher()` (called from `app/_layout.tsx`) subscribes to `@react-native-community/netinfo` so the pill flips to "Offline · saved here" on disconnect (NetInfo uses `navigator.onLine` + window online/offline events on web).
 
 - **Deer Lake Store Plan (`artifacts/deer-lake-store-plan`)**:
     - Slides deck for operational plan, including financial models.
