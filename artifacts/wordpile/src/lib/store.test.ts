@@ -302,6 +302,91 @@ describe("WordpileStore — serializePile / importPile (round-trip)", () => {
     expect(fish?.note).toBe("new");
   });
 
+  it("adopts the incoming bucket / safer-alternative for words listed in useTheirsWords", () => {
+    const target = WordpileStore.createPile("Deer Lake");
+    const stakeholderId = WordpileStore.addWord(target.id, {
+      word: "stakeholder",
+      bucket: "avoid",
+    })!.id;
+    WordpileStore.updateWord(target.id, stakeholderId, {
+      saferAlternative: "community member",
+    });
+    const harvestId = WordpileStore.addWord(target.id, {
+      word: "harvest",
+      bucket: "load",
+    })!.id;
+    WordpileStore.updateWord(target.id, harvestId, { note: "primary verb" });
+
+    const payload: PileExport = {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: {
+        name: "Shared",
+        words: [
+          // Differs in safer-alternative — practitioner picks "use theirs".
+          {
+            word: "stakeholder",
+            bucket: "avoid",
+            note: "shared note",
+            saferAlternative: "neighbour",
+          },
+          // Differs in bucket — practitioner does NOT pick "use theirs",
+          // so the existing classification (load) must stick.
+          { word: "harvest", bucket: "interior", note: "shared", saferAlternative: "" },
+          // Brand-new word — always added.
+          { word: "fish", bucket: "load", note: "new", saferAlternative: "" },
+        ],
+      },
+    };
+
+    const result = WordpileStore.importPile(payload, {
+      mergeIntoPileId: target.id,
+      useTheirsWords: ["stakeholder"],
+    });
+    expect(result).not.toBeNull();
+    const stakeholder = result!.words.find((w) => w.word === "stakeholder");
+    expect(stakeholder?.bucket).toBe("avoid");
+    expect(stakeholder?.saferAlternative).toBe("neighbour");
+    // The note on the existing entry is preserved (we don't pull notes
+    // across — this matches today's "additions only carry their own
+    // metadata" stance).
+    const harvest = result!.words.find((w) => w.word === "harvest");
+    expect(harvest?.bucket).toBe("load");
+    expect(harvest?.note).toBe("primary verb");
+    const fish = result!.words.find((w) => w.word === "fish");
+    expect(fish?.bucket).toBe("load");
+  });
+
+  it("matches useTheirsWords case-insensitively and ignores words that aren't conflicts", () => {
+    const target = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(target.id, { word: "stakeholder", bucket: "avoid" });
+
+    const payload: PileExport = {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: {
+        name: "Shared",
+        words: [
+          {
+            word: "stakeholder",
+            bucket: "interior",
+            note: "",
+            saferAlternative: "",
+          },
+        ],
+      },
+    };
+    // Mixed-case / unknown picks must still resolve correctly.
+    const result = WordpileStore.importPile(payload, {
+      mergeIntoPileId: target.id,
+      useTheirsWords: ["Stakeholder", "not-a-real-word"],
+    });
+    const stakeholder = result!.words.find((w) => w.word === "stakeholder");
+    expect(stakeholder?.bucket).toBe("interior");
+  });
+
   it("returns null when merging into a non-existent pile", () => {
     const payload: PileExport = {
       format: "wordpile-export",
@@ -703,6 +788,49 @@ describe("WordpileStore — serializeAllPiles / importBundle (round-trip)", () =
     const elder = merged.words.find((w) => w.word === "elder");
     expect(elder?.bucket).toBe("load");
     expect(elder?.note).toBe("from backup");
+  });
+
+  it("forwards per-row useTheirsWords to merging entries so reclassifications can be adopted from the backup", () => {
+    const existing = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(existing.id, {
+      word: "stakeholder",
+      bucket: "avoid",
+    });
+
+    const bundle: PileBundleExport = {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [
+        {
+          name: "Deer Lake",
+          words: [
+            {
+              word: "stakeholder",
+              bucket: "interior",
+              note: "shared",
+              saferAlternative: "",
+            },
+            { word: "elder", bucket: "load", note: "", saferAlternative: "" },
+          ],
+        },
+      ],
+    };
+
+    WordpileStore.importBundle(bundle, {
+      decisions: {
+        0: {
+          mode: "merge",
+          pileId: existing.id,
+          useTheirsWords: ["stakeholder"],
+        },
+      },
+    });
+    const merged = WordpileStore.getSnapshot().piles[existing.id];
+    const stakeholder = merged.words.find((w) => w.word === "stakeholder");
+    expect(stakeholder?.bucket).toBe("interior");
+    const elder = merged.words.find((w) => w.word === "elder");
+    expect(elder?.bucket).toBe("load");
   });
 
   it("skips a merge decision targeting a missing pile but still imports the rest", () => {

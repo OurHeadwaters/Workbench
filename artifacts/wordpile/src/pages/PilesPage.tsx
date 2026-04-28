@@ -61,6 +61,20 @@ export function PilesPage() {
   // dropdown, which freezes the auto-default so cloud-sync hydrating
   // more piles in the background can't clobber a manual choice.
   const [userOverrodeImport, setUserOverrodeImport] = useState(false);
+  // Per-word "use theirs" picks for the single-pile (file/share-link)
+  // merge preview. Words listed here will adopt the incoming pile's
+  // bucket + safer alternative instead of keeping the existing version.
+  // Resets whenever the merge target or import payload changes so a
+  // toggle picked against pile A doesn't silently apply to pile B.
+  const [singleUseTheirs, setSingleUseTheirs] = useState<Set<string>>(
+    () => new Set(),
+  );
+  // Same idea for the multi-pile bundle preview, keyed by the bundle
+  // row index. We only ever store the rows the practitioner has touched,
+  // so empty-map = today's "keep mine for everything" behaviour.
+  const [bundleUseTheirsByIndex, setBundleUseTheirsByIndex] = useState<
+    Record<number, Set<string>>
+  >({});
   const piles = data.pileOrder
     .map((id) => data.piles[id])
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
@@ -161,6 +175,15 @@ export function PilesPage() {
     if (importMergeId === "") setImportMergeId(piles[0].id);
   }, [importPayload, importSource, piles, importMergeId, userOverrodeImport]);
 
+  // If the practitioner switches the merge target or mode for a single
+  // import, the per-word "use theirs" picks no longer line up with the
+  // newly previewed conflicts — clear them so we never silently apply a
+  // stale choice. The conflict math itself is recomputed by the
+  // singleMergeConflicts memo below.
+  useEffect(() => {
+    setSingleUseTheirs(new Set());
+  }, [importPayload, importMergeId, importMode]);
+
   // When piles arrive late (sign-in sync) for an already-loaded bundle,
   // re-suggest merge targets for rows the practitioner has not
   // explicitly touched (and that don't already have a merge target).
@@ -213,6 +236,8 @@ export function PilesPage() {
     setImportError(null);
     setImportHint(null);
     setUserOverrodeImport(false);
+    setSingleUseTheirs(new Set());
+    setBundleUseTheirsByIndex({});
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -222,6 +247,7 @@ export function PilesPage() {
       setBundleSelection(parsed.payload.piles.map(() => true));
       setBundleDecisions(parsed.payload.piles.map((p) => suggestBundleDecision(p.name, piles)));
       setBundleDecisionsTouched(parsed.payload.piles.map(() => false));
+      setBundleUseTheirsByIndex({});
       setImportPayload(null);
       setImportFileName(fileName);
       setImportMode("new");
@@ -234,6 +260,8 @@ export function PilesPage() {
     setBundleSelection([]);
     setBundleDecisions([]);
     setBundleDecisionsTouched([]);
+    setBundleUseTheirsByIndex({});
+    setSingleUseTheirs(new Set());
     setImportFileName(fileName);
     setImportNewName(parsed.payload.pile.name);
     setImportMode("new");
@@ -291,7 +319,14 @@ export function PilesPage() {
           );
           return;
         }
-        decisions[i] = decision;
+        if (decision.mode === "merge") {
+          const useTheirs = bundleUseTheirsByIndex[i];
+          decisions[i] = useTheirs && useTheirs.size > 0
+            ? { ...decision, useTheirsWords: Array.from(useTheirs) }
+            : decision;
+        } else {
+          decisions[i] = decision;
+        }
       }
       const result = WordpileStore.importBundle(importBundle, {
         selectedIndexes: indexes,
@@ -308,7 +343,11 @@ export function PilesPage() {
         setImportError("Pick a pile to merge into.");
         return;
       }
-      WordpileStore.importPile(importPayload, { mergeIntoPileId: target.id });
+      WordpileStore.importPile(importPayload, {
+        mergeIntoPileId: target.id,
+        useTheirsWords:
+          singleUseTheirs.size > 0 ? Array.from(singleUseTheirs) : undefined,
+      });
       resetImport();
       navigate(`/pile/${target.id}`);
       return;
@@ -388,12 +427,16 @@ export function PilesPage() {
   // Roll-up of conflict counts across every bundle row in merge mode,
   // so the bottom action button can flag "you'll touch piles with
   // existing words you've classified differently" without making the
-  // practitioner expand every row to find that out.
+  // practitioner expand every row to find that out. `useTheirsCount`
+  // tracks how many of those reclassified words the practitioner has
+  // explicitly opted to take from the backup, so the warning text only
+  // mentions rows that will actually keep the existing version.
   const bundleMergeRollup = (() => {
     if (!importBundle) return null;
     let mergeRows = 0;
     let overlapCount = 0;
     let reclassifiedCount = 0;
+    let useTheirsCount = 0;
     importBundle.piles.forEach((p, i) => {
       const decision = bundleDecisions[i] ?? { mode: "new" };
       const selected = bundleSelection[i] ?? false;
@@ -404,8 +447,22 @@ export function PilesPage() {
       mergeRows += 1;
       overlapCount += summary.overlapCount;
       reclassifiedCount += summary.reclassifiedCount;
+      const picks = bundleUseTheirsByIndex[i];
+      if (picks && picks.size > 0) {
+        for (const c of summary.conflicts) {
+          if ((c.bucketDiffers || c.saferAlternativeDiffers) && picks.has(c.word)) {
+            useTheirsCount += 1;
+          }
+        }
+      }
     });
-    return { mergeRows, overlapCount, reclassifiedCount };
+    return {
+      mergeRows,
+      overlapCount,
+      reclassifiedCount,
+      useTheirsCount,
+      keepMineCount: reclassifiedCount - useTheirsCount,
+    };
   })();
 
   const importPreviewBlock = importPayload ? (
@@ -509,6 +566,15 @@ export function PilesPage() {
                   summary={singleMergeConflicts}
                   targetName={singleMergeTarget.name}
                   testIdPrefix="single"
+                  useTheirsWords={singleUseTheirs}
+                  onToggleUseTheirs={(word, take) => {
+                    setSingleUseTheirs((prev) => {
+                      const next = new Set(prev);
+                      if (take) next.add(word);
+                      else next.delete(word);
+                      return next;
+                    });
+                  }}
                 />
               </div>
             )}
@@ -522,9 +588,12 @@ export function PilesPage() {
           data-testid="button-confirm-import"
         >
           {importMode === "merge"
-            ? singleMergeConflicts && singleMergeConflicts.reclassifiedCount > 0
+            ? singleMergeConflicts &&
+              singleMergeConflicts.reclassifiedCount > singleUseTheirs.size
               ? "Merge anyway"
-              : "Merge into pile"
+              : singleUseTheirs.size > 0
+                ? "Merge with picks"
+                : "Merge into pile"
             : "Create pile"}
         </button>
         <button
@@ -786,6 +855,16 @@ export function PilesPage() {
                                 next[i] = true;
                                 return next;
                               });
+                              // The conflict diff just changed
+                              // (different target, or no target at all
+                              // for "Create new"), so any per-word
+                              // picks for this row are now stale.
+                              setBundleUseTheirsByIndex((prev) => {
+                                if (!(i in prev)) return prev;
+                                const next = { ...prev };
+                                delete next[i];
+                                return next;
+                              });
                             }}
                             data-testid={`select-bundle-mode-${i}`}
                           >
@@ -807,6 +886,26 @@ export function PilesPage() {
                               targetName={mergeTarget.name}
                               testIdPrefix={`bundle-${i}`}
                               compact
+                              useTheirsWords={
+                                bundleUseTheirsByIndex[i] ?? EMPTY_USE_THEIRS
+                              }
+                              onToggleUseTheirs={(word, take) => {
+                                setBundleUseTheirsByIndex((prev) => {
+                                  const current = prev[i] ?? new Set<string>();
+                                  const nextSet = new Set(current);
+                                  if (take) nextSet.add(word);
+                                  else nextSet.delete(word);
+                                  if (nextSet.size === 0 && !(i in prev)) {
+                                    return prev;
+                                  }
+                                  if (nextSet.size === 0) {
+                                    const next = { ...prev };
+                                    delete next[i];
+                                    return next;
+                                  }
+                                  return { ...prev, [i]: nextSet };
+                                });
+                              }}
                             />
                           </div>
                         )}
@@ -823,7 +922,7 @@ export function PilesPage() {
                 style={{
                   margin: 0,
                   color:
-                    bundleMergeRollup.reclassifiedCount > 0
+                    bundleMergeRollup.keepMineCount > 0
                       ? "var(--color-avoid)"
                       : "var(--color-stone)",
                 }}
@@ -837,9 +936,24 @@ export function PilesPage() {
                     <strong>
                       {bundleMergeRollup.reclassifiedCount} are sorted
                       differently in this backup
-                    </strong>{" "}
-                    — your existing classifications will be kept. Expand each
-                    row to see what differs before restoring.
+                    </strong>
+                    {bundleMergeRollup.useTheirsCount > 0 ? (
+                      <>
+                        {" "}
+                        — you've chosen to take{" "}
+                        {bundleMergeRollup.useTheirsCount} from the backup;
+                        the other {bundleMergeRollup.keepMineCount} keep
+                        {bundleMergeRollup.keepMineCount === 1 ? "s" : ""}{" "}
+                        your classification.
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        — your existing classifications will be kept. Expand
+                        each row to see what differs (or pick "Use theirs"
+                        for individual words) before restoring.
+                      </>
+                    )}
                   </>
                 ) : (
                   " Your existing classifications will be kept."
@@ -854,9 +968,12 @@ export function PilesPage() {
                 data-testid="button-confirm-bundle-import"
               >
                 {bundleMergeRollup &&
-                bundleMergeRollup.reclassifiedCount > 0
+                bundleMergeRollup.keepMineCount > 0
                   ? "Restore anyway"
-                  : "Restore selected piles"}
+                  : bundleMergeRollup &&
+                      bundleMergeRollup.useTheirsCount > 0
+                    ? "Restore with picks"
+                    : "Restore selected piles"}
               </button>
               <button
                 className="btn-ghost"
@@ -1014,6 +1131,12 @@ export function PilesPage() {
   );
 }
 
+// Stable empty-set reference for `MergeConflictPreview`'s
+// `useTheirsWords` prop on rows where the practitioner hasn't toggled
+// anything yet — keeps the prop identity stable across renders so the
+// component doesn't think the selection changed.
+const EMPTY_USE_THEIRS: ReadonlySet<string> = new Set();
+
 function SharedPilePeek({ payload }: { payload: PileExport }) {
   const words = payload.pile.words;
   const groups: { key: "load" | "interior" | "avoid" | "unsorted"; label: string; words: PileExportWord[] }[] = [
@@ -1099,11 +1222,19 @@ function MergeConflictPreview({
   targetName,
   testIdPrefix,
   compact = false,
+  useTheirsWords,
+  onToggleUseTheirs,
 }: {
   summary: MergeConflictSummary;
   targetName: string;
   testIdPrefix: string;
   compact?: boolean;
+  // The set of conflicting words the practitioner has opted into "use
+  // theirs" for. Words in this set will adopt the incoming bucket /
+  // safer-alternative on confirm; everything else keeps the existing
+  // version (today's default).
+  useTheirsWords: ReadonlySet<string>;
+  onToggleUseTheirs: (word: string, useTheirs: boolean) => void;
 }) {
   const { totalIncoming, newCount, overlapCount, reclassifiedCount, conflicts } =
     summary;
@@ -1120,9 +1251,18 @@ function MergeConflictPreview({
     );
   }
 
+  // Of the rows that actually differ, how many has the practitioner
+  // chosen to take from the shared pile? Drives the summary text and
+  // the parent's confirm-button label so they match the picks.
+  const useTheirsAppliedCount = conflicts.reduce((acc, c) => {
+    if (!(c.bucketDiffers || c.saferAlternativeDiffers)) return acc;
+    return useTheirsWords.has(c.word) ? acc + 1 : acc;
+  }, 0);
+  const keepMineCount = reclassifiedCount - useTheirsAppliedCount;
+
   const newSentence = `${newCount} new word${newCount === 1 ? "" : "s"} would be added to “${targetName}”.`;
   const overlapColor =
-    reclassifiedCount > 0 ? "var(--color-avoid)" : "var(--color-stone)";
+    keepMineCount > 0 ? "var(--color-avoid)" : "var(--color-stone)";
 
   return (
     <div
@@ -1144,14 +1284,25 @@ function MergeConflictPreview({
           data-testid={`text-merge-overlap-${testIdPrefix}`}
         >
           {overlapCount} word{overlapCount === 1 ? "" : "s"} already in this
-          pile — your version stays.
+          pile.
           {reclassifiedCount > 0 && (
             <>
               {" "}
               <strong data-testid={`text-merge-reclassified-${testIdPrefix}`}>
                 {reclassifiedCount} {reclassifiedCount === 1 ? "is" : "are"}{" "}
                 sorted differently in the shared pile.
-              </strong>
+              </strong>{" "}
+              {useTheirsAppliedCount > 0 ? (
+                <span data-testid={`text-merge-use-theirs-${testIdPrefix}`}>
+                  You're taking {useTheirsAppliedCount} from the shared pile;
+                  the other {keepMineCount} keep
+                  {keepMineCount === 1 ? "s" : ""} your classification.
+                </span>
+              ) : (
+                <span>
+                  Your version stays unless you tick "Use theirs" below.
+                </span>
+              )}
             </>
           )}
         </p>
@@ -1168,6 +1319,9 @@ function MergeConflictPreview({
               {reclassifiedCount > 0
                 ? ` · ${reclassifiedCount} differ${reclassifiedCount === 1 ? "s" : ""}`
                 : ""}
+              {useTheirsAppliedCount > 0
+                ? ` · ${useTheirsAppliedCount} use theirs`
+                : ""}
             </span>
           </summary>
           <ul
@@ -1176,36 +1330,77 @@ function MergeConflictPreview({
               listStyle: "none",
               padding: "8px 0 0",
               margin: 0,
-              maxHeight: 220,
+              maxHeight: 240,
               overflowY: "auto",
             }}
           >
             {conflicts.map((c) => {
               const differs = c.bucketDiffers || c.saferAlternativeDiffers;
+              const taking = useTheirsWords.has(c.word);
               return (
                 <li
                   key={c.word}
-                  className="text-sm"
+                  className="flex flex-col gap-1"
                   style={{
-                    padding: "4px 0",
+                    padding: "6px 0",
                     borderBottom: "1px dashed var(--color-rule)",
                   }}
                   data-testid={`row-merge-conflict-${testIdPrefix}-${c.word}`}
                 >
-                  <strong>{c.word}</strong>
-                  <span style={{ color: "var(--color-stone)", marginLeft: 6 }}>
-                    {differs ? (
-                      <>
-                        you: {bucketSummary(c.existingBucket, c.existingSaferAlternative)}{" "}
-                        →{" "}
-                        <span style={{ color: "var(--color-avoid)" }}>
-                          shared: {bucketSummary(c.incomingBucket, c.incomingSaferAlternative)}
-                        </span>
-                      </>
-                    ) : (
-                      <>same as yours · {BUCKET_LABELS[c.existingBucket]}</>
-                    )}
-                  </span>
+                  <div className="text-sm">
+                    <strong>{c.word}</strong>
+                    <span style={{ color: "var(--color-stone)", marginLeft: 6 }}>
+                      {differs ? (
+                        <>
+                          you: {bucketSummary(c.existingBucket, c.existingSaferAlternative)}{" "}
+                          →{" "}
+                          <span style={{ color: "var(--color-avoid)" }}>
+                            shared: {bucketSummary(c.incomingBucket, c.incomingSaferAlternative)}
+                          </span>
+                        </>
+                      ) : (
+                        <>same as yours · {BUCKET_LABELS[c.existingBucket]}</>
+                      )}
+                    </span>
+                  </div>
+                  {differs && (
+                    <div
+                      className="flex flex-wrap gap-3"
+                      style={{ fontSize: "0.85rem" }}
+                    >
+                      <label
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--color-stone)" }}
+                      >
+                        <input
+                          type="radio"
+                          name={`merge-pick-${testIdPrefix}-${c.word}`}
+                          checked={!taking}
+                          onChange={() => onToggleUseTheirs(c.word, false)}
+                          data-testid={`radio-merge-keep-mine-${testIdPrefix}-${c.word}`}
+                        />
+                        Keep mine
+                      </label>
+                      <label
+                        className="flex items-center gap-1"
+                        style={{
+                          color: taking
+                            ? "var(--color-avoid)"
+                            : "var(--color-stone)",
+                          fontWeight: taking ? 600 : 400,
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name={`merge-pick-${testIdPrefix}-${c.word}`}
+                          checked={taking}
+                          onChange={() => onToggleUseTheirs(c.word, true)}
+                          data-testid={`radio-merge-use-theirs-${testIdPrefix}-${c.word}`}
+                        />
+                        Use theirs
+                      </label>
+                    </div>
+                  )}
                 </li>
               );
             })}

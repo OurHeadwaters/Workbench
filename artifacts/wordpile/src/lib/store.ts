@@ -386,26 +386,62 @@ export const WordpileStore = {
   /**
    * Import a parsed payload. If `mergeIntoPileId` is provided, the words
    * are folded into that pile (case-insensitive de-dupe — existing words
-   * win). Otherwise a brand-new pile is created using `nameOverride` if
-   * given, else the exported name.
+   * win by default). Otherwise a brand-new pile is created using
+   * `nameOverride` if given, else the exported name.
+   *
+   * `useTheirsWords` opts specific overlapping words into "use the
+   * incoming version": their `bucket` and `saferAlternative` on the
+   * existing entry are replaced with the values from the imported pile.
+   * Words not in the set keep their existing classification (the
+   * original existing-wins behaviour). New words (not already present)
+   * are always added regardless. Word strings are matched
+   * case-insensitively.
    *
    * Returns the resulting pile, or null if the target merge pile doesn't
    * exist.
    */
   importPile(
     payload: PileExport,
-    options: { mergeIntoPileId?: string; nameOverride?: string } = {},
+    options: {
+      mergeIntoPileId?: string;
+      nameOverride?: string;
+      useTheirsWords?: readonly string[];
+    } = {},
   ): CommunityPile | null {
     const exportedWords = payload.pile.words.map(normalizeImportWord);
     const now = Date.now();
 
     if (options.mergeIntoPileId) {
       const targetId = options.mergeIntoPileId;
+      const useTheirs = new Set(
+        (options.useTheirsWords ?? []).map((w) => w.trim().toLowerCase()),
+      );
       let result: CommunityPile | null = null;
       update((data) => {
         const target = data.piles[targetId];
         if (!target) return data;
+        // Index incoming words by their normalised key so we can pull
+        // the chosen replacement values without scanning the array.
+        const incomingByWord = new Map<string, PileExportWord>();
+        for (const ew of exportedWords) {
+          if (!incomingByWord.has(ew.word)) incomingByWord.set(ew.word, ew);
+        }
         const existing = new Set(target.words.map((w) => w.word));
+        const updatedWords = target.words.map((w) => {
+          if (!useTheirs.has(w.word)) return w;
+          const incoming = incomingByWord.get(w.word);
+          if (!incoming) return w;
+          const bucketChanged = incoming.bucket !== w.bucket;
+          const saferChanged =
+            (incoming.saferAlternative ?? "") !== (w.saferAlternative ?? "");
+          if (!bucketChanged && !saferChanged) return w;
+          return {
+            ...w,
+            bucket: incoming.bucket,
+            saferAlternative: incoming.saferAlternative,
+            updatedAt: now,
+          };
+        });
         const additions: WordEntry[] = [];
         for (const ew of exportedWords) {
           if (existing.has(ew.word)) continue;
@@ -422,7 +458,7 @@ export const WordpileStore = {
         }
         const merged: CommunityPile = {
           ...target,
-          words: [...target.words, ...additions],
+          words: [...updatedWords, ...additions],
           updatedAt: now,
         };
         result = merged;
@@ -519,6 +555,7 @@ export const WordpileStore = {
         decision.mode === "merge"
           ? WordpileStore.importPile(single, {
               mergeIntoPileId: decision.pileId,
+              useTheirsWords: decision.useTheirsWords,
             })
           : WordpileStore.importPile(
               single,
@@ -532,7 +569,7 @@ export const WordpileStore = {
 
 export type BundleEntryDecision =
   | { mode: "new"; nameOverride?: string }
-  | { mode: "merge"; pileId: string };
+  | { mode: "merge"; pileId: string; useTheirsWords?: readonly string[] };
 
 /**
  * One row of the merge-conflict diff: an incoming word that already
