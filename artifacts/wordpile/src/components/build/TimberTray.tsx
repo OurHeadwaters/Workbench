@@ -31,6 +31,18 @@ export function TrayCard({ word, onDropAt, onTap, badge, testId }: TrayCardProps
     },
   });
   const behavior = bucketBehavior(word.bucket);
+  // Keyboard "pick up + drop" — Enter or Space routes the word through
+  // the same tap-to-place path mouse/touch users get. The Stacker decides
+  // which slot it lands in based on its bucket, so a single keystroke is
+  // a complete pickup-and-drop for keyboard-only practitioners.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      if (onTap) onTap(word);
+    }
+  };
+  const bucketLabel = badge ?? BUCKET_LABELS[word.bucket];
+  const ariaLabel = `${word.word}. ${bucketLabel}. ${behaviorBlurb(behavior)} Press Enter or Space to place it on the build.`;
   return (
     <>
       <div
@@ -38,12 +50,16 @@ export function TrayCard({ word, onDropAt, onTap, badge, testId }: TrayCardProps
           dragging ? "is-dragging" : ""
         }`}
         {...handlers}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-label={ariaLabel}
         title={behaviorBlurb(behavior)}
         data-testid={testId ?? `tray-word-${word.id}`}
       >
         <span className="timber timber-tray-word">{word.word}</span>
-        <span className="timber-tray-bucket">
-          {badge ?? BUCKET_LABELS[word.bucket]}
+        <span className="timber-tray-bucket" aria-hidden="true">
+          {bucketLabel}
         </span>
       </div>
       {dragging && (

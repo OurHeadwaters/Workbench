@@ -96,6 +96,11 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
     const [bumpId, setBumpId] = useState<string | null>(null);
     const [stoodOnce, setStoodOnce] = useState(false);
     const [crackCount, setCrackCount] = useState(0);
+    // Polite live-region message that mirrors the most recent visible
+    // event (placement, crack, full-frame bump). Screen readers will read
+    // it the moment it changes; sighted users never see it.
+    const [announce, setAnnounce] = useState("");
+    const announceCounterRef = useRef(0);
 
     useEffect(() => {
       setPlaced([]);
@@ -104,7 +109,17 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
       setBumpId(null);
       setStoodOnce(false);
       setCrackCount(0);
+      setAnnounce("");
     }, [resetKey]);
+
+    // Push a message into the live region. We append a zero-width space
+    // when the same text repeats so assistive tech treats it as a new
+    // value and re-announces (e.g. two cracks of the same Avoid word).
+    function announcePolite(message: string) {
+      announceCounterRef.current += 1;
+      const suffix = announceCounterRef.current % 2 === 0 ? "\u200B" : "";
+      setAnnounce(message + suffix);
+    }
 
     const frameItems = useMemo(
       () => placed.filter((p) => p.zone === "frame").slice(0, FRAME_SLOTS),
@@ -210,6 +225,12 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
         spawnDust(x, y + 6);
         playCrack();
         setCrackCount((n) => n + 1);
+        const safer = word.saferAlternative?.trim();
+        announcePolite(
+          safer
+            ? `${word.word} cracked — try ${safer}.`
+            : `${word.word} cracked. Use a safer word.`,
+        );
         window.setTimeout(
           () => setCracking((c) => c.filter((cur) => cur.id !== id)),
           1100,
@@ -225,22 +246,29 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
         if (frameItems.length >= FRAME_SLOTS) {
           flashBump("frame-full");
           playBump();
+          announcePolite("Frame is full. Reset to keep building.");
           return;
         }
         setPlaced((p) => [...p, { id: newId, word, zone: "frame" }]);
         flashBump(newId);
         playFrameSnap();
+        const nextCount = frameItems.length + 1;
+        announcePolite(
+          `${word.word} placed as a load-bearing timber. ${nextCount} of ${FRAME_SLOTS} frame slots filled.`,
+        );
         return;
       }
       if (behavior === "decorative") {
         if (trimItems.length >= TRIM_SLOTS) {
           flashBump("trim-full");
           playBump();
+          announcePolite("Trim row is full. Reset to keep building.");
           return;
         }
         setPlaced((p) => [...p, { id: newId, word, zone: "trim" }]);
         flashBump(newId);
         playTrimTap();
+        announcePolite(`${word.word} placed as interior trim.`);
         return;
       }
       // Untreated lumber — try the frame first (kid's "is this load?" test).
@@ -250,11 +278,15 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
         if (targetZone === "trim" && trimItems.length >= TRIM_SLOTS) {
           flashBump("trim-full");
           playBump();
+          announcePolite("Trim row is full. Reset to keep building.");
           return;
         }
         setPlaced((p) => [...p, { id: newId, word, zone: "untested" }]);
         flashBump(newId);
         playUntestedTap();
+        announcePolite(
+          `${word.word} placed loose as untreated lumber. File it as load, interior, or avoid.`,
+        );
         onUnsortedPlaced({
           wordId: word.id,
           word: word.word,
@@ -287,6 +319,17 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
 
     return (
       <div className="prototype-grid">
+        {/* Polite live region for screen readers — empty visually, but
+            assistive tech reads each new placement / crack message. */}
+        <div
+          className="sr-only"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          data-testid="stacker-live-region"
+        >
+          {announce}
+        </div>
         <TimberTray words={words} onDrop={placeWord} onTap={tapPlace} />
 
         <div
@@ -297,7 +340,12 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
           {standing && <div className="stacker-rays" aria-hidden="true" />}
 
           {/* Trim row — sits on top of the frame. */}
-          <div className="stacker-trim" data-testid="stacker-trim">
+          <div
+            className="stacker-trim"
+            data-testid="stacker-trim"
+            role="group"
+            aria-label={`Trim row, ${trimItems.length} of ${TRIM_SLOTS} pieces placed`}
+          >
             {trimItems.map((p) => (
               <div
                 key={p.id}
@@ -310,11 +358,18 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
                     ? "Untreated lumber — file it after."
                     : undefined
                 }
+                aria-label={
+                  p.zone === "untested"
+                    ? `${p.word.word}, untreated lumber on the trim row`
+                    : `${p.word.word}, interior trim`
+                }
               >
                 <span className="timber">{planktext(p.word, 18)}</span>
                 <span className="stacker-trim-grain" aria-hidden="true" />
                 {p.zone === "untested" && (
-                  <span className="stacker-untested-badge">?</span>
+                  <span className="stacker-untested-badge" aria-hidden="true">
+                    ?
+                  </span>
                 )}
               </div>
             ))}
@@ -324,9 +379,17 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
           </div>
 
           {/* Frame row — load-bearing slots. */}
-          <div className="stacker-frame" data-testid="stacker-frame">
+          <div
+            className="stacker-frame"
+            data-testid="stacker-frame"
+            role="group"
+            aria-label={`Frame row, ${frameItems.length} of ${FRAME_SLOTS} load-bearing slots filled`}
+          >
             {Array.from({ length: FRAME_SLOTS }).map((_, i) => {
               const piece = frameItems[i];
+              const slotLabel = piece
+                ? `Frame slot ${i + 1}, filled with ${piece.word.word}`
+                : `Frame slot ${i + 1}, empty`;
               return (
                 <div
                   key={i}
@@ -334,6 +397,8 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
                     piece && bumpId === piece.id ? "is-bump" : ""
                   }`}
                   data-testid={`stacker-frame-slot-${i}`}
+                  data-state={piece ? "filled" : "empty"}
+                  aria-label={slotLabel}
                 >
                   {piece ? (
                     <>
@@ -349,6 +414,7 @@ export const StackerPrototype = forwardRef<StackerSnapshotHandle, Props>(
                     <span
                       className="eyebrow"
                       style={{ color: "var(--color-sand)" }}
+                      aria-hidden="true"
                     >
                       Slot {i + 1}
                     </span>

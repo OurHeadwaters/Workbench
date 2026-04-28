@@ -36,6 +36,20 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
+/* Visually hidden — content is read by screen readers but invisible
+   onscreen. Used for polite live regions and supplemental labels. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -669,6 +683,14 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.4;
 }
 
+/* Visible keyboard focus ring — practitioners using only Tab/Enter rely
+   on a clear outline to know which timber they're about to place. */
+.timber-tray-card:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 2px 6px rgba(31, 61, 46, 0.16);
+}
+
 .timber-tray-card.bucket-load { border-left-color: var(--color-load); }
 .timber-tray-card.bucket-interior { border-left-color: var(--color-interior); }
 .timber-tray-card.bucket-avoid { border-left-color: var(--color-avoid); }
@@ -895,7 +917,10 @@ h1, h2, h3, h4, h5, h6 {
     rgba(0, 0, 0, 0.18) 100%
   );
   color: var(--color-cream);
-  border: 1px solid var(--color-load);
+  /* Solid border (vs the dashed border on empty slots) gives a non-color
+     signal that the slot is filled — important for monochrome / high-
+     contrast viewers and for users with color-vision differences. */
+  border: 2px solid var(--color-load);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 2px 0 rgba(0, 0, 0, 0.18),

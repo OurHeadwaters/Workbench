@@ -7,6 +7,8 @@ import {
   VolumeX,
   Download,
   HelpCircle,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 import { usePile } from "@/lib/useStore";
 import { WordpileStore } from "@/lib/store";
@@ -311,6 +313,27 @@ export function BuildPage() {
               className={standing ? "build-standing-yes" : "build-standing-no"}
               data-testid="text-standing-status"
             >
+              {standing ? (
+                <CheckCircle2
+                  size={14}
+                  aria-hidden="true"
+                  style={{
+                    display: "inline",
+                    verticalAlign: "-2px",
+                    marginRight: 4,
+                  }}
+                />
+              ) : (
+                <Circle
+                  size={14}
+                  aria-hidden="true"
+                  style={{
+                    display: "inline",
+                    verticalAlign: "-2px",
+                    marginRight: 4,
+                  }}
+                />
+              )}
               {standing ? "Standing" : "Not yet"}
             </span>
             <span className="ml-2" style={{ color: "var(--color-stone)" }}>
@@ -318,6 +341,18 @@ export function BuildPage() {
               in place
             </span>
           </p>
+          {/* Polite live region — only announces when the building flips
+              into the "standing" state. Empty content the rest of the
+              time so screen readers stay quiet. */}
+          <span
+            className="sr-only"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            data-testid="text-standing-live"
+          >
+            {standing ? "It stands." : ""}
+          </span>
         </div>
         <div className="build-controls">
           <button
