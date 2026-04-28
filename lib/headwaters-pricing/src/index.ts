@@ -36,13 +36,21 @@ export interface ReinvestmentBucket {
   id: ReinvestmentBucketId;
   /**
    * Short label used on the slide-deck card
-   * (e.g. "Tech CAPEX", "Tooling subs", "Pilot reserve").
+   * (e.g. "Computers and phones", "Software subscriptions",
+   * "Saved for the next reserve"). Written in plain language for the
+   * read-aloud audit (see `docs/read-aloud-audit.md` row 11.5) — the
+   * old internal-accounting labels ("Tech CAPEX", "Tooling subs") were
+   * rewritten so a Deer Lake reader recognises what each bucket buys
+   * without translating the jargon.
    */
   label: string;
   /**
    * Long-form label used in printable / table contexts where the column
-   * is wide enough to spell things out (e.g. "Tooling subscriptions",
-   * "Pilot #2 reserve").
+   * is wide enough to spell things out. With the plain-language rewrite
+   * the short and long labels are now identical for every bucket — the
+   * field is kept on the type so future buckets can still distinguish
+   * the two if needed (e.g. an abbreviation that needs a fuller form
+   * in the printed table).
    */
   longLabel: string;
   /** Year-1 dollar amount in USD/CAD-equivalent (e.g. 60_000). */
@@ -63,43 +71,43 @@ export interface ReinvestmentBucket {
 export const REINVESTMENT_BUCKETS: readonly ReinvestmentBucket[] = [
   {
     id: "techCapex",
-    label: "Tech CAPEX",
-    longLabel: "Tech CAPEX",
+    label: "Computers and phones",
+    longLabel: "Computers and phones",
     year1Amount: 60_000,
     shortDescription:
-      "self-hosted servers, privacy phones, work computers, networking",
+      "servers we run ourselves, secure phones, work laptops, networking gear",
     longDescription:
-      "9 self-hosted servers, 6 privacy phones, 8 work computers, networking",
+      "9 servers we run ourselves, 6 secure phones, 8 work laptops, plus the networking gear that ties them together",
   },
   {
     id: "toolingSubs",
-    label: "Tooling subs",
-    longLabel: "Tooling subscriptions",
+    label: "Software subscriptions",
+    longLabel: "Software subscriptions",
     year1Amount: 24_000,
     shortDescription:
-      "transparency dashboard hosting, GIS, secure comms, payroll",
+      "open-records dashboard hosting, mapping, secure messaging, payroll",
     longDescription:
-      "Transparency dashboard hosting, GIS, secure comms, project ops, payroll",
+      "Open-records dashboard hosting, mapping, secure messaging, project tracker, payroll",
   },
   {
     id: "trainingRnD",
-    label: "Training & R&D",
-    longLabel: "Training & R&D",
+    label: "Training and the written guide",
+    longLabel: "Training and the written guide",
     year1Amount: 36_000,
     shortDescription:
-      "Indigenous-services certifications, conferences, playbook hours",
+      "Indigenous-services certifications, conferences, hours spent writing the guide",
     longDescription:
-      "Indigenous-services certifications, conferences, documented playbook hours",
+      "Indigenous-services certifications, conferences, hours spent writing the guide for running the store",
   },
   {
     id: "pilotReserve",
-    label: "Pilot reserve",
-    longLabel: "Pilot #2 reserve",
+    label: "Saved for the next reserve",
+    longLabel: "Saved for the next reserve",
     year1Amount: 172_000,
     shortDescription:
-      "held in a separate account; seeds the next reserve so they don't wait for grants",
+      "kept in its own account so the next reserve can start without waiting for a grant",
     longDescription:
-      "Held in a separate account; seeds the next reserve so they don't wait for grants",
+      "Kept in its own account so the next reserve can start without waiting for a grant",
   },
 ];
 
