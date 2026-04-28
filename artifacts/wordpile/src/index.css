@@ -296,6 +296,68 @@ h1, h2, h3, h4, h5, h6 {
   margin: 24px 0;
 }
 
+.share-banner {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-load);
+  border-left: 4px solid var(--color-load);
+  border-radius: 4px;
+  padding: 20px;
+  outline: none;
+  box-shadow: 0 2px 12px rgba(31, 61, 46, 0.08);
+}
+
+.share-banner:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-load), 0 2px 12px rgba(31, 61, 46, 0.12);
+}
+
+.share-banner-header {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.share-banner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background-color: var(--color-load);
+  color: var(--color-cream);
+  margin-top: 2px;
+}
+
+.share-banner-headline {
+  flex: 1;
+  min-width: 0;
+}
+
+.intro-muted {
+  opacity: 0.6;
+  filter: saturate(0.85);
+}
+
+.intro-muted:hover,
+.intro-muted:focus-within {
+  opacity: 1;
+  filter: none;
+}
+
+@media (max-width: 640px) {
+  .share-banner {
+    padding: 16px;
+  }
+  .share-banner-header {
+    gap: 10px;
+  }
+  .share-banner-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
 .link {
   font-family: var(--font-mono);
   font-size: 11px;

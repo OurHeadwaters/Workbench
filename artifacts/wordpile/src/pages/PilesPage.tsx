@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import {
   Archive,
   ArrowRight,
+  Gift,
   Link as LinkIcon,
   Pencil,
   Plus,
@@ -35,6 +36,23 @@ export function PilesPage() {
   const piles = data.pileOrder
     .map((id) => data.piles[id])
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const isLinkImport =
+    importSource === "link" && (importPayload !== null || importError !== null);
+  const bannerRef = useRef<HTMLDivElement | null>(null);
+
+  // When a share-link import lands, scroll the banner into view so the
+  // preview is the first thing visible — especially on phones, where the
+  // marketing copy would otherwise push it below the fold.
+  useEffect(() => {
+    if (!isLinkImport) return;
+    if (typeof window === "undefined") return;
+    const el = bannerRef.current;
+    if (!el) return;
+    // Scroll to the very top so the banner sits above the fold without
+    // any leftover marketing copy peeking in above it.
+    window.scrollTo({ top: 0, behavior: "auto" });
+    el.focus({ preventScroll: true });
+  }, [isLinkImport]);
 
   // If we landed here with a `#data=...` share fragment, decode it once
   // and pre-populate the import preview. We strip the fragment afterwards
@@ -227,33 +245,201 @@ export function PilesPage() {
     setBundleSelection((prev) => prev.map(() => value));
   }
 
+  const importErrorBlock = importError ? (
+    <div
+      className="mt-3 rounded p-3 text-sm"
+      style={{
+        backgroundColor: "var(--color-paper)",
+        border: "1px solid var(--color-avoid)",
+        color: "var(--color-avoid)",
+      }}
+      data-testid="text-import-error"
+    >
+      {importError}
+      <button
+        className="btn-ghost ml-2"
+        onClick={resetImport}
+        style={{ color: "inherit" }}
+      >
+        Dismiss
+      </button>
+    </div>
+  ) : null;
+
+  const importPreviewBlock = importPayload ? (
+    <div
+      className="mt-3 rounded p-4 flex flex-col gap-3"
+      style={{
+        backgroundColor: "var(--color-paper)",
+        border: "1px solid var(--color-rule)",
+      }}
+      data-testid="panel-import-preview"
+    >
+      <div>
+        <p className="eyebrow mb-1">
+          {importSource === "link"
+            ? "Importing from share link"
+            : `Importing from ${importFileName}`}
+        </p>
+        <p className="text-sm" style={{ color: "var(--color-stone)" }}>
+          <strong>{importPayload.pile.name}</strong> ·{" "}
+          {importPayload.pile.words.length} word
+          {importPayload.pile.words.length === 1 ? "" : "s"}
+          {importPayload.pile.draft ? " · includes a saved draft" : ""}
+        </p>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="radio"
+            name="import-mode"
+            checked={importMode === "new"}
+            onChange={() => setImportMode("new")}
+            data-testid="radio-import-new"
+          />
+          Create a new pile
+        </label>
+        {importMode === "new" && (
+          <input
+            className="input"
+            style={{ maxWidth: 360, marginLeft: 22 }}
+            value={importNewName}
+            onChange={(e) => setImportNewName(e.target.value)}
+            placeholder="Name for the new pile"
+            data-testid="input-import-new-name"
+          />
+        )}
+        {piles.length > 0 && (
+          <>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="import-mode"
+                checked={importMode === "merge"}
+                onChange={() => setImportMode("merge")}
+                data-testid="radio-import-merge"
+              />
+              Merge into an existing pile
+            </label>
+            {importMode === "merge" && (
+              <select
+                className="input"
+                style={{ maxWidth: 360, marginLeft: 22 }}
+                value={importMergeId}
+                onChange={(e) => setImportMergeId(e.target.value)}
+                data-testid="select-import-merge-target"
+              >
+                {piles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button
+          className="btn-primary"
+          onClick={handleConfirmImport}
+          data-testid="button-confirm-import"
+        >
+          {importMode === "merge" ? "Merge into pile" : "Create pile"}
+        </button>
+        <button
+          className="btn-ghost"
+          onClick={resetImport}
+          data-testid="button-cancel-import"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      <p className="eyebrow mb-3">A per-community word inventory</p>
-      <h1
-        className="text-4xl mb-3"
-        style={{ fontWeight: 600, lineHeight: 1.1 }}
-      >
-        Each community gets its own pile of timber.
-      </h1>
-      <p
-        className="text-lg leading-relaxed mb-2"
-        style={{ color: "var(--color-stone)", maxWidth: 620 }}
-      >
-        Every word is a 2x4. Sort it onto one of three stacks:{" "}
-        <strong style={{ color: "var(--color-load)" }}>load-bearing</strong>{" "}
-        words hold the meaning up,{" "}
-        <strong style={{ color: "var(--color-interior)" }}>interior</strong>{" "}
-        words are flavor you can swap, and{" "}
-        <strong style={{ color: "var(--color-avoid)" }}>avoid</strong> words
-        each get a safer alternative. Stop relearning each community's language
-        from scratch.
-      </p>
+      {isLinkImport && (
+        <section
+          className="share-banner mb-10"
+          ref={bannerRef}
+          tabIndex={-1}
+          aria-label="Shared pile preview"
+          data-testid="banner-share-link"
+        >
+          <div className="share-banner-header">
+            <span className="share-banner-icon" aria-hidden="true">
+              <Gift size={18} />
+            </span>
+            <div className="share-banner-headline">
+              <p className="eyebrow mb-1">Someone shared a pile with you</p>
+              <h1
+                className="text-2xl"
+                style={{ fontWeight: 600, lineHeight: 1.15, margin: 0 }}
+              >
+                {importPayload
+                  ? `Open “${importPayload.pile.name}” on this device?`
+                  : "We couldn't open that share link."}
+              </h1>
+              <p
+                className="text-sm"
+                style={{ color: "var(--color-stone)", margin: "8px 0 0" }}
+              >
+                {importPayload
+                  ? "Review what they sent, then save it as your own pile or merge it into one you already have."
+                  : "Ask the sender to try again — details are below."}
+              </p>
+            </div>
+          </div>
+          {importErrorBlock}
+          {importPreviewBlock}
+        </section>
+      )}
+
+      <div className={isLinkImport ? "intro-muted" : ""}>
+        <p className="eyebrow mb-3">A per-community word inventory</p>
+        <h1
+          className={isLinkImport ? "text-2xl mb-2" : "text-4xl mb-3"}
+          style={{ fontWeight: 600, lineHeight: 1.1 }}
+        >
+          {isLinkImport
+            ? "About wordpile"
+            : "Each community gets its own pile of timber."}
+        </h1>
+        {!isLinkImport && (
+          <p
+            className="text-lg leading-relaxed mb-2"
+            style={{ color: "var(--color-stone)", maxWidth: 620 }}
+          >
+            Every word is a 2x4. Sort it onto one of three stacks:{" "}
+            <strong style={{ color: "var(--color-load)" }}>load-bearing</strong>{" "}
+            words hold the meaning up,{" "}
+            <strong style={{ color: "var(--color-interior)" }}>interior</strong>{" "}
+            words are flavor you can swap, and{" "}
+            <strong style={{ color: "var(--color-avoid)" }}>avoid</strong>{" "}
+            words each get a safer alternative. Stop relearning each
+            community's language from scratch.
+          </p>
+        )}
+        {isLinkImport && (
+          <p
+            className="text-sm leading-relaxed mb-2"
+            style={{ color: "var(--color-stone)", maxWidth: 620 }}
+          >
+            Wordpile keeps a small inventory of words per community —
+            load-bearing, interior, and avoid. The pile above was sent to you
+            so you don't have to start from scratch.
+          </p>
+        )}
+      </div>
 
       <hr className="divider" />
 
-      <section className="mb-10">
-        <p className="eyebrow mb-3">Start a new community pile</p>
+      <section className={`mb-10 ${isLinkImport ? "intro-muted" : ""}`}>
+        <p className="eyebrow mb-3">
+          {isLinkImport ? "Or start your own pile" : "Start a new community pile"}
+        </p>
         <form onSubmit={handleCreate} className="flex gap-2">
           <input
             className="input"
@@ -261,7 +447,7 @@ export function PilesPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             data-testid="input-new-pile-name"
-            autoFocus
+            autoFocus={!isLinkImport}
           />
           <button
             type="submit"
@@ -314,117 +500,8 @@ export function PilesPage() {
             <span className="eyebrow">{importFileName}</span>
           )}
         </div>
-        {importError && (
-          <div
-            className="mt-3 rounded p-3 text-sm"
-            style={{
-              backgroundColor: "var(--color-paper)",
-              border: "1px solid var(--color-avoid)",
-              color: "var(--color-avoid)",
-            }}
-            data-testid="text-import-error"
-          >
-            {importError}
-            <button
-              className="btn-ghost ml-2"
-              onClick={resetImport}
-              style={{ color: "inherit" }}
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
-        {importPayload && (
-          <div
-            className="mt-3 rounded p-4 flex flex-col gap-3"
-            style={{
-              backgroundColor: "var(--color-paper)",
-              border: "1px solid var(--color-rule)",
-            }}
-            data-testid="panel-import-preview"
-          >
-            <div>
-              <p className="eyebrow mb-1">
-                {importSource === "link"
-                  ? "Importing from share link"
-                  : `Importing from ${importFileName}`}
-              </p>
-              <p className="text-sm" style={{ color: "var(--color-stone)" }}>
-                <strong>{importPayload.pile.name}</strong> ·{" "}
-                {importPayload.pile.words.length} word
-                {importPayload.pile.words.length === 1 ? "" : "s"}
-                {importPayload.pile.draft ? " · includes a saved draft" : ""}
-              </p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  name="import-mode"
-                  checked={importMode === "new"}
-                  onChange={() => setImportMode("new")}
-                  data-testid="radio-import-new"
-                />
-                Create a new pile
-              </label>
-              {importMode === "new" && (
-                <input
-                  className="input"
-                  style={{ maxWidth: 360, marginLeft: 22 }}
-                  value={importNewName}
-                  onChange={(e) => setImportNewName(e.target.value)}
-                  placeholder="Name for the new pile"
-                  data-testid="input-import-new-name"
-                />
-              )}
-              {piles.length > 0 && (
-                <>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      name="import-mode"
-                      checked={importMode === "merge"}
-                      onChange={() => setImportMode("merge")}
-                      data-testid="radio-import-merge"
-                    />
-                    Merge into an existing pile
-                  </label>
-                  {importMode === "merge" && (
-                    <select
-                      className="input"
-                      style={{ maxWidth: 360, marginLeft: 22 }}
-                      value={importMergeId}
-                      onChange={(e) => setImportMergeId(e.target.value)}
-                      data-testid="select-import-merge-target"
-                    >
-                      {piles.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <button
-                className="btn-primary"
-                onClick={handleConfirmImport}
-                data-testid="button-confirm-import"
-              >
-                {importMode === "merge" ? "Merge into pile" : "Create pile"}
-              </button>
-              <button
-                className="btn-ghost"
-                onClick={resetImport}
-                data-testid="button-cancel-import"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+        {!isLinkImport && importErrorBlock}
+        {!isLinkImport && importPreviewBlock}
         {importBundle && (
           <div
             className="mt-3 rounded p-4 flex flex-col gap-3"
