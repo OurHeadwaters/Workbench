@@ -1,0 +1,70 @@
+== Constellation-wide primitive surfaced this pass ==
+Naming the category of "temporary centralized disruptions" — the
+moments when individual preparation matters less than collective
+coordination, and the whole microclimate is in it together.
+Includes natural events (drought, flood, fire, smoke, ice, late
+frost, early freeze, severe cold, wind, blowdown), infrastructure
+(power, water, roads, comms, fuel), economic/supply (payment
+systems, freight, employer shocks), public-health/social (pandemic,
+evacuation, sheltering), and co-op-internal scale (venue lost, key
+person down, AGM postponed). Defining trait: temporary +
+centralized + shared.
+
+Recommended name: THE STANDBY.
+- Active event: "a call" (a smoke call, a water call, an AGM-
+  postponed call).
+- What we keep on hand: "standby stock."
+- The work of looking out: "the watch."
+- The post-event review: "the debrief."
+- Severity ladder: advisory / standby / active / standdown.
+
+Strong alternatives considered and rejected:
+- "The Common Pantry" — beautiful and shelf-family-aligned, but
+  food-coded and doesn't verb. Worth keeping as the food/supply
+  sub-shelf inside The Standby.
+- "The Watch" — northern and neighbourly, but tilts toward active
+  monitoring rather than the always-on shelf. Lives inside The
+  Standby as a sub-noun.
+
+Why this is a constellation-wide primitive, not a Zone-3 word:
+The Standby is hosted in Zone 3 (community production is where
+centralized disruptions are felt collectively) but read by every
+zone. Zone 0 — household standby checklists. Zone 1 — standby
+budget envelope, drought-and-fuel cost shifts. Zone 4 — sector
+fragility modeling. Zone 5 — debrief notes that find their way to
+the shallows.
+
+== Codetry principle reinforced this pass ==
+THE NAME HAS TO HOLD BOTH STATES. Bobbie pushed past the initial
+"weather overlay" frame — too narrow, too event-coded — to a name
+that holds the always-on (preparation) and the active (response)
+in the same word. Add to the handbook: "When a system has both a
+slow side (always-on practice) and a fast side (active event), the
+name has to do both jobs in one word, or the system will fork into
+two systems with two cultures."
+
+== Vocabulary to register ==
+- "the Standby" — the umbrella system + the always-on state.
+- "a call" — an active event under the Standby, named for what it
+  is (smoke call, water call, road call, evacuation call).
+- "the watch" — the active monitoring layer under the Standby.
+- "standby stock" — what we keep on hand year-round.
+- "the debrief" — the post-call review that compounds into local
+  resilience knowledge.
+- "centralized disruption" — the category. Pairs with the Zone-0
+  centralized/decentralized dwelling distinction; the Standby is
+  the moment those two have to talk to each other.
+
+== Cross-zone implications ==
+- Zone 0 (SaltBox + Bright Side): household standby checklist
+  could mirror the co-op's standby stock list, item for item.
+- Zone 1 (xBuckets): a "standby envelope" in the household budget
+  that sleeves up automatically during an active call (drought →
+  water-cost envelope, fire → supply-cost envelope).
+- Zone 2 (Practitioner Operating Plan): standby debriefs are
+  exactly the kind of cross-zone synthesis the workbench is for.
+- Zone 4 (Regen Revolution): sector-level standby modeling — which
+  industries have which fragilities to which calls — is a Zone 4
+  long-form concern that reads from Zone 3's call history.
+- Zone 5 (Dam Days / Shallows): debriefs that someone wants to
+  share publicly can float to the shallows.
