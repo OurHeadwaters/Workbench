@@ -6,6 +6,7 @@ import { PileEditorPage } from "@/pages/PileEditorPage";
 import { CheckDraftPage } from "@/pages/CheckDraftPage";
 import { BuildPage } from "@/pages/BuildPage";
 import { ShortLinkLandingPage } from "@/pages/ShortLinkLandingPage";
+import { ShareLinksPage } from "@/pages/ShareLinksPage";
 import { TopBar } from "@/components/TopBar";
 import { WordpileStore } from "@/lib/store";
 
@@ -20,6 +21,7 @@ function Router({ clerkEnabled }: { clerkEnabled: boolean }) {
       <Route path="/" component={PilesPage} />
       <Route path="/import" component={PilesPage} />
       <Route path="/s/:slug" component={ShortLinkLandingPage} />
+      <Route path="/share-links" component={ShareLinksPage} />
       <Route path="/pile/:pileId" component={PileEditorPage} />
       <Route path="/pile/:pileId/check" component={CheckDraftPage} />
       <Route path="/pile/:pileId/build" component={BuildPage} />

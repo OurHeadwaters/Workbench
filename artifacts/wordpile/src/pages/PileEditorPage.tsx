@@ -586,6 +586,23 @@ export function PileEditorPage() {
             )}
           </section>
 
+          {/* ---- Manage-all link (always visible to signed-in users) ---- */}
+          {isSignedIn && (
+            <p
+              className="text-sm"
+              style={{ color: "var(--color-stone)" }}
+            >
+              <Link
+                href="/share-links"
+                className="link"
+                data-testid="link-manage-share-links-from-panel"
+                title="See and revoke every short link you've ever made, across every pile."
+              >
+                Manage all shared links →
+              </Link>
+            </p>
+          )}
+
           {/* ---- Revoke list ---- */}
           {isSignedIn && myShortLinksForThisPile.length > 0 && (
             <>

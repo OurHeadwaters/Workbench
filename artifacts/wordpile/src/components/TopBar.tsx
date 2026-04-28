@@ -1,5 +1,5 @@
 import { useLocation, Link } from "wouter";
-import { Layers, CloudOff, LogOut } from "lucide-react";
+import { Layers, CloudOff, Link2, LogOut } from "lucide-react";
 import { useAuth, useUser, useClerk, ClerkLoaded } from "@clerk/react";
 import { SyncStatusPill } from "@/components/SyncStatusPill";
 
@@ -86,6 +86,16 @@ function SignedInBar() {
   return (
     <div className="flex items-center gap-3">
       <SyncStatusPill />
+      <Link
+        href="/share-links"
+        className="link inline-flex items-center gap-1"
+        data-testid="link-manage-share-links"
+        style={{ color: "var(--color-ink)" }}
+        title="See and revoke every short link you've ever made."
+      >
+        <Link2 size={14} strokeWidth={1.6} />
+        <span className="hidden sm:inline">Shared links</span>
+      </Link>
       <span
         className="hidden sm:inline text-sm"
         style={{ color: "var(--color-stone)" }}
