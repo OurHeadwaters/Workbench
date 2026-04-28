@@ -14,15 +14,19 @@ import { useWordpile } from "@/lib/useStore";
 import {
   WordpileStore,
   findSimilarLocalPile,
+  computeMergeConflicts,
   parseAnyImport,
   type BundleEntryDecision,
+  type MergeConflictSummary,
 } from "@/lib/store";
 import { decodePileShare, readShareFragment } from "@/lib/shareLink";
-import type {
-  AnyPileImport,
-  PileBundleExport,
-  PileExport,
-  PileExportWord,
+import {
+  BUCKET_LABELS,
+  type AnyPileImport,
+  type Bucket,
+  type PileBundleExport,
+  type PileExport,
+  type PileExportWord,
 } from "@/data/types";
 
 export function PilesPage() {
@@ -368,6 +372,42 @@ export function PilesPage() {
     </div>
   ) : null;
 
+  // When the practitioner is in "merge into existing pile" mode, run
+  // the conflict math up front so the preview can show how many of
+  // their existing words would be left untouched and how many of those
+  // are classified differently in the shared pile.
+  const singleMergeTarget =
+    importPayload && importMode === "merge"
+      ? piles.find((p) => p.id === importMergeId) ?? null
+      : null;
+  const singleMergeConflicts =
+    importPayload && singleMergeTarget
+      ? computeMergeConflicts(importPayload.pile, singleMergeTarget)
+      : null;
+
+  // Roll-up of conflict counts across every bundle row in merge mode,
+  // so the bottom action button can flag "you'll touch piles with
+  // existing words you've classified differently" without making the
+  // practitioner expand every row to find that out.
+  const bundleMergeRollup = (() => {
+    if (!importBundle) return null;
+    let mergeRows = 0;
+    let overlapCount = 0;
+    let reclassifiedCount = 0;
+    importBundle.piles.forEach((p, i) => {
+      const decision = bundleDecisions[i] ?? { mode: "new" };
+      const selected = bundleSelection[i] ?? false;
+      if (!selected || decision.mode !== "merge") return;
+      const target = piles.find((px) => px.id === decision.pileId);
+      if (!target) return;
+      const summary = computeMergeConflicts(p, target);
+      mergeRows += 1;
+      overlapCount += summary.overlapCount;
+      reclassifiedCount += summary.reclassifiedCount;
+    });
+    return { mergeRows, overlapCount, reclassifiedCount };
+  })();
+
   const importPreviewBlock = importPayload ? (
     <div
       className="mt-3 rounded p-4 flex flex-col gap-3"
@@ -463,6 +503,15 @@ export function PilesPage() {
                 ))}
               </select>
             )}
+            {importMode === "merge" && singleMergeConflicts && singleMergeTarget && (
+              <div style={{ marginLeft: 22 }}>
+                <MergeConflictPreview
+                  summary={singleMergeConflicts}
+                  targetName={singleMergeTarget.name}
+                  testIdPrefix="single"
+                />
+              </div>
+            )}
           </>
         )}
       </div>
@@ -472,7 +521,11 @@ export function PilesPage() {
           onClick={handleConfirmImport}
           data-testid="button-confirm-import"
         >
-          {importMode === "merge" ? "Merge into pile" : "Create pile"}
+          {importMode === "merge"
+            ? singleMergeConflicts && singleMergeConflicts.reclassifiedCount > 0
+              ? "Merge anyway"
+              : "Merge into pile"
+            : "Create pile"}
         </button>
         <button
           className="btn-ghost"
@@ -690,6 +743,14 @@ export function PilesPage() {
                     const selected = bundleSelection[i] ?? false;
                     const selectValue =
                       decision.mode === "merge" ? `merge:${decision.pileId}` : "new";
+                    const mergeTarget =
+                      decision.mode === "merge"
+                        ? piles.find((px) => px.id === decision.pileId) ?? null
+                        : null;
+                    const rowConflicts =
+                      selected && mergeTarget
+                        ? computeMergeConflicts(p, mergeTarget)
+                        : null;
                     return (
                       <li key={`${p.name}-${i}`} className="flex flex-col gap-1">
                         <label className="flex items-center gap-2 text-sm">
@@ -739,11 +800,51 @@ export function PilesPage() {
                             ))}
                           </select>
                         )}
+                        {rowConflicts && mergeTarget && (
+                          <div style={{ marginLeft: 22 }}>
+                            <MergeConflictPreview
+                              summary={rowConflicts}
+                              targetName={mergeTarget.name}
+                              testIdPrefix={`bundle-${i}`}
+                              compact
+                            />
+                          </div>
+                        )}
                       </li>
                     );
                   })}
                 </ul>
               </>
+            )}
+            {bundleMergeRollup && bundleMergeRollup.overlapCount > 0 && (
+              <p
+                className="text-sm"
+                data-testid="text-bundle-merge-rollup"
+                style={{
+                  margin: 0,
+                  color:
+                    bundleMergeRollup.reclassifiedCount > 0
+                      ? "var(--color-avoid)"
+                      : "var(--color-stone)",
+                }}
+              >
+                Across the merge rows above: {bundleMergeRollup.overlapCount} word
+                {bundleMergeRollup.overlapCount === 1 ? "" : "s"} already exist
+                in your piles.
+                {bundleMergeRollup.reclassifiedCount > 0 ? (
+                  <>
+                    {" "}
+                    <strong>
+                      {bundleMergeRollup.reclassifiedCount} are sorted
+                      differently in this backup
+                    </strong>{" "}
+                    — your existing classifications will be kept. Expand each
+                    row to see what differs before restoring.
+                  </>
+                ) : (
+                  " Your existing classifications will be kept."
+                )}
+              </p>
             )}
             <div className="flex gap-2">
               <button
@@ -752,7 +853,10 @@ export function PilesPage() {
                 disabled={importBundle.piles.length === 0}
                 data-testid="button-confirm-bundle-import"
               >
-                Restore selected piles
+                {bundleMergeRollup &&
+                bundleMergeRollup.reclassifiedCount > 0
+                  ? "Restore anyway"
+                  : "Restore selected piles"}
               </button>
               <button
                 className="btn-ghost"
@@ -981,6 +1085,143 @@ function SharedPilePeek({ payload }: { payload: PileExport }) {
       </div>
     </details>
   );
+}
+
+// Inline preview block describing what would happen if the practitioner
+// merged a shared/imported pile into the named target. Always shows
+// counts; when overlap > 0, also surfaces an expandable per-word diff
+// (bucket / safer-alternative side-by-side) so they can back out
+// before clicking the merge button. The merge code keeps the existing
+// version on a name collision — this UI is what makes that policy
+// visible instead of silent.
+function MergeConflictPreview({
+  summary,
+  targetName,
+  testIdPrefix,
+  compact = false,
+}: {
+  summary: MergeConflictSummary;
+  targetName: string;
+  testIdPrefix: string;
+  compact?: boolean;
+}) {
+  const { totalIncoming, newCount, overlapCount, reclassifiedCount, conflicts } =
+    summary;
+
+  if (totalIncoming === 0) {
+    return (
+      <p
+        className="text-sm"
+        style={{ color: "var(--color-stone)", margin: compact ? "4px 0 0" : "8px 0 0" }}
+        data-testid={`text-merge-empty-${testIdPrefix}`}
+      >
+        Nothing to merge — the shared pile is empty.
+      </p>
+    );
+  }
+
+  const newSentence = `${newCount} new word${newCount === 1 ? "" : "s"} would be added to “${targetName}”.`;
+  const overlapColor =
+    reclassifiedCount > 0 ? "var(--color-avoid)" : "var(--color-stone)";
+
+  return (
+    <div
+      className="flex flex-col gap-2"
+      style={{ marginTop: compact ? 4 : 8 }}
+      data-testid={`panel-merge-conflicts-${testIdPrefix}`}
+    >
+      <p
+        className="text-sm"
+        style={{ color: "var(--color-stone)", margin: 0 }}
+        data-testid={`text-merge-new-${testIdPrefix}`}
+      >
+        {newSentence}
+      </p>
+      {overlapCount > 0 && (
+        <p
+          className="text-sm"
+          style={{ color: overlapColor, margin: 0 }}
+          data-testid={`text-merge-overlap-${testIdPrefix}`}
+        >
+          {overlapCount} word{overlapCount === 1 ? "" : "s"} already in this
+          pile — your version stays.
+          {reclassifiedCount > 0 && (
+            <>
+              {" "}
+              <strong data-testid={`text-merge-reclassified-${testIdPrefix}`}>
+                {reclassifiedCount} {reclassifiedCount === 1 ? "is" : "are"}{" "}
+                sorted differently in the shared pile.
+              </strong>
+            </>
+          )}
+        </p>
+      )}
+      {conflicts.length > 0 && (
+        <details
+          className="peek-disclosure"
+          data-testid={`disclosure-merge-conflicts-${testIdPrefix}`}
+        >
+          <summary className="peek-summary">
+            <span className="peek-summary-label">See what overlaps</span>
+            <span className="peek-summary-meta">
+              {conflicts.length} word{conflicts.length === 1 ? "" : "s"}
+              {reclassifiedCount > 0
+                ? ` · ${reclassifiedCount} differ${reclassifiedCount === 1 ? "s" : ""}`
+                : ""}
+            </span>
+          </summary>
+          <ul
+            className="flex flex-col gap-1"
+            style={{
+              listStyle: "none",
+              padding: "8px 0 0",
+              margin: 0,
+              maxHeight: 220,
+              overflowY: "auto",
+            }}
+          >
+            {conflicts.map((c) => {
+              const differs = c.bucketDiffers || c.saferAlternativeDiffers;
+              return (
+                <li
+                  key={c.word}
+                  className="text-sm"
+                  style={{
+                    padding: "4px 0",
+                    borderBottom: "1px dashed var(--color-rule)",
+                  }}
+                  data-testid={`row-merge-conflict-${testIdPrefix}-${c.word}`}
+                >
+                  <strong>{c.word}</strong>
+                  <span style={{ color: "var(--color-stone)", marginLeft: 6 }}>
+                    {differs ? (
+                      <>
+                        you: {bucketSummary(c.existingBucket, c.existingSaferAlternative)}{" "}
+                        →{" "}
+                        <span style={{ color: "var(--color-avoid)" }}>
+                          shared: {bucketSummary(c.incomingBucket, c.incomingSaferAlternative)}
+                        </span>
+                      </>
+                    ) : (
+                      <>same as yours · {BUCKET_LABELS[c.existingBucket]}</>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      )}
+    </div>
+  );
+}
+
+function bucketSummary(bucket: Bucket, saferAlternative: string) {
+  const label = BUCKET_LABELS[bucket];
+  if (bucket === "avoid" && saferAlternative.trim()) {
+    return `${label} → ${saferAlternative}`;
+  }
+  return label;
 }
 
 function countByBucket(words: { bucket: string }[]) {

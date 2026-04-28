@@ -954,3 +954,115 @@ describe("findSimilarLocalPile", () => {
     expect(match).toBeNull();
   });
 });
+
+describe("computeMergeConflicts", () => {
+  let WordpileStore: WordpileStoreType;
+  let computeMergeConflicts: typeof import("./store").computeMergeConflicts;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    const mod = await import("./store");
+    WordpileStore = mod.WordpileStore;
+    computeMergeConflicts = mod.computeMergeConflicts;
+  });
+
+  it("counts overlap, new additions, and reclassified words", () => {
+    const target = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(target.id, { word: "harvest", bucket: "load" });
+    WordpileStore.addWord(target.id, { word: "stakeholder", bucket: "avoid" });
+    WordpileStore.updateWord(
+      target.id,
+      WordpileStore.getSnapshot().piles[target.id].words.find(
+        (w) => w.word === "stakeholder",
+      )!.id,
+      { saferAlternative: "community member" },
+    );
+    const targetPile = WordpileStore.getSnapshot().piles[target.id];
+
+    const summary = computeMergeConflicts(
+      {
+        name: "Other",
+        words: [
+          // overlap, same bucket, same safer-alt → not reclassified
+          {
+            word: "Harvest",
+            bucket: "load",
+            note: "ignored",
+            saferAlternative: "",
+          },
+          // overlap, different safer-alt → reclassified
+          {
+            word: "stakeholder",
+            bucket: "avoid",
+            note: "",
+            saferAlternative: "neighbour",
+          },
+          // brand new
+          { word: "elder", bucket: "load", note: "", saferAlternative: "" },
+          // duplicate within incoming → counted once
+          { word: "elder", bucket: "interior", note: "", saferAlternative: "" },
+          // blank → dropped
+          { word: "", bucket: "load", note: "", saferAlternative: "" },
+        ],
+      },
+      targetPile,
+    );
+
+    expect(summary.totalIncoming).toBe(3);
+    expect(summary.newCount).toBe(1);
+    expect(summary.overlapCount).toBe(2);
+    expect(summary.reclassifiedCount).toBe(1);
+    expect(summary.conflicts).toHaveLength(2);
+    const harvest = summary.conflicts.find((c) => c.word === "harvest")!;
+    expect(harvest.bucketDiffers).toBe(false);
+    expect(harvest.saferAlternativeDiffers).toBe(false);
+    const stakeholder = summary.conflicts.find(
+      (c) => c.word === "stakeholder",
+    )!;
+    expect(stakeholder.bucketDiffers).toBe(false);
+    expect(stakeholder.saferAlternativeDiffers).toBe(true);
+    expect(stakeholder.existingSaferAlternative).toBe("community member");
+    expect(stakeholder.incomingSaferAlternative).toBe("neighbour");
+  });
+
+  it("flags bucket changes as reclassified", () => {
+    const target = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(target.id, { word: "harvest", bucket: "load" });
+    const targetPile = WordpileStore.getSnapshot().piles[target.id];
+
+    const summary = computeMergeConflicts(
+      {
+        name: "Other",
+        words: [
+          { word: "harvest", bucket: "avoid", note: "", saferAlternative: "" },
+        ],
+      },
+      targetPile,
+    );
+    expect(summary.overlapCount).toBe(1);
+    expect(summary.reclassifiedCount).toBe(1);
+    expect(summary.conflicts[0].bucketDiffers).toBe(true);
+    expect(summary.conflicts[0].existingBucket).toBe("load");
+    expect(summary.conflicts[0].incomingBucket).toBe("avoid");
+  });
+
+  it("returns zero conflicts for an empty target", () => {
+    const target = WordpileStore.createPile("Empty");
+    const targetPile = WordpileStore.getSnapshot().piles[target.id];
+    const summary = computeMergeConflicts(
+      {
+        name: "Other",
+        words: [
+          { word: "harvest", bucket: "load", note: "", saferAlternative: "" },
+          { word: "elder", bucket: "interior", note: "", saferAlternative: "" },
+        ],
+      },
+      targetPile,
+    );
+    expect(summary.totalIncoming).toBe(2);
+    expect(summary.newCount).toBe(2);
+    expect(summary.overlapCount).toBe(0);
+    expect(summary.reclassifiedCount).toBe(0);
+    expect(summary.conflicts).toEqual([]);
+  });
+});

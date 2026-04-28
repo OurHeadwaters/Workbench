@@ -534,6 +534,83 @@ export type BundleEntryDecision =
   | { mode: "new"; nameOverride?: string }
   | { mode: "merge"; pileId: string };
 
+/**
+ * One row of the merge-conflict diff: an incoming word that already
+ * exists in the target pile, with side-by-side bucket / safer-alt so
+ * the UI can show what would change if existing-wins didn't apply.
+ */
+export interface MergeConflictEntry {
+  word: string;
+  existingBucket: Bucket;
+  incomingBucket: Bucket;
+  existingSaferAlternative: string;
+  incomingSaferAlternative: string;
+  bucketDiffers: boolean;
+  saferAlternativeDiffers: boolean;
+}
+
+/**
+ * Summary of what would happen if `incoming` were merged into `target`
+ * with the current "existing wins" semantics. Used by the import UI to
+ * warn the practitioner before the click — so they can see the overlap
+ * count, the reclassification count, and the per-word diff before
+ * committing.
+ */
+export interface MergeConflictSummary {
+  totalIncoming: number;
+  newCount: number;
+  overlapCount: number;
+  reclassifiedCount: number;
+  conflicts: MergeConflictEntry[];
+}
+
+export function computeMergeConflicts(
+  incoming: PileExportPayload,
+  target: CommunityPile,
+): MergeConflictSummary {
+  const existing = new Map<string, WordEntry>();
+  for (const w of target.words) existing.set(w.word, w);
+  const seenIncoming = new Set<string>();
+  const conflicts: MergeConflictEntry[] = [];
+  let newCount = 0;
+  let overlapCount = 0;
+  let reclassifiedCount = 0;
+  for (const raw of incoming.words) {
+    // Defensive: bundle/share payloads come pre-normalised, but a
+    // hand-edited file could slip through with mixed casing.
+    const norm = normalizeImportWord(raw);
+    if (!norm.word || seenIncoming.has(norm.word)) continue;
+    seenIncoming.add(norm.word);
+    const ex = existing.get(norm.word);
+    if (!ex) {
+      newCount += 1;
+      continue;
+    }
+    overlapCount += 1;
+    const existingSafer = ex.saferAlternative ?? "";
+    const incomingSafer = norm.saferAlternative ?? "";
+    const bucketDiffers = ex.bucket !== norm.bucket;
+    const saferAlternativeDiffers = existingSafer !== incomingSafer;
+    if (bucketDiffers || saferAlternativeDiffers) reclassifiedCount += 1;
+    conflicts.push({
+      word: norm.word,
+      existingBucket: ex.bucket,
+      incomingBucket: norm.bucket,
+      existingSaferAlternative: existingSafer,
+      incomingSaferAlternative: incomingSafer,
+      bucketDiffers,
+      saferAlternativeDiffers,
+    });
+  }
+  return {
+    totalIncoming: seenIncoming.size,
+    newCount,
+    overlapCount,
+    reclassifiedCount,
+    conflicts,
+  };
+}
+
 function pileToPayload(pile: CommunityPile): PileExportPayload {
   const draft =
     typeof window !== "undefined"
