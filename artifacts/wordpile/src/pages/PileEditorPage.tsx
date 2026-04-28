@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from "wouter";
 import {
   Check,
   Download,
+  Hammer,
   Link as LinkIcon,
   Pencil,
   Plus,
@@ -199,6 +200,14 @@ export function PileEditorPage() {
           data-testid="link-check-draft"
         >
           <ScanText size={14} /> Check a draft
+        </Link>
+        <Link
+          href={`/pile/${pile.id}/build`}
+          className="btn-secondary"
+          data-testid="link-build-game"
+          title="Try building with these word-timbers — three little games to play with."
+        >
+          <Hammer size={14} /> Build
         </Link>
         <button
           className="btn-ghost"

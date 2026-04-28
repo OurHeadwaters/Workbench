@@ -29,6 +29,8 @@
     "wouter": "catalog:"
   },
   "dependencies": {
-    "@clerk/react": "^6.4.3"
+    "@clerk/react": "^6.4.3",
+    "@types/matter-js": "^0.19.8",
+    "matter-js": "^0.20.0"
   }
 }

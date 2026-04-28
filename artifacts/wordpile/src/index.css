@@ -488,3 +488,638 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-ink);
   border-bottom-color: var(--color-ink);
 }
+
+/* ------------------------------------------------------------------ */
+/* Build game (the three side-by-side prototypes)                      */
+/* ------------------------------------------------------------------ */
+
+.build-toolbar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+@media (min-width: 880px) {
+  .build-toolbar {
+    grid-template-columns: 1fr auto auto;
+  }
+}
+
+.build-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background-color: var(--color-paper);
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--color-rule);
+}
+
+.build-switcher-btn {
+  flex: 1 1 140px;
+  text-align: left;
+  background: transparent;
+  color: var(--color-stone);
+  border: 1px solid transparent;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.build-switcher-btn:hover {
+  background-color: rgba(31, 61, 46, 0.05);
+  color: var(--color-ink);
+}
+
+.build-switcher-btn.is-active {
+  background-color: var(--color-cream);
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+.build-switcher-name {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.build-switcher-blurb {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.build-goal {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--color-ink);
+  padding: 8px 12px;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 3px;
+  min-width: 220px;
+}
+
+.build-standing-yes {
+  color: var(--color-load);
+  font-weight: 600;
+}
+
+.build-standing-no {
+  color: var(--color-stone);
+  font-style: italic;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 880px) {
+  .prototype-grid {
+    grid-template-columns: 260px 1fr;
+  }
+}
+
+.timber-tray {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 320px;
+}
+
+.timber-tray-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-rule);
+  padding-bottom: 8px;
+}
+
+.timber-tray-filters {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.timber-tray-filter {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  background-color: transparent;
+  color: var(--color-stone);
+  border: 1px solid var(--color-rule);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.timber-tray-filter:hover {
+  background-color: rgba(31, 61, 46, 0.05);
+  color: var(--color-ink);
+}
+
+.timber-tray-filter.is-active {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.timber-tray-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: 480px;
+  padding-right: 4px;
+}
+
+.timber-tray-card {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-sand);
+  border-left: 4px solid var(--color-stone);
+  border-radius: 2px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow 120ms ease, transform 120ms ease;
+}
+
+.timber-tray-card:active {
+  cursor: grabbing;
+}
+
+.timber-tray-card:hover {
+  box-shadow: 0 2px 6px rgba(31, 61, 46, 0.08);
+}
+
+.timber-tray-card.is-dragging {
+  opacity: 0.4;
+}
+
+.timber-tray-card.bucket-load { border-left-color: var(--color-load); }
+.timber-tray-card.bucket-interior { border-left-color: var(--color-interior); }
+.timber-tray-card.bucket-avoid { border-left-color: var(--color-avoid); }
+.timber-tray-card.bucket-unsorted { border-left-color: var(--color-unsorted); }
+
+.timber-tray-word {
+  font-size: 14px;
+}
+
+.timber-tray-bucket {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.timber-drag-ghost {
+  position: fixed;
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-ink);
+  border-left: 4px solid var(--color-ink);
+  border-radius: 2px;
+  padding: 8px 10px;
+  pointer-events: none;
+  z-index: 100;
+  font-family: var(--font-mono);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timber-drag-ghost.bucket-load { border-left-color: var(--color-load); border-color: var(--color-load); }
+.timber-drag-ghost.bucket-interior { border-left-color: var(--color-interior); border-color: var(--color-interior); }
+.timber-drag-ghost.bucket-avoid { border-left-color: var(--color-avoid); border-color: var(--color-avoid); }
+.timber-drag-ghost.bucket-unsorted { border-left-color: var(--color-unsorted); border-color: var(--color-unsorted); }
+
+.build-stage {
+  /* Empty marker for the test-id wrapper. */
+}
+
+.stacker-instructions {
+  margin-bottom: 12px;
+}
+
+/* ----- Stacker prototype ----- */
+
+.stacker-stage {
+  position: relative;
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 16px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  touch-action: none;
+}
+
+.stacker-trim {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  min-height: 56px;
+  padding: 4px 8px;
+}
+
+.stacker-trim-piece {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-sand);
+  border-bottom: 3px solid var(--color-interior);
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-size: 13px;
+  position: relative;
+  transition: transform 200ms ease;
+}
+
+.stacker-trim-piece.bucket-load {
+  border-bottom-color: var(--color-load);
+}
+.stacker-trim-piece.bucket-interior {
+  border-bottom-color: var(--color-interior);
+}
+.stacker-trim-piece.bucket-unsorted {
+  border-bottom-color: var(--color-unsorted);
+  background-color: var(--color-grain);
+}
+
+.stacker-trim-piece.is-bump {
+  animation: stacker-bump 480ms ease;
+}
+
+.stacker-untested-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--color-unsorted);
+  color: var(--color-cream);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.stacker-frame {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 6px;
+  background-color: var(--color-paper);
+  border-radius: 3px;
+  border: 1px solid var(--color-rule);
+}
+
+.stacker-frame-slot {
+  min-height: 60px;
+  border: 1px dashed var(--color-sand);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-cream);
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-ink);
+  transition: box-shadow 200ms ease, background-color 200ms ease, border-color 200ms ease;
+}
+
+.stacker-frame-slot.is-filled {
+  background-color: var(--color-load);
+  color: var(--color-cream);
+  border: 1px solid var(--color-load);
+  box-shadow: 0 0 0 2px rgba(31, 61, 46, 0.18);
+}
+
+.stacker-frame-slot.is-bump {
+  animation: stacker-bump 600ms ease;
+}
+
+.stacker-slab {
+  height: 28px;
+  background-color: var(--color-stone);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.stacker-crack {
+  position: fixed;
+  z-index: 90;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-avoid);
+  border-radius: 2px;
+  padding: 6px 10px;
+  font-size: 12px;
+  pointer-events: none;
+  animation: stacker-crack 1100ms ease forwards;
+}
+
+.stacker-crack-line {
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-avoid) 25%,
+    var(--color-avoid) 35%,
+    transparent 45%,
+    transparent 55%,
+    var(--color-avoid) 65%,
+    var(--color-avoid) 75%,
+    transparent 100%
+  );
+  transform: translateY(-50%) rotate(-3deg);
+}
+
+.stacker-crack-tip {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  color: var(--color-avoid);
+  margin-top: 2px;
+}
+
+@keyframes stacker-crack {
+  0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+  20%  { opacity: 1; transform: translateY(-2px) rotate(-2deg); }
+  60%  { opacity: 1; transform: translateY(20px) rotate(8deg); }
+  100% { opacity: 0; transform: translateY(60px) rotate(18deg); }
+}
+
+@keyframes stacker-bump {
+  0%   { transform: translateY(-6px); }
+  60%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* ----- Block builder prototype ----- */
+
+.blocks-stage-wrap {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 16px;
+  position: relative;
+}
+
+.blocks-stage {
+  display: grid;
+  gap: 4px;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 3px;
+  padding: 6px;
+  min-height: 360px;
+  touch-action: none;
+}
+
+.blocks-cell {
+  background-color: var(--color-cream);
+  border: 1px dashed var(--color-sand);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-align: center;
+  position: relative;
+  font-size: 12px;
+  color: var(--color-ink);
+  min-height: 48px;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.blocks-cell.is-baseplate {
+  background-color: var(--color-grain);
+  border-style: solid;
+  border-color: var(--color-sand);
+}
+
+.blocks-cell.is-filled {
+  border-style: solid;
+  color: var(--color-cream);
+}
+
+.blocks-cell.is-filled.bucket-load {
+  background-color: var(--color-load);
+  border-color: var(--color-load);
+  box-shadow: inset 0 0 0 1px rgba(244, 237, 224, 0.18);
+}
+
+.blocks-cell.is-filled.bucket-interior {
+  background-color: var(--color-interior);
+  border-color: var(--color-interior);
+}
+
+.blocks-cell.is-filled.bucket-unsorted {
+  background-color: var(--color-unsorted);
+  border-color: var(--color-unsorted);
+}
+
+.blocks-cell.is-reject {
+  animation: blocks-reject 600ms ease;
+  background-color: rgba(122, 46, 46, 0.18);
+  border-color: var(--color-avoid);
+}
+
+.blocks-cell-label {
+  font-size: 11px;
+  line-height: 1.1;
+  word-break: break-word;
+}
+
+.blocks-reject-tip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  padding: 6px 8px;
+  border-radius: 3px;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+  z-index: 30;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.blocks-baseplate-line {
+  height: 6px;
+  margin-top: 6px;
+  background-color: var(--color-stone);
+  border-radius: 2px;
+}
+
+@keyframes blocks-reject {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-4px); }
+  40%      { transform: translateX(4px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(3px); }
+}
+
+/* ----- Falling planks prototype ----- */
+
+.planks-stage-wrap {
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 16px;
+  outline: none;
+}
+
+.planks-stage-wrap:focus-visible {
+  border-color: var(--color-ink);
+}
+
+.planks-canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
+  border: 1px solid var(--color-rule);
+  touch-action: none;
+  background-color: var(--color-paper);
+}
+
+.planks-controls {
+  margin-top: 14px;
+  border-top: 1px solid var(--color-rule);
+  padding-top: 12px;
+}
+
+/* ----- Voter footer ----- */
+
+.btn-vote {
+  flex: 1 1 180px;
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  text-align: left;
+  transition: border-color 120ms ease, background-color 120ms ease, transform 120ms ease;
+}
+
+.btn-vote:hover {
+  background-color: rgba(31, 61, 46, 0.04);
+  border-color: var(--color-ink);
+}
+
+.btn-vote.is-chosen {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.btn-vote-name {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.btn-vote-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.btn-vote.is-chosen .btn-vote-count {
+  opacity: 1;
+}
+
+/* ----- Name-test prompt (file unsorted) ----- */
+
+.build-name-test {
+  position: sticky;
+  bottom: 12px;
+  margin-top: 14px;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+}
+
+.build-name-test-body {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  padding: 14px 18px;
+  border-radius: 4px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+  max-width: 540px;
+  width: 100%;
+}
+
+.build-name-test-body .eyebrow {
+  color: var(--color-paper);
+  opacity: 0.85;
+}
+
+.build-name-test-body .timber {
+  color: var(--color-cream);
+}
+
+.build-name-test-body .btn-secondary {
+  background-color: transparent;
+  color: var(--color-cream);
+  border-color: var(--color-cream);
+}
+
+.build-name-test-body .btn-secondary:hover {
+  background-color: rgba(244, 237, 224, 0.1);
+}
+
+.build-name-test-body .btn-secondary.is-suggested {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+.build-name-test-body .btn-ghost {
+  color: var(--color-cream);
+  opacity: 0.7;
+}

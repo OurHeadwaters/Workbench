@@ -4,6 +4,7 @@ import { ClerkProvider, SignIn, SignUp, useAuth } from "@clerk/react";
 import { PilesPage } from "@/pages/PilesPage";
 import { PileEditorPage } from "@/pages/PileEditorPage";
 import { CheckDraftPage } from "@/pages/CheckDraftPage";
+import { BuildPage } from "@/pages/BuildPage";
 import { TopBar } from "@/components/TopBar";
 import { WordpileStore } from "@/lib/store";
 
@@ -19,6 +20,7 @@ function Router({ clerkEnabled }: { clerkEnabled: boolean }) {
       <Route path="/import" component={PilesPage} />
       <Route path="/pile/:pileId" component={PileEditorPage} />
       <Route path="/pile/:pileId/check" component={CheckDraftPage} />
+      <Route path="/pile/:pileId/build" component={BuildPage} />
       {clerkEnabled && (
         <Route path="/sign-in/*?">
           <AuthScreen>
