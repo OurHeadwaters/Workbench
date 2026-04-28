@@ -1,7 +1,7 @@
 {
-  "name": "Codetry Practitioner's Handbook",
-  "short_name": "Handbook",
-  "description": "An offline reader for the Codetry Practitioner's Handbook — keeps the book on your phone the way you'd keep a paperback in a bag.",
+  "name": "Headwaters: How a Community Runs Its Own Economy",
+  "short_name": "Headwaters",
+  "description": "An offline reader for Headwaters — a practical guide to how a community runs its own economy, in the Codetry tradition.",
   "start_url": "__START_URL__",
   "scope": "__SCOPE__",
   "id": "__SCOPE__",

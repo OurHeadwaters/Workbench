@@ -2,7 +2,7 @@ const baseUrl = process.env.EXPO_PUBLIC_BASE_URL || undefined;
 
 module.exports = {
   expo: {
-    name: "Codetry Practitioner's Handbook",
+    name: "Headwaters: How a Community Runs Its Own Economy",
     slug: "codetry-handbook",
     version: "1.0.0",
     orientation: "portrait",
@@ -33,8 +33,8 @@ module.exports = {
     web: {
       bundler: "metro",
       favicon: "./assets/images/icon.png",
-      name: "Codetry Handbook",
-      shortName: "Handbook",
+      name: "Headwaters: How a Community Runs Its Own Economy",
+      shortName: "Headwaters",
       themeColor: "#1f3d2e",
       backgroundColor: "#f4ede0",
       display: "standalone",

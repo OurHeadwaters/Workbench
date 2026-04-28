@@ -232,7 +232,7 @@ export default function ChapterScreen() {
     const text =
       `${chapter.partLabel} · ${chapter.number} ${chapter.title}\n\n` +
       (opening ? `${opening}\n\n` : "") +
-      `— Codetry: A Practitioner's Handbook`;
+      `— Headwaters: How a Community Runs Its Own Economy`;
     try {
       if (Platform.OS === "web") {
         const nav: any =

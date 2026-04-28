@@ -51,7 +51,7 @@ export default function PrintScreen() {
     styleEl.textContent = PRINT_CSS;
     doc.head.appendChild(styleEl);
     const prevTitle = doc.title;
-    doc.title = `${chapter.number} ${chapter.title} — Codetry Handbook`;
+    doc.title = `${chapter.number} ${chapter.title} — Headwaters`;
     let cancelled = false;
     // Suppress auto-print when debugging via ?noprint=1.
     const search =
@@ -144,7 +144,7 @@ export default function PrintScreen() {
 
         <View style={styles.endRule} />
         <Text style={[styles.colophon, { fontFamily: MONO }]}>
-          Codetry: A Practitioner's Handbook · {chapter.partLabel} · {chapter.number}
+          Headwaters: How a Community Runs Its Own Economy · {chapter.partLabel} · {chapter.number}
         </Text>
       </View>
     </View>

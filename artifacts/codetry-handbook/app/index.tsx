@@ -55,7 +55,7 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          A FIELD MANUAL
+          A CODETRY HANDBOOK
         </Text>
         <Text
           style={[
@@ -63,7 +63,7 @@ export default function FrontPage() {
             { color: c.foreground, fontFamily: SERIF_BOLD },
           ]}
         >
-          Codetry
+          Headwaters
         </Text>
         <Text
           style={[
@@ -71,7 +71,7 @@ export default function FrontPage() {
             { color: c.foreground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          A Practitioner's Handbook
+          How a Community Runs Its Own Economy
         </Text>
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
         <Text

@@ -1,6 +1,6 @@
 kind = "mobile"
 previewPath = "/codetry-handbook/"
-title = "Codetry Practitioner's Handbook"
+title = "Headwaters: How a Community Runs Its Own Economy"
 version = "1.0.0"
 id = "artifacts/codetry-handbook"
 router = "expo-domain"

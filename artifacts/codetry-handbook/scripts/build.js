@@ -291,9 +291,9 @@ function patchIndexHtml(webOutputDir, exportBaseUrl) {
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Handbook" />
-  <meta name="application-name" content="Codetry Handbook" />
-  <meta name="description" content="An offline reader for the Codetry Practitioner's Handbook." />
+  <meta name="apple-mobile-web-app-title" content="Headwaters" />
+  <meta name="application-name" content="Headwaters" />
+  <meta name="description" content="An offline reader for Headwaters — a practical guide to how a community runs its own economy, in the Codetry tradition." />
 `;
 
   // Insert into <head> right before </head>.

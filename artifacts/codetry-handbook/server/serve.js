@@ -1,5 +1,6 @@
 /**
- * Standalone production server for the Codetry Practitioner's Handbook.
+ * Standalone production server for Headwaters: How a Community Runs Its Own
+ * Economy (the handbook artifact, internally still keyed as `codetry-handbook`).
  *
  * Serves three surfaces from a single port:
  *  1. The web PWA at `/` — installable to the home screen, fully offline once
@@ -55,9 +56,9 @@ const MIME_TYPES = {
 function getAppName() {
   try {
     const cfg = require(path.resolve(__dirname, "..", "app.config.js"));
-    return cfg.expo?.name || "Codetry Practitioner's Handbook";
+    return cfg.expo?.name || "Headwaters: How a Community Runs Its Own Economy";
   } catch {
-    return "Codetry Practitioner's Handbook";
+    return "Headwaters: How a Community Runs Its Own Economy";
   }
 }
 
@@ -315,7 +316,7 @@ const server = http.createServer((req, res) => {
 
 const port = parseInt(process.env.PORT || "3000", 10);
 server.listen(port, "0.0.0.0", () => {
-  console.log(`Serving Codetry handbook on port ${port}`);
+  console.log(`Serving Headwaters handbook on port ${port}`);
   console.log(`  PWA:               ${basePath || ""}/`);
   console.log(`  Expo Go page:      ${basePath || ""}/install`);
   console.log(`  Latest preview APK: ${basePath || ""}/install/apk`);

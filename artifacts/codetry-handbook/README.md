@@ -1,4 +1,9 @@
-# Codetry Practitioner's Handbook
+# Headwaters: How a Community Runs Its Own Economy
+
+A practical guide to how a community runs its own economy, in the Codetry
+tradition. The artifact directory, package name, slug, and bundle IDs are still
+keyed as `codetry-handbook` for stability — only the human-facing title has
+changed.
 
 The handbook ships as an Expo project that can be opened three ways:
 
@@ -155,15 +160,15 @@ generation in the cloud) signed into the Apple ID that will own the app.
    the App Store Connect app record.** Apple splits this in two:
 
    a. Go to https://developer.apple.com/account/resources/identifiers/list
-      → *+* → *App IDs* → *App* → *Continue*. Description: "Codetry
-      Practitioner's Handbook". Bundle ID: *Explicit* →
+      → *+* → *App IDs* → *App* → *Continue*. Description: "Headwaters:
+      How a Community Runs Its Own Economy". Bundle ID: *Explicit* →
       `ca.codetry.handbook`. Leave all capabilities at their defaults
       and click *Register*. (You can also let `eas credentials` create
       this for you in step 5, but doing it by hand first avoids one
       round-trip during the interactive flow.)
 
    b. Then go to https://appstoreconnect.apple.com → *Apps* → *+* →
-      *New App*. Pick *iOS*, name it "Codetry Handbook" (or whatever
+      *New App*. Pick *iOS*, name it "Headwaters" (or whatever
       you'd like the public title to be), primary language English,
       **bundle ID dropdown → select `ca.codetry.handbook`** (the entry
       you just registered in step 2a), and SKU to anything memorable
