@@ -5,10 +5,12 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useColorScheme } from "react-native";
 
+import { clearFailure, recordFailure } from "@/lib/saveStatus";
 import { storage } from "@/lib/storage";
 
 export type ThemeMode = "system" | "light" | "dark";
@@ -35,6 +37,14 @@ const KEYS = {
   bookmarks: `${NS}:bookmarks`,
   lastRead: `${NS}:lastRead`,
 };
+
+// One opId per logical setting so a fresh edit replaces (not stacks on
+// top of) any prior failure for the same setting.
+const OP = {
+  themeMode: "themeMode",
+  fontScale: "fontScale",
+  bookmarks: "bookmarks",
+} as const;
 
 const FONT_STEPS = [0.85, 0.92, 1.0, 1.1, 1.2, 1.3, 1.45] as const;
 const DEFAULT_STEP = 2;
@@ -68,6 +78,12 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
 
+  // Refs mirror state so retry callbacks re-attempt the latest intended
+  // value rather than a snapshot captured at first-write time.
+  const themeModeRef = useRef<ThemeMode>("system");
+  const fontStepRef = useRef<number>(DEFAULT_STEP);
+  const bookmarksRef = useRef<Bookmark[]>([]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -81,17 +97,23 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
         if (cancelled) return;
         if (tm === "light" || tm === "dark" || tm === "system") {
           setThemeModeState(tm);
+          themeModeRef.current = tm;
         }
         if (fs !== null) {
           const n = Number(fs);
           if (Number.isFinite(n) && n >= 0 && n < FONT_STEPS.length) {
-            setFontStep(Math.floor(n));
+            const step = Math.floor(n);
+            setFontStep(step);
+            fontStepRef.current = step;
           }
         }
         if (bm) {
           try {
             const parsed = JSON.parse(bm);
-            if (Array.isArray(parsed)) setBookmarks(parsed as Bookmark[]);
+            if (Array.isArray(parsed)) {
+              setBookmarks(parsed as Bookmark[]);
+              bookmarksRef.current = parsed as Bookmark[];
+            }
           } catch {}
         }
         if (lr) {
@@ -114,71 +136,125 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     };
   }, []);
 
-  // Writes route through `storage` so the SyncStatusPill reflects them.
-  // Rejections stay swallowed; the pill is the failure surface.
-  const setThemeMode = useCallback((m: ThemeMode) => {
-    setThemeModeState(m);
-    storage.setItem(KEYS.themeMode, m).catch(() => {});
-  }, []);
+  // Run a write through `storage` (which goes through `trackSave`),
+  // clear the per-op failure on success, record one with a retry on
+  // rejection. The retry closure re-invokes the same `doWrite`, which
+  // reads from refs so it always sends the latest intended state.
+  const persist = useCallback(
+    async (
+      opId: string,
+      label: string,
+      doWrite: () => Promise<void>,
+    ): Promise<void> => {
+      try {
+        await doWrite();
+        clearFailure(opId);
+      } catch {
+        recordFailure({
+          id: opId,
+          label,
+          retry: () => persist(opId, label, doWrite),
+        });
+      }
+    },
+    [],
+  );
+
+  const writeThemeMode = useCallback(
+    (label: string) =>
+      persist(OP.themeMode, label, () =>
+        storage.setItem(KEYS.themeMode, themeModeRef.current),
+      ),
+    [persist],
+  );
+
+  const writeFontScale = useCallback(
+    (label: string) =>
+      persist(OP.fontScale, label, () =>
+        storage.setItem(KEYS.fontScale, String(fontStepRef.current)),
+      ),
+    [persist],
+  );
+
+  const writeBookmarks = useCallback(
+    (label: string) =>
+      persist(OP.bookmarks, label, () =>
+        storage.setItem(KEYS.bookmarks, JSON.stringify(bookmarksRef.current)),
+      ),
+    [persist],
+  );
+
+  const setThemeMode = useCallback(
+    (m: ThemeMode) => {
+      themeModeRef.current = m;
+      setThemeModeState(m);
+      void writeThemeMode("your theme change");
+    },
+    [writeThemeMode],
+  );
 
   const cycleTheme = useCallback(() => {
     const order: ThemeMode[] = ["system", "light", "dark"];
-    setThemeModeState((prev) => {
-      const next = order[(order.indexOf(prev) + 1) % order.length];
-      storage.setItem(KEYS.themeMode, next).catch(() => {});
-      return next;
-    });
-  }, []);
+    const next =
+      order[(order.indexOf(themeModeRef.current) + 1) % order.length];
+    themeModeRef.current = next;
+    setThemeModeState(next);
+    void writeThemeMode("your theme change");
+  }, [writeThemeMode]);
 
-  const writeFontStep = useCallback((step: number) => {
-    setFontStep(step);
-    storage.setItem(KEYS.fontScale, String(step)).catch(() => {});
-  }, []);
+  const setFontStepValue = useCallback(
+    (step: number) => {
+      const clamped = Math.max(0, Math.min(FONT_STEPS.length - 1, step));
+      fontStepRef.current = clamped;
+      setFontStep(clamped);
+      void writeFontScale("your text size change");
+    },
+    [writeFontScale],
+  );
 
   const increaseFont = useCallback(() => {
-    setFontStep((prev) => {
-      const next = Math.min(FONT_STEPS.length - 1, prev + 1);
-      storage.setItem(KEYS.fontScale, String(next)).catch(() => {});
-      return next;
-    });
-  }, []);
+    setFontStepValue(fontStepRef.current + 1);
+  }, [setFontStepValue]);
 
   const decreaseFont = useCallback(() => {
-    setFontStep((prev) => {
-      const next = Math.max(0, prev - 1);
-      storage.setItem(KEYS.fontScale, String(next)).catch(() => {});
-      return next;
-    });
-  }, []);
+    setFontStepValue(fontStepRef.current - 1);
+  }, [setFontStepValue]);
 
-  const persistBookmarks = useCallback((next: Bookmark[]) => {
-    setBookmarks(next);
-    storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
-  }, []);
+  const updateBookmarks = useCallback(
+    (next: Bookmark[], label: string) => {
+      bookmarksRef.current = next;
+      setBookmarks(next);
+      void writeBookmarks(label);
+    },
+    [writeBookmarks],
+  );
 
   const addBookmark = useCallback(
     (b: Omit<Bookmark, "id" | "createdAt">) => {
       const id =
         Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-      setBookmarks((prev) => {
-        const next: Bookmark[] = [
-          { ...b, id, createdAt: Date.now() },
-          ...prev,
-        ];
-        storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
-        return next;
-      });
+      const fresh: Bookmark = { ...b, id, createdAt: Date.now() };
+      updateBookmarks(
+        [fresh, ...bookmarksRef.current],
+        `your bookmark on “${b.chapterTitle}”`,
+      );
     },
-    [],
+    [updateBookmarks],
   );
 
-  const removeBookmark = useCallback((id: string) => {
-    setBookmarks((prev) => {
-      const next = prev.filter((b) => b.id !== id);
-      storage.setItem(KEYS.bookmarks, JSON.stringify(next)).catch(() => {});
-      return next;
-    });
-  }, []);
+  const removeBookmark = useCallback(
+    (id: string) => {
+      const target = bookmarksRef.current.find((b) => b.id === id);
+      const next = bookmarksRef.current.filter((b) => b.id !== id);
+      updateBookmarks(
+        next,
+        target
+          ? `removing your bookmark on “${target.chapterTitle}”`
+          : "your bookmark change",
+      );
+    },
+    [updateBookmarks],
+  );
 
   const hasBookmark = useCallback(
     (chapterId: string, excerpt: string) =>
@@ -188,6 +264,9 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     [bookmarks],
   );
 
+  // Last-read writes fire on every scroll pause; they have nothing
+  // meaningful to "retry" so we keep them outside the failed-op
+  // registry. Failures still flip the pill via `trackSave`.
   const setLastRead = useCallback((r: LastRead) => {
     setLastReadState(r);
     storage.setItem(KEYS.lastRead, JSON.stringify(r)).catch(() => {});
