@@ -49,6 +49,7 @@ function RootLayoutNav() {
       <Stack.Screen name="chapter/[id]" />
       <Stack.Screen name="part/[roman]" />
       <Stack.Screen name="print/[id]" />
+      <Stack.Screen name="shared-vision" />
     </Stack>
   );
 }

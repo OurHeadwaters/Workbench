@@ -179,6 +179,45 @@ export default function FrontPage() {
           COMPANION TOOLS
         </Text>
         <Pressable
+          onPress={() => router.push("/shared-vision")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              Shared Vision
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              Describe what you want like a familiar object — a bucket, a
+              shelf, a jar — and hand off a clear plan to your agent.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
           onPress={() => Linking.openURL("/wordpile/")}
           style={({ pressed }) => [
             styles.toolRow,
