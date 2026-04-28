@@ -1261,3 +1261,204 @@ describe("bookkeeper route — POST /submissions/:id/approve", () => {
     }
   });
 });
+
+// Tests for POST /submissions/:id/reject. The reject path is the
+// approve path's sibling: a bookkeeper turns a pending submission down
+// with a written reason, and the row must record WHO did it, WHEN, and
+// WHY. If any of that goes missing the food-handler has no recourse and
+// no audit trail to point at, so each contract gets its own assertion.
+describe("bookkeeper route — POST /submissions/:id/reject", () => {
+  // Helper: have a food_handler post a pending expense submission and
+  // return the new submission id. Caller is expected to re-sign-in as
+  // the rejecter afterwards. Mirrors the approve-suite helper so the
+  // two test bodies read the same way.
+  async function seedPendingSubmission(
+    base: string,
+    overrides: Record<string, unknown> = {},
+  ): Promise<string> {
+    signIn({
+      clerkUserId: "user_alice",
+      email: "alice@example.com",
+      role: "food_handler",
+    });
+    const body = {
+      kind: "expense",
+      costCentreCode: "CC-001",
+      occurredOn: "2026-04-10",
+      vendor: "Acme",
+      amount: 25,
+      description: "lunch meeting",
+      ...overrides,
+    };
+    const res = await fetch(`${base}/api/bookkeeper/submissions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status !== 200) {
+      throw new Error(
+        `seedPendingSubmission failed: ${res.status} ${await res.text()}`,
+      );
+    }
+    const json = (await res.json()) as { id: string };
+    return json.id;
+  }
+
+  it("transitions status from pending → rejected, stamps decidedBy + rejectedReason, and writes a submission.reject audit row", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      // Sanity: the submission starts pending with no decision stamped.
+      const before = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(before?.status).toBe("pending");
+      expect(before?.rejectedReason ?? null).toBeNull();
+      expect(before?.decidedByEmail ?? null).toBeNull();
+      expect(before?.decidedById ?? null).toBeNull();
+
+      // Now sign in as a bookkeeper and reject.
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/reject`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "missing receipt photo" }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        id: string;
+        status: string;
+        rejectedReason: string | null;
+        decidedByEmail: string | null;
+        decidedAt: string | null;
+      };
+      expect(body.id).toBe(submissionId);
+      expect(body.status).toBe("rejected");
+      expect(body.rejectedReason).toBe("missing receipt photo");
+      expect(body.decidedByEmail).toBe("bea@example.com");
+      expect(body.decidedAt).not.toBeNull();
+
+      // The submission row in the DB reflects the same final state,
+      // including decidedById which is not in the API response shape.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("rejected");
+      expect(after?.rejectedReason).toBe("missing receipt photo");
+      expect(after?.decidedByEmail).toBe("bea@example.com");
+      expect(after?.decidedById).toBeTruthy();
+      expect(after?.decidedAt).toBeInstanceOf(Date);
+
+      // No transaction was posted as a side-effect of a rejection.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(0);
+      expect(tables.bookkeeperTransactionLinesTable.__store).toHaveLength(0);
+
+      // Audit trail records the reject event with the actor and reason.
+      const audit = tables.bookkeeperAuditLogTable.__store.find(
+        (r) =>
+          r.action === "submission.reject" && r.entityId === submissionId,
+      ) as
+        | undefined
+        | { actorEmail?: string; details?: { reason?: string } };
+      expect(audit).toBeDefined();
+      expect(audit!.actorEmail).toBe("bea@example.com");
+      expect(audit!.details?.reason).toBe("missing receipt photo");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects a too-short reason (< 3 chars) with 400 and leaves the submission pending", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/reject`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "no" }),
+        },
+      );
+      expect(res.status).toBe(400);
+
+      // Submission is untouched: still pending, no decision stamped.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("pending");
+      expect(after?.rejectedReason ?? null).toBeNull();
+      expect(after?.decidedByEmail ?? null).toBeNull();
+      expect(after?.decidedById ?? null).toBeNull();
+      expect(after?.decidedAt ?? null).toBeNull();
+
+      // No reject audit row written for the rejected attempt.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.find(
+          (r) => r.action === "submission.reject",
+        ),
+      ).toBeUndefined();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects a reject from a food_handler with 403 and leaves the submission pending", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      // Alice (the submitter) is still a food_handler — she cannot
+      // reject her own (or anyone else's) submission, even with a
+      // perfectly valid reason.
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/reject`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "I changed my mind" }),
+        },
+      );
+      expect(res.status).toBe(403);
+
+      // Submission is untouched: still pending, no decision stamped.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("pending");
+      expect(after?.rejectedReason ?? null).toBeNull();
+      expect(after?.decidedByEmail ?? null).toBeNull();
+      expect(after?.decidedById ?? null).toBeNull();
+      expect(after?.decidedAt ?? null).toBeNull();
+
+      // No reject audit row either.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.find(
+          (r) => r.action === "submission.reject",
+        ),
+      ).toBeUndefined();
+    } finally {
+      await h.close();
+    }
+  });
+});
