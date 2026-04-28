@@ -1,0 +1,206 @@
+# Codetry Test 006 — Earn flow ribbon graduates
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (Earn surface)
+**App:** xbuckets PWA, Earn tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the top of the Earn tab, where the cold reader first
+lands before any card asks them to translate
+**Files:**
+
+- `artifacts/xbuckets/src/pages/EarnTab.tsx`
+  (new `<EarnFlowRibbon />` component at the bottom; instance rendered
+  near the top of the Earn surface)
+- `artifacts/xbuckets/src/copy.en.ts` + `copy.fr.ts`
+  (new `earn.flowRibbonHeader` / `flowNode*` / `flowEdgeHarvester` strings)
+- `artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/VariantCFlowRibbon.tsx`
+  (the canvas variant this graduates from)
+- `docs/codetry/005-drip-harvester-reads-as-defi-noise.md` (background — Test 005's
+  follow-up that named this test)
+- `artifacts/xbuckets/src/pages/PaydayPlanner.tsx` — `RainfallFlowRibbon`
+  (Test 001 graduation, the same intervention this test mirrors)
+
+---
+
+## The claim (one line)
+
+If a flow ribbon at the top of the Payday tab kept three CTAs from
+fighting for one word, then a flow ribbon at the top of the Earn tab
+will keep four foreign DeFi registers from filling the silence around
+the topology of how a Drip Harvester actually moves money.
+
+## What was on screen (before)
+
+After the Test 005 vocabulary sweep, the Earn surface speaks one
+language consistently — the locked Zone 1 water map plus the two new
+sanctioned nouns (*Drip Harvester*, *Park toll*). The vocabulary defect
+catalogue is closed.
+
+But the **topology** is still implicit. A cold reader who lands on the
+Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro
+card, an LP-position card (when one exists), a list of Private Parks,
+and a Learn accordion. Nothing on the surface tells them, in one read,
+where their money currently sits and how it moves between stations.
+
+This was scoped out of Test 005's graduation precisely because it is
+not a vocabulary fix — it is a layout addition. Test 006 closes that
+gap.
+
+## The intervention (the four variants — recap from Test 005)
+
+The four canvas variants under
+`artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/`
+were already built and reviewed during Test 005:
+
+- **Variant 0 (control)** — the live surface, with the seventeen
+  vocabulary defects tagged in the margin.
+- **Variant A (vocabulary sweep)** — every off-map word replaced.
+  *Graduated in Test 005.*
+- **Variant B (register honesty)** — keep the noisy words, gloss them
+  inline. *Predicted-rejected and rejected.*
+- **Variant C (flow ribbon)** — keep Variant 0's wording, add a flow
+  ribbon at the top of the surface that names the stations the money
+  passes through. *This test's graduate.*
+
+Test 006 graduates Variant C as a layout change on top of the Variant A
+vocabulary that already shipped.
+
+### What graduates
+
+A new `<EarnFlowRibbon />` component is added to `EarnTab.tsx` and
+rendered near the top of the surface (above the XRP Pulse, the XRP
+Spring, the Drip Harvester card, and everything else). It shows three
+nodes connected by chevrons:
+
+```
+  Reservoir   →   Private Park   →[💧]→   Buckets
+  your wallet     earns Park tolls         your savings
+                                  ↑
+                          Drip Harvester
+```
+
+Three differences from Variant C are intentional:
+
+1. **Three nodes, not four.** Variant C drew the Drip Harvester as a
+   fourth station between Reservoir and Park. That mis-named it: the
+   Drip Harvester is not a place the money sits — it is the *verb* that
+   moves Park earnings into a Bucket. So it is rendered as a small
+   badge on the Park → Buckets edge, with the word "Drip Harvester"
+   under the chevron, not as its own circle.
+2. **Active state on the Park node.** When at least one Drip Harvester
+   is running, the Park circle gets a subtle emerald ring — the same
+   "this station has activity" signal the Payday-tab ribbon implies
+   through changing values.
+3. **Animation on the Drip Harvester badge.** When a sweep is ready
+   (`anySweepReady`), the harvester badge pulses (the same `animate-
+   pulse` cyan that the existing sweep toast uses). Otherwise it sits
+   quiet. This mirrors the Payday ribbon's "values change when the move
+   is happening" idiom.
+
+The three new sanctioned ribbon strings (`flowRibbonHeader`,
+`flowNode*`, `flowEdgeHarvester`) are added under `earn` in `copy.en.ts`
+and mirrored to `copy.fr.ts`.
+
+### What does **not** graduate (this round)
+
+- **The dollar values on each node.** The Payday-tab ribbon shows live
+  amounts (rainfall / siphon / reservoir) because each value changes
+  every payday. The Earn surface's amounts are slower — a parked
+  position may sit for weeks — and three live numbers at the top of
+  the surface would compete with the XRP Spring card directly under
+  it. The ribbon ships labels-only, with the XRP Spring + LP-position
+  cards continuing to carry the numbers. Recorded as a follow-up if a
+  cold-read finds the labels are not enough.
+- **A "click a station to scroll to its card" affordance.** Tempting
+  but premature: the Park station already maps to the LP-position card
+  below, the Buckets station maps to the per-agent target picker, and
+  the Reservoir station maps to the XRP Spring. The ribbon is a *map
+  of the surface* before it is a navigation control. Test the map
+  first; add navigation only if a cold reader reaches for it.
+
+## The rule discovered
+
+> **Topology earns its place at the top of the surface when the
+> stations the money passes through cannot be inferred from the cards
+> below.** Test 001 added a flow ribbon to the Payday tab because three
+> CTAs (one for each step) were collapsing into noise. Test 006 adds
+> the same ribbon to the Earn tab because three foreign registers
+> (DevOps / DeFi / broom) had already filled the silence around the
+> topology before Test 005 swept them — and silence is permission for
+> the next register to colonise the same gap.
+
+The rule that follows: **anywhere the metaphor is asked to do work
+across more than one card, the surface earns a flow ribbon at its top.**
+Two ribbons now exist (Payday, Earn). A third would belong on Buckets
+if and when a cold-read finds the Buckets surface implying topology
+rather than naming it.
+
+## Falsifiable claim
+
+If Variant C's graduation holds, then a cold reader landing on the Earn
+tab should be able to point at the ribbon and say, in one sentence,
+where their money currently sits and where it will move to next — even
+before they read any of the cards beneath it. Conversely, if the cold
+reader still has to read the LP-position card to learn that "Park =
+where the money is parked" or the Drip Harvester card to learn that
+"the Drip Harvester is what moves Park earnings into a Bucket", the
+ribbon has failed to anchor the topology and the test is falsified.
+
+A second falsifier: if a cold reader treats the ribbon as decoration
+(skips it on first read) or asks "why is this picture here?", the
+visual weight is wrong and the ribbon needs to be louder, not softer.
+
+## Status
+
+- **Variant C graduated** to `EarnTab.tsx` as `<EarnFlowRibbon />`,
+  rendered above the XRP Pulse / XRP Spring / Drip Harvester section.
+- **New strings** added under `earn.flowRibbonHeader`,
+  `earn.flowNode{Reservoir,Park,Buckets}{,Sub}`, and
+  `earn.flowEdgeHarvester` in `copy.en.ts`, mirrored to `copy.fr.ts`.
+- **Three nodes, not four.** The Drip Harvester is a verb on the
+  Park → Buckets edge, not a station. This is the only design
+  divergence from Variant C; recorded so the canvas does not claim
+  faithfully-shipped if it is later compared to the live surface.
+- **Active state and animation** kept consistent with the Payday-tab
+  flow ribbon: subtle ring when a station has activity, animated
+  pulse on the Drip Harvester badge when a sweep is ready.
+- **Test 005's "Variant C recorded as a follow-up task for production"
+  status** is now closed. Test 006 is that production change.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Earn — flow ribbon graduates from canvas to production
+zone:      1 (Headwaters / xBuckets — Earn surface)
+date:      2026-04-27
+artefacts: artifacts/mockup-sandbox/.../earn-drip-test/VariantCFlowRibbon.tsx
+graduated: <EarnFlowRibbon /> in artifacts/xbuckets/src/pages/EarnTab.tsx
+rule:      topology earns its place at the top when the stations cannot be inferred from the cards below
+status:    graduated — second flow-ribbon surface in production (Payday was the first)
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today the Earn tab grew a roof. Three nodes — Reservoir, Private
+> Park, Buckets — with the Drip Harvester sitting on the edge between
+> Park and Buckets, where it actually lives. Same intervention the
+> Payday tab got from Test 001, the same shape it has there: a flow
+> ribbon at the top of the surface that names the stations the money
+> passes through, before any card asks the reader to translate.**
+>
+> Rule: topology earns its place at the top of the surface when the
+> stations cannot be inferred from the cards below. Two ribbons in
+> production now. The third will land on Buckets the day a cold-read
+> finds the Buckets surface implying its topology rather than naming
+> it.
+>
+> One small design divergence from canvas: the Drip Harvester was
+> drawn as a fourth station in Variant C. It shipped as a verb on the
+> Park → Buckets edge instead, because the Drip Harvester is not a
+> place the money sits — it is what moves Park earnings into a Bucket.
+> One word, one referent. The canvas drew a noun where the surface
+> needed a verb, and the surface won.
+>
+> *(default: private. share to the shallows? — y / n)*

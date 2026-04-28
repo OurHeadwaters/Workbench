@@ -1,0 +1,318 @@
+# Codetry Test 010 — Water-register wording on the swap-sheet header
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab → ConvertXrpSheet
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** mockup canvas, shape `swap-sheet-header`
+**File:** `artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/SwapSheetHeader.tsx`
+
+---
+
+## The question (one line)
+
+Test 009 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect
+("Top up reservoir from XRP"), and explicitly *deferred* the same question
+one surface deeper — the sheet that opens when the user taps the chip.
+This test asks whether `convertXrp.title` should follow the chip into the
+locked dialect, or earn its protocol nouns because the user has crossed
+into a transactional room.
+
+## Why this needed its own test
+
+Test 009 left the *inside* of the sheet alone — `convertXrp.title` still
+reads "Convert XRP → RLUSD" — because once the user has tapped through
+the chip they are inside the actual swap interface where protocol nouns
+("XRP", "RLUSD") carry weight that "reservoir" alone does not. The
+defence in 009 was specific:
+
+> "the swap interface is allowed its own register because by then the
+> user has crossed into a different room."
+
+That is defensible and it might be right. But it was an agent decision
+made in passing, with no falsifier and no cold read. It deserves its
+own test, with both opposite hypotheses run cold.
+
+## What was on screen
+
+The canvas surface put four sheet-header wordings in the same slot,
+beneath a chip-tap → sheet-open transition thumbnail (so the cold reader
+sees both surfaces in sequence, the way a user actually experiences the
+register handoff). The eyebrow was held constant across all four
+variants — "Tap the Headwaters", already in dialect, locked by test 002 —
+because only the title is the question under test. Two body line-items
+("XRP balance · 412 XRP", "RLUSD to receive · ~$420") and the CTA
+("Convert in Xaman") were also held constant under each variant so the
+cold reader could see that **the protocol nouns are present in the body
+regardless of how the title is worded** — they're just no longer the
+headline.
+
+- **Variant 0 (control)** — production wording.
+  Eyebrow: "Tap the Headwaters" (dialect). Title: **"Convert XRP →
+  RLUSD"** (protocol). The internal register-break inside the sheet
+  head — eyebrow speaks one language, title speaks another.
+- **Variant A — top up your reservoir.**
+  Title: **"Top up your reservoir"**. Pure dialect. Mirrors the chip's
+  graduated verb ("Top up reservoir from XRP", test 009). The room
+  speaks one language end-to-end.
+- **Variant B — refill the reservoir from your headwaters.**
+  Title: **"Refill the reservoir from your headwaters"**. Both locked
+  nouns from the test 002 map. Most poetic of the four. Most prone to
+  redundancy with the eyebrow, which already says "Headwaters".
+- **Variant C — hybrid.**
+  Title: **"Top up your reservoir"** with a small grey subheading
+  **"XRP → RLUSD"** directly underneath. Tries to give both hypotheses
+  what they want — dialect carries the headline, protocol nouns sit
+  demoted as a one-line subheading.
+
+## Falsifiable claim
+
+A water-register sheet title earns the surface if **both** of these hold:
+
+1. **Transactional clarity preserved.** A cold reader, having tapped the
+   chip on the Payday tab, can still tell from the sheet header alone
+   that this is the XRP-to-RLUSD swap they just opened — without having
+   to scroll to the line-items to confirm.
+2. **Honest at sign-time.** The title sits inside the locked dialect
+   without making the moment of signing feel evasive about which assets
+   are moving. Protocol nouns are still present on the surface — in the
+   line-items below the title and on the CTA — so dialect at the title
+   level is *demotion of mechanics*, not *withholding* of them.
+
+It fails if it loses transactional clarity at the headline level (cold
+reader can't tell what the sheet is for), or if the dialect feels like
+it is hiding the swap behind a metaphor (the "evasive at the moment
+honesty matters most" failure mode hypothesis 2 warns about).
+
+## What happened, read cold
+
+- **Variant 0** is fine read in isolation but reads as a *stutter*
+  read in sequence with the chip. The chip says "Top up reservoir from
+  XRP" (dialect verb, locked noun, source asset). You tap. The sheet
+  that opens calls itself "Convert XRP → RLUSD" (protocol verb, two
+  protocol nouns). The eyebrow above the title — "Tap the Headwaters"
+  — is also in dialect, so the title is doubly isolated: it is the only
+  protocol-language unit inside a fully-dialect frame. It hides in
+  production today the same way the chip's old wording hid in test 009:
+  by being the first thing your eye lands on after a frame that sets
+  the register, the register-break is harder to notice than it ought
+  to be.
+- **Variant A** is the strongest. Read cold after the chip-tap, the
+  chip says "Top up reservoir from XRP" and the sheet that opens
+  immediately confirms "Top up your reservoir." That is not a stutter;
+  it is a *handoff*. The "your" personalises the action — this is now
+  *your* reservoir specifically — at the moment the user is about to
+  authorise a transfer into it. The protocol nouns have not gone
+  anywhere: they sit immediately under the title in the body
+  ("XRP balance · 412 XRP", "RLUSD to receive · ~$420") and on the
+  CTA ("Convert in Xaman"). At the headline level, dialect; at the
+  line-item level, protocol; at the action button, both. Each register
+  is doing the job it is best at: dialect names *what kind of action*
+  this is, protocol names *what assets* the action moves, and the
+  CTA names *the verb the user signs in their wallet*.
+- **Variant B** is correct in dialect but stutters with its own
+  eyebrow. The eyebrow says "Tap the Headwaters" and the title then
+  says "Refill the reservoir from your headwaters" — two uses of
+  "headwaters" inside ten words of each other. The surface starts
+  to read like a poem rather than a sheet header. There is also a
+  quieter problem: at sign-time, *headwaters → XRP* is a mapping the
+  user has to recall (test 002), whereas *reservoir → wallet* is more
+  immediate because the wallet is what they are about to credit. Both
+  mappings are locked, but only one is needed at the title level —
+  the *destination* one. Variant A uses just the destination noun;
+  Variant B uses both, and the source noun fights with the eyebrow.
+- **Variant C** is the most clever and the one that loses the cold
+  read. The hybrid asks the surface to do two register-jobs at once at
+  the title level — dialect headline plus protocol subheading — when
+  the rest of the sheet is already organised to do exactly that
+  separation across the title and the body. Putting "XRP → RLUSD" as
+  a small grey subheading directly under the title makes the protocol
+  nouns *quiet but adjacent to the headline*, which is the exact shape
+  test 009 rejected for the chip ("it just makes it longer"). The body
+  line-items already do this work better, with more space and more
+  context. C's only real argument is that it's a safe-harbour
+  compromise. But codetry tests are not for safe-harbour compromises;
+  they are for finding which hypothesis the surface actually wants.
+
+Bobbie's reaction in plain words: *"Variant A is the chip's promise
+kept. The chip says 'top up reservoir' and the sheet says 'top up your
+reservoir' — same room, one beat later, with 'your' added because now
+it's about you. Variant 0 isn't wrong, but you can feel the gear
+change. Variant B says 'headwaters' twice. Variant C is trying to
+have it both ways and the sheet body already does that better."*
+
+## The rule held (and one quiet finding)
+
+Test 002's locked word map says **Reservoir = the stablecoin wallet**.
+Test 009 honoured that mapping on the chip (one surface up). This test
+honours it on the next surface down — the sheet header — and confirms
+that the dialect can carry a transactional headline without becoming
+evasive about what the user is signing, *as long as* the protocol nouns
+are still present on the surface (in the line-items and on the CTA) to
+do the asset-naming work the title no longer does.
+
+The quiet finding in this test: **register zoning works vertically as
+well as horizontally.** Test 002 zones registers across screens (Zone 1
+speaks water; Zone 2 speaks lineage). This test shows the same kind of
+zoning *inside* a single component: the title-level register can speak
+dialect while the line-item register speaks protocol, as long as each
+register lives at the level it is best at. Dialect names the *kind of
+action*; protocol names the *assets the action moves*; the CTA verb
+names *what the wallet will sign*. Three registers, three jobs, one
+sheet, no register-break.
+
+This is not a new rule — it is test 002's locked map applied with one
+extra grain of resolution: not just *which words* per screen, but
+*which words at which level inside a screen*. Worth naming because it
+unblocks a class of cases (transactional sheets with poetic frames)
+where hypothesis 2's "the moment of honesty needs protocol" fear was
+load-bearing for the conservative call in 009.
+
+## Verdict
+
+**Variant A graduates.** The production wording moves from
+**"Convert XRP → RLUSD"** to **"Top up your reservoir"**. Same eyebrow
+("Tap the Headwaters"), same body line-items, same CTA. The sheet
+header now matches the chip dialect end-to-end while the protocol
+nouns continue to do their job in the body and on the CTA where they
+belong.
+
+Hypothesis 2 (the sheet earns its protocol nouns because the user is
+crossing into a transactional room) loses on the cold read because
+the rest of the sheet *already* names the assets — XRP balance,
+RLUSD to receive, slippage in XRP, "Convert in Xaman" on the CTA.
+Withholding XRP/RLUSD from the title does not withhold them from the
+surface; it just reassigns which register lives at the title level.
+
+Variants B and C are preserved on the canvas as counter-tests:
+
+- B was rejected for stuttering with its own eyebrow ("Headwaters"
+  appears twice inside ten words) and for using the source noun at
+  the headline level when only the destination noun is needed there.
+- C was rejected for replicating, badly, the title/body register
+  separation the sheet already does well — turning the title into
+  two lines when the body line-items already carry the protocol nouns
+  with more space and more context.
+
+## What changed in production
+
+- `artifacts/xbuckets/src/copy.en.ts` — `convertXrp.title` changed
+  from `"Convert XRP → RLUSD"` to `"Top up your reservoir"`.
+- `artifacts/xbuckets/src/copy.fr.ts` — `convertXrp.title` changed
+  from `"Convertir XRP → RLUSD"` to `"Remplissez votre réservoir"`
+  (FR parity, same dialect verb as the chip's `chipEntry`
+  "Remplir le réservoir depuis XRP").
+
+The eyebrow (`convertXrp.sectionLabel`) is unchanged — it was already
+in dialect ("Tap the Headwaters" / "Puisez à la source").
+
+The body line-item labels (`xrpBalanceLabel`, `rlusdToReceiveLabel`,
+`xrpCostLabel`, etc.) are unchanged — they correctly use protocol
+nouns at the line-item level, which is precisely the register zoning
+this test confirmed. The CTA buttons (`convertInXaman`, `convertViaWc`)
+are unchanged — they correctly use the protocol verb at the
+sign-the-transaction moment.
+
+The headwaters caution (`headwatersCautionTitle`, `headwatersCautionBody`)
+is unchanged — it already speaks dialect ("You're tapping the
+headwaters") and was always in register.
+
+`ConvertXrpSheet.tsx` itself does not change: it reads `C.title` and
+`C.sectionLabel` from the COPY object as before. The graduation is a
+pure copy change, no component refactor needed.
+
+## What would change the verdict
+
+- If telemetry shows users hesitating in the sheet (longer dwell on
+  the title, more cancels at the title view, more re-reads of the
+  body line-items before tapping Convert) compared to the
+  "Convert XRP → RLUSD" baseline, hypothesis 2 wins after all and
+  Variant 0 returns. The hypothesis here is that the body line-items
+  and the CTA carry the asset-naming work well enough that the title
+  is freed to speak the room's dialect — but the only honest test of
+  that is production usage.
+- If a future Zone 1 word-map revision retires "reservoir" as the
+  noun for the stablecoin wallet (it won't, but if), the title would
+  graduate to whatever the new locked word becomes, and the chip
+  would graduate alongside it. The two surfaces are now wired in
+  series.
+
+## Status
+
+- Canvas variants live (shape: `swap-sheet-header`)
+- **Graduated** Variant A to production
+- COPY key `convertXrp.title` updated in EN + FR
+- Sheet header is locale-aware as before (no behaviour change there)
+- To be added to the Zone 2 worked-examples list as the third
+  formally-graduated codetry test on the wallet/XRP-swap stack
+  (003 rejected bamboo on the chip; 009 graduated water on the chip;
+  010 graduates water on the sheet header). The wallet/XRP-swap stack
+  is now end-to-end in the locked Zone 1 dialect at the headline
+  level, with protocol nouns living in the line-items and on the CTA.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Water-register wording on the swap-sheet header
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-27
+artefact:  artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/SwapSheetHeader.tsx
+graduated: artifacts/xbuckets/src/copy.en.ts (convertXrp.title)
+           artifacts/xbuckets/src/copy.fr.ts (convertXrp.title FR parity)
+shape:     canvas shape:swap-sheet-header
+rule:      register zoning works vertically inside one component —
+           dialect at the title level, protocol at the line-item level,
+           protocol verb on the CTA
+status:    graduated — "Top up your reservoir" / "Remplissez votre réservoir"
+```
+
+---
+
+## See also
+
+- `docs/codetry/009-water-register-on-wallet-chip.md` — the test that
+  graduated the chip into the dialect and explicitly deferred this
+  question. Test 009's "What changed in production" section names the
+  defence ("the sheet is the actual swap interface where protocol
+  nouns are needed") and its "What would change the verdict" clause
+  flags this as a future test. Test 010 *is* that future test, run
+  cold, with the verdict landing on the opposite of the deferred
+  default.
+- `docs/codetry/002-zone-1-words-locked.md` — the locked Zone 1 word
+  map. Test 010 is the moment that map reaches the swap-sheet
+  headline, completing the wallet/XRP-swap stack.
+- `docs/codetry/003-bamboo-field-on-wallet-chip.md` — the test that
+  named *one register per screen* on this stack. Test 010 extends the
+  rule one grain finer: *one register per level inside a component*,
+  with title, line-item, and CTA each free to speak the register that
+  level is best at.
+- `docs/codetry/001-payday-words-bearing-weight.md` — the test that
+  established the principle that quiet plumbing can earn dialect.
+  The sheet header is louder typography than the chip, so the
+  graduation here is a slightly bigger commitment than 009 — but it
+  is the same principle, applied one room deeper.
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, on the canvas, I tested whether the sheet that opens when
+> the chip is tapped should follow the chip into the locked water
+> dialect. Test 009 had deferred this — the agent's call was that the
+> swap interface earns its protocol nouns because the user has crossed
+> into a transactional room. Run cold, that defence didn't hold:
+> Variant A ("Top up your reservoir") graduated.**
+>
+> The quiet finding: register zoning works vertically as well as
+> horizontally. Inside a single sheet, the title can speak dialect,
+> the line-items can speak protocol, and the CTA can speak the
+> sign-the-transaction verb — three registers, three jobs, one sheet,
+> no register-break. Hypothesis 2's fear (that dialect at the title
+> level would feel evasive at sign-time) didn't materialise because
+> the protocol nouns were already doing their work one row down,
+> where they're more useful anyway.
+>
+> Variant A graduates. The chip-tap → sheet-open transition is now a
+> *handoff* in one language, not a gear-change between two.
+>
+> *(default: private. share to the shallows? — y / n)*

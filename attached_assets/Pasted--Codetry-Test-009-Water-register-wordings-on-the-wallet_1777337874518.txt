@@ -1,0 +1,251 @@
+# Codetry Test 009 — Water-register wordings on the wallet chip
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** mockup canvas, shape `water-register-chip`
+**File:** `artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/WaterRegisterChip.tsx`
+
+---
+
+## The question (one line)
+
+Test 003 ruled out the bamboo-field metaphor on the wallet/XRP-swap chip
+on the grounds of *one register per screen* — bamboo (biological) was
+fighting rainfall (water) on the same surface. The rejection was clean,
+but it only proved bamboo doesn't belong here. It did not prove that
+the current production wording — **"Convert XRP → RLUSD"** — is the best
+the chip can be. This test asks: can the chip speak the *same* water
+register the rest of the screen already uses, without inflating itself
+back to peer-of-CTA volume?
+
+## What was on screen
+
+The canvas surface put four chip wordings in the same slot, beneath the
+real graduated CTA from test 001 ("Channel the rainfall · $1,200 ready ·
+every drop into a bucket"):
+
+- **Variant 0 (control)** — production wording.
+  "412 XRP unconverted   ⇄   Swap to ~$420 RLUSD."
+  Mechanical wallet/swap language. Speaks raw asset/protocol nouns —
+  the only register-break left on the screen after test 002 locked
+  the Zone 1 word map.
+- **Variant A — top up · from XRP.**
+  "Top up reservoir from XRP · ~$420."
+  Verbal-only. "Reservoir" = wallet (locked map, test 002). "Top up"
+  is a colloquial water-register verb. Drops "RLUSD" because Reservoir
+  already implies it.
+- **Variant B — add to · explicit arrow.**
+  "Add to reservoir · 412 XRP   ⇄   $420."
+  Same locked word, slightly cooler verb than A. Keeps the explicit ⇄
+  arrow with concrete numbers, mirroring Variant 0's mechanics.
+- **Variant C — standing-by · refill.**
+  "412 XRP standing by · refill reservoir."
+  Calmest verb (*standing by* = idle/passive). Source-leads,
+  action-follows.
+
+The test reads each chip cold, with the rainfall language sitting right
+above it, and asks whether the cold reader can still tell what the chip
+*does* — and whether the wording sits honestly inside the locked water
+register without inflating the chip back to peer-of-CTA volume.
+
+A *production-typography reference* row was added beneath the variant
+stack: the actual 10px white/25 underlined text-link the chip wears in
+production (`PaydayPlanner.tsx` ~line 2015). The chunky variant blocks
+are the harder test; the reference shows the volume the words will
+actually live at after graduation.
+
+## Falsifiable claim
+
+A water-register wording earns the chip if **both** of these hold:
+
+1. **Mechanical clarity preserved.** A cold reader, with no prior
+   context, can still tell from the chip alone what the chip does —
+   specifically, that XRP gets exchanged for stablecoins added to the
+   wallet. (This is the same falsifier as test 003.)
+2. **Demotion preserved.** At the actual production typography (10px
+   white/25 underlined text-link), the new wording does not feel
+   louder than the control — i.e. it does not pull the eye away from
+   the "Channel the rainfall" CTA above it. (This is the loudness
+   constraint that test 001 earned.)
+
+It fails if it loses mechanical precision (a cold reader can't tell what
+tapping it does), or if at production volume it still reads as
+peer-of-CTA rather than plumbing.
+
+## What happened, read cold
+
+- **Variant 0** reads as plumbing in mechanics, but on closer inspection
+  it is the *only* register-break left on the screen. Every other word
+  on the Payday tab — rainfall, channel, bucket, reservoir, siphon —
+  sits inside the locked Zone 1 word map (test 002). "Convert XRP →
+  RLUSD" speaks raw asset/protocol nouns. It hides in plain sight
+  because the typography is so quiet, but it is not in dialect.
+- **Variant A** is the strongest. "Reservoir" is doing exactly the job
+  test 002 locked it to do: refer to the stablecoin wallet. "Top up
+  reservoir from XRP" tells a cold reader that XRP enters and adds to
+  the reservoir — which is mechanically correct and dialect-correct.
+  At production typography (the reference row), the wording is
+  *quieter* than Variant 0, not louder: "Top up reservoir from XRP"
+  has no arrow, no two-token swap, no protocol nouns to draw the eye —
+  it just names the action in the surface's own dialect. The
+  inflation worry doesn't materialise.
+- **Variant B** is fine but heavier. The arrow + concrete numbers
+  (412 XRP ⇄ $420) carry mechanical precision but also more visual
+  weight. At the chunky canvas treatment, B reads as the most
+  "transactional" of the four — closer to a confirmation row than a
+  plumbing chip. At production typography, B would still wrap and look
+  busier than A. B's only advantage over A is the explicit numeric
+  arrow, but Variant 0 already has that and it doesn't make Variant 0
+  read better — it just makes it longer.
+- **Variant C** is the most poetic and the clearest failure. "Standing
+  by" beautifully names the idle state, and "refill reservoir" sits
+  honestly in the water register. But cold-reading the chip alone, a
+  user has no signal that *XRP becomes RLUSD*. "Refill reservoir"
+  could mean a transfer, a deposit, a top-up from any source.
+  Mechanical precision is lost. Falsifier #1 bites.
+
+Bobbie's reaction in plain words: *"Variant A says it the way the rest
+of the screen says everything. Variant 0 is fine, but now I notice it's
+the one chip not speaking the same dialect. Variant B is correct but
+crowded. Variant C reads beautifully and tells me nothing."*
+
+## The rule held (and one quiet finding)
+
+Test 002's locked word map says **Reservoir = the stablecoin wallet**.
+A chip whose function is to *add stablecoins to the wallet* should be
+able to say so in the locked dialect — and the test confirms it can,
+without inflating the chip's volume.
+
+The quiet finding in this test: a register-break can hide in a *quietly
+typographically demoted* surface. The chip's 10px white/25 underline
+made "Convert XRP → RLUSD" easy to miss as a register-break — it sits
+right under "Channel the rainfall" but in a different language, and
+nobody noticed for two cycles. The lesson: *demotion by typography is
+not the same as demotion by vocabulary.* The locked map (test 002)
+covers the latter; the temperature rule (test 004) covers the former.
+A surface needs both to feel right.
+
+This is not a new rule — it is an instance of test 002's rule reaching
+one more surface. Worth naming because the surface had been quietly
+exempt by virtue of being demoted.
+
+## Verdict
+
+**Variant A graduates.** The production wording moves from
+"Convert XRP → RLUSD" to **"Top up reservoir from XRP"** — same
+typography, same demoted text-link, same surface position. The chip
+remains plumbing; it now also speaks the locked Zone 1 dialect.
+
+Variants B and C are preserved on the canvas as counter-tests:
+- B was rejected for unnecessary visual weight (the arrow + numbers
+  buy nothing the locked dialect doesn't already give us).
+- C was rejected for losing mechanical precision (poetic but
+  uninformative — cold reader can't tell the chip swaps).
+
+## What changed in production
+
+- `artifacts/xbuckets/src/copy.en.ts` — added
+  `convertXrp.chipEntry: "Top up reservoir from XRP"`.
+- `artifacts/xbuckets/src/copy.fr.ts` — added FR parity
+  `convertXrp.chipEntry: "Remplir le réservoir depuis XRP"`.
+- `artifacts/xbuckets/src/pages/PaydayPlanner.tsx` (~line 2017) — chip
+  wording switched from a hardcoded `"Convert XRP → RLUSD"` string to
+  `{COPY.convertXrp.chipEntry}`. As a side-effect of the graduation,
+  the chip is now locale-aware (it had been hardcoded English before,
+  showing English to FR users — a small pre-existing register-break
+  fixed in passing).
+
+The sheet *inside* the chip (`ConvertXrpSheet`, `convertXrp.title`)
+keeps "Convert XRP → RLUSD" as its header. The sheet is the actual
+swap interface where protocol nouns are needed — once the user has
+tapped through, "XRP" and "RLUSD" carry weight that "reservoir" does
+not. The locked dialect lives on the rainfall screen; the swap
+interface is allowed its own register because by then the user has
+crossed into a different room.
+
+## What would change the verdict
+
+- If telemetry shows users no longer recognise the chip as a swap
+  affordance (drop in tap rate, increase in confused support
+  questions), Variant 0 returns. The hypothesis here is that
+  "reservoir" is well-enough taught by the surrounding surfaces that
+  the chip can rely on it — but the only honest test of that is
+  production usage.
+- If a future task moves the swap UI itself out of XRP-as-protocol
+  language into the bamboo-field/headwaters dialect (per test 003's
+  *"What would change the verdict"* clause 1 — *a bamboo-only
+  surface*), the sheet header would graduate too. That is its own
+  test, not this one.
+
+## Status
+
+- Canvas variants live (shape: `water-register-chip`)
+- **Graduated** Variant A to production
+- New COPY key `convertXrp.chipEntry` in EN + FR
+- Chip is now locale-aware (was hardcoded English)
+- To be added to the Zone 2 worked-examples list as the second
+  formally-graduated codetry test on the wallet/XRP-swap chip surface
+  (003 was the first formally-rejected; 009 is the first to graduate
+  on the same surface)
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Water-register wordings on the wallet chip
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-27
+artefact:  artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/WaterRegisterChip.tsx
+graduated: artifacts/xbuckets/src/pages/PaydayPlanner.tsx (chip ~line 2017)
+           artifacts/xbuckets/src/copy.en.ts (convertXrp.chipEntry)
+           artifacts/xbuckets/src/copy.fr.ts (convertXrp.chipEntry FR parity)
+shape:     canvas shape:water-register-chip
+rule:      one register per screen — held even on a typographically demoted chip
+status:    graduated — "Top up reservoir from XRP"
+```
+
+---
+
+## See also
+
+- `docs/codetry/003-bamboo-field-on-wallet-chip.md` — the test that
+  rejected bamboo-field on this chip and named the *one register per
+  screen* rule. This test is the natural follow-up: bamboo was the
+  wrong register; water is the right one. The chip was always going
+  to need a vocabulary upgrade — 003 told us which direction *not* to
+  go, 009 finds the direction that does.
+- `docs/codetry/002-zone-1-words-locked.md` — the locked Zone 1 word
+  map that names "Reservoir" as the stablecoin wallet. This test is
+  the moment the wallet chip finally honours that lock.
+- `docs/codetry/001-payday-words-bearing-weight.md` — the test that
+  demoted this chip to plumbing in the first place. The graduation
+  here does not undo that demotion: typography stays the same
+  (10px white/25 underline). The chip is plumbing that now speaks the
+  surrounding dialect, instead of plumbing that mutters in protocol.
+- `docs/codetry/004-calm-states-earn-their-loudness.md` — the
+  temperature rule. The graduation in 009 is a vocabulary move, not
+  a temperature one — the chip's volume is unchanged. Two
+  complementary rule families both holding on the same chip.
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, on the canvas, I tried three water-register wordings on the
+> wallet chip — the one test 003 told us bamboo couldn't have. Variant
+> A ("Top up reservoir from XRP") graduated. Variant B was correct but
+> crowded. Variant C ("standing by · refill reservoir") read beautifully
+> and told me nothing.**
+>
+> The quiet finding: the chip's old wording, "Convert XRP → RLUSD," had
+> been the only register-break left on the Payday tab since test 002
+> locked the word map. It hid because the typography is so quiet —
+> 10px white/25 underline. Demotion by typography is not the same as
+> demotion by vocabulary. A chip can be visually plumbing and still
+> mutter in the wrong dialect.
+>
+> Variant A graduates. The chip stays at the same volume; it now speaks
+> the same language as everything around it.
+>
+> *(default: private. share to the shallows? — y / n)*

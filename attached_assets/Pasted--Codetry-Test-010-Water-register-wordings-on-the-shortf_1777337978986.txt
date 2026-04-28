@@ -1,0 +1,260 @@
+# Codetry Test 010 — Water-register wordings on the shortfall CTA
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (daily kitchen garden)
+**App:** xbuckets PWA, Payday tab → wallet-confirm sheet
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** mockup canvas, shape `water-register-shortfall-cta`
+**File:** `artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/WaterRegisterShortfallCta.tsx`
+
+---
+
+## The question (one line)
+
+Test 009 graduated the *demoted* XRP-swap chip from "Convert XRP → RLUSD" to
+**"Top up reservoir from XRP"**, finally bringing it into the locked Zone 1
+water dialect (test 002). That chip has a *loud* twin — the prominent amber
+CTA in the wallet-confirm sheet that appears when the wallet is short of
+plan total. It still says **"Convert XRP → RLUSD to cover shortfall"**.
+Same action, same destination, same protocol-noun register-break. This test
+asks: can the loud chip speak the same dialect as its quiet sibling without
+losing the urgency the amber card is built to express?
+
+## What was on screen
+
+The canvas surface put four wordings in the same slot — the amber CTA at
+the bottom of a faithful render of the production shortfall card (white
+amber-bordered card with: Wallet balance row, Plan total row, an amber
+alert reading *"Wallet is $420 short. Buckets will be filled
+proportionally to your actual $780 — each bucket gets its fair scaled-down
+share."*). The card is the surrounding context that defines the CTA's
+register: the sheet is shouting *act* in amber, and the CTA is the action.
+
+- **Variant 0 (control)** — production wording.
+  "Convert XRP → RLUSD to cover shortfall."
+  Mechanical wallet/swap language with explicit urgency tail. Speaks raw
+  asset/protocol nouns — the only register-break left in the
+  wallet-confirm sheet after test 009 fixed the demoted chip.
+- **Variant A — direct port of test 009's graduate.**
+  "Top up reservoir from XRP."
+  Same exact wording as the demoted chip after test 009. Dialect-correct,
+  but drops the word *shortfall* — and the shortfall is the entire reason
+  this CTA exists on this surface. The user did not request a swap; the
+  user is being offered a swap to fix a problem the surface is calling
+  out.
+- **Variant B — 009's graduate + urgency tail.**
+  "Top up reservoir from XRP · cover the shortfall."
+  Test 009's graduated phrase as the action, then a separator, then the
+  urgency tail. Echoes the demoted chip exactly in the first half (so the
+  two siblings rhyme), then names the shortfall the surrounding amber card
+  is shouting about.
+- **Variant C — refill + paired tail.**
+  "Refill reservoir from XRP · cover the shortfall."
+  Same shape as B but with *refill* instead of *top up*. Rhythmically
+  tighter, but *refill* carries an implication that the reservoir was once
+  full and is now empty — slightly off here, since the reservoir is
+  partially full ($780 of $1,200) and never was full to begin with this
+  pay cycle.
+
+The test reads each chip cold, with the amber alert "Wallet is $420 short"
+sitting right above it, and asks whether the cold reader can still tell
+what the chip *does* — and whether the urgency the amber card is built to
+express is still on the chip.
+
+## Falsifiable claim
+
+A water-register wording earns the loud amber CTA if **both** of these
+hold:
+
+1. **Mechanical clarity preserved.** A cold reader, with no prior context,
+   can still tell from the chip alone what the chip does — specifically,
+   that XRP gets exchanged for stablecoins added to the wallet. (Same
+   falsifier as tests 003 and 009.)
+2. **Urgency preserved.** The cold reader still understands this is a
+   *fix-the-shortfall* action, not a casual top-up. The chip should read
+   as the answer to the amber alert above it, not as an aside that
+   happens to live in the same card.
+
+It fails if it loses mechanical precision (a cold reader can't tell what
+tapping it does), or if dropping/burying *shortfall* makes the CTA feel
+like an afterthought instead of the answer to the amber alert.
+
+## What happened, read cold
+
+- **Variant 0** is mechanically clear and the urgency is explicit
+  (*to cover shortfall* nailed onto the end). But it is now the *only*
+  register-break left in the wallet-confirm sheet — every other word in
+  the card sits inside the locked Zone 1 word map (test 002), and the
+  *demoted* twin chip on the same screen (Payday tab) was just graduated
+  to the water dialect in test 009. Variant 0 is fine in isolation; on
+  the surface it shares with its newly-graduated sibling, it now sounds
+  like the only person in the room speaking a different language.
+- **Variant A** is the cleanest port — *exactly* what test 009 graduated.
+  But it strips the word *shortfall*, and the shortfall is the entire
+  reason this CTA exists on this surface. The amber card above the chip
+  spends three lines explaining there is a $420 shortfall; the chip
+  answering it should reference that explanation, not pretend it isn't
+  there. A cold reader sees "Wallet is $420 short… *Top up reservoir
+  from XRP*" and the connection holds (top up = fix the short), but it's
+  inferred rather than stated. The amber treatment is doing more work
+  than the words. Falsifier #2 bites: the urgency is in the card, not in
+  the chip.
+- **Variant B** is the strongest. The first half ("Top up reservoir from
+  XRP") rhymes with the demoted chip exactly — same verb, same object,
+  same source — so a user who has seen the demoted chip on the Payday
+  tab recognises this as its loud sibling instantly. The dot-separator
+  tail ("· cover the shortfall") names what the amber card is calling
+  out, in plain dialect-neutral English (*shortfall* is the same word
+  the alert uses one line above). Mechanical precision: held. Urgency:
+  held — the tail makes the chip the answer to the alert, not an aside.
+  The composition (*action · purpose*) mirrors the existing graduated
+  hero CTA from test 001 ("Channel the rainfall · $1,200 ready · every
+  drop into a bucket"), so it sits inside an existing pattern.
+- **Variant C** is rhythmically the tightest of the three (*refill* is
+  one syllable shorter than *top up*, and the parallel structure is
+  cleaner). But *refill* implies the reservoir was full and is now
+  empty — which is slightly wrong for this surface, where the reservoir
+  is partially full ($780 of $1,200) and was never full to begin with
+  this pay cycle. The same word survived test 009 only as a rejected
+  variant (Variant C in test 009, "refill reservoir") — and 009 rejected
+  it for losing mechanical precision (no source). Adding "from XRP" here
+  fixes the precision issue, but the *fullness* implication remains.
+  C is *almost* B, with one wrong-temperature word.
+
+Bobbie's reaction in plain words: *"Variant B is the obvious one — it's
+009's chip with its urgency hat on. A is too quiet for amber, C is
+beautiful but says the wrong thing about the reservoir's state, 0 is the
+last register-break in the room."*
+
+## The rule held (and one quiet finding)
+
+Test 009 named the rule: *one register per screen* applies even to a
+typographically demoted surface. Test 010 extends it: it also applies even
+to a *loud* surface — the amber CTA was hiding behind its urgency the way
+the demoted chip was hiding behind its typography. The amber treatment
+draws the eye, but the words still have to sit inside the locked dialect.
+
+The quiet finding in this test: when a chip has a *quiet* sibling and a
+*loud* sibling that do the same thing, the loud one should rhyme with the
+quiet one in dialect, then add whatever the loud surface needs. Variant
+B's structure — *(009's exact graduate) · (purpose-of-this-surface)* —
+gives the two chips a shared spine, so the user reads the loud one as
+*"oh, the same chip, with the reason"*. This is not a new general rule,
+just a working pattern for chips that exist in both quiet and loud forms.
+
+## Verdict
+
+**Variant B graduates.** The production wording moves from
+"Convert XRP → RLUSD to cover shortfall" to
+**"Top up reservoir from XRP · cover the shortfall"** — same amber CTA
+treatment, same surface position, same icon. The chip remains a loud
+amber call-to-action; it now also speaks the locked Zone 1 dialect, and
+its first half rhymes exactly with the demoted twin chip graduated in
+test 009.
+
+Variants A and C are preserved on the canvas as counter-tests:
+- A was rejected for dropping *shortfall* — leaving the urgency in the
+  amber card alone, with no echo on the chip.
+- C was rejected for *refill* implying a state of fullness the reservoir
+  never had this cycle — same word, same problem 009 already flagged on
+  the demoted chip, on a slightly different surface.
+
+## What changed in production
+
+- `artifacts/xbuckets/src/copy.en.ts` — added
+  `convertXrp.shortfallCta: "Top up reservoir from XRP · cover the shortfall"`.
+- `artifacts/xbuckets/src/copy.fr.ts` — added FR parity
+  `convertXrp.shortfallCta: "Remplir le réservoir depuis XRP · combler le manque"`.
+- `artifacts/xbuckets/src/pages/PaydayPlanner.tsx` (~line 2905) — chip
+  wording switched from a hardcoded `"Convert XRP → RLUSD to cover shortfall"`
+  string to `{COPY.convertXrp.shortfallCta}`. As a side-effect of the
+  graduation, the chip is now locale-aware (it had been hardcoded English
+  before, showing English to FR users — the same small pre-existing
+  register-break that 009 fixed in passing on the demoted chip).
+
+## What would change the verdict
+
+- If telemetry shows users no longer recognise the loud chip as a swap
+  affordance (drop in tap rate, increase in confused support questions
+  from FR users, increase in "I don't have any reservoir" replies), the
+  fallback is *not* Variant 0 but a small variant test at amber-CTA
+  scale — the lesson from 009 is that the dialect is teachable, the
+  question is just whether the surface taught it well enough.
+- If a future task moves the swap UI itself out of XRP-as-protocol
+  language into the bamboo-field/headwaters dialect (per test 003's
+  *"What would change the verdict"* clause 1 — *a bamboo-only surface*),
+  the sheet header would graduate too. That is its own test, not this
+  one.
+
+## Status
+
+- Canvas variants live (shape: `water-register-shortfall-cta`)
+- **Graduated** Variant B to production
+- New COPY key `convertXrp.shortfallCta` in EN + FR
+- Loud chip is now locale-aware (was hardcoded English)
+- Pairs with test 009 to close out the wallet/XRP-swap chip surface —
+  both the demoted chip (009) and its loud amber twin (010) now speak
+  the locked Zone 1 water dialect
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Water-register wordings on the shortfall CTA
+zone:      1 (Headwaters / xBuckets)
+date:      2026-04-27
+artefact:  artifacts/mockup-sandbox/src/components/mockups/payday-rain-test/WaterRegisterShortfallCta.tsx
+graduated: artifacts/xbuckets/src/pages/PaydayPlanner.tsx (loud CTA ~line 2905)
+           artifacts/xbuckets/src/copy.en.ts (convertXrp.shortfallCta)
+           artifacts/xbuckets/src/copy.fr.ts (convertXrp.shortfallCta FR parity)
+shape:     canvas shape:water-register-shortfall-cta
+rule:      one register per screen — held on a loud surface as well as a demoted one
+status:    graduated — "Top up reservoir from XRP · cover the shortfall"
+```
+
+---
+
+## See also
+
+- `docs/codetry/009-water-register-on-wallet-chip.md` — the test that
+  graduated "Top up reservoir from XRP" on the *demoted* twin chip. This
+  test is the natural follow-up: 009 fixed the quiet sibling, 010 fixes
+  the loud one. The two chips are now in dialect parity, with B's
+  structure designed so the loud one rhymes with the quiet one in its
+  first half.
+- `docs/codetry/003-bamboo-field-on-wallet-chip.md` — the test that
+  rejected bamboo-field on the wallet/XRP-swap chip and named the *one
+  register per screen* rule. This test extends that rule one more step:
+  loudness does not buy a chip exemption from the locked dialect any
+  more than typographic demotion does (009).
+- `docs/codetry/002-zone-1-words-locked.md` — the locked Zone 1 word map
+  that names "Reservoir" as the stablecoin wallet. With 010 graduated,
+  every chip on the wallet-confirm sheet that refers to the wallet now
+  honours that lock.
+- `docs/codetry/001-payday-words-bearing-weight.md` — the test that
+  established the *action · purpose* compositional pattern with
+  "Channel the rainfall · $1,200 ready · every drop into a bucket".
+  Variant B's structure ("Top up reservoir from XRP · cover the
+  shortfall") sits inside that same pattern.
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today, on the canvas, I tried three water-register wordings on the
+> loud amber shortfall CTA — the chip that opens the same swap as the
+> demoted chip 009 just fixed, but at amber-CTA volume because the wallet
+> is short. Variant B ("Top up reservoir from XRP · cover the shortfall")
+> graduated. Variant A was 009's chip word-for-word but stripped of
+> 'shortfall' — it left the urgency in the amber card with no echo on
+> the chip. Variant C ("refill") read tightly but implied the reservoir
+> had been full and emptied, which it hadn't.**
+>
+> The quiet finding: when a chip has a quiet twin and a loud twin doing
+> the same thing, the loud one should rhyme with the quiet one in
+> dialect, then add what the loud surface needs. *(009's chip) · (the
+> shortfall this surface is here to fix)*. Two chips, one spine.
+>
+> The wallet-confirm sheet now has no register-breaks left. Every word
+> in the room speaks water.
+>
+> *(default: private. share to the shallows? — y / n)*

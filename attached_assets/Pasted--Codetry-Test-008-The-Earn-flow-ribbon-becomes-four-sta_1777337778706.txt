@@ -1,0 +1,262 @@
+# Codetry Test 008 — The Earn flow ribbon becomes four stations
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (Earn surface)
+**App:** xbuckets PWA, Earn tab
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the `<EarnFlowRibbon />` block at the top of the
+Earn surface, the first thing a cold reader lands on after the page
+header
+**Files:**
+
+- `artifacts/xbuckets/src/pages/EarnTab.tsx`
+  (`<EarnFlowRibbon />` near the top of the Earn surface; the
+  component definition at the bottom of the file)
+- `artifacts/xbuckets/src/copy.en.ts` + `copy.fr.ts`
+  (new `flowNodeHarvester{,Sub}` strings for the new station; new
+  `flowPosition{Empty,Harvester,Lake,LakeSweepReady}` strings for
+  the position read-out; the now-unused `flowEdgeHarvester` removed)
+- `artifacts/mockup-sandbox/src/components/mockups/earn-drip-test/VariantCFlowRibbon.tsx`
+  (the canvas variant this test restores — the four-station ribbon)
+- `docs/codetry/005-drip-harvester-reads-as-defi-noise.md` — Variant C
+  recorded as a follow-up
+- `docs/codetry/006-earn-flow-ribbon-graduates.md` — the previous
+  three-station shipping of the same intervention, superseded by this
+  test
+- `docs/codetry/007-lp-position-card-survives-vocab-sweep.md` — the
+  parallel structural test on the LP-position card; together with this
+  test, the Earn surface now answers both "what should the eye look
+  at first?" and "where in the system am I?"
+
+---
+
+## The claim (one line)
+
+If the ribbon is supposed to answer "where in the system am I?" then
+every station the money passes through has to be a thing the reader
+can point at — the Drip Harvester is one of those things, so it
+graduates from a verb on an arrow (Test 006) to its own circle in the
+chain (Test 008), and the ribbon grows a one-line position read-out
+underneath that names where the household actually is.
+
+## What was on screen (before)
+
+Test 006 shipped an Earn flow ribbon with three nodes —
+**Reservoir → Private Lake → Buckets** — and drew the Drip Harvester
+as a small badge sitting on the Lake → Buckets edge. The doc for that
+test argued this was the correct call: "the Drip Harvester is not a
+place the money sits — it is the *verb* that moves Park earnings into
+a Bucket."
+
+Two cold reads later showed that argument did not hold up where it
+mattered. The ribbon was supposed to anchor topology. But:
+
+**1. The Drip Harvester is also a wallet.** "An earner wallet that
+holds RLUSD before it is parked" was already named, repeatedly, in
+the Drip Harvester intro card and in the locked map. Drawing the
+Drip Harvester only as an edge verb left the reader unable to point
+at *the wallet itself* on the ribbon. A cold reader who already
+understood the metaphor would still ask "okay, but the Drip Harvester
+sits between something and something — where on the picture is it?"
+and the picture had no answer.
+
+**2. The ribbon answered topology but not position.** Test 001's
+Payday-tab ribbon shows changing dollar values at each station;
+Test 006's Earn ribbon could not (the Earn-tab values move on a
+weekly-to-monthly cadence, not per-payday) and shipped labels-only.
+But labels-only meant the ribbon answered *the chain in the abstract*
+without ever answering *where the household currently is on it*. A
+reader with no Drip Harvester yet, a reader with one set up but no
+parked RLUSD, a reader with a parked Lake collecting currents, and a
+reader with a sweep-ready harvester all saw the same picture.
+
+Test 006's "subtle ring on the active station" did some of this work
+but quietly: a reader who didn't already know the convention couldn't
+extract "you are at the Lake" from a 2px ring. The ribbon was
+*decorating* topology rather than *narrating* position.
+
+## The intervention
+
+Two changes from Test 006, both restoring something the canvas
+Variant C of Test 005 already had:
+
+### 1. Four nodes, not three
+
+The Drip Harvester gets its own circle on the ribbon, between
+Reservoir and Private Lake, with the sub-label "earner wallet".
+The chain reads:
+
+```
+  Reservoir   →   Drip Harvester   →   Private Lake   →   Buckets
+  your wallet     earner wallet        earns Lake currents   your savings
+```
+
+The Test 006 reasoning ("Drip Harvester is a verb, not a noun") was
+true and irrelevant. The Drip Harvester *is* a verb (the move from
+Lake to Bucket) **and also** a wallet (the place the RLUSD sits while
+the move is happening). Variant C drew it as the wallet because the
+ribbon is a topology, and topology asks "what are the places?", not
+"what are the verbs?" Test 008 restores that.
+
+The verb sense survives in the prose under the ribbon ("your Drip
+Harvester is earning Lake currents"), where it belongs.
+
+### 2. A one-line position read-out under the ribbon
+
+Below the four nodes, a single sentence names the most forward
+station the household has actually reached:
+
+| Household state | Position read-out |
+|---|---|
+| No Drip Harvester yet | "Your reservoir is the only stop with anything in it — set up a Drip Harvester to push the drip forward." |
+| Drip Harvester set up, nothing parked | "Your Drip Harvester is set up but nothing's parked yet — fill a Private Lake with idle RLUSD to start collecting Lake currents." |
+| Parked RLUSD, harvester earning | "You've parked RLUSD in a Private Lake — your Drip Harvester is earning Lake currents." |
+| Sweep ready | "Your Drip Harvester has earned enough — the next drip is ready to land in a Bucket." |
+
+Each later state implies all earlier ones, so the picker is a simple
+forward-most-state lookup — no compound conditions.
+
+The active station(s) on the ribbon get a saturated tone + a soft
+emerald ring; inactive stations stay visible but quiet (so the chain
+still reads as a chain when only the Reservoir is lit). The Drip
+Harvester station also pulses when a sweep is ready — the same
+animation Test 006 used on the harvester edge-badge, kept consistent.
+
+### What does **not** graduate (this round)
+
+- **Live dollar values on each node.** Same call as Test 006: the
+  Earn-tab values move slowly enough that putting three live numbers
+  at the top of the surface would compete with the XRP Spring card
+  and the LP-position card directly under it. The position read-out
+  is text, not numbers, and it earns its place by changing as the
+  household's state changes — without competing for the eye against
+  the value-bearing cards below.
+- **A clickable station that scrolls to the matching card.** Same
+  call as Test 006: tempting but premature. Test the map first; add
+  navigation only if a cold reader reaches for it.
+- **A timeline of the household's recent moves on the chain.** Out
+  of scope. The position read-out names where the household is *now*,
+  not where it has been. If a cold reader asks "and how did I get
+  here?" that is a follow-up.
+
+### Responsive behaviour at 360×640
+
+The ribbon is constrained to the EarnTab page width (mobile-only)
+and uses very small text (`text-[8px]` for sub-labels, `text-[9px]`
+for station labels) plus `flex-1 min-w-0` per node so the four nodes
+share width evenly. The chevron arrows use `shrink-0` and a tight
+`gap-0.5` so they sit between nodes without claiming much space.
+At 360px viewport width with the page container's `px-4` padding
+plus the ribbon's `px-3` padding, the four nodes share roughly
+296px — about 70px each — which is enough to render the icon, the
+label, and the sub-label without overflowing.
+
+## The rule discovered
+
+> **Topology is a noun-game.** The ribbon's job is to let a cold
+> reader point at where their money currently sits. Every station the
+> money passes through must therefore be drawn as a station — even
+> when the same thing is also a verb in the prose. Test 006 hid the
+> Drip Harvester behind its verb-sense and lost the noun-sense that
+> the ribbon needed. The fix is not to choose between the two senses
+> but to put the noun on the ribbon and let the verb live in the
+> sentence underneath.
+
+The corollary: **topology earns position when it names where the
+reader currently is, not just what the chain looks like.** Test 001's
+Payday ribbon did this with changing dollar values; Test 008's Earn
+ribbon does it with a single position read-out underneath. Two
+different mechanisms, same job: the ribbon stops being a static
+diagram and starts being a *status line*.
+
+## Falsifiable claim
+
+If Test 008's graduation holds, then a cold reader landing on the
+Earn tab should be able to (1) point at four labelled circles and
+say "this is where my money goes through", (2) point at the
+highlighted circles and say "this is where it currently is", and
+(3) read the sentence under the ribbon and say what happens next —
+without scrolling past the ribbon.
+
+Conversely, if a cold reader still asks "where is the Drip
+Harvester?" after looking at the ribbon, or treats the position
+read-out as decoration (skips it on first read), the test is
+falsified — either by drawing the Harvester as a station that
+disappears into the row of four, or by phrasing the position
+read-out in a register the reader does not parse as "this sentence
+is about *me*".
+
+A second falsifier: if a reader without a Drip Harvester set up
+sees only the Reservoir lit and reads the surface as "broken" rather
+than as "you are at the start of the chain", the read-out's *empty*
+state is wrong — it must read as an invitation, not as an absence.
+
+## Status
+
+- **Variant C (canvas) restored** as the live ribbon: four nodes,
+  Drip Harvester between Reservoir and Lake.
+- **Position read-out shipped** under the ribbon. Four states; each
+  later state implies all earlier ones; English in `copy.en.ts`,
+  French mirror in `copy.fr.ts`.
+- **Active-station emphasis upgraded** from a 2px ring to a
+  saturated tone-fill + ring, with inactive stations rendered in a
+  quiet slate so the chain still reads as a chain.
+- **Drip Harvester pulse on sweep-ready** preserved from Test 006,
+  now on the Drip Harvester station itself rather than on the
+  Lake → Buckets edge.
+- **Test 006 superseded.** Its three-node design is documented as
+  *the previous shipping*, kept in `docs/codetry/006-...md` for the
+  practice record; its `flowEdgeHarvester` string is removed.
+- **One props addition** at the call site:
+  `anyLakeParked={agents.some((a) => a.lpPosition !== null)}`. The
+  ribbon now takes three booleans (`anyAgentActive`, `anyLakeParked`,
+  `anySweepReady`) and computes the position read-out itself.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Earn — flow ribbon becomes four stations + position read-out
+zone:      1 (Headwaters / xBuckets — Earn surface)
+date:      2026-04-27
+artefacts: artifacts/mockup-sandbox/.../earn-drip-test/VariantCFlowRibbon.tsx
+graduated: <EarnFlowRibbon /> in artifacts/xbuckets/src/pages/EarnTab.tsx
+rule:      topology is a noun-game; the ribbon stops being a diagram and
+           becomes a status line when it names where the reader is, not
+           just what the chain looks like
+status:    graduated — supersedes Test 006's three-station ribbon
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today the Earn ribbon grew a fourth circle and a sentence. Test
+> 006 had drawn the Drip Harvester as a verb on the arrow between
+> Lake and Buckets, on the theory that the Drip Harvester is not a
+> place the money sits. Two cold reads in, the theory had a hole:
+> the Drip Harvester is also the earner wallet, and the wallet is
+> exactly the kind of place a household needs to be able to point at
+> on a topology picture.**
+>
+> Rule: topology is a noun-game. Every station the money passes
+> through has to be drawn as a station, even when the same thing is
+> also a verb in the prose. Put the noun on the ribbon, let the verb
+> live in the sentence underneath.
+>
+> The sentence underneath is the second half of the test. Test 001's
+> Payday ribbon shows where the household is by changing the dollar
+> values at each station every payday. Test 008's Earn ribbon can't
+> do that — Earn-tab values move on a weekly-to-monthly cadence —
+> so it does the same job a different way: a single line of text
+> below the ribbon names the most forward station the household has
+> actually reached. Four states. Each later state implies all
+> earlier ones. The ribbon stops being a static diagram and becomes
+> a status line.
+>
+> The Test 006 ribbon was correct topology and quiet position. The
+> Test 008 ribbon is correct topology and loud position. The
+> Headwaters Earn surface now has both *what should the eye look at
+> first* (Test 007's hierarchy on the LP-position card) and *where
+> in the system am I* (Test 008's four-station ribbon at the top).
+>
+> *(default: private. share to the shallows? — y / n)*
