@@ -11,7 +11,11 @@ import {
   Upload,
 } from "lucide-react";
 import { useWordpile } from "@/lib/useStore";
-import { WordpileStore, parseAnyImport } from "@/lib/store";
+import {
+  WordpileStore,
+  parseAnyImport,
+  type BundleEntryDecision,
+} from "@/lib/store";
 import { decodePileShare, readShareFragment } from "@/lib/shareLink";
 import type { AnyPileImport, PileBundleExport, PileExport } from "@/data/types";
 
@@ -27,6 +31,15 @@ export function PilesPage() {
     null,
   );
   const [bundleSelection, setBundleSelection] = useState<boolean[]>([]);
+  const [bundleDecisions, setBundleDecisions] = useState<BundleEntryDecision[]>(
+    [],
+  );
+  // Tracks which bundle rows the practitioner has explicitly chosen a
+  // mode on, so the late-sync re-suggestion effect doesn't overwrite an
+  // intentional "Create new" pick when piles arrive later.
+  const [bundleDecisionsTouched, setBundleDecisionsTouched] = useState<
+    boolean[]
+  >([]);
   const [importFileName, setImportFileName] = useState<string>("");
   const [importSource, setImportSource] = useState<"file" | "link">("file");
   const [importMode, setImportMode] = useState<"new" | "merge">("new");
@@ -108,6 +121,30 @@ export function PilesPage() {
     }
   }, [importPayload, importMergeId, piles]);
 
+  // When piles arrive late (sign-in sync) for an already-loaded bundle,
+  // re-suggest merge targets for rows the practitioner has not
+  // explicitly touched (and that don't already have a merge target).
+  // We never overwrite an intentional pick — if the user explicitly
+  // chose "Create new", a later cloud sync must not flip them back.
+  useEffect(() => {
+    if (!importBundle || piles.length === 0) return;
+    setBundleDecisions((prev) => {
+      let changed = false;
+      const next = importBundle.piles.map((entry, i) => {
+        const current = prev[i] ?? { mode: "new" as const };
+        if (current.mode === "merge") return current;
+        if (bundleDecisionsTouched[i]) return current;
+        const suggested = suggestBundleDecision(entry.name, piles);
+        if (suggested.mode === "merge") {
+          changed = true;
+          return suggested;
+        }
+        return current;
+      });
+      return changed ? next : prev;
+    });
+  }, [importBundle, piles, bundleDecisionsTouched]);
+
   function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
@@ -126,6 +163,8 @@ export function PilesPage() {
     setImportPayload(null);
     setImportBundle(null);
     setBundleSelection([]);
+    setBundleDecisions([]);
+    setBundleDecisionsTouched([]);
     setImportFileName("");
     setImportSource("file");
     setImportMode("new");
@@ -139,6 +178,8 @@ export function PilesPage() {
     if (parsed.kind === "bundle") {
       setImportBundle(parsed.payload);
       setBundleSelection(parsed.payload.piles.map(() => true));
+      setBundleDecisions(parsed.payload.piles.map((p) => suggestBundleDecision(p.name, piles)));
+      setBundleDecisionsTouched(parsed.payload.piles.map(() => false));
       setImportPayload(null);
       setImportFileName(fileName);
       setImportMode("new");
@@ -147,6 +188,8 @@ export function PilesPage() {
     setImportPayload(parsed.payload);
     setImportBundle(null);
     setBundleSelection([]);
+    setBundleDecisions([]);
+    setBundleDecisionsTouched([]);
     setImportFileName(fileName);
     setImportNewName(parsed.payload.pile.name);
     setImportMode("new");
@@ -188,11 +231,28 @@ export function PilesPage() {
         setImportError("Pick at least one pile to import.");
         return;
       }
-      const created = WordpileStore.importBundle(importBundle, {
+      // Validate any merge decisions still point at a real pile (in
+      // case the practitioner deleted a pile after loading the backup).
+      const decisions: Record<number, BundleEntryDecision> = {};
+      for (const i of indexes) {
+        const decision = bundleDecisions[i] ?? { mode: "new" };
+        if (
+          decision.mode === "merge" &&
+          !piles.some((p) => p.id === decision.pileId)
+        ) {
+          setImportError(
+            `The pile chosen for "${importBundle.piles[i].name}" no longer exists. Pick another target or switch it back to a new pile.`,
+          );
+          return;
+        }
+        decisions[i] = decision;
+      }
+      const result = WordpileStore.importBundle(importBundle, {
         selectedIndexes: indexes,
+        decisions,
       });
       resetImport();
-      if (created.length === 1) navigate(`/pile/${created[0].id}`);
+      if (result.length === 1) navigate(`/pile/${result[0].id}`);
       return;
     }
     if (!importPayload) return;
@@ -518,8 +578,9 @@ export function PilesPage() {
               <p className="text-sm" style={{ color: "var(--color-stone)" }}>
                 {importBundle.piles.length} pile
                 {importBundle.piles.length === 1 ? "" : "s"} in this backup.
-                Pick which ones to bring in — each becomes a new pile, so
-                nothing on this device gets overwritten.
+                Pick which ones to bring in, and choose whether each one
+                becomes a new pile or merges into one you already have
+                (existing words are kept as-is).
               </p>
             </div>
             {importBundle.piles.length === 0 ? (
@@ -547,9 +608,9 @@ export function PilesPage() {
                   </button>
                 </div>
                 <ul
-                  className="flex flex-col gap-1"
+                  className="flex flex-col gap-2"
                   style={{
-                    maxHeight: 260,
+                    maxHeight: 320,
                     overflowY: "auto",
                     borderTop: "1px solid var(--color-rule)",
                     borderBottom: "1px solid var(--color-rule)",
@@ -557,24 +618,63 @@ export function PilesPage() {
                     paddingBottom: 6,
                   }}
                 >
-                  {importBundle.piles.map((p, i) => (
-                    <li key={`${p.name}-${i}`}>
-                      <label className="flex items-center gap-2 text-sm">
-                        <input
-                          type="checkbox"
-                          checked={bundleSelection[i] ?? false}
-                          onChange={() => toggleBundleEntry(i)}
-                          data-testid={`checkbox-bundle-${i}`}
-                        />
-                        <strong>{p.name}</strong>
-                        <span style={{ color: "var(--color-stone)" }}>
-                          · {p.words.length} word
-                          {p.words.length === 1 ? "" : "s"}
-                          {p.draft ? " · draft" : ""}
-                        </span>
-                      </label>
-                    </li>
-                  ))}
+                  {importBundle.piles.map((p, i) => {
+                    const decision = bundleDecisions[i] ?? { mode: "new" };
+                    const selected = bundleSelection[i] ?? false;
+                    const selectValue =
+                      decision.mode === "merge" ? `merge:${decision.pileId}` : "new";
+                    return (
+                      <li key={`${p.name}-${i}`} className="flex flex-col gap-1">
+                        <label className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={selected}
+                            onChange={() => toggleBundleEntry(i)}
+                            data-testid={`checkbox-bundle-${i}`}
+                          />
+                          <strong>{p.name}</strong>
+                          <span style={{ color: "var(--color-stone)" }}>
+                            · {p.words.length} word
+                            {p.words.length === 1 ? "" : "s"}
+                            {p.draft ? " · draft" : ""}
+                          </span>
+                        </label>
+                        {selected && piles.length > 0 && (
+                          <select
+                            className="input"
+                            style={{ maxWidth: 360, marginLeft: 22 }}
+                            value={selectValue}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              setBundleDecisions((prev) => {
+                                const next = [...prev];
+                                next[i] = v.startsWith("merge:")
+                                  ? { mode: "merge", pileId: v.slice("merge:".length) }
+                                  : { mode: "new" };
+                                return next;
+                              });
+                              setBundleDecisionsTouched((prev) => {
+                                const next = [...prev];
+                                next[i] = true;
+                                return next;
+                              });
+                            }}
+                            data-testid={`select-bundle-mode-${i}`}
+                          >
+                            <option value="new">Create a new pile</option>
+                            {piles.map((existing) => (
+                              <option
+                                key={existing.id}
+                                value={`merge:${existing.id}`}
+                              >
+                                Merge into {existing.name}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             )}
@@ -752,4 +852,18 @@ function countByBucket(words: { bucket: string }[]) {
     else counts.unsorted += 1;
   }
   return counts;
+}
+
+// Default each bundle row to "merge into <same-named pile>" when the
+// device already has a pile with that name (case-insensitive). This is
+// what makes a backup actually restore in-place instead of producing
+// duplicates. Anything without a same-named match defaults to creating
+// a new pile.
+function suggestBundleDecision(
+  entryName: string,
+  existing: { id: string; name: string }[],
+): BundleEntryDecision {
+  const target = entryName.trim().toLowerCase();
+  const match = existing.find((p) => p.name.trim().toLowerCase() === target);
+  return match ? { mode: "merge", pileId: match.id } : { mode: "new" };
 }

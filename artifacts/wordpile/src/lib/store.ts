@@ -459,24 +459,36 @@ export const WordpileStore = {
   },
 
   /**
-   * Import every (or a chosen subset of) pile inside a bundle as fresh
-   * piles. Each entry becomes a brand-new pile with a brand-new id, so
-   * importing into a device that already has piles is non-destructive.
+   * Import every (or a chosen subset of) pile inside a bundle. Each
+   * entry can either become a brand-new pile or be merged into an
+   * existing one — letting a backup act as a true restore-in-place
+   * instead of always producing duplicates.
    *
    * `selectedIndexes` filters which entries (by their position in the
    * bundle) get imported. Omit it to restore everything.
    *
-   * Returns the list of created piles.
+   * `decisions` overrides the per-entry behaviour. Each entry defaults
+   * to creating a new pile; pass `{ mode: "merge", pileId }` to fold the
+   * entry into an existing pile (case-insensitive de-dupe — existing
+   * words win). A merge that targets a missing pile is silently skipped
+   * (matching `importPile`'s behaviour).
+   *
+   * Returns the list of resulting piles (created or merged), in bundle
+   * order.
    */
   importBundle(
     payload: PileBundleExport,
-    options: { selectedIndexes?: number[] } = {},
+    options: {
+      selectedIndexes?: number[];
+      decisions?: Record<number, BundleEntryDecision>;
+    } = {},
   ): CommunityPile[] {
     const wanted =
       options.selectedIndexes !== undefined
         ? new Set(options.selectedIndexes)
         : null;
-    const created: CommunityPile[] = [];
+    const decisions = options.decisions ?? {};
+    const results: CommunityPile[] = [];
     payload.piles.forEach((entry, index) => {
       if (wanted && !wanted.has(index)) return;
       const single: PileExport = {
@@ -485,12 +497,25 @@ export const WordpileStore = {
         exportedAt: payload.exportedAt,
         pile: entry,
       };
-      const pile = WordpileStore.importPile(single);
-      if (pile) created.push(pile);
+      const decision = decisions[index] ?? { mode: "new" };
+      const pile =
+        decision.mode === "merge"
+          ? WordpileStore.importPile(single, {
+              mergeIntoPileId: decision.pileId,
+            })
+          : WordpileStore.importPile(
+              single,
+              decision.nameOverride ? { nameOverride: decision.nameOverride } : {},
+            );
+      if (pile) results.push(pile);
     });
-    return created;
+    return results;
   },
 };
+
+export type BundleEntryDecision =
+  | { mode: "new"; nameOverride?: string }
+  | { mode: "merge"; pileId: string };
 
 function pileToPayload(pile: CommunityPile): PileExportPayload {
   const draft =

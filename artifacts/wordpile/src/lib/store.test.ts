@@ -574,6 +574,127 @@ describe("WordpileStore — serializeAllPiles / importBundle (round-trip)", () =
     expect(WordpileStore.getSnapshot().pileOrder).toEqual([]);
   });
 
+  it("merges a bundle entry into an existing pile when given a per-row decision", () => {
+    // Existing on-device state: a "Deer Lake" pile that the practitioner
+    // has been editing.
+    const existing = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(existing.id, {
+      word: "harvest",
+      bucket: "load",
+      note: "kept by user",
+    });
+
+    // Backup contains a "Deer Lake" with stale data — same word back in
+    // the unsorted bucket plus a brand-new word — and a separate fresh
+    // pile that has no on-device counterpart.
+    const bundle: PileBundleExport = {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [
+        {
+          name: "Deer Lake",
+          words: [
+            { word: "Harvest", bucket: "unsorted", note: "stale", saferAlternative: "" },
+            { word: "elder", bucket: "load", note: "from backup", saferAlternative: "" },
+          ],
+        },
+        { name: "Bearskin Lake", words: [{ word: "fish", bucket: "load", note: "", saferAlternative: "" }] },
+      ],
+    };
+
+    const result = WordpileStore.importBundle(bundle, {
+      decisions: {
+        0: { mode: "merge", pileId: existing.id },
+        1: { mode: "new" },
+      },
+    });
+
+    // No duplicate "Deer Lake" pile was created; the existing one is
+    // returned in place, and "Bearskin Lake" was created fresh.
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe(existing.id);
+    expect(result[0].name).toBe("Deer Lake");
+    expect(result[1].name).toBe("Bearskin Lake");
+
+    const snap = WordpileStore.getSnapshot();
+    const names = snap.pileOrder.map((id) => snap.piles[id].name);
+    expect(names).toEqual(["Deer Lake", "Bearskin Lake"]);
+
+    // Existing word kept its load bucket + practitioner's note (existing
+    // wins on the case-insensitive match), and the new word came in.
+    const merged = snap.piles[existing.id];
+    expect(merged.words.map((w) => w.word).sort()).toEqual(["elder", "harvest"]);
+    const harvest = merged.words.find((w) => w.word === "harvest");
+    expect(harvest?.bucket).toBe("load");
+    expect(harvest?.note).toBe("kept by user");
+    const elder = merged.words.find((w) => w.word === "elder");
+    expect(elder?.bucket).toBe("load");
+    expect(elder?.note).toBe("from backup");
+  });
+
+  it("skips a merge decision targeting a missing pile but still imports the rest", () => {
+    const bundle: PileBundleExport = {
+      format: "wordpile-bundle",
+      formatVersion: 1,
+      exportedAt: 0,
+      piles: [
+        { name: "Deer Lake", words: [] },
+        { name: "Bearskin Lake", words: [] },
+      ],
+    };
+    const result = WordpileStore.importBundle(bundle, {
+      decisions: {
+        0: { mode: "merge", pileId: "does-not-exist" },
+        1: { mode: "new" },
+      },
+    });
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe("Bearskin Lake");
+  });
+
+  it("backup → lose edits → restore-with-merge yields an identical pile list (no duplicates)", () => {
+    // Practitioner builds out two piles, takes a backup, then loses
+    // some local edits (we simulate that by deleting a word). They then
+    // restore the backup with both rows merged into the existing piles.
+    const a = WordpileStore.createPile("Deer Lake");
+    WordpileStore.addWord(a.id, { word: "harvest", bucket: "load" });
+    const elderId = WordpileStore.addWord(a.id, { word: "elder" })!.id;
+    const b = WordpileStore.createPile("Bearskin Lake");
+    WordpileStore.addWord(b.id, { word: "stakeholder", bucket: "avoid" });
+
+    const bundle = WordpileStore.serializeAllPiles();
+    const json = JSON.stringify(bundle);
+
+    // Lose an edit.
+    WordpileStore.deleteWord(a.id, elderId);
+    expect(
+      WordpileStore.getSnapshot().piles[a.id].words.map((w) => w.word).sort(),
+    ).toEqual(["harvest"]);
+
+    // Restore in place.
+    const parsed = JSON.parse(json) as PileBundleExport;
+    WordpileStore.importBundle(parsed, {
+      decisions: {
+        0: { mode: "merge", pileId: a.id },
+        1: { mode: "merge", pileId: b.id },
+      },
+    });
+
+    const snap = WordpileStore.getSnapshot();
+    const names = snap.pileOrder.map((id) => snap.piles[id].name);
+    // Still exactly the same two piles — no "Deer Lake (2)" duplicates.
+    expect(names).toEqual(["Deer Lake", "Bearskin Lake"]);
+    // Deleted word is back.
+    expect(snap.piles[a.id].words.map((w) => w.word).sort()).toEqual([
+      "elder",
+      "harvest",
+    ]);
+    expect(snap.piles[b.id].words.map((w) => w.word).sort()).toEqual([
+      "stakeholder",
+    ]);
+  });
+
   it("parseAnyImport detects a bundle vs a single-pile export", () => {
     const bundleRaw = JSON.stringify({
       format: "wordpile-bundle",
