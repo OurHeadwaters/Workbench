@@ -1475,6 +1475,7 @@ describe("bookkeeper route — POST /submissions/:id/approve", () => {
   });
 });
 
+
 // Tests for POST /submissions/:id/reject. The reject path is the
 // approve path's sibling: a bookkeeper turns a pending submission down
 // with a written reason, and the row must record WHO did it, WHEN, and
@@ -1670,6 +1671,265 @@ describe("bookkeeper route — POST /submissions/:id/reject", () => {
           (r) => r.action === "submission.reject",
         ),
       ).toBeUndefined();
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// Voiding is the ONLY way to undo a posted transaction once it's hit
+// the books — there is no edit and no delete. The handler does three
+// things in sequence (post a mirrored reversal, flip the original to
+// `voided`, write an audit row) and a regression in any one of them
+// can leave the ledger in a half-reversed state where, e.g., the
+// reversal exists but the original still shows as `posted`. These
+// tests pin down all three steps and the "no double-void" guard.
+describe("bookkeeper route — POST /transactions/:id/void", () => {
+  // Helper: post a balanced transaction as a bookkeeper and return the
+  // raw response body. Caller is expected to re-sign-in afterwards if
+  // they want to act as a different user.
+  async function postBalancedTransaction(
+    base: string,
+  ): Promise<{
+    id: string;
+    postedDate: string;
+    description: string;
+    reference: string | null;
+    lines: { accountCode: string; debit: number; credit: number }[];
+  }> {
+    signIn({
+      clerkUserId: "user_bk",
+      email: "bk@example.com",
+      role: "bookkeeper",
+    });
+    const res = await fetch(`${base}/api/bookkeeper/transactions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        postedDate: "2026-04-15",
+        description: "Pens & pencils",
+        reference: "RCPT-42",
+        lines: [
+          { accountCode: "5100", debit: 12.5, credit: 0, memo: "supplies" },
+          { accountCode: "1000", debit: 0, credit: 12.5 },
+        ],
+      }),
+    });
+    if (res.status !== 200) {
+      throw new Error(
+        `postBalancedTransaction failed: ${res.status} ${await res.text()}`,
+      );
+    }
+    return (await res.json()) as {
+      id: string;
+      postedDate: string;
+      description: string;
+      reference: string | null;
+      lines: { accountCode: string; debit: number; credit: number }[];
+    };
+  }
+
+  it("creates a balanced reversal transaction whose lines mirror the original (debits ↔ credits)", async () => {
+    const h = await startHarness();
+    try {
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+      const original = await postBalancedTransaction(h.base);
+
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${original.id}/void`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "duplicate entry" }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const reversal = (await res.json()) as {
+        id: string;
+        status: string;
+        reversesTransactionId: string | null;
+        totalDebit: number;
+        totalCredit: number;
+        lines: { accountCode: string; debit: number; credit: number }[];
+      };
+
+      // The response is the reversing transaction itself — posted,
+      // balanced, and pointed back at the original via reversesTxnId.
+      expect(reversal.id).not.toBe(original.id);
+      expect(reversal.status).toBe("posted");
+      expect(reversal.reversesTransactionId).toBe(original.id);
+      expect(reversal.totalDebit).toBe(12.5);
+      expect(reversal.totalCredit).toBe(12.5);
+      expect(reversal.totalDebit).toBe(reversal.totalCredit);
+
+      // Each reversing line mirrors a corresponding original line: same
+      // account code, but debit and credit swapped. This is the whole
+      // point of voiding — the new entry exactly cancels the old one.
+      expect(reversal.lines).toHaveLength(original.lines.length);
+      for (const origLine of original.lines) {
+        const mirror = reversal.lines.find(
+          (l) => l.accountCode === origLine.accountCode,
+        );
+        expect(mirror).toBeDefined();
+        expect(mirror!.debit).toBe(origLine.credit);
+        expect(mirror!.credit).toBe(origLine.debit);
+      }
+
+      // And the reversing rows actually landed in the DB, not just the
+      // response — guards against a regression that returns a serialized
+      // txn without persisting it.
+      const reversalRow = tables.bookkeeperTransactionsTable.__store.find(
+        (r) => r.id === reversal.id,
+      );
+      expect(reversalRow).toBeDefined();
+      expect(reversalRow!.reversesTransactionId).toBe(original.id);
+      expect(
+        tables.bookkeeperTransactionLinesTable.__store.filter(
+          (l) => l.transactionId === reversal.id,
+        ),
+      ).toHaveLength(2);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("flips the original row's status to `voided` and stamps voidedReason and voidedAt", async () => {
+    const h = await startHarness();
+    try {
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+      const original = await postBalancedTransaction(h.base);
+
+      // Sanity: before the void, the original is plain posted and has
+      // no void metadata stamped on it.
+      const before = tables.bookkeeperTransactionsTable.__store.find(
+        (r) => r.id === original.id,
+      );
+      expect(before?.status).toBe("posted");
+      expect(before?.voidedReason ?? null).toBeNull();
+      expect(before?.voidedAt ?? null).toBeNull();
+
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${original.id}/void`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "wrong cost centre" }),
+        },
+      );
+      expect(res.status).toBe(200);
+
+      // The original row is now flipped to `voided` with the reason and
+      // timestamp the caller supplied / the server stamped.
+      const after = tables.bookkeeperTransactionsTable.__store.find(
+        (r) => r.id === original.id,
+      );
+      expect(after?.status).toBe("voided");
+      expect(after?.voidedReason).toBe("wrong cost centre");
+      expect(after?.voidedAt).toBeInstanceOf(Date);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("writes a `transaction.void` audit row that references the original txn and the new reversing txn id", async () => {
+    const h = await startHarness();
+    try {
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+      const original = await postBalancedTransaction(h.base);
+
+      // Switch actors before voiding so we can prove the audit row
+      // captured WHO did it, not just that some row was written.
+      signIn({
+        clerkUserId: "user_owner",
+        email: "owner@example.com",
+        role: "owner",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${original.id}/void`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "reclassification" }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const reversal = (await res.json()) as { id: string };
+
+      const audit = tables.bookkeeperAuditLogTable.__store.find(
+        (r) => r.action === "transaction.void",
+      ) as
+        | undefined
+        | {
+            entityType: string;
+            entityId: string;
+            actorEmail: string;
+            details?: { reason?: string; reversingTransactionId?: string };
+          };
+      expect(audit).toBeDefined();
+      expect(audit!.entityType).toBe("transaction");
+      // The audit row hangs off the ORIGINAL transaction (that's the
+      // entity being acted on); the reversing txn id is recorded in
+      // details so a reader can jump from the original to its mirror.
+      expect(audit!.entityId).toBe(original.id);
+      expect(audit!.actorEmail).toBe("owner@example.com");
+      expect(audit!.details?.reason).toBe("reclassification");
+      expect(audit!.details?.reversingTransactionId).toBe(reversal.id);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects a second void of an already-voided transaction with 400 and writes no second reversal", async () => {
+    const h = await startHarness();
+    try {
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+      const original = await postBalancedTransaction(h.base);
+
+      // First void succeeds and produces exactly two transactions in
+      // the ledger: the original (now voided) and its reversal.
+      const first = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${original.id}/void`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "first void" }),
+        },
+      );
+      expect(first.status).toBe(200);
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(2);
+
+      // Second void on the same id must be rejected — otherwise the
+      // ledger would gain a phantom reversal that has nothing to undo.
+      const second = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${original.id}/void`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ reason: "second void attempt" }),
+        },
+      );
+      expect(second.status).toBe(400);
+      const body = (await second.json()) as { error: string };
+      expect(body.error).toMatch(/posted/i);
+
+      // Ledger size unchanged — no second reversal txn was posted.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(2);
+      // Original still bears the FIRST void reason (was not overwritten).
+      const originalRow = tables.bookkeeperTransactionsTable.__store.find(
+        (r) => r.id === original.id,
+      );
+      expect(originalRow?.status).toBe("voided");
+      expect(originalRow?.voidedReason).toBe("first void");
+      // And only one transaction.void audit row exists, not two.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.filter(
+          (r) => r.action === "transaction.void",
+        ),
+      ).toHaveLength(1);
     } finally {
       await h.close();
     }
