@@ -258,6 +258,61 @@ describe("buildStats", () => {
     });
   });
 
+  describe("readArchivedVotesForPile", () => {
+    it("returns null when there is no archive", async () => {
+      const { mod } = await freshModule();
+      expect(mod.readArchivedVotesForPile("anything")).toBeNull();
+    });
+
+    it("returns null for piles with no archived entry", async () => {
+      const { mod, storage } = await freshModule();
+      storage.setItem(
+        "wordpile:build-vote:abc",
+        JSON.stringify({ stacker: 2, blocks: 0, planks: 0 }),
+      );
+      mod.archiveBuildVotes();
+      expect(mod.readArchivedVotesForPile("xyz")).toBeNull();
+    });
+
+    it("returns null when totals sum to zero", async () => {
+      const { mod, storage } = await freshModule();
+      storage.setItem(
+        "wordpile:build-vote:zero",
+        JSON.stringify({ stacker: 0, blocks: 0, planks: 0 }),
+      );
+      mod.archiveBuildVotes();
+      expect(mod.readArchivedVotesForPile("zero")).toBeNull();
+    });
+
+    it("returns the per-pile totals when votes exist", async () => {
+      const { mod, storage } = await freshModule();
+      storage.setItem(
+        "wordpile:build-vote:abc",
+        JSON.stringify({
+          stacker: 4,
+          blocks: 1,
+          planks: 2,
+          lastChoice: "stacker",
+        }),
+      );
+      mod.archiveBuildVotes();
+      const got = mod.readArchivedVotesForPile("abc");
+      expect(got).toEqual({
+        stacker: 4,
+        blocks: 1,
+        planks: 2,
+        lastChoice: "stacker",
+      });
+    });
+
+    it("hasMigratedBuildVotes flips after archiveBuildVotes runs", async () => {
+      const { mod } = await freshModule();
+      expect(mod.hasMigratedBuildVotes()).toBe(false);
+      mod.archiveBuildVotes();
+      expect(mod.hasMigratedBuildVotes()).toBe(true);
+    });
+  });
+
   it("archiveBuildVotes survives malformed entries", async () => {
     const { mod, storage } = await freshModule();
     storage.setItem("wordpile:build-vote:bad", "not-json");

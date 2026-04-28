@@ -24,9 +24,12 @@ import {
 } from "@/lib/buildAudio";
 import {
   archiveBuildVotes,
+  hasMigratedBuildVotes,
   mergeRunIntoStats,
+  readArchivedVotesForPile,
   readStats,
   writeStats,
+  type ArchivedPileVotes,
   type BuildStats,
   EMPTY_STATS,
 } from "@/lib/buildStats";
@@ -45,6 +48,8 @@ export interface UnsortedVerdict {
 }
 
 const ONBOARD_KEY = "wordpile:build-onboard:v1";
+const ARCHIVE_NOTE_DISMISSED_PREFIX =
+  "wordpile:build-archive-note-dismissed:v1:";
 const EMPTY_RUN: RunState = {
   framePlaced: 0,
   trimPlaced: 0,
@@ -77,6 +82,10 @@ export function BuildPage() {
   const [muted, setMutedState] = useState<boolean>(() => isBuildAudioMuted());
   const [showOnboard, setShowOnboard] = useState(false);
   const [justStood, setJustStood] = useState(false);
+  const [archivedVotes, setArchivedVotes] = useState<ArchivedPileVotes | null>(
+    null,
+  );
+  const [showArchiveNote, setShowArchiveNote] = useState(false);
   const stackerRef = useRef<StackerSnapshotHandle>(null);
   const lastSavedStatsRef = useRef<BuildStats>(EMPTY_STATS);
 
@@ -84,6 +93,41 @@ export function BuildPage() {
   useEffect(() => {
     ensureVoteMigration();
   }, []);
+
+  // After the migration runs, surface a one-time, dismissible note about
+  // the prototype selection — but only for piles that actually had archived
+  // votes. We require both the migration flag and the archive payload (per
+  // the task spec) so the note can never appear before the migration that
+  // produced the archive has run. The dismiss flag is per-pile so each
+  // community gets its own first-visit acknowledgement.
+  useEffect(() => {
+    if (!params.pileId) {
+      setArchivedVotes(null);
+      setShowArchiveNote(false);
+      return;
+    }
+    if (!hasMigratedBuildVotes()) {
+      setArchivedVotes(null);
+      setShowArchiveNote(false);
+      return;
+    }
+    const archived = readArchivedVotesForPile(params.pileId);
+    setArchivedVotes(archived);
+    if (!archived) {
+      setShowArchiveNote(false);
+      return;
+    }
+    if (typeof window === "undefined") return;
+    try {
+      const dismissed =
+        window.localStorage.getItem(
+          `${ARCHIVE_NOTE_DISMISSED_PREFIX}${params.pileId}`,
+        ) === "1";
+      setShowArchiveNote(!dismissed);
+    } catch {
+      setShowArchiveNote(true);
+    }
+  }, [params.pileId]);
 
   // Hydrate stats once we know the pile id.
   useEffect(() => {
@@ -191,6 +235,23 @@ export function BuildPage() {
     setBuildAudioMuted(next);
   }
 
+  function dismissArchiveNote() {
+    setShowArchiveNote(false);
+    if (!params.pileId || typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(
+        `${ARCHIVE_NOTE_DISMISSED_PREFIX}${params.pileId}`,
+        "1",
+      );
+    } catch {
+      // Ignore — quota / privacy mode.
+    }
+  }
+
+  function reopenArchiveNote() {
+    setShowArchiveNote(true);
+  }
+
   function dismissOnboard() {
     setShowOnboard(false);
     if (typeof window !== "undefined") {
@@ -280,6 +341,17 @@ export function BuildPage() {
           >
             <HelpCircle size={16} />
           </button>
+          {archivedVotes && (
+            <button
+              type="button"
+              className="build-about-link"
+              onClick={reopenArchiveNote}
+              data-testid="button-build-about"
+              title="About this build"
+            >
+              About this build
+            </button>
+          )}
           <button
             type="button"
             className="btn-secondary whitespace-nowrap"
@@ -299,6 +371,13 @@ export function BuildPage() {
           </button>
         </div>
       </div>
+
+      {showArchiveNote && archivedVotes && (
+        <ArchiveNote
+          votes={archivedVotes}
+          onDismiss={dismissArchiveNote}
+        />
+      )}
 
       {words.length === 0 ? (
         <div
@@ -401,6 +480,92 @@ function Stat({
     >
       <span className="build-stat-label">{label}</span>
       <span className="build-stat-value">{value}</span>
+    </div>
+  );
+}
+
+function ArchiveNote({
+  votes,
+  onDismiss,
+}: {
+  votes: ArchivedPileVotes;
+  onDismiss: () => void;
+}) {
+  const total = votes.stacker + votes.blocks + votes.planks;
+  const retiredTotal = votes.blocks + votes.planks;
+  return (
+    <div
+      className="build-archive-note"
+      role="note"
+      aria-label="About this build"
+      data-testid="note-build-archive"
+    >
+      <div className="build-archive-note-body">
+        <p className="eyebrow">About this build</p>
+        <h3 className="build-archive-note-title">
+          We picked Stacker. Thanks for voting.
+        </h3>
+        <p className="build-archive-note-lede">
+          During the playtest you could pick between three Build prototypes —
+          Stacker, Block builder, and Falling planks. We've kept{" "}
+          <strong>Stacker</strong> as the one Build experience and retired the
+          other two. The {total === 1 ? "vote" : "votes"} cast on this pile
+          are saved below so the choice is on the record.
+        </p>
+        <ul className="build-archive-note-tally">
+          <li>
+            <span className="build-archive-note-name">
+              Stacker <span className="build-archive-note-tag is-kept">kept</span>
+            </span>
+            <span
+              className="build-archive-note-count"
+              data-testid="archive-vote-stacker"
+            >
+              {votes.stacker} {votes.stacker === 1 ? "vote" : "votes"}
+            </span>
+          </li>
+          <li>
+            <span className="build-archive-note-name">
+              Block builder{" "}
+              <span className="build-archive-note-tag is-retired">retired</span>
+            </span>
+            <span
+              className="build-archive-note-count"
+              data-testid="archive-vote-blocks"
+            >
+              {votes.blocks} {votes.blocks === 1 ? "vote" : "votes"}
+            </span>
+          </li>
+          <li>
+            <span className="build-archive-note-name">
+              Falling planks{" "}
+              <span className="build-archive-note-tag is-retired">retired</span>
+            </span>
+            <span
+              className="build-archive-note-count"
+              data-testid="archive-vote-planks"
+            >
+              {votes.planks} {votes.planks === 1 ? "vote" : "votes"}
+            </span>
+          </li>
+        </ul>
+        {retiredTotal > 0 && (
+          <p className="build-archive-note-thanks">
+            {retiredTotal === 1
+              ? "One of those votes went to a retired prototype — thank you for trying it. The data helped narrow the field."
+              : `${retiredTotal} of those votes went to retired prototypes — thank you for trying them. The data helped narrow the field.`}
+          </p>
+        )}
+      </div>
+      <button
+        type="button"
+        className="build-archive-note-dismiss"
+        onClick={onDismiss}
+        aria-label="Dismiss this note"
+        data-testid="button-archive-note-dismiss"
+      >
+        ×
+      </button>
     </div>
   );
 }

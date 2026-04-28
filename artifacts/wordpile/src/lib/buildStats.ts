@@ -124,13 +124,58 @@ export function mergeRunIntoStats(
   };
 }
 
+export interface ArchivedPileVotes {
+  stacker: number;
+  blocks: number;
+  planks: number;
+  lastChoice?: string;
+}
+
 interface ArchivedVotes {
-  [pileId: string]: {
-    stacker: number;
-    blocks: number;
-    planks: number;
-    lastChoice?: string;
-  };
+  [pileId: string]: ArchivedPileVotes;
+}
+
+/**
+ * Read the archived per-pile vote totals captured by `archiveBuildVotes`.
+ * Returns null if there's no archive entry for this pile or if the totals
+ * sum to zero (i.e. nobody actually voted on this pile, so there's nothing
+ * to acknowledge). Safe to call before or after the migration runs.
+ */
+export function readArchivedVotesForPile(
+  pileId: string,
+): ArchivedPileVotes | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(VOTE_ARCHIVE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as ArchivedVotes;
+    const entry = parsed[pileId];
+    if (!entry) return null;
+    const total =
+      (typeof entry.stacker === "number" ? entry.stacker : 0) +
+      (typeof entry.blocks === "number" ? entry.blocks : 0) +
+      (typeof entry.planks === "number" ? entry.planks : 0);
+    if (total <= 0) return null;
+    return {
+      stacker: typeof entry.stacker === "number" ? entry.stacker : 0,
+      blocks: typeof entry.blocks === "number" ? entry.blocks : 0,
+      planks: typeof entry.planks === "number" ? entry.planks : 0,
+      lastChoice:
+        typeof entry.lastChoice === "string" ? entry.lastChoice : undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** True once the one-time vote-archive migration has been run. */
+export function hasMigratedBuildVotes(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(VOTE_MIGRATED_KEY) === "1";
+  } catch {
+    return false;
+  }
 }
 
 /**

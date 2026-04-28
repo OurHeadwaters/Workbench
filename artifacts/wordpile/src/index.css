@@ -1152,6 +1152,159 @@ h1, h2, h3, h4, h5, h6 {
   100% { transform: translateY(0); opacity: 1; }
 }
 
+/* ----- "About this build" link in the toolbar ----- */
+
+.build-about-link {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-rule);
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.build-about-link:hover,
+.build-about-link:focus-visible {
+  color: var(--color-ink);
+  text-decoration-color: var(--color-ink);
+  outline: none;
+}
+
+/* ----- Archive note (prototype selection acknowledgement) ----- */
+
+.build-archive-note {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-left: 3px solid var(--color-ink);
+  border-radius: 4px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+}
+
+.build-archive-note-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.build-archive-note-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 4px 0 8px;
+  line-height: 1.25;
+}
+
+.build-archive-note-lede {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-ink);
+  margin: 0 0 12px;
+}
+
+.build-archive-note-tally {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.build-archive-note-tally li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--color-ink);
+  padding-bottom: 6px;
+  border-bottom: 1px dotted var(--color-rule);
+}
+
+.build-archive-note-tally li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.build-archive-note-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.build-archive-note-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid var(--color-rule);
+}
+
+.build-archive-note-tag.is-kept {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+}
+
+.build-archive-note-tag.is-retired {
+  background-color: transparent;
+  color: var(--color-stone);
+}
+
+.build-archive-note-count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-stone);
+  white-space: nowrap;
+}
+
+.build-archive-note-thanks {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-stone);
+  margin: 8px 0 0;
+}
+
+.build-archive-note-dismiss {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--color-stone);
+  cursor: pointer;
+  padding: 2px 6px;
+  margin: -4px -6px 0 0;
+  border-radius: 2px;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.build-archive-note-dismiss:hover,
+.build-archive-note-dismiss:focus-visible {
+  color: var(--color-ink);
+  background-color: var(--color-cream);
+  outline: none;
+}
+
 /* ----- Onboard overlay ----- */
 
 .build-onboard-overlay {
