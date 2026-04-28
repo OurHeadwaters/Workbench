@@ -37,6 +37,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "jsdom": "^29.0.2",
     "puppeteer-core": "^24.42.0",
     "react": "catalog:",
     "react-dom": "catalog:",
