@@ -15,6 +15,16 @@ export interface FailedOp {
   failedAt: number;
 }
 
+// A sustained-failure notice for writes that fire too often to deserve a
+// per-action retry banner (e.g. last-read scroll position). Surfaced only
+// after the streak crosses a threshold and stays put until either a
+// successful write resets it or the user dismisses it.
+export interface AmbientNotice {
+  id: string;
+  message: string;
+  surfacedAt: number;
+}
+
 export interface SyncSnapshot {
   status: SyncStatus;
   pendingCount: number;
@@ -22,6 +32,7 @@ export interface SyncSnapshot {
   lastSyncedAt: number | null;
   lastErrorAt: number | null;
   failedOps: readonly FailedOp[];
+  ambientNotices: readonly AmbientNotice[];
 }
 
 let inFlight = 0;
@@ -30,6 +41,16 @@ let lastErrorAt: number | null = null;
 let unsyncedFailures = 0;
 let online = true;
 const failedOps = new Map<string, FailedOp>();
+
+// Per-id consecutive-failure counters for ambient writes. A counter is
+// reset whenever the same id reports a success.
+const ambientStreaks = new Map<string, number>();
+// Notices currently surfaced to the UI.
+const ambientNotices = new Map<string, AmbientNotice>();
+// Ids the user has explicitly dismissed; we suppress re-surfacing for the
+// same id until either a success resets the streak or the streak counter
+// is cleared, so we don't keep nagging on every subsequent failure.
+const ambientDismissed = new Set<string>();
 
 const listeners = new Set<() => void>();
 let cached: SyncSnapshot = compute();
@@ -52,6 +73,7 @@ function compute(): SyncSnapshot {
     lastSyncedAt,
     lastErrorAt,
     failedOps: Object.freeze(Array.from(failedOps.values())),
+    ambientNotices: Object.freeze(Array.from(ambientNotices.values())),
   });
 }
 
@@ -105,6 +127,58 @@ export function clearFailure(id: string): boolean {
   const removed = failedOps.delete(id);
   if (removed) refresh();
   return removed;
+}
+
+const DEFAULT_AMBIENT_THRESHOLD = 3;
+
+// Bumps the consecutive-failure streak for an ambient write. Once the
+// streak crosses `threshold` (default 3) and the user hasn't already
+// dismissed the notice for this id, surfaces a single calm notice. Does
+// not surface anything before the threshold or while dismissed.
+export function recordAmbientFailure(opts: {
+  id: string;
+  message: string;
+  threshold?: number;
+}): void {
+  const threshold = opts.threshold ?? DEFAULT_AMBIENT_THRESHOLD;
+  const next = (ambientStreaks.get(opts.id) ?? 0) + 1;
+  ambientStreaks.set(opts.id, next);
+  if (
+    next >= threshold &&
+    !ambientDismissed.has(opts.id) &&
+    !ambientNotices.has(opts.id)
+  ) {
+    ambientNotices.set(opts.id, {
+      id: opts.id,
+      message: opts.message,
+      surfacedAt: Date.now(),
+    });
+    refresh();
+  }
+}
+
+// Resets the streak and clears any surfaced notice for this id, including
+// the dismissal flag so the notice can re-appear if a fresh streak builds.
+// Call from the success path of an ambient write.
+export function clearAmbientFailure(id: string): void {
+  let changed = false;
+  if (ambientStreaks.delete(id)) changed = true;
+  if (ambientNotices.delete(id)) changed = true;
+  if (ambientDismissed.delete(id)) changed = true;
+  if (changed) refresh();
+}
+
+// Hides the surfaced notice without touching the streak counter, so we
+// don't immediately re-surface on the next failure. A successful write
+// (via clearAmbientFailure) is what brings the notice back into play.
+export function dismissAmbientNotice(id: string): void {
+  let changed = false;
+  if (ambientNotices.delete(id)) changed = true;
+  if (!ambientDismissed.has(id)) {
+    ambientDismissed.add(id);
+    changed = true;
+  }
+  if (changed) refresh();
 }
 
 let networkUnsub: (() => void) | null = null;

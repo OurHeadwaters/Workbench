@@ -23,6 +23,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { LastReadSaveNotice } from "@/components/LastReadSaveNotice";
 import { SyncErrorBanner } from "@/components/SyncErrorBanner";
 import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
@@ -79,6 +80,7 @@ export default function RootLayout() {
               <ReaderStateProvider>
                 <RootLayoutNav />
                 <SyncErrorBanner />
+                <LastReadSaveNotice />
                 <UpdateAvailableBanner />
               </ReaderStateProvider>
             </KeyboardProvider>

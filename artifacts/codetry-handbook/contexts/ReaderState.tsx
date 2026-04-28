@@ -10,7 +10,12 @@ import React, {
 } from "react";
 import { useColorScheme } from "react-native";
 
-import { clearFailure, recordFailure } from "@/lib/saveStatus";
+import {
+  clearAmbientFailure,
+  clearFailure,
+  recordAmbientFailure,
+  recordFailure,
+} from "@/lib/saveStatus";
 import { storage } from "@/lib/storage";
 
 export type ThemeMode = "system" | "light" | "dark";
@@ -39,11 +44,13 @@ const KEYS = {
 };
 
 // One opId per logical setting so a fresh edit replaces (not stacks on
-// top of) any prior failure for the same setting.
+// top of) any prior failure for the same setting. `lastRead` lives in
+// the ambient channel rather than the failed-op registry.
 const OP = {
   themeMode: "themeMode",
   fontScale: "fontScale",
   bookmarks: "bookmarks",
+  lastRead: "lastRead",
 } as const;
 
 const FONT_STEPS = [0.85, 0.92, 1.0, 1.1, 1.2, 1.3, 1.45] as const;
@@ -266,15 +273,38 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
 
   // Last-read writes fire on every scroll pause; they have nothing
   // meaningful to "retry" so we keep them outside the failed-op
-  // registry. Failures still flip the pill via `trackSave`.
+  // registry. Failures still flip the pill via `trackSave`, and a
+  // sustained streak surfaces a calm ambient notice (see
+  // `LastReadSaveNotice`) so the writer isn't silently sent back to the
+  // top of the chapter on next reload.
   const setLastRead = useCallback((r: LastRead) => {
     setLastReadState(r);
-    storage.setItem(KEYS.lastRead, JSON.stringify(r)).catch(() => {});
+    storage
+      .setItem(KEYS.lastRead, JSON.stringify(r))
+      .then(() => {
+        clearAmbientFailure(OP.lastRead);
+      })
+      .catch(() => {
+        recordAmbientFailure({
+          id: OP.lastRead,
+          message: "Your reading position isn't saving right now.",
+        });
+      });
   }, []);
 
   const clearLastRead = useCallback(() => {
     setLastReadState(null);
-    storage.removeItem(KEYS.lastRead).catch(() => {});
+    storage
+      .removeItem(KEYS.lastRead)
+      .then(() => {
+        clearAmbientFailure(OP.lastRead);
+      })
+      .catch(() => {
+        recordAmbientFailure({
+          id: OP.lastRead,
+          message: "Your reading position isn't saving right now.",
+        });
+      });
   }, []);
 
   const theme: ResolvedTheme =
