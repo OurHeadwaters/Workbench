@@ -17,7 +17,12 @@ import {
   type BundleEntryDecision,
 } from "@/lib/store";
 import { decodePileShare, readShareFragment } from "@/lib/shareLink";
-import type { AnyPileImport, PileBundleExport, PileExport } from "@/data/types";
+import type {
+  AnyPileImport,
+  PileBundleExport,
+  PileExport,
+  PileExportWord,
+} from "@/data/types";
 
 export function PilesPage() {
   const data = useWordpile();
@@ -348,6 +353,9 @@ export function PilesPage() {
           {importPayload.pile.draft ? " · includes a saved draft" : ""}
         </p>
       </div>
+      {(importPayload.pile.words.length > 0 || importPayload.pile.draft) && (
+        <SharedPilePeek payload={importPayload} />
+      )}
       <div className="flex flex-col gap-2">
         <label className="flex items-center gap-2 text-sm">
           <input
@@ -840,6 +848,79 @@ export function PilesPage() {
         )}
       </section>
     </div>
+  );
+}
+
+function SharedPilePeek({ payload }: { payload: PileExport }) {
+  const words = payload.pile.words;
+  const groups: { key: "load" | "interior" | "avoid" | "unsorted"; label: string; words: PileExportWord[] }[] = [
+    { key: "load", label: "Load-bearing", words: words.filter((w) => w.bucket === "load") },
+    { key: "interior", label: "Interior", words: words.filter((w) => w.bucket === "interior") },
+    { key: "avoid", label: "Avoid", words: words.filter((w) => w.bucket === "avoid") },
+    { key: "unsorted", label: "Unsorted", words: words.filter((w) => w.bucket === "unsorted") },
+  ];
+  const draft = payload.pile.draft ?? "";
+  const draftSample = draft.trim().slice(0, 80);
+  const draftHasMore = draft.trim().length > draftSample.length;
+
+  const summaryBits: string[] = [];
+  for (const g of groups) {
+    if (g.words.length > 0) {
+      summaryBits.push(`${g.words.length} ${g.label.toLowerCase()}`);
+    }
+  }
+  if (draft) summaryBits.push("draft");
+  const summaryText = summaryBits.length > 0 ? summaryBits.join(" · ") : "Empty pile";
+
+  return (
+    <details className="peek-disclosure" data-testid="disclosure-share-peek">
+      <summary className="peek-summary" data-testid="summary-share-peek">
+        <span className="peek-summary-label">See what's inside</span>
+        <span className="peek-summary-meta">{summaryText}</span>
+      </summary>
+      <div className="peek-body">
+        {words.length === 0 && !draft && (
+          <p className="text-sm" style={{ color: "var(--color-stone)", margin: 0 }}>
+            No words yet.
+          </p>
+        )}
+        {groups.map((g) =>
+          g.words.length === 0 ? null : (
+            <div key={g.key} className={`peek-group peek-group-${g.key}`}>
+              <p className="eyebrow peek-group-label">
+                {g.label} · {g.words.length}
+              </p>
+              <ul className="peek-chip-list">
+                {g.words.map((w, i) => (
+                  <li
+                    key={`${g.key}-${i}`}
+                    className={`peek-chip peek-chip-${g.key}`}
+                    title={
+                      g.key === "avoid" && w.saferAlternative
+                        ? `Suggested instead: ${w.saferAlternative}${w.note ? ` — ${w.note}` : ""}`
+                        : w.note || undefined
+                    }
+                  >
+                    <span className="peek-chip-word">{w.word}</span>
+                    {g.key === "avoid" && w.saferAlternative && (
+                      <span className="peek-chip-arrow"> → {w.saferAlternative}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        )}
+        {draft && (
+          <div className="peek-group peek-draft" data-testid="peek-draft-preview">
+            <p className="eyebrow peek-group-label">Draft</p>
+            <p className="text-sm peek-draft-sample">
+              {draftSample.length > 0 ? `“${draftSample}${draftHasMore ? "…" : ""}”` : "(empty draft)"}
+            </p>
+          </div>
+        )}
+      </div>
+    </details>
   );
 }
 

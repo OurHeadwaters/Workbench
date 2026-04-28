@@ -334,6 +334,121 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 0;
 }
 
+.peek-disclosure {
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  background-color: var(--color-cream);
+}
+
+.peek-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  color: var(--color-ink);
+  font-size: 13px;
+}
+
+.peek-summary::-webkit-details-marker {
+  display: none;
+}
+
+.peek-summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 4px;
+  color: var(--color-stone);
+  transition: transform 120ms ease;
+}
+
+.peek-disclosure[open] > .peek-summary::before {
+  transform: rotate(90deg);
+}
+
+.peek-summary:hover {
+  background-color: var(--color-paper);
+}
+
+.peek-summary-label {
+  font-weight: 600;
+}
+
+.peek-summary-meta {
+  color: var(--color-stone);
+  font-size: 12px;
+}
+
+.peek-body {
+  padding: 4px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--color-rule);
+}
+
+.peek-group-label {
+  margin: 0 0 6px;
+}
+
+.peek-group-load .peek-group-label { color: var(--color-load); }
+.peek-group-interior .peek-group-label { color: var(--color-interior); }
+.peek-group-avoid .peek-group-label { color: var(--color-avoid); }
+.peek-group-unsorted .peek-group-label { color: var(--color-stone); }
+.peek-draft .peek-group-label { color: var(--color-ink); }
+
+.peek-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.peek-chip {
+  display: inline-flex;
+  align-items: baseline;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  font-size: 13px;
+  color: var(--color-ink);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.peek-chip-load { border-color: var(--color-load); }
+.peek-chip-interior { border-color: var(--color-interior); }
+.peek-chip-avoid {
+  border-color: var(--color-avoid);
+  color: var(--color-avoid);
+}
+.peek-chip-unsorted { border-style: dashed; }
+
+.peek-chip-word {
+  font-weight: 500;
+}
+
+.peek-chip-arrow {
+  margin-left: 4px;
+  color: var(--color-stone);
+  font-style: italic;
+}
+
+.peek-draft-sample {
+  margin: 0;
+  color: var(--color-stone);
+  font-style: italic;
+  line-height: 1.4;
+}
+
 .intro-muted {
   opacity: 0.6;
   filter: saturate(0.85);
