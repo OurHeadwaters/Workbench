@@ -39,6 +39,48 @@ function pickZone(z, { defaultZone } = {}) {
     }));
   }
   if (z.context !== undefined) out.context = z.context;
+  if (z.standby !== undefined) out.standby = z.standby;
+  return out;
+}
+
+function pickPrinciple(p) {
+  return {
+    id: p.id,
+    name: p.name,
+    statement: p.statement,
+    ...(p.workedExample !== undefined ? { workedExample: p.workedExample } : {}),
+  };
+}
+
+function pickPrimitive(p) {
+  const out = {
+    id: p.id,
+    name: p.name,
+    kind: p.kind,
+    summary: p.summary,
+  };
+  if (p.hostZone !== undefined) out.hostZone = p.hostZone;
+  if (p.hostZoneRationale !== undefined) out.hostZoneRationale = p.hostZoneRationale;
+  if (Array.isArray(p.vocabulary)) {
+    out.vocabulary = p.vocabulary.map((v) => ({ term: v.term, role: v.role }));
+  }
+  if (Array.isArray(p.severityLadder)) {
+    out.severityLadder = p.severityLadder.map((r) => ({
+      rung: r.rung,
+      meaning: r.meaning,
+    }));
+  }
+  if (Array.isArray(p.subShelves)) {
+    out.subShelves = p.subShelves.map((s) => ({ name: s.name, role: s.role }));
+  }
+  if (Array.isArray(p.rejectedAlternatives)) {
+    out.rejectedAlternatives = p.rejectedAlternatives.map((r) => ({
+      name: r.name,
+      reason: r.reason,
+    }));
+  }
+  if (p.principle !== undefined) out.principle = p.principle;
+  if (p.scope !== undefined) out.scope = p.scope;
   return out;
 }
 
@@ -56,6 +98,13 @@ function buildSnapshot(json) {
       zoneSystem: json.grammar.zoneSystem,
       axiom: json.grammar.axiom,
     },
+    principles: (Array.isArray(json.principles) ? json.principles : []).map(
+      pickPrinciple,
+    ),
+    constellationWidePrimitives: (Array.isArray(json.constellationWidePrimitives)
+      ? json.constellationWidePrimitives
+      : []
+    ).map(pickPrimitive),
     teachers: json.teachers.map((t) => ({
       name: t.name,
       channel: t.channel ?? null,
@@ -94,12 +143,40 @@ function render(snapshot) {
     `  tagline?: string;\n` +
     `  workedExamples?: WorkedExample[];\n` +
     `  context?: string;\n` +
+    `  standby?: string;\n` +
     `};\n` +
     `\n` +
     `export type Teacher = {\n` +
     `  name: string;\n` +
     `  channel: string | null;\n` +
     `  tagline: string;\n` +
+    `};\n` +
+    `\n` +
+    `export type ConstellationPrinciple = {\n` +
+    `  id: string;\n` +
+    `  name: string;\n` +
+    `  statement: string;\n` +
+    `  workedExample?: string;\n` +
+    `};\n` +
+    `\n` +
+    `export type StandbyVocabularyEntry = { term: string; role: string };\n` +
+    `export type StandbyLadderRung = { rung: string; meaning: string };\n` +
+    `export type StandbySubShelf = { name: string; role: string };\n` +
+    `export type StandbyRejectedAlternative = { name: string; reason: string };\n` +
+    `\n` +
+    `export type ConstellationWidePrimitive = {\n` +
+    `  id: string;\n` +
+    `  name: string;\n` +
+    `  kind: string;\n` +
+    `  summary: string;\n` +
+    `  hostZone?: number;\n` +
+    `  hostZoneRationale?: string;\n` +
+    `  vocabulary?: StandbyVocabularyEntry[];\n` +
+    `  severityLadder?: StandbyLadderRung[];\n` +
+    `  subShelves?: StandbySubShelf[];\n` +
+    `  rejectedAlternatives?: StandbyRejectedAlternative[];\n` +
+    `  principle?: string;\n` +
+    `  scope?: string;\n` +
     `};\n` +
     `\n` +
     `export type ConstellationSnapshot = {\n` +
@@ -110,6 +187,8 @@ function render(snapshot) {
     `    zoneSystem: string;\n` +
     `    axiom: string;\n` +
     `  };\n` +
+    `  principles: ConstellationPrinciple[];\n` +
+    `  constellationWidePrimitives: ConstellationWidePrimitive[];\n` +
     `  teachers: Teacher[];\n` +
     `  zones: ConstellationZone[];\n` +
     `  preZone: ConstellationZone[];\n` +

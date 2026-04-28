@@ -20,12 +20,40 @@ export type ConstellationZone = {
   tagline?: string;
   workedExamples?: WorkedExample[];
   context?: string;
+  standby?: string;
 };
 
 export type Teacher = {
   name: string;
   channel: string | null;
   tagline: string;
+};
+
+export type ConstellationPrinciple = {
+  id: string;
+  name: string;
+  statement: string;
+  workedExample?: string;
+};
+
+export type StandbyVocabularyEntry = { term: string; role: string };
+export type StandbyLadderRung = { rung: string; meaning: string };
+export type StandbySubShelf = { name: string; role: string };
+export type StandbyRejectedAlternative = { name: string; reason: string };
+
+export type ConstellationWidePrimitive = {
+  id: string;
+  name: string;
+  kind: string;
+  summary: string;
+  hostZone?: number;
+  hostZoneRationale?: string;
+  vocabulary?: StandbyVocabularyEntry[];
+  severityLadder?: StandbyLadderRung[];
+  subShelves?: StandbySubShelf[];
+  rejectedAlternatives?: StandbyRejectedAlternative[];
+  principle?: string;
+  scope?: string;
 };
 
 export type ConstellationSnapshot = {
@@ -36,19 +64,105 @@ export type ConstellationSnapshot = {
     zoneSystem: string;
     axiom: string;
   };
+  principles: ConstellationPrinciple[];
+  constellationWidePrimitives: ConstellationWidePrimitive[];
   teachers: Teacher[];
   zones: ConstellationZone[];
   preZone: ConstellationZone[];
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.4",
+  "version": "0.5.5",
   "lastUpdated": "2026-04-28",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
     "axiom": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
   },
+  "principles": [
+    {
+      "id": "both-states",
+      "name": "the name has to hold both states",
+      "statement": "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+      "workedExample": "The Standby — the umbrella name had to hold both the always-on shelf (preparation, standby stock, the watch as a posture) and the active event (a call, an active rung, a debrief). Splitting into two names — say, *the Pantry* for the slow side and *the Call* for the fast side — would have produced two systems with two cultures. One word, two states."
+    }
+  ],
+  "constellationWidePrimitives": [
+    {
+      "id": "the-standby",
+      "name": "The Standby",
+      "kind": "constellation-wide primitive",
+      "summary": "The umbrella system + always-on state for *temporary centralized disruptions* — drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down. One name that holds both the slow side (always-on preparation) and the fast side (active event).",
+      "hostZone": 3,
+      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where centralized disruptions are felt collectively — the co-op shelf, the producer pipeline, the orders ledger are where the absence of freight, power, or staff lands first. Read by every zone.",
+      "vocabulary": [
+        {
+          "term": "the Standby",
+          "role": "the umbrella system + always-on state"
+        },
+        {
+          "term": "a call",
+          "role": "a specific active event (a fire call, a flood call, a freight call)"
+        },
+        {
+          "term": "the watch",
+          "role": "the active-monitoring posture between advisory and active — the sub-noun for the act of watching a developing situation"
+        },
+        {
+          "term": "standby stock",
+          "role": "the physical/operational reserves the always-on side maintains"
+        },
+        {
+          "term": "the debrief",
+          "role": "the after-action synthesis once a call has stood down"
+        },
+        {
+          "term": "centralized disruption",
+          "role": "the class of event the Standby is for — a temporary loss or strain of a centralized system the community depends on"
+        }
+      ],
+      "severityLadder": [
+        {
+          "rung": "advisory",
+          "meaning": "something is forming on the horizon; no posture change required, but the watch is informed"
+        },
+        {
+          "rung": "standby",
+          "meaning": "preparation is sleeved in; standby stock is verified; envelopes ready to flex"
+        },
+        {
+          "rung": "active",
+          "meaning": "a call is open; the system is responding; envelopes and rosters have flipped"
+        },
+        {
+          "rung": "standdown",
+          "meaning": "the call is closed; debrief opens; standby stock is replenished"
+        }
+      ],
+      "subShelves": [
+        {
+          "name": "The Common Pantry",
+          "role": "the food/supply sub-noun — the literal shelf inside the Standby that holds staples, water, fuel, medicine. Sub-noun, not replacement."
+        },
+        {
+          "name": "The Watch",
+          "role": "the active-monitoring sub-noun — the posture and the people doing the watching during advisory/standby rungs. Sub-noun, not replacement."
+        }
+      ],
+      "rejectedAlternatives": [
+        {
+          "name": "The Common Pantry (as the umbrella name)",
+          "reason": "Holds the slow side beautifully (a pantry is by definition always-on) but cannot hold an active fire call, an evacuation, or a payment-systems outage without straining the metaphor. A pantry is what you keep; the Standby is also what you do. The Pantry sits *inside* the Standby as the food/supply sub-shelf."
+        },
+        {
+          "name": "The Watch (as the umbrella name)",
+          "reason": "Holds the active-monitoring posture (the watch is active by definition) but cannot hold the slow shelf of standby stock without bending into something that sounds like a permanent vigil. The Watch sits *inside* the Standby as the active-monitoring sub-noun."
+        }
+      ],
+      "principle": "both-states",
+      "scope": "naming and filing only — no UI surface for tracking calls, watches, or debriefs is built on this pass. Future task once the vocabulary has been used in the field."
+    }
+  ],
   "teachers": [
     {
       "name": "Jack Spirko",
@@ -104,7 +218,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "Per-child Goals + tips",
           "rule": "Goal lives with the child, the tip meets them where they are. No streaks, no leaderboards. (Goals row in flight: #175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge — Z0 agent will send a delta before this row locks.)"
         }
-      ]
+      ],
+      "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief)."
     },
     {
       "zone": 0,
@@ -114,7 +229,8 @@ export const constellation: ConstellationSnapshot = {
       "url": null,
       "status": "in development — pilot probe Q4 2026",
       "tagline": "What's the fence to peek over?",
-      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently."
+      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
+      "standby": "Reads The Standby as the institutional standby checklist — facility-side mirror of the co-op's standby stock list (medications, water, generator fuel, comfort supplies). Same rungs, same nouns, scaled to the dwelling unit instead of the household."
     },
     {
       "zone": 1,
@@ -229,7 +345,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "Scaffolding pretending to be engine",
           "rule": "Roughly 600 lines of procedural-music machinery — kick/snare scheduler, synth functions, chord timeline, LFO, music bus, per-scene chord-morph effect — sat behind ENABLE_PROCEDURAL_MUSIC = false for months in the Headwaters promo video's audio file, shaping how the file read and what future contributors thought the system did. Named as 'feature behind a flag' it was untouchable; named honestly as scaffolding pretending to be engine, it could be deleted, and ambient-audio.ts collapsed from 933 lines to ~330 with no change in runtime behavior. A flag that has been off long enough to forget why it was added is not a feature toggle — it is a name lying about the system's intent, and the honest move is to delete it."
         }
-      ]
+      ],
+      "standby": "Reads The Standby as a standby budget envelope that sleeves up automatically during an active call — drought routes a water-cost envelope, fire routes a supply-cost envelope, freight routes a stockpile-cost envelope. Channel/Bridge verbs already model the flex; Standby gives the trigger language."
     },
     {
       "zone": 1,
@@ -283,7 +400,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "Codetry (this doc)",
           "rule": "the version-controlled paper trail of the practice. Renaming to 'Design system' would erase that codetry is the practice naming itself."
         }
-      ]
+      ],
+      "standby": "Reads The Standby as the cross-zone synthesis the workbench is for — standby debriefs surface here as a recurring weekly-steps item once a call has stood down. The workbench keeps no live call state; it keeps the after-action read across zones."
     },
     {
       "zone": 3,
@@ -340,7 +458,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "Appreciation Wall / 'help' stack",
           "rule": "members pin thank-you notes to other members. A first-class surface, not a footer widget — gratitude has its own room because the system says it matters."
         }
-      ]
+      ],
+      "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun."
     },
     {
       "zone": 4,
@@ -377,7 +496,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "Pre-zone parked thread",
           "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Belongs in the Brainstorm Library until it finds its own zone (probably Z0, possibly Z5)."
         }
-      ]
+      ],
+      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector → call → first-touched node is the modeling unit."
     },
     {
       "zone": 5,
@@ -405,7 +525,8 @@ export const constellation: ConstellationSnapshot = {
           "name": "The Shallows handle",
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
-      ]
+      ],
+      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint."
     }
   ],
   "preZone": [

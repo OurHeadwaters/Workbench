@@ -40,6 +40,10 @@ const constellation: ConstellationEntry[] = [
     name: "Brainstorm Library (pre-zone)",
     role: "The seed bank. Where ideas live before they're sorted into a zone.",
   },
+  {
+    name: "The Standby — non-zone primitive (hosted Zone 3, read by every zone)",
+    role: "The constellation's first non-zone primitive. The umbrella system + always-on state for *temporary centralized disruptions* — drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down. Six-word vocabulary: *the Standby* (umbrella + always-on state), *a call* (a specific active event), *the watch* (active-monitoring posture), *standby stock* (the always-on reserves), *the debrief* (after-action synthesis), *centralized disruption* (the class of event). Four-rung severity ladder: advisory / standby / active / standdown. Two sub-shelves inside the umbrella: *The Common Pantry* (food/supply sub-noun) and *The Watch* (active-monitoring sub-noun) — each rejected as the umbrella name in turn because neither could hold both states. Hosted in Zone 3 because that is where centralized disruptions are felt collectively first; read by every zone (household checklists at Z0, standby budget envelopes at Z1, debrief synthesis at Z2, sector fragility modeling at Z4, optional public floats at Z5). The takeaway is the new codetry principle that came with it: **the name has to hold both states** — when a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+  },
 ];
 
 export default function Codetry() {
@@ -163,6 +167,27 @@ export default function Codetry() {
             Codetry asks the same of software: let the form-language do
             the structural work. Let the name carry weight a column would
             otherwise carry.
+          </p>
+
+          <Subhead>The both-states principle</Subhead>
+          <p>
+            A second principle joined the codetry working-doc this pass,
+            registered in the constellation manifest as{" "}
+            <span className="font-mono text-[9.5pt] print:text-[8.5pt]">
+              principles.both-states
+            </span>
+            : <span className="italic">when a system has both a slow
+            side (always-on practice) and a fast side (active event), the
+            name has to do both jobs in one word, or the system will fork
+            into two systems with two cultures.</span> The Standby — the
+            constellation&rsquo;s first non-zone primitive, listed below
+            — is its worked example. The umbrella name had to hold both
+            the always-on shelf (preparation, standby stock, the watch as
+            a posture) and the active event (a call, the active rung, the
+            debrief), or the constellation would now have two parallel
+            systems with two cultures. Sits alongside the saltbox
+            principle as a naming-as-architecture rule that every new
+            primitive doing double duty is checked against.
           </p>
 
           <Subhead>Worked examples — this constellation, so far</Subhead>

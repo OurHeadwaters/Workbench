@@ -150,6 +150,52 @@ const partI: Part = {
       number: "1.3",
       partRoman: "I",
       partLabel: "I · The Discipline",
+      title: "The both-states principle — names that hold the slow side and the fast side",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "Some systems run in one register and only need a name that fits that register. A *bucket* holds money in an envelope-budget app and never has to do anything else; the noun does one job and does it cleanly.",
+        },
+        {
+          kind: "para",
+          text:
+            "Other systems live in two registers at once. They have a slow side — a shelf, a posture, a practice that is always-on, mostly quiet, sometimes ignored — and a fast side, an event that flips the system into action and then stands it down. The temptation, every time, is to name each side separately and let them grow into two systems. The both-states principle is the codetry move that resists that.",
+        },
+        {
+          kind: "callout",
+          text:
+            "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+        },
+        { kind: "subhead", text: "The Standby as the worked example." },
+        {
+          kind: "para",
+          text:
+            "The constellation's first non-zone primitive — *The Standby* — is the cleanest worked example of this principle so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two states.",
+        },
+        {
+          kind: "para",
+          text:
+            "Two early candidate names were rejected for failing the principle. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* (the slow side) and one for *the call* (the fast side) — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
+        },
+        { kind: "subhead", text: "How to spot a both-states name in the wild." },
+        {
+          kind: "para",
+          text:
+            "A both-states name passes a small test: pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung*, the name is holding both states and the system is one system.",
+        },
+        {
+          kind: "para",
+          text:
+            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to do double duty.",
+        },
+      ],
+    },
+    {
+      id: "1-4",
+      number: "1.4",
+      partRoman: "I",
+      partLabel: "I · The Discipline",
       title: "The single-sentence definition",
       blocks: [
         {
@@ -398,6 +444,78 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
   };
 });
 
+const standbyChapters: Chapter[] = constellation.constellationWidePrimitives.map(
+  (p, i) => {
+    const num = `3.${zoneCount + i + 1}`;
+    const blocks: Block[] = [
+      { kind: "small", text: "Constellation-wide primitive · non-zone" },
+      { kind: "para", text: p.summary },
+    ];
+    if (p.hostZoneRationale) {
+      blocks.push({ kind: "para", text: p.hostZoneRationale });
+    }
+    if (p.vocabulary && p.vocabulary.length > 0) {
+      blocks.push({ kind: "subhead", text: "Vocabulary" });
+      blocks.push({
+        kind: "list",
+        items: p.vocabulary.map((v) => `${v.term} — ${v.role}`),
+      });
+    }
+    if (p.severityLadder && p.severityLadder.length > 0) {
+      blocks.push({ kind: "subhead", text: "Severity ladder" });
+      blocks.push({
+        kind: "ordered",
+        items: p.severityLadder.map((r) => `${r.rung} — ${r.meaning}`),
+      });
+    }
+    if (p.subShelves && p.subShelves.length > 0) {
+      blocks.push({ kind: "subhead", text: "Sub-shelves inside the umbrella" });
+      blocks.push({
+        kind: "list",
+        items: p.subShelves.map((s) => `${s.name} — ${s.role}`),
+      });
+    }
+    if (p.rejectedAlternatives && p.rejectedAlternatives.length > 0) {
+      blocks.push({ kind: "subhead", text: "Rejected alternatives" });
+      blocks.push({
+        kind: "list",
+        items: p.rejectedAlternatives.map((r) => `${r.name} — ${r.reason}`),
+      });
+    }
+    blocks.push({ kind: "subhead", text: "Cross-zone reads" });
+    blocks.push({
+      kind: "list",
+      items: [
+        "Zone 0 (Saltbox + Bright Side) — household and institutional standby checklists mirror the co-op's standby stock list, item for item.",
+        "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
+        "Zone 2 (Practitioner Operating Plan) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
+        "Zone 3 (Community Knowledge Hub) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
+        "Zone 4 (Regen Revolution) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
+        "Zone 5 (Dam Days and Shallows) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds.",
+      ],
+    });
+    blocks.push({ kind: "subhead", text: "The takeaway" });
+    blocks.push({
+      kind: "pull",
+      text:
+        "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+    });
+    blocks.push({
+      kind: "para",
+      text:
+        "The Standby is the constellation's first non-zone primitive. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now registered as a named principle in the manifest, available the next time a primitive has to do double duty.",
+    });
+    return {
+      id: `3-${zoneCount + i + 1}`,
+      number: num,
+      partRoman: "III",
+      partLabel: "III · The Constellation as Founding Examples",
+      title: `${p.name} — the constellation's first non-zone primitive`,
+      blocks,
+    };
+  },
+);
+
 const partIII: Part = {
   roman: "III",
   title: "The Constellation as Founding Examples",
@@ -428,9 +546,10 @@ const partIII: Part = {
       ],
     },
     ...zoneChapters,
+    ...standbyChapters,
     {
-      id: `3-${zoneCount + 1}`,
-      number: `3.${zoneCount + 1}`,
+      id: `3-${zoneCount + standbyChapters.length + 1}`,
+      number: `3.${zoneCount + standbyChapters.length + 1}`,
       partRoman: "III",
       partLabel: "III · The Constellation as Founding Examples",
       title: "Closing reflection",
