@@ -616,8 +616,8 @@ export default function FirstReserveThenTheNext() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
-      <div className="absolute inset-0 px-[6vw] py-[6vh] flex flex-col">
-        <div className="mb-[3vh]">
+      <div className="absolute inset-0 px-[6vw] py-[5vh] flex flex-col">
+        <div className="mb-[2vh]">
           <div className="font-mono uppercase tracking-[0.28em] text-[1vw] text-muted mb-[1vh]">
             What this is the start of
           </div>
@@ -628,22 +628,93 @@ export default function FirstReserveThenTheNext() {
         </div>
 
         <div
-          className="rounded-[0.4vw] p-[2.4vw] mb-[2.5vh]"
+          className="rounded-[0.4vw] px-[2vw] py-[1.8vh] mb-[1.5vh]"
           style={{ background: "var(--slide-primary)", color: "var(--slide-bg)" }}
         >
           <div
-            className="font-mono uppercase tracking-[0.22em] text-[1.05vw] mb-[1.2vh]"
+            className="font-mono uppercase tracking-[0.22em] text-[0.95vw] mb-[0.8vh]"
             style={{ color: "#e9c8a8" }}
           >
             What I believe
           </div>
-          <div className="font-display italic text-[2vw] leading-[1.3]">
+          <div className="font-display italic text-[1.7vw] leading-[1.25]">
             Northern reserves need things that work as well as anything down south. Built on what's here.
             <span className="not-italic font-medium"> Not less. Different.</span>
           </div>
         </div>
 
-        <div className="flex-1 grid grid-cols-3 gap-[1.6vw] min-h-0 mb-[2vh]">
+        {/* Day-1 / Day-90 / Day-180 milestone strip — shared milestone vocabulary
+            with the Practitioner Operating Plan deck's SellTimingOutbound slide
+            and the Practitioner's Guide V2 Replication page operating-rhythm
+            callout. This is what tells the contractor and the band council that
+            "first reserve, then the next" is anchored to dated proof points, not
+            vibes — Day-90's audited number is the trigger that opens the next
+            conversation, not Day-1 itself. */}
+        <div
+          className="rounded-[0.4vw] px-[1.6vw] py-[1vh] mb-[1.5vh]"
+          style={{ background: "var(--slide-paper)" }}
+        >
+          <div className="flex items-baseline justify-between mb-[0.6vh]">
+            <div className="font-mono uppercase tracking-[0.22em] text-[0.85vw] text-primary font-semibold">
+              How "then the next" actually starts — Day-1, Day-90, Day-180
+            </div>
+            <div className="font-mono text-[0.72vw] text-muted">
+              Day-90 audited proof point is the trigger
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-[1.2vw]">
+            <div className="border-t-[2px] border-rule pt-[0.5vh]">
+              <div className="flex items-baseline justify-between mb-[0.2vh]">
+                <div className="font-display text-[1.25vw] font-semibold text-primary leading-[1]">
+                  Day-1
+                </div>
+                <div className="font-mono text-[0.65vw] text-muted uppercase tracking-[0.18em]">
+                  Open
+                </div>
+              </div>
+              <div className="font-body text-[0.82vw] text-text leading-[1.35]">
+                Deer Lake store opens. Working POS, freight lane, public price page —
+                not a pitch deck.
+              </div>
+            </div>
+            <div
+              className="border-t-[2px] pt-[0.5vh]"
+              style={{ borderColor: "var(--slide-accent)" }}
+            >
+              <div className="flex items-baseline justify-between mb-[0.2vh]">
+                <div className="font-display text-[1.25vw] font-semibold text-primary leading-[1]">
+                  Day-90
+                </div>
+                <div
+                  className="font-mono text-[0.65vw] uppercase tracking-[0.18em]"
+                  style={{ color: "var(--slide-accent)" }}
+                >
+                  Trigger fires
+                </div>
+              </div>
+              <div className="font-body text-[0.82vw] text-text leading-[1.35]">
+                First audited value-delivered number, signed by the band's bookkeeper.{" "}
+                <strong>Outbound to 3–5 named reserves opens this week.</strong>
+              </div>
+            </div>
+            <div className="border-t-[2px] border-rule pt-[0.5vh]">
+              <div className="flex items-baseline justify-between mb-[0.2vh]">
+                <div className="font-display text-[1.25vw] font-semibold text-primary leading-[1]">
+                  Day-180
+                </div>
+                <div className="font-mono text-[0.65vw] text-muted uppercase tracking-[0.18em]">
+                  Pilot #2 signed
+                </div>
+              </div>
+              <div className="font-body text-[0.82vw] text-text leading-[1.35]">
+                Pilot #2 signed as a <em>paid engagement</em>. The case study writes
+                itself out of the work, not the other way around.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1 grid grid-cols-3 gap-[1.6vw] min-h-0 mb-[1.5vh]">
           <div className="rounded-[0.4vw] p-[1.8vw] flex flex-col" style={{ background: "var(--slide-paper)" }}>
             <div className="font-mono text-[1vw] text-accent font-semibold mb-[1vh]">THE SOFTWARE</div>
             <div className="font-display text-[1.55vw] leading-tight text-primary font-medium mb-[1vh]">

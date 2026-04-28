@@ -3,7 +3,7 @@ import { SectionCard } from "@/components/SectionCard";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { money, pct } from "@/lib/format";
 import { confirmed } from "@/data/tags";
-import { Compass, Repeat, Settings2, Quote, ArrowRight, BookOpen } from "lucide-react";
+import { Compass, Repeat, Settings2, Quote, ArrowRight, BookOpen, Clock } from "lucide-react";
 import { Link } from "wouter";
 
 /**
@@ -274,6 +274,94 @@ export function ReplicationPage() {
         </div>
       </section>
 
+      {/* ============ OPERATING RHYTHM — WHEN TO START THE NEXT CONVERSATION ============ */}
+      <SectionCard
+        title="Operating rhythm — when to start the next conversation"
+        subtitle="Day-1 ship → Day-90 audited proof point → start outbound → Pilot #2 as paid engagement → Day-180 case study. Same milestone vocabulary as the Practitioner Operating Plan deck and the Deer Lake Store deck — open any of the three docs and the timing call reads the same."
+        tag={confirmed("Sell-timing call locked April 2026 — Day-90 audited proof point is the trigger that opens Pilot #2 outbound, not a hypothesis. Mirrors the SellTimingOutbound slide in the Practitioner Operating Plan deck and the Day-1/90/180 milestone strip on the Deer Lake Store deck.")}
+        accent={accent}
+      >
+        <div className="flex items-start gap-3">
+          <Clock
+            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
+            style={{ color: accentInk }}
+          />
+          <div className="flex-1 min-w-0 space-y-5">
+            {/* The timing spine — three milestones in order. */}
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 gap-3"
+              data-testid="operating-rhythm-timeline"
+            >
+              <Milestone
+                label="Day-1"
+                kicker="Open"
+                body="Deer Lake store opens. Working POS, working freight lane, working transparency stack — the system is running before any second-reserve conversation begins."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+              />
+              <Milestone
+                label="Day-90"
+                kicker="Trigger fires"
+                body="First audited value-delivered number, signed by the band's bookkeeper. Reference call ready. This is the trigger that opens outbound to a 3–5 named-prospect bench — not before, not later."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+                isTrigger
+              />
+              <Milestone
+                label="Day-180"
+                kicker="Pilot #2 signed"
+                body="Pilot #2 lands as a paid engagement, not a written deliverable that preceded the sale. The case study writes itself out of the work — the way Deer Lake did."
+                accentInk={accentInk}
+                accentSoft={accentSoft}
+              />
+            </div>
+
+            {/* The three failure modes the rhythm protects against. */}
+            <div>
+              <p
+                className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3"
+              >
+                Three ways this rhythm can break — name them out loud
+              </p>
+              <ul className="space-y-3 text-sm" data-testid="operating-rhythm-failures">
+                <FailureMode
+                  letter="A"
+                  title="Selling before the proof point."
+                  body="Outbound that opens before Day-90 has nothing to point at except a thesis. The receiving band hears a pitch, not a precedent — the V2 mistake, replayed."
+                  accentInk={accentInk}
+                  accentSoft={accentSoft}
+                />
+                <FailureMode
+                  letter="B"
+                  title="Waiting for Pilot #2 to finish writing."
+                  body="Treating Pilot #2 as a written deliverable that has to land before the sale inverts the order. Pilot #2 is the sale. The case study comes out of the paid engagement, not in front of it."
+                  accentInk={accentInk}
+                  accentSoft={accentSoft}
+                />
+                <FailureMode
+                  letter="C"
+                  title="Tinkering without a buyer in the loop."
+                  body="Open-ended polishing of the system between Day-90 and an undated Pilot #2 burns the trigger. If outbound isn't named on Day-90, the audit becomes décor instead of a sales asset."
+                  accentInk={accentInk}
+                  accentSoft={accentSoft}
+                />
+              </ul>
+            </div>
+
+            <p
+              className="text-xs text-muted-foreground border-t pt-4"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+            >
+              <strong className="text-foreground">Queued, not authored here:</strong>{" "}
+              the named-prospect list, the Day-90 audit template, and the outreach kit
+              are tracked as their own work. This callout is the timing call — the
+              assets are downstream of it. Building any of those <em>before</em> Day-90
+              would invert the failure modes above.
+            </p>
+          </div>
+        </div>
+      </SectionCard>
+
       {/* ============ HOW TO USE THIS PAGE ============ */}
       <SectionCard
         title="How to use this page in a Pilot #2 conversation"
@@ -365,6 +453,79 @@ function Challenge({
         </p>
       </div>
     </div>
+  );
+}
+
+function Milestone({
+  label,
+  kicker,
+  body,
+  accentInk,
+  accentSoft,
+  isTrigger,
+}: {
+  label: string;
+  kicker: string;
+  body: string;
+  accentInk: string;
+  accentSoft: string;
+  isTrigger?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-md border p-3"
+      style={{
+        borderColor: isTrigger ? accentInk : "hsl(var(--card-border))",
+        borderTopWidth: isTrigger ? "3px" : "1px",
+        backgroundColor: isTrigger ? accentSoft : "hsl(var(--card))",
+      }}
+    >
+      <div className="flex items-baseline justify-between mb-1">
+        <p
+          className="text-base font-semibold text-foreground"
+          style={{ fontFamily: "var(--app-font-serif)" }}
+        >
+          {label}
+        </p>
+        <span
+          className="text-[0.65rem] uppercase tracking-wider font-medium"
+          style={{ color: isTrigger ? accentInk : "hsl(var(--muted-foreground))" }}
+        >
+          {kicker}
+        </span>
+      </div>
+      <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+function FailureMode({
+  letter,
+  title,
+  body,
+  accentInk,
+  accentSoft,
+}: {
+  letter: string;
+  title: string;
+  body: string;
+  accentInk: string;
+  accentSoft: string;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <span
+        className="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-md text-xs font-semibold flex-shrink-0"
+        style={{ backgroundColor: accentSoft, color: accentInk }}
+        aria-hidden
+      >
+        {letter}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-foreground">{title}</p>
+        <p className="text-muted-foreground mt-0.5 leading-relaxed">{body}</p>
+      </div>
+    </li>
   );
 }
 

@@ -111,7 +111,7 @@ const slide = (
 //     → cash flow / rate / payback-pitch references
 //   • PathToScale (pos 8) — Y1/Y2/Y3 CFO-readable composition
 //     → path-to-scale references
-//   • Closing (pos 9) — the asking moment
+//   • Closing (pos 10) — the asking moment
 //     → closing references
 const SLIDE_BUDGET = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
 const SLIDE_CASHFLOW = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
@@ -120,7 +120,7 @@ const SLIDE_REINVEST = slide(5, "Three revenue layers", "src/pages/slides/ThreeR
 const SLIDE_LAYER1 = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
 const SLIDE_RATE = slide(6, "Year One — cash picture", "src/pages/slides/YearOnePicture.tsx");
 const SLIDE_TEAM = slide(4, "Six-people roster", "src/pages/slides/TheSixPeople.tsx");
-const SLIDE_CLOSING = slide(9, "Closing", "src/pages/slides/Closing.tsx");
+const SLIDE_CLOSING = slide(10, "Closing", "src/pages/slides/Closing.tsx");
 const SLIDE_PATH = slide(8, "Path to scale", "src/pages/slides/PathToScale.tsx");
 const SLIDE_SALT_BENCH = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");
 const SLIDE_SALT_PL = slide(5, "Three revenue layers", "src/pages/slides/ThreeRevenueLayers.tsx");

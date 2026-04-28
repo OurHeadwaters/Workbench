@@ -72,8 +72,17 @@
     "phase": "idea"
   },
   {
-    "id": "v3-0007-close-aaaa-aaaa-aaaaaaaaaaa8",
+    "id": "v3-0007-selltime-aaaa-aaaa-aaaaaaaa8",
     "position": 9,
+    "filepath": "src/pages/slides/SellTimingOutbound.tsx",
+    "title": "Sell-timing — when Pilot #2 outbound starts",
+    "description": "Lands the cross-deck timing call between Path-to-scale and Closing. Outbound to a 3–5 named-prospect bench fires on Day-90, when Deer Lake produces its first audited value-delivered number and a live reference call — not before, not after Pilot #2 finishes writing. Carries the same Day-1 → Day-90 → Day-180 milestone vocabulary used on the Deer Lake Store deck's FirstReserveThenTheNext slide and the Practitioner's Guide V2 Replication page operating-rhythm callout. Reframes Pilot #2 as a paid engagement that becomes the case study, not a written deliverable that precedes the sale. Names the three failure modes the call protects against (sell pre-pilot, wait for pilot #2 to finish writing, tinker without a buyer in the loop). Flags the named-prospect list, Day-90 audit template, and outreach kit as queued — this slide is the timing call, not the assets.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0008-close-aaaa-aaaa-aaaaaaaaaaa8",
+    "position": 10,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Closing",
     "description": "Mission anchor + tagline closing. 'We always knew how to fix it. Now we can.' on dark forest-green field.",
