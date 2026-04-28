@@ -1,9 +1,12 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   text,
   uuid,
   timestamp,
   index,
+  primaryKey,
+  check,
 } from "drizzle-orm/pg-core";
 
 // ---------- wordpile_piles ----------
@@ -62,5 +65,45 @@ export const wordpileWordsTable = pgTable(
   }),
 );
 
+// ---------- wordpile_deletions ----------
+//
+// Tombstones for piles and words this user has explicitly deleted. The
+// /sync endpoint consults this table so a stale device that still has a
+// deleted pile cached locally cannot resurrect it by uploading its old
+// snapshot. (Without tombstones, /sync sees "incoming pile X has no
+// matching server row" and inserts it back — see the comment in
+// `routes/wordpile.ts`.)
+//
+// `kind` is "pile" | "word" — enforced at the application layer rather
+// than as a Postgres enum so we don't have to ship a migration just to
+// add a third tombstoned shape later.
+//
+// The composite primary key (clerkUserId, kind, id) means each user owns
+// their own tombstone namespace and a re-deletion of the same id just
+// updates the existing row instead of creating a duplicate.
+export const wordpileDeletionsTable = pgTable(
+  "wordpile_deletions",
+  {
+    clerkUserId: text("clerk_user_id").notNull(),
+    kind: text("kind").notNull(),
+    id: uuid("id").notNull(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.clerkUserId, t.kind, t.id] }),
+    ownerIdx: index("wordpile_deletions_owner_idx").on(t.clerkUserId),
+    // Belt-and-suspenders: the route layer only ever writes "pile" or
+    // "word", but a CHECK keeps a future bug from silently storing
+    // garbage that the /sync skip-lookup would then ignore.
+    kindCheck: check(
+      "wordpile_deletions_kind_check",
+      sql`${t.kind} IN ('pile', 'word')`,
+    ),
+  }),
+);
+
 export type WordpilePileRow = typeof wordpilePilesTable.$inferSelect;
 export type WordpileWordRow = typeof wordpileWordsTable.$inferSelect;
+export type WordpileDeletionRow = typeof wordpileDeletionsTable.$inferSelect;

@@ -10,10 +10,16 @@ import {
   db,
   wordpilePilesTable,
   wordpileWordsTable,
+  wordpileDeletionsTable,
   type WordpilePileRow,
   type WordpileWordRow,
 } from "@workspace/db";
 import { and, asc, eq, inArray } from "drizzle-orm";
+
+// Tombstone kinds. Kept as a narrow string union and reused in the helper
+// below so a typo can't silently insert e.g. kind="words" (plural) and
+// quietly fail the lookup later.
+type TombstoneKind = "pile" | "word";
 
 const router: IRouter = Router();
 
@@ -101,6 +107,54 @@ async function loadSnapshot(clerkUserId: string) {
   };
 }
 
+// A "db-like" handle: either the top-level `db` or a transaction `tx`
+// passed in via `db.transaction(async (tx) => ...)`. Drizzle gives `db`
+// and `tx` *different* TypeScript types (only `db` carries the pool
+// `$client`), but their query-builder surface is identical. We keep the
+// type structural and narrow to just the methods `recordDeletion` uses
+// so the helper accepts either one without an `as any` escape hatch.
+type DbLike = Pick<typeof db, "insert" | "delete">;
+
+// Record a tombstone for a pile or word the caller has just deleted.
+// The /sync route consults these so a stale device that still has the
+// row cached locally cannot resurrect it on its next bootstrap upload.
+//
+// We delete-then-insert rather than rely on Postgres ON CONFLICT so the
+// behaviour is identical against the in-memory test fake (which doesn't
+// model upserts) and against the real DB. Re-deleting an already-deleted
+// id is rare in practice (the pile would have to exist for the route's
+// `findOwnedPile` check to pass), but the bumped `deletedAt` keeps the
+// "tombstone newer than incoming.updatedAt" check on /sync correct in
+// that edge case too.
+//
+// Always invoke this inside a `db.transaction(...)` together with the
+// row delete itself — otherwise a partial failure (row deleted but
+// tombstone insert errored) would leave the door open for /sync to
+// later resurrect the row, which is exactly the invariant this table
+// exists to protect.
+async function recordDeletion(
+  exec: DbLike,
+  clerkUserId: string,
+  kind: TombstoneKind,
+  id: string,
+): Promise<void> {
+  await exec
+    .delete(wordpileDeletionsTable)
+    .where(
+      and(
+        eq(wordpileDeletionsTable.clerkUserId, clerkUserId),
+        eq(wordpileDeletionsTable.kind, kind),
+        eq(wordpileDeletionsTable.id, id),
+      ),
+    );
+  await exec.insert(wordpileDeletionsTable).values({
+    clerkUserId,
+    kind,
+    id,
+    deletedAt: new Date(),
+  });
+}
+
 // Fetch a single pile owned by the caller, or null if missing/not theirs.
 // We always check ownership in the WHERE clause rather than fetching first
 // then comparing — that keeps the 404 / 403 distinction from leaking.
@@ -178,11 +232,19 @@ router.get("/piles", withAuth, async (req, res) => {
 
 // Bootstrap merge endpoint. Called once after sign-in with the local
 // (anonymous) snapshot. For every incoming pile/word:
-//   - if no row with that id exists for this user, INSERT it
-//   - if a row exists and the incoming updatedAt is strictly newer, UPDATE
+//   - if a tombstone exists with deletedAt >= incoming.updatedAt, SKIP
+//     (the user deleted this on another device after the client's last
+//     known modification — don't resurrect it). For piles, this also
+//     skips the entire `words` array under that pile, since those words
+//     would otherwise become orphans relative to a missing parent.
+//   - else if no row with that id exists for this user, INSERT it
+//   - else if the incoming updatedAt is strictly newer, UPDATE
 //   - otherwise leave the server row alone
-// We do not delete server rows that are missing locally — the user's other
-// devices may have piles this device has never seen.
+// We do not delete server rows that are missing locally — the user's
+// other devices may have piles this device has never seen. The tombstone
+// table is what now distinguishes "this device never knew about it"
+// (keep the server's row) from "this device's copy is stale and must
+// not undo a deletion" (skip the upload).
 router.post("/sync", withAuth, async (req, res) => {
   const { clerkUserId } = req.wordpileUser!;
   const body = (req.body ?? {}) as { piles?: unknown };
@@ -206,6 +268,19 @@ router.post("/sync", withAuth, async (req, res) => {
       : [];
   const existingWordById = new Map(existingWords.map((w) => [w.id, w]));
 
+  // Tombstones for this user, split by kind so the lookup inside the
+  // loop is O(1).
+  const tombstones = await db
+    .select()
+    .from(wordpileDeletionsTable)
+    .where(eq(wordpileDeletionsTable.clerkUserId, clerkUserId));
+  const pileTombstoneAt = new Map<string, Date>();
+  const wordTombstoneAt = new Map<string, Date>();
+  for (const t of tombstones) {
+    if (t.kind === "pile") pileTombstoneAt.set(t.id, t.deletedAt);
+    else if (t.kind === "word") wordTombstoneAt.set(t.id, t.deletedAt);
+  }
+
   for (const raw of incoming) {
     if (!raw || typeof raw !== "object") continue;
     const p = raw as Record<string, unknown>;
@@ -213,6 +288,16 @@ router.post("/sync", withAuth, async (req, res) => {
 
     const incomingUpdated = parseDate(p.updatedAt) ?? new Date();
     const incomingCreated = parseDate(p.createdAt) ?? incomingUpdated;
+
+    // Refuse to resurrect a deleted pile when the client has nothing
+    // newer than the deletion. We use `>=` (not `>`) so that a
+    // simultaneous tombstone+upload defaults to "delete wins" — the
+    // user's most recent intentful action was the delete.
+    const pileTomb = pileTombstoneAt.get(p.id);
+    if (pileTomb && pileTomb.getTime() >= incomingUpdated.getTime()) {
+      continue;
+    }
+
     const existing = existingPileById.get(p.id);
 
     if (!existing) {
@@ -245,6 +330,11 @@ router.post("/sync", withAuth, async (req, res) => {
       const note = typeof w.note === "string" ? w.note : "";
       const safer =
         typeof w.saferAlternative === "string" ? w.saferAlternative : "";
+
+      const wTomb = wordTombstoneAt.get(w.id);
+      if (wTomb && wTomb.getTime() >= wUpdated.getTime()) {
+        continue;
+      }
 
       const existingWord = existingWordById.get(w.id);
       if (!existingWord) {
@@ -354,8 +444,20 @@ router.delete("/piles/:pileId", withAuth, async (req, res) => {
     res.status(404).json({ error: "Pile not found" });
     return;
   }
-  // Words cascade via the FK definition.
-  await db.delete(wordpilePilesTable).where(eq(wordpilePilesTable.id, pileId));
+  // Run the row delete and the tombstone insert in a single
+  // transaction. If either statement fails, both roll back — that
+  // keeps the invariant "every deleted pile has a tombstone" intact,
+  // which is exactly what /sync relies on to refuse stale-device
+  // resurrection. Words cascade via the FK definition.
+  await db.transaction(async (tx) => {
+    await tx
+      .delete(wordpilePilesTable)
+      .where(eq(wordpilePilesTable.id, pileId));
+    // Pile-level tombstone is sufficient: /sync's outer-loop skip
+    // short-circuits the entire incoming `words` array under a
+    // tombstoned pile, so cascaded words can't reappear via /sync.
+    await recordDeletion(tx, clerkUserId, "pile", pileId);
+  });
   res.json({ ok: true });
 });
 
@@ -496,19 +598,30 @@ router.delete("/piles/:pileId/words/:wordId", withAuth, async (req, res) => {
     res.json({ ok: true });
     return;
   }
-  await db
-    .delete(wordpileWordsTable)
-    .where(
-      and(
-        eq(wordpileWordsTable.id, wordId),
-        eq(wordpileWordsTable.pileId, pileId),
-      ),
-    );
+  // Word delete + pile touch + tombstone insert all in one tx — same
+  // reasoning as the pile delete: a partial failure that leaves the
+  // word gone but no tombstone behind would let stale-device /sync
+  // resurrect it on the next bootstrap.
+  await db.transaction(async (tx) => {
+    await tx
+      .delete(wordpileWordsTable)
+      .where(
+        and(
+          eq(wordpileWordsTable.id, wordId),
+          eq(wordpileWordsTable.pileId, pileId),
+        ),
+      );
 
-  await db
-    .update(wordpilePilesTable)
-    .set({ updatedAt: new Date() })
-    .where(eq(wordpilePilesTable.id, pileId));
+    await tx
+      .update(wordpilePilesTable)
+      .set({ updatedAt: new Date() })
+      .where(eq(wordpilePilesTable.id, pileId));
+
+    // The parent pile still exists (no pile tombstone), so /sync's
+    // outer-loop skip wouldn't catch this — the per-word tombstone is
+    // what blocks resurrection.
+    await recordDeletion(tx, clerkUserId, "word", wordId);
+  });
 
   res.json({ ok: true });
 });
