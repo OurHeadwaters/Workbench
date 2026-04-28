@@ -1,0 +1,268 @@
+# Codetry Test 007 — The LP-position card survived the vocabulary sweep
+
+**Date:** 2026-04-27
+**Zone:** 1 — Headwaters / xBuckets (Earn surface, Drip Harvester at work)
+**App:** xbuckets PWA, Earn tab — the card that appears once a household
+has parked RLUSD in a Park and the Drip Harvester is earning
+**Tester:** Bobbie + Replit Agent
+**Surface tested:** the LP-position card in the live Earn tab — the
+block rendered by the `if (lpPosition)` branch of `JoinPoolSection` in
+`EarnTab.tsx`, after the Variant A vocabulary sweep from Test 005 had
+relabelled every word on it
+**Files:**
+
+- `artifacts/xbuckets/src/pages/EarnTab.tsx` (the LP-position branch
+  inside `JoinPoolSection`, ~lines 554–735, plus the new `TollBand`
+  helper at ~line 325)
+- `artifacts/xbuckets/src/copy.en.ts` (the `earn` block, new `lp*`
+  keys at ~line 263)
+- `artifacts/xbuckets/src/copy.fr.ts` (mirror of the new keys at ~line
+  235)
+- `artifacts/mockup-sandbox/src/components/mockups/earn-lp-card-test/`
+  (Variant 0 control with three defect tags, Variant A graduating
+  variant, Variant B stability-band rejected, Variant C single-story
+  rejected)
+
+---
+
+## The finding (one line)
+
+The vocabulary sweep from Test 005 cleaned every word on the LP-position
+card and left the card itself untouched — and the layout it was hiding
+behind those words turned out to be three structural defects stacked
+on top of each other: no impermanent-loss disclosure, four equally
+weighted stat cards with no hierarchy, and a drip rate quoted as if
+it were a constant when it is actually a moving point on a moving
+line.
+
+## What was on screen (before)
+
+A cold read of the LP-position card as Test 005 left it (Variant 0 in
+`earn-lp-card-test/Variant0Control.tsx`) surfaces three defects on a
+single card:
+
+**1. No impermanent-loss disclosure.** The card promises a steady
+drip — "$0.27 / month per $100 parked", "+$2.40 RLUSD earned so far",
+a glowing emerald progress bar marching toward the next bucket drip.
+It never tells the household what happens if RLUSD and XRP drift
+apart in price. The honest "you might end up with less RLUSD than you
+parked, even after the drips" lives in a Learn accordion three taps
+away. Test 005 replaced "impermanent loss" with cleaner words in that
+accordion. It did not put the warning on the card where the parked
+money lives.
+
+**2. Multi-card density.** The card shows six visual blocks fighting
+for the same square inch of attention: pair header + status pill,
+four equally weighted stat cards (Deposited / Your share / Drip rate /
+Today's drip), a hero "+$2.40 earned so far" block, a progress bar,
+and a footer reading "Drips to *bucket* when earnings ≥ $25". Six
+blocks, no hierarchy, no answer to "what should the eye look at first
+when this card loads?" The answer the card was trying to give — *you
+parked $100 and you have $2.40 sitting on it, with $22.50 to go before
+it lands in your bucket* — is split across three of the six blocks
+and never assembled into one sentence.
+
+**3. No toll-drop cadence.** "Drip rate $0.27 / month" reads as a
+constant — a number stamped on the card the way an interest rate is
+stamped on a bond. The Park toll is not a constant. It moves with
+trading volume; if it halves next week the drip halves with it.
+Nothing on the card communicates that. A household that comes back in
+two weeks to a $0.13 drip rate has no reference point — they cannot
+tell whether the drop is normal weather or something is wrong.
+
+## The intervention
+
+Four variants were built side-by-side on the canvas:
+
+- **Variant 0 (control)** — the live card transcribed faithfully from
+  `EarnTab.tsx`, with each of the three defects tagged in the margin so
+  the cold read is reproducible.
+- **Variant A (hierarchy + IL + toll history)** — one hero block
+  ("drip earned so far") with the next-drip threshold and progress bar
+  tucked under it as one unit, a 2-stat sub-row (Parked, Drip rate)
+  underneath, a Park-toll history strip below that, and a
+  household-tone IL "heads-up" amber strip at the bottom linking to the
+  honest Learn module. The hypothesis: hierarchy answers "what should
+  the eye look at first", the IL strip earns its place by sitting
+  next to the parked money, and the toll history reframes the drip
+  rate as a point on a moving line.
+- **Variant B (stability band)** — keeps the four-stat layout and
+  adds a "stability ribbon" under the card showing the toll's typical
+  range as a band rather than a sparkline. Predicted-rejected: it
+  treats the drip rate as the headline (which keeps the multi-card
+  density problem) and adds a fifth element to a card already crowded
+  with four.
+- **Variant C (single story)** — collapses everything into a one-line
+  story: "$100 parked → $2.40 earned → $22.50 to next drip into
+  Vacation". Predicted-rejected: it solves density by deleting
+  information (no IL, no toll cadence, no per-$100 rate the household
+  can compare against next week). It is the right *opening sentence*
+  for the card, but on its own it just makes Defect 1 worse.
+
+### What graduates from Variant A
+
+The Variant A hierarchy ships into `EarnTab.tsx` as the new
+LP-position branch. Three changes from the shipped card:
+
+- **Hero answers the question first.** The card now opens with one
+  block: "Drip earned so far · +$2.40 RLUSD" on the left, "next drip
+  at $25.00" on the right, with the progress bar directly under it and
+  a footer reading "10% of the way · then $22.50 lands in *Vacation*".
+  The four-stat grid + standalone hero + standalone progress bar +
+  standalone footer (six blocks) collapses into one. The redundant
+  "Drips to bucket when earnings ≥ X" footer that used to sit below
+  is removed — it was repeating the threshold the hero now states.
+- **Two stats survive, four don't.** Below the hero, a single 2-stat
+  sub-row carries Parked ("$100 RLUSD in this Park") and Drip rate
+  ("$0.27 / mo per $100 parked"). "Your share" and "Today's drip" are
+  cut. *Your share* is a DeFi-derived metric the household never asked
+  for. *Today's drip* duplicates the hero's "earned so far" at a less
+  useful granularity. Removing them leaves the eye one place to land.
+- **Park-toll history (or what we can honestly show of it today).**
+  A new `TollBand` helper sits under the sub-row showing the Park toll
+  as a band — *low / avg / high* readouts with today's rate marked as
+  a dot inside the band, and a caption that reads "The drip rate moves
+  with this line. If the toll halves, your drip halves with it." The
+  band is honest about its limit: production does not yet snapshot
+  Park toll over time, so the band shown is a *typical range* derived
+  from the current toll (±35%, an empirical band for stablecoin AMM
+  tolls), not a recorded history. The label says "typical range"; the
+  caption says the rate moves; a follow-up task records the actual
+  history so the band can become a real sparkline. The mockup
+  variants show the aspirational sparkline; production ships the
+  honest band.
+- **IL heads-up earns the bottom of the card.** A new amber strip
+  below the toll band reads, in household tone: "Heads up — your
+  RLUSD and XRP can drift apart in price. If they drift far, you may
+  end up with less RLUSD than you parked, even after the drips." A
+  "Learn how this works →" link points to the IL section of the Learn
+  accordion that Test 005 already rewrote to be honest. The IL
+  warning lives next to the parked money now, not three taps away.
+
+The hero and sub-row use copy keys from `copy.en.ts` (mirrored in
+`copy.fr.ts`): `lpHeroLabel`, `lpNextDripLabel`,
+`lpProgressFooter` / `lpProgressFooterNoBucket`, `lpParkedLabel` /
+`lpParkedSub`, `lpDripRateLabel` / `lpDripRateSub`,
+`lpTollBand{Label,Today,Low,Avg,High,Caption}`,
+`lpDriftHeading` / `lpDriftBody` / `lpDriftLearnMore`. No new locked
+words coined this round — the test is structural, not vocabulary.
+
+### What does **not** graduate (this round)
+
+- **Variant B (stability band).** Predicted-rejected before the test
+  was run. It accepts the multi-card density as given and adds a
+  fifth block to a crowded card. Recorded as rejected.
+- **Variant C (single story).** Predicted-rejected. It solves density
+  by deleting information, including the impermanent-loss disclosure
+  that Defect 1 says must be on the card. The single-story sentence
+  it proposes survives as the *footer text under the progress bar*
+  in Variant A — that line ("10% of the way · then $22.50 lands in
+  *Vacation*") is Variant C's contribution, surviving as one line
+  inside Variant A rather than as the whole card. Recorded as rejected
+  as a layout but graduated as a single line.
+- **The real Park-toll sparkline.** Variant A ships a band derived
+  from today's toll because we don't yet record Park-toll history.
+  The aspirational sparkline lives in the mockup; the band ships
+  to production with honest labels. Recorded as a follow-up task to
+  snapshot real Park-toll readings so the band can become a recorded
+  sparkline.
+
+## The rule discovered
+
+> **A vocabulary sweep cleans words; it does not clean layout.** Test
+> 005 replaced "AMM pool" with "Private Park" and "LP Position" with
+> "Parked in [Park]" on this exact card, and the card looked better
+> for it. But the *card itself* — the choice to show four equally
+> weighted stats, the choice to omit IL, the choice to quote the drip
+> rate as a constant — survived the sweep untouched, because words
+> and layout are independent failure modes. The locked map can be
+> perfectly held while the surface still answers the wrong question
+> first, hides the warning the household most needs, and lies (by
+> typography, not by the number) about whether the drip rate is
+> stable.
+>
+> Or more sharply: **clean words on a noisy card still read as a
+> noisy card.** Vocabulary tests do not graduate layout; layout tests
+> do.
+
+## Falsifiable claim
+
+If the Variant A graduation holds, then a cold reader landing on the
+LP-position card should (1) read the hero block and know within one
+sentence what they parked, what they have earned, and how far they
+are from the next drip; (2) see the IL warning without scrolling
+past it or tapping into Learn; and (3) describe the drip rate as
+"about $0.27 a month right now, but it moves with the toll" rather
+than as a constant. Conversely, if a cold reader still says "I see
+four numbers, I don't know which one matters" or "the rate is $0.27 a
+month" with no qualifier, the graduation has not held and the test
+is falsified.
+
+## Status
+
+- Four variants built on canvas under
+  `artifacts/mockup-sandbox/src/components/mockups/earn-lp-card-test/`.
+- **Variant A graduated** to the LP-position branch of
+  `JoinPoolSection` in `EarnTab.tsx` and the new `lp*` copy keys in
+  `copy.en.ts` (mirrored in `copy.fr.ts`). The new `TollBand` helper
+  lives in `EarnTab.tsx` next to `RISK_STYLE`. The redundant
+  "Drips to bucket when earnings ≥ X" footer was removed (the hero
+  states the threshold).
+- **Variant B (stability band)** recorded as rejected
+  (predicted-rejected before testing).
+- **Variant C (single story)** recorded as rejected as a layout, but
+  its one-line "X parked → Y earned → Z to next drip" sentence
+  survives as the footer text under the Variant A progress bar.
+- **Real Park-toll history** recorded as a follow-up task. Variant A
+  ships an honest *typical range* band today; the sparkline shown in
+  the mockup is aspirational and waits on actual snapshot data.
+- **Side note on the practice.** This is the first codetry test on
+  the Earn surface that is not a vocabulary test. Test 005 graduated
+  by holding the locked map; Test 007 graduates by holding hierarchy
+  and disclosure. The practice now has two distinct kinds of test —
+  *what does the surface say* and *what does the surface put first*
+  — and they catch different defects on the same card.
+
+## Coordinates for the Zone 2 worked-examples list
+
+```
+title:     Earn — the LP-position card survived the vocabulary sweep
+zone:      1 (Headwaters / xBuckets — Earn surface, LP-position card)
+date:      2026-04-27
+artefacts: artifacts/mockup-sandbox/src/components/mockups/earn-lp-card-test/
+graduated: Variant A (hierarchy + IL + toll band) → EarnTab.tsx + copy.en.ts
+rule:      a vocabulary sweep cleans words; it does not clean layout
+status:    graduated — first structural codetry test on the Earn surface
+```
+
+---
+
+## Dam Days entry — prompt to mark this finding
+
+> **Today the LP-position card looked clean and read wrong. Test 005
+> had swept it — Park instead of pool, drip instead of sweep, "$X / mo
+> per $100 parked" instead of APR — and the words were honest. The
+> card was not. Four stat tiles all the same size, no answer to which
+> one matters, no warning that RLUSD and XRP can drift apart in
+> price, no hint that the drip rate moves with traffic.**
+>
+> Rule: a vocabulary sweep cleans words; it does not clean layout.
+> Clean words on a noisy card still read as a noisy card.
+>
+> Variant A held the words Test 005 had earned and rebuilt the card
+> around them. One hero block — *drip earned so far*, the next drip's
+> threshold, the progress bar with a single sentence under it. Two
+> sub-stats. A toll-history band labelled honestly as a typical range
+> until we have real snapshots. And the impermanent-loss heads-up,
+> finally living next to the parked money instead of three taps away
+> in a Learn drawer.
+>
+> The card now answers one question first. It puts the warning where
+> the warning has to be. And it stops pretending the drip rate is a
+> constant.
+>
+> Two kinds of test now. *What does the surface say.* And *what does
+> the surface put first.* They catch different defects on the same
+> card.
+>
+> *(default: private. share to the shallows? — y / n)*
