@@ -3,7 +3,9 @@
 // translation, the running glossary, and the handoff brief.
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import { File, Paths } from "expo-file-system";
 import { router, useLocalSearchParams } from "expo-router";
+import * as Sharing from "expo-sharing";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   Platform,
@@ -22,7 +24,7 @@ import { MetaphorShape } from "@/components/sharedVision/MetaphorShape";
 import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
 import { METAPHORS } from "@/lib/sharedVision/catalog";
-import { generateBrief } from "@/lib/sharedVision/markdown";
+import { briefFilename, generateBrief } from "@/lib/sharedVision/markdown";
 import {
   activeGlossary,
   answeredCount,
@@ -82,6 +84,7 @@ export default function SharedVisionFlow() {
   const [lens, setLens] = useState<Lens>("structured");
   const [customDraft, setCustomDraft] = useState("");
   const [briefCopied, setBriefCopied] = useState(false);
+  const [briefShared, setBriefShared] = useState(false);
 
   const template = useMemo<MetaphorTemplate | null>(
     () => (session ? resolveTemplate(session) : null),
@@ -265,6 +268,8 @@ export default function SharedVisionFlow() {
           onBack={() => setShowHandoff(false)}
           briefCopied={briefCopied}
           setBriefCopied={setBriefCopied}
+          briefShared={briefShared}
+          setBriefShared={setBriefShared}
           bottomPad={Math.max(insets.bottom, webBottom) + 32}
         />
       ) : null}
@@ -1105,6 +1110,8 @@ function HandoffView({
   onBack,
   briefCopied,
   setBriefCopied,
+  briefShared,
+  setBriefShared,
   bottomPad,
 }: {
   session: SharedVisionSession;
@@ -1112,10 +1119,13 @@ function HandoffView({
   onBack: () => void;
   briefCopied: boolean;
   setBriefCopied: (v: boolean) => void;
+  briefShared: boolean;
+  setBriefShared: (v: boolean) => void;
   bottomPad: number;
 }) {
   const c = useColors();
   const brief = useMemo(() => generateBrief(session), [session]);
+  const filename = useMemo(() => briefFilename(session), [session]);
 
   const onCopy = useCallback(async () => {
     try {
@@ -1129,37 +1139,72 @@ function HandoffView({
     }
   }, [brief, onMarkHandedOff, setBriefCopied]);
 
-  const onDownload = useCallback(() => {
-    if (Platform.OS !== "web") return;
-    const g: { document?: Document; URL?: typeof URL; Blob?: typeof Blob } =
-      typeof globalThis !== "undefined"
-        ? (globalThis as unknown as {
-            document?: Document;
-            URL?: typeof URL;
-            Blob?: typeof Blob;
-          })
-        : {};
-    const doc = g.document;
-    const URLref = g.URL;
-    const BlobRef = g.Blob;
-    if (!doc || !URLref || !BlobRef) return;
-    const filename =
-      sessionLabel(session)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .slice(0, 60) || "shared-vision";
-    const blob = new BlobRef([brief], { type: "text/markdown;charset=utf-8" });
-    const url = URLref.createObjectURL(blob);
-    const a = doc.createElement("a");
-    a.href = url;
-    a.download = `${filename}.md`;
-    doc.body.appendChild(a);
-    a.click();
-    doc.body.removeChild(a);
-    setTimeout(() => URLref.revokeObjectURL(url), 1000);
-    onMarkHandedOff();
-  }, [brief, session, onMarkHandedOff]);
+  const onDownload = useCallback(async () => {
+    // Web: download via an <a download> link.
+    if (Platform.OS === "web") {
+      const g: { document?: Document; URL?: typeof URL; Blob?: typeof Blob } =
+        typeof globalThis !== "undefined"
+          ? (globalThis as unknown as {
+              document?: Document;
+              URL?: typeof URL;
+              Blob?: typeof Blob;
+            })
+          : {};
+      const doc = g.document;
+      const URLref = g.URL;
+      const BlobRef = g.Blob;
+      if (!doc || !URLref || !BlobRef) return;
+      const blob = new BlobRef([brief], {
+        type: "text/markdown;charset=utf-8",
+      });
+      const url = URLref.createObjectURL(blob);
+      const a = doc.createElement("a");
+      a.href = url;
+      a.download = `${filename}.md`;
+      doc.body.appendChild(a);
+      a.click();
+      doc.body.removeChild(a);
+      setTimeout(() => URLref.revokeObjectURL(url), 1000);
+      onMarkHandedOff();
+      return;
+    }
+    // Native: write the brief to a real .md file in the cache and hand
+    // it to the OS share sheet (Mail, Messages, AirDrop, Slack, …) so
+    // the practitioner can send the file the same way they share any
+    // other attachment.
+    try {
+      const available = await Sharing.isAvailableAsync();
+      if (!available) {
+        // Fall back to the clipboard so the brief still leaves the app.
+        await Clipboard.setStringAsync(brief);
+        setBriefCopied(true);
+        onMarkHandedOff();
+        setTimeout(() => setBriefCopied(false), 2000);
+        return;
+      }
+      const file = new File(Paths.cache, `${filename}.md`);
+      if (file.exists) file.delete();
+      file.create();
+      file.write(brief);
+      await Sharing.shareAsync(file.uri, {
+        mimeType: "text/markdown",
+        UTI: "net.daringfireball.markdown",
+        dialogTitle: "Share vision brief",
+      });
+      setBriefShared(true);
+      onMarkHandedOff();
+      setTimeout(() => setBriefShared(false), 2000);
+    } catch {
+      // Sharing was cancelled or the file couldn't be written — the
+      // brief is still on screen and selectable for manual copy.
+    }
+  }, [
+    brief,
+    filename,
+    onMarkHandedOff,
+    setBriefCopied,
+    setBriefShared,
+  ]);
 
   return (
     <ScrollView
@@ -1221,32 +1266,34 @@ function HandoffView({
             {briefCopied ? "Copied" : "Copy brief"}
           </Text>
         </Pressable>
-        {Platform.OS === "web" ? (
-          <Pressable
-            onPress={onDownload}
-            style={({ pressed }) => [
-              styles.handoffBtnGhost,
-              {
-                borderColor: c.foreground,
-                borderRadius: c.radius,
-                opacity: pressed ? 0.7 : 1,
-              },
-            ]}
-            accessibilityLabel="Download brief as markdown file"
+        <Pressable
+          onPress={onDownload}
+          style={({ pressed }) => [
+            styles.handoffBtnGhost,
+            {
+              borderColor: c.foreground,
+              borderRadius: c.radius,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+          accessibilityLabel={
+            Platform.OS === "web"
+              ? "Download brief as markdown file"
+              : "Share brief as markdown file"
+          }
+        >
+          <Text
+            style={{
+              color: c.foreground,
+              fontFamily: MONO,
+              fontSize: 13,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+            }}
           >
-            <Text
-              style={{
-                color: c.foreground,
-                fontFamily: MONO,
-                fontSize: 13,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-              }}
-            >
-              Download .md
-            </Text>
-          </Pressable>
-        ) : null}
+            {briefShared ? "Shared" : "Download .md"}
+          </Text>
+        </Pressable>
         <Pressable
           onPress={onBack}
           style={({ pressed }) => [

@@ -5,6 +5,21 @@
 import { activeGlossary, deriveSpec, generatePlainSummary, resolveTemplate, sessionLabel } from "./spec";
 import type { SharedVisionSession } from "./types";
 
+// Slugified base name (no extension) used by both the web "Download .md"
+// flow and the native share-sheet flow. The pattern is
+// `shared-vision-<noun>-<id>` so a brief is always recognisable
+// regardless of whether the practitioner renamed the session, and so
+// two briefs from the same metaphor never collide on disk.
+export function briefFilename(session: SharedVisionSession): string {
+  const template = resolveTemplate(session);
+  const noun = template?.noun ?? session.customNoun ?? "vision";
+  const slugify = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const nounSlug = slugify(noun) || "vision";
+  const idSlug = slugify(session.id).slice(0, 12) || "x";
+  return `shared-vision-${nounSlug}-${idSlug}`;
+}
+
 function ensureSentence(s: string): string {
   const trimmed = s.trim();
   if (!trimmed) return "";
