@@ -1143,6 +1143,23 @@ router.post(
       });
       return;
     }
+    // Inventory receipts must carry a real, positive quantity at approval
+    // time — otherwise the mirror row would record 0 units received and
+    // the receipt would silently disappear from stock-on-hand reports.
+    // Quantity is allowed to be blank on the pending submission (curators
+    // sometimes draft a receipt and fill the count in later), but it must
+    // be present and > 0 before the receipt is posted.
+    if (submission[0].kind === "inventory_receipt") {
+      const q =
+        submission[0].quantity !== null ? num(submission[0].quantity) : null;
+      if (q === null || q <= 0) {
+        res.status(400).json({
+          error:
+            "Inventory receipt cannot be approved without a positive quantity.",
+        });
+        return;
+      }
+    }
     const validation = validateLines(parsed.data.lines);
     if (!validation.ok) {
       res.status(400).json({ error: validation.error });

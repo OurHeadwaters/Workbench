@@ -1384,6 +1384,90 @@ describe("bookkeeper route — POST /submissions/:id/approve", () => {
     }
   });
 
+  it("rejects an inventory_receipt approval with no quantity (400, no transaction posted, no mirror row written)", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      seedAccount("1400", "Inventory", "debit");
+      seedAccount("2000", "Accounts Payable", "credit");
+
+      // Inventory receipt drafted with full vendor / SKU / amount metadata
+      // but no quantity recorded. Previously the approve handler would
+      // silently coerce this to "0" units received and the receipt would
+      // disappear from stock-on-hand reports.
+      const submissionId = await seedPendingSubmission(h.base, {
+        kind: "inventory_receipt",
+        costCentreCode: "CC-001",
+        occurredOn: "2026-04-12",
+        vendor: "North Star Foods",
+        amount: 144,
+        description: "12 cases of flour",
+        itemSku: "FLOUR-50LB",
+        itemName: "All-purpose flour, 50lb sack",
+        unit: "case",
+        // quantity intentionally omitted
+      });
+
+      // Sanity: submission was accepted with a null quantity.
+      const seeded = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(seeded?.quantity ?? null).toBeNull();
+
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            reference: "PO-7788",
+            lines: [
+              { accountCode: "1400", debit: 144, credit: 0 },
+              { accountCode: "2000", debit: 0, credit: 144 },
+            ],
+          }),
+        },
+      );
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toMatch(/quantity/i);
+
+      // Submission stays pending — no decided-by stamp, no linked txn.
+      const after = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      );
+      expect(after?.status).toBe("pending");
+      expect(after?.approvedTransactionId ?? null).toBeNull();
+      expect(after?.decidedByEmail ?? null).toBeNull();
+
+      // No transaction or transaction lines were posted.
+      expect(tables.bookkeeperTransactionsTable.__store).toHaveLength(0);
+      expect(tables.bookkeeperTransactionLinesTable.__store).toHaveLength(0);
+
+      // And — the whole point of this test — no inventory-receipts mirror
+      // row was written. A "0 units received" row here is exactly the bug.
+      expect(
+        tables.bookkeeperInventoryReceiptsTable.__store,
+      ).toHaveLength(0);
+
+      // No approve audit row either.
+      expect(
+        tables.bookkeeperAuditLogTable.__store.find(
+          (r) =>
+            r.action === "submission.approve" && r.entityId === submissionId,
+        ),
+      ).toBeUndefined();
+    } finally {
+      await h.close();
+    }
+  });
+
   it("approving a plain expense submission does NOT touch bk_inventory_receipts", async () => {
     const h = await startHarness();
     try {
