@@ -38,24 +38,6 @@ export function bucketAccent(bucket: Bucket): string {
 }
 
 /**
- * Hex equivalents for the canvas-based prototype (Falling planks). Canvas
- * APIs can't read CSS variables, so we keep an authoritative copy here
- * matching `index.css`.
- */
-export const BUCKET_HEX: Record<Bucket, string> = {
-  load: "#1f3d2e",
-  interior: "#6b7665",
-  avoid: "#7a2e2e",
-  unsorted: "#957d50",
-};
-
-export const PAPER_HEX = "#ede4d2";
-export const CREAM_HEX = "#f4ede0";
-export const SAND_HEX = "#c8bfa7";
-export const INK_HEX = "#1f3d2e";
-export const RULE_HEX = "#d4ccb6";
-
-/**
  * Rough "structural" goal shared across prototypes: at least this many
  * load-bearing pieces successfully placed and the building counts as
  * "standing." Three is enough to feel like a wall + roof; small enough

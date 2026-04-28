@@ -1,64 +1,39 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import {
+  ArrowLeft,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  Download,
+  HelpCircle,
+} from "lucide-react";
 import { usePile } from "@/lib/useStore";
 import { WordpileStore } from "@/lib/store";
 import { STANDING_THRESHOLD } from "@/lib/buildBehavior";
 import type { Bucket, WordEntry } from "@/data/types";
-import { StackerPrototype } from "@/components/build/StackerPrototype";
-import { BlockBuilderPrototype } from "@/components/build/BlockBuilderPrototype";
-import { FallingPlanksPrototype } from "@/components/build/FallingPlanksPrototype";
+import {
+  StackerPrototype,
+  type RunState,
+  type StackerSnapshotHandle,
+} from "@/components/build/StackerPrototype";
 import { FileUnsortedPrompt } from "@/components/build/FileUnsortedPrompt";
-
-type Variant = "stacker" | "blocks" | "planks";
-
-const VARIANT_LABELS: Record<Variant, string> = {
-  stacker: "Stacker",
-  blocks: "Block builder",
-  planks: "Falling planks",
-};
-
-const VARIANT_BLURBS: Record<Variant, string> = {
-  stacker: "Drag word-timbers onto a frame.",
-  blocks: "Snap word-blocks onto a baseplate.",
-  planks: "Steer word-planks as they fall.",
-};
-
-interface VoteRecord {
-  stacker: number;
-  blocks: number;
-  planks: number;
-  lastChoice?: Variant;
-}
-
-const EMPTY_VOTES: VoteRecord = { stacker: 0, blocks: 0, planks: 0 };
-
-const voteKeyFor = (pileId: string) => `wordpile:build-vote:${pileId}`;
-
-function readVotes(pileId: string): VoteRecord {
-  if (typeof window === "undefined") return EMPTY_VOTES;
-  try {
-    const raw = window.localStorage.getItem(voteKeyFor(pileId));
-    if (!raw) return EMPTY_VOTES;
-    const parsed = JSON.parse(raw) as Partial<VoteRecord>;
-    return {
-      stacker: typeof parsed.stacker === "number" ? parsed.stacker : 0,
-      blocks: typeof parsed.blocks === "number" ? parsed.blocks : 0,
-      planks: typeof parsed.planks === "number" ? parsed.planks : 0,
-      lastChoice: parsed.lastChoice,
-    };
-  } catch {
-    return EMPTY_VOTES;
-  }
-}
-
-function writeVotes(pileId: string, votes: VoteRecord) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(voteKeyFor(pileId), JSON.stringify(votes));
-}
+import {
+  isBuildAudioMuted,
+  setBuildAudioMuted,
+} from "@/lib/buildAudio";
+import {
+  archiveBuildVotes,
+  mergeRunIntoStats,
+  readStats,
+  writeStats,
+  type BuildStats,
+  EMPTY_STATS,
+} from "@/lib/buildStats";
+import { downloadShareImage } from "@/lib/buildShare";
 
 /**
- * Verdict surfaced after an Unsorted word gets placed in any prototype.
+ * Verdict surfaced after an Unsorted word gets placed in the prototype.
  * The page shows a small prompt offering to file the word into a real
  * bucket; the action goes through the existing store so it cloud-syncs.
  */
@@ -69,36 +44,82 @@ export interface UnsortedVerdict {
   suggested: Bucket;
 }
 
+const ONBOARD_KEY = "wordpile:build-onboard:v1";
+const EMPTY_RUN: RunState = {
+  framePlaced: 0,
+  trimPlaced: 0,
+  cracks: 0,
+  standing: false,
+};
+
+// One-time vote-archive migration on first load. Hoisted out of the
+// component so HMR / re-renders don't re-trigger the work — the helper is
+// idempotent on its own, but skipping the function call avoids a noisy
+// localStorage scan every render.
+let voteMigrationDone = false;
+function ensureVoteMigration() {
+  if (voteMigrationDone) return;
+  voteMigrationDone = true;
+  archiveBuildVotes();
+}
+
 export function BuildPage() {
   const params = useParams<{ pileId: string }>();
   const pile = usePile(params.pileId);
   const [, navigate] = useLocation();
-  const [variant, setVariant] = useState<Variant>("stacker");
   const [resetKey, setResetKey] = useState(0);
   const [pendingVerdict, setPendingVerdict] = useState<UnsortedVerdict | null>(
     null,
   );
-  const [votes, setVotes] = useState<VoteRecord>(EMPTY_VOTES);
   const [structuralCount, setStructuralCount] = useState(0);
+  const [run, setRun] = useState<RunState>(EMPTY_RUN);
+  const [stats, setStats] = useState<BuildStats>(EMPTY_STATS);
+  const [muted, setMutedState] = useState<boolean>(() => isBuildAudioMuted());
+  const [showOnboard, setShowOnboard] = useState(false);
+  const [justStood, setJustStood] = useState(false);
+  const stackerRef = useRef<StackerSnapshotHandle>(null);
+  const lastSavedStatsRef = useRef<BuildStats>(EMPTY_STATS);
 
-  // Hydrate votes once we know the pile id.
+  // One-time vote archival.
+  useEffect(() => {
+    ensureVoteMigration();
+  }, []);
+
+  // Hydrate stats once we know the pile id.
   useEffect(() => {
     if (!params.pileId) return;
-    setVotes(readVotes(params.pileId));
+    const next = readStats(params.pileId);
+    setStats(next);
+    lastSavedStatsRef.current = next;
   }, [params.pileId]);
 
-  // Reset structural count and any open prompt whenever the variant or
-  // the manual Reset button changes — each prototype starts fresh.
+  // First-visit onboarding: show the welcome card unless the user has
+  // already dismissed it. Persisted in localStorage so it doesn't repeat.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (window.localStorage.getItem(ONBOARD_KEY) !== "seen") {
+        setShowOnboard(true);
+      }
+    } catch {
+      // Ignore.
+    }
+  }, []);
+
+  // Reset structural count and any open prompt whenever the manual Reset
+  // button changes — the prototype starts fresh each run.
   useEffect(() => {
     setStructuralCount(0);
     setPendingVerdict(null);
-  }, [variant, resetKey]);
+    setRun(EMPTY_RUN);
+    setJustStood(false);
+  }, [resetKey]);
 
   const words: WordEntry[] = useMemo(() => {
     if (!pile) return [];
-    // Filter out the empty word strings the importer may have left behind
-    // and stable-sort by bucket then alphabetical so the tray reads the
-    // same way every time the page loads.
+    // Filter out empty word strings the importer may have left behind and
+    // stable-sort by bucket then alphabetical so the tray reads the same way
+    // every time the page loads.
     const order: Record<Bucket, number> = {
       load: 0,
       interior: 1,
@@ -114,6 +135,36 @@ export function BuildPage() {
       });
   }, [pile]);
 
+  // Persist run highs into the lifetime stats. The "lastSaved" ref is the
+  // baseline we compare against — at the start of every run it's the
+  // current lifetime totals; per-run counts get added on top of it. The
+  // pure mergeRunIntoStats helper encodes the exact semantics (see its
+  // doc comment) and is unit-tested across the multi-reset lifecycle.
+  useEffect(() => {
+    if (!params.pileId) return;
+    const next = mergeRunIntoStats(lastSavedStatsRef.current, run);
+
+    if (
+      next.runs === stats.runs &&
+      next.bestPlaced === stats.bestPlaced &&
+      next.bestFrame === stats.bestFrame &&
+      next.crackCount === stats.crackCount &&
+      next.everStood === stats.everStood
+    ) {
+      return;
+    }
+
+    setStats(next);
+    writeStats(params.pileId, next);
+  }, [run, params.pileId, stats]);
+
+  const handleReset = useCallback(() => {
+    // Reset locks the current run's totals into the lifetime baseline so
+    // the next run starts counting from there.
+    lastSavedStatsRef.current = { ...stats };
+    setResetKey((k) => k + 1);
+  }, [stats]);
+
   if (!pile) {
     return (
       <div className="max-w-2xl mx-auto px-6 py-24 text-center">
@@ -128,30 +179,39 @@ export function BuildPage() {
 
   const standing = structuralCount >= STANDING_THRESHOLD;
 
-  function handleVote(choice: Variant) {
-    if (!params.pileId) return;
-    const next: VoteRecord = {
-      ...votes,
-      [choice]: votes[choice] + 1,
-      lastChoice: choice,
-    };
-    setVotes(next);
-    writeVotes(params.pileId, next);
-  }
-
   function fileUnsorted(bucket: Bucket) {
     if (!pendingVerdict || !pile) return;
     WordpileStore.moveWord(pile.id, pendingVerdict.wordId, bucket);
     setPendingVerdict(null);
   }
 
-  const sharedProps = {
-    pileId: pile.id,
-    words,
-    resetKey,
-    onStructuralCountChange: setStructuralCount,
-    onUnsortedPlaced: setPendingVerdict,
-  };
+  function toggleMute() {
+    const next = !muted;
+    setMutedState(next);
+    setBuildAudioMuted(next);
+  }
+
+  function dismissOnboard() {
+    setShowOnboard(false);
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(ONBOARD_KEY, "seen");
+      } catch {
+        // Ignore — quota / privacy mode.
+      }
+    }
+  }
+
+  function handleShare() {
+    if (!stackerRef.current) return;
+    const snap = stackerRef.current.getSnapshot();
+    downloadShareImage({
+      pileName: pile?.name ?? "Wordpile",
+      frame: snap.frame,
+      trim: snap.trim,
+      standing,
+    });
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
@@ -176,27 +236,12 @@ export function BuildPage() {
         className="mb-6 text-lg leading-relaxed"
         style={{ color: "var(--color-stone)", maxWidth: 720 }}
       >
-        Every word in the pile is a 2x4. Load-bearing timbers hold weight,
-        Interior trim sits on top, and Avoid words crack on contact. Try all
-        three little games — pick the one that feels best.
+        Every word in the pile is a 2x4. Drag Load-bearing words into the frame,
+        Interior trim onto the top, and watch Avoid words crack on contact.
+        Reach {STANDING_THRESHOLD} load-bearing timbers and the building stands.
       </p>
 
-      <div className="build-toolbar" data-testid="build-toolbar">
-        <div className="build-switcher" role="tablist" aria-label="Prototype">
-          {(Object.keys(VARIANT_LABELS) as Variant[]).map((v) => (
-            <button
-              key={v}
-              role="tab"
-              aria-selected={variant === v}
-              className={`build-switcher-btn ${variant === v ? "is-active" : ""}`}
-              onClick={() => setVariant(v)}
-              data-testid={`button-variant-${v}`}
-            >
-              <span className="build-switcher-name">{VARIANT_LABELS[v]}</span>
-              <span className="build-switcher-blurb">{VARIANT_BLURBS[v]}</span>
-            </button>
-          ))}
-        </div>
+      <div className="build-toolbar build-toolbar-polished" data-testid="build-toolbar">
         <div className="build-goal">
           <p className="eyebrow">Goal</p>
           <p>
@@ -213,13 +258,46 @@ export function BuildPage() {
             </span>
           </p>
         </div>
-        <button
-          className="btn-secondary whitespace-nowrap"
-          onClick={() => setResetKey((k) => k + 1)}
-          data-testid="button-build-reset"
-        >
-          <RotateCcw size={14} /> Reset
-        </button>
+        <div className="build-controls">
+          <button
+            type="button"
+            className="btn-icon"
+            onClick={toggleMute}
+            aria-label={muted ? "Unmute sound" : "Mute sound"}
+            aria-pressed={muted}
+            title={muted ? "Sound off" : "Sound on"}
+            data-testid="button-build-mute"
+          >
+            {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </button>
+          <button
+            type="button"
+            className="btn-icon"
+            onClick={() => setShowOnboard(true)}
+            aria-label="How to play"
+            title="How to play"
+            data-testid="button-build-help"
+          >
+            <HelpCircle size={16} />
+          </button>
+          <button
+            type="button"
+            className="btn-secondary whitespace-nowrap"
+            onClick={handleShare}
+            disabled={run.framePlaced + run.trimPlaced === 0}
+            data-testid="button-build-share"
+            title="Save a picture of your build"
+          >
+            <Download size={14} /> Save image
+          </button>
+          <button
+            className="btn-secondary whitespace-nowrap"
+            onClick={handleReset}
+            data-testid="button-build-reset"
+          >
+            <RotateCcw size={14} /> Reset
+          </button>
+        </div>
       </div>
 
       {words.length === 0 ? (
@@ -237,10 +315,17 @@ export function BuildPage() {
           </p>
         </div>
       ) : (
-        <div className="build-stage" data-testid={`stage-${variant}`}>
-          {variant === "stacker" && <StackerPrototype {...sharedProps} />}
-          {variant === "blocks" && <BlockBuilderPrototype {...sharedProps} />}
-          {variant === "planks" && <FallingPlanksPrototype {...sharedProps} />}
+        <div className="build-stage" data-testid="stage-stacker">
+          <StackerPrototype
+            ref={stackerRef}
+            pileId={pile.id}
+            words={words}
+            resetKey={resetKey}
+            onStructuralCountChange={setStructuralCount}
+            onUnsortedPlaced={setPendingVerdict}
+            onRunUpdate={setRun}
+            onJustStood={() => setJustStood(true)}
+          />
         </div>
       )}
 
@@ -252,40 +337,140 @@ export function BuildPage() {
         />
       )}
 
+      {justStood && (
+        <div
+          className="build-celebrate"
+          role="status"
+          data-testid="banner-celebrate"
+        >
+          <span className="timber">It stands.</span>{" "}
+          <span style={{ color: "var(--color-cream)", opacity: 0.9 }}>
+            Save the picture or keep going.
+          </span>
+          <button
+            className="build-celebrate-dismiss"
+            onClick={() => setJustStood(false)}
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <hr className="divider" />
 
       <section
-        className="rounded p-5"
-        style={{
-          backgroundColor: "var(--color-paper)",
-          border: "1px solid var(--color-rule)",
-        }}
-        data-testid="section-vote"
+        className="build-stats"
+        data-testid="section-build-stats"
+        aria-label="Build stats"
       >
-        <p className="eyebrow mb-2">Which one did you like?</p>
-        <p
-          className="text-sm mb-4"
-          style={{ color: "var(--color-stone)" }}
-        >
-          Tap a button to cast a vote. Votes are saved on this device so we can
-          see what you picked next time.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          {(Object.keys(VARIANT_LABELS) as Variant[]).map((v) => (
-            <button
-              key={v}
-              className={`btn-vote ${votes.lastChoice === v ? "is-chosen" : ""}`}
-              onClick={() => handleVote(v)}
-              data-testid={`button-vote-${v}`}
-            >
-              <span className="btn-vote-name">{VARIANT_LABELS[v]}</span>
-              <span className="btn-vote-count">
-                {votes[v]} vote{votes[v] === 1 ? "" : "s"}
-              </span>
-            </button>
-          ))}
+        <p className="eyebrow mb-2">This pile's workshop log</p>
+        <div className="build-stats-grid">
+          <Stat label="Runs played" value={stats.runs} />
+          <Stat label="Best frame" value={`${stats.bestFrame} / ${STANDING_THRESHOLD}`} />
+          <Stat label="Most pieces placed" value={stats.bestPlaced} />
+          <Stat label="Avoid words cracked" value={stats.crackCount} />
+          <Stat
+            label="Ever stood?"
+            value={stats.everStood ? "Yes" : "Not yet"}
+            highlight={stats.everStood}
+          />
         </div>
       </section>
+
+      {showOnboard && (
+        <OnboardCard onClose={dismissOnboard} pileName={pile.name} />
+      )}
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: string | number;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className={`build-stat ${highlight ? "is-highlight" : ""}`}
+      data-testid={`stat-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+    >
+      <span className="build-stat-label">{label}</span>
+      <span className="build-stat-value">{value}</span>
+    </div>
+  );
+}
+
+function OnboardCard({
+  onClose,
+  pileName,
+}: {
+  onClose: () => void;
+  pileName: string;
+}) {
+  return (
+    <div
+      className="build-onboard-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="build-onboard-title"
+      data-testid="panel-build-onboard"
+    >
+      <div className="build-onboard-card">
+        <p className="eyebrow">Workshop tour</p>
+        <h2 id="build-onboard-title" className="build-onboard-title">
+          Building with {pileName}
+        </h2>
+        <ol className="build-onboard-steps">
+          <li>
+            <span className="build-onboard-num">1</span>
+            <div>
+              <strong>Drag a Load-bearing word</strong> from the tray on the
+              left into one of the five frame slots. It snaps green and counts
+              toward "standing."
+            </div>
+          </li>
+          <li>
+            <span className="build-onboard-num">2</span>
+            <div>
+              <strong>Drag an Interior word</strong> onto the trim row up top.
+              Trim is decorative — it doesn't hold weight.
+            </div>
+          </li>
+          <li>
+            <span className="build-onboard-num">3</span>
+            <div>
+              <strong>Try an Avoid word.</strong> It cracks on contact and
+              shows a safer alternative — that's the lesson.
+            </div>
+          </li>
+          <li>
+            <span className="build-onboard-num">4</span>
+            <div>
+              <strong>Untreated words</strong> land loose. We'll ask whether
+              they're really Load, Interior, or Avoid — your answer files them
+              in the pile.
+            </div>
+          </li>
+        </ol>
+        <p className="build-onboard-tip">
+          Tap a tray card if dragging is fiddly. Use the speaker icon to mute
+          sound, and Save image to grab a picture of your finished build.
+        </p>
+        <div className="build-onboard-actions">
+          <button
+            className="btn-primary"
+            onClick={onClose}
+            data-testid="button-onboard-close"
+          >
+            Got it
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
