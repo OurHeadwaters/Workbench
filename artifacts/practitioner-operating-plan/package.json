@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "BASE_PATH=/ PORT=5173 vite build --config vite.config.ts",
+    "build": "BASE_PATH=\"${BASE_PATH:-/}\" PORT=\"${PORT:-5173}\" vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "postbuild": "SKIP_BUILD=1 pnpm exec tsx scripts/export-pdfs.ts",
     "validate-slides": "pnpm exec tsx scripts/validate-slides.ts",
