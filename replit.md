@@ -1,14 +1,14 @@
 # Overview
 
-This project is a pnpm workspace monorepo using TypeScript, designed to support various applications related to the "Northern Food Systems Research Library" and operational planning for a product company. The overarching goal is to provide tools and platforms for research, knowledge sharing, and strategic planning, with a strong emphasis on decentralization, permaculture principles, and operational flexibility for Indigenous communities in Canada.
+This project is a pnpm workspace monorepo using TypeScript, designed to support various applications related to the "Northern Food Systems Research Library" and operational planning for a product company. Its core purpose is to provide tools and platforms for research, knowledge sharing, and strategic planning, emphasizing decentralization, permaculture principles, and operational flexibility for Indigenous communities in Canada.
 
 Key capabilities include:
-- A React + Vite "Northern Food Systems Research Library" with drag-and-drop functionality, URL ingestion, SHA-256 file deduplication, tokenized share-links, and a needs-review queue.
-- An Express 5 API for library data management and secure storage operations.
-- A hybrid app and slide deck for practitioner operating plans, focusing on a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps, cost review mechanisms, and a "Codetry" philosophy grounding.
+- A React + Vite "Northern Food Systems Research Library" with drag-and-drop, URL ingestion, SHA-256 deduplication, tokenized share-links, and a needs-review queue.
+- An Express 5 API for library data management and secure storage.
+- A hybrid app and slide deck for practitioner operating plans, structured around a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps and cost review mechanisms.
 - An Expo (React Native + web) reader for the "Codetry Practitioner's Handbook," installable as a PWA, Expo Go app, or native binary, ensuring offline access.
 
-The project embodies a vision of empowering communities through accessible knowledge and self-sufficient operational models, moving away from traditional agency-based services towards a product-centric approach that prioritizes local control and value delivery.
+The project aims to empower communities through accessible knowledge and self-sufficient operational models, shifting from traditional agency-based services to a product-centric approach that prioritizes local control and value delivery.
 
 # User Preferences
 
@@ -32,77 +32,28 @@ The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and 
 
 **UI/UX & Feature Specifications:**
 
-- **Northern Food Systems Research Library (`artifacts/library`)**:
-    - Built with React + Vite.
-    - Features SHA-256 file deduplication, URL paste ingestion (Microlink for metadata, Cheerio for fallback), tokenized contributor share-links, a needs-review queue, search/filter, and stable per-entry URLs.
-    - Public `/share/:token` upload portal.
-
-- **Practitioner Operating Plan (`artifacts/practitioner-operating-plan`)**:
-    - Hybrid app + slides deck, rebuilt as a 6-slide V3 deck focusing on a product company model (software + tech stack + training).
-    - Core deal-flow: Idea → Pitch → Contract → Fulfillment → Impact.
-    - Routes include `/today`, `/week`, `/year` (working surfaces), `/plan` (operating slide viewer), `/lifestyle` (lifestyle philosophy viewer), `/slide{N}` (operating editor), `/lifestyle/slide{N}` (lifestyle editor), `/allslides` (export).
-    - All user state (checked steps, week notes, snapshots, cost-review approvals) stored in browser `localStorage` (`pop:v1`).
-    - Integrated cost review system with `useCostValue`, `useCostReview` hooks, and a modal for approving/editing costs.
-    - `/codetry` page defines the "metaphor-as-architecture" practice, crediting Jack Spirko, Joel Salatin, Nicole Sauce, and the Freedom Cells movement as foundational influences for design decisions (solution-shaped, regen-ag/permaculture, peer-to-peer).
-    - Constellation definition (`public/constellation.json`) lists locked permaculture zones (0-5) and serves as a machine-readable manifest.
-    - Slide cross-reference guardrail (`pnpm run check-slide-refs`) to prevent broken links after deck reorders.
-
-- **Codetry Practitioner's Handbook (`artifacts/codetry-handbook`)**:
-    - Expo (React Native + web) reader.
-    - Installable as a PWA (cache-first service worker, version-keyed cache, precaching), Expo Go app, and native binaries (iOS/Android).
-    - `app.config.js` uses `EXPO_PUBLIC_BASE_URL` for base path configuration across environments.
-    - `AsyncStorage` namespace `codetry-handbook:v1` for persistent reader state across platforms (web maps to `localStorage`).
-    - Part III of the handbook is built from an auto-generated, bundled snapshot of the constellation manifest from `practitioner-operating-plan`, with build-time validation to prevent staleness.
-    - Save-status pill (`lib/saveStatus.ts`, `lib/storage.ts`, `components/SyncStatusPill.tsx`): every persisted write goes through a `trackSave`-instrumented AsyncStorage wrapper, so the chrome can show `idle | saving | offline | error` exactly like the Wordpile web pill (icon-only in `TopChrome` on the chapter screen, full label on the bookmarks header). `initNetworkWatcher()` (called from `app/_layout.tsx`) subscribes to `@react-native-community/netinfo` so the pill flips to "Offline · saved here" on disconnect (NetInfo uses `navigator.onLine` + window online/offline events on web).
-
-- **Deer Lake Store Plan (`artifacts/deer-lake-store-plan`)**:
-    - Slides deck for operational plan, including financial models.
-    - Sources default values for its cross-reserve corridor calculator from `@workspace/cross-reserve-corridor`.
-    - A guard script `scripts/check-corridor-defaults.ts` prevents reintroduction of local numeric literals for corridor keys.
-
-- **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**:
-    - React + Vite. Hosts two sibling surfaces sharing palette and shell: the **walkthrough** (council read) at `/` and the **Phase Planner** (contractor decision tool) at `/planner`.
-    - Walkthrough mirrors the Practitioner's Guide v2 mobile shell pattern: full-bleed eagle prologue hoisted above the shell, then a sticky branded header (`AppShell.tsx`) over a continuous-scroll stack of nine sections (`prologue`, `what-it-is`, `why-current-fails`, `cold-chain`, `who-works`, `first-morning`, `what-stays`, `ask`, `recap`).
-    - No swipe-deck, no fixed bottom chrome — anchor IDs + global `scroll-behavior: smooth` make in-page jumps (header brand → top, header chip → recap, prologue Continue → first content section) feel uniform.
-    - Recap section bleeds full-width with the deep evergreen background so the contractor can screenshot it as a one-screen summary.
-    - **Phase Planner (`src/planner/`)** — mobile-first decision tool. Mode-aware throughout: **grants** mode (Optimistic / Realistic / Slippage scenarios) drives 5 anchors (contract-one start, cold-chain pilot start, LFIF intake, council decision, ISC decision) and gates the funding-secured trigger on the federal stack (LFIF + FedNor + ISC). **Self-fund** mode (Self-fund scenario) drives 4 anchors (contract-one start, cold-chain pilot start, council decision, truck-LFIF intake) and gates the trigger on a council vote to spend reserve capital — the only grant in play is the Fall-2026 LFIF window for the 807-partnership ice-road truck, which gates the vehicle but not the store. The `mode` field on each scenario discriminates which set of bars, gates, pegs, off-ramp text, and key-dates rows render. Two stacked Gantt strips (Phase 1 design+pilot+application, Phase 2 build+handover), a derived "What falls out" panel, and a council-decision off-ramp callout. State (including `mode`) persisted in `localStorage` namespace `dlpp:v1` with a backwards-compat shim that infers `mode` from `scenarioId` and injects a default `truckLfifIntake` for older saves. Uses native `<input type="date">` for touch-friendly anchor editing. Pure UTC date math in `src/planner/dates.ts` keeps the timeline timezone-stable. E2e covered by `tests/deer-lake-planner/planner.spec.ts` (6 specs).
-    - Tiny client-side router in `src/lib/route.ts` (custom `useRoute()` hook with `popstate` + custom event, no react-router) switches between walkthrough and planner without a full reload. `src/lib/paths.ts` centralises route constants so both shells link cleanly to each other.
-    - Hosted at `/deer-lake-walkthrough/` and `/deer-lake-walkthrough/planner` because the project is at the artifact cap (9 of 7) and a fresh artifact could not be created — the planner is a sibling surface, not a separate product.
-
-- **`artifacts/api-server`**:
-    - Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects).
-    - Public-objects route includes a local-filesystem fallback for `attached_assets/<filename>`.
-
-- **`artifacts/mockup-sandbox`**: Internal design canvas.
-
-- **Wordpile (`artifacts/wordpile`)**:
-    - React + Vite + Tailwind v4 web tool routed at `/wordpile/`. Local cache in `localStorage` (`wordpile:v1` for piles/words; `wordpile:draft:<pileId>` for per-pile draft text). Optional cloud sync via Clerk + Postgres so a signed-in practitioner sees the same piles on every device.
-    - Per-community word inventory with three buckets (load-bearing / interior / avoid) plus an "unsorted" bucket; supports free-entry, paste-to-extract, in-place editing, and safer-alternative copy on avoid words.
-    - "Check my draft" view tokenizes a pasted draft and inline-flags avoid words (with safer alternatives in tooltips), highlights load-bearing words used, and lists missing load-bearing words.
-    - Import / export: each pile has an Export action on the editor that downloads a `.wordpile.json` file (schema `{format: "wordpile-export", formatVersion: 1, pile: {name, words[], draft?}}`); the piles list has an Import action that reads a `.wordpile.json` file and either creates a new pile or merges into an existing one (case-insensitive de-dupe on word). Helpers live in `lib/store.ts` (`serializePile`, `importPile`, `parsePileExport`).
-    - Wouter routing: `/wordpile/`, `/wordpile/pile/:id`, `/wordpile/pile/:id/check`, `/wordpile/sign-in`, `/wordpile/sign-up`. Visual identity matches the Codetry Handbook (cream `#f4ede0`, ink `#1f3d2e`, Lora serif, JetBrains Mono).
-    - Auth/sync model: anonymous users keep using `localStorage` as the source of truth. On sign-in, the local snapshot is POSTed to `/api/wordpile/sync` (last-write-wins by `updatedAt`, never deletes server rows) and replaced with the merged server result; subsequent mutations write locally first and enqueue a push to the API. Sign-out clears the local cache. ClerkProvider only mounts when `VITE_CLERK_PUBLISHABLE_KEY` is set; otherwise the app falls back to the previous local-only experience.
-    - Sync queue + status pill (`src/lib/cloudSync.ts`, `src/components/SyncStatusPill.tsx`): pushes are queued FIFO with a single in-flight request; a subscribable `SyncSnapshot` (`status` ∈ `idle | saving | error | offline`, `pendingCount`, `lastSyncedAt`, `lastErrorAt`) is rendered as a pill in the signed-in top bar. Network errors and 5xx/408/429 are retried; other 4xx responses drop the op (so a stale create/delete can't loop). Failed pushes retry on the next mutation or a browser `online` event. Sign-out clears the queue.
-    - Backend routes live in `artifacts/api-server/src/routes/wordpile.ts` (`/me`, `/sync`, `/piles` CRUD, `/piles/:pileId/words` CRUD); all but `/me` require a Clerk session and are scoped by `clerkUserId`. Schema in `lib/db/src/schema/wordpile.ts` (`wordpile_piles`, `wordpile_words`, UUID PKs, FK cascade).
-    - Reachable from a "COMPANION TOOLS · Wordpile" tile on the Codetry Handbook front page.
-    - Note: localPort is pinned to `25433` because manually-created artifacts must reuse a port already mapped in `.replit` `[[ports]]` (cannot edit `.replit`).
+- **Northern Food Systems Research Library (`artifacts/library`)**: React + Vite application featuring SHA-256 file deduplication, URL paste ingestion, tokenized contributor share-links, a needs-review queue, search/filter, and public upload portal.
+- **Practitioner Operating Plan (`artifacts/practitioner-operating-plan`)**: Hybrid app + slides deck, focused on a product company model. It implements a core deal-flow (Idea → Pitch → Contract → Fulfillment → Impact), includes integrated cost review, and stores user state in `localStorage`. Features a `/codetry` page defining a "metaphor-as-architecture" practice and a `constellation.json` manifest for permaculture zones.
+- **Codetry Practitioner's Handbook (`artifacts/codetry-handbook`)**: Expo (React Native + web) reader. Installable as a PWA, Expo Go app, or native binaries with offline access. Uses `AsyncStorage` for persistent state and includes a save-status pill. Part III is built from an auto-generated, bundled snapshot of the constellation manifest.
+- **Deer Lake Store Plan (`artifacts/deer-lake-store-plan`)**: Slides deck for operational plan, including financial models. It sources values from `@workspace/cross-reserve-corridor` and includes a guard script to prevent hardcoded corridor keys.
+- **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**: React + Vite application hosting a walkthrough (`/`) and a mobile-first Phase Planner (`/planner`). The walkthrough features a continuous-scroll design with sticky header and in-page jumps. The Phase Planner is a decision tool with "grants" and "self-fund" modes, persisting state in `localStorage` and using UTC date math. It uses a tiny client-side router.
+- **`artifacts/api-server`**: Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects with local filesystem fallback).
+- **Wordpile (`artifacts/wordpile`)**: React + Vite + Tailwind web tool for community word inventories. Supports free-entry, paste-to-extract, "Check my draft" view, and import/export of word piles. Implements optional cloud sync via Clerk + Postgres with a sync queue and status pill. Supports share-links (client-side fragment-only or server-stored short links).
 
 **Database Schema (`lib/db/src/schema/library.ts`):**
-- `subjects`, `project_buckets`, `producers`, `contributors` (taxonomies).
-- `library_entries` (unique partial index on `content_hash`).
-- `entry_subjects`, `entry_buckets`.
-- `share_links` (tokenized contributor upload portals).
+Includes tables for `subjects`, `project_buckets`, `producers`, `contributors`, `library_entries` (with unique partial index on `content_hash`), `entry_subjects`, `entry_buckets`, and `share_links`.
 
 **Seeding:**
-- `pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` provides an idempotent seed for development, cataloging files in `attached_assets/` and provisioning sample data.
+`pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` provides an idempotent seed for development.
 
 # External Dependencies
 
-- **Microlink**: Used by the library for URL metadata and screenshot generation during ingestion.
-- **Cheerio**: Used as a fallback for URL metadata parsing in the library.
-- **Expo**: For building the Codetry Practitioner's Handbook as a cross-platform application (PWA, Expo Go, native iOS/Android).
-- **PostgreSQL**: Primary database for the API and library data.
-- **Drizzle ORM**: Object-relational mapper for database interactions.
-- **Express 5**: Web application framework for the API server.
-- **Zod**: Schema declaration and validation library.
-- **Orval**: API client code generator from OpenAPI specifications.
+- **Microlink**: For URL metadata and screenshot generation in the library.
+- **Cheerio**: Fallback for URL metadata parsing in the library.
+- **Expo**: For cross-platform application development of the Codetry Practitioner's Handbook.
+- **PostgreSQL**: Primary database.
+- **Drizzle ORM**: For database interactions.
+- **Express 5**: For the API server.
+- **Zod**: For schema declaration and validation.
+- **Orval**: For API client code generation.
+- **Clerk**: For user authentication and cloud synchronization in Wordpile.

@@ -104,6 +104,48 @@ export const wordpileDeletionsTable = pgTable(
   }),
 );
 
+// ---------- wordpile_short_links ----------
+//
+// Server-stored share links keyed by an unguessable short slug. The
+// fragment-based share URLs (`#data=...`) keep the pile contents fully
+// client-side and work without ever touching the server, but they get
+// long fast and some messaging apps mangle anything past a few KB.
+// Short links trade that privacy property for a tiny URL: the gzip+
+// base64 payload is stored opaquely on the server keyed by the slug,
+// and anyone with the slug can fetch + decode it.
+//
+// Design choices:
+//   - `slug` is the PK so a `GET /short-links/:slug` is a single
+//     primary-key lookup, no per-user join required (the resolve
+//     endpoint is anonymous on purpose — share-link recipients aren't
+//     necessarily users of this app).
+//   - `clerkUserId` is the owner who can revoke. The resolve endpoint
+//     never exposes it.
+//   - `pileId` is a hint only (no FK) so deleting the pile doesn't
+//     cascade-revoke its share links — a practitioner who deleted a
+//     pile locally can still revoke its outstanding short links.
+//   - `pileName` is captured at create time so the "your short links"
+//     list stays meaningful even after the pile is renamed/deleted.
+//   - `payload` is the same opaque base64url string the fragment link
+//     would carry — the server never has to parse the contents.
+export const wordpileShortLinksTable = pgTable(
+  "wordpile_short_links",
+  {
+    slug: text("slug").primaryKey(),
+    clerkUserId: text("clerk_user_id").notNull(),
+    pileId: uuid("pile_id"),
+    pileName: text("pile_name").notNull().default(""),
+    payload: text("payload").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    ownerIdx: index("wordpile_short_links_owner_idx").on(t.clerkUserId),
+  }),
+);
+
 export type WordpilePileRow = typeof wordpilePilesTable.$inferSelect;
 export type WordpileWordRow = typeof wordpileWordsTable.$inferSelect;
 export type WordpileDeletionRow = typeof wordpileDeletionsTable.$inferSelect;
+export type WordpileShortLinkRow = typeof wordpileShortLinksTable.$inferSelect;

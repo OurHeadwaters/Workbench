@@ -11,10 +11,13 @@ import {
   wordpilePilesTable,
   wordpileWordsTable,
   wordpileDeletionsTable,
+  wordpileShortLinksTable,
   type WordpilePileRow,
   type WordpileWordRow,
+  type WordpileShortLinkRow,
 } from "@workspace/db";
-import { and, asc, eq, inArray, lt } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, lt } from "drizzle-orm";
+import { randomBytes } from "node:crypto";
 
 // Tombstone kinds. Kept as a narrow string union and reused in the helper
 // below so a typo can't silently insert e.g. kind="words" (plural) and
@@ -627,6 +630,186 @@ router.patch("/piles/:pileId/words/:wordId", withAuth, async (req, res) => {
     .where(eq(wordpilePilesTable.id, pileId));
 
   res.json(serializeWord(updated));
+});
+
+// ----------------------- short-link routes -----------------------
+//
+// Server-stored short links for share URLs that get too long to paste
+// into Signal/SMS/etc. Tradeoffs vs. fragment links are spelled out in
+// the schema comment and the editor UI. The four endpoints below are:
+//
+//   POST   /short-links        (auth)   create + return slug
+//   GET    /short-links        (auth)   list mine — for the manage UI
+//   GET    /short-links/:slug  (public) resolve — recipients aren't users
+//   DELETE /short-links/:slug  (auth)   revoke (owner-only, 404 otherwise)
+//
+// We keep the encoded payload opaque on the server: same gzip+base64url
+// blob the client would have stuffed into the fragment, just stored
+// instead of encoded into the URL. The size cap mirrors the client's
+// MAX_ENCODED_LENGTH (32KB of base64).
+
+const SHORT_LINK_PAYLOAD_MAX = 32 * 1024;
+// Slug shape: base64url alphabet, fixed length, generated server-side.
+// We never accept client-supplied slugs — that keeps slug collisions
+// purely a server problem and avoids "guess my friend's slug" attacks.
+const SLUG_RE = /^[A-Za-z0-9_-]{8,32}$/;
+function isSlug(v: unknown): v is string {
+  return typeof v === "string" && SLUG_RE.test(v);
+}
+
+function generateSlug(): string {
+  // 8 random bytes → 11 base64url characters (no padding). At ~10^19
+  // possibilities a single-row collision check is overwhelmingly enough;
+  // the create endpoint retries a couple of times anyway.
+  return randomBytes(8).toString("base64url");
+}
+
+function serializeShortLinkSummary(row: WordpileShortLinkRow) {
+  return {
+    slug: row.slug,
+    pileId: row.pileId,
+    pileName: row.pileName,
+    payloadLength: row.payload.length,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+router.post("/short-links", withAuth, async (req, res) => {
+  const { clerkUserId } = req.wordpileUser!;
+  const body = (req.body ?? {}) as Record<string, unknown>;
+
+  if (typeof body.payload !== "string" || body.payload.length === 0) {
+    res.status(400).json({ error: "payload is required" });
+    return;
+  }
+  if (body.payload.length > SHORT_LINK_PAYLOAD_MAX) {
+    // Mirrors the client-side guard. We refuse here too so a tampered
+    // client can't fill the table with multi-MB rows.
+    res.status(413).json({
+      error: "payload too large",
+      maxLength: SHORT_LINK_PAYLOAD_MAX,
+    });
+    return;
+  }
+  // Same alphabet check the encoder produces — block obvious garbage
+  // up front so the resolve endpoint never has to deal with it.
+  if (!/^[A-Za-z0-9_-]+$/.test(body.payload)) {
+    res.status(400).json({ error: "payload must be base64url" });
+    return;
+  }
+
+  const pileId =
+    typeof body.pileId === "string" && isUuid(body.pileId) ? body.pileId : null;
+  const pileNameRaw =
+    typeof body.pileName === "string" ? body.pileName.trim() : "";
+  const pileName = pileNameRaw.slice(0, 200);
+
+  // Generate-and-retry on collision. With 8 random bytes, p(collision)
+  // for the second insert is ~1 in 10^19 — three tries is comically
+  // generous but cheap enough that future-us doesn't have to think
+  // about whether the table has grown to a billion rows.
+  let inserted: WordpileShortLinkRow | undefined;
+  let attempts = 0;
+  while (!inserted && attempts < 3) {
+    attempts += 1;
+    const slug = generateSlug();
+    try {
+      const [row] = await db
+        .insert(wordpileShortLinksTable)
+        .values({
+          slug,
+          clerkUserId,
+          pileId,
+          pileName,
+          payload: body.payload,
+          createdAt: new Date(),
+        })
+        .returning();
+      inserted = row;
+    } catch (err) {
+      // Postgres unique-violation is the only expected failure here.
+      // Anything else (DB down, etc.) we let bubble — the test fake
+      // throws a synchronous Error with "duplicate key" in the message
+      // for PK conflicts so we can match either shape.
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/duplicate key|unique constraint|already exists/i.test(msg)) {
+        throw err;
+      }
+    }
+  }
+  if (!inserted) {
+    res.status(500).json({ error: "Failed to allocate short link" });
+    return;
+  }
+  res.status(201).json(serializeShortLinkSummary(inserted));
+});
+
+router.get("/short-links", withAuth, async (req, res) => {
+  const { clerkUserId } = req.wordpileUser!;
+  const rows = await db
+    .select()
+    .from(wordpileShortLinksTable)
+    .where(eq(wordpileShortLinksTable.clerkUserId, clerkUserId))
+    .orderBy(desc(wordpileShortLinksTable.createdAt));
+  res.json({ links: rows.map(serializeShortLinkSummary) });
+});
+
+// Public resolve: no auth check. We deliberately return only the
+// payload + the (cosmetic) pileName so the recipient's import preview
+// can show "Importing 'Deer Lake' from a shared link". Owner identity
+// is never disclosed.
+router.get("/short-links/:slug", async (req, res) => {
+  const slug = String(req.params.slug);
+  if (!isSlug(slug)) {
+    res.status(404).json({ error: "Short link not found" });
+    return;
+  }
+  const [row] = await db
+    .select()
+    .from(wordpileShortLinksTable)
+    .where(eq(wordpileShortLinksTable.slug, slug))
+    .limit(1);
+  if (!row) {
+    res.status(404).json({ error: "Short link not found" });
+    return;
+  }
+  res.json({
+    slug: row.slug,
+    payload: row.payload,
+    pileName: row.pileName,
+  });
+});
+
+router.delete("/short-links/:slug", withAuth, async (req, res) => {
+  const { clerkUserId } = req.wordpileUser!;
+  const slug = String(req.params.slug);
+  if (!isSlug(slug)) {
+    // Same as a missing row — don't leak the distinction between
+    // "malformed slug" and "not yours".
+    res.status(404).json({ error: "Short link not found" });
+    return;
+  }
+  // Look it up scoped to the caller. We do the ownership check in the
+  // WHERE clause so a different user's slug appears identical to a
+  // missing slug from the outside.
+  const [row] = await db
+    .select()
+    .from(wordpileShortLinksTable)
+    .where(
+      and(
+        eq(wordpileShortLinksTable.slug, slug),
+        eq(wordpileShortLinksTable.clerkUserId, clerkUserId),
+      ),
+    )
+    .limit(1);
+  if (!row) {
+    res.status(404).json({ error: "Short link not found" });
+    return;
+  }
+  await db
+    .delete(wordpileShortLinksTable)
+    .where(eq(wordpileShortLinksTable.slug, slug));
+  res.json({ ok: true });
 });
 
 router.delete("/piles/:pileId/words/:wordId", withAuth, async (req, res) => {

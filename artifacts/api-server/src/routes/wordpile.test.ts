@@ -23,6 +23,7 @@ const {
   wordpilePilesTable,
   wordpileWordsTable,
   wordpileDeletionsTable,
+  wordpileShortLinksTable,
 } = vi.hoisted(() => {
     type Row = Record<string, unknown>;
     type Col = { __c: string };
@@ -31,11 +32,12 @@ const {
       | { kind: "and"; args: Pred[] }
       | { kind: "inArray"; col: Col; vals: unknown[] }
       | { kind: "lt"; col: Col; val: unknown };
-    type Order = { kind: "asc"; col: Col };
+    type Order = { kind: "asc" | "desc"; col: Col };
 
     const PILES: Row[] = [];
     const WORDS: Row[] = [];
     const DELETIONS: Row[] = [];
+    const SHORT_LINKS: Row[] = [];
 
     const wordpilePilesTable = {
       __store: PILES,
@@ -77,6 +79,21 @@ const {
       id: { __c: "id" } as Col,
       deletedAt: { __c: "deletedAt" } as Col,
     };
+    // Server-stored short links. Single-column PK on `slug`. The slug is
+    // generated server-side, but we still enforce uniqueness here so a
+    // future change that reuses a slug surfaces immediately instead of
+    // silently overwriting an existing row.
+    const wordpileShortLinksTable = {
+      __store: SHORT_LINKS,
+      __name: "short_links" as const,
+      __pk: ["slug"] as readonly string[],
+      slug: { __c: "slug" } as Col,
+      clerkUserId: { __c: "clerkUserId" } as Col,
+      pileId: { __c: "pileId" } as Col,
+      pileName: { __c: "pileName" } as Col,
+      payload: { __c: "payload" } as Col,
+      createdAt: { __c: "createdAt" } as Col,
+    };
 
     const eq = (col: Col, val: unknown): Pred => ({ kind: "eq", col, val });
     const and = (...args: Pred[]): Pred => ({ kind: "and", args });
@@ -87,6 +104,7 @@ const {
     });
     const lt = (col: Col, val: unknown): Pred => ({ kind: "lt", col, val });
     const asc = (col: Col): Order => ({ kind: "asc", col });
+    const desc = (col: Col): Order => ({ kind: "desc", col });
 
     function rowMatches(row: Row, pred: Pred | null): boolean {
       if (!pred) return true;
@@ -114,7 +132,8 @@ const {
     type Table =
       | typeof wordpilePilesTable
       | typeof wordpileWordsTable
-      | typeof wordpileDeletionsTable;
+      | typeof wordpileDeletionsTable
+      | typeof wordpileShortLinksTable;
 
     function makeSelect(table: Table) {
       let where: Pred | null = null;
@@ -124,14 +143,15 @@ const {
         let rows = table.__store.filter((r) => rowMatches(r, where));
         if (order) {
           const c = order.col.__c;
+          const dir = order.kind === "desc" ? -1 : 1;
           rows = [...rows].sort((a, b) => {
             const av = a[c];
             const bv = b[c];
             if (av instanceof Date && bv instanceof Date) {
-              return av.getTime() - bv.getTime();
+              return dir * (av.getTime() - bv.getTime());
             }
-            if ((av as number) < (bv as number)) return -1;
-            if ((av as number) > (bv as number)) return 1;
+            if ((av as number) < (bv as number)) return -1 * dir;
+            if ((av as number) > (bv as number)) return 1 * dir;
             return 0;
           });
         }
@@ -336,7 +356,8 @@ const {
       wordpilePilesTable,
       wordpileWordsTable,
       wordpileDeletionsTable,
-      fakeDrizzle: { eq, and, asc, inArray, lt },
+      wordpileShortLinksTable,
+      fakeDrizzle: { eq, and, asc, desc, inArray, lt },
       fakeDb,
     };
   });
@@ -346,6 +367,7 @@ vi.mock("@workspace/db", () => ({
   wordpilePilesTable,
   wordpileWordsTable,
   wordpileDeletionsTable,
+  wordpileShortLinksTable,
 }));
 
 vi.mock("drizzle-orm", () => fakeDrizzle);
@@ -425,6 +447,7 @@ beforeEach(async () => {
   wordpilePilesTable.__store.length = 0;
   wordpileWordsTable.__store.length = 0;
   wordpileDeletionsTable.__store.length = 0;
+  wordpileShortLinksTable.__store.length = 0;
   setUser(null);
   if (!harness) harness = await startHarness();
 });
@@ -1236,5 +1259,289 @@ describe("POST /sync tombstones (deletes outlast a stale device)", () => {
       sync.body as { piles: Array<{ id: string; name: string }> }
     ).piles;
     expect(piles.map((p) => p.id)).toEqual([PILE_B]);
+  });
+});
+
+// ----------------------- short-link routes -----------------------
+//
+// These cover the four endpoints documented in the route comment:
+//   POST   /short-links        (auth)   create
+//   GET    /short-links        (auth)   list mine
+//   GET    /short-links/:slug  (public) resolve — owner identity hidden
+//   DELETE /short-links/:slug  (auth)   revoke (owner-only, 404 otherwise)
+// The fixed-size in-memory store is reset in the global beforeEach.
+
+describe("short links", () => {
+  // A tiny but base64url-shaped payload — the route doesn't actually
+  // decode it (server treats it opaquely), so anything in the alphabet
+  // works for these tests. Real payloads are gzip+base64url but we
+  // don't need to round-trip them here.
+  const PAYLOAD = "H4sIAAAAAAAACvNIzcnJVyjPL8pJUQQApi3CbAwAAAA";
+  const BIG_PAYLOAD = "A".repeat(33 * 1024);
+
+  describe("auth gating", () => {
+    it("POST /short-links requires auth", async () => {
+      const { status, body } = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "x",
+      });
+      expect(status).toBe(401);
+      expect(body).toEqual({ error: "Unauthorized" });
+    });
+
+    it("GET /short-links requires auth", async () => {
+      const { status } = await req("GET", "/api/wordpile/short-links");
+      expect(status).toBe(401);
+    });
+
+    it("DELETE /short-links/:slug requires auth", async () => {
+      const { status } = await req(
+        "DELETE",
+        "/api/wordpile/short-links/abcdefgh",
+      );
+      expect(status).toBe(401);
+    });
+
+    it("GET /short-links/:slug does NOT require auth (public resolve)", async () => {
+      // No setUser(...) — fully signed-out.
+      const { status, body } = await req(
+        "GET",
+        "/api/wordpile/short-links/doesnotexist",
+      );
+      // Public, but missing slug — so 404 (not 401).
+      expect(status).toBe(404);
+      expect(body).toEqual({ error: "Short link not found" });
+    });
+  });
+
+  describe("POST /short-links", () => {
+    it("creates a short link and returns a slug + summary fields", async () => {
+      setUser("user_a");
+      const { status, body } = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A's pile",
+      });
+      expect(status).toBe(201);
+      const summary = body as {
+        slug: string;
+        pileId: string | null;
+        pileName: string;
+        payloadLength: number;
+        createdAt: string;
+      };
+      expect(summary.pileId).toBe(PILE_A);
+      expect(summary.pileName).toBe("A's pile");
+      expect(summary.payloadLength).toBe(PAYLOAD.length);
+      // base64url alphabet, 8..32 chars — what the route's regex expects.
+      expect(summary.slug).toMatch(/^[A-Za-z0-9_-]{8,32}$/);
+      expect(typeof summary.createdAt).toBe("string");
+      // The row is actually stored owner-scoped, not silently anonymous.
+      const stored = wordpileShortLinksTable.__store.find(
+        (r) => r.slug === summary.slug,
+      );
+      expect(stored?.clerkUserId).toBe("user_a");
+      expect(stored?.payload).toBe(PAYLOAD);
+    });
+
+    it("rejects empty payload (400)", async () => {
+      setUser("user_a");
+      const { status } = await req("POST", "/api/wordpile/short-links", {
+        payload: "",
+        pileName: "x",
+      });
+      expect(status).toBe(400);
+    });
+
+    it("rejects payload over 32KB (413)", async () => {
+      setUser("user_a");
+      const { status, body } = await req("POST", "/api/wordpile/short-links", {
+        payload: BIG_PAYLOAD,
+        pileName: "x",
+      });
+      expect(status).toBe(413);
+      expect((body as { error: string }).error).toBe("payload too large");
+    });
+
+    it("rejects non-base64url payload (400)", async () => {
+      setUser("user_a");
+      const { status } = await req("POST", "/api/wordpile/short-links", {
+        // `+` and `/` are base64 standard but not base64url. `=` likewise.
+        payload: "abc+def/ghi=",
+        pileName: "x",
+      });
+      expect(status).toBe(400);
+    });
+
+    it("treats a non-uuid pileId as anonymous (null pileId on row)", async () => {
+      // The editor passes this when the pile hasn't been cloud-synced
+      // yet. Forcing a 400 in that case would block exactly the kind
+      // of user we most want to support (anonymous practitioner with
+      // a freshly imported pile).
+      setUser("user_a");
+      const { status, body } = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: "not-a-uuid",
+        pileName: "x",
+      });
+      expect(status).toBe(201);
+      expect((body as { pileId: string | null }).pileId).toBeNull();
+    });
+  });
+
+  describe("GET /short-links (list mine)", () => {
+    it("returns only the caller's links, newest first", async () => {
+      setUser("user_a");
+      const a1 = (await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A1",
+      })).body as { slug: string };
+      // Force createdAt ordering deterministically — without this the
+      // two rows can share a millisecond on fast machines and the
+      // "newest first" assertion becomes a flake.
+      const a2 = (await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A2",
+      })).body as { slug: string };
+      const rowsA = wordpileShortLinksTable.__store.filter(
+        (r) => r.clerkUserId === "user_a",
+      );
+      rowsA.find((r) => r.slug === a1.slug)!.createdAt = new Date(
+        "2026-01-01T00:00:00Z",
+      );
+      rowsA.find((r) => r.slug === a2.slug)!.createdAt = new Date(
+        "2026-01-02T00:00:00Z",
+      );
+
+      setUser("user_b");
+      await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_B,
+        pileName: "B1",
+      });
+
+      setUser("user_a");
+      const { status, body } = await req("GET", "/api/wordpile/short-links");
+      expect(status).toBe(200);
+      const links = (body as { links: Array<{ slug: string; pileName: string }> })
+        .links;
+      expect(links.map((l) => l.slug)).toEqual([a2.slug, a1.slug]);
+      // Sanity: nothing from user_b leaked in.
+      expect(links.every((l) => l.pileName !== "B1")).toBe(true);
+    });
+
+    it("returns an empty list when the caller has no short links", async () => {
+      setUser("user_b");
+      const { status, body } = await req("GET", "/api/wordpile/short-links");
+      expect(status).toBe(200);
+      expect(body).toEqual({ links: [] });
+    });
+  });
+
+  describe("GET /short-links/:slug (public resolve)", () => {
+    it("returns payload + pileName but NEVER the owner's identity", async () => {
+      setUser("user_a");
+      const created = (await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A's pile",
+      })).body as { slug: string };
+
+      // Sign out — the resolve endpoint must work with no session at all.
+      setUser(null);
+      const { status, body } = await req(
+        "GET",
+        `/api/wordpile/short-links/${created.slug}`,
+      );
+      expect(status).toBe(200);
+      const resolved = body as Record<string, unknown>;
+      expect(resolved.slug).toBe(created.slug);
+      expect(resolved.payload).toBe(PAYLOAD);
+      expect(resolved.pileName).toBe("A's pile");
+      // Privacy contract: don't disclose owner identity to recipients.
+      expect(resolved.clerkUserId).toBeUndefined();
+      expect(resolved.pileId).toBeUndefined();
+    });
+
+    it("404s for a malformed slug", async () => {
+      const { status } = await req(
+        "GET",
+        "/api/wordpile/short-links/not%20a%20slug",
+      );
+      expect(status).toBe(404);
+    });
+
+    it("404s for a well-formed but unknown slug", async () => {
+      const { status } = await req(
+        "GET",
+        "/api/wordpile/short-links/abcdefgh",
+      );
+      expect(status).toBe(404);
+    });
+  });
+
+  describe("DELETE /short-links/:slug (revoke)", () => {
+    it("owner can revoke; the slug then 404s on resolve", async () => {
+      setUser("user_a");
+      const created = (await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A's pile",
+      })).body as { slug: string };
+
+      const del = await req(
+        "DELETE",
+        `/api/wordpile/short-links/${created.slug}`,
+      );
+      expect(del.status).toBe(200);
+      expect(del.body).toEqual({ ok: true });
+
+      // The row is actually gone, not just hidden.
+      expect(
+        wordpileShortLinksTable.__store.find((r) => r.slug === created.slug),
+      ).toBeUndefined();
+
+      // Public resolve now 404s — recipients of the link see "revoked".
+      setUser(null);
+      const resolve = await req(
+        "GET",
+        `/api/wordpile/short-links/${created.slug}`,
+      );
+      expect(resolve.status).toBe(404);
+    });
+
+    it("non-owner gets 404 (not 403) and the row is untouched", async () => {
+      setUser("user_a");
+      const created = (await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileId: PILE_A,
+        pileName: "A's pile",
+      })).body as { slug: string };
+
+      setUser("user_b");
+      const { status, body } = await req(
+        "DELETE",
+        `/api/wordpile/short-links/${created.slug}`,
+      );
+      // 404 — never disclose "this exists, you just can't touch it".
+      expect(status).toBe(404);
+      expect(body).toEqual({ error: "Short link not found" });
+
+      // Row is still there.
+      expect(
+        wordpileShortLinksTable.__store.find((r) => r.slug === created.slug),
+      ).toBeDefined();
+    });
+
+    it("404s on unknown slug for the owner too", async () => {
+      setUser("user_a");
+      const { status } = await req(
+        "DELETE",
+        "/api/wordpile/short-links/abcdefgh",
+      );
+      expect(status).toBe(404);
+    });
   });
 });
