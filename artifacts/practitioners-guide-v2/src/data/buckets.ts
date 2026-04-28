@@ -21,7 +21,7 @@ export const BUCKETS: Record<BucketId, BucketIdentity> = {
   contracts: {
     id: "contracts",
     name: "Community Contracts",
-    tagline: "807 CDP + Agency aspiration",
+    tagline: "Agency engagement",
     accent: "#1F5446",
     accentSoft: "#E0EAE6",
     accentInk: "#0F2C25",

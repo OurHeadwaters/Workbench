@@ -5,16 +5,16 @@ import { MoneyKpi } from "@/components/MoneyKpi";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { Num } from "@/components/Num";
 import { FootnoteList } from "@/components/FootnoteList";
-import { CDP807_FOOTNOTES, AGENCY_FOOTNOTES } from "@/data/footnotes";
+import { AGENCY_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
 import { tbd, type SourceTag } from "@/data/tags";
 import { buildContractsLedger } from "@/data/contractsLedger";
 import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
+import { ReinvestmentBucketsInteractive } from "@/components/ReinvestmentBucketsInteractive";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
-  const cdp = scenario.contracts.cdp807;
   const a = scenario.contracts.agency;
   const b = BUCKETS.contracts;
 
@@ -28,19 +28,19 @@ export function ContractsPage() {
             className="text-xs font-medium uppercase tracking-[0.2em]"
             style={{ color: b.accent }}
           >
-            {b.name} · two sub-lines
+            {b.name} · {money(a.fee)}/mo agency engagement
           </p>
           <h1
             className="mt-2 text-3xl font-semibold"
             style={{ fontFamily: "var(--app-font-serif)" }}
           >
-            Real money in flight, plus the agency aspiration.
+            One agency line, one waterfall, every dollar accounted for.
           </h1>
           <p className="mt-3 text-muted-foreground max-w-3xl">
-            Sub-line 1 is the 807 CDP grant — a real receivable,{" "}
-            <Num tag={cdp.scoping.tag}>$0</Num> cash collected so far. Sub-line 2 is the{" "}
-            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}.
-            Surplus deployment is tithe-first: <Num tag={a.feeTag}>{pct(a.tithePct)}</Num> of revenue
+            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}{" "}
+            against the 7-role Deer Lake team (<Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo
+            payroll). Surplus deployment is tithe-first:{" "}
+            <Num tag={a.feeTag}>{pct(a.tithePct)}</Num> of revenue
             (<Num tag={a.feeTag}>{money(a.titheMonthly)}</Num>/mo) goes to Giving off the top, then
             capital recovery, then Brightside launch, then Reserve / Innovation.
           </p>
@@ -51,150 +51,13 @@ export function ContractsPage() {
         />
       </header>
 
-      {/* ============ 807 CDP ============ */}
-      <div id="cdp807" className="scroll-mt-24">
-        <h2
-          className="text-2xl font-semibold mb-4"
-          style={{ fontFamily: "var(--app-font-serif)", color: b.accentInk }}
-        >
-          Sub-line 1 · 807 CDP grant
-        </h2>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          <MoneyKpi
-            label="Bill to 807"
-            value={cdp.scoping.billTo807}
-            tag={cdp.scoping.tag}
-            accent={b.accent}
-            hint={`$24k scoped − $2k local discount`}
-            testId="kpi-cdp-bill"
-          />
-          <MoneyKpi
-            label="Cash received"
-            value={cdp.scoping.cashReceivedToDate}
-            tag={cdp.scoping.tag}
-            tone="muted"
-            accent={b.accent}
-            hint="Invoice lands at completion (end of year)"
-            testId="kpi-cdp-cash"
-          />
-          <MoneyKpi
-            label="Cost to deliver"
-            value={cdp.costToDeliver.replitHosting}
-            tag={cdp.costToDeliver.tag}
-            accent={b.accent}
-            hint="Replit hosting only"
-            testId="kpi-cdp-cost"
-          />
-          <MoneyKpi
-            label="Net cash to Headwaters"
-            value={cdp.pAndL.netCash}
-            tag={cdp.pAndL.tag}
-            tone="positive"
-            accent={b.accent}
-            testId="kpi-cdp-net"
-          />
-        </div>
-
-        <SectionCard
-          title="Scope & funding structure"
-          tag={cdp.scoping.tag}
-          accent={b.accent}
-        >
-          <table className="w-full text-sm">
-            <tbody>
-              <PLRow label="Original work scoped" value={cdp.scoping.originalScope} tag={cdp.scoping.tag} />
-              <PLRow label="Local discount Headwaters extending" value={cdp.scoping.localDiscount} tone="muted" tag={cdp.scoping.tag} />
-              <PLRow label="Bill to 807" value={cdp.scoping.billTo807} bold tag={cdp.scoping.tag} />
-              <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
-              <tr className="border-b border-card-border">
-                <td className="py-1.5 pr-4 text-muted-foreground">807's funding sources</td>
-                <td className="py-1.5 pr-4 text-right text-muted-foreground">
-                  <Num tag={cdp.scoping.tag}>{money(cdp.scoping.confirmedGrant + cdp.scoping.boardVoted)}</Num>
-                </td>
-              </tr>
-              <PLRow label="↳ Confirmed grant in hand" value={cdp.scoping.confirmedGrant} tone="muted" tag={cdp.scoping.tag} />
-              <PLRow label="↳ Board-voted to cover remainder (board in deficit)" value={cdp.scoping.boardVoted} tone="muted" tag={cdp.scoping.tag} />
-              <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
-              <PLRow label="Cash received to date" value={cdp.scoping.cashReceivedToDate} bold tone="muted" tag={cdp.scoping.tag} />
-            </tbody>
-          </table>
-          <p className="mt-3 text-xs text-muted-foreground">
-            Cash treatment: bank the full <Num tag={cdp.scoping.tag}>{money(cdp.scoping.billTo807)}</Num> as a non-interest-bearing receivable. The <Num tag={cdp.scoping.tag}>{money(cdp.scoping.boardVoted)}</Num> at-risk piece is a footnote, not a haircut on the headline number.
-          </p>
-        </SectionCard>
-
-        <div className="mt-4">
-          <SectionCard
-            title="807 CDP P&L (cash, when collected)"
-            tag={cdp.pAndL.tag}
-            accent={b.accent}
-          >
-            <table className="w-full text-sm">
-              <tbody>
-                <PLRow label="Revenue (receivable collected)" value={cdp.pAndL.revenue} tag={cdp.pAndL.tag} />
-                <PLRow label="Replit hosting" value={-cdp.pAndL.replitHosting} tag={cdp.pAndL.tag} />
-                <PLRow label="Net cash to Headwaters" value={cdp.pAndL.netCash} bold tone="positive" tag={cdp.pAndL.tag} />
-              </tbody>
-            </table>
-          </SectionCard>
-        </div>
-
-        <div className="mt-4">
-          <SectionCard
-            title="Structured option (working concept)"
-            subtitle="Founder still shaping. Captured as proposed, not as committed."
-            tag={cdp.structuredOption.tag}
-            accent={b.accent}
-          >
-            <ul className="text-sm space-y-2 text-muted-foreground">
-              <li>
-                <strong className="text-foreground">
-                  Upfront from 807:{" "}
-                  <Num tag={cdp.structuredOption.tag}>{money(cdp.structuredOption.upfront807)}</Num>
-                </strong>{" "}
-                — covers Headwaters' development costs, paid up front, takes Replit hosting cost off
-                Headwaters' books.
-              </li>
-              <li>
-                Then: revenue-share back to Headwaters until the{" "}
-                <Num tag={cdp.structuredOption.tag}>{money(cdp.structuredOption.cap)}</Num> invoice is
-                paid up. Two revenue sources contemplated:
-                <ol className="list-decimal pl-6 mt-1 space-y-1">
-                  {cdp.structuredOption.revenueShareSources.map((src) => (
-                    <li key={src}>{src}</li>
-                  ))}
-                </ol>
-              </li>
-              <li>
-                Cap: revenue-share continues until the{" "}
-                <Num tag={cdp.structuredOption.tag}>{money(cdp.structuredOption.cap)}</Num>{" "}
-                receivable is retired. Then it stops.
-              </li>
-              <li>
-                Status: <strong className="text-foreground">{cdp.structuredOption.status}</strong>.
-              </li>
-            </ul>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Dog-treat estimate:{" "}
-              <Num tag={cdp.structuredOption.tag}>
-                ${cdp.structuredOption.dogTreatUnitCostLow}–${cdp.structuredOption.dogTreatUnitCostHigh}/unit
-              </Num>{" "}
-              production cost. Headwaters takes a share of the profit margin on each unit.
-            </p>
-          </SectionCard>
-        </div>
-
-        <FootnoteList title="807 CDP footnotes" notes={CDP807_FOOTNOTES} />
-      </div>
-
-      {/* ============ AGENCY ASPIRATION ============ */}
-      <div id="agency" className="scroll-mt-24 pt-4">
+      {/* ============ AGENCY ENGAGEMENT ============ */}
+      <div id="agency" className="scroll-mt-24">
         <h2
           className="text-2xl font-semibold mb-2"
           style={{ fontFamily: "var(--app-font-serif)", color: b.accentInk }}
         >
-          Sub-line 2 · {money(a.fee)}/mo agency aspiration
+          {money(a.fee)}/mo agency engagement
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
           {a.termMonths}-month engagement starting {a.startDate}, renegotiated at month {a.renegotiateMonth}. Buyer: {a.buyerStatus}.
@@ -445,6 +308,10 @@ export function ContractsPage() {
               Tithe rate: <strong className="text-foreground">{pct(a.tithePct)} of revenue</strong> · Locked monthly: <strong className="text-foreground">{money(a.titheMonthly)}</strong> · 18-mo total: <strong className="text-foreground">{money(a.titheTotal)}</strong>
             </p>
           </SectionCard>
+        </div>
+
+        <div className="mt-6">
+          <ReinvestmentBucketsInteractive accent={b.accent} accentInk={b.accentInk} />
         </div>
 
         <div className="mt-4">

@@ -36,29 +36,6 @@ export const SALTS_FOOTNOTES: Footnote[] = [
     body:
       "The 30% allocation reflects founder gut. When the founder is ready, the $500/mo line should be broken out item-by-item and re-allocated.",
   },
-  {
-    id: "dog-treat-cross",
-    title: "Cross-bucket: dog-treat piecework (Salts ↔ 807 CDP)",
-    body:
-      "If the 807 structured option lands, dog-treat piecework production by Parr's Jars in salt-batch whitespace becomes a potential new sub-line in Salts. The cross-link is flagged here; the founder still needs to size dog-treat volumes with 807 before committing.",
-    crossLink: { label: "See 807 CDP — Structured option", href: "/contracts#cdp807" },
-  },
-];
-
-export const CDP807_FOOTNOTES: Footnote[] = [
-  {
-    id: "at-risk-10k",
-    title: "$10k at-risk piece",
-    body:
-      "The $10,000 board-voted portion is genuinely at risk because the board is in deficit. The structured option exists precisely so 807 has a path to retire the invoice without needing the at-risk $10k to materialize as cash.",
-  },
-  {
-    id: "dog-treat-capacity",
-    title: "Dog-treat capacity assumption",
-    body:
-      "The dog-treat piece-work concept assumes Parr's Jars has spare batch-day capacity. Current salt cadence (every 6 weeks, ~12 hr sessions for 500 jars) suggests there is slack, but the guide should not commit to dog-treat volumes until the founder sizes them with 807.",
-    crossLink: { label: "See Salts — channels & cadence", href: "/salts" },
-  },
 ];
 
 export const AGENCY_FOOTNOTES: Footnote[] = [
@@ -72,7 +49,7 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
     id: "buyer-dependency",
     title: "Buyer dependency",
     body:
-      "If the buyer is 807, the personal-compensation lines and the tithe-first deployment structure carry political weight that should be visible in any conversation with 807. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
+      "If the buyer is the band council, the personal-compensation lines and the tithe-first deployment structure carry political weight that should be visible in any conversation with them. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
   },
   {
     id: "deer-lake-travel",

@@ -151,7 +151,7 @@ export function BrightsidePage() {
       >
         <p className="text-sm">{bs.buildModel.description}</p>
         <dl className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-          <Row label="Founder time cash cost" value={`${money(bs.buildModel.founderTimeCashCost)} (already paid via $18k/mo agency salary)`} />
+          <Row label="Founder time cash cost" value={`${money(bs.buildModel.founderTimeCashCost)} (already paid via $14k/mo agency salary)`} />
           <Row label="Pre-launch engineer cap" value={money(bs.buildModel.prelaunchEngineerCap)} />
           <Row label="Pre-launch payment month" value={bs.buildModel.prelaunchPaymentMonth} />
         </dl>

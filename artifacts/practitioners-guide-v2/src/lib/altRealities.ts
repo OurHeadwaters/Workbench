@@ -64,7 +64,7 @@ export interface MetricDef {
 /**
  * Metric catalogue.
  *
- * Mirrors the headline rows in the founder's spec. Salts / 807 / Brightside
+ * Mirrors the headline rows in the founder's spec. Salts / Brightside
  * aren't included because they're shared (identical across every scenario)
  * — there's no Δ to talk about. Personal cash IS included even though V3
  * and V4 happen to match today, because future alt realities (lifting the

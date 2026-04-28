@@ -27,7 +27,7 @@ export function IndexPage() {
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
       headlineLabel: "18-mo surplus deployed",
-      blurb: `807 CDP grant ($22k receivable, $1.5k cost) and ${money(a.fee)}/mo agency aspiration over ${a.termMonths} months. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first), then capital recovery, then Brightside launch, then Reserve / Innovation.`,
+      blurb: `${money(a.fee)}/mo agency engagement over ${a.termMonths} months against the 7-role Deer Lake team. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first), then capital recovery, then Brightside launch, then Reserve / Innovation.`,
       tag: a.totals18mo.tag,
     },
     {
@@ -58,7 +58,7 @@ export function IndexPage() {
         </h1>
         <p className="mt-3 text-base text-muted-foreground max-w-3xl leading-relaxed">
           A working source of truth, organized the way the founder thinks: Salts (Parr's Jars),
-          Community Contracts (807 CDP + agency), and Software / Hardware / Training (Brightside).
+          Community Contracts (agency engagement), and Software / Hardware / Training (Brightside).
           Every figure carries a "confirmed" tag with the date the founder locked it. V1 (the slides
           deck) stays untouched as a reference; V3 is the locked default operating framework.
         </p>

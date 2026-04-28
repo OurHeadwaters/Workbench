@@ -1,0 +1,21 @@
+I want to build a small tool that helps a non-technical person and an AI agent reach a shared vision faster by leaning on physical metaphors instead of technical vocabulary.
+
+The underlying insight: people and computers "speak" different languages, but we both understand shared metaphors — buckets, shelves, baskets, stacks, jars, decks of cards, drawers, folders, threads, baskets — almost instantly. If a person can describe what they want by reaching for a familiar object ("it's like a bucket I drop things into and pull out later"), the agent can translate that metaphor into structure (data model, UI, flow) much more reliably than parsing free-form descriptions.
+
+Please design and build a feature that does this. Rough shape:
+
+Metaphor picker / canvas. The user starts by choosing or describing a real-world object the thing should feel like (bucket, shelf, jar, deck, board, etc.). They can pick from a starter set or type their own.
+Guided "describe it like the object" flow. A few short prompts grounded in the chosen metaphor — e.g., for a bucket: "What goes in?", "Who can drop things in?", "When do you empty it?", "What do you do with what's inside?" The questions adapt to the metaphor.
+Live translation panel. As the user answers, show a plain-language summary on one side and a structured spec on the other (entities, actions, who-does-what, when). The user can tweak either side and the other updates.
+Shared-vocabulary glossary. Keep a running list of the metaphor terms the user has chosen and what each one maps to in the underlying spec, so the agent and the user use the same words throughout the rest of the conversation.
+Handoff. When the user is happy, export the spec as something an implementing agent can act on (markdown plan, JSON, or both).
+Design constraints:
+
+The interface should feel tactile and friendly, not form-like. Think soft shapes, plain words, and visible objects (a literal bucket on screen, etc.).
+No jargon in the user-facing copy. The structured side can be technical; the metaphor side never is.
+It should work for someone who has never written code.
+Before you start building, please ask me:
+
+Which platform/stack to build it in (web app, mobile, embedded panel)?
+Whether this should plug into an existing project or stand alone?
+Whether the "implementing agent" on the other end of the handoff is a specific one (so the export format matches what it expects)?

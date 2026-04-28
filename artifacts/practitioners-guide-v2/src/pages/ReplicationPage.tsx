@@ -195,8 +195,8 @@ export function ReplicationPage() {
           </div>
           <ul className="space-y-3 text-sm">
             <TravelItem
-              title="The 6-role roster shape"
-              body={`Practitioner / Lead, IT / Tech, Operations Manager, Community Development Associate, Food Handler, Bookkeeper. ${money(a.payrollTotal)}/mo loaded payroll in the worked example. Roles are the same; loaded rates flex with the labour market in the new community.`}
+              title={`The ${a.roster.length}-role roster shape`}
+              body={`${a.roster.map((r) => r.role).join(", ")}. ${money(a.payrollTotal)}/mo loaded payroll in the worked example. Roles are the same; loaded rates flex with the labour market in the new community.`}
             />
             <TravelItem
               title="Fee → margin formula"

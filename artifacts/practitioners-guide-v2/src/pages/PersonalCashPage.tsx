@@ -36,7 +36,7 @@ export function PersonalCashPage() {
           label="Agency salary (18 mo)"
           value={p.agencySalary18mo}
           tag={p.tag}
-          hint="$18k/mo × 18"
+          hint="$14k/mo × 18"
           testId="kpi-personal-agency"
         />
         <MoneyKpi
@@ -68,7 +68,7 @@ export function PersonalCashPage() {
             <tr className="border-b border-card-border">
               <td className="py-2 pr-4 font-medium">Agency practitioner salary</td>
               <td className="py-2 pr-4 text-right num">{money(p.agencySalary18mo)}</td>
-              <td className="py-2 pr-4 text-xs text-muted-foreground">$18k/mo × 18 mo</td>
+              <td className="py-2 pr-4 text-xs text-muted-foreground">$14k/mo × 18 mo</td>
             </tr>
             <tr className="border-b border-card-border">
               <td className="py-2 pr-4 font-medium">Brightside owner take (at $120k revenue target)</td>

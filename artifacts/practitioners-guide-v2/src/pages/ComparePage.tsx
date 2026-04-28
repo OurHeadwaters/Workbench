@@ -347,7 +347,7 @@ export function ComparePage() {
               unchanged.
             </p>
             <p>
-              Salts (Parr's Jars), the 807 CDP grant, and Brightside are unchanged across the
+              Salts (Parr's Jars) and Brightside are unchanged across the
               transition — they describe the world, not the engagement shape.
             </p>
           </div>

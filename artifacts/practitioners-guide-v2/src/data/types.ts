@@ -78,41 +78,7 @@ export interface OverheadRow {
 }
 
 export interface ContractsScenario {
-  cdp807: Cdp807;
   agency: AgencyScenario;
-}
-
-export interface Cdp807 {
-  scoping: {
-    originalScope: number;
-    localDiscount: number;
-    billTo807: number;
-    confirmedGrant: number;
-    boardVoted: number;
-    cashReceivedToDate: number;
-    invoiceTiming: string;
-    tag: SourceTag;
-  };
-  costToDeliver: {
-    replitHosting: number;
-    other: number;
-    tag: SourceTag;
-  };
-  pAndL: {
-    revenue: number;
-    replitHosting: number;
-    netCash: number;
-    tag: SourceTag;
-  };
-  structuredOption: {
-    upfront807: number;
-    revenueShareSources: string[];
-    cap: number;
-    status: string;
-    dogTreatUnitCostLow: number;
-    dogTreatUnitCostHigh: number;
-    tag: SourceTag;
-  };
 }
 
 export interface AgencyScenario {

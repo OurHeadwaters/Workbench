@@ -1,7 +1,6 @@
 import { confirmed } from "./tags";
 import type {
   BrightsideScenario,
-  Cdp807,
   OverheadRow,
   SaltsScenario,
 } from "./types";
@@ -9,19 +8,20 @@ import type {
 /**
  * Shared, scenario-neutral data.
  *
- * Salts (Parr's Jars), the 807 CDP grant, Brightside, and the agency overhead
- * footprint are identical across every scenario the guide carries — they
- * describe the world, not the engagement shape. This module is the single
- * source of truth those scenarios import from.
+ * Salts (Parr's Jars), Brightside, and the agency overhead footprint are
+ * identical across every scenario the guide carries — they describe the
+ * world, not the engagement shape. This module is the single source of
+ * truth those scenarios import from.
  *
  * Reservation purposes and the giving direction are also shared: they describe
  * how surplus is deployed, which doesn't change between scenarios.
  *
  * Historical note: these constants used to live in `v2.ts` while V2 was a
  * live scenario. V2 was retired on 2026-04-26 in favour of V3 (lean team).
- * The data was lifted out so V3 and V4 stop importing from a retired
- * scenario. See ComparePage's "How we got here" milestone note for the
- * narrative version.
+ * The 807 CDP grant block was retired from the guide on 2026-04-28 to
+ * keep planning surfaces focused on the live agency engagement and the
+ * Deer Lake roster — the 807 grant is no longer carried as a planning
+ * line in the guide.
  */
 
 export const SHARED_SALTS: SaltsScenario = {
@@ -115,41 +115,6 @@ export const SHARED_SALTS: SaltsScenario = {
   },
 };
 
-export const SHARED_CDP807: Cdp807 = {
-  scoping: {
-    originalScope: 24000,
-    localDiscount: -2000,
-    billTo807: 22000,
-    confirmedGrant: 12000,
-    boardVoted: 10000,
-    cashReceivedToDate: 0,
-    invoiceTiming: "lands at completion (end of year)",
-    tag: confirmed(),
-  },
-  costToDeliver: {
-    replitHosting: 1500,
-    other: 0,
-    tag: confirmed(),
-  },
-  pAndL: {
-    revenue: 22000,
-    replitHosting: 1500,
-    netCash: 20500,
-    tag: confirmed(),
-  },
-  structuredOption: {
-    upfront807: 1500,
-    revenueShareSources: [
-      "Benefits plan revenue once live (mechanism TBD — % and base TBD)",
-      "Dog-treat piece-work production by Parr's Jars in salt-batch whitespace",
-    ],
-    cap: 22000,
-    status: "working concept — not yet a deal",
-    dogTreatUnitCostLow: 1,
-    dogTreatUnitCostHigh: 2,
-    tag: confirmed(),
-  },
-};
 
 export const SHARED_BRIGHTSIDE: BrightsideScenario = {
   product: {
@@ -174,7 +139,7 @@ export const SHARED_BRIGHTSIDE: BrightsideScenario = {
     founderTimeCashCost: 0,
     prelaunchEngineerCap: 20000,
     prelaunchPaymentMonth: "September 2026 (Brightside Launch Month)",
-    tag: confirmed("founder time = $0 cash, already paid via $18k/mo agency salary"),
+    tag: confirmed("founder time = $0 cash, already paid via $14k/mo agency salary"),
   },
   revenueTarget: {
     cumulative18mo: 120000,
@@ -243,7 +208,7 @@ export const SHARED_OVERHEADS_SEP_ONWARD_TOTAL = 12492;
 export const SHARED_RESERVE_PURPOSES: string[] = [
   "Pilot #2 readiness — capital to launch a second engagement without needing a buyer's upfront cash.",
   "Bad-quarter cushion — 3–6 months of operating expenses kept liquid at all times.",
-  "Buy-out option — early termination of the 807 contract or buying back equity / control if needed.",
+  "Buy-out option — buying back equity / control or unwinding a contract early if the founder needs to.",
   "Capital for a follow-on Brightside investment.",
 ];
 

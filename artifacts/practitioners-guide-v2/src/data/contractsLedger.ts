@@ -3,78 +3,18 @@ import type { LedgerExport, LedgerSheet } from "./saltLedger";
 import { isLocked, tagSummary } from "./tags";
 
 /**
- * Community Contracts ledger (807 CDP grant + agency engagement) structured for CSV / xlsx export.
+ * Community Contracts ledger (agency engagement) structured for CSV / xlsx export.
  * Mirrors the in-page tables on ContractsPage so a board pack matches the screen.
  *
  * Only locked (founder-confirmed) lines are emitted — TBD overhead rows and any other
  * non-locked lines are filtered out so the spreadsheet matches the on-page "locked" promise.
+ *
+ * Historical note: this ledger used to carry three 807 CDP sheets (scope, P&L,
+ * structured option). The 807 grant was retired from the guide on 2026-04-28
+ * for planning purposes; this exporter now ships agency sheets only.
  */
 export function buildContractsLedger(scenario: Scenario): LedgerExport {
-  const cdp = scenario.contracts.cdp807;
   const a = scenario.contracts.agency;
-
-  const cdpScoping: LedgerSheet = {
-    name: "807 CDP — scope",
-    asOf: tagSummary(cdp.scoping.tag),
-    rows: [
-      ["Line", "$", "Notes"],
-      ["Original work scoped", cdp.scoping.originalScope, ""],
-      ["Local discount Headwaters extending", cdp.scoping.localDiscount, ""],
-      ["Bill to 807", cdp.scoping.billTo807, ""],
-      [
-        "807 funding — confirmed grant in hand",
-        cdp.scoping.confirmedGrant,
-        "",
-      ],
-      [
-        "807 funding — board-voted to cover remainder (board in deficit)",
-        cdp.scoping.boardVoted,
-        "",
-      ],
-      [
-        "Cash received to date",
-        cdp.scoping.cashReceivedToDate,
-        cdp.scoping.invoiceTiming,
-      ],
-    ],
-  };
-
-  const cdpPL: LedgerSheet = {
-    name: "807 CDP — P&L",
-    asOf: tagSummary(cdp.pAndL.tag),
-    rows: [
-      ["Line", "$"],
-      ["Revenue (receivable collected)", cdp.pAndL.revenue],
-      ["Replit hosting", -cdp.pAndL.replitHosting],
-      ["Net cash to Headwaters", cdp.pAndL.netCash],
-    ],
-  };
-
-  const cdpStructured: LedgerSheet = {
-    name: "807 CDP — structured option",
-    asOf: tagSummary(cdp.structuredOption.tag),
-    rows: [
-      ["Field", "Value"],
-      ["Status", cdp.structuredOption.status],
-      ["Upfront from 807", cdp.structuredOption.upfront807],
-      ["Cap (receivable retired at)", cdp.structuredOption.cap],
-      [
-        "Dog-treat unit cost low",
-        cdp.structuredOption.dogTreatUnitCostLow,
-        "",
-      ],
-      [
-        "Dog-treat unit cost high",
-        cdp.structuredOption.dogTreatUnitCostHigh,
-        "",
-      ],
-      ...cdp.structuredOption.revenueShareSources.map((src, i) => [
-        `Revenue-share source ${i + 1}`,
-        "",
-        src,
-      ]),
-    ],
-  };
 
   const agencyHeader: LedgerSheet = {
     name: "Agency — terms",
@@ -243,9 +183,6 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
     filenameBase: `headwaters-contracts-ledger-${scenario.id}`,
     asOf: tagSummary(a.totals18mo.tag),
     sheets: [
-      cdpScoping,
-      cdpPL,
-      cdpStructured,
       agencyHeader,
       roster,
       overheadsJunAug,
