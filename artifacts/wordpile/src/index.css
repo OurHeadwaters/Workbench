@@ -181,6 +181,17 @@ h1, h2, h3, h4, h5, h6 {
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
+/* On phones the Move / Edit / Delete row is the primary touch target,
+   so give the ghost buttons inside word cards a larger tap area than
+   the marketing-page chrome would warrant. */
+@media (max-width: 767px) {
+  .card-2x4 .btn-ghost {
+    padding: 8px 12px;
+    min-height: 36px;
+    font-size: 12px;
+  }
+}
+
 .card-2x4:hover {
   box-shadow: 0 2px 6px rgba(31, 61, 46, 0.08);
 }
@@ -199,6 +210,79 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   gap: 10px;
   min-height: 240px;
+}
+
+/* ----- Pile-editor bucket tabs (phone only) ------------------------- */
+
+.bucket-tabs {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .bucket-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 4px;
+    background-color: var(--color-paper);
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .bucket-tab {
+    appearance: none;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 8px 4px;
+    cursor: pointer;
+    color: var(--color-stone);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 48px;
+    line-height: 1.1;
+    transition: background-color 120ms ease, color 120ms ease,
+      border-color 120ms ease;
+  }
+
+  .bucket-tab-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .bucket-tab-count {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .bucket-tab.is-active {
+    background-color: var(--color-cream);
+    border-color: var(--color-rule);
+    color: var(--color-ink);
+  }
+
+  .bucket-tab.bucket-tab-load.is-active { color: var(--color-load); }
+  .bucket-tab.bucket-tab-interior.is-active { color: var(--color-interior); }
+  .bucket-tab.bucket-tab-avoid.is-active { color: var(--color-avoid); }
+  .bucket-tab.bucket-tab-unsorted.is-active { color: var(--color-unsorted); }
+
+  .bucket-grid > .bucket-col:not(.is-phone-active) {
+    display: none;
+  }
+
+  .bucket-col {
+    padding: 12px;
+    min-height: 0;
+  }
 }
 
 .bucket-col-header {

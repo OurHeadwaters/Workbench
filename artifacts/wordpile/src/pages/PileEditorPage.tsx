@@ -74,6 +74,12 @@ export function PileEditorPage() {
   const [copied, setCopied] = useState<"long" | "short" | null>(null);
   const [shortLinks, setShortLinks] = useState<ShortLinkSummary[] | null>(null);
   const [shortLinksError, setShortLinksError] = useState<string | null>(null);
+  // Which bucket column is visible on phones. The desktop layout shows
+  // all four columns side-by-side; on narrow viewports we collapse to a
+  // tab UI so the practitioner doesn't have to scroll past one whole
+  // column to reach the next. CSS hides the inactive columns on phones
+  // and the tab bar itself on larger screens.
+  const [phoneBucket, setPhoneBucket] = useState<Bucket>("unsorted");
 
   const isSignedIn = getCloudUserId() !== null;
   const pileId = pile?.id ?? null;
@@ -277,7 +283,7 @@ export function PileEditorPage() {
   const shortUrl = share.kind === "ready" ? share.shortLink : null;
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       <div className="flex items-baseline gap-3 flex-wrap mb-2">
         {editingName ? (
           <>
@@ -698,13 +704,44 @@ export function PileEditorPage() {
         <PasteExtractor pile={pile} />
       </div>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {/* Phone-only tab bar — collapses the four side-by-side columns
+          into one column at a time so the practitioner can flip between
+          buckets without scrolling past hundreds of words. Hidden on
+          tablet/desktop where the full grid fits comfortably. */}
+      <div
+        className="bucket-tabs"
+        role="tablist"
+        aria-label="Filter by bucket"
+        data-testid="bucket-tabs"
+      >
+        {BUCKETS.map((bucket) => {
+          const count = wordsByBucket[bucket].length;
+          const active = phoneBucket === bucket;
+          return (
+            <button
+              key={bucket}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              className={`bucket-tab bucket-tab-${bucket} ${active ? "is-active" : ""}`}
+              onClick={() => setPhoneBucket(bucket)}
+              data-testid={`bucket-tab-${bucket}`}
+            >
+              <span className="bucket-tab-label">{BUCKET_LABELS[bucket]}</span>
+              <span className="bucket-tab-count">{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <section className="bucket-grid grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {BUCKETS.map((bucket) => {
           const list = wordsByBucket[bucket];
+          const isPhoneActive = phoneBucket === bucket;
           return (
             <div
               key={bucket}
-              className="bucket-col"
+              className={`bucket-col ${isPhoneActive ? "is-phone-active" : ""}`}
               data-testid={`column-${bucket}`}
             >
               <header className="bucket-col-header">
