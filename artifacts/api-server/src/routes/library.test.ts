@@ -149,6 +149,9 @@ const tables = dbModule as unknown as {
   subjectsTable: FakeTable;
   projectBucketsTable: FakeTable;
   libraryEntriesTable: FakeTable;
+  producersTable: FakeTable;
+  entrySubjectsTable: FakeTable;
+  entryBucketsTable: FakeTable;
 };
 
 // ----------------------- harness -----------------------
@@ -184,6 +187,9 @@ beforeEach(() => {
   tables.subjectsTable.__store.length = 0;
   tables.projectBucketsTable.__store.length = 0;
   tables.libraryEntriesTable.__store.length = 0;
+  tables.producersTable.__store.length = 0;
+  tables.entrySubjectsTable.__store.length = 0;
+  tables.entryBucketsTable.__store.length = 0;
 });
 
 // ----------------------- tests -----------------------
@@ -394,10 +400,375 @@ describe("library route — share-link by-token bypasses the gate", () => {
   });
 });
 
+describe("library route — POST /share-links/by-token/:token/uploads", () => {
+  // The contributor-facing write path.  All uploads here MUST be scoped to
+  // the share link's contributor and land in needs_review — owners review
+  // them before they show up in the library proper.
+
+  it("creates a needs_review entry scoped to the link's contributorId", async () => {
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("dora", "Dora");
+      // Seed an unrelated contributor too, so a regression that pulls
+      // any contributor instead of the link's would be visible.
+      seedContributor("eve", "Eve");
+      seedShareLink({ token: "dora-active", contributorId });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/dora-active/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Harvest plan 2026",
+            originalFilename: "harvest_plan_2026.pdf",
+            contentHash: "sha256:dora-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        entry: {
+          id: string;
+          title: string;
+          status: string;
+          contributorId: string;
+        };
+        duplicate: boolean;
+      };
+      expect(body.duplicate).toBe(false);
+      expect(body.entry.title).toBe("Harvest plan 2026");
+      expect(body.entry.status).toBe("needs_review");
+      expect(body.entry.contributorId).toBe(contributorId);
+
+      // Source of truth: the row landed in the table.
+      expect(tables.libraryEntriesTable.__store).toHaveLength(1);
+      const row = tables.libraryEntriesTable.__store[0]!;
+      expect(row.contributorId).toBe(contributorId);
+      expect(row.status).toBe("needs_review");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("ignores any contributorId in the body — the link's wins", async () => {
+    const h = await startHarness();
+    try {
+      const linkContributor = seedContributor("frank", "Frank");
+      const otherContributor = seedContributor("gina", "Gina");
+      seedShareLink({ token: "frank-active", contributorId: linkContributor });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/frank-active/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Spoofed contributor attempt",
+            // A malicious contributor could try to attribute the upload
+            // to someone else.  The route must ignore this.
+            contributorId: otherContributor,
+            contentHash: "sha256:frank-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const row = tables.libraryEntriesTable.__store[0]!;
+      expect(row.contributorId).toBe(linkContributor);
+      expect(row.contributorId).not.toBe(otherContributor);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("applies the link's presetSubjectSlugs and presetBucketSlugs as fixed scopes", async () => {
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("hank", "Hank");
+      const subjectIds = {
+        wildRice: seedSubject("wild-rice", "Wild Rice"),
+        traditional: seedSubject("traditional-foods", "Traditional Foods"),
+        // An unrelated subject that must NOT get attached.
+        unrelated: seedSubject("unrelated", "Unrelated"),
+      };
+      const bucketIds = {
+        deerLake: seedBucket("deer-lake-store", "Deer Lake Store"),
+        // An unrelated bucket that must NOT get attached.
+        unrelated: seedBucket("unrelated-bucket", "Unrelated Bucket"),
+      };
+      seedShareLink({
+        token: "hank-presets",
+        contributorId,
+        presetSubjectSlugs: ["wild-rice", "traditional-foods"],
+        presetBucketSlugs: ["deer-lake-store"],
+      });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/hank-presets/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Manoomin notes",
+            contentHash: "sha256:hank-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const row = tables.libraryEntriesTable.__store[0]!;
+      const entryId = row.id as string;
+
+      const attachedSubjectIds = tables.entrySubjectsTable.__store
+        .filter((r) => r.entryId === entryId)
+        .map((r) => r.subjectId);
+      expect(attachedSubjectIds).toEqual(
+        expect.arrayContaining([subjectIds.wildRice, subjectIds.traditional]),
+      );
+      expect(attachedSubjectIds).toHaveLength(2);
+      expect(attachedSubjectIds).not.toContain(subjectIds.unrelated);
+
+      const attachedBucketIds = tables.entryBucketsTable.__store
+        .filter((r) => r.entryId === entryId)
+        .map((r) => r.bucketId);
+      expect(attachedBucketIds).toEqual([bucketIds.deerLake]);
+      expect(attachedBucketIds).not.toContain(bucketIds.unrelated);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("merges the link's preset slugs with any caller-supplied slugs", async () => {
+    // The share-link UI lets contributors add their own subjects/buckets
+    // on top of what the link enforces.  Both should land on the entry.
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("ivy", "Ivy");
+      seedSubject("preset-only", "Preset");
+      seedSubject("caller-only", "Caller");
+      seedShareLink({
+        token: "ivy-mix",
+        contributorId,
+        presetSubjectSlugs: ["preset-only"],
+      });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/ivy-mix/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Mixed scope",
+            subjectSlugs: ["caller-only"],
+            contentHash: "sha256:ivy-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const entryId = tables.libraryEntriesTable.__store[0]!.id as string;
+      const slugs = tables.entrySubjectsTable.__store
+        .filter((r) => r.entryId === entryId)
+        .map((r) =>
+          tables.subjectsTable.__store.find((s) => s.id === r.subjectId)?.slug,
+        )
+        .sort();
+      expect(slugs).toEqual(["caller-only", "preset-only"]);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 and writes nothing when the link has been revoked", async () => {
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("jack", "Jack");
+      seedShareLink({
+        token: "jack-revoked",
+        contributorId,
+        revokedAt: new Date(),
+      });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/jack-revoked/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Should never land",
+            contentHash: "sha256:jack-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(404);
+      expect(tables.libraryEntriesTable.__store).toHaveLength(0);
+      expect(tables.entrySubjectsTable.__store).toHaveLength(0);
+      expect(tables.entryBucketsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 410 and writes nothing when the link has expired", async () => {
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("kate", "Kate");
+      seedShareLink({
+        token: "kate-expired",
+        contributorId,
+        expiresAt: new Date(Date.now() - 60_000),
+      });
+
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/kate-expired/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Should never land",
+            contentHash: "sha256:kate-1",
+          }),
+        },
+      );
+      expect(res.status).toBe(410);
+      const body = (await res.json()) as { error?: string };
+      expect(body.error).toMatch(/expired/i);
+      expect(tables.libraryEntriesTable.__store).toHaveLength(0);
+      expect(tables.entrySubjectsTable.__store).toHaveLength(0);
+      expect(tables.entryBucketsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 and writes nothing when the token does not exist", async () => {
+    const h = await startHarness();
+    try {
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/no-such-token/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Should never land",
+            contentHash: "sha256:nothing",
+          }),
+        },
+      );
+      expect(res.status).toBe(404);
+      expect(tables.libraryEntriesTable.__store).toHaveLength(0);
+      expect(tables.entrySubjectsTable.__store).toHaveLength(0);
+      expect(tables.entryBucketsTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("dedupes by contentHash — second upload returns existing entry, no new row", async () => {
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("liam", "Liam");
+      seedShareLink({ token: "liam-dedup", contributorId });
+
+      const sharedHash = "sha256:identical-bytes";
+      const first = await fetch(
+        `${h.base}/api/library/share-links/by-token/liam-dedup/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            title: "Original upload",
+            contentHash: sharedHash,
+          }),
+        },
+      );
+      expect(first.status).toBe(200);
+      const firstBody = (await first.json()) as {
+        entry: { id: string };
+        duplicate: boolean;
+      };
+      expect(firstBody.duplicate).toBe(false);
+      expect(tables.libraryEntriesTable.__store).toHaveLength(1);
+      const firstId = firstBody.entry.id;
+
+      const second = await fetch(
+        `${h.base}/api/library/share-links/by-token/liam-dedup/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: "file",
+            // Different title, same bytes — must be reported as a dup.
+            title: "Reupload of the same bytes",
+            contentHash: sharedHash,
+          }),
+        },
+      );
+      expect(second.status).toBe(200);
+      const secondBody = (await second.json()) as {
+        entry: { id: string; title: string };
+        duplicate: boolean;
+      };
+      expect(secondBody.duplicate).toBe(true);
+      expect(secondBody.entry.id).toBe(firstId);
+      // The original title wins — the dup short-circuits before any
+      // update would happen.
+      expect(secondBody.entry.title).toBe("Original upload");
+
+      // Critical: only one row, ever.
+      expect(tables.libraryEntriesTable.__store).toHaveLength(1);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("rejects an invalid body with 400 and writes nothing", async () => {
+    // Defensive: makes sure the gate-bypass doesn't accidentally accept
+    // payloads that wouldn't pass the owner-CRUD validator either.
+    const h = await startHarness();
+    try {
+      const contributorId = seedContributor("mia", "Mia");
+      seedShareLink({ token: "mia-active", contributorId });
+      const res = await fetch(
+        `${h.base}/api/library/share-links/by-token/mia-active/uploads`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            // Missing required `kind` and `title` fields.
+            contentHash: "sha256:bad",
+          }),
+        },
+      );
+      expect(res.status).toBe(400);
+      expect(tables.libraryEntriesTable.__store).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
 // ----------------------- helpers -----------------------
 
+let _seedCounter = 0;
+function seedId(_label: string): string {
+  // Returns a valid v4-shaped UUID (hex-only) so server-side UUID
+  // validators accept these ids when they show up in request bodies.
+  // The label is for human readability only — kept on the call site so
+  // the test reads cleanly.
+  _seedCounter += 1;
+  const hex = _seedCounter.toString(16).padStart(12, "0");
+  return `00000000-0000-4000-8000-${hex}`;
+}
+
 function seedContributor(slug: string, name: string): string {
-  const id = `00000000-0000-0000-0000-${slug.padEnd(12, "0").slice(0, 12)}`;
+  const id = seedId("c0n7");
   tables.contributorsTable.__store.push({
     id,
     name,
@@ -418,7 +789,7 @@ function seedShareLink(opts: {
   presetSubjectSlugs?: string[];
   presetBucketSlugs?: string[];
 }): string {
-  const id = `11111111-0000-0000-0000-${opts.token.padEnd(12, "0").slice(0, 12).replace(/[^a-z0-9]/gi, "0")}`;
+  const id = seedId("5ha7e");
   tables.shareLinksTable.__store.push({
     id,
     token: opts.token,
@@ -428,6 +799,32 @@ function seedShareLink(opts: {
     presetBucketSlugs: opts.presetBucketSlugs ?? [],
     expiresAt: opts.expiresAt ?? null,
     revokedAt: opts.revokedAt ?? null,
+    createdAt: new Date(),
+  });
+  return id;
+}
+
+function seedSubject(slug: string, name: string): string {
+  const id = seedId("5ub");
+  tables.subjectsTable.__store.push({
+    id,
+    slug,
+    name,
+    description: null,
+    color: null,
+    createdAt: new Date(),
+  });
+  return id;
+}
+
+function seedBucket(slug: string, name: string): string {
+  const id = seedId("buck");
+  tables.projectBucketsTable.__store.push({
+    id,
+    slug,
+    name,
+    description: null,
+    color: null,
     createdAt: new Date(),
   });
   return id;

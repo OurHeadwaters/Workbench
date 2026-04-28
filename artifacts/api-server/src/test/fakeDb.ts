@@ -21,7 +21,7 @@
 // fails loudly instead of silently returning the wrong rows.
 
 type Row = Record<string, unknown>;
-export type Col = { __c: string };
+export type Col = { __c: string; __t: string };
 
 export interface TableSpec {
   name: string;
@@ -45,9 +45,17 @@ export function makeTable(spec: TableSpec): FakeTable {
     __defaults: spec.defaults ?? {},
   } as Record<string, unknown>;
   for (const c of spec.columns) {
-    t[c] = { __c: c } as Col;
+    t[c] = { __c: c, __t: spec.name } as Col;
   }
   return t as FakeTable;
+}
+
+function isFakeTable(v: unknown): v is FakeTable {
+  return !!v && typeof v === "object" && "__name" in (v as object) && "__store" in (v as object);
+}
+
+function isCol(v: unknown): v is Col {
+  return !!v && typeof v === "object" && "__c" in (v as object);
 }
 
 // ---------- predicate / order types ----------
@@ -116,29 +124,47 @@ export const fakeDrizzle = {
 
 // ---------- evaluation ----------
 
-function rowMatches(row: Row, pred: Pred | null | undefined): boolean {
+// In a non-joined select the row is `Record<column, value>`; in a joined
+// select the row is `Record<tableName, Record<column, value>>` so columns
+// from different tables don't collide.  `getColValue` papers over the
+// difference so the rest of the engine doesn't have to branch.
+function getColValue(row: Row, col: Col, joined: boolean): unknown {
+  if (joined) {
+    const tableRow = row[col.__t] as Row | null | undefined;
+    return tableRow ? tableRow[col.__c] : undefined;
+  }
+  return row[col.__c];
+}
+
+function rowMatches(
+  row: Row,
+  pred: Pred | null | undefined,
+  joined = false,
+): boolean {
   if (!pred) return true;
   switch (pred.kind) {
     case "eq":
-      return row[pred.col.__c] === pred.val;
+      return getColValue(row, pred.col, joined) === pred.val;
     case "ne":
-      return row[pred.col.__c] !== pred.val;
+      return getColValue(row, pred.col, joined) !== pred.val;
     case "and":
-      return pred.args.every((p) => rowMatches(row, p));
+      return pred.args.every((p) => rowMatches(row, p, joined));
     case "or":
-      return pred.args.some((p) => rowMatches(row, p));
+      return pred.args.some((p) => rowMatches(row, p, joined));
     case "inArray":
-      return pred.vals.includes(row[pred.col.__c]);
+      return pred.vals.includes(getColValue(row, pred.col, joined));
     case "isNull": {
-      const v = row[pred.col.__c];
+      const v = getColValue(row, pred.col, joined);
       return v === null || v === undefined;
     }
     case "gte":
-      return cmp(row[pred.col.__c], pred.val) >= 0;
+      return cmp(getColValue(row, pred.col, joined), pred.val) >= 0;
     case "lte":
-      return cmp(row[pred.col.__c], pred.val) <= 0;
+      return cmp(getColValue(row, pred.col, joined), pred.val) <= 0;
     case "ilike": {
-      const haystack = String(row[pred.col.__c] ?? "").toLowerCase();
+      const haystack = String(
+        getColValue(row, pred.col, joined) ?? "",
+      ).toLowerCase();
       const needle = pred.pattern.toLowerCase().replace(/%/g, "");
       return haystack.includes(needle);
     }
@@ -158,11 +184,11 @@ function cmp(av: unknown, bv: unknown): number {
   return String(av) < String(bv) ? -1 : 1;
 }
 
-function applyOrders(rows: Row[], orders: Order[]): Row[] {
+function applyOrders(rows: Row[], orders: Order[], joined = false): Row[] {
   if (orders.length === 0) return rows;
   return [...rows].sort((a, b) => {
     for (const o of orders) {
-      const c = cmp(a[o.col.__c], b[o.col.__c]);
+      const c = cmp(getColValue(a, o.col, joined), getColValue(b, o.col, joined));
       if (c !== 0) return o.kind === "asc" ? c : -c;
     }
     return 0;
@@ -171,28 +197,73 @@ function applyOrders(rows: Row[], orders: Order[]): Row[] {
 
 // ---------- select ----------
 
+type Join = { table: FakeTable; pred: Pred; kind: "inner" | "left" };
+
 function makeSelect(
   table: FakeTable,
-  projection?: Record<string, Col>,
+  projection?: Record<string, Col | FakeTable>,
 ) {
   let where: Pred | null = null;
   let orders: Order[] = [];
   let limit: number | null = null;
   let offset: number | null = null;
+  const joins: Join[] = [];
 
   const evalRows = (): Row[] => {
-    let rows = table.__store.filter((r) => rowMatches(r, where));
-    rows = applyOrders(rows, orders);
+    const joined = joins.length > 0;
+    // Seed working set from the primary table.  In joined mode the row is
+    // namespaced by table name so columns from other tables can be
+    // attached without collision.
+    let working: Row[] = joined
+      ? table.__store.map((r) => ({ [table.__name]: r }))
+      : table.__store.map((r) => ({ ...r }));
+
+    for (const j of joins) {
+      const next: Row[] = [];
+      for (const left of working) {
+        let matched = false;
+        for (const right of j.table.__store) {
+          const candidate: Row = { ...left, [j.table.__name]: right };
+          if (rowMatches(candidate, j.pred, true)) {
+            next.push(candidate);
+            matched = true;
+          }
+        }
+        if (!matched && j.kind === "left") {
+          next.push({ ...left, [j.table.__name]: null });
+        }
+      }
+      working = next;
+    }
+
+    let rows = working.filter((r) => rowMatches(r, where, joined));
+    rows = applyOrders(rows, orders, joined);
     if (offset !== null) rows = rows.slice(offset);
     if (limit !== null) rows = rows.slice(0, limit);
+
     if (projection) {
       return rows.map((r) => {
         const out: Row = {};
-        for (const [k, col] of Object.entries(projection)) {
-          out[k] = r[col.__c];
+        for (const [k, v] of Object.entries(projection)) {
+          if (isFakeTable(v)) {
+            // Whole-table projection — drizzle returns the joined row's
+            // record under this key.  Without a join, this would be
+            // meaningless, so default to null.
+            out[k] = joined ? (r[v.__name] as Row | null) ?? null : null;
+          } else if (isCol(v)) {
+            out[k] = getColValue(r, v, joined);
+          } else {
+            out[k] = undefined;
+          }
         }
         return out;
       });
+    }
+
+    if (joined) {
+      // Without a projection, surface only the primary-table columns so
+      // existing call sites that expect flat rows keep working.
+      return rows.map((r) => ({ ...((r[table.__name] as Row | null) ?? {}) }));
     }
     return rows.map((r) => ({ ...r }));
   };
@@ -212,6 +283,20 @@ function makeSelect(
     },
     offset(n: number) {
       offset = n;
+      return builder;
+    },
+    innerJoin(other: FakeTable, pred: Pred) {
+      joins.push({ table: other, pred, kind: "inner" });
+      return builder;
+    },
+    leftJoin(other: FakeTable, pred: Pred) {
+      joins.push({ table: other, pred, kind: "left" });
+      return builder;
+    },
+    groupBy(..._cols: Col[]) {
+      // The fake doesn't materialise aggregates — group-by is accepted
+      // and ignored so call sites keep type-checking.  Tests that depend
+      // on aggregate semantics should query the fake's __store directly.
       return builder;
     },
     then<T = Row[]>(
