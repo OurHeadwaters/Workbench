@@ -13,6 +13,7 @@ import {
 import { useWordpile } from "@/lib/useStore";
 import {
   WordpileStore,
+  findSimilarLocalPile,
   parseAnyImport,
   type BundleEntryDecision,
 } from "@/lib/store";
@@ -51,6 +52,11 @@ export function PilesPage() {
   const [importNewName, setImportNewName] = useState<string>("");
   const [importMergeId, setImportMergeId] = useState<string>("");
   const [importError, setImportError] = useState<string | null>(null);
+  const [importHint, setImportHint] = useState<string | null>(null);
+  // Set to true the moment the user touches the mode radios or the merge
+  // dropdown, which freezes the auto-default so cloud-sync hydrating
+  // more piles in the background can't clobber a manual choice.
+  const [userOverrodeImport, setUserOverrodeImport] = useState(false);
   const piles = data.pileOrder
     .map((id) => data.piles[id])
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
@@ -108,6 +114,8 @@ export function PilesPage() {
       setImportMode("new");
       setImportMergeId("");
       setImportError(null);
+      setImportHint(null);
+      setUserOverrodeImport(false);
     });
     return () => {
       cancelled = true;
@@ -117,14 +125,37 @@ export function PilesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Refresh the merge target default once piles arrive from a sign-in
-  // bootstrap (the share link arrives anonymously, before the cloud sync
-  // has hydrated, so the dropdown could otherwise be empty).
+  // Auto-detect duplicate piles for share-link imports and default the
+  // preview to "Merge into <existing>" when the incoming pile looks like
+  // one the practitioner already has. Re-runs as `piles` changes (cloud
+  // sync can hydrate the cache incrementally after the share link
+  // decoded), but freezes once the user has interacted with the import
+  // controls so we never overwrite a manual choice.
   useEffect(() => {
-    if (importPayload && importMergeId === "" && piles.length > 0) {
-      setImportMergeId(piles[0].id);
+    if (!importPayload) return;
+    if (importSource !== "link") {
+      // File imports keep the historical "create new" default; just seed
+      // the merge-target dropdown so it isn't empty if the user switches.
+      if (piles.length > 0 && importMergeId === "") {
+        setImportMergeId(piles[0].id);
+      }
+      return;
     }
-  }, [importPayload, importMergeId, piles]);
+    if (userOverrodeImport) return;
+    if (piles.length === 0) return;
+    const match = findSimilarLocalPile(importPayload, piles);
+    if (match) {
+      setImportMode("merge");
+      setImportMergeId(match.pile.id);
+      setImportHint(match.reason);
+      return;
+    }
+    // No similar pile — clear any stale hint from a prior pile snapshot
+    // and make sure the merge dropdown has a sane default in case the
+    // practitioner switches modes manually.
+    setImportHint(null);
+    if (importMergeId === "") setImportMergeId(piles[0].id);
+  }, [importPayload, importSource, piles, importMergeId, userOverrodeImport]);
 
   // When piles arrive late (sign-in sync) for an already-loaded bundle,
   // re-suggest merge targets for rows the practitioner has not
@@ -176,6 +207,8 @@ export function PilesPage() {
     setImportNewName("");
     setImportMergeId("");
     setImportError(null);
+    setImportHint(null);
+    setUserOverrodeImport(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -188,6 +221,8 @@ export function PilesPage() {
       setImportPayload(null);
       setImportFileName(fileName);
       setImportMode("new");
+      setImportHint(null);
+      setUserOverrodeImport(false);
       return;
     }
     setImportPayload(parsed.payload);
@@ -199,6 +234,8 @@ export function PilesPage() {
     setImportNewName(parsed.payload.pile.name);
     setImportMode("new");
     setImportMergeId(piles[0]?.id ?? "");
+    setImportHint(null);
+    setUserOverrodeImport(false);
   }
 
   async function handleFilePicked(e: React.ChangeEvent<HTMLInputElement>) {
@@ -352,6 +389,19 @@ export function PilesPage() {
           {importPayload.pile.words.length === 1 ? "" : "s"}
           {importPayload.pile.draft ? " · includes a saved draft" : ""}
         </p>
+        {importHint && (
+          <p
+            className="text-sm mt-2"
+            style={{
+              color: "var(--color-load)",
+              borderLeft: "3px solid var(--color-load)",
+              paddingLeft: 10,
+            }}
+            data-testid="text-import-hint"
+          >
+            {importHint}
+          </p>
+        )}
       </div>
       {(importPayload.pile.words.length > 0 || importPayload.pile.draft) && (
         <SharedPilePeek payload={importPayload} />
@@ -362,7 +412,10 @@ export function PilesPage() {
             type="radio"
             name="import-mode"
             checked={importMode === "new"}
-            onChange={() => setImportMode("new")}
+            onChange={() => {
+              setImportMode("new");
+              setUserOverrodeImport(true);
+            }}
             data-testid="radio-import-new"
           />
           Create a new pile
@@ -384,7 +437,10 @@ export function PilesPage() {
                 type="radio"
                 name="import-mode"
                 checked={importMode === "merge"}
-                onChange={() => setImportMode("merge")}
+                onChange={() => {
+                  setImportMode("merge");
+                  setUserOverrodeImport(true);
+                }}
                 data-testid="radio-import-merge"
               />
               Merge into an existing pile
@@ -394,7 +450,10 @@ export function PilesPage() {
                 className="input"
                 style={{ maxWidth: 360, marginLeft: 22 }}
                 value={importMergeId}
-                onChange={(e) => setImportMergeId(e.target.value)}
+                onChange={(e) => {
+                  setImportMergeId(e.target.value);
+                  setUserOverrodeImport(true);
+                }}
                 data-testid="select-import-merge-target"
               >
                 {piles.map((p) => (

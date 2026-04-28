@@ -649,3 +649,55 @@ export function parseAnyImport(raw: string): AnyPileImport | null {
 }
 
 export type WordpileStoreType = typeof WordpileStore;
+
+/**
+ * Pick the local pile most likely to be a duplicate of an incoming share
+ * payload. The check is intentionally lenient — a case-insensitive name
+ * match wins outright; otherwise we look for >80% Jaccard overlap on the
+ * word lists. (Word strings are already stored lowercased in both the
+ * pile and the export, so the set comparison is a straight equality.)
+ *
+ * Returns null if nothing crosses the threshold, so the import preview
+ * can fall back to its usual "create a new pile" default.
+ */
+export function findSimilarLocalPile(
+  payload: PileExport,
+  piles: CommunityPile[],
+): { pile: CommunityPile; reason: string } | null {
+  if (piles.length === 0) return null;
+  const incomingName = payload.pile.name.trim().toLowerCase();
+  if (incomingName) {
+    const nameMatch = piles.find(
+      (p) => p.name.trim().toLowerCase() === incomingName,
+    );
+    if (nameMatch) {
+      return {
+        pile: nameMatch,
+        reason: `You already have a pile called "${nameMatch.name}". Merging will fold these words in instead of creating a duplicate.`,
+      };
+    }
+  }
+  const incomingWords = new Set(payload.pile.words.map((w) => w.word));
+  if (incomingWords.size === 0) return null;
+  let best: { pile: CommunityPile; jaccard: number } | null = null;
+  for (const p of piles) {
+    if (p.words.length === 0) continue;
+    const local = new Set(p.words.map((w) => w.word));
+    let intersection = 0;
+    for (const w of incomingWords) if (local.has(w)) intersection++;
+    const union = local.size + incomingWords.size - intersection;
+    if (union === 0) continue;
+    const jaccard = intersection / union;
+    if (!best || jaccard > best.jaccard) {
+      best = { pile: p, jaccard };
+    }
+  }
+  if (best && best.jaccard > 0.8) {
+    const pct = Math.round(best.jaccard * 100);
+    return {
+      pile: best.pile,
+      reason: `This pile shares ${pct}% of its words with "${best.pile.name}". Merging will skip the duplicates.`,
+    };
+  }
+  return null;
+}

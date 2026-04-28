@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type {
   AnyPileImport,
+  CommunityPile,
   PileBundleExport,
   PileExport,
+  WordEntry,
 } from "@/data/types";
 import type { WordpileStoreType } from "./store";
 
@@ -817,5 +819,138 @@ describe("WordpileStore — serializeAllPiles / importBundle (round-trip)", () =
     const bundle = parsePileBundle(raw)!;
     expect(bundle.piles.map((p) => p.name)).toEqual(["Good", "Also Good"]);
     expect(bundle.piles[1].words[0].bucket).toBe("unsorted");
+  });
+});
+
+describe("findSimilarLocalPile", () => {
+  function makePile(
+    id: string,
+    name: string,
+    words: string[],
+  ): CommunityPile {
+    const now = 0;
+    const wordEntries: WordEntry[] = words.map((w, i) => ({
+      id: `${id}-w${i}`,
+      word: w.toLowerCase(),
+      note: "",
+      bucket: "unsorted",
+      saferAlternative: "",
+      createdAt: now,
+      updatedAt: now,
+    }));
+    return {
+      id,
+      name,
+      createdAt: now,
+      updatedAt: now,
+      words: wordEntries,
+    };
+  }
+
+  function makePayload(name: string, words: string[]): PileExport {
+    return {
+      format: "wordpile-export",
+      formatVersion: 1,
+      exportedAt: 0,
+      pile: {
+        name,
+        words: words.map((w) => ({
+          word: w.toLowerCase(),
+          bucket: "unsorted",
+          note: "",
+          saferAlternative: "",
+        })),
+      },
+    };
+  }
+
+  it("returns null when there are no local piles", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    expect(
+      findSimilarLocalPile(makePayload("Deer Lake", ["a", "b"]), []),
+    ).toBeNull();
+  });
+
+  it("matches by case-insensitive, trimmed name", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const piles = [
+      makePile("p1", "Sandy Lake", ["wholly", "different"]),
+      makePile("p2", "Deer Lake", ["unrelated"]),
+    ];
+    const match = findSimilarLocalPile(
+      makePayload("  deer lake  ", ["totally", "new", "words"]),
+      piles,
+    );
+    expect(match?.pile.id).toBe("p2");
+    expect(match?.reason).toContain("Deer Lake");
+  });
+
+  it("matches by >80% Jaccard word overlap when names differ", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const shared = [
+      "harvest",
+      "elder",
+      "moose",
+      "river",
+      "fire",
+      "snow",
+      "berry",
+      "trap",
+      "canoe",
+    ];
+    const piles = [makePile("p1", "Old Name", shared)];
+    // Incoming has all 9 shared words plus 1 new — Jaccard = 9/10 = 0.9.
+    const match = findSimilarLocalPile(
+      makePayload("New Name", [...shared, "newword"]),
+      piles,
+    );
+    expect(match?.pile.id).toBe("p1");
+    expect(match?.reason).toMatch(/90%/);
+  });
+
+  it("returns null when overlap is at or below 80%", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const piles = [
+      makePile("p1", "Old Name", ["a", "b", "c", "d", "e"]),
+    ];
+    // Incoming shares 4 of 5; union = 6 → 4/6 ≈ 66.7% < 80.
+    const match = findSimilarLocalPile(
+      makePayload("New Name", ["a", "b", "c", "d", "x"]),
+      piles,
+    );
+    expect(match).toBeNull();
+  });
+
+  it("name match wins even when overlap is low", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const piles = [
+      makePile("p1", "Deer Lake", ["only", "two", "words"]),
+    ];
+    const match = findSimilarLocalPile(
+      makePayload("Deer Lake", ["entirely", "different", "vocabulary", "list"]),
+      piles,
+    );
+    expect(match?.pile.id).toBe("p1");
+    expect(match?.reason).toContain('"Deer Lake"');
+  });
+
+  it("picks the best Jaccard match when multiple piles overlap", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const shared = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+    const piles = [
+      // 10/10 same words, but different name → Jaccard 1.0
+      makePile("perfect", "Other", shared),
+      // partial overlap
+      makePile("partial", "Yet Another", ["a", "b", "z"]),
+    ];
+    const match = findSimilarLocalPile(makePayload("Brand New", shared), piles);
+    expect(match?.pile.id).toBe("perfect");
+  });
+
+  it("ignores empty incoming word lists when name doesn't match", async () => {
+    const { findSimilarLocalPile } = await import("./store");
+    const piles = [makePile("p1", "Old", ["a", "b"])];
+    const match = findSimilarLocalPile(makePayload("Fresh", []), piles);
+    expect(match).toBeNull();
   });
 });
