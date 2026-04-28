@@ -39,12 +39,12 @@ isValidation = true
 name = "test"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test && pnpm --filter @workspace/check-in run test && pnpm --filter @workspace/deer-lake-store-plan run test && pnpm --filter @workspace/wordpile run test && pnpm --filter @workspace/api-server run test"
-
 [workflows.workflow.metadata]
 isValidation = true
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --filter @workspace/practitioners-guide-v2 run test && pnpm --filter @workspace/check-in run test && pnpm --filter @workspace/deer-lake-store-plan run test && pnpm --filter @workspace/wordpile run test && pnpm --filter @workspace/api-server run test && pnpm --filter @workspace/codetry-handbook run test"
 
 [agent]
 stack = "PNPM_WORKSPACE"
