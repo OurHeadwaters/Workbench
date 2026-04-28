@@ -879,9 +879,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .stacker-frame {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  padding: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
   background-color: var(--color-paper);
   background-image:
     linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
@@ -1491,4 +1491,88 @@ h1, h2, h3, h4, h5, h6 {
 .build-name-test-body .btn-ghost {
   color: var(--color-cream);
   opacity: 0.7;
+}
+
+/* ----- Phone layout (<= 720px) -------------------------------------- */
+
+@media (max-width: 720px) {
+  .build-toolbar {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .build-goal {
+    min-width: 0;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  /* Reorder: stage first, tray second (the bottom shelf). */
+  .prototype-grid {
+    gap: 12px;
+  }
+  /* min-width:0 lets the horizontal-scroll tray stay within its grid track
+     instead of pushing the page wider than the viewport. */
+  .prototype-grid > * {
+    min-width: 0;
+  }
+  .prototype-grid > .timber-tray {
+    order: 2;
+  }
+
+  /* Tray as a horizontal shelf — list scrolls sideways with snap. */
+  .timber-tray {
+    min-height: 0;
+    min-width: 0;
+    max-width: 100%;
+    padding: 10px;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .timber-tray-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    min-width: 0;
+    width: 100%;
+    padding-right: 0;
+    padding-bottom: 4px;
+    gap: 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .timber-tray-card {
+    flex: 0 0 auto;
+    min-width: 132px;
+    max-width: 180px;
+    scroll-snap-align: start;
+  }
+
+  /* Stages — smaller minimum heights so they fit a phone viewport. */
+  .stacker-stage {
+    min-height: 320px;
+    padding: 12px;
+  }
+  .stacker-frame-slot {
+    min-height: 48px;
+    font-size: 12px;
+    padding: 6px 4px;
+  }
+  .stacker-trim-piece {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+/* Tighter phones (<= 420px) — claw back a little more horizontal room. */
+@media (max-width: 420px) {
+  .timber-tray-card {
+    min-width: 124px;
+  }
+  .stacker-frame {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 4px;
+  }
 }

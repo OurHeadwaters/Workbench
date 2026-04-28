@@ -348,7 +348,7 @@ export function BuildPage() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
       <div className="flex items-baseline gap-3 mb-2">
         <Link
           href={`/pile/${pile.id}`}
