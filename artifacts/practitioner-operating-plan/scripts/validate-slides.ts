@@ -8,6 +8,7 @@ import {
   safeParseSlidesManifest,
   type SlideEntry,
 } from "../src/data/slidesManifestSchema";
+import { checkCostBindings } from "./checkCostBindings";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,6 +131,24 @@ function validateOrphanedSlideFiles(issues: ValidationIssue[]) {
   }
 }
 
+/**
+ * Static guard for the `getLiveCostValue` / `liveDerived` callsites
+ * across slides + page surfaces (OnePager etc). Catches the historic
+ * "slide reads an id the registry no longer derives" bug at lint time
+ * — well before the deck-blanking render-walk vitests would surface it.
+ * See `checkCostBindings.ts` for the parsing rules.
+ */
+function validateLiveCostBindings(issues: ValidationIssue[]) {
+  const found = checkCostBindings({
+    projectRoot,
+    budgetMathPath: path.join(projectRoot, "src/lib/budgetMath.ts"),
+    scanDirs: [path.join(projectRoot, "src/pages")],
+  });
+  for (const issue of found) {
+    issues.push({ message: issue.message });
+  }
+}
+
 async function main() {
   const issues: ValidationIssue[] = [];
 
@@ -177,6 +196,7 @@ async function main() {
   validateContiguousPositions(issues);
   validateFilepaths(issues);
   validateOrphanedSlideFiles(issues);
+  validateLiveCostBindings(issues);
 
   if (issues.length > 0) {
     console.error(`Slide manifest validation failed (${issues.length} issue(s)):\n`);

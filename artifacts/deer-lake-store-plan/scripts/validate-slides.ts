@@ -8,6 +8,7 @@ import {
   safeParseSlidesManifest,
   type SlideEntry,
 } from "../src/data/slidesManifestSchema";
+import { checkCostBindings } from "./checkCostBindings";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,6 +131,31 @@ function validateOrphanedSlideFiles(issues: ValidationIssue[]) {
   }
 }
 
+/**
+ * Static guard for the `getLiveCostValue` / `liveDerived` callsites in
+ * Deer Lake's slides. The derived-id source of truth lives in the
+ * sibling `@workspace/practitioner-operating-plan` package's
+ * `budgetMath.ts` (re-exported via the `./budgetMath` subpath), so we
+ * resolve that file by relative path from this artifact's root.
+ * Mirrors the same check in the practitioner deck — both decks fail
+ * fast at lint time before the render-walk vitests would otherwise
+ * surface the regression.
+ */
+function validateLiveCostBindings(issues: ValidationIssue[]) {
+  const budgetMathPath = path.resolve(
+    projectRoot,
+    "../practitioner-operating-plan/src/lib/budgetMath.ts",
+  );
+  const found = checkCostBindings({
+    projectRoot,
+    budgetMathPath,
+    scanDirs: [path.join(projectRoot, "src/pages")],
+  });
+  for (const issue of found) {
+    issues.push({ message: issue.message });
+  }
+}
+
 async function main() {
   const issues: ValidationIssue[] = [];
 
@@ -177,6 +203,7 @@ async function main() {
   validateContiguousPositions(issues);
   validateFilepaths(issues);
   validateOrphanedSlideFiles(issues);
+  validateLiveCostBindings(issues);
 
   if (issues.length > 0) {
     console.error(`Slide manifest validation failed (${issues.length} issue(s)):\n`);
