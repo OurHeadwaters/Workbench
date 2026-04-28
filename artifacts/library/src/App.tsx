@@ -53,8 +53,12 @@ function Router() {
               <Route path="/why-stores-fail">
                 <WhyStoresFail />
               </Route>
-              <Route path="/phenomena" component={Phenomena} />
-              <Route path="/phenomena/:id" component={PhenomenonDetailPage} />
+              <Route path="/phenomena">
+                <Phenomena />
+              </Route>
+              <Route path="/phenomena/:id">
+                <PhenomenonDetailPage />
+              </Route>
               <Route path="/reverse-test">
                 <ReverseTest />
               </Route>
