@@ -1294,6 +1294,96 @@ describe("bookkeeper route — POST /submissions/:id/approve", () => {
     }
   });
 
+  it("rejects a second approve of an inventory_receipt with 400 and does NOT add a duplicate bk_inventory_receipts row", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      seedAccount("1400", "Inventory", "debit");
+      seedAccount("2000", "Accounts Payable", "credit");
+
+      const submissionId = await seedPendingSubmission(h.base, {
+        kind: "inventory_receipt",
+        costCentreCode: "CC-001",
+        occurredOn: "2026-04-12",
+        vendor: "North Star Foods",
+        amount: 144,
+        description: "12 cases of flour",
+        itemSku: "FLOUR-50LB",
+        itemName: "All-purpose flour, 50lb sack",
+        quantity: 12,
+        unit: "case",
+      });
+
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const approveBody = {
+        postedDate: "2026-04-15",
+        reference: "PO-7788",
+        lines: [
+          { accountCode: "1400", debit: 144, credit: 0 },
+          { accountCode: "2000", debit: 0, credit: 144 },
+        ],
+      };
+
+      // First approval succeeds and writes exactly one mirror row.
+      const first = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(approveBody),
+        },
+      );
+      expect(first.status).toBe(200);
+      const firstBody = (await first.json()) as {
+        approvedTransactionId: string;
+      };
+      expect(
+        tables.bookkeeperInventoryReceiptsTable.__store.filter(
+          (r) => r.submissionId === submissionId,
+        ),
+      ).toHaveLength(1);
+
+      // Second approval, immediately. Same payload — the only thing
+      // protecting stock-on-hand from doubling is the status guard in
+      // the approve handler. If a regression ever lets this through,
+      // the mirror table grows a second row and stock silently doubles.
+      const second = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(approveBody),
+        },
+      );
+      expect(second.status).toBe(400);
+      const secondBody = (await second.json()) as { error: string };
+      expect(secondBody.error).toMatch(/already approved/i);
+
+      // The mirror table still has exactly one row for this submission,
+      // and it still points at the transaction created by the first
+      // (and only) successful approval.
+      const mirrorRows =
+        tables.bookkeeperInventoryReceiptsTable.__store.filter(
+          (r) => r.submissionId === submissionId,
+        );
+      expect(mirrorRows).toHaveLength(1);
+      expect(mirrorRows[0]!.transactionId).toBe(firstBody.approvedTransactionId);
+
+      // And no second transaction was posted as a side-effect either.
+      expect(
+        tables.bookkeeperTransactionsTable.__store.filter(
+          (t) => t.sourceSubmissionId === submissionId,
+        ),
+      ).toHaveLength(1);
+    } finally {
+      await h.close();
+    }
+  });
+
   it("approving a plain expense submission does NOT touch bk_inventory_receipts", async () => {
     const h = await startHarness();
     try {
