@@ -1211,6 +1211,129 @@ describe("bookkeeper route — POST /submissions/:id/approve", () => {
     }
   });
 
+  it("approving an inventory_receipt mirrors a row into bk_inventory_receipts carrying SKU, quantity, unit, vendor, and occurredOn forward", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      // Inventory increases assets (debit), AP increases liabilities (credit).
+      seedAccount("1400", "Inventory", "debit");
+      seedAccount("2000", "Accounts Payable", "credit");
+
+      // Seed a pending inventory_receipt with all of the SKU/quantity/unit
+      // metadata that the approve handler is expected to copy forward.
+      const submissionId = await seedPendingSubmission(h.base, {
+        kind: "inventory_receipt",
+        costCentreCode: "CC-001",
+        occurredOn: "2026-04-12",
+        vendor: "North Star Foods",
+        amount: 144,
+        description: "12 cases of flour",
+        notes: "for opening week bake",
+        itemSku: "FLOUR-50LB",
+        itemName: "All-purpose flour, 50lb sack",
+        quantity: 12,
+        unit: "case",
+      });
+
+      // Sanity: nothing in the inventory-receipts mirror yet.
+      expect(
+        tables.bookkeeperInventoryReceiptsTable.__store,
+      ).toHaveLength(0);
+
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            reference: "PO-7788",
+            lines: [
+              { accountCode: "1400", debit: 144, credit: 0 },
+              { accountCode: "2000", debit: 0, credit: 144 },
+            ],
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { approvedTransactionId: string };
+      expect(body.approvedTransactionId).toBeTruthy();
+
+      // Exactly one mirrored row, linked to BOTH the submission and the
+      // newly-posted transaction (this is the link the inventory reports
+      // join on — drop it and stock-on-hand silently goes wrong).
+      expect(
+        tables.bookkeeperInventoryReceiptsTable.__store,
+      ).toHaveLength(1);
+      const mirror = tables.bookkeeperInventoryReceiptsTable.__store[0]!;
+      expect(mirror.submissionId).toBe(submissionId);
+      expect(mirror.transactionId).toBe(body.approvedTransactionId);
+
+      // And it carries the full SKU / quantity / unit / vendor / occurredOn
+      // payload across from the submission, exactly as stored on the
+      // submission row (quantity is persisted as a 4-decimal string).
+      const submission = tables.bookkeeperSubmissionsTable.__store.find(
+        (r) => r.id === submissionId,
+      )!;
+      expect(mirror.costCentreCode).toBe("CC-001");
+      expect(mirror.itemSku).toBe("FLOUR-50LB");
+      expect(mirror.itemName).toBe("All-purpose flour, 50lb sack");
+      expect(mirror.quantity).toBe(submission.quantity);
+      expect(mirror.quantity).toBe("12.0000");
+      expect(mirror.unit).toBe("case");
+      expect(mirror.vendor).toBe("North Star Foods");
+      expect(mirror.occurredOn).toBe("2026-04-12");
+      expect(mirror.notes).toBe("for opening week bake");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("approving a plain expense submission does NOT touch bk_inventory_receipts", async () => {
+    const h = await startHarness();
+    try {
+      seedCostCentre("CC-001", "Operations");
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const submissionId = await seedPendingSubmission(h.base);
+
+      signIn({
+        clerkUserId: "user_bea",
+        email: "bea@example.com",
+        role: "bookkeeper",
+      });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/submissions/${submissionId}/approve`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            lines: [
+              { accountCode: "5100", debit: 25, credit: 0 },
+              { accountCode: "1000", debit: 0, credit: 25 },
+            ],
+          }),
+        },
+      );
+      expect(res.status).toBe(200);
+
+      // Expenses must not write to the inventory mirror — that table is
+      // strictly for inventory_receipt kind.
+      expect(
+        tables.bookkeeperInventoryReceiptsTable.__store,
+      ).toHaveLength(0);
+    } finally {
+      await h.close();
+    }
+  });
+
   it("rejects approval from a food_handler with 403, leaves the submission pending, and posts no transaction", async () => {
     const h = await startHarness();
     try {
