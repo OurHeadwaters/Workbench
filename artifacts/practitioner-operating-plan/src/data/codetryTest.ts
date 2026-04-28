@@ -26,7 +26,9 @@
 // appears on), renameCandidate (what you tried to rename it to),
 // whatWouldChange (the structural cost of accepting the rename),
 // wouldTypeCheck + typeCheckNote (handbook §2.4 — would the renamed
-// model still satisfy a type-driven schema?), and a verdict. Bump
+// model still satisfy a type-driven schema?), bothStatesVerdict +
+// bothStatesNote (constellation principles.both-states — does the one
+// word hold both a slow side and a fast side?), and a verdict. Bump
 // `lastReviewed` in the same commit.
 //
 // TYPE-CHECKER COLUMN (handbook §2.4) — for each rename trial, also
@@ -38,8 +40,27 @@
 // (rare — usually a fold or a shape change is involved). "n-a" is for
 // meta entries that don't trial a single rename (cross-artifact name
 // collisions, deliberate metaphor reuse).
+//
+// BOTH-STATES COLUMN (constellation principles.both-states) — the
+// second principle filed in the codetry working-doc this pass. When a
+// system has both a slow side (always-on practice) and a fast side
+// (active event), the name has to do both jobs in one word, or the
+// system will forks into two systems with two cultures. The exemplar
+// is The Standby, which holds the always-on shelf (preparation,
+// standby stock, the watch as a posture) and the active event (a
+// call, the active rung, the debrief). For each entry, score:
+//   "holds-both" — one word does both jobs (slow + fast).
+//   "forks"      — the name has a slow/fast split that the team has
+//                  let drift into two words; the system is forking.
+//   "n-a"        — single-state name with no slow/fast duality to
+//                  test (a role, a tier, a bucket, a corridor, a
+//                  meta cross-artifact entry, etc.). saltbox-only
+//                  names live here so the principle doesn't penalize
+//                  them. (Future candidates if any of these grow a
+//                  fast-side counterpart: "harvest" as both season
+//                  and event, "shift" as both rota and handover.)
 
-export const lastReviewed = "2026-04-27";
+export const lastReviewed = "2026-04-28";
 
 export type Verdict = "load-bearing" | "decorative" | "drift";
 
@@ -49,6 +70,15 @@ export type Verdict = "load-bearing" | "decorative" | "drift";
  * rename? "yes" is the §2.4 case — drift the type checker can't see.
  */
 export type TypeCheckOutcome = "yes" | "no" | "n-a";
+
+/**
+ * Per constellation principles.both-states: does the one word hold
+ * both a slow (always-on) side and a fast (active event) side?
+ *   "holds-both" — one word does both jobs.
+ *   "forks"      — name has a slow/fast split letting it drift apart.
+ *   "n-a"        — single-state name, no slow/fast duality to test.
+ */
+export type BothStatesVerdict = "holds-both" | "forks" | "n-a";
 
 export type CodetryTestEntry = {
   name: string;
@@ -63,6 +93,13 @@ export type CodetryTestEntry = {
   wouldTypeCheck: TypeCheckOutcome;
   /** One-line gloss on the type-checker outcome — what a typed schema would or wouldn't see. */
   typeCheckNote: string;
+  /**
+   * Per constellation principles.both-states: does this one word do
+   * both jobs (slow side AND fast side) in one umbrella term?
+   */
+  bothStatesVerdict: BothStatesVerdict;
+  /** One-line gloss on the both-states reading — what the slow and fast sides are, or why this entry has no slow/fast duality. */
+  bothStatesNote: string;
   /** Verdict-specific note. For drift: where the slipped word appears + recommendation. */
   followUp?: string;
 };
@@ -75,6 +112,29 @@ export type CodetryTestGroup = {
 };
 
 export const codetryTest: CodetryTestGroup[] = [
+  {
+    artifact: "Constellation-wide primitives",
+    framing:
+      "Names that aren't owned by any single artifact — the constellation reads them across every zone. The Standby is the first such primitive, and the both-states principle (principles.both-states) was filed in the constellation manifest alongside it. This group is where holds-both verdicts live; the financial artifacts below are saltbox-principle work and score n-a on the both-states column.",
+    entries: [
+      {
+        name: "The Standby",
+        livesAt:
+          "constellation.json constellationWidePrimitives.the-standby (hosted Zone 3, read by every zone) · each zone's `standby` field (Saltbox household checklist · Bright Side facility checklist · Headwaters standby budget envelopes · etc.) · /codetry working-doc under principles.both-states",
+        renameCandidate:
+          "The Common Pantry (slow side only) · The Watch (fast side only) · split into 'the Pantry' (slow) + 'the Call' (fast)",
+        whatWouldChange:
+          "The Standby holds the always-on shelf (preparation, standby stock, the watch as a posture) AND the active event (a call, the active rung, the debrief) under one umbrella, on a four-rung severity ladder (advisory / standby / active / standdown). Renaming to 'The Common Pantry' loses the active call; renaming to 'The Watch' loses the slow shelf; splitting into 'the Pantry' (slow) + 'the Call' (fast) — both single-state names already rejected on paper in the constellation manifest's `rejectedAlternatives` — produces two systems with two cultures: one for the always-on side, one for the event side. The four-rung ladder (advisory → standby → active → standdown) only stays one ladder because the umbrella stays one word; split the word and you split the ladder. Every zone's `standby` reading depends on the same vocabulary travelling with it.",
+        verdict: "load-bearing",
+        wouldTypeCheck: "n-a",
+        typeCheckNote:
+          "No schema yet — per the constellation manifest, the Standby is naming-and-filing only this pass; no calls/watches/debriefs UI is built. The type system has nothing to read. The codetry test (and the both-states column below) is the only thing that catches the slow/fast fork before it happens.",
+        bothStatesVerdict: "holds-both",
+        bothStatesNote:
+          "The exemplar of the both-states principle and the reason the principle was filed. One word does both jobs: the slow side (always-on preparation, standby stock, the watch as a posture, the standby rung sleeved in) and the fast side (a call, the active rung, the debrief, the standdown). The constellation manifest's `rejectedAlternatives` records the two single-state forks that were tried and turned down — 'The Common Pantry' (holds the slow side beautifully but can't hold a fire call or a payment-systems outage without straining the metaphor) and 'The Watch' (holds the active-monitoring posture but can't hold the slow shelf without bending into a permanent vigil). Each survives inside the umbrella as a sub-noun (Pantry as the food/supply sub-shelf; Watch as the active-monitoring sub-noun) — sub-nouns, not replacements.",
+      },
+    ],
+  },
   {
     artifact: "Practitioner Operating Plan",
     framing:
@@ -91,6 +151,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The role is a string label on a record in the staffing table. Renaming it 'Founder' produces an identical type signature; the compiler has nothing to say about which word the discipline travels under.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Single-state name — a role, not a slow/fast pair. No second job for the umbrella to hold; no fork risk to test.",
       },
       {
         name: "floor · recommended · scale (fee tiers)",
@@ -103,6 +166,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The `ask` record carries three numeric fields whatever the keys are called. Renaming `floor` → `minimum` is a key rename, not a shape change — the type stays valid and a type-driven model would say 'still legal'.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Three-state ordinal (walk-away → standard-of-care → growth-state), not a slow/fast duality. Each tier holds one job; no umbrella name has to do double duty.",
       },
       {
         name: "bridge (~$181k day-one ask)",
@@ -115,6 +181,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "A labelled dollar figure stays a labelled dollar figure. The type system can't tell whether the council reads 'bridge' as a self-closing span or 'loan' as a debt instrument.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Single-state name — a temporary span across one known gap, not a slow/fast pair. No always-on shelf alongside an active event for the umbrella to hold.",
       },
       {
         name: "discipline-keeper retainer",
@@ -127,6 +196,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The retainer is a numeric annual figure with a string label. The schema doesn't notice when 'discipline-keeper' becomes 'support' — the contract's posture has changed; its shape hasn't.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Single-state name — a continuous annual retainer with a quarterly cadence baked in, not a slow-shelf-plus-fast-event pair. The cadence is one job, not two.",
       },
       {
         name: "reinvestment + four buckets (Tech CAPEX, Tooling subs, Training & R&D, Pilot reserve)",
@@ -139,6 +211,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "Four named numeric buckets remain four named numeric buckets. The rename to 'categories' is purely lexical — the schema would accept it, but the bucket-discipline (pour from, never summon into) lives in the noun, not the type.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Buckets are spatial categories, not a slow/fast temporal pair. The pour-from-only discipline is one job (the discipline applies whether the bucket is filling or being drawn from); no fast-side event counterpart.",
       },
       {
         name: "cross-reserve install",
@@ -151,6 +226,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The install is a duration-and-cost record with the same fields whether we call it install, deployment, rollout, or expansion. A typed model can't see that 'install' is finite and 'rollout' is open-ended.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Discrete event by definition (12 weeks, finite, with a beginning and an end) — the always-on counterpart is the *retainer* that follows it, which is a separate name. The install word itself only does the fast-side job, on purpose; no umbrella to fork.",
       },
       {
         name: "Hub Operator",
@@ -163,6 +241,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The role is a row in the staffing table; relabelling it 'warehouse worker' produces an identical row. The shape only changes when the fold itself is reversed (one row split into two) — which is a different rename than the one trialed here.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Single-role name — a person operating one hub, on the same shift posture every day. No always-on-shelf-plus-active-event split inside the role for an umbrella name to hold.",
         followUp:
           "Resolved (Task #254, 2026-04). The earlier drift verdict came from two surfaces speaking different words for the same work: the slides (TheSixPeople in this deck, StaffingModel in the Deer Lake deck) call it 'Hub Operator' at $8.5k loaded — a V3 fold of V2's Food Handler + Operations Manager — while the OnePager A·floor table keeps Operations Manager ($8.5k) and Food Handler ($5k) as separate cost-basis lines. Decision: keep separate-with-explanation. The slides carry the lean-roster narrative (where the noun does structural work — operates the hub); the printed OnePager has to give the contractor's CFO an auditable $/line breakdown at the floor. All three surfaces now carry cross-reference notes pointing at the others (TheSixPeople → OnePager + ADR, Deer Lake StaffingModel → OnePager, OnePager OM + Food Handler rows → slide). The registry contract is recorded as a block comment in costRegistry.ts at the Floor scenario (A) section: Hub Operator (folded) == budget.a.opsManager + budget.a.foodHandler. A·floor cost basis ($48,200) is unchanged; rows stay separate in the registry, fold only at presentation time. The ADR also flags a separate registry/print drift to clean up later: budget.a.opsManager carries $9,500 in the registry but the OnePager still prints $8,500 — out of scope for this fold ADR, belongs to a future OnePager hardcoded-numbers reconciliation pass.",
       },
@@ -177,6 +258,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "Three labelled numeric revenue lines stay three labelled numeric revenue lines. A typed model would read 'Layer' and 'Tier' as the same shape, and miss that one means stacked-and-simultaneous and the other means pick-one.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Stacked simultaneous layers — all three are always-on at the same time for a Deer Lake contract. No fast-side event counterpart inside the Layer name; this is a saltbox-principle name about shape, not a both-states name about timing.",
         followUp:
           "Drift risk to watch: 'Tier 2' (subscription rung in the Pilot #2 model) and 'Layer Two' (tech stack at markup) live in the same financial vocabulary. Decision: leave the Layer/Tier distinction explicit in the cost registry and any future shared glossary, so a reader holding both decks doesn't quietly fuse them.",
       },
@@ -191,6 +275,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The gap is a number computed from other numbers. Renaming it 'shortfall' or 'deficit' produces an identical numeric field — the type checker is indifferent between 'distance to close' and 'hole to plug'.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "A computed distance, not a slow/fast pair. The Y1 picture has one state (the gap exists or it's been closed); no always-on shelf alongside an active event for an umbrella name to hold.",
       },
       {
         name: "cost review · cost registry",
@@ -203,6 +290,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The registry is a Map<id, Entry> with a per-entry status enum. Calling it a 'budget table' yields the same shape and the same lookup-by-id; the words 'review' and 'registry' do work the type system never sees.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "A workflow + a dictionary, not a slow/fast pair. The registry (always-on lookup) and the review modal (active editing session) already share one vocabulary cleanly — the review reads and writes registry entries directly. No umbrella name has to span them; both are 'cost'.",
       },
     ],
   },
@@ -222,6 +312,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "This phrase is narrative copy on a slide — there's no type behind it at all. The type system has nothing to say; the codetry test is the only thing that catches the rename.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "A continuous corridor service running on a fixed bi-weekly schedule — one ongoing arrangement, not a slow shelf plus an active event. (If freight ever becomes part of The Standby's active call vocabulary — a 'freight call' when the corridor is disrupted — that fast-side reading lives inside The Standby, not inside this name.)",
       },
       {
         name: "the band runs the store / Headwaters delivers the operating system",
@@ -234,6 +327,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "Slide copy again — no schema to check. A typed model of the staffing table would not notice that the rename quietly inserts a Headwaters embed where the constraint is no embed.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Two clauses, two parties, one ongoing arrangement — both sides are always-on, no fast-side event counterpart. The slow/fast principle doesn't apply; the constraint this name holds is who-does-what, not when.",
       },
       {
         name: "pods, not roles",
@@ -246,6 +342,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "PODS and ROLES are both card titles in JSX. The type system reads them as identical strings; the cover-each-other constraint lives entirely in the noun.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Always-on roster shape — pods are how the store stays open every day. No fast-side event counterpart inside the pod name itself. (If the store ever has to declare a Standby active rung, the pod that responds is doing The Standby's fast-side work; the both-states reading lives there, not here.)",
       },
     ],
   },
@@ -265,6 +364,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "yes",
         typeCheckNote:
           "The entity has the same fields whether the class is called CostCentre, Department, or BusinessUnit. A type-driven schema would accept the rename; the org-chart-vs-bucket distinction is the part the type can't see.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "A bookkeeping bucket — costs land here continuously as they're booked, one ongoing posture. No always-on-shelf-plus-active-event split inside the name.",
       },
       {
         name: "cost centre vs. cost registry (cross-artifact name collision)",
@@ -277,6 +379,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "n-a",
         typeCheckNote:
           "No rename trialed — this entry flags a cross-artifact name collision, not a single candidate rename. Each primitive's type already lives in its own artifact's schema.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Meta entry — a cross-artifact name collision, not a slow/fast test. Both 'cost' primitives are single-state on their own (a bucket; a dictionary); the collision is about scope and audience, not about an umbrella that has to hold two timing modes.",
         followUp:
           "Drift risk to watch (not active today). When the two artifacts start cross-referencing each other, the convention is the long forms — 'Practitioner cost-registry entry' and 'Headwaters Books cost centre' — never the bare word 'cost'. Glossary now landed at /practitioner-operating-plan/constellation.json under the new 'glossary' key (term: 'cost (financial primitives across artifacts)'); it spells out both primitives' shapes, storage layers, audiences, and the long-form convention. The convention is on paper before the first use site needs it; revisit when the first cross-artifact wiring lands.",
       },
@@ -291,6 +396,9 @@ export const codetryTest: CodetryTestGroup[] = [
         wouldTypeCheck: "n-a",
         typeCheckNote:
           "No rename trialed — this entry calls out a deliberate metaphor reuse across the constellation. Two different runtime entities legitimately share one word; nothing for a type checker to flag.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "Meta entry — deliberate metaphor reuse across the constellation, not a slow/fast test. Both Headwaters readings are continuous (the agency runs; the envelope app runs) — neither carries an event counterpart inside the name.",
         followUp:
           "Constellation note already half-acknowledges this in zone 1's `formerNames` field. Recommend: add a short explainer to constellation.json at the agency layer ('Headwaters · the agency that builds the constellation, named for the same upstream-source metaphor as zone 1') so a reader sees both readings on purpose.",
       },

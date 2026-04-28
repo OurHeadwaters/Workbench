@@ -1,6 +1,7 @@
 import {
   codetryTest,
   lastReviewed,
+  type BothStatesVerdict,
   type TypeCheckOutcome,
   type Verdict,
 } from "@/data/codetryTest";
@@ -38,6 +39,27 @@ const typeCheckColor: Record<
   "n-a": { bg: "#f4ede0", text: "#6b7665", border: "#c8bfa7" },
 };
 
+const bothStatesLabel: Record<BothStatesVerdict, string> = {
+  "holds-both": "holds both",
+  forks: "forks",
+  "n-a": "single-state · NA",
+};
+
+const bothStatesColor: Record<
+  BothStatesVerdict,
+  { bg: string; text: string; border: string }
+> = {
+  // The principle's positive case — same boreal-green palette as
+  // load-bearing, because a name that holds both states is doing
+  // structural work the same way.
+  "holds-both": { bg: "#ebe2d0", text: "#1f3d2e", border: "#1f3d2e" },
+  // The failure mode the principle is meant to catch — warm warning.
+  forks: { bg: "#fbe9d6", text: "#7a3030", border: "#b85a3e" },
+  // Single-state names get the neutral parchment so they aren't
+  // penalized — saltbox-only names belong here on this column.
+  "n-a": { bg: "#f4ede0", text: "#6b7665", border: "#c8bfa7" },
+};
+
 export default function CodetryTest() {
   const onPrint = () => {
     if (typeof window !== "undefined") window.print();
@@ -49,12 +71,24 @@ export default function CodetryTest() {
       for (const entry of group.entries) {
         acc[entry.verdict] += 1;
         if (entry.wouldTypeCheck === "yes") acc.typeCheckBlind += 1;
+        if (entry.bothStatesVerdict === "holds-both") acc.holdsBoth += 1;
+        if (entry.bothStatesVerdict === "forks") acc.forks += 1;
+        if (entry.bothStatesVerdict !== "n-a") acc.bothStatesScored += 1;
         acc.total += 1;
       }
       return acc;
     },
-    { "load-bearing": 0, decorative: 0, drift: 0, typeCheckBlind: 0, total: 0 } as Record<
-      Verdict | "typeCheckBlind" | "total",
+    {
+      "load-bearing": 0,
+      decorative: 0,
+      drift: 0,
+      typeCheckBlind: 0,
+      holdsBoth: 0,
+      forks: 0,
+      bothStatesScored: 0,
+      total: 0,
+    } as Record<
+      Verdict | "typeCheckBlind" | "holdsBoth" | "forks" | "bothStatesScored" | "total",
       number
     >,
   );
@@ -66,7 +100,8 @@ export default function CodetryTest() {
           <div>
             <div className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#6b7665] mb-[3pt] print:text-[7pt] print:mb-[2pt]">
               Working doc · Codetry Handbook §4.2 applied · §2.4 column
-              added · Last reviewed {formatLongDate(lastReviewed)}
+              added · principles.both-states column added · Last
+              reviewed {formatLongDate(lastReviewed)}
             </div>
             <h1 className="font-display text-[26pt] leading-[1.0] tracking-tight text-[#1f3d2e] font-semibold print:text-[20pt]">
               The Codetry Test
@@ -86,10 +121,13 @@ export default function CodetryTest() {
 
         <div className="print-hide flex items-center justify-between gap-[8pt] mb-[10pt] text-[9pt]">
           <div className="text-[#6b7665] max-w-[60%]">
-            Three artifacts · {tally.total} canonical names tested by trial
-            rename · per-entry verdict + type-checker reading + footer
-            tally. Names settled by Task #232; method from Codetry
-            Handbook §4.2; type-checker column from §2.4.
+            Three artifacts plus the constellation-wide primitives ·{" "}
+            {tally.total} canonical names tested by trial rename ·
+            per-entry verdict + type-checker reading + both-states
+            reading + footer tally. Names settled by Task #232; method
+            from Codetry Handbook §4.2; type-checker column from §2.4;
+            both-states column from constellation
+            principles.both-states.
           </div>
           <div className="flex gap-[6pt]">
             <button
@@ -121,9 +159,10 @@ export default function CodetryTest() {
             This sheet runs that trial against the canonical names that
             Task #232 settled across three financial artifacts &mdash; the
             Practitioner Operating Plan, the Deer Lake Store Plan, and
-            Headwaters Books. Each entry: the canonical name, where it
-            lives, the rename we trialed, what would actually have to
-            change downstream, and a verdict.
+            Headwaters Books &mdash; plus the constellation-wide
+            primitives that no single artifact owns. Each entry: the
+            canonical name, where it lives, the rename we trialed, what
+            would actually have to change downstream, and a verdict.
           </p>
           <p>
             New since the last review:{" "}
@@ -148,6 +187,37 @@ export default function CodetryTest() {
             <TypeCheckPill outcome="yes" /> are the §2.4 case
             &mdash; the codetry test is the only thing that catches
             that slip.
+          </p>
+          <p>
+            Also new this pass: the codetry working-doc filed a second
+            principle alongside the saltbox principle &mdash;{" "}
+            <a
+              href="/practitioner-operating-plan/codetry"
+              className="font-semibold text-[#1f3d2e] underline decoration-[#c8bfa7] decoration-2 underline-offset-2 hover:decoration-[#1f3d2e]"
+            >
+              principles.both-states
+            </a>{" "}
+            in the constellation manifest:{" "}
+            <span className="italic">
+              when a system has both a slow side (always-on practice)
+              and a fast side (active event), the name has to do both
+              jobs in one word, or the system will fork into two
+              systems with two cultures.
+            </span>{" "}
+            The exemplar is{" "}
+            <span className="font-semibold">The Standby</span> &mdash;
+            one umbrella holding the always-on shelf (preparation,
+            standby stock, the watch as a posture) and the active
+            event (a call, the active rung, the debrief). Each entry
+            now carries a{" "}
+            <span className="font-mono uppercase tracking-[0.16em] text-[8.5pt]">
+              both-states
+            </span>{" "}
+            reading so the principle stays an audit, not just prose.
+            Saltbox-only names show as{" "}
+            <BothStatesPill verdict="n-a" /> so the both-states column
+            doesn&rsquo;t penalize names that have nothing to be tested
+            against.
           </p>
 
           <Subhead>The three verdicts</Subhead>
@@ -203,6 +273,37 @@ export default function CodetryTest() {
             </li>
           </ul>
 
+          <Subhead>The both-states reading (principles.both-states)</Subhead>
+          <ul className="space-y-[3pt] print:space-y-[2pt] list-none pl-0">
+            <li>
+              <BothStatesPill verdict="holds-both" />{" "}
+              <span className="text-[#2a2520]">
+                one word does both jobs &mdash; the slow side
+                (always-on practice) and the fast side (active event)
+                travel under the same umbrella, on the same vocabulary,
+                with no handoff between cultures.
+              </span>
+            </li>
+            <li>
+              <BothStatesPill verdict="forks" />{" "}
+              <span className="text-[#2a2520]">
+                the name has a slow/fast split that the team has let
+                drift into two words &mdash; the system is forking into
+                two systems with two cultures; pick one umbrella before
+                the cultures harden.
+              </span>
+            </li>
+            <li>
+              <BothStatesPill verdict="n-a" />{" "}
+              <span className="text-[#2a2520]">
+                single-state name with no slow/fast duality to test
+                &mdash; a role, a tier, a bucket, a corridor, a meta
+                cross-artifact entry. Saltbox-only names live here so
+                the principle doesn&rsquo;t penalize them.
+              </span>
+            </li>
+          </ul>
+
           {codetryTest.map((group) => (
             <div key={group.artifact} className="print:break-inside-avoid">
               <Subhead>{group.artifact}</Subhead>
@@ -212,14 +313,19 @@ export default function CodetryTest() {
               <ul className="space-y-[8pt] print:space-y-[5pt] list-none pl-0">
                 {group.entries.map((entry) => {
                   const isTypeCheckBlind = entry.wouldTypeCheck === "yes";
+                  const holdsBoth = entry.bothStatesVerdict === "holds-both";
+                  const forks = entry.bothStatesVerdict === "forks";
+                  const borderClass = forks
+                    ? "border-[#b85a3e]"
+                    : holdsBoth
+                      ? "border-[#1f3d2e]"
+                      : isTypeCheckBlind
+                        ? "border-[#b85a3e]"
+                        : "border-[#c8bfa7]";
                   return (
                     <li
                       key={entry.name}
-                      className={`pl-[10pt] print:break-inside-avoid border-l-2 ${
-                        isTypeCheckBlind
-                          ? "border-[#b85a3e]"
-                          : "border-[#c8bfa7]"
-                      }`}
+                      className={`pl-[10pt] print:break-inside-avoid border-l-2 ${borderClass}`}
                     >
                       <div className="flex items-baseline justify-between gap-[8pt] mb-[2pt] flex-wrap">
                         <span className="font-display font-semibold text-[#1f3d2e] text-[12pt] print:text-[10.5pt] leading-[1.2]">
@@ -228,6 +334,7 @@ export default function CodetryTest() {
                         <span className="flex items-center gap-[4pt] flex-wrap">
                           <VerdictPill verdict={entry.verdict} />
                           <TypeCheckPill outcome={entry.wouldTypeCheck} />
+                          <BothStatesPill verdict={entry.bothStatesVerdict} />
                         </span>
                       </div>
                       <div className="text-[8.5pt] text-[#6b7665] mb-[3pt] leading-[1.35] print:text-[7.5pt]">
@@ -267,6 +374,24 @@ export default function CodetryTest() {
                           Type-checker (§2.4)
                         </span>
                         {entry.typeCheckNote}
+                      </div>
+                      <div
+                        className={`mt-[4pt] text-[9.5pt] leading-[1.45] rounded px-[8pt] py-[5pt] border print:text-[8.5pt] print:py-[3pt] ${
+                          holdsBoth
+                            ? "bg-[#ebe2d0] border-[#1f3d2e] text-[#2a2520]"
+                            : forks
+                              ? "bg-[#fbe9d6] border-[#b85a3e] text-[#2a2520]"
+                              : "bg-[#f4ede0] border-[#c8bfa7] text-[#2a2520]"
+                        }`}
+                      >
+                        <span
+                          className={`font-mono uppercase tracking-[0.16em] text-[7.5pt] mr-[4pt] print:text-[6.5pt] ${
+                            forks ? "text-[#7a3030]" : "text-[#1f3d2e]"
+                          }`}
+                        >
+                          Both-states (principles.both-states)
+                        </span>
+                        {entry.bothStatesNote}
                       </div>
                       {entry.followUp ? (
                         <div className="mt-[4pt] text-[9.5pt] leading-[1.45] text-[#2a2520] bg-[#f4ede0] border border-[#c8bfa7] rounded px-[8pt] py-[5pt] print:text-[8.5pt] print:py-[3pt]">
@@ -340,6 +465,48 @@ export default function CodetryTest() {
               {tally.typeCheckBlind} / {tally.total}
             </div>
           </div>
+          <div
+            className="border rounded px-[8pt] py-[6pt] mb-[6pt] flex items-baseline justify-between gap-[8pt] print:py-[4pt]"
+            style={{
+              background: bothStatesColor["holds-both"].bg,
+              borderColor: bothStatesColor["holds-both"].border,
+            }}
+          >
+            <div>
+              <div
+                className="font-mono uppercase tracking-[0.16em] text-[7.5pt] print:text-[6.5pt]"
+                style={{
+                  color: bothStatesColor["holds-both"].text,
+                  opacity: 0.85,
+                }}
+              >
+                principles.both-states · holds-both pass-rate
+              </div>
+              <div className="text-[9pt] mt-[1pt] text-[#2a2520] leading-[1.35] print:text-[8pt]">
+                Of the names with a slow/fast duality to test
+                &mdash; {tally.bothStatesScored}{" "}
+                {tally.bothStatesScored === 1 ? "entry" : "entries"} so
+                far &mdash; how many hold both jobs in one word?
+                Single-state names ({tally.total - tally.bothStatesScored})
+                are excluded so the saltbox-principle work isn&rsquo;t
+                penalized.
+              </div>
+            </div>
+            <div
+              className="font-display font-semibold text-[18pt] leading-[1] print:text-[14pt] whitespace-nowrap"
+              style={{ color: bothStatesColor["holds-both"].text }}
+            >
+              {tally.holdsBoth} / {tally.bothStatesScored || 0}
+              {tally.forks > 0 ? (
+                <span
+                  className="font-mono text-[9pt] block mt-[1pt] print:text-[8pt]"
+                  style={{ color: bothStatesColor.forks.text }}
+                >
+                  · {tally.forks} forks flagged
+                </span>
+              ) : null}
+            </div>
+          </div>
           <div className="text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[7.5pt]">
             <span className="font-mono uppercase tracking-[0.18em] text-[7.5pt] text-[#1f3d2e] mr-[4pt] print:text-[6.5pt]">
               Read
@@ -357,7 +524,14 @@ export default function CodetryTest() {
             here would survive its trial rename in a typed model
             unchanged &mdash; the meaning sits in the noun, not the
             shape, which is why a type checker alone isn&rsquo;t
-            enough.
+            enough. The both-states column then adds a third reading:
+            most of these names are saltbox-principle work (one job in
+            one word, no slow/fast pair to test, scored NA), and the
+            holds-both bench currently has one entry &mdash; The
+            Standby &mdash; with future candidates flagged in the data
+            file (&ldquo;harvest&rdquo; as both season and event,
+            &ldquo;shift&rdquo; as both rota and handover) for when
+            their fast-side counterparts land.
           </div>
         </div>
 
@@ -380,12 +554,23 @@ export default function CodetryTest() {
           >
             §2.4 (&ldquo;Different from type-driven design&rdquo;)
           </a>
-          . The names tested are the ones settled by Task #232 across
-          the three financial artifacts. This page is the audit; the
-          live decks are unchanged. If a verdict here says{" "}
+          ; the both-states column is grounded in{" "}
+          <a
+            href="/practitioner-operating-plan/codetry"
+            className="text-[#1f3d2e] underline decoration-[#c8bfa7] underline-offset-2 hover:decoration-[#1f3d2e]"
+          >
+            principles.both-states
+          </a>{" "}
+          in the constellation manifest. The names tested are the ones
+          settled by Task #232 across the three financial artifacts,
+          plus the constellation-wide primitives that no single
+          artifact owns. This page is the audit; the live decks are
+          unchanged. If a verdict here says{" "}
           <span className="italic">decorative</span> or{" "}
-          <span className="italic">drift</span>, the next move belongs in
-          a follow-up task &mdash; not a quiet rename.
+          <span className="italic">drift</span> &mdash; or the
+          both-states column says <span className="italic">forks</span>{" "}
+          &mdash; the next move belongs in a follow-up task, not a
+          quiet rename.
         </div>
 
         <div className="mt-[10pt] pt-[8pt] border-t border-[#c8bfa7] text-[8.5pt] text-[#6b7665] leading-[1.4] print:text-[7.5pt] print:mt-[7pt] print:pt-[5pt] print:break-inside-avoid">
@@ -399,7 +584,7 @@ export default function CodetryTest() {
             src/data/codetryTest.ts
           </span>{" "}
           and append an entry to the right artifact group. Each entry
-          needs seven things: the <span className="italic">name</span>,
+          needs nine things: the <span className="italic">name</span>,
           where it <span className="italic">lives</span> (every surface
           it appears on), the{" "}
           <span className="italic">rename</span> you trialed, what
@@ -408,7 +593,12 @@ export default function CodetryTest() {
           <span className="italic">type-checker reading</span> (§2.4
           &mdash; would a typed model of the same shape still pass after
           the rename?), the matching one-line{" "}
-          <span className="italic">type-checker note</span>, and a{" "}
+          <span className="italic">type-checker note</span>, the{" "}
+          <span className="italic">both-states reading</span>{" "}
+          (principles.both-states &mdash; does the one word hold both a
+          slow side and a fast side, or is it single-state?), the
+          matching one-line{" "}
+          <span className="italic">both-states note</span>, and a{" "}
           <span className="italic">verdict</span>. Bump{" "}
           <span className="font-mono text-[#1f3d2e]">lastReviewed</span>{" "}
           in the same commit so the eyebrow date and the Year-page
@@ -452,6 +642,19 @@ function TypeCheckPill({ outcome }: { outcome: TypeCheckOutcome }) {
       title="Handbook §2.4 — would a typed model of the same shape still pass after the trial rename?"
     >
       §2.4 · {typeCheckLabel[outcome]}
+    </span>
+  );
+}
+
+function BothStatesPill({ verdict }: { verdict: BothStatesVerdict }) {
+  const c = bothStatesColor[verdict];
+  return (
+    <span
+      className="font-mono uppercase tracking-[0.16em] text-[7.5pt] px-[5pt] py-[1pt] rounded border whitespace-nowrap print:text-[6.5pt]"
+      style={{ background: c.bg, color: c.text, borderColor: c.border }}
+      title="Constellation principles.both-states — does the one word do both jobs (slow side AND fast side)?"
+    >
+      both-states · {bothStatesLabel[verdict]}
     </span>
   );
 }
