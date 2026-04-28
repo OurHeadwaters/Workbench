@@ -77,20 +77,17 @@ export default function Ask() {
       <div className="mt-8 space-y-3">
         <Reveal label="What this first year costs">
           <p>
-            <span className="font-semibold">$420,000 over twelve months.</span>{" "}
-            Covers design work, the cold-chain pilot, the open-records
-            software, training, and the year-end audit.
-          </p>
-          <p>
-            <span className="font-semibold">$240,000 we already have funding for</span>{" "}
-            from Indigenous Services Canada and the Local Food
-            Infrastructure Fund.
-          </p>
-          <p>
-            <span className="font-semibold">$180,000 from the band</span> —
-            mostly back-loaded against the cold-chain pilot, so the band
-            can walk away after step three with a working delivery route
-            and the open-records tools.
+            <span className="font-semibold">$420,000 over twelve months</span>{" "}
+            covers design work, the cold-chain pilot, the open-records
+            software, training, and the year-end audit. No grants are in
+            hand at this point — the most likely source is band reserve
+            capital, the same path the planner walks through in its
+            self-fund mode. The spend is back-loaded against the
+            cold-chain pilot, so the band can walk away after step three
+            with a working delivery route and the open-records tools, and
+            the bill stops there. For the dated picture — council vote on
+            reserves, truck still going through LFIF via the 807
+            partnership — flip the planner to its self-fund scenario.
           </p>
         </Reveal>
 
