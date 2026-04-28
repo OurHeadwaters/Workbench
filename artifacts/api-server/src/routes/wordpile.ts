@@ -649,6 +649,85 @@ router.patch("/piles/:pileId/words/:wordId", withAuth, async (req, res) => {
 // MAX_ENCODED_LENGTH (32KB of base64).
 
 const SHORT_LINK_PAYLOAD_MAX = 32 * 1024;
+
+// ---- Per-user guardrails on POST /short-links ----
+//
+// The endpoint is auth-gated, but a buggy or malicious client (with a
+// valid session) could otherwise create rows in a tight loop until the
+// table is unusable. Two cheap caps keep that contained without getting
+// in the way of normal use:
+//
+//   1. MAX_ACTIVE_SHORT_LINKS_PER_USER  — a hard ceiling on how many
+//      short links one user can have alive at once. Hitting it returns
+//      409 with a message telling the user to revoke old links first.
+//      200 is well above any realistic share-link workflow but small
+//      enough that even thousands of users can't grow the table beyond
+//      the low hundreds of thousands of rows.
+//
+//   2. SHORT_LINK_RATE_LIMIT_*          — a token-bucket rate limit on
+//      create attempts, keyed by Clerk user id. 30 creates/minute is
+//      generous for a human (one click every two seconds, sustained
+//      for a minute) but well below what a runaway script can do.
+//      Exceeding it returns 429 with a Retry-After header so a polite
+//      client can back off.
+//
+// Both limits are tunable in one place here. The bucket lives in this
+// process's memory — sufficient because a) the API is small and runs
+// behind a single deployment today, and b) a multi-process attacker
+// would still hit the per-user row cap as a hard ceiling even if the
+// per-process bucket were bypassed.
+const MAX_ACTIVE_SHORT_LINKS_PER_USER = 200;
+const SHORT_LINK_RATE_LIMIT_CAPACITY = 30;
+const SHORT_LINK_RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const SHORT_LINK_RATE_LIMIT_REFILL_PER_MS =
+  SHORT_LINK_RATE_LIMIT_CAPACITY / SHORT_LINK_RATE_LIMIT_WINDOW_MS;
+
+type RateBucket = { tokens: number; lastRefill: number };
+const shortLinkRateBuckets = new Map<string, RateBucket>();
+
+// Try to take one token from the user's bucket. Returns ok=true if the
+// caller may proceed; otherwise returns the smallest whole-second
+// retry-after that's enough to recover one token. Refill is computed
+// lazily on each call so an idle user always finds a full bucket
+// without us having to run a background timer.
+function consumeShortLinkToken(
+  clerkUserId: string,
+  now: number,
+): { ok: true } | { ok: false; retryAfterSec: number } {
+  let bucket = shortLinkRateBuckets.get(clerkUserId);
+  if (!bucket) {
+    bucket = { tokens: SHORT_LINK_RATE_LIMIT_CAPACITY, lastRefill: now };
+    shortLinkRateBuckets.set(clerkUserId, bucket);
+  } else {
+    const elapsed = Math.max(0, now - bucket.lastRefill);
+    bucket.tokens = Math.min(
+      SHORT_LINK_RATE_LIMIT_CAPACITY,
+      bucket.tokens + elapsed * SHORT_LINK_RATE_LIMIT_REFILL_PER_MS,
+    );
+    bucket.lastRefill = now;
+  }
+  if (bucket.tokens >= 1) {
+    bucket.tokens -= 1;
+    return { ok: true };
+  }
+  const tokensNeeded = 1 - bucket.tokens;
+  const retryAfterMs = Math.ceil(
+    tokensNeeded / SHORT_LINK_RATE_LIMIT_REFILL_PER_MS,
+  );
+  // Round up to whole seconds, with a 1s floor so Retry-After is never
+  // "0" (which would invite an immediate retry that's still rate-limited).
+  const retryAfterSec = Math.max(1, Math.ceil(retryAfterMs / 1000));
+  return { ok: false, retryAfterSec };
+}
+
+// Test-only escape hatch: vitest reuses the module instance across `it`
+// blocks within a file, so the bucket would otherwise carry state from
+// one test into the next. Exported under a clearly-marked name so it
+// can't be mistaken for production API.
+export function __resetShortLinkRateLimitForTesting(): void {
+  shortLinkRateBuckets.clear();
+}
+
 // Slug shape: base64url alphabet, fixed length, generated server-side.
 // We never accept client-supplied slugs — that keeps slug collisions
 // purely a server problem and avoids "guess my friend's slug" attacks.
@@ -678,6 +757,21 @@ router.post("/short-links", withAuth, async (req, res) => {
   const { clerkUserId } = req.wordpileUser!;
   const body = (req.body ?? {}) as Record<string, unknown>;
 
+  // Rate limit first — cheap, in-memory, and shields the validation
+  // and DB paths from a tight-loop client even if every request is
+  // garbage. Counting failed attempts is intentional: a runaway script
+  // sending nonsense payloads is exactly what this guard exists for.
+  const rl = consumeShortLinkToken(clerkUserId, Date.now());
+  if (!rl.ok) {
+    res.setHeader("Retry-After", String(rl.retryAfterSec));
+    res.status(429).json({
+      error:
+        "Too many short links created in a short window. Please try again shortly.",
+      retryAfterSeconds: rl.retryAfterSec,
+    });
+    return;
+  }
+
   if (typeof body.payload !== "string" || body.payload.length === 0) {
     res.status(400).json({ error: "payload is required" });
     return;
@@ -695,6 +789,24 @@ router.post("/short-links", withAuth, async (req, res) => {
   // up front so the resolve endpoint never has to deal with it.
   if (!/^[A-Za-z0-9_-]+$/.test(body.payload)) {
     res.status(400).json({ error: "payload must be base64url" });
+    return;
+  }
+
+  // Per-user row cap. We do this after basic validation so a request
+  // that would have been a 400 still gets a 400 (no need to hide the
+  // shape of the cap behind a malformed-payload mask). The count uses
+  // a plain SELECT rather than COUNT(*) so the test fake — which only
+  // implements the row-list query surface — works unchanged. The
+  // capacity is small (200), so reading the rows is cheap in practice.
+  const existing = await db
+    .select()
+    .from(wordpileShortLinksTable)
+    .where(eq(wordpileShortLinksTable.clerkUserId, clerkUserId));
+  if (existing.length >= MAX_ACTIVE_SHORT_LINKS_PER_USER) {
+    res.status(409).json({
+      error: `You already have ${MAX_ACTIVE_SHORT_LINKS_PER_USER} active short links. Revoke some from the manage screen before creating new ones.`,
+      maxActiveLinks: MAX_ACTIVE_SHORT_LINKS_PER_USER,
+    });
     return;
   }
 

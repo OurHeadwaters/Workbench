@@ -393,7 +393,9 @@ vi.mock("@clerk/express", () => ({
 // whose schema tables we'd otherwise also need to fake.
 
 import express from "express";
-import wordpileRouter from "./wordpile";
+import wordpileRouter, {
+  __resetShortLinkRateLimitForTesting,
+} from "./wordpile";
 
 interface Harness {
   base: string;
@@ -448,6 +450,11 @@ beforeEach(async () => {
   wordpileWordsTable.__store.length = 0;
   wordpileDeletionsTable.__store.length = 0;
   wordpileShortLinksTable.__store.length = 0;
+  // Vitest reuses the imported route module across tests in this file,
+  // so the in-process token bucket would otherwise carry state between
+  // them. Reset it so each test starts with a full bucket — exactly
+  // the same starting state every fresh user sees in production.
+  __resetShortLinkRateLimitForTesting();
   setUser(null);
   if (!harness) harness = await startHarness();
 });
@@ -1542,6 +1549,166 @@ describe("short links", () => {
         "/api/wordpile/short-links/abcdefgh",
       );
       expect(status).toBe(404);
+    });
+  });
+
+  // ---- runaway-script guardrails ----
+  //
+  // The route ships with a per-user token-bucket rate limit (30 creates
+  // /minute) and a per-user active-row cap (200). Both protect the table
+  // from a buggy or malicious client that holds a valid session.
+  describe("runaway-script guardrails", () => {
+    it("returns 429 with a Retry-After header once the per-user rate limit is exhausted", async () => {
+      setUser("user_a");
+      // Drain the bucket. The capacity is 30, so the first 30 creates
+      // succeed (well under the 200-row cap, so neither limit is in
+      // play yet). The 31st must hit the rate limit. We use direct
+      // fetch on the failing request so we can assert the response
+      // header — `req()` swallows headers.
+      for (let i = 0; i < 30; i++) {
+        const { status } = await req("POST", "/api/wordpile/short-links", {
+          payload: PAYLOAD,
+          pileName: "x",
+        });
+        expect(status).toBe(201);
+      }
+      const limited = await fetch(`${harness.base}/api/wordpile/short-links`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ payload: PAYLOAD, pileName: "x" }),
+      });
+      expect(limited.status).toBe(429);
+      const retryAfter = limited.headers.get("retry-after");
+      expect(retryAfter).not.toBeNull();
+      // Retry-After is delta-seconds (RFC 7231) — must be a positive
+      // whole number, not "0" (which would invite an immediate retry
+      // that's still rate-limited).
+      const retryNum = Number(retryAfter);
+      expect(Number.isFinite(retryNum)).toBe(true);
+      expect(retryNum).toBeGreaterThanOrEqual(1);
+    });
+
+    it("rate limit is per-user — user_b is unaffected by user_a's burst", async () => {
+      setUser("user_a");
+      for (let i = 0; i < 30; i++) {
+        const { status } = await req("POST", "/api/wordpile/short-links", {
+          payload: PAYLOAD,
+          pileName: "x",
+        });
+        expect(status).toBe(201);
+      }
+      // user_a is now rate-limited.
+      const aBlocked = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "x",
+      });
+      expect(aBlocked.status).toBe(429);
+
+      // user_b's bucket is untouched.
+      setUser("user_b");
+      const bOk = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "x",
+      });
+      expect(bOk.status).toBe(201);
+    });
+
+    it("returns 409 once the user has reached the active short-link cap", async () => {
+      setUser("user_a");
+      // Seed the store directly so we can test the 200-row cap without
+      // first having to defeat the 30/min rate limit. The slugs only
+      // need to be unique within this test; their shape doesn't matter
+      // because we never read them via the resolve endpoint here.
+      for (let i = 0; i < 200; i++) {
+        wordpileShortLinksTable.__store.push({
+          slug: `seed${String(i).padStart(5, "0")}`,
+          clerkUserId: "user_a",
+          pileId: null,
+          pileName: "seed",
+          payload: PAYLOAD,
+          createdAt: new Date(2026, 0, 1, 0, 0, i),
+        });
+      }
+      const { status, body } = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "x",
+      });
+      expect(status).toBe(409);
+      const err = body as { error: string; maxActiveLinks: number };
+      // The error message must explain the way out — revoke old ones —
+      // so a frustrated user isn't stuck guessing.
+      expect(err.error.toLowerCase()).toMatch(/revoke/);
+      expect(err.maxActiveLinks).toBe(200);
+
+      // The seeded rows are untouched (the rejected create didn't
+      // partially insert).
+      expect(
+        wordpileShortLinksTable.__store.filter(
+          (r) => r.clerkUserId === "user_a",
+        ),
+      ).toHaveLength(200);
+    });
+
+    it("the 409 cap is per-user — user_b can still create when user_a is at the cap", async () => {
+      // Seed user_a to the cap; user_b should be unaffected.
+      for (let i = 0; i < 200; i++) {
+        wordpileShortLinksTable.__store.push({
+          slug: `seed${String(i).padStart(5, "0")}`,
+          clerkUserId: "user_a",
+          pileId: null,
+          pileName: "seed",
+          payload: PAYLOAD,
+          createdAt: new Date(2026, 0, 1, 0, 0, i),
+        });
+      }
+      setUser("user_b");
+      const { status } = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "x",
+      });
+      expect(status).toBe(201);
+    });
+
+    it("revoking a link frees a slot under the cap", async () => {
+      // Seed user_a to exactly the cap minus one, so the next create
+      // succeeds, the one after fails, and after a revoke a fresh
+      // create succeeds again. This is the "tell the user to revoke
+      // old links" workflow end-to-end.
+      setUser("user_a");
+      for (let i = 0; i < 199; i++) {
+        wordpileShortLinksTable.__store.push({
+          slug: `seed${String(i).padStart(5, "0")}`,
+          clerkUserId: "user_a",
+          pileId: null,
+          pileName: "seed",
+          payload: PAYLOAD,
+          createdAt: new Date(2026, 0, 1, 0, 0, i),
+        });
+      }
+      const created = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "fresh",
+      });
+      expect(created.status).toBe(201);
+      const slug = (created.body as { slug: string }).slug;
+
+      const blocked = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "next",
+      });
+      expect(blocked.status).toBe(409);
+
+      const revoked = await req(
+        "DELETE",
+        `/api/wordpile/short-links/${slug}`,
+      );
+      expect(revoked.status).toBe(200);
+
+      const retry = await req("POST", "/api/wordpile/short-links", {
+        payload: PAYLOAD,
+        pileName: "after-revoke",
+      });
+      expect(retry.status).toBe(201);
     });
   });
 });
