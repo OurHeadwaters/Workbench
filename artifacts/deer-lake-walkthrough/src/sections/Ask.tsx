@@ -77,17 +77,21 @@ export default function Ask() {
       <div className="mt-8 space-y-3">
         <Reveal label="What this first year costs">
           <p>
-            <span className="font-semibold">$420,000 over twelve months</span>{" "}
-            covers design work, the cold-chain pilot, the open-records
-            software, training, and the year-end audit. No grants are in
-            hand at this point — the most likely source is band reserve
-            capital, the same path the planner walks through in its
-            self-fund mode. The spend is back-loaded against the
-            cold-chain pilot, so the band can walk away after step three
-            with a working delivery route and the open-records tools, and
-            the bill stops there. For the dated picture — council vote on
-            reserves, truck still going through LFIF via the 807
-            partnership — flip the planner to its self-fund scenario.
+            <span className="font-semibold">$1,080,000 over twelve months</span>{" "}
+            — that's $90,000 a month for the Headwaters engagement,
+            the locked rate from the Practitioners Guide. It covers the
+            seven-person team doing the design work, running the
+            cold-chain pilot, building the open-records software,
+            training Deer Lake staff, and producing the year-end audit.
+            No grants are in hand at this point — the most likely
+            source is band reserve capital, the same path the planner
+            walks through in its self-fund mode. The spend is
+            back-loaded against the cold-chain pilot, so the band can
+            walk away after step three with a working delivery route
+            and the open-records tools, and the bill stops there. For
+            the dated picture — council vote on reserves, truck still
+            going through LFIF via the 807 partnership — flip the
+            planner to its self-fund scenario.
           </p>
         </Reveal>
 

@@ -11,7 +11,7 @@ export default function Recap() {
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → Deer Lake. Two cold trucks."],
     ["Team", "17–20 jobs for Deer Lake people in two years."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
-    ["Ask", "$420k year one. Likely from band reserves, back-loaded against the cold-chain pilot."],
+    ["Ask", "$1.08M year one ($90k/mo). Likely from band reserves, back-loaded against the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],
   ];
 
