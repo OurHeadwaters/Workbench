@@ -4,6 +4,8 @@ import { useRoute } from "@/lib/route";
 
 import Prologue from "@/sections/Prologue";
 import WhatItIs from "@/sections/WhatItIs";
+import WhatHeadwatersDelivers from "@/sections/WhatHeadwatersDelivers";
+import WhyThisTeam from "@/sections/WhyThisTeam";
 import WhyCurrentFails from "@/sections/WhyCurrentFails";
 import ColdChain from "@/sections/ColdChain";
 import WhoWorks from "@/sections/WhoWorks";
@@ -21,6 +23,13 @@ import PlannerApp from "@/planner/PlannerApp";
  * first viewport; once the contractor scrolls past it, the sticky header
  * pins to the top and the document begins.
  *
+ * Reading order is seller-side-first: after WhatItIs frames the store,
+ * the very next two sections (WhatHeadwatersDelivers + WhyThisTeam)
+ * answer the contractor's two unanswered questions — what is being sold
+ * and why this team is the one to sell it. Only then does the document
+ * pivot back to the store's own story (WhyCurrentFails → ColdChain →
+ * WhoWorks → FirstMorning → WhatStays → Ask → Recap).
+ *
  * The /planner sub-route renders the Phase Planner — same artifact, same
  * palette, same shell pattern, different surface. Walkthrough = read.
  * Planner = decide.
@@ -37,6 +46,8 @@ export default function App() {
       <Prologue />
       <AppShell>
         <WhatItIs />
+        <WhatHeadwatersDelivers />
+        <WhyThisTeam />
         <WhyCurrentFails />
         <ColdChain />
         <WhoWorks />

@@ -1,7 +1,11 @@
 /**
  * The recap. Built to fit on a single phone screen so the contractor can
- * screenshot it and send it. Tight typography, six rows compressed to a
+ * screenshot it and send it. Tight typography, seven rows compressed to a
  * label/value table, no Reveals — everything visible at once.
+ *
+ * This section is the documented exception to the editorial-lock
+ * three-bullet ceiling defined in components/Reveal.tsx. Recap exists to
+ * BE the screenshot; compressing it would destroy the surface it is.
  *
  * Targeted height: ~720px (iPhone 12/13/14 portrait minus chrome).
  */
@@ -9,8 +13,9 @@ export default function Recap() {
   const rows: Array<[string, string]> = [
     ["What", "A second store. Headwaters' system. Band runs the floor."],
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → Deer Lake. Two cold trucks."],
-    ["Team", "17–20 jobs for Deer Lake people in two years."],
+    ["Jobs", "17–20 jobs for Deer Lake people in two years."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
+    ["Team", "Headwaters has shipped the plan, the books, the handbook, the planner."],
     ["Ask", "$1.08M year one ($90k/mo). Likely from band reserves, back-loaded against the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],
   ];

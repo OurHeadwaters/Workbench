@@ -3,12 +3,31 @@ import { Reveal } from "@/components/Reveal";
 const base = import.meta.env.BASE_URL;
 
 /**
- * Why the current store fails. Per the spec: one image, one line, all
- * numbers behind a tap. The boreal landscape sits as a wide hero up top,
- * a single sentence sits beneath, and the comparison numbers wait inside
- * the Reveal so the page can be looked at without being read.
+ * Why the current store fails. Hero image holds the place; the three
+ * stat bullets carry the gist; the citations and the longer
+ * "southern playbook" prose live behind a tap.
+ *
+ * Editorial lock: see Reveal.tsx. Three top-level bullets visible.
  */
 export default function WhyCurrentFails() {
+  const stats = [
+    {
+      lead: "$1,680 vs $1,000",
+      body:
+        "What a family of four spends here, every month, vs the same basket down south.",
+    },
+    {
+      lead: "Only 58¢ on the dollar",
+      body:
+        "Of every federal grocery help dollar, just 58¢ reaches the shelf. The store keeps the rest.",
+    },
+    {
+      lead: "$1.6 to $2.0 million leaves",
+      body:
+        "Every year, that much grocery spend leaves Deer Lake — to Winnipeg, or to the one store in town.",
+    },
+  ];
+
   return (
     <section
       id="why-current-fails"
@@ -62,28 +81,38 @@ export default function WhyCurrentFails() {
             Most of the federal grocery help never reaches the shelf.
           </p>
 
-          <div className="mt-9 space-y-3">
-            <Reveal label="See the numbers">
-              <p>
-                A family of four spends{" "}
-                <span className="font-semibold">$1,680 a month</span> on
-                groceries here. Down south, that same basket is{" "}
-                <span className="font-semibold">$1,000</span>.
-              </p>
-              <p>
-                Of every federal grocery help dollar, the store keeps{" "}
-                <span className="font-semibold">42¢</span>. Only{" "}
-                <span className="font-semibold">58¢</span> reaches the shelf.
-              </p>
+          <div className="mt-7 space-y-3">
+            {stats.map((s) => (
+              <div
+                key={s.lead}
+                className="rounded-xl p-4 border"
+                style={{
+                  background: "var(--color-paper)",
+                  borderColor: "var(--color-rule)",
+                }}
+              >
+                <div
+                  className="serif text-[19px] leading-[1.25] font-semibold"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  {s.lead}
+                </div>
+                <div
+                  className="serif text-[15.5px] leading-[1.45] mt-1.5"
+                  style={{ color: "var(--color-text)" }}
+                >
+                  {s.body}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 space-y-3">
+            <Reveal label="Where these numbers come from">
               <p>
                 <span className="font-semibold">87 of every 100</span> fly-in
                 First Nations in Ontario have just one grocery store. Deer
                 Lake is one of them.
-              </p>
-              <p>
-                <span className="font-semibold">$1.6 to $2.0 million</span>{" "}
-                leaves Deer Lake every year — spent in Winnipeg, or kept by
-                the one store in town.
               </p>
               <p
                 className="mono text-[12px] uppercase tracking-[0.16em] mt-3"
