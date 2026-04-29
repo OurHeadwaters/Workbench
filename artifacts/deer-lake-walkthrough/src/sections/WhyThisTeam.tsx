@@ -124,35 +124,55 @@ export default function WhyThisTeam() {
           ))}
         </div>
 
-        <div className="mt-8 space-y-3">
-          <Reveal label="What's inside the operating plan">
-            <p>
-              The Deer Lake Store Operational Plan is a slides deck — the
-              same one the band steering committee would read at the table.
-              Cost lines, staffing, the financial model, the
-              first-reserve-then-the-next phasing.
-            </p>
-            <p>
-              The Practitioner Operating Plan one-pager carries the locked
-              cost basis: the $90,000-a-month engagement total broken down
-              line by line, including the Headwaters-owned Food Handler role
-              embedded at the store from day one.
-            </p>
+        {/*
+          Practitioner Operating Plan one-pager — promoted out of the
+          accordion into a prominent callout. Copy leads with the
+          one-pager's own $60k+/month inflection-point framing; the
+          Deer Lake Store deck is kept as a companion sub-block.
+        */}
+        <div className="mt-10">
+          <div
+            className="rounded-2xl p-6 border-2"
+            style={{
+              background: "var(--color-paper)",
+              borderColor: "var(--color-accent-warm)",
+            }}
+          >
+            <div
+              className="mono text-[11px] uppercase tracking-[0.22em] mb-2"
+              style={{ color: "var(--color-accent-warm)" }}
+            >
+              The artifact to open · Practitioner Operating Plan
+            </div>
+            <h3
+              className="serif text-[24px] leading-[1.15] font-semibold"
+              style={{ color: "var(--color-primary)", textWrap: "balance" }}
+            >
+              A community development contract at $60k+/month is a real
+              inflection point.
+            </h3>
             <p
-              className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
+              className="serif text-[16px] leading-[1.5] mt-3"
+              style={{ color: "var(--color-text)" }}
+            >
+              The one-pager carries the cost basis line by line — the
+              practitioner, an operations manager, IT/Tech, a bookkeeper,
+              the Headwaters-owned Food Handler embedded at the Deer Lake
+              store from day one, life-supports overhead, and the
+              aggregation hub — and the three tiers it can be billed at:
+              <span className="font-semibold"> $60k floor</span>,
+              <span className="font-semibold"> $90k recommended</span>,
+              <span className="font-semibold"> $125k scale</span>. The $60k
+              floor is the inflection point the one-pager leads with; $90k
+              is the recommended upgrade ask and the rate the rest of this
+              walkthrough quotes; $125k is what it grows into once Pilot #2
+              is live.
+            </p>
+            <div
+              className="mono text-[11px] uppercase tracking-[0.18em] mt-4"
               style={{ color: "var(--color-muted)" }}
             >
-              Open in another tab ·{" "}
-              <a
-                href="/deer-lake-store-plan/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:no-underline"
-                style={{ color: "var(--color-accent-warm)" }}
-              >
-                /deer-lake-store-plan
-              </a>{" "}
-              ·{" "}
+              Open the one-pager ·{" "}
               <a
                 href="/practitioner-operating-plan/"
                 target="_blank"
@@ -162,9 +182,46 @@ export default function WhyThisTeam() {
               >
                 /practitioner-operating-plan
               </a>
-            </p>
-          </Reveal>
+            </div>
 
+            <div
+              className="mt-5 pt-4 border-t"
+              style={{ borderColor: "var(--color-rule)" }}
+            >
+              <div
+                className="mono text-[11px] uppercase tracking-[0.22em] mb-1.5"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                Companion deck · Deer Lake Store Operational Plan
+              </div>
+              <p
+                className="serif text-[15px] leading-[1.5]"
+                style={{ color: "var(--color-text)" }}
+              >
+                The slides deck the band steering committee would read at
+                the table. Cost lines, staffing, the financial model, the
+                first-reserve-then-the-next phasing.
+              </p>
+              <div
+                className="mono text-[11px] uppercase tracking-[0.18em] mt-3"
+                style={{ color: "var(--color-muted)" }}
+              >
+                Open the deck ·{" "}
+                <a
+                  href="/deer-lake-store-plan/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:no-underline"
+                  style={{ color: "var(--color-accent-warm)" }}
+                >
+                  /deer-lake-store-plan
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 space-y-3">
           <Reveal label="What's inside the software">
             <p>
               <span className="font-semibold">Headwaters Books.</span> The
