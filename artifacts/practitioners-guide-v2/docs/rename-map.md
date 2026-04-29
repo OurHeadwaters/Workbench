@@ -4,6 +4,17 @@ A single, term-by-term inventory of names in this guide that may have drifted aw
 codetry-aligned vocabulary, with proposed replacements for the founder to accept,
 reject, or amend one row at a time.
 
+> **Format note for maintainers:** the `/codetry` page in the guide reads this file
+> verbatim and re-renders the table below. The parser (`src/lib/renameMap.ts`) expects
+> the data table to have exactly 7 pipe-delimited columns in this order:
+> `# | Term | Where it appears | Drift | Proposed replacement | Second-order effects | Status`.
+> The `Drift` cell is a sequence of single letters drawn from `G`, `U`, `D`, `A` (an em-dash
+> `—` means no drift); the `Status` cell must be one of the canonical words below. Adding new
+> rows is fine — keep the row number monotonically increasing so the worked-example references
+> in `CodetryDisciplinePage.tsx` stay stable. If you reorder or remove rows, the worked-example
+> alignment tests will fail and the page will surface an amber warning until the references are
+> updated.
+
 **Nothing in this map has been applied.** Every status is `proposed`. The founder
 walks the table, sets each row to `approved`, `rejected`, or `deferred`, and only
 then does a follow-up task perform the renames on the `approved` rows.

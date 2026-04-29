@@ -12,6 +12,7 @@ import {
   Wallet,
   GitCompareArrows,
   Repeat,
+  ScrollText,
 } from "lucide-react";
 
 interface NavItem {
@@ -21,7 +22,7 @@ interface NavItem {
   accent?: string;
 }
 
-const NAV: NavItem[] = [
+export const NAV: NavItem[] = [
   { href: "/", label: "Index", icon: BookOpen },
   { href: "/salts", label: BUCKETS.salts.name, icon: Salad, accent: BUCKETS.salts.accent },
   {
@@ -39,6 +40,7 @@ const NAV: NavItem[] = [
   { href: "/personal-cash", label: "Personal cash", icon: Wallet },
   { href: "/compare", label: "Operating framework", icon: GitCompareArrows },
   { href: "/replication", label: "Replication", icon: Repeat },
+  { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {

@@ -3,7 +3,7 @@ import { SectionCard } from "@/components/SectionCard";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { money, pct } from "@/lib/format";
 import { confirmed } from "@/data/tags";
-import { Compass, Repeat, Settings2, Quote, ArrowRight, BookOpen, Clock } from "lucide-react";
+import { Compass, Repeat, Settings2, Quote, ArrowRight, BookOpen, Clock, ScrollText } from "lucide-react";
 import { Link } from "wouter";
 
 /**
@@ -415,6 +415,31 @@ export function ReplicationPage() {
         <ConfirmedTag tag={confirmed("Replication model locked alongside V4.")} className="mr-2" />
         The replication chapter is the model written down — it does not introduce a new sales site or pricing calculator. Per-community parameter calculators live in the operating-plan slides.
       </div>
+
+      <Link
+        href="/codetry"
+        className="block rounded-lg border border-card-border bg-card hover:shadow-md transition-shadow p-4"
+        style={{ borderTopColor: "#3B2A6E", borderTopWidth: "4px" }}
+        data-testid="replication-next-codetry"
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="h-9 w-9 rounded-md grid place-items-center flex-shrink-0"
+            style={{ backgroundColor: "#E6E1F2", color: "#1F1640" }}
+          >
+            <ScrollText className="h-5 w-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Next
+            </p>
+            <p className="text-sm font-semibold text-foreground mt-0.5">
+              How this guide is named — the codetry test, the drift map, and the audit's worked examples
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+        </div>
+      </Link>
     </div>
   );
 }
