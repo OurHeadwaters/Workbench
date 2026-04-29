@@ -99,28 +99,28 @@ export default function WhatStays() {
         <div className="mt-8 space-y-3">
           <Reveal label="The year-end value-delivered audit">
             <p>
-              An outside reviewer checks our work once a year against what we
-              charged. <span className="font-semibold">If what we delivered
-              to Deer Lake is worth less than what we charged, we credit the
-              difference back against next year's contract.</span> In writing.
+              An outside reviewer checks our work once a year against
+              what we charged. <span className="font-semibold">If we
+              delivered less than we charged, we credit the difference
+              against next year's contract.</span> In writing.
             </p>
             <p>
-              Five things we have to deliver: money saved, staff time saved,
-              open-records tools used, local skill built up, and the year-end
-              review itself.
+              Five things we have to deliver: money saved, staff time
+              saved, open-records tools used, local skill built up,
+              and the review itself.
             </p>
           </Reveal>
 
           <Reveal label="What Headwaters is paid for" variant="ink">
             <p>
-              We charge a monthly fee for software, training, and a team that
-              shows up. We take no cut of the groceries. The store's grocery
-              margin stays in Deer Lake.
+              We charge a monthly fee for software, training, and a
+              team that shows up. We take no cut of the groceries —
+              the margin stays in Deer Lake.
             </p>
             <p>
-              The monthly fee covers three things: the software (built by us,
-              owned by the band), the tools we resell to the band with
-              a markup we publish openly, and the training programs.
+              The fee covers three things: the software (built by us,
+              owned by the band), tools we resell to the band with a
+              markup we publish openly, and the training programs.
             </p>
           </Reveal>
         </div>

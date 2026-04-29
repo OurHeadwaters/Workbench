@@ -72,17 +72,9 @@ export default function WhatHeadwatersDelivers() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          What the band is actually buying. Two people run the floor.
-          Square, QuickBooks, and Local Line do the back end. The
-          payroll line stays small, the doors stay open, the truck
-          stays on time, and the money starts coming home fast.
-        </p>
-        <p
-          className="serif text-[18px] leading-[1.55] mt-3 max-w-md"
-          style={{ color: "var(--color-text)" }}
-        >
-          Each line below is a real thing we ship. Tap to see the
-          proof.
+          Two people run the floor. Square, QuickBooks, and Local
+          Line do the back end. Doors stay open, truck stays on time,
+          money comes home fast.
         </p>
 
         <div
@@ -102,10 +94,9 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5]"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Eight weeks. One person —
-            the practitioner, working alone.</span> No team hired yet.
-            Nothing built yet. What comes out at the end is the four
-            written things below. That's the whole trial.
+            <span className="font-semibold">Eight weeks. The
+            practitioner alone.</span> No team yet. Nothing built
+            yet. Out comes the four written things below:
           </p>
           <ol
             className="serif text-[14.5px] leading-[1.45] mt-2 mb-3 list-decimal pl-5"
@@ -119,12 +110,10 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5]"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">The full team starts in
-            Step 1, at $90,000 a month.</span> That covers the seven
-            people, the cold-chain pilot, the software build, the
-            staff training, and the gear we need on day one. The three
-            things below are what Step 1 buys — what the trial gets
-            the band ready for.
+            <span className="font-semibold">Step 1 brings the full
+            team in at $90,000 a month</span> — seven people, the
+            cold-chain pilot, the software build, training, day-one
+            gear. The three things below are what Step 1 buys.
           </p>
         </div>
 

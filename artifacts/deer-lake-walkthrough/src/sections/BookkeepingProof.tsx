@@ -25,7 +25,7 @@ const EMBEDS: Array<{
     tag: "Screen 1 · Open-records ledger",
     head: "What the band sees, any time.",
     caption:
-      "Running totals, recent postings, by cost centre. No login. The chief and council can open this on a phone.",
+      "Running totals and recent postings, by cost centre. No login. Open it on a phone.",
     src: "/headwaters-books/embed/open-records",
   },
   {
@@ -33,7 +33,7 @@ const EMBEDS: Array<{
     tag: "Screen 2 · Daily close",
     head: "Five minutes at end-of-day.",
     caption:
-      "The operator couple counts the drawer, drops the deposit, and kicks anything tricky to the bookkeeper for the next morning.",
+      "Count the drawer, drop the deposit, kick anything tricky to the bookkeeper for the morning.",
     src: "/headwaters-books/embed/daily-close",
   },
   {
@@ -41,7 +41,7 @@ const EMBEDS: Array<{
     tag: "Screen 3 · Month-end pack",
     head: "What council reads at the monthly meeting.",
     caption:
-      "Cost-centre P&L on top, top variances below, sign-off line at the foot. Built to be the council pack, not a screenshot of a dashboard.",
+      "Cost-centre P&L on top, top variances below, sign-off line at the foot. A council pack, not a dashboard screenshot.",
     src: "/headwaters-books/embed/month-end",
   },
 ];
@@ -77,10 +77,9 @@ export default function BookkeepingProof() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Three screens from the books the band would run on, loaded
-          right here in the page. The numbers shown are samples — the
-          screens themselves are real. Scroll inside any one to read
-          it the way an operator would.
+          Three real screens from the books, loaded right here.
+          Numbers are samples. Scroll inside any one to use it like
+          an operator would.
         </p>
 
         <div className="mt-7 space-y-5">

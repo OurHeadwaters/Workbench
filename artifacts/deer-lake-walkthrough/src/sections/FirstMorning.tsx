@@ -58,10 +58,9 @@ export default function FirstMorning() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Big buttons. Nothing hidden in menus. No business words. The
-          operator couple opens the till in twenty minutes — and the
-          doors stay open the next day even if one of them is at a
-          funeral, because the software does the back end.
+          Big buttons. No menus. No business words. The couple opens
+          the till in twenty minutes. Doors still open the next day if
+          one of them is at a funeral — software does the back end.
         </p>
 
         <div className="mt-7 space-y-3">
@@ -139,9 +138,9 @@ export default function FirstMorning() {
             className="serif text-[14.5px] leading-[1.5] mb-4"
             style={{ color: "var(--color-text)" }}
           >
-            Four screens. The floor plan. The morning home screen. A till
-            you can actually press the buttons on. And the line between
-            what the operators can do and what stays locked to the band.
+            Four screens. Floor plan. Morning home screen. A working
+            till. The line between what operators can do and what's
+            locked to the band.
           </p>
           <button
             type="button"

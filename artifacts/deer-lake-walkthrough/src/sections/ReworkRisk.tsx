@@ -72,10 +72,10 @@ export default function ReworkRisk() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          A door that's an inch too narrow is never really about the door.
-          It's about a plan that wasn't locked before the wall went up.
-          That's the work Headwaters owns — locking the plan first, so
-          the build only happens once.
+          A door that's an inch too narrow isn't about the door.
+          It's about a plan that wasn't locked before the wall went
+          up. Headwaters locks the plan first — so the build only
+          happens once.
         </p>
 
         <div className="mt-7 space-y-3">
@@ -113,52 +113,48 @@ export default function ReworkRisk() {
         <div className="mt-8 space-y-3">
           <Reveal label="What rework actually looks like on this build">
             <p>
-              A door framed for a standard pallet, then re-framed because
-              the cold-chain spec arrived after the wall went up. A floor
-              plan that fits the till, then doesn't fit the back-of-house
-              freezer. A staff room sized for two roles that turn into
-              four. None of these are construction mistakes. They are
-              planning gaps that the construction work absorbs.
+              A door re-framed because the cold-chain spec landed
+              after the wall went up. A floor plan that fits the till
+              but not the freezer. A staff room sized for two roles,
+              then four. Not construction mistakes — planning gaps the
+              crew has to absorb.
             </p>
             <p>
-              Each one of these is a decision that could have been locked
+              Every one was a decision that could have been locked
               before the saw came out — if anyone owned the brief.
             </p>
           </Reveal>
 
           <Reveal label="Why the planning process has no rhyme or reason">
             <p>
-              The current process has no single owner of the operational
-              brief. The chief is asked to ratify decisions; the band
-              office is asked to administer them; the contractor is asked
-              to build them. Nobody is asked to keep them.
+              Nobody owns the brief. Chief ratifies decisions, band
+              office administers them, contractor builds them. Nobody
+              keeps them.
             </p>
             <p>
-              That's why decisions get reopened. There's no artifact the
-              contractor can point to and say: "this was settled on the
-              fourteenth, here's the page, here's who signed it." So the
-              same conversation gets had again, and the wall gets moved
-              again, and the doors get built too small.
+              So decisions get reopened. There's no page anyone can
+              point to and say "this was settled on the fourteenth,
+              here's who signed it." The conversation gets had again,
+              the wall gets moved again, the doors get built too
+              small.
             </p>
           </Reveal>
 
           <Reveal label="What 'locking the plan' actually means here" variant="ink">
             <p>
-              Headwaters owns the plan from start to finish. Before
-              each construction phase, the plan is locked: the floor
-              plan, the cold-chain plan, where the till and the back-of-
-              house freezer go, who does which job. Once it's locked,
-              the decision doesn't get reopened next Tuesday because
-              somebody remembered something.
+              Headwaters owns the plan start to finish. Before each
+              construction phase, the plan locks: floor plan,
+              cold-chain, where the till and freezer go, who does
+              which job. Once locked, no reopening next Tuesday
+              because somebody remembered something.
             </p>
             <p>
-              The work the contractor can point to is already shipped.
-              The store operating plan shows the costs honestly, line
-              by line. The practitioner one-pager shows who does what,
-              including a Headwaters food-safety person at the store
-              from day one. The cockpit is the actual tablet the
-              operator couple uses — so the plan still works the day
-              the doors open.
+              The work is already shipped. The store operating plan
+              shows costs honestly. The practitioner one-pager shows
+              who does what — including a Headwaters food-safety
+              person on-site from day one. The cockpit is the actual
+              tablet the operators run — so the plan still works the
+              day the doors open.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"

@@ -102,17 +102,16 @@ export default function WhyThisTeam() {
             className="serif text-[15.5px] leading-[1.5] mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            Same setup that runs the band's hotel today. The contractor
-            brings the couple. The band pays the contractor. The
-            building works.
+            Same setup as the band's hotel today. Contractor brings
+            the couple. Band pays the contractor. The building works.
           </p>
           <p
             className="serif text-[15.5px] leading-[1.5] mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            The store is harder than the hotel — fresh food, food safety,
-            faster turnover. That's why the contractor brings Headwaters
-            in. Same setup. The part that's new is the food side.
+            The store is harder — fresh food, faster turnover. That's
+            why the contractor brings Headwaters in. Same setup, new
+            food side.
           </p>
         </div>
 
@@ -199,24 +198,20 @@ export default function WhyThisTeam() {
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              The one-pager shows the costs line by line — the
-              practitioner, an operations manager, an IT person, a
-              bookkeeper, a Headwaters food-safety person at the Deer
-              Lake store from day one, basic overhead, and the Dryden
-              hub that brings the food up.
+              The one-pager lists every cost: practitioner, operations
+              manager, IT, bookkeeper, a Headwaters food-safety person
+              on-site from day one, overhead, and the Dryden food hub.
             </p>
             <p
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              Three prices to choose from:
-              <span className="font-semibold"> $60k a month</span> is
-              the floor.
-              <span className="font-semibold"> $90k a month</span> is
-              what we recommend, and the rate the rest of this
-              walkthrough uses.
-              <span className="font-semibold"> $125k a month</span> is
-              what it grows to once a second store is up and running.
+              Three monthly prices:
+              <span className="font-semibold"> $60k</span> floor,
+              <span className="font-semibold"> $90k</span> recommended
+              (the rate this walkthrough uses),
+              <span className="font-semibold"> $125k</span> once a
+              second store is running.
             </p>
             <div
               className="mono text-[11px] uppercase tracking-[0.18em] mt-4"
@@ -248,9 +243,9 @@ export default function WhyThisTeam() {
                 className="serif text-[15px] leading-[1.5]"
                 style={{ color: "var(--color-text)" }}
               >
-                The slides deck the band steering committee would read at
-                the table. Cost lines, staffing, the financial model, the
-                first-reserve-then-the-next phasing.
+                The slides the steering committee reads at the table.
+                Cost lines, staffing, the financial model, the
+                phasing.
               </p>
               <div
                 className="mono text-[11px] uppercase tracking-[0.18em] mt-3"
@@ -275,13 +270,13 @@ export default function WhyThisTeam() {
           <Reveal label="What's inside the software">
             <p>
               <span className="font-semibold">Headwaters Books.</span> The
-              bookkeeping front-end the agency uses for its own books —
-              same patterns the Deer Lake till and daily-close slip will use.
+              bookkeeping the agency uses for its own books — same patterns
+              the Deer Lake till will use.
             </p>
             <p>
               <span className="font-semibold">Northern Food Systems
-              Research Library.</span> A working research library for food
-              systems work in the north — already shipped, already populated.
+              Research Library.</span> A working library on northern food
+              systems — already shipped.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
@@ -312,15 +307,13 @@ export default function WhyThisTeam() {
 
           <Reveal label="What's inside the method" variant="ink">
             <p>
-              The codetry handbook is titled <span className="italic">
-              Headwaters: How a Community Runs Its Own Economy</span>.
-              Seven parts. Written in plain grade-9 English. Anyone
-              with a phone can read it.
+              The codetry handbook — <span className="italic">Headwaters:
+              How a Community Runs Its Own Economy</span>. Seven parts,
+              plain grade-9 English. Read it on a phone.
             </p>
             <p>
-              The same method is what gets used at the kitchen table in
-              Dryden, in Deer Lake, and at any northern community Headwaters
-              works with. Not a slide deck. A practice.
+              Same method used at the kitchen table in Dryden, Deer Lake,
+              anywhere Headwaters works. Not a slide deck — a practice.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"

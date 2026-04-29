@@ -49,7 +49,7 @@ export default function Ask() {
     {
       head: "Decide together by November 2026",
       body:
-        "At the end of the year, the band decides whether to commit to building. A real off-ramp at every step before this one.",
+        "At year end, the band decides whether to commit to building. Real off-ramp at every step before this.",
     },
   ];
 
@@ -167,9 +167,8 @@ export default function Ask() {
             className="serif text-[14.5px] leading-[1.45] mt-2"
             style={{ color: "var(--color-muted)" }}
           >
-            The four written things from the trial, spread across eight
-            weeks. The week-eight review meeting lands on day{" "}
-            {TRIAL_WEEK_8_REVIEW_DAY} from the day you sign.
+            Four written things from the trial, spread across eight
+            weeks. Review meeting lands day {TRIAL_WEEK_8_REVIEW_DAY}.
           </p>
           <div
             className="mt-3 rounded-md border px-3 py-2 text-[12.5px] leading-[1.45] italic"
@@ -377,37 +376,34 @@ export default function Ask() {
           <Reveal label="What this first year costs">
             <p>
               <span className="font-semibold">$1,080,000 over twelve months</span>{" "}
-              — that's $90,000 a month for Headwaters. It covers the
-              seven-person team doing the design work, running the
-              cold-chain pilot, building the open-records software,
-              training Deer Lake staff, and producing the year-end
-              audit.
+              — $90,000 a month for Headwaters. Covers the seven-person
+              team, the cold-chain pilot, the software build, staff
+              training, and the year-end audit.
             </p>
             <p>
-              No grants are in hand right now. The most likely source
-              is band reserves — the planner shows that path in detail.
-              Most of the spending comes near the end, against the
-              cold-chain pilot. So if the band wants to walk away after
-              step three, they keep the truck route and the open-records
-              tools and the bill stops there.
+              No grants in hand. Paid from band reserves — the planner
+              shows the path. Most spending lands near the end, against
+              the cold-chain pilot. Walk away after step three and the
+              band keeps the truck route, the software, and the bill
+              stops.
             </p>
           </Reveal>
 
           <Reveal label="What the band gets back, and how soon">
             <p>
               <span className="font-semibold">About $125,000 to $200,000 of grocery margin stays in Deer Lake the first year.</span>{" "}
-              That's the money that today flies south at 58¢ on the dollar:
-              the new store sells 30 to 40 percent of Deer Lake's
-              $1.6–2.0M grocery spend in year one, and keeps 26¢ more
-              of every dollar than the current store does (84¢ on the
-              shelf, not 58¢).
+              Money flying south today at 58¢ on the dollar. The new
+              store sells 30 to 40 percent of Deer Lake's $1.6–2.0M
+              grocery spend in year one, keeping 26¢ more of every
+              dollar than the current store (84¢ on the shelf, not
+              58¢).
             </p>
             <p>
               Plus <span className="font-semibold">17 to 20 jobs for Deer
               Lake people</span> grow into the store over two years.
-              Both numbers come straight from the financial model in
-              the store-plan deck — no new claims, just the math
-              arranged so the council can see it.
+              Both numbers come from the store-plan financial model —
+              no new claims, just the math arranged so council can see
+              it.
             </p>
           </Reveal>
 

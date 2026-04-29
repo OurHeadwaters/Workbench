@@ -16,12 +16,12 @@ export default function WhoWorks() {
     {
       tag: "Bullet 1 · A two-person operator couple",
       body:
-        "Sam & Jess on the cockpit. Brought in and paid by the contractor — the same setup that already runs the band's hotel today. Two people on payroll, not a row of managers. That's the only way the math works at this size.",
+        "Sam & Jess on the cockpit. Brought in and paid by the contractor — same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size.",
     },
     {
       tag: "Bullet 2 · Serious software underneath them",
       body:
-        "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. The doors stay open through hunting season and bad weather, and the truck still leaves Dryden loaded when one of the operators is short-handed.",
+        "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. Doors stay open through hunting season and bad weather. Truck leaves Dryden loaded even when one operator is out.",
     },
     {
       tag: "Bullet 3 · Margin comes home in year one",
@@ -60,11 +60,9 @@ export default function WhoWorks() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Two people on the cockpit. Software underneath them. That's
-          how the payroll line stays small, how the doors stay open
-          when somebody can't make it in, how the truck still arrives
-          loaded — and how the band's grocery margin starts coming
-          home fast.
+          Two people on the cockpit. Software underneath. Payroll
+          stays small. Doors stay open when somebody can't make it
+          in. Truck arrives loaded. Margin comes home fast.
         </p>
 
         <div className="mt-7 space-y-3">
