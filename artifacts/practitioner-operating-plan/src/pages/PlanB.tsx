@@ -15,7 +15,7 @@ import {
 // future integration point.
 import { planBFunders, type FunderStatus } from "@/data/planBFunders";
 
-const accentByConfidence: Record<Confidence, string> = {
+const accentByConfidence: Record<Confidence["kind"], string> = {
   seed: "#7a5c1f",
   confirmed: "#1f3d2e",
 };
@@ -25,13 +25,34 @@ function ConfidencePill({ confidence }: { confidence: Confidence }) {
     <span
       className="inline-flex items-center font-mono uppercase tracking-[0.18em] text-[7pt] font-semibold px-[5pt] py-[1pt] rounded-full border"
       style={{
-        color: accentByConfidence[confidence],
-        borderColor: accentByConfidence[confidence],
+        color: accentByConfidence[confidence.kind],
+        borderColor: accentByConfidence[confidence.kind],
         background: "#faf6ec",
       }}
     >
-      {confidence === "seed" ? "Seed" : "Confirmed"}
+      {confidence.kind === "seed" ? "Seed" : "Confirmed"}
     </span>
+  );
+}
+
+function ConfidenceNote({ confidence }: { confidence: Confidence }) {
+  if (confidence.kind === "seed") {
+    return (
+      <div className="mt-[4pt] border-l-2 border-[#d6c89a] pl-[6pt] py-[1pt] text-[8pt] font-body text-[#5a4a1f] leading-[1.4]">
+        <span className="font-mono uppercase tracking-[0.18em] text-[6.5pt] font-semibold mr-[4pt] text-[#7a5c1f]">
+          Needs
+        </span>
+        {confidence.needs}
+      </div>
+    );
+  }
+  return (
+    <div className="mt-[4pt] border-l-2 border-[#9bb09a] pl-[6pt] py-[1pt] text-[8pt] font-body text-[#1f3d2e] leading-[1.4]">
+      <span className="font-mono uppercase tracking-[0.18em] text-[6.5pt] font-semibold mr-[4pt] text-[#1f3d2e]">
+        Source
+      </span>
+      <span className="font-mono">{confidence.source}</span>
+    </div>
   );
 }
 
@@ -119,6 +140,7 @@ function WorkSplitItemRow({ item }: { item: WorkSplitItem }) {
           {item.artifactPath}
         </div>
       )}
+      <ConfidenceNote confidence={item.confidence} />
     </li>
   );
 }
@@ -152,10 +174,18 @@ export default function PlanB() {
           you call instead, what you pitch them, what you do with the 807
           work, and where the runway money comes from in the meantime.
           Nothing here replaces the Deer Lake one-pager — Plan B sits next
-          to Plan A, not on top of it. Items marked{" "}
-          <ConfidencePill confidence="seed" /> are placeholders to sharpen;
-          items marked <ConfidencePill confidence="confirmed" /> are
-          signed off against intel in <span className="font-mono">docs/partnerships/</span>.
+          to Plan A, not on top of it. Every item carries a confidence
+          flag: <ConfidencePill confidence={{ kind: "seed", needs: "" }} />{" "}
+          items name, in a <span className="font-mono">Needs</span> caption,
+          the specific intel that would let them flip;{" "}
+          <ConfidencePill
+            confidence={{ kind: "confirmed", source: "" }}
+          />{" "}
+          items name, in a <span className="font-mono">Source</span>{" "}
+          caption, the file in{" "}
+          <span className="font-mono">docs/partnerships/</span> they were
+          verified against. Reading the page top-to-bottom is also reading
+          the practitioner's next intel asks in priority order.
         </div>
 
         {/* §1 Trigger conditions */}
@@ -197,6 +227,7 @@ export default function PlanB() {
                     <div>{trig.thenDo}</div>
                   </div>
                 </div>
+                <ConfidenceNote confidence={trig.confidence} />
               </li>
             ))}
           </ul>
@@ -221,10 +252,13 @@ export default function PlanB() {
                 {p}
               </p>
             ))}
+            <ConfidenceNote confidence={reframedPitch.confidence} />
           </div>
           <div className="mt-[3pt] font-body italic text-[8.5pt] text-[#6b7665] leading-[1.4]">
-            Written so a tribal council procurement officer can read it cold.
-            No internal vocabulary, no Deer Lake-specific framing.
+            Drafted so a tribal council procurement officer could read it
+            cold — no internal vocabulary, no Deer Lake-specific framing.
+            Whether it actually does read cold is the open question
+            captured in the Needs caption above.
           </div>
         </section>
 
@@ -277,6 +311,7 @@ export default function PlanB() {
                           <div>{target.leadWith}</div>
                         </div>
                       </div>
+                      <ConfidenceNote confidence={target.confidence} />
                     </li>
                   ))}
                 </ol>
@@ -380,6 +415,7 @@ export default function PlanB() {
                       </div>
                     )}
                   </div>
+                  <ConfidenceNote confidence={slot.confidence} />
                 </li>
               );
             })}
@@ -426,6 +462,7 @@ export default function PlanB() {
                       Pairs with §1 trigger · {m.triggerLabel}
                     </div>
                   )}
+                  <ConfidenceNote confidence={m.confidence} />
                 </div>
               </li>
             ))}
