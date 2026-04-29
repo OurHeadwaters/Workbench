@@ -19,6 +19,7 @@ import CodetryVsLiterate from "@/pages/CodetryVsLiterate";
 import NamingDiff from "@/pages/NamingDiff";
 import LeaseTooling from "@/pages/LeaseTooling";
 import PaybackMemo from "@/pages/PaybackMemo";
+import TrialAcceptanceSheet from "@/pages/TrialAcceptanceSheet";
 import SaltCoA from "@/pages/SaltCoA";
 import SaltMonthlyClose from "@/pages/SaltMonthlyClose";
 import StudioWindDown from "@/pages/StudioWindDown";
@@ -368,6 +369,7 @@ export default function App() {
   if (location === "/hours") return <HoursByPillar />;
   if (location === "/lease-tooling") return <LeaseTooling />;
   if (location === "/payback-memo") return <PaybackMemo />;
+  if (location === "/trial-acceptance-sheet") return <TrialAcceptanceSheet />;
   if (location === "/salt-coa") return <SaltCoA />;
   if (location === "/codetry") return <Codetry />;
   if (location === "/codetry-test") return <CodetryTest />;

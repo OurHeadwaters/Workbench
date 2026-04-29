@@ -400,6 +400,23 @@ export default function PaybackMemo() {
             {TRIAL_CONVERSION_TO_STEP_1}
           </p>
           <p>
+            <span className="font-semibold">Meeting artifact.</span>{" "}
+            The week-eight review is recorded on the printable trial
+            acceptance &amp; refund-election worksheet at{" "}
+            <a
+              href="/trial-acceptance-sheet"
+              className="font-mono text-[#1f3d2e] underline hover:opacity-80"
+            >
+              /trial-acceptance-sheet
+            </a>
+            . The worksheet scores each of the four criteria above,
+            captures the contractor&rsquo;s election (refund, service
+            credit, or accept), computes the fourteen-day invocation
+            deadline from the meeting date, and is signed by both
+            parties at the meeting; the signed sheet is filed alongside
+            this memorandum.
+          </p>
+          <p>
             <span className="font-semibold">Plain-language anchor.</span>{" "}
             This clause is the contractual form of the trial offer
             stated identically on the Deer Lake Walkthrough (§ Ask),
