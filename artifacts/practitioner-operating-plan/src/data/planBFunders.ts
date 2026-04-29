@@ -1,23 +1,28 @@
-// Plan B · funder slots
+// Single named export consumed by /plan-b ("Top 5 funder slots").
+// This file is the integration seam: it pulls the live program list
+// from `planBFundersFeed.ts` (the slot a future grants-finder
+// artifact would slide into) and derives the open / opens [date] /
+// closed status against the current date so slots auto-flip as
+// windows roll over.
 //
-// Static seed for the "Top 5 funder slots" section on /plan-b. The page
-// imports the single named export `planBFunders` below; swapping this
-// file's body for a feed from the grants-finder artifact is a one-file
-// change — the page does not import any of these types or constants
-// from anywhere else.
-//
-// FUTURE INTEGRATION POINT (named, not dated): when the grants-finder
-// artifact exposes a stable feed of program slots in the same shape, the
-// only edit required to switch over is replacing the body of
-// `planBFunders` (and optionally the type) with an import from that
-// feed. Do not add behaviour to this file — it is a data seam.
+// Graceful degradation: if the feed is empty or throws, this file
+// falls back to a small built-in seed so the page never goes dark.
+// `planBFundersSource` lets the page tell the reader which they're
+// looking at.
 //
 // Confidence flag uses the same discriminated union as the rest of
-// Plan B (see `planB.ts`): `seed` items name the specific intel that
-// would let them flip; `confirmed` items name the file in
-// `docs/partnerships/` they were verified against.
+// Plan B (see `planB.ts`): `seed` items name, in `needs`, the
+// specific intel that would let them flip; `confirmed` items name,
+// in `source`, the file in `docs/partnerships/` they were verified
+// against.
 
 import type { Confidence } from "./planB";
+import {
+  liveFunderPrograms,
+  liveFundersGeneratedAt,
+  type FunderProgram,
+  type FunderProgramWindow,
+} from "./planBFundersFeed";
 
 export type FunderStatus =
   | { kind: "open"; closesOn?: string }
@@ -40,7 +45,12 @@ export type FunderSlot = {
   confidence: Confidence;
 };
 
-export const planBFunders: FunderSlot[] = [
+export type FunderSource =
+  | { kind: "live"; asOf: string; count: number }
+  | { kind: "fallback"; reason: "empty" | "error" };
+
+/** Built-in seed used only when the live feed is empty or throws. */
+const seedFallback: FunderSlot[] = [
   {
     programName: "Local Food Infrastructure Fund (LFIF) — follow-on stream",
     funder: "Agriculture and Agri-Food Canada",
@@ -117,3 +127,118 @@ export const planBFunders: FunderSlot[] = [
     },
   },
 ];
+
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function todayIso(now: Date): string {
+  // Use UTC to avoid local-timezone drift on a static page that
+  // gets viewed from anywhere.
+  return now.toISOString().slice(0, 10);
+}
+
+function formatMonthYear(iso: string): string {
+  const [y, m] = iso.split("-");
+  return `${m}/${y}`;
+}
+
+/**
+ * Derive an Open / Opens MM/YYYY / Closed pill from a program's
+ * dated windows against `now`. Exported so the unit tests can
+ * exercise the open/opens/closed boundaries directly.
+ */
+export function deriveFunderStatus(
+  program: Pick<FunderProgram, "rolling" | "windows">,
+  now: Date,
+): FunderStatus {
+  if (program.rolling) return { kind: "open" };
+
+  const windows = (program.windows ?? []).filter(
+    (w): w is FunderProgramWindow =>
+      ISO_DATE_RE.test(w.opensOn) &&
+      (w.closesOn === undefined || ISO_DATE_RE.test(w.closesOn)),
+  );
+  if (windows.length === 0) return { kind: "open" };
+
+  const today = todayIso(now);
+
+  const openNow = windows.find(
+    (w) => w.opensOn <= today && (!w.closesOn || w.closesOn >= today),
+  );
+  if (openNow) {
+    return openNow.closesOn
+      ? { kind: "open", closesOn: formatMonthYear(openNow.closesOn) }
+      : { kind: "open" };
+  }
+
+  const future = windows
+    .filter((w) => w.opensOn > today)
+    .sort((a, b) => a.opensOn.localeCompare(b.opensOn))[0];
+  if (future) return { kind: "opens", on: formatMonthYear(future.opensOn) };
+
+  // All known windows have closed and no future window is announced.
+  return { kind: "closed" };
+}
+
+function programToSlot(program: FunderProgram, now: Date): FunderSlot {
+  return {
+    programName: program.programName,
+    funder: program.funder,
+    fitRationale: program.fitRationale,
+    applicationWindow: program.applicationWindow,
+    status: deriveFunderStatus(program, now),
+    link: program.link,
+    confidence: program.confidence,
+  };
+}
+
+/**
+ * Build the top-5 funder slots from the live feed at `now`. Returns
+ * `null` when the feed is missing/empty so the caller can fall back.
+ * Exported for tests.
+ */
+export function buildLiveFunderSlots(
+  programs: readonly FunderProgram[],
+  now: Date,
+): FunderSlot[] | null {
+  if (!Array.isArray(programs) || programs.length === 0) return null;
+  return [...programs]
+    .sort((a, b) => a.priority - b.priority)
+    .slice(0, 5)
+    .map((p) => programToSlot(p, now));
+}
+
+function resolveFunders(now: Date): {
+  slots: FunderSlot[];
+  source: FunderSource;
+  asOf: string | null;
+} {
+  try {
+    const live = buildLiveFunderSlots(liveFunderPrograms, now);
+    if (live && live.length > 0) {
+      return {
+        slots: live,
+        source: { kind: "live", asOf: liveFundersGeneratedAt, count: live.length },
+        asOf: liveFundersGeneratedAt,
+      };
+    }
+    return {
+      slots: seedFallback,
+      source: { kind: "fallback", reason: "empty" },
+      asOf: null,
+    };
+  } catch {
+    return {
+      slots: seedFallback,
+      source: { kind: "fallback", reason: "error" },
+      asOf: null,
+    };
+  }
+}
+
+const resolved = resolveFunders(new Date());
+
+/** Top-5 funder slots rendered by /plan-b. */
+export const planBFunders: FunderSlot[] = resolved.slots;
+
+/** Tells the page whether it's looking at live data or the seed fallback. */
+export const planBFundersSource: FunderSource = resolved.source;

@@ -9,11 +9,15 @@ import {
   type Confidence,
   type WorkSplitItem,
 } from "@/data/planB";
-// Funder slots are imported from a single named export so this page can
-// later be swapped to consume a feed from the grants-finder artifact
-// without touching anything else here. See planBFunders.ts for the
-// future integration point.
-import { planBFunders, type FunderStatus } from "@/data/planBFunders";
+// Funder slots are imported from a single named export. The list is
+// derived live from the grants-finder feed (see planBFundersFeed.ts);
+// `planBFundersSource` tells us whether we got live data or the seed
+// fallback so we can label the section honestly.
+import {
+  planBFunders,
+  planBFundersSource,
+  type FunderStatus,
+} from "@/data/planBFunders";
 
 const accentByConfidence: Record<Confidence["kind"], string> = {
   seed: "#7a5c1f",
@@ -361,6 +365,36 @@ export default function PlanB() {
             kicker="Top 5 funder slots"
             title="Where the runway money comes from in the meantime."
           />
+          <div className="mb-[6pt] flex items-center gap-[5pt] flex-wrap">
+            {planBFundersSource.kind === "live" ? (
+              <>
+                <span
+                  className="inline-flex items-center font-mono uppercase tracking-[0.16em] text-[7pt] font-semibold px-[6pt] py-[1pt] rounded-full"
+                  style={{ color: "#1f3d2e", background: "#dbe7d2" }}
+                >
+                  Live · grants-finder feed
+                </span>
+                <span className="font-mono text-[7.5pt] text-[#6b7665] tracking-[0.14em]">
+                  As of {planBFundersSource.asOf} · status pills auto-flip as
+                  windows open and close.
+                </span>
+              </>
+            ) : (
+              <>
+                <span
+                  className="inline-flex items-center font-mono uppercase tracking-[0.16em] text-[7pt] font-semibold px-[6pt] py-[1pt] rounded-full"
+                  style={{ color: "#7a3030", background: "#f7d7c9" }}
+                >
+                  No live data · seed fallback
+                </span>
+                <span className="font-mono text-[7.5pt] text-[#6b7665] tracking-[0.14em]">
+                  {planBFundersSource.reason === "error"
+                    ? "Live feed errored — showing the last-known seed."
+                    : "Live feed is empty — showing the last-known seed."}
+                </span>
+              </>
+            )}
+          </div>
           <ul className="list-none p-0 m-0 grid grid-cols-1 gap-[6pt]">
             {planBFunders.map((slot, idx) => {
               const status = formatStatus(slot.status);
@@ -421,10 +455,12 @@ export default function PlanB() {
             })}
           </ul>
           <div className="mt-[4pt] font-body italic text-[8.5pt] text-[#6b7665] leading-[1.4]">
-            Source data lives in{" "}
-            <span className="font-mono">src/data/planBFunders.ts</span> as a
-            single named export — when the grants-finder artifact exposes a
-            stable feed, that file is the one (and only) swap.
+            Status pills are derived live from{" "}
+            <span className="font-mono">src/data/planBFundersFeed.ts</span>{" "}
+            against today's date — Open / Opens MM/YYYY / Closed flips on its
+            own as application windows roll over. If the feed goes empty or
+            errors, the section degrades to a built-in seed and labels itself
+            so no one mistakes it for live.
           </div>
         </section>
 
