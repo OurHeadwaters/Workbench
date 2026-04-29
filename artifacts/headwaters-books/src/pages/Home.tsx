@@ -56,20 +56,21 @@ export default function Home() {
 
       <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
         {/*
-          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #489).
+          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #478, #489).
           The footer links the constellation-wide-primitive surfaces
           this app ships. Two primitives are registered in the manifest
           and each has its own per-primitive page on its own route —
           the Standby pilot dashboard at /standby (with its
           advisory/standby/active/standdown ladder + call composer),
-          and the Gate shell at /gate (with its
-          draft/under-review/cleared/refused ladder + outbound link to
-          the runnable surface at legacy-gatekeeper.replit.app). Each
-          link names its primitive explicitly — do NOT collapse them
-          into a single generic "non-zone primitives" link that would
-          inherit one primitive's framing for both. If a third sibling
-          primitive earns a surface, add it as its own line here with
-          its own naming.
+          and the Gate ledger at /gate (with its
+          draft/under-review/cleared/refused ladder + bright-side ↔ massity
+          substitution composer). Both are now runnable in-repo — Task #478
+          brought the runnable Gate substitution surface in-repo,
+          replacing the previous shell. Each link names its primitive
+          explicitly — do NOT collapse them into a single generic
+          "non-zone primitives" link that would inherit one primitive's
+          framing for both. If a third sibling primitive earns a surface,
+          add it as its own line here with its own naming.
         */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
           <Link href="/standby">
@@ -80,7 +81,7 @@ export default function Home() {
           <span className="text-muted-foreground/40" aria-hidden>·</span>
           <Link href="/gate">
             <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
-              The Gate — Z3 shell
+              The Gate — bright-side ↔ massity ledger
             </span>
           </Link>
         </div>

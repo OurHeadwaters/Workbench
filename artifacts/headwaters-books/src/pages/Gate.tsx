@@ -1,19 +1,29 @@
-import { useMemo } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import {
   ArrowLeft,
   ArrowLeftRight,
-  BookOpen,
-  ChevronRight,
+  ArrowRight,
+  Trash2,
+  Plus,
   ExternalLink,
-  FileText,
-  FolderTree,
   Layers,
-  ScrollText,
+  BookMarked,
+  Tag,
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -23,8 +33,15 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { constellation } from "@/data/constellation";
+import {
+  useGateStore,
+  type GateDirection,
+  type GateRung,
+  type SubstitutionEntry,
+} from "@/lib/gateStore";
 
-// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #489)
+// AUDIT NOTE — Standby-leaks-into-Gate bug class
+// (Task #473, Task #475, Task #478, Task #489)
 // =====================================================================
 // This page is *intentionally* Gate-only. Every UI affordance below is
 // built around The Gate's specific vocabulary: the severity ladder
@@ -53,22 +70,21 @@ import { constellation } from "@/data/constellation";
 // on its own route, with its own UI shaped to that primitive's
 // vocabulary, ladder, and sub-shelves.
 //
-// The manifest's `scope` field for The Gate states that the runnable
-// surface lives externally at legacy-gatekeeper.replit.app and that
-// this in-repo page is a *shell*: it reads the manifest verbatim and
-// links out to the live Gate. The translations log, mappings ledger,
-// and substitutions history below are presented as empty-state
-// surfaces for that reason — they describe the shape the in-repo
-// surface would take if/when the Gate is brought in-repo. The decision
-// whether to bring the runnable surface in-repo (as artifacts/the-gate)
-// is left for a later task once this shell has had some traffic.
+// History of this page:
+// - Task #489 first landed the in-constellation home for The Gate at
+//   /gate as a *shell* page that read this manifest entry verbatim
+//   (vocabulary chips, severity ladder with refused-is-first-class
+//   paragraph, three sub-shelves, four rejected alternatives, footer
+//   link out to legacy-gatekeeper.replit.app).
+// - Task #478 then brought the runnable substitution surface in-repo
+//   on the same /gate route — the bright-side ↔ massity composer plus
+//   the persisted substitution ledger below — so the manifest entry
+//   and the runnable surface live at the same address. The legacy host
+//   stayed as a footer reference link only, and is parsed back out of
+//   the manifest scope text below (rather than hardcoded) so this page
+//   tracks the manifest if the reference link ever moves.
 
-type GateRungId = "draft" | "under-review" | "cleared" | "refused";
-
-const RUNG_TONE: Record<
-  GateRungId,
-  { dot: string; ring: string; text: string; bg: string }
-> = {
+const RUNG_TONE: Record<GateRung, { dot: string; ring: string; text: string; bg: string }> = {
   draft: {
     dot: "bg-slate-400",
     ring: "ring-slate-400/30",
@@ -88,29 +104,54 @@ const RUNG_TONE: Record<
     bg: "bg-emerald-50",
   },
   refused: {
-    dot: "bg-rose-600",
-    ring: "ring-rose-500/30",
-    text: "text-rose-700",
-    bg: "bg-rose-50",
+    dot: "bg-red-600",
+    ring: "ring-red-500/40",
+    text: "text-red-700",
+    bg: "bg-red-50",
   },
 };
 
-const SHELF_ICON: Record<string, typeof Layers> = {
-  Mappings: BookOpen,
-  Substitutions: ArrowLeftRight,
-  Categories: FolderTree,
+const SUB_SHELF_ICONS: Record<string, ReactNode> = {
+  Mappings: <BookMarked className="w-5 h-5 text-primary" />,
+  Substitutions: <Layers className="w-5 h-5 text-primary" />,
+  Categories: <Tag className="w-5 h-5 text-primary" />,
 };
 
-// The Gate's runnable surface lives externally per the manifest's
-// `scope` field. Read the host out of that prose (the manifest writes
-// it bare, e.g. "legacy-gatekeeper.replit.app") so this page stays in
-// sync with the manifest if the runnable surface ever moves; only fall
-// back to the known address if the scope text is rewritten in a way
-// that drops the host.
-const EXTERNAL_GATE_FALLBACK_HOST = "legacy-gatekeeper.replit.app";
-function externalGateHostFromScope(scope: string | undefined): string {
-  if (!scope) return EXTERNAL_GATE_FALLBACK_HOST;
-  // Match either a full URL or a bare *.replit.app / *.replit.dev host.
+// Default category seeds in case the practitioner wants to file a
+// substitution before a custom category exists.
+//
+// SOURCE OF TRUTH: this list is *transcribed verbatim* from the Gate
+// primitive in the canonical manifest at
+//   artifacts/practitioner-operating-plan/public/constellation.json
+// — specifically the vocabulary entry for "a category", which reads:
+//   "the domain a mapping belongs to (Pragmatism, Politics, Regulations,
+//    Privacy, Banking, …); each category is a sub-shelf inside the Gate"
+// The trailing "…" in the manifest is an explicit invitation to add more,
+// which is why the composer also accepts a custom category. If a category
+// is added/removed in the manifest, update this seed list to match.
+//
+// (We don't derive this list at runtime from the vocabulary string because
+// the manifest field is human prose, not a structured array — parsing it
+// would couple the surface to a phrasing convention rather than to a data
+// shape.)
+const DEFAULT_CATEGORIES = [
+  "Pragmatism",
+  "Politics",
+  "Regulations",
+  "Privacy",
+  "Banking",
+];
+
+// The legacy Gate runnable surface address. After Task #478 it is no
+// longer the source of truth (the runnable surface lives at /gate inside
+// this app), but the manifest's `scope` field still names it as a
+// historical reference link. Parse the host out of that prose so this
+// page tracks the manifest if the reference link ever moves; only fall
+// back to the known address if the scope text is rewritten in a way that
+// drops the host.
+const LEGACY_GATE_FALLBACK_HOST = "legacy-gatekeeper.replit.app";
+function legacyGateHostFromScope(scope: string | undefined): string {
+  if (!scope) return LEGACY_GATE_FALLBACK_HOST;
   const urlMatch = scope.match(/https?:\/\/[^\s)]+/);
   if (urlMatch) {
     try {
@@ -122,7 +163,26 @@ function externalGateHostFromScope(scope: string | undefined): string {
   const hostMatch = scope.match(
     /[a-z0-9-]+(?:\.[a-z0-9-]+)*\.replit\.(?:app|dev)/i,
   );
-  return hostMatch ? hostMatch[0] : EXTERNAL_GATE_FALLBACK_HOST;
+  return hostMatch ? hostMatch[0] : LEGACY_GATE_FALLBACK_HOST;
+}
+
+function formatStamp(iso: string): string {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+  const time = d.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${date}, ${time}`;
+}
+
+function directionLabel(d: GateDirection): string {
+  return d === "bright-to-massity"
+    ? "bright side → massity"
+    : "massity → bright side";
 }
 
 export default function Gate() {
@@ -151,8 +211,36 @@ export default function Gate() {
   const subShelves = gatePrimitive.subShelves ?? [];
   const vocabulary = gatePrimitive.vocabulary ?? [];
   const rejected = gatePrimitive.rejectedAlternatives ?? [];
-  const externalGateHost = externalGateHostFromScope(gatePrimitive.scope);
-  const externalGateUrl = `https://${externalGateHost}`;
+  const legacyGateHost = legacyGateHostFromScope(gatePrimitive.scope);
+  const legacyGateUrl = `https://${legacyGateHost}`;
+
+  const store = useGateStore();
+  const [openComposer, setOpenComposer] = useState(false);
+
+  if (!store.hydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Loading the gate…
+      </div>
+    );
+  }
+
+  // Categories the practitioner has actually used, plus the defaults.
+  // The picker's role is to encourage filing under a known category
+  // without forcing one — the manifest treats categories as an
+  // open-ended sub-shelf, not a fixed enum.
+  const usedCategories = Array.from(
+    new Set(store.substitutions.map((s) => s.category).filter(Boolean)),
+  );
+  const allCategories = Array.from(
+    new Set([...DEFAULT_CATEGORIES, ...usedCategories]),
+  ).sort();
+
+  const cleared = store.substitutions.filter((s) => s.rung === "cleared");
+  const refused = store.substitutions.filter((s) => s.rung === "refused");
+  const inFlight = store.substitutions.filter(
+    (s) => s.rung === "draft" || s.rung === "under-review",
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,8 +256,7 @@ export default function Gate() {
             <Separator orientation="vertical" className="h-6" />
             <div>
               <div className="text-xs text-muted-foreground tracking-wide uppercase">
-                Z3 · {constellation.z3?.memberFacingBrand ?? "807 Benefits"} ·
-                sibling to The Standby
+                Z3 · {constellation.z3?.memberFacingBrand ?? "807 Benefits"} · sibling to The Standby
               </div>
               <h1 className="font-serif text-2xl text-foreground leading-tight">
                 The Gate
@@ -184,7 +271,7 @@ export default function Gate() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Primitive header — vocabulary verbatim from constellation */}
+        {/* Primitive header — vocabulary verbatim from the constellation manifest */}
         <section className="mb-10">
           <p className="text-base text-foreground/80 max-w-3xl leading-relaxed">
             {gatePrimitive.summary}
@@ -208,7 +295,10 @@ export default function Gate() {
           </div>
         </section>
 
-        {/* The bright side ↔ massity diagram — Gate-specific framing */}
+        {/* The bright side ↔ massity diagram — Gate-specific framing.
+            Using only the canonical pairs the manifest names verbatim
+            (neighbour↔resident, send↔remit, fee↔service-charge,
+            money↔funds) so no other primitive's vocabulary leaks here. */}
         <section className="mb-10">
           <h2 className="font-serif text-lg text-foreground mb-3">
             What the Gate sits between
@@ -225,8 +315,7 @@ export default function Gate() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-foreground/70 leading-relaxed">
-                neighbour · send · fee · money · the shelf · the books ·
-                the channel
+                neighbour · send · fee · money
               </CardContent>
             </Card>
             <div className="hidden md:flex items-center justify-center px-2">
@@ -243,8 +332,7 @@ export default function Gate() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-foreground/70 leading-relaxed">
-                resident · remit · service charge · funds · the database ·
-                financial statements · compliance officer
+                resident · remit · service charge · funds
               </CardContent>
             </Card>
           </div>
@@ -263,7 +351,7 @@ export default function Gate() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {ladder.map((rung) => {
-              const tone = RUNG_TONE[rung.rung as GateRungId];
+              const tone = RUNG_TONE[rung.rung as GateRung];
               return (
                 <div
                   key={rung.rung}
@@ -295,157 +383,33 @@ export default function Gate() {
             The three sub-shelves
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {subShelves.map((shelf) => {
-              const Icon = SHELF_ICON[shelf.name] ?? Layers;
-              return (
-                <Card
-                  key={shelf.name}
-                  className="border-border"
-                  data-testid={`subshelf-${shelf.name.toLowerCase()}`}
-                >
-                  <CardHeader className="pb-2">
-                    <CardTitle className="font-serif text-lg flex items-center gap-2">
-                      <Icon className="w-5 h-5 text-primary" />
-                      {shelf.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {shelf.role}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        <Separator className="mb-8" />
-
-        {/* The runnable surface — manifest scope says it lives externally */}
-        <section className="mb-10">
-          <Card className="border-primary/40 bg-primary/5">
-            <CardHeader>
-              <CardTitle className="font-serif text-xl flex items-center gap-2">
-                <ExternalLink className="w-5 h-5 text-primary" />
-                The runnable Gate
-              </CardTitle>
-              <CardDescription className="text-foreground/70 max-w-3xl leading-relaxed">
-                The manifest's{" "}
-                <code className="px-1 py-0.5 rounded bg-muted text-foreground">
-                  scope
-                </code>{" "}
-                field for The Gate states that the live, runnable surface —
-                where mappings are entered, substitutions are applied to
-                crossing language, and categories are managed — continues to
-                operate externally while the in-repo vocabulary settles. This
-                page is the in-repo shell; it reads the manifest verbatim and
-                links out so the practitioner has one door, not two.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <a
-                href={externalGateUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="link-external-gate"
+            {subShelves.map((shelf) => (
+              <Card
+                key={shelf.name}
+                className="border-border"
+                data-testid={`subshelf-${shelf.name.toLowerCase()}`}
               >
-                <Button className="gap-2">
-                  Open the runnable Gate
-                  <ExternalLink className="w-4 h-4" />
-                </Button>
-              </a>
-              <p className="mt-3 text-xs text-muted-foreground font-mono">
-                {externalGateUrl}
-              </p>
-
-              <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-4 text-sm text-foreground/80 leading-relaxed">
-                <div className="flex items-center gap-2 mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-                  <ChevronRight className="w-3.5 h-3.5" />
-                  Scope of this page
-                </div>
-                {gatePrimitive.scope}
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Translations log — empty-state surface, Gate vocabulary */}
-        <section className="mb-10">
-          <div className="mb-4">
-            <h2 className="font-serif text-2xl text-foreground flex items-center gap-2">
-              <ScrollText className="w-5 h-5 text-primary" />
-              Translations log
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1 max-w-3xl">
-              Every piece of language that has crossed the Gate in either
-              direction — bright side out to massity, or massity in to the
-              bright side. The auditable record of what crossed and what
-              changed.
-            </p>
+                <CardHeader className="pb-2">
+                  <CardTitle className="font-serif text-lg flex items-center gap-2">
+                    {SUB_SHELF_ICONS[shelf.name] ?? (
+                      <Layers className="w-5 h-5 text-primary" />
+                    )}
+                    {shelf.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {shelf.role}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-          <Card className="border-dashed">
-            <CardContent className="py-10 text-center text-muted-foreground">
-              <FileText className="w-6 h-6 mx-auto mb-2 opacity-60" />
-              No translation has been logged in this shell yet. The
-              practitioner-facing translation work continues on the
-              runnable Gate above; this log will mirror it when the Gate
-              is brought in-repo.
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Mappings ledger — empty-state surface, Gate vocabulary */}
-        <section className="mb-10">
-          <div className="mb-4">
-            <h2 className="font-serif text-2xl text-foreground flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-primary" />
-              Mappings ledger
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1 max-w-3xl">
-              The registered correspondences the Gate carries — a
-              bright-side noun on one side, its honest massity equivalent
-              on the other, filed under a category. The dictionary side of
-              the Gate.
-            </p>
-          </div>
-          <Card className="border-dashed">
-            <CardContent className="py-10 text-center text-muted-foreground">
-              <BookOpen className="w-6 h-6 mx-auto mb-2 opacity-60" />
-              No mapping has been registered in this shell yet. The
-              practitioner registers mappings on the runnable Gate; the
-              ledger here will read from that source when the surface is
-              in-repo.
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Substitutions history — empty-state surface, Gate vocabulary */}
-        <section className="mb-10">
-          <div className="mb-4">
-            <h2 className="font-serif text-2xl text-foreground flex items-center gap-2">
-              <ArrowLeftRight className="w-5 h-5 text-primary" />
-              Substitutions history
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1 max-w-3xl">
-              Each time a mapping has actually been applied — who applied
-              it, on which document, in which direction. The applied-instance
-              ledger; the Gate's history of work done.
-            </p>
-          </div>
-          <Card className="border-dashed">
-            <CardContent className="py-10 text-center text-muted-foreground">
-              <ArrowLeftRight className="w-6 h-6 mx-auto mb-2 opacity-60" />
-              No substitution has been recorded in this shell yet. The
-              applied-substitution record lives on the runnable Gate; this
-              history will mirror it once the Gate moves in-repo.
-            </CardContent>
-          </Card>
         </section>
 
         {/* Names rejected on paper — verbatim, four single-side or single-direction names */}
         {rejected.length > 0 && (
-          <section className="mb-4">
+          <section className="mb-10">
             <h2 className="font-serif text-lg text-foreground mb-3">
               Names rejected on paper
             </h2>
@@ -478,31 +442,432 @@ export default function Gate() {
             </ul>
           </section>
         )}
+
+        <Separator className="mb-8" />
+
+        {/* Substitutions — the runnable ledger that used to live at the legacy host */}
+        <section>
+          <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
+            <div>
+              <h2 className="font-serif text-2xl text-foreground">
+                Substitutions on the ledger
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                A substitution is a single instance of a mapping being applied
+                to a piece of crossing language. Pass it through the Gate; the
+                ledger keeps both names on file.
+              </p>
+            </div>
+            <Button
+              data-testid="button-log-substitution"
+              onClick={() => setOpenComposer(true)}
+              className="gap-2"
+            >
+              <Plus className="w-4 h-4" /> Log a substitution
+            </Button>
+          </div>
+
+          {openComposer && (
+            <SubstitutionComposer
+              ladder={ladder.map((l) => l.rung as GateRung)}
+              categories={allCategories}
+              onCancel={() => setOpenComposer(false)}
+              onSubmit={(input) => {
+                store.logSubstitution(input);
+                setOpenComposer(false);
+              }}
+            />
+          )}
+
+          {store.substitutions.length === 0 && !openComposer && (
+            <Card className="border-dashed">
+              <CardContent className="py-10 text-center text-muted-foreground">
+                <ArrowLeftRight className="w-6 h-6 mx-auto mb-2 opacity-60" />
+                The ledger is empty. The Gate is closed and calm.
+              </CardContent>
+            </Card>
+          )}
+
+          {inFlight.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                In flight
+              </h3>
+              <div className="space-y-2">
+                {inFlight.map((s) => (
+                  <SubstitutionRow
+                    key={s.id}
+                    substitution={s}
+                    onSetRung={(rung) => store.setRung(s.id, rung)}
+                    onDelete={() => store.deleteSubstitution(s.id)}
+                    ladder={ladder.map((l) => l.rung as GateRung)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {cleared.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                Cleared
+              </h3>
+              <div className="space-y-2">
+                {cleared.map((s) => (
+                  <SubstitutionRow
+                    key={s.id}
+                    substitution={s}
+                    onSetRung={(rung) => store.setRung(s.id, rung)}
+                    onDelete={() => store.deleteSubstitution(s.id)}
+                    ladder={ladder.map((l) => l.rung as GateRung)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {refused.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                Refused
+              </h3>
+              <div className="space-y-2">
+                {refused.map((s) => (
+                  <SubstitutionRow
+                    key={s.id}
+                    substitution={s}
+                    onSetRung={(rung) => store.setRung(s.id, rung)}
+                    onDelete={() => store.deleteSubstitution(s.id)}
+                    ladder={ladder.map((l) => l.rung as GateRung)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
       </main>
 
       <footer className="border-t border-border mt-12">
         <div className="max-w-6xl mx-auto px-6 py-6 text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-2">
           <span>
-            In-constellation home for The Gate — vocabulary verbatim from the
-            manifest; the runnable surface lives at{" "}
+            In-repo runnable surface for The Gate — replaces the previously
+            external tool. State lives in this browser only.
+          </span>
+          <span className="flex items-center gap-3">
             <a
-              href={externalGateUrl}
+              href={legacyGateUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-foreground"
+              data-testid="link-external-gate"
+              className="inline-flex items-center gap-1 text-foreground/70 hover:text-foreground underline-offset-4 hover:underline"
             >
-              {externalGateHost}
+              {legacyGateHost} <ExternalLink className="w-3 h-3" />
             </a>
-            .
-          </span>
-          <span>
-            Read from{" "}
-            <code className="px-1.5 py-0.5 rounded bg-muted text-foreground">
-              constellation.constellationWidePrimitives.the-gate
-            </code>
+            <span>
+              read from{" "}
+              <code className="px-1.5 py-0.5 rounded bg-muted text-foreground">
+                constellation.constellationWidePrimitives.the-gate
+              </code>
+            </span>
           </span>
         </div>
       </footer>
     </div>
+  );
+}
+
+function SubstitutionRow({
+  substitution: s,
+  onSetRung,
+  onDelete,
+  ladder,
+}: {
+  substitution: SubstitutionEntry;
+  onSetRung: (rung: GateRung) => void;
+  onDelete: () => void;
+  ladder: GateRung[];
+}) {
+  const tone = RUNG_TONE[s.rung];
+  const arrow =
+    s.direction === "bright-to-massity" ? (
+      <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+    ) : (
+      <ArrowLeft className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+    );
+  const left =
+    s.direction === "bright-to-massity" ? s.brightSide : s.massity;
+  const right =
+    s.direction === "bright-to-massity" ? s.massity : s.brightSide;
+
+  return (
+    <div
+      data-testid={`row-substitution-${s.id}`}
+      className={`rounded-lg border border-border bg-card px-4 py-3 ring-1 ${tone.ring}`}
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className={`inline-block w-2.5 h-2.5 rounded-full ${tone.dot} mt-1.5 flex-shrink-0`}
+        />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap text-foreground">
+            <span className="font-medium">{left}</span>
+            {arrow}
+            <span className="font-medium">{right}</span>
+            <Badge variant="outline" className="font-normal text-xs">
+              {s.category}
+            </Badge>
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            <span className={`uppercase tracking-wide font-semibold ${tone.text}`}>
+              {s.rung}
+            </span>
+            <span> · {directionLabel(s.direction)} · logged {formatStamp(s.loggedAt)}</span>
+            {s.loggedBy ? <span> · by {s.loggedBy}</span> : null}
+            {s.document ? <span> · doc: {s.document}</span> : null}
+          </div>
+          {s.note && (
+            <p className="mt-2 text-sm text-foreground/80 leading-snug">
+              {s.note}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Select
+            value={s.rung}
+            onValueChange={(v) => onSetRung(v as GateRung)}
+          >
+            <SelectTrigger
+              className="h-8 text-xs w-32"
+              data-testid={`select-rung-${s.id}`}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ladder.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {r}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onDelete}
+            className="text-muted-foreground hover:text-destructive"
+            title="Remove this substitution"
+            data-testid={`button-delete-${s.id}`}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SubstitutionComposer({
+  ladder,
+  categories,
+  onSubmit,
+  onCancel,
+}: {
+  ladder: GateRung[];
+  categories: string[];
+  onSubmit: (input: {
+    direction: GateDirection;
+    rung: GateRung;
+    brightSide: string;
+    massity: string;
+    category: string;
+    document?: string;
+    note?: string;
+    loggedBy?: string;
+  }) => void;
+  onCancel: () => void;
+}) {
+  const [direction, setDirection] = useState<GateDirection>("bright-to-massity");
+  const [rung, setRung] = useState<GateRung>(ladder[0] ?? "draft");
+  const [brightSide, setBrightSide] = useState("");
+  const [massity, setMassity] = useState("");
+  const [category, setCategory] = useState(
+    categories.includes("Pragmatism") ? "Pragmatism" : (categories[0] ?? "Pragmatism"),
+  );
+  const [customCategory, setCustomCategory] = useState("");
+  const [document, setDocument] = useState("");
+  const [note, setNote] = useState("");
+  const [loggedBy, setLoggedBy] = useState("");
+
+  const finalCategory = customCategory.trim() || category;
+  const canSubmit =
+    brightSide.trim().length > 0 &&
+    massity.trim().length > 0 &&
+    finalCategory.trim().length > 0;
+
+  return (
+    <Card className="border-primary/40 mb-4">
+      <CardHeader>
+        <CardTitle className="font-serif text-lg">Log a substitution</CardTitle>
+        <CardDescription>
+          Both names stay on file. The Gate keeps the bright-side noun
+          alongside its massity equivalent so the translation stays
+          auditable.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-direction">Direction</Label>
+            <Select
+              value={direction}
+              onValueChange={(v) => setDirection(v as GateDirection)}
+            >
+              <SelectTrigger
+                id="gate-direction"
+                data-testid="select-direction"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="bright-to-massity">
+                  bright side → massity (going out)
+                </SelectItem>
+                <SelectItem value="massity-to-bright">
+                  massity → bright side (coming in)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-rung">Open at rung</Label>
+            <Select value={rung} onValueChange={(v) => setRung(v as GateRung)}>
+              <SelectTrigger id="gate-rung" data-testid="select-composer-rung">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {ladder.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {r}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-bright">Bright-side noun</Label>
+            <Input
+              id="gate-bright"
+              data-testid="input-bright"
+              placeholder="neighbour · send · fee · money"
+              value={brightSide}
+              onChange={(e) => setBrightSide(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-massity">Massity equivalent</Label>
+            <Input
+              id="gate-massity"
+              data-testid="input-massity"
+              placeholder="resident · remit · service charge · funds"
+              value={massity}
+              onChange={(e) => setMassity(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-category">Category</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger
+                id="gate-category"
+                data-testid="select-category"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-custom-category">…or new category</Label>
+            <Input
+              id="gate-custom-category"
+              data-testid="input-custom-category"
+              placeholder="leave blank to use selected"
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-doc">Document (optional)</Label>
+            <Input
+              id="gate-doc"
+              data-testid="input-document"
+              placeholder="bank-letter-2026-04-29.docx"
+              value={document}
+              onChange={(e) => setDocument(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="gate-by">Logged by (optional)</Label>
+            <Input
+              id="gate-by"
+              data-testid="input-logged-by"
+              placeholder="founder · steward · bookkeeper"
+              value={loggedBy}
+              onChange={(e) => setLoggedBy(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="gate-note">Notes (optional)</Label>
+          <Textarea
+            id="gate-note"
+            data-testid="input-note"
+            placeholder="Why this substitution; what was at stake; what the Gate wants on the record."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={3}
+          />
+        </div>
+
+        <div className="flex justify-end gap-2 pt-2">
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button
+            data-testid="button-submit-substitution"
+            disabled={!canSubmit}
+            onClick={() =>
+              onSubmit({
+                direction,
+                rung,
+                brightSide,
+                massity,
+                category: finalCategory,
+                document: document || undefined,
+                note: note || undefined,
+                loggedBy: loggedBy || undefined,
+              })
+            }
+          >
+            Log it
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

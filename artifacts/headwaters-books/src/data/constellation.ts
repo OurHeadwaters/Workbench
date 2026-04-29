@@ -210,7 +210,7 @@ export const constellation: ConstellationSnapshot = {
         }
       ],
       "principle": "both-sides",
-      "scope": "in-constellation home now lives at /headwaters-books/gate — a shell page that reads this manifest entry verbatim (vocabulary, four-rung ladder, three sub-shelves, four rejected alternatives) and links out to the runnable surface. The runnable surface at legacy-gatekeeper.replit.app continues to operate externally; whether to bring it in-repo as artifacts/the-gate is left for a later decision once the shell page has had some traffic."
+      "scope": "in-repo runnable surface lives at /gate inside artifacts/headwaters-books — a sibling route to /standby that reads this manifest verbatim for vocabulary, severity ladder (draft/under-review/cleared/refused), sub-shelves, and rejected alternatives, lets a real bright-side ↔ massity substitution be entered with category and direction, and persists the substitution ledger in the browser so it survives reload. The legacy surface at legacy-gatekeeper.replit.app is linked from the page footer for historical reference but is no longer the source of truth. Task #489 first landed the in-constellation home as a shell page that read this entry verbatim and linked out to the legacy surface; Task #478 then brought the runnable substitution surface fully in-repo at the same /gate route. The artifact-limit on this project ruled out a standalone artifacts/the-gate at this pass; if the limit is raised the page may move to a dedicated artifact without changing the manifest contract."
     }
   ],
   "z3": {
