@@ -70,11 +70,24 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
       "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher post-tithe surplus, which is why capital recovery clears faster in those early months.",
   },
   {
-    id: "brightside-coupling",
-    title: "Cross-bucket: agency surplus funds Brightside Launch Month",
+    id: "signing-bonus",
+    title: "Signing bonus — V5 surplus-waterfall line",
     body:
-      "If Brightside's pre-launch costs (engineer / audit / legal) overrun the locked $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — not from the tithe, not from the founder personally, and not from the agency cost basis. The tithe is structurally protected because it sits above the entire surplus waterfall.",
+      "The Codetry-archetype baseline (V5) carries a signing bonus between the Wages and Capital Recovery lines of the surplus waterfall. For Deer Lake, the bonus is $40,000 paid in month 1 (with month-2 spillover at the post-tithe surplus rate), and is sized to retire the founder's husband's family infusion in full up front. As a result the V5 capital-recovery line shrinks to the $72k loan-only piece — that's the visible carryover to Phase 1. The Software/Sales archetype does NOT carry a signing bonus because profit-share carries the equivalent value; only the Codetry archetype surfaces this line.",
+    crossLink: { label: "See Archetypes", href: "/archetypes" },
+  },
+  {
+    id: "brightside-coupling",
+    title: "Cross-bucket: Brightside pre-launch funding (V4 carve-out vs V5 Innovation)",
+    body:
+      "Under the V4 baseline, Brightside's $28k pre-launch was funded from a dedicated Brightside Launch Month carve-out at the top of Phase 2 of the agency surplus waterfall. Under V5 (current), that dedicated phase is dropped — Brightside's pre-launch is funded from the Innovation bucket inside Phase 3 instead, after the signing bonus and capital recovery have cleared. In either model, if pre-launch costs overrun the $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — not from the tithe, not from the founder personally, and not from the agency cost basis. The tithe is structurally protected because it sits above the entire surplus waterfall.",
     crossLink: { label: "See Brightside — pre-launch cost basis", href: "/brightside" },
+  },
+  {
+    id: "team-incentives",
+    title: "Team incentives — visible-but-TBD",
+    body:
+      "Christmas bonus, perks of employment, and similar discretionary team-side spend appear as a named line on the roster table even though the dollar amount has not been pinned yet. The line exists to make sure the planning conversation never silently drops the team-incentives bucket — the cost will land somewhere (overheads or a new dedicated waterfall step) when it's locked.",
   },
 ];
 
@@ -123,7 +136,13 @@ export const PERSONAL_CASH_FOOTNOTES: Footnote[] = [
     id: "capital-recovery-not-income",
     title: "Capital Recovery is NOT income",
     body:
-      "Phase 1 Capital Recovery returns existing obligations to lender ($72k business loan) and family ($40k personal infusion from founder's husband). Booked as \"Capital Recovery\" — distinct line, separate from compensation, separate from owner draw. Time-bound: ends when the $112k is retired.",
+      "Capital Recovery returns existing obligations and is booked as \"Capital Recovery\" — distinct line, separate from compensation, separate from owner draw. Under V5 (current Codetry-archetype baseline) it covers the $72k business loan only, because the $40k family infusion (founder's husband) is paid via the signing bonus in month 1. Under V4 (historical) it carried the full $112k = $72k loan + $40k family. Either way, time-bound: ends when the obligation is retired.",
+  },
+  {
+    id: "signing-bonus-not-ongoing",
+    title: "Signing bonus is one-time, not ongoing compensation",
+    body:
+      "The V5 Codetry-archetype baseline carries a $40,000 signing bonus paid in month 1 (with month-2 spillover at the post-tithe surplus rate). It compensates the lead for the discontinuity-of-income risk of starting a community engagement, and is sized to retire the family infusion in full up front. It's shown in the breakdown table as a one-time line — separate from the agency salary line, and explicitly NOT folded into per-year compensation.",
   },
   {
     id: "no-agency-owner-take",

@@ -177,6 +177,14 @@ const v4Agency = {
   monthlySurplusSepOnward: v4SurplusSepOnward,
   costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
+  signingBonus: 0,
+  signingBonusTag: confirmed("V4 right-priced did not carry a signing-bonus line — the line was added in V5 to compensate the lead for the discontinuity-of-income risk of starting a community engagement."),
+  signingBonusDescription: "",
+
+  teamIncentivesName: "Team incentives (Christmas bonus, perks of employment)",
+  teamIncentivesAmount: null,
+  teamIncentivesTag: confirmed("Visible-but-TBD line so the planning conversation never silently drops the team-incentives bucket; dollar amount has not been pinned yet."),
+
   capitalRecoveryAmount: 112000,
   capitalRecoveryDescription:
     "$72k outstanding business loan first, then $40k personal infusion from founder's husband, in that order.",
@@ -207,6 +215,7 @@ const v4Agency = {
     payroll: v4Payroll18mo,
     overheads: v4Overheads18mo,
     surplusDeployed: v4Surplus18mo,
+    signingBonus: 0,
     capitalRecovery: 112000,
     brightsidePrelaunch: 28000,
     reserve: v4Reserve18mo,
@@ -226,12 +235,14 @@ const v4Agency = {
 
 const v4Personal = {
   agencySalary18mo: v4Roster[0].monthlyLoaded * 18, // 252,000
-  brightsideOwnerTake: 37000,
-  total18mo: v4Roster[0].monthlyLoaded * 18 + 37000, // 289,000
-  perYear: Math.round((v4Roster[0].monthlyLoaded * 18 + 37000) / 1.5), // 192,667
+  brightsideOwnerTake: SHARED_BRIGHTSIDE.surplusDeployment.ownerTake, // 31,000 (post-tithe-first revision 2026-04-29)
+  total18mo: v4Roster[0].monthlyLoaded * 18 + SHARED_BRIGHTSIDE.surplusDeployment.ownerTake, // 283,000
+  perYear: Math.round(
+    (v4Roster[0].monthlyLoaded * 18 + SHARED_BRIGHTSIDE.surplusDeployment.ownerTake) / 1.5,
+  ), // 188,667
   capitalRecovery: 112000,
   tag: confirmed(
-    "Lead draw stays at $14k/mo for the published 18 months under the 2026-04-28 Deer Lake roster sync (was $18k). V4 personal-cash now matches V3 personal-cash; the V4 advantage shows up in surplus deployment, not personal income. Renegotiation triggers (Contracts page) describe the post-month-12 step.",
+    "Lead draw stays at $14k/mo for the published 18 months under the 2026-04-28 Deer Lake roster sync. V4 personal-cash matches V3 personal-cash; the V4 advantage shows up in surplus deployment, not personal income. Brightside owner take dropped from $37k to $31k under the 2026-04-29 tithe-first revision. Renegotiation triggers (Contracts page) describe the post-month-12 step.",
   ),
 };
 

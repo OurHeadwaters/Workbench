@@ -4,11 +4,18 @@ import type { Scenario } from "@/data/types";
 /**
  * Operating-framework workspace state.
  *
- * V3 is the locked default operating framework — it's read-only on the
- * Compare page and sourced directly from SCENARIO_V3. Everything else is
- * stored in this module: editable "alternative reality" tabs that the
- * founder uses to talk through a turn ("what if the fee landed at $100k?",
- * "what if we added one role?") without having to touch source data.
+ * The workspace is anchored on V3 — V3 is read-only on the Compare page,
+ * sourced directly from SCENARIO_V3, and used as the yardstick the
+ * Δ-vs-anchor column compares against. V3 is no longer the live published
+ * default (V5 is, as of 2026-04-29) but it's preserved as the workspace
+ * anchor because the alt-reality story-telling on this page is built
+ * around V3-as-baseline; moving the anchor would invalidate every
+ * persisted scratch reality across the team's browsers.
+ *
+ * Around that V3 anchor the workspace holds editable "alternative
+ * reality" tabs that the founder uses to talk through a turn ("what if
+ * the fee landed at $100k?", "what if we added one role?") without
+ * having to touch source data.
  *
  * Each row in an alt reality carries:
  *   - value:  the proposed number (defaults to V3's number on first add)
@@ -21,11 +28,11 @@ import type { Scenario } from "@/data/types";
  * if the browser blocks it (private mode, quota), the page still renders with
  * the in-memory defaults.
  *
- * Seeding: on first load (no stored state) the workspace is seeded with V4
- * pre-populated as the first alternative reality, every row locked, since
- * V4's right-priced numbers are the most-talked-about alternative on
- * 2026-04-26 and we want the page to be useful before the reader does
- * anything.
+ * Seeding: on first load (no stored state) the workspace is seeded with
+ * the V4 right-priced baseline as the first alternative reality (every
+ * row locked). It's surfaced as "Prior — Right-priced" in the toggle
+ * framing — V4 is the right-priced baseline V5's renegotiation triggers
+ * step back up toward.
  */
 
 export const PGV2_ALT_REALITIES_KEY = "pgv2.altRealities";
@@ -218,9 +225,9 @@ export function buildDefaultState(): AltRealityState {
   }
   const reality: AltReality = {
     id: "v4-seed",
-    name: "V4 — Right-priced",
+    name: "Prior — Right-priced (V4)",
     note:
-      "Same lean roster as V3, fee lifted to $105k/mo so the Sep-onward operating margin (pre-tithe) lands at the 38.6% band.",
+      "V4 right-priced baseline — fee at $105k/mo against the 7-role Deer Lake roster. Surfaced as the Prior reality in the toggle framing because V5's renegotiation triggers step back up toward this fee once the value-delivered audit lands.",
     rows,
   };
   return { realities: [reality], activeId: reality.id };

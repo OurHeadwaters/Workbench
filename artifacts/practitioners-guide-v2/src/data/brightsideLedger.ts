@@ -112,14 +112,23 @@ export function buildBrightsideLedger(scenario: Scenario): LedgerExport {
     ],
   };
 
+  // Surplus deployment is tithe-first across all archetypes: 10% off the
+  // top of revenue, then cost basis, then 50/50 split on what remains.
+  // The exported sheet has to mirror the on-page math exactly so the
+  // reconciliation reads the same way as the page.
   const surplus: LedgerSheet = {
     name: "Surplus deployment",
     asOf: tagSummary(bs.surplusDeployment.tag),
     rows: [
       ["Line", "$"],
       ["Revenue (target)", bs.surplusDeployment.revenue],
+      [
+        `Tithe — Giving (${bs.surplusDeployment.tithePct}% off the top, first claim)`,
+        -bs.surplusDeployment.tithe,
+      ],
+      ["Revenue after tithe", bs.surplusDeployment.revenueAfterTithe],
       ["Cost basis", -bs.surplusDeployment.cost],
-      ["Surplus", bs.surplusDeployment.surplus],
+      ["Surplus (post-tithe)", bs.surplusDeployment.surplus],
       [],
       [
         `Retained in Brightside (${bs.surplusDeployment.retainedPct}%)`,

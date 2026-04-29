@@ -30,9 +30,17 @@ const ScenarioContext = createContext<ScenarioContextValue | null>(null);
 
 /**
  * Pure migration: returns the persisted ScenarioId, or null if storage is
- * empty / unknown. The retired V2 scenario is migrated to the locked default
- * (V3) so existing readers don't bounce out of the app on first load after
- * the V2 retirement.
+ * empty / unknown.
+ *
+ *   - Retired-on-2026-04-26 V2 → migrated to the locked default (V5) so
+ *     any reader with a persisted V2 choice lands on the current default
+ *     instead of getting an unknown-id reset.
+ *   - V3 (Lean team) → migrated to the locked default (V5). V3 was
+ *     pulled from the user-facing scenario toggle on 2026-04-29 when V5
+ *     was promoted to the default; V3 still exists in SCENARIOS for
+ *     workspace-level reads (Compare anchor, alt-realities seed) but is
+ *     no longer a target the toggle can land on.
+ *   - V4 (Right-priced) and V5 (Codetry archetype) → preserved as-is.
  *
  * Anything not in this matrix (legacy, garbage, casing) is treated as "no
  * explicit choice".
@@ -41,11 +49,9 @@ const ScenarioContext = createContext<ScenarioContextValue | null>(null);
  * standing up a DOM.
  */
 export function migrateStoredScenario(stored: string | null): ScenarioId | null {
-  // Retired-on-2026-04-26 scenario is migrated to the locked default so any
-  // reader with a persisted V2 choice lands on V3 instead of getting an
-  // unknown-id reset.
   if (stored === "v2") return DEFAULT_SCENARIO_ID;
-  if (stored === "v3" || stored === "v4") return stored;
+  if (stored === "v3") return DEFAULT_SCENARIO_ID;
+  if (stored === "v4" || stored === "v5") return stored;
   return null;
 }
 

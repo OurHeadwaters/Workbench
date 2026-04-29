@@ -13,6 +13,7 @@ import { PersonalCashPage } from "@/pages/PersonalCashPage";
 import { ComparePage } from "@/pages/ComparePage";
 import { ReplicationPage } from "@/pages/ReplicationPage";
 import { CodetryDisciplinePage } from "@/pages/CodetryDisciplinePage";
+import { ArchetypesPage } from "@/pages/ArchetypesPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/compare" component={ComparePage} />
       <Route path="/replication" component={ReplicationPage} />
       <Route path="/codetry" component={CodetryDisciplinePage} />
+      <Route path="/archetypes" component={ArchetypesPage} />
       <Route component={NotFound} />
     </Switch>
   );

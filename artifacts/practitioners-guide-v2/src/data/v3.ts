@@ -136,6 +136,14 @@ const v3Agency = {
   monthlySurplusSepOnward: v3SurplusSepOnward,
   costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
+  signingBonus: 0,
+  signingBonusTag: confirmed("V3 Codetry pre-roster-sync did not carry a signing-bonus line — the line was added in V5 to compensate the lead for the discontinuity-of-income risk of starting a community engagement."),
+  signingBonusDescription: "",
+
+  teamIncentivesName: "Team incentives (Christmas bonus, perks of employment)",
+  teamIncentivesAmount: null,
+  teamIncentivesTag: confirmed("Visible-but-TBD line so the planning conversation never silently drops the team-incentives bucket; dollar amount has not been pinned yet."),
+
   capitalRecoveryAmount: 112000,
   capitalRecoveryDescription:
     "$72k outstanding business loan first, then $40k personal infusion from founder's husband, in that order.",
@@ -166,6 +174,7 @@ const v3Agency = {
     payroll: v3Payroll18mo,
     overheads: v3Overheads18mo,
     surplusDeployed: v3Surplus18mo,
+    signingBonus: 0,
     capitalRecovery: 112000,
     brightsidePrelaunch: 28000,
     reserve: v3Reserve18mo,
@@ -183,11 +192,15 @@ const v3Agency = {
 
 const v3Personal = {
   agencySalary18mo: v3Roster[0].monthlyLoaded * 18, // 252,000
-  brightsideOwnerTake: 37000,
-  total18mo: v3Roster[0].monthlyLoaded * 18 + 37000, // 289,000
-  perYear: Math.round((v3Roster[0].monthlyLoaded * 18 + 37000) / 1.5), // 192,667
+  brightsideOwnerTake: SHARED_BRIGHTSIDE.surplusDeployment.ownerTake, // 31,000 (post-tithe-first revision 2026-04-29)
+  total18mo: v3Roster[0].monthlyLoaded * 18 + SHARED_BRIGHTSIDE.surplusDeployment.ownerTake, // 283,000
+  perYear: Math.round(
+    (v3Roster[0].monthlyLoaded * 18 + SHARED_BRIGHTSIDE.surplusDeployment.ownerTake) / 1.5,
+  ), // 188,667
   capitalRecovery: 112000,
-  tag: confirmed("Capital Recovery is debt repayment to lender + family — NOT income. Practitioner draw drops from $18k to $14k under the 2026-04-28 Deer Lake roster sync."),
+  tag: confirmed(
+    "Capital Recovery is debt repayment to lender + family — NOT income. Brightside owner take dropped from $37k to $31k under the 2026-04-29 tithe-first revision (10% tithe taken before the 50/50 split). Practitioner draw stays at $14k/mo under the V3 roster.",
+  ),
 };
 
 export const SCENARIO_V3: Scenario = {

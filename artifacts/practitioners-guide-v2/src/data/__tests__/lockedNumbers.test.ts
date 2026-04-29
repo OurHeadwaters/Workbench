@@ -1,7 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { SCENARIO_V3 } from "../v3";
 import { SCENARIO_V4 } from "../v4";
+import { SCENARIO_V5 } from "../v5";
 import { SCENARIOS, SCENARIO_ORDER, DEFAULT_SCENARIO_ID } from "../scenarios";
+import { buildContractsLedger } from "../contractsLedger";
+import { buildBrightsideLedger } from "../brightsideLedger";
 import {
   SHARED_BRIGHTSIDE,
   SHARED_GIVING_DIRECTION,
@@ -335,17 +338,27 @@ describe("Brightside RT-LTC SaaS bucket — locked headline numbers (sourced fro
     expect(recurringSum).toBe(1375);
   });
 
-  it("surplus deployment: $120k − $46k = $74k, 50/50 split = $37k retained / $37k owner take", () => {
+  it("surplus deployment is tithe-first: 10% off the top of $120k revenue = $12k tithe, then $46k cost, then 50/50 split on the $62k that remains", () => {
     expect(bs.surplusDeployment.revenue).toBe(120000);
+    expect(bs.surplusDeployment.tithePct).toBe(10);
+    expect(bs.surplusDeployment.tithe).toBe(12000);
+    expect(bs.surplusDeployment.revenueAfterTithe).toBe(108000);
     expect(bs.surplusDeployment.cost).toBe(46000);
-    expect(bs.surplusDeployment.surplus).toBe(74000);
-    expect(bs.surplusDeployment.revenue - bs.surplusDeployment.cost).toBe(
-      bs.surplusDeployment.surplus,
-    );
+    expect(bs.surplusDeployment.surplus).toBe(62000);
+    // Math: revenue − tithe − cost = surplus.
+    expect(
+      bs.surplusDeployment.revenue -
+        bs.surplusDeployment.tithe -
+        bs.surplusDeployment.cost,
+    ).toBe(bs.surplusDeployment.surplus);
+    // 50/50 split on what's left.
     expect(bs.surplusDeployment.retainedPct).toBe(50);
     expect(bs.surplusDeployment.ownerTakePct).toBe(50);
-    expect(bs.surplusDeployment.retained).toBe(37000);
-    expect(bs.surplusDeployment.ownerTake).toBe(37000);
+    expect(bs.surplusDeployment.retained).toBe(31000);
+    expect(bs.surplusDeployment.ownerTake).toBe(31000);
+    expect(bs.surplusDeployment.retained + bs.surplusDeployment.ownerTake).toBe(
+      bs.surplusDeployment.surplus,
+    );
   });
 
   it("downside coverage: max exposure $46k ≈ 36% of $126,155 Innovation bucket (V2-era number kept as a reference frame)", () => {
@@ -355,17 +368,17 @@ describe("Brightside RT-LTC SaaS bucket — locked headline numbers (sourced fro
   });
 });
 
-describe("V3 personal compensation — locked headline numbers", () => {
+describe("V3 personal compensation — locked headline numbers (post-tithe-first revision)", () => {
   const personal = SCENARIO_V3.personal;
 
-  it("$252k agency salary + $37k Brightside owner take = $289k total over 18 months", () => {
+  it("$252k agency salary + $31k Brightside owner take = $283k total over 18 months (Brightside dropped from $37k → $31k under tithe-first)", () => {
     expect(personal.agencySalary18mo).toBe(252000);
-    expect(personal.brightsideOwnerTake).toBe(37000);
-    expect(personal.total18mo).toBe(289000);
+    expect(personal.brightsideOwnerTake).toBe(31000);
+    expect(personal.total18mo).toBe(283000);
     expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
       personal.total18mo,
     );
-    expect(personal.perYear).toBe(192667);
+    expect(personal.perYear).toBe(188667);
   });
 
   it("$112k Capital Recovery is flagged as debt repayment, NOT income", () => {
@@ -569,17 +582,17 @@ describe("V4 18-month surplus deployment math — tithe-first, adds up to $519,4
   });
 });
 
-describe("V4 personal compensation — unchanged from V3 baseline", () => {
+describe("V4 personal compensation — unchanged from V3 baseline (post-tithe-first revision)", () => {
   const personal = SCENARIO_V4.personal;
 
-  it("$252k agency salary + $37k Brightside owner take = $289k total (same as V3)", () => {
+  it("$252k agency salary + $31k Brightside owner take = $283k total (same as V3 under tithe-first)", () => {
     expect(personal.agencySalary18mo).toBe(252000);
-    expect(personal.brightsideOwnerTake).toBe(37000);
-    expect(personal.total18mo).toBe(289000);
+    expect(personal.brightsideOwnerTake).toBe(31000);
+    expect(personal.total18mo).toBe(283000);
     expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
       personal.total18mo,
     );
-    expect(personal.perYear).toBe(192667);
+    expect(personal.perYear).toBe(188667);
     expect(personal.total18mo).toBe(SCENARIO_V3.personal.total18mo);
   });
 
@@ -661,18 +674,359 @@ describe("V3 ↔ V4 invariants — Salts and Brightside are the SAME object (can
   });
 });
 
-describe("Scenario registry — V3 is the locked default; V4 is the alt-reality option", () => {
-  it("SCENARIOS contains exactly v3 and v4 (V2 has been retired)", () => {
-    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4"]);
+describe("Scenario registry — V5 is the locked default; V4 is the prior toggle option; V3 retained for migration / Compare anchor only", () => {
+  it("SCENARIOS contains v3, v4, and v5 (V2 retired; V3 retained as the workspace anchor for migration + Compare seed)", () => {
+    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4", "v5"]);
     expect(SCENARIOS.v3).toBe(SCENARIO_V3);
     expect(SCENARIOS.v4).toBe(SCENARIO_V4);
+    expect(SCENARIOS.v5).toBe(SCENARIO_V5);
   });
 
-  it("SCENARIO_ORDER lists v3 first, v4 second (toggle reads left-to-right)", () => {
-    expect(SCENARIO_ORDER).toEqual(["v3", "v4"]);
+  it("SCENARIO_ORDER lists v5 first (Current), v4 second (Prior); V3 is intentionally absent from the toggle", () => {
+    expect(SCENARIO_ORDER).toEqual(["v5", "v4"]);
+    expect(SCENARIO_ORDER).not.toContain("v3");
   });
 
-  it("DEFAULT_SCENARIO_ID is v3 (the locked operating framework)", () => {
-    expect(DEFAULT_SCENARIO_ID).toBe("v3");
+  it("DEFAULT_SCENARIO_ID is v5 (the Codetry-archetype baseline applied to Deer Lake)", () => {
+    expect(DEFAULT_SCENARIO_ID).toBe("v5");
   });
+});
+
+describe("V5 — Codetry archetype (Deer Lake) — locked headline numbers", () => {
+  // Source of truth: .local/tasks/practitioners-guide-v5.md plus the
+  // 2026-04-29 spec note in v5.ts. V5 is the new default operating
+  // framework; the rest of the guide reads from V5.
+  const agency = SCENARIO_V5.contracts.agency;
+
+  it("engagement structure: $90k/mo fee, 12-month term, renegotiated at month 12", () => {
+    expect(agency.fee).toBe(90000);
+    expect(agency.termMonths).toBe(12);
+    expect(agency.renegotiateMonth).toBe(12);
+    expect(agency.startDate).toBe("June 1, 2026");
+  });
+
+  it("payroll: 4-role Day-1 team totalling $43,500/mo (leaner than the V3/V4 7-role roster)", () => {
+    expect(agency.roster).toHaveLength(4);
+    expect(agency.payrollTotal).toBe(43500);
+    expect(agency.roster.reduce((s, r) => s + r.monthlyLoaded, 0)).toBe(43500);
+  });
+
+  it("roster: lead $18k, ops & food (Dryden) $13.5k, code reviewer $9.5k, bookkeeper $2.5k on the Day-1 cost basis", () => {
+    const roles = agency.roster.map((r) => r.role);
+    expect(roles).toEqual([
+      "Practitioner / Lead",
+      "Operations & Food (Dryden)",
+      "Code Reviewer",
+      "Bookkeeper / Admin",
+    ]);
+    // V3/V4 roles that are NOT on the Day-1 cost basis under V5. They are
+    // not removed from the planning surface — they're deferred and gated
+    // against the month-12 renegotiation triggers (and may reappear or get
+    // reassigned to the Software/Sales archetype once a trigger fires).
+    // Asserting they're absent from the Day-1 roster (only) is what locks
+    // the leaner Day-1 cost basis in place.
+    expect(roles).not.toContain("IT / Tech");
+    expect(roles).not.toContain("Community Development Associate");
+    expect(roles).not.toContain("Junior Analyst / Field");
+    // The deferred roles must be named explicitly in the rosterTag prose so
+    // the planning surface keeps them visible (gated, not deleted).
+    expect(agency.rosterTag.kind).toBe("confirmed");
+    expect(agency.rosterTag.note).toContain("deferred");
+    expect(agency.rosterTag.note).toContain("renegotiation");
+    expect(agency.rosterTag.note).toContain("IT/Tech");
+    expect(agency.rosterTag.note).toContain("Community Development");
+    expect(agency.rosterTag.note).toContain("Junior Analyst");
+    // Lead draw is the V5 lift from $14k to $18k.
+    expect(agency.roster[0].monthlyLoaded).toBe(18000);
+  });
+
+  it("tithe is 10% of revenue, top of waterfall: $9,000/mo, $108,000 over 12 months", () => {
+    expect(agency.tithePct).toBe(10);
+    expect(agency.titheMonthly).toBe(9000);
+    expect(agency.titheTotal).toBe(108000);
+    expect(agency.fee * 0.10).toBe(agency.titheMonthly);
+    expect(agency.titheMonthly * agency.termMonths).toBe(agency.titheTotal);
+  });
+
+  it("cost basis: $53,892 Jun–Aug, $55,992 Sep+; post-tithe surplus $27,108 / $25,008", () => {
+    expect(agency.costBasisJunAug).toBe(53892);
+    expect(agency.costBasisSepOnward).toBe(55992);
+    expect(agency.monthlySurplusJunAug).toBe(27108);
+    expect(agency.monthlySurplusSepOnward).toBe(25008);
+    expect(agency.fee - agency.titheMonthly - agency.costBasisJunAug).toBe(
+      agency.monthlySurplusJunAug,
+    );
+    expect(agency.fee - agency.titheMonthly - agency.costBasisSepOnward).toBe(
+      agency.monthlySurplusSepOnward,
+    );
+  });
+
+  it("signing bonus: NEW $40,000 line in month 1, sized to retire the family infusion in full up front", () => {
+    expect(agency.signingBonus).toBe(40000);
+    expect(agency.signingBonusTag.kind).toBe("confirmed");
+    expect(agency.signingBonusDescription).toContain("$40,000");
+    expect(agency.signingBonusDescription.toLowerCase()).toContain("month 1");
+  });
+
+  it("capital recovery: shrinks to $72k loan-only (was $112k under V3/V4), since the $40k family infusion is paid via the signing bonus", () => {
+    expect(agency.capitalRecoveryAmount).toBe(72000);
+    expect(agency.capitalRecoveryDescription).toContain("loan only");
+    expect(agency.capitalRecoveryStartLabel.toLowerCase()).toContain("aug");
+    expect(agency.capitalRecoveryEndLabel.toLowerCase()).toContain("oct");
+  });
+
+  it("Brightside Launch Month phase is dropped from the agency waterfall (zeroed); Brightside pre-launch is funded out of Innovation in Phase 3", () => {
+    expect(agency.brightsidePrelaunchSpend).toBe(0);
+    expect(agency.brightsideLaunchSurplus).toBe(0);
+    expect(agency.brightsideLaunchRemainder).toBe(0);
+    expect(agency.brightsideLaunchMonthLabel.toLowerCase()).toContain("none");
+  });
+
+  it("team incentives: visible-but-TBD line surfaces the Christmas-bonus / perks bucket without pinning the dollar amount yet", () => {
+    expect(agency.teamIncentivesName).toContain("Team incentives");
+    expect(agency.teamIncentivesAmount).toBeNull();
+    expect(agency.teamIncentivesTag.kind).toBe("confirmed");
+  });
+
+  it("Phase 3 split stays 75/25 across 7 months (Nov 2026 → May 2027) at the post-tithe Sep-onward surplus", () => {
+    expect(agency.reservePct).toBe(75);
+    expect(agency.innovationPct).toBe(25);
+    expect(agency.phase3Months).toBe(7);
+    expect(agency.phase3MonthlySurplus).toBe(25008);
+    expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
+  });
+
+  it("Phase 3 totals reconcile to the Phase 3 budget (post-tithe surplus minus signing bonus minus capital recovery)", () => {
+    const phase3Budget =
+      agency.totals18mo.surplusDeployed -
+      agency.totals18mo.signingBonus -
+      agency.totals18mo.capitalRecovery;
+    expect(phase3Budget).toBe(194396);
+    expect(agency.reserveTotal + agency.innovationTotal).toBe(phase3Budget);
+    expect(agency.reserveTotal).toBe(145797);
+    expect(agency.innovationTotal).toBe(48599);
+  });
+
+  it("renegotiation triggers reset to the $90k baseline (step UP to V4 right-priced and beyond)", () => {
+    const triggers = agency.renegotiationTriggers;
+    expect(triggers.length).toBe(2);
+    // First trigger lifts to V4 right-priced ($105k / $22k draw).
+    expect(triggers[0].feeStepTo).toBe(105000);
+    expect(triggers[0].drawStepTo).toBe(22000);
+    // Each step monotonically escalates from the V5 baseline.
+    expect(triggers[0].feeStepTo).toBeGreaterThan(agency.fee);
+    expect(triggers[1].feeStepTo).toBeGreaterThanOrEqual(triggers[0].feeStepTo);
+    expect(triggers[1].drawStepTo).toBeGreaterThanOrEqual(triggers[0].drawStepTo);
+  });
+
+  it("practitioner salary: $216,000 across 12 months ($18k/mo × 12, V5 lead-draw lift)", () => {
+    expect(agency.practitionerSalary18mo).toBe(216000);
+    expect(agency.roster[0].monthlyLoaded * agency.termMonths).toBe(
+      agency.practitionerSalary18mo,
+    );
+  });
+});
+
+describe("V5 12-month surplus deployment math — tithe-first, signing-bonus-second, adds up to $306,396", () => {
+  const agency = SCENARIO_V5.contracts.agency;
+  const totals = agency.totals18mo;
+
+  it("revenue: $90k × 12 = $1,080,000", () => {
+    expect(totals.revenue).toBe(1080000);
+    expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("tithe: 10% of revenue × 12 mo = $108,000 (top of the waterfall)", () => {
+    expect(totals.tithe).toBe(108000);
+    expect(totals.revenue * 0.10).toBe(totals.tithe);
+    expect(totals.tithe).toBe(agency.titheTotal);
+  });
+
+  it("payroll: $43,500 × 12 = $522,000", () => {
+    expect(totals.payroll).toBe(522000);
+    expect(agency.payrollTotal * agency.termMonths).toBe(totals.payroll);
+  });
+
+  it("overheads: 3 × $10,392 + 9 × $12,492 = $143,604 (12-month window, not 18)", () => {
+    expect(totals.overheads).toBe(143604);
+    expect(
+      3 * agency.overheadsJunAugTotal + 9 * agency.overheadsSepOnwardTotal,
+    ).toBe(totals.overheads);
+  });
+
+  it("surplus deployed (post-tithe): $1,080,000 − $108,000 − $522,000 − $143,604 = $306,396", () => {
+    expect(totals.surplusDeployed).toBe(306396);
+    expect(totals.revenue - totals.tithe - totals.payroll - totals.overheads).toBe(306396);
+  });
+
+  it("totals18mo carries the new signing-bonus line ($40k) and the V5 capital-recovery line ($72k loan-only); brightsidePrelaunch is 0 under V5", () => {
+    expect(totals.signingBonus).toBe(40000);
+    expect(totals.capitalRecovery).toBe(72000);
+    expect(totals.brightsidePrelaunch).toBe(0);
+  });
+
+  it("deployment components (signing bonus + cap recovery + reserve + innovation + brightside) reconcile exactly to surplus deployed", () => {
+    const componentsSum =
+      totals.signingBonus +
+      totals.capitalRecovery +
+      totals.brightsidePrelaunch +
+      totals.reserve +
+      totals.innovation;
+    expect(componentsSum).toBe(totals.surplusDeployed);
+  });
+
+  it("Giving is taken at the top as tithe (totals18mo.giving is removed in favour of totals18mo.tithe)", () => {
+    expect(totals).not.toHaveProperty("giving");
+    expect(totals).toHaveProperty("tithe");
+  });
+});
+
+describe("V5 personal compensation — locked headline numbers", () => {
+  const personal = SCENARIO_V5.personal;
+  const agency = SCENARIO_V5.contracts.agency;
+
+  it("$216k agency salary + $31k Brightside owner take = $247k total over 12 months", () => {
+    expect(personal.agencySalary18mo).toBe(216000);
+    expect(personal.brightsideOwnerTake).toBe(31000);
+    expect(personal.total18mo).toBe(247000);
+    expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
+      personal.total18mo,
+    );
+    // Per-year equals total because the engagement window is 12 months exactly.
+    expect(personal.perYear).toBe(247000);
+  });
+
+  it("$72k Capital Recovery (loan only) is flagged as debt repayment, NOT income", () => {
+    expect(personal.capitalRecovery).toBe(72000);
+    expect(personal.capitalRecovery).toBe(agency.capitalRecoveryAmount);
+    // Capital Recovery must NOT be folded into the personal-cash total.
+    expect(personal.total18mo).not.toBe(
+      personal.agencySalary18mo +
+        personal.brightsideOwnerTake +
+        personal.capitalRecovery,
+    );
+  });
+
+  it("Signing bonus ($40k) is carried on the agency line, NOT in personal.total18mo (it's compensation for risk, shown separately on the page)", () => {
+    expect(agency.signingBonus).toBe(40000);
+    expect(personal.total18mo).not.toBe(
+      personal.agencySalary18mo + personal.brightsideOwnerTake + agency.signingBonus,
+    );
+  });
+});
+
+describe("V3 ↔ V4 ↔ V5 invariants — Salts and Brightside are the SAME object across all three (cannot drift)", () => {
+  it("Salts bucket is the SHARED_SALTS object across V3, V4, and V5", () => {
+    expect(SCENARIO_V3.salts).toBe(SHARED_SALTS);
+    expect(SCENARIO_V4.salts).toBe(SHARED_SALTS);
+    expect(SCENARIO_V5.salts).toBe(SHARED_SALTS);
+  });
+
+  it("Brightside bucket is the SHARED_BRIGHTSIDE object across V3, V4, and V5", () => {
+    expect(SCENARIO_V3.brightside).toBe(SHARED_BRIGHTSIDE);
+    expect(SCENARIO_V4.brightside).toBe(SHARED_BRIGHTSIDE);
+    expect(SCENARIO_V5.brightside).toBe(SHARED_BRIGHTSIDE);
+  });
+
+  it("V5 lead draw lifts to $18k/mo (above V3/V4 $14k/mo); brightside owner take stays identical across V3/V4/V5 (sourced from SHARED_BRIGHTSIDE)", () => {
+    // Per-month draw is the right comparison — V5's 12-month window means
+    // total agency salary is lower in absolute dollars even though the
+    // monthly draw is higher.
+    expect(SCENARIO_V5.contracts.agency.roster[0].monthlyLoaded).toBeGreaterThan(
+      SCENARIO_V3.contracts.agency.roster[0].monthlyLoaded,
+    );
+    expect(SCENARIO_V5.contracts.agency.roster[0].monthlyLoaded).toBe(18000);
+    expect(SCENARIO_V3.contracts.agency.roster[0].monthlyLoaded).toBe(14000);
+    expect(SCENARIO_V5.personal.brightsideOwnerTake).toBe(
+      SCENARIO_V3.personal.brightsideOwnerTake,
+    );
+    expect(SCENARIO_V5.personal.brightsideOwnerTake).toBe(
+      SHARED_BRIGHTSIDE.surplusDeployment.ownerTake,
+    );
+  });
+});
+
+describe("Contracts ledger export — term-aware (12 mo on V5; 18 mo on V3/V4)", () => {
+  // Board-pack export must reconcile to the on-page numbers. The previous
+  // exporter hardcoded 18-month framing (sheet name, overhead month-count
+  // label, /1.5 annualization), which produced materially wrong board-pack
+  // output under V5 (12-month term). These guards lock the term-aware
+  // labels and arithmetic in place across all three scenarios.
+  for (const sc of [SCENARIO_V3, SCENARIO_V4, SCENARIO_V5]) {
+    const ledger = buildContractsLedger(sc);
+    const a = sc.contracts.agency;
+    const totalsSheet = ledger.sheets.find((s) =>
+      s.name.startsWith("Agency — ") && s.name.endsWith("-mo totals"),
+    );
+    const compSheet = ledger.sheets.find(
+      (s) => s.name === "Agency — practitioner pay",
+    );
+
+    it(`${sc.id}: totals sheet name reflects the engagement window (${a.termMonths}-mo)`, () => {
+      expect(totalsSheet).toBeDefined();
+      expect(totalsSheet!.name).toBe(`Agency — ${a.termMonths}-mo totals`);
+    });
+
+    it(`${sc.id}: overheads label reads "3 mo Jun–Aug + ${a.termMonths - 3} mo Sep+"`, () => {
+      const overheadRow = totalsSheet!.rows.find(
+        (r) => typeof r[0] === "string" && (r[0] as string).startsWith("Overheads"),
+      );
+      expect(overheadRow).toBeDefined();
+      expect(overheadRow![0]).toBe(
+        `Overheads (3 mo Jun–Aug + ${a.termMonths - 3} mo Sep+)`,
+      );
+    });
+
+    it(`${sc.id}: implied $/yr is normalised by termMonths/12 (not hardcoded /1.5)`, () => {
+      const impliedRow = compSheet!.rows.find((r) => r[0] === "Implied $/yr");
+      expect(impliedRow).toBeDefined();
+      const expected = Math.round(a.practitionerSalary18mo / (a.termMonths / 12));
+      expect(impliedRow![1]).toBe(expected);
+      // Spot-check V5 specifically: $216k / 1.0 yr = $216k (NOT $216k/1.5 = $144k).
+      if (sc.id === "v5") expect(impliedRow![1]).toBe(216000);
+    });
+  }
+});
+
+describe("Brightside ledger export — Surplus deployment sheet is tithe-first (matches the on-page math)", () => {
+  // The on-page Brightside surplus is now: Revenue → Tithe (10%) → Cost
+  // basis → Surplus → 50/50. The export must mirror that or board-pack
+  // readers can't reconcile $120k → $46k → $62k without seeing the $12k
+  // tithe step.
+  for (const sc of [SCENARIO_V3, SCENARIO_V4, SCENARIO_V5]) {
+    const ledger = buildBrightsideLedger(sc);
+    const surplusSheet = ledger.sheets.find((s) => s.name === "Surplus deployment");
+
+    it(`${sc.id}: surplus sheet shows tithe + revenue-after-tithe rows`, () => {
+      expect(surplusSheet).toBeDefined();
+      const rowLabels = surplusSheet!.rows.map((r) => String(r[0] ?? ""));
+      expect(rowLabels.some((l) => l.startsWith("Tithe — Giving"))).toBe(true);
+      expect(rowLabels).toContain("Revenue after tithe");
+      expect(rowLabels).toContain("Surplus (post-tithe)");
+    });
+
+    it(`${sc.id}: tithe row is signed negative (subtraction) and equals SHARED_BRIGHTSIDE.tithe ($12,000)`, () => {
+      const titheRow = surplusSheet!.rows.find(
+        (r) => typeof r[0] === "string" && (r[0] as string).startsWith("Tithe — Giving"),
+      );
+      expect(titheRow).toBeDefined();
+      expect(titheRow![1]).toBe(-SHARED_BRIGHTSIDE.surplusDeployment.tithe);
+      expect(titheRow![1]).toBe(-12000);
+    });
+
+    it(`${sc.id}: revenue + tithe + cost reconciles to surplus (post-tithe) on the sheet`, () => {
+      const numAt = (label: string) => {
+        const row = surplusSheet!.rows.find((r) => r[0] === label);
+        return row && typeof row[1] === "number" ? row[1] : 0;
+      };
+      const rev = numAt("Revenue (target)");
+      const titheRow = surplusSheet!.rows.find(
+        (r) => typeof r[0] === "string" && (r[0] as string).startsWith("Tithe — Giving"),
+      );
+      const tithe = (titheRow![1] as number); // signed negative
+      const cost = numAt("Cost basis"); // signed negative
+      const surplus = numAt("Surplus (post-tithe)");
+      expect(rev + tithe + cost).toBe(surplus);
+    });
+  }
 });

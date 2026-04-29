@@ -139,7 +139,7 @@ export const SHARED_BRIGHTSIDE: BrightsideScenario = {
     founderTimeCashCost: 0,
     prelaunchEngineerCap: 20000,
     prelaunchPaymentMonth: "September 2026 (Brightside Launch Month)",
-    tag: confirmed("founder time = $0 cash, already paid via $14k/mo agency salary"),
+    tag: confirmed("founder time = $0 cash, already paid via the lead-draw line on the agency engagement"),
   },
   revenueTarget: {
     cumulative18mo: 120000,
@@ -167,14 +167,26 @@ export const SHARED_BRIGHTSIDE: BrightsideScenario = {
     tag: confirmed("$28k one-time + ~$18k recurring across 14 post-launch months"),
   },
   surplusDeployment: {
+    // Tithe-first: 10% off the top of Brightside revenue, then cost basis,
+    // then a 50/50 split on what's left. Revised on 2026-04-29 to align
+    // Brightside with the agency-line tithe-first discipline.
+    //   $120,000 revenue
+    //   − $12,000 tithe (10%)
+    //   = $108,000 net of tithe
+    //   − $46,000 cost basis
+    //   = $62,000 surplus
+    //   → $31,000 retained / $31,000 owner take (50/50)
     revenue: 120000,
+    tithePct: 10,
+    tithe: 12000,
+    revenueAfterTithe: 108000,
     cost: 46000,
-    surplus: 74000,
+    surplus: 62000,
     retainedPct: 50,
     ownerTakePct: 50,
-    retained: 37000,
-    ownerTake: 37000,
-    tag: confirmed("default split"),
+    retained: 31000,
+    ownerTake: 31000,
+    tag: confirmed("Tithe-first: 10% off the top of Brightside revenue, then 50/50 split on what's left."),
   },
   downsideCoverage: {
     sourceBucket: "Agency Innovation / R&D (Phase 3)",

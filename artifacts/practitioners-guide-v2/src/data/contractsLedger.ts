@@ -82,7 +82,8 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
   // Phase 3 has its own tag; capital recovery, brightside launch, and the
   // top-of-waterfall tithe each have theirs. Use the most-restrictive
   // (totals18mo) tag as the sheet header so a single line captures the
-  // provenance of the whole 18-month picture.
+  // provenance of the whole engagement-window picture (12 mo on V5, 18 mo
+  // on V3/V4).
   const phasesRows: (string | number)[][] = [
     ["Phase", "Window", "Amount", "Notes", "Confirmed"],
   ];
@@ -97,6 +98,15 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
       tagSummary(a.feeTag),
     ]);
   }
+  if (a.signingBonus > 0 && isLocked(a.signingBonusTag)) {
+    phasesRows.push([
+      "Signing bonus",
+      "Month 1 (with month-2 spillover)",
+      a.signingBonus,
+      a.signingBonusDescription,
+      tagSummary(a.signingBonusTag),
+    ]);
+  }
   if (isLocked(a.capitalRecoveryTag)) {
     phasesRows.push([
       "Phase 1 — Capital Recovery",
@@ -106,7 +116,7 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
       tagSummary(a.capitalRecoveryTag),
     ]);
   }
-  if (isLocked(a.brightsideLaunchTag)) {
+  if (a.brightsidePrelaunchSpend > 0 && isLocked(a.brightsideLaunchTag)) {
     phasesRows.push([
       "Phase 2 — Brightside launch",
       a.brightsideLaunchMonthLabel,
@@ -140,31 +150,50 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
     rows: phasesRows,
   };
 
+  // Overheads window is 3 months Jun–Aug + (termMonths − 3) months Sep+.
+  // V5 (12-mo term) = 3 + 9 ; V3/V4 (18-mo term) = 3 + 15.
+  const sepOnwardMonths = a.termMonths - 3;
   const totals18mo: LedgerSheet = {
-    name: "Agency — 18-mo totals",
+    name: `Agency — ${a.termMonths}-mo totals`,
     asOf: tagSummary(a.totals18mo.tag),
     rows: [
       ["Line", "$"],
       [`Revenue (${a.fee} × ${a.termMonths})`, a.totals18mo.revenue],
       [`Tithe — Giving (${a.tithePct}% off the top, first claim)`, -a.totals18mo.tithe],
       [`Payroll (${a.payrollTotal} × ${a.termMonths})`, -a.totals18mo.payroll],
-      ["Overheads (3 mo Jun–Aug + 15 mo Sep+)", -a.totals18mo.overheads],
+      [
+        `Overheads (3 mo Jun–Aug + ${sepOnwardMonths} mo Sep+)`,
+        -a.totals18mo.overheads,
+      ],
       ["Total surplus deployed (post-tithe)", a.totals18mo.surplusDeployed],
       [],
+      ...(a.totals18mo.signingBonus > 0
+        ? ([["↳ Signing bonus", a.totals18mo.signingBonus]] as (string | number)[][])
+        : []),
       ["↳ Capital Recovery (Phase 1)", a.totals18mo.capitalRecovery],
-      ["↳ Brightside one-time pre-launch (Phase 2)", a.totals18mo.brightsidePrelaunch],
+      ...(a.totals18mo.brightsidePrelaunch > 0
+        ? ([
+            [
+              "↳ Brightside one-time pre-launch (Phase 2)",
+              a.totals18mo.brightsidePrelaunch,
+            ],
+          ] as (string | number)[][])
+        : []),
       ["↳ Reserve (Phase 3)", a.totals18mo.reserve],
       ["↳ Innovation / R&D (Phase 3)", a.totals18mo.innovation],
     ],
   };
 
+  // Implied $/yr = total practitioner salary normalised to a 12-month year.
+  // V5 (12-mo term): salary / 1.0 ; V3/V4 (18-mo term): salary / 1.5.
+  const termYears = a.termMonths / 12;
   const compensation: LedgerSheet = {
     name: "Agency — practitioner pay",
     asOf: tagSummary(a.practitionerSalaryTag),
     rows: [
       ["Field", "Value"],
       [`Practitioner salary across ${a.termMonths} months`, a.practitionerSalary18mo],
-      ["Implied $/yr", a.practitionerSalary18mo / 1.5],
+      ["Implied $/yr", Math.round(a.practitionerSalary18mo / termYears)],
     ],
   };
 

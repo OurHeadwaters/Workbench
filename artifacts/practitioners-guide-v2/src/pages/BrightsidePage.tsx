@@ -224,13 +224,23 @@ export function BrightsidePage() {
       </div>
 
       <SectionCard
-        title="Surplus deployment — 50/50 default split"
+        title={`Surplus deployment — tithe-first, then ${bs.surplusDeployment.retainedPct}/${bs.surplusDeployment.ownerTakePct} split`}
+        subtitle="Brightside mirrors the agency-line tithe-first discipline: 10% off the top to Giving, then cost basis, then a 50/50 split on what's left."
         tag={bs.surplusDeployment.tag}
         accent={b.accent}
       >
         <table className="w-full text-sm">
           <tbody>
             <PLRow label="Revenue (target)" value={bs.surplusDeployment.revenue} />
+            <PLRow
+              label={`Tithe — Giving (${pct(bs.surplusDeployment.tithePct)} off the top, first claim)`}
+              value={-bs.surplusDeployment.tithe}
+            />
+            <PLRow
+              label="Revenue net of tithe"
+              value={bs.surplusDeployment.revenueAfterTithe}
+              tone="muted"
+            />
             <PLRow label="Cost basis" value={-bs.surplusDeployment.cost} />
             <PLRow label="Surplus" value={bs.surplusDeployment.surplus} bold tone="positive" />
             <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
@@ -247,7 +257,10 @@ export function BrightsidePage() {
           </tbody>
         </table>
         <p className="mt-3 text-xs text-muted-foreground">
-          Founder retains discretion to shift the split toward retained if Brightside requires capital reinvestment to scale (e.g. chain-deal win, dedicated team) — captured as "balance shifts to brightside agency work."
+          Founder retains discretion to shift the split toward retained if Brightside requires
+          capital reinvestment to scale (e.g. chain-deal win, dedicated team) — captured as
+          "balance shifts to brightside agency work." The tithe is taken from gross revenue, not
+          from the surplus, so it is not a discretionary line.
         </p>
       </SectionCard>
 

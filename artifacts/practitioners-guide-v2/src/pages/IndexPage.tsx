@@ -26,8 +26,8 @@ export function IndexPage() {
       href: "/contracts",
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
-      headlineLabel: "18-mo surplus deployed",
-      blurb: `${money(a.fee)}/mo agency engagement over ${a.termMonths} months against the 7-role Deer Lake team. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first), then capital recovery, then Brightside launch, then Reserve / Innovation.`,
+      headlineLabel: `${a.termMonths}-mo surplus deployed`,
+      blurb: `${money(a.fee)}/mo agency engagement over ${a.termMonths} months against the ${a.roster.length}-role Deer Lake team. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first)${a.signingBonus > 0 ? ", then signing bonus" : ""}, then capital recovery${a.brightsidePrelaunchSpend > 0 ? ", then Brightside launch" : ""}, then Reserve / Innovation.`,
       tag: a.totals18mo.tag,
     },
     {
@@ -35,9 +35,9 @@ export function IndexPage() {
       href: "/brightside",
       icon: Cpu,
       headline: money(scenario.brightside.surplusDeployment.surplus),
-      headlineLabel: "18-mo surplus (50/50 split)",
+      headlineLabel: "post-tithe surplus (50/50 split)",
       blurb:
-        "Recreation Therapy SaaS for LTC. Founder builds, founder sells. $28k pre-launch funded by agency surplus. Owner take is the founder's only profit-share line.",
+        "Recreation Therapy SaaS for LTC. Founder builds, founder sells. Tithe-first, then 50/50 split on what's left. Owner take is the founder's only profit-share line.",
       tag: scenario.brightside.surplusDeployment.tag,
     },
   ];
@@ -60,7 +60,13 @@ export function IndexPage() {
           A working source of truth, organized the way the founder thinks: Salts (Parr's Jars),
           Community Contracts (agency engagement), and Software / Hardware / Training (Brightside).
           Every figure carries a "confirmed" tag with the date the founder locked it. V1 (the slides
-          deck) stays untouched as a reference; V3 is the locked default operating framework.
+          deck) stays untouched as a reference; V5 (the Codetry-archetype baseline applied to Deer
+          Lake) is the locked default operating framework. V4 (Right-priced) and V3 (Lean team) are
+          preserved as historical baselines — see the{" "}
+          <Link href="/archetypes" className="underline hover:text-foreground" data-testid="link-archetypes-from-index">
+            Archetypes page
+          </Link>{" "}
+          for the V3 → V4 → V5 lineage and the Codetry vs Software/Sales split.
         </p>
         <div
           className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
@@ -131,7 +137,7 @@ export function IndexPage() {
             </div>
             <div>
               <p className="text-sm font-semibold">Personal cash transparency</p>
-              <p className="text-xs text-muted-foreground">All sources, 18 months, in one place</p>
+              <p className="text-xs text-muted-foreground">All sources, engagement window, in one place</p>
             </div>
           </div>
           <p
@@ -140,7 +146,7 @@ export function IndexPage() {
           >
             {money(scenario.personal.total18mo)}
             <span className="text-sm text-muted-foreground font-normal ml-2">
-              over 18 mo · ~{money(scenario.personal.perYear)}/yr
+              over {a.termMonths} mo · ~{money(scenario.personal.perYear)}/yr
             </span>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -165,9 +171,11 @@ export function IndexPage() {
             </div>
           </div>
           <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            V3 is the locked default — same numbers as the rest of the guide. To the right, V4 is
-            pre-loaded as the first alternative reality and you can add new ones, edit each row,
-            lock what you've decided, and read the Δ-vs-V3 cell live as you talk a turn out.
+            V3 is the workspace anchor (preserved to keep persisted scratch realities valid). To
+            the right, V4 (right-priced) is pre-loaded as the first alternative reality and you
+            can add new ones, edit each row, lock what you've decided, and read the Δ-vs-V3 cell
+            live as you talk a turn out. The published default is V5 (Codetry archetype) — see
+            the rest of the guide for V5's numbers.
           </p>
         </Link>
       </section>
@@ -195,7 +203,7 @@ export function IndexPage() {
             The model written down: the role roster, the fee → margin formula, the pre-baked
             renegotiation triggers, the year-end value-delivered audit, and the positioning
             narrative — alongside the things that swap per community (capital recovery, local
-            stable force, travel cadence, capex). V4 is the worked example.
+            stable force, travel cadence, capex). V5 (Deer Lake, Codetry archetype) is the worked example.
           </p>
         </Link>
       </section>

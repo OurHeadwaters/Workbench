@@ -13,6 +13,7 @@ import {
   GitCompareArrows,
   Repeat,
   ScrollText,
+  Layers,
 } from "lucide-react";
 
 interface NavItem {
@@ -38,6 +39,7 @@ export const NAV: NavItem[] = [
     accent: BUCKETS.brightside.accent,
   },
   { href: "/personal-cash", label: "Personal cash", icon: Wallet },
+  { href: "/archetypes", label: "Archetypes", icon: Layers, accent: "#1F5B3F" },
   { href: "/compare", label: "Operating framework", icon: GitCompareArrows },
   { href: "/replication", label: "Replication", icon: Repeat },
   { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },

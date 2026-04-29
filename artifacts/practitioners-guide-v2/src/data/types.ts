@@ -109,6 +109,38 @@ export interface AgencyScenario {
   titheMonthly: number;
   titheTotal: number;
 
+  /**
+   * Signing bonus — typed surplus-waterfall line that lands between Wages
+   * and Capital Recovery. Codetry-archetype projects (Deer Lake, future
+   * boots-on-the-ground engagements) carry a non-zero bonus to compensate
+   * the lead for the discontinuity-of-income risk of starting a community
+   * engagement; Software/Sales engagements run it at $0 because they are
+   * leveraged enough that profit-share carries the equivalent value.
+   *
+   * For V5 / Deer Lake the bonus is $40,000 paid in month 1, which exactly
+   * retires the founder's husband's family infusion (so the family piece is
+   * paid out as the bonus, not separately recovered through capital
+   * recovery).
+   */
+  signingBonus: number;
+  signingBonusTag: SourceTag;
+  /**
+   * Plain-language description of what the bonus is for and where it
+   * lands in the waterfall. Empty string when signingBonus = 0.
+   */
+  signingBonusDescription: string;
+
+  /**
+   * Team incentives line — Christmas bonus, perks of employment, etc.
+   * Surfaced as a named cost-basis row even when the dollar amount is
+   * still TBD (so the line is visible in the planning conversation rather
+   * than invisible). `amount` may be null when the founder hasn't filled
+   * the number in yet.
+   */
+  teamIncentivesName: string;
+  teamIncentivesAmount: number | null;
+  teamIncentivesTag: SourceTag;
+
   costBasisJunAug: number;
   costBasisSepOnward: number;
   /**
@@ -145,12 +177,17 @@ export interface AgencyScenario {
 
   totals18mo: {
     revenue: number;
-    /** 18-month tithe total — 10% of revenue, paid first. */
+    /** Engagement-window tithe total — 10% of revenue, paid first. */
     tithe: number;
     payroll: number;
     overheads: number;
     /** Surplus AFTER tithe + payroll + overheads. */
     surplusDeployed: number;
+    /**
+     * Signing bonus paid out of the engagement-window surplus (Codetry
+     * archetype only — Software/Sales engagements run this at $0).
+     */
+    signingBonus: number;
     capitalRecovery: number;
     brightsidePrelaunch: number;
     reserve: number;
@@ -227,6 +264,17 @@ export interface BrightsideScenario {
   };
   surplusDeployment: {
     revenue: number;
+    /**
+     * Tithe rate applied off the top of Brightside revenue, before the
+     * cost basis is subtracted. Mirrors the agency-line tithe-first
+     * discipline so Brightside doesn't have a different shape from the
+     * rest of the surplus waterfall.
+     */
+    tithePct: number;
+    /** Brightside tithe — tithePct% of revenue, paid first. */
+    tithe: number;
+    /** Revenue net of the tithe — what the cost basis is taken against. */
+    revenueAfterTithe: number;
     cost: number;
     surplus: number;
     retainedPct: number;
@@ -253,7 +301,7 @@ export interface PersonalCash {
   tag: SourceTag;
 }
 
-export type ScenarioId = "v3" | "v4";
+export type ScenarioId = "v3" | "v4" | "v5";
 
 export interface Scenario {
   id: ScenarioId;
