@@ -137,3 +137,13 @@ export function formatBucketAmount(year1Amount: number): string {
 export function formatBucketAmountY1(year1Amount: number): string {
   return `${formatBucketAmount(year1Amount)} Y1`;
 }
+
+/**
+ * Headwaters Step 0 paid-trial offer — single source of truth for the
+ * "$40,000 flat / eight weeks / solo practitioner / money back if we
+ * don't deliver" call-out quoted on the walkthrough deck, the store-
+ * plan deck, the printable one-pager, and §7 of the payback memo. See
+ * `trialOffer.ts` for the full export surface and the rationale for
+ * each canonical string.
+ */
+export * from "./trialOffer.js";

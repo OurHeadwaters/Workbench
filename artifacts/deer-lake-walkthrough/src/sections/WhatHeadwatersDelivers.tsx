@@ -1,4 +1,7 @@
 import { Reveal } from "@/components/Reveal";
+import {
+  TRIAL_ACCEPTANCE_CRITERIA,
+} from "@workspace/headwaters-pricing";
 
 /**
  * What Headwaters delivers — the seller-side surface the contractor
@@ -6,6 +9,14 @@ import { Reveal } from "@/components/Reveal";
  * with a Reveal apiece pointing at the shipped artifact backing each
  * one. Same shape as Ask.tsx (eyebrow + headline + 3 bullet cards +
  * Reveals).
+ *
+ * The "what's inside the eight-week trial · what isn't" framing block
+ * above the three line items names the four trial deliverables by
+ * their headline (the verbatim first half of each
+ * `TRIAL_ACCEPTANCE_CRITERIA` entry from `@workspace/headwaters-pricing`).
+ * Reading the headlines from the canonical array keeps this surface in
+ * lockstep with the formal Step 0 call-out on Ask.tsx, the slide on
+ * RisksAsk.tsx, the printable one-pager, and the §7 refund clause.
  *
  * Editorial lock: see Reveal.tsx.
  */
@@ -68,6 +79,52 @@ export default function WhatHeadwatersDelivers() {
           arriving fast. Each line below is a real deliverable, not a
           promise — open the proof beneath each one.
         </p>
+
+        <div
+          className="mt-6 rounded-xl border p-4"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-rule)",
+          }}
+        >
+          <div
+            className="mono text-[10px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            What's inside the eight-week trial · what isn't
+          </div>
+          <p
+            className="serif text-[15px] leading-[1.5]"
+            style={{ color: "var(--color-text)" }}
+          >
+            The Step 0 trial buys planning and preparation, not build.
+            <span className="font-semibold"> Inside the eight weeks
+            (solo, by the practitioner):</span> the four written
+            deliverables listed in the Step 0 call-out on the Ask
+            below — quoted verbatim from the same canonical source so
+            the slide deck, the printable one-pager, and §7 of the
+            payback memo all read identically.
+          </p>
+          <ol
+            className="serif text-[14.5px] leading-[1.45] mt-2 mb-3 list-decimal pl-5"
+            style={{ color: "var(--color-text)" }}
+          >
+            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
+              <li key={criterion}>{criterion}</li>
+            ))}
+          </ol>
+          <p
+            className="serif text-[15px] leading-[1.5]"
+            style={{ color: "var(--color-text)" }}
+          >
+            <span className="font-semibold">Deferred to Step 1 (the
+            full team, $90,000 a month):</span> the seven-person team,
+            the cold-chain pilot itself, the open-records software
+            build, the staff training, and the day-one CAPEX. The
+            three line items below describe the Step 1 deliverables —
+            what the trial gets the band ready to buy.
+          </p>
+        </div>
 
         <ol className="mt-7 space-y-3 list-none pl-0">
           {lines.map((line, i) => (

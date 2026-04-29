@@ -11,6 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "@workspace/headwaters-pricing": "workspace:*"
+  },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "catalog:",
     "@replit/vite-plugin-dev-banner": "catalog:",

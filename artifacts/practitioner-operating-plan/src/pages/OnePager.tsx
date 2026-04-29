@@ -2,6 +2,10 @@ import { useCallback, useState } from "react";
 
 import {
   REINVESTMENT_BUCKETS,
+  TRIAL_EYEBROW,
+  TRIAL_FRAMING_LINE,
+  TRIAL_HEADLINE,
+  TRIAL_OFFER_QUADRANTS,
   formatBucketAmount,
 } from "@workspace/headwaters-pricing";
 
@@ -168,6 +172,32 @@ export default function OnePager() {
           a yes if the practitioner's days with the kids stay sacred, the
           on-the-ground execution doesn't depend on one tired person, and
           the band gets infrastructure that outlasts the engagement.
+        </div>
+
+        <div
+          className="mb-[10pt] p-[8pt] rounded-[3pt]"
+          style={{ border: "1.5pt solid #b85a3e", background: "#f7ecdc" }}
+        >
+          <div
+            className="font-mono uppercase tracking-[0.22em] text-[8pt] text-[#b85a3e] font-semibold mb-[3pt]"
+          >
+            {TRIAL_EYEBROW} · the on-ramp to the engagement below
+          </div>
+          <div className="font-display text-[12pt] leading-[1.2] text-[#1f3d2e] font-semibold mb-[4pt]">
+            {TRIAL_HEADLINE}
+          </div>
+          <div className="grid grid-cols-2 gap-x-[10pt] gap-y-[2pt] text-[8.5pt] leading-[1.4] text-[#2a2520]">
+            {TRIAL_OFFER_QUADRANTS.map((quadrant) => (
+              <div key={quadrant.id}>
+                <span className="font-semibold">{quadrant.label}.</span>{" "}
+                {quadrant.body}
+              </div>
+            ))}
+          </div>
+          <div className="text-[7.5pt] text-[#6b7665] mt-[4pt] leading-[1.35] italic">
+            {TRIAL_FRAMING_LINE} Refund clause is written into the
+            payback memo as §7.
+          </div>
         </div>
 
         <div className="mb-[10pt]">

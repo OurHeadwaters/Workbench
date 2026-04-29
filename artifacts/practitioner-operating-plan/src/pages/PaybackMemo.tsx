@@ -1,3 +1,13 @@
+import {
+  TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_CONVERSION_TO_STEP_1,
+  TRIAL_FEE_LINE,
+  TRIAL_HEADLINE,
+  TRIAL_NO_TEAM_LINE,
+  TRIAL_REFUND_MECHANIC,
+  TRIAL_WHAT_SURVIVES_REFUND,
+} from "@workspace/headwaters-pricing";
+
 import { useCostValue } from "../lib/costReview";
 import { CostReviewButton } from "../components/CostReviewButton";
 
@@ -332,6 +342,77 @@ export default function PaybackMemo() {
             or a change of board composition at 807, does not alter the
             principal, the triggers, the included or excluded revenue lines,
             or the no-debt / no-cash-up-front posture of §5.
+          </p>
+        </Section>
+
+        <Section
+          number="7"
+          title="Deer Lake eight-week paid trial — refund clause"
+        >
+          <Verbatim>{TRIAL_HEADLINE}</Verbatim>
+          <p>
+            <span className="font-semibold">Scope of this section.</span>{" "}
+            This clause applies <span className="italic">only</span> to
+            the Step 0 eight-week paid trial offered to the Deer Lake
+            engagement contractor as the on-ramp to the $90,000-a-month
+            full-stack agency engagement (Scenario B). It does not apply
+            to the 807 receivable governed by §§1–6 above. The trial
+            and the 807 receivable are independent obligations and the
+            clauses do not cross-trigger.
+          </p>
+          <p>
+            <span className="font-semibold">Fee and payment schedule.</span>{" "}
+            {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE} No team payroll and no
+            day-one tech CAPEX are required from the contractor or the
+            band during the trial — the practitioner works solo. All
+            amounts are stated in Canadian dollars; the governing
+            jurisdiction provisions of §§1–6 apply to this clause as
+            well.
+          </p>
+          <p>
+            <span className="font-semibold">Acceptance criteria
+            (judged at the week-eight review meeting).</span> By the end
+            of week eight, the practitioner shall have delivered the
+            following four items, each in writing:
+          </p>
+          <ol className="list-decimal pl-[16pt] space-y-[3pt] print:space-y-[1pt]">
+            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => {
+              const [headline, ...rest] = criterion.split(" — ");
+              const detail = rest.join(" — ");
+              return (
+                <li key={criterion}>
+                  <span className="font-semibold">{headline}.</span>
+                  {detail ? <> {detail}</> : null}
+                </li>
+              );
+            })}
+          </ol>
+          <p>
+            <span className="font-semibold">Refund mechanic.</span>{" "}
+            {TRIAL_REFUND_MECHANIC}
+          </p>
+          <p>
+            <span className="font-semibold">What survives the
+            refund.</span> {TRIAL_WHAT_SURVIVES_REFUND}
+          </p>
+          <p>
+            <span className="font-semibold">Conversion to Step 1.</span>{" "}
+            {TRIAL_CONVERSION_TO_STEP_1}
+          </p>
+          <p>
+            <span className="font-semibold">Plain-language anchor.</span>{" "}
+            This clause is the contractual form of the trial offer
+            stated identically on the Deer Lake Walkthrough (§ Ask),
+            the Deer Lake Store Operational Plan (§ Risks &amp; Ask),
+            and the Practitioner Operating Plan one-pager. The
+            canonical strings (fee headline, fee line, acceptance
+            criteria, refund mechanic, what-survives, and
+            conversion-to-Step-1 paragraphs) live in
+            <span className="font-mono"> @workspace/headwaters-pricing</span>{" "}
+            and every surface above quotes them verbatim. If any of
+            those surfaces and this clause appear to disagree on the
+            fee, the duration, the acceptance criteria, the refund
+            window, or the invocation deadline, this clause governs.
           </p>
         </Section>
 

@@ -1,4 +1,13 @@
 import { Reveal } from "@/components/Reveal";
+import {
+  TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_EYEBROW,
+  TRIAL_FEE_LINE,
+  TRIAL_FRAMING_LINE,
+  TRIAL_HEADLINE,
+  TRIAL_NO_TEAM_LINE,
+  TRIAL_REFUND_MECHANIC,
+} from "@workspace/headwaters-pricing";
 
 /**
  * The ask. Five small steps compressed to three top-level bullets — a
@@ -7,6 +16,15 @@ import { Reveal } from "@/components/Reveal";
  * granular five-step list lives in the first Reveal, and the
  * money/locked-numbers reveal stays exactly as before so the
  * lockedNumbers test continues to pass.
+ *
+ * Step 0 (the eight-week paid trial call-out above the three steps) is
+ * rendered from the canonical strings exported by
+ * `@workspace/headwaters-pricing` — `TRIAL_HEADLINE`, `TRIAL_FEE_LINE`,
+ * `TRIAL_NO_TEAM_LINE`, `TRIAL_ACCEPTANCE_CRITERIA`,
+ * `TRIAL_REFUND_MECHANIC`, and `TRIAL_FRAMING_LINE` — so the offer
+ * reads identically here, on the Deer Lake Store deck's RisksAsk
+ * slide, on the printable one-pager, and in §7 of the payback memo.
+ * Edit those constants, not the prose below.
  *
  * Editorial lock: see Reveal.tsx.
  */
@@ -62,6 +80,63 @@ export default function Ask() {
           Not a yes or no on a $4M store today. A small first step that
           anyone can walk back from.
         </p>
+
+        <div
+          className="mt-7 rounded-xl border-2 p-5"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-accent-warm)",
+          }}
+        >
+          <div
+            className="mono text-[10px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            {TRIAL_EYEBROW}
+          </div>
+          <div
+            className="serif text-[20px] leading-[1.25] font-semibold"
+            style={{ color: "var(--color-primary)" }}
+          >
+            {TRIAL_HEADLINE}
+          </div>
+          <p
+            className="serif text-[15.5px] leading-[1.5] mt-3"
+            style={{ color: "var(--color-text)" }}
+          >
+            <span className="font-semibold">How much.</span>{" "}
+            {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE}
+          </p>
+          <p
+            className="serif text-[15.5px] leading-[1.5] mt-2"
+            style={{ color: "var(--color-text)" }}
+          >
+            <span className="font-semibold">
+              What you get in eight weeks (solo, by the practitioner):
+            </span>
+          </p>
+          <ol
+            className="serif text-[15px] leading-[1.5] mt-1 list-decimal pl-5"
+            style={{ color: "var(--color-text)" }}
+          >
+            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
+              <li key={criterion}>{criterion}</li>
+            ))}
+          </ol>
+          <p
+            className="serif text-[15.5px] leading-[1.5] mt-3"
+            style={{ color: "var(--color-text)" }}
+          >
+            <span className="font-semibold">Money back.</span>{" "}
+            {TRIAL_REFUND_MECHANIC}
+          </p>
+          <p
+            className="serif text-[14.5px] leading-[1.45] mt-3 italic"
+            style={{ color: "var(--color-muted)" }}
+          >
+            {TRIAL_FRAMING_LINE}
+          </p>
+        </div>
 
         <ol className="mt-7 space-y-3 list-none pl-0">
           {steps.map((step, i) => (

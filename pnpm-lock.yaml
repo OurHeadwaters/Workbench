@@ -473,6 +473,10 @@ importers:
         version: 3.25.76
 
   artifacts/deer-lake-walkthrough:
+    dependencies:
+      '@workspace/headwaters-pricing':
+        specifier: workspace:*
+        version: link:../../lib/headwaters-pricing
     devDependencies:
       '@replit/vite-plugin-cartographer':
         specifier: 'catalog:'

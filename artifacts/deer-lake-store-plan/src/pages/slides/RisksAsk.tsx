@@ -1,3 +1,27 @@
+import {
+  TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_FEE_LINE,
+  TRIAL_HEADLINE,
+  TRIAL_NO_TEAM_LINE,
+  TRIAL_REFUND_MECHANIC,
+} from "@workspace/headwaters-pricing";
+
+/**
+ * Risks & Ask slide. The right-hand "Naming the deal" panel includes a
+ * highlighted Step 0 card sitting above the existing "deal in plain
+ * words" block. The Step 0 card is rendered from the canonical strings
+ * exported by `@workspace/headwaters-pricing` (`TRIAL_HEADLINE`,
+ * `TRIAL_FEE_LINE`, `TRIAL_NO_TEAM_LINE`, `TRIAL_ACCEPTANCE_CRITERIA`,
+ * `TRIAL_REFUND_MECHANIC`) so the offer reads identically here, in
+ * Ask.tsx on the walkthrough deck, on the printable one-pager, and in
+ * §7 of the payback memo. Edit those constants, not the prose below.
+ *
+ * The "deal in plain words" panel below still hardcodes the locked
+ * Step 1 numbers ($90,000/month, $69,700/month, ~$181,000 bridge,
+ * Indigenous Services Canada 60-day cycle, $22,000 807 receivable
+ * precedent) — those are guarded by the deck's lockedNumbers test and
+ * are intentionally not part of the trial-offer source-of-truth.
+ */
 export default function RisksAsk() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg text-text">
@@ -87,12 +111,32 @@ export default function RisksAsk() {
               </div>
             </div>
 
+            <div className="mt-[1vh] rounded-[0.3vw] px-[0.9vw] py-[0.8vh]" style={{ background: "rgba(233,200,168,0.18)", border: "1px solid rgba(233,200,168,0.55)" }}>
+              <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] mb-[0.3vh]" style={{ color: "#e9c8a8" }}>
+                Step 0 · Try us for eight weeks · the on-ramp
+              </div>
+              <div className="font-body text-[0.82vw] leading-[1.35] opacity-95">
+                <span className="font-semibold">{TRIAL_HEADLINE}</span>{" "}
+                {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE}{" "}
+                <span className="font-semibold">
+                  Solo deliverables in eight weeks:
+                </span>
+                <ol className="list-decimal pl-[1.4vw] mt-[0.3vh] mb-[0.3vh] space-y-[0.15vh]">
+                  {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
+                    <li key={criterion}>{criterion}</li>
+                  ))}
+                </ol>
+                <span className="font-semibold">Refund:</span>{" "}
+                {TRIAL_REFUND_MECHANIC}
+              </div>
+            </div>
+
             <div className="mt-[1vh] rounded-[0.3vw] px-[0.9vw] py-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] mb-[0.3vh]" style={{ color: "#e9c8a8" }}>
                 The deal, in plain words
               </div>
               <div className="font-body text-[0.82vw] leading-[1.35] opacity-95">
-                Recommended: <span className="font-semibold">we bill $90,000 a month. Costs us $69,700 a month.</span> Replaces today's $35,000-a-month software-only contract. Now with the full team and accountability. We put 35% of what you pay back into the store. Outside reviewer every year. Day-one ask: <span className="font-semibold">about $181,000 in gap money</span> to cover team payroll and day-one equipment until the first band invoice clears. Indigenous Services Canada (the federal department that pays the band) takes about 60 days. Council picks the plan. Written payback promise on file from last time, $22,000.
+                Step 0 above is the on-ramp. <span className="font-semibold">Step 1 is the full engagement: we bill $90,000 a month. Costs us $69,700 a month.</span> Replaces today's $35,000-a-month software-only contract. Now with the full team and accountability. We put 35% of what you pay back into the store. Outside reviewer every year. Day-one ask: <span className="font-semibold">about $181,000 in gap money</span> to cover team payroll and day-one equipment until the first band invoice clears. Indigenous Services Canada (the federal department that pays the band) takes about 60 days. Council picks the plan. Written payback promise on file from last time, $22,000.
               </div>
             </div>
 
