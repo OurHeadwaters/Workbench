@@ -300,7 +300,7 @@ const partII: Part = {
   roman: "II",
   title: "Adjacent Disciplines",
   blurb:
-    "Four older disciplines codetry gets confused with — all honoured, all doing different work.",
+    "Four older disciplines codetry gets mixed up with — all respected, all doing different work.",
   chapters: [
     {
       id: "2-1",
@@ -628,7 +628,7 @@ const partIII: Part = {
   roman: "III",
   title: "The Constellation as Founding Examples",
   blurb:
-    "The worked examples that happened to be in front of the practitioner when codetry got named.",
+    "The real examples the practitioner had on the table when codetry got its name.",
   chapters: [
     {
       id: "3-0",
@@ -681,7 +681,7 @@ const partIV: Part = {
   roman: "IV",
   title: "The Practice",
   blurb:
-    "A handful of moves the codetry practitioner makes — in the field, with people, in the working language of the room.",
+    "A few moves the codetry practitioner makes — in the field, with people, in the working language of the room.",
   chapters: [
     {
       id: "4-1",
@@ -1017,7 +1017,7 @@ const teacherList: Block[] = constellation.teachers.map((t) => ({
 const partV: Part = {
   roman: "V",
   title: "Grounding",
-  blurb: "The four teachers, the axiom, the lineage, the hempcrete chapter, and the colophon.",
+  blurb: "The four teachers behind the discipline, the one rule it runs on, where it comes from, what kind of thing it is, and a note on how this book was made.",
   chapters: [
     {
       id: "5-1",
@@ -1249,7 +1249,7 @@ const partVI: Part = {
   roman: "VI",
   title: "Open Questions",
   blurb:
-    "A handbook needs a place where the questions live before they have answers. The chapters in this part are written to be returned to. Each one names a thing the discipline is being asked that the discipline has not yet finished thinking through.",
+    "A handbook needs a place where the questions live before they have answers. The chapters in this part are written to be read again later. Each one names a thing the discipline is being asked that the discipline has not yet finished thinking through.",
   chapters: [
     {
       id: "6-1",
@@ -1476,7 +1476,7 @@ const partVII: Part = {
   roman: "VII",
   title: "The Codetry Test Ledger",
   blurb:
-    "Eleven worked codetry tests, in the order they happened. Each one is a small piece of the practice — a question about a name, what was on the screen before, the intervention tried, the rule discovered, the falsifier the rule lives or dies by, and the verdict. The ledger is here so the discipline can be checked against its own examples rather than only against its rules.",
+    "Eleven real codetry tests, in the order they happened. Each one is a small piece of the practice — a question about a name, what was on the screen before, what was tried, the rule that came out of it, the test that rule lives or dies by, and the verdict. The ledger is here so the discipline can be checked against its own examples, not just against its rules.",
   chapters: [
     {
       id: "7-1",

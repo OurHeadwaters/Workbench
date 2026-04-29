@@ -149,7 +149,7 @@ export default function PartLanding() {
         >
           {`${part.chapters.length} ${
             part.chapters.length === 1 ? "QUESTION" : "QUESTIONS"
-          } KEPT OPEN`}
+          } STILL OPEN`}
         </Text>
 
         {part.chapters.map((ch, i) => {
@@ -253,8 +253,8 @@ export default function PartLanding() {
             { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          Returned to as the answer changes. New open questions appear here when
-          the discipline meets a thing it cannot yet answer.
+          Come back here as the answer changes. New open questions show up when
+          the discipline runs into something it cannot yet answer.
         </Text>
       </ScrollView>
     </View>

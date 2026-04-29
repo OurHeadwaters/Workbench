@@ -112,7 +112,7 @@ export default function Contents() {
                       { color: c.mutedForeground, fontFamily: MONO },
                     ]}
                   >
-                    {`Open Part ${p.roman} as a set →`}
+                    {`Open all of Part ${p.roman} together →`}
                   </Text>
                 ) : null}
               </View>
