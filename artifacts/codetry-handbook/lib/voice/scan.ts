@@ -70,11 +70,12 @@ export const BANNED_TERMS = [
   "cross-zone",
 ] as const;
 
-// Hard cap on a single sentence. Current prose maxes out around 103
-// words (a handful of explicit (1)/(2)/(3) enumerated structures), so
-// 110 leaves a few words of headroom while still catching obviously
-// over-long sentences that would drag the reading level back up.
-export const MAX_SENTENCE_WORDS = 110;
+// Hard cap on a single sentence. Task #508 rewrote the longest
+// sentences in handbook.ts (the (1)/(2)/(3) enumerated structures
+// were converted to ordered/list blocks; the rest were broken into
+// shorter sentences). Current prose maxes out around 49 words, so
+// 50 is a true grade-9 ceiling with one word of headroom.
+export const MAX_SENTENCE_WORDS = 50;
 
 export type BodyCopyString = {
   file: string;

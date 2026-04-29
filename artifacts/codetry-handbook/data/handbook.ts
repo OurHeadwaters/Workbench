@@ -825,7 +825,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §7.1 (Codetry Test 001) is this chapter at work on a single button: two sightings on the Payday CTA, one of *bank* trying to push out *channel*, the other of a stale *Surplus Pool* parenthetical drifting in a daily drop, both caught by reading the surfaces cold and naming the slip as a slip. The two sightings are the cleanest worked example of *catch the slip early and name it as a slip* the handbook has on hand.",
+            "From the ledger — §7.1 (Codetry Test 001) is this chapter at work on a single button. The Payday CTA caught two sightings: one of *bank* trying to push out *channel*, the other of a stale *Surplus Pool* parenthetical drifting in a daily drop. Both were caught by reading the surfaces cold and naming the slip as a slip. The two sightings are the cleanest worked example of *catch the slip early and name it as a slip* the handbook has on hand.",
         },
       ],
     },
@@ -894,7 +894,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §7.3 (Codetry Test 003) and §7.5 (Codetry Test 005) both run this distinction at the surface level. §7.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the Zone 1 water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §7.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, written down here) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Zone 1 watershed dialect.",
+            "From the ledger — §7.3 (Codetry Test 003) and §7.5 (Codetry Test 005) both run this distinction at the surface level. §7.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip — and not because bamboo is a bad metaphor. The chip's *medium* — a wallet/swap surface inside the Zone 1 water register — already belongs to a different metaphor. The rule *one register per screen* protects the medium from carrying two competing metaphors at once. §7.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, written down here) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Zone 1 watershed dialect.",
         },
       ],
     },
@@ -1144,7 +1144,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The lineage above can be tested. If a craft already in the older books can be shown to do all four moves above — the workable rename test at the noun level, the use outside the tech office, drift checking as ongoing practice, and checking by reading the surface name — then codetry is not a new craft. It is a renaming of that one. The practitioner who finds the earlier craft that does all four is owed the credit. This chapter owes them the rewrite. Until then, the four moves taken together is the smallest claim this handbook is willing to make on its own behalf.",
+            "The lineage above can be tested. If a craft already in the older books can be shown to do all four moves above, then codetry is not a new craft. The four moves are the workable rename test at the noun level, the use outside the tech office, drift checking as ongoing practice, and checking by reading the surface name. It is a renaming of that one. The practitioner who finds the earlier craft that does all four is owed the credit. This chapter owes them the rewrite. Until then, the four moves taken together is the smallest claim this handbook is willing to make on its own behalf.",
         },
       ],
     },
@@ -1334,7 +1334,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The chapter has so far used *piece* in the narrow sense the cutter gives it: a sub-word fragment, a `[\"Salt\", \"box\"]` cluster, a unit the model reads where a word used to be. The word *token* has a second meaning the craft cannot pretend not to know about. *Token* in the on-chain sense — the unit a community's nouns are turned into when its assets, memberships, votes, or shares of a co-op are placed on a blockchain — is the same word doing matching work in another field. The same hazard rhymes across both. When a community's nouns are turned into chain tokens without a name-layer craft, the resulting governance pieces are readable only to the people fluent in the layer beneath: the wallet UIs, the contract addresses, the function signatures, the gas-priced enactments of decisions whose underlying nouns the community never named for itself. That is rule by the few who can read the layer the rest of the community can't. Codetry's bet on the noun is, by extension, a bet against that capture of community-owned systems — the §1.0 hedge against language drift, lifted one floor up to where the drifted words carry formal authority. Without *name* as widely-used architecture in the blockchain world, the chain token does to a community's *governance* what the model's piece does to its prose: shreds the weight-bearing noun into fragments only the layer beneath can read, then reassembles it into a piece the layer beneath can act on. The craft has no ready answer to that move yet, either.",
+            "The chapter has so far used *piece* in the narrow sense the cutter gives it: a sub-word fragment, a `[\"Salt\", \"box\"]` cluster, a unit the model reads where a word used to be. The word *token* has a second meaning the craft cannot pretend not to know about. *Token* in the on-chain sense — the unit a community's nouns are turned into when its assets, memberships, votes, or shares of a co-op are placed on a blockchain — is the same word doing matching work in another field. The same hazard rhymes across both. When a community's nouns are turned into chain tokens without a name-layer craft, the resulting governance pieces are readable only to the people fluent in the layer beneath. That layer is the wallet UIs, the contract addresses, the function signatures, the gas-priced enactments of decisions whose underlying nouns the community never named for itself. That is rule by the few who can read the layer the rest of the community can't. Codetry's bet on the noun is, by extension, a bet against that capture of community-owned systems — the §1.0 hedge against language drift, lifted one floor up to where the drifted words carry formal authority. Without *name* as widely-used architecture in the blockchain world, the chain token does to a community's *governance* what the model's piece does to its prose: shreds the weight-bearing noun into fragments only the layer beneath can read, then reassembles it into a piece the layer beneath can act on. The craft has no ready answer to that move yet, either.",
         },
         {
           kind: "callout",
@@ -1496,7 +1496,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Three actions, one metaphor, no hierarchy: *Let's make it rain* (the hero), *Convert XRP → RLUSD* (the wallet/swap chip beside it at the same volume as the CTA), and a *Full rain / 90% / 75% / 50% / Custom* percentage chip cluster that scaled how much of the plan to pour. A user asked to read the screen cold froze. Which CTA do I tap, and what does *full rain* mean if *let's make it rain* is also a button?",
+            "Three actions, one metaphor, no hierarchy. *Let's make it rain* was the hero. *Convert XRP → RLUSD* sat beside it as the wallet/swap chip, at the same volume as the CTA. A *Full rain / 90% / 75% / 50% / Custom* percentage chip cluster scaled how much of the plan to pour. A user asked to read the screen cold froze. Which CTA do I tap, and what does *full rain* mean if *let's make it rain* is also a button?",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -1691,7 +1691,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Falsified if a Zone 1 surface in a calm building state still presents loud active controls by default (failure mode A: pre-loud), or if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default (failure mode B: hidden, not retreated). The rule sits between those two failure modes — *retreat, not removal*.",
+            "Falsified if a Zone 1 surface in a calm building state still presents loud active controls by default — call this failure mode A, *pre-loud*. Falsified too if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default — failure mode B, *hidden, not retreated*. The rule sits between those two failure modes — *retreat, not removal*.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -1768,7 +1768,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If a flow ribbon at the top of the Payday tab kept three CTAs from fighting for one word, then a flow ribbon at the top of the Earn tab will keep four foreign DeFi registers from filling the silence around the topology of how a Drip Harvester actually moves money.",
+            "A flow ribbon at the top of the Payday tab kept three CTAs from fighting for one word. The same move at the top of the Earn tab will keep four foreign DeFi registers from filling the silence around the topology of how a Drip Harvester actually moves money.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -1822,7 +1822,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "*Defect 1 — no impermanent-loss disclosure on the card.* The card promised a steady drip and never told the household what happens if RLUSD and XRP drift apart in price. The honest *you might end up with less RLUSD than you parked* lived in a Learn accordion three taps away. *Defect 2 — multi-card density.* Six visual blocks fought for the same square inch of attention with no hierarchy and no answer to *what should the eye look at first when this card loads?* *Defect 3 — no toll-drop cadence.* *Drip rate $0.27 / month* read as a constant — a number stamped on the card the way an interest rate is stamped on a bond — but the Park toll moves with trading volume, and a household coming back to a $0.13 drip rate in two weeks had no reference point for telling normal weather from something wrong.",
+            "*Defect 1 — no impermanent-loss disclosure on the card.* The card promised a steady drip and never told the household what happens if RLUSD and XRP drift apart in price. The honest *you might end up with less RLUSD than you parked* lived in a Learn accordion three taps away. *Defect 2 — multi-card density.* Six visual blocks fought for the same square inch of attention with no hierarchy and no answer to *what should the eye look at first when this card loads?* *Defect 3 — no toll-drop cadence.* *Drip rate $0.27 / month* read as a constant — a number stamped on the card the way an interest rate is stamped on a bond. But the Park toll moves with trading volume. A household coming back to a $0.13 drip rate in two weeks had no reference point for telling normal weather from something wrong.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -1840,7 +1840,20 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If the graduation holds, a cold reader on the LP-position card should (1) read the hero block and know within one sentence what they parked, what they have earned, and how far they are from the next drip; (2) see the IL warning without scrolling past it or tapping into Learn; and (3) describe the drip rate as *about $0.27 a month right now, but it moves with the toll* rather than as a constant. Falsified if a cold reader still says *I see four numbers, I don't know which one matters* or quotes the rate with no qualifier.",
+            "If the graduation holds, a cold reader on the LP-position card should be able to do three things:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "Read the hero block and know within one sentence what they parked, what they have earned, and how far they are from the next drip.",
+            "See the IL warning without scrolling past it or tapping into Learn.",
+            "Describe the drip rate as *about $0.27 a month right now, but it moves with the toll* rather than as a constant.",
+          ],
+        },
+        {
+          kind: "para",
+          text:
+            "Falsified if a cold reader still says *I see four numbers, I don't know which one matters* or quotes the rate with no qualifier.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -1870,7 +1883,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card — and drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station. §7.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
+            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card. But drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station. §7.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -1898,7 +1911,20 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If the graduation holds, a cold reader landing on the Earn tab should be able to (1) point at four labelled circles and say *this is where my money goes through*, (2) point at the highlighted circles and say *this is where it currently is*, and (3) read the sentence under the ribbon and say what happens next — without scrolling past the ribbon. Falsified if a cold reader still asks *where is the Drip Harvester?* after looking at the ribbon, or if the *empty* state of the read-out is read as *broken* rather than as *you are at the start of the chain*.",
+            "If the graduation holds, a cold reader landing on the Earn tab should be able to do three things, without scrolling past the ribbon:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "Point at four labelled circles and say *this is where my money goes through*.",
+            "Point at the highlighted circles and say *this is where it currently is*.",
+            "Read the sentence under the ribbon and say what happens next.",
+          ],
+        },
+        {
+          kind: "para",
+          text:
+            "Falsified if a cold reader still asks *where is the Drip Harvester?* after looking at the ribbon, or if the *empty* state of the read-out is read as *broken* rather than as *you are at the start of the chain*.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -1946,7 +1972,14 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "A water-register wording earns the chip if both hold: (1) *mechanical clarity preserved* — a cold reader can still tell from the chip alone what the chip does, specifically that XRP gets exchanged for stablecoins added to the wallet (the same falsifier as §7.3); and (2) *demotion preserved* — at the actual production typography (10px white/25 underlined text-link), the new wording does not feel louder than the control. It does not pull the eye away from the *Channel the rainfall* CTA above it.",
+            "A water-register wording earns the chip if both of the following hold:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "*Mechanical clarity preserved.* A cold reader can still tell from the chip alone what the chip does, specifically that XRP gets exchanged for stablecoins added to the wallet (the same falsifier as §7.3).",
+            "*Demotion preserved.* At the actual production typography (10px white/25 underlined text-link), the new wording does not feel louder than the control. It does not pull the eye away from the *Channel the rainfall* CTA above it.",
+          ],
         },
         { kind: "subhead", text: "Status." },
         {
@@ -2017,7 +2050,7 @@ const partVII: Part = {
         {
           kind: "callout",
           text:
-            "Numbering note. This is the second entry filed as *Test 010* in the ledger, and it has been left at its original number rather than renumbered to 011 — both because the duplicate is itself part of the practice record (two tests on the same wallet/XRP-swap stack landed on the same date and were filed as 010 in error, and the ledger keeps that), and because the first 010 (§7.10) and this entry (§7.11) are the loud-twin and the deeper-room moves of one closing-out arc on the same surface stack and read better as a pair than as 010 / 011 across a renumbering boundary. Future ledger entries are expected to start at 011, leaving §7.10 / §7.11 as the one anomaly the numbering keeps.",
+            "Numbering note. This is the second entry filed as *Test 010* in the ledger. It has been left at its original number rather than renumbered to 011, for two reasons. First, the duplicate is itself part of the practice record — two tests on the same wallet/XRP-swap stack landed on the same date and were filed as 010 in error, and the ledger keeps that. Second, the first 010 (§7.10) and this entry (§7.11) are the loud-twin and the deeper-room moves of one closing-out arc on the same surface stack. They read better as a pair than as 010 / 011 across a renumbering boundary. Future ledger entries are expected to start at 011, leaving §7.10 / §7.11 as the one anomaly the numbering keeps.",
         },
         { kind: "subhead", text: "The question." },
         {
@@ -2052,7 +2085,19 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "A water-register sheet title earns the surface if both hold: (1) *transactional clarity preserved* — a cold reader, having tapped the chip on the Payday tab, can still tell from the sheet header alone that this is the XRP-to-RLUSD swap they just opened, without having to scroll to the line-items to confirm; and (2) *honest at sign-time* — the title sits inside the locked dialect without making the moment of signing feel evasive about which assets are moving. Protocol nouns are still present on the surface — in the line-items below the title and on the CTA — so dialect at the title level is *demotion of mechanics*, not *withholding* of them.",
+            "A water-register sheet title earns the surface if both of the following hold:",
+        },
+        {
+          kind: "ordered",
+          items: [
+            "*Transactional clarity preserved.* A cold reader, having tapped the chip on the Payday tab, can still tell from the sheet header alone that this is the XRP-to-RLUSD swap they just opened, without having to scroll to the line-items to confirm.",
+            "*Honest at sign-time.* The title sits inside the locked dialect without making the moment of signing feel evasive about which assets are moving.",
+          ],
+        },
+        {
+          kind: "para",
+          text:
+            "Protocol nouns are still present on the surface — in the line-items below the title and on the CTA — so dialect at the title level is *demotion of mechanics*, not *withholding* of them.",
         },
         { kind: "subhead", text: "Status." },
         {
