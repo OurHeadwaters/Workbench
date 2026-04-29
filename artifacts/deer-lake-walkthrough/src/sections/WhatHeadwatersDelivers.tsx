@@ -105,37 +105,16 @@ export default function WhatHeadwatersDelivers() {
           ))}
         </ol>
 
+        {/*
+          Line 1's old Reveal lived here ("Proof for line 1 — the operating
+          system already exists"). It was removed in task #526: the
+          bookkeeping proof now has its own dedicated section
+          (BookkeepingProof.tsx) immediately below this one, with three
+          live in-page embeds of the actual Headwaters Books screens.
+          Lines 2 and 3 keep their Reveals because their proof still
+          lives outside this artifact.
+        */}
         <div className="mt-8 space-y-3">
-          <Reveal label="Proof for line 1 — the operating system already exists">
-            <p>
-              The bookkeeping front-end is already built and running as the
-              Headwaters Books artifact. The cashier till, the daily-close
-              slip, and the open-records screens follow the same patterns and
-              the same palette.
-            </p>
-            <p>
-              The "what stays with Deer Lake" section below names the three
-              public surfaces this operating system ships: the public price
-              page, the household price lookup, and the written guide for
-              running the store.
-            </p>
-            <p
-              className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
-              style={{ color: "var(--color-muted)" }}
-            >
-              Open in another tab ·{" "}
-              <a
-                href="/headwaters-books/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:no-underline"
-                style={{ color: "var(--color-accent-warm)" }}
-              >
-                /headwaters-books
-              </a>
-            </p>
-          </Reveal>
-
           <Reveal label="Proof for line 2 — the cold-chain plan is already drawn">
             <p>
               The route is already planned: Thunder Bay → Sioux Lookout →

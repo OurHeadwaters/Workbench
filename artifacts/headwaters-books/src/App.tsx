@@ -21,6 +21,9 @@ import Submit from "@/pages/Submit";
 import Handlers from "@/pages/Handlers";
 import Users from "@/pages/Users";
 import Layout from "@/components/Layout";
+import EmbedOpenRecords from "@/embed/OpenRecords";
+import EmbedDailyClose from "@/embed/DailyClose";
+import EmbedMonthEnd from "@/embed/MonthEnd";
 
 const queryClient = new QueryClient();
 
@@ -113,6 +116,18 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/standby" component={Standby} />
       <Route path="/gate" component={Gate} />
+      {/*
+        Public, chrome-free embed routes consumed by the Deer Lake
+        walkthrough's BookkeepingProof section as iframes. They render
+        without Clerk auth so a councillor reading the walkthrough sees
+        the books without hitting a sign-in wall, and they pull from a
+        shared "Sample · Deer Lake demo" dataset so the demo numbers
+        can never be confused for the band's real numbers. See task
+        #526 for the rationale.
+      */}
+      <Route path="/embed/open-records" component={EmbedOpenRecords} />
+      <Route path="/embed/daily-close" component={EmbedDailyClose} />
+      <Route path="/embed/month-end" component={EmbedMonthEnd} />
       <Route path="/sign-in/*?">
         <div className="min-h-screen flex items-center justify-center bg-background">
           <SignIn routing="path" path={`${basePath}/sign-in`} />

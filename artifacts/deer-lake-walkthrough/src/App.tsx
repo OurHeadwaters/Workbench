@@ -6,6 +6,7 @@ import Prologue from "@/sections/Prologue";
 import WhatItIs from "@/sections/WhatItIs";
 import WhatHeadwatersDelivers from "@/sections/WhatHeadwatersDelivers";
 import CockpitTeaser from "@/sections/CockpitTeaser";
+import BookkeepingProof from "@/sections/BookkeepingProof";
 import WhyThisTeam from "@/sections/WhyThisTeam";
 import WhyCurrentFails from "@/sections/WhyCurrentFails";
 import ColdChain from "@/sections/ColdChain";
@@ -60,6 +61,7 @@ export default function App() {
         <WhatItIs />
         <WhatHeadwatersDelivers />
         <CockpitTeaser />
+        <BookkeepingProof />
         <WhyThisTeam />
         <WhyCurrentFails />
         <ColdChain />
