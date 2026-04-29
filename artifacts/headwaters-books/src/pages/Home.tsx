@@ -55,6 +55,16 @@ export default function Home() {
       </main>
 
       <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
+        {/*
+          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473).
+          The footer links the only constellation-wide-primitive surface
+          this app currently ships: the Standby pilot dashboard at
+          /standby. The Gate is registered as a sibling primitive in the
+          constellation manifest but has no surface in this app yet. If
+          one is added (e.g. /gate), add a sibling link here — do NOT
+          rename this link to a generic "non-zone primitives" link that
+          inherits Standby's framing.
+        */}
         <div>
           <Link href="/standby">
             <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">

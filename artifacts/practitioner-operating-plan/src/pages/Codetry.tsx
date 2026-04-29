@@ -3,6 +3,24 @@ type ConstellationEntry = {
   role: string;
 };
 
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473)
+// =========================================================
+// This `constellation` array is a *curated narrative list* of worked
+// examples for the Codetry design-philosophy page. It is NOT a
+// templated render of `public/constellation.json`'s
+// `constellationWidePrimitives` — every entry's prose is hand-written
+// for this page's audience. Each non-zone primitive (currently The
+// Standby; soon to include The Gate) gets its own narrative entry
+// here; copy is not shared between primitives. The Standby's framing
+// below ("the constellation's first non-zone primitive", "the
+// exemplar of the both-states principle") is Standby-specific and
+// will not generalize to The Gate (which carries the both-sides
+// principle and is the second non-zone primitive). When adding a Gate
+// entry, write its own role copy from scratch — do not template over
+// the manifest and inherit Standby's prose. The "The both-states
+// principle" section below is the same shape: it intentionally
+// narrates Standby alone; the both-sides / Gate principle gets its
+// own subhead.
 const constellation: ConstellationEntry[] = [
   {
     name: "Saltbox Zone 0 (decentralized)",

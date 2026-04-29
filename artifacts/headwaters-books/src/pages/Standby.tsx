@@ -86,6 +86,27 @@ function formatStamp(iso: string): string {
   return `${date}, ${time}`;
 }
 
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473)
+// =========================================================
+// This page is *intentionally* Standby-only. Every UI affordance below
+// is built around The Standby's specific vocabulary: the four-rung
+// ladder (advisory/standby/active/standdown), the call composer, the
+// watch tab, the drawdown ledger, the debrief shape with its
+// `standbyStockReplenished` checkbox, the Common Pantry / Watch
+// sub-shelves. None of that vocabulary survives unchanged on The Gate
+// (which has draft/under-review/cleared/refused as its rungs and
+// Mappings/Substitutions/Categories as its sub-shelves).
+//
+// The constellation manifest now registers two primitives under
+// `constellationWidePrimitives` — `the-standby` and `the-gate`. This
+// page picks `the-standby` by id explicitly. DO NOT genericize this
+// template into a primitive-loop renderer that takes the id from the
+// route or from props — that is the bug class the codetry-handbook
+// chapter generator was just fixed for. If a sibling Gate dashboard is
+// wanted, build it as a separate file (e.g. `pages/Gate.tsx`) on a
+// separate route (`/gate`) with its own UI that respects the Gate's
+// vocabulary, ladder, and sub-shelves. Each non-zone primitive opts in
+// per surface; nothing is shared by default.
 export default function Standby() {
   const standbyPrimitive = useMemo(
     () =>

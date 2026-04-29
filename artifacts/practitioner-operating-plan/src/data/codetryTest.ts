@@ -111,6 +111,26 @@ export type CodetryTestGroup = {
   entries: CodetryTestEntry[];
 };
 
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473)
+// =========================================================
+// The "Constellation-wide primitives" group below is a *curated audit*
+// over the canonical names registered in the constellation manifest's
+// `constellationWidePrimitives`. It is not auto-generated from the
+// manifest, and its prose is per-primitive: each entry's
+// `whatWouldChange`, `bothStatesNote`, etc. are written for that one
+// primitive specifically. The Standby's "first such primitive"
+// framing in the group `framing` field, and its `bothStatesNote`
+// language about being "the exemplar of the both-states principle",
+// are Standby-only and would not generalize to The Gate. When adding a
+// Gate entry to this group, the group `framing` field will need a
+// rewrite that names both primitives without inheriting Standby's
+// "first" framing, and The Gate gets its own entry with its own
+// `whatWouldChange` (about the both-sides / massity-vs-bright-side
+// duality, not slow-vs-fast) and its own audit narrative — never a
+// templated copy of The Standby's. See
+// artifacts/codetry-handbook/data/foundingExamples.ts for the
+// per-primitive content-layer pattern that the chapter generator now
+// uses to keep Standby's prose from leaking onto The Gate.
 export const codetryTest: CodetryTestGroup[] = [
   {
     artifact: "Constellation-wide primitives",
