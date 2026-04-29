@@ -19,7 +19,7 @@ export default function WhyCurrentFails() {
     {
       lead: "Only 58¢ on the dollar",
       body:
-        "Of every federal grocery help dollar, just 58¢ reaches the shelf. The store keeps the other 42¢.",
+        "Of every federal grocery help dollar, just 58¢ reaches the shelf. The store keeps the rest.",
     },
     {
       lead: "$1.6 to $2.0 million leaves",

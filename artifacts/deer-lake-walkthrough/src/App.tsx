@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell";
-import { isPlannerPath } from "@/lib/paths";
+import { isCockpitPath, isPlannerPath } from "@/lib/paths";
 import { useRoute } from "@/lib/route";
 
 import Prologue from "@/sections/Prologue";
@@ -15,6 +15,7 @@ import Ask from "@/sections/Ask";
 import Recap from "@/sections/Recap";
 
 import PlannerApp from "@/planner/PlannerApp";
+import CockpitApp from "@/cockpit/CockpitApp";
 
 /**
  * The walkthrough is a single continuous scroll, framed by the v2-style
@@ -39,6 +40,10 @@ export default function App() {
 
   if (isPlannerPath(pathname)) {
     return <PlannerApp />;
+  }
+
+  if (isCockpitPath(pathname)) {
+    return <CockpitApp />;
   }
 
   return (

@@ -1,4 +1,6 @@
 import { Reveal } from "@/components/Reveal";
+import { ROUTES } from "@/lib/paths";
+import { useRoute } from "@/lib/route";
 
 /**
  * The first morning. Three top-level bullets — works offline, end-of-day
@@ -8,6 +10,7 @@ import { Reveal } from "@/components/Reveal";
  * Editorial lock: see Reveal.tsx.
  */
 export default function FirstMorning() {
+  const { navigate } = useRoute();
   const bullets = [
     {
       tag: "Works offline",
@@ -109,6 +112,47 @@ export default function FirstMorning() {
               sent once a month. Spoiled food is logged, not absorbed.
             </p>
           </Reveal>
+        </div>
+
+        <div
+          className="mt-8 rounded-xl p-5 border-2"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-accent-warm)",
+          }}
+        >
+          <div
+            className="mono text-[10.5px] uppercase tracking-[0.20em] mb-2"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            Click through it yourself
+          </div>
+          <div
+            className="serif text-[18px] leading-[1.35] font-medium mb-3"
+            style={{ color: "var(--color-primary)" }}
+          >
+            See the operator-couple cockpit on top of your 40&times;80 box.
+          </div>
+          <p
+            className="serif text-[14.5px] leading-[1.5] mb-4"
+            style={{ color: "var(--color-text)" }}
+          >
+            Four screens. The floor plan. The morning home screen. A till
+            you can actually press the buttons on. And the line between
+            what the operators can do and what stays locked to the band.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate(ROUTES.cockpit)}
+            data-testid="firstmorning-open-cockpit"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md font-semibold text-[14px] transition-transform hover:-translate-y-[1px]"
+            style={{
+              background: "var(--color-primary)",
+              color: "var(--color-bg)",
+            }}
+          >
+            Open the cockpit mockup →
+          </button>
         </div>
       </div>
     </section>
