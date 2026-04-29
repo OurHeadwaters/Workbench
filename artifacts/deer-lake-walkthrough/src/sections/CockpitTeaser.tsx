@@ -4,9 +4,11 @@ import { useRoute } from "@/lib/route";
 import { COCKPIT_PROMISES } from "@/cockpit/copy";
 
 /**
- * Cockpit teaser. Sits in the main scroll immediately after
- * WhatHeadwatersDelivers (see App.tsx) so a contractor reopening the
- * walkthrough spots the new cockpit work without hunting.
+ * Cockpit teaser. Sits high in the main scroll, immediately after
+ * WhatItIs and before BookkeepingProof (see App.tsx), so the contractor
+ * or a councillor sees the operator-couple cockpit before any wall of
+ * pitch text. The visual surfaces (this teaser + BookkeepingProof) are
+ * the first thing the reader hits after the framing intro.
  *
  * One eyebrow, one headline, one short lede, three audience promises
  * (single-line condensations from `cockpit/copy.ts` — same source the

@@ -6,13 +6,12 @@ import { join } from "node:path";
 import BookkeepingProof from "../sections/BookkeepingProof";
 import WhatHeadwatersDelivers from "../sections/WhatHeadwatersDelivers";
 
-// Locks the in-page bookkeeping proof shipped in task #526.
-//
-// The contract: scrolling the walkthrough between WhatHeadwatersDelivers
-// and WhyThisTeam, the reader hits a dedicated bookkeeping section with
-// three live previews loaded from the Headwaters Books embed routes.
-// The old "Proof for line 1" Reveal in WhatHeadwatersDelivers is gone
-// because its job is now done by this section.
+// Locks the in-page bookkeeping proof shipped in task #526, with the
+// visual-first reordering: BookkeepingProof now sits high up — after
+// WhatItIs and before WhatHeadwatersDelivers — so the contractor or
+// councillor sees the actual books screens before any wall of pitch
+// text. The old "Proof for line 1" Reveal in WhatHeadwatersDelivers is
+// gone because its job is now done by this section.
 
 const APP_TSX_PATH = join(import.meta.dirname, "..", "App.tsx");
 
@@ -49,24 +48,25 @@ describe("BookkeepingProof — three embedded previews", () => {
   });
 });
 
-describe("App.tsx — bookkeeping section sits between Delivers and WhyThisTeam", () => {
+describe("App.tsx — bookkeeping section sits high, after WhatItIs and before Delivers", () => {
   const source = readFileSync(APP_TSX_PATH, "utf8");
 
   it("imports BookkeepingProof", () => {
     expect(source).toMatch(/import\s+BookkeepingProof\s+from\s+"@\/sections\/BookkeepingProof"/);
   });
 
-  it("renders BookkeepingProof after WhatHeadwatersDelivers and before WhyThisTeam", () => {
-    // Other sections (e.g. CockpitTeaser) may sit between Delivers and
-    // BookkeepingProof. The bookkeeping section's job is to land before
-    // WhyThisTeam so the bookkeeping story is felt before the
-    // credibility wall.
-    const deliversIdx = source.indexOf("<WhatHeadwatersDelivers");
+  it("renders BookkeepingProof after WhatItIs and before WhatHeadwatersDelivers", () => {
+    // Visual-first ordering: the cockpit teaser and the bookkeeping
+    // iframes both land before any wall of pitch text. CockpitTeaser
+    // may sit between WhatItIs and BookkeepingProof. BookkeepingProof
+    // must precede WhatHeadwatersDelivers so the actual books are felt
+    // before the seller-side argument is read.
+    const whatItIsIdx = source.indexOf("<WhatItIs");
     const bookkeepingIdx = source.indexOf("<BookkeepingProof");
-    const whyTeamIdx = source.indexOf("<WhyThisTeam");
-    expect(deliversIdx, "<WhatHeadwatersDelivers /> present").toBeGreaterThanOrEqual(0);
-    expect(bookkeepingIdx, "<BookkeepingProof /> present").toBeGreaterThan(deliversIdx);
-    expect(whyTeamIdx, "<WhyThisTeam /> present").toBeGreaterThan(bookkeepingIdx);
+    const deliversIdx = source.indexOf("<WhatHeadwatersDelivers");
+    expect(whatItIsIdx, "<WhatItIs /> present").toBeGreaterThanOrEqual(0);
+    expect(bookkeepingIdx, "<BookkeepingProof /> present").toBeGreaterThan(whatItIsIdx);
+    expect(deliversIdx, "<WhatHeadwatersDelivers /> present").toBeGreaterThan(bookkeepingIdx);
   });
 
 });

@@ -28,15 +28,17 @@ import SustainabilityApp from "@/sustainability/SustainabilityApp";
  * first viewport; once the contractor scrolls past it, the sticky header
  * pins to the top and the document begins.
  *
- * Reading order is seller-side-first: after WhatItIs frames the store,
- * the next sections (WhatHeadwatersDelivers + CockpitTeaser +
- * BookkeepingProof + WhyThisTeam) answer the contractor's unanswered
- * questions — what is being sold and why this team is the one to sell
- * it. ReworkRisk then names the contractor's own pain (the doors got
- * built too small) and frames Headwaters as the thing that makes that
- * pain stop. Only then does the document pivot back to the store's own
- * story (WhyCurrentFails → ColdChain → WhoWorks → FirstMorning →
- * WhatStays → Ask → Recap).
+ * Reading order is visual-first: WhatItIs frames the store, then the
+ * two visual surfaces land immediately — CockpitTeaser (a phone-friendly
+ * preview of the operator-couple tablet) and BookkeepingProof (three
+ * live iframes of the actual books screens). The contractor or
+ * councillor sees something tangible before any wall of pitch text.
+ * The seller-side argument (WhatHeadwatersDelivers + WhyThisTeam) and
+ * the contractor's own pain (ReworkRisk) come AFTER the visuals, when
+ * the reader is already grounded in what the store will actually look
+ * and feel like. The store's own story then follows
+ * (WhyCurrentFails → ColdChain → WhoWorks → FirstMorning → WhatStays
+ * → Ask → Recap).
  *
  * The /planner sub-route renders the Phase Planner — same artifact, same
  * palette, same shell pattern, different surface. Walkthrough = read.
@@ -61,11 +63,13 @@ export default function App() {
     <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
       <Prologue />
       <AppShell>
-        {/* New sections insert AFTER <WhatHeadwatersDelivers />, not appended at the end. */}
+        {/* Visual surfaces (CockpitTeaser, BookkeepingProof) sit at the
+            top, immediately after WhatItIs frames the store. Pitch text
+            (WhatHeadwatersDelivers, WhyThisTeam) follows. */}
         <WhatItIs />
-        <WhatHeadwatersDelivers />
         <CockpitTeaser />
         <BookkeepingProof />
+        <WhatHeadwatersDelivers />
         <WhyThisTeam />
         <ReworkRisk />
         <WhyCurrentFails />
