@@ -32,6 +32,15 @@ export const TRIAL_REFUND_PAYMENT_DAYS = 30;
 export const TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA = 2;
 
 /**
+ * Day count from signing day to the week-eight review meeting. 8 weeks
+ * × 7 days = 56. Quoted verbatim ("fifty-six (56) calendar days from
+ * signing day") in the canonical week-8 timeline entry below and on
+ * every surface that prints the timeline. Reconciles to
+ * `TRIAL_DURATION_WEEKS` so a guard test catches drift.
+ */
+export const TRIAL_WEEK_8_REVIEW_DAY = TRIAL_DURATION_WEEKS * 7;
+
+/**
  * One-line pitch headline used as the first line of the call-out on
  * every surface (Ask.tsx, RisksAsk.tsx, OnePager.tsx, PaybackMemo §7
  * Verbatim block).
@@ -157,5 +166,160 @@ export const TRIAL_OFFER_QUADRANTS: readonly TrialOfferQuadrant[] = [
     id: "howToGetMoneyBack",
     label: "How to get your money back",
     body: TRIAL_REFUND_MECHANIC,
+  },
+] as const;
+
+/**
+ * One row of the canonical eight-week trial schedule. The schedule
+ * sequences the four §7 acceptance criteria into the eight-week window
+ * — naming the deliverable(s) in flight that week, the meeting(s) that
+ * week, and the gating decision (if any). Each criterion is delivered
+ * in a specific week so the contractor knows when each one is in play
+ * (criterion index → week mapping below).
+ *
+ * The same array is rendered on every surface that publishes the
+ * timeline (the Deer Lake Walkthrough Ask section and the Practitioner
+ * Operating Plan one-pager today) so a single edit here moves the
+ * timeline on every printed copy. Drift is the failure mode the
+ * lockedTrialOffer guard test is built to catch.
+ */
+export interface TrialTimelineWeek {
+  /** 1-indexed week number (1 through TRIAL_DURATION_WEEKS). */
+  week: number;
+  /**
+   * Day window from signing day, e.g. "Days 1–7", "Days 50–56".
+   * Always inclusive on both ends; week N covers days
+   * `((N-1)*7)+1` through `N*7`.
+   */
+  windowLabel: string;
+  /**
+   * Short headline for the week — what the week is about, in five to
+   * eight words. Renders as the row title on every surface.
+   */
+  focus: string;
+  /**
+   * One-sentence prose describing the deliverable(s) in flight that
+   * week. May reference more than one of the four §7 acceptance
+   * criteria when criteria are being prepared in parallel.
+   */
+  deliverables: string;
+  /**
+   * One-sentence prose listing the meetings on the calendar that week
+   * — council motions, steering committee sittings, community input
+   * sessions, existing-store cold-chain conversations, and the week-8
+   * review with the contractor.
+   */
+  meetings: string;
+  /**
+   * The gating decision in play that week, written as a single
+   * sentence — or null when the week has no formal gate. The first
+   * gating decision (council motion, week 2) is the trial's earliest
+   * off-ramp; the last (week-8 review, week 8) is the conversion gate
+   * to Step 1.
+   */
+  gatingDecision: string | null;
+  /**
+   * Index into `TRIAL_ACCEPTANCE_CRITERIA` (0..3) when this week is
+   * the one in which a §7 acceptance criterion is delivered, or null
+   * when the week is preparation only. Each criterion is mapped to
+   * exactly one week; the four mappings cover all four criteria.
+   */
+  acceptanceCriterionDelivered: 0 | 1 | 2 | 3 | null;
+}
+
+export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
+  {
+    week: 1,
+    windowLabel: "Days 1–7",
+    focus: "Signing & kickoff",
+    deliverables:
+      "Steering committee terms-of-reference drafted. Council motion text drafted. First existing-store visit logged.",
+    meetings:
+      "Signing meeting with the contractor on day 1. Pre-meet with the band CEO and the practitioner. Intro call with the existing-store manager.",
+    gatingDecision:
+      "Council motion to enter the design phase tabled for the week-2 council meeting (text drafted this week).",
+    acceptanceCriterionDelivered: null,
+  },
+  {
+    week: 2,
+    windowLabel: "Days 8–14",
+    focus: "Council motion · steering members named",
+    deliverables:
+      "Steering members named (three council, two community). Charter draft circulated to all five. Cold-chain pilot scoping notes #1.",
+    meetings:
+      "Band council meeting (motion read for adoption). Sit-downs with the two community-side candidates. Cold-chain scoping call with the existing-store manager.",
+    gatingDecision:
+      "Council passes the design-phase motion. Without this the trial is paused: the second installment is not invoiced and the refund clock starts at the week-8 review on whatever was delivered.",
+    acceptanceCriterionDelivered: null,
+  },
+  {
+    week: 3,
+    windowLabel: "Days 15–21",
+    focus: "Steering committee seated · charter signed",
+    deliverables:
+      "Steering committee charter signed by all five members at the first steering meeting — terms of reference adopted by council motion.",
+    meetings:
+      "Steering committee meeting #1 (kickoff and charter signing). Cold-chain site walk at the existing store.",
+    gatingDecision: "Charter signed → §7 criterion #1 delivered.",
+    acceptanceCriterionDelivered: 0,
+  },
+  {
+    week: 4,
+    windowLabel: "Days 22–28",
+    focus: "Mid-trial · co-design first read · second installment due",
+    deliverables:
+      "First draft of the six-month co-design plan (store layout, opening hours, pricing principles). Cold-chain MOU draft to the existing store.",
+    meetings:
+      "Steering committee meeting #2 (first read of the co-design plan). Community input session #1 (open community meeting). Existing-store MOU draft review.",
+    gatingDecision:
+      "Second $20,000 installment invoiced at the start of the week.",
+    acceptanceCriterionDelivered: null,
+  },
+  {
+    week: 5,
+    windowLabel: "Days 29–35",
+    focus: "Community input · MOU red-line · budget skeleton",
+    deliverables:
+      "Co-design plan revised against community input. Cold-chain MOU red-lined by the existing store. Year-one budget skeleton drafted with the bookkeeper.",
+    meetings:
+      "Community input session #2. Existing-store MOU red-line meeting. Bookkeeper sit-down on the year-one budget shape.",
+    gatingDecision: null,
+    acceptanceCriterionDelivered: null,
+  },
+  {
+    week: 6,
+    windowLabel: "Days 36–42",
+    focus: "Co-design plan adopted",
+    deliverables:
+      "Six-month co-design plan adopted in steering committee minutes. Cold-chain MOU near-final.",
+    meetings:
+      "Steering committee meeting #3 (vote to adopt the co-design plan). Existing-store MOU near-final review.",
+    gatingDecision:
+      "Steering committee adopts the co-design plan → §7 criterion #2 delivered.",
+    acceptanceCriterionDelivered: 1,
+  },
+  {
+    week: 7,
+    windowLabel: "Days 43–49",
+    focus: "Cold-chain pilot scope MOU signed",
+    deliverables:
+      "Cold-chain pilot MOU signed by Headwaters and the existing store — lane plan, ninety-day pilot duration, operational hand-offs. Year-one budget draft to council finance pre-read.",
+    meetings:
+      "MOU signing meeting at the existing store. Council finance pre-read.",
+    gatingDecision:
+      "MOU signed → §7 criterion #3 delivered. Booking confirmation sent for the week-8 review meeting (day 56).",
+    acceptanceCriterionDelivered: 2,
+  },
+  {
+    week: 8,
+    windowLabel: "Days 50–56",
+    focus: "Year-one budget to council · week-eight review (day 56)",
+    deliverables:
+      "Year-one budget and cash plan handed to council in writing — Step 1 cost basis, $90,000-a-month bill, ~$181,000 day-one bridge ask, 35% reinvestment line.",
+    meetings:
+      "Council session for the budget hand-off. The week-eight review meeting with the contractor — fifty-six (56) calendar days from signing day — at which the contractor judges all four §7 acceptance criteria and elects: convert to Step 1, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $40,000 to a service credit against the first Step 1 invoice.",
+    gatingDecision:
+      "Week-eight review decision. Refund-invocation deadline runs from this meeting; an invocation made later than fourteen (14) calendar days is out of time and the trial is deemed accepted.",
+    acceptanceCriterionDelivered: 3,
   },
 ] as const;

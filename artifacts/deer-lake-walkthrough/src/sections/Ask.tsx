@@ -7,6 +7,8 @@ import {
   TRIAL_HEADLINE,
   TRIAL_NO_TEAM_LINE,
   TRIAL_REFUND_MECHANIC,
+  TRIAL_TIMELINE,
+  TRIAL_WEEK_8_REVIEW_DAY,
 } from "@workspace/headwaters-pricing";
 
 /**
@@ -136,6 +138,104 @@ export default function Ask() {
           >
             {TRIAL_FRAMING_LINE}
           </p>
+        </div>
+
+        <div
+          className="mt-5 rounded-xl border p-5"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-rule)",
+          }}
+        >
+          <div
+            className="mono text-[10px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            Eight weeks, week by week
+          </div>
+          <div
+            className="serif text-[17px] leading-[1.3] font-semibold"
+            style={{ color: "var(--color-primary)" }}
+          >
+            What the practitioner is doing each week.
+          </div>
+          <p
+            className="serif text-[14.5px] leading-[1.45] mt-2"
+            style={{ color: "var(--color-muted)" }}
+          >
+            The four §7 deliverables sequenced into eight weeks. Week-eight
+            review meeting lands on day {TRIAL_WEEK_8_REVIEW_DAY} from
+            signing day.
+          </p>
+          <ol className="mt-3 space-y-2 list-none pl-0">
+            {TRIAL_TIMELINE.map((week) => {
+              const acIndex = week.acceptanceCriterionDelivered;
+              const delivers = acIndex !== null;
+              return (
+                <li
+                  key={week.week}
+                  className="rounded-lg p-3 border"
+                  style={{
+                    background: delivers
+                      ? "rgba(184,90,62,0.06)"
+                      : "var(--color-bg)",
+                    borderColor: delivers
+                      ? "var(--color-accent-warm)"
+                      : "var(--color-rule)",
+                  }}
+                >
+                  <div className="flex items-baseline gap-3">
+                    <div
+                      className="mono text-[12px] tabular-nums shrink-0 uppercase tracking-[0.18em]"
+                      style={{ color: "var(--color-accent-warm)" }}
+                    >
+                      W{week.week} · {week.windowLabel}
+                    </div>
+                    <div
+                      className="serif text-[14.5px] leading-[1.3] font-semibold flex-1"
+                      style={{ color: "var(--color-primary)" }}
+                    >
+                      {week.focus}
+                    </div>
+                  </div>
+                  <div
+                    className="serif text-[13.5px] leading-[1.45] mt-1.5"
+                    style={{ color: "var(--color-text)" }}
+                  >
+                    <span className="font-semibold">Deliverables.</span>{" "}
+                    {week.deliverables}
+                  </div>
+                  <div
+                    className="serif text-[13.5px] leading-[1.45] mt-1"
+                    style={{ color: "var(--color-text)" }}
+                  >
+                    <span className="font-semibold">Meetings.</span>{" "}
+                    {week.meetings}
+                  </div>
+                  {week.gatingDecision ? (
+                    <div
+                      className="serif text-[13.5px] leading-[1.45] mt-1"
+                      style={{ color: "var(--color-text)" }}
+                    >
+                      <span className="font-semibold">Gating decision.</span>{" "}
+                      {week.gatingDecision}
+                    </div>
+                  ) : null}
+                  {delivers ? (
+                    <div
+                      className="mono text-[11px] uppercase tracking-[0.18em] mt-2"
+                      style={{ color: "var(--color-accent-warm)" }}
+                    >
+                      §7 acceptance criterion #{(acIndex ?? 0) + 1} delivered:{" "}
+                      <span className="normal-case tracking-normal italic">
+                        {TRIAL_ACCEPTANCE_CRITERIA[acIndex ?? 0]}
+                      </span>
+                    </div>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
         <ol className="mt-7 space-y-3 list-none pl-0">

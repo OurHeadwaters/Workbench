@@ -2,10 +2,13 @@ import { useCallback, useState } from "react";
 
 import {
   REINVESTMENT_BUCKETS,
+  TRIAL_ACCEPTANCE_CRITERIA,
   TRIAL_EYEBROW,
   TRIAL_FRAMING_LINE,
   TRIAL_HEADLINE,
   TRIAL_OFFER_QUADRANTS,
+  TRIAL_TIMELINE,
+  TRIAL_WEEK_8_REVIEW_DAY,
   formatBucketAmount,
 } from "@workspace/headwaters-pricing";
 
@@ -198,6 +201,91 @@ export default function OnePager() {
             {TRIAL_FRAMING_LINE} Refund clause is written into the
             payback memo as §7.
           </div>
+        </div>
+
+        <div className="mb-[10pt]">
+          <div
+            className="font-mono uppercase tracking-[0.2em] text-[8.5pt] text-[#b85a3e] font-semibold mb-[5pt]"
+          >
+            Eight-week trial schedule · what the practitioner does each week
+          </div>
+          <div className="text-[8pt] text-[#6b7665] mb-[4pt] leading-[1.35]">
+            The four §7 acceptance criteria sequenced into eight weeks. Week-eight
+            review meeting lands on day {TRIAL_WEEK_8_REVIEW_DAY} from signing day —
+            same calendar math on every printed copy. Edit
+            <span className="font-mono"> TRIAL_TIMELINE</span> in
+            <span className="font-mono"> @workspace/headwaters-pricing</span>,
+            not this sheet.
+          </div>
+          <table
+            className="w-full text-[8.5pt] border-collapse"
+            style={{ tableLayout: "fixed" }}
+          >
+            <thead>
+              <tr className="border-b border-[#c8bfa7] text-left text-[#6b7665] font-semibold">
+                <th className="py-[3pt] pr-[4pt] w-[12%]">Week</th>
+                <th className="py-[3pt] pr-[4pt] w-[26%]">Focus</th>
+                <th className="py-[3pt] pr-[4pt] w-[42%]">Deliverables · meetings</th>
+                <th className="py-[3pt] w-[20%]">Gate · §7 criterion</th>
+              </tr>
+            </thead>
+            <tbody className="text-[#2a2520] align-top">
+              {TRIAL_TIMELINE.map((week, idx) => {
+                const isLast = idx === TRIAL_TIMELINE.length - 1;
+                const acIndex = week.acceptanceCriterionDelivered;
+                const delivers = acIndex !== null;
+                return (
+                  <tr
+                    key={week.week}
+                    className={isLast ? undefined : "border-b border-[#e3dac4]"}
+                    style={
+                      delivers
+                        ? { background: "#f7ecdc" }
+                        : undefined
+                    }
+                  >
+                    <td className="py-[3pt] pr-[4pt] font-semibold text-[#1f3d2e]">
+                      W{week.week}
+                      <div className="font-mono text-[7pt] text-[#6b7665] uppercase tracking-[0.16em] font-normal">
+                        {week.windowLabel}
+                      </div>
+                    </td>
+                    <td className="py-[3pt] pr-[4pt] font-semibold">
+                      {week.focus}
+                    </td>
+                    <td className="py-[3pt] pr-[4pt] leading-[1.4]">
+                      <div>
+                        <span className="font-semibold">Deliverables.</span>{" "}
+                        {week.deliverables}
+                      </div>
+                      <div className="mt-[2pt]">
+                        <span className="font-semibold">Meetings.</span>{" "}
+                        {week.meetings}
+                      </div>
+                    </td>
+                    <td className="py-[3pt] leading-[1.4]">
+                      {week.gatingDecision ? (
+                        <div>{week.gatingDecision}</div>
+                      ) : (
+                        <div className="text-[#6b7665] italic">
+                          No formal gate this week.
+                        </div>
+                      )}
+                      {delivers ? (
+                        <div className="mt-[2pt] font-semibold text-[#b85a3e]">
+                          §7 criterion #{(acIndex ?? 0) + 1} delivered:
+                          <span className="font-normal text-[#2a2520] italic">
+                            {" "}
+                            {TRIAL_ACCEPTANCE_CRITERIA[acIndex ?? 0]}
+                          </span>
+                        </div>
+                      ) : null}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         <div className="mb-[10pt]">

@@ -15,6 +15,8 @@ import {
   TRIAL_REFUND_MECHANIC,
   TRIAL_REFUND_PAYMENT_DAYS,
   TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA,
+  TRIAL_TIMELINE,
+  TRIAL_WEEK_8_REVIEW_DAY,
   TRIAL_WHAT_SURVIVES_REFUND,
   TRIAL_DURATION_WEEKS,
   TRIAL_FEE_USD,
@@ -223,6 +225,78 @@ describe("Step 0 paid-trial offer · single source of truth", () => {
       expect(TRIAL_CONVERSION_TO_STEP_1).toContain(
         "is not credited",
       );
+    });
+  });
+
+  describe("eight-week trial schedule sequences the §7 acceptance criteria", () => {
+    it("week-8 review day is 56 (8 weeks × 7) so calendar math reconciles", () => {
+      expect(TRIAL_WEEK_8_REVIEW_DAY).toBe(56);
+      expect(TRIAL_WEEK_8_REVIEW_DAY).toBe(TRIAL_DURATION_WEEKS * 7);
+    });
+
+    it("timeline is exactly TRIAL_DURATION_WEEKS rows, week numbers 1..N in order", () => {
+      expect(TRIAL_TIMELINE).toHaveLength(TRIAL_DURATION_WEEKS);
+      TRIAL_TIMELINE.forEach((entry, i) => {
+        expect(entry.week).toBe(i + 1);
+      });
+    });
+
+    it("every week has a focus, deliverables, and meetings string", () => {
+      for (const entry of TRIAL_TIMELINE) {
+        expect(entry.focus.length).toBeGreaterThan(0);
+        expect(entry.deliverables.length).toBeGreaterThan(20);
+        expect(entry.meetings.length).toBeGreaterThan(20);
+      }
+    });
+
+    it("each §7 acceptance criterion is delivered in exactly one week and all four are covered", () => {
+      const deliveredIndices = TRIAL_TIMELINE.map(
+        (w) => w.acceptanceCriterionDelivered,
+      ).filter((i): i is 0 | 1 | 2 | 3 => i !== null);
+      expect(deliveredIndices).toHaveLength(TRIAL_ACCEPTANCE_CRITERIA.length);
+      expect([...deliveredIndices].sort()).toEqual([0, 1, 2, 3]);
+    });
+
+    it("the steering-committee charter (criterion #1) is delivered before the cold-chain MOU (criterion #3)", () => {
+      const weekFor = (idx: 0 | 1 | 2 | 3): number => {
+        const entry = TRIAL_TIMELINE.find(
+          (w) => w.acceptanceCriterionDelivered === idx,
+        );
+        if (!entry) {
+          throw new Error(`No timeline week delivers criterion #${idx + 1}`);
+        }
+        return entry.week;
+      };
+      expect(weekFor(0)).toBeLessThan(weekFor(1));
+      expect(weekFor(1)).toBeLessThan(weekFor(2));
+      expect(weekFor(2)).toBeLessThan(weekFor(3));
+    });
+
+    it("week-8 entry names the review meeting and quotes the day-56 figure", () => {
+      const week8 = TRIAL_TIMELINE.find((w) => w.week === 8);
+      expect(week8).toBeDefined();
+      expect(week8!.meetings).toContain("week-eight review meeting");
+      expect(week8!.meetings).toContain("fifty-six (56) calendar days from signing day");
+      expect(week8!.acceptanceCriterionDelivered).toBe(3);
+    });
+
+    it("week-2 names the council motion as the trial's first gating decision", () => {
+      const week2 = TRIAL_TIMELINE.find((w) => w.week === 2);
+      expect(week2).toBeDefined();
+      expect(week2!.gatingDecision).not.toBeNull();
+      expect(week2!.gatingDecision!.toLowerCase()).toContain("council");
+      expect(week2!.gatingDecision!.toLowerCase()).toContain("motion");
+    });
+
+    it("walkthrough Ask and one-pager render the timeline by importing TRIAL_TIMELINE", () => {
+      const ask = readSurface(
+        "artifacts/deer-lake-walkthrough/src/sections/Ask.tsx",
+      );
+      const onepager = readSurface(
+        "artifacts/practitioner-operating-plan/src/pages/OnePager.tsx",
+      );
+      expect(ask).toContain("TRIAL_TIMELINE");
+      expect(onepager).toContain("TRIAL_TIMELINE");
     });
   });
 
