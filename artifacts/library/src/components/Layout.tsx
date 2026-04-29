@@ -6,8 +6,8 @@ import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Overview", icon: Home },
-  { href: "/entries", label: "Library", icon: BookOpen },
+  { href: "/", label: "Library", icon: Home },
+  { href: "/entries", label: "Entries", icon: BookOpen },
   { href: "/needs-review", label: "Review Queue", icon: CheckCircle2 },
   { href: "/producers", label: "Producers", icon: Users },
   { href: "/buckets", label: "Project Buckets", icon: FolderOpen },

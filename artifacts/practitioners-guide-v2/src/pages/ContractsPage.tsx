@@ -301,6 +301,9 @@ export function ContractsPage() {
                 <li key={i}><span className="text-foreground">{p}</span></li>
               ))}
             </ol>
+            <p className="mt-3 text-xs text-muted-foreground italic">
+              Naming note. <em>Reserve</em> here is the agency P&L line — a 75% hold-back of post-tithe surplus that funds the next reserve / next pilot. It is a different object from the codetry-handbook's <em>Reservoir</em> (the household stablecoin wallet that holds RLUSD between rainfall and channelling into buckets). The household wallet is downstream of the household's own income, not of this agency's surplus.
+            </p>
           </SectionCard>
           <SectionCard title="Giving — directional intent (where the tithe goes)" accent={b.accent}>
             <p className="text-sm text-muted-foreground">{a.givingDirection}</p>

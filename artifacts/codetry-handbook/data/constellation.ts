@@ -334,7 +334,7 @@ export const constellation: ConstellationSnapshot = {
         "Watershed"
       ],
       "formerNamesNote": "Z5 reports 'Watershed' is still active at the URL/storage layer for Dam Days (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
-      "domain": "Non-custodial XRPL stablecoin envelope-budgeting PWA — household balance is the source of the watershed",
+      "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
       "url": "https://x-buckets-vision.replit.app/",
       "status": "live",
       "tagline": "Channel every drop. Watch the ripple effect.",

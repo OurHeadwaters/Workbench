@@ -673,7 +673,7 @@ export default function FirstReserveThenTheNext() {
                 </div>
               </div>
               <div className="font-body text-[0.82vw] text-text leading-[1.35]">
-                Deer Lake store opens. Working POS, freight lane, public price page —
+                Deer Lake store opens. Working till, freight lane, public price page —
                 not a pitch deck.
               </div>
             </div>

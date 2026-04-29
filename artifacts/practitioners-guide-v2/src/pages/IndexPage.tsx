@@ -18,7 +18,7 @@ export function IndexPage() {
       headline: money(scenario.salts.pAndL.netCash),
       headlineLabel: "net cash / yr",
       blurb:
-        "Parr's Jars salt: 4 channels, $5.50 per-jar COGS, 1,190 jars/yr steady state. Sustainable on family hands; shadow labour ~$858/yr would tip the line if it became paid.",
+        "Parr's Jars salt: 4 channels, $5.50 per-jar cost, 1,190 jars/yr steady state. Sustainable on family hands; shadow labour ~$858/yr would tip the line if it became paid.",
       tag: scenario.salts.pAndL.tag,
     },
     {

@@ -52,6 +52,16 @@ export default function PhenomenaIndexPage({ readOnly = false }: PhenomenaPagePr
           the community itself — and shows them side-by-side as readings of
           one structural object. The link is the finding.
         </p>
+        <p className="text-sm text-muted-foreground/90 italic max-w-3xl leading-relaxed border-l-2 border-border pl-4">
+          A <em>phenomenon</em>, once it has a load-bearing name and rungs and
+          a principle, becomes a <em>primitive</em> in the codetry-handbook's
+          constellation. The library is upstream; the constellation is
+          downstream. <em>The Standby</em> began as a phenomenon here (food
+          insecurity organising itself into call/watch/standby stock/debrief
+          across kitchens that don't talk) before it was registered as a
+          constellation-wide primitive in the handbook. New phenomena that
+          earn that promotion will appear there too.
+        </p>
         <div className="flex flex-wrap gap-2 pt-2">
           <Badge variant="outline" className="bg-background/50 font-normal">
             <Network className="h-3 w-3 mr-1.5" />

@@ -165,12 +165,12 @@ export default function Submissions() {
       }
     }, {
       onSuccess: () => {
-        toast.success("Submission approved and posted");
+        toast.success("Receipt approved and posted");
         setSelectedSub(null);
         queryClient.invalidateQueries({ queryKey: getListSubmissionsQueryKey() });
       },
       onError: (err: Error) => {
-        toast.error(err.message || "Failed to approve submission");
+        toast.error(err.message || "Failed to approve receipt");
       }
     });
   };
@@ -183,14 +183,14 @@ export default function Submissions() {
       data: { reason: rejectReason }
     }, {
       onSuccess: () => {
-        toast.success("Submission rejected");
+        toast.success("Receipt rejected");
         setIsRejectOpen(false);
         setSelectedSub(null);
         setRejectReason("");
         queryClient.invalidateQueries({ queryKey: getListSubmissionsQueryKey() });
       },
       onError: (err: Error) => {
-        toast.error(err.message || "Failed to reject submission");
+        toast.error(err.message || "Failed to reject receipt");
       }
     });
   };
@@ -208,7 +208,7 @@ export default function Submissions() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-foreground">Submissions Queue</h1>
+          <h1 className="text-3xl font-serif font-bold text-foreground">Receipts Queue</h1>
           <p className="text-muted-foreground mt-1">Review receipts and inventory reports from staff.</p>
         </div>
         
@@ -219,7 +219,7 @@ export default function Submissions() {
               <SelectValue placeholder="Filter status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Submissions</SelectItem>
+              <SelectItem value="all">All Receipts</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
@@ -252,7 +252,7 @@ export default function Submissions() {
                 <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
                   <div className="flex flex-col items-center justify-center">
                     <FileText className="w-8 h-8 text-muted-foreground/50 mb-2" />
-                    <p>No submissions found.</p>
+                    <p>No receipts found.</p>
                     <p className="text-sm mt-1">You're all caught up!</p>
                   </div>
                 </TableCell>
@@ -297,7 +297,7 @@ export default function Submissions() {
             <div className="space-y-6 pb-20">
               <SheetHeader>
                 <div className="flex items-center justify-between mt-4">
-                  <SheetTitle className="text-2xl font-serif">Submission Details</SheetTitle>
+                  <SheetTitle className="text-2xl font-serif">Receipt Details</SheetTitle>
                   {getStatusBadge(selectedSub.status)}
                 </div>
                 <SheetDescription>
@@ -351,7 +351,7 @@ export default function Submissions() {
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-md flex justify-between items-center">
                   <div>
                     <h4 className="text-sm font-semibold text-primary mb-1">Posted Transaction</h4>
-                    <p className="text-sm text-primary/80">This submission has been posted to the ledger.</p>
+                    <p className="text-sm text-primary/80">This receipt has been posted to the ledger.</p>
                   </div>
                   <Link href={`/transactions/${selectedSub.approvedTransactionId}`}>
                     <Button variant="outline" size="sm">View Entry</Button>
@@ -543,9 +543,9 @@ export default function Submissions() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Reject Submission</DialogTitle>
+                              <DialogTitle>Reject Receipt</DialogTitle>
                               <DialogDescription>
-                                Provide a reason for rejecting this submission. The user will see this message.
+                                Provide a reason for rejecting this receipt. The user will see this message.
                               </DialogDescription>
                             </DialogHeader>
                             <div className="py-4">

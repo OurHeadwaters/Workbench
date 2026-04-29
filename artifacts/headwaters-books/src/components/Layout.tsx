@@ -49,10 +49,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const role = user.role;
   
   const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["owner", "ops_manager", "bookkeeper"] },
+    { href: "/dashboard", label: "The books today", icon: LayoutDashboard, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/submit", label: "Submit Receipt", icon: PenSquare, roles: ["food_handler"] },
     { href: "/transactions", label: "Transactions", icon: Receipt, roles: ["owner", "ops_manager", "bookkeeper"] },
-    { href: "/submissions", label: "Submissions", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
+    { href: "/submissions", label: "Receipts", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/accounts", label: "Accounts", icon: BookOpen, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/cost-centres", label: "Cost Centres", icon: Building2, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/pnl", label: "P&L Report", icon: LineChart, roles: ["owner", "bookkeeper"] },

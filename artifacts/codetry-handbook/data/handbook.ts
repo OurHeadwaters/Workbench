@@ -151,7 +151,7 @@ const partI: Part = {
       number: "1.3",
       partRoman: "I",
       partLabel: "I · The Discipline",
-      title: "The both-states principle — names that hold the slow side and the fast side",
+      title: "The two-sidedness principles — names that hold both faces of one system",
       blocks: [
         {
           kind: "para",
@@ -161,34 +161,56 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "Other systems live in two registers at once. They have a slow side — a shelf, a posture, a practice that is always-on, mostly quiet, sometimes ignored — and a fast side, an event that flips the system into action and then stands it down. The temptation, every time, is to name each side separately and let them grow into two systems. The both-states principle is the codetry move that resists that.",
+            "Other systems live in two registers at once. They have two sides, and the name either holds both or it doesn't. The temptation, every time, is to name each side separately and let them grow into two systems. The two-sidedness principles are the codetry moves that resist that.",
         },
         {
           kind: "callout",
           text:
-            "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
-        },
-        { kind: "subhead", text: "The Standby as the worked example." },
-        {
-          kind: "para",
-          text:
-            "The constellation's first non-zone primitive — *The Standby* — is the cleanest worked example of this principle so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two states.",
+            "When a system has two sides at once, the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
         },
         {
           kind: "para",
           text:
-            "Two early candidate names were rejected for failing the principle. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* (the slow side) and one for *the call* (the fast side) — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
+            "The constellation has discovered, so far, two distinct kinds of two-sidedness. They are siblings, not subtypes — each was named after a different worked example refused to collapse into the other.",
         },
-        { kind: "subhead", text: "How to spot a both-states name in the wild." },
+        { kind: "subhead", text: "Both-states — the temporal kind." },
         {
           kind: "para",
           text:
-            "A both-states name passes a small test: pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung*, the name is holding both states and the system is one system.",
+            "Some systems are two-sided in *tempo*. They have a slow side — a shelf, a posture, a practice that is always-on, mostly quiet, sometimes ignored — and a fast side, an event that flips the system into action and then stands it down. The two sides are the *same room* read at different speeds; the people, the stock, the vocabulary are all one. The name has to ride from one tempo to the other without bending.",
         },
         {
           kind: "para",
           text:
-            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to do double duty.",
+            "*The Standby* is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two tempos. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
+        },
+        { kind: "subhead", text: "Both-sides — the contextual kind." },
+        {
+          kind: "para",
+          text:
+            "Other systems are two-sided in *context*. They have a side fully legitimate inside one room and a side fully legitimate inside another, and the two rooms don't trust each other's language. Neither side is the slow or fast version of the other; they are simultaneous, equally real, and unfit currency in each other's territory. The name has to be the membrane that lets each room keep its own dialect while still allowing communication across — including a posture for source-side language with no honest target equivalent (a *refused* rung, not a forced translation).",
+        },
+        {
+          kind: "para",
+          text:
+            "*The Gate* is the worked example. The Gate names the membrane between the *inside* (the constellation's own dialect — *neighbour*, *channel*, *the books*) and *massity* (regulator-banker-funder English — *resident*, *bank account*, *financial statements*). Each is fully legitimate inside its room and unfit currency in the other's. Two early candidate names were rejected for failing the test. *The Translator* collapsed the work into directional substitution and lost the posture that some source-side language has no honest target equivalent. *The Importer* read as one-way and lost the bidirectional symmetry. Both survived as *verbs* inside The Gate; neither could be the umbrella. If either had been adopted, the constellation would now treat the inside as the *raw* material the outside *processes*, instead of two equally legitimate dialects with a membrane between them.",
+        },
+        { kind: "subhead", text: "How to spot a two-sided name in the wild." },
+        {
+          kind: "para",
+          text:
+            "A two-sided name passes a small test, in either flavour. Pick one side first and ask whether the noun also fits the other side, then pick the other side and ask whether the noun also fits the first. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding both faces and the system is one system.",
+        },
+        {
+          kind: "para",
+          text:
+            "The two principles are registered in the constellation manifest as `principles.both-states` and `principles.both-sides`. Each is cited on the primitive whose two-sidedness it names; both-states is cited on The Standby, both-sides on The Gate. A new primitive that does double duty must declare which kind of two-sidedness it carries — and may, in time, name a third.",
+        },
+        { kind: "subhead", text: "Why two principles instead of one." },
+        {
+          kind: "para",
+          text:
+            "Both kinds answer the same family of question — *one system or two?* — but on different axes. Both-states asks the question on the *time* axis (slow tempo vs fast tempo, same room). Both-sides asks the question on the *legitimacy* axis (one room's dialect vs another room's dialect, same phenomenon). Collapsing them into one principle would have lost both the temporal-vs-contextual distinction and the cross-zone-reads test that separates them when an umbrella name is being chosen. The constellation keeps the family open: a future primitive may carry a third kind of two-sidedness — across densities, scales, jurisdictions, or some axis not yet named — and that primitive's chapter is where the third principle would be registered.",
         },
       ],
     },
@@ -1463,6 +1485,11 @@ const partVII: Part = {
             "Fill (verb) — the move from Reservoir into a Lake (parking RLUSD to earn Lake currents)",
             "Drainage — the verb for paying down debt, never *Channel*",
           ],
+        },
+        {
+          kind: "para",
+          text:
+            "Naming note. *Reservoir* in this zone is the household stablecoin wallet — the place RLUSD sits between rainfall and channelling into buckets. It is a different object from the *Reserve* line in the Practitioner's Guide V2 ContractsPage (a 75% hold-back of post-tithe agency surplus that funds the next reserve / next pilot). Same metaphor family — both are *what is held back so the system can run again* — but the household wallet is downstream of the household's own income, not of an agency's surplus. A reader moving between the two artifacts should not conflate them.",
         },
         { kind: "subhead", text: "The rule discovered." },
         {

@@ -137,7 +137,7 @@ export default function PlannerApp() {
         tone: "warm",
       },
       {
-        label: "NNC enrolment readiness (POS, SKU, baseline)",
+        label: "NNC enrolment readiness (till, SKU, baseline)",
         start: addDays(anchors.contractOneStart, 30),
         // Self-fund: end of NNC readiness is anchored to council vote
         // since there's no application-prep window.

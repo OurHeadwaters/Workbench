@@ -20,7 +20,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-serif font-bold text-foreground">Dashboard</h1>
+        <h1 className="text-3xl font-serif font-bold text-foreground">The books today</h1>
         <p className="text-muted-foreground mt-2">Overview of agency ledger activity.</p>
       </div>
 

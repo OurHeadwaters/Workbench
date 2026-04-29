@@ -35,7 +35,7 @@ export function SaltsPage() {
             Sustainable on family hands.
           </h1>
           <p className="mt-3 text-muted-foreground max-w-3xl">
-            One blended per-jar COGS today (founder will break out per-blend later). Four channels,
+            One blended per-jar cost today (founder will break out per-blend later). Four channels,
             1,190 jars/yr steady state, $1,298/yr net. The economic story is honest only when you
             carry the shadow-labour line.
           </p>
@@ -48,7 +48,7 @@ export function SaltsPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MoneyKpi
-          label="Per-jar COGS"
+          label="Per-jar cost"
           value={s.perJarCogs.total}
           tag={s.perJarCogs.tag}
           accent={b.accent}
@@ -114,7 +114,7 @@ export function SaltsPage() {
               </td>
             </tr>
             <tr className="font-semibold">
-              <td className="py-2 pr-4">Per-jar COGS</td>
+              <td className="py-2 pr-4">Per-jar cost</td>
               <td className="py-2 pr-4 text-right num">
                 <Num tag={s.perJarCogs.tag}>{money(s.perJarCogs.total, 2)}</Num>
               </td>
@@ -137,7 +137,7 @@ export function SaltsPage() {
                 <th className="py-2 pr-4 font-medium text-right num">Jars/yr</th>
                 <th className="py-2 pr-4 font-medium text-right num">Price</th>
                 <th className="py-2 pr-4 font-medium text-right num">Revenue</th>
-                <th className="py-2 pr-4 font-medium text-right num">COGS</th>
+                <th className="py-2 pr-4 font-medium text-right num">Per-jar cost</th>
                 <th className="py-2 pr-4 font-medium text-right num">Gross margin</th>
               </tr>
             </thead>
@@ -218,7 +218,7 @@ export function SaltsPage() {
         <table className="w-full text-sm">
           <tbody>
             <PLRow label="Revenue" value={s.pAndL.revenue} tag={s.pAndL.tag} />
-            <PLRow label="COGS" value={-s.pAndL.cogs} tag={s.pAndL.tag} />
+            <PLRow label="Per-jar cost" value={-s.pAndL.cogs} tag={s.pAndL.tag} />
             <PLRow label="Markets overhead" value={-s.pAndL.marketsOverhead} tag={s.pAndL.tag} />
             <PLRow label="Subscriptions (30% allocation)" value={-s.pAndL.subscriptions} tag={s.pAndL.tag} />
             <PLRow label="Net cash" value={s.pAndL.netCash} bold tone="positive" tag={s.pAndL.tag} />

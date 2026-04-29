@@ -49,7 +49,7 @@ export default function Home() {
         </SignedOut>
         <SignedIn>
           <Link href="/dashboard">
-            <Button size="lg" className="text-lg px-8 h-14">Open Dashboard</Button>
+            <Button size="lg" className="text-lg px-8 h-14">Open the books</Button>
           </Link>
         </SignedIn>
       </main>

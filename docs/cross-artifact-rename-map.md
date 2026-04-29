@@ -30,8 +30,12 @@ and the rows below begin from the vocabulary that map locks in.
 - **Out-of-scope rows imported from the guide's map:** 2 (rows X-1 and X-2 —
   the `pilotReserve` and `techCapex/toolingSubs/trainingRnD` ids that live in
   `@workspace/headwaters-pricing`).
-- **Applied so far:** 0. **Approved so far:** 0. **Deferred so far:** 0.
-  **Rejected so far:** 0. The founder updates this line as rows land.
+- **Applied so far:** 8 (P-3, P-5, P-6, P-7, P-8, A-1, A-2, A-5 — Tier 1 batch).
+  **Approved so far:** 0 currently outstanding (Tier 1 was approved + applied in
+  the same pass; Tier 2 rows P-1, P-4, A-4, U-4, X-1, X-2 still `proposed` and
+  awaiting founder review). **Deferred so far:** 0. **Rejected so far:** 3
+  (B-1, B-2, B-3 — borderlines walked past intentionally per their `Why`
+  columns). The founder updates this line as rows land.
 
 ### Coverage / selection rule
 
