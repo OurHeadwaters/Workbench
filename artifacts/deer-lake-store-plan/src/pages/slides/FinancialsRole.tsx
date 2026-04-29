@@ -126,14 +126,14 @@ export default function FinancialsRole() {
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>Inside the store</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">A two-person operator couple runs the floor.</span> Hired by the band. Local on-call group paid by the job. The payroll line stays a couple, not a manager bench.
+                <span className="font-semibold">A two-person operator couple runs the floor.</span> Installed and paid by the contractor — same model already running the band's hotel today. Local on-call group on the contractor's payroll too. The payroll line stays a couple, not a manager bench.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>What Headwaters delivers</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">Square + QuickBooks + Local Line, composed into one cockpit.</span> Training, monthly visits. That's how a couple keeps the doors open long hours and the truck on time.
+                <span className="font-semibold">Square + QuickBooks + Local Line, composed into one cockpit.</span> Training, monthly visits. That's how a couple keeps the doors open long hours and the truck on time. Contracted by the contractor as the store-specialist sub.
               </div>
             </div>
 

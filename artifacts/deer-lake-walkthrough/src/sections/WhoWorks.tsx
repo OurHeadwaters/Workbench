@@ -16,7 +16,7 @@ export default function WhoWorks() {
     {
       tag: "Bullet 1 · A two-person operator couple",
       body:
-        "Sam & Jess on the cockpit. The payroll line stays a couple, not a manager bench — that's how the math works at northern volume.",
+        "Sam & Jess on the cockpit. Installed and paid by the contractor — same operator-couple model already running the band's hotel today. The payroll line stays a couple, not a manager bench — that's how the math works at northern volume.",
     },
     {
       tag: "Bullet 2 · Serious software underneath them",

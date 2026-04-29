@@ -97,6 +97,53 @@ export default function Roles() {
         </>
       }
     >
+      {/*
+        Who employs whom — across all six functions. The contractor is
+        already the band's operator at the hotel and carries the operating
+        payroll there; the same model extends to the store. Headwaters is
+        the store-specialist sub the contractor brings in.
+      */}
+      <aside
+        className="rounded-xl border-2 p-4"
+        style={{
+          background: "var(--color-paper)",
+          borderColor: "var(--color-accent-warm)",
+        }}
+      >
+        <div
+          className="mono text-[10.5px] uppercase tracking-[0.20em] mb-2"
+          style={{ color: "var(--color-accent-warm)" }}
+        >
+          Who employs whom · across all six functions
+        </div>
+        <ul
+          className="space-y-2 text-[14.5px] leading-[1.45] list-none pl-0"
+          style={{ color: "var(--color-text)" }}
+        >
+          <li>
+            <span className="font-semibold">
+              Operator couple, on-call pod, named bench:
+            </span>{" "}
+            on the contractor's payroll — same model already running the
+            band's hotel today.
+          </li>
+          <li>
+            <span className="font-semibold">
+              Bookkeeper, Dryden hub worker, technical advisor, training
+              partner:
+            </span>{" "}
+            on Headwaters' payroll, contracted by the contractor as the
+            store-specialist sub.
+          </li>
+          <li>
+            <span className="font-semibold">
+              Community liaison, council oversight:
+            </span>{" "}
+            band, no payroll change.
+          </li>
+        </ul>
+      </aside>
+
       {FUNCTIONS.map((f) => (
         <article
           key={f.id}

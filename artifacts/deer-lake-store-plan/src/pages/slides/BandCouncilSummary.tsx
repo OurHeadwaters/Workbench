@@ -68,6 +68,12 @@ export default function BandCouncilSummary() {
                   Not an experiment. Arctic Co-ops and the Mistissini Meechum store already do this up north.
                 </div>
               </div>
+              <div className="flex gap-[0.7vw]">
+                <div className="font-mono text-accent text-[0.95vw] pt-[0.1vh] shrink-0">→</div>
+                <div>
+                  Same operator-couple model already running at the band's hotel — same contractor extending it to the store.
+                </div>
+              </div>
             </div>
           </div>
 
@@ -185,7 +191,7 @@ export default function BandCouncilSummary() {
                 The band runs the store
               </div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                Hires and pays everyone inside. A two-person operator couple runs the floor day to day. Local on-call group paid by the job. Council member on oversight from day one.
+                Owns the store outright. The contractor installs and pays the operator couple and the local on-call group — already running the band's hotel under this same model. A two-person operator couple runs the floor day to day. Council member on oversight from day one.
               </div>
             </div>
 
@@ -200,7 +206,7 @@ export default function BandCouncilSummary() {
                 Headwaters delivers the cockpit underneath them
               </div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                Square + QuickBooks + Local Line, composed into one cockpit the band owns. Training, monthly visits, public price dashboard. That's why a couple can do it. No one from Headwaters works the floor.
+                Square + QuickBooks + Local Line, composed into one cockpit the band owns. Training, monthly visits, public price dashboard. That's why a couple can do it. No one from Headwaters works the floor. Contracted by the contractor as the store-specialist sub.
               </div>
             </div>
 

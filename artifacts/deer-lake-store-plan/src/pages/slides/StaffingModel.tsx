@@ -35,7 +35,7 @@ export default function StaffingModel() {
             </div>
           </div>
           <div className="font-body text-[1vw] text-text leading-[1.45] max-w-[52vw]">
-            That's how the payroll line stays a couple, not a manager bench. How the doors stay open through hunting season and bad weather. How the truck still leaves Dryden loaded the week one operator is short-handed. And how the band's grocery margin starts coming home in year one. <span className="text-primary font-semibold">Nobody flies in to run the store.</span>
+            That's how the payroll line stays a couple, not a manager bench. How the doors stay open through hunting season and bad weather. How the truck still leaves Dryden loaded the week one operator is short-handed. And how the band's grocery margin starts coming home in year one. <span className="text-primary font-semibold">Nobody flies in to run the store.</span> <span className="text-primary font-semibold">The contractor installs and pays the couple — same model already running the band's hotel today.</span>
           </div>
         </div>
 

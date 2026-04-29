@@ -72,6 +72,52 @@ export default function WhyThisTeam() {
           tab and shows real work already shipped for northern food systems.
         </p>
 
+        {/*
+          Hotel-as-precedent callout. The strongest credibility lever the
+          contractor has with the chief is the chief's own past decision —
+          the operator-couple model is already running at the band's hotel
+          under the same contractor. Headwaters is the store-specialist sub
+          the contractor brings in for the harder asset.
+        */}
+        <div
+          className="mt-7 rounded-2xl border-2 p-5"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-accent-warm)",
+          }}
+        >
+          <div
+            className="mono text-[10.5px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            Hotel precedent · already running
+          </div>
+          <h3
+            className="serif text-[22px] leading-[1.2] font-semibold"
+            style={{ color: "var(--color-primary)", textWrap: "balance" }}
+          >
+            You've proved this model at the hotel.
+          </h3>
+          <p
+            className="serif text-[15.5px] leading-[1.5] mt-3"
+            style={{ color: "var(--color-text)" }}
+          >
+            The same operator-couple-installed-by-contractor pattern that
+            opens this walkthrough is what runs the band's hotel today. The
+            contractor brings the operator couple. You pay the contractor.
+            The building works.
+          </p>
+          <p
+            className="serif text-[15.5px] leading-[1.5] mt-3"
+            style={{ color: "var(--color-text)" }}
+          >
+            The store is harder than the hotel — perishables, food safety,
+            vendor terms, faster turnover — which is why the contractor is
+            bringing in Headwaters as the store-specialist sub. The model
+            itself is the one you already trust.
+          </p>
+        </div>
+
         <div className="mt-7 space-y-3">
           {claims.map((c) => (
             <div
