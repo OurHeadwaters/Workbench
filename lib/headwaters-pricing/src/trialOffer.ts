@@ -227,6 +227,73 @@ export interface TrialTimelineWeek {
   acceptanceCriterionDelivered: 0 | 1 | 2 | 3 | null;
 }
 
+/**
+ * Locale code for the canonical English copy of the schedule (the
+ * `TRIAL_TIMELINE` array below). Quoted on every surface that prints
+ * the bilingual schedule so the column / row label is sourced from
+ * the canonical lib rather than hand-typed twice.
+ */
+export const TRIAL_TIMELINE_LOCALE_EN = "English (plain language)";
+
+/**
+ * Locale code for the Anishininiimowin (Oji-Cree, Severn dialect)
+ * draft below. The dialect spoken at Deer Lake First Nation is the
+ * Severn variety of Oji-Cree (Anishininiimowin), so the column /
+ * row label calls out the dialect explicitly rather than using the
+ * generic "Oji-Cree" umbrella term.
+ */
+export const TRIAL_TIMELINE_LOCALE_OJ =
+  "Anishininiimowin (Oji-Cree · Severn)";
+
+/**
+ * Visible status banner the bilingual surfaces print above the
+ * Anishininiimowin column. The English schedule has been through
+ * editorial review and is print-ready; the Oji-Cree column is a
+ * working draft from this engagement and needs an Anishininiimowin-
+ * speaking elder reviewer to verify (and almost certainly revise)
+ * the wording before any printed copy goes to Deer Lake elders.
+ *
+ * This is the same disclaimer the broader walkthrough deck Oji-Cree
+ * pass (the existing "Translate the deck into Oji-Cree" project task)
+ * is expected to land — the schedule rides on the same convention so
+ * the elder reviewer touches every surface in one pass and replaces
+ * the draft strings here when the verified versions are ready.
+ */
+export const TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER =
+  "Anishininiimowin draft — written alongside the English schedule, awaiting review by an Anishininiimowin-speaking elder before this side of the sheet is printed for Deer Lake elders. Read the English column as the authoritative version until the verified Oji-Cree pass lands.";
+
+/**
+ * Translation row paralleling `TrialTimelineWeek` for non-English
+ * locales. Only the four prose fields the elder reviewer will revise
+ * — `focus`, `deliverables`, `meetings`, `gatingDecision` — live
+ * here. The `week` number ties each row back to its English row
+ * (`TrialTimelineWeek.week`); shared structural fields (week index,
+ * `windowLabel` day window, `acceptanceCriterionDelivered` index)
+ * stay on the English schedule and are reused by every locale so the
+ * surface markup never has to fork the layout per locale.
+ *
+ * `gatingDecision` follows the same null-vs-string convention as the
+ * English entry — if the English week has no formal gate, the
+ * translated row is `null` too (the lockedTrialOffer guard test
+ * asserts this).
+ */
+export interface TrialTimelineWeekTranslation {
+  /** 1-indexed week number; mirrors `TrialTimelineWeek.week`. */
+  week: number;
+  /** Translated focus headline (parallels `TrialTimelineWeek.focus`). */
+  focus: string;
+  /** Translated deliverables sentence (parallels `.deliverables`). */
+  deliverables: string;
+  /** Translated meetings sentence (parallels `.meetings`). */
+  meetings: string;
+  /**
+   * Translated gating-decision sentence (parallels `.gatingDecision`).
+   * `null` whenever the English entry's `gatingDecision` is `null`,
+   * so the bilingual row collapses cleanly on every surface.
+   */
+  gatingDecision: string | null;
+}
+
 export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
   {
     week: 1,
@@ -321,5 +388,119 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     gatingDecision:
       "Week-eight review decision. Refund-invocation deadline runs from this meeting; an invocation made later than fourteen (14) calendar days is out of time and the trial is deemed accepted.",
     acceptanceCriterionDelivered: 3,
+  },
+] as const;
+
+/**
+ * Anishininiimowin (Oji-Cree, Severn dialect) draft of `TRIAL_TIMELINE`.
+ *
+ * STATUS: WORKING DRAFT. Written alongside the English schedule by
+ * the practitioner team; not elder-reviewed yet. Every surface that
+ * prints this column also prints `TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER`
+ * above it, so a reader cannot mistake the draft for the verified
+ * version. The broader Oji-Cree pass on the walkthrough deck and the
+ * one-pager (the existing "Translate the deck into Oji-Cree" project
+ * task) is the home for the elder verification — when that lands,
+ * the verified strings replace the drafts here in place, and the
+ * disclaimer is dropped.
+ *
+ * The week numbers below match `TRIAL_TIMELINE` 1:1 (week 1..8) so
+ * the bilingual surfaces can render the two arrays in parallel
+ * without per-week lookups, and the `gatingDecision` field is `null`
+ * exactly when the English row's `gatingDecision` is `null` (week 5)
+ * so the bilingual row collapses cleanly. Both invariants are
+ * asserted by the lockedTrialOffer guard test.
+ *
+ * Style notes for the elder reviewer:
+ *   - Romanised orthography (not syllabics) so the printed sheet
+ *     stays single-column without a font swap; switch to syllabics
+ *     in a follow-up if Deer Lake elders prefer.
+ *   - Plain language over loan translations; English borrowings
+ *     ("MOU", "Step 1", "$40,000", "$90,000", "Headwaters") are
+ *     left in English as code-switches, the way they are spoken in
+ *     practice in the community.
+ *   - One short sentence per field where possible — the printable
+ *     one-pager runs the bilingual rows tight against each other
+ *     and a long Oji-Cree paragraph breaks the row layout.
+ */
+export const TRIAL_TIMELINE_OJICREE: readonly TrialTimelineWeekTranslation[] = [
+  {
+    week: 1,
+    focus: "Ozhibii'igewin miinawaa maajitaawin",
+    deliverables:
+      "Niigaanibatoojig o-onaakonigewiniwaa ozhibii'igaade. Onaakonigewi-mazina'igan ozhibii'igaade ji-bagidiniwaad onaakonigewikamigong. Nitam gii-izhaad noongom adaawewigamigong gii-mazinaabii'igaade.",
+    meetings:
+      "Nitamigiizhigak: ozhibii'igewi-mawanjiidiwin Headwaters miinawaa onaakonigewikamig. Niigaanibatood miinawaa anishinaabe-okimaakaan gii-mawanjiidiwag jiibwaa. Adaawewigamigong-niigaanibatood gii-giigidotaagod biindig-giigidowin onji.",
+    gatingDecision:
+      "Onaakonigewin ji-maajitaad odazhitoowin gii-ozhibii'igaade noongom-anama'e-giizhigak; ji-bagidiniwaad niizh-anama'e-giizhigak onaakonigewikamigong.",
+  },
+  {
+    week: 2,
+    focus: "Onaakonigewin · niigaanibatoojig wiindamaagewag",
+    deliverables:
+      "Niigaanibatoojig wiindamaagewag — niso onaakonigewikamigong, niizh anishinabewinjig. O-onaakonigewiniwaa ozhibii'igaade naanan-niigaanibatoojig ji-aabajitoowaad. Dakaayaa-bimibatoo gii-giigidoo-aade nitam.",
+    meetings:
+      "Onaakonigewikamig-mawanjiidiwin (onaakonigewin gii-anaamikinige). Niizh anishinaabe-niigaanibatoojig gii-aabichinaadiwag bedosed. Adaawewigamigong-niigaanibatood gii-giigidotaagod dakaayaa-bimibatoo onji.",
+    gatingDecision:
+      "Onaakonigewikamig dazhi-bagidinige onaakonigewin. Gaawiin dash, gegoo da-noogishkaag: niso-mazina'igan zhooniyaa gaawiin da-andawenjigesinoog, miinawaa nishwaaso-anama'e-giizhigak waabamigewin onji ge-andawenjigaadeg azhe-miinigewin.",
+  },
+  {
+    week: 3,
+    focus: "Niigaani-mawanjiidiwin gii-mawanjiisawag · onaakonigewi-mazina'igan gii-ozhibii'igaade",
+    deliverables:
+      "Niigaani-mawanjiidiwining onaakonigewi-mazina'igan gii-ozhibii'igaade naanan-niigaanibatoojig nitam-mawanjiidiwaad — o-onaakonigewiniwaa wewenisidoonig onaakonigewikamigong.",
+    meetings:
+      "Niigaani-mawanjiidiwin nitam (maajitaag miinawaa onaakonigewi-mazina'igan ozhibii'igaade). Adaawewigamigong gii-bimose dakaayaa-gajigewin onji.",
+    gatingDecision:
+      "Onaakonigewi-mazina'igan ozhibii'igaade → §7 ozhitoogaade #1 gii-debibinige.",
+  },
+  {
+    week: 4,
+    focus: "Aabita-gojitoowin · ningotwaaso-giizis-ozhitoowin nitam-noondaagewin · niizh-zhooniyaa da-andawendaagwad",
+    deliverables:
+      "Nitam ozhitoogaade ningotwaaso-giizis-ozhitoowin (adaawewigamig-onaakonigewin, baagininangewi-giizhigak, gaganoonidiwi-zhooniyaa). Dakaayaa-bimibatoo MOU gii-ozhibii'igaade adaawewigamigong.",
+    meetings:
+      "Niigaani-mawanjiidiwin niizh (nitam-noondaagewin ozhitoowin onji). Anishinaabe-mawanjiidiwin nitam (anokiitaadiwi-mawanjiidiwin). Adaawewigamigong MOU dazhindamoog.",
+    gatingDecision:
+      "Niizh-$20,000 zhooniyaa da-mazinaakidewin majinjiwa'amaazod aabita-gojitoowining.",
+  },
+  {
+    week: 5,
+    focus: "Anishinaabe-noondaagewin · MOU-zhakwii'igewin · zhooniyaa-mazina'igan-maajitaawin",
+    deliverables:
+      "Ozhitoowin gii-naagajitamaagaadeg anishinaabe-noondaagewin onji. Dakaayaa-bimibatoo MOU gii-zhakwii'igaade adaawewigamigong. Nitam-bibooni-zhooniyaa-mazina'igan gii-maajitaagaade zhooniyaa-bizindaad omawanjiidaan.",
+    meetings:
+      "Anishinaabe-mawanjiidiwin niizh. Adaawewigamig-MOU zhakwii'igewi-mawanjiidiwin. Zhooniyaa-bizindaad omawanjiidaan ji-ozhitoowaad nitam-bibooni-zhooniyaa.",
+    gatingDecision: null,
+  },
+  {
+    week: 6,
+    focus: "Ningotwaaso-giizis-ozhitoowin gii-debibinige",
+    deliverables:
+      "Ningotwaaso-giizis-ozhitoowin gii-debibinige niigaani-mawanjiidiwining mazina'iganang. Dakaayaa-bimibatoo MOU besho jiibwaagaade.",
+    meetings:
+      "Niigaani-mawanjiidiwin niso (debibinigewin onji ozhitoowin). Adaawewigamigong MOU besho jiibwaagaade dazhindamoog.",
+    gatingDecision:
+      "Niigaani-mawanjiidiwin obizindamaagonan ozhitoowin → §7 ozhitoogaade #2 gii-debibinige.",
+  },
+  {
+    week: 7,
+    focus: "Dakaayaa-bimibatoo gojitoowi-MOU gii-ozhibii'igaade",
+    deliverables:
+      "Dakaayaa-bimibatoo MOU gii-ozhibii'igaade Headwaters miinawaa adaawewigamig — biminizha'igewi-ozhitoowin, zhaangaaso-midaaso-giizhigak gojitoowin-pebakaan, miikaadenamodag gegoo. Nitam-bibooni-zhooniyaa-mazina'igan ozhibii'igaade onaakonigewikamig-zhooniyaa-bizindamoodag onji.",
+    meetings:
+      "MOU-ozhibii'igewi-mawanjiidiwin adaawewigamigong. Onaakonigewikamig-zhooniyaa-bizindamoodag pre-read.",
+    gatingDecision:
+      "MOU gii-ozhibii'igaade → §7 ozhitoogaade #3 gii-debibinige. Mazina'igan biidaabamod nishwaaso-anama'e-giizhigak waabamigewin (giizhig 56) gii-azhe-andigaade.",
+  },
+  {
+    week: 8,
+    focus: "Bibooni-zhooniyaa onaakonigewikamigong · nishwaaso-anama'e-giizhigak waabamigewin (giizhig 56)",
+    deliverables:
+      "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $90,000-aabita-giizis-mazina'igan, ~$181,000 nitam-giizhig-azhe-aabajichigewin, miinawaa 35% azhe-bidoonigewin.",
+    meetings:
+      "Onaakonigewikamigong-mawanjiidiwin zhooniyaa onji. Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwin niigaanibatood — zhaangaaso-midaaso-ningotwaaso giizhigak ozhibii'igewin onji — niigaanibatood obawaadagonan iniw newin §7 ozhitoogaadeg, ji-Step 1 izhaag, gemaa azhe-miinigewin gawaadabamigaazod (newin-midaaso giizhigak ishkwaaj waabamigewin), gemaa-go ji-meshkwajiwaadag $40,000 ji-zhooniyaa-bagidiniwagang Step 1 nitam-mazina'igan onji.",
+    gatingDecision:
+      "Nishwaaso-anama'e-giizhigak waabamigewin onaakonigewin. Azhe-miinigewi-andawendaagwadowin majiidoo waabamigewin onji; newin-midaaso giizhigak ishkwaaj eta da-andawendaagwad — gawiin dash, gojitoowin gii-debibinige.",
   },
 ] as const;

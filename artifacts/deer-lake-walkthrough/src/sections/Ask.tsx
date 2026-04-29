@@ -8,6 +8,10 @@ import {
   TRIAL_NO_TEAM_LINE,
   TRIAL_REFUND_MECHANIC,
   TRIAL_TIMELINE,
+  TRIAL_TIMELINE_LOCALE_EN,
+  TRIAL_TIMELINE_LOCALE_OJ,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
+  TRIAL_TIMELINE_OJICREE,
   TRIAL_WEEK_8_REVIEW_DAY,
 } from "@workspace/headwaters-pricing";
 
@@ -167,10 +171,23 @@ export default function Ask() {
             review meeting lands on day {TRIAL_WEEK_8_REVIEW_DAY} from
             signing day.
           </p>
+          <div
+            className="mt-3 rounded-md border px-3 py-2 text-[12.5px] leading-[1.45] italic"
+            style={{
+              borderColor: "var(--color-rule)",
+              background: "var(--color-bg)",
+              color: "var(--color-muted)",
+            }}
+          >
+            {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+          </div>
           <ol className="mt-3 space-y-2 list-none pl-0">
             {TRIAL_TIMELINE.map((week) => {
               const acIndex = week.acceptanceCriterionDelivered;
               const delivers = acIndex !== null;
+              const ojiWeek = TRIAL_TIMELINE_OJICREE.find(
+                (w) => w.week === week.week,
+              );
               return (
                 <li
                   key={week.week}
@@ -191,36 +208,98 @@ export default function Ask() {
                     >
                       W{week.week} · {week.windowLabel}
                     </div>
-                    <div
-                      className="serif text-[14.5px] leading-[1.3] font-semibold flex-1"
-                      style={{ color: "var(--color-primary)" }}
-                    >
-                      {week.focus}
+                    <div className="flex-1">
+                      <div
+                        className="serif text-[14.5px] leading-[1.3] font-semibold"
+                        style={{ color: "var(--color-primary)" }}
+                      >
+                        {week.focus}
+                      </div>
+                      {ojiWeek ? (
+                        <div
+                          className="serif text-[13.5px] leading-[1.3] font-medium italic mt-0.5"
+                          style={{ color: "var(--color-muted)" }}
+                          lang="oj"
+                        >
+                          {ojiWeek.focus}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
-                  <div
-                    className="serif text-[13.5px] leading-[1.45] mt-1.5"
-                    style={{ color: "var(--color-text)" }}
-                  >
-                    <span className="font-semibold">Deliverables.</span>{" "}
-                    {week.deliverables}
-                  </div>
-                  <div
-                    className="serif text-[13.5px] leading-[1.45] mt-1"
-                    style={{ color: "var(--color-text)" }}
-                  >
-                    <span className="font-semibold">Meetings.</span>{" "}
-                    {week.meetings}
-                  </div>
-                  {week.gatingDecision ? (
-                    <div
-                      className="serif text-[13.5px] leading-[1.45] mt-1"
-                      style={{ color: "var(--color-text)" }}
-                    >
-                      <span className="font-semibold">Gating decision.</span>{" "}
-                      {week.gatingDecision}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 mt-2">
+                    <div>
+                      <div
+                        className="mono text-[9.5px] uppercase tracking-[0.18em] mb-0.5"
+                        style={{ color: "var(--color-muted)" }}
+                      >
+                        {TRIAL_TIMELINE_LOCALE_EN}
+                      </div>
+                      <div
+                        className="serif text-[13.5px] leading-[1.45]"
+                        style={{ color: "var(--color-text)" }}
+                      >
+                        <span className="font-semibold">Deliverables.</span>{" "}
+                        {week.deliverables}
+                      </div>
+                      <div
+                        className="serif text-[13.5px] leading-[1.45] mt-1"
+                        style={{ color: "var(--color-text)" }}
+                      >
+                        <span className="font-semibold">Meetings.</span>{" "}
+                        {week.meetings}
+                      </div>
+                      {week.gatingDecision ? (
+                        <div
+                          className="serif text-[13.5px] leading-[1.45] mt-1"
+                          style={{ color: "var(--color-text)" }}
+                        >
+                          <span className="font-semibold">
+                            Gating decision.
+                          </span>{" "}
+                          {week.gatingDecision}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
+                    {ojiWeek ? (
+                      <div lang="oj">
+                        <div
+                          className="mono text-[9.5px] uppercase tracking-[0.18em] mb-0.5"
+                          style={{ color: "var(--color-muted)" }}
+                        >
+                          {TRIAL_TIMELINE_LOCALE_OJ}
+                        </div>
+                        <div
+                          className="serif text-[13.5px] leading-[1.45] italic"
+                          style={{ color: "var(--color-muted)" }}
+                        >
+                          <span className="font-semibold not-italic">
+                            Deliverables.
+                          </span>{" "}
+                          {ojiWeek.deliverables}
+                        </div>
+                        <div
+                          className="serif text-[13.5px] leading-[1.45] mt-1 italic"
+                          style={{ color: "var(--color-muted)" }}
+                        >
+                          <span className="font-semibold not-italic">
+                            Meetings.
+                          </span>{" "}
+                          {ojiWeek.meetings}
+                        </div>
+                        {ojiWeek.gatingDecision ? (
+                          <div
+                            className="serif text-[13.5px] leading-[1.45] mt-1 italic"
+                            style={{ color: "var(--color-muted)" }}
+                          >
+                            <span className="font-semibold not-italic">
+                              Gating decision.
+                            </span>{" "}
+                            {ojiWeek.gatingDecision}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
                   {delivers ? (
                     <div
                       className="mono text-[11px] uppercase tracking-[0.18em] mt-2"

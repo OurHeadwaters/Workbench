@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 
 import {
   REINVESTMENT_BUCKETS,
@@ -8,6 +8,10 @@ import {
   TRIAL_HEADLINE,
   TRIAL_OFFER_QUADRANTS,
   TRIAL_TIMELINE,
+  TRIAL_TIMELINE_LOCALE_EN,
+  TRIAL_TIMELINE_LOCALE_OJ,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
+  TRIAL_TIMELINE_OJICREE,
   TRIAL_WEEK_8_REVIEW_DAY,
   formatBucketAmount,
 } from "@workspace/headwaters-pricing";
@@ -213,7 +217,8 @@ export default function OnePager() {
             The four §7 acceptance criteria sequenced into eight weeks. Week-eight
             review meeting lands on day {TRIAL_WEEK_8_REVIEW_DAY} from signing day —
             same calendar math on every printed copy. Edit
-            <span className="font-mono"> TRIAL_TIMELINE</span> in
+            <span className="font-mono"> TRIAL_TIMELINE</span> /
+            <span className="font-mono"> TRIAL_TIMELINE_OJICREE</span> in
             <span className="font-mono"> @workspace/headwaters-pricing</span>,
             not this sheet.{" "}
             <a
@@ -223,15 +228,21 @@ export default function OnePager() {
               Print the eight signable check-in sheets →
             </a>
           </div>
+          <div
+            className="text-[7.5pt] text-[#6b7665] mb-[4pt] leading-[1.35] italic border border-[#c8bfa7] bg-[#fdf7e8] px-[6pt] py-[4pt] rounded-[2pt]"
+          >
+            {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+          </div>
           <table
             className="w-full text-[8.5pt] border-collapse"
             style={{ tableLayout: "fixed" }}
           >
             <thead>
               <tr className="border-b border-[#c8bfa7] text-left text-[#6b7665] font-semibold">
-                <th className="py-[3pt] pr-[4pt] w-[12%]">Week</th>
-                <th className="py-[3pt] pr-[4pt] w-[26%]">Focus</th>
-                <th className="py-[3pt] pr-[4pt] w-[42%]">Deliverables · meetings</th>
+                <th className="py-[3pt] pr-[4pt] w-[10%]">Week</th>
+                <th className="py-[3pt] pr-[4pt] w-[12%]">Locale</th>
+                <th className="py-[3pt] pr-[4pt] w-[22%]">Focus</th>
+                <th className="py-[3pt] pr-[4pt] w-[36%]">Deliverables · meetings</th>
                 <th className="py-[3pt] w-[20%]">Gate · §7 criterion</th>
               </tr>
             </thead>
@@ -240,54 +251,116 @@ export default function OnePager() {
                 const isLast = idx === TRIAL_TIMELINE.length - 1;
                 const acIndex = week.acceptanceCriterionDelivered;
                 const delivers = acIndex !== null;
+                const ojiWeek = TRIAL_TIMELINE_OJICREE.find(
+                  (w) => w.week === week.week,
+                );
+                const rowGroupBackground = delivers ? "#f7ecdc" : undefined;
+                const englishRowClass = ojiWeek
+                  ? undefined
+                  : isLast
+                    ? undefined
+                    : "border-b border-[#e3dac4]";
+                const ojiRowClass = isLast
+                  ? undefined
+                  : "border-b border-[#e3dac4]";
                 return (
-                  <tr
-                    key={week.week}
-                    className={isLast ? undefined : "border-b border-[#e3dac4]"}
-                    style={
-                      delivers
-                        ? { background: "#f7ecdc" }
-                        : undefined
-                    }
-                  >
-                    <td className="py-[3pt] pr-[4pt] font-semibold text-[#1f3d2e]">
-                      W{week.week}
-                      <div className="font-mono text-[7pt] text-[#6b7665] uppercase tracking-[0.16em] font-normal">
-                        {week.windowLabel}
-                      </div>
-                    </td>
-                    <td className="py-[3pt] pr-[4pt] font-semibold">
-                      {week.focus}
-                    </td>
-                    <td className="py-[3pt] pr-[4pt] leading-[1.4]">
-                      <div>
-                        <span className="font-semibold">Deliverables.</span>{" "}
-                        {week.deliverables}
-                      </div>
-                      <div className="mt-[2pt]">
-                        <span className="font-semibold">Meetings.</span>{" "}
-                        {week.meetings}
-                      </div>
-                    </td>
-                    <td className="py-[3pt] leading-[1.4]">
-                      {week.gatingDecision ? (
-                        <div>{week.gatingDecision}</div>
-                      ) : (
-                        <div className="text-[#6b7665] italic">
-                          No formal gate this week.
+                  <Fragment key={week.week}>
+                    <tr
+                      className={englishRowClass}
+                      style={
+                        rowGroupBackground
+                          ? { background: rowGroupBackground }
+                          : undefined
+                      }
+                    >
+                      <td
+                        className="py-[3pt] pr-[4pt] font-semibold text-[#1f3d2e]"
+                        rowSpan={ojiWeek ? 2 : 1}
+                      >
+                        W{week.week}
+                        <div className="font-mono text-[7pt] text-[#6b7665] uppercase tracking-[0.16em] font-normal">
+                          {week.windowLabel}
                         </div>
-                      )}
-                      {delivers ? (
-                        <div className="mt-[2pt] font-semibold text-[#b85a3e]">
-                          §7 criterion #{(acIndex ?? 0) + 1} delivered:
-                          <span className="font-normal text-[#2a2520] italic">
-                            {" "}
-                            {TRIAL_ACCEPTANCE_CRITERIA[acIndex ?? 0]}
-                          </span>
+                      </td>
+                      <td className="py-[3pt] pr-[4pt] font-mono text-[6.5pt] uppercase tracking-[0.14em] text-[#6b7665]">
+                        {TRIAL_TIMELINE_LOCALE_EN}
+                      </td>
+                      <td className="py-[3pt] pr-[4pt] font-semibold">
+                        {week.focus}
+                      </td>
+                      <td className="py-[3pt] pr-[4pt] leading-[1.4]">
+                        <div>
+                          <span className="font-semibold">Deliverables.</span>{" "}
+                          {week.deliverables}
                         </div>
-                      ) : null}
-                    </td>
-                  </tr>
+                        <div className="mt-[2pt]">
+                          <span className="font-semibold">Meetings.</span>{" "}
+                          {week.meetings}
+                        </div>
+                      </td>
+                      <td
+                        className="py-[3pt] leading-[1.4]"
+                        rowSpan={ojiWeek ? 2 : 1}
+                      >
+                        {week.gatingDecision ? (
+                          <div>{week.gatingDecision}</div>
+                        ) : (
+                          <div className="text-[#6b7665] italic">
+                            No formal gate this week.
+                          </div>
+                        )}
+                        {ojiWeek?.gatingDecision ? (
+                          <div
+                            className="mt-[2pt] italic text-[#6b7665]"
+                            lang="oj"
+                          >
+                            {ojiWeek.gatingDecision}
+                          </div>
+                        ) : null}
+                        {delivers ? (
+                          <div className="mt-[2pt] font-semibold text-[#b85a3e]">
+                            §7 criterion #{(acIndex ?? 0) + 1} delivered:
+                            <span className="font-normal text-[#2a2520] italic">
+                              {" "}
+                              {TRIAL_ACCEPTANCE_CRITERIA[acIndex ?? 0]}
+                            </span>
+                          </div>
+                        ) : null}
+                      </td>
+                    </tr>
+                    {ojiWeek ? (
+                      <tr
+                        className={ojiRowClass}
+                        style={
+                          rowGroupBackground
+                            ? { background: rowGroupBackground }
+                            : undefined
+                        }
+                        lang="oj"
+                      >
+                        <td className="py-[3pt] pr-[4pt] font-mono text-[6.5pt] uppercase tracking-[0.14em] text-[#6b7665]">
+                          {TRIAL_TIMELINE_LOCALE_OJ}
+                        </td>
+                        <td className="py-[3pt] pr-[4pt] font-semibold italic text-[#6b7665]">
+                          {ojiWeek.focus}
+                        </td>
+                        <td className="py-[3pt] pr-[4pt] leading-[1.4] italic text-[#6b7665]">
+                          <div>
+                            <span className="font-semibold not-italic">
+                              Deliverables.
+                            </span>{" "}
+                            {ojiWeek.deliverables}
+                          </div>
+                          <div className="mt-[2pt]">
+                            <span className="font-semibold not-italic">
+                              Meetings.
+                            </span>{" "}
+                            {ojiWeek.meetings}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : null}
+                  </Fragment>
                 );
               })}
             </tbody>

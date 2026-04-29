@@ -16,6 +16,10 @@ import {
   TRIAL_REFUND_PAYMENT_DAYS,
   TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA,
   TRIAL_TIMELINE,
+  TRIAL_TIMELINE_LOCALE_EN,
+  TRIAL_TIMELINE_LOCALE_OJ,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
+  TRIAL_TIMELINE_OJICREE,
   TRIAL_WEEK_8_REVIEW_DAY,
   TRIAL_WHAT_SURVIVES_REFUND,
   TRIAL_DURATION_WEEKS,
@@ -297,6 +301,95 @@ describe("Step 0 paid-trial offer · single source of truth", () => {
       );
       expect(ask).toContain("TRIAL_TIMELINE");
       expect(onepager).toContain("TRIAL_TIMELINE");
+    });
+  });
+
+  describe("Anishininiimowin (Oji-Cree, Severn) draft sits alongside the English schedule", () => {
+    it("locale labels are non-empty and named for the Severn dialect, not the umbrella term", () => {
+      expect(TRIAL_TIMELINE_LOCALE_EN.length).toBeGreaterThan(0);
+      expect(TRIAL_TIMELINE_LOCALE_OJ.length).toBeGreaterThan(0);
+      // The dialect spoken at Deer Lake First Nation is the Severn
+      // variety of Oji-Cree (Anishininiimowin); the label has to call
+      // that out so the elder reviewer knows which dialect to verify.
+      expect(TRIAL_TIMELINE_LOCALE_OJ).toContain("Anishininiimowin");
+      expect(TRIAL_TIMELINE_LOCALE_OJ).toContain("Severn");
+    });
+
+    it("review-status disclaimer flags the Oji-Cree column as a working draft pending elder review", () => {
+      expect(TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER.length).toBeGreaterThan(80);
+      // Every printed copy must visibly tell the reader the column is
+      // a working draft and not the elder-verified version yet, so the
+      // disclaimer's two key signals (working draft + elder review) are
+      // present verbatim.
+      expect(TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER.toLowerCase()).toContain(
+        "draft",
+      );
+      expect(TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER.toLowerCase()).toContain(
+        "elder",
+      );
+    });
+
+    it("Oji-Cree timeline has the same number of weeks as the English schedule", () => {
+      expect(TRIAL_TIMELINE_OJICREE).toHaveLength(TRIAL_TIMELINE.length);
+      expect(TRIAL_TIMELINE_OJICREE).toHaveLength(TRIAL_DURATION_WEEKS);
+    });
+
+    it("each Oji-Cree row mirrors the English row's week number 1:1 in order", () => {
+      TRIAL_TIMELINE_OJICREE.forEach((entry, i) => {
+        expect(entry.week).toBe(i + 1);
+        expect(entry.week).toBe(TRIAL_TIMELINE[i]!.week);
+      });
+    });
+
+    it("every Oji-Cree row has non-empty focus, deliverables, meetings strings", () => {
+      for (const entry of TRIAL_TIMELINE_OJICREE) {
+        expect(entry.focus.length).toBeGreaterThan(0);
+        expect(entry.deliverables.length).toBeGreaterThan(20);
+        expect(entry.meetings.length).toBeGreaterThan(20);
+      }
+    });
+
+    it("Oji-Cree gatingDecision is null exactly when the English gatingDecision is null", () => {
+      // The bilingual surfaces collapse the gating-decision row when
+      // there's no formal gate that week (e.g. week 5). A drift here
+      // would render an empty cell on one column and prose on the
+      // other, breaking the side-by-side layout.
+      TRIAL_TIMELINE.forEach((englishWeek, i) => {
+        const ojiWeek = TRIAL_TIMELINE_OJICREE[i]!;
+        expect(ojiWeek.gatingDecision === null).toBe(
+          englishWeek.gatingDecision === null,
+        );
+      });
+    });
+
+    it("Oji-Cree text is distinct from the English text on every week (i.e. the column was actually translated, not copied)", () => {
+      // Catches a regression where someone "translates" by pasting
+      // the English string into the Oji-Cree slot.
+      TRIAL_TIMELINE.forEach((englishWeek, i) => {
+        const ojiWeek = TRIAL_TIMELINE_OJICREE[i]!;
+        expect(ojiWeek.focus).not.toBe(englishWeek.focus);
+        expect(ojiWeek.deliverables).not.toBe(englishWeek.deliverables);
+        expect(ojiWeek.meetings).not.toBe(englishWeek.meetings);
+        if (englishWeek.gatingDecision !== null) {
+          expect(ojiWeek.gatingDecision).not.toBe(englishWeek.gatingDecision);
+        }
+      });
+    });
+
+    it("walkthrough Ask renders both locales by importing TRIAL_TIMELINE_OJICREE and the disclaimer", () => {
+      const ask = readSurface(
+        "artifacts/deer-lake-walkthrough/src/sections/Ask.tsx",
+      );
+      expect(ask).toContain("TRIAL_TIMELINE_OJICREE");
+      expect(ask).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
+    });
+
+    it("printable one-pager renders both locales by importing TRIAL_TIMELINE_OJICREE and the disclaimer", () => {
+      const onepager = readSurface(
+        "artifacts/practitioner-operating-plan/src/pages/OnePager.tsx",
+      );
+      expect(onepager).toContain("TRIAL_TIMELINE_OJICREE");
+      expect(onepager).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
     });
   });
 
