@@ -88,32 +88,25 @@ export default function WhatHeadwatersDelivers() {
             className="mono text-[10px] uppercase tracking-[0.22em] mb-2"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            What's inside the eight-week trial · what isn't
+            Trial vs. Step 1
           </div>
           <p
             className="serif text-[15px] leading-[1.5]"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Eight weeks. The
-            practitioner alone.</span> No team yet. Nothing built
-            yet. Out comes the four written things below:
+            <span className="font-semibold">Trial · eight weeks.</span>{" "}
+            Practitioner alone. No team. Four written things land:
+            steering committee, co-design plan, cold-chain pilot
+            scope, year-one budget.
           </p>
-          <ol
-            className="serif text-[14.5px] leading-[1.45] mt-2 mb-3 list-decimal pl-5"
-            style={{ color: "var(--color-text)" }}
-          >
-            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
-              <li key={criterion}>{criterion}</li>
-            ))}
-          </ol>
           <p
-            className="serif text-[15px] leading-[1.5]"
+            className="serif text-[15px] leading-[1.5] mt-2"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Step 1 brings the full
-            team in at $90,000 a month</span> — seven people, the
-            cold-chain pilot, the software build, training, day-one
-            gear. The three things below are what Step 1 buys.
+            <span className="font-semibold">Step 1 · $90,000 a
+            month.</span> Full team — seven people, cold-chain pilot,
+            software, training, day-one gear. Below: what Step 1
+            buys.
           </p>
         </div>
 
@@ -167,6 +160,21 @@ export default function WhatHeadwatersDelivers() {
           lives outside this artifact.
         */}
         <div className="mt-8 space-y-3">
+          <Reveal label="The four trial deliverables, in full">
+            <p>
+              The full contractual wording of the four §7 acceptance
+              criteria — what the contractor signs off on at the
+              week-eight review meeting.
+            </p>
+            <ol
+              className="list-decimal pl-5 space-y-2 mt-2"
+            >
+              {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
+                <li key={criterion}>{criterion}</li>
+              ))}
+            </ol>
+          </Reveal>
+
           <Reveal label="Proof for line 2 — the cold-chain plan is already drawn">
             <p>
               The route is already planned: Thunder Bay → Sioux Lookout →
