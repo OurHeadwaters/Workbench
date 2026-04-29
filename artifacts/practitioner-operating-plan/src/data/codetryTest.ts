@@ -111,8 +111,8 @@ export type CodetryTestGroup = {
   entries: CodetryTestEntry[];
 };
 
-// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473)
-// =========================================================
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #474)
+// =================================================================
 // The "Constellation-wide primitives" group below is a *curated audit*
 // over the canonical names registered in the constellation manifest's
 // `constellationWidePrimitives`. It is not auto-generated from the
@@ -121,21 +121,26 @@ export type CodetryTestGroup = {
 // primitive specifically. The Standby's "first such primitive"
 // framing in the group `framing` field, and its `bothStatesNote`
 // language about being "the exemplar of the both-states principle",
-// are Standby-only and would not generalize to The Gate. When adding a
-// Gate entry to this group, the group `framing` field will need a
-// rewrite that names both primitives without inheriting Standby's
-// "first" framing, and The Gate gets its own entry with its own
-// `whatWouldChange` (about the both-sides / massity-vs-bright-side
-// duality, not slow-vs-fast) and its own audit narrative — never a
-// templated copy of The Standby's. See
-// artifacts/codetry-handbook/data/foundingExamples.ts for the
+// are Standby-only and do not generalize to The Gate. The Gate's
+// entry below carries its own `whatWouldChange` (about the bright-
+// side/massity contextual duality, not the Standby's slow/fast
+// temporal duality), its own rejected-rename trial drawn from the
+// manifest's four single-side or single-direction names that were
+// turned down, and a `bothStatesVerdict` of "n-a" with a
+// `bothStatesNote` that explains why: the Gate's duality lives on a
+// different axis (principles.both-sides) than the both-states column
+// is scored on. When adding a third non-zone primitive, write its own
+// audit narrative from scratch — do not template over The Standby's
+// or The Gate's — and update the group `framing` field to name it
+// alongside the existing two without inheriting either's framing.
+// See artifacts/codetry-handbook/data/foundingExamples.ts for the
 // per-primitive content-layer pattern that the chapter generator now
-// uses to keep Standby's prose from leaking onto The Gate.
+// uses to keep one primitive's prose from leaking onto another.
 export const codetryTest: CodetryTestGroup[] = [
   {
     artifact: "Constellation-wide primitives",
     framing:
-      "Names that aren't owned by any single artifact — the constellation reads them across every zone. The Standby is the first such primitive, and the both-states principle (principles.both-states) was filed in the constellation manifest alongside it. This group is where holds-both verdicts live; the financial artifacts below are saltbox-principle work and score n-a on the both-states column.",
+      "Names that aren't owned by any single artifact — the constellation reads them across every zone. Two non-zone primitives are filed here so far: The Standby carries principles.both-states (one system in two tempos — slow always-on practice and fast active event) and The Gate carries principles.both-sides (one system facing two audiences — the constellation's own bright-side dialect and massity, the mass-society dialect of regulators, bankers, funders, and lawyers). Both were registered in the constellation manifest in the same pass, on different axes. This group is where holds-both verdicts live alongside their both-sides cousins; the financial artifacts below are saltbox-principle work and score n-a on the both-states column. Per-primitive prose only — neither entry's audit narrative templates over the other's, since the principles they carry are on different axes and a single template would erase the distinction.",
     entries: [
       {
         name: "The Standby",
@@ -152,6 +157,22 @@ export const codetryTest: CodetryTestGroup[] = [
         bothStatesVerdict: "holds-both",
         bothStatesNote:
           "The exemplar of the both-states principle and the reason the principle was filed. One word does both jobs: the slow side (always-on preparation, standby stock, the watch as a posture, the standby rung sleeved in) and the fast side (a call, the active rung, the debrief, the standdown). The constellation manifest's `rejectedAlternatives` records the two single-state forks that were tried and turned down — 'The Common Pantry' (holds the slow side beautifully but can't hold a fire call or a payment-systems outage without straining the metaphor) and 'The Watch' (holds the active-monitoring posture but can't hold the slow shelf without bending into a permanent vigil). Each survives inside the umbrella as a sub-noun (Pantry as the food/supply sub-shelf; Watch as the active-monitoring sub-noun) — sub-nouns, not replacements.",
+      },
+      {
+        name: "The Gate",
+        livesAt:
+          "constellation.json constellationWidePrimitives.the-gate (hosted Zone 3, sibling to The Standby) · /codetry working-doc under principles.both-sides · external runnable surface at legacy-gatekeeper.replit.app (in-repo home deferred to a follow-up task — either artifacts/the-gate, or a /gate shell page in headwaters-books that reads this manifest verbatim and links out, or both) · per-zone reads anywhere a zone's work has to leave the constellation in writing (grant applications, CRA filings, regulator forms, banker meetings, council resolutions)",
+        renameCandidate:
+          "Translator (collapses posture into pure transaction) · Filter (subtractive mis-frame) · Censor (adversarial framing) · Glossary (dictionary side only) · split into 'the Translator' (bright-to-massity outbound) + 'the Importer' (massity-to-bright inbound)",
+        whatWouldChange:
+          "The Gate is a calm membrane between the bright side (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and massity (mass-society dialect: resident, bank account, financial statements, inventory reserves, compliance officer). It carries a four-rung severity ladder (draft / under-review / cleared / refused — where 'refused' is a first-class outcome for source-side language with no honest target-side equivalent the founder is unwilling to lose) and three sub-shelves (Mappings as the dictionary side, Substitutions as the applied-instance ledger, Categories as the domain shelves). Renaming to 'Translator' flattens the posture into pure transaction — a translator processes; the Gate decides whether to, and the 'refused' rung disappears. Renaming to 'Filter' mis-frames the work as subtractive — the Gate doesn't remove language, it relabels in flight while keeping both names on file. Renaming to 'Censor' carries punitive weight the metaphor refuses; the Gate is collaborative with the founder, not adversarial. Renaming to 'Glossary' loses the active posture and the substitutions ledger — a glossary sits on a shelf; the Gate is the shelf, the room, and the work happening inside. Splitting into 'the Translator' (outbound) + 'the Importer' (inbound) — both single-direction names along the same axis as the four already rejected on paper in the manifest's `rejectedAlternatives` — produces two pipes and no posture: no shared category shelf, no shared mappings dictionary, no shared refused-rung discipline, and no record that both names exist for the same thing. Every zone whose work has to face an external counterparty in writing reads the Gate; the vocabulary is what travels with the work.",
+        verdict: "load-bearing",
+        wouldTypeCheck: "n-a",
+        typeCheckNote:
+          "No in-repo schema yet — the runnable surface lives externally at legacy-gatekeeper.replit.app and the constellation manifest registers The Gate as naming-and-filing only on this pass. The type system has nothing to read. The codetry test (with the both-sides reading captured in the bothStatesNote below, since the column itself only scores the slow/fast axis) is the only thing that catches a directional split or a posture-flatten before it happens.",
+        bothStatesVerdict: "n-a",
+        bothStatesNote:
+          "The Gate's duality is not slow/fast (the both-states axis); it is bright-side/massity — two contexts that hold different vocabularies as legitimate. The principle filed alongside it in the manifest is principles.both-sides, not principles.both-states, on purpose: where The Standby is one system in two tempos, The Gate is one system facing two audiences. On the both-states column the verdict is therefore n-a; the audit equivalent on the both-sides axis lives in this note. On that axis the Gate scores 'holds both sides' — one umbrella name fits both the bright side and massity without flattening either, and the manifest's `rejectedAlternatives` records the four single-side or single-direction names that were turned down because none could: 'Translator' (collapses posture into transaction), 'Filter' (subtractive), 'Censor' (adversarial), 'Glossary' (dictionary without the room). Each surfaces inside the umbrella as a sub-shelf or a sub-posture — Mappings is the dictionary the Glossary trial wanted to be, Substitutions is the directional ledger the Translator trial wanted to be — sub-nouns, not replacements.",
       },
     ],
   },

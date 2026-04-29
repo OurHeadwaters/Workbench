@@ -3,24 +3,26 @@ type ConstellationEntry = {
   role: string;
 };
 
-// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473)
-// =========================================================
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #474)
+// =================================================================
 // This `constellation` array is a *curated narrative list* of worked
 // examples for the Codetry design-philosophy page. It is NOT a
 // templated render of `public/constellation.json`'s
 // `constellationWidePrimitives` — every entry's prose is hand-written
 // for this page's audience. Each non-zone primitive (currently The
-// Standby; soon to include The Gate) gets its own narrative entry
-// here; copy is not shared between primitives. The Standby's framing
-// below ("the constellation's first non-zone primitive", "the
-// exemplar of the both-states principle") is Standby-specific and
-// will not generalize to The Gate (which carries the both-sides
-// principle and is the second non-zone primitive). When adding a Gate
-// entry, write its own role copy from scratch — do not template over
-// the manifest and inherit Standby's prose. The "The both-states
-// principle" section below is the same shape: it intentionally
-// narrates Standby alone; the both-sides / Gate principle gets its
-// own subhead.
+// Standby and The Gate) gets its own narrative entry here; copy is
+// not shared between primitives. The Standby's framing below ("the
+// constellation's first non-zone primitive", "the exemplar of the
+// both-states principle") is Standby-specific and does not
+// generalize to The Gate, which carries the both-sides principle and
+// is named in its own role copy below. The two principle subsections
+// in the page body ("The both-states principle" and "The both-sides
+// principle") follow the same shape: each names exactly one
+// primitive as its worked example, and neither's prose was templated
+// from the other. When adding a third non-zone primitive, write its
+// role copy from scratch — do not template over the manifest and
+// inherit Standby's or Gate's prose, and give the new principle (if
+// any) its own subhead alongside the existing two.
 const constellation: ConstellationEntry[] = [
   {
     name: "Saltbox Zone 0 (decentralized)",
@@ -61,6 +63,10 @@ const constellation: ConstellationEntry[] = [
   {
     name: "The Standby — non-zone primitive (hosted Zone 3, read by every zone)",
     role: "The constellation's first non-zone primitive. The umbrella system + always-on state for *temporary centralized disruptions* — drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down. Six-word vocabulary: *the Standby* (umbrella + always-on state), *a call* (a specific active event), *the watch* (active-monitoring posture), *standby stock* (the always-on reserves), *the debrief* (after-action synthesis), *centralized disruption* (the class of event). Four-rung severity ladder: advisory / standby / active / standdown. Two sub-shelves inside the umbrella: *The Common Pantry* (food/supply sub-noun) and *The Watch* (active-monitoring sub-noun) — each rejected as the umbrella name in turn because neither could hold both states. Hosted in Zone 3 because that is where centralized disruptions are felt collectively first; read by every zone (household checklists at Z0, standby budget envelopes at Z1, debrief synthesis at Z2, sector fragility modeling at Z4, optional public floats at Z5). The takeaway is the new codetry principle that came with it: **the name has to hold both states** — when a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+  },
+  {
+    name: "The Gate — non-zone primitive (hosted Zone 3, sibling to The Standby)",
+    role: "A calm membrane between *the bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and *massity* (mass-society dialect: resident, bank account, financial statements, inventory reserves, compliance officer). Holds the umbrella system + always-on posture for passing language across institutional boundaries — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Eight-word vocabulary: *the Gate* (umbrella + always-on posture), *the bright side* (codetry-vocabulary side), *massity* (legacy-world side), *a mapping* (a registered correspondence between a bright-side term and its massity equivalent — neighbour → resident, send → remit, fee → service charge, money → funds), *a substitution* (one applied instance of a mapping), *a category* (the domain a mapping belongs to — Pragmatism, Politics, Regulations, Privacy, Banking, …), *a translation* (the auditable record of what crossed and what changed), *a calm membrane* (the metaphor doing the load — selectively permeable, alive, not a wall and not an open door). Four-rung severity ladder: draft / under-review / cleared / refused — the *refused* rung is first-class, for source-side language with no honest target-side equivalent the founder is unwilling to lose. Three sub-shelves inside the umbrella: *Mappings* (the dictionary side), *Substitutions* (the applied-instance ledger of who used which mapping on what document, in which direction), *Categories* (the domain shelves the mappings live on). Four single-side or single-direction names rejected on paper as the umbrella in turn — *Translator* (collapses posture into pure transaction), *Filter* (subtractive mis-frame; the Gate doesn't remove language, it relabels in flight while keeping both names on file), *Censor* (carries punitive weight the metaphor refuses), *Glossary* (dictionary without the room) — because none could hold both sides without flattening one. Hosted in Zone 3 alongside The Standby because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the bookkeeper files with CRA; read by every zone whose work has to leave the constellation in writing. The runnable surface lives externally at legacy-gatekeeper.replit.app for now; a follow-up task will decide whether to bring it in-repo. The takeaway is the second new codetry principle filed in this pass: **the name has to hold both sides** — when a system has language that has to live in two contexts that hold different vocabularies as legitimate, the umbrella name has to fit both contexts in one word, or the system will pick a dialect and lose the other room.",
   },
 ];
 
@@ -206,6 +212,40 @@ export default function Codetry() {
             systems with two cultures. Sits alongside the saltbox
             principle as a naming-as-architecture rule that every new
             primitive doing double duty is checked against.
+          </p>
+
+          <Subhead>The both-sides principle</Subhead>
+          <p>
+            A third principle joined the codetry working-doc in the same
+            pass, filed as a sibling to both-states and registered in the
+            constellation manifest as{" "}
+            <span className="font-mono text-[9.5pt] print:text-[8.5pt]">
+              principles.both-sides
+            </span>
+            : <span className="italic">when a system has language that
+            has to live in two contexts that hold different vocabularies
+            as legitimate, the umbrella name has to fit both contexts in
+            one word, or the system will pick a dialect and lose the
+            other room.</span> The Gate — the constellation&rsquo;s
+            second non-zone primitive, also listed below — is its
+            worked example. The umbrella name had to fit both the{" "}
+            <span className="italic">bright side</span> (the
+            constellation&rsquo;s own dialect: neighbour, channel, the
+            books, standby stock) and{" "}
+            <span className="italic">massity</span> (mass-society
+            dialect: regulator, banker, funder, lawyer, generic SaaS
+            English), or the constellation would have picked a dialect
+            and lost the other room. Where both-states is a{" "}
+            <span className="italic">temporal</span> duality (one
+            system in two tempos, slow and fast), both-sides is a{" "}
+            <span className="italic">contextual</span> duality (one
+            system facing two audiences). The two principles are
+            siblings on different axes — both-states catches a
+            slow/fast fork, both-sides catches a dialect-collapse —
+            and the principles array in the manifest is open-ended on
+            purpose: a future primitive doing double duty along a third
+            axis (densities? scales? jurisdictions?) gets its own
+            principle filed alongside these two.
           </p>
 
           <Subhead>Worked examples — this constellation, so far</Subhead>
