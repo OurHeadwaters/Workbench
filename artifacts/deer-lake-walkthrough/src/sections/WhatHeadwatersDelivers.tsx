@@ -135,7 +135,8 @@ export default function WhatHeadwatersDelivers() {
               section below has the lane-by-lane detail.
             </p>
             <p>
-              The Phase Planner at <span className="font-semibold">/planner</span>{" "}
+              The Phase Planner at{" "}
+              <span className="font-semibold">/deer-lake-walkthrough/planner</span>{" "}
               lets the contractor flip between the self-fund and grant-funded
               scenarios live, with the cold-chain pilot back-loaded so the
               band can walk away after step three with the route built.
