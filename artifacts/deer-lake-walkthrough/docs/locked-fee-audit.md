@@ -19,14 +19,14 @@ Searched `*.ts`, `*.tsx`, `*.md` in:
 - `artifacts/deer-lake-store-plan`
 - `artifacts/deer-lake-walkthrough`
 
-Literals: `$35,000`, `$35k`, `$420,000`, `$420k`.
+Literals: `$35,000`, `$35k`, `$420,000`, `$420k`. <!-- locked-fees: ignore — listing the literals the guard scans for -->
 
 Excluded by intent: `node_modules`, `dist`, `static-build`, `_expo`,
 build artifacts.
 
 ## Results
 
-| Artifact | $35k hits | $420k hits | Surface kind | Needed label fix? |
+| Artifact | $35k hits | $420k hits | Surface kind | Needed label fix? | <!-- locked-fees: ignore — column headers, not prose -->
 | --- | --- | --- | --- | --- |
 | `practitioners-guide-v2` | 0 | 0 | — | no |
 | `practitioner-operating-plan` | 8 | 4 | code comments + cost-registry `context` strings + `__tests__` (not user-visible prose); each one already names "Layer 1 software-only" + "absorbs / replaces" | no |
@@ -46,5 +46,5 @@ build artifacts.
   mentions the Layer-1 number — the audit confirms it does today.
 - The audit is a snapshot, not a guard. Follow-up #463 proposes a
   workspace-level test that scans all four artifacts on every CI run
-  for unlabeled `$35k`/`$420k` mentions so this check becomes
+  for unlabeled `$35k`/`$420k` mentions so this check becomes <!-- locked-fees: ignore — describing what the guard scans for -->
   permanent.
