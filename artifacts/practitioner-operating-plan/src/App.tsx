@@ -23,6 +23,7 @@ import SaltCoA from "@/pages/SaltCoA";
 import SaltMonthlyClose from "@/pages/SaltMonthlyClose";
 import StudioWindDown from "@/pages/StudioWindDown";
 import InquiryTriage from "@/pages/InquiryTriage";
+import PlanB from "@/pages/PlanB";
 import Today from "@/pages/Today";
 import Week from "@/pages/Week";
 import WeekCloseOut from "@/pages/WeekCloseOut";
@@ -377,6 +378,9 @@ export default function App() {
   if (location === "/salt-monthly-close") return <SaltMonthlyClose />;
   if (location === "/studio-wind-down") return <StudioWindDown />;
   if (location === "/inquiry-triage") return <InquiryTriage />;
+  // /plan-b is a self-contained read-only briefing surface (same shape
+  // as /onepager and /inquiry-triage), so it renders outside AppLayout.
+  if (location === "/plan-b") return <PlanB />;
 
   return (
     <ToastProvider>

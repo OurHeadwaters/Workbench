@@ -30,6 +30,7 @@ const NAV_ITEMS: Array<{
     matches: (p) => p === "/lifestyle" || p.startsWith("/lifestyle/"),
   },
   { label: "One-Pager", href: "/onepager", matches: (p) => p.startsWith("/onepager") },
+  { label: "Plan B", href: "/plan-b", matches: (p) => p.startsWith("/plan-b") },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
