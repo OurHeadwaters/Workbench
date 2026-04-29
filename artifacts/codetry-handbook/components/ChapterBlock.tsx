@@ -106,6 +106,14 @@ export function ChapterBlock({
               letterSpacing: 0.6,
               textTransform: "uppercase",
             }}
+            italicStyle={{ fontFamily: MONO }}
+            onPressRef={onPressRef}
+            refStyle={{
+              color: c.foreground,
+              fontFamily: MONO,
+              textDecorationLine: "underline",
+              textDecorationColor: c.muted,
+            }}
           />
         </View>
       );

@@ -513,6 +513,38 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
   };
 });
 
+// Where each registered principle in the constellation manifest has its
+// home chapter in Part I. Used to generate the back-citation at the top
+// of each Part-III primitive chapter, so a reader who lands on the
+// worked example can tap straight back to the principle that explains
+// why the umbrella name had to do double duty. New principle ids must
+// be added here when they are registered in the manifest; the lookup
+// throws otherwise, the same discipline foundingExamples.ts uses to
+// refuse silent defaults.
+const PRINCIPLE_CHAPTER_NUMBERS: Record<string, string> = {
+  "both-states": "1.3",
+  "both-sides": "1.4",
+};
+
+function principleCitationBlock(primitiveId: string, principleId: string): Block {
+  const principle = constellation.principles.find((pr) => pr.id === principleId);
+  if (!principle) {
+    throw new Error(
+      `Primitive "${primitiveId}" cites principle "${principleId}", but no such principle is registered in the constellation manifest's principles array.`,
+    );
+  }
+  const sectionNumber = PRINCIPLE_CHAPTER_NUMBERS[principleId];
+  if (!sectionNumber) {
+    throw new Error(
+      `No Part-I chapter number registered for principle "${principleId}". Add an entry to PRINCIPLE_CHAPTER_NUMBERS in data/handbook.ts.`,
+    );
+  }
+  return {
+    kind: "small",
+    text: `Worked example for the *${principleId}* principle, introduced in §${sectionNumber}.`,
+  };
+}
+
 // Founding-primitive chapters in Part III. One chapter per
 // constellation-wide primitive registered in the bundled manifest. The
 // manifest carries each primitive's vocabulary, severity ladder, sub-
@@ -528,8 +560,11 @@ const foundingPrimitiveChapters: Chapter[] =
     const commentary = findFoundingExampleCommentary(p.id);
     const blocks: Block[] = [
       { kind: "small", text: "Constellation-wide primitive · non-zone" },
-      { kind: "para", text: p.summary },
     ];
+    if (p.principle) {
+      blocks.push(principleCitationBlock(p.id, p.principle));
+    }
+    blocks.push({ kind: "para", text: p.summary });
     if (p.hostZoneRationale) {
       blocks.push({ kind: "para", text: p.hostZoneRationale });
     }
