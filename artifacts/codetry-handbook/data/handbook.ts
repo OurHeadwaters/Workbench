@@ -1,4 +1,5 @@
 import { constellation, type WorkedExample } from "./constellation";
+import { findFoundingExampleCommentary } from "./foundingExamples";
 
 export type Block =
   | { kind: "para"; text: string }
@@ -444,9 +445,19 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
   };
 });
 
-const standbyChapters: Chapter[] = constellation.constellationWidePrimitives.map(
-  (p, i) => {
+// Founding-primitive chapters in Part III. One chapter per
+// constellation-wide primitive registered in the bundled manifest. The
+// manifest carries each primitive's vocabulary, severity ladder, sub-
+// shelves, and rejected alternatives; the per-primitive *commentary*
+// (title suffix, why-this-is-two-sided exploration, cross-zone reads,
+// takeaway, open questions) is authored in data/foundingExamples.ts and
+// looked up by primitive id. The lookup throws if a primitive ships in
+// the snapshot without commentary, the same discipline standby.ts uses
+// to refuse silent defaults.
+const foundingPrimitiveChapters: Chapter[] =
+  constellation.constellationWidePrimitives.map((p, i) => {
     const num = `3.${zoneCount + i + 1}`;
+    const commentary = findFoundingExampleCommentary(p.id);
     const blocks: Block[] = [
       { kind: "small", text: "Constellation-wide primitive · non-zone" },
       { kind: "para", text: p.summary },
@@ -454,6 +465,7 @@ const standbyChapters: Chapter[] = constellation.constellationWidePrimitives.map
     if (p.hostZoneRationale) {
       blocks.push({ kind: "para", text: p.hostZoneRationale });
     }
+    blocks.push(...commentary.whyTwoSided);
     if (p.vocabulary && p.vocabulary.length > 0) {
       blocks.push({ kind: "subhead", text: "Vocabulary" });
       blocks.push({
@@ -483,38 +495,21 @@ const standbyChapters: Chapter[] = constellation.constellationWidePrimitives.map
       });
     }
     blocks.push({ kind: "subhead", text: "Cross-zone reads" });
-    blocks.push({
-      kind: "list",
-      items: [
-        "Zone 0 (Saltbox + Bright Side) — household and institutional standby checklists mirror the co-op's standby stock list, item for item.",
-        "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
-        "Zone 2 (Practitioner Operating Plan) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
-        "Zone 3 (Community Knowledge Hub) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
-        "Zone 4 (Regen Revolution) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
-        "Zone 5 (Dam Days and Shallows) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds.",
-      ],
-    });
+    blocks.push({ kind: "list", items: commentary.crossZoneReads });
     blocks.push({ kind: "subhead", text: "The takeaway" });
-    blocks.push({
-      kind: "pull",
-      text:
-        "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
-    });
-    blocks.push({
-      kind: "para",
-      text:
-        "The Standby is the constellation's first non-zone primitive. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now registered as a named principle in the manifest, available the next time a primitive has to do double duty.",
-    });
+    blocks.push({ kind: "pull", text: commentary.takeaway.pull });
+    blocks.push({ kind: "para", text: commentary.takeaway.closingPara });
+    blocks.push({ kind: "subhead", text: "Open questions" });
+    blocks.push({ kind: "list", items: commentary.openQuestions });
     return {
       id: `3-${zoneCount + i + 1}`,
       number: num,
       partRoman: "III",
       partLabel: "III · The Constellation as Founding Examples",
-      title: `${p.name} — the constellation's first non-zone primitive`,
+      title: `${p.name} — ${commentary.titleSuffix}`,
       blocks,
     };
-  },
-);
+  });
 
 const partIII: Part = {
   roman: "III",
@@ -546,10 +541,10 @@ const partIII: Part = {
       ],
     },
     ...zoneChapters,
-    ...standbyChapters,
+    ...foundingPrimitiveChapters,
     {
-      id: `3-${zoneCount + standbyChapters.length + 1}`,
-      number: `3.${zoneCount + standbyChapters.length + 1}`,
+      id: `3-${zoneCount + foundingPrimitiveChapters.length + 1}`,
+      number: `3.${zoneCount + foundingPrimitiveChapters.length + 1}`,
       partRoman: "III",
       partLabel: "III · The Constellation as Founding Examples",
       title: "Closing reflection",
