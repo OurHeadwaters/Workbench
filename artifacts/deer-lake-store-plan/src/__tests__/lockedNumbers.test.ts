@@ -43,6 +43,16 @@ import {
  *   5. Headline strings ($69.7k/mo cost basis, $24.3k/mo reinvestment,
  *      ~$94k/mo cost-of-delivery, $291.6k/yr) appear verbatim in the slides
  *      they're supposed to appear in.
+ *
+ *   6. The year-one home-margin figure introduced in task #531 — about
+ *      $125,000 to $200,000 of grocery margin staying in Deer Lake in
+ *      year one, with the "84¢ on the shelf instead of 58¢" framing —
+ *      appears identically on FinancialsRole.tsx and BandCouncilSummary.tsx
+ *      (and is mirrored in the deer-lake-walkthrough Ask reveal + Recap
+ *      Back-home row, locked there in
+ *      artifacts/deer-lake-walkthrough/src/__tests__/lockedNumbers.test.tsx).
+ *      The figure is derived, not a free input — see the math note above
+ *      the new "year-one home-margin figure" describe block.
  */
 
 const DECK_SLIDES_DIR = path.resolve(import.meta.dirname, "..", "pages", "slides");
@@ -212,6 +222,64 @@ describe("Deer Lake deck — FinancialsRole tier table matches the locked number
     expect(src).toContain("Indigenous Services Canada");
     expect(src).toContain("60 days");
     expect(src).toContain("$22,000");
+  });
+});
+
+describe("Deer Lake deck — year-one home-margin figure ($125k–$200k) agrees across slides", () => {
+  // The figure introduced in task #531 is derived, not a free input.
+  // The math:
+  //   Deer Lake's annual grocery spend ........ $1.6M – $2.0M
+  //   Year-one share captured by new store .... 30% – 40%
+  //   Extra margin retained per dollar ........ 26¢   (84¢ on the shelf
+  //                                                    vs 58¢ today)
+  //   Floor   = $1.6M × 0.30 × 0.26 ≈ $124.8k → "~$125k"
+  //   Ceiling = $2.0M × 0.40 × 0.26 ≈ $208.0k → "~$200k" (rounded down
+  //                                                       to a friendly
+  //                                                       round figure)
+  // If a future agent updates any of those inputs (annual spend,
+  // capture rate, or per-dollar margin retention), they MUST recompute
+  // the floor/ceiling and update every surface that quotes them. The
+  // walkthrough Ask reveal + Recap row are guarded in a parallel test
+  // file in artifacts/deer-lake-walkthrough.
+  const FIGURE = "about $125,000 to $200,000";
+  const FRAMING = "84¢ on the shelf instead of 58¢";
+
+  it("FinancialsRole.tsx renders the $125,000 to $200,000 figure", () => {
+    const src = readDeckSlide("FinancialsRole.tsx");
+    expect(src).toContain(FIGURE);
+  });
+
+  it("FinancialsRole.tsx frames the figure as 84¢ on the shelf instead of 58¢", () => {
+    const src = readDeckSlide("FinancialsRole.tsx");
+    expect(src).toContain(FRAMING);
+  });
+
+  it("FinancialsRole.tsx headline carries the compact ~$125k–$200k callout", () => {
+    // The headline strapline is a separate surface inside the same
+    // slide and uses the compact en-dash form. Lock that too so the
+    // headline can't drift away from the numbers card below it.
+    const src = readDeckSlide("FinancialsRole.tsx");
+    expect(src).toContain("~$125k–$200k");
+  });
+
+  it("BandCouncilSummary.tsx renders the $125,000 to $200,000 figure", () => {
+    const src = readDeckSlide("BandCouncilSummary.tsx");
+    expect(src).toContain(FIGURE);
+  });
+
+  it("BandCouncilSummary.tsx frames the figure as 84¢ on the shelf instead of 58¢", () => {
+    const src = readDeckSlide("BandCouncilSummary.tsx");
+    expect(src).toContain(FRAMING);
+  });
+
+  it("FinancialsRole.tsx exposes the 30 to 40 percent capture-rate input the figure derives from", () => {
+    const src = readDeckSlide("FinancialsRole.tsx");
+    expect(src).toContain("30 to 40 percent of it");
+  });
+
+  it("FinancialsRole.tsx exposes the $1.6 to $2.0 million annual-spend input the figure derives from", () => {
+    const src = readDeckSlide("FinancialsRole.tsx");
+    expect(src).toContain("$1.6 to $2.0 million");
   });
 });
 
