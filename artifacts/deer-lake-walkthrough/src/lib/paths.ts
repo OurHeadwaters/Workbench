@@ -25,9 +25,27 @@ export const ROUTES = {
   cockpitHome: joinBase("cockpit/home"),
   cockpitTill: joinBase("cockpit/till"),
   cockpitLocks: joinBase("cockpit/locks"),
+  sustainability: joinBase("sustainability"),
+  sustainabilityModel: joinBase("sustainability/model"),
+  sustainabilityRoles: joinBase("sustainability/roles"),
+  sustainabilityHandover: joinBase("sustainability/handover"),
+  sustainabilityBurnout: joinBase("sustainability/burnout"),
+  sustainabilityRenewal: joinBase("sustainability/renewal"),
+  sustainabilityTooling: joinBase("sustainability/tooling"),
+  sustainabilityIndicators: joinBase("sustainability/indicators"),
 } as const;
 
 export type CockpitScreen = "pitch" | "floor" | "home" | "till" | "locks";
+
+export type SustainabilityPage =
+  | "index"
+  | "model"
+  | "roles"
+  | "handover"
+  | "burnout"
+  | "renewal"
+  | "tooling"
+  | "indicators";
 
 /** Strip trailing slash so /planner and /planner/ both match. */
 function normalize(p: string): string {
@@ -57,4 +75,27 @@ export function getCockpitScreen(pathname: string): CockpitScreen {
   if (norm === normalize(ROUTES.cockpitLocks)) return "locks";
   if (norm === normalize(ROUTES.cockpitFloor)) return "floor";
   return "pitch";
+}
+
+/**
+ * Sustainability playbook lives at /sustainability and seven sub-paths.
+ * Anything under /sustainability renders the playbook shell; the
+ * remaining segment picks which page to show.
+ */
+export function isSustainabilityPath(pathname: string): boolean {
+  const norm = normalize(pathname);
+  const base = normalize(ROUTES.sustainability);
+  return norm === base || norm.startsWith(base + "/");
+}
+
+export function getSustainabilityPage(pathname: string): SustainabilityPage {
+  const norm = normalize(pathname);
+  if (norm === normalize(ROUTES.sustainabilityModel)) return "model";
+  if (norm === normalize(ROUTES.sustainabilityRoles)) return "roles";
+  if (norm === normalize(ROUTES.sustainabilityHandover)) return "handover";
+  if (norm === normalize(ROUTES.sustainabilityBurnout)) return "burnout";
+  if (norm === normalize(ROUTES.sustainabilityRenewal)) return "renewal";
+  if (norm === normalize(ROUTES.sustainabilityTooling)) return "tooling";
+  if (norm === normalize(ROUTES.sustainabilityIndicators)) return "indicators";
+  return "index";
 }

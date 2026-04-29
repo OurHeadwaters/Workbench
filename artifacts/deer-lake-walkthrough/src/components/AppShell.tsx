@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <a
             href="#recap"
             data-testid="header-jump-recap"
-            className="mono text-[10px] uppercase tracking-[0.18em] px-2.5 py-1.5 rounded-md border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-warm)]"
+            className="mono text-[10px] uppercase tracking-[0.18em] px-2.5 py-1.5 rounded-md border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-warm)] hidden sm:inline-block"
             style={{
               color: "var(--color-primary)",
               borderColor: "var(--color-rule)",
@@ -73,6 +73,19 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             Recap ↓
           </a>
+          <button
+            type="button"
+            onClick={() => navigate(ROUTES.sustainability)}
+            data-testid="header-jump-sustainability"
+            className="mono text-[10px] uppercase tracking-[0.18em] px-2.5 py-1.5 rounded-md border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-warm)]"
+            style={{
+              color: "var(--color-primary)",
+              borderColor: "var(--color-rule)",
+              background: "rgba(31,61,46,0.04)",
+            }}
+          >
+            Playbook
+          </button>
           <button
             type="button"
             onClick={() => navigate(ROUTES.planner)}
