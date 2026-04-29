@@ -114,6 +114,37 @@ describe("grade-9 voice — constellation manifest", () => {
     ).toBe(true);
   });
 
+  // Per-field coverage guard. Every reader-facing leaf field documented
+  // in scan.ts must surface at least one extracted string. If a future
+  // change to extractPrimitiveStrings / extractZoneStrings drops one of
+  // these fields — or silently switches the array-element child it
+  // pulls (e.g. severityLadder[].rung instead of .meaning) — the
+  // banned-vocabulary and long-sentence assertions below would silently
+  // pass on that field. This guard fails loudly with the missing leaf
+  // path instead.
+  it("covers every documented manifest field via extractConstellationStrings()", () => {
+    const expectedLeaves: { name: string; pattern: RegExp }[] = [
+      { name: "primitive.summary", pattern: /\.summary$/ },
+      { name: "primitive.hostZoneRationale", pattern: /\.hostZoneRationale$/ },
+      { name: "primitive.vocabulary[].role", pattern: /\.vocabulary\[\d+\]\.role$/ },
+      { name: "primitive.severityLadder[].meaning", pattern: /\.severityLadder\[\d+\]\.meaning$/ },
+      { name: "primitive.subShelves[].role", pattern: /\.subShelves\[\d+\]\.role$/ },
+      { name: "primitive.rejectedAlternatives[].reason", pattern: /\.rejectedAlternatives\[\d+\]\.reason$/ },
+      { name: "zone.domain", pattern: /\.domain$/ },
+      { name: "zone.tagline", pattern: /\.tagline$/ },
+      { name: "zone.context", pattern: /\.context$/ },
+    ];
+    const missing = expectedLeaves
+      .filter(({ pattern }) => !CONSTELLATION_COPY.some((b) => pattern.test(b.file)))
+      .map(({ name }) => name);
+    expect(
+      missing,
+      missing.length === 0
+        ? ""
+        : `extractConstellationStrings() is no longer surfacing these documented manifest leaf fields: ${missing.join(", ")}. Re-add the extraction in lib/voice/scan.ts so the grade-9 voice rules continue to cover them.`,
+    ).toEqual([]);
+  });
+
   it("does not appear in constellation reader-facing prose", () => {
     const hits = findBannedVocabularyHits(CONSTELLATION_COPY);
     const formatted = hits
