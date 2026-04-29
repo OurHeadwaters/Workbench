@@ -70,12 +70,13 @@ export const BANNED_TERMS = [
   "cross-zone",
 ] as const;
 
-// Hard cap on a single sentence. Task #508 rewrote the longest
-// sentences in handbook.ts (the (1)/(2)/(3) enumerated structures
-// were converted to ordered/list blocks; the rest were broken into
-// shorter sentences). Current prose maxes out around 49 words, so
-// 50 is a true grade-9 ceiling with one word of headroom.
-export const MAX_SENTENCE_WORDS = 50;
+// Hard cap on a single sentence. Task #508 lowered this from 110 to
+// 50 by rewriting the longest sentences in handbook.ts. Task #511
+// then rewrote the remaining 41-49-word sentences in handbook.ts and
+// foundingExamples.ts so the cap could drop again — to 40, which is
+// closer to a true short-sentence grade-9 ceiling. Current prose
+// maxes out at 40 words.
+export const MAX_SENTENCE_WORDS = 40;
 
 export type BodyCopyString = {
   file: string;

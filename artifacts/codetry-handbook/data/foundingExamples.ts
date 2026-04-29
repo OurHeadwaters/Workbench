@@ -63,11 +63,11 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       pull:
         "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
       closingPara:
-        "The Standby is the first piece used across the whole constellation. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now a named principle in the manifest, ready the next time a piece has to do double duty.",
+        "The Standby is the first piece used across the whole constellation. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first. Every zone reads it. The both-states principle it carries is now a named principle in the manifest, ready the next time a piece has to do double duty.",
     },
     openQuestions: [
       "What is the right cadence for the slow side's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
-      "Does standby stock get ledgered the way money does in Zone 1, or is it deliberately kept off the books — held by the household and the co-op directly, outside the financial pieces — so the act of stocking does not become an act of accounting?",
+      "Does standby stock get ledgered the way money does in Zone 1? Or is it deliberately kept off the books — held by the household and the co-op directly, outside the financial pieces — so stocking does not become accounting?",
       "When two calls overlap (a fire call open while a freight call is still standing down), do they share a single active rung, or does each call get its own ladder running in parallel? The manifest currently assumes one call at a time.",
       "How does the practitioner know when *not* to open a call? An over-eager active rung wears down the discipline as fast as a missed one does, and there is no rejected-alternative entry yet for *did not open the call when we should have*.",
       "When does a long fast side stop being a fast side and become the new slow side? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the slow side without losing the debrief?",
