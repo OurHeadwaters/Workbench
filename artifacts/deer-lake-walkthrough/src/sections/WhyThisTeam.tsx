@@ -9,27 +9,32 @@ import { Reveal } from "@/components/Reveal";
  * The proof is shipped artifacts, not biography. See task #514.
  */
 export default function WhyThisTeam() {
-  const claims = [
+  const claims: Array<{
+    tag: string;
+    head: string;
+    body: string;
+    links: string[];
+  }> = [
     {
       tag: "Claim 1 · We've already written this plan",
       head: "The Deer Lake operating plan exists.",
       body:
         "Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.",
-      links: "/deer-lake-store-plan · /practitioner-operating-plan",
+      links: ["/deer-lake-store-plan/", "/practitioner-operating-plan/"],
     },
     {
       tag: "Claim 2 · We've already built the software",
       head: "The bookkeeping system is live.",
       body:
         "The same patterns used for the Deer Lake till. Open it in another tab — the work isn't theoretical.",
-      links: "/headwaters-books · /library",
+      links: ["/headwaters-books/", "/library/"],
     },
     {
       tag: "Claim 3 · We work with northern communities, not at them",
       head: "The method is written down.",
       body:
         "Headwaters has a practice with a name — codetry — and a handbook anyone can read. Seven parts, plain voice, no jargon.",
-      links: "/codetry-handbook",
+      links: ["/codetry-handbook/"],
     },
   ];
 
@@ -99,7 +104,21 @@ export default function WhyThisTeam() {
                 className="mono text-[10.5px] uppercase tracking-[0.16em] mt-3"
                 style={{ color: "var(--color-muted)" }}
               >
-                Open in another tab · {c.links}
+                Open in another tab ·{" "}
+                {c.links.map((href, i) => (
+                  <span key={href}>
+                    {i > 0 ? " · " : ""}
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline underline-offset-2 hover:no-underline"
+                      style={{ color: "var(--color-accent-warm)" }}
+                    >
+                      {href}
+                    </a>
+                  </span>
+                ))}
               </div>
             </div>
           ))}
@@ -123,8 +142,26 @@ export default function WhyThisTeam() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "var(--color-muted)" }}
             >
-              Open in another tab · /deer-lake-store-plan ·
-              /practitioner-operating-plan
+              Open in another tab ·{" "}
+              <a
+                href="/deer-lake-store-plan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /deer-lake-store-plan
+              </a>{" "}
+              ·{" "}
+              <a
+                href="/practitioner-operating-plan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /practitioner-operating-plan
+              </a>
             </p>
           </Reveal>
 
@@ -143,7 +180,26 @@ export default function WhyThisTeam() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "var(--color-muted)" }}
             >
-              Open in another tab · /headwaters-books · /library
+              Open in another tab ·{" "}
+              <a
+                href="/headwaters-books/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /headwaters-books
+              </a>{" "}
+              ·{" "}
+              <a
+                href="/library/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /library
+              </a>
             </p>
           </Reveal>
 
@@ -163,7 +219,16 @@ export default function WhyThisTeam() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "rgba(244,237,224,0.7)" }}
             >
-              Open in another tab · /codetry-handbook
+              Open in another tab ·{" "}
+              <a
+                href="/codetry-handbook/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "rgba(244,237,224,0.95)" }}
+              >
+                /codetry-handbook
+              </a>
             </p>
           </Reveal>
         </div>

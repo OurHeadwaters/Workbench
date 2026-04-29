@@ -123,7 +123,16 @@ export default function WhatHeadwatersDelivers() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "var(--color-muted)" }}
             >
-              Open in another tab · /headwaters-books
+              Open in another tab ·{" "}
+              <a
+                href="/headwaters-books/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /headwaters-books
+              </a>
             </p>
           </Reveal>
 
@@ -145,8 +154,26 @@ export default function WhatHeadwatersDelivers() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "var(--color-muted)" }}
             >
-              Open in another tab · /deer-lake-walkthrough/planner ·
-              /deer-lake-store-plan
+              Open in another tab ·{" "}
+              <a
+                href="/deer-lake-walkthrough/planner"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /deer-lake-walkthrough/planner
+              </a>{" "}
+              ·{" "}
+              <a
+                href="/deer-lake-store-plan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                /deer-lake-store-plan
+              </a>
             </p>
           </Reveal>
 
@@ -167,7 +194,26 @@ export default function WhatHeadwatersDelivers() {
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
               style={{ color: "rgba(244,237,224,0.7)" }}
             >
-              Open in another tab · /codetry-handbook · /practitioners-guide-v2
+              Open in another tab ·{" "}
+              <a
+                href="/codetry-handbook/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "rgba(244,237,224,0.95)" }}
+              >
+                /codetry-handbook
+              </a>{" "}
+              ·{" "}
+              <a
+                href="/practitioners-guide-v2/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "rgba(244,237,224,0.95)" }}
+              >
+                /practitioners-guide-v2
+              </a>
             </p>
           </Reveal>
         </div>
