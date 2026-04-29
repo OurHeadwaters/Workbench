@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { ROUTES } from "@/lib/paths";
 import { useRoute } from "@/lib/route";
+import { COCKPIT_PROMISES } from "../copy";
 
 /**
  * The cockpit landing. This is the first thing the contractor sees when
@@ -14,53 +15,33 @@ import { useRoute } from "@/lib/route";
  * Mobile-first by design: single column on phones, three-up only at lg+.
  */
 
-interface Promise {
-  id: string;
-  audience: string;
-  headline: string;
-  italicHeadline?: string;
-  sub: string;
+interface PromiseStyle {
   bg: string;
   ink: string;
   tagInk: string;
   subInk: string;
 }
 
-const PROMISES: Promise[] = [
-  {
-    id: "band",
-    audience: "For the band",
-    headline: "A system,",
-    italicHeadline: "not a person.",
-    sub: "Same screens survive every retirement. Same till. Same books. Same producer cycle.",
+const PROMISE_STYLES: Record<string, PromiseStyle> = {
+  band: {
     bg: "#ebe2d0",
     ink: "#1f3d2e",
     tagInk: "#6b7665",
     subInk: "#3d4a3f",
   },
-  {
-    id: "contractor",
-    audience: "For you",
-    headline: "A practice",
-    italicHeadline: "you can sell.",
-    sub: "Built on Square, QuickBooks, and Local Line. Tools the next contractor already knows.",
+  contractor: {
     bg: "#1f3d2e",
     ink: "#f4ede0",
     tagInk: "#e9c8a8",
     subInk: "rgba(244,237,224,0.82)",
   },
-  {
-    id: "handover",
-    audience: "For the next two years",
-    headline: "A handover,",
-    italicHeadline: "on purpose.",
-    sub: "What's only in your head right now becomes the operating manual the buyer pays for.",
+  handover: {
     bg: "#b85a3e",
     ink: "#f4ede0",
     tagInk: "#fbe7e2",
     subInk: "rgba(244,237,224,0.85)",
   },
-];
+};
 
 const STACK = [
   { name: "Square", role: "till + sales" },
@@ -122,51 +103,52 @@ export default function Pitch() {
       </p>
 
       <div className="mt-7 sm:mt-9 flex flex-col gap-3 sm:gap-4">
-        {PROMISES.map((p) => (
-          <article
-            key={p.id}
-            data-testid={`pitch-promise-${p.id}`}
-            className="rounded-[14px] p-5 sm:p-6"
-            style={{ background: p.bg, color: p.ink }}
-          >
-            <div
-              className="text-[10.5px] uppercase tracking-[0.24em] mb-2"
-              style={{
-                color: p.tagInk,
-                fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
-              }}
+        {COCKPIT_PROMISES.map((p) => {
+          const s = PROMISE_STYLES[p.id];
+          return (
+            <article
+              key={p.id}
+              data-testid={`pitch-promise-${p.id}`}
+              className="rounded-[14px] p-5 sm:p-6"
+              style={{ background: s.bg, color: s.ink }}
             >
-              {p.audience}
-            </div>
-            <div
-              className="font-medium"
-              style={{
-                fontFamily: "'Fraunces', Georgia, serif",
-                fontSize: "clamp(26px, 6vw, 36px)",
-                lineHeight: "1.05",
-                textWrap: "balance",
-              }}
-            >
-              {p.headline}{" "}
-              {p.italicHeadline && (
+              <div
+                className="text-[10.5px] uppercase tracking-[0.24em] mb-2"
+                style={{
+                  color: s.tagInk,
+                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                }}
+              >
+                {p.audience}
+              </div>
+              <div
+                className="font-medium"
+                style={{
+                  fontFamily: "'Fraunces', Georgia, serif",
+                  fontSize: "clamp(26px, 6vw, 36px)",
+                  lineHeight: "1.05",
+                  textWrap: "balance",
+                }}
+              >
+                {p.headline}{" "}
                 <span style={{ fontStyle: "italic", opacity: 0.96 }}>
                   {p.italicHeadline}
                 </span>
-              )}
-            </div>
-            <p
-              className="mt-3"
-              style={{
-                color: p.subInk,
-                fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-                fontSize: "clamp(14px, 3.6vw, 15.5px)",
-                lineHeight: "1.45",
-              }}
-            >
-              {p.sub}
-            </p>
-          </article>
-        ))}
+              </div>
+              <p
+                className="mt-3"
+                style={{
+                  color: s.subInk,
+                  fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                  fontSize: "clamp(14px, 3.6vw, 15.5px)",
+                  lineHeight: "1.45",
+                }}
+              >
+                {p.sub}
+              </p>
+            </article>
+          );
+        })}
       </div>
 
       {/* The stack — proof the buyer doesn't inherit a science project */}

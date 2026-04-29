@@ -5,6 +5,7 @@ import { useRoute } from "@/lib/route";
 import Prologue from "@/sections/Prologue";
 import WhatItIs from "@/sections/WhatItIs";
 import WhatHeadwatersDelivers from "@/sections/WhatHeadwatersDelivers";
+import CockpitTeaser from "@/sections/CockpitTeaser";
 import WhyThisTeam from "@/sections/WhyThisTeam";
 import WhyCurrentFails from "@/sections/WhyCurrentFails";
 import ColdChain from "@/sections/ColdChain";
@@ -50,8 +51,10 @@ export default function App() {
     <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
       <Prologue />
       <AppShell>
+        {/* New sections insert AFTER <WhatHeadwatersDelivers />, not appended at the end. */}
         <WhatItIs />
         <WhatHeadwatersDelivers />
+        <CockpitTeaser />
         <WhyThisTeam />
         <WhyCurrentFails />
         <ColdChain />
