@@ -11,6 +11,7 @@ import {
 } from "@/slideLoader";
 import OnePager from "@/pages/OnePager";
 import BrandOnePager from "@/pages/BrandOnePager";
+import CheckInSheets from "@/pages/CheckInSheets";
 import Checklist from "@/pages/Checklist";
 import HoursByPillar from "@/pages/HoursByPillar";
 import Codetry from "@/pages/Codetry";
@@ -366,6 +367,8 @@ export default function App() {
 
   // Checklist is also a self-contained printable page (no app chrome).
   if (location === "/checklist") return <Checklist />;
+  // Eight-week trial check-in sheets — printable, one page per week.
+  if (location === "/check-in-sheets") return <CheckInSheets />;
   if (location === "/hours") return <HoursByPillar />;
   if (location === "/lease-tooling") return <LeaseTooling />;
   if (location === "/payback-memo") return <PaybackMemo />;

@@ -242,6 +242,85 @@ body {
   }
 }
 
+/* Eight-week trial check-in sheets: one printed page per week. On
+   screen the eight sheets stack as letter-paper cards. In print, the
+   `page-break-after: always` on each non-final sheet (set inline in
+   CheckInSheets.tsx) drops each one onto its own letter page. */
+.checkin-screen {
+  background: #d6cdb8;
+  min-height: 100vh;
+  width: 100%;
+  padding: 4vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24pt;
+}
+
+.checkin-toolbar {
+  width: 8.5in;
+  background: #faf6ec;
+  color: var(--slide-ink);
+  padding: 14pt 18pt;
+  border-radius: 4pt;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  font-family: var(--font-body-family);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16pt;
+  box-sizing: border-box;
+}
+
+.checkin-toolbar-copy {
+  flex: 1;
+}
+
+.checkin-sheet {
+  width: 8.5in;
+  min-height: 11in;
+  background: #faf6ec;
+  color: var(--slide-ink);
+  padding: 0.55in 0.6in;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-body-family);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .checkin-toolbar,
+  .checkin-sheet {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .checkin-sheet {
+    padding: 18pt 16pt;
+    min-height: auto;
+  }
+}
+
+@media print {
+  .checkin-screen {
+    background: #ffffff !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    gap: 0 !important;
+  }
+
+  .checkin-sheet {
+    width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    /* page-break-after is set inline so the last sheet doesn't push a
+       trailing blank page. */
+  }
+}
+
 @media print {
   /* Named-page rule scoped to .square-page only, so OnePager,
      PaybackMemo, Codetry, etc. keep their 0.4in margin from the

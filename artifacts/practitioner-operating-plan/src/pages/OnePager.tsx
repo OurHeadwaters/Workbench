@@ -215,7 +215,13 @@ export default function OnePager() {
             same calendar math on every printed copy. Edit
             <span className="font-mono"> TRIAL_TIMELINE</span> in
             <span className="font-mono"> @workspace/headwaters-pricing</span>,
-            not this sheet.
+            not this sheet.{" "}
+            <a
+              href={`${baseUrl}check-in-sheets`}
+              className="font-mono uppercase tracking-[0.16em] text-[7.5pt] text-[#1f3d2e] underline print-hide"
+            >
+              Print the eight signable check-in sheets →
+            </a>
           </div>
           <table
             className="w-full text-[8.5pt] border-collapse"
