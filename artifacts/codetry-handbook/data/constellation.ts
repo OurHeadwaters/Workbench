@@ -85,6 +85,12 @@ export const constellation: ConstellationSnapshot = {
       "name": "the name has to hold both states",
       "statement": "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
       "workedExample": "The Standby — the umbrella name had to hold both the always-on shelf (preparation, standby stock, the watch as a posture) and the active event (a call, an active rung, a debrief). Splitting into two names — say, *the Pantry* for the slow side and *the Call* for the fast side — would have produced two systems with two cultures. One word, two states."
+    },
+    {
+      "id": "both-sides",
+      "name": "the name has to hold both sides",
+      "statement": "When a system has language that has to live in two contexts that hold different vocabularies as legitimate, the umbrella name has to fit both contexts in one word, or the system will pick a dialect and lose the other room.",
+      "workedExample": "The Gate — the umbrella name had to hold both the *bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock) and *massity* (mass-society dialect: resident, bank account, financial statements, inventory reserves). Splitting into two names — say, *Translator* for the bright-to-massity direction and *Importer* for the massity-to-bright direction — would have produced two pipes and no posture, with no record that both names exist for the same thing. One word, two contexts."
     }
   ],
   "constellationWidePrimitives": [

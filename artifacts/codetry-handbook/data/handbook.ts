@@ -219,6 +219,52 @@ const partI: Part = {
       number: "1.4",
       partRoman: "I",
       partLabel: "I · The Discipline",
+      title: "The both-sides principle — names that hold each context's dialect",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The both-states principle holds when a system runs in two tempos. A second class of system runs in one tempo but in two contexts at once — two audiences holding two different vocabularies as legitimate, neither willing to give up theirs to the other. The temptation, every time, is to name each side separately and let them grow into two pipes facing two rooms. The both-sides principle is the codetry move that resists that.",
+        },
+        {
+          kind: "callout",
+          text:
+            "When a system has language that has to live in two contexts that hold different vocabularies as legitimate, the umbrella name has to fit both contexts in one word, or the system will pick a dialect and lose the other room.",
+        },
+        { kind: "subhead", text: "The Gate as the worked example." },
+        {
+          kind: "para",
+          text:
+            "The constellation's second non-zone primitive — *The Gate* — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts.",
+        },
+        {
+          kind: "para",
+          text:
+            "Two early candidate names were rejected for failing the principle. *Translator* held the directional work but flattened the membrane into pure transaction — a translator processes; a gate decides whether to. *Glossary* held the dictionary side beautifully — a glossary is by definition a registered correspondence — but could not hold the active posture of substituting in real documents, the ledger of past substitutions, or the *refused* rung for source-side language with no honest target-side equivalent. Both survived as *sub-shelves* inside The Gate (Mappings, Substitutions); neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have a one-way pipe and a shelf of words — with no posture deciding whether language *should* cross at all, and no record kept that both names exist for the same thing.",
+        },
+        { kind: "subhead", text: "How the two two-sided tests differ." },
+        {
+          kind: "para",
+          text:
+            "Both tests are pick-one-side-then-the-other, but the axis is different. The both-states test picks a *tempo*: pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects massity, then pick the massity side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding both sides and the system is one system.",
+        },
+        {
+          kind: "para",
+          text:
+            "The Standby's two sides are *temporal* — the same plumbing in slow and fast tempo. The Gate's two sides are *contextual* — the same plumbing facing two audiences that hold different vocabularies as legitimate. A future primitive may need a third axis (densities? scales? jurisdictions?); the constellation manifest's `principles` array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
+        },
+        {
+          kind: "para",
+          text:
+            "The principle is registered in the constellation manifest as `principles.both-sides` and is cited every time a new primitive is asked to hold two contexts at once.",
+        },
+      ],
+    },
+    {
+      id: "1-5",
+      number: "1.5",
+      partRoman: "I",
+      partLabel: "I · The Discipline",
       title: "The single-sentence definition",
       blocks: [
         {
