@@ -72,9 +72,9 @@
       "id": "the-gate",
       "name": "The Gate",
       "kind": "constellation-wide primitive",
-      "summary": "A calm membrane between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
+      "summary": "A calm passage between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
       "hostZone": 3,
-      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both primitives operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
+      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both umbrella systems operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
       "vocabulary": [
         { "term": "the Gate", "role": "the umbrella system + always-on posture" },
         { "term": "the bright side", "role": "the codetry-vocabulary side; the constellation's own dialect" },
@@ -97,7 +97,7 @@
         { "name": "Categories", "role": "the domain shelves the mappings live on (Pragmatism, Politics, Regulations, Privacy, Banking, …). Sub-noun, not replacement: a category is where a mapping is filed; the Gate is the building all the categories sit in." }
       ],
       "rejectedAlternatives": [
-        { "name": "Translator", "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the 'calm' and the 'membrane' from the metaphor." },
+        { "name": "Translator", "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the calm-passage feel out of the metaphor." },
         { "name": "Filter", "reason": "Implies the Gate's job is to remove or block, which mis-frames the work — the Gate doesn't subtract, it relabels in flight while keeping both names on file. A filter chooses what gets through; the Gate chooses what the through-language is called on each side." },
         { "name": "Censor", "reason": "Carries punitive weight the metaphor refuses; the Gate is collaborative with the founder, not adversarial. A censor decides for you; the Gate proposes and lets the founder confirm." },
         { "name": "Glossary", "reason": "Holds the dictionary side (Mappings) beautifully but cannot hold the active posture of substituting in real documents, the ledger of past substitutions, or the refused-translation rung. A glossary is what you keep on a shelf; the Gate is the shelf plus the room plus the work happening in it." }
@@ -206,7 +206,7 @@
         "killCriterion": "Bundle says no AND no second-region prospect by mid-2027",
         "graduationToRevenueLayer": "ARR clears $50k or a chain LOI lands"
       },
-      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
+      "context": "PHI-free posture is what holds the product up — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
       "proposedInterfaces": {
         "fromZ1Headwaters": "household primitive as shared unit of account for institutional dwelling units"
       },
@@ -340,7 +340,7 @@
       "zone": 2,
       "name": "Practitioner Operating Plan",
       "aliases": ["This site", "Workbench"],
-      "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, cross-zone synthesis",
+      "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
       "url": null,
       "status": "live (you are here)",
       "audience": "Bobbie — single practitioner, NWO, building a constellation as her business shape. Reads as a trade journal kept by hand.",

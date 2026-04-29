@@ -6,6 +6,7 @@ import {
   MAX_SENTENCE_WORDS,
   countWords,
   extractBodyCopyStrings,
+  extractConstellationStrings,
   findBannedVocabularyHits,
   findLongSentences,
   splitSentences,
@@ -16,6 +17,11 @@ import {
 const BODY_COPY = HANDBOOK_SOURCE_FILES.flatMap((file) =>
   extractBodyCopyStrings(file),
 );
+
+// Pulls every reader-facing string out of the bundled constellation
+// manifest (data/constellation.ts) once. Carve-outs (vocabulary terms,
+// names, machine ids, worked examples) are documented inline in scan.ts.
+const CONSTELLATION_COPY = extractConstellationStrings();
 
 describe("grade-9 voice — body-copy scan setup", () => {
   it("finds body-copy strings in both source files", () => {
@@ -91,6 +97,49 @@ describe("grade-9 voice — sentence length", () => {
       hits.length === 0
         ? ""
         : `Found ${hits.length} sentence(s) longer than ${MAX_SENTENCE_WORDS} words. Break the sentence into shorter ones to keep the grade-9 voice:\n${formatted}`,
+    ).toEqual([]);
+  });
+});
+
+describe("grade-9 voice — constellation manifest", () => {
+  it("finds reader-facing strings in the bundled constellation", () => {
+    expect(
+      CONSTELLATION_COPY.length,
+      "extractConstellationStrings() returned no strings — the manifest may be empty or the extractor lost its fields",
+    ).toBeGreaterThan(0);
+    // Every entry should be tagged with the constellation source file so
+    // failure messages point a reader at data/constellation.ts.
+    expect(
+      CONSTELLATION_COPY.every((b) => b.file.startsWith("data/constellation.ts")),
+    ).toBe(true);
+  });
+
+  it("does not appear in constellation reader-facing prose", () => {
+    const hits = findBannedVocabularyHits(CONSTELLATION_COPY);
+    const formatted = hits
+      .map((h) => `  ${h.file} [${h.term}] — ${h.preview}`)
+      .join("\n");
+    expect(
+      hits,
+      hits.length === 0
+        ? ""
+        : `Found ${hits.length} banned academic vocabulary use(s) in constellation manifest fields that flow into chapter prose. Rewrite the field in plain language in artifacts/practitioner-operating-plan/public/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`. Field carve-outs (vocabulary terms, sub-shelf names, rejected-name names, primitive/zone names) are documented in lib/voice/scan.ts:\n${formatted}`,
+    ).toEqual([]);
+  });
+
+  it("does not contain a sentence longer than the hard cap in the constellation", () => {
+    const hits = findLongSentences(CONSTELLATION_COPY, MAX_SENTENCE_WORDS);
+    const formatted = hits
+      .map(
+        (h) =>
+          `  ${h.file} (${h.words} words): ${h.preview}${h.preview.length === 200 ? "…" : ""}`,
+      )
+      .join("\n");
+    expect(
+      hits,
+      hits.length === 0
+        ? ""
+        : `Found ${hits.length} sentence(s) longer than ${MAX_SENTENCE_WORDS} words in constellation manifest fields. Break the sentence into shorter ones in artifacts/practitioner-operating-plan/public/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`:\n${formatted}`,
     ).toEqual([]);
   });
 });

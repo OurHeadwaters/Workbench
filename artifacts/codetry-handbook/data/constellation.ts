@@ -172,9 +172,9 @@ export const constellation: ConstellationSnapshot = {
       "id": "the-gate",
       "name": "The Gate",
       "kind": "constellation-wide primitive",
-      "summary": "A calm membrane between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
+      "summary": "A calm passage between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
       "hostZone": 3,
-      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both primitives operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
+      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both umbrella systems operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
       "vocabulary": [
         {
           "term": "the Gate",
@@ -244,7 +244,7 @@ export const constellation: ConstellationSnapshot = {
       "rejectedAlternatives": [
         {
           "name": "Translator",
-          "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the 'calm' and the 'membrane' from the metaphor."
+          "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the calm-passage feel out of the metaphor."
         },
         {
           "name": "Filter",
@@ -329,7 +329,7 @@ export const constellation: ConstellationSnapshot = {
       "url": null,
       "status": "in development — pilot probe Q4 2026",
       "tagline": "What's the fence to peek over?",
-      "context": "PHI-free posture is load-bearing — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
+      "context": "PHI-free posture is what holds the product up — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
       "standby": "Reads The Standby as the institutional standby checklist — facility-side mirror of the co-op's standby stock list (medications, water, generator fuel, comfort supplies). Same rungs, same nouns, scaled to the dwelling unit instead of the household."
     },
     {
@@ -476,7 +476,7 @@ export const constellation: ConstellationSnapshot = {
     {
       "zone": 2,
       "name": "Practitioner Operating Plan",
-      "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, cross-zone synthesis",
+      "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
       "url": null,
       "status": "live (you are here)",
       "workedExamples": [
