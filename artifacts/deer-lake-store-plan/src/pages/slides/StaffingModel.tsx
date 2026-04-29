@@ -28,14 +28,14 @@ export default function StaffingModel() {
         >
           <div className="shrink-0 max-w-[28vw]">
             <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-accent font-semibold mb-[0.4vh]">
-              Whose store this is
+              How the math works at northern volume
             </div>
             <div className="font-display text-[1.5vw] leading-tight text-primary font-medium">
-              The band runs the store. Headwaters delivers the software and training.
+              A two-person operator couple. Square, QuickBooks, Local Line, and the Headwaters cockpit underneath them.
             </div>
           </div>
           <div className="font-body text-[1vw] text-text leading-[1.45] max-w-[52vw]">
-            Hiring, scheduling, daily decisions, ownership: the band. Software, training, monthly visits: Headwaters. Shipping: the family cold truck already on the route. <span className="text-primary font-semibold">Nobody flies in to run the store.</span>
+            That's how the payroll line stays a couple, not a manager bench. How the doors stay open through hunting season and bad weather. How the truck still leaves Dryden loaded the week one operator is short-handed. And how the band's grocery margin starts coming home in year one. <span className="text-primary font-semibold">Nobody flies in to run the store.</span>
           </div>
         </div>
 

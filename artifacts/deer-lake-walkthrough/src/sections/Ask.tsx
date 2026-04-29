@@ -140,6 +140,24 @@ export default function Ask() {
             </p>
           </Reveal>
 
+          <Reveal label="What the band gets back, and how soon">
+            <p>
+              <span className="font-semibold">About $125,000 to $200,000 of grocery margin stays in Deer Lake the first year.</span>{" "}
+              That's the money that today flies south at 58¢ on the dollar:
+              the new store sells 30 to 40 percent of Deer Lake's
+              $1.6–2.0M grocery spend in year one, and keeps 26¢ more
+              of every dollar than the current store does (84¢ on the
+              shelf, not 58¢).
+            </p>
+            <p>
+              Plus <span className="font-semibold">17 to 20 jobs for Deer
+              Lake people</span> grow into the store over two years.
+              Both numbers come straight from the financial model in
+              the store-plan deck — no new claims, just the math
+              arranged so the council can see it.
+            </p>
+          </Reveal>
+
           <Reveal label="What stays even if Deer Lake walks away" variant="ink">
             <p>The cold-chain truck route — built, tested, available to other communities.</p>
             <p>The open-records software — Deer Lake keeps full ownership.</p>

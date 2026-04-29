@@ -346,7 +346,7 @@ export default function Till() {
               }}
             >
               <span>Basket · {lines.length} items</span>
-              <span>Mary on till</span>
+              <span>Sam on till</span>
             </div>
 
             <div

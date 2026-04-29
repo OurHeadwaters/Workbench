@@ -7,9 +7,9 @@ export default function FinancialsRole() {
             The numbers, the schedule, who runs it
           </div>
           <h2 className="font-display text-[3.2vw] leading-[1] tracking-tight text-primary font-medium">
-            What it costs.
-            <span className="italic font-normal"> When it opens.</span>
-            <span className="italic font-normal text-accent"> Who runs it.</span>
+            A two-person operator couple, on top of serious software.
+            <span className="italic font-normal"> That's why the payroll line is small,</span>
+            <span className="italic font-normal text-accent"> and why ~$125k–$200k of margin comes home year one.</span>
           </h2>
         </div>
 
@@ -32,6 +32,11 @@ export default function FinancialsRole() {
                 <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">Margin we keep on each dollar</div>
                 <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>22 to 28 cents</div>
                 <div className="text-muted text-[0.82vw] mt-[0.1vh]">Lower than the current store. On purpose.</div>
+              </div>
+              <div>
+                <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">What stays in Deer Lake year one</div>
+                <div className="font-mono text-[0.88vw] text-accent mt-[0.2vh]" style={{ fontVariantNumeric: "tabular-nums" }}>about $125,000 to $200,000</div>
+                <div className="text-muted text-[0.82vw] mt-[0.1vh]">Grocery margin that today flies south. 84¢ on the shelf instead of 58¢, on the year-one sales mix.</div>
               </div>
               <div>
                 <div className="font-display text-[1.05vw] text-primary font-semibold leading-tight">Cost to open the doors</div>
@@ -121,14 +126,14 @@ export default function FinancialsRole() {
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>Inside the store</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">The band hires and runs everyone inside.</span> The store manager works for the band. Local on-call group paid by the job.
+                <span className="font-semibold">A two-person operator couple runs the floor.</span> Hired by the band. Local on-call group paid by the job. The payroll line stays a couple, not a manager bench.
               </div>
             </div>
 
             <div className="rounded-[0.3vw] p-[0.9vw] mb-[0.8vh]" style={{ background: "rgba(244,237,224,0.08)" }}>
               <div className="font-mono uppercase tracking-[0.14em] text-[0.78vw]" style={{ color: "#e9c8a8" }}>What Headwaters delivers</div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                <span className="font-semibold">Software, tools, training. That's all.</span> No one from Headwaters works the floor. Specialist visits monthly.
+                <span className="font-semibold">Square + QuickBooks + Local Line, composed into one cockpit.</span> Training, monthly visits. That's how a couple keeps the doors open long hours and the truck on time.
               </div>
             </div>
 

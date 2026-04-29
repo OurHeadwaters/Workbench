@@ -8,8 +8,8 @@ export default function PosOps() {
               The first morning
             </div>
             <h2 className="font-display text-[4vw] leading-[1] tracking-tight text-primary font-medium">
-              Walk in on your first morning.
-              <span className="italic font-normal text-accent block mt-[0.4vh]">Use the till without any training.</span>
+              An operator couple. Twenty minutes on the till.
+              <span className="italic font-normal text-accent block mt-[0.4vh]">Software does the back end. The doors stay open the next day.</span>
             </h2>
           </div>
           <div className="text-right pl-[3vw] shrink-0 max-w-[28vw]">
@@ -17,7 +17,7 @@ export default function PosOps() {
               See it for yourself
             </div>
             <div className="font-body text-[1.1vw] text-primary leading-[1.4]">
-              A working copy of the till sits beside this deck. You can press the buttons yourself.
+              A working copy of the cockpit sits beside this deck — Square at the till, QuickBooks on the books, Local Line on the truck. Press the buttons yourself.
             </div>
           </div>
         </div>

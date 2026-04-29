@@ -41,7 +41,7 @@ export default function BandCouncilSummary() {
             </div>
 
             <div className="font-display text-[1.4vw] leading-[1.25] text-primary font-medium mb-[1.2vh]">
-              A second grocery store in Deer Lake. The band owns it. Headwaters delivers the operating system.
+              A second grocery store. The band owns it. A two-person operator couple sits on top of Square, QuickBooks, Local Line, and the Headwaters cockpit — that's the cost-control story.
             </div>
 
             <div className="space-y-[0.8vh] font-body text-[0.92vw] leading-[1.35]">
@@ -142,6 +142,21 @@ export default function BandCouncilSummary() {
                   The store grows into them over two years.
                 </div>
               </div>
+
+              <div>
+                <div className="font-display text-[1vw] text-primary font-semibold leading-tight">
+                  What stays in Deer Lake year one
+                </div>
+                <div
+                  className="font-mono text-[0.95vw] text-accent mt-[0.2vh] font-semibold"
+                  style={{ fontVariantNumeric: "tabular-nums" }}
+                >
+                  about $125,000 to $200,000
+                </div>
+                <div className="text-muted text-[0.78vw] mt-[0.1vh]">
+                  Grocery margin that today flies south. 84¢ on the shelf instead of 58¢, on year-one sales mix.
+                </div>
+              </div>
             </div>
           </div>
 
@@ -170,7 +185,7 @@ export default function BandCouncilSummary() {
                 The band runs the store
               </div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                Hires and pays everyone inside. The store manager works for the band. Local on-call group paid by the job. Council member on oversight from day one.
+                Hires and pays everyone inside. A two-person operator couple runs the floor day to day. Local on-call group paid by the job. Council member on oversight from day one.
               </div>
             </div>
 
@@ -182,10 +197,10 @@ export default function BandCouncilSummary() {
                 className="font-mono uppercase tracking-[0.14em] text-[0.78vw]"
                 style={{ color: "#e9c8a8" }}
               >
-                Headwaters delivers the operating system
+                Headwaters delivers the cockpit underneath them
               </div>
               <div className="font-body text-[0.85vw] leading-[1.4] opacity-95 mt-[0.3vh]">
-                Software the band owns, tech stack at markup, training. No one from Headwaters works the floor. Specialist visits monthly. Public price dashboard and household lookup stay with Deer Lake.
+                Square + QuickBooks + Local Line, composed into one cockpit the band owns. Training, monthly visits, public price dashboard. That's why a couple can do it. No one from Headwaters works the floor.
               </div>
             </div>
 

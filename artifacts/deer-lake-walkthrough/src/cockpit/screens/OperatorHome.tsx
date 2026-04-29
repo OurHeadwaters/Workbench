@@ -178,7 +178,7 @@ export default function OperatorHome() {
                     fontFamily: "'Fraunces', Georgia, serif",
                   }}
                 >
-                  Mary &amp; Joseph Meekis
+                  Sam &amp; Jess
                 </div>
               </div>
               <div className="text-right">

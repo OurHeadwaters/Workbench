@@ -1,30 +1,32 @@
 import { Reveal } from "@/components/Reveal";
 
 /**
- * Who works the store. Three top-level bullets carry the design rule
- * that lets a northern store survive — pods, software, a calendar that
- * bends. The five-item "things that hold it together" list and the
- * five-role "who from Headwaters touches it" list both live behind a
- * tap, untouched.
+ * Who works the store. Three top-level bullets carry the four-part
+ * cost-control story: a two-person operator couple, sitting on top of
+ * serious software, keeps the payroll line small, the doors open long
+ * hours with limited disruption, the food on the truck on time, and
+ * the band's grocery margin coming home fast. The five-item "things
+ * that hold it together" list and the five-role "who from Headwaters
+ * touches it" list both live behind a tap, untouched.
  *
  * Editorial lock: see Reveal.tsx.
  */
 export default function WhoWorks() {
   const bullets = [
     {
-      tag: "Bullet 1 · Everyone learns every job",
+      tag: "Bullet 1 · A two-person operator couple",
       body:
-        "Till, cooler, stockroom, daily books. If two people don't show up Tuesday, the store still opens.",
+        "Sam & Jess on the cockpit. The payroll line stays a couple, not a manager bench — that's how the math works at northern volume.",
     },
     {
-      tag: "Bullet 2 · Software covers the gaps",
+      tag: "Bullet 2 · Serious software underneath them",
       body:
-        "Reordering, closing the day, tracking shipments. The till works without internet.",
+        "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. The doors stay open through hunting season and bad weather, and the truck still leaves Dryden loaded when one of the operators is short-handed.",
     },
     {
-      tag: "Bullet 3 · A calendar that bends",
+      tag: "Bullet 3 · Margin comes home in year one",
       body:
-        "Hunting season, funerals, hockey tournaments, treaty days. Hours bend around community life.",
+        "About $125k–$200k of grocery margin stays in Deer Lake the first year — money that today flies south at 58¢ on the dollar. 17–20 jobs grow into the store over two years.",
     },
   ];
 
@@ -58,8 +60,11 @@ export default function WhoWorks() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          The band runs the floor. Headwaters delivers the operating system.
-          Nobody flies in to run the till.
+          Two people on the cockpit. Software underneath them. That's
+          how the payroll line stays small, how the doors stay open
+          when somebody can't make it in, how the truck still arrives
+          loaded — and how the band's grocery margin starts coming
+          home fast.
         </p>
 
         <div className="mt-7 space-y-3">

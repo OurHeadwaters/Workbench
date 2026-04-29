@@ -58,8 +58,10 @@ export default function FirstMorning() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Big buttons. Nothing hidden in menus. No business words. The first
-          cashier learns it in twenty minutes.
+          Big buttons. Nothing hidden in menus. No business words. The
+          operator couple opens the till in twenty minutes — and the
+          doors stay open the next day even if one of them is at a
+          funeral, because the software does the back end.
         </p>
 
         <div className="mt-7 space-y-3">

@@ -55,6 +55,16 @@ export default function ColdChain() {
           </span>
         </h2>
 
+        <p
+          className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
+          style={{ color: "var(--color-text)" }}
+        >
+          The operator couple loads each truck from Local Line. The
+          cockpit watches lead times, weather, and the road status —
+          so the truck still leaves Dryden on time the week one of
+          them is at a funeral.
+        </p>
+
         <div className="mt-7 space-y-3">
           {lanes.map((lane) => (
             <div

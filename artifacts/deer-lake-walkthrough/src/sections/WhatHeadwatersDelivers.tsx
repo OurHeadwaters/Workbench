@@ -61,8 +61,12 @@ export default function WhatHeadwatersDelivers() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          What the band is actually buying. Each line below is a real
-          deliverable, not a promise — open the proof beneath each one.
+          What the band is actually buying — built so a two-person operator
+          couple, sitting on top of Square, QuickBooks, and Local Line, keeps
+          the payroll line small, the doors open long hours with limited
+          disruption, the truck on time, and the dollars-back-to-band
+          arriving fast. Each line below is a real deliverable, not a
+          promise — open the proof beneath each one.
         </p>
 
         <ol className="mt-7 space-y-3 list-none pl-0">
