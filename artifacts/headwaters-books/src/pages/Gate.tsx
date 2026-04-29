@@ -4,23 +4,64 @@ import {
   ArrowLeft,
   ArrowLeftRight,
   BookOpen,
+  ChevronRight,
   ExternalLink,
   FileText,
   FolderTree,
   Layers,
   ScrollText,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { constellation } from "@/data/constellation";
+
+// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #489)
+// =====================================================================
+// This page is *intentionally* Gate-only. Every UI affordance below is
+// built around The Gate's specific vocabulary: the severity ladder
+// (draft / under-review / cleared / refused — where "refused" is a
+// first-class outcome, not the Standby's standdown), the bright-side ↔
+// massity directionality, the three sub-shelves (Mappings as the
+// dictionary side, Substitutions as the applied-instance ledger,
+// Categories as the domain shelves — not the Standby's Common
+// Pantry/Watch), the four rejected alternatives (Translator, Filter,
+// Censor, Glossary — none of which appear on The Standby's rejected
+// list), and the calm-membrane posture. None of that survives unchanged
+// on The Standby (which has advisory/standby/active/standdown as its
+// rungs, calls and watch as its core nouns, drawdowns from its standby
+// shelf as its inventory move, and a debrief shape that asks whether
+// that shelf was replenished).
+//
+// The constellation manifest registers two primitives under
+// `constellationWidePrimitives` — `the-standby` and `the-gate`. This
+// page picks `the-gate` by id explicitly, mirroring the discipline
+// documented at the top of `pages/Standby.tsx`. DO NOT genericize this
+// template into a primitive-loop renderer that takes the id from the
+// route or from props — that is the bug class the codetry-handbook
+// chapter generator was already fixed for, and the reason Standby and
+// Gate live as two separate files. If a third sibling primitive earns
+// a surface in this app, build it as its own file (e.g. `pages/X.tsx`)
+// on its own route, with its own UI shaped to that primitive's
+// vocabulary, ladder, and sub-shelves.
+//
+// The manifest's `scope` field for The Gate states that the runnable
+// surface lives externally at legacy-gatekeeper.replit.app and that
+// this in-repo page is a *shell*: it reads the manifest verbatim and
+// links out to the live Gate. The translations log, mappings ledger,
+// and substitutions history below are presented as empty-state
+// surfaces for that reason — they describe the shape the in-repo
+// surface would take if/when the Gate is brought in-repo. The decision
+// whether to bring the runnable surface in-repo (as artifacts/the-gate)
+// is left for a later task once this shell has had some traffic.
 
 type GateRungId = "draft" | "under-review" | "cleared" | "refused";
 
@@ -78,42 +119,12 @@ function externalGateHostFromScope(scope: string | undefined): string {
       // fall through to bare-host match
     }
   }
-  const hostMatch = scope.match(/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.replit\.(?:app|dev)/i);
+  const hostMatch = scope.match(
+    /[a-z0-9-]+(?:\.[a-z0-9-]+)*\.replit\.(?:app|dev)/i,
+  );
   return hostMatch ? hostMatch[0] : EXTERNAL_GATE_FALLBACK_HOST;
 }
 
-// AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, Task #475)
-// =====================================================================
-// This page is *intentionally* Gate-only. Every UI affordance below is
-// built around The Gate's specific vocabulary: the four-rung ladder
-// (draft/under-review/cleared/refused), the bright-side ↔ massity
-// directionality, mappings, substitutions, categories, the
-// translations log, the calm-membrane posture. None of that survives
-// unchanged on The Standby (which has advisory/standby/active/standdown
-// as its rungs, calls and watch as its core nouns, drawdowns from
-// standby stock as its inventory move, and a debrief shape that asks
-// whether standby stock was replenished).
-//
-// The constellation manifest registers two primitives under
-// `constellationWidePrimitives` — `the-standby` and `the-gate`. This
-// page picks `the-gate` by id explicitly, mirroring the discipline
-// documented at the top of `pages/Standby.tsx`. DO NOT genericize this
-// template into a primitive-loop renderer that takes the id from the
-// route or from props — that is the bug class the codetry-handbook
-// chapter generator was already fixed for, and the reason Standby and
-// Gate live as two separate files. If a third sibling primitive earns
-// a surface in this app, build it as its own file (e.g. `pages/X.tsx`)
-// on its own route, with its own UI shaped to that primitive's
-// vocabulary, ladder, and sub-shelves.
-//
-// The manifest's `scope` field for The Gate states that the runnable
-// surface lives externally at legacy-gatekeeper.replit.app and that
-// this in-repo page is a *shell*: it reads the manifest verbatim and
-// links out to the live Gate. The translations log, mappings ledger,
-// and substitutions history below are presented as empty-state
-// surfaces for that reason — they describe the shape the in-repo
-// surface would take if/when the Gate is brought in-repo, but for now
-// they direct the practitioner to the external surface.
 export default function Gate() {
   const gatePrimitive = useMemo(
     () =>
@@ -157,7 +168,8 @@ export default function Gate() {
             <Separator orientation="vertical" className="h-6" />
             <div>
               <div className="text-xs text-muted-foreground tracking-wide uppercase">
-                Z3 · {constellation.z3?.memberFacingBrand ?? "807 Benefits"} · shell
+                Z3 · {constellation.z3?.memberFacingBrand ?? "807 Benefits"} ·
+                sibling to The Standby
               </div>
               <h1 className="font-serif text-2xl text-foreground leading-tight">
                 The Gate
@@ -213,8 +225,8 @@ export default function Gate() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-foreground/70 leading-relaxed">
-                neighbour · send · fee · money · the shelf · the call ·
-                the watch · standby stock
+                neighbour · send · fee · money · the shelf · the books ·
+                the channel
               </CardContent>
             </Card>
             <div className="hidden md:flex items-center justify-center px-2">
@@ -232,17 +244,23 @@ export default function Gate() {
               </CardHeader>
               <CardContent className="text-xs text-foreground/70 leading-relaxed">
                 resident · remit · service charge · funds · the database ·
-                the incident · the watchlist · safety stock
+                financial statements · compliance officer
               </CardContent>
             </Card>
           </div>
         </section>
 
-        {/* The four-rung ladder, verbatim */}
+        {/* The severity ladder, verbatim — draft/under-review/cleared/refused */}
         <section className="mb-10">
           <h2 className="font-serif text-lg text-foreground mb-3">
-            The four-rung ladder
+            The severity ladder
           </h2>
+          <p className="text-sm text-muted-foreground mb-3 max-w-3xl leading-relaxed">
+            The <span className="italic">refused</span> rung is first-class —
+            for source-side language with no honest target-side equivalent the
+            founder is unwilling to lose. The Gate doesn&rsquo;t force a
+            substitution; it records the refusal so the noun stays on file.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {ladder.map((rung) => {
               const tone = RUNG_TONE[rung.rung as GateRungId];
@@ -271,26 +289,35 @@ export default function Gate() {
           </div>
         </section>
 
-        {/* The three sub-shelves, verbatim */}
-        <section className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-          {subShelves.map((shelf) => {
-            const Icon = SHELF_ICON[shelf.name] ?? Layers;
-            return (
-              <Card key={shelf.name} className="border-border">
-                <CardHeader className="pb-2">
-                  <CardTitle className="font-serif text-lg flex items-center gap-2">
-                    <Icon className="w-5 h-5 text-primary" />
-                    {shelf.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {shelf.role}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+        {/* The three sub-shelves, verbatim — Mappings/Substitutions/Categories */}
+        <section className="mb-10">
+          <h2 className="font-serif text-lg text-foreground mb-3">
+            The three sub-shelves
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {subShelves.map((shelf) => {
+              const Icon = SHELF_ICON[shelf.name] ?? Layers;
+              return (
+                <Card
+                  key={shelf.name}
+                  className="border-border"
+                  data-testid={`subshelf-${shelf.name.toLowerCase()}`}
+                >
+                  <CardHeader className="pb-2">
+                    <CardTitle className="font-serif text-lg flex items-center gap-2">
+                      <Icon className="w-5 h-5 text-primary" />
+                      {shelf.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {shelf.role}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </section>
 
         <Separator className="mb-8" />
@@ -304,12 +331,16 @@ export default function Gate() {
                 The runnable Gate
               </CardTitle>
               <CardDescription className="text-foreground/70 max-w-3xl leading-relaxed">
-                The manifest's <code className="px-1 py-0.5 rounded bg-muted text-foreground">scope</code>{" "}
-                field for The Gate states that the live, runnable surface
-                continues to operate externally while the in-repo
-                vocabulary settles. This page is the in-repo shell — it
-                reads the manifest verbatim and links out so the
-                practitioner has one door, not two.
+                The manifest's{" "}
+                <code className="px-1 py-0.5 rounded bg-muted text-foreground">
+                  scope
+                </code>{" "}
+                field for The Gate states that the live, runnable surface —
+                where mappings are entered, substitutions are applied to
+                crossing language, and categories are managed — continues to
+                operate externally while the in-repo vocabulary settles. This
+                page is the in-repo shell; it reads the manifest verbatim and
+                links out so the practitioner has one door, not two.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -324,9 +355,17 @@ export default function Gate() {
                   <ExternalLink className="w-4 h-4" />
                 </Button>
               </a>
-              <p className="mt-3 text-xs text-muted-foreground">
+              <p className="mt-3 text-xs text-muted-foreground font-mono">
                 {externalGateUrl}
               </p>
+
+              <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-4 text-sm text-foreground/80 leading-relaxed">
+                <div className="flex items-center gap-2 mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">
+                  <ChevronRight className="w-3.5 h-3.5" />
+                  Scope of this page
+                </div>
+                {gatePrimitive.scope}
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -404,31 +443,39 @@ export default function Gate() {
           </Card>
         </section>
 
-        {/* Why these names — rejected alternatives, verbatim from manifest */}
+        {/* Names rejected on paper — verbatim, four single-side or single-direction names */}
         {rejected.length > 0 && (
           <section className="mb-4">
             <h2 className="font-serif text-lg text-foreground mb-3">
-              Why this is called the Gate
+              Names rejected on paper
             </h2>
-            <p className="text-sm text-muted-foreground mb-4 max-w-3xl">
-              Names that were considered and refused, with the reason on
-              file — kept here so the next person to reach for one of
-              these words finds the prior thinking.
+            <p className="text-sm text-muted-foreground mb-3 max-w-3xl leading-relaxed">
+              Four single-side or single-direction names that were trialed as
+              the umbrella and turned down — none could hold both the bright
+              side and massity at once. Kept on file so the next person to
+              reach for one of these words finds the prior thinking.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <ul className="space-y-3">
               {rejected.map((alt) => (
-                <Card key={alt.name} className="border-border">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="font-serif text-base text-foreground/80">
-                      Not “{alt.name}”
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-foreground/70 leading-relaxed">
-                    {alt.reason}
-                  </CardContent>
-                </Card>
+                <li
+                  key={alt.name}
+                  className="rounded-lg border border-border bg-card p-4"
+                  data-testid={`rejected-${alt.name.toLowerCase()}`}
+                >
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-4 h-4 mt-0.5 text-stone-500 flex-shrink-0" />
+                    <div>
+                      <div className="font-serif text-base text-foreground">
+                        Not &ldquo;{alt.name}&rdquo;
+                      </div>
+                      <p className="mt-1 text-sm text-foreground/75 leading-relaxed">
+                        {alt.reason}
+                      </p>
+                    </div>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
         )}
       </main>
@@ -436,8 +483,8 @@ export default function Gate() {
       <footer className="border-t border-border mt-12">
         <div className="max-w-6xl mx-auto px-6 py-6 text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-2">
           <span>
-            In-repo shell for The Gate — a Z3 dashboard. The runnable
-            surface lives at{" "}
+            In-constellation home for The Gate — vocabulary verbatim from the
+            manifest; the runnable surface lives at{" "}
             <a
               href={externalGateUrl}
               target="_blank"
@@ -451,7 +498,7 @@ export default function Gate() {
           <span>
             Read from{" "}
             <code className="px-1.5 py-0.5 rounded bg-muted text-foreground">
-              constellation.constellationWidePrimitives
+              constellation.constellationWidePrimitives.the-gate
             </code>
           </span>
         </div>

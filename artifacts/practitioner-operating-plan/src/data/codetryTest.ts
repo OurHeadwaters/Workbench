@@ -161,7 +161,7 @@ export const codetryTest: CodetryTestGroup[] = [
       {
         name: "The Gate",
         livesAt:
-          "constellation.json constellationWidePrimitives.the-gate (hosted Zone 3, sibling to The Standby) · /codetry working-doc under principles.both-sides · external runnable surface at legacy-gatekeeper.replit.app (in-repo home deferred to a follow-up task — either artifacts/the-gate, or a /gate shell page in headwaters-books that reads this manifest verbatim and links out, or both) · per-zone reads anywhere a zone's work has to leave the constellation in writing (grant applications, CRA filings, regulator forms, banker meetings, council resolutions)",
+          "constellation.json constellationWidePrimitives.the-gate (hosted Zone 3, sibling to The Standby) · /codetry working-doc under principles.both-sides · in-constellation home at /headwaters-books/gate (shell page that reads the manifest entry verbatim — vocabulary, four-rung ladder, three sub-shelves, four rejected alternatives — and links out to the runnable surface) · external runnable surface at legacy-gatekeeper.replit.app (whether to bring the runnable surface in-repo as artifacts/the-gate is left for a later decision once the shell has had some traffic) · per-zone reads anywhere a zone's work has to leave the constellation in writing (grant applications, CRA filings, regulator forms, banker meetings, council resolutions)",
         renameCandidate:
           "Translator (collapses posture into pure transaction) · Filter (subtractive mis-frame) · Censor (adversarial framing) · Glossary (dictionary side only) · split into 'the Translator' (bright-to-massity outbound) + 'the Importer' (massity-to-bright inbound)",
         whatWouldChange:

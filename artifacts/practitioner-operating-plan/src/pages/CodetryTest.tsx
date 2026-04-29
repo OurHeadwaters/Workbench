@@ -45,6 +45,57 @@ const bothStatesLabel: Record<BothStatesVerdict, string> = {
   "n-a": "single-state · NA",
 };
 
+// AUDIT NOTE — Task #489 (Gate-page-link): make `livesAt` URL-aware.
+// =================================================================
+// `livesAt` is per-entry prose recording every surface a name shows up
+// on. Some of those surfaces are now in-repo pages (e.g. The Gate's
+// in-constellation home at /headwaters-books/gate, The Standby's
+// pilot dashboard at /headwaters-books/standby) or external runnable
+// surfaces (legacy-gatekeeper.replit.app). When `livesAt` mentions
+// one of those, the audit page should link to it — readers shouldn't
+// have to hand-paste a path. The helper below scans for matches and
+// turns them into anchors; everything else stays as text. Per-entry
+// prose stays per-entry; this helper is presentation-only and never
+// templates over a primitive's vocabulary.
+const LIVES_AT_LINK_PATTERN =
+  /(\/headwaters-books\/[a-z0-9-]+|\/practitioner-operating-plan\/[a-z0-9-]+|legacy-gatekeeper\.replit\.app)/g;
+
+function renderLivesAt(text: string) {
+  const parts: Array<string | { href: string; label: string }> = [];
+  let lastIndex = 0;
+  for (const match of text.matchAll(LIVES_AT_LINK_PATTERN)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > lastIndex) {
+      parts.push(text.slice(lastIndex, matchIndex));
+    }
+    const label = match[0];
+    const href = label.startsWith("legacy-gatekeeper")
+      ? `https://${label}`
+      : label;
+    parts.push({ href, label });
+    lastIndex = matchIndex + label.length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts.map((part, i) =>
+    typeof part === "string" ? (
+      part
+    ) : (
+      <a
+        key={i}
+        href={part.href}
+        {...(part.href.startsWith("http")
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
+        className="underline decoration-[#c8bfa7] decoration-1 underline-offset-2 hover:decoration-[#1f3d2e] text-[#1f3d2e]"
+      >
+        {part.label}
+      </a>
+    ),
+  );
+}
+
 const bothStatesColor: Record<
   BothStatesVerdict,
   { bg: string; text: string; border: string }
@@ -341,7 +392,9 @@ export default function CodetryTest() {
                         <span className="font-mono uppercase tracking-[0.16em] text-[7.5pt] text-[#1f3d2e] mr-[4pt] print:text-[6.5pt]">
                           Lives at
                         </span>
-                        <span className="font-mono">{entry.livesAt}</span>
+                        <span className="font-mono">
+                          {renderLivesAt(entry.livesAt)}
+                        </span>
                       </div>
                       <div className="text-[10pt] mb-[3pt] leading-[1.45] print:text-[9pt]">
                         <span className="font-mono uppercase tracking-[0.16em] text-[7.5pt] text-[#1f3d2e] mr-[4pt] print:text-[6.5pt]">

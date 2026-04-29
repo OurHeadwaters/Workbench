@@ -260,7 +260,7 @@ export const constellation: ConstellationSnapshot = {
         }
       ],
       "principle": "both-sides",
-      "scope": "naming and filing only — no UI surface is built in this pass. The runnable surface at legacy-gatekeeper.replit.app continues to operate externally; a follow-up task will decide whether to bring it in-repo as artifacts/the-gate, build a /gate shell page in headwaters-books that reads this manifest verbatim and links out, or both. Future task once the vocabulary has been used in the field."
+      "scope": "in-constellation home now lives at /headwaters-books/gate — a shell page that reads this manifest entry verbatim (vocabulary, four-rung ladder, three sub-shelves, four rejected alternatives) and links out to the runnable surface. The runnable surface at legacy-gatekeeper.replit.app continues to operate externally; whether to bring it in-repo as artifacts/the-gate is left for a later decision once the shell page has had some traffic."
     }
   ],
   "teachers": [

@@ -180,6 +180,38 @@ export default function Codetry() {
             across the three financial artifacts. Per-entry verdict
             (load-bearing / decorative / drift) and footer tally.
           </p>
+          <p className="mt-[4pt] print:mt-[3pt] text-[8pt] text-[#6b7665] leading-[1.4] print:text-[7pt]">
+            <span className="font-mono uppercase tracking-[0.18em] text-[7pt] text-[#1f3d2e] mr-[4pt]">
+              Live page
+            </span>
+            <a
+              href="/headwaters-books/gate"
+              className="font-mono text-[#1f3d2e] underline decoration-[#c8bfa7] underline-offset-2 hover:decoration-[#1f3d2e] print:no-underline"
+            >
+              /headwaters-books/gate
+            </a>{" "}
+            &mdash; in-constellation home for The Gate. Reads the manifest
+            entry verbatim (vocabulary, four-rung ladder
+            draft/under-review/cleared/refused, three sub-shelves
+            Mappings/Substitutions/Categories, four rejected alternatives)
+            and links out to the runnable surface at{" "}
+            <a
+              href="https://legacy-gatekeeper.replit.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[#1f3d2e] underline decoration-[#c8bfa7] underline-offset-2 hover:decoration-[#1f3d2e] print:no-underline"
+            >
+              legacy-gatekeeper.replit.app
+            </a>
+            . The Standby&rsquo;s sibling pilot dashboard lives at{" "}
+            <a
+              href="/headwaters-books/standby"
+              className="font-mono text-[#1f3d2e] underline decoration-[#c8bfa7] underline-offset-2 hover:decoration-[#1f3d2e] print:no-underline"
+            >
+              /headwaters-books/standby
+            </a>
+            .
+          </p>
 
           <Subhead>The saltbox principle</Subhead>
           <p>

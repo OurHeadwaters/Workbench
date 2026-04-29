@@ -56,14 +56,20 @@ export default function Home() {
 
       <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
         {/*
-          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475).
+          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #489).
           The footer links the constellation-wide-primitive surfaces
-          this app ships: the Standby pilot dashboard at /standby and
-          the Gate shell at /gate. Each link names its primitive
-          explicitly — do NOT collapse them into a single generic
-          "non-zone primitives" link that would inherit one primitive's
-          framing for both. If a third sibling primitive earns a
-          surface, add it as its own line here with its own naming.
+          this app ships. Two primitives are registered in the manifest
+          and each has its own per-primitive page on its own route —
+          the Standby pilot dashboard at /standby (with its
+          advisory/standby/active/standdown ladder + call composer),
+          and the Gate shell at /gate (with its
+          draft/under-review/cleared/refused ladder + outbound link to
+          the runnable surface at legacy-gatekeeper.replit.app). Each
+          link names its primitive explicitly — do NOT collapse them
+          into a single generic "non-zone primitives" link that would
+          inherit one primitive's framing for both. If a third sibling
+          primitive earns a surface, add it as its own line here with
+          its own naming.
         */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
           <Link href="/standby">
