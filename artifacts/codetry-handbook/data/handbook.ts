@@ -300,7 +300,7 @@ const partII: Part = {
   roman: "II",
   title: "Adjacent Disciplines",
   blurb:
-    "Four older disciplines codetry gets mixed up with — all respected, all doing different work.",
+    "Five older disciplines codetry gets mixed up with — all respected, all doing different work.",
   chapters: [
     {
       id: "2-1",
@@ -473,6 +473,63 @@ const partII: Part = {
           kind: "callout",
           text:
             "Type-driven design makes illegal states impossible. Codetry makes drifted nouns unshippable — and treats a perfectly typed model with the wrong word as drift the type checker can't see.",
+        },
+      ],
+    },
+    {
+      id: "2-5",
+      number: "2.5",
+      partRoman: "II",
+      partLabel: "II · Adjacent Disciplines",
+      title: "Different from capital allocation at scale",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The fifth discipline codetry gets confused with comes from finance, not software. It is the founder-as-allocator school that treats capital allocation as the highest economic act. Mises in 1920, Hayek after, and the modern entrepreneur lineage that runs through Silicon Valley sit in this room.",
+        },
+        {
+          kind: "para",
+          text:
+            "The conviction is sharp. Resources are finite. Uses are infinite. The person closest to a real problem, taking real risk on their own balance sheet, allocates better than a committee that does not. Profit is the signal that the bet was right. A loss is the signal it was wrong.",
+        },
+        {
+          kind: "para",
+          text:
+            "Codetry agrees with the calculation point. A central planner cannot see what the people on the ground see. The information that decides where the next dollar should go lives in the room where the work happens, not in a head office. Both disciplines accept that the local reader sees what the distant planner cannot.",
+        },
+        {
+          kind: "subhead",
+          text: "Capital allocation at scale wants the allocator to keep allocating.",
+        },
+        {
+          kind: "para",
+          text:
+            "The school's success story is the founder who allocates well and then keeps allocating, on a bigger and bigger pile, for as long as they live. The exit is to compound. The community around the founder is a counterparty, not a successor.",
+        },
+        {
+          kind: "subhead",
+          text: "Codetry wants the allocator to make themselves replaceable.",
+        },
+        {
+          kind: "para",
+          text:
+            "The practitioner takes personal risk. The practitioner reads the local information. The practitioner runs a P&L. So far the disciplines agree. Then they part ways. The practitioner is paid to write the method down so the community can run the work without them.",
+        },
+        {
+          kind: "para",
+          text:
+            "The exit is handover, not compound. The book the practitioner ships is the work, not the brand. A successful practitioner is one the community no longer needs in the chair. A successful founder-allocator is one whose chair grows.",
+        },
+        {
+          kind: "para",
+          text:
+            "Both schools agree that profit is a signal. They disagree on who reads it. Capital allocation at scale reads the signal at the cap table. Codetry insists the signal must also be readable at the kitchen table — the cost stack, the markup, the truck cost on a page the household sees.",
+        },
+        {
+          kind: "callout",
+          text:
+            "Capital allocation at scale wants the best allocator to keep allocating. Codetry wants the best allocator to write down how, and then leave the chair to the community that owns the work.",
         },
       ],
     },
