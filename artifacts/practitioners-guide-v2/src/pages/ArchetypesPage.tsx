@@ -45,28 +45,38 @@ export function ArchetypesPage() {
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
               <strong>Shape.</strong> Community engagement with a lead practitioner on the ground,
-              a small team, a fixed engagement window (typically 12 months), and a signing-bonus
-              line up front. The lead carries the discontinuity-of-income risk of stepping into the
-              engagement; the bonus retires that risk in full at month 1.
+              a small team, and a fixed engagement window (typically 12 months). When the founder
+              has personally guaranteed family capital into the business, Capital Recovery is split
+              into two visible legs so the family piece can be retired up front without disguising
+              the substance.
             </p>
             <p>
               <strong>Canonical example.</strong> Deer Lake (V5). {money(a.fee)}/mo agency fee × {a.termMonths} months
-              against a {a.roster.length}-role Day-1 team ({money(a.payrollTotal)}/mo loaded payroll). Signing bonus{" "}
-              {money(a.signingBonus)} in month 1; capital recovery {money(a.capitalRecoveryAmount)} (loan only — the
-              family infusion was paid via the signing bonus); Phase 3 {money(a.totals18mo.reserve + a.totals18mo.innovation)} split{" "}
-              {a.reservePct}/{a.innovationPct} Reserve / Innovation.
+              against a {a.roster.length}-role Day-1 team ({money(a.payrollTotal)}/mo loaded payroll). Capital Recovery{" "}
+              {money(a.familyInfusionRecovery + a.capitalRecoveryAmount)} total, shown as two legs:{" "}
+              {money(a.familyInfusionRecovery)} family-infusion leg in month 1 and{" "}
+              {money(a.capitalRecoveryAmount)} business-loan leg Aug → Oct. Phase 3{" "}
+              {money(a.totals18mo.reserve + a.totals18mo.innovation)} split {a.reservePct}/{a.innovationPct} Reserve / Innovation.
             </p>
             <p>
               <strong>Surplus waterfall.</strong> Tithe (10% off the top, first claim) → Wages →{" "}
-              <strong>Signing bonus</strong> → Capital Recovery → Reserve / Innovation. The Brightside
-              Launch Month phase is dropped from the agency waterfall — Brightside's pre-launch is
-              funded out of the Innovation bucket once Phase 3 is deployed.
+              <strong>Capital Recovery — family infusion</strong> →{" "}
+              <strong>Capital Recovery — business loan</strong> → Reserve / Innovation. The
+              Brightside Launch Month phase is dropped from the agency waterfall — Brightside's
+              pre-launch is funded out of the Innovation bucket once Phase 3 is deployed.
             </p>
             <p>
-              <strong>Why a signing bonus.</strong> The lead is leaving (or holding back from) other
-              income to start a place-bound community engagement. The bonus is sized to retire the
-              founder-side family-capital obligations in full up front, so the engagement starts
-              clean — the only cap-recovery line that survives is the actual third-party loan.
+              <strong>Why front-load the family infusion.</strong> The founder's husband put $40k
+              of family capital into the business. Retiring that obligation in month 1 (rather
+              than dragging it across the same window as the bank loan) gives the family stack
+              its closure early, lets the business carry only the bank-loan leg through Aug → Oct,
+              and makes the personal-guarantee piece visible as a discrete sibling line. Both legs
+              are tax-free debt repayment to creditors — the money flows business → husband or
+              business → bank, never through the founder personally. NOT compensation, NOT income,
+              NOT a deductible expense. (An earlier draft framed this as a "signing bonus" to the
+              lead; that would have triggered ~$18k of personal income tax, CRA reasonableness
+              scrutiny, and lost the balance-sheet treatment, so the relabel was reverted to debt
+              repayment.)
             </p>
             <p>
               <strong>Deferred roles (gated, not deleted).</strong> The V4 7-role roster carried{" "}
@@ -85,8 +95,9 @@ export function ArchetypesPage() {
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
               <strong>Shape.</strong> Leveraged software / services revenue. No fixed engagement
-              window, no on-the-ground roster, no signing bonus — profit-share carries the
-              equivalent value the signing bonus plays in the Codetry archetype.
+              window, no on-the-ground roster, no family-infusion stack to retire — profit-share
+              carries the founder's compensation directly, so the Codetry-archetype Capital
+              Recovery legs don't apply.
             </p>
             <p>
               <strong>Canonical example.</strong> Brightside (Recreation Therapy SaaS for LTC).
@@ -131,9 +142,12 @@ export function ArchetypesPage() {
             outside the agency salary).
           </li>
           <li>
-            <strong>Capital recovery is NOT income.</strong> Whether the line is $72k (V5,
-            loan-only) or $112k (V4, loan + family), it's a debt-repayment line and is shown
-            separately on the personal-cash page so it never reads as compensation.
+            <strong>Capital recovery is NOT income, in either presentation.</strong> Whether the
+            $112k debt stack is shown as one undivided line (V3/V4) or as two visible legs (V5:
+            $40k family-infusion m1 + $72k bank-loan Aug→Oct), it's tax-free debt repayment to
+            creditors. Money flows business → creditor; nothing lands on the founder's personal
+            T1; nothing is deductible to the business. Shown separately on the personal-cash page
+            so it never reads as compensation.
           </li>
           <li>
             <strong>Tags and dates.</strong> Every figure ships with a "confirmed" or "TBD" tag
@@ -152,8 +166,8 @@ export function ArchetypesPage() {
                 <th className="py-2 pr-4 text-left font-medium">Fee × term</th>
                 <th className="py-2 pr-4 text-left font-medium">Roster</th>
                 <th className="py-2 pr-4 text-left font-medium">Lead draw</th>
-                <th className="py-2 pr-4 text-left font-medium">Signing bonus</th>
-                <th className="py-2 pr-4 text-left font-medium">Cap recovery</th>
+                <th className="py-2 pr-4 text-left font-medium">Cap recovery — family (m1)</th>
+                <th className="py-2 pr-4 text-left font-medium">Cap recovery — loan</th>
               </tr>
             </thead>
             <tbody>

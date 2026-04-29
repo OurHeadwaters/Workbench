@@ -19,18 +19,18 @@ export function ContractsPage() {
   const a = scenario.contracts.agency;
   const b = BUCKETS.contracts;
 
-  const hasSigningBonus = a.signingBonus > 0;
+  const hasFamilyInfusionRecovery = a.familyInfusionRecovery > 0;
   const hasBrightsideLaunchPhase = a.brightsidePrelaunchSpend > 0;
 
   // Compute the phases description string for the header — it's slightly
-  // different per scenario (V5 drops the Brightside Launch Month and adds a
-  // signing-bonus line; V3/V4 carry the Brightside Launch Month and no
-  // bonus line).
+  // different per scenario (V5 drops the Brightside Launch Month and splits
+  // Capital Recovery into two visible legs; V3/V4 carry the Brightside Launch
+  // Month and a single undivided Capital Recovery line).
   const waterfallDescription = [
     "tithe",
     "wages",
-    hasSigningBonus ? "signing bonus" : null,
-    "capital recovery",
+    hasFamilyInfusionRecovery ? "capital recovery — family infusion" : null,
+    hasFamilyInfusionRecovery ? "capital recovery — business loan" : "capital recovery",
     hasBrightsideLaunchPhase ? "Brightside launch" : null,
     "Reserve / Innovation",
   ]
@@ -40,8 +40,9 @@ export function ContractsPage() {
   const overheadsBreakdownLabel = `Overheads (3 mo Jun–Aug + ${a.termMonths - 3} mo Sep+)`;
 
   // Build the surplus-deployment phase blocks dynamically so the phase
-  // numbering stays correct whether or not the scenario carries a
-  // signing-bonus line and/or a dedicated Brightside Launch Month.
+  // numbering stays correct whether or not the scenario carries a separated
+  // family-infusion leg of Capital Recovery and/or a dedicated Brightside
+  // Launch Month.
   const phaseBlocks: { key: string; node: ReactNode }[] = [];
   let phaseIndex = 0;
 
@@ -63,27 +64,30 @@ export function ContractsPage() {
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
           Dave Ramsey discipline: the tithe is what you decided, not what was left. Locked the
-          moment the fee is locked — wages, signing bonus, capital recovery, Brightside, and
-          Reserve / Innovation absorb the cost of that decision.
+          moment the fee is locked — wages, capital recovery (both legs), Brightside, and Reserve /
+          Innovation absorb the cost of that decision.
         </p>
       </PhaseBlock>
     ),
   });
 
-  if (hasSigningBonus) {
+  if (hasFamilyInfusionRecovery) {
     phaseBlocks.push({
-      key: "signing-bonus",
+      key: "capital-recovery-family",
       node: (
         <PhaseBlock
-          key="signing-bonus"
+          key="capital-recovery-family"
           index={phaseIndex++}
-          title={`Signing bonus · ${money(a.signingBonus)} (paid in month 1, with month-2 spillover)`}
-          tag={a.signingBonusTag}
+          title={`Capital Recovery — family infusion · ${money(a.familyInfusionRecovery)} (paid in month 1, with month-2 spillover)`}
+          tag={a.familyInfusionRecoveryTag}
           accent={b.accent}
         >
-          <p className="text-sm text-muted-foreground">{a.signingBonusDescription}</p>
+          <p className="text-sm text-muted-foreground">{a.familyInfusionRecoveryDescription}</p>
           <p className="mt-2 text-xs text-muted-foreground">
-            The signing-bonus line is a Codetry-archetype feature — see the{" "}
+            Tax-free return of principal to the founder's husband. Money flows business →
+            husband, bypassing the founder's personal accounts. NOT compensation, NOT income, NOT
+            a deductible expense — the same character as the bank-loan leg below. The split-leg
+            framing is for visibility; see the{" "}
             <a href="/archetypes" className="underline hover:text-foreground" data-testid="link-archetypes-from-bonus">
               Archetypes page
             </a>{" "}
@@ -100,12 +104,14 @@ export function ContractsPage() {
       <PhaseBlock
         key="capital-recovery"
         index={phaseIndex++}
-        title={`Capital Recovery (pure) · ${a.capitalRecoveryStartLabel} → ${a.capitalRecoveryEndLabel}`}
+        title={`${hasFamilyInfusionRecovery ? "Capital Recovery — business loan" : "Capital Recovery"} · ${a.capitalRecoveryStartLabel} → ${a.capitalRecoveryEndLabel}`}
         tag={a.capitalRecoveryTag}
         accent={b.accent}
       >
         <p className="text-sm text-muted-foreground">
-          All post-tithe agency surplus retires the {money(a.capitalRecoveryAmount)} debt stack.{" "}
+          {hasFamilyInfusionRecovery
+            ? `Post-tithe surplus from August onward retires the ${money(a.capitalRecoveryAmount)} bank-loan leg. `
+            : `All post-tithe agency surplus retires the ${money(a.capitalRecoveryAmount)} debt stack. `}
           {a.capitalRecoveryDescription}{" "}
           <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this
           scenario's post-tithe monthly surplus.
@@ -345,20 +351,20 @@ export function ContractsPage() {
             tone="positive"
             accent={b.accent}
             hint={
-              hasSigningBonus
-                ? "Signing bonus + capital recovery + Reserve / Innovation, after the tithe"
+              hasFamilyInfusionRecovery
+                ? "Capital Recovery (family m1 + loan Aug→Oct) + Reserve / Innovation, after the tithe"
                 : "Capital recovery + Brightside + Reserve / Innovation, after the tithe"
             }
             testId="kpi-agency-18mo"
           />
-          {hasSigningBonus ? (
+          {hasFamilyInfusionRecovery ? (
             <MoneyKpi
-              label="Signing bonus"
-              value={a.signingBonus}
-              tag={a.signingBonusTag}
+              label="Capital Recovery — family infusion"
+              value={a.familyInfusionRecovery}
+              tag={a.familyInfusionRecoveryTag}
               accent={b.accent}
-              hint="Paid in month 1, retires the family infusion in full up front"
-              testId="kpi-agency-signing-bonus"
+              hint="Paid in month 1 — tax-free debt repayment to founder's husband (NOT income)"
+              testId="kpi-agency-family-infusion-recovery"
             />
           ) : null}
         </div>
@@ -493,10 +499,22 @@ export function ContractsPage() {
                 <PLRow label={overheadsBreakdownLabel} value={-a.totals18mo.overheads} />
                 <PLRow label="Total surplus deployed (post-tithe)" value={a.totals18mo.surplusDeployed} bold tone="positive" />
                 <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
-                {hasSigningBonus ? (
-                  <PLRow label="↳ Signing bonus (Codetry archetype)" value={a.totals18mo.signingBonus} tone="muted" />
+                {hasFamilyInfusionRecovery ? (
+                  <PLRow
+                    label="↳ Capital Recovery — family infusion (m1, tax-free debt repayment)"
+                    value={a.totals18mo.familyInfusionRecovery}
+                    tone="muted"
+                  />
                 ) : null}
-                <PLRow label="↳ Capital Recovery" value={a.totals18mo.capitalRecovery} tone="muted" />
+                <PLRow
+                  label={
+                    hasFamilyInfusionRecovery
+                      ? "↳ Capital Recovery — business loan (Aug → Oct)"
+                      : "↳ Capital Recovery"
+                  }
+                  value={a.totals18mo.capitalRecovery}
+                  tone="muted"
+                />
                 {hasBrightsideLaunchPhase ? (
                   <PLRow label="↳ Brightside one-time pre-launch" value={a.totals18mo.brightsidePrelaunch} tone="muted" />
                 ) : null}
@@ -523,12 +541,13 @@ export function ContractsPage() {
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
               No ongoing owner take from the agency surplus, no profit-share, no dividend from the
-              agency line. Capital Recovery returns existing obligations to lender
-              {hasSigningBonus ? "" : " and family"}; not characterized as compensation.
-              {hasSigningBonus
-                ? " The signing bonus is a one-time payment to the lead at engagement start, not ongoing compensation."
-                : ""}{" "}
-              Brightside owner take is the founder's only profit-share line — see Brightside.
+              agency line. Capital Recovery returns existing obligations to{" "}
+              {hasFamilyInfusionRecovery
+                ? "the founder's husband (family-infusion leg, m1) and the bank (business-loan leg, Aug → Oct)"
+                : "lender and family"}
+              ; both legs are tax-free debt repayment, not characterized as compensation and not
+              flowing through the founder personally. Brightside owner take is the founder's only
+              profit-share line — see Brightside.
             </p>
           </SectionCard>
         </div>

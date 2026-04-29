@@ -136,9 +136,9 @@ const v3Agency = {
   monthlySurplusSepOnward: v3SurplusSepOnward,
   costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
-  signingBonus: 0,
-  signingBonusTag: confirmed("V3 Codetry pre-roster-sync did not carry a signing-bonus line — the line was added in V5 to compensate the lead for the discontinuity-of-income risk of starting a community engagement."),
-  signingBonusDescription: "",
+  familyInfusionRecovery: 0,
+  familyInfusionRecoveryTag: confirmed("V3 Codetry pre-roster-sync kept Capital Recovery undivided ($112k = $72k loan + $40k family infusion paid in order). The split-leg framing was added in V5 to make the front-loading of the family piece visible without changing tax/legal substance — both V3 and V5 are tax-free debt repayment."),
+  familyInfusionRecoveryDescription: "",
 
   teamIncentivesName: "Team incentives (Christmas bonus, perks of employment)",
   teamIncentivesAmount: null,
@@ -174,7 +174,7 @@ const v3Agency = {
     payroll: v3Payroll18mo,
     overheads: v3Overheads18mo,
     surplusDeployed: v3Surplus18mo,
-    signingBonus: 0,
+    familyInfusionRecovery: 0,
     capitalRecovery: 112000,
     brightsidePrelaunch: 28000,
     reserve: v3Reserve18mo,

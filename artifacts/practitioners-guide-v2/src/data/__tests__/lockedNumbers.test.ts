@@ -761,18 +761,31 @@ describe("V5 — Codetry archetype (Deer Lake) — locked headline numbers", () 
     );
   });
 
-  it("signing bonus: NEW $40,000 line in month 1, sized to retire the family infusion in full up front", () => {
-    expect(agency.signingBonus).toBe(40000);
-    expect(agency.signingBonusTag.kind).toBe("confirmed");
-    expect(agency.signingBonusDescription).toContain("$40,000");
-    expect(agency.signingBonusDescription.toLowerCase()).toContain("month 1");
+  it("family-infusion recovery: $40,000 leg of Capital Recovery paid in month 1; tax-free debt repayment, NOT a signing bonus / NOT compensation", () => {
+    expect(agency.familyInfusionRecovery).toBe(40000);
+    expect(agency.familyInfusionRecoveryTag.kind).toBe("confirmed");
+    expect(agency.familyInfusionRecoveryDescription).toContain("$40,000");
+    expect(agency.familyInfusionRecoveryDescription.toLowerCase()).toContain("month 1");
+    // Tax-character invariants — these phrases must appear in the description
+    // so the substance is locked at the data layer (not just the page copy).
+    // If a future relabel back to "signing bonus" / "compensation" is
+    // attempted, this guard fires.
+    const desc = agency.familyInfusionRecoveryDescription.toLowerCase();
+    expect(desc).toContain("tax-free");
+    expect(desc).toContain("not compensation");
+    expect(desc).toContain("not income");
+    expect(desc).toContain("not a deductible");
   });
 
-  it("capital recovery: shrinks to $72k loan-only (was $112k under V3/V4), since the $40k family infusion is paid via the signing bonus", () => {
+  it("capital recovery (business-loan leg): $72k bank-loan leg only (V3/V4 carried the same $112k stack as one undivided line)", () => {
     expect(agency.capitalRecoveryAmount).toBe(72000);
-    expect(agency.capitalRecoveryDescription).toContain("loan only");
+    expect(agency.capitalRecoveryDescription.toLowerCase()).toContain("bank-loan");
     expect(agency.capitalRecoveryStartLabel.toLowerCase()).toContain("aug");
     expect(agency.capitalRecoveryEndLabel.toLowerCase()).toContain("oct");
+    // Family-infusion + bank-loan legs together retire the same $112k stack
+    // V3/V4 carried as one undivided Capital Recovery line — substance is
+    // identical, only the visual presentation differs.
+    expect(agency.familyInfusionRecovery + agency.capitalRecoveryAmount).toBe(112000);
   });
 
   it("Brightside Launch Month phase is dropped from the agency waterfall (zeroed); Brightside pre-launch is funded out of Innovation in Phase 3", () => {
@@ -796,10 +809,10 @@ describe("V5 — Codetry archetype (Deer Lake) — locked headline numbers", () 
     expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
   });
 
-  it("Phase 3 totals reconcile to the Phase 3 budget (post-tithe surplus minus signing bonus minus capital recovery)", () => {
+  it("Phase 3 totals reconcile to the Phase 3 budget (post-tithe surplus minus both Capital Recovery legs)", () => {
     const phase3Budget =
       agency.totals18mo.surplusDeployed -
-      agency.totals18mo.signingBonus -
+      agency.totals18mo.familyInfusionRecovery -
       agency.totals18mo.capitalRecovery;
     expect(phase3Budget).toBe(194396);
     expect(agency.reserveTotal + agency.innovationTotal).toBe(phase3Budget);
@@ -827,7 +840,7 @@ describe("V5 — Codetry archetype (Deer Lake) — locked headline numbers", () 
   });
 });
 
-describe("V5 12-month surplus deployment math — tithe-first, signing-bonus-second, adds up to $306,396", () => {
+describe("V5 12-month surplus deployment math — tithe-first, family-infusion-second, adds up to $306,396", () => {
   const agency = SCENARIO_V5.contracts.agency;
   const totals = agency.totals18mo;
 
@@ -859,15 +872,19 @@ describe("V5 12-month surplus deployment math — tithe-first, signing-bonus-sec
     expect(totals.revenue - totals.tithe - totals.payroll - totals.overheads).toBe(306396);
   });
 
-  it("totals18mo carries the new signing-bonus line ($40k) and the V5 capital-recovery line ($72k loan-only); brightsidePrelaunch is 0 under V5", () => {
-    expect(totals.signingBonus).toBe(40000);
+  it("totals18mo carries the family-infusion-recovery leg ($40k) and the V5 bank-loan capital-recovery leg ($72k); brightsidePrelaunch is 0 under V5", () => {
+    expect(totals.familyInfusionRecovery).toBe(40000);
     expect(totals.capitalRecovery).toBe(72000);
     expect(totals.brightsidePrelaunch).toBe(0);
+    // The two Capital Recovery legs together retire the same $112k stack
+    // V3/V4 carried as one undivided line — a hard-locked invariant on the
+    // substance of the relabel.
+    expect(totals.familyInfusionRecovery + totals.capitalRecovery).toBe(112000);
   });
 
-  it("deployment components (signing bonus + cap recovery + reserve + innovation + brightside) reconcile exactly to surplus deployed", () => {
+  it("deployment components (family-infusion + cap recovery + brightside + reserve + innovation) reconcile exactly to surplus deployed", () => {
     const componentsSum =
-      totals.signingBonus +
+      totals.familyInfusionRecovery +
       totals.capitalRecovery +
       totals.brightsidePrelaunch +
       totals.reserve +
@@ -907,10 +924,10 @@ describe("V5 personal compensation — locked headline numbers", () => {
     );
   });
 
-  it("Signing bonus ($40k) is carried on the agency line, NOT in personal.total18mo (it's compensation for risk, shown separately on the page)", () => {
-    expect(agency.signingBonus).toBe(40000);
+  it("Family-infusion recovery ($40k) is carried on the agency line as tax-free debt repayment to the husband — NOT in personal.total18mo (money never lands in Bobbie's accounts)", () => {
+    expect(agency.familyInfusionRecovery).toBe(40000);
     expect(personal.total18mo).not.toBe(
-      personal.agencySalary18mo + personal.brightsideOwnerTake + agency.signingBonus,
+      personal.agencySalary18mo + personal.brightsideOwnerTake + agency.familyInfusionRecovery,
     );
   });
 });
@@ -984,6 +1001,36 @@ describe("Contracts ledger export — term-aware (12 mo on V5; 18 mo on V3/V4)",
       expect(impliedRow![1]).toBe(expected);
       // Spot-check V5 specifically: $216k / 1.0 yr = $216k (NOT $216k/1.5 = $144k).
       if (sc.id === "v5") expect(impliedRow![1]).toBe(216000);
+    });
+
+    // The Phase 3 row in the surplus-phases sheet must reconcile to the
+    // Reserve + Innovation bucket totals shown immediately below it on the
+    // same sheet. Previously this row reported phase3MonthlySurplus ×
+    // phase3Months, which on V5 omitted the ~$19,340 Oct spillover and
+    // produced a board-pack sheet that internally contradicted its own
+    // Reserve + Innovation subtotals.
+    it(`${sc.id}: Phase 3 ledger row amount equals Reserve + Innovation bucket totals on the same sheet (no internal contradiction)`, () => {
+      const phasesSheet = ledger.sheets.find(
+        (s) => s.name === "Agency — surplus phases",
+      );
+      expect(phasesSheet).toBeDefined();
+      const phase3Row = phasesSheet!.rows.find(
+        (r) => typeof r[0] === "string" && (r[0] as string).startsWith("Phase 3"),
+      );
+      const reserveRow = phasesSheet!.rows.find((r) => r[0] === "Reserve");
+      const innovationRow = phasesSheet!.rows.find(
+        (r) => r[0] === "Innovation / R&D",
+      );
+      expect(phase3Row).toBeDefined();
+      expect(reserveRow).toBeDefined();
+      expect(innovationRow).toBeDefined();
+      expect(phase3Row![2]).toBe(
+        (reserveRow![3] as number) + (innovationRow![3] as number),
+      );
+      expect(phase3Row![2]).toBe(a.reserveTotal + a.innovationTotal);
+      // Spot-check V5 (the relabel target): 306,396 − 40,000 (family) − 72,000
+      // (loan) − 0 (no Brightside launch on V5) = 194,396 deployed to Phase 3.
+      if (sc.id === "v5") expect(phase3Row![2]).toBe(194396);
     });
   }
 });

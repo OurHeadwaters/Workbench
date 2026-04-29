@@ -27,7 +27,7 @@ export function IndexPage() {
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
       headlineLabel: `${a.termMonths}-mo surplus deployed`,
-      blurb: `${money(a.fee)}/mo agency engagement over ${a.termMonths} months against the ${a.roster.length}-role Deer Lake team. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first)${a.signingBonus > 0 ? ", then signing bonus" : ""}, then capital recovery${a.brightsidePrelaunchSpend > 0 ? ", then Brightside launch" : ""}, then Reserve / Innovation.`,
+      blurb: `${money(a.fee)}/mo agency engagement over ${a.termMonths} months against the ${a.roster.length}-role Deer Lake team. No ongoing owner take from agency surplus — Giving (10% off the top, tithe-first), then ${a.familyInfusionRecovery > 0 ? "capital recovery (family infusion m1, then bank loan)" : "capital recovery"}${a.brightsidePrelaunchSpend > 0 ? ", then Brightside launch" : ""}, then Reserve / Innovation.`,
       tag: a.totals18mo.tag,
     },
     {

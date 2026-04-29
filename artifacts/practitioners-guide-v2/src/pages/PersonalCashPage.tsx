@@ -30,9 +30,9 @@ export function PersonalCashPage() {
         <p className="mt-3 text-muted-foreground max-w-3xl">
           Across the {a.termMonths}-month engagement window: agency practitioner salary plus
           Brightside owner take. Capital Recovery is shown separately and explicitly flagged as
-          debt repayment{a.signingBonus > 0 ? " to lender" : " to lender + family"} — NOT income.
-          {a.signingBonus > 0
-            ? " The signing bonus is also shown separately — it's a one-time payment that retires the family infusion in full up front, not ongoing compensation."
+          debt repayment to lender + family — NOT income.
+          {a.familyInfusionRecovery > 0
+            ? " Under V5 the Capital Recovery line is split into two visible legs (family infusion m1 + business loan Aug→Oct); both legs are tax-free debt repayment that flow business → creditor and never land in the founder's personal accounts, so neither leg appears on this page."
             : ""}
         </p>
       </header>
@@ -95,26 +95,30 @@ export function PersonalCashPage() {
             <tr>
               <td colSpan={3} className="pt-3"><div className="border-t border-dashed border-card-border" /></td>
             </tr>
-            {a.signingBonus > 0 ? (
-              <tr className="text-muted-foreground" data-testid="row-personal-signing-bonus">
+            {a.familyInfusionRecovery > 0 ? (
+              <tr className="text-muted-foreground" data-testid="row-personal-family-infusion-recovery">
                 <td className="py-2 pr-4 italic">
-                  Signing bonus (paid in month 1, with month-2 spillover)
+                  Capital Recovery — family infusion (m1, business → husband)
                 </td>
-                <td className="py-2 pr-4 text-right num italic">{money(a.signingBonus)}</td>
+                <td className="py-2 pr-4 text-right num italic">
+                  ({money(a.familyInfusionRecovery)})
+                </td>
                 <td className="py-2 pr-4 text-xs italic">
-                  Compensates the lead for the discontinuity-of-income risk of starting the
-                  engagement; retires the family infusion in full up front
+                  Tax-free debt repayment to founder's husband — bypasses Bobbie personally; NOT
+                  income
                 </td>
               </tr>
             ) : null}
             <tr className="text-muted-foreground">
               <td className="py-2 pr-4 italic">
-                Capital Recovery (retired in the first months of the engagement)
+                {a.familyInfusionRecovery > 0
+                  ? "Capital Recovery — business loan (Aug → Oct, business → bank)"
+                  : "Capital Recovery (retired in the first months of the engagement)"}
               </td>
               <td className="py-2 pr-4 text-right num italic">({money(p.capitalRecovery)})</td>
               <td className="py-2 pr-4 text-xs italic">
-                Debt repayment to lender
-                {a.signingBonus > 0 ? "" : " + family"} — NOT income
+                Debt repayment to {a.familyInfusionRecovery > 0 ? "bank" : "lender + family"} —
+                NOT income
               </td>
             </tr>
           </tbody>

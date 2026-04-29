@@ -30,14 +30,14 @@ import {
  *   P&L. So as of 2026-04-29 we now carry two project archetypes:
  *
  *     - Codetry archetype — community engagement with a lead practitioner
- *       on the ground, a small team, a 12-month engagement window, and a
- *       signing-bonus line up front to compensate the lead for the
- *       discontinuity-of-income risk of stepping into the engagement. V5
- *       is the canonical Codetry-archetype scenario, applied to Deer
- *       Lake.
+ *       on the ground, a small team, a 12-month engagement window, and
+ *       (when family capital is in the stack) a front-loaded
+ *       family-infusion leg of Capital Recovery to retire the personal
+ *       guarantee up front. V5 is the canonical Codetry-archetype
+ *       scenario, applied to Deer Lake.
  *
  *     - Software/Sales archetype — leveraged software/services revenue,
- *       no signing bonus (profit-share carries the equivalent value), no
+ *       no family-infusion stack (no personal guarantees in play), no
  *       12-month engagement window. Brightside is the canonical example;
  *       Karen's tool is the next one. The Software/Sales archetype is
  *       described on the Archetypes page; it does not carry a numbered
@@ -62,14 +62,18 @@ import {
  *   - Lead draw: $14k/mo → $18k/mo. The Codetry archetype lead is the
  *     primary engagement owner and carries the discontinuity-of-income
  *     risk; the draw moves up to match.
- *   - Signing bonus: NEW — $40,000 in month 1 (with month-2 spillover).
- *     The bonus retires the founder's husband's family infusion in full
- *     up front, so capital recovery shrinks from $112k to $72k (loan
- *     only).
- *   - Surplus waterfall: Tithe → Wages → SIGNING BONUS (new) → Capital
- *     Recovery → Reserve / Innovation. Brightside Launch Month phase is
- *     dropped from the agency waterfall — Brightside's ~$28k pre-launch
- *     is funded out of the Innovation bucket once the engagement is
+ *   - Capital Recovery split into two visible legs (NEW): the $40k
+ *     family-infusion piece is paid in month 1 (with month-2 spillover),
+ *     and the $72k business loan piece is paid Aug → early Oct. Both
+ *     legs are tax-free debt repayment — same character as V3/V4's
+ *     undivided $112k Capital Recovery line, just shown separately so the
+ *     front-loading of the family piece is legible. NOT compensation,
+ *     NOT income, NOT deductible.
+ *   - Surplus waterfall: Tithe → Wages → Capital Recovery — family
+ *     infusion (m1) → Capital Recovery — business loan (Aug → Oct) →
+ *     Reserve / Innovation. Brightside Launch Month phase is dropped
+ *     from the agency waterfall — Brightside's ~$28k pre-launch is
+ *     funded out of the Innovation bucket once the engagement is
  *     deployed.
  *   - Renegotiation triggers: reset to the $90k baseline. The V4 triggers
  *     described stepping a $105k right-priced fee up further; V5 starts
@@ -88,13 +92,14 @@ import {
  *               $43,500 + $12,492 = $55,992/mo Sep onward.
  *   Post-tithe surplus: $27,108/mo Jun–Aug; $25,008/mo Sep onward.
  *   Surplus waterfall (12 months total = $306,396):
- *     - Signing bonus: $40,000
- *         Month 1 (Jun, $27,108) covers $27,108 of bonus; remaining
- *         $12,892 spills into month 2 (Jul, $27,108), leaving $14,216
- *         toward capital recovery.
- *     - Capital recovery: $72,000 (loan only — family infusion was paid
- *       via the signing bonus)
- *         Aug ($27,108): cum cap recovery = $14,216 + $27,108 = $41,324
+ *     - Capital recovery — family infusion: $40,000
+ *         Month 1 (Jun, $27,108) covers $27,108; remaining $12,892
+ *         spills into month 2 (Jul, $27,108), leaving $14,216 toward the
+ *         business-loan leg. Tax-free return of principal to the
+ *         founder's husband — money flows business → husband, bypassing
+ *         the founder's personal accounts entirely.
+ *     - Capital recovery — business loan: $72,000
+ *         Aug ($27,108): cum loan recovery = $14,216 + $27,108 = $41,324
  *         Sep ($25,008): cum = $66,332
  *         Oct ($25,008): need $5,668 — completes recovery, leaves
  *         $19,340 spillover into the Reserve / Innovation phase.
@@ -110,7 +115,7 @@ const v5Roster = [
     role: "Practitioner / Lead",
     monthlyLoaded: 18000,
     notes:
-      "Engagement owner; visits Deer Lake ~3 days/mo. Carries the discontinuity-of-income risk of starting the engagement; signing bonus retires the family-infusion piece of that risk in full up front. Draw steps at the renegotiation triggers below.",
+      "Engagement owner; visits Deer Lake ~3 days/mo. Draw steps at the renegotiation triggers below.",
   },
   {
     role: "Operations & Food (Dryden)",
@@ -149,14 +154,16 @@ const v5CostBasisSepOnward = v5PayrollTotal + SHARED_OVERHEADS_SEP_ONWARD_TOTAL;
 const v5SurplusJunAug = v5Fee - v5TitheMonthly - v5CostBasisJunAug; // 27,108
 const v5SurplusSepOnward = v5Fee - v5TitheMonthly - v5CostBasisSepOnward; // 25,008
 
-// Signing bonus — NEW V5 surplus-waterfall line, between Wages and Capital
-// Recovery. $40,000 paid in month 1 (with month-2 spillover). Retires the
-// founder's husband's family infusion in full up front, so capital recovery
-// shrinks from $112k to $72k (loan only).
-const v5SigningBonus = 40000;
+// Family-infusion recovery — front-loaded leg of Capital Recovery. $40,000
+// paid in month 1 (with month-2 spillover at the post-tithe surplus rate),
+// retiring the founder's husband's family infusion in full up front. Same
+// tax/legal character as the rest of Capital Recovery: tax-free return of
+// principal to the husband, NOT compensation, NOT income, NOT deductible.
+// Money flows business → husband, bypassing the founder personally.
+const v5FamilyInfusionRecovery = 40000;
 
-// Capital recovery — loan only ($72k); the family infusion was paid via the
-// signing bonus.
+// Capital recovery — business-loan leg ($72k); the family-infusion leg
+// above is shown separately so the front-loading is visible.
 const v5CapitalRecovery = 72000;
 
 // 12-month totals.
@@ -169,9 +176,10 @@ const v5SurplusDeployed =
   v5RevenueTotal - v5TitheTotal - v5PayrollTotalWindow - v5OverheadsTotal;
 // = 1,080,000 − 108,000 − 522,000 − 143,604 = 306,396
 
-// Phase 3 budget — what's left after the signing bonus and capital recovery.
+// Phase 3 budget — what's left after both Capital Recovery legs (the
+// family-infusion leg and the bank-loan leg).
 const v5Phase3Budget =
-  v5SurplusDeployed - v5SigningBonus - v5CapitalRecovery; // 194,396
+  v5SurplusDeployed - v5FamilyInfusionRecovery - v5CapitalRecovery; // 194,396
 
 // Phase 3 starts Nov 2026 (after capital recovery completes early in Oct).
 // The Oct overshoot ($19,340) sits inside the Phase 3 budget too, which is
@@ -242,12 +250,12 @@ const v5Agency = {
   titheMonthly: v5TitheMonthly,
   titheTotal: v5TitheTotal,
 
-  signingBonus: v5SigningBonus,
-  signingBonusTag: confirmed(
-    "Codetry-archetype signing bonus — $40,000 paid in month 1 (with $12,892 spillover into month 2 at the post-tithe surplus rate). Retires the founder's husband's family infusion in full up front, so capital recovery shrinks from $112k (V4) to $72k (V5, loan only).",
+  familyInfusionRecovery: v5FamilyInfusionRecovery,
+  familyInfusionRecoveryTag: confirmed(
+    "Family-infusion leg of Capital Recovery — $40,000 paid in month 1 (with $12,892 spillover into month 2 at the post-tithe surplus rate). Tax-free return of principal to the founder's husband; the business-loan leg ($72k) clears Aug → early Oct in parallel. Same character as V3/V4's undivided $112k Capital Recovery line — the split-leg framing is for visibility, not a substantive change.",
   ),
-  signingBonusDescription:
-    "Signing bonus compensates the lead for the discontinuity-of-income risk of starting a community engagement. For Deer Lake the bonus is sized to retire the family infusion ($40,000) in full up front — paid in month 1, with month-2 spillover at the post-tithe surplus rate.",
+  familyInfusionRecoveryDescription:
+    "The family-infusion leg of Capital Recovery retires the founder's husband's $40,000 family infusion in full up front (month 1 + month-2 spillover at the post-tithe surplus rate). Money flows business → husband, bypassing the founder personally. Tax-free debt repayment — NOT compensation to the lead, NOT income to the founder, NOT a deductible expense to the business. The remaining $72k Capital Recovery is the bank-loan leg.",
 
   teamIncentivesName: "Team incentives (Christmas bonus, perks of employment)",
   teamIncentivesAmount: null,
@@ -263,13 +271,13 @@ const v5Agency = {
 
   capitalRecoveryAmount: v5CapitalRecovery,
   capitalRecoveryDescription:
-    "$72k outstanding business loan only. The $40k family infusion (founder's husband) is paid via the signing bonus in month 1, not via this line.",
+    "$72k bank-loan leg. Sibling line to the $40k family-infusion leg above — together they retire the same $112k debt stack V3/V4 carried as one undivided Capital Recovery line. Tax-free debt repayment.",
   capitalRecoveryMonths: 5,
-  capitalRecoveryStartLabel: "Aug 2026 (after the signing bonus completes mid-July)",
+  capitalRecoveryStartLabel: "Aug 2026 (after the family-infusion leg completes mid-July)",
   capitalRecoveryEndLabel:
     "Early Oct 2026 (~$19,340 Oct spillover into the Reserve / Innovation phase)",
   capitalRecoveryTag: confirmed(
-    "Loan-only recovery at the post-tithe surplus. Starts in month 3 once the signing bonus completes spillover into month 2; clears in Oct 2026 with $19,340 of Oct spillover into Phase 3.",
+    "Bank-loan leg at the post-tithe surplus. Starts in month 3 once the family-infusion leg completes spillover into month 2; clears in Oct 2026 with $19,340 of Oct spillover into Phase 3.",
   ),
 
   brightsideLaunchMonthLabel:
@@ -299,13 +307,13 @@ const v5Agency = {
     payroll: v5PayrollTotalWindow,
     overheads: v5OverheadsTotal,
     surplusDeployed: v5SurplusDeployed,
-    signingBonus: v5SigningBonus,
+    familyInfusionRecovery: v5FamilyInfusionRecovery,
     capitalRecovery: v5CapitalRecovery,
     brightsidePrelaunch: 0,
     reserve: v5ReserveTotal,
     innovation: v5InnovationTotal,
     tag: confirmed(
-      "Computed from locked fee + roster, with tithe taken first and the signing bonus paid second. Engagement window is 12 months (V5), not 18 months (V3/V4).",
+      "Computed from locked fee + roster, with tithe taken first and Capital Recovery split into a family-infusion leg (m1) and a bank-loan leg (Aug → Oct). Engagement window is 12 months (V5), not 18 months (V3/V4).",
     ),
   },
 
@@ -341,9 +349,9 @@ export const SCENARIO_V5: Scenario = {
   name: "V5 — Codetry archetype (Deer Lake)",
   short: "V5",
   tagline:
-    "$90k/mo agency · 4-role Day-1 team · 12-month engagement · $40k signing bonus · tithe-first",
+    "$90k/mo agency · 4-role Day-1 team · 12-month engagement · split Capital Recovery (family m1 + loan Aug→Oct) · tithe-first",
   description:
-    "Codetry-archetype baseline applied to Deer Lake. Lean 4-role Day-1 team ($43.5k/mo payroll), $90k/mo agency fee, 12-month engagement window. Surplus waterfall: tithe → wages → signing bonus → capital recovery → Reserve / Innovation. Signing bonus ($40k m1) retires the family infusion in full up front; capital recovery shrinks to the $72k loan-only piece. Renegotiation triggers reset to the $90k baseline — they describe stepping the fee back up toward the V4 right-priced range once the value-delivered audit lands.",
+    "Codetry-archetype baseline applied to Deer Lake. Lean 4-role Day-1 team ($43.5k/mo payroll), $90k/mo agency fee, 12-month engagement window. Surplus waterfall: tithe → wages → Capital Recovery — family infusion ($40k, month 1) → Capital Recovery — business loan ($72k, Aug → Oct) → Reserve / Innovation. Both Capital Recovery legs are tax-free debt repayment — same character as V3/V4's undivided $112k line, just split for visibility. Renegotiation triggers reset to the $90k baseline — they describe stepping the fee back up toward the V4 right-priced range once the value-delivered audit lands.",
   accent: "#1F5B3F",
   accentSoft: "#DDF0E5",
   accentInk: "#0F2E20",

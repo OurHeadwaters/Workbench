@@ -110,25 +110,38 @@ export interface AgencyScenario {
   titheTotal: number;
 
   /**
-   * Signing bonus — typed surplus-waterfall line that lands between Wages
-   * and Capital Recovery. Codetry-archetype projects (Deer Lake, future
-   * boots-on-the-ground engagements) carry a non-zero bonus to compensate
-   * the lead for the discontinuity-of-income risk of starting a community
-   * engagement; Software/Sales engagements run it at $0 because they are
-   * leveraged enough that profit-share carries the equivalent value.
+   * Family-infusion recovery — front-loaded leg of Capital Recovery that
+   * retires the founder's husband's $40,000 family infusion in full at
+   * month 1 (with month-2 spillover at the post-tithe surplus rate). It
+   * is the SAME tax/legal character as the rest of Capital Recovery:
+   * tax-free return of principal to the lender (husband), NOT compensation
+   * to the lead, NOT income to the founder, NOT a deductible expense to
+   * the business. It is shown as its own visible leg only to make the
+   * front-loading legible — the substance is identical to V3/V4's
+   * undivided $112k Capital Recovery line.
    *
-   * For V5 / Deer Lake the bonus is $40,000 paid in month 1, which exactly
-   * retires the founder's husband's family infusion (so the family piece is
-   * paid out as the bonus, not separately recovered through capital
-   * recovery).
+   * Codetry-archetype projects (Deer Lake, future boots-on-the-ground
+   * engagements) where the founder personally guaranteed family capital
+   * carry a non-zero value here when that capital is being retired up
+   * front; Software/Sales engagements run it at $0 because they don't
+   * carry a family-infusion obligation. V3/V4 also run it at $0 because
+   * their $112k Capital Recovery line was kept undivided.
+   *
+   * IMPORTANT — relabel history. This field was briefly framed as a
+   * "signing bonus" (compensation to the lead) on 2026-04-29 and reverted
+   * the same day. Compensation framing would have triggered ~$18k of
+   * personal income tax (Ontario top marginal ~53.5%), CRA reasonableness
+   * scrutiny, and lost the balance-sheet treatment. Debt repayment is the
+   * correct substance.
    */
-  signingBonus: number;
-  signingBonusTag: SourceTag;
+  familyInfusionRecovery: number;
+  familyInfusionRecoveryTag: SourceTag;
   /**
-   * Plain-language description of what the bonus is for and where it
-   * lands in the waterfall. Empty string when signingBonus = 0.
+   * Plain-language description of what the family-infusion recovery line
+   * is for and where it lands in the waterfall. Empty string when
+   * familyInfusionRecovery = 0.
    */
-  signingBonusDescription: string;
+  familyInfusionRecoveryDescription: string;
 
   /**
    * Team incentives line — Christmas bonus, perks of employment, etc.
@@ -184,10 +197,12 @@ export interface AgencyScenario {
     /** Surplus AFTER tithe + payroll + overheads. */
     surplusDeployed: number;
     /**
-     * Signing bonus paid out of the engagement-window surplus (Codetry
-     * archetype only — Software/Sales engagements run this at $0).
+     * Family-infusion recovery paid out of the engagement-window surplus
+     * (Codetry-archetype only — Software/Sales engagements run this at $0,
+     * V3/V4 also at $0 because their Capital Recovery line was kept
+     * undivided).
      */
-    signingBonus: number;
+    familyInfusionRecovery: number;
     capitalRecovery: number;
     brightsidePrelaunch: number;
     reserve: number;

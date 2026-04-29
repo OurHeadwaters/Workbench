@@ -177,9 +177,9 @@ const v4Agency = {
   monthlySurplusSepOnward: v4SurplusSepOnward,
   costBasisTag: confirmed("Computed from locked roster + fee, post-tithe."),
 
-  signingBonus: 0,
-  signingBonusTag: confirmed("V4 right-priced did not carry a signing-bonus line — the line was added in V5 to compensate the lead for the discontinuity-of-income risk of starting a community engagement."),
-  signingBonusDescription: "",
+  familyInfusionRecovery: 0,
+  familyInfusionRecoveryTag: confirmed("V4 right-priced kept Capital Recovery undivided ($112k = $72k loan + $40k family infusion paid in order). The split-leg framing was added in V5 to make the front-loading of the family piece visible without changing tax/legal substance — both V4 and V5 are tax-free debt repayment."),
+  familyInfusionRecoveryDescription: "",
 
   teamIncentivesName: "Team incentives (Christmas bonus, perks of employment)",
   teamIncentivesAmount: null,
@@ -215,7 +215,7 @@ const v4Agency = {
     payroll: v4Payroll18mo,
     overheads: v4Overheads18mo,
     surplusDeployed: v4Surplus18mo,
-    signingBonus: 0,
+    familyInfusionRecovery: 0,
     capitalRecovery: 112000,
     brightsidePrelaunch: 28000,
     reserve: v4Reserve18mo,

@@ -98,18 +98,20 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
       tagSummary(a.feeTag),
     ]);
   }
-  if (a.signingBonus > 0 && isLocked(a.signingBonusTag)) {
+  if (a.familyInfusionRecovery > 0 && isLocked(a.familyInfusionRecoveryTag)) {
     phasesRows.push([
-      "Signing bonus",
+      "Phase 1a — Capital Recovery (family infusion)",
       "Month 1 (with month-2 spillover)",
-      a.signingBonus,
-      a.signingBonusDescription,
-      tagSummary(a.signingBonusTag),
+      a.familyInfusionRecovery,
+      a.familyInfusionRecoveryDescription,
+      tagSummary(a.familyInfusionRecoveryTag),
     ]);
   }
   if (isLocked(a.capitalRecoveryTag)) {
     phasesRows.push([
-      "Phase 1 — Capital Recovery",
+      a.familyInfusionRecovery > 0
+        ? "Phase 1b — Capital Recovery (business loan)"
+        : "Phase 1 — Capital Recovery",
       `${a.capitalRecoveryStartLabel} → ${a.capitalRecoveryEndLabel}`,
       a.capitalRecoveryAmount,
       a.capitalRecoveryDescription,
@@ -126,11 +128,18 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
     ]);
   }
   if (isLocked(a.phase3Tag)) {
+    const phase3Budget = a.reserveTotal + a.innovationTotal;
+    const fullMonthsTotal = a.phase3MonthlySurplus * a.phase3Months;
+    const spillover = phase3Budget - fullMonthsTotal;
+    const windowLabel =
+      spillover > 0
+        ? `${a.phase3Months} months @ ${a.phase3MonthlySurplus}/mo + ${spillover} spillover from the prior phase`
+        : `${a.phase3Months} months @ ${a.phase3MonthlySurplus}/mo`;
     phasesRows.push([
       "Phase 3 — Reserve / Innovation",
-      `${a.phase3Months} months @ ${a.phase3MonthlySurplus}/mo`,
-      a.phase3MonthlySurplus * a.phase3Months,
-      `${a.reservePct}/${a.innovationPct} split (renormalised when Giving moved to tithe-first)`,
+      windowLabel,
+      phase3Budget,
+      `${a.reservePct}/${a.innovationPct} split (renormalised when Giving moved to tithe-first). Equals total surplus deployed minus Capital Recovery (both legs) and any Brightside launch spend.`,
       tagSummary(a.phase3Tag),
     ]);
     phasesRows.push([]);
@@ -167,10 +176,20 @@ export function buildContractsLedger(scenario: Scenario): LedgerExport {
       ],
       ["Total surplus deployed (post-tithe)", a.totals18mo.surplusDeployed],
       [],
-      ...(a.totals18mo.signingBonus > 0
-        ? ([["↳ Signing bonus", a.totals18mo.signingBonus]] as (string | number)[][])
+      ...(a.totals18mo.familyInfusionRecovery > 0
+        ? ([
+            [
+              "↳ Capital Recovery — family infusion (Phase 1a)",
+              a.totals18mo.familyInfusionRecovery,
+            ],
+          ] as (string | number)[][])
         : []),
-      ["↳ Capital Recovery (Phase 1)", a.totals18mo.capitalRecovery],
+      [
+        a.totals18mo.familyInfusionRecovery > 0
+          ? "↳ Capital Recovery — business loan (Phase 1b)"
+          : "↳ Capital Recovery (Phase 1)",
+        a.totals18mo.capitalRecovery,
+      ],
       ...(a.totals18mo.brightsidePrelaunch > 0
         ? ([
             [

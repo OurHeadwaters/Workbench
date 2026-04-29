@@ -70,17 +70,17 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
       "Life supports start September 2026. The June–August window has lower overheads ($10,392 vs $12,492) and therefore slightly higher post-tithe surplus, which is why capital recovery clears faster in those early months.",
   },
   {
-    id: "signing-bonus",
-    title: "Signing bonus — V5 surplus-waterfall line",
+    id: "family-infusion-recovery",
+    title: "Capital Recovery — family-infusion leg (V5 split)",
     body:
-      "The Codetry-archetype baseline (V5) carries a signing bonus between the Wages and Capital Recovery lines of the surplus waterfall. For Deer Lake, the bonus is $40,000 paid in month 1 (with month-2 spillover at the post-tithe surplus rate), and is sized to retire the founder's husband's family infusion in full up front. As a result the V5 capital-recovery line shrinks to the $72k loan-only piece — that's the visible carryover to Phase 1. The Software/Sales archetype does NOT carry a signing bonus because profit-share carries the equivalent value; only the Codetry archetype surfaces this line.",
+      "Under V5 the $112k Capital Recovery total is shown as two visible legs instead of one undivided line: the family-infusion leg ($40,000, month 1 + month-2 spillover at the post-tithe surplus rate) and the bank-loan leg ($72,000, Aug → early Oct). Both legs are tax-free debt repayment — money flows business → creditor (the founder's husband for the family leg, the bank for the loan leg), bypassing the founder's personal accounts entirely. NOT compensation to the lead, NOT income to the founder, NOT a deductible expense to the business. The split-leg framing is for visibility (so the front-loading of the family piece is legible); the substance is identical to V3/V4's undivided $112k Capital Recovery line. The Software/Sales archetype does NOT carry this line because it doesn't have a personal-guarantee stack to retire.",
     crossLink: { label: "See Archetypes", href: "/archetypes" },
   },
   {
     id: "brightside-coupling",
     title: "Cross-bucket: Brightside pre-launch funding (V4 carve-out vs V5 Innovation)",
     body:
-      "Under the V4 baseline, Brightside's $28k pre-launch was funded from a dedicated Brightside Launch Month carve-out at the top of Phase 2 of the agency surplus waterfall. Under V5 (current), that dedicated phase is dropped — Brightside's pre-launch is funded from the Innovation bucket inside Phase 3 instead, after the signing bonus and capital recovery have cleared. In either model, if pre-launch costs overrun the $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — not from the tithe, not from the founder personally, and not from the agency cost basis. The tithe is structurally protected because it sits above the entire surplus waterfall.",
+      "Under the V4 baseline, Brightside's $28k pre-launch was funded from a dedicated Brightside Launch Month carve-out at the top of Phase 2 of the agency surplus waterfall. Under V5 (current), that dedicated phase is dropped — Brightside's pre-launch is funded from the Innovation bucket inside Phase 3 instead, after both Capital Recovery legs (family infusion + bank loan) have cleared. In either model, if pre-launch costs overrun the $28k cap, the overrun comes out of the following month's Reserve / Innovation splits — not from the tithe, not from the founder personally, and not from the agency cost basis. The tithe is structurally protected because it sits above the entire surplus waterfall.",
     crossLink: { label: "See Brightside — pre-launch cost basis", href: "/brightside" },
   },
   {
@@ -134,15 +134,15 @@ export const BRIGHTSIDE_FOOTNOTES: Footnote[] = [
 export const PERSONAL_CASH_FOOTNOTES: Footnote[] = [
   {
     id: "capital-recovery-not-income",
-    title: "Capital Recovery is NOT income",
+    title: "Capital Recovery is NOT income (either leg)",
     body:
-      "Capital Recovery returns existing obligations and is booked as \"Capital Recovery\" — distinct line, separate from compensation, separate from owner draw. Under V5 (current Codetry-archetype baseline) it covers the $72k business loan only, because the $40k family infusion (founder's husband) is paid via the signing bonus in month 1. Under V4 (historical) it carried the full $112k = $72k loan + $40k family. Either way, time-bound: ends when the obligation is retired.",
+      "Capital Recovery returns existing obligations and is booked as \"Capital Recovery\" — distinct line, separate from compensation, separate from owner draw. Under V5 (current Codetry-archetype baseline) it is shown as two visible legs that retire the same $112k debt stack: a family-infusion leg ($40k, month 1, paid to the founder's husband) and a bank-loan leg ($72k, Aug → Oct, paid to the bank). Both legs are tax-free return of principal — money flows business → creditor, bypassing the founder personally; neither leg is income to the founder, and neither is a deductible expense to the business. Under V3/V4 (historical) the same $112k was carried as one undivided Capital Recovery line. Either way, time-bound: ends when the obligation is retired.",
   },
   {
-    id: "signing-bonus-not-ongoing",
-    title: "Signing bonus is one-time, not ongoing compensation",
+    id: "family-infusion-tax-free",
+    title: "Family-infusion leg is tax-free debt repayment, not a payment to Bobbie",
     body:
-      "The V5 Codetry-archetype baseline carries a $40,000 signing bonus paid in month 1 (with month-2 spillover at the post-tithe surplus rate). It compensates the lead for the discontinuity-of-income risk of starting a community engagement, and is sized to retire the family infusion in full up front. It's shown in the breakdown table as a one-time line — separate from the agency salary line, and explicitly NOT folded into per-year compensation.",
+      "The $40k family-infusion leg of V5 Capital Recovery retires the founder's husband's family-capital infusion in full in month 1 (with month-2 spillover at the post-tithe surplus rate). The money flows business → husband; it never lands in Bobbie's personal accounts and never appears on her T1. There is no T4, no T4A, no withholding, and nothing to remit. It is intentionally NOT framed as a signing bonus or any other form of compensation — that framing would have triggered ~$18k of personal income tax (Ontario top marginal ~53.5%), CRA reasonableness scrutiny on related-party comp, and lost the balance-sheet treatment. The split-leg presentation gives visual cleanliness without the wallet hit.",
   },
   {
     id: "no-agency-owner-take",
