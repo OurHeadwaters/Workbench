@@ -100,7 +100,7 @@ export const constellation: ConstellationSnapshot = {
       "kind": "constellation-wide primitive",
       "summary": "The umbrella system + always-on state for *temporary centralized disruptions* — drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down. One name that holds both the slow side (always-on preparation) and the fast side (active event).",
       "hostZone": 3,
-      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where centralized disruptions are felt collectively — the co-op shelf, the producer pipeline, the orders ledger are where the absence of freight, power, or staff lands first. Read by every zone.",
+      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where centralized disruptions are felt collectively. The co-op shelf, the producer pipeline, the orders ledger are where the absence of freight, power, or staff lands first. Read by every zone.",
       "vocabulary": [
         {
           "term": "the Standby",

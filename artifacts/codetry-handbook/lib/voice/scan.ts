@@ -74,9 +74,12 @@ export const BANNED_TERMS = [
 // 50 by rewriting the longest sentences in handbook.ts. Task #511
 // then rewrote the remaining 41-49-word sentences in handbook.ts and
 // foundingExamples.ts so the cap could drop again — to 40, which is
-// closer to a true short-sentence grade-9 ceiling. Current prose
-// maxes out at 40 words.
-export const MAX_SENTENCE_WORDS = 40;
+// closer to a true short-sentence grade-9 ceiling. Task #512 tightened
+// the cap one more notch — to 35 — by rewriting every 36-40-word
+// sentence in handbook.ts, foundingExamples.ts, and the constellation
+// manifest's hostZoneRationale field. Current prose maxes out at
+// 35 words.
+export const MAX_SENTENCE_WORDS = 35;
 
 export type BodyCopyString = {
   file: string;

@@ -38,7 +38,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "para",
         text:
-          "The Standby holds two registers that an outside system would almost certainly split apart. On one side is a slow, always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. On the other side is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. Two sides, one umbrella.",
+          "The Standby holds two registers that an outside system would almost certainly split apart. On one side is a slow, always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. On the other side is a fast, episodic event. A fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. Two sides, one umbrella.",
       },
       {
         kind: "para",
@@ -61,7 +61,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
     ],
     takeaway: {
       pull:
-        "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+        "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word. Otherwise the system will fork into two systems with two cultures.",
       closingPara:
         "The Standby is the first piece used across the whole constellation. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first. Every zone reads it. The both-states principle it carries is now a named principle in the manifest, ready the next time a piece has to do double duty.",
     },
@@ -105,12 +105,12 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       "Zone 1 (Headwaters) — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*. Massity says *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
       "Zone 2 (Practitioner Operating Plan) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary. The workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
       "Zone 3 (Community Knowledge Hub) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
-      "Zone 4 (Regen Revolution) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
+      "Zone 4 (Regen Revolution) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes — *harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*. The bright-side name continues to live unchanged at home.",
       "Zone 5 (Dam Days and Shallows) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor massity. The Gate handles bright-to-massity and back. The third register lives one zone over, and the Shallows decide what gets said publicly in whose words.",
     ],
     takeaway: {
       pull:
-        "When a system has language that has to live inside two rooms that do not trust each other, the metaphor must hold both sides without flattening either, or the system will pick a dialect and lose the other room.",
+        "When a system has language that has to live inside two rooms that do not trust each other, the metaphor must hold both sides without flattening either. Otherwise the system will pick a dialect and lose the other room.",
       closingPara:
         "The Gate is the second piece used across the whole constellation. It is hosted in Zone 3 alongside The Standby because that is where the community's collective surface meets every external counterparty — and it is read by every zone. The both-sides principle it carries is named alongside both-states in the manifest, ready the next time a piece has to hold two rooms at once.",
     },

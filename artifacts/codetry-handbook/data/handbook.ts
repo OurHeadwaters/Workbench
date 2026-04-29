@@ -192,7 +192,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "*The Standby* (worked out in §3.10) is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two speeds. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both lived on as *sub-shelves* inside The Standby. Neither could be the umbrella name. If either had been chosen, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
+            "*The Standby* (worked out in §3.10) is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two speeds. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both lived on as *sub-shelves* inside The Standby. Neither could be the umbrella name. If either had been chosen, the constellation would now have two systems. One for *the pantry*, one for *the call*. Two cultures, two cadences, two vocabularies for the same underlying thing.",
         },
         { kind: "subhead", text: "Both-sides — the room kind." },
         {
@@ -245,7 +245,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The constellation's second non-zone piece — *The Gate* (worked out in §3.11) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own way of speaking — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*). The umbrella does not pick a side. One word, two rooms.",
+            "The constellation's second non-zone piece — *The Gate* (worked out in §3.11) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* and *massity*. The bright side is the constellation's own way of speaking — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. *Massity* is mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. The umbrella does not pick a side. One word, two rooms.",
         },
         {
           kind: "para",
@@ -289,7 +289,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "That is the whole discipline in one line. The rest of this handbook unpacks it: the disciplines codetry is *not*, the worked examples that happened to be in front of the practitioner who first named it, the practice itself, and the teachers behind the practice.",
+            "That is the whole discipline in one line. The rest of this handbook unpacks it. It covers the disciplines codetry is *not*, the worked examples in front of the practitioner who first named it, the practice itself, and the teachers behind the practice.",
         },
       ],
     },
@@ -364,7 +364,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Knuth's discipline is named here with the same respect already paid to code poetry. It is older. It is deeper in the literature. Both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by showing the reasoning. Codetry verifies by making the metaphor visible in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in side-by-side rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry. That makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
+            "Knuth's discipline is named here with the same respect already paid to code poetry. It is older. It is deeper in the literature. Both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by showing the reasoning. Codetry verifies by making the metaphor visible in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in side-by-side rooms. The contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1. The woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims. That makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
         },
       ],
     },
@@ -800,7 +800,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The constellation carries a version number. This handbook keeps an offline copy of the constellation so it can sit on a phone in a fishing camp with no signal. The constellation gained a new entry: a glossary line that named two distinct meanings of the bare word *cost* and asked the practitioner to use the long forms when both meanings were in the same room. Its version moved. The handbook's offline copy did not.",
+            "The constellation carries a version number. This handbook keeps an offline copy of the constellation so it can sit on a phone in a fishing camp with no signal. The constellation gained a new entry. A glossary line named two distinct meanings of the bare word *cost*. It asked the practitioner to use the long forms when both meanings were in the same room. Its version moved. The handbook's offline copy did not.",
         },
         {
           kind: "para",
@@ -987,7 +987,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "Where the room already has live opinions on the material — and in northern Ontario, hempcrete is a real conversation, not a hypothetical — the teaching uses engagement that is already there rather than building it from scratch.",
+            "Where the room already has live opinions on the material, the teaching uses engagement that is already there rather than building it from scratch. In northern Ontario, hempcrete is a real conversation, not a hypothetical.",
         },
         { kind: "rule" },
         { kind: "subhead", text: "The first room" },
@@ -1170,7 +1170,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "*A mix, not a single block.* Hempcrete is two things doing two jobs. The timber frame holds the load. The hemp-and-lime filler holds the climate. Neither alone is the wall. Codetry is the same shape. The *names* hold the picture. The *system* holds the mechanics. Neither alone is the craft. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent mistake in software talk is to argue about which single material is *the* right one (the type system as the only truth, the docs as the only truth, the test suite as the only truth). The codetry move, like the hempcrete move, is to refuse the choice. Put the materials in the relationship that makes the wall work.",
+            "*A mix, not a single block.* Hempcrete is two things doing two jobs. The timber frame holds the load. The hemp-and-lime filler holds the climate. Neither alone is the wall. Codetry is the same shape. The *names* hold the picture. The *system* holds the mechanics. Neither alone is the craft. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent mistake in software talk is to argue about which single material is *the* right one. The type system as the only truth, the docs as the only truth, the test suite as the only truth. The codetry move, like the hempcrete move, is to refuse the choice. Put the materials in the relationship that makes the wall work.",
         },
         {
           kind: "para",
@@ -1192,7 +1192,7 @@ const partV: Part = {
         {
           kind: "callout",
           text:
-            "Codetry is hempcrete: a mixed craft whose *names* are the breathing filler laid between the frame of *type* and the surface of *affordance*, doing the climate-keeping, carbon-storing, right-feeling work no single layer in the system was holding before.",
+            "Codetry is hempcrete: a mixed craft whose *names* are the breathing filler laid between the frame of *type* and the surface of *affordance*. The names do the climate-keeping, carbon-storing, right-feeling work no single layer in the system was holding before.",
         },
         { kind: "rule" },
         { kind: "subhead", text: "Coda — the bamboo field." },
@@ -1270,7 +1270,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The line of work to honour is short and recent. A 2016 paper by Sennrich, Haddow, and Birch brought a sub-word cutting trick into machine translation. SentencePiece took it wider. The GPT line and what came after made it the default reading layer of the industry. Andrej Karpathy's posts on the cutting made the strange visible — the way `\" the\"` and `\"the\"` are different pieces, the way a leading space re-shapes meaning, the way numbers split in ways no human reader would tolerate. Sub-word cutting and codetry both treat below-the-word patterns as structural. But from opposite directions. Cutting pulls patterns out of pieces. Codetry builds meaning into a whole.",
+            "The line of work to honour is short and recent. A 2016 paper by Sennrich, Haddow, and Birch brought a sub-word cutting trick into machine translation. SentencePiece took it wider. The GPT line and what came after made it the default reading layer of the industry. Andrej Karpathy's posts on the cutting made the strange visible. The way `\" the\"` and `\"the\"` are different pieces. The way a leading space re-shapes meaning. The way numbers split in ways no human reader would tolerate. Sub-word cutting and codetry both treat below-the-word patterns as structural. But from opposite directions. Cutting pulls patterns out of pieces. Codetry builds meaning into a whole.",
         },
         {
           kind: "subhead",
@@ -1320,7 +1320,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "It is worth being precise about where the craft actually stands. *Type* lives in the compiler — the layer §2.4 already names — held by a machine that does not read English. *Piece* (the sub-word cut) lives in the model, the layer this chapter has been circling, held by a cutter that does not read meaning. *Name* sits in the space between them. It is the only layer in the stack where a human author is still the deciding party. The compiler will check what the name is *of*. The cutter will break the name by what it is *spelled like*. Only the author chooses what the name *is*. If name is treated as decoration on top of type — as the type system's pet, swappable on a whim because the type is what carries the truth — the in-between layer collapses upward. The craft has nothing to do that §2.4 does not already do. If name is treated as raw material for the cutter to chew — as fuel for the pattern-reader, valuable only by how often the cluster `[\"Salt\", \"box\"]` appears in the body of code — the in-between layer collapses downward. The craft has nothing to do that the model's pre-training does not already do. The codetry claim is that the in-between layer is real, that it is the weight-bearing one, and that it is the only place where authorship of the system's nouns is still possible at all.",
+            "It is worth being precise about where the craft actually stands. *Type* lives in the compiler — the layer §2.4 already names — held by a machine that does not read English. *Piece* (the sub-word cut) lives in the model, the layer this chapter has been circling, held by a cutter that does not read meaning. *Name* sits in the space between them. It is the only layer in the stack where a human author is still the deciding party. The compiler will check what the name is *of*. The cutter will break the name by what it is *spelled like*. Only the author chooses what the name *is*. If name is treated as decoration on top of type — as the type system's pet, swappable on a whim because the type is what carries the truth — the in-between layer collapses upward. The craft has nothing to do that §2.4 does not already do. If name is treated as raw material for the cutter to chew, the in-between layer collapses downward. Name becomes fuel for the pattern-reader, valuable only by how often the cluster `[\"Salt\", \"box\"]` appears in the body of code. The craft has nothing to do that the model's pre-training does not already do. The codetry claim is that the in-between layer is real, that it is the weight-bearing one, and that it is the only place where authorship of the system's nouns is still possible at all.",
         },
         {
           kind: "callout",
@@ -1334,7 +1334,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The chapter has so far used *piece* in the narrow sense the cutter gives it: a sub-word fragment, a `[\"Salt\", \"box\"]` cluster, a unit the model reads where a word used to be. The word *token* has a second meaning the craft cannot pretend not to know about. *Token* in the on-chain sense — the unit a community's nouns are turned into when its assets, memberships, votes, or shares of a co-op are placed on a blockchain — is the same word doing matching work in another field. The same hazard rhymes across both. When a community's nouns are turned into chain tokens without a name-layer craft, the resulting governance pieces are readable only to the people fluent in the layer beneath. That layer is the wallet UIs, the contract addresses, the function signatures, the gas-priced enactments of decisions whose underlying nouns the community never named for itself. That is rule by the few who can read the layer the rest of the community can't. Codetry's bet on the noun is, by extension, a bet against that capture of community-owned systems — the §1.0 hedge against language drift, lifted one floor up to where the drifted words carry formal authority. Without *name* as widely-used architecture in the blockchain world, the chain token does to a community's *governance* what the model's piece does to its prose. It shreds the weight-bearing noun into fragments only the layer beneath can read, then reassembles it into a piece the layer beneath can act on. The craft has no ready answer to that move yet, either.",
+            "The chapter has so far used *piece* in the narrow sense the cutter gives it: a sub-word fragment, a `[\"Salt\", \"box\"]` cluster, a unit the model reads where a word used to be. The word *token* has a second meaning the craft cannot pretend not to know about. *Token* in the on-chain sense is the same word doing matching work in another field. It is the unit a community's nouns are turned into when its assets, memberships, votes, or shares of a co-op are placed on a blockchain. The same hazard rhymes across both. When a community's nouns are turned into chain tokens without a name-layer craft, the resulting governance pieces are readable only to the people fluent in the layer beneath. That layer is the wallet UIs, the contract addresses, the function signatures, the gas-priced enactments of decisions whose underlying nouns the community never named for itself. That is rule by the few who can read the layer the rest of the community can't. Codetry's bet on the noun is, by extension, a bet against that capture of community-owned systems — the §1.0 hedge against language drift, lifted one floor up to where the drifted words carry formal authority. Without *name* as widely-used architecture in the blockchain world, the chain token does to a community's *governance* what the model's piece does to its prose. It shreds the weight-bearing noun into fragments only the layer beneath can read, then reassembles it into a piece the layer beneath can act on. The craft has no ready answer to that move yet, either.",
         },
         {
           kind: "callout",
@@ -1376,7 +1376,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "What this does to a community whose governance has been placed on such a foundation is exactly what §6.1 named. The members can read *the token*, *the vote*, *the share* in their own kitchen-language. The chain reads `0xa0b8...`, `castVote(uint256,uint8)`, `balanceOf(address)`. When the two readings disagree — when the wallet UI says *yes* and the contract dispatches *no*, when the doc calls a piece *the council seat* and the bytecode treats it as a tradable token — the chain's reading wins. The community's noun loses, quietly, on every disagreement. The drift is invisible to anyone who is not fluent in the layer beneath. Which is most of the community by design. That is the rule-by-the-few failure §6.1 named, made concrete.",
+            "What this does to a community whose governance has been placed on such a foundation is exactly what §6.1 named. The members can read *the token*, *the vote*, *the share* in their own kitchen-language. The chain reads `0xa0b8...`, `castVote(uint256,uint8)`, `balanceOf(address)`. When the two readings disagree, the chain's reading wins. The wallet UI says *yes* and the contract dispatches *no*. The doc calls a piece *the council seat* and the bytecode treats it as a tradable token. The community's noun loses, quietly, on every disagreement. The drift is invisible to anyone who is not fluent in the layer beneath. Which is most of the community by design. That is the rule-by-the-few failure §6.1 named, made concrete.",
         },
         {
           kind: "subhead",
@@ -1385,7 +1385,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "It is worth being honest about how little of this is settled. A name-layer craft for on-chain governance would, at minimum, have to answer three questions the codetry move already answers in source code. And re-answer them under harder rules here. *Who writes the name.* In source code the answer is the practitioner sitting with the community at the kitchen table. On-chain it is unclear whether the name lives in the contract's metadata, in a registry the community controls, in a wallet UI the community does not control, or in a governance document the chain cannot read. *What the name is bound to.* In source code the bind is held by the rename test of §4.2 — change the name, and the picture breaks loud enough to hear. On-chain, the bind between *the council seat* and the token at `0xa0b8...` is by convention, not enforced. Nothing in the layer beneath fails when the two drift. *How the name survives a fork.* Source code forks rarely and visibly. Chains fork often. A community whose governance noun is *the share* may wake up to find two chains, two contracts, two `share` tokens, and no rule that says which one carries the noun the community originally named.",
+            "It is worth being honest about how little of this is settled. A name-layer craft for on-chain governance would, at minimum, have to answer three questions the codetry move already answers in source code. And re-answer them under harder rules here. *Who writes the name.* In source code the answer is the practitioner sitting with the community at the kitchen table. On-chain it is unclear where the name lives. The candidates are the contract's metadata, a registry the community controls, a wallet UI the community does not control, and a governance document the chain cannot read. *What the name is bound to.* In source code the bind is held by the rename test of §4.2 — change the name, and the picture breaks loud enough to hear. On-chain, the bind between *the council seat* and the token at `0xa0b8...` is by convention, not enforced. Nothing in the layer beneath fails when the two drift. *How the name survives a fork.* Source code forks rarely and visibly. Chains fork often. A community whose governance noun is *the share* may wake up to find two chains, two contracts, two `share` tokens, and no rule that says which one carries the noun the community originally named.",
         },
         {
           kind: "callout",
@@ -1404,7 +1404,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "There is a temptation, when the answer is unknown, to fold the question back into a chapter with more material around it. §6.1 is that fuller chapter. It has the rename-test analogy, the body-of-code argument, the type/name/piece stack. It would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes. Not so they can be tamed as tails on the chapters that almost-but-not-quite address them. When a name-layer craft for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the piece — record it here. Not tacked onto §6.1.",
+            "There is a temptation, when the answer is unknown, to fold the question back into a chapter with more material around it. §6.1 is that fuller chapter. It has the rename-test analogy, the body-of-code argument, the type/name/piece stack. It would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes. Not so they can be tamed as tails on the chapters that almost-but-not-quite address them. When a name-layer craft for on-chain governance does start to take shape, record it here. The shape may show up in a registry pattern, in a contract convention, or in a community's actual practice of binding the noun to the piece. Not tacked onto §6.1.",
         },
         {
           kind: "callout",
@@ -1436,7 +1436,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "A trade shows up when several industries' outputs only come together in a *built thing*. And the built thing only holds if one pair of hands knows how all of them behave under load. Bricklaying is the example worth keeping in front of this chapter. The bricklayer is not a brick-maker, not a chemist, not a structural engineer, and not a site planner. But the trade soaked up enough brick chemistry, mortar chemistry, structural reading, site know-how, and apprenticeship teaching that the wall it builds holds. A name-layer trade would soak up in the same shape, from at least four feeder streams. *Codetry*: the rename test of §4.2, the practice of picking a picture that shapes the system rather than decorates it, the refusal to let the name collapse upward into the type or downward into the piece. *Literate programming*, framed by §6.1 as the precondition the practice rests on rather than the sibling working in the next room: document-as-source, prose as the place the work lives, names inside the source carrying the picture the prose claims. *Wisdom keeping*: the only existing job that already does multi-generation name care — knowing who named a place, what the name binds to, what happens to the name when the river reroutes, the clan splits, or the treaty is broken. *Community development*: the practice of asking who is in the room when a noun gets coined, who is not, and what the downstream cost of those absences is. None of those four are the trade. The trade is where their outputs come together in a wall. The wall being the names a community's institutions and on-chain pieces are bound to, written and tended so the names outlast the foundation they were laid on.",
+            "A trade shows up when several industries' outputs only come together in a *built thing*. And the built thing only holds if one pair of hands knows how all of them behave under load. Bricklaying is the example worth keeping in front of this chapter. The bricklayer is not a brick-maker, not a chemist, not a structural engineer, and not a site planner. But the trade soaked up enough brick chemistry, mortar chemistry, structural reading, site know-how, and apprenticeship teaching that the wall it builds holds. A name-layer trade would soak up in the same shape, from at least four feeder streams. *Codetry*: the rename test of §4.2, the practice of picking a picture that shapes the system rather than decorates it. The refusal to let the name collapse upward into the type or downward into the piece. *Literate programming*, framed by §6.1 as the precondition the practice rests on rather than the sibling working in the next room. Its parts: document-as-source, prose as the place the work lives, names inside the source carrying the picture the prose claims. *Wisdom keeping*: the only existing job that already does multi-generation name care. The keeper knows who named a place, what the name binds to, and what happens to the name when the river reroutes, the clan splits, or the treaty is broken. *Community development*: the practice of asking who is in the room when a noun gets coined, who is not, and what the downstream cost of those absences is. None of those four are the trade. The trade is where their outputs come together in a wall. The wall being the names a community's institutions and on-chain pieces are bound to, written and tended so the names outlast the foundation they were laid on.",
         },
         {
           kind: "subhead",
@@ -1514,13 +1514,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If holding one-word-one-referent across the constellation reduces ambiguity at decision points, then a user looking at Variant A without prior context should be able to tell from the words alone what the single next action is. Falsified if the user still cannot.",
+            "If holding one-word-one-referent reduces ambiguity at decision points, then a user looking at Variant A without prior context should be able to tell from the words alone what the single next action is. Falsified if the user still cannot.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly pushing out the locked Zone 1 verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces brought back *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately. The locked map of §7.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently undid the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)*. Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently brought back the older banking word. Nothing in the merge process flagged it. The fix here was to put the locked word back and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
+            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly pushing out the locked Zone 1 verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces brought back *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately. The locked map of §7.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently undid the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)*. Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently brought back the older banking word. Nothing in the merge process flagged it. The fix here was to put the locked word back and add the smallest possible mechanical witness. That witness was a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
         },
         {
           kind: "callout",
@@ -1553,7 +1553,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Lock the word map for the whole zone — one word, one referent, in EN and FR, in every surface, in every lesson, and in the code field-names. Where one word was doing two jobs, a second word was coined or recovered so each job has a name of its own. The Bridge sheet was rewritten to use *Bridge* (not *Channel*). The debt-channeling lesson became *debt-drainage*. The *compound-rainfall* lesson became *cloud-cover* and introduced *Glacier* explicitly as the tax-sheltered vehicle. The *Reservoir* field was renamed in `TenantConfig` from `masterBucketLabel` to `reservoirLabel`. A separate decision recorded in the test (Task #851) rephrased three remaining surface uses of the bare verb *park* to *set aside* / *keep* so the retired metaphor word never appears on a Zone 1 surface at all.",
+            "Lock the word map for the whole zone — one word, one referent, in EN and FR, in every surface, in every lesson, and in the code field-names. Where one word was doing two jobs, a second word was coined or recovered so each job has a name of its own. The Bridge sheet was rewritten to use *Bridge* (not *Channel*). The debt-channeling lesson became *debt-drainage*. The *compound-rainfall* lesson became *cloud-cover* and introduced *Glacier* explicitly as the tax-sheltered vehicle. The *Reservoir* field was renamed in `TenantConfig` from `masterBucketLabel` to `reservoirLabel`. A separate decision recorded in the test (Task #851) rephrased three remaining surface uses of the bare verb *park* to *set aside* / *keep*. The retired metaphor word never appears on a Zone 1 surface at all.",
         },
         { kind: "subhead", text: "The locked map." },
         {
@@ -1614,7 +1614,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.3) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
+            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.3) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA? Or does it stay as a meta-doc reference only?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -1691,13 +1691,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Falsified if a Zone 1 surface in a calm building state still presents loud active controls by default — call this failure mode A, *pre-loud*. Falsified too if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default — failure mode B, *hidden, not retreated*. The rule sits between those two failure modes — *retreat, not removal*.",
+            "Falsified if a Zone 1 surface in a calm building state still presents loud active controls by default — call this failure mode A, *pre-loud*. Falsified too if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default. Call this failure mode B — *hidden, not retreated*. The rule sits between those two failure modes — *retreat, not removal*.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated on arrival. Unlike Tests 001–003, this rule was not discovered on the canvas and then graduated to production — it was *shipped twice* in production before being named, by two unrelated tasks, and only then recognised as a single rule. The codetry test here is the naming, not the shipping. No production code or copy ships from this test.",
+            "Graduated on arrival. Unlike Tests 001–003, this rule was not discovered on the canvas and then graduated to production. It was *shipped twice* in production before being named, by two unrelated tasks, and only then recognised as a single rule. The codetry test here is the naming, not the shipping. No production code or copy ships from this test.",
         },
         { kind: "subhead", text: "See also." },
         { kind: "small", text: "§7.1 (Test 001) — the vocabulary rule the Wobble-targets escape hatch shipped from. §7.3 (Test 003) — the one-register-per-screen rule, which sits alongside the temperature rule named here." },
@@ -1744,13 +1744,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If the Variant A graduation holds, a cold-read of the Earn tab should describe what the screen does using only the locked Zone 1 words plus *Drip Harvester* and *Park toll* (the two new sanctioned nouns). Falsified if a cold reader still reaches for *deploy* or *LP* or *sweep* to describe what they see.",
+            "If the Variant A graduation holds, the Earn tab should be describable using only the locked Zone 1 words and the two new sanctioned nouns. The two new nouns are *Drip Harvester* and *Park toll*. Falsified if a cold reader still reaches for *deploy* or *LP* or *sweep* to describe what they see.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`. Critical strings were mirrored to `copy.fr.ts`. *Park toll* added to the locked Zone 1 map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage (APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked the first time). A third leak — *Not funded yet* on the Drip Harvester card, where *funded* read as *broken/halted* to a household reader — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
+            "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`. Critical strings were mirrored to `copy.fr.ts`. *Park toll* added to the locked Zone 1 map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage. The first time, APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked. A third leak — *Not funded yet* on the Drip Harvester card — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. To a household reader, *funded* read as *broken/halted*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
         },
         { kind: "subhead", text: "See also." },
         { kind: "small", text: "§7.2 (Test 002) — the locked map this test was held to. §7.6 (Test 006) — the flow-ribbon follow-up scoped out of this test. §7.7 (Test 007) — the structural test that found the LP-position card had survived this vocabulary sweep." },
@@ -1774,13 +1774,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "After the §7.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Zone 1 water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implied. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
+            "After the §7.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Zone 1 water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implied. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, and an LP-position card when one exists. Then a list of Private Parks and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
         },
         { kind: "subhead", text: "The intervention." },
         {
           kind: "para",
           text:
-            "An `<EarnFlowRibbon />` component was added to `EarnTab.tsx` and rendered near the top of the surface. It shipped with three nodes connected by chevrons: *Reservoir → Private Park → Buckets*, with the Drip Harvester drawn as a small badge sitting on the Park → Buckets edge — *not* as its own node. The Test 006 reasoning was that the Drip Harvester is *the verb that moves Park earnings into a Bucket* and so does not deserve a station on a topology picture. Active state on the Park node when at least one Drip Harvester is running. Pulse on the Drip Harvester badge when a sweep is ready.",
+            "An `<EarnFlowRibbon />` component was added to `EarnTab.tsx` and rendered near the top of the surface. It shipped with three nodes connected by chevrons: *Reservoir → Private Park → Buckets*. The Drip Harvester was drawn as a small badge sitting on the Park → Buckets edge, *not* as its own node. The Test 006 reasoning was that the Drip Harvester is *the verb that moves Park earnings into a Bucket* and so does not deserve a station on a topology picture. Active state on the Park node when at least one Drip Harvester is running. Pulse on the Drip Harvester badge when a sweep is ready.",
         },
         { kind: "subhead", text: "The rule discovered." },
         {
@@ -1792,7 +1792,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If Variant C's graduation holds, a cold reader landing on the Earn tab should be able to point at the ribbon and say, in one sentence, where their money currently sits and where it will move to next. They should be able to do this even before reading any of the cards beneath it. A second falsifier: if a cold reader treats the ribbon as decoration (skips it on first read) or asks *why is this picture here?*, the visual weight is wrong and the ribbon needs to be louder, not softer.",
+            "If Variant C's graduation holds, a cold reader landing on the Earn tab should be able to point at the ribbon. In one sentence, they should say where their money currently sits and where it will move to next. They should be able to do this even before reading any of the cards beneath it. A second falsifier: if a cold reader treats the ribbon as decoration (skips it on first read) or asks *why is this picture here?*, then the visual weight is wrong. The ribbon needs to be louder, not softer.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -1828,7 +1828,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Variant A (hierarchy + IL + toll history) graduates. A single hero block opens the card (*Drip earned so far · +$2.40 RLUSD* / *next drip at $25.00*, with the progress bar directly under it and a one-line footer *10% of the way · then $22.50 lands in Vacation*). Two stats survive in a sub-row below (*Parked* and *Drip rate*), with *Your share* and *Today's drip* cut as DeFi-derived metrics the household never asked for. A `TollBand` helper sits under the sub-row showing the Park toll as a band labelled honestly as a *typical range*. Production does not yet snapshot tolls over time, so the band is derived from the current toll ±35%, with a follow-up to record real history. An amber IL heads-up earns the bottom of the card next to the parked money, with a link out to the Learn module §7.5 already rewrote to be honest. Variant B (stability band) and Variant C (single story) recorded as rejected.",
+            "Variant A (hierarchy + IL + toll history) graduates. A single hero block opens the card: *Drip earned so far · +$2.40 RLUSD* / *next drip at $25.00*. The progress bar sits directly under it, with a one-line footer: *10% of the way · then $22.50 lands in Vacation*. Two stats survive in a sub-row below (*Parked* and *Drip rate*), with *Your share* and *Today's drip* cut as DeFi-derived metrics the household never asked for. A `TollBand` helper sits under the sub-row showing the Park toll as a band labelled honestly as a *typical range*. Production does not yet snapshot tolls over time, so the band is derived from the current toll ±35%, with a follow-up to record real history. An amber IL heads-up earns the bottom of the card next to the parked money, with a link out to the Learn module §7.5 already rewrote to be honest. Variant B (stability band) and Variant C (single story) recorded as rejected.",
         },
         { kind: "subhead", text: "The rule discovered." },
         {
@@ -1883,7 +1883,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card. But drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station. §7.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
+            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card. But drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station. §7.6's Earn ribbon could not — the Earn-tab values move on a weekly-to-monthly cadence — and shipped labels-only. That meant the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. All four readers — no Drip Harvester yet, one set up but no parked RLUSD, a parked Lake collecting currents, and a sweep-ready harvester — saw the same picture.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -2015,7 +2015,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Each variant rendered in the actual amber-CTA treatment of the wallet-confirm sheet, with the surrounding amber alert text intact, and read cold. The question was: does the new dialect rhyme with the quiet sibling on the Payday tab *and* still read as the answer to the alert above it, not as an aside that happens to live in the same card?",
+            "Each variant rendered in the actual amber-CTA treatment of the wallet-confirm sheet, with the surrounding amber alert text intact, and read cold. The question was double. Does the new dialect rhyme with the quiet sibling on the Payday tab? And does it still read as the answer to the alert above it, not as an aside that happens to live in the same card?",
         },
         { kind: "subhead", text: "The rule discovered." },
         {
@@ -2027,13 +2027,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "A water-register wording earns the loud amber CTA if both hold: (1) *mechanical clarity preserved* (same falsifier as §7.3 and §7.9); and (2) *urgency preserved* — the cold reader still understands this is a *fix-the-shortfall* action, not a casual top-up. The chip should read as the answer to the amber alert above it, not as an aside that happens to live in the same card.",
+            "A water-register wording earns the loud amber CTA if both hold. (1) *Mechanical clarity preserved* (same falsifier as §7.3 and §7.9). (2) *Urgency preserved* — the cold reader still understands this is a *fix-the-shortfall* action, not a casual top-up. The chip should read as the answer to the amber alert above it, not as an aside that happens to live in the same card.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. Variant B — *Top up reservoir from XRP · cover the shortfall* — ships, same amber CTA treatment, same surface position, same icon. Variant A is rejected for dropping *shortfall* and leaving the urgency in the amber card alone with no echo on the chip. Variant C is rejected for *refill* implying a state of fullness the reservoir never had this cycle (the same word §7.9 had already flagged as wrong-temperature on the demoted twin). Variant B's structure — *(§7.9's exact graduate) · (purpose-of-this-surface)* — gives the two chips a shared spine, mirroring the existing graduated hero CTA from §7.1 (*Channel the rainfall · $1,200 ready · every drop into a bucket*).",
+            "Graduated. Variant B — *Top up reservoir from XRP · cover the shortfall* — ships, same amber CTA treatment, same surface position, same icon. Variant A is rejected for dropping *shortfall* and leaving the urgency in the amber card alone with no echo on the chip. Variant C is rejected for *refill* implying a state of fullness the reservoir never had this cycle (the same word §7.9 had already flagged as wrong-temperature on the demoted twin). Variant B's structure — *(§7.9's exact graduate) · (purpose-of-this-surface)* — gives the two chips a shared spine. That mirrors the existing graduated hero CTA from §7.1: *Channel the rainfall · $1,200 ready · every drop into a bucket*.",
         },
         { kind: "subhead", text: "See also." },
         { kind: "small", text: "§7.9 (Test 009) — the quiet sibling on the Payday tab whose dialect this loud twin now rhymes with. §7.11 (the second-filed Test 010) — the deeper-room move on the swap-sheet header that closes out the arc this test opened." },
@@ -2056,7 +2056,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "§7.9 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §7.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right. But it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
+            "§7.9 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect (*Top up reservoir from XRP*). It explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §7.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right. But it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -2074,7 +2074,7 @@ const partVII: Part = {
         {
           kind: "pull",
           text:
-            "Register zoning works vertically as well as horizontally. Test 002 zones registers across screens (§7.2). This test shows the same kind of zoning *inside* a single component: the title-level register can speak dialect while the line-item register speaks protocol, as long as each register lives at the level it is best at. Dialect names the *kind of action*. Protocol names the *assets the action moves*. The CTA verb names *what the wallet will sign*. Three registers, three jobs, one sheet, no register-break.",
+            "Register zoning works vertically as well as horizontally. Test 002 zones registers across screens (§7.2). This test shows the same kind of zoning *inside* a single component. The title-level register can speak dialect while the line-item register speaks protocol, as long as each register lives at the level it is best at. Dialect names the *kind of action*. Protocol names the *assets the action moves*. The CTA verb names *what the wallet will sign*. Three registers, three jobs, one sheet, no register-break.",
         },
         {
           kind: "para",
@@ -2090,7 +2090,7 @@ const partVII: Part = {
         {
           kind: "ordered",
           items: [
-            "*Transactional clarity preserved.* A cold reader, having tapped the chip on the Payday tab, can still tell from the sheet header alone that this is the XRP-to-RLUSD swap they just opened, without having to scroll to the line-items to confirm.",
+            "*Transactional clarity preserved.* A cold reader, having tapped the chip on the Payday tab, can still tell from the sheet header alone that this is the XRP-to-RLUSD swap they just opened. They should not need to scroll to the line-items to confirm.",
             "*Honest at sign-time.* The title sits inside the locked dialect without making the moment of signing feel evasive about which assets are moving.",
           ],
         },
