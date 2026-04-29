@@ -10,6 +10,7 @@ import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Standby from "@/pages/Standby";
+import Gate from "@/pages/Gate";
 import Dashboard from "@/pages/Dashboard";
 import TransactionNew from "@/pages/TransactionNew";
 import TransactionDetail from "@/pages/TransactionDetail";
@@ -111,6 +112,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/standby" component={Standby} />
+      <Route path="/gate" component={Gate} />
       <Route path="/sign-in/*?">
         <div className="min-h-screen flex items-center justify-center bg-background">
           <SignIn routing="path" path={`${basePath}/sign-in`} />

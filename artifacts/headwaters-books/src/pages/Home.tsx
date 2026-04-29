@@ -56,19 +56,25 @@ export default function Home() {
 
       <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
         {/*
-          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473).
-          The footer links the only constellation-wide-primitive surface
-          this app currently ships: the Standby pilot dashboard at
-          /standby. The Gate is registered as a sibling primitive in the
-          constellation manifest but has no surface in this app yet. If
-          one is added (e.g. /gate), add a sibling link here — do NOT
-          rename this link to a generic "non-zone primitives" link that
-          inherits Standby's framing.
+          AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475).
+          The footer links the constellation-wide-primitive surfaces
+          this app ships: the Standby pilot dashboard at /standby and
+          the Gate shell at /gate. Each link names its primitive
+          explicitly — do NOT collapse them into a single generic
+          "non-zone primitives" link that would inherit one primitive's
+          framing for both. If a third sibling primitive earns a
+          surface, add it as its own line here with its own naming.
         */}
-        <div>
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
           <Link href="/standby">
             <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
               The Standby — Z3 pilot dashboard
+            </span>
+          </Link>
+          <span className="text-muted-foreground/40" aria-hidden>·</span>
+          <Link href="/gate">
+            <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
+              The Gate — Z3 shell
             </span>
           </Link>
         </div>
