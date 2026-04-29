@@ -63,6 +63,21 @@ describe("Slide deck — V2 numbers carried into V3 (must match V2 spec)", () =>
     expect(yearOne).toContain("$112,000");
   });
 
+  it("Capital Recovery line on the Year-1 slide carries an explicit tax-character clarifier (debt repayment, NOT income, NOT compensation, NOT deductible)", () => {
+    // The $112k Capital Recovery line is tax-free debt repayment to
+    // lender + family — money flows business → creditor, never lands on
+    // the founder's T1, never deductible to the business. Locking the
+    // clarifier here guards against a future edit silently dropping the
+    // tax-character framing and leaving an accountant or board reader to
+    // mis-read $112k as a comp or expense flow. Mirror of the PG2 V5
+    // family-infusion-tax-free guard.
+    const yearOne = readSlide("YearOnePicture.tsx");
+    expect(yearOne).toContain("Tax-free debt repayment");
+    expect(yearOne).toContain("not income to the founder");
+    expect(yearOne).toContain("not a deductible expense");
+    expect(yearOne).toContain("never as compensation");
+  });
+
   it("Practitioner stays at $18,000/mo in TheSixPeople (V2 roster row 1)", () => {
     const sixPeople = readSlide("TheSixPeople.tsx");
     expect(sixPeople).toContain("$18,000");

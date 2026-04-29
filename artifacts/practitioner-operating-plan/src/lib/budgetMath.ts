@@ -428,6 +428,15 @@ export const CROSS_RESERVE_INSTALL_WEEKS = CORRIDOR_INSTALL_SHAPE.installWeeks;
 // exporting them here lets the second-anchor slide reconcile against
 // the same gap figure rather than re-typing it. If the Y1 picture
 // changes, both slides move together.
+//
+// Tax character of the $112k Capital Recovery line (locked at the slide
+// copy + slides-manifest description, anchored here for reference): it
+// is tax-free debt repayment to lender + family. Money flows business →
+// creditor; not income to the founder, not a deductible expense to the
+// business, no T4/T4A/withholding. Booked on the balance sheet as
+// Capital Recovery, never as compensation. PG2 V5 splits the same $112k
+// into two visible legs ($72k bank + $40k family infusion) for visibility;
+// V2/V3 (this deck) carries it as one undivided line. Substance is identical.
 export const Y1_HONEST_REVENUE = 446598;
 export const Y1_HONEST_COST_BASIS = 573800;
 export const Y1_HONEST_GAP = Y1_HONEST_COST_BASIS - Y1_HONEST_REVENUE;
