@@ -8,6 +8,7 @@ import WhatHeadwatersDelivers from "@/sections/WhatHeadwatersDelivers";
 import CockpitTeaser from "@/sections/CockpitTeaser";
 import BookkeepingProof from "@/sections/BookkeepingProof";
 import WhyThisTeam from "@/sections/WhyThisTeam";
+import ReworkRisk from "@/sections/ReworkRisk";
 import WhyCurrentFails from "@/sections/WhyCurrentFails";
 import ColdChain from "@/sections/ColdChain";
 import WhoWorks from "@/sections/WhoWorks";
@@ -28,11 +29,14 @@ import SustainabilityApp from "@/sustainability/SustainabilityApp";
  * pins to the top and the document begins.
  *
  * Reading order is seller-side-first: after WhatItIs frames the store,
- * the very next two sections (WhatHeadwatersDelivers + WhyThisTeam)
- * answer the contractor's two unanswered questions — what is being sold
- * and why this team is the one to sell it. Only then does the document
- * pivot back to the store's own story (WhyCurrentFails → ColdChain →
- * WhoWorks → FirstMorning → WhatStays → Ask → Recap).
+ * the next sections (WhatHeadwatersDelivers + CockpitTeaser +
+ * BookkeepingProof + WhyThisTeam) answer the contractor's unanswered
+ * questions — what is being sold and why this team is the one to sell
+ * it. ReworkRisk then names the contractor's own pain (the doors got
+ * built too small) and frames Headwaters as the thing that makes that
+ * pain stop. Only then does the document pivot back to the store's own
+ * story (WhyCurrentFails → ColdChain → WhoWorks → FirstMorning →
+ * WhatStays → Ask → Recap).
  *
  * The /planner sub-route renders the Phase Planner — same artifact, same
  * palette, same shell pattern, different surface. Walkthrough = read.
@@ -63,6 +67,7 @@ export default function App() {
         <CockpitTeaser />
         <BookkeepingProof />
         <WhyThisTeam />
+        <ReworkRisk />
         <WhyCurrentFails />
         <ColdChain />
         <WhoWorks />
