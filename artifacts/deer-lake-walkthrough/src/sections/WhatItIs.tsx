@@ -10,7 +10,7 @@ export default function WhatItIs() {
   const bullets = [
     {
       tag: "Owned by the band",
-      body: "Deer Lake hires and runs everyone inside.",
+      body: "The band owns it. Gilles hires the couple and runs the floor, with locals pitching in.",
     },
     {
       tag: "Built for long winters",
