@@ -12,32 +12,12 @@ import { ChevronDown } from "lucide-react";
  * Numbers, schedules, and supporting data live inside `<Reveal>` so the
  * vision-led top of each section can stay short and image-first.
  *
- * ────────────────────────────────────────────────────────────────────
- * EDITORIAL LOCK — section bullet contract
- * ────────────────────────────────────────────────────────────────────
- * Every section under `src/sections/` follows this shape:
- *
- *   eyebrow + headline (+ optional one-sentence hook)
- *   ↓
- *   AT MOST THREE top-level bullet/card items visible above the fold
- *   ↓
- *   one or more <Reveal> blocks holding everything longer than a
- *   single short sentence (numbers, dates, citations, supporting
- *   prose, ranked lists)
- *
- * If a section needs a fourth visible item, the fourth becomes a
- * <Reveal>. The rule is non-negotiable: the contractor must be able to
- * scan a section in under five seconds and screenshot it for the chief.
- * Reveals are the only collapsible pattern allowed — do not introduce a
- * second.
- *
- * Documented exception: `sections/Recap.tsx` is a single-screen summary
- * table built to BE the screenshot the contractor sends to the chief.
- * It carries seven label/value rows on purpose, with no Reveals,
- * because compressing it would destroy the surface it exists to be.
- * Recap is the only section allowed to break the three-bullet ceiling,
- * and it does so by intentional design.
- * ────────────────────────────────────────────────────────────────────
+ * EDITORIAL LOCK — every `src/sections/` section shows at most three
+ * top-level bullet/card items above the fold; everything longer (numbers,
+ * dates, citations, ranked lists, supporting prose) sits in a <Reveal>.
+ * <Reveal> is the only collapsible pattern allowed. Sole exception:
+ * `Recap.tsx` is a single-screen summary table built to BE the
+ * screenshot the contractor sends to the chief; it has no Reveals.
  */
 export function Reveal({
   label,
