@@ -108,7 +108,7 @@ export default function ThreeRevenueLayers() {
               /yr · {formatDollars(layer1Monthly)}/mo · Layer 1 software-only · signed today
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text mb-[1.5vh]">
-              Bundled deliverable: license, ongoing dev, practitioner advisory, monthly visit, Dryden Hub coordination, three training cohorts.
+              <span className="text-primary font-semibold">What this contract powers:</span> a two-person operator couple at the Deer Lake store, running Square + QuickBooks + Local Line on top of the Headwaters cockpit. Bundled deliverable: license, ongoing dev, practitioner advisory, monthly visit, Dryden Hub coordination, three training cohorts.
             </div>
             <div className="font-body text-[1.2vw] leading-[1.5] text-text">
               <span className="text-primary font-semibold">Software is owned by the band</span> and reused across every band that adopts it.

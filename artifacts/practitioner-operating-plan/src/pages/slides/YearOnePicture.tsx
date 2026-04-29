@@ -89,7 +89,7 @@ export default function YearOnePicture() {
               Tax-free debt repayment to lender + family. Money flows business → creditor; not income to the founder, not a deductible expense to the business, no T4/T4A/withholding. Booked on the balance sheet as Capital Recovery, never as compensation.
             </div>
             <div className="font-body italic text-[1.15vw] text-text leading-[1.5] mt-auto" style={{ fontVariantNumeric: "tabular-nums" }}>
-              The {formatDollars(layer1Monthly)}/mo Layer-1 software-only contract is a real security baseline for the practitioner and the team's core. It does not, by itself, fund Headwaters at the V3 cost basis — that's what the recommended-ask upgrade closes.
+              The {formatDollars(layer1Monthly)}/mo Layer-1 software-only contract is a real security baseline for the practitioner and the team's core — it keeps the operator-couple-plus-software stack live at Deer Lake (Sam &amp; Jess on the cockpit; Square, QuickBooks, Local Line, the Headwaters cockpit underneath them). It does not, by itself, fund Headwaters at the V3 cost basis — that's what the recommended-ask upgrade closes.
             </div>
           </div>
         </div>

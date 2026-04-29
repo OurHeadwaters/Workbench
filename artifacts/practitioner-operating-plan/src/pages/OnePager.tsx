@@ -154,13 +154,20 @@ export default function OnePager() {
         </div>
 
         <div className="text-[9.5pt] leading-[1.4] text-[#2a2520] mb-[10pt]">
-          A community development contract at $60k+/month is a real inflection
-          point. It only stays a yes if the practitioner's days with the kids
-          stay sacred, the on-the-ground execution doesn't depend on one tired
-          person, and the band gets infrastructure that outlasts the
-          engagement. Below: the operating structure, the financial model with
-          a 35% reinvestment markup, and the path from one pilot to a
-          repeatable template.
+          Underneath this contract sits a two-person operator couple — Sam
+          &amp; Jess on the cockpit at the Deer Lake store — running on
+          Square at the till, QuickBooks on the books, Local Line for
+          producers, and the Headwaters cockpit tying them together.
+          Everything below — the lean roster, the cost basis with a 35%
+          reinvestment markup, the day-one bridge — exists so the payroll
+          line at the store stays a couple, the doors stay open through
+          hunting season and bad weather, the truck still leaves Dryden
+          loaded when one operator is short-handed, and the band's grocery
+          margin starts coming home in year one. A community development
+          contract at $60k+/month is a real inflection point: it only stays
+          a yes if the practitioner's days with the kids stay sacred, the
+          on-the-ground execution doesn't depend on one tired person, and
+          the band gets infrastructure that outlasts the engagement.
         </div>
 
         <div className="mb-[10pt]">
@@ -531,8 +538,16 @@ export default function OnePager() {
               is required on day one to cover team payroll plus tech CAPEX
               (cost basis includes the Dad-warehouse aggregation hub at
               $3k/mo all-in; see /lease-tooling) before the first net-60
-              invoice clears. 35% is the target reinvestment line — audited
-              annually; the actual % drifts as the cost basis grows.
+              invoice clears. What it funds, in one line:{" "}
+              <span className="font-semibold">
+                the operator-couple-plus-software stack at the Deer Lake
+                store
+              </span>{" "}
+              — Sam &amp; Jess on the cockpit; Square, QuickBooks, Local
+              Line and the Headwaters cockpit underneath them; the lean
+              roster back at Headwaters keeping it stitched together. 35%
+              is the target reinvestment line — audited annually; the
+              actual % drifts as the cost basis grows.
             </div>
           </div>
           <div>
