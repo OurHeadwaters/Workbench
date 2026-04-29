@@ -82,6 +82,17 @@ export default function FrontPage() {
         >
           {constellation.grammar.axiom}
         </Text>
+        <View
+          style={[styles.lifePreserverRule, { backgroundColor: c.rule }]}
+        />
+        <Text
+          style={[
+            styles.lifePreserver,
+            { color: c.foreground, fontFamily: SERIF_ITALIC },
+          ]}
+        >
+          {"When we are underwater, we need a lifeguard to help us come up for air \u2014 this is your life preserver. Work it the best way you know how to lay it, using codetry like a stone mason."}
+        </Text>
         <Text
           style={[
             styles.byline,
@@ -380,6 +391,17 @@ const styles = StyleSheet.create({
   epigraph: {
     fontSize: 17,
     lineHeight: 26,
+  },
+  lifePreserverRule: {
+    height: 1,
+    width: 28,
+    marginTop: 22,
+    marginBottom: 18,
+    opacity: 0.5,
+  },
+  lifePreserver: {
+    fontSize: 16,
+    lineHeight: 25,
   },
   byline: {
     fontSize: 11,
