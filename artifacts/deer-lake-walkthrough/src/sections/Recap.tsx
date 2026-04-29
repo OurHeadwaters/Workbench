@@ -16,7 +16,7 @@ export default function Recap() {
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → Deer Lake. Two cold trucks."],
     ["Back home", "~$125k–$200k of grocery margin stays in Deer Lake year one. 17–20 jobs grow in over two years."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
-    ["Ask", "$1.08M year one ($90k/mo). Likely from band reserves, back-loaded against the cold-chain pilot."],
+    ["Ask", "$1.08M year one ($90k/mo). Likely paid from band reserves. Most of it spent near the end, on the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],
   ];
 

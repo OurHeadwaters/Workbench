@@ -64,7 +64,7 @@ export default function WhatHeadwatersDelivers() {
             className="italic font-normal block mt-2"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            One contract. One team that ships.
+            One contract. One team that gets it done.
           </span>
         </h2>
 
@@ -72,12 +72,17 @@ export default function WhatHeadwatersDelivers() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          What the band is actually buying — built so a two-person operator
-          couple, sitting on top of Square, QuickBooks, and Local Line, keeps
-          the payroll line small, the doors open long hours with limited
-          disruption, the truck on time, and the dollars-back-to-band
-          arriving fast. Each line below is a real deliverable, not a
-          promise — open the proof beneath each one.
+          What the band is actually buying. Two people run the floor.
+          Square, QuickBooks, and Local Line do the back end. The
+          payroll line stays small, the doors stay open, the truck
+          stays on time, and the money starts coming home fast.
+        </p>
+        <p
+          className="serif text-[18px] leading-[1.55] mt-3 max-w-md"
+          style={{ color: "var(--color-text)" }}
+        >
+          Each line below is a real thing we ship. Tap to see the
+          proof.
         </p>
 
         <div

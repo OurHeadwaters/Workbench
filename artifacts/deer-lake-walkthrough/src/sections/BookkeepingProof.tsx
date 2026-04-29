@@ -22,7 +22,7 @@ const EMBEDS: Array<{
 }> = [
   {
     id: "open-records",
-    tag: "Embed 1 · Open-records ledger",
+    tag: "Screen 1 · Open-records ledger",
     head: "What the band sees, any time.",
     caption:
       "Running totals, recent postings, by cost centre. No login. The chief and council can open this on a phone.",
@@ -30,7 +30,7 @@ const EMBEDS: Array<{
   },
   {
     id: "daily-close",
-    tag: "Embed 2 · Daily close",
+    tag: "Screen 2 · Daily close",
     head: "Five minutes at end-of-day.",
     caption:
       "The operator couple counts the drawer, drops the deposit, and kicks anything tricky to the bookkeeper for the next morning.",
@@ -38,7 +38,7 @@ const EMBEDS: Array<{
   },
   {
     id: "month-end",
-    tag: "Embed 3 · Month-end pack",
+    tag: "Screen 3 · Month-end pack",
     head: "What council reads at the monthly meeting.",
     caption:
       "Cost-centre P&L on top, top variances below, sign-off line at the foot. Built to be the council pack, not a screenshot of a dashboard.",
@@ -77,10 +77,10 @@ export default function BookkeepingProof() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Three screens from the Headwaters Books surface the band would
-          run on, loaded right here in the page. Sample numbers, real
-          screens. Scroll inside any embed to read it the way an operator
-          would.
+          Three screens from the books the band would run on, loaded
+          right here in the page. The numbers shown are samples — the
+          screens themselves are real. Scroll inside any one to read
+          it the way an operator would.
         </p>
 
         <div className="mt-7 space-y-5">

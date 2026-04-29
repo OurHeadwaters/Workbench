@@ -119,8 +119,8 @@ export default function WhatStays() {
             </p>
             <p>
               The monthly fee covers three things: the software (built by us,
-              owned by the band), the tools we resell at a published markup,
-              and the training programs.
+              owned by the band), the tools we resell to the band with
+              a markup we publish openly, and the training programs.
             </p>
           </Reveal>
         </div>

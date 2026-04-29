@@ -47,9 +47,10 @@ export default function CockpitTeaser() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          A phone-readable mockup of the tablet the operator couple
-          works from — Square, QuickBooks, and Local Line composed
-          into one surface, with the band's money behind a lock.
+          A phone-friendly mockup of the tablet the operator couple
+          uses. Square, QuickBooks, and Local Line all in one
+          screen. The band's money sits behind a lock the operators
+          can't open.
         </p>
 
         <ul className="mt-7 space-y-3 list-none pl-0">

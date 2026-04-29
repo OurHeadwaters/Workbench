@@ -64,7 +64,7 @@ export default function ReworkRisk() {
             className="italic font-normal block mt-2"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            That's the signature of unsecured planning.
+            Because nobody owned the plan.
           </span>
         </h2>
 
@@ -73,9 +73,9 @@ export default function ReworkRisk() {
           style={{ color: "var(--color-text)" }}
         >
           A door that's an inch too narrow is never really about the door.
-          It's about a brief that wasn't locked before the wall went up.
-          That's the work Headwaters secures upstream, so the build only
-          ever happens once.
+          It's about a plan that wasn't locked before the wall went up.
+          That's the work Headwaters owns — locking the plan first, so
+          the build only happens once.
         </p>
 
         <div className="mt-7 space-y-3">
@@ -142,23 +142,23 @@ export default function ReworkRisk() {
             </p>
           </Reveal>
 
-          <Reveal label="What 'secured planning' actually means here" variant="ink">
+          <Reveal label="What 'locking the plan' actually means here" variant="ink">
             <p>
-              Headwaters owns the operational brief end-to-end. Before
-              each construction phase, the brief is locked: the floor
-              plan, the cold-chain spec, the till and back-of-house
-              placement, the role design that decides where the walls
-              go. Once locked, a decision doesn't get reopened on a
-              Tuesday because somebody remembered something.
+              Headwaters owns the plan from start to finish. Before
+              each construction phase, the plan is locked: the floor
+              plan, the cold-chain plan, where the till and the back-of-
+              house freezer go, who does which job. Once it's locked,
+              the decision doesn't get reopened next Tuesday because
+              somebody remembered something.
             </p>
             <p>
-              The artifacts the contractor can point to are already
-              shipped. The store operating plan carries the dollar-honest
-              cost basis. The practitioner one-pager carries the locked
-              role design — including the Headwaters-owned Food Handler
-              embedded at the store from day one. The cockpit is the
-              tablet surface the operator couple actually runs from, so
-              the brief survives contact with day-one operations.
+              The work the contractor can point to is already shipped.
+              The store operating plan shows the costs honestly, line
+              by line. The practitioner one-pager shows who does what,
+              including a Headwaters food-safety person at the store
+              from day one. The cockpit is the actual tablet the
+              operator couple uses — so the plan still works the day
+              the doors open.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"

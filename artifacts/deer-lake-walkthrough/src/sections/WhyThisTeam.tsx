@@ -102,19 +102,17 @@ export default function WhyThisTeam() {
             className="serif text-[15.5px] leading-[1.5] mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            The same operator-couple-installed-by-contractor pattern that
-            opens this walkthrough is what runs the band's hotel today. The
-            contractor brings the operator couple. You pay the contractor.
-            The building works.
+            Same setup that runs the band's hotel today. The contractor
+            brings the couple. The band pays the contractor. The
+            building works.
           </p>
           <p
             className="serif text-[15.5px] leading-[1.5] mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            The store is harder than the hotel — perishables, food safety,
-            vendor terms, faster turnover — which is why the contractor is
-            bringing in Headwaters as the store-specialist sub. The model
-            itself is the one you already trust.
+            The store is harder than the hotel — fresh food, food safety,
+            faster turnover. That's why the contractor brings Headwaters
+            in. Same setup. The part that's new is the food side.
           </p>
         </div>
 
@@ -194,25 +192,31 @@ export default function WhyThisTeam() {
               className="serif text-[24px] leading-[1.15] font-semibold"
               style={{ color: "var(--color-primary)", textWrap: "balance" }}
             >
-              A community development contract at $60k+/month is a real
-              inflection point.
+              $60,000 a month or more is real money. Here's where it
+              goes.
             </h3>
             <p
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              The one-pager carries the cost basis line by line — the
-              practitioner, an operations manager, IT/Tech, a bookkeeper,
-              the Headwaters-owned Food Handler embedded at the Deer Lake
-              store from day one, life-supports overhead, and the
-              aggregation hub — and the three tiers it can be billed at:
-              <span className="font-semibold"> $60k floor</span>,
-              <span className="font-semibold"> $90k recommended</span>,
-              <span className="font-semibold"> $125k scale</span>. The $60k
-              floor is the inflection point the one-pager leads with; $90k
-              is the recommended upgrade ask and the rate the rest of this
-              walkthrough quotes; $125k is what it grows into once Pilot #2
-              is live.
+              The one-pager shows the costs line by line — the
+              practitioner, an operations manager, an IT person, a
+              bookkeeper, a Headwaters food-safety person at the Deer
+              Lake store from day one, basic overhead, and the Dryden
+              hub that brings the food up.
+            </p>
+            <p
+              className="serif text-[16px] leading-[1.5] mt-3"
+              style={{ color: "var(--color-text)" }}
+            >
+              Three prices to choose from:
+              <span className="font-semibold"> $60k a month</span> is
+              the floor.
+              <span className="font-semibold"> $90k a month</span> is
+              what we recommend, and the rate the rest of this
+              walkthrough uses.
+              <span className="font-semibold"> $125k a month</span> is
+              what it grows to once a second store is up and running.
             </p>
             <div
               className="mono text-[11px] uppercase tracking-[0.18em] mt-4"
@@ -310,13 +314,13 @@ export default function WhyThisTeam() {
             <p>
               The codetry handbook is titled <span className="italic">
               Headwaters: How a Community Runs Its Own Economy</span>.
-              Seven parts. Plain grade-9 voice, locked by an automated check
-              on every commit. The reading level is the discipline.
+              Seven parts. Written in plain grade-9 English. Anyone
+              with a phone can read it.
             </p>
             <p>
               The same method is what gets used at the kitchen table in
               Dryden, in Deer Lake, and at any northern community Headwaters
-              works with. Not a deck. A practice.
+              works with. Not a slide deck. A practice.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
