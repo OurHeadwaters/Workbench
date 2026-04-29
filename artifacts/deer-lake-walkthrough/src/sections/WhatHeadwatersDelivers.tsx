@@ -97,13 +97,10 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5]"
             style={{ color: "var(--color-text)" }}
           >
-            The Step 0 trial buys planning and preparation, not build.
-            <span className="font-semibold"> Inside the eight weeks
-            (solo, by the practitioner):</span> the four written
-            deliverables listed in the Step 0 call-out on the Ask
-            below — quoted verbatim from the same canonical source so
-            the slide deck, the printable one-pager, and §7 of the
-            payback memo all read identically.
+            <span className="font-semibold">Eight weeks. One person —
+            the practitioner, working alone.</span> No team hired yet.
+            Nothing built yet. What comes out at the end is the four
+            written things below. That's the whole trial.
           </p>
           <ol
             className="serif text-[14.5px] leading-[1.45] mt-2 mb-3 list-decimal pl-5"
@@ -117,12 +114,12 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5]"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Deferred to Step 1 (the
-            full team, $90,000 a month):</span> the seven-person team,
-            the cold-chain pilot itself, the open-records software
-            build, the staff training, and the day-one CAPEX. The
-            three line items below describe the Step 1 deliverables —
-            what the trial gets the band ready to buy.
+            <span className="font-semibold">The full team starts in
+            Step 1, at $90,000 a month.</span> That covers the seven
+            people, the cold-chain pilot, the software build, the
+            staff training, and the gear we need on day one. The three
+            things below are what Step 1 buys — what the trial gets
+            the band ready for.
           </p>
         </div>
 
