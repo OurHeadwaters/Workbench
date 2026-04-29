@@ -72,8 +72,8 @@ export type ConstellationSnapshot = {
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.5",
-  "lastUpdated": "2026-04-28",
+  "version": "0.5.6",
+  "lastUpdated": "2026-04-29",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
@@ -161,6 +161,100 @@ export const constellation: ConstellationSnapshot = {
       ],
       "principle": "both-states",
       "scope": "naming and filing only — no UI surface for tracking calls, watches, or debriefs is built on this pass. Future task once the vocabulary has been used in the field."
+    },
+    {
+      "id": "the-gate",
+      "name": "The Gate",
+      "kind": "constellation-wide primitive",
+      "summary": "A calm membrane between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
+      "hostZone": 3,
+      "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both primitives operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
+      "vocabulary": [
+        {
+          "term": "the Gate",
+          "role": "the umbrella system + always-on posture"
+        },
+        {
+          "term": "the bright side",
+          "role": "the codetry-vocabulary side; the constellation's own dialect"
+        },
+        {
+          "term": "massity",
+          "role": "the legacy-world side; mass-society dialect (regulator, banker, funder, lawyer, generic SaaS English)"
+        },
+        {
+          "term": "a mapping",
+          "role": "a registered correspondence between a bright-side term and its massity equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)"
+        },
+        {
+          "term": "a substitution",
+          "role": "a single instance of a mapping being applied to a piece of crossing language"
+        },
+        {
+          "term": "a category",
+          "role": "the domain a mapping belongs to (Pragmatism, Politics, Regulations, Privacy, Banking, …); each category is a sub-shelf inside the Gate"
+        },
+        {
+          "term": "a translation",
+          "role": "a piece of language that has passed through the Gate in either direction; the auditable record of what crossed and what changed"
+        },
+        {
+          "term": "a calm membrane",
+          "role": "the metaphor doing the load — selectively permeable, alive, not a wall and not a wide-open door; the gate does work without picking a side"
+        }
+      ],
+      "severityLadder": [
+        {
+          "rung": "draft",
+          "meaning": "language has been written but not run past the Gate yet; no posture change required"
+        },
+        {
+          "rung": "under-review",
+          "meaning": "the Gate is reading the language; mappings are being proposed; the founder is in the loop"
+        },
+        {
+          "rung": "cleared",
+          "meaning": "the language has crossed; substitutions are logged; the translation is part of the record"
+        },
+        {
+          "rung": "refused",
+          "meaning": "the Gate declined to translate — usually because the bright-side noun has no honest massity equivalent and forcing one would lose the meaning the founder is trying to keep"
+        }
+      ],
+      "subShelves": [
+        {
+          "name": "Mappings",
+          "role": "the registered correspondences that the Gate carries — the dictionary side. Sub-noun, not replacement: a Mapping is what the Gate knows; the Gate is also what it does with what it knows."
+        },
+        {
+          "name": "Substitutions",
+          "role": "the applied-instance ledger — every time a mapping has been used, who used it, on what document, in which direction. Sub-noun, not replacement: substitutions are the Gate's history; the Gate is also its present."
+        },
+        {
+          "name": "Categories",
+          "role": "the domain shelves the mappings live on (Pragmatism, Politics, Regulations, Privacy, Banking, …). Sub-noun, not replacement: a category is where a mapping is filed; the Gate is the building all the categories sit in."
+        }
+      ],
+      "rejectedAlternatives": [
+        {
+          "name": "Translator",
+          "reason": "Holds the directional work but flattens the gate's posture into pure transaction — a translator processes; a gate decides whether to. Strips the 'calm' and the 'membrane' from the metaphor."
+        },
+        {
+          "name": "Filter",
+          "reason": "Implies the Gate's job is to remove or block, which mis-frames the work — the Gate doesn't subtract, it relabels in flight while keeping both names on file. A filter chooses what gets through; the Gate chooses what the through-language is called on each side."
+        },
+        {
+          "name": "Censor",
+          "reason": "Carries punitive weight the metaphor refuses; the Gate is collaborative with the founder, not adversarial. A censor decides for you; the Gate proposes and lets the founder confirm."
+        },
+        {
+          "name": "Glossary",
+          "reason": "Holds the dictionary side (Mappings) beautifully but cannot hold the active posture of substituting in real documents, the ledger of past substitutions, or the refused-translation rung. A glossary is what you keep on a shelf; the Gate is the shelf plus the room plus the work happening in it."
+        }
+      ],
+      "principle": "both-sides",
+      "scope": "naming and filing only — no UI surface is built in this pass. The runnable surface at legacy-gatekeeper.replit.app continues to operate externally; a follow-up task will decide whether to bring it in-repo as artifacts/the-gate, build a /gate shell page in headwaters-books that reads this manifest verbatim and links out, or both. Future task once the vocabulary has been used in the field."
     }
   ],
   "teachers": [
