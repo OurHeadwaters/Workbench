@@ -4,15 +4,21 @@ import path from "node:path";
 
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
   TRIAL_CONVERSION_TO_STEP_1,
   TRIAL_FEE_LINE,
+  TRIAL_FEE_LINE_OJICREE,
   TRIAL_FRAMING_LINE,
+  TRIAL_FRAMING_LINE_OJICREE,
   TRIAL_HEADLINE,
+  TRIAL_HEADLINE_OJICREE,
   TRIAL_HOW_LONG_LINE,
+  TRIAL_HOW_LONG_LINE_OJICREE,
   TRIAL_NO_TEAM_LINE,
   TRIAL_OFFER_QUADRANTS,
   TRIAL_REFUND_INVOCATION_DAYS,
   TRIAL_REFUND_MECHANIC,
+  TRIAL_REFUND_MECHANIC_OJICREE,
   TRIAL_REFUND_PAYMENT_DAYS,
   TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA,
   TRIAL_TIMELINE,
@@ -390,6 +396,152 @@ describe("Step 0 paid-trial offer · single source of truth", () => {
       );
       expect(onepager).toContain("TRIAL_TIMELINE_OJICREE");
       expect(onepager).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
+    });
+  });
+
+  describe("Anishininiimowin (Oji-Cree, Severn) draft sits alongside the §7 contractual prose", () => {
+    it("every English-only §7 string has a non-empty Oji-Cree draft sibling", () => {
+      // The six contractually load-bearing strings on the Step 0
+      // call-out — headline, fee line, how-long, refund mechanic,
+      // framing line, plus the four-criteria array — each have an
+      // Anishininiimowin draft sibling living in the same canonical
+      // module (`lib/headwaters-pricing/src/trialOffer.ts`).
+      expect(TRIAL_HEADLINE_OJICREE.length).toBeGreaterThan(20);
+      expect(TRIAL_FEE_LINE_OJICREE.length).toBeGreaterThan(40);
+      expect(TRIAL_HOW_LONG_LINE_OJICREE.length).toBeGreaterThan(60);
+      expect(TRIAL_REFUND_MECHANIC_OJICREE.length).toBeGreaterThan(120);
+      expect(TRIAL_FRAMING_LINE_OJICREE.length).toBeGreaterThan(120);
+    });
+
+    it("Oji-Cree drafts are distinct from their English source-of-truth (i.e. actually translated, not copied)", () => {
+      // Catches a regression where someone "translates" by pasting
+      // the English string into the Oji-Cree slot — exact-equality
+      // mirror of the schedule guard one block above.
+      expect(TRIAL_HEADLINE_OJICREE).not.toBe(TRIAL_HEADLINE);
+      expect(TRIAL_FEE_LINE_OJICREE).not.toBe(TRIAL_FEE_LINE);
+      expect(TRIAL_HOW_LONG_LINE_OJICREE).not.toBe(TRIAL_HOW_LONG_LINE);
+      expect(TRIAL_REFUND_MECHANIC_OJICREE).not.toBe(TRIAL_REFUND_MECHANIC);
+      expect(TRIAL_FRAMING_LINE_OJICREE).not.toBe(TRIAL_FRAMING_LINE);
+    });
+
+    it("Oji-Cree headline stays sentence-bounded and short enough to print under the English headline", () => {
+      // The bilingual call-out renders the Oji-Cree headline in italic
+      // immediately under the English headline; an unbounded paragraph
+      // here breaks the call-out's vertical rhythm on the slide and
+      // the printable one-pager.
+      expect(TRIAL_HEADLINE_OJICREE.length).toBeLessThan(220);
+      expect(TRIAL_HEADLINE_OJICREE.endsWith(".")).toBe(true);
+    });
+
+    it("Oji-Cree acceptance-criteria array has the same number of entries as the English array", () => {
+      expect(TRIAL_ACCEPTANCE_CRITERIA_OJICREE).toHaveLength(
+        TRIAL_ACCEPTANCE_CRITERIA.length,
+      );
+    });
+
+    it("each Oji-Cree criterion mirrors the English criterion's index 1:1 in order", () => {
+      TRIAL_ACCEPTANCE_CRITERIA_OJICREE.forEach((entry, i) => {
+        expect(entry.index).toBe(i);
+      });
+    });
+
+    it("every Oji-Cree criterion has a non-empty translated text", () => {
+      for (const entry of TRIAL_ACCEPTANCE_CRITERIA_OJICREE) {
+        expect(entry.text.length).toBeGreaterThan(40);
+        expect(entry.text.length).toBeLessThan(360);
+        expect(entry.text.endsWith(".")).toBe(true);
+      }
+    });
+
+    it("Oji-Cree criteria text is distinct from English text on every criterion (i.e. actually translated, not copied)", () => {
+      TRIAL_ACCEPTANCE_CRITERIA.forEach((englishCriterion, i) => {
+        const ojiCriterion = TRIAL_ACCEPTANCE_CRITERIA_OJICREE[i]!;
+        expect(ojiCriterion.text).not.toBe(englishCriterion);
+      });
+    });
+
+    it("Oji-Cree drafts retain the English borrowings practitioners actually code-switch on (dollar figures, Step 1, Headwaters)", () => {
+      // The style notes pinned to the canonical lib say English
+      // borrowings ("$40,000", "$90,000", "Step 1", "Headwaters", etc.)
+      // are kept in English as code-switches, the way they are spoken
+      // in the community. A regression that "translates" them into
+      // novel coined Oji-Cree forms would defeat the purpose of the
+      // bilingual draft (which is to keep the contractual numbers
+      // unambiguous on the printed sheet).
+      expect(TRIAL_HEADLINE_OJICREE).toContain("$40,000");
+      expect(TRIAL_FEE_LINE_OJICREE).toContain("$40,000");
+      expect(TRIAL_FEE_LINE_OJICREE).toContain("$20,000");
+      expect(TRIAL_HOW_LONG_LINE_OJICREE).toContain("Step 1");
+      expect(TRIAL_REFUND_MECHANIC_OJICREE).toContain("$40,000");
+      expect(TRIAL_REFUND_MECHANIC_OJICREE).toContain("Step 1");
+      expect(TRIAL_FRAMING_LINE_OJICREE).toContain("Step 1");
+      expect(TRIAL_FRAMING_LINE_OJICREE).toContain("$90,000");
+      // Year-one budget criterion (#4) names the Step 1 cost basis,
+      // the $90k/mo bill, and the ~$181k bridge ask in English; the
+      // borrowings have to come through.
+      const criterion4 = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.find(
+        (c) => c.index === 3,
+      );
+      expect(criterion4).toBeDefined();
+      expect(criterion4!.text).toContain("$90,000");
+      expect(criterion4!.text).toContain("$181,000");
+      expect(criterion4!.text).toContain("Step 1");
+    });
+
+    it("walkthrough Ask renders both locales of the call-out by importing the new constants and the disclaimer", () => {
+      const ask = readSurface(
+        "artifacts/deer-lake-walkthrough/src/sections/Ask.tsx",
+      );
+      expect(ask).toContain("TRIAL_HEADLINE_OJICREE");
+      expect(ask).toContain("TRIAL_FEE_LINE_OJICREE");
+      expect(ask).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
+      expect(ask).toContain("TRIAL_REFUND_MECHANIC_OJICREE");
+      expect(ask).toContain("TRIAL_FRAMING_LINE_OJICREE");
+      expect(ask).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
+    });
+
+    it("WhatHeadwatersDelivers renders the four §7 criteria bilingually", () => {
+      const whatDelivers = readSurface(
+        "artifacts/deer-lake-walkthrough/src/sections/WhatHeadwatersDelivers.tsx",
+      );
+      expect(whatDelivers).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
+      expect(whatDelivers).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
+    });
+
+    it("Deer Lake Store deck RisksAsk slide renders the Step 0 card bilingually", () => {
+      const risksAsk = readSurface(
+        "artifacts/deer-lake-store-plan/src/pages/slides/RisksAsk.tsx",
+      );
+      expect(risksAsk).toContain("TRIAL_HEADLINE_OJICREE");
+      expect(risksAsk).toContain("TRIAL_FEE_LINE_OJICREE");
+      expect(risksAsk).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
+      expect(risksAsk).toContain("TRIAL_REFUND_MECHANIC_OJICREE");
+      expect(risksAsk).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
+    });
+
+    it("printable one-pager renders the call-out bilingually", () => {
+      const onepager = readSurface(
+        "artifacts/practitioner-operating-plan/src/pages/OnePager.tsx",
+      );
+      expect(onepager).toContain("TRIAL_HEADLINE_OJICREE");
+      expect(onepager).toContain("TRIAL_FEE_LINE_OJICREE");
+      expect(onepager).toContain("TRIAL_HOW_LONG_LINE_OJICREE");
+      expect(onepager).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
+      expect(onepager).toContain("TRIAL_REFUND_MECHANIC_OJICREE");
+      expect(onepager).toContain("TRIAL_FRAMING_LINE_OJICREE");
+    });
+
+    it("PaybackMemo §7 renders the contractual prose bilingually", () => {
+      const memo = readSurface(
+        "artifacts/practitioner-operating-plan/src/pages/PaybackMemo.tsx",
+      );
+      expect(memo).toContain("TRIAL_HEADLINE_OJICREE");
+      expect(memo).toContain("TRIAL_FEE_LINE_OJICREE");
+      expect(memo).toContain("TRIAL_HOW_LONG_LINE_OJICREE");
+      expect(memo).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
+      expect(memo).toContain("TRIAL_REFUND_MECHANIC_OJICREE");
+      expect(memo).toContain("TRIAL_FRAMING_LINE_OJICREE");
+      expect(memo).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
     });
   });
 

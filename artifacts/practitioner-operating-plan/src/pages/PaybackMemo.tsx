@@ -1,10 +1,17 @@
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
   TRIAL_CONVERSION_TO_STEP_1,
   TRIAL_FEE_LINE,
+  TRIAL_FEE_LINE_OJICREE,
+  TRIAL_FRAMING_LINE_OJICREE,
   TRIAL_HEADLINE,
+  TRIAL_HEADLINE_OJICREE,
+  TRIAL_HOW_LONG_LINE_OJICREE,
   TRIAL_NO_TEAM_LINE,
   TRIAL_REFUND_MECHANIC,
+  TRIAL_REFUND_MECHANIC_OJICREE,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
   TRIAL_WHAT_SURVIVES_REFUND,
 } from "@workspace/headwaters-pricing";
 
@@ -350,6 +357,21 @@ export default function PaybackMemo() {
           title="Deer Lake eight-week paid trial — refund clause"
         >
           <Verbatim>{TRIAL_HEADLINE}</Verbatim>
+          <div
+            className="border-l-[3pt] border-[#6b7665] pl-[8pt] py-[3pt] italic text-[#6b7665] print:pl-[6pt] print:py-[1pt]"
+            style={{ background: "rgba(107,118,101,0.04)" }}
+            lang="oj"
+          >
+            &ldquo;{TRIAL_HEADLINE_OJICREE}&rdquo;{" "}
+            <span className="not-italic font-mono text-[7.5pt] text-[#6b7665] print:text-[6.5pt]">
+              (Anishininiimowin draft)
+            </span>
+          </div>
+          <div
+            className="text-[8pt] text-[#6b7665] italic border border-[#c8bfa7] bg-[#fdf7e8] px-[6pt] py-[3pt] rounded-[2pt] leading-[1.35] print:text-[7pt]"
+          >
+            {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+          </div>
           <p>
             <span className="font-semibold">Scope of this section.</span>{" "}
             This clause applies <span className="italic">only</span> to
@@ -369,20 +391,37 @@ export default function PaybackMemo() {
             jurisdiction provisions of §§1–6 apply to this clause as
             well.
           </p>
+          <p className="italic text-[#6b7665]" lang="oj">
+            {TRIAL_FEE_LINE_OJICREE}
+          </p>
+          <p className="italic text-[#6b7665]" lang="oj">
+            {TRIAL_HOW_LONG_LINE_OJICREE}
+          </p>
           <p>
             <span className="font-semibold">Acceptance criteria
             (judged at the week-eight review meeting).</span> By the end
             of week eight, the practitioner shall have delivered the
             following four items, each in writing:
           </p>
-          <ol className="list-decimal pl-[16pt] space-y-[3pt] print:space-y-[1pt]">
-            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => {
+          <ol className="list-decimal pl-[16pt] space-y-[5pt] print:space-y-[2pt]">
+            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion, i) => {
               const [headline, ...rest] = criterion.split(" — ");
               const detail = rest.join(" — ");
+              const ojiCriterion = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.find(
+                (c) => c.index === i,
+              );
               return (
                 <li key={criterion}>
                   <span className="font-semibold">{headline}.</span>
                   {detail ? <> {detail}</> : null}
+                  {ojiCriterion ? (
+                    <div
+                      className="italic text-[#6b7665] mt-[1pt] text-[8.5pt] leading-[1.4] print:text-[7.5pt]"
+                      lang="oj"
+                    >
+                      {ojiCriterion.text}
+                    </div>
+                  ) : null}
                 </li>
               );
             })}
@@ -391,6 +430,9 @@ export default function PaybackMemo() {
             <span className="font-semibold">Refund mechanic.</span>{" "}
             {TRIAL_REFUND_MECHANIC}
           </p>
+          <p className="italic text-[#6b7665]" lang="oj">
+            {TRIAL_REFUND_MECHANIC_OJICREE}
+          </p>
           <p>
             <span className="font-semibold">What survives the
             refund.</span> {TRIAL_WHAT_SURVIVES_REFUND}
@@ -398,6 +440,9 @@ export default function PaybackMemo() {
           <p>
             <span className="font-semibold">Conversion to Step 1.</span>{" "}
             {TRIAL_CONVERSION_TO_STEP_1}
+          </p>
+          <p className="italic text-[#6b7665]" lang="oj">
+            {TRIAL_FRAMING_LINE_OJICREE}
           </p>
           <p>
             <span className="font-semibold">Meeting artifact.</span>{" "}

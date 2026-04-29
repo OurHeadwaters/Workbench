@@ -1,9 +1,14 @@
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
   TRIAL_FEE_LINE,
+  TRIAL_FEE_LINE_OJICREE,
   TRIAL_HEADLINE,
+  TRIAL_HEADLINE_OJICREE,
   TRIAL_NO_TEAM_LINE,
   TRIAL_REFUND_MECHANIC,
+  TRIAL_REFUND_MECHANIC_OJICREE,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
 } from "@workspace/headwaters-pricing";
 
 /**
@@ -116,18 +121,58 @@ export default function RisksAsk() {
                 Step 0 · Try us for eight weeks · the on-ramp
               </div>
               <div className="font-body text-[0.82vw] leading-[1.35] opacity-95">
-                <span className="font-semibold">{TRIAL_HEADLINE}</span>{" "}
-                {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE}{" "}
-                <span className="font-semibold">
+                <div>
+                  <span className="font-semibold">{TRIAL_HEADLINE}</span>
+                </div>
+                <div className="italic opacity-80 text-[0.78vw] mt-[0.2vh]" lang="oj">
+                  {TRIAL_HEADLINE_OJICREE}
+                </div>
+                <div
+                  className="mt-[0.5vh] mb-[0.5vh] px-[0.6vw] py-[0.4vh] rounded-[0.2vw] italic text-[0.7vw] leading-[1.35]"
+                  style={{
+                    background: "rgba(244,237,224,0.08)",
+                    border: "1px solid rgba(244,237,224,0.25)",
+                    color: "#e9c8a8",
+                  }}
+                >
+                  {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+                </div>
+                <div>
+                  {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE}
+                </div>
+                <div className="italic opacity-80 text-[0.76vw] mt-[0.15vh]" lang="oj">
+                  {TRIAL_FEE_LINE_OJICREE}
+                </div>
+                <div className="font-semibold mt-[0.4vh]">
                   Solo deliverables in eight weeks:
-                </span>
-                <ol className="list-decimal pl-[1.4vw] mt-[0.3vh] mb-[0.3vh] space-y-[0.15vh]">
-                  {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
-                    <li key={criterion}>{criterion}</li>
-                  ))}
+                </div>
+                <ol className="list-decimal pl-[1.4vw] mt-[0.3vh] mb-[0.3vh] space-y-[0.3vh]">
+                  {TRIAL_ACCEPTANCE_CRITERIA.map((criterion, i) => {
+                    const ojiCriterion = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.find(
+                      (c) => c.index === i,
+                    );
+                    return (
+                      <li key={criterion}>
+                        <div>{criterion}</div>
+                        {ojiCriterion ? (
+                          <div
+                            className="italic opacity-80 text-[0.74vw] mt-[0.1vh]"
+                            lang="oj"
+                          >
+                            {ojiCriterion.text}
+                          </div>
+                        ) : null}
+                      </li>
+                    );
+                  })}
                 </ol>
-                <span className="font-semibold">Refund:</span>{" "}
-                {TRIAL_REFUND_MECHANIC}
+                <div>
+                  <span className="font-semibold">Refund:</span>{" "}
+                  {TRIAL_REFUND_MECHANIC}
+                </div>
+                <div className="italic opacity-80 text-[0.76vw] mt-[0.15vh]" lang="oj">
+                  {TRIAL_REFUND_MECHANIC_OJICREE}
+                </div>
               </div>
             </div>
 

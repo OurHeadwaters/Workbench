@@ -1,12 +1,17 @@
 import { Reveal } from "@/components/Reveal";
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
   TRIAL_EYEBROW,
   TRIAL_FEE_LINE,
+  TRIAL_FEE_LINE_OJICREE,
   TRIAL_FRAMING_LINE,
+  TRIAL_FRAMING_LINE_OJICREE,
   TRIAL_HEADLINE,
+  TRIAL_HEADLINE_OJICREE,
   TRIAL_NO_TEAM_LINE,
   TRIAL_REFUND_MECHANIC,
+  TRIAL_REFUND_MECHANIC_OJICREE,
   TRIAL_TIMELINE,
   TRIAL_TIMELINE_LOCALE_EN,
   TRIAL_TIMELINE_LOCALE_OJ,
@@ -106,12 +111,42 @@ export default function Ask() {
           >
             {TRIAL_HEADLINE}
           </div>
+          <div
+            className="serif text-[15.5px] leading-[1.3] font-medium italic mt-1"
+            style={{ color: "var(--color-muted)" }}
+            lang="oj"
+          >
+            {TRIAL_HEADLINE_OJICREE}
+          </div>
+          <div
+            className="mt-3 rounded-md border px-3 py-2 text-[12.5px] leading-[1.45] italic"
+            style={{
+              borderColor: "var(--color-rule)",
+              background: "var(--color-bg)",
+              color: "var(--color-muted)",
+            }}
+          >
+            {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+          </div>
           <p
             className="serif text-[15.5px] leading-[1.5] mt-3"
             style={{ color: "var(--color-text)" }}
           >
             <span className="font-semibold">How much.</span>{" "}
+            <span className="mono text-[10px] uppercase tracking-[0.18em] mr-1" style={{ color: "var(--color-muted)" }}>
+              {TRIAL_TIMELINE_LOCALE_EN}
+            </span>
             {TRIAL_FEE_LINE} {TRIAL_NO_TEAM_LINE}
+          </p>
+          <p
+            className="serif text-[14.5px] leading-[1.45] mt-1 italic"
+            style={{ color: "var(--color-muted)" }}
+            lang="oj"
+          >
+            <span className="mono text-[10px] not-italic uppercase tracking-[0.18em] mr-1">
+              {TRIAL_TIMELINE_LOCALE_OJ}
+            </span>
+            {TRIAL_FEE_LINE_OJICREE}
           </p>
           <p
             className="serif text-[15.5px] leading-[1.5] mt-2"
@@ -125,9 +160,25 @@ export default function Ask() {
             className="serif text-[15px] leading-[1.5] mt-1 list-decimal pl-5"
             style={{ color: "var(--color-text)" }}
           >
-            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
-              <li key={criterion}>{criterion}</li>
-            ))}
+            {TRIAL_ACCEPTANCE_CRITERIA.map((criterion, i) => {
+              const ojiCriterion = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.find(
+                (c) => c.index === i,
+              );
+              return (
+                <li key={criterion}>
+                  <div>{criterion}</div>
+                  {ojiCriterion ? (
+                    <div
+                      className="serif text-[14px] leading-[1.45] italic mt-0.5"
+                      style={{ color: "var(--color-muted)" }}
+                      lang="oj"
+                    >
+                      {ojiCriterion.text}
+                    </div>
+                  ) : null}
+                </li>
+              );
+            })}
           </ol>
           <p
             className="serif text-[15.5px] leading-[1.5] mt-3"
@@ -137,10 +188,24 @@ export default function Ask() {
             {TRIAL_REFUND_MECHANIC}
           </p>
           <p
+            className="serif text-[14.5px] leading-[1.45] mt-1 italic"
+            style={{ color: "var(--color-muted)" }}
+            lang="oj"
+          >
+            {TRIAL_REFUND_MECHANIC_OJICREE}
+          </p>
+          <p
             className="serif text-[14.5px] leading-[1.45] mt-3 italic"
             style={{ color: "var(--color-muted)" }}
           >
             {TRIAL_FRAMING_LINE}
+          </p>
+          <p
+            className="serif text-[13.5px] leading-[1.45] mt-1 italic"
+            style={{ color: "var(--color-muted)" }}
+            lang="oj"
+          >
+            {TRIAL_FRAMING_LINE_OJICREE}
           </p>
         </div>
 

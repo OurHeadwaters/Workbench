@@ -423,6 +423,90 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
  *     one-pager runs the bilingual rows tight against each other
  *     and a long Oji-Cree paragraph breaks the row layout.
  */
+/**
+ * Anishininiimowin (Oji-Cree, Severn dialect) draft of the §7
+ * contractual prose — the headline, the fee line, the
+ * "how long / what gates the conversion" line, the four
+ * acceptance criteria, the refund mechanic, and the framing line.
+ *
+ * STATUS: WORKING DRAFT, identical posture to the timeline drafts
+ * below. Not elder-reviewed yet. Every surface that prints these
+ * strings also prints `TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER` (the
+ * same banner the schedule uses) above the bilingual block, so a
+ * reader cannot mistake the draft for the verified version.
+ *
+ * Style notes for the elder reviewer (mirror the timeline drafts so
+ * a single elder-review pass touches both blocks):
+ *   - Romanised orthography (not syllabics) so the printed sheet
+ *     stays single-column without a font swap; switch to syllabics
+ *     in a follow-up if Deer Lake elders prefer.
+ *   - Plain language over loan translations; English borrowings
+ *     ("Step 1", "$40,000", "$90,000", "$181,000", "$20,000",
+ *     "Headwaters", "35%", "MOU", "CAPEX") are left in English as
+ *     code-switches, the way they are spoken in practice in the
+ *     community.
+ *   - One short sentence per field where possible — the printable
+ *     one-pager and the slide both run the bilingual blocks tight
+ *     against each other and a long Oji-Cree paragraph breaks the
+ *     row layout.
+ *
+ * The four-criteria array (`TRIAL_ACCEPTANCE_CRITERIA_OJICREE`)
+ * mirrors `TRIAL_ACCEPTANCE_CRITERIA` index-for-index (entry 0 is the
+ * Oji-Cree of English entry 0, entry 1 is the Oji-Cree of entry 1,
+ * etc.), the same pattern `TRIAL_TIMELINE_OJICREE` uses for the
+ * timeline rows. Length is asserted to equal the English array by
+ * the lockedTrialOffer guard test, and each entry is asserted
+ * distinct from its English counterpart so a paste-instead-of-
+ * translate regression is caught.
+ */
+export const TRIAL_HEADLINE_OJICREE =
+  "$40,000 wewenig. Nishwaaso-anama'e-giizhig. Niigaanibatood eta. Azhe-miinigewin gishpin gegoo gaa-debinasinog.";
+
+export const TRIAL_FEE_LINE_OJICREE =
+  "$40,000 wewenig nishwaaso-anama'e-giizhigak onji, $20,000 gii-mazinaakidewin ozhibii'igewing miinawaa $20,000 niiwin-anama'e-giizhig maajitaag.";
+
+export const TRIAL_HOW_LONG_LINE_OJICREE =
+  "Nishwaaso-anama'e-giizhig ozhibii'igewing onji. Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwining niigaanibatood obawaadagonan iniw newin ozhitoogaadeg waabandang, miinawaa onaakoniged ji-Step 1 izhaag, gemaa azhe-miinigewin ji-andawendaagwadowin, gemaa-go anokiitaadiwi-zhooniyaa ji-meshkwajiwaag.";
+
+/**
+ * Translation row paralleling one entry of `TRIAL_ACCEPTANCE_CRITERIA`.
+ * `index` ties each row back to its English row (0..3); `text` carries
+ * the Oji-Cree draft. Same shape posture as `TrialTimelineWeekTranslation`
+ * — translated prose lives here, structural fields stay on the canonical
+ * (English) array.
+ */
+export interface TrialAcceptanceCriterionTranslation {
+  /** Index into `TRIAL_ACCEPTANCE_CRITERIA` (0..3); mirrors order. */
+  index: 0 | 1 | 2 | 3;
+  /** Translated criterion (parallels `TRIAL_ACCEPTANCE_CRITERIA[index]`). */
+  text: string;
+}
+
+export const TRIAL_ACCEPTANCE_CRITERIA_OJICREE: readonly TrialAcceptanceCriterionTranslation[] = [
+  {
+    index: 0,
+    text: "Niigaani-mawanjiidiwin gii-mawanjiisawag miinawaa onaakonigewi-mazina'igan gii-ozhibii'igaade — niso onaakonigewikamigong, niizh anishinabewinjig gii-wiindamaagaadewag, o-onaakonigewiniwaa gii-debibinigaadeg onaakonigewikamig-onaakonigewining.",
+  },
+  {
+    index: 1,
+    text: "Ningotwaaso-giizis ozhitoowin gii-debibinige niigaani-mawanjiidiwining — adaawewigamig-onaakonigewin, baagininangewi-giizhigak, gaganoonidiwi-zhooniyaa-onaakonigewin gii-ozhibii'igaadewan miinawaa gii-debibinigaadewan mazina'iganang.",
+  },
+  {
+    index: 2,
+    text: "Dakaayaa-bimibatoo gojitoowi-onaakonigewin gii-debibinige mazina'igan-onji adaawewigamigong — biminizha'igewi-ozhitoowin, zhaangaaso-midaaso giizhigak gojitoowi-pebakaan, miikaadenamodag wewenig gii-ozhibii'igaadewan, ji-maajitaag wii-ayaag.",
+  },
+  {
+    index: 3,
+    text: "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $90,000-aabita-giizis-mazina'igan, ~$181,000 nitam-giizhig-azhe-aabajichigewin gaa-andawenjigaadeg, miinawaa 35% azhe-bidoonigewin.",
+  },
+] as const;
+
+export const TRIAL_REFUND_MECHANIC_OJICREE =
+  "Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwining niigaanibatood obawaadagonan iniw newin ozhitoogaadeg waabandang. Gishpin niizh gemaa nawaj gaa-debinasinog, Headwaters da-azhe-miinigewag kakina $40,000 nisimidana (30) giizhigak biindig. Niigaanibatood mazina'igan-onji da-andawenjigeg azhe-miinigewin newin-midaaso (14) giizhigak waabamigewin onji; gishpin nawaj-ishkwaaj nokiijiged, gegaa zaagiwe-aniin miinawaa gojitoowin gii-debibinige onaakoniged. Niigaanibatood gii-ondinigewin: $40,000 ji-meshkwajiwaag anokiitaadiwi-zhooniyaa ezhi-aapiitendaag Step 1 nitam-mazina'igan onji.";
+
+export const TRIAL_FRAMING_LINE_OJICREE =
+  "Step 0 igo Step 1 onji maajitaawin, gaawiin meshkwadoonigewin. Anokii-bimaachiwin, dakaayaa-bimibatoo gojitoowin, mazinaategiziwin-ozhitoowin, anokii-gikinoo'amaadiwin, miinawaa nitam-giizhig-aabajichiganan kakina Step 1 biindig ($90,000-aabita-giizis okimaakanan-anokiichigewin), gaawiin gojitoowin biindig. Maaji-ezhiwebak onaakonigewikamig onji: nishwaaso-anama'e-giizhig diba'amaagewi-niigaanibatood eta-anokiit, newin ozhitoogaadeg ozhibii'igaadeg, kakina azhe-miinigewin gii-azhe-miinigaade. Onishishi-ezhiwebak: nishwaaso-anama'e-giizhigak Step 1 da-meshkwajiwa'iwemagad mii dash naasab mazina'igan-onji.";
+
 export const TRIAL_TIMELINE_OJICREE: readonly TrialTimelineWeekTranslation[] = [
   {
     week: 1,

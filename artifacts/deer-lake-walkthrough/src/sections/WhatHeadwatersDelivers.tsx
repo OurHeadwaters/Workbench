@@ -1,6 +1,8 @@
 import { Reveal } from "@/components/Reveal";
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
+  TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
 } from "@workspace/headwaters-pricing";
 
 /**
@@ -166,12 +168,27 @@ export default function WhatHeadwatersDelivers() {
               criteria — what the contractor signs off on at the
               week-eight review meeting.
             </p>
+            <p className="text-[12.5px] italic text-muted mt-2">
+              {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+            </p>
             <ol
               className="list-decimal pl-5 space-y-2 mt-2"
             >
-              {TRIAL_ACCEPTANCE_CRITERIA.map((criterion) => (
-                <li key={criterion}>{criterion}</li>
-              ))}
+              {TRIAL_ACCEPTANCE_CRITERIA.map((criterion, i) => {
+                const ojiCriterion = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.find(
+                  (c) => c.index === i,
+                );
+                return (
+                  <li key={criterion}>
+                    <div>{criterion}</div>
+                    {ojiCriterion ? (
+                      <div className="italic text-[13.5px] mt-1" lang="oj">
+                        {ojiCriterion.text}
+                      </div>
+                    ) : null}
+                  </li>
+                );
+              })}
             </ol>
           </Reveal>
 

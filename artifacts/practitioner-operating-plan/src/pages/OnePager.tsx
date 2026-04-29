@@ -3,10 +3,16 @@ import { Fragment, useCallback, useState } from "react";
 import {
   REINVESTMENT_BUCKETS,
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
   TRIAL_EYEBROW,
+  TRIAL_FEE_LINE_OJICREE,
   TRIAL_FRAMING_LINE,
+  TRIAL_FRAMING_LINE_OJICREE,
   TRIAL_HEADLINE,
+  TRIAL_HEADLINE_OJICREE,
+  TRIAL_HOW_LONG_LINE_OJICREE,
   TRIAL_OFFER_QUADRANTS,
+  TRIAL_REFUND_MECHANIC_OJICREE,
   TRIAL_TIMELINE,
   TRIAL_TIMELINE_LOCALE_EN,
   TRIAL_TIMELINE_LOCALE_OJ,
@@ -190,20 +196,70 @@ export default function OnePager() {
           >
             {TRIAL_EYEBROW} · the on-ramp to the engagement below
           </div>
-          <div className="font-display text-[12pt] leading-[1.2] text-[#1f3d2e] font-semibold mb-[4pt]">
+          <div className="font-display text-[12pt] leading-[1.2] text-[#1f3d2e] font-semibold mb-[2pt]">
             {TRIAL_HEADLINE}
           </div>
-          <div className="grid grid-cols-2 gap-x-[10pt] gap-y-[2pt] text-[8.5pt] leading-[1.4] text-[#2a2520]">
-            {TRIAL_OFFER_QUADRANTS.map((quadrant) => (
-              <div key={quadrant.id}>
-                <span className="font-semibold">{quadrant.label}.</span>{" "}
-                {quadrant.body}
-              </div>
-            ))}
+          <div
+            className="font-display text-[10pt] leading-[1.2] text-[#6b7665] italic font-medium mb-[4pt]"
+            lang="oj"
+          >
+            {TRIAL_HEADLINE_OJICREE}
+          </div>
+          <div
+            className="text-[7.5pt] text-[#6b7665] italic border border-[#c8bfa7] bg-[#fdf7e8] px-[6pt] py-[3pt] rounded-[2pt] mb-[4pt] leading-[1.35]"
+          >
+            {TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER}
+          </div>
+          <div className="grid grid-cols-2 gap-x-[10pt] gap-y-[3pt] text-[8.5pt] leading-[1.4] text-[#2a2520]">
+            {TRIAL_OFFER_QUADRANTS.map((quadrant) => {
+              // The bilingual draft prose for the quadrant body lives
+              // alongside the English source-of-truth strings — fee /
+              // how-long / acceptance criteria / refund — and is keyed
+              // by quadrant id here so a single elder-review pass on
+              // the canonical lib flows through the printable sheet.
+              let ojiBody: React.ReactNode = null;
+              if (quadrant.id === "howMuch") {
+                ojiBody = TRIAL_FEE_LINE_OJICREE;
+              } else if (quadrant.id === "howLong") {
+                ojiBody = TRIAL_HOW_LONG_LINE_OJICREE;
+              } else if (quadrant.id === "whatYouGet") {
+                ojiBody = TRIAL_ACCEPTANCE_CRITERIA_OJICREE.map(
+                  (c, i) => `${i + 1}) ${c.text}`,
+                ).join(" ");
+              } else if (quadrant.id === "howToGetMoneyBack") {
+                ojiBody = TRIAL_REFUND_MECHANIC_OJICREE;
+              }
+              return (
+                <div key={quadrant.id}>
+                  <span className="font-semibold">{quadrant.label}.</span>{" "}
+                  <span className="font-mono uppercase tracking-[0.14em] text-[6.5pt] text-[#6b7665] mr-[2pt]">
+                    {TRIAL_TIMELINE_LOCALE_EN}
+                  </span>
+                  {quadrant.body}
+                  {ojiBody ? (
+                    <div
+                      className="italic text-[#6b7665] mt-[1pt] text-[8pt] leading-[1.35]"
+                      lang="oj"
+                    >
+                      <span className="font-mono not-italic uppercase tracking-[0.14em] text-[6.5pt] mr-[2pt]">
+                        {TRIAL_TIMELINE_LOCALE_OJ}
+                      </span>
+                      {ojiBody}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
           <div className="text-[7.5pt] text-[#6b7665] mt-[4pt] leading-[1.35] italic">
             {TRIAL_FRAMING_LINE} Refund clause is written into the
             payback memo as §7.
+          </div>
+          <div
+            className="text-[7pt] text-[#6b7665] mt-[2pt] leading-[1.35] italic"
+            lang="oj"
+          >
+            {TRIAL_FRAMING_LINE_OJICREE}
           </div>
         </div>
 
