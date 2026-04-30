@@ -1385,6 +1385,252 @@ const partV: Part = {
       number: "5.4",
       partRoman: "V",
       partLabel: "V · Grounding",
+      title: "The reading lineage — nonfiction",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The chapter that just preceded this one named the books that trained the practitioner's ear for load-bearing language. This chapter names the books that sharpened the practitioner's vocabulary once that ear was already listening. The two are not redundant. The fiction works above taught the muscle of *hearing the swap* as it is being made; the nonfiction works below taught the precision of *naming the move once it has been heard*. A practitioner with the ear and no vocabulary registers that something is wrong in the room and cannot say what; a practitioner with the vocabulary and no ear can name a move that was never made. The discipline asks for both, and the two reading lineages are kept separate so neither flattens the contribution of the other.",
+        },
+        {
+          kind: "para",
+          text:
+            "*This chapter, like the one above, is not training data for an AI on a corpus. It is the reading list that gave one human practitioner the precise nouns for the moves the fiction works had taught the ear to notice.* The framing keeps drifting in conversations about contemporary nonfiction — an *influences* list is now read as if its purpose were to show which traditions the practitioner had been trained to perform. The purpose here is older and more specific. These works are named because they are the rocks the practitioner could not skip in the stream — small, flat, locally precise volumes that lodged on the shelf because each one supplied a noun the practice could not have functioned without. There is no claim that reading them produces the discipline. There is only the claim that, for this practitioner, the precise vocabulary of the discipline was unreachable without them.",
+        },
+        { kind: "subhead", text: "Why nonfiction next." },
+        {
+          kind: "para",
+          text:
+            "Fiction is where load-bearing language is most easily *heard*; nonfiction is where load-bearing language is most patiently *named*. The practical-skills literature in particular — the field guides, the lifespan textbooks, the trust treatises, the habit manuals, the recreation-programming texts, the working herbals — is the literature that has done the unglamorous work of putting the right noun on the right move and defending it against drift, decade after decade. It is the corpus codetry's vocabulary inherits from. Where the fiction lineage trained the practitioner to flinch at the word that does not belong, the nonfiction lineage supplied the words that do. The two together are what makes the rename test of §4.2 possible at all: the ear catches the substitution; the vocabulary names what was substituted out. A practitioner with only one half of this inheritance cannot run the test to completion.",
+        },
+        {
+          kind: "para",
+          text:
+            "The shelf below is grouped into three clusters. Each cluster names a kind of vocabulary the practice depends on: the discipline of the self, the substrate of the community, and the grounding of the land and the body. The grouping is the practitioner's, not the literature's — these are the rocks that lodged in the order they lodged, and the clusters describe what the rocks turned out to be doing once the shelf was full. Through-line: each entry below was an *early or ongoing reading* that supplied the protective instinct and the threat vocabulary the practitioner was eventually going to need to defend the noun on a button — and without which codetry would not have been possible to write down.",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text:
+            "The self-is-the-first-protocol cluster — *Atomic Habits*, *The 7 Habits of Highly Effective People*, *How to Win Friends and Influence People*.",
+        },
+        {
+          kind: "para",
+          text:
+            "These three sit together as the practitioner-development triangle. *Atomic Habits* names the *compound layer* — the small repeated act that decides what kind of system the practitioner becomes over years. *The 7 Habits of Highly Effective People* names the *principle layer* — the constant the practitioner aligns the day to before the day's first decision is made. *How to Win Friends and Influence People* names the *relational layer* — the discipline of bringing other people into shared work without manipulation, leverage, or the friendlier varieties of control. The triangle teaches that the practitioner is the first system the discipline has to operate on, and that a discipline whose practitioner has not done this work has nowhere to stand. The constellation manifest's *Practitioner* role is the institution-level version of what these three books work out at the personal level: a role whose habits, principles, and relations are themselves the load-bearing infrastructure the discipline runs on.",
+        },
+        { kind: "subhead", text: "*Atomic Habits* — Clear." },
+        {
+          kind: "para",
+          text:
+            "Clear's central claim is that systems beat goals — that the small repeated act, run thousands of times, builds the person; the dramatic resolution at the start of the year does not. The book gives the practitioner the vocabulary to name *the compound* — the slow, daily layering that decides what kind of practitioner is in the room a decade from now, not what kind of practitioner intends to be there. The cure-time argument of §4.3 (that a renamed system takes weeks of conversation to settle into the team's mouths) is the same shape one floor up: codetry is itself an atomic-habits discipline, applied to a community's nouns rather than to a person's daily practice, and it is run in the compound register or it does not run.",
+        },
+        {
+          kind: "para",
+          text:
+            "What the book gave the practitioner that nothing else had was the *unflattering precision* of the time horizon. The dystopia codetry resists is rarely built by a single deliberate act of vocabulary capture; more often it is built by the unwatched accumulation of small misalignments the practitioner did not name early enough — a generic *user* swapped in for *neighbour* on one screen, then on a second, then on the form, until the system the community runs is not a system the community recognises. *Atomic Habits* taught the practitioner to read the small misalignment as if it were the dystopia in compound form, because in the time horizons codetry cares about, it is.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Habits are sovereign code: the small repeated act either authors the practitioner or the legacy-world authors them in its place.*",
+        },
+        { kind: "subhead", text: "*The 7 Habits of Highly Effective People* — Covey." },
+        {
+          kind: "para",
+          text:
+            "Covey's contribution is the *principle-centred* frame — the move of locating the practitioner's reliable ground inside the practitioner rather than inside the platform, the role, the funder, or the latest method. The book's central language — *be proactive*, *begin with the end in mind*, *put first things first*, *think win-win* — supplies the vocabulary for a posture that does not depend on conditions outside the practitioner's control to remain stable. That posture is the one the constellation's *Practitioner* role inherits and the one §6.3's wisdom-keeper standing presupposes: a person whose principles are upstream of the platform, not downstream of it.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book also names, in plain language, the failure mode codetry's discourse most often falls into when its principles are not yet settled. *Reactive dependence* — Covey's term — is the disposition that lets the loudest dialect in the room set the practitioner's vocabulary by default. The practitioner who has not done the principle-centred work will arrive at the policy table speaking the funder's *engagement*, the regulator's *compliance*, the consultant's *innovation*, because nothing inside the practitioner is holding a different word steady against the room's gravitational pull. Covey is the book that supplied the vocabulary for what that failure is, before the rename test of §4.2 supplied the operation that catches it.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Principles are upstream of platforms; the practitioner whose principles drift with the platform has no name to hold a button to.*",
+        },
+        { kind: "subhead", text: "*How to Win Friends and Influence People* — Carnegie." },
+        {
+          kind: "para",
+          text:
+            "Carnegie's book is the oldest in this cluster and is the one most often misread. The title sounds like a manual for manipulation; the contents are nearly the opposite — a long, patient training in the discipline of being genuinely interested in the other person, of remembering the name, of listening for the thing the other person is actually trying to say rather than for the cue to begin one's own next sentence. What Carnegie taught the practitioner to name is *influence without coercion*: the move of bringing another person into shared work through earned attention rather than through pressure, leverage, or any of the friendlier varieties of control.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book matters to codetry because the discipline's most demanding rooms are not technical rooms; they are rooms where the practitioner is asking a community to keep its own noun on a button instead of accepting the funder's or the platform's substitution. The room responds to the practitioner the way it responds to any person asking it to do something it is not yet sure it wants to do, and the question the practitioner has to be ready to answer is whether they are present in the room as someone the room has reason to trust, or as someone running a method on the room. Carnegie supplied the vocabulary for the difference. The practitioner who has not done this work will sound, however gently, like a method; the practitioner who has will sound like a person, and the room will give them the noun.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Influence without coercion is the only kind of influence the discipline is allowed to use; anything else is the substitution it claims to refuse.*",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text:
+            "The community-is-the-substrate cluster — *Health Promotion Strategies Through the Lifespan*, *Teach Your Children Well*, *The 10 Laws of Trust*, *Recreation Programming: Designing Leisure Experiences*.",
+        },
+        {
+          kind: "para",
+          text:
+            "These four are the books that taught the practitioner that the substrate the discipline runs on is not the codebase, the platform, or the institution; it is the community of actual people across actual generations whose lives the system touches. *Health Promotion Strategies Through the Lifespan* names the longest of those time horizons — the human life as the design constraint the practice answers to. *Teach Your Children Well* names the handover horizon — what the next generation inherits from the system the current one builds. *The 10 Laws of Trust* names the present-tense substrate — the trust between people in real time, without which no protocol survives the first hard decision. *Recreation Programming: Designing Leisure Experiences* names the substrate's working conditions — the deliberate craft of designing the in-person experience the trust is built and rebuilt inside. The cluster teaches together that codetry's load is held by a community, that the community is multi-generational, and that the discipline's job is to keep the substrate readable to the people standing on it.",
+        },
+        { kind: "subhead", text: "*Health Promotion Strategies Through the Lifespan* — Murray & Zentner." },
+        {
+          kind: "para",
+          text:
+            "Murray and Zentner's textbook does what no shorter framing of public health does: it walks the reader through the entire arc of a human life — infancy, childhood, adolescence, young adulthood, middle adulthood, late adulthood, the dying — and names the developmental tasks, the threats, and the community supports that belong to each stage. What the book gave the practitioner was the vocabulary for *lifespan as a design constraint*. A system designed for one stage of life — the system whose default user is a working-age adult on a smartphone, for instance — has quietly excluded six other stages and has called the exclusion *targeting*. The textbook supplies the noun for the missing stages so the system's quietness about them becomes audible.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book also names the cumulative shape of *disconnection* — from body, from seasons, from community — as a public-health threat in itself, not as a side effect of other threats. That framing is the one codetry's protection of community vocabulary inherits from. The funder-friendly noun (*engagement*) is comfortable in part because the more honest noun (*reconnection*) names a longer arc and a deeper deficit; the textbook's vocabulary is the longer arc made unmissable. The constellation manifest's insistence on *Standby* and *Gate* primitives — institutions that hold the older arrangement available across the lifespan of the people using them — is the textbook's claim restated at the architecture level.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Lifespan is the ultimate design constraint; the system that defaults to one stage has silently exiled the other six.*",
+        },
+        { kind: "subhead", text: "*Teach Your Children Well* — Levine." },
+        {
+          kind: "para",
+          text:
+            "Levine's book is the shortest and clearest case in the practical-parenting literature for the proposition that the next generation inherits the *system* it grew up inside, not the *intentions* the current generation had for it. The argument against over-protection and performance culture is, at root, an argument for letting children develop the competence, struggle-tolerance, and real-world skill that an antifragile adult needs — and the argument is made in the precise vocabulary of *what is being taken from the child by the well-meant substitution*. The substitution itself is well-meant; the child loses the noun the substitution replaced.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is the §1.0 hedge stated at the family scale: a generation can lose a vocabulary of competence by having it kindly replaced with the appearance of competence over the course of a single childhood, and the loss does not announce itself because nothing in the child's environment sounds wrong. The handbook's commitment to handover — to a Practitioner role whose whole job is to leave the discipline behind it for the next person to use — is the same commitment Levine names at the developmental scale. The discipline that does not raise its successors antifragile has not handed the discipline over; it has handed over the appearance of it.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Raising antifragile humans is the generational-scale rename test: the kind substitution that takes the noun the child needed.*",
+        },
+        { kind: "subhead", text: "*The 10 Laws of Trust* — Peterson." },
+        {
+          kind: "para",
+          text:
+            "Peterson's book names the architecture trust actually has — that high-trust environments are not the result of personality or culture in the loose sense; they are the result of specific, repeated, demonstrable behaviours arranged into a small number of *laws* the participants have internalised. What the book gave the practitioner was the vocabulary for *trust as a protocol* — a thing with a structure, a thing that can be specified, audited, and rebuilt, not a thing that has to be hoped for. That framing is the one codetry's insistence on *readable, ownable, forkable* tools depends on: the readability is what makes the trust verifiable; the ownership is what gives the community the authority to demand the verification; the forkability is the always-available exit that makes the trust voluntary rather than captive.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book also names the failure mode the rest of the trust literature is too polite about. Low-trust systems do not stay low-trust; they convert the missing trust into *control*. The control then has to be paid for — in surveillance, in compliance overhead, in the friction of every transaction that a high-trust environment would have settled in a sentence. Codetry's whole bet against the technocratic capture §6.1 and §6.2 keep open is the bet that a community whose nouns it can read is a community whose protocol is a trust protocol rather than a control protocol; Peterson is the book that supplied the vocabulary for what is at stake in losing that distinction.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Trust is a protocol, not a feeling; when the protocol fails, control fills the space, and the community pays for the control with everything it had in surplus.*",
+        },
+        { kind: "subhead", text: "*Recreation Programming: Designing Leisure Experiences* — Rossman & Schlatter." },
+        {
+          kind: "para",
+          text:
+            "Rossman and Schlatter's textbook is, on the surface, a practical guide for community recreation professionals on how to design and run leisure experiences — youth nights, festivals, drop-ins, programs. What the book gave the practitioner was the vocabulary for *deliberate group flow* — the recognition that the in-person, embodied, shared experience is itself a designed thing, with components and stages and craft, and that the trust and culture a community runs on are built and rebuilt inside those experiences far more than inside any of its formal institutions. The textbook supplies the nouns for the components — interaction, experience, animation, debrief — so the practice of designing them stops being inherited as instinct and starts being inherited as discipline.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book is in this cluster because it names the *working conditions* the trust of the previous entry is built under. *The 10 Laws of Trust* explains why a high-trust community runs on a protocol; *Recreation Programming* explains where the protocol gets practised. In an environment where most of the public's communal life has been displaced onto isolated screens, the textbook's claim — that the in-person group experience is a designable, defendable, non-substitutable cultural good — is a load-bearing one. Codetry's commitment to leave room for the campfire, not just the cursor — to refuse to design any system that quietly displaces the community's in-person practice — inherits from this book the vocabulary for what is being displaced.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Leisure is the cultural immune response; a community that has lost the discipline of its own in-person experience has lost the room the trust protocol gets practised in.*",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text:
+            "The land-and-the-body-are-the-base cluster — *Ancient Remedies Revived*, *Laws of Life*, the works of Thomas J. Elpel, the practical field guides.",
+        },
+        {
+          kind: "para",
+          text:
+            "These four entries are the base layer of the shelf and the base layer of the practice. *Ancient Remedies Revived* names the body's inheritance — the plant, animal, and seasonal knowledge that older communities held as a working literacy and that industrial systems quietly relocated into specialist domains. *Laws of Life* names the refusal — the practitioner's stance of declining the legacy-world's offered dependencies and rebuilding the working capability outside them. *Botany in a Day* and the rest of the Elpel corpus name the *pattern recognition* — the discipline of reading the land as a system whose own grammar repeats across scales, the way codetry asks the practitioner to read named software. The practical field guides — foraging, fishing, crafts, cooking, gardening, community development — name the *embodied competence* the rest of the cluster defends. Together the four teach that codetry's discipline does not float above the substrate it claims to serve. It begins where the practitioner's hands and the place they stand in begin, or it begins nowhere.",
+        },
+        { kind: "subhead", text: "*Ancient Remedies Revived* — Greef & Willow." },
+        {
+          kind: "para",
+          text:
+            "Greef and Willow's book is in the lineage of the working herbal — a record of plant remedies, food medicines, and seasonal practices that older communities held as ordinary household literacy and that industrial medicine quietly relocated into the consultancy of pharmacists, physicians, and packaged-product manufacturers. What the book gave the practitioner was the vocabulary for *the body's literacy* — the recognition that the knowledge of one's plants, one's seasons, and one's household remedies is a *language*, not a hobby, and that its loss is a vocabulary loss in the technical sense the rest of the handbook uses that phrase.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is §1.0's drift hazard stated at the bodily scale. A community that no longer knows the names of its medicines has not chosen to forget; it has had the names slipped under it by the same generic-professional vocabulary that does the work in every other domain — *wellness*, *self-care*, *natural products*. The book's contribution to the practitioner's vocabulary is the older noun. The constellation manifest's insistence that the community's working language survive the platform that runs on top of it is the same insistence Greef and Willow make at the kitchen scale: the named remedy is what the household runs on, and the household that has lost it has lost the protocol the lifespan textbook above is calibrated to.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Remedies are resistance: the body's vocabulary is the first vocabulary the legacy-world replaces, and the last one the discipline gets back.*",
+        },
+        { kind: "subhead", text: "*Laws of Life: Ditch the System, Design Your Life* — Spirko." },
+        {
+          kind: "para",
+          text:
+            "Spirko's book is the most practical and the least patient of the cluster, and that is its contribution. The book is straight talk — no fluff, no theoretical apparatus — on building real, working capability outside the systems most people are expected to depend on: food, energy, money, communication, learning, security. What it gave the practitioner was the vocabulary for *the refusal* — the disposition of declining the legacy-world's offered dependencies not as a posture or an ideology but as a working practice with concrete steps, materials, and skills that have to be built before they are needed.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book matters to codetry's pioneer-toned register because it names the difference between *opting out* (a stance the practitioner takes that requires nothing further from them) and *building out* (a long, embodied practice that requires the practitioner to acquire the skills the dependency was hiding). The discipline asks for the second, not the first. The constellation's *Standby* primitive — the always-on shelf that keeps the older arrangement available — is the institution-level version of Spirko's claim at the household level: the alternative arrangement only exists if it has been built and is in working order before the moment the dependency fails.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Ditch the system, design the life — the refusal is a practice with materials, not a posture with vocabulary.*",
+        },
+        { kind: "subhead", text: "*Botany in a Day*, *Participating in Nature*, and related works — Elpel." },
+        {
+          kind: "para",
+          text:
+            "Elpel's corpus is the closest single body of work in the practical literature to what codetry asks of a practitioner. *Botany in a Day* teaches plant identification not by memorising species but by reading *families* — by learning the small number of structural patterns that, once recognised, let the practitioner read a plant they have never seen before and know what kind of thing it is. *Participating in Nature* extends the same posture to the whole landscape: the river, the hillside, the meadow are read as a system whose grammar is repeating at multiple scales, and the practitioner's job is to learn the grammar so the next encounter with an unfamiliar instance is an act of recognition rather than an act of looking-up.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is the deepest single contribution of the cluster to codetry. The discipline asks the practitioner to read a system's nouns the way Elpel asks the reader to read a meadow: not as a list of items but as a small number of structural patterns whose recognition lets an unfamiliar instance be read on first sight. The rename test of §4.2 is the same operation in software. The pattern-recognition discipline §6.1 names — the practitioner who can tell load-bearing from decorative — is the same practitioner Elpel has been training in the meadow. The book's quiet claim, that nature is itself the first literate text and that learning to read it is a transferable literacy, is the claim codetry is making about software at one floor up.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Nature is the first literate programming; the practitioner who can read a meadow's grammar can read a system's, and the discipline depends on the transfer.*",
+        },
+        { kind: "subhead", text: "*The practical field guides* — foraging, fishing, crafts, cooking, gardening, community development." },
+        {
+          kind: "para",
+          text:
+            "This entry is categorical, not titular. It names the layer of the shelf the practitioner could not stop adding to: the small, locally precise volume on how to clean a fish, how to identify the edible shelf-fungus, how to lay a stone wall, how to make the bread, how to start the seedling, how to run the community kitchen. The works are individually unglamorous and collectively load-bearing. What they gave the practitioner was the vocabulary for *embodied competence* — the recognition that the person who can do the thing with their hands is not the same person as the one who has read about the thing, and that no quantity of the second turns into the first.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is the cluster's argument made literal. Codetry's pioneer-toned register is the register of a practice whose practitioner is expected to be able to *make things*, not only to think about making them. The constellation manifest's whole bet — that a community runs on the names it can author — is impossible to keep without practitioners who themselves know the difference between the named act and the performed one, and the field guides are the literature that taught the practitioner that difference. A discipline whose practitioners have not done embodied work tends to drift, slowly and politely, toward systems that talk competently about a world none of their authors are still in. The shelf of practical guides is the standing refusal of that drift.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Skill is the root of sovereignty; the discipline whose practitioners cannot make things by hand will, in time, design systems for a world none of them still inhabit.*",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "Falsifier for the reading-lineage claim." },
+        {
+          kind: "para",
+          text:
+            "The chapter above makes a strong claim: that the eleven entries on this shelf taught the practitioner the precise vocabulary the rename test of §4.2 needs in the field, and that the practitioner who has read the seven fiction works of §5.3 but none of the practical-skills, lifespan, trust, recreation, herbal, refusal, or Elpel-style pattern-reading work above would catch the *substitution* but would not reliably *name* what was substituted out. The claim is falsifiable. *If a reader who has built the ear from the fiction lineage but has done none of the nonfiction shelf above is shown to produce diagnoses indistinguishable in precision from a reader who has done all of it, the chapter's claim fails.* The claim survives only as long as the trained vocabulary is detectably more precise than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the shelf above is the smallest nonfiction reading list this handbook is willing to claim sharpened the discipline.",
+        },
+      ],
+    },
+    {
+      id: "5-5",
+      number: "5.5",
+      partRoman: "V",
+      partLabel: "V · Grounding",
       title: "What kind of thing codetry is (Hempcrete)",
       blocks: [
         {
@@ -1441,8 +1687,8 @@ const partV: Part = {
       ],
     },
     {
-      id: "5-5",
-      number: "5.5",
+      id: "5-6",
+      number: "5.6",
       partRoman: "V",
       partLabel: "V · Grounding",
       title: "Colophon",
@@ -1783,7 +2029,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.4's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.4 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
+            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.5's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.5 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
         },
         {
           kind: "subhead",
@@ -2118,7 +2364,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.4) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
+            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.5) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -2148,10 +2394,10 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.4). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
+            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.5). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§5.4 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
+        { kind: "small", text: "§5.5 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
       ],
     },
     {
