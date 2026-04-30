@@ -1575,6 +1575,169 @@ const partVI: Part = {
         },
       ],
     },
+    {
+      id: "6-5",
+      number: "6.5",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "The inspector and the act that has two faces",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · the role the discipline has been doing without naming · two-sided act in the gate/standby family.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.4 closed by saying the next set of boundary tests is already visible and the practice owes itself a name for what runs them. The work has been done in the corpus from the beginning — *the rename test* of §4.2, the trailblazer's burn of §6.4, the bricklayer's master of §6.3 calling out the wandering line three courses in — but the role doing the work has not been named. This chapter names it. The role is *the inspector*. The act the inspector performs is two-sided in the same shape *the gate* (§3.11) and *the standby* (§3.10) are two-sided: one role, two faces. Where the standby's two faces are *temporal* — the same plumbing in slow and fast tempo — and the gate's two faces are *contextual* — the same membrane facing two legitimate vocabularies — the inspector's two faces are *operational*. The inspector certifies a name is load-bearing *by* pulling on it, and pulls on a name *in order to* certify what holds. The pull is the certification. The bind is the result of a successful pull. One inspection, two readings.",
+        },
+        {
+          kind: "subhead",
+          text: "Why the role is called the inspector and not something else.",
+        },
+        {
+          kind: "para",
+          text:
+            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.3's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.3 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
+        },
+        {
+          kind: "subhead",
+          text: "The inspector's act in three intensities.",
+        },
+        {
+          kind: "para",
+          text:
+            "The same act presents in three calibrated intensities the corpus already has worked examples for. *Light pull* — the §4.2 rename test. The inspector substitutes one word for the named primitive, watches what shifts in the surrounding mechanics, and certifies the bind on the strength of what failed and what held. The intensity is low because the substrate around the test is intact; the test is a single course poked. *Sustained pull* — the §6.3 master walking the apprentice's job and calling out the wandering line three courses in. The intensity is steady, low-grade, and continuous; the certification is the apprentice being sent back to relay the course. *Aggressive pull* — the §6.4 burn. The inspector substitutes against an entire register of named primitives at corpus scale, watches the wall lean, and certifies — by the leaning — which terms were binder and which were decoration. The intensity is the highest the trade has language for; the recovery is the §6.4 revert and the chapter that records what the test surfaced. Three intensities, one act, one role.",
+        },
+        {
+          kind: "subhead",
+          text: "Three drift types and the three responses.",
+        },
+        {
+          kind: "para",
+          text:
+            "The wall the inspector walks is built to last seven generations, which is a horizon long enough that drift has time to take three structurally distinct shapes. *Slow drift* is entropy: the lime binder thinning at the joins, the prose around a named primitive going un-re-pointed for a season, the team's shared sense of what *the standby* is certified to mean drifting half a degree off true with each handoff. The inspector's response is the everyday one — re-point the binder, refresh the surrounding prose, run the rename test as routine maintenance rather than as event. *Kind drift* is well-meaning maintenance done without trade knowledge: the vapour barrier installed on the wrong face of the wall, the modern acrylic painted over the lime render, the simplification rule applied across the corpus by a practitioner who did not read the wall as hempcrete first. §6.4 is the corpus's first formally logged instance. The inspector's response is to intercept at the brief — to veto the kind-but-wrong move before it ships, with the trade reasoning written down so the next inspector inherits both the veto and the why. *Adversarial drift* is rarer and louder: the deliberate renaming of a load-bearing primitive for political or commercial advantage, the wholesale substitution of an acquirer's vocabulary over the corpus, the regime change that wraps the wall in vinyl siding until the hempcrete underneath does no work. The inspector's response is *witnessing* — documenting in a form the §6.3 trade lineage can carry across the regime change, so the wall's load-bearing structure is recoverable by a future generation that comes back to it.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The discipline does not fail to vandals. It fails to kind people without trade knowledge, and to the slow weather of years no one was re-pointing against.",
+        },
+        {
+          kind: "subhead",
+          text: "The role the gate plays, precisely.",
+        },
+        {
+          kind: "para",
+          text:
+            "§3.11 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §4.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §3.11 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it.",
+        },
+        {
+          kind: "subhead",
+          text: "Where the inspector comes from.",
+        },
+        {
+          kind: "para",
+          text:
+            "The inspector role is not acquired by reading. It is acquired by the kind of generalist apprenticeship that puts a practitioner through enough terrain to recognise, when a load-bearing piece appears, that it is load-bearing. §6.3 names the trade lineage the role would inherit pedagogy from — cartography, constitutional drafting, oral lineage — and refuses the temptation to assign the trade to the wisdom keepers themselves. What §6.3 leaves open is the prior question this chapter is the right place to answer: where the apprenticeship that produces the apprentice's hands actually comes from. Codetry's first inspector apprenticed for fifteen years to *Jack Spirko* — *Son of Thunder*, *The Survival Podcast* — already named first in §V's four teachers. What that apprenticeship transmitted is not a checklist and not a worldview. It is a sense of control and empowerment held against the everyday assumption that control belongs upward. It is a pattern-recognition lens trained across enough subjects — preparedness, food, energy, shelter, communication, finance, community organisation — that the *shape* of a load-bearing piece becomes legible across terrains that look unrelated to a specialist eye. And it is the discipline of using *the computer between the ears* over a fifteen-year horizon to hold questions and patterns in a working set the practitioner cannot always articulate but can return to when the surrounding tools catch up. Spirko's tagline — *for if times get tough or even if they don't* — is §1.3's *both-states* principle written into time itself, applied not to the plumbing of a single primitive but to the historical conditions under which the discipline has to keep working. The handbook named in this volume is what the questions held in the back of the practitioner's mind for fifteen years grew into when the surrounding computational and authorship tools finally surfaced enough to put them on paper. The lineage is owed the acknowledgement here, in the chapter where the role doing the work is finally named.",
+        },
+        {
+          kind: "subhead",
+          text: "Who the inspector serves.",
+        },
+        {
+          kind: "para",
+          text:
+            "The discipline does not exist to recruit the practitioner into a politics. It exists to give the practitioner — and the practitioners working alongside them in the same lineage since 2009 — practical tools for rebuilding the substance of the institutions they live in, on terms they themselves set, in places they already are. The base the practice is most directly accountable to has been doing this work for a decade and a half: building food systems, building shelter, building local money, building peer-to-peer organisation, building family-scale resilience under whatever political weather the surrounding country was running. The shortage was never problems. The shortage was tools — and specifically, tools at the *name layer* of the institutions being built, which is the layer the surrounding software and policy traditions have left chronically under-served. The handbook is for those people first. It is grounding rather than agitating, practical rather than ideological, solution-oriented rather than position-taking. The choice between *anarchism*, *libertarianism*, *conservatism*, *agorism*, and any neighbouring posture is one the discipline has no authority to make and no interest in making. Those are choices about what to be; codetry is the substance choices of any of those shapes have to be built out of if they are meant to last more than one generation of the people holding them. The inspector serves the wall, not the politics the wall is enclosing.",
+        },
+        {
+          kind: "subhead",
+          text: "Open question, kept open.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The trade has its first inspector — the practitioner authoring this handbook. The chapter is open until the apprenticeship of the second one begins. Whether inspector standing transfers through the §6.3 wisdom-keeper line, through peer certification inside the four-teacher lineage, through some formal pedagogy the trade has not yet built, or through some combination of the three is the open question this chapter exists to be returned to. What the chapter establishes for the record now: the role exists, the act has two faces, the three drift types each call for a different response, the gate is the structural location and the inspector is the role that makes it function, and the apprenticeship is generalist before it is specific.",
+        },
+      ],
+    },
+    {
+      id: "6-6",
+      number: "6.6",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "Inspector standing — the right that cannot be negotiated away",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · second-order non-negotiable · entrenchment of the inspection itself.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.5 names the inspector as the role that certifies a named piece holds by pulling on it. This chapter names the second-order condition that role depends on. Codetry has two tiers of non-negotiability, and both are load-bearing. *First-order non-negotiables* are the binder spec — the eight named primitives §6.4 burned to surface (*substrate*, *primitive*, *membrane*, *load-bearing*, *cross-zone*, *vernacular*, *tokenize*, *reify*), the third-actor frame, the additive-only posture, the academic register as the workshop floor for the craft's nouns, and *verify, don't trust* as the working stance toward proposed additions. These are *what* the binder is made of. *Second-order non-negotiable* — singular — is *inspector standing*: the inspector's right to maintain the first-order list, to add to it as new failure modes are discovered, and to refuse to negotiate the right itself away under pressure, persuasion, or convenience. This is not what the binder is made of; it is *who is permitted to specify what the binder is made of*, and the answer the discipline now writes down is *the inspector, and the right cannot be surrendered*. *Cannot be surrendered* and *cannot be passed on* are different claims; this chapter is about the first. Succession to the next inspector — how the right travels from one trade member to the next when the trade is working as intended — is the open question this chapter holds for §6.6's closing callout. The non-negotiability is against giving the right away under pressure, persuasion, or convenience, not against the trade's own succession protocol.",
+        },
+        {
+          kind: "subhead",
+          text: "Why the second tier matters more than the first.",
+        },
+        {
+          kind: "para",
+          text:
+            "Most failed disciplines fail at the second-order tier. People rarely vote to remove their non-negotiables outright; the loss of attention required to assemble that vote is too visible and the resistance is too organised. What people do vote for, often unanimously and often with the best of intentions, is the removal of the inspector's standing to enforce them — *just for this case*, *just for this quarter*, *just while the funding closes*, *just until the new owner settles in*. The downstream effect is the same as removing the binder spec outright: the inspector cannot intercept the next kind-drift edit, cannot witness against the next adversarial substitution, cannot re-point the next slow-drift weathering, because the standing to do any of those acts has been temporarily — and then, by precedent, permanently — surrendered. The second tier is where the real defense sits. An attacker who can defeat it does not need to fight the first tier; the first tier dissolves on its own once the role with standing to maintain it is gone.",
+        },
+        {
+          kind: "subhead",
+          text: "Additive-only as a second-order non-negotiable hiding in plain sight.",
+        },
+        {
+          kind: "para",
+          text:
+            "The handbook's standing rule for edits — *additive only* — is not a stylistic preference. It is a second-order non-negotiable the corpus has been carrying for some time without flagging as such. The binder spec can grow but cannot quietly shrink. New primitives can be added; existing ones cannot be removed by single-pass edit. This is what makes *verify, don't trust* safe to add as a working stance: the addition is permanent in the sense that no later substitution can dissolve it without an inspection trail visible enough for a future inspector to read what was removed and why. *Additive-only* is the structural property that protects the binder spec from kind drift attacking it one item at a time. It belongs in this chapter rather than in §6.5 because it is not an act the inspector performs; it is a property of the standing the inspector holds — a property that travels with the role and that a later inspector inherits intact.",
+        },
+        {
+          kind: "subhead",
+          text: "Standing as the precondition for all three responses at once.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.5 names three drift types — slow, kind, adversarial — and three responses — re-point, veto, witness. Each of the three responses is conditional on the inspector's standing to perform it. *Re-pointing* requires the standing to spend trade time on a wall the surrounding institution does not visibly need re-pointed; without standing, the re-pointing is the first activity cut when budgets tighten. *Vetoing a kind-but-wrong edit* requires the standing to refuse a change everyone in the room agrees would be an improvement; without standing, the veto is overruled by collegiality. *Witnessing against an adversarial substitution* requires the standing to keep documenting what was load-bearing after the new vocabulary has shipped; without standing, the witness is dismissed as backward-looking. Inspector standing is not a defense against one drift type. It is the precondition for *any* of the three responses to be available at all. That is why it sits at the second tier: it is the load-bearing piece holding all three first-tier responses up.",
+        },
+        {
+          kind: "subhead",
+          text: "The §6.4 finding restated through standing.",
+        },
+        {
+          kind: "para",
+          text:
+            "§6.4 logged the 29 April burn as a recoverable lapse in the academic register. The chapter's surface finding is that the eight named primitives are non-negotiable; the deeper finding, available now from the vantage of this chapter, is that the lapse was recoverable *only* because the second-order tier was held intact. The practitioner who applied the simplification rule was the same practitioner who reverted it — the standing to revert had not been surrendered, and so the revert was a single act inside the inspector's existing authority rather than a campaign requiring permission from somewhere else. The discipline survived its own most aggressive test against itself because the right to inspect the test's outcome had not been surrendered before the test was run. The chapter lesson §6.6 owes the corpus is the inverse: a single permanent surrender of the second-order tier ends the discipline regardless of what the first-tier list says, because the list cannot defend itself.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The right to inspect cannot be negotiated away, because giving it away is the failure mode the inspection exists to prevent. Inspector standing is the second-order non-negotiable the first-order non-negotiables depend on; surrender of the second tier ends the discipline whether the first-tier list is amended or not.",
+        },
+        {
+          kind: "subhead",
+          text: "What standing protects, for the people the discipline serves.",
+        },
+        {
+          kind: "para",
+          text:
+            "The base the discipline is most directly accountable to — the practitioners who have been building food, shelter, money, and community since 2009, on terms they themselves set, in places they already live — does not need a politics imposed from above and is not asking for one. What that base needs, and has been short of, is *the right to author and maintain the substance of the institutions they are building, in vocabulary they themselves set, across the generations the institutions are meant to last*. That right is what inspector standing names. It is not a political position; it is the structural condition under which any political position the practitioners might choose — *anarchism*, *libertarianism*, *conservatism*, *agorism*, or any other — has a chance of staying bound to its meaning across more than one generation of the people holding it. The discipline does not pick the politics. The discipline keeps the binder cured so the wall the politics is built into stays a wall. The lineage's standing observation is *push a free man hard enough and watch what he does*; the discipline's structural answer is *keep the right to inspect his own substance unsurrendered, and watch what he builds*.",
+        },
+        {
+          kind: "subhead",
+          text: "Open question, kept open.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The chapter records the structure now — two tiers, second tier load-bearing, additive-only as the property that protects the first-tier list from quiet erosion — and leaves open the question of how second-tier standing transfers to the trade's next inspector. §6.3 names the wisdom-keeper line as the source of authority and review for the first-tier list; §6.5 names the generalist apprenticeship as the source of the inspector's hands. Whether second-tier standing — the *right* itself, distinct from the trade skill — transfers through the same two channels, through a third the trade has not built yet, or through some combination, is the open question this chapter exists to be returned to as the answer becomes available.",
+        },
+      ],
+    },
   ],
 };
 
