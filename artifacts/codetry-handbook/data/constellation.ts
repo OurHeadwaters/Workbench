@@ -647,7 +647,7 @@ export const constellation: ConstellationSnapshot = {
       "zone": -1,
       "name": "Brainstorm Library",
       "domain": "Seed bank — ideas before they're sorted into a zone",
-      "url": null,
+      "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
       "status": "pending",
       "context": "awaiting agent context-pack"
     }

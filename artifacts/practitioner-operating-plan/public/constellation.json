@@ -166,7 +166,15 @@
       "proposedInterfaces": {
         "fromZ1Headwaters": "household primitive as shared unit of account — note: requires bridge since Saltbox is local-first IndexedDB, not server-backed"
       },
-      "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief)."
+      "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief).",
+      "addOns": [
+        {
+          "name": "Robit Buddy Chat",
+          "url": "https://replit.com/@xbucketsapp/Robit-Buddy-Chat?s=app",
+          "kind": "scratch / may be picked back up",
+          "note": "Saltbox add-on — chat companion surface held in scratch for future development; recorded so future codetry contributions are not lost."
+        }
+      ]
     },
     {
       "zone": 0,
@@ -617,7 +625,7 @@
     {
       "name": "Brainstorm Library",
       "domain": "Seed bank — ideas before they're sorted into a zone",
-      "url": null,
+      "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
       "status": "pending",
       "context": "awaiting agent context-pack",
       "proposedInterfaces": {
@@ -682,5 +690,40 @@
     "Z5 monorepo — Z5's pack didn't specify whether they live in the same monorepo as Z0/Z1/Z3/Z4 or on their own. Worth confirming so coordination cost is known.",
     "Z2 → Z5 /api/channel — Z5 offered: Z2 could POST deal-flow / weekly-steps fragments and get a Practitioner-side Zone 0/Income surfacing. Worth wiring as a recurring weekly read in Today, or skip?",
     "Z5 SSE event bus — Z5 offered to build a thin SSE channel emitting take.created / take.updated / channel.refreshed if Z2 wants reactive coordination. Real cost (new infra at Z5 + new client at Z2). Practitioner: worth it now, or stick with poll-on-demand?"
-  ]
+  ],
+  "scratchProjects": {
+    "intent": "Scratch / paused projects the practitioner has explicitly chosen to preserve so future codetry contributions are not lost. Each entry may be picked back up and developed; the home for that future work may be an existing zone, a new zone, or the Brainstorm Library pre-zone. Recorded here as canonical metadata; not yet rendered through the bundled snapshot.",
+    "items": [
+      {
+        "name": "Legacy Gatekeeper",
+        "url": "https://legacy-gatekeeper.replit.app/",
+        "kind": "scratch / superseded surface",
+        "note": "The Gate's prior live surface, now superseded by the in-repo /gate route in artifacts/headwaters-books (per the companions entry that names this URL as 'linked from the page footer for historical reference but no longer the source of truth'). Kept reachable in case the legacy reading surface is wanted again."
+      },
+      {
+        "name": "App Success Agent",
+        "url": "https://replit.com/@xbucketsapp/App-Success-Agent?s=app",
+        "kind": "scratch / may be picked back up",
+        "note": "Scratch project — name suggests an agent / AI helper for app-success work; held for future codetry contributions, zone home not yet decided."
+      },
+      {
+        "name": "Legacy Builder Journey",
+        "url": "https://replit.com/@xbucketsapp/Legacy-Builder-Journey?s=app",
+        "kind": "scratch / may be picked back up",
+        "note": "Scratch project — name suggests a guided journey for legacy builders; held for future codetry contributions, zone home not yet decided."
+      },
+      {
+        "name": "Legacy Asset Manager",
+        "url": "https://replit.com/@xbucketsapp/Legacy-Asset-Manager?s=app",
+        "kind": "scratch / may be picked back up",
+        "note": "Scratch project — name suggests an asset manager for legacy items; held for future codetry contributions, zone home not yet decided."
+      },
+      {
+        "name": "Water Shed Rebrand",
+        "url": "https://replit.com/@xbucketsapp/Water-Shed-Rebrand?s=app",
+        "kind": "scratch / part of the Watershed → Headwaters / Dam Days naming history",
+        "note": "Scratch project — sits in the Watershed naming-history thread (see Z1 formerNames, Z5 formerNames, and the Watershed-namespace open question). Held for future codetry contributions; if revived, the zone home is likely Z1 or Z5 depending on which face of the rebrand is being picked up."
+      }
+    ]
+  }
 }
