@@ -20,7 +20,7 @@ export default function WhyThisTeam() {
       head: "The Deer Lake operating plan exists.",
       body:
         "Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.",
-      links: ["/deer-lake-store-plan/", "/practitioner-operating-plan/"],
+      links: ["/practitioner-operating-plan/"],
     },
     {
       tag: "Claim 2 · We've already built the software",
@@ -229,40 +229,6 @@ export default function WhyThisTeam() {
               </a>
             </div>
 
-            <div
-              className="mt-5 pt-4 border-t"
-              style={{ borderColor: "var(--color-rule)" }}
-            >
-              <div
-                className="mono text-[11px] uppercase tracking-[0.22em] mb-1.5"
-                style={{ color: "var(--color-accent-warm)" }}
-              >
-                Companion deck · Deer Lake Store Operational Plan
-              </div>
-              <p
-                className="serif text-[15px] leading-[1.5]"
-                style={{ color: "var(--color-text)" }}
-              >
-                The slides the steering committee reads at the table.
-                Cost lines, staffing, the financial model, the
-                phasing.
-              </p>
-              <div
-                className="mono text-[11px] uppercase tracking-[0.18em] mt-3"
-                style={{ color: "var(--color-muted)" }}
-              >
-                Open the deck ·{" "}
-                <a
-                  href="/deer-lake-store-plan/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:no-underline"
-                  style={{ color: "var(--color-accent-warm)" }}
-                >
-                  /deer-lake-store-plan
-                </a>
-              </div>
-            </div>
           </div>
         </div>
 

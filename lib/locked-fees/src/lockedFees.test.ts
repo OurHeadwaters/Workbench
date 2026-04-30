@@ -50,8 +50,10 @@ const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..");
 const ARTIFACTS = [
   "practitioners-guide-v2",
   "practitioner-operating-plan",
-  "deer-lake-store-plan",
   "deer-lake-walkthrough",
+  // (artifacts/deer-lake-store-plan was retired, so it is no longer
+  // scanned. The guard scope is kept exactly in sync with the live
+  // financial-heavy artifacts.)
 ] as const;
 
 // Literals we lock. Order matters for matching: the longer comma-form
@@ -251,13 +253,14 @@ describe("Deer Lake locked-fee drift guard (workspace-level)", () => {
     });
   }
 
-  it("guards exactly the four financial-heavy artifacts (per task #462 audit scope)", () => {
+  it("guards exactly the live financial-heavy artifacts (per task #462 audit scope)", () => {
     // If this list grows or shrinks, update the guard intentionally —
-    // don't let a silent typo reduce coverage.
+    // don't let a silent typo reduce coverage. The Deer Lake Store
+    // Plan deck was originally part of this scope but has since been
+    // retired, leaving three live financial-heavy artifacts.
     expect([...ARTIFACTS]).toEqual([
       "practitioners-guide-v2",
       "practitioner-operating-plan",
-      "deer-lake-store-plan",
       "deer-lake-walkthrough",
     ]);
   });

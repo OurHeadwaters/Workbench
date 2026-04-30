@@ -549,7 +549,8 @@ describe("Cross-reserve surfaces — no stale dollar literals on slide / page TS
   const REPO_ROOT = path.resolve(__dirname, "..", "..", "..", "..", "..");
   const SCAN_DIRS = [
     path.join(REPO_ROOT, "artifacts/practitioner-operating-plan/src/pages"),
-    path.join(REPO_ROOT, "artifacts/deer-lake-store-plan/src/pages"),
+    // (artifacts/deer-lake-store-plan was retired; only the practitioner
+    // operating plan still hosts cross-reserve dollar surfaces.)
   ];
 
   // Hand-typed dollar literals that match the four cross-reserve
@@ -663,13 +664,14 @@ describe("Cross-reserve surfaces — no stale dollar literals on slide / page TS
       `Hardcoded cross-reserve dollar literals found:\n  ${violations.join("\n  ")}`,
     ).toEqual([]);
 
-    // Sanity floor: if both directories disappear or the patterns rot,
-    // the scan would silently pass with zero work. Lock in that we are
-    // actually walking real TSX files.
+    // Sanity floor: if the directory disappears or the file walker
+    // breaks, the scan would silently pass with zero work. Lock in
+    // that we are actually walking real TSX files.
     expect(scannedFiles).toBeGreaterThanOrEqual(20);
-    // And lock in that the scan is finding *something* — the existing
-    // `// $30k — round-nearest-1k…` comment in FirstReserveThenTheNext
-    // means the patterns themselves are at minimum matching one line.
-    expect(scanned).toBeGreaterThanOrEqual(1);
+    // (We previously also asserted `scanned >= 1` because a comment in
+    // the retired Deer Lake Store deck guaranteed at least one regex
+    // hit. With that surface gone, every remaining literal is correctly
+    // derived from the cost registry — so the success state is now
+    // exactly zero matches and the floor would only fire false alarms.)
   });
 });

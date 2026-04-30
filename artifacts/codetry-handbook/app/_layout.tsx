@@ -51,6 +51,7 @@ function RootLayoutNav() {
       <Stack.Screen name="print/[id]" />
       <Stack.Screen name="shared-vision" />
       <Stack.Screen name="standby" />
+      <Stack.Screen name="path" />
     </Stack>
   );
 }

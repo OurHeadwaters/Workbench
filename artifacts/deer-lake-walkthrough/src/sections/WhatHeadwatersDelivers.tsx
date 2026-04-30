@@ -219,16 +219,6 @@ export default function WhatHeadwatersDelivers() {
                 style={{ color: "var(--color-accent-warm)" }}
               >
                 /deer-lake-walkthrough/planner
-              </a>{" "}
-              ·{" "}
-              <a
-                href="/deer-lake-store-plan/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:no-underline"
-                style={{ color: "var(--color-accent-warm)" }}
-              >
-                /deer-lake-store-plan
               </a>
             </p>
           </Reveal>

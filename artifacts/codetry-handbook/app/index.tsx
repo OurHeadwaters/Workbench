@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
 import {
-  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -268,7 +267,7 @@ export default function FrontPage() {
         </Pressable>
         <View style={{ height: 12 }} />
         <Pressable
-          onPress={() => Linking.openURL("/wordpile/")}
+          onPress={() => router.push("/path")}
           style={({ pressed }) => [
             styles.toolRow,
             {
@@ -284,7 +283,7 @@ export default function FrontPage() {
                 { color: c.foreground, fontFamily: SERIF_BOLD },
               ]}
             >
-              Wordpile
+              The Pioneer Path
             </Text>
             <Text
               style={[
@@ -292,8 +291,9 @@ export default function FrontPage() {
                 { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
               ]}
             >
-              Per-community word inventory: load-bearing, interior, avoid.
-              Check drafts against the pile.
+              The handbook walked, not read. Five stations, each with a
+              short voiceover, a short reading, and one thing to do
+              before the next opens.
             </Text>
           </View>
           <Text

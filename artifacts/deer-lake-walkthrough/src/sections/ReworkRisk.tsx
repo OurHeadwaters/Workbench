@@ -149,9 +149,8 @@ export default function ReworkRisk() {
               because somebody remembered something.
             </p>
             <p>
-              The work is already shipped. The store operating plan
-              shows costs honestly. The practitioner one-pager shows
-              who does what — including a Headwaters food-safety
+              The work is already shipped. The practitioner one-pager
+              shows who does what — including a Headwaters food-safety
               person on-site from day one. The cockpit is the actual
               tablet the operators run — so the plan still works the
               day the doors open.
@@ -161,16 +160,6 @@ export default function ReworkRisk() {
               style={{ color: "rgba(244,237,224,0.7)" }}
             >
               Open in another tab ·{" "}
-              <a
-                href="/deer-lake-store-plan/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:no-underline"
-                style={{ color: "rgba(244,237,224,0.95)" }}
-              >
-                /deer-lake-store-plan
-              </a>{" "}
-              ·{" "}
               <a
                 href="/practitioner-operating-plan/"
                 target="_blank"

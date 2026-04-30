@@ -42,14 +42,15 @@ import {
  *      (the Step 0 call-out above the three steps on the walkthrough deck)
  *   2. artifacts/deer-lake-walkthrough/src/sections/WhatHeadwatersDelivers.tsx
  *      (the "what's inside the trial / what's deferred to Step 1" framing block)
- *   3. artifacts/deer-lake-store-plan/src/pages/slides/RisksAsk.tsx
- *      (the highlighted Step 0 card on the Naming the Deal panel)
- *   4. artifacts/practitioner-operating-plan/src/pages/OnePager.tsx
+ *   3. artifacts/practitioner-operating-plan/src/pages/OnePager.tsx
  *      (the bordered Step 0 call-out at the top of the printable one-pager)
- *   5. artifacts/practitioner-operating-plan/src/pages/PaybackMemo.tsx §7
+ *   4. artifacts/practitioner-operating-plan/src/pages/PaybackMemo.tsx §7
  *      (the formal refund clause)
  *
- * All five files render the offer from a single source of truth in
+ * (The Deer Lake Store deck previously hosted a fifth surface; that
+ * artifact has been retired, so it is no longer scanned here.)
+ *
+ * All four files render the offer from a single source of truth in
  * `lib/headwaters-pricing/src/trialOffer.ts`. Each file `import`s the
  * canonical strings and inserts them into JSX as `{TRIAL_*}` interp-
  * olations, so the import statements (asserted below) prove the
@@ -70,7 +71,6 @@ const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..", "..", ".."
 const SURFACES = [
   "artifacts/deer-lake-walkthrough/src/sections/Ask.tsx",
   "artifacts/deer-lake-walkthrough/src/sections/WhatHeadwatersDelivers.tsx",
-  "artifacts/deer-lake-store-plan/src/pages/slides/RisksAsk.tsx",
   "artifacts/practitioner-operating-plan/src/pages/OnePager.tsx",
   "artifacts/practitioner-operating-plan/src/pages/PaybackMemo.tsx",
 ] as const;
@@ -506,17 +506,6 @@ describe("Step 0 paid-trial offer · single source of truth", () => {
       );
       expect(whatDelivers).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
       expect(whatDelivers).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
-    });
-
-    it("Deer Lake Store deck RisksAsk slide renders the Step 0 card bilingually", () => {
-      const risksAsk = readSurface(
-        "artifacts/deer-lake-store-plan/src/pages/slides/RisksAsk.tsx",
-      );
-      expect(risksAsk).toContain("TRIAL_HEADLINE_OJICREE");
-      expect(risksAsk).toContain("TRIAL_FEE_LINE_OJICREE");
-      expect(risksAsk).toContain("TRIAL_ACCEPTANCE_CRITERIA_OJICREE");
-      expect(risksAsk).toContain("TRIAL_REFUND_MECHANIC_OJICREE");
-      expect(risksAsk).toContain("TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER");
     });
 
     it("printable one-pager renders the call-out bilingually", () => {
