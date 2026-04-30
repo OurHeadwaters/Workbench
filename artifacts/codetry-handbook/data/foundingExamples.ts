@@ -12,8 +12,8 @@
 // surface needs to.
 //
 // Add a new entry here whenever a new constellation-wide primitive is
-// registered in
-// artifacts/practitioner-operating-plan/public/constellation.json. The
+// registered in artifacts/codetry-handbook/data/constellation.json
+// (the canonical, in-tree constellation manifest — see Task #562). The
 // chapter generator throws if a primitive is in the snapshot without
 // matching commentary here — same discipline standby.ts uses to refuse
 // to silently default.

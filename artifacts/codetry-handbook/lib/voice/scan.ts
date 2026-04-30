@@ -267,8 +267,8 @@ export function findLongSentences(
 // The two AST-scanned files above are hand-authored. The Part III
 // founding-piece chapters in handbook.ts pull additional reader-facing
 // strings out of the bundled constellation manifest at module load time
-// (data/constellation.ts, regenerated from
-// artifacts/practitioner-operating-plan/public/constellation.json).
+// (data/constellation.ts, regenerated from data/constellation.json —
+// the canonical, in-tree manifest, see Task #562 for the move).
 // Those manifest strings end up rendered into chapter prose, so they
 // have to obey the same grade-9 voice rules.
 //

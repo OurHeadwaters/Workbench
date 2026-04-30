@@ -138,7 +138,7 @@ describe("grade-9 voice — constellation manifest", () => {
       hits,
       hits.length === 0
         ? ""
-        : `Found ${hits.length} banned academic vocabulary use(s) in constellation manifest fields that flow into chapter prose. Rewrite the field in plain language in artifacts/practitioner-operating-plan/public/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`. Field carve-outs (vocabulary terms, sub-shelf names, rejected-name names, primitive/zone names) are documented in lib/voice/scan.ts:\n${formatted}`,
+        : `Found ${hits.length} banned academic vocabulary use(s) in constellation manifest fields that flow into chapter prose. Rewrite the field in plain language in artifacts/codetry-handbook/data/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`. Field carve-outs (vocabulary terms, sub-shelf names, rejected-name names, primitive/zone names) are documented in lib/voice/scan.ts:\n${formatted}`,
     ).toEqual([]);
   });
 
@@ -154,7 +154,7 @@ describe("grade-9 voice — constellation manifest", () => {
       hits,
       hits.length === 0
         ? ""
-        : `Found ${hits.length} sentence(s) longer than ${MAX_SENTENCE_WORDS} words in constellation manifest fields. Break the sentence into shorter ones in artifacts/practitioner-operating-plan/public/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`:\n${formatted}`,
+        : `Found ${hits.length} sentence(s) longer than ${MAX_SENTENCE_WORDS} words in constellation manifest fields. Break the sentence into shorter ones in artifacts/codetry-handbook/data/constellation.json and re-run \`pnpm --filter @workspace/codetry-handbook run sync-constellation\`:\n${formatted}`,
     ).toEqual([]);
   });
 });

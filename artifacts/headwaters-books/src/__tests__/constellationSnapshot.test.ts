@@ -1,19 +1,27 @@
-// Structural lock for the constellation snapshot bundled into Headwaters
+// Structural lock for the constellation snapshot consumed by Headwaters
 // Books and its on-page consumer (Standby.tsx) — guards against the
 // Standby-leaks-into-Gate bug class first found and fixed in
 // artifacts/codetry-handbook (Task #473) and audited in
 // artifacts/practitioner-operating-plan.
 //
-// In this artifact the manifest is mirrored from
-// artifacts/practitioner-operating-plan/public/constellation.json into
-// src/data/constellation.ts via scripts/sync-constellation.cjs, and the
-// Standby pilot at /standby reads from that snapshot. The bug class is:
-// a future contributor genericizes Standby.tsx into a primitive-loop
-// renderer (e.g. takes the id from the route or from props and maps
-// over constellationWidePrimitives), and The Gate inherits Standby's
-// UI — its four-rung ladder (advisory/standby/active/standdown), its
-// Common Pantry / Watch sub-shelves, its drawdown ledger, and its
-// debrief shape — none of which describe The Gate.
+// SOURCE OF TRUTH (Task #562): the canonical constellation manifest
+// lives in the codetry-handbook artifact at
+// `artifacts/codetry-handbook/data/constellation.json`, and the
+// generated TypeScript snapshot is exported as
+// `@workspace/codetry-handbook/data/constellation`. This test imports
+// the live snapshot directly — there is no longer a local
+// `src/data/constellation.ts` copy or sync script in this artifact.
+// Edits made in the canonical file fail or pass this test on the next
+// run with no manual sync step.
+//
+// The Standby pilot at /standby reads from the same import. The bug
+// class is: a future contributor genericizes Standby.tsx into a
+// primitive-loop renderer (e.g. takes the id from the route or from
+// props and maps over constellationWidePrimitives), and The Gate
+// inherits Standby's UI — its four-rung ladder
+// (advisory/standby/active/standdown), its Common Pantry / Watch
+// sub-shelves, its drawdown ledger, and its debrief shape — none of
+// which describe The Gate.
 //
 // These tests do three things:
 //   1. Lock the snapshot's structure: both primitives present, each
@@ -28,7 +36,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { constellation } from "@/data/constellation";
+import { constellation } from "@workspace/codetry-handbook/data/constellation";
 
 const STANDBY_TSX_PATH = join(
   import.meta.dirname,

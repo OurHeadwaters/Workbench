@@ -39,7 +39,13 @@ import {
 } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { constellation } from "@/data/constellation";
+// SOURCE OF TRUTH (Task #562): the constellation manifest lives in the
+// codetry-handbook artifact at artifacts/codetry-handbook/data/. We
+// import the bundled snapshot directly via the workspace package
+// export — there is no local copy or sync script in this artifact
+// anymore. Edits made in the canonical file propagate to this page on
+// the next build with no manual step.
+import { constellation } from "@workspace/codetry-handbook/data/constellation";
 import {
   useStandbyStore,
   type CallEntry,
@@ -119,10 +125,14 @@ export default function Standby() {
   if (!standbyPrimitive) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 text-center text-muted-foreground">
-        Constellation manifest is missing the Standby primitive. Refresh the
-        snapshot with{" "}
+        Constellation manifest is missing the Standby primitive. Edit the
+        canonical file at{" "}
         <code className="ml-1 px-2 py-0.5 rounded bg-muted text-foreground text-sm">
-          pnpm --filter @workspace/headwaters-books run sync-constellation
+          artifacts/codetry-handbook/data/constellation.json
+        </code>{" "}
+        and rerun{" "}
+        <code className="ml-1 px-2 py-0.5 rounded bg-muted text-foreground text-sm">
+          pnpm --filter @workspace/codetry-handbook run sync-constellation
         </code>
         .
       </div>

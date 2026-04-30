@@ -10,9 +10,11 @@
   },
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "BASE_PATH=\"${BASE_PATH:-/}\" PORT=\"${PORT:-5173}\" vite build --config vite.config.ts",
+    "build": "node scripts/publish-constellation.cjs && BASE_PATH=\"${BASE_PATH:-/}\" PORT=\"${PORT:-5173}\" vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "postbuild": "SKIP_BUILD=1 pnpm exec tsx scripts/export-pdfs.ts",
+    "publish-constellation": "node scripts/publish-constellation.cjs",
+    "check-constellation": "node scripts/publish-constellation.cjs --check",
     "validate-slides": "pnpm exec tsx scripts/validate-slides.ts",
     "check-slide-refs": "pnpm exec tsx scripts/check-slide-refs.ts",
     "check-corridor-defaults": "pnpm exec tsx scripts/check-corridor-defaults.ts",
@@ -20,7 +22,7 @@
     "export-pdfs": "pnpm exec tsx scripts/export-pdfs.ts",
     "export-onepager-pdf": "pnpm exec tsx scripts/export-pdfs.ts",
     "export-checklist-pdf": "pnpm exec tsx scripts/export-pdfs.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "node scripts/publish-constellation.cjs --check && tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },

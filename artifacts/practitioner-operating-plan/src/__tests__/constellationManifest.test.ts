@@ -13,6 +13,14 @@
 // content (see audit-note comments in those files). This test verifies
 // the manifest itself is healthy AND that the curated surfaces guard
 // the Standby-only phrases the way the codetry-handbook test does.
+//
+// SOURCE-OF-TRUTH NOTE (Task #562): the canonical constellation manifest
+// lives in the codetry-handbook artifact at
+// `artifacts/codetry-handbook/data/constellation.json`. This test reads
+// the canonical file directly, *not* the local `public/constellation.json`
+// copy that scripts/publish-constellation.cjs writes at build time. That
+// way the test fails the moment the canonical file drifts, regardless of
+// whether the publish step has been run yet in this environment.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -24,7 +32,9 @@ const MANIFEST_PATH = join(
   import.meta.dirname,
   "..",
   "..",
-  "public",
+  "..",
+  "codetry-handbook",
+  "data",
   "constellation.json",
 );
 
