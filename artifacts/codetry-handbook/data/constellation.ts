@@ -464,7 +464,7 @@ export const constellation: ConstellationSnapshot = {
       "zone": 1,
       "name": "Family Buckets",
       "domain": "Kid-allowance + courage sibling to Headwaters",
-      "url": null,
+      "url": "https://family-buckets.replit.app/family-buckets/",
       "status": "live",
       "workedExamples": [
         {
