@@ -1370,7 +1370,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The nonfiction reading lineage will be drafted as its own chapter when the practitioner has the list ready. The separation is deliberate, not editorial. Fiction trained the *ear* — the muscle for hearing load-bearing language as it is being spoken; nonfiction sharpened the *vocabulary* — the precision that lets the practitioner name the move once it has been heard. Conflating the two would flatten both contributions: it would let the nonfiction works look like they had taught a listening they did not teach, and it would let the fiction works look like reference material rather than the long, slow training the chapter above is honest about. The companion chapter is owed to the reader and is held back until the practitioner is ready to write it with the same care.",
+            "The nonfiction reading lineage is drafted as its own chapter at §5.4. The separation is deliberate, not editorial. Fiction trained the *ear* — the muscle for hearing load-bearing language as it is being spoken; nonfiction sharpened the *vocabulary* — the precision that lets the practitioner name the move once it has been heard. Conflating the two would flatten both contributions: it would let the nonfiction works look like they had taught a listening they did not teach, and it would let the fiction works look like reference material rather than the long, slow training the chapter above is honest about. The companion chapter is owed to the reader and §5.4 pays that debt with the same care.",
         },
         { kind: "subhead", text: "Falsifier for the reading-lineage claim." },
         {
