@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { TrailConnector, TrailMarker } from "@/components/path/TrailMarker";
+import { ConstellationMap } from "@/components/path/ConstellationMap";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 import {
@@ -121,36 +121,32 @@ export default function PathHome() {
         </Text>
 
         <View style={styles.trail}>
-          {PIONEER_STATIONS.map((station, i) => {
-            const completed = isCompleted(station.id);
-            const unlocked = isUnlocked(station.id);
-            const state = completed
-              ? "completed"
-              : unlocked
-                ? "unlocked"
-                : "locked";
-            const prevCompleted =
-              i === 0 ? true : isCompleted(PIONEER_STATIONS[i - 1].id);
-            return (
-              <React.Fragment key={station.id}>
-                {i > 0 ? <TrailConnector active={prevCompleted} /> : null}
-                <TrailMarker
-                  ordinal={station.ordinal}
-                  name={station.name}
-                  subtitle={station.subtitle}
-                  state={state}
-                  onPress={() => {
-                    if (state === "locked") return;
-                    router.push({
-                      pathname: "/path/station/[id]",
-                      params: { id: station.id },
-                    });
-                  }}
-                  onLongPress={() => setPeek(station)}
-                />
-              </React.Fragment>
-            );
-          })}
+          <ConstellationMap
+            stations={PIONEER_STATIONS}
+            stateOf={(id) =>
+              isCompleted(id)
+                ? "completed"
+                : isUnlocked(id)
+                  ? "unlocked"
+                  : "locked"
+            }
+            onStarPress={(station) => {
+              const unlocked = isUnlocked(station.id);
+              if (!unlocked) {
+                // Locked stars open the peek so the reader can read a
+                // one-line teaser of what's ahead — same affordance as
+                // the long-press, kept reachable on tap because the
+                // star itself is the only handle on the constellation.
+                setPeek(station);
+                return;
+              }
+              router.push({
+                pathname: "/path/station/[id]",
+                params: { id: station.id },
+              });
+            }}
+            onStarLongPress={(station) => setPeek(station)}
+          />
         </View>
 
         <View style={[styles.endRule, { backgroundColor: c.rule }]} />
