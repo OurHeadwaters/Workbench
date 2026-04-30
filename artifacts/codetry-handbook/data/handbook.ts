@@ -62,12 +62,12 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "AI tools cut words into pieces. A word that carries weight gets sheared into fragments and pieced back together as something more generic. Consultants and software vendors translate. The community's words get rewritten into the vendor's data model on the way to a contract. The contract is what survives.",
+            "AI tools cut words into pieces — a weight-bearing word gets sheared into fragments and pieced back together as something more generic. Consultants and software vendors translate, and the community's words get rewritten into the vendor's data model on the way to a contract. The contract is what survives.",
         },
         {
           kind: "para",
           text:
-            "None of these moves looks like a loss. Each one feels like cleanup, like progress, like doing things properly. The discipline exists because the loss is real anyway. By the time it shows up on a screen, the words underneath have already shifted.",
+            "None of these moves looks like a loss. Each one feels like cleanup, like progress, like doing things properly — and the discipline exists because the loss is real anyway. By the time it shows up on a screen, the words underneath have already shifted.",
         },
         {
           kind: "subhead",
@@ -100,7 +100,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The work is small and specific. The practitioner listens for the noun the community already uses. They refuse to swap it for something cleaner. When in doubt, they check with the person who handed them the word. Not a textbook. Not an AI model. Not their own better idea. The discipline is built so this is enough.",
+            "The work is small and specific. The practitioner listens for the noun the community already uses, and refuses to swap it for something cleaner. When in doubt, they check with the person who handed them the word — not a textbook, not an AI model, not their own better idea. The discipline is built so this is enough.",
         },
         {
           kind: "subhead",
@@ -128,7 +128,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "It is a quiet discipline. Most of it is naming. Most of the rest is refusing to swap the names the community handed you for the words the industry would have preferred. The little that is left is the work of building the system honestly enough that the names keep their promises.",
+            "It is a quiet discipline. Most of it is naming, and most of the rest is refusing to swap the names the community handed you for the words the industry would have preferred. The little that is left is the work of building the system honestly enough that the names keep their promises.",
         },
       ],
     },
@@ -142,12 +142,12 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "A codetry app is named the way a saltbox house is built — every beam holds weight. *Saltbox Zone 0* shows up day-to-day as a homeschool companion. The name is the design spec. It carries that the household is Zone 0, that this is the saltbox-house itself, and that everything else flows from this center. Change the name and you have changed the building.",
+            "A codetry app is named the way a saltbox house is built — every beam holds weight. *Saltbox Zone 0* shows up day-to-day as a homeschool companion, and the name is the design spec. It carries that the household is Zone 0, that this is the saltbox-house itself, and that everything else flows from this center. Change the name and you have changed the building.",
         },
         {
           kind: "para",
           text:
-            "Codetry borrows from the cold-climate way of building. A saltbox house was not designed for prettiness. Its slanted roof and thick north wall were the only way a house survived a boreal winter. The form *is* the function. Codetry asks the same of software: let the words do the work a beam would otherwise do. Let the name carry weight a column would carry.",
+            "Codetry borrows from the cold-climate way of building. A saltbox house was not designed for prettiness — its slanted roof and thick north wall were the only way a house survived a boreal winter, and the form *is* the function. Codetry asks the same of software: let the words do the work a beam would otherwise do, and let the name carry weight a column would carry.",
         },
         {
           kind: "pull",
@@ -192,7 +192,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "*The Standby* (worked out in §3.10) is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two speeds. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both lived on as *sub-shelves* inside The Standby. Neither could be the umbrella name. If either had been chosen, the constellation would now have two systems. One for *the pantry*, one for *the call*. Two cultures, two cadences, two vocabularies for the same underlying thing.",
+            "*The Standby* (worked out in §3.10) is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two speeds. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both lived on as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been chosen, the constellation would now have two systems — one for *the pantry*, one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
         },
         { kind: "subhead", text: "Both-sides — the room kind." },
         {
@@ -312,7 +312,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "There is a real, decades-old tradition called *code poetry*. It goes back to Perl in the late 1980s, through the Stanford Code Poetry Slam, Mez Breeze, Nick Montfort, and Ishac Bertran's *code {poems}* anthology. That tradition is about the source code itself being a poem. Programs that are also valid verse. Lines arranged for sound or shortness. The look of what is on the page in the editor. A beautiful tradition. Adjacent and respected.",
+            "There is a real, decades-old tradition called *code poetry*. It goes back to Perl in the late 1980s, through the Stanford Code Poetry Slam, Mez Breeze, Nick Montfort, and Ishac Bertran's *code {poems}* anthology. That tradition is about the source code itself being a poem — programs that are also valid verse, lines arranged for sound or shortness, the look of what is on the page in the editor. A beautiful tradition, adjacent and respected.",
         },
         {
           kind: "para",
@@ -350,7 +350,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Prose explains. Code is generated from the prose. The unit of care is the explanation. The reader is meant to read the program the way they would read an essay. The typeset output is what the discipline is for.",
+            "Prose explains, and code is generated from the prose. The unit of care is the explanation, and the reader is meant to read the program the way they would read an essay. The typeset output is what the discipline is for.",
         },
         {
           kind: "subhead",
@@ -359,12 +359,12 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Naming carries the building. The code is what makes the metaphor real, clickable, runnable. The unit of care is the name. The reader is meant to *use* the program and find that the metaphor is doing real work. The name a user types is the same name a column in the database carries, the same name the test fixture asserts on.",
+            "Naming carries the building, and the code is what makes the metaphor real, clickable, runnable. The unit of care is the name. The reader is meant to *use* the program and find that the metaphor is doing real work. The name a user types is the same name a column in the database carries, and the same name the test fixture asserts on.",
         },
         {
           kind: "para",
           text:
-            "Knuth's discipline is named here with the same respect already paid to code poetry. It is older. It is deeper in the literature. Both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by showing the reasoning. Codetry verifies by making the metaphor visible in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in side-by-side rooms. The contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1. The woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims. That makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
+            "Knuth's discipline is named here with the same respect already paid to code poetry. It is older and deeper in the literature. Both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by showing the reasoning; codetry verifies by making the metaphor visible in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in side-by-side rooms. The contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1. The woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims. That makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
         },
       ],
     },
@@ -467,7 +467,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Type-driven design checks the model against the compiler. Codetry checks the model against the person who handed you the word. Both are *don't trust; verify* moves. They check against different witnesses.",
+            "Type-driven design checks the model against the compiler; codetry checks the model against the person who handed you the word. Both are *don't trust; verify* moves — they just check against different witnesses.",
         },
         {
           kind: "callout",
@@ -491,7 +491,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "The conviction is sharp. Resources are finite. Uses are infinite. The person closest to a real problem, taking real risk on their own balance sheet, allocates better than a committee that does not. Profit is the signal that the bet was right. A loss is the signal it was wrong.",
+            "The conviction is sharp. Resources are finite, uses are infinite, and the person closest to a real problem — taking real risk on their own balance sheet — allocates better than a committee that does not. Profit signals the bet was right; a loss signals it was wrong.",
         },
         {
           kind: "para",
@@ -514,12 +514,12 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "The practitioner takes personal risk. The practitioner reads the local information. The practitioner runs a P&L. So far the disciplines agree. Then they part ways. The practitioner is paid to write the method down so the community can run the work without them.",
+            "The practitioner takes personal risk, reads the local information, runs a P&L. So far the two disciplines agree. Then they part ways. The practitioner is paid to write the method down so the community can run the work without them.",
         },
         {
           kind: "para",
           text:
-            "The exit is handover, not compound. The book the practitioner ships is the work, not the brand. A successful practitioner is one the community no longer needs in the chair. A successful founder-allocator is one whose chair grows.",
+            "The exit is handover, not compound. The book the practitioner ships is the work, not the brand. A successful practitioner is one the community no longer needs in the chair; a successful founder-allocator is one whose chair grows.",
         },
         {
           kind: "para",
@@ -702,7 +702,7 @@ const partIII: Part = {
         {
           kind: "para",
           text:
-            "The reader's own constellation will look nothing like this one. That is correct. The discipline travels. The examples don't.",
+            "The reader's own constellation will look nothing like this one — and that is correct. The discipline travels; the examples don't.",
         },
         {
           kind: "small",
@@ -727,7 +727,7 @@ const partIII: Part = {
         {
           kind: "para",
           text:
-            "That is the test of whether codetry has taken root. Not whether anyone else uses these names. Whether anyone else's names start carrying their own weight.",
+            "That is the test of whether codetry has taken root — not whether anyone else uses these names, but whether anyone else's names start carrying their own weight.",
         },
       ],
     },
@@ -760,7 +760,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The codetry practitioner's first move is to write down the noun the community used and refuse to swap it. The system, when it ships, has *the books* in it. The button says *open the books*. The data table is called *the books*. The reports are *what the books say this month*. If the team starts saying anything else in the working session, the practitioner asks why and writes the new word down. Something has shifted.",
+            "The codetry practitioner's first move is to write down the noun the community used and refuse to swap it. The shipped system carries *the books* through every layer — the button says *open the books*, the data table is called *the books*, the reports are *what the books say this month*. If the team starts saying anything else in the working session, the practitioner asks why and writes the new word down. Something has shifted.",
         },
         {
           kind: "pull",
@@ -784,7 +784,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "Imagine the same system with a generic noun in the same slot. *Buckets* becomes *Categories*. *The territory* becomes *The Service Area*. *Calm* becomes *Easy*. *Stuck* becomes *Overdue*. Hold the rest of the system constant and read what changes.",
+            "Imagine the same system with a generic noun in the same slot — *Buckets* → *Categories*, *The territory* → *The Service Area*, *Calm* → *Easy*, *Stuck* → *Overdue*. Hold the rest of the system constant and read what changes.",
         },
         {
           kind: "small",
@@ -804,7 +804,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "A name that survives this test is a name a system can be built on. A name that does not is a label.",
+            "A name that survives this test is a name a system can be built on; a name that does not is a label.",
         },
         {
           kind: "examples",
@@ -840,7 +840,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The names slip. Always. *Member* becomes *user* on a slide deck because the deck was made in a hurry. *The day* becomes *the curriculum* in an email because the recipient was a school board. *The books* becomes *the financials* in a grant application because the funder uses that word. None of these are bad faith. All of them are drift.",
+            "The names slip. Always. *Member* becomes *user* on a slide deck because the deck was made in a hurry. *The day* becomes *the curriculum* in an email because the recipient was a school board. *The books* becomes *the financials* in a grant application because the funder uses that word. None of these are bad faith — all of them are drift.",
         },
         {
           kind: "para",
@@ -850,7 +850,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The practitioner's job is to catch the slip early and name it as a slip. Not as a brand violation. As a structural issue. *We started saying user. Did we mean to? If we meant to, what changes about the thing being built?* If the answer is *nothing changes*, the team was tired and the right move is to put the original word back in everyone's mouth. If the answer is *something does change*, then the team has been telling the practitioner something the practitioner had not yet heard. The discipline is to follow the new word back to the building it implies and decide on purpose.",
+            "The practitioner's job is to catch the slip early and name it as a slip — not as a brand violation, but as a structural issue. *We started saying user. Did we mean to? If we meant to, what changes about the thing being built?* If the answer is *nothing changes*, the team was tired and the right move is to put the original word back in everyone's mouth. If the answer is *something does change*, then the team has been telling the practitioner something the practitioner had not yet heard. The discipline is to follow the new word back to the building it implies and decide on purpose.",
         },
         { kind: "rule" },
         { kind: "subhead", text: "From the field — drift caught at the gate" },
@@ -901,7 +901,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "A naming session is not a brainstorm. It is not a logo workshop. It is a quiet conversation in the working language of the people in the room.",
+            "A naming session is not a brainstorm and not a logo workshop. It is a quiet conversation in the working language of the people in the room.",
         },
         { kind: "subhead", text: "The shape of the session" },
         {
@@ -941,12 +941,12 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The error is to assume that the technology decides the discipline. It does not. A paper ledger named honestly — *the books*, with columns called *what we owe* and *what we are owed* — is more codetry than a SaaS dashboard with rows called *Account Receivable Aging Report*. The first one carries weight in its names. The second one carries weight nowhere; the names are scaffolding for the database, not the other way around.",
+            "The error is to assume that the technology decides the discipline. It does not. A paper ledger named honestly — *the books*, with columns called *what we owe* and *what we are owed* — is more codetry than a SaaS dashboard with rows called *Account Receivable Aging Report*. The first one carries weight in its names; the second one carries weight nowhere, because the names are scaffolding for the database, not the other way around.",
         },
         {
           kind: "para",
           text:
-            "When the practitioner is choosing the medium for a codetry build, the question is not *what is the most modern stack.* The question is *what medium will let the names hold.* Sometimes that is software. Sometimes it is not. The discipline is the same either way.",
+            "When the practitioner is choosing the medium for a codetry build, the question is not *what is the most modern stack.* The question is *what medium will let the names hold.* Sometimes that is software, sometimes it is not. The discipline is the same either way.",
         },
         {
           kind: "small",
@@ -999,12 +999,12 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "Sooner or later the practitioner has to explain codetry to a room of people who did not come to learn a software discipline. They came to talk about a store, a clinic, a road, a co-op. The practitioner's job in that room is not to teach codetry as theory. It is to surface the principle the room has been using its whole life and put a name on it, so the work that follows can be done together.",
+            "Sooner or later the practitioner has to explain codetry to a room of people who did not come to learn a software discipline. They came to talk about a store, a clinic, a road, a co-op. The practitioner's job in that room is not to teach codetry as theory. It is to surface the principle the room has been using its whole life — and put a name on it so the work can be done together.",
         },
         {
           kind: "para",
           text:
-            "The example to teach with is architecture itself. Not architecture as analogy — architecture as *source*. The principle codetry takes into the world of words is the same principle that holds when the material is wood, concrete, or hempcrete. Some parts hold weight, others do not. The parts that hold weight cannot be quietly renamed without the building shifting underneath. The audience already knows this. They have spent their lives in buildings. The teaching move is not to introduce a new idea. It is to make a familiar idea visible in a place they had not yet looked: the words.",
+            "The example to teach with is architecture itself — not architecture as analogy, but architecture as *source*. The principle codetry takes into the world of words is the same principle that holds when the material is wood, concrete, or hempcrete. Some parts hold weight, others do not, and the parts that hold weight cannot be quietly renamed without the building shifting underneath. The audience already knows this — they have spent their lives in buildings. The teaching move is not to introduce a new idea; it is to make a familiar idea visible in a place they had not yet looked: the words.",
         },
         {
           kind: "subhead",
@@ -1030,7 +1030,7 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "If there is no flinch — if the rename lands and nothing in the room reacts — the word was decoration, and the practitioner has just done a piece of useful diagnostic work in public. Either is a good outcome. Both are codetry.",
+            "If there is no flinch — if the rename lands and nothing in the room reacts — the word was decoration, and the practitioner has just done a piece of useful diagnostic work in public. Either is a good outcome; both are codetry.",
         },
         {
           kind: "subhead",
@@ -1114,25 +1114,25 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "From Perl in the late 1980s to the Stanford Code Poetry Slam. From Mez Breeze and Nick Montfort to Ishac Bertran's *code {poems}* book. A tradition of source code as poem. Side-by-side and respected.",
+            "From Perl in the late 1980s to the Stanford Code Poetry Slam, and from Mez Breeze and Nick Montfort to Ishac Bertran's *code {poems}* book. A tradition of source code as poem, side-by-side and respected.",
         },
         { kind: "subhead", text: "Literate programming (Knuth, 1984)" },
         {
           kind: "para",
           text:
-            "Donald Knuth's WEB and CWEB. Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. The document is the source. The code is woven from prose. This is the closest craft to codetry. On the reading §6.1 lands on, codetry sits one floor under it. Literate programming checks the reasoning by showing it. But the woven program only does what its prose says — if the names inside the source carry the picture the prose claims. Holding those names is the move codetry is for.",
+            "Donald Knuth's WEB and CWEB. Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. The document is the source, and the code is woven from prose. This is the closest craft to codetry, and on the reading §6.1 lands on, codetry sits one floor under it. Literate programming checks the reasoning by showing it — but the woven program only does what its prose says if the names inside the source carry the picture the prose claims. Holding those names is the move codetry is for.",
         },
         { kind: "subhead", text: "The earlier book (2017)" },
         {
           kind: "para",
           text:
-            "The earlier book on codetry was written in 2017 from inside the tech industry. It named the impulse. It did not yet have a constellation to draw the craft against. This handbook is the same impulse, nine years later. The worked examples are now in front of it.",
+            "The earlier book on codetry was written in 2017 from inside the tech industry. It named the impulse, but did not yet have a constellation to draw the craft against. This handbook is the same impulse nine years later, and the worked examples are now in front of it.",
         },
         { kind: "subhead", text: "Don't trust; verify" },
         {
           kind: "para",
           text:
-            "An older line codetry's checking belongs to. Show your work in the place where the work actually lives. For codetry, that place is the name on the button.",
+            "An older line codetry's checking belongs to: show your work in the place where the work actually lives. For codetry, that place is the name on the button.",
         },
         { kind: "subhead", text: "Domain-driven design (Evans, 2003)" },
         {
@@ -1227,7 +1227,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "*A mix, not a single block.* Hempcrete is two things doing two jobs. The timber frame holds the load. The hemp-and-lime filler holds the climate. Neither alone is the wall. Codetry is the same shape. The *names* hold the picture. The *system* holds the mechanics. Neither alone is the craft. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent mistake in software talk is to argue about which single material is *the* right one. The type system as the only truth, the docs as the only truth, the test suite as the only truth. The codetry move, like the hempcrete move, is to refuse the choice. Put the materials in the relationship that makes the wall work.",
+            "*A mix, not a single block.* Hempcrete is two things doing two jobs — the timber frame holds the load, and the hemp-and-lime filler holds the climate. Neither alone is the wall. Codetry is the same shape: the *names* hold the picture, the *system* holds the mechanics, and neither alone is the craft. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent mistake in software talk is to argue about which single material is *the* right one. The type system as the only truth, the docs as the only truth, the test suite as the only truth. The codetry move, like the hempcrete move, is to refuse the choice and put the materials in the relationship that makes the wall work.",
         },
         {
           kind: "para",
@@ -1237,13 +1237,13 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "*Right-feeling, not just technical.* Hempcrete is picked, where it is picked, for a bundle of reasons. No one reason is enough on its own. It works for warmth. It stores carbon. It can be locally grown. It is non-toxic. It ages honestly. It is beautiful in a way pre-cast concrete is not. The choice is technical and ethical and beautiful at the same time. A practitioner who tries to defend it on one ground alone will sound like they are leaving the other reasons out. Codetry has the same mixed character. The rename test of §4.2 is technical (it catches drift the type system misses). Protecting community vocabulary is ethical (the people who live in the place are the ones whose words the system runs on). Insisting the name on the button keeps its promise is beautiful (the wall is honest about what it is). The craft does not survive being reduced to one of those grounds. The hempcrete picture is the shortest sentence the handbook has for that.",
+            "*Right-feeling, not just technical.* Hempcrete is picked, where it is picked, for a bundle of reasons, and no one reason is enough on its own. It works for warmth, stores carbon, can be locally grown, is non-toxic, ages honestly, and is beautiful in a way pre-cast concrete is not. The choice is technical and ethical and beautiful at the same time, and a practitioner who tries to defend it on one ground alone will sound like they are leaving the other reasons out. Codetry has the same mixed character. The rename test of §4.2 is technical (it catches drift the type system misses). Protecting community vocabulary is ethical (the people who live in the place are the ones whose words the system runs on). Insisting the name on the button keeps its promise is beautiful (the wall is honest about what it is). The craft does not survive being reduced to one of those grounds, and the hempcrete picture is the shortest sentence the handbook has for that.",
         },
         { kind: "subhead", text: "Where the picture honestly strains." },
         {
           kind: "para",
           text:
-            "Hempcrete is not perfect. It needs a frame to hold any real load. It sets slowly. The current revival is small next to the cement industry it would have to replace. The lime binder is less green than the hemp side suggests. In some climates the breathing advantage shrinks. Codetry has matching strains. It needs an existing system to hold real load (the craft is not a build plan; it is a craft applied to a build). It sets slowly (a renamed system takes weeks of talk to settle in the team's mouths, §4.3). It is small next to the architecture and product-management traditions it would have to replace. The rename test depends on a practitioner who can tell weight-bearing from decorative. That judgment is itself a glue whose mix matters. The picture is not flattering by accident. The hempcrete wall is the kind of wall the practitioner is trying to build *because* it is honest about what it can and cannot carry.",
+            "Hempcrete is not perfect. It needs a frame to hold any real load, it sets slowly, and the current revival is small next to the cement industry it would have to replace. The lime binder is less green than the hemp side suggests, and in some climates the breathing advantage shrinks. Codetry has matching strains. It needs an existing system to hold real load (the craft is not a build plan; it is a craft applied to a build). It sets slowly (a renamed system takes weeks of talk to settle in the team's mouths, §4.3). It is small next to the architecture and product-management traditions it would have to replace. The rename test depends on a practitioner who can tell weight-bearing from decorative, and that judgment is itself a glue whose mix matters. The picture is not flattering by accident — the hempcrete wall is the kind of wall the practitioner is trying to build *because* it is honest about what it can and cannot carry.",
         },
         { kind: "subhead", text: "The one-sentence claim." },
         {
@@ -1280,18 +1280,18 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Voice and editorial decisions follow the constellation's own quiet, declarative tone. No marketing.",
+            "Voice and editorial decisions follow the constellation's own quiet, declarative tone, with no marketing.",
         },
         {
           kind: "para",
           text:
-            "The discipline named here is offered in the spirit of the four teachers above and the axiom alongside them.",
+            "The discipline named here is offered in the spirit of the four teachers above, and the axiom alongside them.",
         },
         { kind: "rule" },
         {
           kind: "para",
           text:
-            "For the community development practitioners who pick this up: the names will be your own. Use the discipline. Throw away the examples. That is the only correct way to read this book.",
+            "For the community development practitioners who pick this up: the names will be your own. Use the discipline, throw away the examples — that is the only correct way to read this book.",
         },
         {
           kind: "small",
@@ -1327,7 +1327,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The line of work to honour is short and recent. A 2016 paper by Sennrich, Haddow, and Birch brought a sub-word cutting trick into machine translation. SentencePiece took it wider. The GPT line and what came after made it the default reading layer of the industry. Andrej Karpathy's posts on the cutting made the strange visible. The way `\" the\"` and `\"the\"` are different pieces. The way a leading space re-shapes meaning. The way numbers split in ways no human reader would tolerate. Sub-word cutting and codetry both treat below-the-word patterns as structural. But from opposite directions. Cutting pulls patterns out of pieces. Codetry builds meaning into a whole.",
+            "The line of work to honour is short and recent. A 2016 paper by Sennrich, Haddow, and Birch brought a sub-word cutting trick into machine translation. SentencePiece took it wider, and the GPT line and what came after made it the default reading layer of the industry. Andrej Karpathy's posts on the cutting made the strange visible. The way `\" the\"` and `\"the\"` are different pieces, the way a leading space re-shapes meaning, the way numbers split in ways no human reader would tolerate. Sub-word cutting and codetry both treat below-the-word patterns as structural — but from opposite directions. Cutting pulls patterns out of pieces; codetry builds meaning into a whole.",
         },
         {
           kind: "subhead",

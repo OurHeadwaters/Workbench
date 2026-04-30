@@ -43,7 +43,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "para",
         text:
-          "If the slow side and the fast side were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would split. The moment a call opened, the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens. Pick the slow side, ask whether the umbrella name still fits the fast side. Pick the fast side, ask whether the umbrella name still fits the slow side. *Standby* passes both — *on standby* and *standby stock* are the same posture in different speeds. *Pantry* and *Call* each pass only one.",
+          "If the slow side and the fast side were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling; the other would have an event handler and no preparation discipline. The cultures would split. The moment a call opened, the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens. Pick the slow side and ask whether the umbrella name still fits the fast side. Pick the fast side and ask whether the umbrella name still fits the slow side. *Standby* passes both — *on standby* and *standby stock* are the same posture in different speeds. *Pantry* and *Call* each pass only one.",
       },
       {
         kind: "callout",
@@ -86,7 +86,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "para",
         text:
-          "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction. It logs every substitution so the bright-side noun stays on file alongside the massity equivalent. And it has a *refused* rung for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape. Pick the bright side, ask whether the umbrella name still respects the massity side. Pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both. Neither side is the inside, neither is the outside. The Gate is the doorway that lets each room keep its own language while still allowing communication across.",
+          "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction. It logs every substitution so the bright-side noun stays on file alongside the massity equivalent. And it has a *refused* rung for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape. Pick the bright side and ask whether the umbrella name still respects the massity side. Pick the massity side and ask whether the umbrella name still respects the bright side. *Gate* passes both. Neither side is the inside, and neither is the outside — the Gate is the doorway that lets each room keep its own language while still allowing communication across.",
       },
       {
         kind: "callout",
@@ -97,7 +97,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "para",
         text:
-          "The Standby's two sides are *time* — the same system in slow and fast speed. The Gate's two sides are *room* — the same system facing two audiences that hold different vocabularies as right. The Standby's principle is *both-states*. The Gate's principle is *both-sides*. Both are now named principles in the manifest. A future piece may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose. The discipline travels. The worked examples pile up.",
+          "The Standby's two sides are *time* — the same system in slow and fast speed. The Gate's two sides are *room* — the same system facing two audiences that hold different vocabularies as right. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now named principles in the manifest. A future piece may need a third axis (densities? scales? jurisdictions?), and the principles array is open-ended on purpose. The discipline travels; the worked examples pile up.",
       },
     ],
     crossZoneReads: [
