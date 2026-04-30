@@ -14,6 +14,7 @@ import { ComparePage } from "@/pages/ComparePage";
 import { ReplicationPage } from "@/pages/ReplicationPage";
 import { CodetryDisciplinePage } from "@/pages/CodetryDisciplinePage";
 import { ArchetypesPage } from "@/pages/ArchetypesPage";
+import { WorkbenchArchivePage } from "@/pages/WorkbenchArchivePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/replication" component={ReplicationPage} />
       <Route path="/codetry" component={CodetryDisciplinePage} />
       <Route path="/archetypes" component={ArchetypesPage} />
+      <Route path="/workbench" component={WorkbenchArchivePage} />
       <Route component={NotFound} />
     </Switch>
   );

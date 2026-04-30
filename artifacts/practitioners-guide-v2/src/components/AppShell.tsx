@@ -42,6 +42,7 @@ export const NAV: NavItem[] = [
   { href: "/archetypes", label: "Archetypes", icon: Layers, accent: "#1F5B3F" },
   { href: "/compare", label: "Operating framework", icon: GitCompareArrows },
   { href: "/replication", label: "Replication", icon: Repeat },
+  { href: "/workbench", label: "Workbench", icon: ScrollText, accent: "#7A2E12" },
   { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
 ];
 

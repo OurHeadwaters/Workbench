@@ -20,7 +20,7 @@ export default function WhyThisTeam() {
       head: "The Deer Lake operating plan exists.",
       body:
         "Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.",
-      links: ["/practitioner-operating-plan/"],
+      links: ["/practitioners-guide-v2/workbench"],
     },
     {
       tag: "Claim 2 · We've already built the software",
@@ -219,13 +219,13 @@ export default function WhyThisTeam() {
             >
               Open the one-pager ·{" "}
               <a
-                href="/practitioner-operating-plan/"
+                href="/practitioners-guide-v2/workbench"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-2 hover:no-underline"
                 style={{ color: "var(--color-accent-warm)" }}
               >
-                /practitioner-operating-plan
+                /practitioners-guide-v2/workbench
               </a>
             </div>
 

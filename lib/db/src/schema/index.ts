@@ -3,3 +3,4 @@ export * from "./library";
 export * from "./checkin";
 export * from "./bookkeeper";
 export * from "./wordpile";
+export * from "./shipManifest";

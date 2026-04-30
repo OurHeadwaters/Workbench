@@ -82,7 +82,7 @@ export default function CostCentres() {
           <p className="text-xs text-muted-foreground mt-2 italic max-w-2xl">
             Not the same primitive as the Practitioner cost-registry. When both appear together, use the long forms &mdash;{" "}
             <a
-              href="/practitioner-operating-plan/constellation.json"
+              href="/practitioners-guide-v2/workbench"
               target="_blank"
               rel="noopener noreferrer"
               className="underline decoration-dotted underline-offset-2 hover:text-foreground"

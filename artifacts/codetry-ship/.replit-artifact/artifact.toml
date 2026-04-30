@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/codetry-ship/"
+title = "Codetry Ship — Crew Manifest"
+version = "1.0.0"
+id = "artifacts/codetry-ship"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/codetry-ship/" ]
+localPort = 21384
+
+[services.development]
+run = "pnpm --filter @workspace/codetry-ship run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/codetry-ship", "run", "build" ]
+publicDir = "artifacts/codetry-ship/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21384"
+BASE_PATH = "/codetry-ship/"

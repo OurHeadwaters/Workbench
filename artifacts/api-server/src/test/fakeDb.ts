@@ -372,6 +372,76 @@ function makeInsert(table: FakeTable) {
           }
           return Promise.resolve(out);
         },
+        // Upsert by `target` column with the supplied set patch.  Mirrors
+        // drizzle's `.onConflictDoUpdate({ target, set })` shape.  `target`
+        // is a single column ref or an array of column refs that together
+        // form the unique key.  Sql-tag values in `set` (e.g. `sql`now()``)
+        // are treated as "use current Date".
+        onConflictDoUpdate(opts: {
+          target: Col | Col[];
+          set: Row;
+        }) {
+          const targets = Array.isArray(opts.target) ? opts.target : [opts.target];
+          const out: Row[] = [];
+          for (const v of arr) {
+            const row: Row = { ...table.__defaults, ...v };
+            if (isColRef(table, "id") && !("id" in row)) {
+              row.id = nextId();
+            }
+            if (isColRef(table, "createdAt") && row.createdAt === undefined) {
+              row.createdAt = new Date();
+            }
+            if (isColRef(table, "updatedAt") && row.updatedAt === undefined) {
+              row.updatedAt = new Date();
+            }
+            const existing = table.__store.find((r) =>
+              targets.every((c) => r[c.__c] === row[c.__c]),
+            );
+            if (existing) {
+              const patch: Row = {};
+              for (const [k, val] of Object.entries(opts.set)) {
+                // `sql\`...\`` values become a fakeDrizzle sql tag object —
+                // approximate "current timestamp" here so updated_at flows
+                // through tests like in production.
+                if (
+                  val &&
+                  typeof val === "object" &&
+                  (val as { kind?: unknown }).kind === "raw"
+                ) {
+                  patch[k] = new Date();
+                } else {
+                  patch[k] = val;
+                }
+              }
+              Object.assign(existing, patch);
+              out.push({ ...existing });
+              continue;
+            }
+            const conflict = table.__store.some((r) =>
+              table.__pk.every((c) => r[c] === row[c]),
+            );
+            if (conflict) {
+              throw new Error(
+                `duplicate key value violates unique constraint on ${table.__name} pk`,
+              );
+            }
+            table.__store.push(row);
+            out.push({ ...row });
+          }
+          return {
+            returning() {
+              return Promise.resolve(out);
+            },
+            then(
+              resolve: (v: Row[]) => unknown,
+              reject?: (e: unknown) => unknown,
+            ) {
+              return Promise.resolve(out)
+                .then(resolve)
+                .catch((e) => (reject ? reject(e) : Promise.reject(e)));
+            },
+          };
+        },
         // Ignore conflicts — used by library tag attachers.
         onConflictDoNothing() {
           const out: Row[] = [];

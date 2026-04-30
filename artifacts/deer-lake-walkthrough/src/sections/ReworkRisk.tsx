@@ -161,13 +161,13 @@ export default function ReworkRisk() {
             >
               Open in another tab ·{" "}
               <a
-                href="/practitioner-operating-plan/"
+                href="/practitioners-guide-v2/workbench"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-2 hover:no-underline"
                 style={{ color: "rgba(244,237,224,0.95)" }}
               >
-                /practitioner-operating-plan
+                /practitioners-guide-v2/workbench
               </a>{" "}
               ·{" "}
               <a

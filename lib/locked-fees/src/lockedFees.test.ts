@@ -49,11 +49,12 @@ const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..");
 
 const ARTIFACTS = [
   "practitioners-guide-v2",
-  "practitioner-operating-plan",
   "deer-lake-walkthrough",
-  // (artifacts/deer-lake-store-plan was retired, so it is no longer
-  // scanned. The guard scope is kept exactly in sync with the live
-  // financial-heavy artifacts.)
+  // (artifacts/deer-lake-store-plan and artifacts/practitioner-operating-plan
+  // were retired, so they are no longer scanned. The guard scope is kept
+  // exactly in sync with the live financial-heavy artifacts. Content from
+  // the operating plan was migrated into practitioners-guide-v2's
+  // /workbench archive page, which is already covered above.)
 ] as const;
 
 // Literals we lock. Order matters for matching: the longer comma-form
@@ -260,7 +261,6 @@ describe("Deer Lake locked-fee drift guard (workspace-level)", () => {
     // retired, leaving three live financial-heavy artifacts.
     expect([...ARTIFACTS]).toEqual([
       "practitioners-guide-v2",
-      "practitioner-operating-plan",
       "deer-lake-walkthrough",
     ]);
   });
