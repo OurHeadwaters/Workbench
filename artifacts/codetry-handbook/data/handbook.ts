@@ -1200,6 +1200,191 @@ const partV: Part = {
       number: "5.3",
       partRoman: "V",
       partLabel: "V · Grounding",
+      title: "The reading lineage — fiction",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The lineage chapter that just preceded this one named the *disciplines* codetry sits inside. This chapter names the *books* that trained the practitioner's own ear for the kind of pattern recognition codetry depends on. The two are separate inheritances. The disciplines name the moves; the books taught the listening that lets a practitioner notice when a move is needed in the field.",
+        },
+        {
+          kind: "para",
+          text:
+            "*This chapter is not training data for an AI on a corpus. It is the reading list that trained one human mind to hear what codetry is for.* The distinction matters because the framing keeps drifting in conversations about contemporary writing — it is now common to read a list of influences as if its purpose were to ground a model in a tradition. The purpose here is older and smaller: to be honest about which authors taught the practitioner to recognise *load-bearing story* when it is in front of them, and to give a future reader of this handbook a way to walk the same path on foot if they choose. There is no claim that reading these books produces the discipline. There is only the claim that, for this practitioner, the discipline was unreachable without them.",
+        },
+        { kind: "subhead", text: "Why fiction first." },
+        {
+          kind: "para",
+          text:
+            "Codetry is a discipline about story being load-bearing — about names whose job is to carry the metaphor a community lives by, into the system that community runs on. The clearest place to learn what *load-bearing story* feels like is the place where story bears the most weight: a novel. Fiction is where a single chosen noun decides what is thinkable inside the world the reader enters; where renaming a thing renames the room around it; where a metaphor either holds the chapter together or quietly collapses it. Theory can describe those moves after the fact, and is useful when a practitioner needs to argue for the discipline at the policy table. But theory ossifies the diagnosis without teaching the ear. The practitioner who has only read theory can name *what kind of capture* a vocabulary is performing and cannot reliably notice the capture happening in the room they are standing in. The practitioner who has read the seven books named below has been trained, repeatedly and for a long time, in the muscle of *hearing the load-bearing word being swapped out before the swap is announced*. That muscle is what codetry asks for in the field. Fiction is where it is built.",
+        },
+        {
+          kind: "para",
+          text:
+            "The seven works below are grouped into three clusters. Each cluster teaches something the books in it teach together that no single one of them teaches alone.",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text: "The language-is-the-cage cluster — *1984*, *Animal Farm*, *Brave New World*.",
+        },
+        {
+          kind: "para",
+          text:
+            "These three are read here as one triangle. *1984* names the *fast capture* of a vocabulary — Newspeak as the deliberate, top-down compression of what can be said and therefore thought. *Animal Farm* names the *slow capture* — the painted commandments on the barn quietly rewritten in the night, where the drift is so gradual that no single reading catches it but the comparison across years is unanswerable. *Brave New World* names the *soft capture* — a vocabulary so comfortable that the cage is welcomed in and the question of whether one is inside it never arises. The triangle teaches that capture has at least three speeds and that a practitioner who is only watching for one will miss the other two; the rename test of §4.2 is sharp against fast capture, the drift detection of §4.3 is sharp against slow capture, and the protection of community vocabulary against generic professional English is the move sharpest against the third.",
+        },
+        { kind: "subhead", text: "*1984* — Orwell." },
+        {
+          kind: "para",
+          text:
+            "*1984* is the foundational text. Newspeak is the clearest fictional rendering ever made of a system in which a community's available vocabulary is engineered top-down so that whole moves of thought become unsayable, and over time, unthinkable. Orwell's appendix on the principles of Newspeak — written in the past tense, as if the language has already passed away — is the single passage in twentieth-century fiction that comes closest to a working specification of the discipline codetry is built to *resist*. The Party's project is not to ban dissenting thoughts; it is to remove the words the dissent would have to be assembled from.",
+        },
+        {
+          kind: "para",
+          text:
+            "The diagnostic the book gave the practitioner is a method, not a mood. If Newspeak is the deliberate compression of a vocabulary so that load-bearing thought becomes impossible, then the rename test of §4.2 is the same operation run in reverse: hold the system constant, swap the noun, and read what becomes thinkable that was not thinkable a moment ago. The test surfaces the words a system is quietly relying on by removing them and watching what the system can no longer say. Orwell built the negative case at civilisational scale; codetry runs the positive version at the scale of a single button on a single screen, on the working assumption that a community whose buttons keep their words has not yet had its Newspeak written for it.",
+        },
+        {
+          kind: "para",
+          text:
+            "*The rename test is Newspeak run in reverse: instead of removing a word so a thought becomes unsayable, remove it so the system tells us which thought it was quietly carrying.*",
+        },
+        { kind: "subhead", text: "*Animal Farm* — Orwell." },
+        {
+          kind: "para",
+          text:
+            "*Animal Farm* is the slow companion to *1984*. Where Newspeak compresses overnight, the painted commandments on the barn wall change a syllable at a time, between visits, while everyone is busy with the harvest. *All animals are equal* becomes *all animals are equal, but some animals are more equal than others* and no one in the barn quite remembers when. The book is a manual in the *cadence* of vocabulary drift: the words on the wall are not policed in the moment they shift; they are policed by the comparison between this season's reading and last season's, by the practitioner who keeps a record and notices the syllable that was added.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is exactly the drift codetry §4.3 is built to hedge against, and the worked examples it gives are the *Animal Farm* shape: a benefit form's category label *household* quietly becoming *qualifying household*; a savings envelope quietly being called *reserve* in the next sprint; a *neighbour* quietly becoming a *resident* on the third revision of the document. None of these are Newspeak; all of them are the painted-commandment move. The audit page, the build-time vocabulary check, the version-controlled glossary — these are the practitioner's equivalent of standing in the barn at night with a lantern and reading the wall against a written copy held in the pocket. The book's quiet horror is the threat profile codetry's drift practices are calibrated to.",
+        },
+        {
+          kind: "para",
+          text:
+            "*If the only check on the wall is the wall, the wall has been rewritten by morning. The discipline is the lantern and the copy in the pocket.*",
+        },
+        { kind: "subhead", text: "*Brave New World* — Huxley." },
+        {
+          kind: "para",
+          text:
+            "*Brave New World* is the third side of the triangle and the most quietly damaging of the three. Huxley's World State does not compress vocabulary by force or rewrite the wall at night; it makes the existing vocabulary *comfortable*, conditioned, soothing. *Soma*, *the feelies*, *community-identity-stability* — the words land easily, they sound forward-looking, they belong to a register that no one in the world wants to argue against because to argue against them would be to argue against feeling well. The capture is soft. The cage has cushions.",
+        },
+        {
+          kind: "para",
+          text:
+            "This is the strongest critique fiction has yet produced of the kind of *generic professional vocabulary* that has come to dominate the rooms codetry works in: *sustainability*, *engagement*, *impact*, *resilience*, *empowerment*, *innovation*. The words are not malevolent and they are not, in any single instance, deceptive. They are comfortable. They register as forward-looking. They flatten the specific, place-rooted noun the community already had into a generic that the funder, the regulator, and the consultant all recognise — and the cost of the flattening is invisible because nothing in the room sounds wrong. Huxley's contribution to the practitioner's ear is the alarm that *nothing sounding wrong* is itself a diagnostic, often the most important one. The room that is too easy to talk in has usually had a vocabulary slipped under it.",
+        },
+        {
+          kind: "para",
+          text:
+            "*When no word in the meeting room registers as wrong, the meeting room has been carpeted in a vocabulary the people in it did not write. Listen for the specific noun the carpeting replaced.*",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text: "The method-must-survive-the-person cluster — *Lord of the Flies*, *Ishmael*.",
+        },
+        {
+          kind: "para",
+          text:
+            "These two are the books that taught the practitioner that a discipline's life is decided by whether it can be handed off, not by whether it can be performed. *Lord of the Flies* is the book of what handover failure looks like at close range; *Ishmael* is the book of what a discipline that has survived handover for thousands of generations looks like, and the closest single literary ancestor to the *Practitioner* role this handbook is named for. Together they teach that the question every codetry practitioner is eventually asked — *who carries this when you stop* — is the question that decides whether the discipline ever existed.",
+        },
+        { kind: "subhead", text: "*Lord of the Flies* — Golding." },
+        {
+          kind: "para",
+          text:
+            "The conch on Ralph's beach is the cleanest worked example in twentieth-century fiction of a *load-bearing noun*. The shell is a physical object; it is also a rule; it is also a posture. Whoever holds it speaks. The boys who agree to the conch agree to one another; the boys who shatter the conch shatter the agreement. The book's whole argument turns on a single named object that the community has invested with the discipline of taking turns. When the conch shatters in the final chapters, the discipline does not slowly degrade — it is gone in the same instant. That is the *Saltbox Principle* of §1.3 played out in the worst case: a method whose load is held by a single fragile noun, and a method that goes when the noun goes.",
+        },
+        {
+          kind: "para",
+          text:
+            "The book is also, read at field strength, the cleanest possible illustration of why the *Practitioner* role of this handbook is defined the way it is. The Practitioner's job is *handover* — the deliberate practice of arranging the discipline so that no single person, no single shell, no single founder, holds the load alone. A Practitioner role that ends with the Practitioner is the conch on the rock. The whole architecture of §6 — the wisdom keepers, the inspector standing, the seven-generation horizon — is the corpus's answer to the Golding question: *what arrangement of names and people would mean that the conch is replaceable before it shatters?*",
+        },
+        {
+          kind: "para",
+          text:
+            "*If the conch shatters, the method shatters with it; this is why the Practitioner's whole job is handover.*",
+        },
+        { kind: "subhead", text: "*Ishmael* — Quinn." },
+        {
+          kind: "para",
+          text:
+            "*Ishmael* is the cleanest single literary influence on codetry's posture. Quinn's *Leavers and Takers* framing — the long line of cultures that left the world running on its own terms versus the short, recent culture that takes the world apart and runs it on rewritten terms — is the lineage codetry's *Practitioner* role inherits from. The Leavers are not romanticised in the book; they are presented as people whose discipline is *to remember the older arrangement long enough to keep the option open* of returning to it. That is the posture codetry asks of the practitioner. The handbook's *Standby* primitive in the constellation manifest is, read honestly, a Leaver-shaped institution: the always-on shelf that keeps the older arrangement available against the day the newer one fails.",
+        },
+        {
+          kind: "para",
+          text:
+            "Quinn's *Mother Culture* — the voice that whispers the Taker premises into the room before any conscious thought is spoken — is the other contribution. Codetry's *massity* names the same thing one floor closer to the working surface: the legacy-world dialect that arrives in the room without being invited and substitutes its nouns for the local ones unless the practitioner is listening. The *Gate* primitive in the constellation is the practitioner's working answer to Mother Culture in real time: a passage that lets the legacy-world vocabulary cross when it must, but logs the substitution so the original noun is never silently lost.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Quinn's Leavers are the lineage ancestor of the Practitioner role; Mother Culture is the older name for what codetry calls massity, and the Gate is the practitioner's answer to it.*",
+        },
+        { kind: "rule" },
+        {
+          kind: "subhead",
+          text: "The perception-is-the-substrate cluster — *The Doors of Perception*, *Blueprints of the Afterlife*.",
+        },
+        {
+          kind: "para",
+          text:
+            "The third cluster is the one that keeps the discipline humble. The first two clusters establish that names hold load and that methods must outlive their carriers. This cluster establishes the prior condition the other two depend on — that *what a person can register as real is decided by the vocabulary already inside their head before they look* — and the matched humility that no naming discipline survives every kind of break. Together the two works teach: name carefully, *and* know what naming cannot save.",
+        },
+        { kind: "subhead", text: "*The Doors of Perception* — Huxley." },
+        {
+          kind: "para",
+          text:
+            "Huxley's book-length essay on perception names the *reducing valve*: the thesis that ordinary consciousness is not a window onto the world but a narrow filter that admits only the slice of reality the organism needs to act. The valve is constructed largely out of language — the categories, names, and habits the mind has internalised over a lifetime decide which signals are admitted as *real* and which are dismissed as noise before any conscious processing happens. What the practitioner takes from this is not the chemistry of the essay but its model: *the names a community lives inside decide what the community can register as real*. Rename a thing and you have widened or narrowed the valve for everyone who passes through it. This is why the rename test of §4.2 has the consequences it has — because the noun on the button is also, at substrate level, deciding what the user is *able to see* about the system the button sits on.",
+        },
+        {
+          kind: "para",
+          text:
+            "Huxley is filed alongside *Brave New World* by the rest of his readership, and that filing is correct, but the *Doors* essay is the deeper of the two for codetry's purposes. *Brave New World* warned about the comfort of a captured vocabulary; *The Doors of Perception* explained the mechanism by which the capture happens — that vocabulary is not decorative on top of perception, it is upstream of it. The handbook treats the essay, not the novel, as the load-bearing Huxley contribution to the practitioner's ear, which is why both works are listed and the essay sits in this cluster rather than the first.",
+        },
+        {
+          kind: "para",
+          text:
+            "*The names a community lives inside decide what that community can register as real; widen or narrow the valve, and you have widened or narrowed what is visible from inside the room.*",
+        },
+        { kind: "subhead", text: "*Blueprints of the Afterlife* — Boudinot." },
+        {
+          kind: "para",
+          text:
+            "Boudinot's novel sits at the end of the cluster as the humility check against everything the other six have just argued. The book is set after a civilisational discontinuity so total that the names from the world before survive only as half-remembered fragments inside characters who can no longer reliably tell their own memories from another's; one of its central characters is hired to clone the cathedrals of a ruined coast, full-scale, knowing the cathedrals' meanings have not survived to be cloned along with them. The book is unsentimental about the limits of what naming can preserve when the substrate the names lived in is gone. A discipline that has been told over and over that names hold load needs, at intervals, to read a book that takes the same claim and asks honestly *what kind of break the names cannot carry across*, and to sit with the answer.",
+        },
+        {
+          kind: "para",
+          text:
+            "The contribution to the practitioner's ear is calibrating. Codetry is a discipline for the long, slow, *continuous* horizon — the horizon in which the conch can be passed and the wall can be re-read. It is not a discipline that promises to save anything across a discontinuity. The seven-generation framing of §6 is itself a humility: it is the longest horizon the practice claims competence over, not the longest horizon the world will run on. *Blueprints* is the book the practitioner reads when the temptation arrives to claim the discipline is more than that.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Name carefully for the continuous horizon; do not pretend a name will carry across a break the substrate did not survive.*",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "Why nonfiction is a separate chapter." },
+        {
+          kind: "para",
+          text:
+            "The nonfiction reading lineage will be drafted as its own chapter when the practitioner has the list ready. The separation is deliberate, not editorial. Fiction trained the *ear* — the muscle for hearing load-bearing language as it is being spoken; nonfiction sharpened the *vocabulary* — the precision that lets the practitioner name the move once it has been heard. Conflating the two would flatten both contributions: it would let the nonfiction works look like they had taught a listening they did not teach, and it would let the fiction works look like reference material rather than the long, slow training the chapter above is honest about. The companion chapter is owed to the reader and is held back until the practitioner is ready to write it with the same care.",
+        },
+        { kind: "subhead", text: "Falsifier for the reading-lineage claim." },
+        {
+          kind: "para",
+          text:
+            "The chapter above makes a strong claim: that the seven works listed taught the practitioner to *hear* what codetry depends on, and that the practitioner who has not read them — but has read theory and practice notes — would not reliably hear the same thing. The claim is falsifiable. *If a reader who has never read any of these books, asked to walk the rename test of §4.2 across a real constellation of named systems, produces verdicts indistinguishable from the verdicts of a reader who has read all seven, the chapter's claim fails.* The claim survives only as long as the trained ear is detectably better than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the seven works above are the smallest reading list this handbook is willing to claim trained the discipline.",
+        },
+      ],
+    },
+    {
+      id: "5-4",
+      number: "5.4",
+      partRoman: "V",
+      partLabel: "V · Grounding",
       title: "What kind of thing codetry is (Hempcrete)",
       blocks: [
         {
@@ -1256,8 +1441,8 @@ const partV: Part = {
       ],
     },
     {
-      id: "5-4",
-      number: "5.4",
+      id: "5-5",
+      number: "5.5",
       partRoman: "V",
       partLabel: "V · Grounding",
       title: "Colophon",
@@ -1598,7 +1783,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.3's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.3 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
+            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.4's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.4 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
         },
         {
           kind: "subhead",
@@ -1933,7 +2118,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.3) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
+            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.4) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -1963,10 +2148,10 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.3). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
+            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.4). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§5.3 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
+        { kind: "small", text: "§5.4 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
       ],
     },
     {
