@@ -2263,6 +2263,74 @@ const partVI: Part = {
         },
       ],
     },
+    {
+      id: "6-8",
+      number: "5.8",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
+      title: "Sponsors and experts — base first, then networking outward",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · how the trade grows without losing its ground.",
+        },
+        {
+          kind: "para",
+          text:
+            "The pioneer journey will at some point be visited. Sponsors will offer to stand behind the work materially; experts will offer to stand beside the work in their own discipline. The question this chapter exists to keep open is when that traffic begins, in what order, and what the standing rule is for letting it in. The discipline records the pattern now, before the visitors arrive, so the order is structural rather than improvised.",
+        },
+        {
+          kind: "subhead",
+          text: "The base is people, not infrastructure.",
+        },
+        {
+          kind: "para",
+          text:
+            "The base the chapter refers to is not a follower count, a subscriber list, or a marketing channel. It is the practitioner's own circle — the people already doing the work in the same physical territory, on terms they themselves set, in lineage with the four teachers §4.1 names. That base earns the right to extend invitation by walking the path themselves first, and only then inviting a second cohort whose completion of the same stations will, in turn, earn the standing to issue further invitations. Base now; cohort as the path is walked; only then the visitors who arrive on the standing the cohort has built. The phrasing is *base, then cohort, then visitors*, in that order, and the order is the discipline.",
+        },
+        {
+          kind: "subhead",
+          text: "Sponsors stand behind. Experts stand beside.",
+        },
+        {
+          kind: "para",
+          text:
+            "A sponsor stands behind the work materially — funding, materials, a workshop floor, time off another job, the loan of a tool the trade does not yet own. An expert stands beside the work in their own discipline — a builder who has spent thirty years framing, a midwife who has caught a thousand babies, an accountant who has kept a small business honest across three recessions. The two roles are not the same and the chapter resists collapsing them. A sponsor whose money becomes the basis on which their expertise is then accepted is the failure mode §5.6 named about inspector standing being negotiated away under pressure; the discipline records the names separately so the failure mode can be named separately, and so the inspector can refuse the conflation when it is offered.",
+        },
+        {
+          kind: "subhead",
+          text: "What 'visit' means on the path.",
+        },
+        {
+          kind: "para",
+          text:
+            "A visit is bounded. A visitor leaves a single short note at one station — not a tour of all of them, not a curriculum, not a relationship the path conscripts on the practitioner's behalf. The note is in the visitor's own voice, attributed to the visitor and to the role (sponsor or expert), and visible to anyone walking that station thereafter. The bounded surface is the structural protection: a visitor cannot accidentally become the path's primary voice because there is no place on the path for a primary visitor voice to live. The path is the practitioner's; the visit is the visitor's; the line between the two stays drawn.",
+        },
+        {
+          kind: "subhead",
+          text: "Phasing is not optional.",
+        },
+        {
+          kind: "para",
+          text:
+            "The temptation, once the pattern is named, is to network early — to invite sponsors before the base has walked the path, on the reasoning that visible sponsorship will draw the base in. The chapter records this as the failure mode the chapter exists to name. Networking before the base is real produces the inverse of the intended effect: the base reads sponsor-first as a recruitment campaign and stays away, the path is then walked primarily by visitors with no base, and the discipline loses the people whose practice it was supposed to be in service of. The §5.7 framing of *holding the headwaters back while the world slept* is the same pattern in a different register — the calm came first, the launch comes second, and the order cannot be reversed without surrendering the calm.",
+        },
+        {
+          kind: "subhead",
+          text: "What the path records now.",
+        },
+        {
+          kind: "para",
+          text:
+            "The Pioneer Path data structure now carries an optional *visitors* slot on every station, capable of holding a list of named sponsors and experts with their role and a single short note in their own voice. The slot is empty on every station at the time of writing. The empty state is the chapter's argument made visible: there are no visitors yet because the base has not yet walked the path, and the discipline records the absence rather than papering over it with placeholder names. As the base walks the stations and earns the standing to invite, real visitors will be added one at a time, and the populated state will be the discipline's milestone — recorded in the same field the empty state is recorded in now.",
+        },
+        {
+          kind: "callout",
+          text:
+            "The visitor surface is empty by design. Sponsors and experts are added as the practitioner's own circle walks the path and earns the standing to invite the second cohort, and as that cohort in turn earns the standing to host visitors. The empty state is the discipline; the populated state is the milestone.",
+        },
+      ],
+    },
   ],
 };
 

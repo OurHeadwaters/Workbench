@@ -13,6 +13,26 @@
 import { CHAPTERS, type Block } from "./handbook";
 import { constellation } from "./constellation";
 
+// A sponsor or expert who has visited a station along the path. The
+// distinction matters: §5.8 names sponsors as those who stand behind
+// the work materially, and experts as those who stand beside the work
+// in their own discipline. The two roles are kept separate so a
+// sponsor whose money becomes the basis on which their expertise is
+// then accepted — the §5.6 inspector-standing failure mode — stays
+// visible and refusable rather than collapsed into a single "supporter".
+export type PioneerVisitor = {
+  // Stable slug-cased id used for keyed React renders.
+  id: string;
+  // Display name in the visitor's preferred form.
+  name: string;
+  // §5.8 distinction. Sponsor = stands behind materially. Expert = stands
+  // beside in their own discipline. The chapter resists collapsing them.
+  role: "sponsor" | "expert";
+  // Single short note in the visitor's own voice, left at this station.
+  // Bounded by §5.8: one station, one note, in their own voice.
+  note: string;
+};
+
 export type PioneerStation = {
   id: string;
   ordinal: number; // 1-indexed position on the trail
@@ -30,6 +50,13 @@ export type PioneerStation = {
   // with this name and the player picks it up automatically on next
   // load. No code change required to publish a recording.
   narrationSlug: string;
+  // Optional list of sponsors and experts who have visited this
+  // station, per §5.8 ("Sponsors and experts — base first, then
+  // networking outward"). Empty/undefined by design at the time of
+  // writing — the absence is the §5.8 argument made visible. Real
+  // visitors are added one at a time as the base walks the path and
+  // earns the standing to invite.
+  visitors?: PioneerVisitor[];
 };
 
 // Resolve a constellation primitive's auto-generated chapter id. The

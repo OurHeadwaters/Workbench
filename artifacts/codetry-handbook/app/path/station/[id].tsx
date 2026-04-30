@@ -302,6 +302,47 @@ export default function StationScreen() {
           </Text>
         </View>
 
+        {/* VISITED BY — sponsors and experts (§5.8). Renders nothing
+            when the station has no visitors yet. The empty state is
+            the §5.8 argument made visible: visitors are added one at a
+            time as the base earns the standing to invite. */}
+        {station.visitors && station.visitors.length > 0 ? (
+          <>
+            <Text
+              style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
+            >
+              VISITED BY
+            </Text>
+            {station.visitors.map((v) => (
+              <View
+                key={v.id}
+                style={[
+                  styles.visitorCard,
+                  { backgroundColor: c.card, borderColor: c.rule },
+                ]}
+              >
+                <View style={styles.visitorHeadRow}>
+                  <Text
+                    style={[styles.visitorName, { color: c.foreground, fontFamily: SERIF }]}
+                  >
+                    {v.name}
+                  </Text>
+                  <Text
+                    style={[styles.visitorRole, { color: c.mutedForeground, fontFamily: MONO }]}
+                  >
+                    {v.role.toUpperCase()}
+                  </Text>
+                </View>
+                <Text
+                  style={[styles.visitorNote, { color: c.foreground, fontFamily: SERIF_ITALIC }]}
+                >
+                  “{v.note}”
+                </Text>
+              </View>
+            ))}
+          </>
+        ) : null}
+
         {/* MARK */}
         <Text
           style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
@@ -646,6 +687,33 @@ const styles = StyleSheet.create({
   doPrompt: {
     fontSize: 17,
     lineHeight: 26,
+  },
+  visitorCard: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+  },
+  visitorHeadRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+    marginBottom: 8,
+    gap: 12,
+  },
+  visitorName: {
+    fontSize: 16,
+    lineHeight: 22,
+    flexShrink: 1,
+  },
+  visitorRole: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+  },
+  visitorNote: {
+    fontSize: 15,
+    lineHeight: 22,
   },
   markIntro: {
     fontSize: 14,
