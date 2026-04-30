@@ -1,6 +1,0 @@
-# Auto-generated at build time by scripts/publish-constellation.cjs from
-# the canonical manifest in artifacts/codetry-handbook/data/constellation.json
-# (see Task #562 for source-of-truth context, Task #570 for why this file is
-# untracked). Do not commit — re-publish locally with:
-#   pnpm --filter @workspace/practitioner-operating-plan run publish-constellation
-public/constellation.json
