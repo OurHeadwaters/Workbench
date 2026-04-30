@@ -91,7 +91,7 @@ export default function FrontPage() {
             { color: c.foreground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          {"When you are underwater, you need a hand up for air. This book is that hand. Use it the way a stone mason uses a level \u2014 one course at a time, codetry as the tool."}
+          {"When we are underwater, we need a lifeguard to help us come up for air \u2014 this is your life preserver. Work it the best way you know how to lay it, using codetry like a stone mason."}
         </Text>
         <Text
           style={[
@@ -214,8 +214,8 @@ export default function FrontPage() {
                 { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
               ]}
             >
-              Describe what you want as a thing you already know — a bucket, a
-              shelf, a jar — then hand a clear plan to your agent.
+              Describe what you want like a familiar object — a bucket, a
+              shelf, a jar — and hand off a clear plan to your agent.
             </Text>
           </View>
           <Text
@@ -253,7 +253,7 @@ export default function FrontPage() {
                 { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
               ]}
             >
-              The Standby read at household size. Same rungs, same words the
+              The Z0 saltbox read of The Standby. Same rungs and nouns the
               co-op uses — water, fuel, meds, kid-care, contact tree.
             </Text>
           </View>
@@ -292,9 +292,8 @@ export default function FrontPage() {
                 { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
               ]}
             >
-              Each community keeps its own pile of words — the ones that hold
-              weight, the ones for inside use, the ones to avoid. Check drafts
-              against the pile.
+              Per-community word inventory: load-bearing, interior, avoid.
+              Check drafts against the pile.
             </Text>
           </View>
           <Text
@@ -315,7 +314,7 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          IN SEVEN PARTS
+          IN SIX PARTS
         </Text>
         {PARTS.map((p) => (
           <View key={p.roman} style={styles.partRow}>
@@ -355,8 +354,8 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: SERIF },
           ]}
         >
-          Built from the Practitioner Operating Plan's constellation manifest.
-          The discipline travels; the examples stay where they are.
+          Drawn from the Practitioner Operating Plan's constellation manifest. The
+          discipline travels; the examples don't.
         </Text>
       </ScrollView>
     </View>

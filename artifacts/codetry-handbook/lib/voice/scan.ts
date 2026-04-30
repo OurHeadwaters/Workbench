@@ -54,32 +54,31 @@ const STRING_ARRAY_PROPERTY_NAMES = new Set([
   "openQuestions",
 ]);
 
-// Banned academic vocabulary. These are the terms task #504 retired from
-// chapter prose. They remain valid inside the constellation manifest and
-// inside `kind:"examples"` worked-example blocks (where the discipline's
-// own technical vocabulary is allowed to appear), but must not creep
-// back into hand-authored chapter or commentary prose.
-export const BANNED_TERMS = [
-  "substrate",
-  "tokenize",
-  "reify",
-  "vernacular",
-  "primitive",
-  "membrane",
-  "load-bearing",
-  "cross-zone",
-] as const;
+// Banned academic vocabulary.
+//
+// 30 April 2026 — emptied. Task #504 (the grade-9 simplification pass)
+// installed eight terms here — substrate, tokenize, reify, vernacular,
+// primitive, membrane, load-bearing, cross-zone — on the theory that
+// they were academic decoration that could be replaced inline with
+// plainer substitutes. Chapter §6.4 ("What bringing a sledgehammer to
+// the party looks like") records why that theory was wrong: those terms
+// are not decoration, they are the named pieces the craft is built on.
+// The list is kept here as an empty array (and the test still runs
+// against it) so the infrastructure stays in place for a future
+// derivative everyday-language volume that would carry its own
+// alias map. The academic source volume is exempt by design.
+export const BANNED_TERMS: readonly string[] = [];
 
-// Hard cap on a single sentence. Task #508 lowered this from 110 to
-// 50 by rewriting the longest sentences in handbook.ts. Task #511
-// then rewrote the remaining 41-49-word sentences in handbook.ts and
-// foundingExamples.ts so the cap could drop again — to 40, which is
-// closer to a true short-sentence grade-9 ceiling. Task #512 tightened
-// the cap one more notch — to 35 — by rewriting every 36-40-word
-// sentence in handbook.ts, foundingExamples.ts, and the constellation
-// manifest's hostZoneRationale field. Current prose maxes out at
-// 35 words.
-export const MAX_SENTENCE_WORDS = 35;
+// Hard cap on a single sentence.
+//
+// 30 April 2026 — relaxed from 35 back to 200. The aggressive
+// 110→50→40→35 ratchet across tasks #508, #511, #512 was part of the
+// same simplification pass §6.4 documents. The academic source volume
+// uses long, em-dash- and semicolon-stitched sentences as a deliberate
+// instrument; the cap is kept at 200 to catch obviously runaway prose
+// without forcing the rhythm into staccato. A future everyday-language
+// volume can ratchet this back down for its own corpus.
+export const MAX_SENTENCE_WORDS = 200;
 
 export type BodyCopyString = {
   file: string;

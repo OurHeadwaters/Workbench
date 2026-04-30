@@ -52,34 +52,18 @@ describe("grade-9 voice — body-copy scan setup", () => {
   });
 });
 
-describe("grade-9 voice — banned academic vocabulary", () => {
-  it("registers all eight banned terms", () => {
-    expect([...BANNED_TERMS]).toEqual([
-      "substrate",
-      "tokenize",
-      "reify",
-      "vernacular",
-      "primitive",
-      "membrane",
-      "load-bearing",
-      "cross-zone",
-    ]);
+describe("voice — banned vocabulary list (currently empty)", () => {
+  // 30 April 2026 — BANNED_TERMS was emptied as part of the §6.4
+  // sledgehammer revert. The infrastructure is preserved so a future
+  // derivative everyday-language volume can re-seed the list with its
+  // own alias map. The academic source volume is exempt by design.
+  it("starts as an empty list (academic volume is exempt)", () => {
+    expect([...BANNED_TERMS]).toEqual([]);
   });
 
-  it("does not appear in handbook.ts or foundingExamples.ts body copy", () => {
+  it("therefore reports no banned-term hits in body copy", () => {
     const hits = findBannedVocabularyHits(BODY_COPY);
-    const formatted = hits
-      .map(
-        (h) =>
-          `  ${h.file}:${h.line} [${h.term}] — ${h.preview}`,
-      )
-      .join("\n");
-    expect(
-      hits,
-      hits.length === 0
-        ? ""
-        : `Found ${hits.length} banned academic vocabulary use(s) in body copy. Rewrite in plain language or, if the term is unavoidably technical, move the prose into a kind:"examples" block:\n${formatted}`,
-    ).toEqual([]);
+    expect(hits).toEqual([]);
   });
 });
 
@@ -188,21 +172,25 @@ describe("grade-9 voice — scan helpers", () => {
     expect(countWords("the *books* are open")).toBe(4);
   });
 
-  it("flags a banned term in a synthetic body-copy string", () => {
+  it("returns no banned-term hits while the banned list is empty", () => {
+    // Sanity: with BANNED_TERMS empty, no synthetic prose can produce
+    // a hit. Re-seed BANNED_TERMS in scan.ts to revive the path.
     const hits = findBannedVocabularyHits([
       { file: "synthetic.ts", line: 1, text: "this prose uses substrate" },
     ]);
-    expect(hits.length).toBe(1);
-    expect(hits[0].term).toBe("substrate");
+    expect(hits).toEqual([]);
   });
 
-  it("flags a synthetic over-long sentence", () => {
-    const long = Array.from({ length: 150 }, () => "word").join(" ") + ".";
+  it("flags a sentence that exceeds the current cap", () => {
+    // Build a sentence one word longer than the cap so the test tracks
+    // whatever MAX_SENTENCE_WORDS happens to be set to in scan.ts.
+    const overCap = MAX_SENTENCE_WORDS + 1;
+    const long = Array.from({ length: overCap }, () => "word").join(" ") + ".";
     const hits = findLongSentences(
       [{ file: "synthetic.ts", line: 1, text: long }],
       MAX_SENTENCE_WORDS,
     );
     expect(hits.length).toBe(1);
-    expect(hits[0].words).toBe(150);
+    expect(hits[0].words).toBe(overCap);
   });
 });

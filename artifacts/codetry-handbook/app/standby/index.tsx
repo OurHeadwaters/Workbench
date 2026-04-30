@@ -198,7 +198,7 @@ export default function StandbyChecklist() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          A HOUSEHOLD COMPANION TOOL
+          Z0 SALTBOX · A COMPANION TOOL
         </Text>
         <Text
           style={[
@@ -214,7 +214,7 @@ export default function StandbyChecklist() {
             { color: c.foreground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          The household checklist — same rungs, same words the co-op uses.
+          The household checklist — same rungs, same nouns the co-op uses.
         </Text>
 
         <Text
@@ -281,7 +281,7 @@ export default function StandbyChecklist() {
                 ? `Last standdown ${formatElapsed(
                     Date.now() - state.callClosedAt,
                   )}`
-                : "The shelf is stocked. Open a call when one comes up."}
+                : "Standby stock sits on the shelf until a call opens."}
             </Text>
           </View>
           {callOpen ? (
@@ -344,7 +344,7 @@ export default function StandbyChecklist() {
             },
           ]}
         >
-          The four rungs
+          The four-rung ladder
         </Text>
         <View style={styles.rungRow}>
           {RUNGS.map((r) => {
@@ -395,7 +395,7 @@ export default function StandbyChecklist() {
               { color: c.mutedForeground, fontFamily: MONO },
             ]}
           >
-            {`${checkedCount}/${totalForRung} done on this rung`}
+            {`${checkedCount}/${totalForRung} on this rung`}
           </Text>
           {checkedCount > 0 ? (
             <Pressable
@@ -436,8 +436,8 @@ export default function StandbyChecklist() {
             { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          Same checklist the co-op keeps for {VOCAB.standbyStock || "standby stock"} —
-          at household size. {VOCAB.debrief ? `${VOCAB.debrief.charAt(0).toUpperCase()}${VOCAB.debrief.slice(1)}.` : ""}
+          Same checklist the co-op holds for {VOCAB.standbyStock || "standby stock"} —
+          read at the household scale. {VOCAB.debrief ? `${VOCAB.debrief.charAt(0).toUpperCase()}${VOCAB.debrief.slice(1)}.` : ""}
         </Text>
       </ScrollView>
     </View>
