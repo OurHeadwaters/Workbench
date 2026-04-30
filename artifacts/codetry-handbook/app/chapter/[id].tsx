@@ -292,7 +292,7 @@ export default function ChapterScreen() {
   const chapterBookmarkActive = !!chapterBookmark;
   const total = CHAPTERS.length;
   const progressPct = total > 1 ? Math.round((index / (total - 1)) * 100) : 0;
-  const hasPartLanding = chapter.partRoman === "VI";
+  const hasPartLanding = chapter.partRoman === "V";
   const goToPartLanding = useCallback(() => {
     router.push({
       pathname: "/part/[roman]",

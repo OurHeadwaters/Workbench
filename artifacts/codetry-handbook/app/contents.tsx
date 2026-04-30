@@ -73,8 +73,12 @@ export default function Contents() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {PARTS.map((p) => {
-          const hasLanding = p.roman === "VI";
+        {PARTS.map((p, idx) => {
+          const isBackMatter = p.kind === "backMatter";
+          const prev = idx > 0 ? PARTS[idx - 1] : undefined;
+          const showBackMatterDivider =
+            isBackMatter && (!prev || prev.kind !== "backMatter");
+          const hasLanding = p.roman === "V";
           const headContent = (
             <>
               <Text
@@ -120,6 +124,30 @@ export default function Contents() {
           );
           return (
             <View key={p.roman} style={styles.partBlock}>
+              {showBackMatterDivider ? (
+                <View style={styles.backMatterDivider}>
+                  <View
+                    style={[
+                      styles.backMatterRule,
+                      { backgroundColor: c.rule },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.backMatterLabel,
+                      { color: c.mutedForeground, fontFamily: MONO },
+                    ]}
+                  >
+                    Back Matter
+                  </Text>
+                  <View
+                    style={[
+                      styles.backMatterRule,
+                      { backgroundColor: c.rule },
+                    ]}
+                  />
+                </View>
+              ) : null}
               {hasLanding ? (
                 <Pressable
                   onPress={() =>
@@ -253,6 +281,23 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginLeft: 40,
     opacity: 0.6,
+  },
+  backMatterDivider: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 4,
+    marginBottom: 18,
+  },
+  backMatterRule: {
+    flex: 1,
+    height: 1,
+    opacity: 0.5,
+  },
+  backMatterLabel: {
+    fontSize: 10,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
   },
   chapterRow: {
     flexDirection: "row",

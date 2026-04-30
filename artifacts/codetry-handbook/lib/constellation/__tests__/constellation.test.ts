@@ -119,17 +119,25 @@ describe("constellation-wide primitives — structural lock", () => {
     }
   });
 
-  it("Standby and Gate chapters render as separate Part III worked examples", () => {
+  it("Standby and Gate chapters render as separate Constellation worked examples", () => {
+    // The Constellation moved from old Part III to new Part II in the
+    // five-part-spine restructure. Look up by Part II.
     const standbyChapter = CHAPTERS.find(
       (ch) =>
-        ch.partRoman === "III" && ch.title.startsWith("The Standby"),
+        ch.partRoman === "II" && ch.title.startsWith("The Standby"),
     );
     const gateChapter = CHAPTERS.find(
-      (ch) => ch.partRoman === "III" && ch.title.startsWith("The Gate"),
+      (ch) => ch.partRoman === "II" && ch.title.startsWith("The Gate"),
     );
 
-    expect(standbyChapter, "Standby chapter exists in Part III").toBeDefined();
-    expect(gateChapter, "Gate chapter exists in Part III").toBeDefined();
+    expect(
+      standbyChapter,
+      "Standby chapter exists in Part II (Constellation)",
+    ).toBeDefined();
+    expect(
+      gateChapter,
+      "Gate chapter exists in Part II (Constellation)",
+    ).toBeDefined();
 
     // Title suffixes must be distinct — the bug we just fixed was both
     // chapters carrying the literal suffix "the constellation's first

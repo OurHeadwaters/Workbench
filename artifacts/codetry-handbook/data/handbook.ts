@@ -26,6 +26,7 @@ export type Part = {
   title: string;
   blurb: string;
   chapters: Chapter[];
+  kind?: "spine" | "backMatter";
 };
 
 const partI: Part = {
@@ -151,7 +152,7 @@ const partI: Part = {
       number: "1.3",
       partRoman: "I",
       partLabel: "I · The Discipline",
-      title: "The two-sidedness principles — names that hold both faces of one system",
+      title: "The both-states principle — names that hold one system across two tempos",
       blocks: [
         {
           kind: "para",
@@ -161,56 +162,34 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "Other systems live in two registers at once. They have two sides, and the name either holds both or it doesn't. The temptation, every time, is to name each side separately and let them grow into two systems. The two-sidedness principles are the codetry moves that resist that.",
+            "Other systems run in *two tempos at once* — a slow side and a fast side that are the *same room* read at different speeds. The temptation, every time, is to name each tempo separately and let them grow into two systems. The both-states principle is the codetry move that resists that.",
         },
         {
           kind: "callout",
           text:
-            "When a system has two sides at once, the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+            "When a system has a slow tempo and a fast tempo that are the same plumbing read at different speeds, the umbrella name has to ride from one tempo to the other without bending, or the system will fork into two systems with two cadences and two cultures.",
+        },
+        { kind: "subhead", text: "The Standby as the worked example." },
+        {
+          kind: "para",
+          text:
+            "*The Standby* (worked out in §2.10) is the cleanest worked example so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two tempos. The people, the stock, the vocabulary are all one — only the cadence changes.",
         },
         {
           kind: "para",
           text:
-            "The constellation has discovered, so far, two distinct kinds of two-sidedness. They are siblings, not subtypes — each was named after a different worked example refused to collapse into the other.",
+            "Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
         },
-        { kind: "subhead", text: "Both-states — the temporal kind." },
+        { kind: "subhead", text: "How to spot a both-states name." },
         {
           kind: "para",
           text:
-            "Some systems are two-sided in *tempo*. They have a slow side — a shelf, a posture, a practice that is always-on, mostly quiet, sometimes ignored — and a fast side, an event that flips the system into action and then stands it down. The two sides are the *same room* read at different speeds; the people, the stock, the vocabulary are all one. The name has to ride from one tempo to the other without bending.",
-        },
-        {
-          kind: "para",
-          text:
-            "*The Standby* (worked out in §3.10) is the worked example. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two tempos. Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
-        },
-        { kind: "subhead", text: "Both-sides — the contextual kind." },
-        {
-          kind: "para",
-          text:
-            "Other systems are two-sided in *context*. They have a side fully legitimate inside one room and a side fully legitimate inside another, and the two rooms don't trust each other's language. Neither side is the slow or fast version of the other; they are simultaneous, equally real, and unfit currency in each other's territory. The name has to be the membrane that lets each room keep its own dialect while still allowing communication across — including a posture for source-side language with no honest target equivalent (a *refused* rung, not a forced translation).",
+            "Pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung*, the name is holding both faces and the system is one system.",
         },
         {
           kind: "para",
           text:
-            "*The Gate* is the worked example. The Gate names the membrane between the *inside* (the constellation's own dialect — *neighbour*, *channel*, *the books*) and *massity* (regulator-banker-funder English — *resident*, *bank account*, *financial statements*). Each is fully legitimate inside its room and unfit currency in the other's. Two early candidate names were rejected for failing the test. *The Translator* collapsed the work into directional substitution and lost the posture that some source-side language has no honest target equivalent. *The Importer* read as one-way and lost the bidirectional symmetry. Both survived as *verbs* inside The Gate; neither could be the umbrella. If either had been adopted, the constellation would now treat the inside as the *raw* material the outside *processes*, instead of two equally legitimate dialects with a membrane between them.",
-        },
-        { kind: "subhead", text: "How to spot a two-sided name in the wild." },
-        {
-          kind: "para",
-          text:
-            "A two-sided name passes a small test, in either flavour. Pick one side first and ask whether the noun also fits the other side, then pick the other side and ask whether the noun also fits the first. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding both faces and the system is one system.",
-        },
-        {
-          kind: "para",
-          text:
-            "The two principles are registered in the constellation manifest as `principles.both-states` and `principles.both-sides`. Each is cited on the primitive whose two-sidedness it names; both-states is cited on The Standby, both-sides on The Gate. A new primitive that does double duty must declare which kind of two-sidedness it carries — and may, in time, name a third.",
-        },
-        { kind: "subhead", text: "Why two principles instead of one." },
-        {
-          kind: "para",
-          text:
-            "Both kinds answer the same family of question — *one system or two?* — but on different axes. Both-states asks the question on the *time* axis (slow tempo vs fast tempo, same room). Both-sides asks the question on the *legitimacy* axis (one room's dialect vs another room's dialect, same phenomenon). Collapsing them into one principle would have lost both the temporal-vs-contextual distinction and the cross-zone-reads test that separates them when an umbrella name is being chosen. The constellation keeps the family open: a future primitive may carry a third kind of two-sidedness — across densities, scales, jurisdictions, or some axis not yet named — and that primitive's chapter is where the third principle would be registered.",
+            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to hold two tempos at once. Its sibling principle — *both-sides*, for systems that hold two contexts in one tempo — is taken up next.",
         },
       ],
     },
@@ -235,7 +214,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The constellation's second non-zone primitive — *The Gate* (worked out in §3.11) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts.",
+            "The constellation's second non-zone primitive — *The Gate* (worked out in §2.11) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts.",
         },
         {
           kind: "para",
@@ -261,8 +240,68 @@ const partI: Part = {
       ],
     },
     {
-      id: "1-5",
+      id: "5-5",
       number: "1.5",
+      partRoman: "I",
+      partLabel: "I · The Discipline",
+      title: "What kind of thing codetry is (Hempcrete)",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "The metaphor that runs through the whole discipline is architectural. *Load-bearing*, *foundation*, *the wall*, *the room*, *the surface* — every one of those words enters the handbook borrowed from a building. This chapter is the one place the borrowing gets explicit and the practitioner names the *kind* of building they have in mind: not the steel-and-glass office tower, not the suburban stick-frame house, but a hempcrete wall — a composite of a structural frame with an insulating, breathable infill. Codetry is a hempcrete discipline.",
+        },
+        { kind: "subhead", text: "What hempcrete actually is, briefly." },
+        {
+          kind: "para",
+          text:
+            "Hempcrete is a composite building material made from the woody core of the hemp plant (*hurd* or *shiv*) bound with a lime-based binder. It is not a structural material on its own. It is laid as an infill around a load-bearing frame — typically timber — and once cured, it provides insulation, hygrothermal regulation (it breathes water vapour rather than trapping it), fire resistance, and a wall that quietly continues to absorb carbon over its working life. The material is older than concrete by centuries in some regional traditions and newer than concrete by a century in its modern revival; it sits in the interesting place where the deepest possible historical roots and the most current decarbonisation conversation meet.",
+        },
+        { kind: "subhead", text: "Why the metaphor fits codetry, three ways." },
+        {
+          kind: "para",
+          text:
+            "*A composite, not a monolith.* Hempcrete is two things doing two jobs: the timber frame holds the load; the hemp-and-lime infill holds the climate. Neither alone is the wall. Codetry is the same shape: the *names* hold the metaphor; the *system* holds the mechanics; neither alone is the discipline. §5.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent error in software discourse is to argue about which single material is *the* right material (the type system as the only truth, the documentation as the only truth, the test suite as the only truth); the codetry move, like the hempcrete move, is to refuse the choice and put the materials in the relationship that makes the wall work.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Infill, not facade.* Hempcrete sits *inside* the wall — between the structural studs of the frame, breathing in both directions, doing its work in the body of the building. It is not a cladding bolted on the outside for appearance. The codetry name is the same: it is not a label sprayed on the outside of a system that was designed without it. It is the load-distributing infill that lives between the structural type and the surface affordance, and the system only works the way the room expects it to because the infill is doing its job *inside* the wall. Strip the infill and the frame still stands — but the wall stops regulating, the room stops being habitable in the same way, and the mechanics that were quietly held by the composite now have to be shouted by signage and policy.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Ethical-aesthetic, not just technical.* Hempcrete is chosen, where it is chosen, for a bundle of reasons that no one of which is sufficient: it works thermally, it sequesters carbon, it is locally grown, it is non-toxic, it ages honestly, it is beautiful in a way that pre-cast concrete is not. The choice is technical and ethical and aesthetic at the same time, and the practitioner who tries to defend it on any one of those grounds alone will sound like they are leaving the other reasons out. Codetry has the same compound character. The rename test of §3.2 is technical (it catches drift the type system misses); the protection of community vocabulary is ethical (the people who live in the place are the ones whose words the system runs on); the insistence that the name on the button keep its promise is aesthetic (the wall is honest about what it is). The discipline does not survive being reduced to any one of those grounds. The hempcrete metaphor is the shortest sentence the handbook has for that.",
+        },
+        { kind: "subhead", text: "Where the strain on the metaphor is honest." },
+        {
+          kind: "para",
+          text:
+            "Hempcrete is not perfect. It needs a frame to hold any real load; it cures slowly; the modern revival is small relative to the cement industry it would have to displace; the lime binder is less ecologically clean than the hemp suggests; in some climates the hygrothermal advantages diminish. Codetry has analogous strains: it needs an existing system to hold any real load (the discipline is not a build pattern, it is a discipline applied to a build); the practice cures slowly (a renamed system takes weeks of conversation to settle into the team's mouths, §3.3); the discipline is small relative to the architectural and product-management traditions it would have to displace; the rename test depends on a practitioner who can tell load-bearing from decorative, and that practitioner's judgment is itself a binder whose composition matters. The metaphor is not flattering by accident. The hempcrete wall is the kind of wall the practitioner is trying to build *because* it is honest about what it can and cannot carry.",
+        },
+        { kind: "subhead", text: "The one-sentence claim." },
+        {
+          kind: "callout",
+          text:
+            "Codetry is hempcrete: a composite discipline whose *names* are the breathing infill laid between the structural frame of *type* and the surface skin of *affordance*, doing the climate-regulating, carbon-sequestering, ethical-aesthetic work that no single layer in the system was holding before.",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "Coda — the bamboo field." },
+        {
+          kind: "para",
+          text:
+            "There is a second material the practice keeps reaching for, alongside hempcrete, that the handbook has been politely vague about until now. It is *bamboo* — specifically, the bamboo field of the xBuckets XRP-spring artwork, where six growth stages of a planted grove serve as the visual register for savings accumulating above the network reserve. The bamboo metaphor is doing the same kind of work as the hempcrete one (a living material chosen for a bundle of technical, ecological, and aesthetic reasons that no one of which is sufficient), but in a different room: where hempcrete is the metaphor for the *discipline*, bamboo is a *register* the discipline carries on a particular surface. The two are not interchangeable. §FL.3 records the test that ruled out bamboo as a register on the wallet/XRP-swap chip — bamboo is the right material for the spring artwork and the wrong material for the swap chip, and the test that drew that line is one of the load-bearing entries in the test ledger the Field Ledger collects.",
+        },
+        {
+          kind: "small",
+          text:
+            "Cross-reference: §FL.3 (Codetry Test 003 — bamboo-field on the wallet chip) for the test that named *one register per screen* and rejected the bamboo register on a surface the water register had already claimed.",
+        },
+      ],
+    },
+    {
+      id: "1-5",
+      number: "1.6",
       partRoman: "I",
       partLabel: "I · The Discipline",
       title: "The single-sentence definition",
@@ -283,20 +322,54 @@ const partI: Part = {
         },
       ],
     },
+    {
+        id: "1-7",
+        number: "1.7",
+        partRoman: "I",
+        partLabel: "I · The Discipline",
+        title: "Nearest neighbors — the disciplines codetry is not",
+        blocks: [
+          {
+            kind: "para",
+            text:
+              "Codetry sits next to a small family of older disciplines that share its concerns about words doing structural work. None of them is codetry. Each of them is honoured. Naming the neighbours up front, in the same breath as naming codetry itself, is part of the discipline — it spares the reader the work of asking, every chapter, *isn't this just X?*",
+          },
+          {
+            kind: "list",
+            items: [
+              "*Code poetry* — programs that are also valid verse. The poem lives inside the source. In codetry, the poem lives as the architecture and the source is what makes it run.",
+              "*Literate programming* (Knuth, 1984) — prose and source woven into one document. The unit of care is the explanation. In codetry, the unit of care is the name itself, and the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry.",
+              "*Domain-driven design* (Evans, 2003) and *Conway's Law* (Conway, 1968) — the bounded-context, ubiquitous-language tradition. DDD is the closest sibling. Codetry sharpens the test at the level of the individual noun rather than the bounded context, and applies it outside enterprise software in community institutions where the *domain experts* are the people who live in the place.",
+              "*Type-driven development* — types as the load-bearing layer. The compiler enforces what the type is *of*. Codetry asks who decides what the name *is*, and insists that layer is real, load-bearing, and the only place authorship of the system's nouns is still possible at all.",
+              "*Capital allocation at scale* — the founder-allocator school of compounding ownership through long-horizon allocation. Codetry's exit is handover, not compound; the practitioner's job is to leave the chair to the community whose words the system runs on.",
+            ],
+          },
+          {
+            kind: "para",
+            text:
+              "Each of these neighbours has its own room in the back-matter Deep Dives, where the codetry / neighbour distinction is worked out in full. The point of naming them here is the inverse — to put the family on the table early, so the rest of Part I can name *what codetry is* without having to keep saying *what it isn't*.",
+          },
+          {
+            kind: "small",
+            text: "Deep treatments of each neighbour live in the back-matter section *Deep Dives* (§DD.1–§DD.5).",
+          },
+        ],
+      },
   ],
 };
 
 const partII: Part = {
-  roman: "II",
+  roman: "DD",
   title: "Adjacent Disciplines",
   blurb:
     "Five older disciplines codetry gets confused with — all honoured, all doing different work.",
+  kind: "backMatter",
   chapters: [
     {
       id: "2-1",
-      number: "2.1",
-      partRoman: "II",
-      partLabel: "II · Adjacent Disciplines",
+      number: "DD.1",
+      partRoman: "DD",
+      partLabel: "Deep Dives",
       title: "Different from code poetry",
       blocks: [
         {
@@ -318,9 +391,9 @@ const partII: Part = {
     },
     {
       id: "2-2",
-      number: "2.2",
-      partRoman: "II",
-      partLabel: "II · Adjacent Disciplines",
+      number: "DD.2",
+      partRoman: "DD",
+      partLabel: "Deep Dives",
       title: "Different from literate programming",
       blocks: [
         {
@@ -331,7 +404,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Both disciplines insist that words around the code do load-bearing work. What each one names as the load-bearing word, and where each one places the unit of care, is the contrast worth drawing here; §6.1 returns to the relationship between the two disciplines once that contrast is on the page, and finds it less symmetric than this chapter first allows.",
+            "Both disciplines insist that words around the code do load-bearing work. What each one names as the load-bearing word, and where each one places the unit of care, is the contrast worth drawing here; §5.1 returns to the relationship between the two disciplines once that contrast is on the page, and finds it less symmetric than this chapter first allows.",
         },
         {
           kind: "subhead",
@@ -354,15 +427,15 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in adjacent rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §6.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry, which makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
+            "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in adjacent rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §5.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry, which makes the discipline that holds those names a precondition for the weave rather than a sibling to it.",
         },
       ],
     },
     {
       id: "2-3",
-      number: "2.3",
-      partRoman: "II",
-      partLabel: "II · Adjacent Disciplines",
+      number: "DD.3",
+      partRoman: "DD",
+      partLabel: "Deep Dives",
       title: "Different from DDD and Conway's Law",
       blocks: [
         {
@@ -396,7 +469,7 @@ const partII: Part = {
         {
           kind: "para",
           text:
-            "The relationship between codetry and DDD is taken up again, less politely, in §5.2: DDD is not only a sibling discipline but one of the *roots* codetry sits on top of, and the *ubiquitous language* clause is the closest single phrase in the prior literature to the move codetry asks of every individual noun.",
+            "The relationship between codetry and DDD is taken up again, less politely, in §4.2: DDD is not only a sibling discipline but one of the *roots* codetry sits on top of, and the *ubiquitous language* clause is the closest single phrase in the prior literature to the move codetry asks of every individual noun.",
         },
         {
           kind: "subhead",
@@ -421,9 +494,9 @@ const partII: Part = {
     },
     {
       id: "2-4",
-      number: "2.4",
-      partRoman: "II",
-      partLabel: "II · Adjacent Disciplines",
+      number: "DD.4",
+      partRoman: "DD",
+      partLabel: "Deep Dives",
       title: "Different from type-driven design",
       blocks: [
         {
@@ -468,9 +541,9 @@ const partII: Part = {
     },
     {
       id: "2-5",
-      number: "2.5",
-      partRoman: "II",
-      partLabel: "II · Adjacent Disciplines",
+      number: "DD.5",
+      partRoman: "DD",
+      partLabel: "Deep Dives",
       title: "Different from capital allocation at scale",
       blocks: [
         {
@@ -526,12 +599,12 @@ const partII: Part = {
   ],
 };
 
-// Build Part III dynamically from the bundled constellation.
+// Build the Constellation part (now spine Part II) dynamically from the bundled constellation.
 const allZones = [...constellation.zones, ...constellation.preZone];
 const zoneCount = allZones.length;
 
 const zoneChapters: Chapter[] = allZones.map((z, i) => {
-  const num = `3.${i + 1}`;
+  const num = `2.${i + 1}`;
   const zoneLabel =
     z.zone < 0 ? "Pre-zone" : `Zone ${z.zone}${z.slot ? ` · ${z.slot}` : ""}`;
   const blocks: Block[] = [
@@ -563,8 +636,8 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
   return {
     id: `3-${i + 1}`,
     number: num,
-    partRoman: "III",
-    partLabel: "III · The Constellation as Founding Examples",
+    partRoman: "II",
+    partLabel: "II · The Constellation: 7 Zones and 2 Primitives",
     title: z.name,
     blocks,
   };
@@ -572,7 +645,7 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
 
 // Where each registered principle in the constellation manifest has its
 // home chapter in Part I. Used to generate the back-citation at the top
-// of each Part-III primitive chapter, so a reader who lands on the
+// of each Part-II primitive chapter, so a reader who lands on the
 // worked example can tap straight back to the principle that explains
 // why the umbrella name had to do double duty. New principle ids must
 // be added here when they are registered in the manifest; the lookup
@@ -602,7 +675,7 @@ function principleCitationBlock(primitiveId: string, principleId: string): Block
   };
 }
 
-// Founding-primitive chapters in Part III. One chapter per
+// Founding-primitive chapters in Part II. One chapter per
 // constellation-wide primitive registered in the bundled manifest. The
 // manifest carries each primitive's vocabulary, severity ladder, sub-
 // shelves, and rejected alternatives; the per-primitive *commentary*
@@ -613,7 +686,7 @@ function principleCitationBlock(primitiveId: string, principleId: string): Block
 // to refuse silent defaults.
 const foundingPrimitiveChapters: Chapter[] =
   constellation.constellationWidePrimitives.map((p, i) => {
-    const num = `3.${zoneCount + i + 1}`;
+    const num = `2.${zoneCount + i + 1}`;
     const commentary = findFoundingExampleCommentary(p.id);
     const blocks: Block[] = [
       { kind: "small", text: "Constellation-wide primitive · non-zone" },
@@ -664,24 +737,24 @@ const foundingPrimitiveChapters: Chapter[] =
     return {
       id: `3-${zoneCount + i + 1}`,
       number: num,
-      partRoman: "III",
-      partLabel: "III · The Constellation as Founding Examples",
+      partRoman: "II",
+      partLabel: "II · The Constellation: 7 Zones and 2 Primitives",
       title: `${p.name} — ${commentary.titleSuffix}`,
       blocks,
     };
   });
 
 const partIII: Part = {
-  roman: "III",
-  title: "The Constellation as Founding Examples",
+  roman: "II",
+  title: "The Constellation: 7 Zones and 2 Primitives",
   blurb:
-    "The worked examples that happened to be in front of the practitioner when codetry got named.",
+    "The worked examples that happened to be in front of the practitioner when codetry got named — seven zones and two primitives. The list is open: more primitives may join the constellation as the discipline meets new ground.",
   chapters: [
     {
       id: "3-0",
-      number: "3.0",
-      partRoman: "III",
-      partLabel: "III · The Constellation as Founding Examples",
+      number: "2.0",
+      partRoman: "II",
+      partLabel: "II · The Constellation: 7 Zones and 2 Primitives",
       title: "How to read these",
       blocks: [
         {
@@ -704,9 +777,9 @@ const partIII: Part = {
     ...foundingPrimitiveChapters,
     {
       id: `3-${zoneCount + foundingPrimitiveChapters.length + 1}`,
-      number: `3.${zoneCount + foundingPrimitiveChapters.length + 1}`,
-      partRoman: "III",
-      partLabel: "III · The Constellation as Founding Examples",
+      number: `2.${zoneCount + foundingPrimitiveChapters.length + 1}`,
+      partRoman: "II",
+      partLabel: "II · The Constellation: 7 Zones and 2 Primitives",
       title: "Closing reflection",
       blocks: [
         {
@@ -725,16 +798,16 @@ const partIII: Part = {
 };
 
 const partIV: Part = {
-  roman: "IV",
+  roman: "III",
   title: "The Practice",
   blurb:
     "Six moves the codetry practitioner makes — in the field, with people, in the working language of the room.",
   chapters: [
     {
       id: "4-1",
-      number: "4.1",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.1",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Listen for the noun",
       blocks: [
         {
@@ -757,13 +830,24 @@ const partIV: Part = {
           text:
             "The noun is not branding. The noun is the foundation footing.",
         },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — write down the noun the community already uses, and refuse to translate it.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.2 (Codetry Test 002) is this rule made permanent: the Zone 1 word map locks in the watershed nouns the community had already been using and refuses to swap them for generic equivalents. §FL.5 (Codetry Test 005) records the same rule pulling the Earn destination back to the community-native *Lake* after several generic candidates were tried.",
+        },
       ],
     },
     {
       id: "4-2",
-      number: "4.2",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.2",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Test the name by trying to rename it",
       blocks: [
         {
@@ -779,7 +863,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — Tests 001, 002, 009, and 010 (the two 010 entries — shortfall CTA and swap-sheet header) all turn on the rename test of this chapter. §7.1 catches *bank* trying to displace the watershed verbs on the Payday CTA. §7.2 locks the Zone 1 word map and rejects three specific generic-noun renames at once. §7.9 graduates *Top up reservoir from XRP* on the demoted swap chip by running this test against the production wording *Convert XRP → RLUSD*. The two §7.10 entries — *Top up reservoir from XRP · cover the shortfall* on the loud amber CTA, and *Top up your reservoir* on the swap-sheet header — extend the same test to a loud surface and to a transactional sheet's title-level register. See §7 for the full ledger.",
+            "From the ledger — Tests 001, 002, 009, and 010 (the two 010 entries — shortfall CTA and swap-sheet header) all turn on the rename test of this chapter. §FL.1 catches *bank* trying to displace the watershed verbs on the Payday CTA. §FL.2 locks the Zone 1 word map and rejects three specific generic-noun renames at once. §FL.9 graduates *Top up reservoir from XRP* on the demoted swap chip by running this test against the production wording *Convert XRP → RLUSD*. The two §FL.10 entries — *Top up reservoir from XRP · cover the shortfall* on the loud amber CTA, and *Top up your reservoir* on the swap-sheet header — extend the same test to a loud surface and to a transactional sheet's title-level register. See the Field Ledger for the full ledger.",
         },
         {
           kind: "callout",
@@ -818,13 +902,24 @@ const partIV: Part = {
           text:
             "Open /codetry-test alongside this chapter to see the test running on real names.",
         },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — a name that survives the rename test is load-bearing; one that doesn't is decoration. Reject generic-noun renames at the gate.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.1, §FL.2, §FL.9, §FL.10 are the rule at work; the §FL.10 pair extends it to a loud-amber CTA and a transactional sheet's title-level register.",
+        },
       ],
     },
     {
       id: "4-3",
-      number: "4.3",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.3",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Detect drift",
       blocks: [
         {
@@ -867,20 +962,31 @@ const partIV: Part = {
         {
           kind: "para",
           text:
-            "The instruments that catch drift — the audit pages, the long-form glossaries, the build-time checks, the cross-deck assertions — are taken up again, as a family, in §4.6.",
+            "The instruments that catch drift — the audit pages, the long-form glossaries, the build-time checks, the cross-deck assertions — are taken up again, as a family, in §3.6.",
         },
         {
           kind: "small",
           text:
-            "From the ledger — §7.1 (Codetry Test 001) is this chapter at work on a single button: two sightings on the Payday CTA, one of *bank* trying to displace *channel*, the other of a stale *Surplus Pool* parenthetical drifting in a daily drop, both caught by reading the surfaces cold and naming the slip as a slip. The two sightings are the cleanest worked example of *catch the slippage early and name it as slippage* the handbook has on hand.",
+            "From the ledger — §FL.1 (Codetry Test 001) is this chapter at work on a single button: two sightings on the Payday CTA, one of *bank* trying to displace *channel*, the other of a stale *Surplus Pool* parenthetical drifting in a daily drop, both caught by reading the surfaces cold and naming the slip as a slip. The two sightings are the cleanest worked example of *catch the slippage early and name it as slippage* the handbook has on hand.",
+        },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — drift is structural, not cosmetic. Catch the slippage early and name it as slippage; install the check at the bench, not at the gate.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.1 names the gate-vs-bench timing the rule turns on; the §FL.1 sightings of *bank* and *Surplus Pool* are the slip caught and named.",
         },
       ],
     },
     {
       id: "4-4",
-      number: "4.4",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.4",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Run a naming session",
       blocks: [
         {
@@ -914,13 +1020,24 @@ const partIV: Part = {
           text:
             "Suitable for printing from the share sheet — five steps fit on one side of a letter page.",
         },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — the session's output is a one-page list of nouns and verbs in the community's own language. Print it; the print is the spec.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.2 (Codetry Test 002) is the locked Zone 1 word map: a one-page table of nouns and verbs the practitioner committed to as the spec for the watershed dialect, born of exactly the kind of session this chapter describes.",
+        },
       ],
     },
     {
       id: "4-5",
-      number: "4.5",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.5",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Distinguish the metaphor from the technology",
       blocks: [
         {
@@ -941,15 +1058,26 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §7.3 (Codetry Test 003) and §7.5 (Codetry Test 005) both run this distinction at the surface level. §7.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the Zone 1 water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §7.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, recorded in this entry) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Zone 1 watershed dialect.",
+            "From the ledger — §FL.3 (Codetry Test 003) and §FL.5 (Codetry Test 005) both run this distinction at the surface level. §FL.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the Zone 1 water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §FL.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, recorded in this entry) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Zone 1 watershed dialect.",
+        },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — one register per screen. The medium serves the metaphor; never let two metaphors compete on the same surface.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.3 enforces *one register per screen* on the Zone 1 wallet/swap chip; §FL.5 lands the medium-correct noun (*Lake*) on the Earn destination after the discipline rejects the off-register candidates.",
         },
       ],
     },
     {
       id: "4-6",
-      number: "4.6",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.6",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "The instruments of verification",
       blocks: [
         {
@@ -975,15 +1103,26 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §7.2 (Test 002), §7.4 (Test 004), and the §7.6/§7.8 pair (Test 006 and the second-numbered Test 008) read as a working family of verification instruments. §7.2 is the locked Zone 1 word map itself — the table the rename test of §4.2 runs against. §7.4 names the temperature rule (calm states earn their loudness) — the verification that a name's typographic volume matches the work the name is doing. §7.6 and §7.8 install the Drip Harvester sense-distinction across Earn surfaces — verification by pinning down two senses of one noun rather than letting the bare word drift between them.",
+            "From the ledger — §FL.2 (Test 002), §FL.4 (Test 004), and the §FL.6/§FL.8 pair (Test 006 and the second-numbered Test 008) read as a working family of verification instruments. §FL.2 is the locked Zone 1 word map itself — the table the rename test of §3.2 runs against. §FL.4 names the temperature rule (calm states earn their loudness) — the verification that a name's typographic volume matches the work the name is doing. §FL.6 and §FL.8 install the Drip Harvester sense-distinction across Earn surfaces — verification by pinning down two senses of one noun rather than letting the bare word drift between them.",
+        },
+        { kind: "rule" },
+        {
+          kind: "callout",
+          text:
+            "Rule — one word, one referent. Pin each noun to a single sense; let the typographic volume match the work the name is doing.",
+        },
+        {
+          kind: "small",
+          text:
+            "From the ledger — §FL.6 and §FL.8 hold *one word, one referent* on the Drip Harvester noun across Earn surfaces; §FL.4 holds the calm-states temperature rule.",
         },
       ],
     },
     {
       id: "4-7",
-      number: "4.7",
-      partRoman: "IV",
-      partLabel: "IV · The Practice",
+      number: "3.7",
+      partRoman: "III",
+      partLabel: "III · The Practice",
       title: "Teaching codetry to communities",
       blocks: [
         {
@@ -1062,15 +1201,15 @@ const teacherList: Block[] = constellation.teachers.map((t) => ({
 }));
 
 const partV: Part = {
-  roman: "V",
+  roman: "IV",
   title: "Grounding",
-  blurb: "The four teachers, the axiom, the lineage, the hempcrete chapter, and the colophon.",
+  blurb: "The four teachers, the axiom, and the lineage codetry stands inside.",
   chapters: [
     {
       id: "5-1",
-      number: "5.1",
-      partRoman: "V",
-      partLabel: "V · Grounding",
+      number: "4.1",
+      partRoman: "IV",
+      partLabel: "IV · Grounding",
       title: "The four teachers and the axiom",
       blocks: [
         {
@@ -1090,9 +1229,9 @@ const partV: Part = {
     },
     {
       id: "5-2",
-      number: "5.2",
-      partRoman: "V",
-      partLabel: "V · Grounding",
+      number: "4.2",
+      partRoman: "IV",
+      partLabel: "IV · Grounding",
       title: "Lineage",
       blocks: [
         {
@@ -1110,7 +1249,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Donald Knuth's WEB and CWEB; Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. Document is the source; code is woven from prose. The discipline closest to codetry in this lineage — and, on the reading §6.1 lands on, the discipline codetry sits one floor underneath rather than across the room from: literate programming verifies by exposing the reasoning, but the woven program only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims, and holding those names is the move codetry is for.",
+            "Donald Knuth's WEB and CWEB; Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. Document is the source; code is woven from prose. The discipline closest to codetry in this lineage — and, on the reading §5.1 lands on, the discipline codetry sits one floor underneath rather than across the room from: literate programming verifies by exposing the reasoning, but the woven program only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims, and holding those names is the move codetry is for.",
         },
         { kind: "subhead", text: "The earlier book (2017)" },
         {
@@ -1128,7 +1267,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Eric Evans' *Domain-Driven Design* and the bounded-context, ubiquitous-language vocabulary it seeded. DDD's *ubiquitous language* is the closest single phrase in the prior literature to what codetry asks of a name: a word that has to live in the conversation, the whiteboard, and the code at once, with no translation step in between. §2.3 already named DDD as a sibling discipline to codetry; this chapter names it as a *root*. The rename test of §4.2 is the same move DDD's bounded-context boundary already half-described — codetry's contribution is to make the test sharp at the level of the individual noun rather than the bounded context, and to apply it outside enterprise software, in community institutions where the *domain experts* are the people who live in the place.",
+            "Eric Evans' *Domain-Driven Design* and the bounded-context, ubiquitous-language vocabulary it seeded. DDD's *ubiquitous language* is the closest single phrase in the prior literature to what codetry asks of a name: a word that has to live in the conversation, the whiteboard, and the code at once, with no translation step in between. §DD.3 already named DDD as a sibling discipline to codetry; this chapter names it as a *root*. The rename test of §3.2 is the same move DDD's bounded-context boundary already half-described — codetry's contribution is to make the test sharp at the level of the individual noun rather than the bounded context, and to apply it outside enterprise software, in community institutions where the *domain experts* are the people who live in the place.",
         },
         { kind: "subhead", text: "Beck and the XP/agile vocabulary (1999 →)" },
         {
@@ -1140,19 +1279,19 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* drew the line codetry's whole verification standard rests on. Brooks distinguished between *essence* — the irreducible conceptual structure of the software — and *accident* — the parts that exist only because of the substrate. Codetry's claim that *the metaphor must be inspectable in the name itself* (§4.6) is a claim about *essence*: the name is not an accident of the substrate (a label, a string field, a UI affordance), it is part of the system's essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended. Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident, which is the line codetry walks across.",
+            "Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* drew the line codetry's whole verification standard rests on. Brooks distinguished between *essence* — the irreducible conceptual structure of the software — and *accident* — the parts that exist only because of the substrate. Codetry's claim that *the metaphor must be inspectable in the name itself* (§3.6) is a claim about *essence*: the name is not an accident of the substrate (a label, a string field, a UI affordance), it is part of the system's essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended. Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident, which is the line codetry walks across.",
         },
         { kind: "subhead", text: "Nielsen, heuristic #2 — *match between system and the real world* (1994)" },
         {
           kind: "para",
           text:
-            "Jakob Nielsen's second usability heuristic: *the system should speak the users' language, with words, phrases, and concepts familiar to the user.* The HCI tradition has carried this rule for thirty years and it is the most under-cited root of codetry. Nielsen's framing is descriptive (a usability principle, evaluated heuristically); codetry's contribution is to make it constructive (a design discipline whose load-bearing test is the rename of §4.2) and to extend it from interface copy into the *system structure* the names enact. Heuristic #2 is what made the move legible to UX practitioners; codetry says the same move has architectural consequences the UX framing did not yet claim.",
+            "Jakob Nielsen's second usability heuristic: *the system should speak the users' language, with words, phrases, and concepts familiar to the user.* The HCI tradition has carried this rule for thirty years and it is the most under-cited root of codetry. Nielsen's framing is descriptive (a usability principle, evaluated heuristically); codetry's contribution is to make it constructive (a design discipline whose load-bearing test is the rename of §3.2) and to extend it from interface copy into the *system structure* the names enact. Heuristic #2 is what made the move legible to UX practitioners; codetry says the same move has architectural consequences the UX framing did not yet claim.",
         },
         { kind: "subhead", text: "Lakoff and Johnson — *Metaphors We Live By* (1980)" },
         {
           kind: "para",
           text:
-            "George Lakoff and Mark Johnson's *Metaphors We Live By* is the philosophical root underneath the entire discipline. Their claim — that conceptual metaphor is not decorative language but the substrate of human cognition, and that the metaphors a community lives by shape what that community can think — is the claim codetry treats as a working assumption. The reason renaming *Buckets* to *Categories* lets the UI quietly suggest balances can grow by clicking (§4.2) is the Lakoff/Johnson claim playing out at software scale: the metaphor was structuring thought, the new word structures different thought, and the system shifts to match. Codetry is what the Lakoff/Johnson observation looks like once it is treated as a constraint on building, not just a description of speaking.",
+            "George Lakoff and Mark Johnson's *Metaphors We Live By* is the philosophical root underneath the entire discipline. Their claim — that conceptual metaphor is not decorative language but the substrate of human cognition, and that the metaphors a community lives by shape what that community can think — is the claim codetry treats as a working assumption. The reason renaming *Buckets* to *Categories* lets the UI quietly suggest balances can grow by clicking (§3.2) is the Lakoff/Johnson claim playing out at software scale: the metaphor was structuring thought, the new word structures different thought, and the system shifts to match. Codetry is what the Lakoff/Johnson observation looks like once it is treated as a constraint on building, not just a description of speaking.",
         },
         { kind: "subhead", text: "GOV.UK content design and the Mailchimp voice tradition" },
         {
@@ -1176,10 +1315,10 @@ const partV: Part = {
         {
           kind: "ordered",
           items: [
-            "*A constructive rename test for individual nouns.* Nielsen's heuristic #2 evaluates the match between system and real-world language descriptively. DDD's bounded-context boundary tests vocabulary at the context level. Codetry's §4.2 rename test is the same family of move, sharpened to the individual noun and made constructive: hold the rest of the system constant, swap the word, read what shifts. The test is small enough to fit on a workbench page and falsifiable enough to settle a disagreement at the kitchen table.",
+            "*A constructive rename test for individual nouns.* Nielsen's heuristic #2 evaluates the match between system and real-world language descriptively. DDD's bounded-context boundary tests vocabulary at the context level. Codetry's §3.2 rename test is the same family of move, sharpened to the individual noun and made constructive: hold the rest of the system constant, swap the word, read what shifts. The test is small enough to fit on a workbench page and falsifiable enough to settle a disagreement at the kitchen table.",
             "*The discipline applied outside enterprise software.* DDD's *domain experts* are usually a product manager and three subject-matter specialists in a corporate setting. Codetry's *domain experts* are the people who live in the place — the fishing camp, the food co-op, the neighbourhood clinic — and the *ubiquitous language* is whatever they already say to each other before a software person enters the room. The discipline is the same; the room it is practised in is older and slower than the one DDD was written for.",
-            "*Drift detection as a continuous practice, not a project phase.* Lakoff/Johnson observed that conceptual metaphor shifts under social pressure; codetry's §4.3 and §4.6 install that observation as a routine check — audit pages, build-time version checks, vocabulary sweeps run on a cadence. The closest prior practice is the GOV.UK / Mailchimp style-guide tradition; codetry extends the cadence into source code and version control so the metaphor and the system cannot disagree without something visibly breaking.",
-            "*Verification by inspection of the name on the surface.* The XP system-metaphor practice, the literate-programming weave, and the Brooks essence/accident line each get to the edge of this claim without making it. Codetry makes it explicit: the verification standard is that a user reading the name on the button can predict what happens when they press it, because the metaphor the name carries is enacted by the system underneath. Verification lives in the place the user already looks. This is the move §4.6 names and the falsifier the rest of the practice is built around.",
+            "*Drift detection as a continuous practice, not a project phase.* Lakoff/Johnson observed that conceptual metaphor shifts under social pressure; codetry's §3.3 and §3.6 install that observation as a routine check — audit pages, build-time version checks, vocabulary sweeps run on a cadence. The closest prior practice is the GOV.UK / Mailchimp style-guide tradition; codetry extends the cadence into source code and version control so the metaphor and the system cannot disagree without something visibly breaking.",
+            "*Verification by inspection of the name on the surface.* The XP system-metaphor practice, the literate-programming weave, and the Brooks essence/accident line each get to the edge of this claim without making it. Codetry makes it explicit: the verification standard is that a user reading the name on the button can predict what happens when they press it, because the metaphor the name carries is enacted by the system underneath. Verification lives in the place the user already looks. This is the move §3.6 names and the falsifier the rest of the practice is built around.",
           ],
         },
         {
@@ -1197,9 +1336,9 @@ const partV: Part = {
     },
     {
       id: "5-3",
-      number: "5.3",
-      partRoman: "V",
-      partLabel: "V · Grounding",
+      number: "4.3",
+      partRoman: "IV",
+      partLabel: "IV · Grounding",
       title: "The reading lineage — fiction",
       blocks: [
         {
@@ -1231,7 +1370,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "These three are read here as one triangle. *1984* names the *fast capture* of a vocabulary — Newspeak as the deliberate, top-down compression of what can be said and therefore thought. *Animal Farm* names the *slow capture* — the painted commandments on the barn quietly rewritten in the night, where the drift is so gradual that no single reading catches it but the comparison across years is unanswerable. *Brave New World* names the *soft capture* — a vocabulary so comfortable that the cage is welcomed in and the question of whether one is inside it never arises. The triangle teaches that capture has at least three speeds and that a practitioner who is only watching for one will miss the other two; the rename test of §4.2 is sharp against fast capture, the drift detection of §4.3 is sharp against slow capture, and the protection of community vocabulary against generic professional English is the move sharpest against the third.",
+            "These three are read here as one triangle. *1984* names the *fast capture* of a vocabulary — Newspeak as the deliberate, top-down compression of what can be said and therefore thought. *Animal Farm* names the *slow capture* — the painted commandments on the barn quietly rewritten in the night, where the drift is so gradual that no single reading catches it but the comparison across years is unanswerable. *Brave New World* names the *soft capture* — a vocabulary so comfortable that the cage is welcomed in and the question of whether one is inside it never arises. The triangle teaches that capture has at least three speeds and that a practitioner who is only watching for one will miss the other two; the rename test of §3.2 is sharp against fast capture, the drift detection of §3.3 is sharp against slow capture, and the protection of community vocabulary against generic professional English is the move sharpest against the third.",
         },
         { kind: "subhead", text: "*1984* — Orwell." },
         {
@@ -1242,7 +1381,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The diagnostic the book gave the practitioner is a method, not a mood. If Newspeak is the deliberate compression of a vocabulary so that load-bearing thought becomes impossible, then the rename test of §4.2 is the same operation run in reverse: hold the system constant, swap the noun, and read what becomes thinkable that was not thinkable a moment ago. The test surfaces the words a system is quietly relying on by removing them and watching what the system can no longer say. Orwell built the negative case at civilisational scale; codetry runs the positive version at the scale of a single button on a single screen, on the working assumption that a community whose buttons keep their words has not yet had its Newspeak written for it.",
+            "The diagnostic the book gave the practitioner is a method, not a mood. If Newspeak is the deliberate compression of a vocabulary so that load-bearing thought becomes impossible, then the rename test of §3.2 is the same operation run in reverse: hold the system constant, swap the noun, and read what becomes thinkable that was not thinkable a moment ago. The test surfaces the words a system is quietly relying on by removing them and watching what the system can no longer say. Orwell built the negative case at civilisational scale; codetry runs the positive version at the scale of a single button on a single screen, on the working assumption that a community whose buttons keep their words has not yet had its Newspeak written for it.",
         },
         {
           kind: "para",
@@ -1258,7 +1397,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "This is exactly the drift codetry §4.3 is built to hedge against, and the worked examples it gives are the *Animal Farm* shape: a benefit form's category label *household* quietly becoming *qualifying household*; a savings envelope quietly being called *reserve* in the next sprint; a *neighbour* quietly becoming a *resident* on the third revision of the document. None of these are Newspeak; all of them are the painted-commandment move. The audit page, the build-time vocabulary check, the version-controlled glossary — these are the practitioner's equivalent of standing in the barn at night with a lantern and reading the wall against a written copy held in the pocket. The book's quiet horror is the threat profile codetry's drift practices are calibrated to.",
+            "This is exactly the drift codetry §3.3 is built to hedge against, and the worked examples it gives are the *Animal Farm* shape: a benefit form's category label *household* quietly becoming *qualifying household*; a savings envelope quietly being called *reserve* in the next sprint; a *neighbour* quietly becoming a *resident* on the third revision of the document. None of these are Newspeak; all of them are the painted-commandment move. The audit page, the build-time vocabulary check, the version-controlled glossary — these are the practitioner's equivalent of standing in the barn at night with a lantern and reading the wall against a written copy held in the pocket. The book's quiet horror is the threat profile codetry's drift practices are calibrated to.",
         },
         {
           kind: "para",
@@ -1300,7 +1439,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The book is also, read at field strength, the cleanest possible illustration of why the *Practitioner* role of this handbook is defined the way it is. The Practitioner's job is *handover* — the deliberate practice of arranging the discipline so that no single person, no single shell, no single founder, holds the load alone. A Practitioner role that ends with the Practitioner is the conch on the rock. The whole architecture of §6 — the wisdom keepers, the inspector standing, the seven-generation horizon — is the corpus's answer to the Golding question: *what arrangement of names and people would mean that the conch is replaceable before it shatters?*",
+            "The book is also, read at field strength, the cleanest possible illustration of why the *Practitioner* role of this handbook is defined the way it is. The Practitioner's job is *handover* — the deliberate practice of arranging the discipline so that no single person, no single shell, no single founder, holds the load alone. A Practitioner role that ends with the Practitioner is the conch on the rock. The whole architecture of §5 — the wisdom keepers, the inspector standing, the seven-generation horizon — is the corpus's answer to the Golding question: *what arrangement of names and people would mean that the conch is replaceable before it shatters?*",
         },
         {
           kind: "para",
@@ -1337,7 +1476,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Huxley's book-length essay on perception names the *reducing valve*: the thesis that ordinary consciousness is not a window onto the world but a narrow filter that admits only the slice of reality the organism needs to act. The valve is constructed largely out of language — the categories, names, and habits the mind has internalised over a lifetime decide which signals are admitted as *real* and which are dismissed as noise before any conscious processing happens. What the practitioner takes from this is not the chemistry of the essay but its model: *the names a community lives inside decide what the community can register as real*. Rename a thing and you have widened or narrowed the valve for everyone who passes through it. This is why the rename test of §4.2 has the consequences it has — because the noun on the button is also, at substrate level, deciding what the user is *able to see* about the system the button sits on.",
+            "Huxley's book-length essay on perception names the *reducing valve*: the thesis that ordinary consciousness is not a window onto the world but a narrow filter that admits only the slice of reality the organism needs to act. The valve is constructed largely out of language — the categories, names, and habits the mind has internalised over a lifetime decide which signals are admitted as *real* and which are dismissed as noise before any conscious processing happens. What the practitioner takes from this is not the chemistry of the essay but its model: *the names a community lives inside decide what the community can register as real*. Rename a thing and you have widened or narrowed the valve for everyone who passes through it. This is why the rename test of §3.2 has the consequences it has — because the noun on the button is also, at substrate level, deciding what the user is *able to see* about the system the button sits on.",
         },
         {
           kind: "para",
@@ -1358,7 +1497,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The contribution to the practitioner's ear is calibrating. Codetry is a discipline for the long, slow, *continuous* horizon — the horizon in which the conch can be passed and the wall can be re-read. It is not a discipline that promises to save anything across a discontinuity. The seven-generation framing of §6 is itself a humility: it is the longest horizon the practice claims competence over, not the longest horizon the world will run on. *Blueprints* is the book the practitioner reads when the temptation arrives to claim the discipline is more than that.",
+            "The contribution to the practitioner's ear is calibrating. Codetry is a discipline for the long, slow, *continuous* horizon — the horizon in which the conch can be passed and the wall can be re-read. It is not a discipline that promises to save anything across a discontinuity. The seven-generation framing of §5 is itself a humility: it is the longest horizon the practice claims competence over, not the longest horizon the world will run on. *Blueprints* is the book the practitioner reads when the temptation arrives to claim the discipline is more than that.",
         },
         {
           kind: "para",
@@ -1370,21 +1509,21 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The nonfiction reading lineage is drafted as its own chapter at §5.4. The separation is deliberate, not editorial. Fiction trained the *ear* — the muscle for hearing load-bearing language as it is being spoken; nonfiction sharpened the *vocabulary* — the precision that lets the practitioner name the move once it has been heard. Conflating the two would flatten both contributions: it would let the nonfiction works look like they had taught a listening they did not teach, and it would let the fiction works look like reference material rather than the long, slow training the chapter above is honest about. The companion chapter is owed to the reader and §5.4 pays that debt with the same care.",
+            "The nonfiction reading lineage is drafted as its own chapter at §4.4. The separation is deliberate, not editorial. Fiction trained the *ear* — the muscle for hearing load-bearing language as it is being spoken; nonfiction sharpened the *vocabulary* — the precision that lets the practitioner name the move once it has been heard. Conflating the two would flatten both contributions: it would let the nonfiction works look like they had taught a listening they did not teach, and it would let the fiction works look like reference material rather than the long, slow training the chapter above is honest about. The companion chapter is owed to the reader and §4.4 pays that debt with the same care.",
         },
         { kind: "subhead", text: "Falsifier for the reading-lineage claim." },
         {
           kind: "para",
           text:
-            "The chapter above makes a strong claim: that the seven works listed taught the practitioner to *hear* what codetry depends on, and that the practitioner who has not read them — but has read theory and practice notes — would not reliably hear the same thing. The claim is falsifiable. *If a reader who has never read any of these books, asked to walk the rename test of §4.2 across a real constellation of named systems, produces verdicts indistinguishable from the verdicts of a reader who has read all seven, the chapter's claim fails.* The claim survives only as long as the trained ear is detectably better than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the seven works above are the smallest reading list this handbook is willing to claim trained the discipline.",
+            "The chapter above makes a strong claim: that the seven works listed taught the practitioner to *hear* what codetry depends on, and that the practitioner who has not read them — but has read theory and practice notes — would not reliably hear the same thing. The claim is falsifiable. *If a reader who has never read any of these books, asked to walk the rename test of §3.2 across a real constellation of named systems, produces verdicts indistinguishable from the verdicts of a reader who has read all seven, the chapter's claim fails.* The claim survives only as long as the trained ear is detectably better than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the seven works above are the smallest reading list this handbook is willing to claim trained the discipline.",
         },
       ],
     },
     {
       id: "5-4",
-      number: "5.4",
-      partRoman: "V",
-      partLabel: "V · Grounding",
+      number: "4.4",
+      partRoman: "IV",
+      partLabel: "IV · Grounding",
       title: "The reading lineage — nonfiction",
       blocks: [
         {
@@ -1401,7 +1540,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Fiction is where load-bearing language is most easily *heard*; nonfiction is where load-bearing language is most patiently *named*. The practical-skills literature in particular — the field guides, the lifespan textbooks, the trust treatises, the habit manuals, the recreation-programming texts, the working herbals — is the literature that has done the unglamorous work of putting the right noun on the right move and defending it against drift, decade after decade. It is the corpus codetry's vocabulary inherits from. Where the fiction lineage trained the practitioner to flinch at the word that does not belong, the nonfiction lineage supplied the words that do. The two together are what makes the rename test of §4.2 possible at all: the ear catches the substitution; the vocabulary names what was substituted out. A practitioner with only one half of this inheritance cannot run the test to completion.",
+            "Fiction is where load-bearing language is most easily *heard*; nonfiction is where load-bearing language is most patiently *named*. The practical-skills literature in particular — the field guides, the lifespan textbooks, the trust treatises, the habit manuals, the recreation-programming texts, the working herbals — is the literature that has done the unglamorous work of putting the right noun on the right move and defending it against drift, decade after decade. It is the corpus codetry's vocabulary inherits from. Where the fiction lineage trained the practitioner to flinch at the word that does not belong, the nonfiction lineage supplied the words that do. The two together are what makes the rename test of §3.2 possible at all: the ear catches the substitution; the vocabulary names what was substituted out. A practitioner with only one half of this inheritance cannot run the test to completion.",
         },
         {
           kind: "para",
@@ -1423,7 +1562,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Clear's central claim is that systems beat goals — that the small repeated act, run thousands of times, builds the person; the dramatic resolution at the start of the year does not. The book gives the practitioner the vocabulary to name *the compound* — the slow, daily layering that decides what kind of practitioner is in the room a decade from now, not what kind of practitioner intends to be there. The cure-time argument of §4.3 (that a renamed system takes weeks of conversation to settle into the team's mouths) is the same shape one floor up: codetry is itself an atomic-habits discipline, applied to a community's nouns rather than to a person's daily practice, and it is run in the compound register or it does not run.",
+            "Clear's central claim is that systems beat goals — that the small repeated act, run thousands of times, builds the person; the dramatic resolution at the start of the year does not. The book gives the practitioner the vocabulary to name *the compound* — the slow, daily layering that decides what kind of practitioner is in the room a decade from now, not what kind of practitioner intends to be there. The cure-time argument of §3.3 (that a renamed system takes weeks of conversation to settle into the team's mouths) is the same shape one floor up: codetry is itself an atomic-habits discipline, applied to a community's nouns rather than to a person's daily practice, and it is run in the compound register or it does not run.",
         },
         {
           kind: "para",
@@ -1439,12 +1578,12 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "Covey's contribution is the *principle-centred* frame — the move of locating the practitioner's reliable ground inside the practitioner rather than inside the platform, the role, the funder, or the latest method. The book's central language — *be proactive*, *begin with the end in mind*, *put first things first*, *think win-win* — supplies the vocabulary for a posture that does not depend on conditions outside the practitioner's control to remain stable. That posture is the one the constellation's *Practitioner* role inherits and the one §6.3's wisdom-keeper standing presupposes: a person whose principles are upstream of the platform, not downstream of it.",
+            "Covey's contribution is the *principle-centred* frame — the move of locating the practitioner's reliable ground inside the practitioner rather than inside the platform, the role, the funder, or the latest method. The book's central language — *be proactive*, *begin with the end in mind*, *put first things first*, *think win-win* — supplies the vocabulary for a posture that does not depend on conditions outside the practitioner's control to remain stable. That posture is the one the constellation's *Practitioner* role inherits and the one §5.3's wisdom-keeper standing presupposes: a person whose principles are upstream of the platform, not downstream of it.",
         },
         {
           kind: "para",
           text:
-            "The book also names, in plain language, the failure mode codetry's discourse most often falls into when its principles are not yet settled. *Reactive dependence* — Covey's term — is the disposition that lets the loudest dialect in the room set the practitioner's vocabulary by default. The practitioner who has not done the principle-centred work will arrive at the policy table speaking the funder's *engagement*, the regulator's *compliance*, the consultant's *innovation*, because nothing inside the practitioner is holding a different word steady against the room's gravitational pull. Covey is the book that supplied the vocabulary for what that failure is, before the rename test of §4.2 supplied the operation that catches it.",
+            "The book also names, in plain language, the failure mode codetry's discourse most often falls into when its principles are not yet settled. *Reactive dependence* — Covey's term — is the disposition that lets the loudest dialect in the room set the practitioner's vocabulary by default. The practitioner who has not done the principle-centred work will arrive at the policy table speaking the funder's *engagement*, the regulator's *compliance*, the consultant's *innovation*, because nothing inside the practitioner is holding a different word steady against the room's gravitational pull. Covey is the book that supplied the vocabulary for what that failure is, before the rename test of §3.2 supplied the operation that catches it.",
         },
         {
           kind: "para",
@@ -1519,7 +1658,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The book also names the failure mode the rest of the trust literature is too polite about. Low-trust systems do not stay low-trust; they convert the missing trust into *control*. The control then has to be paid for — in surveillance, in compliance overhead, in the friction of every transaction that a high-trust environment would have settled in a sentence. Codetry's whole bet against the technocratic capture §6.1 and §6.2 keep open is the bet that a community whose nouns it can read is a community whose protocol is a trust protocol rather than a control protocol; Peterson is the book that supplied the vocabulary for what is at stake in losing that distinction.",
+            "The book also names the failure mode the rest of the trust literature is too polite about. Low-trust systems do not stay low-trust; they convert the missing trust into *control*. The control then has to be paid for — in surveillance, in compliance overhead, in the friction of every transaction that a high-trust environment would have settled in a sentence. Codetry's whole bet against the technocratic capture §5.1 and §5.2 keep open is the bet that a community whose nouns it can read is a community whose protocol is a trust protocol rather than a control protocol; Peterson is the book that supplied the vocabulary for what is at stake in losing that distinction.",
         },
         {
           kind: "para",
@@ -1594,7 +1733,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "This is the deepest single contribution of the cluster to codetry. The discipline asks the practitioner to read a system's nouns the way Elpel asks the reader to read a meadow: not as a list of items but as a small number of structural patterns whose recognition lets an unfamiliar instance be read on first sight. The rename test of §4.2 is the same operation in software. The pattern-recognition discipline §6.1 names — the practitioner who can tell load-bearing from decorative — is the same practitioner Elpel has been training in the meadow. The book's quiet claim, that nature is itself the first literate text and that learning to read it is a transferable literacy, is the claim codetry is making about software at one floor up.",
+            "This is the deepest single contribution of the cluster to codetry. The discipline asks the practitioner to read a system's nouns the way Elpel asks the reader to read a meadow: not as a list of items but as a small number of structural patterns whose recognition lets an unfamiliar instance be read on first sight. The rename test of §3.2 is the same operation in software. The pattern-recognition discipline §5.1 names — the practitioner who can tell load-bearing from decorative — is the same practitioner Elpel has been training in the meadow. The book's quiet claim, that nature is itself the first literate text and that learning to read it is a transferable literacy, is the claim codetry is making about software at one floor up.",
         },
         {
           kind: "para",
@@ -1622,101 +1761,7 @@ const partV: Part = {
         {
           kind: "para",
           text:
-            "The chapter above makes a strong claim: that the eleven entries on this shelf taught the practitioner the precise vocabulary the rename test of §4.2 needs in the field, and that the practitioner who has read the seven fiction works of §5.3 but none of the practical-skills, lifespan, trust, recreation, herbal, refusal, or Elpel-style pattern-reading work above would catch the *substitution* but would not reliably *name* what was substituted out. The claim is falsifiable. *If a reader who has built the ear from the fiction lineage but has done none of the nonfiction shelf above is shown to produce diagnoses indistinguishable in precision from a reader who has done all of it, the chapter's claim fails.* The claim survives only as long as the trained vocabulary is detectably more precise than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the shelf above is the smallest nonfiction reading list this handbook is willing to claim sharpened the discipline.",
-        },
-      ],
-    },
-    {
-      id: "5-5",
-      number: "5.5",
-      partRoman: "V",
-      partLabel: "V · Grounding",
-      title: "What kind of thing codetry is (Hempcrete)",
-      blocks: [
-        {
-          kind: "para",
-          text:
-            "The metaphor that runs through the whole discipline is architectural. *Load-bearing*, *foundation*, *the wall*, *the room*, *the surface* — every one of those words enters the handbook borrowed from a building. This chapter is the one place the borrowing gets explicit and the practitioner names the *kind* of building they have in mind: not the steel-and-glass office tower, not the suburban stick-frame house, but a hempcrete wall — a composite of a structural frame with an insulating, breathable infill. Codetry is a hempcrete discipline.",
-        },
-        { kind: "subhead", text: "What hempcrete actually is, briefly." },
-        {
-          kind: "para",
-          text:
-            "Hempcrete is a composite building material made from the woody core of the hemp plant (*hurd* or *shiv*) bound with a lime-based binder. It is not a structural material on its own. It is laid as an infill around a load-bearing frame — typically timber — and once cured, it provides insulation, hygrothermal regulation (it breathes water vapour rather than trapping it), fire resistance, and a wall that quietly continues to absorb carbon over its working life. The material is older than concrete by centuries in some regional traditions and newer than concrete by a century in its modern revival; it sits in the interesting place where the deepest possible historical roots and the most current decarbonisation conversation meet.",
-        },
-        { kind: "subhead", text: "Why the metaphor fits codetry, three ways." },
-        {
-          kind: "para",
-          text:
-            "*A composite, not a monolith.* Hempcrete is two things doing two jobs: the timber frame holds the load; the hemp-and-lime infill holds the climate. Neither alone is the wall. Codetry is the same shape: the *names* hold the metaphor; the *system* holds the mechanics; neither alone is the discipline. §6.1's type/name/token stack is a hempcrete diagram — three layers, three jobs, one wall. The frequent error in software discourse is to argue about which single material is *the* right material (the type system as the only truth, the documentation as the only truth, the test suite as the only truth); the codetry move, like the hempcrete move, is to refuse the choice and put the materials in the relationship that makes the wall work.",
-        },
-        {
-          kind: "para",
-          text:
-            "*Infill, not facade.* Hempcrete sits *inside* the wall — between the structural studs of the frame, breathing in both directions, doing its work in the body of the building. It is not a cladding bolted on the outside for appearance. The codetry name is the same: it is not a label sprayed on the outside of a system that was designed without it. It is the load-distributing infill that lives between the structural type and the surface affordance, and the system only works the way the room expects it to because the infill is doing its job *inside* the wall. Strip the infill and the frame still stands — but the wall stops regulating, the room stops being habitable in the same way, and the mechanics that were quietly held by the composite now have to be shouted by signage and policy.",
-        },
-        {
-          kind: "para",
-          text:
-            "*Ethical-aesthetic, not just technical.* Hempcrete is chosen, where it is chosen, for a bundle of reasons that no one of which is sufficient: it works thermally, it sequesters carbon, it is locally grown, it is non-toxic, it ages honestly, it is beautiful in a way that pre-cast concrete is not. The choice is technical and ethical and aesthetic at the same time, and the practitioner who tries to defend it on any one of those grounds alone will sound like they are leaving the other reasons out. Codetry has the same compound character. The rename test of §4.2 is technical (it catches drift the type system misses); the protection of community vocabulary is ethical (the people who live in the place are the ones whose words the system runs on); the insistence that the name on the button keep its promise is aesthetic (the wall is honest about what it is). The discipline does not survive being reduced to any one of those grounds. The hempcrete metaphor is the shortest sentence the handbook has for that.",
-        },
-        { kind: "subhead", text: "Where the strain on the metaphor is honest." },
-        {
-          kind: "para",
-          text:
-            "Hempcrete is not perfect. It needs a frame to hold any real load; it cures slowly; the modern revival is small relative to the cement industry it would have to displace; the lime binder is less ecologically clean than the hemp suggests; in some climates the hygrothermal advantages diminish. Codetry has analogous strains: it needs an existing system to hold any real load (the discipline is not a build pattern, it is a discipline applied to a build); the practice cures slowly (a renamed system takes weeks of conversation to settle into the team's mouths, §4.3); the discipline is small relative to the architectural and product-management traditions it would have to displace; the rename test depends on a practitioner who can tell load-bearing from decorative, and that practitioner's judgment is itself a binder whose composition matters. The metaphor is not flattering by accident. The hempcrete wall is the kind of wall the practitioner is trying to build *because* it is honest about what it can and cannot carry.",
-        },
-        { kind: "subhead", text: "The one-sentence claim." },
-        {
-          kind: "callout",
-          text:
-            "Codetry is hempcrete: a composite discipline whose *names* are the breathing infill laid between the structural frame of *type* and the surface skin of *affordance*, doing the climate-regulating, carbon-sequestering, ethical-aesthetic work that no single layer in the system was holding before.",
-        },
-        { kind: "rule" },
-        { kind: "subhead", text: "Coda — the bamboo field." },
-        {
-          kind: "para",
-          text:
-            "There is a second material the practice keeps reaching for, alongside hempcrete, that the handbook has been politely vague about until now. It is *bamboo* — specifically, the bamboo field of the xBuckets XRP-spring artwork, where six growth stages of a planted grove serve as the visual register for savings accumulating above the network reserve. The bamboo metaphor is doing the same kind of work as the hempcrete one (a living material chosen for a bundle of technical, ecological, and aesthetic reasons that no one of which is sufficient), but in a different room: where hempcrete is the metaphor for the *discipline*, bamboo is a *register* the discipline carries on a particular surface. The two are not interchangeable. §7.3 records the test that ruled out bamboo as a register on the wallet/XRP-swap chip — bamboo is the right material for the spring artwork and the wrong material for the swap chip, and the test that drew that line is one of the load-bearing entries in the test ledger §7 collects.",
-        },
-        {
-          kind: "small",
-          text:
-            "Cross-reference: §7.3 (Codetry Test 003 — bamboo-field on the wallet chip) for the test that named *one register per screen* and rejected the bamboo register on a surface the water register had already claimed.",
-        },
-      ],
-    },
-    {
-      id: "5-6",
-      number: "5.6",
-      partRoman: "V",
-      partLabel: "V · Grounding",
-      title: "Colophon",
-      blocks: [
-        {
-          kind: "para",
-          text:
-            "This handbook was authored in 2026 alongside the constellation it draws its founding examples from. The constellation lives at the practitioner's working URL; the canonical Codetry working-doc lives at /practitioner-operating-plan/codetry; the machine-readable constellation manifest, frozen as a snapshot in this app, lives at /practitioner-operating-plan/constellation.json.",
-        },
-        {
-          kind: "para",
-          text:
-            "Voice and editorial decisions follow the constellation's own quiet, declarative register. No marketing.",
-        },
-        {
-          kind: "para",
-          text:
-            "The discipline named here is offered in the spirit of the four teachers above and the axiom alongside them.",
-        },
-        { kind: "rule" },
-        {
-          kind: "para",
-          text:
-            "For the community development practitioners who pick this up: the names will be your own. Use the discipline; throw away the examples. That is the only correct way to read this book.",
-        },
-        {
-          kind: "small",
-          text: `Snapshot v${constellation.version} · ${constellation.lastUpdated}. Offline-readable. State held under codetry-handbook:v1.`,
+            "The chapter above makes a strong claim: that the eleven entries on this shelf taught the practitioner the precise vocabulary the rename test of §3.2 needs in the field, and that the practitioner who has read the seven fiction works of §4.3 but none of the practical-skills, lifespan, trust, recreation, herbal, refusal, or Elpel-style pattern-reading work above would catch the *substitution* but would not reliably *name* what was substituted out. The claim is falsifiable. *If a reader who has built the ear from the fiction lineage but has done none of the nonfiction shelf above is shown to produce diagnoses indistinguishable in precision from a reader who has done all of it, the chapter's claim fails.* The claim survives only as long as the trained vocabulary is detectably more precise than the untrained one in the field. The practitioner who finds the counter-example is owed the credit and this chapter owes them the rewrite. Until then, the shelf above is the smallest nonfiction reading list this handbook is willing to claim sharpened the discipline.",
         },
       ],
     },
@@ -1724,16 +1769,16 @@ const partV: Part = {
 };
 
 const partVI: Part = {
-  roman: "VI",
+  roman: "V",
   title: "Open Questions",
   blurb:
     "A handbook needs a place where the questions live before they have answers. The chapters in this part are written to be returned to. Each one names a thing the discipline is being asked that the discipline has not yet finished thinking through.",
   chapters: [
     {
       id: "6-1",
-      number: "6.1",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.1",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Tokenization, and what it does to the noun",
       blocks: [
         {
@@ -1757,7 +1802,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "Tokenisation is the most aggressive *translate the noun* operation that exists. It is sharper than the boundary translations of §2.3 and stricter than the type-level abstractions of §2.4 because it operates *below the word*. *Saltbox* becomes `[\"Salt\", \"box\"]`. *Headwaters* may become `[\"Head\", \"waters\"]` or `[\"He\", \"ad\", \"waters\"]` depending on what the tokeniser learned. *Watershed* fragments. *Codetry*, being a coined word, fragments hardest of all. The load-bearing weight of a noun-as-noun does not survive the token layer. To the model reading the code, the word is no longer a word.",
+            "Tokenisation is the most aggressive *translate the noun* operation that exists. It is sharper than the boundary translations of §DD.3 and stricter than the type-level abstractions of §DD.4 because it operates *below the word*. *Saltbox* becomes `[\"Salt\", \"box\"]`. *Headwaters* may become `[\"Head\", \"waters\"]` or `[\"He\", \"ad\", \"waters\"]` depending on what the tokeniser learned. *Watershed* fragments. *Codetry*, being a coined word, fragments hardest of all. The load-bearing weight of a noun-as-noun does not survive the token layer. To the model reading the code, the word is no longer a word.",
         },
         {
           kind: "subhead",
@@ -1775,7 +1820,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "Two places, both worth naming early. The first is the rename test of §4.2. To a human, *Saltbox* → *HouseholdContainer* surfaces drift in one beat — the metaphor dies on contact. To a tokeniser, the rename is one token cluster swapped for another; the model will happily continue with whatever the new cluster's neighbourhood predicts. The discipline's enforcement mechanism does not survive at the token layer. This is the §2.4 problem one floor down: drift the tokeniser cannot see. The second is corpus-dependence. The back-door survival described above holds only as long as the training corpus retains enough metaphor-respectful code to keep the statistical pattern alive. If the corpus drifts toward generic naming — through autoformatters that strip metaphor, AI-generated boilerplate that defaults to the average word, or *clean code* conventions that punish poetry — the back door narrows. Codetry's machine-readability is, at present, an ecosystem position rather than a self-sufficient property.",
+            "Two places, both worth naming early. The first is the rename test of §3.2. To a human, *Saltbox* → *HouseholdContainer* surfaces drift in one beat — the metaphor dies on contact. To a tokeniser, the rename is one token cluster swapped for another; the model will happily continue with whatever the new cluster's neighbourhood predicts. The discipline's enforcement mechanism does not survive at the token layer. This is the §DD.4 problem one floor down: drift the tokeniser cannot see. The second is corpus-dependence. The back-door survival described above holds only as long as the training corpus retains enough metaphor-respectful code to keep the statistical pattern alive. If the corpus drifts toward generic naming — through autoformatters that strip metaphor, AI-generated boilerplate that defaults to the average word, or *clean code* conventions that punish poetry — the back door narrows. Codetry's machine-readability is, at present, an ecosystem position rather than a self-sufficient property.",
         },
         {
           kind: "para",
@@ -1789,7 +1834,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "There is a move waiting in this chapter the rest of the handbook has been polite about. §2.2 frames literate programming as the nearest sibling discipline, and §5.2 places it in the lineage codetry honours its work from — both framings are true, and both are too generous to codetry's modesty about its own role. Codetry is, in the harder sense, *foundational* to successful literate programming: not a sibling, but a precondition. Knuth's discipline weaves prose and source into a single document so the reader can follow the reasoning in the medium where the work actually lives — but the woven program only does what its prose says it does to the extent that the *names* inside the source carry the metaphor the prose claims they carry. Without the codetry move, the prose narrates one architecture and the names enact another, and *literate programming* degrades into prose *about* code that has already drifted away from the prose. The rename test of §4.2 is what makes the weave hold; without it, the document is honest about its reasoning and dishonest about its execution at the same time, and the discipline that was supposed to verify by exposing the reasoning ends up exposing reasoning the code no longer obeys.",
+            "There is a move waiting in this chapter the rest of the handbook has been polite about. §DD.2 frames literate programming as the nearest sibling discipline, and §4.2 places it in the lineage codetry honours its work from — both framings are true, and both are too generous to codetry's modesty about its own role. Codetry is, in the harder sense, *foundational* to successful literate programming: not a sibling, but a precondition. Knuth's discipline weaves prose and source into a single document so the reader can follow the reasoning in the medium where the work actually lives — but the woven program only does what its prose says it does to the extent that the *names* inside the source carry the metaphor the prose claims they carry. Without the codetry move, the prose narrates one architecture and the names enact another, and *literate programming* degrades into prose *about* code that has already drifted away from the prose. The rename test of §3.2 is what makes the weave hold; without it, the document is honest about its reasoning and dishonest about its execution at the same time, and the discipline that was supposed to verify by exposing the reasoning ends up exposing reasoning the code no longer obeys.",
         },
         {
           kind: "subhead",
@@ -1798,7 +1843,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "It is worth being precise about where the discipline actually stands. *Type* lives in the compiler — the layer §2.4 already names — and is enforced by a machine that does not read English. *Token* lives in the model, the layer this chapter has been circling, and is enforced by a tokeniser that does not read meaning. *Name* sits in the space between them, and is the only layer in the stack where a human author is still the deciding party: the compiler will check what the name is *of*, the tokeniser will fragment what the name is *spelled like*, and only the author chooses what the name *is*. If name is treated as decoration on top of type — as the type system's pet, renameable on a whim because the type is what carries the truth — the in-between layer collapses upward, and the discipline has nothing to do that §2.4 does not already do. If name is treated as raw material for the tokeniser to chew — as fuel for the statistical reader, valuable only in proportion to how often the cluster `[\"Salt\", \"box\"]` appears in the corpus — the in-between layer collapses downward, and the discipline has nothing to do that the model's pre-training does not already do. The codetry claim is that the in-between layer is real, that it is the load-bearing one, and that it is the only place where authorship of the system's nouns is still possible at all.",
+            "It is worth being precise about where the discipline actually stands. *Type* lives in the compiler — the layer §DD.4 already names — and is enforced by a machine that does not read English. *Token* lives in the model, the layer this chapter has been circling, and is enforced by a tokeniser that does not read meaning. *Name* sits in the space between them, and is the only layer in the stack where a human author is still the deciding party: the compiler will check what the name is *of*, the tokeniser will fragment what the name is *spelled like*, and only the author chooses what the name *is*. If name is treated as decoration on top of type — as the type system's pet, renameable on a whim because the type is what carries the truth — the in-between layer collapses upward, and the discipline has nothing to do that §DD.4 does not already do. If name is treated as raw material for the tokeniser to chew — as fuel for the statistical reader, valuable only in proportion to how often the cluster `[\"Salt\", \"box\"]` appears in the corpus — the in-between layer collapses downward, and the discipline has nothing to do that the model's pre-training does not already do. The codetry claim is that the in-between layer is real, that it is the load-bearing one, and that it is the only place where authorship of the system's nouns is still possible at all.",
         },
         {
           kind: "callout",
@@ -1823,9 +1868,9 @@ const partVI: Part = {
     },
     {
       id: "6-2",
-      number: "6.2",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.2",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Name as architecture, when the noun goes on-chain",
       blocks: [
         {
@@ -1835,12 +1880,12 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.1 closed by naming a second tokenisation, structurally analogous to the first: the *token* the chain mints when a community's assets, memberships, votes, or shares of a co-op are placed on a blockchain. The argument there ended on a hazard rather than an answer — that without a name-layer discipline, on-chain primitives become legible only to the people fluent in the substrate, which is the precise definition of technocracy. That paragraph deserves a chapter of its own. It is not a tail to the LLM-tokenisation argument; it is a separate open question, in the same shape, that the discipline owes itself a place to keep returning to. This is that place.",
+            "§5.1 closed by naming a second tokenisation, structurally analogous to the first: the *token* the chain mints when a community's assets, memberships, votes, or shares of a co-op are placed on a blockchain. The argument there ended on a hazard rather than an answer — that without a name-layer discipline, on-chain primitives become legible only to the people fluent in the substrate, which is the precise definition of technocracy. That paragraph deserves a chapter of its own. It is not a tail to the LLM-tokenisation argument; it is a separate open question, in the same shape, that the discipline owes itself a place to keep returning to. This is that place.",
         },
         {
           kind: "para",
           text:
-            "The §1.0 distinction holds here without amendment. Codetry serves practice, not governance, and the chapter is not arguing that the discipline should expand to design what a community does with its votes, its shares, or its council seat. The hazard is to the noun *substrate* such governance is laid over once that substrate goes on-chain, and the open question is the same §1.0 hedge — protect the words the community already uses — asked at a layer where the words enact authority rather than describe practice. Whether that hedge is held by codetry, by a successor trade (§6.3), or by neither is part of what is open here.",
+            "The §1.0 distinction holds here without amendment. Codetry serves practice, not governance, and the chapter is not arguing that the discipline should expand to design what a community does with its votes, its shares, or its council seat. The hazard is to the noun *substrate* such governance is laid over once that substrate goes on-chain, and the open question is the same §1.0 hedge — protect the words the community already uses — asked at a layer where the words enact authority rather than describe practice. Whether that hedge is held by codetry, by a successor trade (§5.3), or by neither is part of what is open here.",
         },
         {
           kind: "subhead",
@@ -1849,12 +1894,12 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The on-chain version of the §6.1 problem is not that the chain is hostile to names. It is that the chain's load-bearing identifiers are addresses and signatures — a contract is `0x` followed by forty hex characters; an interface is `transfer(address,uint256)`; a vote is a transaction whose meaning is whatever the function dispatched at that address happens to do. Names exist on top of this layer as conveniences: an ENS record, a token symbol, a label in a wallet UI, a string field inside a contract that the contract itself does not have to honour. The relationship between *name* and *primitive* on-chain is the inverse of the codetry relationship — the primitive is authoritative, the name is a label on top of it, and the label is replaceable without the primitive shifting underneath. The §2.4 collapse — *the type is what carries the truth, the name is just decoration* — is the chain's default state, not its failure mode.",
+            "The on-chain version of the §5.1 problem is not that the chain is hostile to names. It is that the chain's load-bearing identifiers are addresses and signatures — a contract is `0x` followed by forty hex characters; an interface is `transfer(address,uint256)`; a vote is a transaction whose meaning is whatever the function dispatched at that address happens to do. Names exist on top of this layer as conveniences: an ENS record, a token symbol, a label in a wallet UI, a string field inside a contract that the contract itself does not have to honour. The relationship between *name* and *primitive* on-chain is the inverse of the codetry relationship — the primitive is authoritative, the name is a label on top of it, and the label is replaceable without the primitive shifting underneath. The §DD.4 collapse — *the type is what carries the truth, the name is just decoration* — is the chain's default state, not its failure mode.",
         },
         {
           kind: "para",
           text:
-            "What this does to a community whose governance has been placed on such a substrate is exactly what §6.1 named. The members can read *the token*, *the vote*, *the share* in their own kitchen-language. The chain reads `0xa0b8...`, `castVote(uint256,uint8)`, `balanceOf(address)`. When the two readings disagree — when the wallet UI says *yes* and the contract dispatches *no*, when the documentation calls a primitive *the council seat* and the bytecode treats it as a transferable ERC-721 — the chain's reading is the one that enacts. The community's noun loses, quietly, on every disagreement. The drift is invisible to anyone who is not fluent in the substrate, which is most of the community by design. That is the technocratic failure §6.1 named, made concrete.",
+            "What this does to a community whose governance has been placed on such a substrate is exactly what §5.1 named. The members can read *the token*, *the vote*, *the share* in their own kitchen-language. The chain reads `0xa0b8...`, `castVote(uint256,uint8)`, `balanceOf(address)`. When the two readings disagree — when the wallet UI says *yes* and the contract dispatches *no*, when the documentation calls a primitive *the council seat* and the bytecode treats it as a transferable ERC-721 — the chain's reading is the one that enacts. The community's noun loses, quietly, on every disagreement. The drift is invisible to anyone who is not fluent in the substrate, which is most of the community by design. That is the technocratic failure §5.1 named, made concrete.",
         },
         {
           kind: "subhead",
@@ -1863,12 +1908,12 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "It is worth being honest about how little of this is settled. A name-layer discipline for on-chain governance would, at minimum, have to answer three questions the codetry move already answers in source code, and re-answers under harder constraints here. *Who authors the name.* In source code the answer is the practitioner sitting with the community at the kitchen table; on-chain it is unclear whether the name lives in the contract's metadata, in a registry the community controls, in a wallet UI the community does not control, or in a governance document the chain cannot read. *What the name is bound to.* In source code the binding is enforced by the rename test of §4.2 — change the name, and the metaphor breaks loud enough to hear. On-chain, the binding between *the council seat* and the ERC-721 dispatched at `0xa0b8...` is conventional rather than enforced; nothing in the substrate fails when the two drift. *How the name survives a fork.* Source code forks rarely and visibly; chains fork routinely, and a community whose governance noun is *the share* may wake up to find two chains, two contracts, two `share` tokens, and no discipline that says which of the two carries the noun the community originally named.",
+            "It is worth being honest about how little of this is settled. A name-layer discipline for on-chain governance would, at minimum, have to answer three questions the codetry move already answers in source code, and re-answers under harder constraints here. *Who authors the name.* In source code the answer is the practitioner sitting with the community at the kitchen table; on-chain it is unclear whether the name lives in the contract's metadata, in a registry the community controls, in a wallet UI the community does not control, or in a governance document the chain cannot read. *What the name is bound to.* In source code the binding is enforced by the rename test of §3.2 — change the name, and the metaphor breaks loud enough to hear. On-chain, the binding between *the council seat* and the ERC-721 dispatched at `0xa0b8...` is conventional rather than enforced; nothing in the substrate fails when the two drift. *How the name survives a fork.* Source code forks rarely and visibly; chains fork routinely, and a community whose governance noun is *the share* may wake up to find two chains, two contracts, two `share` tokens, and no discipline that says which of the two carries the noun the community originally named.",
         },
         {
           kind: "callout",
           text:
-            "On-chain, *type is the chain's, token is the chain's, and name has nowhere obvious to live*. The §6.1 stack — type, name, token — collapses into two layers, both belonging to the substrate. The name layer is the one the discipline would have to build.",
+            "On-chain, *type is the chain's, token is the chain's, and name has nowhere obvious to live*. The §5.1 stack — type, name, token — collapses into two layers, both belonging to the substrate. The name layer is the one the discipline would have to build.",
         },
         {
           kind: "subhead",
@@ -1877,25 +1922,25 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.1 is about what tokenisation does to a noun the practitioner *wrote*. This chapter is about what tokenisation does to a noun the community *enacts authority through*, which is a different stake. The first hazard is that the discipline's reading public shifts from human to model and the noun-as-architecture move has to survive a statistical reader; the second hazard is that the community's reading public shifts from member to substrate and the noun-as-architecture move has to survive a *technocratic* reader — one whose fluency in the layer is itself the asymmetry of power. The first is a question about whether codetry's machine-readability holds. The second is a question about whether codetry's *bet against drift* — the §1.0 hedge — extends to the layer where drifted words have formal authority attached. They rhyme. They are not the same chapter.",
+            "§5.1 is about what tokenisation does to a noun the practitioner *wrote*. This chapter is about what tokenisation does to a noun the community *enacts authority through*, which is a different stake. The first hazard is that the discipline's reading public shifts from human to model and the noun-as-architecture move has to survive a statistical reader; the second hazard is that the community's reading public shifts from member to substrate and the noun-as-architecture move has to survive a *technocratic* reader — one whose fluency in the layer is itself the asymmetry of power. The first is a question about whether codetry's machine-readability holds. The second is a question about whether codetry's *bet against drift* — the §1.0 hedge — extends to the layer where drifted words have formal authority attached. They rhyme. They are not the same chapter.",
         },
         {
           kind: "para",
           text:
-            "There is a temptation, when the answer is unknown, to fold the question back into a chapter that has more developed material around it. §6.1 is the more developed chapter — it has the rename-test analogy, the corpus-dependence argument, the type/name/token stack — and it would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes, not so they can be domesticated as tails on the chapters that almost-but-not-quite address them. When a name-layer discipline for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the primitive — the place to record it is here, not appended to §6.1.",
+            "There is a temptation, when the answer is unknown, to fold the question back into a chapter that has more developed material around it. §5.1 is the more developed chapter — it has the rename-test analogy, the corpus-dependence argument, the type/name/token stack — and it would be easy to keep the on-chain thread as a closing movement there. Part VI exists to refuse that move. Open questions get their own chapters here precisely so they can be returned to as the answer changes, not so they can be domesticated as tails on the chapters that almost-but-not-quite address them. When a name-layer discipline for on-chain governance does start to take shape — in a registry pattern, in a contract convention, in a community's actual practice of binding the noun to the primitive — the place to record it is here, not appended to §5.1.",
         },
         {
           kind: "callout",
           text:
-            "Open question, kept open. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §6.1 named. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §6.3 takes up — codetry feeding it as one tributary, not extending itself into governance — is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down.",
+            "Open question, kept open. There is no settled name-layer practice for on-chain governance primitives, and the gap is the technocracy hazard §5.1 named. Whether the practice that fills the gap belongs inside codetry or, more honestly, in the successor trade §5.3 takes up — codetry feeding it as one tributary, not extending itself into governance — is itself part of the open question. This chapter exists to be returned to: when the substrate changes, when a registry pattern earns its place, when a community's practice of authoring the noun-as-primitive becomes specific enough to write down.",
         },
       ],
     },
     {
       id: "6-3",
-      number: "6.3",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.3",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Name as a trade, practiced through the wisdom keepers",
       blocks: [
         {
@@ -1905,7 +1950,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.2 closed by saying the discipline does not yet have a name-layer practice for on-chain governance primitives, and that the chapter exists to be returned to when a community's practice of authoring the noun-as-primitive becomes specific enough to write down. The chapter before this one named the *site* and the *wall*. The chapter that follows it has to name the *worker* — what kind of work building a name-layer practice would actually be, and who would do it. If the name layer is the one the discipline would have to build (§6.2), the prior question is what shape the building would take: a credential, a role inside an existing profession, a community elder's extra duty, or a *trade* in the older sense of the word. This chapter is a place to keep the question of the shape of the work itself.",
+            "§5.2 closed by saying the discipline does not yet have a name-layer practice for on-chain governance primitives, and that the chapter exists to be returned to when a community's practice of authoring the noun-as-primitive becomes specific enough to write down. The chapter before this one named the *site* and the *wall*. The chapter that follows it has to name the *worker* — what kind of work building a name-layer practice would actually be, and who would do it. If the name layer is the one the discipline would have to build (§5.2), the prior question is what shape the building would take: a credential, a role inside an existing profession, a community elder's extra duty, or a *trade* in the older sense of the word. This chapter is a place to keep the question of the shape of the work itself.",
         },
         {
           kind: "subhead",
@@ -1914,7 +1959,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "A trade is what emerges when several industries' outputs only cohere in a *built thing*, and the built thing only holds if one pair of hands knows how all of them behave under load. Bricklaying is the example worth keeping in front of this chapter. The bricklayer is not a brick-maker, not a chemist, not a structural engineer, and not a site planner — but the trade absorbed enough brick chemistry, mortar chemistry, structural reading, site interface, and apprenticeship pedagogy that the wall it builds holds. A name-layer trade would absorb in the same shape, from at least four tributaries. *Codetry*: the rename test of §4.2, the discipline of choosing a metaphor that constrains the system rather than decorates it, the refusal to let the name collapse upward into the type or downward into the token. *Literate programming*, framed by §6.1 as the precondition the practice rests on rather than the sibling working in the next room: document-as-source, prose as the medium of work, names inside the source carrying the metaphor the prose claims they carry. *Wisdom keeping*: the only existing profession that already does multi-generation name maintenance — knowing who named a place, what the name binds to, what happens to the name when the river reroutes, the clan splits, or the treaty is broken. *Community development*: the practice of asking who is in the room when a noun gets coined, who is not, and what the downstream cost of those absences is. None of those four are the trade. The trade is where their outputs cohere in a wall — the wall being the names a community's institutions and on-chain primitives are bound to, authored and maintained with the intent that those names survive the substrate they were laid on.",
+            "A trade is what emerges when several industries' outputs only cohere in a *built thing*, and the built thing only holds if one pair of hands knows how all of them behave under load. Bricklaying is the example worth keeping in front of this chapter. The bricklayer is not a brick-maker, not a chemist, not a structural engineer, and not a site planner — but the trade absorbed enough brick chemistry, mortar chemistry, structural reading, site interface, and apprenticeship pedagogy that the wall it builds holds. A name-layer trade would absorb in the same shape, from at least four tributaries. *Codetry*: the rename test of §3.2, the discipline of choosing a metaphor that constrains the system rather than decorates it, the refusal to let the name collapse upward into the type or downward into the token. *Literate programming*, framed by §5.1 as the precondition the practice rests on rather than the sibling working in the next room: document-as-source, prose as the medium of work, names inside the source carrying the metaphor the prose claims they carry. *Wisdom keeping*: the only existing profession that already does multi-generation name maintenance — knowing who named a place, what the name binds to, what happens to the name when the river reroutes, the clan splits, or the treaty is broken. *Community development*: the practice of asking who is in the room when a noun gets coined, who is not, and what the downstream cost of those absences is. None of those four are the trade. The trade is where their outputs cohere in a wall — the wall being the names a community's institutions and on-chain primitives are bound to, authored and maintained with the intent that those names survive the substrate they were laid on.",
         },
         {
           kind: "subhead",
@@ -1937,7 +1982,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "A bricklayer's wall is expected to outlast its builder by a century or more. Software's working assumption is that the substrate gets rewritten within a decade, which is why every existing software role is calibrated to the platform currently in fashion — the framework, the chain, the model, the cloud. A name-layer trade calibrated to seven generations would have to refuse that calibration. Not because the substrate is unimportant — §6.2 spent its length making the opposite case — but because the trade's job is to author names that *survive* the substrate, not to specialise in any one of them. The lineage that pedagogy would inherit from is therefore not computer science. The closer analogues are older. *Cartography*: place names that outlast the empires that drew the maps. *Constitutional drafting*: the bind between *the assembly* and the institution it names, across the generations the institution is supposed to last. *Oral lineage itself*: the discipline that already knows how to carry a noun across centuries by holding the practice of who tells it next. §5.2 honours literate programming as the closest sibling in the *technical* lineage codetry sits inside, and that placement is correct for that lineage. The trade lineage — the one a name-layer profession would inherit its pedagogy from — is older than the technical one, and §6.3 is the chapter that owes it the acknowledgement.",
+            "A bricklayer's wall is expected to outlast its builder by a century or more. Software's working assumption is that the substrate gets rewritten within a decade, which is why every existing software role is calibrated to the platform currently in fashion — the framework, the chain, the model, the cloud. A name-layer trade calibrated to seven generations would have to refuse that calibration. Not because the substrate is unimportant — §5.2 spent its length making the opposite case — but because the trade's job is to author names that *survive* the substrate, not to specialise in any one of them. The lineage that pedagogy would inherit from is therefore not computer science. The closer analogues are older. *Cartography*: place names that outlast the empires that drew the maps. *Constitutional drafting*: the bind between *the assembly* and the institution it names, across the generations the institution is supposed to last. *Oral lineage itself*: the discipline that already knows how to carry a noun across centuries by holding the practice of who tells it next. §4.2 honours literate programming as the closest sibling in the *technical* lineage codetry sits inside, and that placement is correct for that lineage. The trade lineage — the one a name-layer profession would inherit its pedagogy from — is older than the technical one, and §5.3 is the chapter that owes it the acknowledgement.",
         },
         {
           kind: "callout",
@@ -1948,14 +1993,14 @@ const partVI: Part = {
     },
     {
       id: "6-4",
-      number: "6.4",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.4",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Where the flames held and where the corpus burned",
       blocks: [
         {
           kind: "small",
-          text: "Open question · trailblazer's burn line · the §6.1 problem read from a third angle.",
+          text: "Open question · trailblazer's burn line · the §5.1 problem read from a third angle.",
         },
         {
           kind: "para",
@@ -1965,16 +2010,16 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The finding the chapter exists to log is sharp and worth the burn. The eight banned words are not academic decoration on top of a craft that could just as well be described in everyday speech. They are the named primitives the craft is built on. *Load-bearing* is what §1.0 means when it says the noun carries the weight of the building; the metaphor *is* the discipline. *Substrate* is the word §6.1 reaches for when it has to distinguish the layer the cutter eats from the layer the author writes. *Membrane* is what §1.4 calls the gate between rooms before it earns the name *Gate*; *primitive* is the registered category of named pieces in the constellation manifest. Stripping the words and leaving the prose was not a translation; it was a controlled removal of the foundational vocabulary the prose stood on. The new prose was lighter to read because there was less holding it up — which is exactly the structural answer the test was built to surface, and which no amount of in-register inspection of the academic source could have produced. Some non-negotiables only show themselves when you remove them and watch the building lean.",
+            "The finding the chapter exists to log is sharp and worth the burn. The eight banned words are not academic decoration on top of a craft that could just as well be described in everyday speech. They are the named primitives the craft is built on. *Load-bearing* is what §1.0 means when it says the noun carries the weight of the building; the metaphor *is* the discipline. *Substrate* is the word §5.1 reaches for when it has to distinguish the layer the cutter eats from the layer the author writes. *Membrane* is what §1.4 calls the gate between rooms before it earns the name *Gate*; *primitive* is the registered category of named pieces in the constellation manifest. Stripping the words and leaving the prose was not a translation; it was a controlled removal of the foundational vocabulary the prose stood on. The new prose was lighter to read because there was less holding it up — which is exactly the structural answer the test was built to surface, and which no amount of in-register inspection of the academic source could have produced. Some non-negotiables only show themselves when you remove them and watch the building lean.",
         },
         {
           kind: "subhead",
-          text: "Why this is the §6.1 problem read from a third angle.",
+          text: "Why this is the §5.1 problem read from a third angle.",
         },
         {
           kind: "para",
           text:
-            "§6.1 names a hazard from below: the cutter shreds the noun into sub-word fragments the model can read but the human author cannot author into. §6.2 names the same hazard one floor down: the chain shreds the noun into addresses the bytecode can read but the community cannot author into. The 29 April pass surfaced the same hazard from above: a substitution rule, applied uniformly across the corpus, shredded the named primitives into everyday synonyms the new reader could decode but the discipline could no longer be built out of. A layer that could read at one resolution forced a transformation on a layer authored at another, and the authored layer lost. That is the §6.1 frame, observed from a third angle the practice did not have on paper before the test. The chapter belongs in Part VI for the same reason §6.1 and §6.2 do: the discipline now knows the hazard exists at this third angle and does not yet have a settled answer for it.",
+            "§5.1 names a hazard from below: the cutter shreds the noun into sub-word fragments the model can read but the human author cannot author into. §5.2 names the same hazard one floor down: the chain shreds the noun into addresses the bytecode can read but the community cannot author into. The 29 April pass surfaced the same hazard from above: a substitution rule, applied uniformly across the corpus, shredded the named primitives into everyday synonyms the new reader could decode but the discipline could no longer be built out of. A layer that could read at one resolution forced a transformation on a layer authored at another, and the authored layer lost. That is the §5.1 frame, observed from a third angle the practice did not have on paper before the test. The chapter belongs in Part VI for the same reason §5.1 and §5.2 do: the discipline now knows the hazard exists at this third angle and does not yet have a settled answer for it.",
         },
         {
           kind: "subhead",
@@ -1983,7 +2028,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "Three findings the discipline did not have on paper before the burn. *First*, the eight terms are non-negotiable in the academic register — not because the practitioner is attached to them but because each one carries structural work that no plainer substitute carried after substitution; the building leaned where the named piece had been removed. *Second*, the plain-language register is a *derivative* artifact, not a *replacement* one. The §1.0 line about the kitchen table still holds, and the practitioner still owes the community a book it can sit with — but the academic register is where the craft's nouns are authored, defined, cross-referenced, and tested against each other, and the plain-language register is what gets carried out of that workshop into the community room. *Third*, authoring the plain register first by stripping the academic one collapses the workshop into the room and leaves nothing in the workshop to carry anything else out of, ever again. The §4.2 rename test catches drift inside a single register. It does not catch the deeper drift the test surfaced — the drift introduced when one register is asked to do the work of two. That is a new test the practice now knows it owes itself.",
+            "Three findings the discipline did not have on paper before the burn. *First*, the eight terms are non-negotiable in the academic register — not because the practitioner is attached to them but because each one carries structural work that no plainer substitute carried after substitution; the building leaned where the named piece had been removed. *Second*, the plain-language register is a *derivative* artifact, not a *replacement* one. The §1.0 line about the kitchen table still holds, and the practitioner still owes the community a book it can sit with — but the academic register is where the craft's nouns are authored, defined, cross-referenced, and tested against each other, and the plain-language register is what gets carried out of that workshop into the community room. *Third*, authoring the plain register first by stripping the academic one collapses the workshop into the room and leaves nothing in the workshop to carry anything else out of, ever again. The §3.2 rename test catches drift inside a single register. It does not catch the deeper drift the test surfaced — the drift introduced when one register is asked to do the work of two. That is a new test the practice now knows it owes itself.",
         },
         {
           kind: "subhead",
@@ -1997,7 +2042,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "What the craft owes itself in return is also unfinished, and the next set of boundary tests is already visible. A test that catches a register-collapse before it ships — the §4.2 rename test, lifted one floor up to the level of *which named pieces still live in the corpus at all*. A protocol for the everyday volume's authorship — what gets aliased, what stays in academic form, what is allowed to be dropped, and how the dropping is logged so a future reader can find what the alias is hiding. A clearer answer to whether the academic volume is the correct ground at all, or whether the craft's nouns belong somewhere even more durable — a glossary, a manifest, an oral lineage held by named carriers — that both volumes refer back to. None of those answers are written yet. They are the boundary tests the practice now knows it has to run. This chapter is here so the finding is *in* the handbook — logged in the ledger of what has been deliberately set alight to find out what the discipline is actually made of.",
+            "What the craft owes itself in return is also unfinished, and the next set of boundary tests is already visible. A test that catches a register-collapse before it ships — the §3.2 rename test, lifted one floor up to the level of *which named pieces still live in the corpus at all*. A protocol for the everyday volume's authorship — what gets aliased, what stays in academic form, what is allowed to be dropped, and how the dropping is logged so a future reader can find what the alias is hiding. A clearer answer to whether the academic volume is the correct ground at all, or whether the craft's nouns belong somewhere even more durable — a glossary, a manifest, an oral lineage held by named carriers — that both volumes refer back to. None of those answers are written yet. They are the boundary tests the practice now knows it has to run. This chapter is here so the finding is *in* the handbook — logged in the ledger of what has been deliberately set alight to find out what the discipline is actually made of.",
         },
         {
           kind: "callout",
@@ -2008,9 +2053,9 @@ const partVI: Part = {
     },
     {
       id: "6-5",
-      number: "6.5",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.5",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "The inspector and the act that has two faces",
       blocks: [
         {
@@ -2020,7 +2065,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.4 closed by saying the next set of boundary tests is already visible and the practice owes itself a name for what runs them. The work has been done in the corpus from the beginning — *the rename test* of §4.2, the trailblazer's burn of §6.4, the bricklayer's master of §6.3 calling out the wandering line three courses in — but the role doing the work has not been named. This chapter names it. The role is *the inspector*. The act the inspector performs is two-sided in the same shape *the gate* (§3.11) and *the standby* (§3.10) are two-sided: one role, two faces. Where the standby's two faces are *temporal* — the same plumbing in slow and fast tempo — and the gate's two faces are *contextual* — the same membrane facing two legitimate vocabularies — the inspector's two faces are *operational*. The inspector certifies a name is load-bearing *by* pulling on it, and pulls on a name *in order to* certify what holds. The pull is the certification. The bind is the result of a successful pull. One inspection, two readings.",
+            "§5.4 closed by saying the next set of boundary tests is already visible and the practice owes itself a name for what runs them. The work has been done in the corpus from the beginning — *the rename test* of §3.2, the trailblazer's burn of §5.4, the bricklayer's master of §5.3 calling out the wandering line three courses in — but the role doing the work has not been named. This chapter names it. The role is *the inspector*. The act the inspector performs is two-sided in the same shape *the gate* (§2.11) and *the standby* (§2.10) are two-sided: one role, two faces. Where the standby's two faces are *temporal* — the same plumbing in slow and fast tempo — and the gate's two faces are *contextual* — the same membrane facing two legitimate vocabularies — the inspector's two faces are *operational*. The inspector certifies a name is load-bearing *by* pulling on it, and pulls on a name *in order to* certify what holds. The pull is the certification. The bind is the result of a successful pull. One inspection, two readings.",
         },
         {
           kind: "subhead",
@@ -2029,7 +2074,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §5.5's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §6.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §5.5 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
+            "The construction-trade resonance is the one the corpus is reaching for. *Inspector* in §1.5's hempcrete frame is the trade member who walks the wall, taps the cured course to hear whether it sounds bound, presses against the infill to read whether the lime took, and certifies the wall as load-bearing on the strength of those acts. The regulatory connotation — the building-code official sent from outside to confirm the work meets a published standard — is not the reading wanted here. The inspector named in this chapter is internal to the trade: the practitioner certifying their own and their peers' courses, accountable to the §5.3 wisdom keepers above and to the seven-generation horizon those keepers carry. The trade's discipline is what registers the certification; the regulator's stamp does not. Near-variants — *the keeper*, *the journeyman*, *the wall-reader* — were considered and set aside for losing the construction-trade resonance §1.5 already commits the corpus to. *Inspector* keeps the resonance and is disambiguated here in one paragraph rather than worked around.",
         },
         {
           kind: "subhead",
@@ -2038,7 +2083,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The same act presents in three calibrated intensities the corpus already has worked examples for. *Light pull* — the §4.2 rename test. The inspector substitutes one word for the named primitive, watches what shifts in the surrounding mechanics, and certifies the bind on the strength of what failed and what held. The intensity is low because the substrate around the test is intact; the test is a single course poked. *Sustained pull* — the §6.3 master walking the apprentice's job and calling out the wandering line three courses in. The intensity is steady, low-grade, and continuous; the certification is the apprentice being sent back to relay the course. *Aggressive pull* — the §6.4 burn. The inspector substitutes against an entire register of named primitives at corpus scale, watches the wall lean, and certifies — by the leaning — which terms were binder and which were decoration. The intensity is the highest the trade has language for; the recovery is the §6.4 revert and the chapter that records what the test surfaced. Three intensities, one act, one role.",
+            "The same act presents in three calibrated intensities the corpus already has worked examples for. *Light pull* — the §3.2 rename test. The inspector substitutes one word for the named primitive, watches what shifts in the surrounding mechanics, and certifies the bind on the strength of what failed and what held. The intensity is low because the substrate around the test is intact; the test is a single course poked. *Sustained pull* — the §5.3 master walking the apprentice's job and calling out the wandering line three courses in. The intensity is steady, low-grade, and continuous; the certification is the apprentice being sent back to relay the course. *Aggressive pull* — the §5.4 burn. The inspector substitutes against an entire register of named primitives at corpus scale, watches the wall lean, and certifies — by the leaning — which terms were binder and which were decoration. The intensity is the highest the trade has language for; the recovery is the §5.4 revert and the chapter that records what the test surfaced. Three intensities, one act, one role.",
         },
         {
           kind: "subhead",
@@ -2047,7 +2092,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The wall the inspector walks is built to last seven generations, which is a horizon long enough that drift has time to take three structurally distinct shapes. *Slow drift* is entropy: the lime binder thinning at the joins, the prose around a named primitive going un-re-pointed for a season, the team's shared sense of what *the standby* is certified to mean drifting half a degree off true with each handoff. The inspector's response is the everyday one — re-point the binder, refresh the surrounding prose, run the rename test as routine maintenance rather than as event. *Kind drift* is well-meaning maintenance done without trade knowledge: the vapour barrier installed on the wrong face of the wall, the modern acrylic painted over the lime render, the simplification rule applied across the corpus by a practitioner who did not read the wall as hempcrete first. §6.4 is the corpus's first formally logged instance. The inspector's response is to intercept at the brief — to veto the kind-but-wrong move before it ships, with the trade reasoning written down so the next inspector inherits both the veto and the why. *Adversarial drift* is rarer and louder: the deliberate renaming of a load-bearing primitive for political or commercial advantage, the wholesale substitution of an acquirer's vocabulary over the corpus, the regime change that wraps the wall in vinyl siding until the hempcrete underneath does no work. The inspector's response is *witnessing* — documenting in a form the §6.3 trade lineage can carry across the regime change, so the wall's load-bearing structure is recoverable by a future generation that comes back to it.",
+            "The wall the inspector walks is built to last seven generations, which is a horizon long enough that drift has time to take three structurally distinct shapes. *Slow drift* is entropy: the lime binder thinning at the joins, the prose around a named primitive going un-re-pointed for a season, the team's shared sense of what *the standby* is certified to mean drifting half a degree off true with each handoff. The inspector's response is the everyday one — re-point the binder, refresh the surrounding prose, run the rename test as routine maintenance rather than as event. *Kind drift* is well-meaning maintenance done without trade knowledge: the vapour barrier installed on the wrong face of the wall, the modern acrylic painted over the lime render, the simplification rule applied across the corpus by a practitioner who did not read the wall as hempcrete first. §5.4 is the corpus's first formally logged instance. The inspector's response is to intercept at the brief — to veto the kind-but-wrong move before it ships, with the trade reasoning written down so the next inspector inherits both the veto and the why. *Adversarial drift* is rarer and louder: the deliberate renaming of a load-bearing primitive for political or commercial advantage, the wholesale substitution of an acquirer's vocabulary over the corpus, the regime change that wraps the wall in vinyl siding until the hempcrete underneath does no work. The inspector's response is *witnessing* — documenting in a form the §5.3 trade lineage can carry across the regime change, so the wall's load-bearing structure is recoverable by a future generation that comes back to it.",
         },
         {
           kind: "callout",
@@ -2061,7 +2106,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§3.11 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §4.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §3.11 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it.",
+            "§2.11 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.11 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it.",
         },
         {
           kind: "subhead",
@@ -2070,7 +2115,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The inspector role is not acquired by reading. It is acquired by the kind of generalist apprenticeship that puts a practitioner through enough terrain to recognise, when a load-bearing piece appears, that it is load-bearing. §6.3 names the trade lineage the role would inherit pedagogy from — cartography, constitutional drafting, oral lineage — and refuses the temptation to assign the trade to the wisdom keepers themselves. What §6.3 leaves open is the prior question this chapter is the right place to answer: where the apprenticeship that produces the apprentice's hands actually comes from. Codetry's first inspector apprenticed for fifteen years to *Jack Spirko* — *Son of Thunder*, *The Survival Podcast* — already named first in §V's four teachers. What that apprenticeship transmitted is not a checklist and not a worldview. It is a sense of control and empowerment held against the everyday assumption that control belongs upward. It is a pattern-recognition lens trained across enough subjects — preparedness, food, energy, shelter, communication, finance, community organisation — that the *shape* of a load-bearing piece becomes legible across terrains that look unrelated to a specialist eye. And it is the discipline of using *the computer between the ears* over a fifteen-year horizon to hold questions and patterns in a working set the practitioner cannot always articulate but can return to when the surrounding tools catch up. Spirko's tagline — *for if times get tough or even if they don't* — is §1.3's *both-states* principle written into time itself, applied not to the plumbing of a single primitive but to the historical conditions under which the discipline has to keep working. The handbook named in this volume is what the questions held in the back of the practitioner's mind for fifteen years grew into when the surrounding computational and authorship tools finally surfaced enough to put them on paper. The lineage is owed the acknowledgement here, in the chapter where the role doing the work is finally named.",
+            "The inspector role is not acquired by reading. It is acquired by the kind of generalist apprenticeship that puts a practitioner through enough terrain to recognise, when a load-bearing piece appears, that it is load-bearing. §5.3 names the trade lineage the role would inherit pedagogy from — cartography, constitutional drafting, oral lineage — and refuses the temptation to assign the trade to the wisdom keepers themselves. What §5.3 leaves open is the prior question this chapter is the right place to answer: where the apprenticeship that produces the apprentice's hands actually comes from. Codetry's first inspector apprenticed for fifteen years to *Jack Spirko* — *Son of Thunder*, *The Survival Podcast* — already named first in §IV's four teachers. What that apprenticeship transmitted is not a checklist and not a worldview. It is a sense of control and empowerment held against the everyday assumption that control belongs upward. It is a pattern-recognition lens trained across enough subjects — preparedness, food, energy, shelter, communication, finance, community organisation — that the *shape* of a load-bearing piece becomes legible across terrains that look unrelated to a specialist eye. And it is the discipline of using *the computer between the ears* over a fifteen-year horizon to hold questions and patterns in a working set the practitioner cannot always articulate but can return to when the surrounding tools catch up. Spirko's tagline — *for if times get tough or even if they don't* — is §1.3's *both-states* principle written into time itself, applied not to the plumbing of a single primitive but to the historical conditions under which the discipline has to keep working. The handbook named in this volume is what the questions held in the back of the practitioner's mind for fifteen years grew into when the surrounding computational and authorship tools finally surfaced enough to put them on paper. The lineage is owed the acknowledgement here, in the chapter where the role doing the work is finally named.",
         },
         {
           kind: "subhead",
@@ -2088,15 +2133,15 @@ const partVI: Part = {
         {
           kind: "callout",
           text:
-            "The trade has its first inspector — the practitioner authoring this handbook. The chapter is open until the apprenticeship of the second one begins. Whether inspector standing transfers through the §6.3 wisdom-keeper line, through peer certification inside the four-teacher lineage, through some formal pedagogy the trade has not yet built, or through some combination of the three is the open question this chapter exists to be returned to. What the chapter establishes for the record now: the role exists, the act has two faces, the three drift types each call for a different response, the gate is the structural location and the inspector is the role that makes it function, and the apprenticeship is generalist before it is specific.",
+            "The trade has its first inspector — the practitioner authoring this handbook. The chapter is open until the apprenticeship of the second one begins. Whether inspector standing transfers through the §5.3 wisdom-keeper line, through peer certification inside the four-teacher lineage, through some formal pedagogy the trade has not yet built, or through some combination of the three is the open question this chapter exists to be returned to. What the chapter establishes for the record now: the role exists, the act has two faces, the three drift types each call for a different response, the gate is the structural location and the inspector is the role that makes it function, and the apprenticeship is generalist before it is specific.",
         },
       ],
     },
     {
       id: "6-6",
-      number: "6.6",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.6",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Inspector standing — the right that cannot be negotiated away",
       blocks: [
         {
@@ -2106,7 +2151,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.5 names the inspector as the role that certifies a named piece holds by pulling on it. This chapter names the second-order condition that role depends on. Codetry has two tiers of non-negotiability, and both are load-bearing. *First-order non-negotiables* are the binder spec — the eight named primitives §6.4 burned to surface (*substrate*, *primitive*, *membrane*, *load-bearing*, *cross-zone*, *vernacular*, *tokenize*, *reify*), the third-actor frame, the additive-only posture, the academic register as the workshop floor for the craft's nouns, and *verify, don't trust* as the working stance toward proposed additions. These are *what* the binder is made of. *Second-order non-negotiable* — singular — is *inspector standing*: the inspector's right to maintain the first-order list, to add to it as new failure modes are discovered, and to refuse to negotiate the right itself away under pressure, persuasion, or convenience. This is not what the binder is made of; it is *who is permitted to specify what the binder is made of*, and the answer the discipline now writes down is *the inspector, and the right cannot be surrendered*. *Cannot be surrendered* and *cannot be passed on* are different claims; this chapter is about the first. Succession to the next inspector — how the right travels from one trade member to the next when the trade is working as intended — is the open question this chapter holds for §6.6's closing callout. The non-negotiability is against giving the right away under pressure, persuasion, or convenience, not against the trade's own succession protocol.",
+            "§5.5 names the inspector as the role that certifies a named piece holds by pulling on it. This chapter names the second-order condition that role depends on. Codetry has two tiers of non-negotiability, and both are load-bearing. *First-order non-negotiables* are the binder spec — the eight named primitives §5.4 burned to surface (*substrate*, *primitive*, *membrane*, *load-bearing*, *cross-zone*, *vernacular*, *tokenize*, *reify*), the third-actor frame, the additive-only posture, the academic register as the workshop floor for the craft's nouns, and *verify, don't trust* as the working stance toward proposed additions. These are *what* the binder is made of. *Second-order non-negotiable* — singular — is *inspector standing*: the inspector's right to maintain the first-order list, to add to it as new failure modes are discovered, and to refuse to negotiate the right itself away under pressure, persuasion, or convenience. This is not what the binder is made of; it is *who is permitted to specify what the binder is made of*, and the answer the discipline now writes down is *the inspector, and the right cannot be surrendered*. *Cannot be surrendered* and *cannot be passed on* are different claims; this chapter is about the first. Succession to the next inspector — how the right travels from one trade member to the next when the trade is working as intended — is the open question this chapter holds for §5.6's closing callout. The non-negotiability is against giving the right away under pressure, persuasion, or convenience, not against the trade's own succession protocol.",
         },
         {
           kind: "subhead",
@@ -2124,7 +2169,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "The handbook's standing rule for edits — *additive only* — is not a stylistic preference. It is a second-order non-negotiable the corpus has been carrying for some time without flagging as such. The binder spec can grow but cannot quietly shrink. New primitives can be added; existing ones cannot be removed by single-pass edit. This is what makes *verify, don't trust* safe to add as a working stance: the addition is permanent in the sense that no later substitution can dissolve it without an inspection trail visible enough for a future inspector to read what was removed and why. *Additive-only* is the structural property that protects the binder spec from kind drift attacking it one item at a time. It belongs in this chapter rather than in §6.5 because it is not an act the inspector performs; it is a property of the standing the inspector holds — a property that travels with the role and that a later inspector inherits intact.",
+            "The handbook's standing rule for edits — *additive only* — is not a stylistic preference. It is a second-order non-negotiable the corpus has been carrying for some time without flagging as such. The binder spec can grow but cannot quietly shrink. New primitives can be added; existing ones cannot be removed by single-pass edit. This is what makes *verify, don't trust* safe to add as a working stance: the addition is permanent in the sense that no later substitution can dissolve it without an inspection trail visible enough for a future inspector to read what was removed and why. *Additive-only* is the structural property that protects the binder spec from kind drift attacking it one item at a time. It belongs in this chapter rather than in §5.5 because it is not an act the inspector performs; it is a property of the standing the inspector holds — a property that travels with the role and that a later inspector inherits intact.",
         },
         {
           kind: "subhead",
@@ -2133,16 +2178,16 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§6.5 names three drift types — slow, kind, adversarial — and three responses — re-point, veto, witness. Each of the three responses is conditional on the inspector's standing to perform it. *Re-pointing* requires the standing to spend trade time on a wall the surrounding institution does not visibly need re-pointed; without standing, the re-pointing is the first activity cut when budgets tighten. *Vetoing a kind-but-wrong edit* requires the standing to refuse a change everyone in the room agrees would be an improvement; without standing, the veto is overruled by collegiality. *Witnessing against an adversarial substitution* requires the standing to keep documenting what was load-bearing after the new vocabulary has shipped; without standing, the witness is dismissed as backward-looking. Inspector standing is not a defense against one drift type. It is the precondition for *any* of the three responses to be available at all. That is why it sits at the second tier: it is the load-bearing piece holding all three first-tier responses up.",
+            "§5.5 names three drift types — slow, kind, adversarial — and three responses — re-point, veto, witness. Each of the three responses is conditional on the inspector's standing to perform it. *Re-pointing* requires the standing to spend trade time on a wall the surrounding institution does not visibly need re-pointed; without standing, the re-pointing is the first activity cut when budgets tighten. *Vetoing a kind-but-wrong edit* requires the standing to refuse a change everyone in the room agrees would be an improvement; without standing, the veto is overruled by collegiality. *Witnessing against an adversarial substitution* requires the standing to keep documenting what was load-bearing after the new vocabulary has shipped; without standing, the witness is dismissed as backward-looking. Inspector standing is not a defense against one drift type. It is the precondition for *any* of the three responses to be available at all. That is why it sits at the second tier: it is the load-bearing piece holding all three first-tier responses up.",
         },
         {
           kind: "subhead",
-          text: "The §6.4 finding restated through standing.",
+          text: "The §5.4 finding restated through standing.",
         },
         {
           kind: "para",
           text:
-            "§6.4 logged the 29 April burn as a recoverable lapse in the academic register. The chapter's surface finding is that the eight named primitives are non-negotiable; the deeper finding, available now from the vantage of this chapter, is that the lapse was recoverable *only* because the second-order tier was held intact. The practitioner who applied the simplification rule was the same practitioner who reverted it — the standing to revert had not been surrendered, and so the revert was a single act inside the inspector's existing authority rather than a campaign requiring permission from somewhere else. The discipline survived its own most aggressive test against itself because the right to inspect the test's outcome had not been surrendered before the test was run. The chapter lesson §6.6 owes the corpus is the inverse: a single permanent surrender of the second-order tier ends the discipline regardless of what the first-tier list says, because the list cannot defend itself.",
+            "§5.4 logged the 29 April burn as a recoverable lapse in the academic register. The chapter's surface finding is that the eight named primitives are non-negotiable; the deeper finding, available now from the vantage of this chapter, is that the lapse was recoverable *only* because the second-order tier was held intact. The practitioner who applied the simplification rule was the same practitioner who reverted it — the standing to revert had not been surrendered, and so the revert was a single act inside the inspector's existing authority rather than a campaign requiring permission from somewhere else. The discipline survived its own most aggressive test against itself because the right to inspect the test's outcome had not been surrendered before the test was run. The chapter lesson §5.6 owes the corpus is the inverse: a single permanent surrender of the second-order tier ends the discipline regardless of what the first-tier list says, because the list cannot defend itself.",
         },
         {
           kind: "callout",
@@ -2165,15 +2210,15 @@ const partVI: Part = {
         {
           kind: "callout",
           text:
-            "The chapter records the structure now — two tiers, second tier load-bearing, additive-only as the property that protects the first-tier list from quiet erosion — and leaves open the question of how second-tier standing transfers to the trade's next inspector. §6.3 names the wisdom-keeper line as the source of authority and review for the first-tier list; §6.5 names the generalist apprenticeship as the source of the inspector's hands. Whether second-tier standing — the *right* itself, distinct from the trade skill — transfers through the same two channels, through a third the trade has not built yet, or through some combination, is the open question this chapter exists to be returned to as the answer becomes available.",
+            "The chapter records the structure now — two tiers, second tier load-bearing, additive-only as the property that protects the first-tier list from quiet erosion — and leaves open the question of how second-tier standing transfers to the trade's next inspector. §5.3 names the wisdom-keeper line as the source of authority and review for the first-tier list; §5.5 names the generalist apprenticeship as the source of the inspector's hands. Whether second-tier standing — the *right* itself, distinct from the trade skill — transfers through the same two channels, through a third the trade has not built yet, or through some combination, is the open question this chapter exists to be returned to as the answer becomes available.",
         },
       ],
     },
     {
       id: "6-7",
-      number: "6.7",
-      partRoman: "VI",
-      partLabel: "VI · Open Questions",
+      number: "5.7",
+      partRoman: "V",
+      partLabel: "V · Open Questions",
       title: "Pioneer training",
       blocks: [
         {
@@ -2223,16 +2268,17 @@ const partVI: Part = {
 
 
 const partVII: Part = {
-  roman: "VII",
-  title: "The Codetry Test Ledger",
+  roman: "FL",
+  title: "Field Ledger",
   blurb:
     "Eleven worked codetry tests, in chronological order. Each one is a small piece of the practice — a question about a name, what was on the screen before, the intervention tried, the rule discovered, the falsifier the rule lives or dies by, and the verdict. The ledger is here so the discipline can be inspected against its own examples rather than only against its rules.",
+  kind: "backMatter",
   chapters: [
     {
       id: "7-1",
-      number: "7.1",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.1",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 001 — Payday: words bearing weight",
       blocks: [
         { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: graduated." },
@@ -2270,7 +2316,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly displacing the locked Zone 1 verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces restored *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately, and the locked map of §7.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently un-did the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)* — Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently restored the older banking word. Nothing in the merge process flagged it. The fix here was to restore the locked word and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
+            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly displacing the locked Zone 1 verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces restored *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately, and the locked map of §FL.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently un-did the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)* — Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently restored the older banking word. Nothing in the merge process flagged it. The fix here was to restore the locked word and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
         },
         {
           kind: "callout",
@@ -2281,9 +2327,9 @@ const partVII: Part = {
     },
     {
       id: "7-2",
-      number: "7.2",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.2",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 002 — Zone 1: the word map locked",
       blocks: [
         { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets, every surface · status: graduated." },
@@ -2354,9 +2400,9 @@ const partVII: Part = {
     },
     {
       id: "7-3",
-      number: "7.3",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.3",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 003 — Bamboo field on the wallet chip",
       blocks: [
         { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: rejected." },
@@ -2364,7 +2410,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The first formally *rejected* test. The handbook's hempcrete chapter (§5.5) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
+            "The first formally *rejected* test. The handbook's hempcrete chapter (§1.5) names XRP as *the bamboo field* in its coda. Does the word *bamboo field* earn a place on the wallet/XRP-swap chip — the quiet plumbing chip Test 001 demoted below the *Channel the rainfall* CTA — or does it stay as a meta-doc reference only?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -2394,17 +2440,17 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§5.5). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
+            "Rejected for the wallet chip. The bamboo-field metaphor stays as a meta-doc reference (§1.5). The chip on the Payday tab continues to read as the quiet plumbing chip Test 001 demoted it to. The canvas variants are preserved as a counter-test artefact. The verdict would change only if a bamboo-only surface is built (the upstream gets its own screen, no rainfall language nearby) or if the water register is replaced wholesale on the Payday tab — neither of which is on the table from this test.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§5.5 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §7.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
+        { kind: "small", text: "§1.5 (What kind of thing codetry is — Hempcrete) coda — the bamboo-field metaphor that this test refused on the wallet chip. §FL.1 (Test 001) — the test that demoted the wallet chip to plumbing in the first place." },
       ],
     },
     {
       id: "7-4",
-      number: "7.4",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.4",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 004 — Calm states earn their loudness back",
       blocks: [
         { kind: "small", text: "Date 2026-04-26 · Zone 1 / xBuckets Payday tab · status: graduated on arrival." },
@@ -2435,7 +2481,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "This is a different rule family from one-word-one-referent (§7.1) and one-register-per-screen (§7.3). Those rules govern the *vocabulary* of the surface — which words appear, in which dialect. This rule governs the *temperature* of the surface — which controls appear, at what loudness, given the architectural state behind the screen. The two families compose: a locked vocabulary doesn't help if every control is shouting at peer volume; a calm layout doesn't help if the words are doing two jobs each. Both have to hold for the surface to feel right.",
+            "This is a different rule family from one-word-one-referent (§FL.1) and one-register-per-screen (§FL.3). Those rules govern the *vocabulary* of the surface — which words appear, in which dialect. This rule governs the *temperature* of the surface — which controls appear, at what loudness, given the architectural state behind the screen. The two families compose: a locked vocabulary doesn't help if every control is shouting at peer volume; a calm layout doesn't help if the words are doing two jobs each. Both have to hold for the surface to feel right.",
         },
         { kind: "subhead", text: "Falsifiable claim." },
         {
@@ -2450,14 +2496,14 @@ const partVII: Part = {
             "Graduated on arrival. Unlike Tests 001–003, this rule was not discovered on the canvas and then graduated to production — it was *shipped twice* in production before being named, by two unrelated tasks, and only then recognised as a single rule. The codetry test here is the naming, not the shipping. No production code or copy ships from this test.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.1 (Test 001) — the vocabulary rule the Wobble-targets escape hatch shipped from. §7.3 (Test 003) — the one-register-per-screen rule, complementary to the temperature rule named here." },
+        { kind: "small", text: "§FL.1 (Test 001) — the vocabulary rule the Wobble-targets escape hatch shipped from. §FL.3 (Test 003) — the one-register-per-screen rule, complementary to the temperature rule named here." },
       ],
     },
     {
       id: "7-5",
-      number: "7.5",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.5",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 005 — Drip Harvester reads as DeFi noise",
       blocks: [
         { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated." },
@@ -2465,7 +2511,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The Earn surface speaks two languages at once. The locked Zone 1 water vocabulary (§7.2) covers four of the words on screen. The other seventeen are imported from DevOps, naval, finance, and crypto-Twitter registers — and the cold reader has to translate every one of them to understand what the screen does.",
+            "The Earn surface speaks two languages at once. The locked Zone 1 water vocabulary (§FL.2) covers four of the words on screen. The other seventeen are imported from DevOps, naval, finance, and crypto-Twitter registers — and the cold reader has to translate every one of them to understand what the screen does.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -2503,17 +2549,17 @@ const partVII: Part = {
             "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`; critical strings mirrored to `copy.fr.ts`. *Park toll* added to the locked Zone 1 map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage (APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked the first time). A third leak — *Not funded yet* on the Drip Harvester card, where *funded* read as *broken/halted* to a household reader — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.2 (Test 002) — the locked map this test was held to. §7.6 (Test 006) — the flow-ribbon follow-up scoped out of this test. §7.7 (Test 007) — the structural test that found the LP-position card had survived this vocabulary sweep." },
+        { kind: "small", text: "§FL.2 (Test 002) — the locked map this test was held to. §FL.6 (Test 006) — the flow-ribbon follow-up scoped out of this test. §FL.7 (Test 007) — the structural test that found the LP-position card had survived this vocabulary sweep." },
       ],
     },
     {
       id: "7-6",
-      number: "7.6",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.6",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 006 — Earn flow ribbon graduates (three stations)",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, later superseded by §7.8." },
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, later superseded by §FL.8." },
         { kind: "subhead", text: "The claim." },
         {
           kind: "para",
@@ -2524,7 +2570,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "After the §7.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Zone 1 water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implicit. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
+            "After the §FL.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Zone 1 water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implicit. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -2548,17 +2594,17 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated, then superseded by §7.8 (Test 008). Two cold reads after Test 006 shipped found the three-station design hid the Drip Harvester's noun-sense behind its verb-sense and lost the reader's ability to point at the earner wallet on the topology picture. §7.8 restored the four-station ribbon and added a position read-out underneath. Test 006 is preserved here for the practice record — including the moment the rule held and the moment it didn't.",
+            "Graduated, then superseded by §FL.8 (Test 008). Two cold reads after Test 006 shipped found the three-station design hid the Drip Harvester's noun-sense behind its verb-sense and lost the reader's ability to point at the earner wallet on the topology picture. §FL.8 restored the four-station ribbon and added a position read-out underneath. Test 006 is preserved here for the practice record — including the moment the rule held and the moment it didn't.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.5 (Test 005) — Variant C of which this test graduated. §7.8 (Test 008) — supersedes this three-station design with a four-station ribbon and a position read-out." },
+        { kind: "small", text: "§FL.5 (Test 005) — Variant C of which this test graduated. §FL.8 (Test 008) — supersedes this three-station design with a four-station ribbon and a position read-out." },
       ],
     },
     {
       id: "7-7",
-      number: "7.7",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.7",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 007 — The LP-position card survived the vocabulary sweep",
       blocks: [
         { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface, LP-position card · status: graduated." },
@@ -2566,7 +2612,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "The vocabulary sweep from §7.5 cleaned every word on the LP-position card and left the card itself untouched — and the layout it had been hiding behind those words turned out to be three structural defects stacked on top of each other.",
+            "The vocabulary sweep from §FL.5 cleaned every word on the LP-position card and left the card itself untouched — and the layout it had been hiding behind those words turned out to be three structural defects stacked on top of each other.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -2578,7 +2624,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Variant A (hierarchy + IL + toll history) graduates. A single hero block opens the card (*Drip earned so far · +$2.40 RLUSD* / *next drip at $25.00*, with the progress bar directly under it and a one-line footer *10% of the way · then $22.50 lands in Vacation*); two stats survive in a sub-row below (*Parked* and *Drip rate*), with *Your share* and *Today's drip* cut as DeFi-derived metrics the household never asked for; a `TollBand` helper sits under the sub-row showing the Park toll as a band labelled honestly as a *typical range* (production does not yet snapshot tolls over time, so the band is derived from the current toll ±35%, with a follow-up to record real history); an amber IL heads-up earns the bottom of the card next to the parked money, with a link out to the Learn module §7.5 already rewrote to be honest. Variant B (stability band) and Variant C (single story) recorded as rejected.",
+            "Variant A (hierarchy + IL + toll history) graduates. A single hero block opens the card (*Drip earned so far · +$2.40 RLUSD* / *next drip at $25.00*, with the progress bar directly under it and a one-line footer *10% of the way · then $22.50 lands in Vacation*); two stats survive in a sub-row below (*Parked* and *Drip rate*), with *Your share* and *Today's drip* cut as DeFi-derived metrics the household never asked for; a `TollBand` helper sits under the sub-row showing the Park toll as a band labelled honestly as a *typical range* (production does not yet snapshot tolls over time, so the band is derived from the current toll ±35%, with a follow-up to record real history); an amber IL heads-up earns the bottom of the card next to the parked money, with a link out to the Learn module §FL.5 already rewrote to be honest. Variant B (stability band) and Variant C (single story) recorded as rejected.",
         },
         { kind: "subhead", text: "The rule discovered." },
         {
@@ -2596,37 +2642,37 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped to the LP-position branch of `JoinPoolSection` in `EarnTab.tsx` and the new `lp*` copy keys in `copy.en.ts` (mirrored in `copy.fr.ts`). The new `TollBand` helper lives in `EarnTab.tsx` next to `RISK_STYLE`. Real Park-toll history is recorded as a follow-up task; Variant A ships an honest *typical range* band today. *Side note on the practice.* The Earn surface now has two distinct kinds of test — *what does the surface say* (§7.5's vocabulary sweep) and *what does the surface put first* (this test's hierarchy + disclosure). They catch different defects on the same card.",
+            "Graduated. Variant A shipped to the LP-position branch of `JoinPoolSection` in `EarnTab.tsx` and the new `lp*` copy keys in `copy.en.ts` (mirrored in `copy.fr.ts`). The new `TollBand` helper lives in `EarnTab.tsx` next to `RISK_STYLE`. Real Park-toll history is recorded as a follow-up task; Variant A ships an honest *typical range* band today. *Side note on the practice.* The Earn surface now has two distinct kinds of test — *what does the surface say* (§FL.5's vocabulary sweep) and *what does the surface put first* (this test's hierarchy + disclosure). They catch different defects on the same card.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.5 (Test 005) — the vocabulary sweep that this test found the layout had survived. §7.8 (Test 008) — the parallel structural test on the Earn flow ribbon." },
+        { kind: "small", text: "§FL.5 (Test 005) — the vocabulary sweep that this test found the layout had survived. §FL.8 (Test 008) — the parallel structural test on the Earn flow ribbon." },
       ],
     },
     {
       id: "7-8",
-      number: "7.8",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.8",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 008 — The Earn flow ribbon becomes four stations",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, supersedes §7.6." },
+        { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Earn surface · status: graduated, supersedes §FL.6." },
         { kind: "subhead", text: "The claim." },
         {
           kind: "para",
           text:
-            "If the ribbon is supposed to answer *where in the system am I?* then every station the money passes through has to be a thing the reader can point at — the Drip Harvester is one of those things, so it graduates from a verb on an arrow (§7.6) to its own circle in the chain, and the ribbon grows a one-line position read-out underneath that names where the household actually is.",
+            "If the ribbon is supposed to answer *where in the system am I?* then every station the money passes through has to be a thing the reader can point at — the Drip Harvester is one of those things, so it graduates from a verb on an arrow (§FL.6) to its own circle in the chain, and the ribbon grows a one-line position read-out underneath that names where the household actually is.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
           kind: "para",
           text:
-            "Two cold reads after §7.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card — and drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station; §7.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
+            "Two cold reads after §FL.6 shipped showed its three-station ribbon had a hole. *The Drip Harvester is also a wallet* — *an earner wallet that holds RLUSD before it is parked* was already named, repeatedly, in the locked map and the intro card — and drawing the Drip Harvester only as an edge verb left the cold reader unable to point at *the wallet itself* on the topology picture. *The ribbon answered topology but not position.* Test 001's Payday-tab ribbon shows changing dollar values at each station; §FL.6's Earn ribbon could not (the Earn-tab values move on a weekly-to-monthly cadence) and shipped labels-only — meaning the ribbon answered *the chain in the abstract* without ever answering *where the household currently is on it*. A reader with no Drip Harvester yet, a reader with one set up but no parked RLUSD, a reader with a parked Lake collecting currents, and a reader with a sweep-ready harvester all saw the same picture.",
         },
         { kind: "subhead", text: "The intervention." },
         {
           kind: "para",
           text:
-            "Two changes from §7.6, both restoring something the canvas Variant C of §7.5 already had. *Four nodes, not three.* The Drip Harvester gets its own circle on the ribbon, between Reservoir and Private Lake, with the sub-label *earner wallet*. The §7.6 reasoning (Drip Harvester is a verb, not a noun) was true and irrelevant: the Drip Harvester *is* a verb (the move from Lake to Bucket) **and also** a wallet (the place RLUSD sits while the move is happening). The ribbon is a topology, and topology asks *what are the places?*, not *what are the verbs?* The verb sense survives in the prose under the ribbon. *A one-line position read-out under the ribbon* names the most forward station the household has actually reached: four states, each later state implying all earlier ones.",
+            "Two changes from §FL.6, both restoring something the canvas Variant C of §FL.5 already had. *Four nodes, not three.* The Drip Harvester gets its own circle on the ribbon, between Reservoir and Private Lake, with the sub-label *earner wallet*. The §FL.6 reasoning (Drip Harvester is a verb, not a noun) was true and irrelevant: the Drip Harvester *is* a verb (the move from Lake to Bucket) **and also** a wallet (the place RLUSD sits while the move is happening). The ribbon is a topology, and topology asks *what are the places?*, not *what are the verbs?* The verb sense survives in the prose under the ribbon. *A one-line position read-out under the ribbon* names the most forward station the household has actually reached: four states, each later state implying all earlier ones.",
         },
         { kind: "subhead", text: "The position read-out." },
         {
@@ -2654,17 +2700,17 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated. Variant C (canvas) restored as the live ribbon: four nodes, Drip Harvester between Reservoir and Lake. Position read-out shipped under the ribbon, EN in `copy.en.ts`, FR mirror in `copy.fr.ts`. Active-station emphasis upgraded from a 2px ring to a saturated tone-fill + ring. Drip Harvester pulse on sweep-ready preserved from §7.6, now on the Drip Harvester station itself rather than on the Lake → Buckets edge. §7.6 superseded; its `flowEdgeHarvester` string removed.",
+            "Graduated. Variant C (canvas) restored as the live ribbon: four nodes, Drip Harvester between Reservoir and Lake. Position read-out shipped under the ribbon, EN in `copy.en.ts`, FR mirror in `copy.fr.ts`. Active-station emphasis upgraded from a 2px ring to a saturated tone-fill + ring. Drip Harvester pulse on sweep-ready preserved from §FL.6, now on the Drip Harvester station itself rather than on the Lake → Buckets edge. §FL.6 superseded; its `flowEdgeHarvester` string removed.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.6 (Test 006) — the previous (three-station) shipping of this same intervention, kept in the ledger because the moment a rule held wrong is part of the practice record. §7.7 (Test 007) — the parallel structural test on the LP-position card." },
+        { kind: "small", text: "§FL.6 (Test 006) — the previous (three-station) shipping of this same intervention, kept in the ledger because the moment a rule held wrong is part of the practice record. §FL.7 (Test 007) — the parallel structural test on the LP-position card." },
       ],
     },
     {
       id: "7-9",
-      number: "7.9",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.9",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 009 — Water-register wordings on the wallet chip",
       blocks: [
         { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets Payday tab · status: graduated." },
@@ -2672,13 +2718,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "§7.3 ruled out the bamboo-field metaphor on the wallet/XRP-swap chip on the grounds of *one register per screen* — bamboo (biological) was fighting rainfall (water) on the same surface. The rejection was clean, but it only proved bamboo doesn't belong here. It did not prove that the production wording — *Convert XRP → RLUSD* — is the best the chip can be. This test asks: can the chip speak the same water register the rest of the screen already uses, without inflating itself back to peer-of-CTA volume?",
+            "§FL.3 ruled out the bamboo-field metaphor on the wallet/XRP-swap chip on the grounds of *one register per screen* — bamboo (biological) was fighting rainfall (water) on the same surface. The rejection was clean, but it only proved bamboo doesn't belong here. It did not prove that the production wording — *Convert XRP → RLUSD* — is the best the chip can be. This test asks: can the chip speak the same water register the rest of the screen already uses, without inflating itself back to peer-of-CTA volume?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
           kind: "para",
           text:
-            "Three water-register variants were tried alongside Variant 0 (*412 XRP unconverted ⇄ Swap to ~$420 RLUSD*). Variant A: *Top up reservoir from XRP · ~$420* — verbal-only, *Reservoir* doing the wallet work the locked map of §7.2 says it should. Variant B: *Add to reservoir · 412 XRP ⇄ $420* — same locked word, slightly cooler verb, with the explicit ⇄ arrow and concrete numbers retained. Variant C: *412 XRP standing by · refill reservoir* — the calmest verb, source-leads, action-follows.",
+            "Three water-register variants were tried alongside Variant 0 (*412 XRP unconverted ⇄ Swap to ~$420 RLUSD*). Variant A: *Top up reservoir from XRP · ~$420* — verbal-only, *Reservoir* doing the wallet work the locked map of §FL.2 says it should. Variant B: *Add to reservoir · 412 XRP ⇄ $420* — same locked word, slightly cooler verb, with the explicit ⇄ arrow and concrete numbers retained. Variant C: *412 XRP standing by · refill reservoir* — the calmest verb, source-leads, action-follows.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -2690,13 +2736,13 @@ const partVII: Part = {
         {
           kind: "pull",
           text:
-            "Demotion by typography is not the same as demotion by vocabulary. The locked map (§7.2) covers vocabulary; the temperature rule (§7.4) covers loudness. A chip can be typographically quiet and still break the screen's register — and that break can hide for cycles precisely because the typography says *don't look here*.",
+            "Demotion by typography is not the same as demotion by vocabulary. The locked map (§FL.2) covers vocabulary; the temperature rule (§FL.4) covers loudness. A chip can be typographically quiet and still break the screen's register — and that break can hide for cycles precisely because the typography says *don't look here*.",
         },
         { kind: "subhead", text: "Falsifiable claim." },
         {
           kind: "para",
           text:
-            "A water-register wording earns the chip if both hold: (1) *mechanical clarity preserved* — a cold reader can still tell from the chip alone what the chip does, specifically that XRP gets exchanged for stablecoins added to the wallet (the same falsifier as §7.3); and (2) *demotion preserved* — at the actual production typography (10px white/25 underlined text-link), the new wording does not feel louder than the control, i.e. it does not pull the eye away from the *Channel the rainfall* CTA above it.",
+            "A water-register wording earns the chip if both hold: (1) *mechanical clarity preserved* — a cold reader can still tell from the chip alone what the chip does, specifically that XRP gets exchanged for stablecoins added to the wallet (the same falsifier as §FL.3); and (2) *demotion preserved* — at the actual production typography (10px white/25 underlined text-link), the new wording does not feel louder than the control, i.e. it does not pull the eye away from the *Channel the rainfall* CTA above it.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -2705,14 +2751,14 @@ const partVII: Part = {
             "Graduated. Variant A — *Top up reservoir from XRP* — ships as the new wording, same typography, same demoted text-link, same surface position. The chip remains plumbing; it now also speaks the locked Zone 1 dialect. Variant B is rejected for unnecessary visual weight (the arrow + numbers buy nothing the locked dialect doesn't already give). Variant C is rejected for losing mechanical precision (poetic but uninformative — a cold reader can't tell the chip swaps).",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.3 (Test 003) — rejected the bamboo-field metaphor on the same chip on the grounds of *one register per screen*. §7.10 / §7.11 (Test 010) — the loud-twin and the deeper-room moves of the same closing-out arc on this surface stack." },
+        { kind: "small", text: "§FL.3 (Test 003) — rejected the bamboo-field metaphor on the same chip on the grounds of *one register per screen*. §FL.10 / §FL.11 (Test 010) — the loud-twin and the deeper-room moves of the same closing-out arc on this surface stack." },
       ],
     },
     {
       id: "7-10",
-      number: "7.10",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.10",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 010 — Water-register wordings on the shortfall CTA",
       blocks: [
         { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets wallet-confirm sheet · status: graduated." },
@@ -2720,13 +2766,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "§7.9 graduated the *demoted* XRP-swap chip from *Convert XRP → RLUSD* to *Top up reservoir from XRP*, finally bringing it into the locked Zone 1 water dialect. That chip has a *loud* twin — the prominent amber CTA in the wallet-confirm sheet that appears when the wallet is short of plan total. It still said *Convert XRP → RLUSD to cover shortfall*. Same action, same destination, same protocol-noun register-break. This test asks: can the loud chip speak the same dialect as its quiet sibling without losing the urgency the amber card is built to express?",
+            "§FL.9 graduated the *demoted* XRP-swap chip from *Convert XRP → RLUSD* to *Top up reservoir from XRP*, finally bringing it into the locked Zone 1 water dialect. That chip has a *loud* twin — the prominent amber CTA in the wallet-confirm sheet that appears when the wallet is short of plan total. It still said *Convert XRP → RLUSD to cover shortfall*. Same action, same destination, same protocol-noun register-break. This test asks: can the loud chip speak the same dialect as its quiet sibling without losing the urgency the amber card is built to express?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
           kind: "para",
           text:
-            "Three variants alongside Variant 0 (*Convert XRP → RLUSD to cover shortfall*). Variant A — *Top up reservoir from XRP* (a direct port of §7.9's graduate). Variant B — *Top up reservoir from XRP · cover the shortfall* (§7.9's graduate as the action, then a separator, then the urgency tail naming what the amber card is shouting about). Variant C — *Refill reservoir from XRP · cover the shortfall* (same shape as B but with *refill* instead of *top up*).",
+            "Three variants alongside Variant 0 (*Convert XRP → RLUSD to cover shortfall*). Variant A — *Top up reservoir from XRP* (a direct port of §FL.9's graduate). Variant B — *Top up reservoir from XRP · cover the shortfall* (§FL.9's graduate as the action, then a separator, then the urgency tail naming what the amber card is shouting about). Variant C — *Refill reservoir from XRP · cover the shortfall* (same shape as B but with *refill* instead of *top up*).",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -2738,48 +2784,48 @@ const partVII: Part = {
         {
           kind: "pull",
           text:
-            "When a chip has a *quiet* sibling and a *loud* sibling that do the same thing, the loud one should rhyme with the quiet one in dialect, then add whatever the loud surface needs. Test 003's *one register per screen* held even on a typographically demoted surface (§7.9); this test extends it to a *loud* surface — the amber CTA was hiding behind its urgency the way the demoted chip was hiding behind its typography.",
+            "When a chip has a *quiet* sibling and a *loud* sibling that do the same thing, the loud one should rhyme with the quiet one in dialect, then add whatever the loud surface needs. Test 003's *one register per screen* held even on a typographically demoted surface (§FL.9); this test extends it to a *loud* surface — the amber CTA was hiding behind its urgency the way the demoted chip was hiding behind its typography.",
         },
         { kind: "subhead", text: "Falsifiable claim." },
         {
           kind: "para",
           text:
-            "A water-register wording earns the loud amber CTA if both hold: (1) *mechanical clarity preserved* (same falsifier as §7.3 and §7.9); and (2) *urgency preserved* — the cold reader still understands this is a *fix-the-shortfall* action, not a casual top-up. The chip should read as the answer to the amber alert above it, not as an aside that happens to live in the same card.",
+            "A water-register wording earns the loud amber CTA if both hold: (1) *mechanical clarity preserved* (same falsifier as §FL.3 and §FL.9); and (2) *urgency preserved* — the cold reader still understands this is a *fix-the-shortfall* action, not a casual top-up. The chip should read as the answer to the amber alert above it, not as an aside that happens to live in the same card.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. Variant B — *Top up reservoir from XRP · cover the shortfall* — ships, same amber CTA treatment, same surface position, same icon. Variant A is rejected for dropping *shortfall* and leaving the urgency in the amber card alone with no echo on the chip. Variant C is rejected for *refill* implying a state of fullness the reservoir never had this cycle (the same word §7.9 had already flagged as wrong-temperature on the demoted twin). Variant B's structure — *(§7.9's exact graduate) · (purpose-of-this-surface)* — gives the two chips a shared spine, mirroring the existing graduated hero CTA from §7.1 (*Channel the rainfall · $1,200 ready · every drop into a bucket*).",
+            "Graduated. Variant B — *Top up reservoir from XRP · cover the shortfall* — ships, same amber CTA treatment, same surface position, same icon. Variant A is rejected for dropping *shortfall* and leaving the urgency in the amber card alone with no echo on the chip. Variant C is rejected for *refill* implying a state of fullness the reservoir never had this cycle (the same word §FL.9 had already flagged as wrong-temperature on the demoted twin). Variant B's structure — *(§FL.9's exact graduate) · (purpose-of-this-surface)* — gives the two chips a shared spine, mirroring the existing graduated hero CTA from §FL.1 (*Channel the rainfall · $1,200 ready · every drop into a bucket*).",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.9 (Test 009) — the quiet sibling on the Payday tab whose dialect this loud twin now rhymes with. §7.11 (the second-filed Test 010) — the deeper-room move on the swap-sheet header that closes out the arc this test opened." },
+        { kind: "small", text: "§FL.9 (Test 009) — the quiet sibling on the Payday tab whose dialect this loud twin now rhymes with. §FL.11 (the second-filed Test 010) — the deeper-room move on the swap-sheet header that closes out the arc this test opened." },
       ],
     },
     {
       id: "7-11",
-      number: "7.11",
-      partRoman: "VII",
-      partLabel: "VII · The Codetry Test Ledger",
+      number: "FL.11",
+      partRoman: "FL",
+      partLabel: "Field Ledger",
       title: "Test 010 (second entry) — Water-register wording on the swap-sheet header",
       blocks: [
         { kind: "small", text: "Date 2026-04-27 · Zone 1 / xBuckets ConvertXrpSheet · status: graduated." },
         {
           kind: "callout",
           text:
-            "Numbering note. This is the second entry filed as *Test 010* in the ledger, and it has been left at its original number rather than renumbered to 011 — both because the duplicate is itself part of the practice record (two tests on the same wallet/XRP-swap stack landed on the same date and were filed as 010 in error, and the ledger preserves that), and because the first 010 (§7.10) and this entry (§7.11) are the loud-twin and the deeper-room moves of one closing-out arc on the same surface stack and read better as a pair than as 010 / 011 across a renumbering boundary. Future ledger entries are expected to start at 011, leaving §7.10 / §7.11 as the one anomaly the numbering preserves.",
+            "Numbering note. This is the second entry filed as *Test 010* in the ledger, and it has been left at its original number rather than renumbered to 011 — both because the duplicate is itself part of the practice record (two tests on the same wallet/XRP-swap stack landed on the same date and were filed as 010 in error, and the ledger preserves that), and because the first 010 (§FL.10) and this entry (§FL.11) are the loud-twin and the deeper-room moves of one closing-out arc on the same surface stack and read better as a pair than as 010 / 011 across a renumbering boundary. Future ledger entries are expected to start at 011, leaving §FL.10 / §FL.11 as the one anomaly the numbering preserves.",
         },
         { kind: "subhead", text: "The question." },
         {
           kind: "para",
           text:
-            "§7.9 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §7.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right — but it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
+            "§FL.9 graduated the wallet/XRP-swap chip into the locked Zone 1 dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §FL.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right — but it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
           kind: "para",
           text:
-            "Four variants. Variant 0 (control): eyebrow *Tap the Headwaters* (already in dialect, locked by §7.2), title *Convert XRP → RLUSD* (protocol). Variant A: title *Top up your reservoir* — pure dialect, mirrors §7.9's graduated verb. Variant B: title *Refill the reservoir from your headwaters* — both locked nouns, most poetic. Variant C: title *Top up your reservoir* with a small grey subheading *XRP → RLUSD* underneath — hybrid.",
+            "Four variants. Variant 0 (control): eyebrow *Tap the Headwaters* (already in dialect, locked by §FL.2), title *Convert XRP → RLUSD* (protocol). Variant A: title *Top up your reservoir* — pure dialect, mirrors §FL.9's graduated verb. Variant B: title *Refill the reservoir from your headwaters* — both locked nouns, most poetic. Variant C: title *Top up your reservoir* with a small grey subheading *XRP → RLUSD* underneath — hybrid.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -2791,12 +2837,12 @@ const partVII: Part = {
         {
           kind: "pull",
           text:
-            "Register zoning works vertically as well as horizontally. Test 002 zones registers across screens (§7.2); this test shows the same kind of zoning *inside* a single component: the title-level register can speak dialect while the line-item register speaks protocol, as long as each register lives at the level it is best at. Dialect names the *kind of action*; protocol names the *assets the action moves*; the CTA verb names *what the wallet will sign*. Three registers, three jobs, one sheet, no register-break.",
+            "Register zoning works vertically as well as horizontally. Test 002 zones registers across screens (§FL.2); this test shows the same kind of zoning *inside* a single component: the title-level register can speak dialect while the line-item register speaks protocol, as long as each register lives at the level it is best at. Dialect names the *kind of action*; protocol names the *assets the action moves*; the CTA verb names *what the wallet will sign*. Three registers, three jobs, one sheet, no register-break.",
         },
         {
           kind: "para",
           text:
-            "This is not a new general rule — it is §7.2's locked map applied with one extra grain of resolution: not just *which words* per screen, but *which words at which level inside a screen*. Worth naming because it unblocks a class of cases (transactional sheets with poetic frames) where the *moment of honesty needs protocol* fear was load-bearing for the conservative call in §7.9.",
+            "This is not a new general rule — it is §FL.2's locked map applied with one extra grain of resolution: not just *which words* per screen, but *which words at which level inside a screen*. Worth naming because it unblocks a class of cases (transactional sheets with poetic frames) where the *moment of honesty needs protocol* fear was load-bearing for the conservative call in §FL.9.",
         },
         { kind: "subhead", text: "Falsifiable claim." },
         {
@@ -2811,13 +2857,58 @@ const partVII: Part = {
             "Graduated. Variant A — *Top up your reservoir* — ships as the new title, same eyebrow, same body line-items, same CTA. The chip-tap → sheet-open transition is now a *handoff* in one language, not a gear-change between two. Variant B is rejected for stuttering with its own eyebrow (*Headwaters* appears twice inside ten words). Variant C is rejected for replicating, badly, the title/body register separation the sheet already does well.",
         },
         { kind: "subhead", text: "See also." },
-        { kind: "small", text: "§7.9 (Test 009) — the chip whose graduation this test extends one surface deeper. §7.10 (the first-filed Test 010) — the loud-twin chip on the wallet-confirm sheet that opened the arc this test closes." },
+        { kind: "small", text: "§FL.9 (Test 009) — the chip whose graduation this test extends one surface deeper. §FL.10 (the first-filed Test 010) — the loud-twin chip on the wallet-confirm sheet that opened the arc this test closes." },
       ],
     },
   ],
 };
 
-export const PARTS: Part[] = [partI, partII, partIII, partIV, partV, partVI, partVII];
+
+const partColophon: Part = {
+  roman: "C",
+  title: "Colophon",
+  blurb:
+    "How this handbook was authored, and the spirit in which it is offered.",
+  kind: "backMatter",
+  chapters: [
+    {
+      id: "5-6",
+      number: "C",
+      partRoman: "C",
+      partLabel: "Colophon",
+      title: "Colophon",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "This handbook was authored in 2026 alongside the constellation it draws its founding examples from. The constellation lives at the practitioner's working URL; the canonical Codetry working-doc lives at /practitioner-operating-plan/codetry; the machine-readable constellation manifest, frozen as a snapshot in this app, lives at /practitioner-operating-plan/constellation.json.",
+        },
+        {
+          kind: "para",
+          text:
+            "Voice and editorial decisions follow the constellation's own quiet, declarative register. No marketing.",
+        },
+        {
+          kind: "para",
+          text:
+            "The discipline named here is offered in the spirit of the four teachers above and the axiom alongside them.",
+        },
+        { kind: "rule" },
+        {
+          kind: "para",
+          text:
+            "For the community development practitioners who pick this up: the names will be your own. Use the discipline; throw away the examples. That is the only correct way to read this book.",
+        },
+        {
+          kind: "small",
+          text: `Snapshot v${constellation.version} · ${constellation.lastUpdated}. Offline-readable. State held under codetry-handbook:v1.`,
+        },
+      ],
+    },
+  ],
+};
+
+export const PARTS: Part[] = [partI, partIII, partIV, partV, partVI, partII, partVII, partColophon];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 

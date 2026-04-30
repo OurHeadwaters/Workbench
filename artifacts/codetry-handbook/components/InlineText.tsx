@@ -7,11 +7,15 @@ type Run =
   | { kind: "text"; text: string; italic: boolean }
   | { kind: "ref"; text: string; chapterId: string };
 
-const VALID_CHAPTER_IDS: ReadonlySet<string> = new Set(
-  CHAPTERS.map((c) => c.id),
+const NUMBER_TO_CHAPTER_ID: ReadonlyMap<string, string> = new Map(
+  CHAPTERS.map((c) => [c.number, c.id]),
 );
 
-const REF_RE = /§(\d+)\.(\d+)/g;
+// Matches §X.Y where X is one or more letters or digits and Y is one or
+// more digits. Covers numeric refs like §1.5 and §3.2 as well as
+// back-matter refs like §DD.1, §FL.10. Bare part refs like §5 or §IV
+// are intentionally excluded — those are prose, not navigable targets.
+const REF_RE = /§([A-Za-z0-9]+)\.(\d+)/g;
 const ITALIC_RE = /\*([^*]+)\*/g;
 
 function pushTextWithRefs(out: Run[], plain: string, withRefs: boolean) {
@@ -30,8 +34,9 @@ function pushTextWithRefs(out: Run[], plain: string, withRefs: boolean) {
         italic: false,
       });
     }
-    const id = `${m[1]}-${m[2]}`;
-    if (VALID_CHAPTER_IDS.has(id)) {
+    const number = `${m[1]}.${m[2]}`;
+    const id = NUMBER_TO_CHAPTER_ID.get(number);
+    if (id) {
       out.push({ kind: "ref", text: m[0], chapterId: id });
     } else {
       out.push({ kind: "text", text: m[0], italic: false });

@@ -15,7 +15,9 @@ import { CHAPTERS, type Block, type Chapter } from "../../data/handbook";
 
 // Mirrors the regex in components/InlineText.tsx so the validator
 // catches exactly the references the renderer would try to resolve.
-const REF_RE = /§(\d+)\.(\d+)/g;
+// Matches both numeric refs (§1.5, §3.2) and back-matter refs with an
+// alphabetic prefix (§DD.1, §FL.10).
+const REF_RE = /§([A-Za-z0-9]+)\.(\d+)/g;
 
 export type DeadReference = {
   chapterId: string;
@@ -52,21 +54,27 @@ export function extractChapterStrings(chapter: Chapter): string[] {
 export function findDeadReferences(
   chapters: readonly Chapter[] = CHAPTERS,
 ): DeadReference[] {
-  const validIds = new Set(chapters.map((c) => c.id));
+  // Resolve §X.Y by chapter `number`, not by id. Chapter ids are
+  // preserved for bookmark continuity across renumbers, so they may
+  // diverge from the user-facing number (e.g., a Constellation
+  // chapter with id "3-10" but number "2.10" after the spine
+  // renumber). The renderer in InlineText.tsx looks up by number too,
+  // so this validator must mirror that.
+  const validNumbers = new Map(chapters.map((c) => [c.number, c.id]));
   const dead: DeadReference[] = [];
   for (const chapter of chapters) {
     for (const text of extractChapterStrings(chapter)) {
       REF_RE.lastIndex = 0;
       let match: RegExpExecArray | null;
       while ((match = REF_RE.exec(text))) {
-        const targetId = `${match[1]}-${match[2]}`;
-        if (!validIds.has(targetId)) {
+        const targetNumber = `${match[1]}.${match[2]}`;
+        if (!validNumbers.has(targetNumber)) {
           dead.push({
             chapterId: chapter.id,
             chapterNumber: chapter.number,
             chapterTitle: chapter.title,
             reference: match[0],
-            targetId,
+            targetId: targetNumber,
           });
         }
       }
@@ -79,7 +87,7 @@ export function formatDeadReferences(hits: readonly DeadReference[]): string {
   return hits
     .map(
       (h) =>
-        `  - §${h.chapterNumber} (${h.chapterTitle}) [id ${h.chapterId}] points at ${h.reference} → no chapter with id ${h.targetId}`,
+        `  - §${h.chapterNumber} (${h.chapterTitle}) [id ${h.chapterId}] points at ${h.reference} → no chapter with number ${h.targetId}`,
     )
     .join("\n");
 }

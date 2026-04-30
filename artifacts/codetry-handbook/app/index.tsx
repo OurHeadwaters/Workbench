@@ -314,9 +314,9 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          IN SIX PARTS
+          IN FIVE PARTS
         </Text>
-        {PARTS.map((p) => (
+        {PARTS.filter((p) => p.kind !== "backMatter").map((p) => (
           <View key={p.roman} style={styles.partRow}>
             <Text
               style={[
