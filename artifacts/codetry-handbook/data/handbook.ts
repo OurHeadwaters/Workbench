@@ -1738,6 +1738,55 @@ const partVI: Part = {
         },
       ],
     },
+    {
+      id: "6-7",
+      number: "6.7",
+      partRoman: "VI",
+      partLabel: "VI · Open Questions",
+      title: "Pioneer training",
+      blocks: [
+        {
+          kind: "small",
+          text: "Open question · who this work is for · the calm before the storm.",
+        },
+        {
+          kind: "para",
+          text: "This is the calm before the storm.",
+        },
+        {
+          kind: "subhead",
+          text: "Sons and daughters of thunder.",
+        },
+        {
+          kind: "para",
+          text:
+            "We are the sons and daughters of thunder — those who have stood for years at the headwaters, holding back the flood not to stop it, but to learn its rhythm, its force, its promise. We did not dam the future; we studied it. We prepared.",
+        },
+        {
+          kind: "subhead",
+          text: "The icon is a ship.",
+        },
+        {
+          kind: "para",
+          text:
+            "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality.",
+        },
+        {
+          kind: "subhead",
+          text: "Who the work belongs to.",
+        },
+        {
+          kind: "para",
+          text:
+            "This work belongs to well-grounded individuals who prize self-sovereignty and refuse aggression. It calls to big hearts, restless minds, and artists who understand that the most powerful tools are also the most beautiful when shaped by care.",
+        },
+        {
+          kind: "callout",
+          text:
+            "We are not late to this frontier. We are the ones who kept the headwaters while the world slept. Now we launch.",
+        },
+      ],
+    },
   ],
 };
 
