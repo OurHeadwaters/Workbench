@@ -33,7 +33,7 @@ export default function WhyThisTeam() {
       tag: "Claim 3 · We work with northern communities, not at them",
       head: "The method is written down.",
       body:
-        "Headwaters has a practice with a name — codetry — and a handbook anyone can read. Seven parts, plain voice, no jargon.",
+        "Headwaters has a practice with a name — codetry — and a handbook anyone can read. Seven parts, written down end to end.",
       links: ["/codetry-handbook/"],
     },
   ];
@@ -308,8 +308,8 @@ export default function WhyThisTeam() {
           <Reveal label="What's inside the method" variant="ink">
             <p>
               The codetry handbook — <span className="italic">Headwaters:
-              How a Community Runs Its Own Economy</span>. Seven parts,
-              plain grade-9 English. Read it on a phone.
+              How a Community Runs Its Own Economy</span>. Seven parts.
+              Read it on a phone.
             </p>
             <p>
               Same method used at the kitchen table in Dryden, Deer Lake,

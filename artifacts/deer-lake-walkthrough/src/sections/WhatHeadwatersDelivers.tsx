@@ -237,8 +237,8 @@ export default function WhatHeadwatersDelivers() {
             <p>
               The codetry handbook is the written method behind how
               Headwaters trains. Seven parts, every chapter readable on a
-              phone, the same plain voice the band staff will see in their
-              training materials.
+              phone — the same handbook the band staff will work from in
+              their training materials.
             </p>
             <p>
               The Practitioner's Guide is the reference Bobbie's own
