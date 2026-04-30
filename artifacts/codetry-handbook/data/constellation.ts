@@ -303,7 +303,7 @@ export const constellation: ConstellationSnapshot = {
       "slot": "decentralized",
       "name": "Saltbox",
       "domain": "Decentralized homes — homeschool day companion, local-first per family",
-      "url": null,
+      "url": "https://salt-box.replit.app/",
       "status": "live",
       "workedExamples": [
         {
@@ -338,7 +338,7 @@ export const constellation: ConstellationSnapshot = {
       "slot": "centralized",
       "name": "Bright Side",
       "domain": "Centralized homes / care institutions — long-term care recreation therapy",
-      "url": null,
+      "url": "https://health-support-hub.replit.app/",
       "status": "in development — pilot probe Q4 2026",
       "tagline": "What's the fence to peek over?",
       "context": "PHI-free posture is what holds the product up — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
@@ -489,7 +489,7 @@ export const constellation: ConstellationSnapshot = {
       "zone": 2,
       "name": "Practitioner Operating Plan",
       "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
-      "url": null,
+      "url": "https://northern-store-plan.replit.app/codetry-handbook/",
       "status": "live (you are here)",
       "workedExamples": [
         {
@@ -578,7 +578,7 @@ export const constellation: ConstellationSnapshot = {
       "zone": 4,
       "name": "Regen Revolution",
       "domain": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO",
-      "url": null,
+      "url": "https://regen-revolution-zone-4.replit.app/",
       "status": "live (v0.1 anchor shipping)",
       "workedExamples": [
         {
@@ -619,7 +619,7 @@ export const constellation: ConstellationSnapshot = {
         "Watershed (still active at URL + storage namespace)"
       ],
       "domain": "Wild / observation — private capture (Dam Days takes) with structured channel-out and opt-in float to the Shallows",
-      "url": "https://watershed.replit.app/",
+      "url": "https://conversation-log.replit.app/",
       "status": "live",
       "workedExamples": [
         {
