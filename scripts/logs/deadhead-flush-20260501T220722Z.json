@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-05-01T22:07:22Z",
+  "command": "pnpm --filter @workspace/scripts tsx src/flushDeadheadBacklog.ts",
+  "exitCode": 0,
+  "output": [
+    "Found 0 PROPOSED task(s) in total.",
+    "0 are unflushed (0 already in deadhead_items).",
+    "Nothing to flush — unflushed count (0) is within the threshold of 30."
+  ],
+  "databaseStateAtRun": {
+    "projectTasksTotal": 0,
+    "projectTasksByStatus": {},
+    "deadheadItems": 0,
+    "deadheadFlushLog": 0
+  },
+  "tasksSentToDeadhead": 0,
+  "flushBatchId": null,
+  "verdict": "VALID_NO_OP",
+  "explanation": "The project_tasks table is completely empty (0 rows of any status). There is no PROPOSED backlog to flush — it either never existed in this environment or was already cleared before this one-time task ran. The flush script ran correctly and reported nothing to flush. Re-running would produce identical output. No action is required."
+}

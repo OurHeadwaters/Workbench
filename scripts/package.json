@@ -6,6 +6,8 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "upload-attached-assets": "tsx ./src/uploadAttachedAssets.ts",
+    "flush-deadhead-backlog": "tsx src/flushDeadheadBacklog.ts",
+    "tsx": "tsx",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
