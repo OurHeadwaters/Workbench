@@ -154,6 +154,19 @@ export function BrightSidePage() {
           </div>
         </section>
 
+        <footer className="mt-12 pt-6 border-t flex items-center justify-between gap-4"
+          style={{ borderColor: "hsl(var(--card-border))" }}>
+          <p className="signoff">— bobbie parr · headwaters</p>
+          <a
+            href={import.meta.env.BASE_URL}
+            className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-70 transition-opacity"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+            data-testid="bright-side-home-link"
+          >
+            ← headwaters home
+          </a>
+        </footer>
+
       </div>
     </main>
   );

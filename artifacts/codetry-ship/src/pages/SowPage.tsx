@@ -200,6 +200,14 @@ export function SowPage() {
               >
                 bobbie@ourheadwaters.ca
               </a>
+              <a
+                href={import.meta.env.BASE_URL}
+                className="print:hidden font-mono text-[10px] uppercase tracking-[0.18em] mt-3 block hover:opacity-70 transition-opacity"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="sow-home-link"
+              >
+                ← headwaters home
+              </a>
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 mb-2">

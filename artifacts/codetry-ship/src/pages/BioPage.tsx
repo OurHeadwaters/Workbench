@@ -337,15 +337,25 @@ export function BioPage() {
 
           <footer className="mt-5 print:mt-4 flex items-center justify-between gap-4">
             <p className="signoff">— bobbie parr · headwaters</p>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.18em]"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-            >
-              {new Date().toLocaleDateString("en-CA", {
-                year: "numeric",
-                month: "long",
-              })}
-            </p>
+            <div className="flex items-center gap-5">
+              <a
+                href={import.meta.env.BASE_URL}
+                className="print:hidden font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-70 transition-opacity"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="bio-home-link"
+              >
+                ← headwaters home
+              </a>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                {new Date().toLocaleDateString("en-CA", {
+                  year: "numeric",
+                  month: "long",
+                })}
+              </p>
+            </div>
           </footer>
         </article>
       </div>
