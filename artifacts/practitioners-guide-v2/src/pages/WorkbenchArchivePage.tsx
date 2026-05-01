@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { triageGates, routeDescriptors } from "@/data/inquiryTriage";
 import { windDownActions } from "@/data/studioWindDown";
 import { leaseToolingActions } from "@/data/leaseToolingActions";
@@ -12,6 +13,7 @@ import {
   TRIAL_FRAMING_LINE,
   TRIAL_TIMELINE,
   TRIAL_ACCEPTANCE_CRITERIA,
+  TRIAL_REFUND_INVOCATION_DAYS,
 } from "@workspace/headwaters-pricing";
 
 const sectionHeader = "text-2xl font-semibold tracking-tight mb-2";
@@ -72,6 +74,18 @@ export function WorkbenchArchivePage() {
             <li key={i}>{c}</li>
           ))}
         </ul>
+        <p className="mt-4 text-sm">
+          §7 also requires the contractor to invoke any refund{" "}
+          <em>in writing</em> within {TRIAL_REFUND_INVOCATION_DAYS}{" "}
+          calendar days of the week-eight review.{" "}
+          <Link
+            href="/refund-invocation-letter"
+            className="underline font-medium"
+            data-testid="link-refund-invocation-letter"
+          >
+            Open the printable refund-invocation letter →
+          </Link>
+        </p>
       </section>
 
       {/* ---------------------------- inquiry triage ---------------------------- */}
