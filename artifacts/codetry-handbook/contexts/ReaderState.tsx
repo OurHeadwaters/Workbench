@@ -77,6 +77,8 @@ type ReaderContextValue = {
   saveScroll: (chapterId: string, y: number) => void;
   saveOriginScroll: (chapterId: string, y: number) => void;
   takeOriginScroll: (chapterId: string) => number | null;
+  saveOriginBlockIndex: (chapterId: string, n: number) => void;
+  takeOriginBlockIndex: (chapterId: string) => number | null;
 };
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
@@ -90,6 +92,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
   const scrollMapRef = useRef<Record<string, number>>({});
   const originScrollMapRef = useRef<Record<string, number>>({});
+  const originBlockIndexMapRef = useRef<Record<string, number>>({});
 
   // Refs mirror state so retry callbacks re-attempt the latest intended
   // value rather than a snapshot captured at first-write time.
@@ -332,6 +335,17 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     return y;
   }, []);
 
+  const saveOriginBlockIndex = useCallback((chapterId: string, n: number) => {
+    originBlockIndexMapRef.current[chapterId] = n;
+  }, []);
+
+  const takeOriginBlockIndex = useCallback((chapterId: string): number | null => {
+    const n = originBlockIndexMapRef.current[chapterId];
+    if (n === undefined) return null;
+    delete originBlockIndexMapRef.current[chapterId];
+    return n;
+  }, []);
+
   const theme: ResolvedTheme =
     themeMode === "system"
       ? systemScheme === "dark"
@@ -363,6 +377,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       saveScroll,
       saveOriginScroll,
       takeOriginScroll,
+      saveOriginBlockIndex,
+      takeOriginBlockIndex,
     }),
     [
       ready,
@@ -385,6 +401,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       saveScroll,
       saveOriginScroll,
       takeOriginScroll,
+      saveOriginBlockIndex,
+      takeOriginBlockIndex,
     ],
   );
 

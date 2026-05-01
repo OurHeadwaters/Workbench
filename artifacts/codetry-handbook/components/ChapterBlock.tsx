@@ -1,8 +1,9 @@
-import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useColors } from "@/hooks/useColors";
+import { useReader } from "@/contexts/ReaderState";
 import type { Block } from "@/data/handbook";
 import { InlineText } from "./InlineText";
 
@@ -17,14 +18,17 @@ export function ChapterBlock({
   onLongPress,
   bookmarked,
   onPressRef,
+  highlighted,
 }: {
   block: Block;
   fontScale: number;
   onLongPress?: (excerpt: string) => void;
   bookmarked?: boolean;
   onPressRef?: (chapterId: string) => void;
+  highlighted?: boolean;
 }) {
   const c = useColors();
+  const { theme } = useReader();
   const baseSize = 17 * fontScale;
   const lineHeight = baseSize * 1.55;
   const smallSize = 13 * fontScale;
@@ -37,12 +41,53 @@ export function ChapterBlock({
     textDecorationColor: c.muted,
   };
 
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!highlighted) return;
+    glowAnim.setValue(0);
+    Animated.sequence([
+      Animated.timing(glowAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(900),
+      Animated.timing(glowAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [highlighted]);
+
+  const glowColor =
+    theme === "dark"
+      ? "rgba(140, 200, 140, 0.18)"
+      : "rgba(200, 175, 60, 0.22)";
+
+  function wrapWithGlow(content: React.ReactNode) {
+    return (
+      <View style={styles.glowWrapper}>
+        {content}
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles.glowOverlay,
+            { opacity: glowAnim, backgroundColor: glowColor },
+          ]}
+          pointerEvents="none"
+        />
+      </View>
+    );
+  }
+
   switch (block.kind) {
     case "para": {
       const handleLong = onLongPress
         ? () => onLongPress(block.text)
         : undefined;
-      return (
+      return wrapWithGlow(
         <Pressable
           onLongPress={handleLong}
           delayLongPress={350}
@@ -71,11 +116,11 @@ export function ChapterBlock({
             onPressRef={onPressRef}
             refStyle={refStyle}
           />
-        </Pressable>
+        </Pressable>,
       );
     }
     case "subhead":
-      return (
+      return wrapWithGlow(
         <View style={styles.row}>
           <InlineText
             text={block.text}
@@ -91,10 +136,10 @@ export function ChapterBlock({
             onPressRef={onPressRef}
             refStyle={refStyle}
           />
-        </View>
+        </View>,
       );
     case "small":
-      return (
+      return wrapWithGlow(
         <View style={styles.row}>
           <InlineText
             text={block.text}
@@ -115,10 +160,10 @@ export function ChapterBlock({
               textDecorationColor: c.muted,
             }}
           />
-        </View>
+        </View>,
       );
     case "pull":
-      return (
+      return wrapWithGlow(
         <View
           style={[
             styles.pull,
@@ -135,10 +180,10 @@ export function ChapterBlock({
             }}
             italicStyle={{ fontFamily: SERIF_ITALIC }}
           />
-        </View>
+        </View>,
       );
     case "callout":
-      return (
+      return wrapWithGlow(
         <View
           style={[
             styles.callout,
@@ -157,10 +202,10 @@ export function ChapterBlock({
             onPressRef={onPressRef}
             refStyle={refStyle}
           />
-        </View>
+        </View>,
       );
     case "examples":
-      return (
+      return wrapWithGlow(
         <View style={styles.examples}>
           {block.items.map((ex, i) => {
             const handleLong = onLongPress
@@ -200,10 +245,10 @@ export function ChapterBlock({
               </Pressable>
             );
           })}
-        </View>
+        </View>,
       );
     case "list":
-      return (
+      return wrapWithGlow(
         <View style={styles.list}>
           {block.items.map((it, i) => (
             <View key={i} style={styles.listItem}>
@@ -232,10 +277,10 @@ export function ChapterBlock({
               />
             </View>
           ))}
-        </View>
+        </View>,
       );
     case "ordered":
-      return (
+      return wrapWithGlow(
         <View style={styles.list}>
           {block.items.map((it, i) => (
             <Pressable
@@ -269,16 +314,16 @@ export function ChapterBlock({
               />
             </Pressable>
           ))}
-        </View>
+        </View>,
       );
     case "rule":
-      return (
+      return wrapWithGlow(
         <View
           style={[
             styles.rule,
             { backgroundColor: c.rule },
           ]}
-        />
+        />,
       );
   }
 }
@@ -295,6 +340,8 @@ export function BookmarkIcon({ filled, color }: { filled: boolean; color: string
 }
 
 const styles = StyleSheet.create({
+  glowWrapper: { position: "relative" },
+  glowOverlay: { borderRadius: 3 },
   row: { paddingVertical: 8 },
   body: {},
   bookmarkDot: {

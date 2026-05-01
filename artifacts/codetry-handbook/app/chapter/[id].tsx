@@ -53,12 +53,15 @@ export default function ChapterScreen() {
     saveScroll,
     saveOriginScroll,
     takeOriginScroll,
+    saveOriginBlockIndex,
+    takeOriginBlockIndex,
   } = useReader();
   const { CHAPTERS, getChapter, getNeighbors } = useHandbookContent();
 
   const chapter = getChapter(id);
   const { prev, next, index } = useMemo(() => getNeighbors(id), [id, getNeighbors]);
   const [chromeVisible, setChromeVisible] = useState(true);
+  const [highlightedBlockIndex, setHighlightedBlockIndex] = useState<number | null>(null);
   const scrollRef = useRef<ScrollView>(null);
   const lastSavedY = useRef(0);
   const currentScrollYRef = useRef(0);
@@ -80,6 +83,12 @@ export default function ChapterScreen() {
     // null (rather than 0) lets us distinguish "reader was at the very top"
     // (entryY === 0) from "no entry point was stored" (entryY === null).
     let resolvedY: number | null = takeOriginScroll(chapter.id);
+    if (resolvedY !== null) {
+      const blockIdx = takeOriginBlockIndex(chapter.id);
+      if (blockIdx !== null) {
+        setHighlightedBlockIndex(blockIdx);
+      }
+    }
     if (resolvedY === null) {
       const fromMap = getScrollY(chapter.id);
       const fromLastRead =
@@ -98,7 +107,7 @@ export default function ChapterScreen() {
       return () => clearTimeout(t);
     }
     return;
-  }, [chapter, lastRead, getScrollY, takeOriginScroll]);
+  }, [chapter, lastRead, getScrollY, takeOriginScroll, takeOriginBlockIndex]);
 
   const persistPosition = useCallback(
     (y: number) => {
@@ -132,17 +141,21 @@ export default function ChapterScreen() {
   );
 
   const onPressRef = useCallback(
-    (target: string) => {
+    (target: string, blockIndex?: number) => {
       if (Platform.OS !== "web")
         Haptics.selectionAsync().catch(() => {});
-      // Save this chapter's current scroll position so the reader is
-      // returned to exactly where they left off on back-navigation.
+      // Save this chapter's current scroll position and the originating
+      // block index so the reader is returned to exactly where they left
+      // off on back-navigation, with the entry paragraph highlighted.
       if (chapter) {
         saveOriginScroll(chapter.id, currentScrollYRef.current);
+        if (blockIndex !== undefined) {
+          saveOriginBlockIndex(chapter.id, blockIndex);
+        }
       }
       goTo(target);
     },
-    [goTo, chapter, saveOriginScroll],
+    [goTo, chapter, saveOriginScroll, saveOriginBlockIndex],
   );
 
   const goPrev = useCallback(() => {
@@ -390,6 +403,7 @@ export default function ChapterScreen() {
             const excerpt = text ? chapterExcerpt(text, 140) : "";
             const bookmarked =
               text.length > 0 ? hasBookmark(chapter.id, excerpt) : false;
+            const blockOnPressRef = (target: string) => onPressRef(target, i);
             return (
               <ChapterBlock
                 key={i}
@@ -397,7 +411,8 @@ export default function ChapterScreen() {
                 fontScale={fontScale}
                 onLongPress={onLongPressBlock}
                 bookmarked={bookmarked}
-                onPressRef={onPressRef}
+                onPressRef={blockOnPressRef}
+                highlighted={i === highlightedBlockIndex}
               />
             );
           })}
