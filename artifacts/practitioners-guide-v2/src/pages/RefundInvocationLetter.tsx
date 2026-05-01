@@ -9,6 +9,7 @@ import {
   TRIAL_REFUND_MECHANIC,
   TRIAL_WHAT_SURVIVES_REFUND,
 } from "@workspace/headwaters-pricing";
+import { useToast } from "@/hooks/use-toast";
 
 const fmtMoney = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -34,7 +35,7 @@ function todayIsoLocal(): string {
 function isoToDate(iso: string): Date | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
   const [y, m, d] = iso.split("-").map(Number);
-  const dt = new Date(y, (m ?? 1) - 1, d ?? 1);
+  const dt = new Date(y!, (m! - 1), d!);
   return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
@@ -48,19 +49,25 @@ function formatLong(date: Date | null): string {
   return date ? fmtLongDate.format(date) : "—";
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 type Election = "refund" | "credit";
 
 export function RefundInvocationLetter() {
+  const { toast } = useToast();
+
   const initialIso = useMemo(() => todayIsoLocal(), []);
   const [meetingIso, setMeetingIso] = useState<string>(initialIso);
   const [letterIso, setLetterIso] = useState<string>(initialIso);
   const [contractorName, setContractorName] = useState<string>("");
   const [contractorTitle, setContractorTitle] = useState<string>("");
   const [contractorOrg, setContractorOrg] = useState<string>("");
+  const [contractorEmail, setContractorEmail] = useState<string>("");
   const [election, setElection] = useState<Election>("refund");
   const [notMet, setNotMet] = useState<readonly boolean[]>(
     TRIAL_ACCEPTANCE_CRITERIA.map(() => false),
   );
+  const [sending, setSending] = useState(false);
 
   const meetingDate = isoToDate(meetingIso);
   const letterDate = isoToDate(letterIso);
@@ -81,6 +88,102 @@ export function RefundInvocationLetter() {
 
   const toggleNotMet = (idx: number) => {
     setNotMet((prev) => prev.map((v, i) => (i === idx ? !v : v)));
+  };
+
+  // Validation for the send button
+  const emailValid = EMAIL_RE.test(contractorEmail.trim());
+  const dateWindowOk =
+    !!meetingDate &&
+    !!letterDate &&
+    !!invocationDeadline &&
+    letterDate >= meetingDate &&
+    letterDate <= invocationDeadline;
+  const thresholdMet = notMetCount >= TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA;
+  const canSend =
+    contractorName.trim().length > 0 &&
+    emailValid &&
+    dateWindowOk &&
+    thresholdMet &&
+    !sending;
+
+  let sendBlockReason: string | null = null;
+  if (!contractorName.trim()) sendBlockReason = "Add the contractor name above.";
+  else if (!emailValid) sendBlockReason = "Add a valid contractor email above.";
+  else if (!dateWindowOk) sendBlockReason = "Fix the dates so they are inside the 14-day window.";
+  else if (!thresholdMet) sendBlockReason = `Mark at least ${TRIAL_REFUND_THRESHOLD_FAILED_CRITERIA} criteria not met above.`;
+
+  const onSendEmail = async () => {
+    if (!canSend) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/refund-invocation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          meetingIso,
+          letterIso,
+          contractorName: contractorName.trim(),
+          contractorEmail: contractorEmail.trim().toLowerCase(),
+          contractorTitle: contractorTitle.trim() || null,
+          contractorOrg: contractorOrg.trim() || null,
+          election,
+          notMet: Array.from(notMet),
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        status?: string;
+        error?: string;
+        sentAt?: string;
+      };
+
+      if (!res.ok) {
+        toast({
+          title: "Email not sent",
+          description: data.error ?? `Server returned ${res.status}.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data.status === "skipped") {
+        toast({
+          title: "Email queued (dev mode)",
+          description:
+            "The server accepted the letter but email sending is not configured in this environment. The server log has the payload.",
+        });
+      } else if (data.status === "failed") {
+        toast({
+          title: "Email delivery failed",
+          description:
+            "The letter could not be delivered to Headwaters. The server log records the attempt. Try again or send the PDF by another means.",
+          variant: "destructive",
+        });
+      } else if (data.status === "partial") {
+        toast({
+          title: "Letter sent to Headwaters — copy not delivered",
+          description:
+            "Headwaters received the §7 invocation, but the timestamped copy to your inbox failed. The server log records the send. Contact Headwaters to confirm receipt.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Letter sent",
+          description:
+            "Headwaters has received the §7 invocation. A timestamped copy has been sent to your inbox.",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Network error",
+        description:
+          err instanceof Error ? err.message : "Could not reach the server.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -157,8 +260,9 @@ export function RefundInvocationLetter() {
             window so the §7 "in writing" requirement is satisfied.
           </p>
           <p className="text-sm text-muted-foreground max-w-3xl">
-            Fill the four fields below, then print to PDF (or paper) and
-            send. The on-screen controls are hidden on the printed copy.
+            Fill the fields below, then send via email (recommended — creates
+            a timestamped server record) or print to PDF and send manually.
+            The on-screen controls are hidden on the printed copy.
           </p>
         </header>
 
@@ -242,6 +346,23 @@ export function RefundInvocationLetter() {
                 className="w-full rounded-md border px-3 py-2 bg-background"
                 style={{ borderColor: "hsl(var(--card-border))" }}
                 data-testid="input-contractor-org"
+              />
+            </label>
+            <label className="block text-sm space-y-1 md:col-span-2">
+              <span className="font-medium">
+                Contractor email{" "}
+                <span className="text-muted-foreground font-normal">
+                  — receives a timestamped copy
+                </span>
+              </span>
+              <input
+                type="email"
+                value={contractorEmail}
+                onChange={(e) => setContractorEmail(e.target.value)}
+                placeholder="e.g. jane.smith@example.com"
+                className="w-full rounded-md border px-3 py-2 bg-background"
+                style={{ borderColor: "hsl(var(--card-border))" }}
+                data-testid="input-contractor-email"
               />
             </label>
           </div>
@@ -328,20 +449,39 @@ export function RefundInvocationLetter() {
             </ol>
           </fieldset>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={onPrint}
-              className="rounded-md border px-4 py-2 text-sm font-medium hover-elevate"
+              onClick={onSendEmail}
+              disabled={!canSend}
+              className="rounded-md border px-4 py-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 borderColor: "hsl(var(--card-border))",
                 backgroundColor: "hsl(var(--primary))",
                 color: "hsl(var(--primary-foreground))",
               }}
+              data-testid="button-send-email"
+              title={sendBlockReason ?? undefined}
+            >
+              {sending ? "Sending…" : "Send via email"}
+            </button>
+            <button
+              type="button"
+              onClick={onPrint}
+              className="rounded-md border px-4 py-2 text-sm font-medium hover-elevate"
+              style={{ borderColor: "hsl(var(--card-border))" }}
               data-testid="button-print"
             >
               Print / save as PDF
             </button>
+            {sendBlockReason && (
+              <p
+                className="text-xs text-muted-foreground"
+                data-testid="send-block-reason"
+              >
+                {sendBlockReason}
+              </p>
+            )}
           </div>
         </section>
 

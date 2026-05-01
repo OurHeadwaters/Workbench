@@ -7,6 +7,7 @@ import bookkeeperRouter from "./bookkeeper";
 import wordpileRouter from "./wordpile";
 import shipManifestRouter from "./shipManifest";
 import handbookRouter from "./handbook";
+import refundInvocationRouter from "./refundInvocation";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use("/bookkeeper", bookkeeperRouter);
 router.use("/wordpile", wordpileRouter);
 router.use("/ship-manifest", shipManifestRouter);
 router.use("/handbook", handbookRouter);
+router.use("/refund-invocation", refundInvocationRouter);
 
 export default router;
