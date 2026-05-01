@@ -261,6 +261,15 @@
     color: #111111 !important;
   }
 
+  /* Belt-and-suspenders: keep the on-screen Download PDF button out of any
+   * printed/PDF output. The button itself also uses Tailwind's print:hidden,
+   * but this guarantees it never bleeds into the saved PDF even if a future
+   * markup change drops that utility class. */
+  .bio-page .bio-download-row,
+  .bio-page .bio-download-button {
+    display: none !important;
+  }
+
   .bio-page {
     background: #ffffff !important;
     min-height: 0 !important;

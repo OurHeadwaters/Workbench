@@ -1,9 +1,43 @@
+import { Download } from "lucide-react";
 import portrait from "@assets/IMG_7710_1777635285170.jpeg";
+
+function handleDownloadPdf() {
+  if (typeof window === "undefined") return;
+  const previousTitle = document.title;
+  document.title = "bobbie-parr-bio";
+  try {
+    window.print();
+  } finally {
+    window.setTimeout(() => {
+      document.title = previousTitle;
+    }, 0);
+  }
+}
 
 export function BioPage() {
   return (
     <main className="bio-page min-h-screen w-full bg-background text-foreground">
       <div className="mx-auto max-w-[64rem] px-6 sm:px-8 py-6 print:py-0 print:px-0 print:max-w-none">
+        <div
+          className="bio-download-row mb-3 flex justify-end print:hidden"
+          data-testid="bio-download-row"
+        >
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            className="bio-download-button inline-flex items-center gap-2 rounded-sm border px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.22em] transition-colors"
+            style={{
+              borderColor: "hsl(var(--accent))",
+              color: "hsl(var(--accent))",
+              background: "transparent",
+            }}
+            aria-label="Download Bobbie Parr's bio as a PDF"
+            data-testid="bio-download-pdf"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Download PDF</span>
+          </button>
+        </div>
         <article
           className="bio-card rounded-md border bg-card p-6 sm:p-8 print:p-0 print:border-0 print:rounded-none print:bg-white"
           style={{ borderColor: "hsl(var(--card-border))" }}
