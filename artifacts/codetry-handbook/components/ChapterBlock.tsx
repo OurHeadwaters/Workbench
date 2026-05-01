@@ -227,6 +227,8 @@ export function ChapterBlock({
                   flex: 1,
                 }}
                 italicStyle={{ fontFamily: SERIF_ITALIC }}
+                onPressRef={onPressRef}
+                refStyle={refStyle}
               />
             </View>
           ))}
@@ -262,6 +264,8 @@ export function ChapterBlock({
                   flex: 1,
                 }}
                 italicStyle={{ fontFamily: SERIF_ITALIC }}
+                onPressRef={onPressRef}
+                refStyle={refStyle}
               />
             </Pressable>
           ))}

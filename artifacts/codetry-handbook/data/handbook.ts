@@ -449,7 +449,7 @@ const partI: Part = {
           },
           {
             kind: "small",
-            text: "Deep treatments of each neighbour live in the back-matter section *Deep Dives* (§DD.1–§DD.5).",
+            text: "Continue to the Deep Dives → §DD.1.",
           },
         ],
       },
