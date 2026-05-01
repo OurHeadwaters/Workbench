@@ -33,10 +33,12 @@ import {
   ExternalLink,
   Clock,
   Loader2,
+  Eye,
+  X as XIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { errMessage } from "@/lib/utils";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 type ConfidentialTier = "draft" | "under-review" | "refused" | "routed";
 
@@ -51,6 +53,7 @@ type QueueEntry = {
   statusFlag: string | null;
   notes: string | null;
   fileSize: number | null;
+  storageRef: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -127,6 +130,25 @@ async function routeEntry(id: string): Promise<void> {
   if (!res.ok) throw new Error(`Failed to route entry: ${res.status}`);
 }
 
+type PreviewUrlResponse = {
+  url: string;
+  expiresInSeconds: number;
+  fileType: string | null;
+  contentType: string | null;
+  originalFilename: string | null;
+};
+
+async function fetchPreviewUrl(id: string): Promise<PreviewUrlResponse> {
+  const res = await fetch(`/api/library/confidential/${id}/preview-url`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { error?: string }).error ?? `Failed to load preview: ${res.status}`);
+  }
+  return res.json();
+}
+
 const QUEUE_KEY = ["confidential-queue"];
 
 export default function ConfidentialQueue() {
@@ -141,6 +163,8 @@ export default function ConfidentialQueue() {
   const [refuseDialogId, setRefuseDialogId] = useState<string | null>(null);
   const [refuseReason, setRefuseReason] = useState("");
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState<string | null>(null);
+  const [previewData, setPreviewData] = useState<(PreviewUrlResponse & { entryTitle: string }) | null>(null);
 
   const CONFIDENTIAL_COUNT_KEY = ["confidential-count"];
   const invalidate = async () => {
@@ -183,6 +207,27 @@ export default function ConfidentialQueue() {
       toast({ title: "Error", description: errMessage(err), variant: "destructive" });
     } finally {
       setProcessingId(null);
+    }
+  };
+
+  const handlePreview = async (entry: QueueEntry) => {
+    if (!entry.storageRef) {
+      toast({ title: "No file", description: "This entry has no attached file to preview.", variant: "destructive" });
+      return;
+    }
+    setPreviewLoading(entry.id);
+    try {
+      const data = await fetchPreviewUrl(entry.id);
+      const inlineTypes = ["pdf", "image"];
+      if (!inlineTypes.includes(data.fileType ?? "")) {
+        window.open(data.url, "_blank", "noopener,noreferrer");
+      } else {
+        setPreviewData({ ...data, entryTitle: entry.title });
+      }
+    } catch (err) {
+      toast({ title: "Preview failed", description: errMessage(err), variant: "destructive" });
+    } finally {
+      setPreviewLoading(null);
     }
   };
 
@@ -280,6 +325,7 @@ export default function ConfidentialQueue() {
                   key={entry.id}
                   entry={entry}
                   processing={processingId === entry.id}
+                  previewLoading={previewLoading === entry.id}
                   onTierChange={(tier) => handleTierChange(entry.id, tier)}
                   onClear={() => handleClear(entry.id)}
                   onRefuse={() => {
@@ -287,6 +333,7 @@ export default function ConfidentialQueue() {
                     setRefuseDialogId(entry.id);
                   }}
                   onRoute={() => handleRoute(entry.id)}
+                  onPreview={() => handlePreview(entry)}
                 />
               ))}
             </div>
@@ -302,6 +349,7 @@ export default function ConfidentialQueue() {
                   key={entry.id}
                   entry={entry}
                   processing={processingId === entry.id}
+                  previewLoading={previewLoading === entry.id}
                   onTierChange={(tier) => handleTierChange(entry.id, tier)}
                   onClear={() => handleClear(entry.id)}
                   onRefuse={() => {
@@ -309,6 +357,7 @@ export default function ConfidentialQueue() {
                     setRefuseDialogId(entry.id);
                   }}
                   onRoute={() => handleRoute(entry.id)}
+                  onPreview={() => handlePreview(entry)}
                 />
               ))}
             </div>
@@ -348,6 +397,60 @@ export default function ConfidentialQueue() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Preview modal — owner-only, short-lived signed URL */}
+      {previewData && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-black/80 backdrop-blur-sm">
+          <div className="flex items-center justify-between px-4 py-3 bg-card border-b border-border shrink-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <Lock className="h-4 w-4 text-rose-500 shrink-0" />
+              <span className="text-sm font-medium truncate text-foreground">
+                {previewData.originalFilename ?? previewData.entryTitle}
+              </span>
+              <span className="text-xs text-muted-foreground shrink-0">
+                · preview expires in {Math.round(previewData.expiresInSeconds / 60)} min
+              </span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 h-7 text-xs"
+                onClick={() => window.open(previewData.url, "_blank", "noopener,noreferrer")}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                Open in tab
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 w-7 p-0"
+                onClick={() => setPreviewData(null)}
+                aria-label="Close preview"
+              >
+                <XIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            {previewData.fileType === "pdf" ? (
+              <iframe
+                src={previewData.url}
+                className="w-full h-full border-0"
+                title={previewData.originalFilename ?? previewData.entryTitle}
+              />
+            ) : previewData.fileType === "image" ? (
+              <div className="flex items-center justify-center h-full p-6">
+                <img
+                  src={previewData.url}
+                  alt={previewData.originalFilename ?? previewData.entryTitle}
+                  className="max-w-full max-h-full object-contain rounded shadow-lg"
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -355,17 +458,21 @@ export default function ConfidentialQueue() {
 function EntryRow({
   entry,
   processing,
+  previewLoading,
   onTierChange,
   onClear,
   onRefuse,
   onRoute,
+  onPreview,
 }: {
   entry: QueueEntry;
   processing: boolean;
+  previewLoading: boolean;
   onTierChange: (tier: ConfidentialTier) => void;
   onClear: () => void;
   onRefuse: () => void;
   onRoute: () => void;
+  onPreview: () => void;
 }) {
   const tier = (entry.statusFlag as ConfidentialTier) ?? "draft";
   const tierColor = TIER_COLORS[tier] ?? TIER_COLORS.draft;
@@ -438,6 +545,23 @@ function EntryRow({
                   <SelectItem value="under-review">under-review</SelectItem>
                 </SelectContent>
               </Select>
+
+              {entry.storageRef && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5 text-violet-700 border-violet-200 hover:bg-violet-50 h-7 text-xs"
+                  onClick={onPreview}
+                  disabled={processing || previewLoading}
+                >
+                  {previewLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Eye className="h-3.5 w-3.5" />
+                  )}
+                  Preview
+                </Button>
+              )}
 
               {!isSettled && (
                 <div className="flex items-center gap-1.5 flex-wrap">

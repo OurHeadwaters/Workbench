@@ -22,7 +22,7 @@ import {
   shareLinksTable,
 } from "@workspace/db";
 import { and, desc, asc, eq, ilike, or, sql, inArray, ne } from "drizzle-orm";
-import { ObjectStorageService } from "../lib/objectStorage";
+import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
 import { randomBytes } from "crypto";
 import {
   OWNER_TOKEN,
@@ -1402,6 +1402,64 @@ router.post("/confidential/intake", async (req, res) => {
   });
 
   res.json({ entry: created, duplicate: false });
+});
+
+router.get("/confidential/:id/preview-url", async (req, res) => {
+  const { id } = req.params;
+
+  const rows = await db
+    .select()
+    .from(libraryEntriesTable)
+    .where(
+      and(
+        eq(libraryEntriesTable.id, id),
+        eq(libraryEntriesTable.status, "confidential_queue"),
+      ),
+    )
+    .limit(1);
+
+  if (!rows.length) {
+    res.status(404).json({ error: "Not found in confidential queue" });
+    return;
+  }
+
+  const entry = rows[0]!;
+  const storageRef = entry.storageRef;
+
+  if (!storageRef) {
+    res.status(422).json({ error: "This entry has no file attached." });
+    return;
+  }
+
+  // Normalize storageRef → objectPath (must start with /objects/)
+  let objectPath: string;
+  if (storageRef.startsWith("gcs:")) {
+    objectPath = storageRef.slice(4);
+  } else if (storageRef.startsWith("/objects/")) {
+    objectPath = storageRef;
+  } else {
+    res.status(422).json({ error: "Unsupported storage reference format." });
+    return;
+  }
+
+  try {
+    const TTL_SEC = 300;
+    const url = await objectStorageService.getSignedDownloadUrl(objectPath, TTL_SEC);
+    res.json({
+      url,
+      expiresInSeconds: TTL_SEC,
+      fileType: entry.fileType ?? null,
+      contentType: entry.contentType ?? null,
+      originalFilename: entry.originalFilename ?? null,
+    });
+  } catch (err) {
+    if (err instanceof ObjectNotFoundError) {
+      res.status(404).json({ error: "File not found in storage." });
+      return;
+    }
+    req.log.error({ err }, "Failed to generate preview URL");
+    res.status(500).json({ error: "Failed to generate preview URL" });
+  }
 });
 
 router.patch("/confidential/:id", async (req, res) => {
