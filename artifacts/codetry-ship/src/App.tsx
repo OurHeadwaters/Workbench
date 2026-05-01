@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import { SignOnPage } from "@/pages/SignOnPage";
 import { ManifestPage } from "@/pages/ManifestPage";
 import { BioPage } from "@/pages/BioPage";
+import { HomePage } from "@/pages/HomePage";
 import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
@@ -15,7 +16,7 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={BioPage} />
+      <Route path="/" component={HomePage} />
       <Route path="/bio" component={BioPage} />
       <Route path="/sign-on" component={SignOnPage} />
       <Route path="/manifest" component={ManifestPage} />
