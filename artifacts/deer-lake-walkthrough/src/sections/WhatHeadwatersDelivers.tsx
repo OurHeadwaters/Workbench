@@ -253,6 +253,92 @@ export default function WhatHeadwatersDelivers() {
             </ol>
           </Reveal>
 
+          <Reveal label="Truck decision — used purchase or contractor lease to Headwaters">
+            <p>
+              The 1-ton truck is a hard requirement — fulfillment cannot start
+              without it. Two paths are available. The contractor chooses;
+              Headwaters works with either one.
+            </p>
+            <div
+              className="mt-4 grid gap-3"
+              style={{ gridTemplateColumns: "1fr 1fr" }}
+            >
+              {/* Option A */}
+              <div
+                className="rounded-lg border p-3 flex flex-col gap-2"
+                style={{
+                  borderColor: "var(--color-accent-warm)",
+                  background: "rgba(0,0,0,0.04)",
+                }}
+              >
+                <div
+                  className="mono text-[10px] uppercase tracking-[0.2em]"
+                  style={{ color: "var(--color-accent-warm)" }}
+                >
+                  Option A · Used purchase
+                </div>
+                <dl className="space-y-2 text-[13.5px] leading-[1.45]">
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Market price</dt>
+                    <dd style={{ color: "var(--color-text)" }}>~$25,000–$40,000 for a usable 1-ton in northern Ontario condition</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Who holds title</dt>
+                    <dd style={{ color: "var(--color-text)" }}>The contractor — it's your asset on your books</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Annual maintenance</dt>
+                    <dd style={{ color: "var(--color-text)" }}>Budget ~$4,000–$6,000/yr (tires, fluids, winter prep, unexpected repairs)</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Insurance</dt>
+                    <dd style={{ color: "var(--color-text)" }}>Contractor carries commercial vehicle insurance</dd>
+                  </div>
+                </dl>
+              </div>
+
+              {/* Option B */}
+              <div
+                className="rounded-lg border p-3 flex flex-col gap-2"
+                style={{
+                  borderColor: "var(--color-rule)",
+                  background: "rgba(0,0,0,0.04)",
+                }}
+              >
+                <div
+                  className="mono text-[10px] uppercase tracking-[0.2em]"
+                  style={{ color: "var(--color-accent-warm)" }}
+                >
+                  Option B · Contractor leases to Headwaters
+                </div>
+                <dl className="space-y-2 text-[13.5px] leading-[1.45]">
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Rate structure</dt>
+                    <dd style={{ color: "var(--color-text)" }}>~$1,200–$1,800/mo flat, or per-run rate negotiated at contracting — added to the monthly invoice</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Who holds title</dt>
+                    <dd style={{ color: "var(--color-text)" }}>The contractor — Headwaters is a tenant of the truck, not the owner</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>Insurance</dt>
+                    <dd style={{ color: "var(--color-text)" }}>Contractor carries insurance; Headwaters is named as additional insured while the truck is on a Headwaters run</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold" style={{ color: "var(--color-primary)" }}>If unavailable</dt>
+                    <dd style={{ color: "var(--color-text)" }}>Contractor notifies 48 hrs in advance; Headwaters arranges alternate transport — cost falls to the contractor for that run</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+            <p
+              className="mt-3 text-[13px] italic"
+              style={{ color: "var(--color-muted)" }}
+            >
+              Both options are workable. The decision affects the contractor's balance sheet and insurance obligations — not the store's ability to open.
+            </p>
+          </Reveal>
+
           <Reveal label="Proof for line 2 — the cold-chain plan is already drawn">
             <p>
               The route is already planned: Thunder Bay → Sioux Lookout →
