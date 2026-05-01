@@ -390,15 +390,30 @@ interface WorkLinkProps {
 }
 
 function WorkLink({ href, label, testId }: WorkLinkProps) {
+  const printUrl = buildPrintUrl(href);
   return (
     <li>
       <a
         href={href}
         className="bio-work-link underline-offset-4 hover:underline"
         data-testid={testId}
+        data-print-url={printUrl}
       >
         {label}
       </a>
     </li>
   );
+}
+
+function buildPrintUrl(href: string): string {
+  if (typeof window === "undefined") {
+    return href.replace(/^\/+/, "");
+  }
+  try {
+    const absolute = new URL(href, window.location.origin);
+    const hostAndPath = `${absolute.host}${absolute.pathname}`;
+    return hostAndPath.replace(/^www\./, "");
+  } catch {
+    return href.replace(/^\/+/, "");
+  }
 }

@@ -300,8 +300,28 @@
   .bio-page .bio-work {
     page-break-inside: avoid;
   }
+  /* In print, drop the work list to one column so each label + URL gets
+   * its own full-width line and we don't break URLs across columns. */
+  .bio-page .bio-work [data-testid="work-list"] {
+    display: block !important;
+  }
+  .bio-page .bio-work [data-testid="work-list"] > li {
+    display: block;
+    margin-bottom: 1pt;
+  }
   .bio-page .bio-work-link {
     color: #111111 !important;
     text-decoration: none !important;
+  }
+  /* When the bio is printed, append each Selected work link's full URL
+   * (host + path) right after the label so a reader holding paper can
+   * still find the artifact. The URL lives in `data-print-url` on the
+   * <a>; it is hidden on screen and only revealed in print. */
+  .bio-page .bio-work-link[data-print-url]::after {
+    content: " — " attr(data-print-url);
+    font-family: var(--app-font-mono);
+    font-size: 9pt !important;
+    color: #444444 !important;
+    white-space: nowrap;
   }
 }
