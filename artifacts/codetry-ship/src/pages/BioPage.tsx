@@ -325,12 +325,12 @@ export function BioPage() {
                 email
               </span>
               <a
-                href="mailto:parrsjars@gmail.com"
+                href="mailto:bobbie@theheadwaters.ca"
                 className="underline underline-offset-2"
                 style={{ color: "hsl(var(--primary))" }}
                 data-testid="contact-email-link"
               >
-                parrsjars@gmail.com
+                bobbie@theheadwaters.ca
               </a>
             </p>
           </section>
