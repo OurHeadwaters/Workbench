@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { InlineText } from "@/components/InlineText";
-import { getChapter, type Block } from "@/data/handbook";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
+import type { Block } from "@/data/handbook";
 
 type WebGlobals = { document?: Document; window?: Window };
 
@@ -37,6 +38,7 @@ html, body { background: #e8e6e0; }
 export default function PrintScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const id = typeof params.id === "string" ? params.id : "";
+  const { getChapter } = useHandbookContent();
   const chapter = getChapter(id);
 
   // On web, inject @page / @media print styles, set the document title

@@ -25,12 +25,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChapterBlock } from "@/components/ChapterBlock";
 import { BottomChrome, TopChrome } from "@/components/Chrome";
 import { useReader } from "@/contexts/ReaderState";
-import {
-  CHAPTERS,
-  chapterExcerpt,
-  getChapter,
-  getNeighbors,
-} from "@/data/handbook";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
+import { chapterExcerpt } from "@/data/handbook";
 import { useColors } from "@/hooks/useColors";
 
 const SERIF_BOLD = "Lora_700Bold";
@@ -58,9 +54,10 @@ export default function ChapterScreen() {
     saveDeepDiveEntryScrollY,
     takeDeepDiveEntryScrollY,
   } = useReader();
+  const { CHAPTERS, getChapter, getNeighbors } = useHandbookContent();
 
   const chapter = getChapter(id);
-  const { prev, next, index } = useMemo(() => getNeighbors(id), [id]);
+  const { prev, next, index } = useMemo(() => getNeighbors(id), [id, getNeighbors]);
   const [chromeVisible, setChromeVisible] = useState(true);
   const scrollRef = useRef<ScrollView>(null);
   const lastSavedY = useRef(0);

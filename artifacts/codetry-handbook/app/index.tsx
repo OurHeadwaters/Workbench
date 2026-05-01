@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useReader } from "@/contexts/ReaderState";
 import { useColors } from "@/hooks/useColors";
-import { CHAPTERS, getChapter, PARTS } from "@/data/handbook";
 import { constellation } from "@/data/constellation";
 
 const SERIF = "Lora_400Regular";
@@ -24,6 +24,7 @@ export default function FrontPage() {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { lastRead, bookmarks } = useReader();
+  const { CHAPTERS, getChapter, PARTS } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 

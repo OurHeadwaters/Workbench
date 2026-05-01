@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 import {
   chapterOpening,
   chapterSmallLine,
-  getPart,
 } from "@/data/handbook";
 
 const SERIF = "Lora_400Regular";
@@ -30,6 +30,7 @@ export default function PartLanding() {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { lastRead, bookmarks } = useReader();
+  const { getPart } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 

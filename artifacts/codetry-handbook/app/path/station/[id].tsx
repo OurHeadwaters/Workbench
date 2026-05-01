@@ -30,11 +30,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ChapterBlock } from "@/components/ChapterBlock";
 import { StationAudio } from "@/components/path/StationAudio";
-import {
-  getPioneerNeighbors,
-  getPioneerStation,
-  pioneerPathStationExcerpt,
-} from "@/data/pioneerPath";
+import { pioneerPathStationExcerpt } from "@/data/pioneerPath";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useColors } from "@/hooks/useColors";
 import { usePioneerPath } from "@/lib/pioneerPath/store";
 
@@ -57,11 +54,12 @@ export default function StationScreen() {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { ready, isCompleted, isUnlocked, markDone, unmark, progress } = usePioneerPath();
+  const { getPioneerStation, getPioneerNeighbors } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
   const station = getPioneerStation(id);
-  const { prev, next } = useMemo(() => getPioneerNeighbors(id), [id]);
+  const { prev, next } = useMemo(() => getPioneerNeighbors(id), [id, getPioneerNeighbors]);
   const excerpt = useMemo(() => pioneerPathStationExcerpt(id), [id]);
 
   const completed = station ? isCompleted(station.id) : false;

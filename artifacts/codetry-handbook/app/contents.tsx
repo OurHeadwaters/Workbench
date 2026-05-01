@@ -12,8 +12,8 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useColors } from "@/hooks/useColors";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useReader } from "@/contexts/ReaderState";
-import { PARTS } from "@/data/handbook";
 
 const SERIF = "Lora_400Regular";
 const SERIF_ITALIC = "Lora_400Regular_Italic";
@@ -24,6 +24,7 @@ export default function Contents() {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const { lastRead, bookmarks } = useReader();
+  const { PARTS } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 

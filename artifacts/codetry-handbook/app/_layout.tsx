@@ -26,6 +26,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LastReadSaveNotice } from "@/components/LastReadSaveNotice";
 import { SyncErrorBanner } from "@/components/SyncErrorBanner";
 import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
+import { HandbookContentProvider } from "@/contexts/HandbookContentContext";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
 import { initNetworkWatcher } from "@/lib/saveStatus";
 
@@ -77,6 +78,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ErrorBoundary>
+        <HandbookContentProvider>
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
@@ -89,6 +91,7 @@ export default function RootLayout() {
             </KeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>
+        </HandbookContentProvider>
       </ErrorBoundary>
     </SafeAreaProvider>
   );

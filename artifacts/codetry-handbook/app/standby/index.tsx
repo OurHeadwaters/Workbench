@@ -22,32 +22,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SyncStatusPill } from "@/components/SyncStatusPill";
 import { useColors } from "@/hooks/useColors";
-import { CHAPTERS } from "@/data/handbook";
-import {
-  itemsForRungBySubShelf,
-  RUNGS,
-  STANDBY_PRIMITIVE_NAME,
-  STANDBY_PRIMITIVE_SUMMARY,
-  SUB_SHELVES,
-  VOCAB,
-  type RungId,
-  type SubShelfInfo,
-} from "@/data/standby";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
+import { itemsForRungBySubShelf, type RungId, type SubShelfInfo } from "@/data/standby";
 import { useStandby } from "@/lib/standby/store";
 
 const SERIF = "Lora_400Regular";
 const SERIF_ITALIC = "Lora_400Regular_Italic";
 const SERIF_BOLD = "Lora_700Bold";
 const MONO = "JetBrainsMono_500Medium";
-
-function findStandbyChapterId(): string | null {
-  const target = STANDBY_PRIMITIVE_NAME.toLowerCase();
-  const hit = CHAPTERS.find(
-    (ch) =>
-      ch.partRoman === "III" && ch.title.toLowerCase().startsWith(target),
-  );
-  return hit?.id ?? null;
-}
 
 function formatElapsed(ms: number): string {
   const mins = Math.floor(ms / 60000);
@@ -79,7 +61,22 @@ export default function StandbyChecklist() {
     closeCall,
   } = useStandby();
 
-  const standbyChapterId = useMemo(findStandbyChapterId, []);
+  const {
+    CHAPTERS,
+    RUNGS,
+    SUB_SHELVES,
+    VOCAB,
+    STANDBY_PRIMITIVE_NAME,
+    STANDBY_PRIMITIVE_SUMMARY,
+  } = useHandbookContent();
+
+  const standbyChapterId = useMemo(() => {
+    const target = STANDBY_PRIMITIVE_NAME.toLowerCase();
+    const hit = CHAPTERS.find(
+      (ch) => ch.partRoman === "III" && ch.title.toLowerCase().startsWith(target),
+    );
+    return hit?.id ?? null;
+  }, [CHAPTERS, STANDBY_PRIMITIVE_NAME]);
 
   const onAskReset = (rungId: RungId, rungName: string) => {
     const message = `Clear the “${rungName}” checks? Items will return to unchecked.`;

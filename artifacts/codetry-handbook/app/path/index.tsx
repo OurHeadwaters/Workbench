@@ -14,10 +14,10 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ConstellationMap } from "@/components/path/ConstellationMap";
+import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 import {
-  PIONEER_STATIONS,
   pioneerPathStationExcerpt,
   type PioneerStation,
 } from "@/data/pioneerPath";
@@ -33,6 +33,7 @@ export default function PathHome() {
   const insets = useSafeAreaInsets();
   const { ready, isCompleted, isUnlocked } = usePioneerPath();
   const { theme, cycleTheme } = useReader();
+  const { PIONEER_STATIONS } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
