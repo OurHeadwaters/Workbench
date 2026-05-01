@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { ROUTES } from "@/lib/paths";
+import { usePlannerLockDates } from "@/planner/usePlannerLockDates";
 
 /**
  * Phase locks — the literal lock schedule the contractor can hand to
@@ -9,36 +10,36 @@ import { ROUTES } from "@/lib/paths";
  * construction phase, who signs them, and which already-shipped
  * artifact carries the proof.
  *
+ * Each card now shows the live lock-by date sourced from the Phase
+ * Planner (same localStorage state, same derive() math). Flip the
+ * scenario in the planner and the dates update here on next visit.
+ *
  * Three phase cards above the fold (Pre-frame, Pre-electrical,
  * Pre-finish), each with a Reveal carrying the literal checklist,
- * the signer ledger, and the link out to the proof artifact.
- *
- * Editorial lock: see Reveal.tsx — three top-level cards, the rest
- * inside <Reveal>.
+ * the signer ledger, the link out to the proof artifact, and a
+ * plain-language slip-consequence paragraph.
  */
 export default function PhaseLocks() {
-  const phases: Array<{
-    tag: string;
-    head: string;
-    body: string;
-  }> = [
+  const lockDates = usePlannerLockDates();
+
+  const phases = [
     {
       tag: "Phase 1 · Pre-frame",
       head: "Before the walls go up.",
-      body:
-        "Floor plan, cold-chain footprint, role design. Locked together — so the door is wide enough for the freezer, and the freezer is sized for the truck.",
+      lockFmt: lockDates.preFrameFmt,
+      body: "Floor plan, cold-chain footprint, role design. Locked together — so the door is wide enough for the freezer, and the freezer is sized for the truck.",
     },
     {
       tag: "Phase 2 · Pre-electrical",
       head: "Before the conduit gets pulled.",
-      body:
-        "Till position, back-of-house placement, public-records hardware. Locked before the electrician decides where the outlets live.",
+      lockFmt: lockDates.preElectricalFmt,
+      body: "Till position, back-of-house placement, public-records hardware. Locked before the electrician decides where the outlets live.",
     },
     {
       tag: "Phase 3 · Pre-finish",
       head: "Before the sign goes on the building.",
-      body:
-        "Signage, public price page, opening-day staffing. Locked before opening week — so day one isn't the day the band first sees the price list.",
+      lockFmt: lockDates.preFinishFmt,
+      body: "Signage, public price page, opening-day staffing. Locked before opening week — so day one isn't the day the band first sees the price list.",
     },
   ];
 
@@ -78,7 +79,22 @@ export default function PhaseLocks() {
           signed-off proof.
         </p>
 
-        <ol className="mt-7 space-y-3 list-none pl-0">
+        <p
+          className="mono text-[11px] uppercase tracking-[0.18em] mt-4"
+          style={{ color: "var(--color-muted)" }}
+        >
+          Dates from the{" "}
+          <a
+            href={ROUTES.planner}
+            className="underline underline-offset-2 hover:no-underline"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            build calendar
+          </a>
+          {" "}·{" "}{lockDates.scenarioLabel} scenario
+        </p>
+
+        <ol className="mt-5 space-y-3 list-none pl-0">
           {phases.map((phase, i) => (
             <li
               key={phase.tag}
@@ -95,11 +111,22 @@ export default function PhaseLocks() {
                 {String(i + 1).padStart(2, "0")}
               </div>
               <div className="flex-1">
-                <div
-                  className="mono text-[10.5px] uppercase tracking-[0.18em] mb-1.5"
-                  style={{ color: "var(--color-accent-warm)" }}
-                >
-                  {phase.tag}
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                  <div
+                    className="mono text-[10.5px] uppercase tracking-[0.18em]"
+                    style={{ color: "var(--color-accent-warm)" }}
+                  >
+                    {phase.tag}
+                  </div>
+                  <div
+                    className="mono text-[10px] uppercase tracking-[0.14em] px-1.5 py-0.5 rounded"
+                    style={{
+                      background: "color-mix(in srgb, var(--color-accent-warm) 12%, transparent)",
+                      color: "var(--color-accent-warm)",
+                    }}
+                  >
+                    Lock by {phase.lockFmt}
+                  </div>
                 </div>
                 <div
                   className="serif text-[18px] leading-[1.3] font-semibold"
@@ -121,6 +148,26 @@ export default function PhaseLocks() {
         <div className="mt-8 space-y-3">
           <Reveal label="Phase 1 · Pre-frame — what gets locked, who signs, where the proof lives">
             <p>
+              <span className="font-semibold">Lock by:</span>{" "}
+              <span
+                className="mono text-[12px]"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                {lockDates.preFrameFmt}
+              </span>
+              {" "}— the day construction begins ({lockDates.scenarioLabel}{" "}
+              scenario
+              {lockDates.mode === "self-fund" ? ", reserve-funded" : ", grant-funded"}).
+              Dates move when you flip the scenario in the{" "}
+              <a
+                href={ROUTES.planner}
+                className="underline underline-offset-2 hover:no-underline"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                build calendar
+              </a>.
+            </p>
+            <p>
               <span className="font-semibold">Locked at this gate:</span>{" "}
               the store's floor plan, the cold-chain footprint
               (freezer dimensions, dock height, receiving aisle), and
@@ -137,6 +184,20 @@ export default function PhaseLocks() {
               Chief (ratifies), Headwaters practitioner (owns the
               brief), contractor's site foreman (acknowledges and
               builds to it).
+            </p>
+            <p
+              style={{
+                borderLeft: "3px solid var(--color-accent-warm)",
+                paddingLeft: "0.75rem",
+                opacity: 0.85,
+              }}
+            >
+              <span className="font-semibold">If this gate slips:</span>{" "}
+              framing begins on an unlocked floor plan. The freezer
+              may not fit through the door that gets built. Catching
+              that mid-frame means cutting and re-framing — a cost the
+              contractor absorbs in change-order negotiations with the
+              band, and a delay that pushes every downstream gate.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
@@ -183,6 +244,17 @@ export default function PhaseLocks() {
 
           <Reveal label="Phase 2 · Pre-electrical — what gets locked, who signs, where the proof lives">
             <p>
+              <span className="font-semibold">Lock by:</span>{" "}
+              <span
+                className="mono text-[12px]"
+                style={{ color: "var(--color-accent-warm)" }}
+              >
+                {lockDates.preElectricalFmt}
+              </span>
+              {" "}— 45 days into the build, before the electrical sub
+              pulls conduit ({lockDates.scenarioLabel} scenario).
+            </p>
+            <p>
               <span className="font-semibold">Locked at this gate:</span>{" "}
               till + back-of-house placement, and the public-records
               hardware that sits behind the open-records software.
@@ -200,6 +272,21 @@ export default function PhaseLocks() {
               Headwaters practitioner (owns the brief), contractor's
               electrical sub (acknowledges and pulls to it), operator
               couple (walks the position before sign-off).
+            </p>
+            <p
+              style={{
+                borderLeft: "3px solid var(--color-accent-warm)",
+                paddingLeft: "0.75rem",
+                opacity: 0.85,
+              }}
+            >
+              <span className="font-semibold">If this gate slips:</span>{" "}
+              the electrician makes their best guess on outlet placement.
+              The till ends up 30 cm from where the operator couple
+              needs it, the cold-chain readout has no data drop, and
+              the open-records terminal is on the wrong wall. Retrofitting
+              after drywall means cutting, patching, and re-inspecting —
+              delays and costs that compound into the soft-opening window.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
@@ -240,6 +327,17 @@ export default function PhaseLocks() {
 
           <Reveal label="Phase 3 · Pre-finish — what gets locked, who signs, where the proof lives" variant="ink">
             <p>
+              <span className="font-semibold">Lock by:</span>{" "}
+              <span
+                className="mono text-[12px]"
+                style={{ color: "rgba(244,237,224,0.9)" }}
+              >
+                {lockDates.preFinishFmt}
+              </span>
+              {" "}— the soft-opening date, 30 days before doors open
+              ({lockDates.scenarioLabel} scenario).
+            </p>
+            <p>
               <span className="font-semibold">Locked at this gate:</span>{" "}
               the signage on the building, the public price page the
               band can read before day one, and the opening-day
@@ -257,6 +355,21 @@ export default function PhaseLocks() {
               Chief (ratifies the public face), Headwaters
               practitioner (owns the brief and the price page),
               operator couple (commits to the opening-day schedule).
+            </p>
+            <p
+              style={{
+                borderLeft: "3px solid rgba(244,237,224,0.5)",
+                paddingLeft: "0.75rem",
+                opacity: 0.85,
+              }}
+            >
+              <span className="font-semibold">If this gate slips:</span>{" "}
+              the band sees the price list on day one — simultaneously
+              with the community. The opening-day staffing schedule
+              goes unsigned, so the operator couple shows up without a
+              confirmed roster. The sign-maker quotes on an unfinished
+              brief, adding a change-order round. Each slip here is
+              visible to the whole community on opening morning.
             </p>
             <p
               className="mono text-[12px] uppercase tracking-[0.16em] mt-2"
