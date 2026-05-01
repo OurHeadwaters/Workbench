@@ -1,0 +1,24 @@
+Rootwork — Project Briefing for Integration Decision
+
+Rootwork is a fully built and deployed web app created by Bobbie Parr out of the same workshop in Dryden, Ontario that makes Parr's Jars salts. It is live at https://community-knowledge-hub.replit.app/studio/ and currently in free early access.
+
+What it does:
+Rootwork is a calm command center for builders, makers, and solo entrepreneurs who accumulate scattered work — photos, voice notes, receipts, screenshots, half-written ideas — across too many places. It solves the pile-of-stuff problem, not a productivity problem. Key features: drop content in without a folder hierarchy, fast search and smart grouping, and a duplicate detector. The interface is deliberately quiet — warm cream surfaces, generous serif typography, no dashboards — designed to feel like a workshop bench.
+
+Where it sits in the broader project:
+Rootwork is one of four digital tools built by Headwaters, which is Bobbie's Ontario corporation doing agency work for rural and Indigenous communities. Headwaters' four service areas are: (1) operating plans, (2) small pointed software, (3) practitioner training, (4) kitchen-table consulting. Rootwork is an example of service area 2 — small, pointed software. On the Parr's Jars site, Rootwork currently appears only in the portfolio section. A pending task (#352) will add it to the Headwaters page as a concrete past-work example of what Headwaters software looks like, with a link to the live app.
+
+My suggestion for your decision — use Rootwork vs. build new:
+
+Use Rootwork if the task involves any of these:
+
+Organizing scattered files, notes, photos, or documents for a solo operator or small team
+Surfacing existing content quickly without requiring the user to maintain a folder structure
+A "knowledge library" where the user drops things in and finds them later
+Any context where the user has a pile-of-stuff problem rather than a workflow problem
+Build something new if the task involves:
+
+Multi-user or community-scale coordination (Rootwork is solo/personal scale by design)
+Structured community data — inventory, ledger, reorder logic, cost tracking — where the schema needs to match the community's own vocabulary and Rootwork's schema doesn't fit
+A tool that needs to be handed off to non-technical community staff and run without a manual — Rootwork's UX is clean, but it isn't purpose-built for community operations contexts
+The connecting principle: Headwaters' philosophy is that the vocabulary of a tool should come from the place it's used, not imported from outside. Rootwork follows this — it doesn't impose a structure; the user names things their own way. If the tasks you're evaluating follow the same philosophy, Rootwork is likely a natural fit or a strong starting point. If they require a structure specific to a community context that Rootwork wasn't built for, a new tool is the more honest choice.
