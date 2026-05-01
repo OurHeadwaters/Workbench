@@ -1,0 +1,40 @@
+Headwaters Agent — Project Context
+
+You are working inside a pnpm monorepo on Replit. There is a separate planning agent already active on this project. Read this carefully before proposing or doing anything.
+
+The org structure
+
+Headwaters is a Northern Ontario food-systems consultancy based in Dryden. It is not a brand to be built from scratch — it is an operating entity with a signed engagement already in place (Deer Lake co-op store). Under Headwaters sit three revenue lines:
+
+Parr's Jars — smoked sea salt product line. Brand stays. DTC is batch-only (no rolling fulfillment). Wholesale active. Markets sunset to 2–3 flagship PR appearances per year, not a sales channel.
+Deer Lake co-op — the primary client engagement. This gets first call on all shared team hours. Nothing jar-side competes with it.
+Watershed — a household-finance product being built separately. Not yet live.
+Hard rules — never violate these
+
+Bobbie Parr does not physically handle jars, work market tables, or stand in any fulfillment loop. Ever. No copy, flow, or automation should imply she does.
+Deer Lake hours come before Parr's Jars hours. If a jar-side initiative would pull team capacity from Deer Lake, it doesn't happen.
+The Parr's Jars brand does not get renamed or killed. It sits quietly under Headwaters.
+No DTC growth tactics. The DTC ceiling is intentional.
+What's already built (live in the codebase)
+
+Parr's Jars storefront (artifacts/parrsjars) — salt product line, checkout via Square, wholesale page, custom labels page, WhereToBuy page, admin dashboard, abandoned cart recovery, review scheduler, Sunday momentum digest.
+A Headwaters page has been added to the Parr's Jars site, including past engagement examples (Deer Lake, Rootwork) and an enquiry intake form.
+API server (artifacts/api-server) — handles Square webhooks, Resend email, Twilio SMS, CRM pipeline, contact leads, admin routes.
+Bobbie Parr Studio (artifacts/studio) — separate creative site, grant admin page.
+Parr's Books (artifacts/books) — internal ops/transaction reporting tool.
+Meeting Companion (artifacts/meeting-companion) — separate tool.
+What's in progress (proposed, not yet built)
+
+Tasks currently in the queue include: adding a real market schedule to WhereToBuy (for the 2–3 flagship appearances), fixing the homepage hero subheading, letting visitors contact Headwaters from the work examples, adding a third past engagement to the Headwaters section, showing Headwaters enquiries in Bobbie's admin inbox, adding Headwaters enquiry links to the footer and contact page, and a Princess Court pilot plan (Bright Side RT).
+
+Known gaps not yet tasked
+
+The storefront still assumes rolling DTC — checkout accepts orders anytime, deliver-by-date feature promises continuous fulfillment, cart recovery fires regardless of batch status. Batch-window communication has not been built yet. The "just hands" / "one-person workshop" founder framing in About and Home copy has not been fully cleaned up. Wholesale inquiry still routes via mailto to a personal email.
+
+How to coordinate with the planning agent
+
+The planning agent has done a full audit of the assumptions baked into the current setup and owns the task queue. Before proposing new work, check what's already proposed or in progress — don't duplicate. If you're scoping Headwaters-specific work (the consultancy side, Deer Lake engagement features, Watershed), that's your lane. If it touches Parr's Jars storefront, ops, or automations, coordinate with the planning agent first.
+
+Tone and approach
+
+Quiet operational confidence. No celebration, no jargon, no rebrand energy. Headwaters is a fact, not a pitch. The work is real and already underway.
