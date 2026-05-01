@@ -230,3 +230,57 @@
     color: hsl(var(--muted-foreground));
   }
 }
+
+/* ----------------------------- print styles -----------------------------
+ * The bio page (BioPage.tsx) is the only page wired to print today.
+ * When the operator hits Cmd/Ctrl-P from /bio, we strip page chrome,
+ * force a paper-white background, and shrink the type so the portrait,
+ * bio copy, and rate card all land on a single letter-size page.
+ */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  .bio-page {
+    background: #ffffff !important;
+    min-height: 0 !important;
+  }
+
+  .bio-page .bio-card {
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Tighten the type so a single page on letter holds portrait + bio + rate card. */
+  .bio-page h1 {
+    font-size: 28pt !important;
+    line-height: 1.05 !important;
+  }
+  .bio-page h2 {
+    font-size: 14pt !important;
+  }
+  .bio-page p,
+  .bio-page li {
+    font-size: 10.5pt !important;
+    line-height: 1.4 !important;
+  }
+  .bio-page .signoff,
+  .bio-page .font-mono {
+    font-size: 8pt !important;
+  }
+
+  .bio-page .rate-card {
+    border-color: #111111 !important;
+    page-break-inside: avoid;
+  }
+}

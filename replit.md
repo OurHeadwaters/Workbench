@@ -1,14 +1,12 @@
 # Overview
 
-This project is a pnpm workspace monorepo using TypeScript, designed to support various applications related to the "Northern Food Systems Research Library" and operational planning for a product company. Its core purpose is to provide tools and platforms for research, knowledge sharing, and strategic planning, emphasizing decentralization, permaculture principles, and operational flexibility for Indigenous communities in Canada.
+This project is a pnpm workspace monorepo using TypeScript, designed to support various applications related to the "Northern Food Systems Research Library" and operational planning for a product company. Its core purpose is to provide tools and platforms for research, knowledge sharing, and strategic planning, emphasizing decentralization, permaculture principles, and operational flexibility for Indigenous communities in Canada. The project aims to empower communities through accessible knowledge and self-sufficient operational models, shifting from traditional agency-based services to a product-centric approach that prioritizes local control and value delivery.
 
 Key capabilities include:
 - A React + Vite "Northern Food Systems Research Library" with drag-and-drop, URL ingestion, SHA-256 deduplication, tokenized share-links, and a needs-review queue.
 - An Express 5 API for library data management and secure storage.
 - A hybrid app and slide deck for practitioner operating plans, structured around a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps and cost review mechanisms.
 - An Expo (React Native + web) reader for the "Codetry Practitioner's Handbook," installable as a PWA, Expo Go app, or native binary, ensuring offline access.
-
-The project aims to empower communities through accessible knowledge and self-sufficient operational models, shifting from traditional agency-based services to a product-centric approach that prioritizes local control and value delivery.
 
 # User Preferences
 
@@ -22,46 +20,39 @@ I prefer iterative development with clear validation steps. If a typecheck fails
 
 # System Architecture
 
-The project is structured as a pnpm workspace monorepo utilizing Node.js 24 and TypeScript 5.9.
+The project is structured as a pnpm workspace monorepo using Node.js 24 and TypeScript 5.9.
 
 **Monorepo Tools & Build:**
-- **Monorepo tool**: pnpm workspaces
-- **Package manager**: pnpm
-- **Build**: esbuild (CJS bundle)
-- **Typechecking**: `pnpm run typecheck:gated` for critical paths, with `pnpm run typecheck` for the full workspace.
+- Monorepo tool: pnpm workspaces
+- Package manager: pnpm
+- Build: esbuild (CJS bundle)
+- Typechecking: `pnpm run typecheck:gated` for critical paths, with `pnpm run typecheck` for the full workspace.
 
 **API & Data Layer:**
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
+- API framework: Express 5
+- Database: PostgreSQL + Drizzle ORM
+- Validation: Zod (`zod/v4`), `drizzle-zod`
+- API codegen: Orval (from OpenAPI spec)
 
 **UI/UX & Feature Specifications:**
 
 - **Northern Food Systems Research Library (`artifacts/library`)**: React + Vite application featuring SHA-256 file deduplication, URL paste ingestion, tokenized contributor share-links, a needs-review queue, search/filter, and public upload portal.
-- **Practitioner Operating Plan (`artifacts/practitioner-operating-plan`)**: Hybrid app + slides deck, focused on a product company model. It implements a core deal-flow (Idea → Pitch → Contract → Fulfillment → Impact), includes integrated cost review, and stores user state in `localStorage`. Features a `/codetry` page defining a "metaphor-as-architecture" practice. Re-publishes the canonical constellation manifest (which now lives at `artifacts/codetry-handbook/data/constellation.json` — see Task #562) into its own `public/constellation.json` at build time via `scripts/publish-constellation.cjs` so the deployed site can fetch it; `typecheck` runs the same script in `--check` mode to fail loudly on drift.
-- **Codetry Practitioner's Handbook (`artifacts/codetry-handbook`)**: Expo (React Native + web) reader. Installable as a PWA, Expo Go app, or native binaries with offline access. Uses `AsyncStorage` for persistent state and includes a save-status pill. Part III is built from an auto-generated, bundled snapshot of the constellation manifest. Also hosts the **Pioneer Path** companion at `/path` (Task #560) — an audio-narrated, action-gated mobile pilgrimage with five stations (The Saltbox, Both-States, Both-Sides, The Standby, The Gate). Each station has a Listen block (HTML5 audio on web, "narration coming" placeholder on native or when an MP3 is missing), a Read block (chapter excerpt rendered through `ChapterBlock` with a "open the full chapter in the handbook" link), a Do block (a single concrete action), and a Mark-done input + button. Progress persists in AsyncStorage under `codetry-handbook:v1:pioneer-path` (audio positions throttled at 4s); each station gates the next until the previous one is marked walked. Files live under `app/path/`, `components/path/`, `lib/pioneerPath/`, `data/pioneerPath.ts`, and `public/narration/`.
-- **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**: React + Vite application hosting a walkthrough (`/`), a mobile-first Phase Planner (`/planner`), an Operator-Couple Store Cockpit mockup (`/cockpit` + four sub-screens: `/cockpit/floor`, `/cockpit/home`, `/cockpit/till`, `/cockpit/locks`), and a Sustainability & Succession Playbook (`/sustainability` + seven sub-pages: `/sustainability/model`, `/sustainability/roles`, `/sustainability/handover`, `/sustainability/burnout`, `/sustainability/renewal`, `/sustainability/tooling`, `/sustainability/indicators`). The walkthrough features a continuous-scroll design with sticky header and in-page jumps. The Phase Planner is a decision tool with "grants" and "self-fund" modes, persisting state in `localStorage` and using UTC date math. The Cockpit is a phone-first pitch landing ("your business doesn't end with you") plus a 4-screen contractor mockup (40×80 floor plan, iPad operator home, working till with basket state, open-vs-locked permission boundary) using Fraunces / IBM Plex fonts and the deck palette via inline styles. The cockpit weaves four integration layers — Square (till + sales), QuickBooks (books + bank), Local Line (807 producer cycle + truck manifest), and Headwaters (operator surface). The Sustainability Playbook covers store + hotel under one model: six functions, Y1/Y2/Y3 handover ladders, four burnout indicators (green/yellow/red), contract renewal, tooling continuity bridging to `/cockpit`, and six leading indicators. It's phone-first single-column with the walkthrough's Lora serif + oat-paper / evergreen / warm-tan palette and uses `<HonestyNote>` blocks where data is genuinely unknown. All routes share a tiny client-side router (`useRoute`).
+- **Practitioner Operating Plan (`artifacts/practitioner-operating-plan`)**: Hybrid app + slides deck, focused on a product company model with a core deal-flow (Idea → Pitch → Contract → Fulfillment → Impact). Includes integrated cost review and a `/codetry` page defining a "metaphor-as-architecture" practice.
+- **Codetry Practitioner's Handbook (`artifacts/codetry-handbook`)**: Expo (React Native + web) reader, installable as PWA, Expo Go app, or native binaries with offline access. Includes the **Pioneer Path** companion, an audio-narrated, action-gated mobile pilgrimage with five stations (The Saltbox, Both-States, Both-Sides, The Standby, The Gate).
+- **Deer Lake Walkthrough (`artifacts/deer-lake-walkthrough`)**: React + Vite application hosting a walkthrough (`/`), a mobile-first Phase Planner (`/planner`), an Operator-Couple Store Cockpit mockup (`/cockpit`), and a Sustainability & Succession Playbook (`/sustainability`). Features continuous-scroll design, decision tools, and phone-first layouts with specific font and color palettes.
 - **`artifacts/api-server`**: Express 5 API mounting `/api/library` (CRUD, stats) and `/api/storage` (presigned uploads, public-objects with local filesystem fallback).
-- **Headwaters Books (`artifacts/headwaters-books`)**: React + Vite bookkeeping front-end for the Headwaters agency, gated by Clerk for the ledger surfaces. Hosts two public sibling dashboards for the constellation-wide primitives, both reading their vocabulary, severity ladder, sub-shelves, and rejected alternatives verbatim from the bundled constellation snapshot. The snapshot is imported directly from the codetry-handbook artifact via `@workspace/codetry-handbook/data/constellation` (Task #562 — the artifact no longer carries its own copy or sync script, so codetry edits propagate on the next build with no manual step):
-  - **The Standby** at `/standby` — runnable steward dashboard. Four-rung ladder (advisory/standby/active/standdown) and two sub-shelves (The Common Pantry, The Watch). Calls (open → walk the ladder → log who's on the watch → draw down standby stock → close with a debrief) persist in browser localStorage under `z3.standby.v1`.
-  - **The Gate** at `/gate` — runnable bright-side ↔ massity translation surface, replacing the previously external tool at `legacy-gatekeeper.replit.app` (still linked from the page footer for historical reference). Four-rung ladder (draft/under-review/cleared/refused) and three sub-shelves (Mappings, Substitutions, Categories). Substitutions (direction, bright-side noun, massity equivalent, category, optional document/note/logged-by) persist in browser localStorage under `z3.gate.v1`. Per the Standby-leaks-into-Gate audit note (Task #473), each primitive owns its own page file; nothing is genericized across primitives.
-> **Retired artifacts:** Two artifacts in earlier checkpoints — **Deer Lake Store Plan** (`artifacts/deer-lake-store-plan`, slides deck for the operational plan) and **Wordpile** (`artifacts/wordpile`, community word-inventory tool with the Build/Stacker page) — have been removed to stay under the seven-artifact cap. Cross-references in other artifacts (deer-lake-walkthrough section components, the locked-fees and trial-offer drift guards) were updated to drop the dependency. Do not reintroduce them without a deliberate replan; the Pioneer Path inside `artifacts/codetry-handbook/app/path/` now occupies the "walked companion tool" slot that wordpile previously held.
-
-**Database Schema (`lib/db/src/schema/library.ts`):**
-Includes tables for `subjects`, `project_buckets`, `producers`, `contributors`, `library_entries` (with unique partial index on `content_hash`), `entry_subjects`, `entry_buckets`, and `share_links`.
-
-**Seeding:**
-`pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` provides an idempotent seed for development.
+- **Headwaters Books (`artifacts/headwaters-books`)**: React + Vite bookkeeping front-end, gated by Clerk. Hosts two public sibling dashboards, **The Standby** (`/standby`) and **The Gate** (`/gate`), both reading vocabulary from the bundled constellation snapshot.
+- **Database Schema (`lib/db/src/schema/library.ts`):** Includes tables for `subjects`, `project_buckets`, `producers`, `contributors`, `library_entries` (with unique partial index on `content_hash`), `entry_subjects`, `entry_buckets`, and `share_links`.
+- **Seeding:** `pnpm --filter @workspace/scripts exec tsx ./src/seedLibrary.ts` provides an idempotent seed for development.
 
 # External Dependencies
 
 - **Microlink**: For URL metadata and screenshot generation in the library.
 - **Cheerio**: Fallback for URL metadata parsing in the library.
-- **Expo**: For cross-platform application development of the Codetry Practitioner's Handbook.
+- **Expo**: For cross-platform application development.
 - **PostgreSQL**: Primary database.
 - **Drizzle ORM**: For database interactions.
 - **Express 5**: For the API server.
 - **Zod**: For schema declaration and validation.
 - **Orval**: For API client code generation.
-- **Clerk**: For user authentication and cloud synchronization in Wordpile.
+- **Clerk**: For user authentication.
