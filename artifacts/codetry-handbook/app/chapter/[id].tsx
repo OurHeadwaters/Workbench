@@ -51,8 +51,8 @@ export default function ChapterScreen() {
     setLastRead,
     getScrollY,
     saveScroll,
-    saveDeepDiveEntryScrollY,
-    takeDeepDiveEntryScrollY,
+    saveOriginScroll,
+    takeOriginScroll,
   } = useReader();
   const { CHAPTERS, getChapter, getNeighbors } = useHandbookContent();
 
@@ -65,13 +65,12 @@ export default function ChapterScreen() {
   const restoredFor = useRef<string | null>(null);
 
   // Restore scroll position when entering this chapter (once).
-  // Priority order for §1.7:
-  //   1. takeDeepDiveEntryScrollY() — the exact Y the reader was at when they
-  //      tapped a Deep Dive link; consumed (set to null) on first read so
+  // Priority order for every chapter:
+  //   1. takeOriginScroll(chapter.id) — the exact Y the reader was at in THIS
+  //      chapter when they tapped a §ref cross-link; consumed on first read so
   //      a subsequent re-render doesn't re-trigger the scroll.
   //   2. getScrollY in-memory map — updated on every scroll pause this session.
   //   3. lastRead — persisted across sessions.
-  // For all other chapters only priorities 2 and 3 apply.
   useEffect(() => {
     if (!chapter) return;
     if (restoredFor.current === chapter.id) return;
@@ -80,10 +79,7 @@ export default function ChapterScreen() {
     // resolvedY stays null until a source provides a value. Keeping it
     // null (rather than 0) lets us distinguish "reader was at the very top"
     // (entryY === 0) from "no entry point was stored" (entryY === null).
-    let resolvedY: number | null = null;
-    if (chapter.id === "1-7") {
-      resolvedY = takeDeepDiveEntryScrollY();
-    }
+    let resolvedY: number | null = takeOriginScroll(chapter.id);
     if (resolvedY === null) {
       const fromMap = getScrollY(chapter.id);
       const fromLastRead =
@@ -93,8 +89,8 @@ export default function ChapterScreen() {
 
     if (resolvedY > 0 && scrollRef.current) {
       const target = resolvedY;
-      // Seed currentScrollYRef so that if the reader taps a deep-dive link
-      // before any scroll event fires, the saved entry Y is already correct.
+      // Seed currentScrollYRef so that if the reader taps a cross-link
+      // before any scroll event fires, the saved origin Y is already correct.
       currentScrollYRef.current = target;
       const t = setTimeout(() => {
         scrollRef.current?.scrollTo({ y: target, animated: false });
@@ -102,7 +98,7 @@ export default function ChapterScreen() {
       return () => clearTimeout(t);
     }
     return;
-  }, [chapter, lastRead, getScrollY, takeDeepDiveEntryScrollY]);
+  }, [chapter, lastRead, getScrollY, takeOriginScroll]);
 
   const persistPosition = useCallback(
     (y: number) => {
@@ -139,12 +135,14 @@ export default function ChapterScreen() {
     (target: string) => {
       if (Platform.OS !== "web")
         Haptics.selectionAsync().catch(() => {});
-      if (chapter?.id === "1-7" && getChapter(target)?.partRoman === "DD") {
-        saveDeepDiveEntryScrollY(currentScrollYRef.current);
+      // Save this chapter's current scroll position so the reader is
+      // returned to exactly where they left off on back-navigation.
+      if (chapter) {
+        saveOriginScroll(chapter.id, currentScrollYRef.current);
       }
       goTo(target);
     },
-    [goTo, chapter, saveDeepDiveEntryScrollY],
+    [goTo, chapter, saveOriginScroll],
   );
 
   const goPrev = useCallback(() => {
