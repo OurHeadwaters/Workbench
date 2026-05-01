@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { ROUTES } from "@/lib/paths";
 import { usePlannerLockDates } from "@/planner/usePlannerLockDates";
+import { PHASE_LOCKS } from "@/lib/phase-locks-data";
 
 /**
  * Phase locks — the literal lock schedule the contractor can hand to
@@ -18,30 +19,18 @@ import { usePlannerLockDates } from "@/planner/usePlannerLockDates";
  * Pre-finish), each with a Reveal carrying the literal checklist,
  * the signer ledger, the link out to the proof artifact, and a
  * plain-language slip-consequence paragraph.
+ *
+ * Phase card data comes from @/lib/phase-locks-data so the printable
+ * sign-off sheet stays in sync automatically.
+ *
+ * Editorial lock: see Reveal.tsx — three top-level cards, the rest
+ * inside <Reveal>.
  */
 export default function PhaseLocks() {
   const lockDates = usePlannerLockDates();
 
-  const phases = [
-    {
-      tag: "Phase 1 · Pre-frame",
-      head: "Before the walls go up.",
-      lockFmt: lockDates.preFrameFmt,
-      body: "Floor plan, cold-chain footprint, role design. Locked together — so the door is wide enough for the freezer, and the freezer is sized for the truck.",
-    },
-    {
-      tag: "Phase 2 · Pre-electrical",
-      head: "Before the conduit gets pulled.",
-      lockFmt: lockDates.preElectricalFmt,
-      body: "Till position, back-of-house placement, public-records hardware. Locked before the electrician decides where the outlets live.",
-    },
-    {
-      tag: "Phase 3 · Pre-finish",
-      head: "Before the sign goes on the building.",
-      lockFmt: lockDates.preFinishFmt,
-      body: "Signage, public price page, opening-day staffing. Locked before opening week — so day one isn't the day the band first sees the price list.",
-    },
-  ];
+  const lockFmts = [lockDates.preFrameFmt, lockDates.preElectricalFmt, lockDates.preFinishFmt];
+  const phases = PHASE_LOCKS.map((phase, i) => ({ ...phase, lockFmt: lockFmts[i] }));
 
   return (
     <section
@@ -95,7 +84,7 @@ export default function PhaseLocks() {
         </p>
 
         <ol className="mt-5 space-y-3 list-none pl-0">
-          {phases.map((phase, i) => (
+          {phases.map((phase) => (
             <li
               key={phase.tag}
               className="flex gap-4 rounded-xl p-4 border-l-4"
@@ -108,7 +97,7 @@ export default function PhaseLocks() {
                 className="mono text-[18px] tabular-nums shrink-0 leading-none pt-0.5"
                 style={{ color: "var(--color-accent-warm)" }}
               >
-                {String(i + 1).padStart(2, "0")}
+                {phase.number}
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -132,20 +121,35 @@ export default function PhaseLocks() {
                   className="serif text-[18px] leading-[1.3] font-semibold"
                   style={{ color: "var(--color-primary)" }}
                 >
-                  {phase.head}
+                  {phase.headline}
                 </div>
                 <div
                   className="serif text-[15.5px] leading-[1.45] mt-1.5"
                   style={{ color: "var(--color-text)" }}
                 >
-                  {phase.body}
+                  {phase.summary}
                 </div>
               </div>
             </li>
           ))}
         </ol>
 
-        <div className="mt-8 space-y-3">
+        {/* Sign-off sheet link */}
+        <div className="mt-6">
+          <a
+            href={ROUTES.phaseLockSignoff}
+            className="inline-flex items-center gap-2 mono text-[10.5px] uppercase tracking-[0.18em] rounded-lg px-4 py-2.5 border transition-opacity hover:opacity-80"
+            style={{
+              background: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+            }}
+          >
+            Print sign-off sheet →
+          </a>
+        </div>
+
+        <div className="mt-6 space-y-3">
           <Reveal label="Phase 1 · Pre-frame — what gets locked, who signs, where the proof lives">
             <p>
               <span className="font-semibold">Lock by:</span>{" "}

@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell";
-import { isCockpitPath, isCheckinSheetsPath, isPlannerPath, isSustainabilityPath } from "@/lib/paths";
+import { isCockpitPath, isCheckinSheetsPath, isPhaseLockSignoffPath, isPlannerPath, isSustainabilityPath } from "@/lib/paths";
 import { useRoute } from "@/lib/route";
 
 import Prologue from "@/sections/Prologue";
@@ -22,6 +22,7 @@ import PlannerApp from "@/planner/PlannerApp";
 import CockpitApp from "@/cockpit/CockpitApp";
 import SustainabilityApp from "@/sustainability/SustainabilityApp";
 import CheckinSheets from "@/sections/CheckinSheets";
+import PhaseLockSignoff from "@/sections/PhaseLockSignoff";
 
 /**
  * The walkthrough is a single continuous scroll, framed by the v2-style
@@ -66,6 +67,10 @@ export default function App() {
 
   if (isCheckinSheetsPath(pathname)) {
     return <CheckinSheets />;
+  }
+
+  if (isPhaseLockSignoffPath(pathname)) {
+    return <PhaseLockSignoff />;
   }
 
   return (

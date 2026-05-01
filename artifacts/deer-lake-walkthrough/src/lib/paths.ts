@@ -34,6 +34,7 @@ export const ROUTES = {
   sustainabilityTooling: joinBase("sustainability/tooling"),
   sustainabilityIndicators: joinBase("sustainability/indicators"),
   checkinSheets: joinBase("checkin-sheets"),
+  phaseLockSignoff: joinBase("phase-locks-signoff"),
 } as const;
 
 export type CockpitScreen = "pitch" | "floor" | "home" | "till" | "locks";
@@ -104,4 +105,9 @@ export function getSustainabilityPage(pathname: string): SustainabilityPage {
 /** Check-in sheets printable page lives at /checkin-sheets. */
 export function isCheckinSheetsPath(pathname: string): boolean {
   return normalize(pathname) === normalize(ROUTES.checkinSheets);
+}
+
+/** Phase-lock sign-off sheet lives at /phase-locks-signoff. */
+export function isPhaseLockSignoffPath(pathname: string): boolean {
+  return normalize(pathname) === normalize(ROUTES.phaseLockSignoff);
 }
