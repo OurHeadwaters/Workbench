@@ -1,4 +1,6 @@
 import { Reveal } from "@/components/Reveal";
+import { ROUTES } from "@/lib/paths";
+import { useTrialWeekMarks } from "@/planner/trialWeekMarks";
 import {
   TRIAL_ACCEPTANCE_CRITERIA,
   TRIAL_ACCEPTANCE_CRITERIA_OJICREE,
@@ -40,6 +42,8 @@ import {
  * Editorial lock: see Reveal.tsx.
  */
 export default function Ask() {
+  const { isMarked, toggleMark } = useTrialWeekMarks();
+
   const steps = [
     {
       head: "Council motion + steering committee",
@@ -252,17 +256,22 @@ export default function Ask() {
               const ojiWeek = TRIAL_TIMELINE_OJICREE.find(
                 (w) => w.week === week.week,
               );
+              const marked = isMarked(week.week);
               return (
                 <li
                   key={week.week}
                   className="rounded-lg p-3 border"
                   style={{
-                    background: delivers
-                      ? "rgba(184,90,62,0.06)"
-                      : "var(--color-bg)",
-                    borderColor: delivers
-                      ? "var(--color-accent-warm)"
-                      : "var(--color-rule)",
+                    background: marked
+                      ? "rgba(80,120,80,0.07)"
+                      : delivers
+                        ? "rgba(184,90,62,0.06)"
+                        : "var(--color-bg)",
+                    borderColor: marked
+                      ? "rgba(80,140,80,0.45)"
+                      : delivers
+                        ? "var(--color-accent-warm)"
+                        : "var(--color-rule)",
                   }}
                 >
                   <div className="flex items-baseline gap-3">
@@ -375,10 +384,35 @@ export default function Ask() {
                       </span>
                     </div>
                   ) : null}
+                  <button
+                    type="button"
+                    onClick={() => toggleMark(week.week)}
+                    data-testid={`week-mark-${week.week}`}
+                    aria-pressed={marked}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] mono uppercase tracking-[0.16em] border transition-colors"
+                    style={{
+                      background: marked ? "rgba(80,140,80,0.12)" : "transparent",
+                      borderColor: marked ? "rgba(80,140,80,0.4)" : "var(--color-rule)",
+                      color: marked ? "rgba(60,120,60,0.9)" : "var(--color-muted)",
+                    }}
+                  >
+                    {marked ? "✓ Done" : "Mark done"}
+                  </button>
                 </li>
               );
             })}
           </ol>
+          <div className="mt-4 flex justify-end">
+            <a
+              href={ROUTES.checkinSheets}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mono text-[11px] uppercase tracking-[0.16em] underline underline-offset-2 hover:no-underline"
+              style={{ color: "var(--color-accent-warm)" }}
+            >
+              Print all eight check-in sheets →
+            </a>
+          </div>
         </div>
 
         <ol className="mt-7 space-y-3 list-none pl-0">

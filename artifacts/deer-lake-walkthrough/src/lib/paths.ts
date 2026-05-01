@@ -33,6 +33,7 @@ export const ROUTES = {
   sustainabilityRenewal: joinBase("sustainability/renewal"),
   sustainabilityTooling: joinBase("sustainability/tooling"),
   sustainabilityIndicators: joinBase("sustainability/indicators"),
+  checkinSheets: joinBase("checkin-sheets"),
 } as const;
 
 export type CockpitScreen = "pitch" | "floor" | "home" | "till" | "locks";
@@ -98,4 +99,9 @@ export function getSustainabilityPage(pathname: string): SustainabilityPage {
   if (norm === normalize(ROUTES.sustainabilityTooling)) return "tooling";
   if (norm === normalize(ROUTES.sustainabilityIndicators)) return "indicators";
   return "index";
+}
+
+/** Check-in sheets printable page lives at /checkin-sheets. */
+export function isCheckinSheetsPath(pathname: string): boolean {
+  return normalize(pathname) === normalize(ROUTES.checkinSheets);
 }

@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell";
-import { isCockpitPath, isPlannerPath, isSustainabilityPath } from "@/lib/paths";
+import { isCockpitPath, isCheckinSheetsPath, isPlannerPath, isSustainabilityPath } from "@/lib/paths";
 import { useRoute } from "@/lib/route";
 
 import Prologue from "@/sections/Prologue";
@@ -21,6 +21,7 @@ import Recap from "@/sections/Recap";
 import PlannerApp from "@/planner/PlannerApp";
 import CockpitApp from "@/cockpit/CockpitApp";
 import SustainabilityApp from "@/sustainability/SustainabilityApp";
+import CheckinSheets from "@/sections/CheckinSheets";
 
 /**
  * The walkthrough is a single continuous scroll, framed by the v2-style
@@ -61,6 +62,10 @@ export default function App() {
 
   if (isSustainabilityPath(pathname)) {
     return <SustainabilityApp />;
+  }
+
+  if (isCheckinSheetsPath(pathname)) {
+    return <CheckinSheets />;
   }
 
   return (
