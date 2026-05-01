@@ -4,3 +4,4 @@ export * from "./checkin";
 export * from "./bookkeeper";
 export * from "./wordpile";
 export * from "./shipManifest";
+export * from "./deadhead";

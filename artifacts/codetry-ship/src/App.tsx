@@ -8,6 +8,7 @@ import { ManifestPage } from "@/pages/ManifestPage";
 import { BioPage } from "@/pages/BioPage";
 import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
+import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/manifest" component={ManifestPage} />
       <Route path="/sow" component={SowPage} />
       <Route path="/bright-side" component={BrightSidePage} />
+      <Route path="/deadhead/intake" component={DeadheadIntakePage} />
       <Route component={NotFound} />
     </Switch>
   );

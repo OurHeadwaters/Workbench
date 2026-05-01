@@ -121,3 +121,71 @@ export async function downloadManifestCsv(token: string): Promise<void> {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+// ----------------------- deadhead intake -----------------------
+
+export interface DeadheadItem {
+  id: string;
+  originalTaskId: string;
+  title: string;
+  originalCreatedAt: string;
+  status: string;
+  flushedAt: string;
+  flushBatchId: string;
+}
+
+export interface FlushLogEntry {
+  id: string;
+  flushedAt: string;
+  count: number;
+  proposedCountBefore: number;
+  flushBatchId: string;
+}
+
+export async function fetchDeadheadIntake(
+  token: string,
+  status?: string,
+): Promise<{ total: number; items: DeadheadItem[] }> {
+  const url = status
+    ? `/api/deadhead/intake?status=${encodeURIComponent(status)}`
+    : "/api/deadhead/intake";
+  const res = await fetch(url, { headers: ownerHeaders(token) });
+  if (!res.ok) {
+    throw new ApiError(
+      res.status,
+      res.status === 401 ? "Unauthorized" : "Failed to load intake",
+    );
+  }
+  return (await res.json()) as { total: number; items: DeadheadItem[] };
+}
+
+export async function fetchDeadheadLog(
+  token: string,
+): Promise<{ total: number; entries: FlushLogEntry[] }> {
+  const res = await fetch("/api/deadhead/log", {
+    headers: ownerHeaders(token),
+  });
+  if (!res.ok) {
+    throw new ApiError(
+      res.status,
+      res.status === 401 ? "Unauthorized" : "Failed to load flush log",
+    );
+  }
+  return (await res.json()) as { total: number; entries: FlushLogEntry[] };
+}
+
+export async function patchDeadheadItem(
+  token: string,
+  id: string,
+  status: string,
+): Promise<{ id: string; status: string }> {
+  const res = await fetch(`/api/deadhead/intake/${id}`, {
+    method: "PATCH",
+    headers: { ...ownerHeaders(token), "content-type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) {
+    throw new ApiError(res.status, "Failed to update item status");
+  }
+  return (await res.json()) as { id: string; status: string };
+}
