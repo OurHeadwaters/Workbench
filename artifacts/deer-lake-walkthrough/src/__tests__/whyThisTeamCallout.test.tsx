@@ -4,37 +4,19 @@ import WhyThisTeam from "../sections/WhyThisTeam";
 
 /**
  * Locks the Practitioner Operating Plan callout inside WhyThisTeam
- * against silent drift away from the one-pager's own $60k+/month
- * inflection-point framing (task #535).
+ * against silent drift (task #535, updated for the Deer Lake cost
+ * reframe landed alongside task #596).
  *
- * The walkthrough previously called the engagement "the $90,000-a-month
- * engagement total" — a mis-frame, since the one-pager itself leads
- * with "a community development contract at $60k+/month is a real
- * inflection point" and treats:
- *   - $60k  as the FLOOR tier,
- *   - $90k  as the RECOMMENDED rate (the rate this walkthrough uses),
- *   - $125k as the SCALE tier (once a second store is running).
+ * The callout keeps the one-pager's eyebrow and $60k+/month headline
+ * (general framing for what this class of engagement costs) but the
+ * tier-ladder paragraph was replaced with the Deer Lake-specific cost:
+ *   - $29,000/month fixed to Headwaters (Practitioner $80/hr, Tyler
+ *     $35/hr, IT/Assistant $35/hr, $5k overhead)
+ *   - Gas card and insurance at cost on top.
  *
- * Nothing in the existing test suite caught the drift; a human did.
- * This file converts that human catch into a permanent CI guard:
- * editing the callout in a way that drops the eyebrow, the
- * $60k+/month inflection-point headline, or any of the three tiers
- * fails this test.
- *
- * Source-of-truth note. The standalone practitioner-operating-plan
- * artifact (which the task brief referenced as the home of
- * `OnePager.tsx` and `costRegistry.ts`) has been retired and its
- * content migrated into the practitioners-guide-v2 `/workbench`
- * archive page — see `lib/locked-fees/src/lockedFees.test.ts` for
- * the workspace-level audit that codifies the migration. There is
- * therefore no live `OnePager.tsx` whose headline string can be
- * imported as a shared constant; the optional second assertion in
- * the task brief is moot. The $60k / $90k / $125k tier values
- * themselves are also guarded elsewhere (Ask + Recap rows lock $90k
- * in `lockedNumbers.test.tsx`; the deer-lake store-plan deck locks
- * the full tier ladder). This test only locks the callout's own
- * framing — eyebrow, inflection-point headline, and the three-tier
- * mention.
+ * This test locks that specific breakdown so a future edit can't
+ * silently drop the rate breakdown or reintroduce the abstract
+ * $60k/$90k/$125k tier ladder that confused the target contractor.
  */
 
 describe("Deer Lake walkthrough — WhyThisTeam Practitioner Operating Plan callout", () => {
@@ -57,20 +39,17 @@ describe("Deer Lake walkthrough — WhyThisTeam Practitioner Operating Plan call
     );
   });
 
-  it("frames $60k as the FLOOR tier", () => {
-    // Tier values render inside a font-semibold span followed by the
-    // tier label in plain text. Anchoring on `</span> floor` pins the
-    // assertion to the floor-tier span specifically.
-    expect(html).toMatch(/\$60k\s*<\/span>\s*floor/);
+  it("names the Deer Lake-specific $29,000/month fixed rate (not the abstract tier ladder)", () => {
+    expect(html).toContain("$29,000/month fixed");
   });
 
-  it("frames $90k as the RECOMMENDED tier the walkthrough uses", () => {
-    expect(html).toMatch(/\$90k\s*<\/span>\s*recommended/);
-    expect(html).toContain("the rate this walkthrough uses");
+  it("names all three Headwaters roles with their hourly rates", () => {
+    expect(html).toContain("$80/hr");
+    expect(html).toContain("$35/hr");
   });
 
-  it("frames $125k as the SCALE tier (once a second store is running)", () => {
-    expect(html).toMatch(/\$125k\s*<\/span>\s*once a/);
-    expect(html).toMatch(/second store is running/);
+  it("mentions gas card and insurance at cost (the variable component)", () => {
+    expect(html).toContain("Gas card and insurance");
+    expect(html).toContain("at cost");
   });
 });

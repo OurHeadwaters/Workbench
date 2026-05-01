@@ -474,8 +474,8 @@ export default function Ask() {
 
           <Reveal label="What this first year costs">
             <p>
-              <span className="font-semibold">$1,080,000 over twelve months</span>{" "}
-              — $90,000 a month for Headwaters. Covers the Practitioner, Distribution Lead (Tyler), and IT/Assistant on the Headwaters side, the contractor couple, the cold-chain pilot, the software build, staff training, and the year-end audit.
+              <span className="font-semibold">$348,000 over twelve months</span>{" "}
+              — $29,000 a month fixed to Headwaters. Covers the Practitioner, Distribution Lead (Tyler), and IT/Assistant on the Headwaters side, plus $5,000/month overhead. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
             </p>
             <p>
               No grants in hand. Paid from band reserves — the planner

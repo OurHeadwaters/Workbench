@@ -94,7 +94,7 @@ export const TRIAL_ACCEPTANCE_CRITERIA: readonly string[] = [
   "Steering committee seated and charter signed — three council members, two community members named, terms of reference adopted by council motion.",
   "Six-month co-design plan adopted by the steering committee — store layout, opening hours, and pricing principles documented and accepted in committee minutes.",
   "Cold-chain pilot scope agreed in writing with the existing store — lane plan, ninety-day pilot duration, and operational hand-offs signed by both parties, ready to launch.",
-  "Year-one budget and cash plan handed to council in writing — Step 1 cost basis, $90,000-a-month bill, ~$181,000 day-one bridge ask, and the 35% reinvestment line.",
+  "Year-one budget and cash plan handed to council in writing — Step 1 cost basis at $29,000/month Headwaters fee (fixed), plus gas card and insurance at cost.",
 ] as const;
 
 /**
@@ -108,12 +108,12 @@ export const TRIAL_REFUND_MECHANIC =
 
 /**
  * The "Step 0 is the on-ramp" framing line that closes every Step 0
- * call-out. Reframes the trial against Step 1 (the $90,000-a-month
- * full-stack engagement) and the worst-case / best-case outcomes for
- * the band.
+ * call-out. Reframes the trial against Step 1 (the $29,000-a-month
+ * Headwaters engagement — Practitioner, Distribution Lead, IT/Assistant)
+ * and the worst-case / best-case outcomes for the band.
  */
 export const TRIAL_FRAMING_LINE =
-  "Step 0 is the on-ramp to Step 1, not a replacement. The team hiring, the cold-chain pilot itself, the software build, the staff training, and the day-one CAPEX all sit inside Step 1 ($90,000-a-month full-stack agency engagement), not the trial. Worst case for the band: eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at week eight Step 1 converts on the same paper.";
+  "Step 0 is the on-ramp to Step 1, not a replacement. The cold-chain pilot itself, the software build, and the staff training all sit inside Step 1 ($29,000-a-month Headwaters engagement — Practitioner, Distribution Lead, IT/Assistant), not the trial. Worst case for the band: eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at week eight Step 1 converts on the same paper.";
 
 /**
  * "What survives a refund" paragraph used in the legal §7 of the
@@ -130,7 +130,7 @@ export const TRIAL_WHAT_SURVIVES_REFUND =
  * unambiguous.
  */
 export const TRIAL_CONVERSION_TO_STEP_1 =
-  "If the contractor accepts the trial deliverables at the week-eight review and elects to proceed, the trial closes and Step 1 of the Deer Lake engagement opens on the same paper — the $90,000-a-month full-stack agency engagement described in the Practitioner Operating Plan and the Deer Lake Walkthrough. The $40,000 trial fee is not credited against the Step 1 monthly fee; the trial bought planning and preparation, Step 1 buys the build.";
+  "If the contractor accepts the trial deliverables at the week-eight review and elects to proceed, the trial closes and Step 1 of the Deer Lake engagement opens on the same paper — the $29,000-a-month Headwaters engagement (Practitioner, Distribution Lead, IT/Assistant) described in the Deer Lake Walkthrough. The $40,000 trial fee is not credited against the Step 1 monthly fee; the trial bought planning and preparation, Step 1 buys the build.";
 
 /**
  * Convenience: the four labelled "How much / How long / What you get /
@@ -382,7 +382,7 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     windowLabel: "Days 50–56",
     focus: "Year-one budget to council · week-eight review (day 56)",
     deliverables:
-      "Year-one budget and cash plan handed to council in writing — Step 1 cost basis, $90,000-a-month bill, ~$181,000 day-one bridge ask, 35% reinvestment line.",
+      "Year-one budget and cash plan handed to council in writing — Step 1 cost basis at $29,000/month Headwaters fee (fixed), plus gas card and insurance at cost.",
     meetings:
       "Council session for the budget hand-off. The week-eight review meeting with the contractor — fifty-six (56) calendar days from signing day — at which the contractor judges all four §7 acceptance criteria and elects: convert to Step 1, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $40,000 to a service credit against the first Step 1 invoice.",
     gatingDecision:
@@ -497,7 +497,7 @@ export const TRIAL_ACCEPTANCE_CRITERIA_OJICREE: readonly TrialAcceptanceCriterio
   },
   {
     index: 3,
-    text: "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $90,000-aabita-giizis-mazina'igan, ~$181,000 nitam-giizhig-azhe-aabajichigewin gaa-andawenjigaadeg, miinawaa 35% azhe-bidoonigewin.",
+    text: "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $29,000-aabita-giizis-mazina'igan Headwaters (wewenig), miinawaa gaandeg-bimiwidoowin gaa-dibaakonigaadeg.",
   },
 ] as const;
 
@@ -505,7 +505,7 @@ export const TRIAL_REFUND_MECHANIC_OJICREE =
   "Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwining niigaanibatood obawaadagonan iniw newin ozhitoogaadeg waabandang. Gishpin niizh gemaa nawaj gaa-debinasinog, Headwaters da-azhe-miinigewag kakina $40,000 nisimidana (30) giizhigak biindig. Niigaanibatood mazina'igan-onji da-andawenjigeg azhe-miinigewin newin-midaaso (14) giizhigak waabamigewin onji; gishpin nawaj-ishkwaaj nokiijiged, gegaa zaagiwe-aniin miinawaa gojitoowin gii-debibinige onaakoniged. Niigaanibatood gii-ondinigewin: $40,000 ji-meshkwajiwaag anokiitaadiwi-zhooniyaa ezhi-aapiitendaag Step 1 nitam-mazina'igan onji.";
 
 export const TRIAL_FRAMING_LINE_OJICREE =
-  "Step 0 igo Step 1 onji maajitaawin, gaawiin meshkwadoonigewin. Anokii-bimaachiwin, dakaayaa-bimibatoo gojitoowin, mazinaategiziwin-ozhitoowin, anokii-gikinoo'amaadiwin, miinawaa nitam-giizhig-aabajichiganan kakina Step 1 biindig ($90,000-aabita-giizis okimaakanan-anokiichigewin), gaawiin gojitoowin biindig. Maaji-ezhiwebak onaakonigewikamig onji: nishwaaso-anama'e-giizhig diba'amaagewi-niigaanibatood eta-anokiit, newin ozhitoogaadeg ozhibii'igaadeg, kakina azhe-miinigewin gii-azhe-miinigaade. Onishishi-ezhiwebak: nishwaaso-anama'e-giizhigak Step 1 da-meshkwajiwa'iwemagad mii dash naasab mazina'igan-onji.";
+  "Step 0 igo Step 1 onji maajitaawin, gaawiin meshkwadoonigewin. Dakaayaa-bimibatoo gojitoowin, mazinaategiziwin-ozhitoowin, miinawaa anokii-gikinoo'amaadiwin kakina Step 1 biindig ($29,000-aabita-giizis Headwaters anokiichigewin — Niigaanibatood, Biminizha'igewi-niigaan, IT/Ombibishkigozid), gaawiin gojitoowin biindig. Maaji-ezhiwebak onaakonigewikamig onji: nishwaaso-anama'e-giizhig diba'amaagewi-niigaanibatood eta-anokiit, newin ozhitoogaadeg ozhibii'igaadeg, kakina azhe-miinigewin gii-azhe-miinigaade. Onishishi-ezhiwebak: nishwaaso-anama'e-giizhigak Step 1 da-meshkwajiwa'iwemagad mii dash naasab mazina'igan-onji.";
 
 export const TRIAL_TIMELINE_OJICREE: readonly TrialTimelineWeekTranslation[] = [
   {
@@ -581,7 +581,7 @@ export const TRIAL_TIMELINE_OJICREE: readonly TrialTimelineWeekTranslation[] = [
     week: 8,
     focus: "Bibooni-zhooniyaa onaakonigewikamigong · nishwaaso-anama'e-giizhigak waabamigewin (giizhig 56)",
     deliverables:
-      "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $90,000-aabita-giizis-mazina'igan, ~$181,000 nitam-giizhig-azhe-aabajichigewin, miinawaa 35% azhe-bidoonigewin.",
+      "Nitam-bibooni-zhooniyaa miinawaa zhooniyaa-ozhitoowin gii-miinaa onaakonigewikamigong mazina'igan-onji — Step 1 zhooniyaa-onji, $29,000-aabita-giizis-mazina'igan Headwaters (wewenig), miinawaa gaandeg-bimiwidoowin gaa-dibaakonigaadeg.",
     meetings:
       "Onaakonigewikamigong-mawanjiidiwin zhooniyaa onji. Nishwaaso-anama'e-giizhigak waabamigewi-mawanjiidiwin niigaanibatood — zhaangaaso-midaaso-ningotwaaso giizhigak ozhibii'igewin onji — niigaanibatood obawaadagonan iniw newin §7 ozhitoogaadeg, ji-Step 1 izhaag, gemaa azhe-miinigewin gawaadabamigaazod (newin-midaaso giizhigak ishkwaaj waabamigewin), gemaa-go ji-meshkwajiwaadag $40,000 ji-zhooniyaa-bagidiniwagang Step 1 nitam-mazina'igan onji.",
     gatingDecision:

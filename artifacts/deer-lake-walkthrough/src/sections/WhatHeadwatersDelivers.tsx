@@ -105,9 +105,74 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5] mt-2"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Step 1 · $90,000 a
-            month.</span> Food is moving. Tyler (Distribution Lead) and an IT/Assistant join the Practitioner. Contractor couple on the floor. Cold-chain pilot, software, training, day-one gear. Below: what Step 1 buys.
+            <span className="font-semibold">Step 1 · $29,000 a
+            month fixed.</span> Food is moving. Tyler (Distribution Lead) and an IT/Assistant join the Practitioner on the Headwaters side. Cold-chain pilot, software, training, day-one gear. Below: what Step 1 buys.
           </p>
+        </div>
+
+        {/* Cost breakdown — answers the three questions the contractor asks */}
+        <div
+          className="mt-5 rounded-xl border-2 p-5"
+          style={{
+            background: "var(--color-paper)",
+            borderColor: "var(--color-accent-warm)",
+          }}
+        >
+          <div
+            className="mono text-[10px] uppercase tracking-[0.22em] mb-3"
+            style={{ color: "var(--color-accent-warm)" }}
+          >
+            Cost · What you pay / What you bring
+          </div>
+          <dl className="space-y-3">
+            <div>
+              <dt
+                className="serif text-[14px] font-semibold"
+                style={{ color: "var(--color-primary)" }}
+              >
+                What do I pay?
+              </dt>
+              <dd
+                className="serif text-[14.5px] leading-[1.5] mt-0.5"
+                style={{ color: "var(--color-text)" }}
+              >
+                <span className="font-semibold">$29,000/month fixed</span> to
+                Headwaters — labour and overhead combined. Plus gas card at
+                cost and insurance on top.
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="serif text-[14px] font-semibold"
+                style={{ color: "var(--color-primary)" }}
+              >
+                Who does that cover?
+              </dt>
+              <dd
+                className="serif text-[14.5px] leading-[1.5] mt-0.5"
+                style={{ color: "var(--color-text)" }}
+              >
+                Headwaters side only: Practitioner $80/hr FT · Distribution
+                Lead Tyler $35/hr FT · IT/Assistant $35/hr FT · $5,000/mo
+                overhead. Your operator couple stays on your payroll.
+              </dd>
+            </div>
+            <div>
+              <dt
+                className="serif text-[14px] font-semibold"
+                style={{ color: "var(--color-primary)" }}
+              >
+                What do I bring?
+              </dt>
+              <dd
+                className="serif text-[14.5px] leading-[1.5] mt-0.5"
+                style={{ color: "var(--color-text)" }}
+              >
+                The 1-ton truck. Your operator couple on the floor, on your
+                payroll.
+              </dd>
+            </div>
+          </dl>
         </div>
 
         <ol className="mt-7 space-y-3 list-none pl-0">

@@ -4,12 +4,12 @@ import Ask from "../sections/Ask";
 import Recap from "../sections/Recap";
 import WhoWorks from "../sections/WhoWorks";
 
-// Locks the canonical $90k/mo Deer Lake fee in the walkthrough.
-// Source of truth: ask.recommended in the practitioner-operating-plan
-// cost registry ($1,080,000/yr · $90,000/mo full-stack agency
-// engagement). Already guarded in the practitioner deck, store plan,
-// and practitioners-guide V2 lockedNumbers tests; this file extends
-// the guard to the walkthrough so the Ask + Recap copy can't drift.
+// Locks the canonical $29k/mo Deer Lake fee in the walkthrough.
+// Source of truth: actual Headwaters Deer Lake engagement rates —
+// Practitioner $80/hr FT ($12,800/mo) + Distribution Lead $35/hr FT
+// ($5,600/mo) + IT/Assistant $35/hr FT ($5,600/mo) + $5,000/mo overhead
+// = $29,000/mo fixed, $348,000/yr. Gas card and insurance at cost on top.
+// This file guards the Ask + Recap copy so the numbers can't drift.
 //
 // This file also locks the year-one home-margin figure introduced in
 // task #531 — about $125,000 to $200,000 of grocery margin stays in
@@ -31,15 +31,15 @@ import WhoWorks from "../sections/WhoWorks";
 // BandCouncilSummary.tsx in the Deer Lake store-plan deck, where it
 // is locked by that deck's lockedNumbers.test.ts.
 
-describe("Deer Lake walkthrough — Ask reveal locks the $90k/mo fee", () => {
+describe("Deer Lake walkthrough — Ask reveal locks the $29k/mo Headwaters fee", () => {
   const html = renderToStaticMarkup(<Ask />);
 
-  it("names the $1,080,000 first-year total", () => {
-    expect(html).toContain("$1,080,000");
+  it("names the $348,000 first-year Headwaters fee total", () => {
+    expect(html).toContain("$348,000");
   });
 
-  it("names the $90,000 a month canonical rate", () => {
-    expect(html).toContain("$90,000 a month");
+  it("names the $29,000 a month fixed rate", () => {
+    expect(html).toContain("$29,000 a month fixed");
   });
 
   it("frames the spend over twelve months so per-month math is unambiguous", () => {
@@ -47,7 +47,7 @@ describe("Deer Lake walkthrough — Ask reveal locks the $90k/mo fee", () => {
   });
 });
 
-describe("Deer Lake walkthrough — Recap Ask row locks the compact $90k/mo fee", () => {
+describe("Deer Lake walkthrough — Recap Ask row locks the compact $29k/mo Headwaters fee", () => {
   // Scope assertions to the Ask row specifically: each Recap row
   // renders as <label-cell><body-cell>, so the body text we care about
   // sits in the ~250 characters immediately following the ">Ask<"
@@ -61,12 +61,12 @@ describe("Deer Lake walkthrough — Recap Ask row locks the compact $90k/mo fee"
     expect(askRowSlice.length).toBeGreaterThan(0);
   });
 
-  it("Ask row names the $1.08M year-one total in compact form", () => {
-    expect(askRowSlice).toContain("$1.08M");
+  it("Ask row names the $348k year-one total in compact form", () => {
+    expect(askRowSlice).toContain("$348k");
   });
 
-  it("Ask row names the $90k/mo rate in compact form", () => {
-    expect(askRowSlice).toContain("$90k/mo");
+  it("Ask row names the $29k/mo fixed rate in compact form", () => {
+    expect(askRowSlice).toContain("$29k/mo");
   });
 });
 

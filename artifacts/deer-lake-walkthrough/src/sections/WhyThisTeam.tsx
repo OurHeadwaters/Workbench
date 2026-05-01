@@ -204,12 +204,11 @@ export default function WhyThisTeam() {
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              Three monthly prices:
-              <span className="font-semibold"> $60k</span> floor,
-              <span className="font-semibold"> $90k</span> recommended
-              (the rate this walkthrough uses),
-              <span className="font-semibold"> $125k</span> once a
-              second store is running.
+              Deer Lake engagement:{" "}
+              <span className="font-semibold">$29,000/month fixed</span> —
+              Practitioner at $80/hr, Tyler at $35/hr, IT/Assistant at $35/hr,
+              all full-time, plus $5,000/month overhead. Gas card and insurance
+              billed at cost on top.
             </p>
             <div
               className="mono text-[11px] uppercase tracking-[0.18em] mt-4"
