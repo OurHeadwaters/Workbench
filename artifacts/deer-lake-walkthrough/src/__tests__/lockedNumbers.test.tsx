@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import Ask from "../sections/Ask";
 import Recap from "../sections/Recap";
+import WhoWorks from "../sections/WhoWorks";
 
 // Locks the canonical $90k/mo Deer Lake fee in the walkthrough.
 // Source of truth: ask.recommended in the practitioner-operating-plan
@@ -121,5 +122,29 @@ describe("Deer Lake walkthrough — Recap 'Back home' row locks the compact $125
   it("Back home row also names the 17–20 jobs grown into the store over two years", () => {
     expect(rowSlice).toContain("17–20 jobs");
     expect(rowSlice).toContain("two years");
+  });
+});
+
+describe("Deer Lake walkthrough — WhoWorks bullet locks the compact $125k–$200k figure", () => {
+  // WhoWorks restates the same year-one home-margin figure that lives
+  // on the Ask reveal, the Recap row, FinancialsRole, and
+  // BandCouncilSummary. The derivation math is documented at the top
+  // of this file — do not duplicate it here. This guard just pins the
+  // surface so a future edit can't drift WhoWorks out of step with
+  // the other four surfaces.
+  const html = renderToStaticMarkup(<WhoWorks />);
+
+  it("names the ~$125k–$200k year-one home-margin figure", () => {
+    // En-dash (U+2013) — same character used in source copy.
+    expect(html).toContain("$125k–$200k");
+  });
+
+  it("frames the figure against today's 58¢ on the dollar leakage", () => {
+    expect(html).toContain("58¢ on the dollar");
+  });
+
+  it("anchors the 17–20 jobs grown into the store over two years", () => {
+    expect(html).toContain("17–20 jobs");
+    expect(html).toContain("two years");
   });
 });
