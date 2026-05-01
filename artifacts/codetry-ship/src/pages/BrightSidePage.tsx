@@ -141,11 +141,11 @@ export function BrightSidePage() {
               <p className="font-serif font-bold text-lg mb-0.5">Bobbie Parr</p>
               <p className="font-serif text-foreground/70 text-[14px] mb-2">Headwaters · Dryden, Ontario</p>
               <a
-                href="mailto:bobbie@theheadwaters.ca?subject=Bright Side — interested in a walkthrough"
+                href="mailto:bobbie@ourheadwaters.ca?subject=Bright Side — interested in a walkthrough"
                 className="font-mono text-[13px] underline underline-offset-4 decoration-dotted"
                 style={{ color: "hsl(var(--primary))" }}
               >
-                bobbie@theheadwaters.ca
+                bobbie@ourheadwaters.ca
               </a>
               <p className="font-serif text-[13px] text-foreground/50 mt-3 italic">
                 No obligation. If it's not the right fit, I'll say so.

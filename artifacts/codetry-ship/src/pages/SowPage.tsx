@@ -194,11 +194,11 @@ export function SowPage() {
               <p className="font-serif font-bold text-lg">Bobbie Parr</p>
               <p className="font-serif text-foreground/70 text-[14px]">Headwaters</p>
               <a
-                href="mailto:bobbie@theheadwaters.ca"
+                href="mailto:bobbie@ourheadwaters.ca"
                 className="font-mono text-[12px] mt-1 block"
                 style={{ color: "hsl(var(--primary))" }}
               >
-                bobbie@theheadwaters.ca
+                bobbie@ourheadwaters.ca
               </a>
             </div>
             <div>
