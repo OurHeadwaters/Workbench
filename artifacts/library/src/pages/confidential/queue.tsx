@@ -515,6 +515,11 @@ function EntryRow({
                 <Clock className="h-3 w-3" />
                 <span>Dropped {droppedAt}</span>
               </div>
+              {entry.notes && tier !== "refused" && (
+                <p className="mt-2 text-sm text-muted-foreground bg-muted/50 rounded px-2 py-1 border border-border">
+                  {entry.notes}
+                </p>
+              )}
               {entry.notes && tier === "refused" && (
                 <p className="mt-2 text-sm text-rose-700 bg-rose-50 rounded px-2 py-1 border border-rose-100">
                   Refusal note: {entry.notes}

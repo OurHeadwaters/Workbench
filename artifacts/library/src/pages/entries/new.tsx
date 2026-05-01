@@ -128,10 +128,16 @@ export default function NewEntry() {
 
   const [confidentialDragActive, setConfidentialDragActive] = useState(false);
   const [confidentialUploading, setConfidentialUploading] = useState(false);
-  const [confidentialProgress, setConfidentialProgress] = useState(0);
   const confidentialFileInputRef = useRef<HTMLInputElement>(null);
 
-  const { uploadFile: uploadConfidentialFile } = useUpload({
+  // Pending file waiting for title/notes form submission
+  const [pendingConfidentialFile, setPendingConfidentialFile] = useState<File | null>(null);
+  const [confidentialTitle, setConfidentialTitle] = useState("");
+  const [confidentialNotes, setConfidentialNotes] = useState("");
+  // Use a ref so the upload onSuccess closure always sees the latest values
+  const confidentialMetaRef = useRef<{ title: string; notes: string }>({ title: "", notes: "" });
+
+  const { uploadFile: uploadConfidentialFile, isUploading: isConfidentialUploading, progress: confidentialUploadProgress } = useUpload({
     getHeaders: () => {
       try {
         const t = window.localStorage.getItem("library:owner-token");
@@ -147,6 +153,7 @@ export default function NewEntry() {
         setConfidentialUploading(true);
         const hash = await computeFileHash(file);
         const token = window.localStorage.getItem("library:owner-token") ?? "";
+        const meta = confidentialMetaRef.current;
         const res = await fetch("/api/library/confidential/intake", {
           method: "POST",
           headers: {
@@ -155,7 +162,8 @@ export default function NewEntry() {
           },
           body: JSON.stringify({
             kind: "file",
-            title: file.name.replace(/\.[^/.]+$/, ""),
+            title: meta.title || file.name.replace(/\.[^/.]+$/, ""),
+            notes: meta.notes || undefined,
             objectPath: response.objectPath,
             contentHash: hash,
             fileSize: file.size,
@@ -170,6 +178,9 @@ export default function NewEntry() {
           title: "File quarantined",
           description: "Dropped into the confidential queue — nothing is shared until you clear it.",
         });
+        setPendingConfidentialFile(null);
+        setConfidentialTitle("");
+        setConfidentialNotes("");
         setLocation("/confidential/queue");
       } catch (err) {
         toast({
@@ -179,12 +190,10 @@ export default function NewEntry() {
         });
       } finally {
         setConfidentialUploading(false);
-        setConfidentialProgress(0);
       }
     },
     onError: (err) => {
       setConfidentialUploading(false);
-      setConfidentialProgress(0);
       toast({
         title: "Upload failed",
         description: err.message || "Could not upload file to storage",
@@ -192,6 +201,21 @@ export default function NewEntry() {
       });
     },
   });
+
+  const stageConfidentialFile = (file: File) => {
+    setPendingConfidentialFile(file);
+    const defaultTitle = file.name.replace(/\.[^/.]+$/, "");
+    setConfidentialTitle(defaultTitle);
+    setConfidentialNotes("");
+    confidentialMetaRef.current = { title: defaultTitle, notes: "" };
+  };
+
+  const handleConfidentialSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pendingConfidentialFile) return;
+    confidentialMetaRef.current = { title: confidentialTitle.trim() || pendingConfidentialFile.name.replace(/\.[^/.]+$/, ""), notes: confidentialNotes.trim() };
+    uploadConfidentialFile(pendingConfidentialFile);
+  };
 
   const handleConfidentialDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -205,14 +229,14 @@ export default function NewEntry() {
     e.stopPropagation();
     setConfidentialDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      uploadConfidentialFile(e.dataTransfer.files[0]);
+      stageConfidentialFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleConfidentialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      uploadConfidentialFile(e.target.files[0]);
+      stageConfidentialFile(e.target.files[0]);
     }
   };
 
@@ -477,43 +501,28 @@ export default function NewEntry() {
                 Contracts, NDAs, legal notices, sensitive documents — drop here first, decide later.
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-6">
-              <div
-                className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
-                  confidentialDragActive
-                    ? "border-rose-500 bg-rose-100/60"
-                    : "border-rose-300 hover:border-rose-400 bg-rose-50/50"
-                } ${confidentialUploading ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
-                onDragEnter={handleConfidentialDrag}
-                onDragLeave={handleConfidentialDrag}
-                onDragOver={handleConfidentialDrag}
-                onDrop={handleConfidentialDrop}
-                onClick={() => !confidentialUploading && confidentialFileInputRef.current?.click()}
-              >
-                <input
-                  ref={confidentialFileInputRef}
-                  type="file"
-                  className="hidden"
-                  onChange={handleConfidentialChange}
-                  disabled={confidentialUploading}
-                />
-
-                {confidentialUploading ? (
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-10 w-10 text-rose-600 animate-spin" />
-                    <p className="font-medium text-rose-800">
-                      {confidentialProgress > 0 ? `Uploading… ${Math.round(confidentialProgress)}%` : "Quarantining file…"}
-                    </p>
-                    {confidentialProgress > 0 && (
-                      <div className="w-full max-w-xs bg-rose-100 rounded-full h-2 mt-2">
-                        <div
-                          className="bg-rose-600 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${confidentialProgress}%` }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ) : (
+            <CardContent className="p-6 space-y-6">
+              {/* Step 1: Drop zone — hidden once a file is staged */}
+              {!pendingConfidentialFile && (
+                <div
+                  className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
+                    confidentialDragActive
+                      ? "border-rose-500 bg-rose-100/60"
+                      : "border-rose-300 hover:border-rose-400 bg-rose-50/50"
+                  } ${(isConfidentialUploading || confidentialUploading) ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
+                  onDragEnter={handleConfidentialDrag}
+                  onDragLeave={handleConfidentialDrag}
+                  onDragOver={handleConfidentialDrag}
+                  onDrop={handleConfidentialDrop}
+                  onClick={() => !(isConfidentialUploading || confidentialUploading) && confidentialFileInputRef.current?.click()}
+                >
+                  <input
+                    ref={confidentialFileInputRef}
+                    type="file"
+                    className="hidden"
+                    onChange={handleConfidentialChange}
+                    disabled={isConfidentialUploading || confidentialUploading}
+                  />
                   <div className="flex flex-col items-center gap-2">
                     <Lock className="h-12 w-12 text-rose-400 mb-2" />
                     <p className="text-lg font-serif font-medium text-rose-800">Drag and drop your confidential file here</p>
@@ -522,8 +531,81 @@ export default function NewEntry() {
                       Select Confidential File
                     </Button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+
+              {/* Step 2: Title + notes form, shown after a file is staged */}
+              {pendingConfidentialFile && (
+                <form onSubmit={handleConfidentialSubmit} className="space-y-5">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-rose-50 border border-rose-200">
+                    <Lock className="h-5 w-5 text-rose-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-rose-800 truncate">{pendingConfidentialFile.name}</p>
+                      <p className="text-xs text-rose-600">{(pendingConfidentialFile.size / 1024).toFixed(0)} KB · ready to quarantine</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="ml-auto text-rose-400 hover:text-rose-700 shrink-0"
+                      onClick={() => { setPendingConfidentialFile(null); setConfidentialTitle(""); setConfidentialNotes(""); }}
+                      aria-label="Remove staged file"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="conf-title">Title</Label>
+                    <Input
+                      id="conf-title"
+                      value={confidentialTitle}
+                      onChange={(e) => setConfidentialTitle(e.target.value)}
+                      placeholder="Document title"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="conf-notes">Notes <span className="text-muted-foreground font-normal">(optional)</span></Label>
+                    <Textarea
+                      id="conf-notes"
+                      value={confidentialNotes}
+                      onChange={(e) => setConfidentialNotes(e.target.value)}
+                      placeholder="Why is this confidential? Who sent it? Any context that'll help you review it later."
+                      className="min-h-[90px] resize-none"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Button
+                      type="submit"
+                      disabled={isConfidentialUploading || confidentialUploading || !confidentialTitle.trim()}
+                      className="bg-rose-700 hover:bg-rose-800 text-white gap-2"
+                    >
+                      {(isConfidentialUploading || confidentialUploading) ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          {isConfidentialUploading && confidentialUploadProgress > 0
+                            ? `Uploading… ${Math.round(confidentialUploadProgress)}%`
+                            : "Quarantining…"}
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="h-4 w-4" />
+                          Quarantine file
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={isConfidentialUploading || confidentialUploading}
+                      onClick={() => { setPendingConfidentialFile(null); setConfidentialTitle(""); setConfidentialNotes(""); }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
