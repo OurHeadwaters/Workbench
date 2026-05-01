@@ -142,7 +142,12 @@ export default function PhaseLockSignoff() {
         >
           Confidential · Deer Lake First Nation
           <br />
-          Date: _________________________________
+          Date:{" "}
+          {new Date().toLocaleDateString("en-CA", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </div>
       </div>
 
