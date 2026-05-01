@@ -29,6 +29,7 @@ import {
   isValidOwnerToken,
   isOwnerRequest,
 } from "../lib/ownerAuth";
+import { sendConfidentialIntakeNotification } from "../lib/resend";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -1380,6 +1381,25 @@ router.post("/confidential/intake", async (req, res) => {
     res.status(500).json({ error: "Insert failed" });
     return;
   }
+
+  // Fire-and-forget notification — never block the response on email delivery.
+  // Build the most absolute URL we can so the link is clickable in email clients.
+  // Priority: LIBRARY_BASE_URL (explicit override) → Replit domain env vars → relative fallback.
+  const libraryBase = process.env.LIBRARY_BASE_URL?.replace(/\/$/, "")
+    ?? (() => {
+      const domain = process.env.REPLIT_DEV_DOMAIN ?? process.env.REPLIT_DOMAINS?.split(",")[0];
+      return domain ? `https://${domain}/library` : null;
+    })();
+  const queueUrl = libraryBase
+    ? `${libraryBase}/confidential/queue`
+    : "/library/confidential/queue";
+  sendConfidentialIntakeNotification({
+    filename: created.originalFilename ?? created.title ?? null,
+    fileSize: created.fileSize ?? null,
+    queueUrl,
+  }).catch(() => {
+    // intentionally swallowed — email failure must never break the intake response
+  });
 
   res.json({ entry: created, duplicate: false });
 });

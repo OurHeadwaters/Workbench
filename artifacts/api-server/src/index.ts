@@ -24,6 +24,12 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
 
+  if (!process.env.CONFIDENTIAL_NOTIFY_EMAIL) {
+    logger.warn(
+      "CONFIDENTIAL_NOTIFY_EMAIL is not set — confidential intake notifications will be skipped",
+    );
+  }
+
   seedBookkeeper().catch((seedErr) => {
     logger.error({ err: seedErr }, "bookkeeper seed failed");
   });

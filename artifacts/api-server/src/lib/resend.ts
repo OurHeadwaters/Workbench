@@ -115,6 +115,44 @@ export async function sendOperatorNotification(
   });
 }
 
+export interface ConfidentialIntakePayload {
+  filename: string | null;
+  fileSize: number | null;
+  queueUrl: string;
+}
+
+function formatBytes(bytes: number | null): string {
+  if (bytes === null || bytes === 0) return "unknown size";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+export async function sendConfidentialIntakeNotification(
+  payload: ConfidentialIntakePayload,
+): Promise<SendResult> {
+  const to = process.env.CONFIDENTIAL_NOTIFY_EMAIL;
+  if (!to) return { status: "skipped" };
+
+  const filename = payload.filename ?? "(unnamed file)";
+  const subject = `Confidential file queued: ${filename}`;
+  const body = [
+    "A new file has landed in the confidential intake queue.",
+    "",
+    `File: ${filename}`,
+    `Size: ${formatBytes(payload.fileSize)}`,
+    "",
+    "Review it here:",
+    payload.queueUrl,
+    "",
+    "Nothing is shared until you clear, refuse, or route the file.",
+    "",
+    "—Library",
+  ].join("\n");
+
+  return sendEmail({ to, subject, text: body });
+}
+
 export async function sendSignerReply(
   payload: ManifestPayload,
 ): Promise<SendResult> {
