@@ -316,7 +316,9 @@ export default function FrontPage() {
         >
           IN FIVE PARTS
         </Text>
-        {PARTS.filter((p) => p.kind !== "backMatter").map((p) => (
+        {PARTS.filter(
+          (p) => p.kind !== "backMatter" && p.kind !== "frontMatter",
+        ).map((p) => (
           <View key={p.roman} style={styles.partRow}>
             <Text
               style={[

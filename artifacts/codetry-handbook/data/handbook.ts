@@ -26,7 +26,84 @@ export type Part = {
   title: string;
   blurb: string;
   chapters: Chapter[];
-  kind?: "spine" | "backMatter";
+  kind?: "spine" | "backMatter" | "frontMatter";
+};
+
+// Prologue — sits before Part I. Holds the Pioneer-training invocation
+// at the start so the reader meets it as a motivator before the first
+// technical chapter. The same material is also kept in §5.7 (Open
+// Questions) where the rest of the discipline cross-references it as
+// the "calm before the storm" framing — additive only, nothing moved.
+const partPrologue: Part = {
+  roman: "P",
+  title: "Prologue",
+  blurb: "Pioneer training — the calm before the storm, and who this work is for.",
+  kind: "frontMatter",
+  chapters: [
+    {
+      id: "0-1",
+      number: "P.1",
+      partRoman: "P",
+      partLabel: "P · Prologue",
+      title: "Pioneer training",
+      blocks: [
+        {
+          kind: "small",
+          text: "Prologue · who this work is for · the calm before the storm.",
+        },
+        {
+          kind: "para",
+          text: "This is the calm before the storm.",
+        },
+        {
+          kind: "subhead",
+          text: "Sons and daughters of thunder.",
+        },
+        {
+          kind: "para",
+          text:
+            "We are the sons and daughters of thunder — those who have stood for years at the headwaters, holding back the flood not to stop it, but to learn its rhythm, its force, its promise. We did not dam the future; we studied it. We prepared.",
+        },
+        {
+          kind: "subhead",
+          text: "The icon is a ship.",
+        },
+        {
+          kind: "para",
+          text:
+            "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality.",
+        },
+        {
+          kind: "subhead",
+          text: "Who the work belongs to.",
+        },
+        {
+          kind: "para",
+          text:
+            "This work belongs to well-grounded individuals who prize self-sovereignty and refuse aggression. It calls to big hearts, restless minds, and artists who understand that the most powerful tools are also the most beautiful when shaped by care.",
+        },
+        {
+          kind: "callout",
+          text:
+            "We are not late to this frontier. We are the ones who kept the headwaters while the world slept. Now we launch.",
+        },
+        {
+          kind: "subhead",
+          text: "What follows.",
+        },
+        {
+          kind: "para",
+          text:
+            "Five parts follow. Part I names what the discipline is and what it is hedging against. Parts III, IV, V build the practice — the constellation of seven zones and two primitives, the moves the practitioner makes, and the grounding the moves rest on. Part VI keeps the open questions open, in writing, so the discipline cannot quietly resolve them by attrition. Part II — Adjacent Disciplines — sits behind the spine as a reference: what codetry is not, named precisely, so the work it is doing stays its own.",
+        },
+        {
+          kind: "para",
+          text:
+            "The chapter you are reading now returns later, in §5.7, in a different register — there as the open question of who this work is for, named structurally rather than spoken aloud. The two readings are meant to bracket the discipline: the invocation at the front, the kept-open question at the back, and the practice in between.",
+        },
+      ],
+    },
+  ],
 };
 
 const partI: Part = {
@@ -2976,7 +3053,7 @@ const partColophon: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partI, partIII, partIV, partV, partVI, partII, partVII, partColophon];
+export const PARTS: Part[] = [partPrologue, partI, partIII, partIV, partV, partVI, partII, partVII, partColophon];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
