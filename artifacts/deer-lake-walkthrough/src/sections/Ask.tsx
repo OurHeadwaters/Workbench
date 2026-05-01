@@ -475,9 +475,7 @@ export default function Ask() {
           <Reveal label="What this first year costs">
             <p>
               <span className="font-semibold">$1,080,000 over twelve months</span>{" "}
-              — $90,000 a month for Headwaters. Covers the seven-person
-              team, the cold-chain pilot, the software build, staff
-              training, and the year-end audit.
+              — $90,000 a month for Headwaters. Covers the Practitioner, Distribution Lead (Tyler), and IT/Assistant on the Headwaters side, the contractor couple, the cold-chain pilot, the software build, staff training, and the year-end audit.
             </p>
             <p>
               No grants in hand. Paid from band reserves — the planner
@@ -498,11 +496,7 @@ export default function Ask() {
               58¢).
             </p>
             <p>
-              Plus <span className="font-semibold">17 to 20 jobs for Deer
-              Lake people</span> grow into the store over two years.
-              Both numbers come from the store-plan financial model —
-              no new claims, just the math arranged so council can see
-              it.
+              Plus <span className="font-semibold">four full-time roles</span> — two contractor, two Headwaters — and a band casual pool of 15+ people getting paid hours each week. Both the margin figure and the employment picture come from the store-plan financial model — no new claims, just the math arranged so council can see it.
             </p>
           </Reveal>
 

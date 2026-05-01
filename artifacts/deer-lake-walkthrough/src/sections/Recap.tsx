@@ -14,7 +14,7 @@ export default function Recap() {
     ["What", "A second store. Band runs the floor. An operator couple on the cockpit."],
     ["System", "Square + QuickBooks + Local Line + the Headwaters cockpit. Payroll stays small. Doors stay open. Truck stays on time."],
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → Deer Lake. Two cold trucks."],
-    ["Back home", "~$125k–$200k of grocery margin stays in Deer Lake year one. 17–20 jobs grow in over two years."],
+    ["Back home", "~$125k–$200k of grocery margin stays in Deer Lake year one. 4 FT roles (contractor couple + Headwaters practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
     ["Ask", "$1.08M year one ($90k/mo). Likely paid from band reserves. Most of it spent near the end, on the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],

@@ -198,9 +198,7 @@ export default function WhyThisTeam() {
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              The one-pager lists every cost: practitioner, operations
-              manager, IT, bookkeeper, a Headwaters food-safety person
-              on-site from day one, overhead, and the Dryden food hub.
+              The one-pager lists every cost: Practitioner (software), Distribution Lead Tyler (Thunder Bay → Deer Lake, in person), IT/Assistant (domains, bookkeeping, Tyler's support), contractor couple, overhead, and the 1-ton truck.
             </p>
             <p
               className="serif text-[16px] leading-[1.5] mt-3"

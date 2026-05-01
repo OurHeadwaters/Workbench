@@ -26,7 +26,7 @@ export default function WhoWorks() {
     {
       tag: "Bullet 3 · Margin comes home in year one",
       body:
-        "About $125k–$200k of grocery margin stays in Deer Lake the first year — money that today flies south at 58¢ on the dollar. 17–20 jobs grow into the store over two years.",
+        "About $125k–$200k of grocery margin stays in Deer Lake the first year — money that today flies south at 58¢ on the dollar. Four full-time roles — two contractor, two Headwaters — plus a band casual pool of 15+ people getting paid hours each week.",
     },
   ];
 
@@ -123,40 +123,35 @@ export default function WhoWorks() {
           </Reveal>
 
           <Reveal label="Who from Headwaters touches it" variant="ink">
+            <p className="text-[13px] italic mb-2" style={{ color: "rgba(244,237,224,0.55)" }}>
+              Trial: practitioner alone. Tyler and IT come in when food is moving.
+            </p>
             <ul className="space-y-2 list-none pl-0">
               <li>
-                <span className="font-semibold">Headwaters specialist.</span>{" "}
-                Builds the software. Visits Deer Lake monthly.
+                <span className="font-semibold">Practitioner.</span>{" "}
+                Builds and maintains the software. The only Headwaters role during the trial.
               </li>
               <li>
-                <span className="font-semibold">Dryden hub worker.</span>{" "}
-                Handles Deer Lake orders and the phone.
+                <span className="font-semibold">Distribution Lead (Tyler).</span>{" "}
+                Handles Thunder Bay → Deer Lake distribution in person. Runs the 1-ton truck and trailer.
               </li>
               <li>
-                <span className="font-semibold">Bookkeeper, remote.</span>{" "}
-                Closes the month. Prepares payroll.
-              </li>
-              <li>
-                <span className="font-semibold">Technical advisor on call.</span>{" "}
-                Reviews the software quarterly. Checks any code that touches
-                money.
-              </li>
-              <li>
-                <span className="font-semibold">Training partner.</span> An
-                Indigenous educator. Trains the trainers from day one.
+                <span className="font-semibold">IT/Assistant.</span>{" "}
+                Domains, passwords, bookkeeping, troubleshooting. Tyler's on-the-ground support and the practitioner's IT backup.
               </li>
             </ul>
           </Reveal>
 
-          <Reveal label="Jobs at full run">
+          <Reveal label="Employment at full run">
             <p>
-              The store grows into{" "}
-              <span className="font-semibold">17 to 20 jobs for Deer Lake
-              people</span> over two years.
+              <span className="font-semibold">Four full-time roles:</span>{" "}
+              contractor couple (on the contractor's payroll) and Headwaters Practitioner + Distribution Lead (on Headwaters' payroll).
             </p>
             <p>
-              None of those jobs are Headwaters jobs. They all belong to the
-              band.
+              A <span className="font-semibold">band casual pool of 15+ people</span> getting paid hours each week — restocks, market tables, open shifts. The work stays local and flexible.
+            </p>
+            <p>
+              Band employment grows from the casual pool up. None of the Headwaters roles are permanent band positions.
             </p>
           </Reveal>
         </div>

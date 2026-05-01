@@ -13,7 +13,10 @@ import WhoWorks from "../sections/WhoWorks";
 //
 // This file also locks the year-one home-margin figure introduced in
 // task #531 — about $125,000 to $200,000 of grocery margin stays in
-// Deer Lake in year one, plus 17–20 jobs over two years. The figure
+// Deer Lake in year one. The employment picture (task #595): 4 FT
+// roles (contractor couple + Headwaters practitioner + distribution
+// lead) plus a band casual pool of 15+ getting paid hours weekly.
+// The figure
 // is a derived number, not a free input, so a future agent that
 // touches the inputs must update the derived figure too. The math:
 //   Deer Lake's annual grocery spend ........ $1.6M – $2.0M
@@ -95,9 +98,9 @@ describe("Deer Lake walkthrough — Ask reveal locks the year-one home-margin fi
     expect(html).toContain("84¢ on the shelf, not 58¢");
   });
 
-  it("names the 17 to 20 jobs grown into the store over two years", () => {
-    expect(html).toMatch(/17 to 20 jobs/);
-    expect(html).toMatch(/two years/);
+  it("names the four full-time roles and the 15+ band casual pool", () => {
+    expect(html).toMatch(/four full-time roles/);
+    expect(html).toContain("15+");
   });
 });
 
@@ -119,9 +122,9 @@ describe("Deer Lake walkthrough — Recap 'Back home' row locks the compact $125
     expect(rowSlice).toContain("~$125k–$200k");
   });
 
-  it("Back home row also names the 17–20 jobs grown into the store over two years", () => {
-    expect(rowSlice).toContain("17–20 jobs");
-    expect(rowSlice).toContain("two years");
+  it("Back home row names the 4 FT roles and the 15+ band casual pool", () => {
+    expect(rowSlice).toContain("4 FT");
+    expect(rowSlice).toContain("15+");
   });
 });
 
@@ -143,8 +146,8 @@ describe("Deer Lake walkthrough — WhoWorks bullet locks the compact $125k–$2
     expect(html).toContain("58¢ on the dollar");
   });
 
-  it("anchors the 17–20 jobs grown into the store over two years", () => {
-    expect(html).toContain("17–20 jobs");
-    expect(html).toContain("two years");
+  it("anchors the four full-time roles and the 15+ band casual pool", () => {
+    expect(html).toContain("15+");
+    expect(html).toMatch(/Four full-time roles/);
   });
 });

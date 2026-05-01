@@ -34,7 +34,7 @@ export default function WhatHeadwatersDelivers() {
       tag: "Line 2 · The way the food gets here",
       head: "Cold-chain plan, truck route, ninety-day pilot.",
       body:
-        "Three lanes (truck on the road, winter-road truck, plane), planned route by route, tested before the store opens.",
+        "Three lanes (truck on the road, winter-road truck, plane), planned route by route, tested before the store opens. Requires a 1-ton truck — budget line in the plan as either a used purchase or contractor lease to Headwaters.",
     },
     {
       tag: "Line 3 · The people, trained",
@@ -106,9 +106,7 @@ export default function WhatHeadwatersDelivers() {
             style={{ color: "var(--color-text)" }}
           >
             <span className="font-semibold">Step 1 · $90,000 a
-            month.</span> Full team — seven people, cold-chain pilot,
-            software, training, day-one gear. Below: what Step 1
-            buys.
+            month.</span> Food is moving. Tyler (Distribution Lead) and an IT/Assistant join the Practitioner. Contractor couple on the floor. Cold-chain pilot, software, training, day-one gear. Below: what Step 1 buys.
           </p>
         </div>
 

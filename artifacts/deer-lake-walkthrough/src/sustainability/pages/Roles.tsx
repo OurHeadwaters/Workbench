@@ -129,11 +129,9 @@ export default function Roles() {
           </li>
           <li>
             <span className="font-semibold">
-              Bookkeeper, Dryden hub worker, technical advisor, training
-              partner:
+              Practitioner, Distribution Lead, IT/Assistant:
             </span>{" "}
-            on Headwaters' payroll, contracted by the contractor as the
-            store-specialist sub.
+            on Headwaters' payroll — Practitioner (software), Distribution Lead Tyler (Thunder Bay → Deer Lake, in person), IT/Assistant (bookkeeping, domains, Tyler's support). Engaged when food is flowing.
           </li>
           <li>
             <span className="font-semibold">
