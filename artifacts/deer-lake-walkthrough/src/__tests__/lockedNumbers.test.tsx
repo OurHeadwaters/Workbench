@@ -4,11 +4,16 @@ import Ask from "../sections/Ask";
 import Recap from "../sections/Recap";
 import WhoWorks from "../sections/WhoWorks";
 
-// Locks the canonical $29k/mo Deer Lake fee in the walkthrough.
-// Source of truth: actual Headwaters Deer Lake engagement rates —
-// Practitioner $80/hr FT ($12,800/mo) + Distribution Lead $35/hr FT
-// ($5,600/mo) + IT/Assistant $35/hr FT ($5,600/mo) + $5,000/mo overhead
-// = $29,000/mo fixed, $348,000/yr. Gas card and insurance at cost on top.
+// Locks the canonical ~$41k/mo Deer Lake fee in the walkthrough.
+// Source of truth: actual Headwaters Deer Lake engagement rates (updated
+// task #597 — reframe from employee rates to independent-business rates):
+//   Practitioner (independent consultant) $150/hr × 160 hrs = $24,000/mo
+//   Tyler subcontract (Tyler's business, Tyler + helper) $70/hr × 160 hrs = $11,200/mo
+//   IT/Support partial ~$900/mo
+//   Overhead $5,000/mo
+//   Total ≈ $41,100/mo → displayed as ~$41,000/mo, ~$492,000/yr
+//   Gas card and insurance at cost on top.
+// No Ontario employer payroll obligations on either Headwaters party.
 // This file guards the Ask + Recap copy so the numbers can't drift.
 //
 // This file also locks the year-one home-margin figure introduced in
@@ -16,9 +21,8 @@ import WhoWorks from "../sections/WhoWorks";
 // Deer Lake in year one. The employment picture (task #595): 4 FT
 // roles (contractor couple + Headwaters practitioner + distribution
 // lead) plus a band casual pool of 15+ getting paid hours weekly.
-// The figure
-// is a derived number, not a free input, so a future agent that
-// touches the inputs must update the derived figure too. The math:
+// The figure is a derived number, not a free input, so a future agent
+// that touches the inputs must update the derived figure too. The math:
 //   Deer Lake's annual grocery spend ........ $1.6M – $2.0M
 //   Year-one share captured by new store .... 30% – 40%
 //   Extra margin retained per dollar ........ 26¢   (84¢ on the shelf
@@ -31,23 +35,31 @@ import WhoWorks from "../sections/WhoWorks";
 // BandCouncilSummary.tsx in the Deer Lake store-plan deck, where it
 // is locked by that deck's lockedNumbers.test.ts.
 
-describe("Deer Lake walkthrough — Ask reveal locks the $29k/mo Headwaters fee", () => {
+describe("Deer Lake walkthrough — Ask reveal locks the ~$41k/mo Headwaters fee", () => {
   const html = renderToStaticMarkup(<Ask />);
 
-  it("names the $348,000 first-year Headwaters fee total", () => {
-    expect(html).toContain("$348,000");
+  it("names the ~$492,000 first-year Headwaters fee total", () => {
+    expect(html).toContain("$492,000");
   });
 
-  it("names the $29,000 a month fixed rate", () => {
-    expect(html).toContain("$29,000 a month fixed");
+  it("names the ~$41,000 a month rate", () => {
+    expect(html).toContain("$41,000");
   });
 
   it("frames the spend over twelve months so per-month math is unambiguous", () => {
     expect(html).toMatch(/twelve months|12 months/);
   });
+
+  it("names the $150/hr practitioner rate", () => {
+    expect(html).toContain("$150/hr");
+  });
+
+  it("names the $70/hr Tyler subcontract rate", () => {
+    expect(html).toContain("$70/hr");
+  });
 });
 
-describe("Deer Lake walkthrough — Recap Ask row locks the compact $29k/mo Headwaters fee", () => {
+describe("Deer Lake walkthrough — Recap Ask row locks the compact ~$41k/mo Headwaters fee", () => {
   // Scope assertions to the Ask row specifically: each Recap row
   // renders as <label-cell><body-cell>, so the body text we care about
   // sits in the ~250 characters immediately following the ">Ask<"
@@ -61,12 +73,12 @@ describe("Deer Lake walkthrough — Recap Ask row locks the compact $29k/mo Head
     expect(askRowSlice.length).toBeGreaterThan(0);
   });
 
-  it("Ask row names the $348k year-one total in compact form", () => {
-    expect(askRowSlice).toContain("$348k");
+  it("Ask row names the ~$492k year-one total in compact form", () => {
+    expect(askRowSlice).toContain("$492k");
   });
 
-  it("Ask row names the $29k/mo fixed rate in compact form", () => {
-    expect(askRowSlice).toContain("$29k/mo");
+  it("Ask row names the ~$41k/mo rate in compact form", () => {
+    expect(askRowSlice).toContain("$41k/mo");
   });
 });
 

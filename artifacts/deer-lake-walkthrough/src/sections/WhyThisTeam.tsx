@@ -205,10 +205,13 @@ export default function WhyThisTeam() {
               style={{ color: "var(--color-text)" }}
             >
               Deer Lake engagement:{" "}
-              <span className="font-semibold">$29,000/month fixed</span> —
-              Practitioner at $80/hr, Tyler at $35/hr, IT/Assistant at $35/hr,
-              all full-time, plus $5,000/month overhead. Gas card and insurance
-              billed at cost on top.
+              <span className="font-semibold">~$41,000/month</span> —
+              Practitioner invoices at $150/hr (independent consultant); Tyler's
+              company invoices at $70/hr, covering Tyler + his helper on the
+              ground; IT/Support partial at ~$900/mo; plus $5,000/month
+              overhead. No employer payroll obligations — both parties invoice
+              as independent businesses. Gas card and insurance billed at cost
+              on top.
             </p>
             <div
               className="mono text-[11px] uppercase tracking-[0.18em] mt-4"

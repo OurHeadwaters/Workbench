@@ -474,8 +474,8 @@ export default function Ask() {
 
           <Reveal label="What this first year costs">
             <p>
-              <span className="font-semibold">$348,000 over twelve months</span>{" "}
-              — $29,000 a month fixed to Headwaters. Covers the Practitioner, Distribution Lead (Tyler), and IT/Assistant on the Headwaters side, plus $5,000/month overhead. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
+              <span className="font-semibold">~$492,000 over twelve months</span>{" "}
+              — ~$41,000 a month to Headwaters. The Practitioner invoices at $150/hr as an independent consultant. Tyler's company invoices at $70/hr, bringing Tyler and a second hand on the ground. IT/Support invoiced at cost (~$900/mo), plus $5,000/month overhead. No employer payroll obligations on either party — both invoice through their own businesses. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
             </p>
             <p>
               No grants in hand. Paid from band reserves — the planner

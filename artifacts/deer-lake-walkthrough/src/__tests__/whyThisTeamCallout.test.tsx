@@ -5,14 +5,18 @@ import WhyThisTeam from "../sections/WhyThisTeam";
 /**
  * Locks the Practitioner Operating Plan callout inside WhyThisTeam
  * against silent drift (task #535, updated for the Deer Lake cost
- * reframe landed alongside task #596).
+ * reframe landed alongside task #596, rates corrected in task #597).
  *
  * The callout keeps the one-pager's eyebrow and $60k+/month headline
  * (general framing for what this class of engagement costs) but the
  * tier-ladder paragraph was replaced with the Deer Lake-specific cost:
- *   - $29,000/month fixed to Headwaters (Practitioner $80/hr, Tyler
- *     $35/hr, IT/Assistant $35/hr, $5k overhead)
+ *   - ~$41,000/month to Headwaters
+ *   - Practitioner $150/hr (independent consultant)
+ *   - Tyler's company $70/hr (Tyler + helper, subcontract through Tyler's business)
+ *   - IT/Support ~$900/mo partial
+ *   - $5,000/month overhead
  *   - Gas card and insurance at cost on top.
+ *   - No employer payroll obligations on either party.
  *
  * This test locks that specific breakdown so a future edit can't
  * silently drop the rate breakdown or reintroduce the abstract
@@ -29,27 +33,29 @@ describe("Deer Lake walkthrough — WhyThisTeam Practitioner Operating Plan call
   });
 
   it("leads with the one-pager's $60,000-a-month inflection-point headline", () => {
-    // Whitespace-tolerant: the JSX wraps the headline across two
-    // lines, so static markup may preserve an inline newline + indent
-    // between "Here's where it" and "goes.". Apostrophe-tolerant:
-    // renderToStaticMarkup escapes "'" as "&#x27;". Match the
-    // meaningful sentence regardless of either detail.
     expect(html).toMatch(
       /\$60,000 a month or more is real money\.\s*Here(?:'|&#x27;)s where it\s+goes\./,
     );
   });
 
-  it("names the Deer Lake-specific $29,000/month fixed rate (not the abstract tier ladder)", () => {
-    expect(html).toContain("$29,000/month fixed");
+  it("names the Deer Lake-specific ~$41,000/month rate (not the abstract tier ladder)", () => {
+    expect(html).toContain("$41,000");
   });
 
-  it("names all three Headwaters roles with their hourly rates", () => {
-    expect(html).toContain("$80/hr");
-    expect(html).toContain("$35/hr");
+  it("names the $150/hr practitioner rate", () => {
+    expect(html).toContain("$150/hr");
+  });
+
+  it("names the $70/hr Tyler subcontract rate", () => {
+    expect(html).toContain("$70/hr");
   });
 
   it("mentions gas card and insurance at cost (the variable component)", () => {
     expect(html).toContain("Gas card and insurance");
     expect(html).toContain("at cost");
+  });
+
+  it("notes no employer payroll obligations", () => {
+    expect(html).toContain("No employer payroll obligations");
   });
 });
