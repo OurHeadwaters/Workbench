@@ -193,6 +193,64 @@ export function BioPage() {
             </ul>
           </section>
 
+          <hr
+            className="rule my-5 print:my-4"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          />
+
+          <section className="bio-work" data-testid="bio-work">
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2
+                className="font-serif text-xl tracking-tight"
+                data-testid="work-title"
+              >
+                Selected work
+              </h2>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                shipped artifacts
+              </p>
+            </div>
+
+            <ul
+              className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-1 font-serif text-[14.5px] leading-[1.45]"
+              data-testid="work-list"
+            >
+              <WorkLink
+                href="/practitioners-guide-v2/"
+                label="Practitioner's Guide"
+                testId="work-practitioners-guide"
+              />
+              <WorkLink
+                href="/codetry-handbook/"
+                label="Codetry Handbook"
+                testId="work-codetry-handbook"
+              />
+              <WorkLink
+                href="/deer-lake-walkthrough/"
+                label="Deer Lake Store walkthrough"
+                testId="work-deer-lake-walkthrough"
+              />
+              <WorkLink
+                href="/library/"
+                label="Northern Food Systems Research Library"
+                testId="work-library"
+              />
+              <WorkLink
+                href="/headwaters-books/"
+                label="Headwaters Books"
+                testId="work-headwaters-books"
+              />
+              <WorkLink
+                href={`${import.meta.env.BASE_URL}manifest`}
+                label="Crew Manifest"
+                testId="work-crew-manifest"
+              />
+            </ul>
+          </section>
+
           <footer className="mt-5 print:mt-4 flex items-center justify-between gap-4">
             <p className="signoff">— bobbie parr · headwaters</p>
             <p
@@ -273,4 +331,24 @@ interface SkillItemProps {
 
 function SkillItem({ label, testId }: SkillItemProps) {
   return <li data-testid={testId}>{label}</li>;
+}
+
+interface WorkLinkProps {
+  href: string;
+  label: string;
+  testId: string;
+}
+
+function WorkLink({ href, label, testId }: WorkLinkProps) {
+  return (
+    <li>
+      <a
+        href={href}
+        className="bio-work-link underline-offset-4 hover:underline"
+        data-testid={testId}
+      >
+        {label}
+      </a>
+    </li>
+  );
 }

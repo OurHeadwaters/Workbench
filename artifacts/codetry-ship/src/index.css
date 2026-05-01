@@ -229,6 +229,18 @@
     text-transform: uppercase;
     color: hsl(var(--muted-foreground));
   }
+
+  /* Selected work links on the bio card. Inherit color from the card body
+   * so they read as plain text; only get an underline on hover/focus. */
+  .bio-work-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .bio-work-link:focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }
 
 /* ----------------------------- print styles -----------------------------
@@ -282,5 +294,14 @@
   .bio-page .rate-card {
     border-color: #111111 !important;
     page-break-inside: avoid;
+  }
+
+  /* Keep the Selected work block together; print links as plain text. */
+  .bio-page .bio-work {
+    page-break-inside: avoid;
+  }
+  .bio-page .bio-work-link {
+    color: #111111 !important;
+    text-decoration: none !important;
   }
 }
