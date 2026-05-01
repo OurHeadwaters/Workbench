@@ -128,7 +128,7 @@ export default function WhoWorks() {
             </p>
             <ul className="space-y-2 list-none pl-0">
               <li>
-                <span className="font-semibold">Practitioner.</span>{" "}
+                <span className="font-semibold">Practitioner (Bobbie).</span>{" "}
                 Builds and maintains the software. The only Headwaters role during the trial.
               </li>
               <li>
