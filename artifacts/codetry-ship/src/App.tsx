@@ -6,6 +6,8 @@ import NotFound from "@/pages/not-found";
 import { SignOnPage } from "@/pages/SignOnPage";
 import { ManifestPage } from "@/pages/ManifestPage";
 import { BioPage } from "@/pages/BioPage";
+import { SowPage } from "@/pages/SowPage";
+import { BrightSidePage } from "@/pages/BrightSidePage";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +18,8 @@ function Router() {
       <Route path="/bio" component={BioPage} />
       <Route path="/sign-on" component={SignOnPage} />
       <Route path="/manifest" component={ManifestPage} />
+      <Route path="/sow" component={SowPage} />
+      <Route path="/bright-side" component={BrightSidePage} />
       <Route component={NotFound} />
     </Switch>
   );
