@@ -108,6 +108,14 @@ export function ReplicationPage() {
               recovered capital, one tool that pays for itself, and a Reserve /
               Innovation split the value-delivered audit defends each year.
             </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              And underneath that team, on the buyer's books: a two-person
+              operator couple — Sam &amp; Jess on the cockpit — sitting on
+              Square at the till, QuickBooks on the books, Local Line for
+              producers, the Headwaters cockpit tying them together. That's
+              what keeps the buyer's payroll line small enough that this
+              cost-plus-35% structure actually fits inside their world.
+            </p>
           </div>
         </div>
       </SectionCard>
@@ -197,6 +205,10 @@ export function ReplicationPage() {
             <TravelItem
               title={`The ${a.roster.length}-role roster shape`}
               body={`${a.roster.map((r) => r.role).join(", ")}. ${money(a.payrollTotal)}/mo loaded payroll in the worked example. Roles are the same; loaded rates flex with the labour market in the new community.`}
+            />
+            <TravelItem
+              title="Two-person operator couple on the cockpit, on the buyer's books"
+              body="Underneath the Codetry roster above, sitting on the buyer's payroll: a two-person operator couple — brought in and paid by the contractor, same setup as a band's hotel — running Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. The couple changes per community; the shape (two operators + that software stack) does not. It's what keeps the cost-plus-35% structure small enough to fit inside a buyer's world."
             />
             <TravelItem
               title="Fee → margin formula"

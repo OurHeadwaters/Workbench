@@ -79,6 +79,18 @@ export function ArchetypesPage() {
               repayment.)
             </p>
             <p>
+              <strong>What sits underneath the team — operator couple + software.</strong>{" "}
+              The Codetry roster is what the buyer is paying for; what they're getting, on the
+              ground at the store, is a two-person operator couple — Sam &amp; Jess on the
+              cockpit — brought in and paid by the contractor (same setup as a band's hotel),
+              sitting on Square at the till, QuickBooks on the books, Local Line for producers,
+              the Headwaters cockpit tying them together. The couple is on the buyer's payroll,
+              not the {money(a.payrollTotal)}/mo Codetry payroll above. That's the shape that
+              makes a cost-plus-35% structure fit inside a community's world at this size — and
+              it's the layer the V5 Code Reviewer seat keeps honest, with quarterly software
+              review across every code path that touches money.
+            </p>
+            <p>
               <strong>Deferred roles (gated, not deleted).</strong> The V4 7-role roster carried{" "}
               <em>IT/Tech</em>, <em>Community Development Associate</em>, and{" "}
               <em>Junior Analyst / Field</em> seats that V5 leaves off the Day-1 cost basis. They're

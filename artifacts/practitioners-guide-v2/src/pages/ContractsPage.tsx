@@ -9,7 +9,7 @@ import { FootnoteList } from "@/components/FootnoteList";
 import { AGENCY_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
-import { tbd, type SourceTag } from "@/data/tags";
+import { confirmed, tbd, type SourceTag } from "@/data/tags";
 import { buildContractsLedger } from "@/data/contractsLedger";
 import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
 import { ReinvestmentBucketsInteractive } from "@/components/ReinvestmentBucketsInteractive";
@@ -83,6 +83,13 @@ export function ContractsPage() {
           accent={b.accent}
         >
           <p className="text-sm text-muted-foreground">{a.familyInfusionRecoveryDescription}</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            This is the day-one bridge in this engagement: the {money(a.familyInfusionRecovery)}{" "}
+            family infusion is what got the two-person operator couple onto the cockpit — Square
+            at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit
+            tying them together — live before the first month's fee cleared. Retiring it in month
+            1 closes the bridge before the rest of the waterfall starts.
+          </p>
           <p className="mt-2 text-xs text-muted-foreground">
             Tax-free return of principal to the founder's husband. Money flows business →
             husband, bypassing the founder's personal accounts. NOT compensation, NOT income, NOT
@@ -426,6 +433,47 @@ export function ContractsPage() {
             </table>
           </div>
         </SectionCard>
+
+        <div className="mt-4">
+          <SectionCard
+            title="Underneath this team — the two-person operator couple on the cockpit"
+            subtitle="The Codetry roster above is what the buyer is paying for. What they're getting, on the ground at the store, is a two-person operator couple sitting on serious software — that's the layer that makes the cost basis on this page hold."
+            tag={confirmed(
+              "Operator-couple + software framing carried verbatim from the Deer Lake Walkthrough's WhoWorks section, the Deer Lake Store Plan deck's StaffingModel slide, and the V3 Practitioner Operating Plan deck's TheSixPeople slide. The 'Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together' line is the shared phrase across all four surfaces.",
+            )}
+            accent={b.accent}
+          >
+            <div className="space-y-3 text-sm leading-relaxed">
+              <p>
+                <strong>Sam &amp; Jess on the cockpit.</strong> A two-person
+                operator couple, brought in and paid by the contractor — same
+                setup as the band's hotel. Two on payroll at the store, not a
+                row of managers. It is the only way the math on this page
+                works at this size: a leaner store-floor headcount keeps the
+                buyer's payroll line small while the {a.roster.length}-role
+                Codetry team above carries the discipline, the software, and
+                the bookkeeping.
+              </p>
+              <p>
+                <strong>Serious software underneath them.</strong> Square at
+                the till, QuickBooks on the books, Local Line for producers,
+                the Headwaters cockpit tying them together. Doors stay open
+                through hunting season and bad weather. Truck leaves Dryden
+                loaded even when one operator is out. The Code Reviewer seat
+                in the roster above is the line that keeps this stack
+                honest — quarterly software review, every code path that
+                touches money checked.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Naming note. The operator couple is not on the{" "}
+                {money(a.payrollTotal)}/mo Codetry payroll above — they're on
+                the buyer's books, downstream of the agency engagement. The
+                roster on this page is the team the buyer doesn't have to
+                hire; the operator couple is the team the buyer does.
+              </p>
+            </div>
+          </SectionCard>
+        </div>
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <OverheadCard
