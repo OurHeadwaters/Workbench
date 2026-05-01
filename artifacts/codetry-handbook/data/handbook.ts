@@ -409,22 +409,43 @@ const partI: Part = {
           {
             kind: "para",
             text:
-              "Codetry sits next to a small family of older disciplines that share its concerns about words doing structural work. None of them is codetry. Each of them is honoured. Naming the neighbours up front, in the same breath as naming codetry itself, is part of the discipline — it spares the reader the work of asking, every chapter, *isn't this just X?*",
+              "Codetry sits next to a small family of older disciplines that share its concerns about words doing structural work. None of them is codetry, and each of them is honoured. Naming the neighbours up front, in the same breath as naming codetry itself, spares the reader the work of asking, every chapter, *isn't this just X?* Each contrast below is the one-paragraph form; the full treatment of each neighbour lives in the back-matter Deep Dives, and the §DD reference at the end of each paragraph is the door.",
           },
-          {
-            kind: "list",
-            items: [
-              "*Code poetry* — programs that are also valid verse. The poem lives inside the source. In codetry, the poem lives as the architecture and the source is what makes it run.",
-              "*Literate programming* (Knuth, 1984) — prose and source woven into one document. The unit of care is the explanation. In codetry, the unit of care is the name itself, and the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry.",
-              "*Domain-driven design* (Evans, 2003) and *Conway's Law* (Conway, 1968) — the bounded-context, ubiquitous-language tradition. DDD is the closest sibling. Codetry sharpens the test at the level of the individual noun rather than the bounded context, and applies it outside enterprise software in community institutions where the *domain experts* are the people who live in the place.",
-              "*Type-driven development* — types as the load-bearing layer. The compiler enforces what the type is *of*. Codetry asks who decides what the name *is*, and insists that layer is real, load-bearing, and the only place authorship of the system's nouns is still possible at all.",
-              "*Capital allocation at scale* — the founder-allocator school of compounding ownership through long-horizon allocation. Codetry's exit is handover, not compound; the practitioner's job is to leave the chair to the community whose words the system runs on.",
-            ],
-          },
+          { kind: "subhead", text: "Code poetry." },
           {
             kind: "para",
             text:
-              "Each of these neighbours has its own room in the back-matter Deep Dives, where the codetry / neighbour distinction is worked out in full. The point of naming them here is the inverse — to put the family on the table early, so the rest of Part I can name *what codetry is* without having to keep saying *what it isn't*.",
+              "*Code poetry* is the older tradition of programs that are also valid verse — Perl in the late 1980s, the Stanford Code Poetry Slam, Mez Breeze, Nick Montfort, Ishac Bertran's *code {poems}* anthology. The poem in code poetry lives *inside* the source: the lines on the screen are the artwork, arranged for sound or terseness or shape. Codetry's poem lives *as* the architecture, and the source is what makes it run. The source of a codetry system is rarely the artefact a reader is meant to admire; the artefact is the way the same noun shows up on the button, in the schema, in the test fixture, and in the conversation in the room, and the source's job is to keep that single noun honest in all of those places at once. §DD.1 walks the contrast in full.",
+          },
+          { kind: "subhead", text: "Literate programming." },
+          {
+            kind: "para",
+            text:
+              "*Literate programming* — Donald Knuth, 1984, WEB and CWEB, with Org-mode Babel, Jupyter, R Markdown, and Quarto as its modern descendants — makes the *document* the source. Prose explains; code is generated from the prose; the unit of care is the explanation, and the typeset essay is what the discipline is for. Codetry makes the *metaphor* the source: the unit of care is the name, and the code is the medium that makes the metaphor real, clickable, runnable. Both are *don't trust; verify* moves — show your work in the medium where the work actually lives — but they verify against different witnesses: literate programming exposes the reasoning; codetry exposes the noun. §DD.2 (with §5.1) draws out why the discipline that holds the names is a precondition for the woven document rather than a sibling to it: the woven essay only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry.",
+          },
+          { kind: "subhead", text: "Domain-driven design and Conway's Law." },
+          {
+            kind: "para",
+            text:
+              "*Domain-driven design* (Eric Evans, 2003), with *Conway's Law* (Melvin Conway, 1968) and the bounded-context, ubiquitous-language tradition behind it, is codetry's closest sibling. Both accept the uncomfortable premise that structure outside the code shapes structure inside the code, and both refuse the older arrangement where the language of the domain is paraphrased into engineer-speak on the way into the schema. DDD typically lands on the *domain expert* — the analyst, the consultant, the senior engineer who has just spent a week in workshops tidying the vocabulary up. Codetry insists the noun must come from the community itself, in the form the community already uses it, before any tidying — and treats every translation away from that noun, even into a cleaner, more general, more reusable noun, as *drift* rather than cleanup. §DD.3 (with §4.2) names DDD as one of the *roots* codetry sits on top of, not only a sibling, and reads the *ubiquitous language* clause as the closest single phrase in the prior literature to the move codetry asks of every individual noun.",
+          },
+          { kind: "subhead", text: "Type-driven design." },
+          {
+            kind: "para",
+            text:
+              "*Type-driven design* — *make illegal states unrepresentable*, with Yaron Minsky's Jane Street essays, Richard Feldman's Elm work, and Scott Wlaschin's *Domain Modeling Made Functional* in the room — pushes every invariant the domain demands into the type signature. A non-empty list is its own type; a validated email is its own type; an *Order* that has been *Paid* is structurally different from an *Order* that has not, so the function that ships it cannot be called on the unpaid one. The compiler becomes the first reader of the domain, and the bugs that slip past it are the only bugs left. Codetry agrees that the model carries the architecture, and then asks the harder question: *whose word is on the type?* A perfectly typed `HouseholdContainer` with a non-empty `Items` list and an immutable `CreatedAt` is, by every type-driven measure, a beautiful model; by codetry's measure it is drifted, because the community said *saltbox*. §DD.4: type-driven design verifies the model against the compiler; codetry verifies the model against the person who handed you the word, and treats a perfectly typed model with the wrong word as drift the type checker can't see.",
+          },
+          { kind: "subhead", text: "Capital allocation at scale." },
+          {
+            kind: "para",
+            text:
+              "*Capital allocation at scale* is the founder-as-allocator school — Mises in 1920, Hayek after, the modern entrepreneur lineage that runs through Silicon Valley — that treats capital allocation as the highest economic act and reads profit as the signal the bet was right. Codetry agrees with the calculation point: the information that decides where the next dollar should go lives in the room where the work happens, not in a head office. The two part ways at the exit. The school's success story is the founder who allocates well and *keeps* allocating, on a bigger and bigger pile, for as long as they live; the community around the founder is a counterparty, not a successor. The codetry exit is handover, not compound — the practitioner is paid to write the method down so the community can run the work without them, and a successful practitioner is one the community no longer needs in the chair. §DD.5: both schools agree profit is a signal; they disagree on who reads it — capital allocation at scale reads it at the cap table; codetry insists the signal must also be readable at the kitchen table.",
+          },
+          { kind: "rule" },
+          {
+            kind: "para",
+            text:
+              "Each of the paragraphs above is the one-paragraph form of a contrast that takes a full chapter to hold honestly. The full chapters are §DD.1 through §DD.5 in the back-matter Deep Dives; that is where the codetry / neighbour distinction is worked out at the length the neighbour deserves. The point of naming the family here, at the close of Part I, is the inverse — to put it on the table once and in one place, so the rest of the handbook can name *what codetry is* without having to keep saying *what it isn't*.",
           },
           {
             kind: "small",
