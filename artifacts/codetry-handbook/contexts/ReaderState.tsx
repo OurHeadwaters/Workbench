@@ -75,6 +75,8 @@ type ReaderContextValue = {
   clearLastRead: () => void;
   getScrollY: (chapterId: string) => number;
   saveScroll: (chapterId: string, y: number) => void;
+  saveDeepDiveEntryScrollY: (y: number) => void;
+  takeDeepDiveEntryScrollY: () => number | null;
 };
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
@@ -87,6 +89,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
   const scrollMapRef = useRef<Record<string, number>>({});
+  const deepDiveEntryYRef = useRef<number | null>(null);
 
   // Refs mirror state so retry callbacks re-attempt the latest intended
   // value rather than a snapshot captured at first-write time.
@@ -318,6 +321,16 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     return scrollMapRef.current[chapterId] ?? 0;
   }, []);
 
+  const saveDeepDiveEntryScrollY = useCallback((y: number) => {
+    deepDiveEntryYRef.current = y;
+  }, []);
+
+  const takeDeepDiveEntryScrollY = useCallback((): number | null => {
+    const y = deepDiveEntryYRef.current;
+    deepDiveEntryYRef.current = null;
+    return y;
+  }, []);
+
   const theme: ResolvedTheme =
     themeMode === "system"
       ? systemScheme === "dark"
@@ -347,6 +360,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       clearLastRead,
       getScrollY,
       saveScroll,
+      saveDeepDiveEntryScrollY,
+      takeDeepDiveEntryScrollY,
     }),
     [
       ready,
@@ -367,6 +382,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       clearLastRead,
       getScrollY,
       saveScroll,
+      saveDeepDiveEntryScrollY,
+      takeDeepDiveEntryScrollY,
     ],
   );
 
