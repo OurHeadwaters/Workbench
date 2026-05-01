@@ -9,6 +9,7 @@ import CockpitTeaser from "@/sections/CockpitTeaser";
 import BookkeepingProof from "@/sections/BookkeepingProof";
 import WhyThisTeam from "@/sections/WhyThisTeam";
 import ReworkRisk from "@/sections/ReworkRisk";
+import PhaseLocks from "@/sections/PhaseLocks";
 import WhyCurrentFails from "@/sections/WhyCurrentFails";
 import ColdChain from "@/sections/ColdChain";
 import WhoWorks from "@/sections/WhoWorks";
@@ -34,9 +35,12 @@ import SustainabilityApp from "@/sustainability/SustainabilityApp";
  * live iframes of the actual books screens). The contractor or
  * councillor sees something tangible before any wall of pitch text.
  * The seller-side argument (WhatHeadwatersDelivers + WhyThisTeam) and
- * the contractor's own pain (ReworkRisk) come AFTER the visuals, when
- * the reader is already grounded in what the store will actually look
- * and feel like. The store's own story then follows
+ * the contractor's own pain (ReworkRisk → PhaseLocks) come AFTER the
+ * visuals, when the reader is already grounded in what the store will
+ * actually look and feel like. ReworkRisk names the pain ("the doors
+ * got built too small"); PhaseLocks converts the "secured planning"
+ * pitch into the literal phase-by-phase lock schedule the contractor
+ * can hand to their CFO. The store's own story then follows
  * (WhyCurrentFails → ColdChain → WhoWorks → FirstMorning → WhatStays
  * → Ask → Recap).
  *
@@ -72,6 +76,7 @@ export default function App() {
         <WhatHeadwatersDelivers />
         <WhyThisTeam />
         <ReworkRisk />
+        <PhaseLocks />
         <WhyCurrentFails />
         <ColdChain />
         <WhoWorks />
