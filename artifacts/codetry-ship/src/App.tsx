@@ -12,9 +12,10 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={SignOnPage} />
-      <Route path="/manifest" component={ManifestPage} />
+      <Route path="/" component={BioPage} />
       <Route path="/bio" component={BioPage} />
+      <Route path="/sign-on" component={SignOnPage} />
+      <Route path="/manifest" component={ManifestPage} />
       <Route component={NotFound} />
     </Switch>
   );

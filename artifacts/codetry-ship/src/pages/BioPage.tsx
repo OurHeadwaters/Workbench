@@ -144,6 +144,55 @@ export function BioPage() {
             </section>
           </div>
 
+          <hr
+            className="rule my-5 print:my-4"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          />
+
+          <section className="bio-skills" data-testid="bio-skills">
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2
+                className="font-serif text-xl tracking-tight"
+                data-testid="skills-title"
+              >
+                Marketable skills
+              </h2>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                areas of practice
+              </p>
+            </div>
+
+            <ul
+              className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-1 font-serif text-[14.5px] leading-[1.45]"
+              data-testid="skills-list"
+            >
+              <SkillPair
+                first="Website design"
+                second="Operational planning"
+                testId="skill-web-ops"
+              />
+              <SkillPair
+                first="App development"
+                second="Privacy hardware and devices"
+                testId="skill-app-privacy"
+              />
+              <SkillPair
+                first="Economic development (grassroots)"
+                second="grant writing"
+                testId="skill-econ-grants"
+              />
+              <SkillItem
+                label="Policy and procedure manuals"
+                testId="skill-policy"
+              />
+              <SkillItem label="Team handbooks" testId="skill-handbooks" />
+              <SkillItem label="Ghost writing" testId="skill-ghost" />
+            </ul>
+          </section>
+
           <footer className="mt-5 print:mt-4 flex items-center justify-between gap-4">
             <p className="signoff">— bobbie parr · headwaters</p>
             <p
@@ -194,4 +243,34 @@ function RateRow({ label, amount, note, testId }: RateRowProps) {
       </p>
     </li>
   );
+}
+
+interface SkillPairProps {
+  first: string;
+  second: string;
+  testId: string;
+}
+
+function SkillPair({ first, second, testId }: SkillPairProps) {
+  return (
+    <li className="flex flex-wrap items-baseline gap-x-2" data-testid={testId}>
+      <span>{first}</span>
+      <span
+        className="font-mono text-[13px]"
+        style={{ color: "hsl(var(--accent))" }}
+      >
+        +
+      </span>
+      <span>{second}</span>
+    </li>
+  );
+}
+
+interface SkillItemProps {
+  label: string;
+  testId: string;
+}
+
+function SkillItem({ label, testId }: SkillItemProps) {
+  return <li data-testid={testId}>{label}</li>;
 }
