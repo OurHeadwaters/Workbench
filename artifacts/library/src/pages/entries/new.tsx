@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, Link as LinkIcon, Loader2, X, File as FileIcon, Image as ImageIcon } from "lucide-react";
+import { UploadCloud, Link as LinkIcon, Loader2, X, File as FileIcon, Image as ImageIcon, Lock, ShieldAlert } from "lucide-react";
 
 const urlFormSchema = z.object({
   url: z.string().url({ message: "Please enter a valid URL" }),
@@ -126,6 +126,96 @@ export default function NewEntry() {
     bucketSlugs: []
   });
 
+  const [confidentialDragActive, setConfidentialDragActive] = useState(false);
+  const [confidentialUploading, setConfidentialUploading] = useState(false);
+  const [confidentialProgress, setConfidentialProgress] = useState(0);
+  const confidentialFileInputRef = useRef<HTMLInputElement>(null);
+
+  const { uploadFile: uploadConfidentialFile } = useUpload({
+    getHeaders: () => {
+      try {
+        const t = window.localStorage.getItem("library:owner-token");
+        const headers: Record<string, string> = {};
+        if (t) headers.authorization = `Bearer ${t}`;
+        return headers;
+      } catch {
+        return {} as Record<string, string>;
+      }
+    },
+    onSuccess: async (response, file) => {
+      try {
+        setConfidentialUploading(true);
+        const hash = await computeFileHash(file);
+        const token = window.localStorage.getItem("library:owner-token") ?? "";
+        const res = await fetch("/api/library/confidential/intake", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            kind: "file",
+            title: file.name.replace(/\.[^/.]+$/, ""),
+            objectPath: response.objectPath,
+            contentHash: hash,
+            fileSize: file.size,
+            contentType: file.type,
+            originalFilename: file.name,
+            status: "needs_review",
+          }),
+        });
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+        toast({
+          title: "File quarantined",
+          description: "Dropped into the confidential queue — nothing is shared until you clear it.",
+        });
+        setLocation("/confidential/queue");
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: errMessage(err, "Failed to create confidential entry"),
+          variant: "destructive",
+        });
+      } finally {
+        setConfidentialUploading(false);
+        setConfidentialProgress(0);
+      }
+    },
+    onError: (err) => {
+      setConfidentialUploading(false);
+      setConfidentialProgress(0);
+      toast({
+        title: "Upload failed",
+        description: err.message || "Could not upload file to storage",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleConfidentialDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") setConfidentialDragActive(true);
+    else if (e.type === "dragleave") setConfidentialDragActive(false);
+  };
+
+  const handleConfidentialDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setConfidentialDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      uploadConfidentialFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleConfidentialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      uploadConfidentialFile(e.target.files[0]);
+    }
+  };
+
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -193,7 +283,7 @@ export default function NewEntry() {
       </div>
 
       <Tabs defaultValue="file" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-8 bg-card border border-border shadow-sm p-1 rounded-xl">
+        <TabsList className="grid w-full grid-cols-3 mb-8 bg-card border border-border shadow-sm p-1 rounded-xl">
           <TabsTrigger value="file" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <UploadCloud className="h-4 w-4 mr-2" />
             Upload File
@@ -201,6 +291,10 @@ export default function NewEntry() {
           <TabsTrigger value="url" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <LinkIcon className="h-4 w-4 mr-2" />
             Paste Link
+          </TabsTrigger>
+          <TabsTrigger value="confidential" className="rounded-lg data-[state=active]:bg-rose-700 data-[state=active]:text-white">
+            <Lock className="h-4 w-4 mr-2" />
+            Confidential
           </TabsTrigger>
         </TabsList>
 
@@ -352,6 +446,81 @@ export default function NewEntry() {
                     <p className="text-lg font-serif font-medium text-foreground">Drag and drop your file here</p>
                     <p className="text-sm text-muted-foreground mb-4">or click to browse from your computer</p>
                     <Button type="button" variant="outline">Select File</Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="confidential" className="space-y-6">
+          <Card className="bg-rose-50 border-rose-200 shadow-sm overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="h-5 w-5 text-rose-600 mt-0.5 shrink-0" />
+                <div className="text-sm text-rose-800">
+                  <span className="font-semibold">This drops into your private review queue — nothing is shared until you clear it.</span>
+                  {" "}Files dropped here are stored privately and excluded from all library listings, share links, and public URLs.
+                  Use the <Link href="/confidential/queue" className="underline font-medium">Confidential Queue</Link> to review, then clear, refuse, or route each file using the Gate&rsquo;s severity ladder.
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-rose-200 shadow-sm overflow-hidden">
+            <CardHeader className="bg-rose-50 border-b border-rose-100 pb-4">
+              <CardTitle className="text-lg font-serif flex items-center gap-2">
+                <Lock className="h-5 w-5 text-rose-600" />
+                Drop Confidential File
+              </CardTitle>
+              <CardDescription>
+                Contracts, NDAs, legal notices, sensitive documents — drop here first, decide later.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div
+                className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
+                  confidentialDragActive
+                    ? "border-rose-500 bg-rose-100/60"
+                    : "border-rose-300 hover:border-rose-400 bg-rose-50/50"
+                } ${confidentialUploading ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
+                onDragEnter={handleConfidentialDrag}
+                onDragLeave={handleConfidentialDrag}
+                onDragOver={handleConfidentialDrag}
+                onDrop={handleConfidentialDrop}
+                onClick={() => !confidentialUploading && confidentialFileInputRef.current?.click()}
+              >
+                <input
+                  ref={confidentialFileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={handleConfidentialChange}
+                  disabled={confidentialUploading}
+                />
+
+                {confidentialUploading ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-10 w-10 text-rose-600 animate-spin" />
+                    <p className="font-medium text-rose-800">
+                      {confidentialProgress > 0 ? `Uploading… ${Math.round(confidentialProgress)}%` : "Quarantining file…"}
+                    </p>
+                    {confidentialProgress > 0 && (
+                      <div className="w-full max-w-xs bg-rose-100 rounded-full h-2 mt-2">
+                        <div
+                          className="bg-rose-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${confidentialProgress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-2">
+                    <Lock className="h-12 w-12 text-rose-400 mb-2" />
+                    <p className="text-lg font-serif font-medium text-rose-800">Drag and drop your confidential file here</p>
+                    <p className="text-sm text-rose-600 mb-4">or click to browse — lands in quarantine, never the main library</p>
+                    <Button type="button" variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100">
+                      Select Confidential File
+                    </Button>
                   </div>
                 )}
               </div>

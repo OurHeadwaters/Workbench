@@ -1,14 +1,32 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat } from "lucide-react";
+import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+function useConfidentialCount() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const token = (() => {
+      try { return window.localStorage.getItem("library:owner-token"); } catch { return null; }
+    })();
+    if (!token) return;
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    fetch("/api/library/confidential/count", { headers })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data != null) setCount(data.count ?? 0); })
+      .catch(() => {});
+  }, []);
+  return count;
+}
 
 const NAV_ITEMS = [
   { href: "/", label: "Library", icon: Home },
   { href: "/entries", label: "Entries", icon: BookOpen },
   { href: "/needs-review", label: "Review Queue", icon: CheckCircle2 },
+  { href: "/confidential/queue", label: "Confidential Queue", icon: ShieldAlert, confidential: true },
   { href: "/producers", label: "Producers", icon: Users },
   { href: "/buckets", label: "Project Buckets", icon: FolderOpen },
   { href: "/subjects", label: "Subjects", icon: Tag },
@@ -22,6 +40,7 @@ const NAV_ITEMS = [
 export default function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const { logout } = useOwnerAuth();
+  const confidentialCount = useConfidentialCount();
 
   return (
     <div className="min-h-[100dvh] flex flex-col md:flex-row bg-background">
@@ -39,6 +58,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <nav className="p-4 flex-1 overflow-y-auto space-y-1">
           {NAV_ITEMS.map((item) => {
             const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+            const showBadge = item.confidential && confidentialCount > 0;
             return (
               <Link key={item.href} href={item.href}>
                 <div
@@ -46,11 +66,18 @@ export default function Layout({ children }: { children: ReactNode }) {
                     "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all cursor-pointer",
                     isActive
                       ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      : item.confidential
+                        ? "text-rose-700 hover:bg-rose-50 hover:text-rose-800"
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
-                  {item.label}
+                  <span className="flex-1">{item.label}</span>
+                  {showBadge && (
+                    <Badge className="bg-rose-600 text-white text-xs px-1.5 py-0 h-5 min-w-5 flex items-center justify-center">
+                      {confidentialCount}
+                    </Badge>
+                  )}
                 </div>
               </Link>
             );

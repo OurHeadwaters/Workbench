@@ -141,9 +141,12 @@ router.get("/storage/objects/*path", async (req: Request, res: Response) => {
     // Gate: only serve files actually referenced by a library entry
     // (either as the file storageRef or as a web-source screenshot).
     // This prevents arbitrary enumeration of the private bucket.
+    // Access lockdown: refuse to serve any file belonging to a
+    // confidential_queue entry — those must never be reachable via
+    // a public or share-link URL until the founder clears them.
     const refMatch = `gcs:${objectPath}`;
     const referenced = await db
-      .select({ id: libraryEntriesTable.id })
+      .select({ id: libraryEntriesTable.id, status: libraryEntriesTable.status })
       .from(libraryEntriesTable)
       .where(
         or(
@@ -155,6 +158,10 @@ router.get("/storage/objects/*path", async (req: Request, res: Response) => {
       .limit(1);
     if (referenced.length === 0) {
       res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (referenced[0]!.status === "confidential_queue") {
+      res.status(403).json({ error: "This file is in the confidential queue and cannot be served publicly." });
       return;
     }
 

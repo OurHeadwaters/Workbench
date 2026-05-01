@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
 import { Link } from "wouter";
 import {
   ArrowLeft,
@@ -11,6 +11,7 @@ import {
   BookMarked,
   Tag,
   XCircle,
+  ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -226,6 +227,20 @@ export default function Gate() {
 
   const store = useGateStore();
   const [openComposer, setOpenComposer] = useState(false);
+  const [confidentialCount, setConfidentialCount] = useState(0);
+
+  useEffect(() => {
+    const token = (() => {
+      try { return window.localStorage.getItem("library:owner-token"); } catch { return null; }
+    })();
+    if (!token) return;
+    fetch("/api/library/confidential/count", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data != null) setConfidentialCount(data.count ?? 0); })
+      .catch(() => {});
+  }, []);
 
   if (!store.hydrated) {
     return (
@@ -268,9 +283,20 @@ export default function Gate() {
               <div className="text-xs text-muted-foreground tracking-wide uppercase">
                 Z3 · {constellation.z3?.memberFacingBrand ?? "807 Benefits"} · sibling to The Standby
               </div>
-              <h1 className="font-serif text-2xl text-foreground leading-tight">
-                The Gate
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="font-serif text-2xl text-foreground leading-tight">
+                  The Gate
+                </h1>
+                {confidentialCount > 0 && (
+                  <span
+                    title={`${confidentialCount} unreviewed confidential file${confidentialCount !== 1 ? "s" : ""} in the Library queue`}
+                    className="inline-flex items-center gap-1 bg-rose-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full"
+                  >
+                    <ShieldAlert className="w-3 h-3" />
+                    {confidentialCount}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           <div className="text-right text-xs text-muted-foreground">

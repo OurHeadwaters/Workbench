@@ -21,7 +21,7 @@ import {
   entryBucketsTable,
   shareLinksTable,
 } from "@workspace/db";
-import { and, desc, asc, eq, ilike, or, sql, inArray } from "drizzle-orm";
+import { and, desc, asc, eq, ilike, or, sql, inArray, ne } from "drizzle-orm";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { randomBytes } from "crypto";
 import {
@@ -339,6 +339,10 @@ async function loadOneEntry(id: string) {
 // ----------------------- stats / overview -----------------------
 
 router.get("/stats", async (_req, res) => {
+  // All stats queries exclude confidential_queue so quarantined files never
+  // surface in library totals or recent-additions lists.
+  const notConfidential = ne(libraryEntriesTable.status, "confidential_queue");
+
   const [
     totalsRow,
     needsReviewRow,
@@ -352,19 +356,19 @@ router.get("/stats", async (_req, res) => {
     bucketBreakdown,
     recentRows,
   ] = await Promise.all([
-    db.select({ count: sql<number>`count(*)::int` }).from(libraryEntriesTable),
+    db.select({ count: sql<number>`count(*)::int` }).from(libraryEntriesTable).where(notConfidential),
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(libraryEntriesTable)
-      .where(eq(libraryEntriesTable.status, "needs_review")),
+      .where(and(eq(libraryEntriesTable.status, "needs_review"), notConfidential)),
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(libraryEntriesTable)
-      .where(eq(libraryEntriesTable.kind, "file")),
+      .where(and(eq(libraryEntriesTable.kind, "file"), notConfidential)),
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(libraryEntriesTable)
-      .where(eq(libraryEntriesTable.kind, "web_source")),
+      .where(and(eq(libraryEntriesTable.kind, "web_source"), notConfidential)),
     db.select({ count: sql<number>`count(*)::int` }).from(producersTable),
     db.select({ count: sql<number>`count(*)::int` }).from(subjectsTable),
     db.select({ count: sql<number>`count(*)::int` }).from(projectBucketsTable),
@@ -376,7 +380,16 @@ router.get("/stats", async (_req, res) => {
         count: sql<number>`count(${entrySubjectsTable.entryId})::int`,
       })
       .from(subjectsTable)
-      .leftJoin(entrySubjectsTable, eq(entrySubjectsTable.subjectId, subjectsTable.id))
+      .leftJoin(
+        entrySubjectsTable,
+        and(
+          eq(entrySubjectsTable.subjectId, subjectsTable.id),
+          ne(
+            sql<string>`(SELECT status FROM library_entries WHERE id = ${entrySubjectsTable.entryId})`,
+            "confidential_queue",
+          ),
+        ),
+      )
       .groupBy(subjectsTable.id, subjectsTable.slug, subjectsTable.name, subjectsTable.color)
       .orderBy(desc(sql`count(${entrySubjectsTable.entryId})`))
       .limit(8),
@@ -387,7 +400,13 @@ router.get("/stats", async (_req, res) => {
         count: sql<number>`count(${libraryEntriesTable.id})::int`,
       })
       .from(producersTable)
-      .leftJoin(libraryEntriesTable, eq(libraryEntriesTable.producerId, producersTable.id))
+      .leftJoin(
+        libraryEntriesTable,
+        and(
+          eq(libraryEntriesTable.producerId, producersTable.id),
+          notConfidential,
+        ),
+      )
       .groupBy(producersTable.id, producersTable.slug, producersTable.name)
       .orderBy(desc(sql`count(${libraryEntriesTable.id})`))
       .limit(8),
@@ -410,6 +429,7 @@ router.get("/stats", async (_req, res) => {
     db
       .select()
       .from(libraryEntriesTable)
+      .where(notConfidential)
       .orderBy(desc(libraryEntriesTable.updatedAt))
       .limit(8),
   ]);
@@ -452,6 +472,7 @@ router.get("/recent", async (req, res) => {
   const rows = await db
     .select()
     .from(libraryEntriesTable)
+    .where(ne(libraryEntriesTable.status, "confidential_queue"))
     .orderBy(desc(libraryEntriesTable.updatedAt))
     .limit(limit);
   res.json(await loadEntries(rows));
@@ -470,7 +491,9 @@ router.get("/entries", async (req, res) => {
   const offset = q.offset ?? 0;
   const sort = q.sort ?? "recent";
 
-  const conditions = [] as ReturnType<typeof eq>[];
+  const conditions = [
+    ne(libraryEntriesTable.status, "confidential_queue"),
+  ] as ReturnType<typeof eq>[];
   if (q.search) {
     const term = `%${q.search}%`;
     conditions.push(
@@ -570,12 +593,19 @@ async function createEntryFromBody(body: unknown, opts?: { contributorId?: strin
   if (!parsed.success) return { error: "Invalid input" as const };
   const data = parsed.data;
 
-  // Dedup by content hash (exact bit-level match)
+  // Dedup by content hash (exact bit-level match).
+  // Confidential-queue entries are excluded so that a quarantined file is
+  // never returned as a "duplicate" to a share-link or public upload path.
   if (data.contentHash) {
     const existing = await db
       .select()
       .from(libraryEntriesTable)
-      .where(eq(libraryEntriesTable.contentHash, data.contentHash))
+      .where(
+        and(
+          eq(libraryEntriesTable.contentHash, data.contentHash),
+          ne(libraryEntriesTable.status, "confidential_queue"),
+        ),
+      )
       .limit(1);
     if (existing.length) {
       const full = await loadOneEntry(existing[0]!.id);
@@ -586,6 +616,7 @@ async function createEntryFromBody(body: unknown, opts?: { contributorId?: strin
   // Near-duplicate detection by normalized original filename.
   // Normalize: lowercase, strip path, drop a trailing "_<digits>" timestamp
   // before the extension, and collapse whitespace/punctuation runs.
+  // Confidential-queue entries are excluded for the same isolation reason.
   if (data.originalFilename) {
     const normalized = normalizeFilenameForDedup(data.originalFilename);
     if (normalized) {
@@ -596,7 +627,12 @@ async function createEntryFromBody(body: unknown, opts?: { contributorId?: strin
           fileSize: libraryEntriesTable.fileSize,
         })
         .from(libraryEntriesTable)
-        .where(sql`${libraryEntriesTable.originalFilename} IS NOT NULL`);
+        .where(
+          and(
+            sql`${libraryEntriesTable.originalFilename} IS NOT NULL`,
+            ne(libraryEntriesTable.status, "confidential_queue"),
+          ),
+        );
       const sizeIn = data.fileSize ?? null;
       const match = candidates.find((row) => {
         if (!row.originalFilename) return false;
@@ -1251,6 +1287,179 @@ router.get("/needs-review", async (_req, res) => {
     .where(eq(libraryEntriesTable.status, "needs_review"))
     .orderBy(desc(libraryEntriesTable.createdAt));
   res.json(await loadEntries(rows));
+});
+
+// ----------------------- confidential queue -----------------------
+//
+// Files dropped via the confidential intake path land here with
+// status="confidential_queue". They are invisible to all public queries,
+// share links, and storage URLs until the founder explicitly clears them.
+// The statusFlag column carries the Gate severity tier:
+//   draft | under-review | refused | routed
+// When cleared the entry moves to status="published" with statusFlag="confidential".
+
+router.get("/confidential/count", async (_req, res) => {
+  const row = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(libraryEntriesTable)
+    .where(
+      and(
+        eq(libraryEntriesTable.status, "confidential_queue"),
+        or(
+          eq(libraryEntriesTable.statusFlag, "draft"),
+          eq(libraryEntriesTable.statusFlag, "under-review"),
+          sql`${libraryEntriesTable.statusFlag} IS NULL`,
+        ),
+      ),
+    );
+  res.json({ count: row[0]?.count ?? 0 });
+});
+
+router.get("/confidential/queue", async (_req, res) => {
+  const rows = await db
+    .select()
+    .from(libraryEntriesTable)
+    .where(eq(libraryEntriesTable.status, "confidential_queue"))
+    .orderBy(desc(libraryEntriesTable.createdAt));
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      title: r.title,
+      originalFilename: r.originalFilename ?? null,
+      contentType: r.contentType ?? null,
+      fileType: r.fileType ?? null,
+      kind: r.kind,
+      status: r.status,
+      statusFlag: r.statusFlag ?? null,
+      notes: r.notes ?? null,
+      fileSize: r.fileSize ?? null,
+      storageRef: r.storageRef ?? null,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    })),
+  );
+});
+
+router.post("/confidential/intake", async (req, res) => {
+  // Confidential intake bypasses the global dedup logic entirely so that we
+  // never mutate an existing published entry into quarantine state.
+  // We always create a fresh row. contentHash is set to null to avoid the
+  // unique-index constraint (two confidential drops of the same file are fine).
+  const parsed = CreateLibraryEntryBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid input" });
+    return;
+  }
+  const data = parsed.data;
+
+  const storageRef = normalizeStorageRef({
+    storageRef: data.storageRef,
+    objectPath: data.objectPath,
+  });
+  const fileType = coarseFileType(data.contentType, data.originalFilename);
+
+  const [created] = await db
+    .insert(libraryEntriesTable)
+    .values({
+      kind: data.kind,
+      title: data.title,
+      summary: data.summary ?? null,
+      notes: data.notes ?? null,
+      status: "confidential_queue",
+      statusFlag: "draft",
+      storageRef,
+      contentHash: null, // intentionally omitted to avoid unique-index collision
+      fileSize: data.fileSize ?? null,
+      contentType: data.contentType ?? null,
+      originalFilename: data.originalFilename ?? null,
+      fileType,
+    })
+    .returning();
+
+  if (!created) {
+    res.status(500).json({ error: "Insert failed" });
+    return;
+  }
+
+  res.json({ entry: created, duplicate: false });
+});
+
+router.patch("/confidential/:id", async (req, res) => {
+  const { id } = req.params;
+  const body = (req.body ?? {}) as {
+    action?: string;
+    reason?: string;
+    tier?: string;
+  };
+
+  const existing = await db
+    .select()
+    .from(libraryEntriesTable)
+    .where(
+      and(
+        eq(libraryEntriesTable.id, id),
+        eq(libraryEntriesTable.status, "confidential_queue"),
+      ),
+    )
+    .limit(1);
+
+  if (!existing.length) {
+    res.status(404).json({ error: "Not found in confidential queue" });
+    return;
+  }
+
+  // Once routed the entry is locked — no further tier or action changes.
+  if (existing[0]!.statusFlag === "routed") {
+    res.status(409).json({ error: "Entry is routed and locked from further changes." });
+    return;
+  }
+
+  if (body.action === "clear") {
+    await db
+      .update(libraryEntriesTable)
+      .set({ status: "published", statusFlag: "confidential", updatedAt: new Date() })
+      .where(eq(libraryEntriesTable.id, id));
+    res.json({ ok: true, action: "cleared" });
+    return;
+  }
+
+  if (body.action === "refuse") {
+    await db
+      .update(libraryEntriesTable)
+      .set({
+        statusFlag: "refused",
+        notes: body.reason?.trim() || null,
+        updatedAt: new Date(),
+      })
+      .where(eq(libraryEntriesTable.id, id));
+    res.json({ ok: true, action: "refused" });
+    return;
+  }
+
+  if (body.action === "route") {
+    await db
+      .update(libraryEntriesTable)
+      .set({ statusFlag: "routed", updatedAt: new Date() })
+      .where(eq(libraryEntriesTable.id, id));
+    res.json({ ok: true, action: "routed" });
+    return;
+  }
+
+  if (body.tier) {
+    const validTiers = ["draft", "under-review"];
+    if (!validTiers.includes(body.tier)) {
+      res.status(400).json({ error: "Invalid tier" });
+      return;
+    }
+    await db
+      .update(libraryEntriesTable)
+      .set({ statusFlag: body.tier, updatedAt: new Date() })
+      .where(eq(libraryEntriesTable.id, id));
+    res.json({ ok: true, tier: body.tier });
+    return;
+  }
+
+  res.status(400).json({ error: "Provide action (clear|refuse|route) or tier (draft|under-review)" });
 });
 
 // Touch objectStorageService so unused-import lint doesn't trip in some configs.
