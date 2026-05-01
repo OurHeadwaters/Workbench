@@ -54,9 +54,9 @@ export function HomePage() {
 
           <div className="space-y-3" data-testid="work-cards">
             <WorkCard
-              eyebrow="Deer Lake First Nation · Case study"
-              title="Deer Lake Store — operating plan"
-              description="A full community store operating plan for a fly-in First Nation in northwestern Ontario: cost stack, staffing, freight, co-op structure, phase-lock schedule. The chief, the contractor, and the council can open it and read it for themselves."
+              eyebrow="Pilot project · Community store"
+              title="Community store — operating plan"
+              description="A full operating plan for a fly-in First Nation community store in northwestern Ontario: cost stack, staffing, freight, co-op structure, phase-lock schedule. Built as a pilot to show what the finished work looks like before an engagement begins."
               href="/deer-lake-walkthrough/"
               testId="work-card-deer-lake"
             />
