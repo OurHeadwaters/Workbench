@@ -251,6 +251,56 @@ export function BioPage() {
             </ul>
           </section>
 
+          <hr
+            className="rule my-5 print:my-4"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          />
+
+          <section className="bio-contact" data-testid="bio-contact">
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2
+                className="font-serif text-xl tracking-tight"
+                data-testid="contact-title"
+              >
+                How to engage
+              </h2>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                contact
+              </p>
+            </div>
+
+            <p
+              className="font-serif text-[14.5px] leading-[1.5]"
+              data-testid="contact-blurb"
+            >
+              Reach out by email to scope a trial period or a Deer Lake
+              engagement. Terms are on the rate card above.
+            </p>
+
+            <p
+              className="mt-2 font-mono text-[13px] tracking-tight"
+              data-testid="contact-email"
+            >
+              <span
+                className="text-[10px] uppercase tracking-[0.22em] mr-2"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                email
+              </span>
+              <a
+                href="mailto:parrsjars@gmail.com"
+                className="underline underline-offset-2"
+                style={{ color: "hsl(var(--primary))" }}
+                data-testid="contact-email-link"
+              >
+                parrsjars@gmail.com
+              </a>
+            </p>
+          </section>
+
           <footer className="mt-5 print:mt-4 flex items-center justify-between gap-4">
             <p className="signoff">— bobbie parr · headwaters</p>
             <p
