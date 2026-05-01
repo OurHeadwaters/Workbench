@@ -53,6 +53,8 @@ export default function ChapterScreen() {
     hasBookmark,
     lastRead,
     setLastRead,
+    getScrollY,
+    saveScroll,
   } = useReader();
 
   const chapter = getChapter(id);
@@ -63,11 +65,16 @@ export default function ChapterScreen() {
   const restoredFor = useRef<string | null>(null);
 
   // Restore scroll position when entering this chapter (once).
+  // getScrollY is checked first (in-memory, updated on every scroll pause
+  // this session), then lastRead (persisted across sessions), then 0.
   useEffect(() => {
     if (!chapter) return;
     if (restoredFor.current === chapter.id) return;
     restoredFor.current = chapter.id;
-    const y = lastRead?.chapterId === chapter.id ? lastRead.scrollY : 0;
+    const fromMap = getScrollY(chapter.id);
+    const fromLastRead =
+      lastRead?.chapterId === chapter.id ? lastRead.scrollY : 0;
+    const y = fromMap > 0 ? fromMap : fromLastRead;
     if (y > 0 && scrollRef.current) {
       const t = setTimeout(() => {
         scrollRef.current?.scrollTo({ y, animated: false });
@@ -75,16 +82,17 @@ export default function ChapterScreen() {
       return () => clearTimeout(t);
     }
     return;
-  }, [chapter, lastRead]);
+  }, [chapter, lastRead, getScrollY]);
 
   const persistPosition = useCallback(
     (y: number) => {
       if (!chapter) return;
       if (Math.abs(y - lastSavedY.current) < 80) return;
       lastSavedY.current = y;
+      saveScroll(chapter.id, y);
       setLastRead({ chapterId: chapter.id, scrollY: y });
     },
-    [chapter, setLastRead],
+    [chapter, saveScroll, setLastRead],
   );
 
   const onScroll = useCallback(
@@ -293,12 +301,21 @@ export default function ChapterScreen() {
   const total = CHAPTERS.length;
   const progressPct = total > 1 ? Math.round((index / (total - 1)) * 100) : 0;
   const hasPartLanding = chapter.partRoman === "V";
+  const isDeepDive = chapter.partRoman === "DD";
   const goToPartLanding = useCallback(() => {
     router.push({
       pathname: "/part/[roman]",
       params: { roman: chapter.partRoman },
     });
   }, [chapter.partRoman]);
+  const goToSpine = useCallback(() => {
+    if (Platform.OS !== "web") Haptics.selectionAsync().catch(() => {});
+    restoredFor.current = null;
+    router.replace({
+      pathname: "/chapter/[id]",
+      params: { id: "1-7" },
+    });
+  }, []);
 
   return (
     <View
@@ -381,6 +398,26 @@ export default function ChapterScreen() {
                 ]}
               >
                 {`← Back to ${chapter.partLabel}`}
+              </Text>
+            </Pressable>
+          ) : null}
+          {isDeepDive ? (
+            <Pressable
+              onPress={goToSpine}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.partLandingLink,
+                pressed && { opacity: 0.6 },
+              ]}
+              accessibilityLabel="Back to §1.7 — Nearest Neighbours"
+            >
+              <Text
+                style={[
+                  styles.partLandingText,
+                  { color: c.foreground, fontFamily: MONO },
+                ]}
+              >
+                {"← Back to §1.7 — Nearest Neighbours"}
               </Text>
             </Pressable>
           ) : null}

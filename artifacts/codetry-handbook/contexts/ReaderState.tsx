@@ -73,6 +73,8 @@ type ReaderContextValue = {
   lastRead: LastRead | null;
   setLastRead: (r: LastRead) => void;
   clearLastRead: () => void;
+  getScrollY: (chapterId: string) => number;
+  saveScroll: (chapterId: string, y: number) => void;
 };
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
@@ -84,6 +86,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [fontStep, setFontStep] = useState<number>(DEFAULT_STEP);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
+  const scrollMapRef = useRef<Record<string, number>>({});
 
   // Refs mirror state so retry callbacks re-attempt the latest intended
   // value rather than a snapshot captured at first-write time.
@@ -307,6 +310,14 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       });
   }, []);
 
+  const saveScroll = useCallback((chapterId: string, y: number) => {
+    scrollMapRef.current[chapterId] = y;
+  }, []);
+
+  const getScrollY = useCallback((chapterId: string): number => {
+    return scrollMapRef.current[chapterId] ?? 0;
+  }, []);
+
   const theme: ResolvedTheme =
     themeMode === "system"
       ? systemScheme === "dark"
@@ -334,6 +345,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       lastRead,
       setLastRead,
       clearLastRead,
+      getScrollY,
+      saveScroll,
     }),
     [
       ready,
@@ -352,6 +365,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       lastRead,
       setLastRead,
       clearLastRead,
+      getScrollY,
+      saveScroll,
     ],
   );
 
