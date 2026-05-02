@@ -276,6 +276,24 @@ export function BioPage() {
                 label="Crew Manifest"
                 testId="work-crew-manifest"
               />
+              <WorkLink
+                href="/codetry-ship/infographics/community-store-plan.html"
+                label="Community store plan"
+                testId="work-community-store-plan"
+                target="_blank"
+              />
+              <WorkLink
+                href="/codetry-ship/infographics/coop-membership-platform.html"
+                label="Co-op membership platform"
+                testId="work-coop-membership-platform"
+                target="_blank"
+              />
+              <WorkLink
+                href="/codetry-ship/infographics/custom-internal-tool.html"
+                label="Custom internal tool"
+                testId="work-custom-internal-tool"
+                target="_blank"
+              />
             </ul>
           </section>
 
@@ -425,9 +443,10 @@ interface WorkLinkProps {
   href: string;
   label: string;
   testId: string;
+  target?: string;
 }
 
-function WorkLink({ href, label, testId }: WorkLinkProps) {
+function WorkLink({ href, label, testId, target }: WorkLinkProps) {
   const printUrl = buildPrintUrl(href);
   return (
     <li>
@@ -436,6 +455,8 @@ function WorkLink({ href, label, testId }: WorkLinkProps) {
         className="bio-work-link underline-offset-4 hover:underline"
         data-testid={testId}
         data-print-url={printUrl}
+        target={target}
+        rel={target === "_blank" ? "noopener noreferrer" : undefined}
       >
         {label}
       </a>

@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Community Store Plan — Headwaters / Codetry</title>
+    <meta name="viewport" content="width=800" />
+    <style>
+      :root {
+        --ink: #0D2318;
+        --green: #1A4D35;
+        --green-mid: #2E7D55;
+        --green-light: #4CAF80;
+        --soft: #DFF0E8;
+        --paper: #F7FCF9;
+        --rule: #C8DDD4;
+        --muted: #5A7268;
+        --accent: #2E7D55;
+        --header-bg: #1A4D35;
+        --header-text: #F7FCF9;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        background: #E8F0EC;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: var(--ink);
+      }
+      .page {
+        width: 800px;
+        margin: 0 auto;
+        background: var(--paper);
+        box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      }
+
+      /* ── HEADER ── */
+      .header {
+        background: var(--header-bg);
+        color: var(--header-text);
+        padding: 36px 40px 32px;
+        position: relative;
+      }
+      .header-circles {
+        position: absolute;
+        top: -24px;
+        right: 32px;
+        display: flex;
+        gap: 10px;
+        opacity: 0.18;
+      }
+      .header-circles span {
+        display: block;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(247,252,249,0.65);
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .header h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.18;
+        margin-bottom: 10px;
+        color: var(--header-text);
+      }
+      .tagline {
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(247,252,249,0.80);
+        margin-bottom: 20px;
+        max-width: 520px;
+      }
+      .what-box {
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.20);
+        border-radius: 6px;
+        padding: 14px 18px;
+        font-size: 12px;
+        line-height: 1.55;
+        color: rgba(247,252,249,0.90);
+        max-width: 620px;
+      }
+      .what-box b { color: #fff; }
+
+      /* ── BODY ── */
+      .body { padding: 32px 40px 36px; }
+
+      /* ── SECTION HEADER ── */
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        margin-top: 28px;
+      }
+      .section-head:first-child { margin-top: 0; }
+      .section-dot {
+        width: 14px; height: 14px;
+        background: var(--green);
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      .section-head h2 {
+        font-family: Georgia, serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--green);
+        letter-spacing: -0.01em;
+      }
+
+      /* ── CAPABILITY GRID ── */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .cap-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-left: 4px solid var(--green-mid);
+        border-radius: 5px;
+        padding: 12px 14px;
+      }
+      .cap-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 5px;
+      }
+      .cap-card p {
+        font-size: 11.5px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .cap-card p b { color: var(--ink); }
+
+      /* ── PHASE FLOW ── */
+      .phase-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .phase-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-top: 4px solid var(--green-mid);
+        border-radius: 5px;
+        padding: 12px 12px 14px;
+        position: relative;
+      }
+      .phase-card.active {
+        border-top-color: var(--green);
+      }
+      .phase-num {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .phase-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 8px;
+      }
+      .phase-card ul {
+        list-style: none;
+        font-size: 11px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .phase-card ul li {
+        padding: 2px 0;
+        border-bottom: 1px dashed var(--rule);
+        display: flex;
+        gap: 6px;
+        align-items: baseline;
+      }
+      .phase-card ul li:last-child { border-bottom: none; }
+      .phase-card ul li::before {
+        content: "›";
+        color: var(--green-mid);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .arrow-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin-bottom: 8px;
+      }
+      .arrow-label {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: center;
+        flex: 1;
+      }
+      .arrow-sep {
+        color: var(--green-light);
+        font-size: 16px;
+        line-height: 1;
+        margin: 0 4px;
+      }
+
+      /* ── STAT ROW ── */
+      .stat-row {
+        display: flex;
+        gap: 0;
+        background: white;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .stat-cell {
+        flex: 1;
+        padding: 16px 18px;
+        border-right: 1px solid var(--rule);
+        text-align: center;
+      }
+      .stat-cell:last-child { border-right: none; }
+      .stat-num {
+        font-family: Georgia, serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--green);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .stat-label {
+        font-size: 10.5px;
+        color: var(--muted);
+        line-height: 1.4;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+      }
+
+      /* ── DIVIDER ── */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 24px 0;
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        background: var(--header-bg);
+        padding: 16px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-brand {
+        font-family: Georgia, serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(247,252,249,0.90);
+        letter-spacing: -0.01em;
+      }
+      .footer-sub {
+        font-size: 10px;
+        color: rgba(247,252,249,0.50);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-circles">
+          <span style="width:120px;height:120px;"></span>
+          <span style="width:80px;height:80px;margin-top:20px;"></span>
+          <span style="width:50px;height:50px;margin-top:5px;"></span>
+        </div>
+        <div class="eyebrow">Headwaters · Codetry Service · Community Infrastructure</div>
+        <h1>Community Store Plan</h1>
+        <p class="tagline">A structured, four-phase engagement that takes a First Nation community from pre-planning through to an operating store — with governance, cold-chain logistics, and staffing locked before opening day.</p>
+        <div class="what-box">
+          <b>What this is:</b> A two-stage flat-fee engagement (Stage 1: planning and design / Stage 2: build and launch) that puts the band council, the store committee, and the community in the driver's seat. Every deliverable is documented. Every decision is the community's. Codetry holds the process, not the outcome.
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="body">
+
+        <!-- CORE DELIVERABLES -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Core Deliverables</h2>
+        </div>
+        <div class="cap-grid">
+          <div class="cap-card">
+            <h3>Steering Committee Formation</h3>
+            <p>We work with the band to seat a store committee — council rep, community voice, and operational lead — so the store has a clear governance structure before a single shelf goes up.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Cold-Chain Pilot Design</h3>
+            <p>A realistic cold-chain logistics plan: what gets ordered, from where, at what frequency, and who is responsible for receiving and rotating stock. <b>Designed for the community's reality</b>, not a southern grocery model.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Year-One Operating Budget</h3>
+            <p>A full cash-flow model for Year 1: payroll, inventory float, margin targets, utility costs, and a buffer line. Band council gets a document they can table and approve.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Operating System Setup</h3>
+            <p>POS, inventory, and reporting configured and tested before opening day. Staff are trained on every screen. A written guide stays with the store — not with Codetry.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Staffing Plan &amp; Hire Support</h3>
+            <p>Job descriptions, pay scales, and an onboarding checklist built around the community's labour market. We help shortlist and structure — the band makes the hire.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Governance Policy Set</h3>
+            <p>A minimal, clear policy pack: mark-up policy, employee handbook outline, cash-handling procedure, and a supplier agreement template. Nothing onerous. Everything needed.</p>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- PHASE FLOW -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Four-Phase Build Calendar</h2>
+        </div>
+        <div class="arrow-row">
+          <span class="arrow-label">Pre-frame</span>
+          <span class="arrow-sep">→</span>
+          <span class="arrow-label">Pre-electrical</span>
+          <span class="arrow-sep">→</span>
+          <span class="arrow-label">Pre-finish</span>
+          <span class="arrow-sep">→</span>
+          <span class="arrow-label">Open</span>
+        </div>
+        <div class="phase-row">
+          <div class="phase-card active">
+            <div class="phase-num">Phase 1 · Weeks 1–2</div>
+            <h3>Pre-frame</h3>
+            <ul>
+              <li>Band council kick-off</li>
+              <li>Seat steering committee</li>
+              <li>Site walk &amp; constraints map</li>
+              <li>Supplier outreach begins</li>
+              <li>Community survey</li>
+            </ul>
+          </div>
+          <div class="phase-card active">
+            <div class="phase-num">Phase 2 · Weeks 3–4</div>
+            <h3>Pre-electrical</h3>
+            <ul>
+              <li>Cold-chain logistics draft</li>
+              <li>Equipment list locked</li>
+              <li>Year-one budget model</li>
+              <li>Staffing plan drafted</li>
+              <li>Policy set v1</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-num">Phase 3 · Weeks 5–6</div>
+            <h3>Pre-finish</h3>
+            <ul>
+              <li>POS &amp; inventory configured</li>
+              <li>Staff hiring support</li>
+              <li>Training schedule set</li>
+              <li>Supplier agreements signed</li>
+              <li>Opening inventory order</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-num">Phase 4 · Weeks 7–8</div>
+            <h3>Open</h3>
+            <ul>
+              <li>Staff trained on system</li>
+              <li>Soft opening + debrief</li>
+              <li>Written guide handed off</li>
+              <li>30-day check-in booked</li>
+              <li>Stage 1 closed out</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- STATS -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>At a Glance</h2>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div class="stat-num">$25k</div>
+            <div class="stat-label">Stage 1<br>Flat fee</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">8</div>
+            <div class="stat-label">Weeks to<br>open day</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">2</div>
+            <div class="stat-label">Stage<br>structure</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">6</div>
+            <div class="stat-label">Core<br>deliverables</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Band-owned<br>at handoff</div>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="footer-brand">Headwaters · Codetry</div>
+        <div class="footer-sub">Community Store Plan · Stage 1 Engagement · headwaters.ca</div>
+      </div>
+
+    </div>
+  </body>
+</html>

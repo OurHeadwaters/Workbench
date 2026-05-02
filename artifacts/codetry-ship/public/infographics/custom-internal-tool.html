@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Custom Internal Tool — Headwaters / Codetry</title>
+    <meta name="viewport" content="width=800" />
+    <style>
+      :root {
+        --ink: #231A08;
+        --amber: #7A4A0A;
+        --amber-mid: #B5711A;
+        --amber-light: #E8A84A;
+        --soft: #FAF0DC;
+        --paper: #FDFAF4;
+        --rule: #E0D4B8;
+        --muted: #7A6840;
+        --header-bg: #6A3E08;
+        --header-text: #FDFAF4;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        background: #EDE4CC;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: var(--ink);
+      }
+      .page {
+        width: 800px;
+        margin: 0 auto;
+        background: var(--paper);
+        box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      }
+
+      /* ── HEADER ── */
+      .header {
+        background: var(--header-bg);
+        color: var(--header-text);
+        padding: 36px 40px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .header-circles {
+        position: absolute;
+        top: -20px;
+        right: 24px;
+        display: flex;
+        gap: 10px;
+        opacity: 0.15;
+      }
+      .header-circles span {
+        display: block;
+        border-radius: 50%;
+        border: 2px solid rgba(232,168,74,0.9);
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(253,250,244,0.60);
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .header h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.18;
+        margin-bottom: 10px;
+        color: var(--header-text);
+      }
+      .tagline {
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(253,250,244,0.80);
+        margin-bottom: 20px;
+        max-width: 520px;
+      }
+      .what-box {
+        background: rgba(255,255,255,0.09);
+        border: 1px solid rgba(232,168,74,0.30);
+        border-radius: 6px;
+        padding: 14px 18px;
+        font-size: 12px;
+        line-height: 1.55;
+        color: rgba(253,250,244,0.90);
+        max-width: 620px;
+      }
+      .what-box b { color: #F5D28A; }
+
+      /* ── BODY ── */
+      .body { padding: 32px 40px 36px; }
+
+      /* ── SECTION HEADER ── */
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        margin-top: 28px;
+      }
+      .section-head:first-child { margin-top: 0; }
+      .section-dot {
+        width: 14px; height: 14px;
+        background: var(--amber);
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      .section-head h2 {
+        font-family: Georgia, serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--amber);
+        letter-spacing: -0.01em;
+      }
+
+      /* ── CAPABILITY GRID ── */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .cap-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-left: 4px solid var(--amber-mid);
+        border-radius: 5px;
+        padding: 12px 14px;
+      }
+      .cap-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 5px;
+      }
+      .cap-card p {
+        font-size: 11.5px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .cap-card p b { color: var(--ink); }
+
+      /* ── ENGAGEMENT ARC ── */
+      .arc-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        background: white;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .arc-stage {
+        padding: 18px 14px 20px;
+        border-right: 1px solid var(--rule);
+        position: relative;
+      }
+      .arc-stage:last-child { border-right: none; }
+      .arc-stage.active {
+        background: var(--soft);
+      }
+      .arc-num {
+        width: 24px; height: 24px;
+        background: var(--amber);
+        border-radius: 50%;
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .arc-stage.active .arc-num { background: var(--amber-mid); }
+      .arc-eyebrow {
+        font-size: 9.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .arc-stage h3 {
+        font-family: Georgia, serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--amber);
+        margin-bottom: 10px;
+      }
+      .arc-stage ul {
+        list-style: none;
+        font-size: 11px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .arc-stage ul li {
+        padding: 2.5px 0;
+        border-bottom: 1px dashed var(--rule);
+        display: flex;
+        gap: 5px;
+        align-items: baseline;
+      }
+      .arc-stage ul li:last-child { border-bottom: none; }
+      .arc-stage ul li::before {
+        content: "›";
+        color: var(--amber-mid);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .arc-connector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin-bottom: 8px;
+      }
+      .arc-connector-label {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: center;
+        flex: 1;
+      }
+      .arc-connector-sep {
+        color: var(--amber-light);
+        font-size: 16px;
+        line-height: 1;
+        margin: 0 4px;
+      }
+
+      /* ── PRINCIPLE BANNER ── */
+      .principle-banner {
+        background: var(--amber);
+        color: white;
+        border-radius: 6px;
+        padding: 20px 24px;
+        margin-top: 4px;
+        text-align: center;
+      }
+      .principle-banner .quote {
+        font-family: Georgia, serif;
+        font-size: 19px;
+        font-style: italic;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 8px;
+      }
+      .principle-banner .sub {
+        font-size: 11px;
+        color: rgba(255,255,255,0.65);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* ── DELIVERABLES GRID ── */
+      .deliverables-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .deliverable-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-top: 3px solid var(--amber-mid);
+        border-radius: 5px;
+        padding: 12px 12px 14px;
+        text-align: center;
+      }
+      .deliverable-icon {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+      .deliverable-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 5px;
+      }
+      .deliverable-card p {
+        font-size: 11px;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
+      /* ── STAT ROW ── */
+      .stat-row {
+        display: flex;
+        gap: 0;
+        background: white;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .stat-cell {
+        flex: 1;
+        padding: 16px 14px;
+        border-right: 1px solid var(--rule);
+        text-align: center;
+      }
+      .stat-cell:last-child { border-right: none; }
+      .stat-num {
+        font-family: Georgia, serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--amber);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .stat-label {
+        font-size: 10.5px;
+        color: var(--muted);
+        line-height: 1.4;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+      }
+
+      /* ── DIVIDER ── */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 24px 0;
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        background: var(--header-bg);
+        padding: 16px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-brand {
+        font-family: Georgia, serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(253,250,244,0.90);
+        letter-spacing: -0.01em;
+      }
+      .footer-sub {
+        font-size: 10px;
+        color: rgba(253,250,244,0.50);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-circles">
+          <span style="width:110px;height:110px;"></span>
+          <span style="width:70px;height:70px;margin-top:22px;"></span>
+          <span style="width:42px;height:42px;margin-top:6px;"></span>
+        </div>
+        <div class="eyebrow">Headwaters · Codetry Service · Bespoke Software</div>
+        <h1>Custom Internal Tool</h1>
+        <p class="tagline">A four-stage engagement that takes your team from a problem statement to a working, documented, fully-owned internal tool — built for how you actually work, not how a generic product expects you to.</p>
+        <div class="what-box">
+          <b>What this is:</b> When off-the-shelf software is close-but-not-quite, we build the exact tool your team needs. A structured engagement: we do Discovery, Build, and Handoff — then it's <b>yours forever</b>. No ongoing licence, no SaaS dependency, no black box.
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="body">
+
+        <!-- CAPABILITIES -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>What a Bespoke Engagement Delivers</h2>
+        </div>
+        <div class="cap-grid">
+          <div class="cap-card">
+            <h3>Written Specification</h3>
+            <p>Before a line of code is written, we produce a plain-English spec: what the tool does, what it doesn't do, who uses it, and what success looks like. <b>Your team signs off on the spec</b> before we build.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Working Prototype</h3>
+            <p>An early, testable version of the tool lands in your hands for feedback before the full build. Reduces surprise, catches edge cases, and lets your team shape the final product.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Trained Team</h3>
+            <p>Handoff isn't a Zoom recording. We walk your team through the tool, run a live session for every role that will use it, and answer questions until everyone is comfortable.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Written Guide</h3>
+            <p>A plain-language guide — how the tool works, how to add a user, what to do when something breaks — stays with your team forever. Written for the person who'll be using it in two years.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Source Code Ownership</h3>
+            <p>The code belongs to you. Hosted where you want it. Modified by anyone you choose. <b>We don't hold the keys.</b> You're not renting — you own what we build together.</p>
+          </div>
+          <div class="cap-card">
+            <h3>30-Day Support Window</h3>
+            <p>After handoff, we stay available for 30 days for questions, small fixes, and edge cases that surface in real use. No retainer required — it's part of the engagement.</p>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ENGAGEMENT ARC -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Four-Stage Engagement Arc</h2>
+        </div>
+        <div class="arc-connector">
+          <span class="arc-connector-label">Discovery</span>
+          <span class="arc-connector-sep">→</span>
+          <span class="arc-connector-label">Build</span>
+          <span class="arc-connector-sep">→</span>
+          <span class="arc-connector-label">Handoff</span>
+          <span class="arc-connector-sep">→</span>
+          <span class="arc-connector-label">Yours</span>
+        </div>
+        <div class="arc-row">
+          <div class="arc-stage active">
+            <div class="arc-num">1</div>
+            <div class="arc-eyebrow">Stage One</div>
+            <h3>Discovery</h3>
+            <ul>
+              <li>Problem statement sessions</li>
+              <li>Map the current workflow</li>
+              <li>Identify who uses what</li>
+              <li>Draft written spec</li>
+              <li>Sign-off before build</li>
+            </ul>
+          </div>
+          <div class="arc-stage">
+            <div class="arc-num">2</div>
+            <div class="arc-eyebrow">Stage Two</div>
+            <h3>Build</h3>
+            <ul>
+              <li>Working prototype first</li>
+              <li>Team feedback round</li>
+              <li>Full build to spec</li>
+              <li>Internal testing</li>
+              <li>Edge case hardening</li>
+            </ul>
+          </div>
+          <div class="arc-stage">
+            <div class="arc-num">3</div>
+            <div class="arc-eyebrow">Stage Three</div>
+            <h3>Handoff</h3>
+            <ul>
+              <li>Live training session</li>
+              <li>Written guide delivered</li>
+              <li>Source code transfer</li>
+              <li>Hosting set up your way</li>
+              <li>30-day window opens</li>
+            </ul>
+          </div>
+          <div class="arc-stage active">
+            <div class="arc-num">4</div>
+            <div class="arc-eyebrow">Stage Four</div>
+            <h3>Yours</h3>
+            <ul>
+              <li>No ongoing licence fee</li>
+              <li>No SaaS dependency</li>
+              <li>Modify it yourself</li>
+              <li>Add users any time</li>
+              <li>Run it forever</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- PRINCIPLE BANNER -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>The Principle</h2>
+        </div>
+        <div class="principle-banner">
+          <div class="quote">"Built for your team, not a generic product."</div>
+          <div class="sub">Codetry · Every custom engagement · Every client</div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- DELIVERABLES GRID -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>What You Walk Away With</h2>
+        </div>
+        <div class="deliverables-grid">
+          <div class="deliverable-card">
+            <div class="deliverable-icon">📄</div>
+            <h3>Specification</h3>
+            <p>Written, signed-off, plain-language spec before a line of code is written.</p>
+          </div>
+          <div class="deliverable-card">
+            <div class="deliverable-icon">🛠</div>
+            <h3>Working Tool</h3>
+            <p>A tested, production-ready internal tool built exactly to the spec your team signed off on.</p>
+          </div>
+          <div class="deliverable-card">
+            <div class="deliverable-icon">🎓</div>
+            <h3>Trained Team</h3>
+            <p>Live training for every role that uses the tool. No recorded Zooms, no guesswork.</p>
+          </div>
+          <div class="deliverable-card">
+            <div class="deliverable-icon">📖</div>
+            <h3>Written Guide</h3>
+            <p>A plain-language manual that stays with your team — written for the person using it in two years.</p>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- STATS -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>At a Glance</h2>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Stage<br>arc</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Things you<br>walk away with</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">30</div>
+            <div class="stat-label">Day support<br>window</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Your team<br>owns the code</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">$0</div>
+            <div class="stat-label">Ongoing<br>licence fee</div>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="footer-brand">Headwaters · Codetry</div>
+        <div class="footer-sub">Custom Internal Tool · Bespoke Engagement · headwaters.ca</div>
+      </div>
+
+    </div>
+  </body>
+</html>

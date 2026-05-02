@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Co-op Membership Platform — Headwaters / Codetry</title>
+    <meta name="viewport" content="width=800" />
+    <style>
+      :root {
+        --ink: #0A2228;
+        --teal: #0F4D52;
+        --teal-mid: #1A7A7A;
+        --teal-light: #3AAFA8;
+        --soft: #D8EEED;
+        --paper: #F5FBFB;
+        --rule: #C0D8D8;
+        --muted: #4A6E70;
+        --header-bg: #0F4D52;
+        --header-text: #F5FBFB;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        background: #D8ECED;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: var(--ink);
+      }
+      .page {
+        width: 800px;
+        margin: 0 auto;
+        background: var(--paper);
+        box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      }
+
+      /* ── HEADER ── */
+      .header {
+        background: var(--header-bg);
+        color: var(--header-text);
+        padding: 36px 40px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .header-circles {
+        position: absolute;
+        top: -30px;
+        right: 28px;
+        display: flex;
+        gap: 12px;
+        opacity: 0.15;
+      }
+      .header-circles span {
+        display: block;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(245,251,251,0.60);
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .header h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.18;
+        margin-bottom: 10px;
+        color: var(--header-text);
+      }
+      .tagline {
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(245,251,251,0.80);
+        margin-bottom: 20px;
+        max-width: 520px;
+      }
+      .what-box {
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.20);
+        border-radius: 6px;
+        padding: 14px 18px;
+        font-size: 12px;
+        line-height: 1.55;
+        color: rgba(245,251,251,0.90);
+        max-width: 620px;
+      }
+      .what-box b { color: #fff; }
+
+      /* ── BODY ── */
+      .body { padding: 32px 40px 36px; }
+
+      /* ── SECTION HEADER ── */
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        margin-top: 28px;
+      }
+      .section-head:first-child { margin-top: 0; }
+      .section-dot {
+        width: 14px; height: 14px;
+        background: var(--teal);
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      .section-head h2 {
+        font-family: Georgia, serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--teal);
+        letter-spacing: -0.01em;
+      }
+
+      /* ── CAPABILITY GRID ── */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .cap-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-left: 4px solid var(--teal-mid);
+        border-radius: 5px;
+        padding: 12px 14px;
+      }
+      .cap-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 5px;
+      }
+      .cap-card p {
+        font-size: 11.5px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .cap-card p b { color: var(--ink); }
+
+      /* ── ROLE COLUMNS ── */
+      .role-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .role-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-top: 4px solid var(--teal-mid);
+        border-radius: 5px;
+        padding: 14px 14px 16px;
+      }
+      .role-card.primary { border-top-color: var(--teal); }
+      .role-eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .role-card h3 {
+        font-family: Georgia, serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--teal);
+        margin-bottom: 10px;
+      }
+      .role-card ul {
+        list-style: none;
+        font-size: 11px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .role-card ul li {
+        padding: 3px 0;
+        border-bottom: 1px dashed var(--rule);
+        display: flex;
+        gap: 6px;
+        align-items: baseline;
+      }
+      .role-card ul li:last-child { border-bottom: none; }
+      .role-card ul li::before {
+        content: "·";
+        color: var(--teal-light);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* ── MODULE MAP ── */
+      .module-map {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .module-card {
+        background: white;
+        border: 1px solid var(--rule);
+        border-radius: 5px;
+        padding: 12px 14px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .module-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--soft);
+        border-radius: 6px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+      }
+      .module-card h3 {
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+      .module-card p {
+        font-size: 11px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      /* ── TAG ROW ── */
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .tag {
+        background: var(--soft);
+        border: 1px solid var(--rule);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 11px;
+        color: var(--teal);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      /* ── STAT ROW ── */
+      .stat-row {
+        display: flex;
+        gap: 0;
+        background: white;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .stat-cell {
+        flex: 1;
+        padding: 16px 14px;
+        border-right: 1px solid var(--rule);
+        text-align: center;
+      }
+      .stat-cell:last-child { border-right: none; }
+      .stat-num {
+        font-family: Georgia, serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--teal);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .stat-label {
+        font-size: 10.5px;
+        color: var(--muted);
+        line-height: 1.4;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+      }
+
+      /* ── DIVIDER ── */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 24px 0;
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        background: var(--header-bg);
+        padding: 16px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-brand {
+        font-family: Georgia, serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(245,251,251,0.90);
+        letter-spacing: -0.01em;
+      }
+      .footer-sub {
+        font-size: 10px;
+        color: rgba(245,251,251,0.50);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-circles">
+          <span style="width:130px;height:130px;"></span>
+          <span style="width:75px;height:75px;margin-top:28px;"></span>
+          <span style="width:45px;height:45px;margin-top:8px;"></span>
+        </div>
+        <div class="eyebrow">Headwaters · Codetry Service · Cooperative Infrastructure</div>
+        <h1>Co-op Membership Platform</h1>
+        <p class="tagline">A role-based member portal built for northern food co-operatives — giving household members, local producers, and board directors the tools they actually need, without the overhead of a generic platform.</p>
+        <div class="what-box">
+          <b>What this is:</b> A custom web platform that connects every member of a northern food co-op — households ordering through a members-only marketplace, producers managing their listings and share fulfilment, and the board running governance without a spreadsheet. <b>One platform, three doors, all connected.</b>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="body">
+
+        <!-- CAPABILITIES -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Core Capabilities</h2>
+        </div>
+        <div class="cap-grid">
+          <div class="cap-card">
+            <h3>Role-Based Access</h3>
+            <p>Each user sees exactly what their role requires — nothing more. Households see their orders and share schedule. Producers see their listings and payouts. Directors see financials and meeting minutes. <b>One login, appropriate scope.</b></p>
+          </div>
+          <div class="cap-card">
+            <h3>Members-Only Marketplace</h3>
+            <p>A browseable catalogue of local and sourced products available only to co-op members. Orders are batched by pick-up date and route, reducing logistics overhead and food waste.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Producer Onboarding Flow</h3>
+            <p>A structured intake for new producers: product listing, pricing, capacity, and seasonal availability. Producers manage their own inventory — the co-op doesn't carry the data burden.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Board Hub &amp; Governance Tools</h3>
+            <p>Agenda builder, minute-keeping, resolution tracking, and a document library. <b>Designed for volunteer boards</b> — low friction, no training required, works on any device.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Veg Share &amp; Event Management</h3>
+            <p>Subscription share management with flexible skip/pause, pick-up slot booking, and automated reminders. Community events — potlucks, markets, work bees — are promoted and RSVP'd through the same portal.</p>
+          </div>
+          <div class="cap-card">
+            <h3>Learning Hub</h3>
+            <p>A simple resource library: growing guides, food preservation how-tos, co-op bylaws, and board training materials. Built for members who want to learn, not just buy.</p>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ROLE COLUMNS -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Who It Serves — Three Portals, One System</h2>
+        </div>
+        <div class="role-row">
+          <div class="role-card primary">
+            <div class="role-eyebrow">Portal 1</div>
+            <h3>Household Members</h3>
+            <ul>
+              <li>Browse &amp; order from marketplace</li>
+              <li>Manage veg share subscription</li>
+              <li>Book pick-up slots</li>
+              <li>View order history &amp; receipts</li>
+              <li>Register for community events</li>
+              <li>Access learning hub</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <div class="role-eyebrow">Portal 2</div>
+            <h3>Local Producers</h3>
+            <ul>
+              <li>Create &amp; manage product listings</li>
+              <li>Set seasonal availability</li>
+              <li>Track orders &amp; fulfilment</li>
+              <li>View payout summaries</li>
+              <li>Upload certifications &amp; docs</li>
+              <li>Message co-op coordinator</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <div class="role-eyebrow">Portal 3</div>
+            <h3>Board Directors</h3>
+            <ul>
+              <li>Set &amp; publish agendas</li>
+              <li>Record &amp; approve minutes</li>
+              <li>Track resolutions &amp; votes</li>
+              <li>Access financial summaries</li>
+              <li>Manage document library</li>
+              <li>Member communication tools</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- MODULE MAP -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Platform Modules</h2>
+        </div>
+        <div class="module-map">
+          <div class="module-card">
+            <div class="module-icon">🛒</div>
+            <div>
+              <h3>Marketplace</h3>
+              <p>Batched ordering, route-optimised pick-up, local and sourced products in one catalogue. Members only.</p>
+            </div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">📋</div>
+            <div>
+              <h3>Board Hub</h3>
+              <p>Agenda, minutes, resolutions, and a document library. Volunteer-board-friendly design — no training required.</p>
+            </div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">🌱</div>
+            <div>
+              <h3>Producer Onboarding</h3>
+              <p>Structured intake, self-managed listings, availability scheduling, and payout tracking for local growers.</p>
+            </div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">📦</div>
+            <div>
+              <h3>Veg Share &amp; Events</h3>
+              <p>Subscription management with skip/pause, pick-up booking, and community event RSVP in one place.</p>
+            </div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">📚</div>
+            <div>
+              <h3>Learning Hub</h3>
+              <p>Growing guides, food preservation resources, co-op bylaws, and board training — searchable, always accessible.</p>
+            </div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">👤</div>
+            <div>
+              <h3>Member Directory</h3>
+              <p>Opt-in member profiles, household contact info, and co-op participation history for coordinators and board use.</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- WHO IT SERVES TAGS -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>Designed For</h2>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Northern food co-operatives</span>
+          <span class="tag">First Nations band-owned stores</span>
+          <span class="tag">CSA &amp; veg share programs</span>
+          <span class="tag">Community buying clubs</span>
+          <span class="tag">Producer networks</span>
+          <span class="tag">Volunteer boards</span>
+          <span class="tag">Remote &amp; fly-in communities</span>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- STATS -->
+        <div class="section-head">
+          <div class="section-dot"></div>
+          <h2>At a Glance</h2>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Role-based<br>portals</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">6</div>
+            <div class="stat-label">Core<br>modules</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">1</div>
+            <div class="stat-label">Platform,<br>all users</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Band or co-op<br>owned data</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Generic<br>SaaS lock-in</div>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="footer-brand">Headwaters · Codetry</div>
+        <div class="footer-sub">Co-op Membership Platform · Custom Build · headwaters.ca</div>
+      </div>
+
+    </div>
+  </body>
+</html>
