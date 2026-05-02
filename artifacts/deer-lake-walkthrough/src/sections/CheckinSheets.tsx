@@ -40,7 +40,7 @@ export default function CheckinSheets() {
             className="mono text-[10px] uppercase tracking-[0.22em]"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            Deer Lake · Eight-week trial
+            Eight-week trial
           </div>
           <div
             className="serif text-[16px] font-semibold leading-tight mt-0.5"
@@ -78,7 +78,7 @@ export default function CheckinSheets() {
         className="hidden print:block text-[9px] text-center py-1"
         style={{ color: "#888" }}
       >
-        Deer Lake · Headwaters eight-week paid trial · Check-in sheets
+        Headwaters eight-week paid trial · Check-in sheets
       </div>
 
       {/* Oji-Cree draft disclaimer */}
@@ -123,7 +123,7 @@ export default function CheckinSheets() {
                     className="mono text-[10px] uppercase tracking-[0.22em] mb-1"
                     style={{ color: "var(--color-accent-warm)" }}
                   >
-                    Deer Lake · Headwaters trial · Check-in sheet
+                    Headwaters trial · Check-in sheet
                   </div>
                   <div
                     className="serif text-[22px] leading-[1.15] font-semibold"

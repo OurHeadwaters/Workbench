@@ -14,7 +14,7 @@ function ShareButton() {
         try {
           if (navigator.share) {
             await navigator.share({
-              title: "Deer Lake Sustainability Playbook",
+              title: "Community Store Sustainability Playbook",
               url,
             });
             return;

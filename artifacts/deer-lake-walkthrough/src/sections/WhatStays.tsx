@@ -14,7 +14,7 @@ export default function WhatStays() {
       head: "The public price page",
       tag: "Live by month 3 · used by month 6",
       body:
-        "Anyone in Deer Lake can see what the store paid, what it sells at, and what it keeps. Line by line.",
+        "Anyone in the community can see what the store paid, what it sells at, and what it keeps. Line by line.",
     },
     {
       head: "The household price lookup",
@@ -41,7 +41,7 @@ export default function WhatStays() {
           className="mono text-[11px] uppercase tracking-[0.22em] mb-3"
           style={{ color: "var(--color-accent-warm)" }}
         >
-          What stays with Deer Lake
+          What stays with the community
         </div>
         <h2
           className="serif font-medium text-[34px] leading-[1.1]"
@@ -60,7 +60,7 @@ export default function WhatStays() {
           className="serif text-[18px] leading-[1.55] mt-6 max-w-md"
           style={{ color: "var(--color-text)" }}
         >
-          Three things stay with Deer Lake forever — even after our contract
+          Three things stay with the community forever — even after our contract
           ends.
         </p>
 
@@ -115,7 +115,7 @@ export default function WhatStays() {
             <p>
               We charge a monthly fee for software, training, and a
               team that shows up. We take no cut of the groceries —
-              the margin stays in Deer Lake.
+              the margin stays in the community.
             </p>
             <p>
               The fee covers three things: the software (built by us,

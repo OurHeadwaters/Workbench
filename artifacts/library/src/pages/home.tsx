@@ -80,7 +80,7 @@ export default function Home() {
                 <CardDescription className="text-base leading-relaxed">
                   A named catalog of every failure mode in the current
                   northern-store model — with the evidence and the source it came
-                  from. Same dataset the Deer Lake Store deck reads from.
+                  from. Same dataset the community store analysis reads from.
                 </CardDescription>
               </div>
               <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0 mt-1" />

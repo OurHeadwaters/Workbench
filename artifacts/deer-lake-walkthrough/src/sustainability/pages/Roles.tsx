@@ -131,7 +131,7 @@ export default function Roles() {
             <span className="font-semibold">
               Practitioner, Distribution Lead, IT/Assistant:
             </span>{" "}
-            on Headwaters' payroll — Practitioner (software), Distribution Lead Tyler (Thunder Bay → Deer Lake, in person), IT/Assistant (bookkeeping, domains, Tyler's support). Engaged when food is flowing.
+            on Headwaters' payroll — Practitioner (software), Distribution Lead Tyler (Thunder Bay → community, in person), IT/Assistant (bookkeeping, domains, Tyler's support). Engaged when food is flowing.
           </li>
           <li>
             <span className="font-semibold">

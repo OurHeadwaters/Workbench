@@ -13,8 +13,8 @@ export default function Recap() {
   const rows: Array<[string, string]> = [
     ["What", "A second store. Band runs the floor. An operator couple on the cockpit."],
     ["System", "Square + QuickBooks + Local Line + the Headwaters cockpit. Payroll stays small. Doors stay open. Truck stays on time."],
-    ["Route", "Thunder Bay → Sioux Lookout → Dryden → Deer Lake. Two cold trucks."],
-    ["Back home", "~$125k–$200k of grocery margin stays in Deer Lake year one. 4 FT roles (contractor couple + Headwaters practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
+    ["Route", "Thunder Bay → Sioux Lookout → Dryden → community. Two cold trucks."],
+    ["Back home", "~$125k–$200k of grocery margin stays in the community year one. 4 FT roles (contractor couple + Headwaters practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
     ["Ask", "Stage 1 — planning trial: $25,000 flat (8 weeks, practitioner solo). Stage 2 — Tyler subcontracted for distribution: $42,000/mo + gas & insurance at cost. Band reserves. Most spending near the end, on the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],
@@ -37,9 +37,9 @@ export default function Recap() {
           className="serif font-medium text-[24px] leading-[1.15]"
           style={{ textWrap: "balance" }}
         >
-          A second store. Run by Deer Lake.
+          A second store. Run by the band.
           <br />
-          Margin stays in Deer Lake.
+          Margin stays in the community.
         </h2>
 
         <div className="mt-5 space-y-2.5">

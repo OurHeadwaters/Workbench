@@ -13,11 +13,11 @@ export default function ColdChain() {
       tag: "Lane 1 · The truck already on the road",
       head: "Thunder Bay → Sioux Lookout → Dryden",
       body:
-        "A family-run cold truck. Already on this road every two weeks. Deer Lake joins the route in May 2026.",
+        "A family-run cold truck. Already on this road every two weeks. The community joins the route in May 2026.",
     },
     {
       tag: "Lane 2 · The winter-road truck we add",
-      head: "Dryden → Deer Lake (winter road)",
+      head: "Dryden → community (winter road)",
       body:
         "A second truck for the winter road. Funded by the federal Local Food Infrastructure Fund. Kept separate on purpose.",
     },
@@ -108,9 +108,8 @@ export default function ColdChain() {
 
           <Reveal label="What's on the shelf" variant="ink">
             <p>
-              <span className="font-semibold">Local first.</span> Food from
-              Deer Lake itself goes on the shelf first. People know it comes
-              from home.
+              <span className="font-semibold">Local first.</span> Local food
+              goes on the shelf first. People know it comes from home.
             </p>
             <p>
               <span className="font-semibold">Regional next.</span> Slate River

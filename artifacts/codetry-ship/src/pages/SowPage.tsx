@@ -3,7 +3,7 @@ import { Download } from "lucide-react";
 function handleDownloadPdf() {
   if (typeof window === "undefined") return;
   const previousTitle = document.title;
-  document.title = "deer-lake-statement-of-work";
+  document.title = "headwaters-statement-of-work";
   try {
     window.print();
   } finally {
@@ -69,7 +69,7 @@ export function SowPage() {
               Bobbie Parr — Hourly Engagement
             </h1>
             <p className="font-serif text-lg text-foreground/70 mt-1 italic">
-              Deer Lake First Nation · Community Development &amp; Digital Planning
+              Community Development &amp; Digital Planning
             </p>
 
             <hr className="rule mt-5 mb-5 border-0 h-px"
@@ -112,7 +112,7 @@ export function SowPage() {
               />
               <SowRow
                 item="App maintenance"
-                description="Updates and improvements to the Deer Lake Store digital walkthrough, planner, and cockpit tools built during the CDP project."
+                description="Updates and improvements to the community store digital walkthrough, planner, and cockpit tools built during the CDP project."
               />
               <SowRow
                 item="Grant writing"
@@ -151,10 +151,10 @@ export function SowPage() {
                 Work begins on a task-by-task basis at the hourly rate above. No minimum hour commitment is required to start. Hours are logged and billed every two weeks with a plain-language summary of work completed.
               </p>
               <p>
-                Travel to Deer Lake is billed at an additional <strong>$150.00 per travel day</strong>. Expenses (fuel, accommodation, meals) are reimbursed at cost with receipts.
+                Travel to site is billed at an additional <strong>$150.00 per travel day</strong>. Expenses (fuel, accommodation, meals) are reimbursed at cost with receipts.
               </p>
               <p>
-                Either party may pause or end the engagement with two weeks' written notice. All work product and digital assets produced remain the property of Deer Lake First Nation.
+                Either party may pause or end the engagement with two weeks' written notice. All work product and digital assets produced remain the property of the community.
               </p>
             </div>
           </section>
@@ -216,7 +216,7 @@ export function SowPage() {
               <div className="border-b mt-8 mb-1"
                 style={{ borderColor: "hsl(var(--card-border))" }} />
               <p className="font-serif text-[13px] text-foreground/50">
-                Name, Title · Deer Lake First Nation · Date
+                Name, Title · Community · Date
               </p>
             </div>
           </footer>

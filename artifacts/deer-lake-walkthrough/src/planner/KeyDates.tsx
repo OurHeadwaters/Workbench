@@ -58,7 +58,7 @@ export function KeyDates({ d, mode }: { d: Derived; mode: ScenarioMode }) {
     { label: "Soft opening", value: fmtShort(d.buildSoftOpen) },
     { label: "Doors open", value: fmtShort(d.doorsOpen), tone: "warm" },
     {
-      label: "Handover to Deer Lake manager",
+      label: "Handover to community manager",
       value: fmtShort(d.buildHandover),
     },
   );

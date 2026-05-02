@@ -87,7 +87,7 @@ export interface SampleDataset {
 }
 
 export const SAMPLE: SampleDataset = {
-  brand: "Sample · Deer Lake demo",
+  brand: "Sample · community demo",
   period: "April 2026",
   closingDay: "Tuesday, April 28, 2026",
 
@@ -106,13 +106,13 @@ export const SAMPLE: SampleDataset = {
   costCentres: [
     {
       code: "DL-STORE",
-      name: "Deer Lake store",
+      name: "Community store",
       blurb: "Day-to-day grocery store operations.",
     },
     {
       code: "DL-COLD",
       name: "Cold-chain route",
-      blurb: "Truck route Thunder Bay → Sioux Lookout → Dryden → Deer Lake.",
+      blurb: "Truck route Thunder Bay → Sioux Lookout → Dryden → community.",
     },
     {
       code: "DL-TRAIN",
@@ -183,7 +183,7 @@ export const SAMPLE: SampleDataset = {
 
   signOff: {
     preparedBy: "Headwaters bookkeeper",
-    presentedTo: "Deer Lake Band Council",
+    presentedTo: "Band Council",
     line: "Reviewed and signed by the band's appointed reviewer at the monthly council meeting.",
   },
 };

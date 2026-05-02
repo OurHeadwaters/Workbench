@@ -102,7 +102,7 @@ export function BioPage() {
               <p>
                 She is the practitioner behind Headwaters and the codetry
                 practice: the author of the Practitioner Operating Plan,
-                the Codetry Handbook, and the Deer Lake Store operating
+                the Codetry Handbook, and the community store operating
                 plan the contractor is reading right now. The work is
                 shipped, not proposed — a constellation of running
                 artifacts the chief, the contractor, and the council can
@@ -149,7 +149,7 @@ export function BioPage() {
                   testId="rate-trial"
                 />
                 <RateRow
-                  label="Full-time Deer Lake project"
+                  label="Full-time engagement"
                   amount="$80.00 / hour"
                   note="Ongoing engagement, hourly"
                   testId="rate-fulltime"
@@ -157,13 +157,13 @@ export function BioPage() {
                 <RateRow
                   label="Travel premium"
                   amount="$150.00 / day"
-                  note="On days worked at Deer Lake"
+                  note="On days worked on-site"
                   testId="rate-travel"
                 />
                 <RateRow
                   label="Expenses"
                   amount="Reimbursed at cost"
-                  note="Reasonable travel to/from Deer Lake, lodging, meals"
+                  note="Reasonable travel to/from site, lodging, meals"
                   testId="rate-expenses"
                 />
               </ul>
@@ -259,7 +259,7 @@ export function BioPage() {
               />
               <WorkLink
                 href="/deer-lake-walkthrough/"
-                label="Deer Lake Store walkthrough"
+                label="Community store walkthrough"
                 testId="work-deer-lake-walkthrough"
               />
               <WorkLink
@@ -305,7 +305,7 @@ export function BioPage() {
               className="font-serif text-[14.5px] leading-[1.5]"
               data-testid="contact-blurb"
             >
-              Reach out by email to scope a trial period or a Deer Lake
+              Reach out by email to scope a trial period or a community
               engagement. Terms are on the rate card above.
             </p>
 

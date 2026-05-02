@@ -24,7 +24,7 @@ export default function WhyCurrentFails() {
     {
       lead: "$1.6 to $2.0 million leaves",
       body:
-        "Every year, that much grocery spend leaves Deer Lake — to Winnipeg, or to the one store in town.",
+        "Every year, that much grocery spend leaves the community — to Winnipeg, or to the one store in town.",
     },
   ];
 
@@ -45,7 +45,7 @@ export default function WhyCurrentFails() {
           >
             <img
               src={`${base}hero-boreal.png`}
-              alt="A single road cutting through frozen boreal forest under a flat winter sky — the only way into Deer Lake when the road is open"
+              alt="A single road cutting through frozen boreal forest under a flat winter sky — the only way in when the road is open"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: "center 45%" }}
             />
@@ -111,8 +111,8 @@ export default function WhyCurrentFails() {
             <Reveal label="Where these numbers come from">
               <p>
                 <span className="font-semibold">87 of every 100</span> fly-in
-                First Nations in Ontario have just one grocery store. Deer
-                Lake is one of them.
+                First Nations in Ontario have just one grocery store. The
+                same pattern holds across the north.
               </p>
               <p
                 className="mono text-[12px] uppercase tracking-[0.16em] mt-3"

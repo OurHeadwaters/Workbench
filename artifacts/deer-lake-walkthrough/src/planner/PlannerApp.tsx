@@ -253,7 +253,7 @@ export default function PlannerApp() {
       tone: "primary",
     },
     {
-      label: "Handover to Deer Lake manager",
+      label: "Handover to community manager",
       start: addDays(derived.buildHandover, -30),
       end: derived.buildHandover,
       tone: "tan",

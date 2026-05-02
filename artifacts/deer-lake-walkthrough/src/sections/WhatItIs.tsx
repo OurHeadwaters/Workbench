@@ -17,7 +17,7 @@ export default function WhatItIs() {
       body: "Cold-chain truck route, calendar that bends, till that runs offline.",
     },
     {
-      tag: "Margin stays in Deer Lake",
+      tag: "Margin stays in the community",
       body: "The grocery margin doesn't fly south. It funds jobs and lower prices here.",
     },
   ];
@@ -39,7 +39,7 @@ export default function WhatItIs() {
           className="serif font-medium text-[34px] leading-[1.1] mb-2"
           style={{ color: "var(--color-primary)", textWrap: "balance" }}
         >
-          A second grocery store in Deer Lake.
+          A second grocery store. Community-owned.
           <span
             className="italic font-normal block mt-2"
             style={{ color: "var(--color-accent-warm)" }}
@@ -100,15 +100,14 @@ export default function WhatItIs() {
             </p>
             <p>
               <span className="font-semibold">Mistissini Meechum store.</span> A
-              Cree community of similar size to Deer Lake. Their store has been
+              Cree community of similar size. Their store has been
               community-owned since 1979.
             </p>
             <p
               className="serif italic text-[15px] mt-2"
               style={{ color: "var(--color-muted)" }}
             >
-              Not an experiment. The shape is proven. Deer Lake's version is
-              what's new.
+              Not an experiment. The shape is proven.
             </p>
           </Reveal>
         </div>

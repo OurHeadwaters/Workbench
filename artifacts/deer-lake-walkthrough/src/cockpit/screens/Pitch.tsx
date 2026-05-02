@@ -69,7 +69,7 @@ export default function Pitch() {
         }}
         data-testid="pitch-context-tag"
       >
-        For tonight's conversation · Deer Lake
+        For tonight's conversation · the community
       </div>
 
       <h1

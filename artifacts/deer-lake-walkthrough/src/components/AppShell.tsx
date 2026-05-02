@@ -43,14 +43,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                 letterSpacing: "0.04em",
               }}
             >
-              DL
+              HW
             </div>
             <div className="leading-tight">
               <p
                 className="serif text-[14px] font-semibold"
                 style={{ color: "var(--color-primary)" }}
               >
-                Deer Lake walkthrough
+                Community store walkthrough
               </p>
               <p
                 className="mono text-[10px] uppercase tracking-[0.18em]"
@@ -112,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           background: "var(--color-bg)",
         }}
       >
-        Headwaters · Deer Lake walkthrough · for the contractor
+        Headwaters · Community store walkthrough · for the contractor
       </footer>
     </div>
   );

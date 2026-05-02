@@ -84,7 +84,7 @@ export default function PhaseLockSignoff() {
             className="mono text-[10px] uppercase tracking-[0.22em]"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            Deer Lake · Phase locks
+            Community store · Phase locks
           </div>
           <div
             className="serif text-[16px] font-semibold leading-tight mt-0.5"
@@ -127,7 +127,7 @@ export default function PhaseLockSignoff() {
             className="mono text-[8px] uppercase tracking-[0.22em]"
             style={{ color: "var(--color-accent-warm)" }}
           >
-            Deer Lake · Headwaters · Phase-lock sign-off sheet
+            Headwaters · Phase-lock sign-off sheet
           </div>
           <div
             className="serif text-[17px] font-semibold leading-tight mt-0.5"
@@ -140,7 +140,7 @@ export default function PhaseLockSignoff() {
           className="mono text-[8px] uppercase tracking-[0.16em] text-right"
           style={{ color: "var(--color-muted)" }}
         >
-          Confidential · Deer Lake First Nation
+          Confidential · Community
           <br />
           Date:{" "}
           {new Date().toLocaleDateString("en-CA", {
@@ -287,7 +287,7 @@ export default function PhaseLockSignoff() {
                 className="serif text-[12px] leading-[1.5]"
                 style={{ color: "var(--color-text)" }}
               >
-                Deer Lake First Nation · Headwaters food-systems pilot.
+                Headwaters food-systems pilot.
                 Signed copies to: Chief's office, Headwaters practitioner,
                 contractor file.
               </p>

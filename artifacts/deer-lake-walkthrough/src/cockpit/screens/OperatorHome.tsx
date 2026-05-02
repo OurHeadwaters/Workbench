@@ -153,7 +153,7 @@ export default function OperatorHome() {
                 fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
               }}
             >
-              <span>Deer Lake General Store · iPad · 9:14 am</span>
+              <span>Community General Store · iPad · 9:14 am</span>
               <span className="flex items-center gap-1.5">
                 <WifiOff size={12} /> Offline · sales saved here
               </span>

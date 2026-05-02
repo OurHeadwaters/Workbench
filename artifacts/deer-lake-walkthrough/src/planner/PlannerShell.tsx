@@ -86,7 +86,7 @@ export function PlannerShell({ children }: { children: ReactNode }) {
           background: "var(--color-bg)",
         }}
       >
-        Headwaters · Deer Lake phase planner · for the contractor
+        Headwaters · Community store phase planner · for the contractor
       </footer>
     </div>
   );

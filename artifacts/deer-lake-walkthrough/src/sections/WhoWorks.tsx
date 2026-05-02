@@ -26,7 +26,7 @@ export default function WhoWorks() {
     {
       tag: "Bullet 3 · Margin comes home in year one",
       body:
-        "About $125k–$200k of grocery margin stays in Deer Lake the first year — money that today flies south at 58¢ on the dollar. Four full-time roles — two contractor, two Headwaters — plus a band casual pool of 15+ people getting paid hours each week.",
+        "About $125k–$200k of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar. Four full-time roles — two contractor, two Headwaters — plus a band casual pool of 15+ people getting paid hours each week.",
     },
   ];
 
@@ -133,7 +133,7 @@ export default function WhoWorks() {
               </li>
               <li>
                 <span className="font-semibold">Distribution Lead (Tyler).</span>{" "}
-                Handles Thunder Bay → Deer Lake distribution in person. Runs the 1-ton truck and trailer.
+                Handles Thunder Bay → community distribution in person. Runs the 1-ton truck and trailer.
               </li>
               <li>
                 <span className="font-semibold">IT/Assistant.</span>{" "}

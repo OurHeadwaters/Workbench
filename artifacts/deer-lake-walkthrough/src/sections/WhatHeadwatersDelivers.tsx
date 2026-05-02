@@ -339,7 +339,7 @@ export default function WhatHeadwatersDelivers() {
           <Reveal label="Proof for line 2 — the cold-chain plan is already drawn">
             <p>
               The route is already planned: Thunder Bay → Sioux Lookout →
-              Dryden, then a winter-road truck Dryden → Deer Lake, with plane
+              Dryden, then a winter-road truck Dryden → community, with plane
               backup April through November. The "How groceries get here"
               section below has the lane-by-lane detail.
             </p>
@@ -377,7 +377,7 @@ export default function WhatHeadwatersDelivers() {
             <p>
               The Practitioner's Guide is the reference Bobbie's own
               practitioners work from — contracts ledger, archetypes,
-              personal-cash discipline. It's the bench the Deer Lake training
+              personal-cash discipline. It's the bench the community training
               gets staffed from.
             </p>
             <p

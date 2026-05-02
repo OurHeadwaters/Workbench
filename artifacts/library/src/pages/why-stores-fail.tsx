@@ -76,8 +76,8 @@ export default function WhyStoresFailPage({ readOnly = false }: WhyStoresFailPag
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
           A named catalog of every failure mode in the current northern-store
           model — with the evidence and the source it came from. The dataset
-          backing this page is the same one the Deer Lake Store deck reads from,
-          so the deck and the library can never drift.
+          backing this page is the same one the community store analysis reads from,
+          so they can never drift.
         </p>
         {!readOnly && PHENOMENA.length > 0 && (
           <Link href="/phenomena">

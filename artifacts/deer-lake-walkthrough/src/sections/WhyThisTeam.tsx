@@ -17,7 +17,7 @@ export default function WhyThisTeam() {
   }> = [
     {
       tag: "Claim 1 · We've already written this plan",
-      head: "The Deer Lake operating plan exists.",
+      head: "The operating plan exists.",
       body:
         "Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.",
       links: ["/practitioners-guide-v2/workbench"],
@@ -26,7 +26,7 @@ export default function WhyThisTeam() {
       tag: "Claim 2 · We've already built the software",
       head: "The bookkeeping system is live.",
       body:
-        "The same patterns used for the Deer Lake till. Open it in another tab — the work isn't theoretical.",
+        "The same patterns used for the community store till. Open it in another tab — the work isn't theoretical.",
       links: ["/headwaters-books/", "/library/"],
     },
     {
@@ -198,13 +198,13 @@ export default function WhyThisTeam() {
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              The one-pager lists every cost: Practitioner (software), Distribution Lead Tyler (Thunder Bay → Deer Lake, in person), IT/Assistant (domains, bookkeeping, Tyler's support), contractor couple, overhead, and the 1-ton truck.
+              The one-pager lists every cost: Practitioner (software), Distribution Lead Tyler (Thunder Bay → community, in person), IT/Assistant (domains, bookkeeping, Tyler's support), contractor couple, overhead, and the 1-ton truck.
             </p>
             <p
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              Deer Lake engagement — two stages.{" "}
+              Two stages.{" "}
               <span className="font-semibold">Stage 1 (planning trial): $25,000 flat</span>{" "}
               — eight weeks at $80/hr, practitioner solo, no team hired.{" "}
               <span className="font-semibold">Stage 2 (distribution live): $42,000/month</span>{" "}
@@ -237,7 +237,7 @@ export default function WhyThisTeam() {
             <p>
               <span className="font-semibold">Headwaters Books.</span> The
               bookkeeping the agency uses for its own books — same patterns
-              the Deer Lake till will use.
+              the community store till will use.
             </p>
             <p>
               <span className="font-semibold">Northern Food Systems
@@ -278,7 +278,7 @@ export default function WhyThisTeam() {
               Read it on a phone.
             </p>
             <p>
-              Same method used at the kitchen table in Dryden, Deer Lake,
+              Same method used at the kitchen table in Dryden, Thunder Bay,
               anywhere Headwaters works. Not a slide deck — a practice.
             </p>
             <p
