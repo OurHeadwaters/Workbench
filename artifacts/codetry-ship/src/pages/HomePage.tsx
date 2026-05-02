@@ -98,7 +98,7 @@ export function HomePage() {
             <WorkCard
               eyebrow="Operations · For entrepreneurs"
               title="Rootwork"
-              description="A calm command center for builders who can't sit still. Drop in the chaos — voice memos, screenshots, half-finished ideas — and find what you need in seconds."
+              description="A calm command center for builders who can't sit still. Private and self-hosted — your notes stay yours. Drop in the chaos, find what you need in seconds."
               href="https://community-knowledge-hub.replit.app/studio/"
               external
               testId="work-card-rootwork"
