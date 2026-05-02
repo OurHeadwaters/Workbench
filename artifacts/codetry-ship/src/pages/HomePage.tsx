@@ -1,4 +1,56 @@
+import { useState, type FormEvent } from "react";
+import { ApiError, postIntake } from "@/lib/api";
+
+interface IntakeFormState {
+  name: string;
+  email: string;
+  community: string;
+  role: string;
+  whatTheyNeed: string;
+  website: string; // honeypot
+}
+
+const EMPTY_INTAKE: IntakeFormState = {
+  name: "",
+  email: "",
+  community: "",
+  role: "",
+  whatTheyNeed: "",
+  website: "",
+};
+
 export function HomePage() {
+  const [form, setForm] = useState<IntakeFormState>(EMPTY_INTAKE);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmedName, setConfirmedName] = useState<string | null>(null);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await postIntake({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        community: form.community.trim(),
+        role: form.role.trim() || undefined,
+        whatTheyNeed: form.whatTheyNeed.trim(),
+      });
+      setConfirmedName(res.name);
+      setForm(EMPTY_INTAKE);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Could not send your message just now. Try again in a moment.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <main className="home-page min-h-screen w-full bg-background text-foreground">
       <div className="mx-auto max-w-[52rem] px-6 sm:px-8 py-16 sm:py-24">
@@ -29,6 +81,190 @@ export function HomePage() {
             and built to run without an outside consultant on retainer.
           </p>
         </header>
+
+        <hr
+          className="my-12 sm:my-16"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        />
+
+        {/* ── start a conversation ── */}
+        <section data-testid="home-intake">
+          <div className="flex items-baseline justify-between gap-3 mb-6">
+            <h2
+              className="font-serif text-2xl tracking-tight"
+              data-testid="intake-heading"
+            >
+              Start a conversation
+            </h2>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.22em]"
+              style={{ color: "hsl(var(--accent))" }}
+            >
+              no ceremony required
+            </p>
+          </div>
+
+          <div className="space-y-4 font-serif text-[15px] leading-[1.6] mb-8" data-testid="intake-intro">
+            <p>
+              The usual first step is a trial period: a bounded scope of work
+              at an hourly rate, no retainer, no long commitment. If the fit
+              is right, it continues. If not, you leave with something useful
+              and no obligation to keep going.
+            </p>
+            <p>
+              Tell us a little about your community and what you are trying
+              to build. That is enough to start.
+            </p>
+          </div>
+
+          {confirmedName ? (
+            <div
+              className="rounded-md border bg-card p-7 sm:p-9 space-y-4"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+              role="status"
+              aria-live="polite"
+              data-testid="intake-confirmation"
+            >
+              <p
+                className="font-mono text-[11px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                received
+              </p>
+              <h3 className="font-serif text-2xl leading-tight">
+                Thank you, {confirmedName}.
+              </h3>
+              <p className="font-serif text-base leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
+                We have your message. Bobbie will read it and write back
+                with a plain-language response — no sales pitch, no proposal
+                deck. Usually within a day or two.
+              </p>
+              <button
+                type="button"
+                onClick={() => setConfirmedName(null)}
+                className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                data-testid="intake-send-another"
+              >
+                send another message
+              </button>
+            </div>
+          ) : (
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5"
+              data-testid="form-intake"
+              noValidate
+            >
+              {/* honeypot */}
+              <div
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}
+              >
+                <label>
+                  Website
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.website}
+                    onChange={(e) => setForm({ ...form, website: e.target.value })}
+                  />
+                </label>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <IntakeField
+                  id="intake-name"
+                  label="Your name"
+                  required
+                  value={form.name}
+                  onChange={(v) => setForm({ ...form, name: v })}
+                  testId="input-intake-name"
+                />
+                <IntakeField
+                  id="intake-email"
+                  label="Email"
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(v) => setForm({ ...form, email: v })}
+                  testId="input-intake-email"
+                />
+                <IntakeField
+                  id="intake-community"
+                  label="Community or organisation"
+                  required
+                  value={form.community}
+                  onChange={(v) => setForm({ ...form, community: v })}
+                  testId="input-intake-community"
+                />
+                <IntakeField
+                  id="intake-role"
+                  label="Your role (optional)"
+                  value={form.role}
+                  onChange={(v) => setForm({ ...form, role: v })}
+                  testId="input-intake-role"
+                  placeholder="Chief, Manager, Director…"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="intake-need"
+                  className="block font-sans text-sm font-medium"
+                >
+                  What are you trying to build?{" "}
+                  <span style={{ color: "hsl(var(--accent))" }}>*</span>
+                </label>
+                <textarea
+                  id="intake-need"
+                  required
+                  rows={4}
+                  value={form.whatTheyNeed}
+                  onChange={(e) => setForm({ ...form, whatTheyNeed: e.target.value })}
+                  placeholder="A sentence or two is enough. What is the problem, and what would a good outcome look like for your community?"
+                  className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2 resize-y"
+                  style={{ borderColor: "hsl(var(--card-border))" }}
+                  data-testid="input-intake-need"
+                />
+              </div>
+
+              {error ? (
+                <p
+                  role="alert"
+                  className="font-sans text-sm text-destructive"
+                  data-testid="intake-error"
+                >
+                  {error}
+                </p>
+              ) : null}
+
+              <div className="flex flex-wrap items-center gap-5 pt-1">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    background: "hsl(var(--accent))",
+                    color: "hsl(var(--background))",
+                  }}
+                  data-testid="button-intake-submit"
+                >
+                  {submitting ? "Sending…" : "Send message"}
+                </button>
+                <a
+                  href="mailto:bobbie@ourheadwaters.ca"
+                  className="font-mono text-[11px] uppercase tracking-[0.18em] opacity-60 hover:opacity-90"
+                  style={{ color: "hsl(var(--foreground))" }}
+                  data-testid="intake-email-fallback"
+                >
+                  or email directly →
+                </a>
+              </div>
+            </form>
+          )}
+        </section>
 
         <hr
           className="my-12 sm:my-16"
@@ -127,57 +363,41 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
-        {/* ── engage ── */}
-        <section data-testid="home-engage">
+        {/* ── about ── */}
+        <section data-testid="home-about">
           <div className="flex items-baseline justify-between gap-3 mb-5">
             <h2
               className="font-serif text-2xl tracking-tight"
-              data-testid="engage-heading"
+              data-testid="about-heading"
             >
-              How to start
+              The practitioner
             </h2>
             <p
               className="font-mono text-[10px] uppercase tracking-[0.22em]"
               style={{ color: "hsl(var(--accent))" }}
             >
-              no ceremony required
+              bobbie parr
             </p>
           </div>
-
-          <div className="space-y-4 font-serif text-[15px] leading-[1.6]" data-testid="engage-body">
-            <p>
-              The usual first step is a trial period: a bounded scope of work
-              at an hourly rate, no retainer, no long commitment. If the fit
-              is right, it continues. If not, you leave with something useful
-              and no obligation to keep going.
-            </p>
-            <p>
-              Reach out by email with a sentence or two about your community
-              and what you are trying to build. That is enough to start.
-            </p>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center gap-6" data-testid="engage-actions">
-            <a
-              href="mailto:bobbie@ourheadwaters.ca"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-sm font-sans text-sm font-medium tracking-wide transition-opacity hover:opacity-90"
-              style={{
-                background: "hsl(var(--accent))",
-                color: "hsl(var(--background))",
-              }}
-              data-testid="engage-email-btn"
-            >
-              bobbie@ourheadwaters.ca
-            </a>
-            <a
-              href="bio"
-              className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-70"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-              data-testid="engage-bio-link"
-            >
-              Rate card and full bio →
-            </a>
-          </div>
+          <p
+            className="font-serif text-[15px] leading-[1.6] mb-6"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+            data-testid="about-body"
+          >
+            Single-practitioner, by design. Plain language, dollar-honest,
+            no startup-pitch tone. Rate card and full background on the bio page.
+          </p>
+          <a
+            href="bio"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-sm font-sans text-sm font-medium tracking-wide border transition-opacity hover:opacity-80"
+            style={{
+              borderColor: "hsl(var(--accent))",
+              color: "hsl(var(--accent))",
+            }}
+            data-testid="link-bio"
+          >
+            Rate card and full bio →
+          </a>
         </section>
 
         {/* ── footer ── */}
@@ -197,6 +417,51 @@ export function HomePage() {
 
       </div>
     </main>
+  );
+}
+
+interface IntakeFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  testId: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+}
+
+function IntakeField({
+  id,
+  label,
+  value,
+  onChange,
+  testId,
+  type = "text",
+  required,
+  placeholder,
+}: IntakeFieldProps) {
+  return (
+    <div className="space-y-2">
+      <label htmlFor={id} className="block font-sans text-sm font-medium">
+        {label}
+        {required ? (
+          <span className="ml-1" style={{ color: "hsl(var(--accent))" }}>*</span>
+        ) : null}
+      </label>
+      <input
+        id={id}
+        type={type}
+        required={required}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        autoComplete={type === "email" ? "email" : "off"}
+        className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2"
+        style={{ borderColor: "hsl(var(--card-border))" }}
+        data-testid={testId}
+      />
+    </div>
   );
 }
 

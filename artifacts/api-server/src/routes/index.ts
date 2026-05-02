@@ -9,6 +9,7 @@ import shipManifestRouter from "./shipManifest";
 import handbookRouter from "./handbook";
 import refundInvocationRouter from "./refundInvocation";
 import deadheadRouter from "./deadhead";
+import intakeRouter from "./intake";
 
 const router: IRouter = Router();
 
@@ -21,6 +22,7 @@ router.use("/wordpile", wordpileRouter);
 router.use("/ship-manifest", shipManifestRouter);
 router.use("/handbook", handbookRouter);
 router.use("/refund-invocation", refundInvocationRouter);
+router.use("/", intakeRouter);
 router.use("/", deadheadRouter);
 
 export default router;

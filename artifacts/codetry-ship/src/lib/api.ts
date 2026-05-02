@@ -122,6 +122,43 @@ export async function downloadManifestCsv(token: string): Promise<void> {
   URL.revokeObjectURL(url);
 }
 
+// ----------------------- community development intake -----------------------
+
+export interface IntakePayload {
+  name: string;
+  email: string;
+  community: string;
+  role?: string;
+  whatTheyNeed: string;
+}
+
+export interface IntakeResult {
+  ok: true;
+  id: string;
+  name: string;
+}
+
+export async function postIntake(payload: IntakePayload): Promise<IntakeResult> {
+  const res = await fetch("/api/intake", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    let msg = "Something went wrong. Please try again.";
+    let retry: number | undefined;
+    try {
+      const body = (await res.json()) as { error?: string; retryAfterSec?: number };
+      if (body.error) msg = body.error;
+      retry = body.retryAfterSec;
+    } catch {
+      // non-JSON body — keep default
+    }
+    throw new ApiError(res.status, msg, retry);
+  }
+  return (await res.json()) as IntakeResult;
+}
+
 // ----------------------- deadhead intake -----------------------
 
 export interface DeadheadItem {

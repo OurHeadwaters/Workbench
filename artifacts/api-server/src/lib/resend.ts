@@ -191,6 +191,44 @@ export async function sendSignerReply(
   });
 }
 
+// ─── Community development intake notification ─────────────────────────────────
+
+export interface CommunityIntakeEmailPayload {
+  name: string;
+  email: string;
+  community: string;
+  role: string | null;
+  whatTheyNeed: string;
+}
+
+export async function sendCommunityIntakeNotification(
+  payload: CommunityIntakeEmailPayload,
+): Promise<SendResult> {
+  const operator =
+    process.env.RESEND_OPERATOR_EMAIL ?? OPERATOR_DEFAULT;
+  const subject = `New community inquiry: ${payload.community}`;
+  const body = [
+    "A new community development inquiry has come in through the Headwaters homepage.",
+    "",
+    `Name: ${payload.name}`,
+    `Email: ${payload.email}`,
+    `Community / org: ${payload.community}`,
+    `Role: ${payload.role ?? "—"}`,
+    "",
+    "What they're trying to build:",
+    payload.whatTheyNeed,
+    "",
+    "—Headwaters",
+  ].join("\n");
+
+  return sendEmail({
+    to: operator,
+    subject,
+    text: body,
+    replyTo: payload.email,
+  });
+}
+
 // ─── Refund-invocation email helpers ──────────────────────────────────────────
 
 /**
