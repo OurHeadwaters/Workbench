@@ -58,20 +58,21 @@ export function ContractsPage() {
       <PhaseBlock
         key="tithe"
         index={phaseIndex++}
-        title={`Tithe · ${pct(a.tithePct)} of revenue, off the top`}
+        title={`Practitioner tithe · ${pct(a.tithePct)} of draw, first claim on drawings`}
         tag={a.feeTag}
         accent={b.accent}
       >
         <p className="text-sm text-muted-foreground">
-          Giving is the first claim on revenue, paid before cost basis or any capital allocation.{" "}
+          Giving is the first claim on practitioner drawings — not on revenue. Paid from Bobbie's
+          draw before personal spending or any other allocation.{" "}
           <strong className="text-foreground">{money(a.titheMonthly)}/mo</strong> for {a.termMonths}{" "}
           months = <strong className="text-foreground">{money(a.titheTotal)}</strong> over the
           engagement.
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
-          Dave Ramsey discipline: the tithe is what you decided, not what was left. Locked the
-          moment the fee is locked — wages, capital recovery (both legs), Brightside, and Reserve /
-          Innovation absorb the cost of that decision.
+          Dave Ramsey discipline: the tithe is what you decided, not what was left. This is a
+          personal obligation on Bobbie's draw, not a business expense — the business surplus
+          ({money(a.monthlySurplusJunAug)}/mo) is separate and goes to capital recovery / waterfall.
         </p>
       </PhaseBlock>
     ),

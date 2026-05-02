@@ -2,27 +2,28 @@
  * DebtAttackPage — Bobbie's private debt attack plan.
  *
  * Three phases: buffer → Debt A ($40k) → Debt B ($72k).
- * Personal spending: $4,000 bi-weekly ($8,000/mo) from Bobbie draw until debt-free.
- * All engagement income above personal spending goes to the active phase target.
+ * Personal take-home: $2,000 bi-weekly ($4,000/mo) from Bobbie draw until debt-free.
+ * Tithe rule (permanent): first claim on practitioner DRAWINGS only — not on revenue.
+ *   During debt attack: tithe on $4,000/mo take-home = $400/mo.
+ * All engagement income above personal spending + tithe goes to the active phase target.
  * Debt-free is the trigger to increase personal spending.
  *
  * Math (V7 rates — Bobbie $175/hr billed, $105/hr net):
- *   Monthly billed:          $39,200
- *   Tithe (10% of billed):    $3,920   ← on business revenue
- *   Bobbie draw:             $16,800   ($105/hr × 160 hr/mo)
- *   Tyler sub:               $11,200
- *   Overheads:                $1,292
- *   Business surplus:         $5,988/mo
+ *   Monthly billed:            $39,200
+ *   Tyler sub:                ($11,200)
+ *   Overheads:                 ($1,292)
+ *   Bobbie draw:              ($16,800)  ($105/hr × 160 hr/mo)
+ *   Business surplus:          $9,908/mo  (no business tithe — tithe is personal)
  *
- *   Bobbie personal spending: $8,000/mo ($4,000 bi-weekly from draw)
- *   Unspent draw to debt:     $8,800   (draw $16,800 − spending $8,000)
- *   Business surplus to debt: $5,988
- *   Total stacked:           $14,788/mo
+ *   From draw — personal take-home: ($4,000)  ($2,000 bi-weekly)
+ *   From draw — tithe (10% of $4k):   ($400)  first claim on drawings
+ *   From draw — to debt:            $12,400  ($16,800 − $4,000 − $400)
+ *   Total stacked:                  $22,308/mo  ($12,400 from draw + $9,908 surplus)
  *
- *   Phase 1 — buffer:    $20,000 ÷ $14,788 ≈ 1.4 months
- *   Phase 2 — $40k debt: $40,000 ÷ $14,788 ≈ 2.7 months
- *   Phase 3 — $72k debt: $72,000 ÷ $14,788 ≈ 4.9 months
- *   Total to debt-free: ~10 months from engagement start (Jun 2026 → Apr 2027)
+ *   Phase 1 — buffer:    $20,000 ÷ $22,308 ≈ 0.9 months → 1 month
+ *   Phase 2 — $40k debt: $40,000 ÷ $22,308 ≈ 1.8 months → 2 months
+ *   Phase 3 — $72k debt: $72,000 ÷ $22,308 ≈ 3.2 months → 4 months
+ *   Total to debt-free: ~7 months from engagement start (Jun 2026 → Jan 2027)
  */
 
 import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign } from "lucide-react";
@@ -30,9 +31,10 @@ import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign }
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const BOBBIE_DRAW_MONTHLY = 16_800;  // $105/hr × 160 hr/mo (V7 rate)
-const PERSONAL_MONTHLY    = 8_000;   // $4,000 bi-weekly
-const SURPLUS_MONTHLY     = 5_988;   // business surplus after tithe + draw + Tyler + OH
-const STACK_MONTHLY       = (BOBBIE_DRAW_MONTHLY - PERSONAL_MONTHLY) + SURPLUS_MONTHLY; // 14,788
+const PERSONAL_MONTHLY    = 4_000;   // $2,000 bi-weekly take-home during debt attack
+const TITHE_MONTHLY       = 400;     // 10% of $4,000 take-home — first claim on drawings, NOT on revenue
+const SURPLUS_MONTHLY     = 9_908;   // business surplus: revenue − draw − Tyler − OH (no business tithe)
+const STACK_MONTHLY       = (BOBBIE_DRAW_MONTHLY - PERSONAL_MONTHLY - TITHE_MONTHLY) + SURPLUS_MONTHLY; // 22,308
 
 const BUFFER_TARGET      = 20_000;
 const DEBT_A             = 40_000;
@@ -323,7 +325,7 @@ export function DebtAttackPage() {
             Debt attack plan
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Buffer → $40k → $72k → debt free · $4,000 bi-weekly until debt-free
+            Buffer → $40k → $72k → debt free · $2,000 bi-weekly take-home during debt attack
           </p>
         </div>
       </header>
@@ -338,7 +340,7 @@ export function DebtAttackPage() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Personal/mo", value: money(PERSONAL_MONTHLY), sub: "$4,000 bi-weekly", color: "#065f46" },
+            { label: "Personal/mo", value: money(PERSONAL_MONTHLY), sub: "$2,000 bi-weekly", color: "#065f46" },
             { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "after personal spending", color: "#c2410c" },
             { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k", color: "#6d28d9" },
             { label: "Debt-free", value: DEBT_FREE_DATE.split(" ").slice(-1)[0], sub: DEBT_FREE_DATE, color: "#92400e" },
@@ -370,11 +372,14 @@ export function DebtAttackPage() {
         <div className="space-y-2.5">
           {[
             { label: "Total billed to client", value: 39_200, sign: "+", color: "#065f46" },
-            { label: "Tithe (10% of billed)", value: -3_920, sign: "−", color: "#c2410c", note: "on business revenue" },
-            { label: "Bobbie personal ($4k bi-weekly)", value: -8_000, sign: "−", color: "#6d28d9", note: "from draw · remaining $8,800 → debt" },
             { label: "Tyler subcontract", value: -11_200, sign: "−", color: "#c2410c" },
             { label: "Overheads (lean)", value: -1_292, sign: "−", color: "#c2410c" },
-            { label: "Stacked toward debt", value: 14_788, sign: "=", color: "#92400e", bold: true },
+            { label: "Bobbie draw ($105/hr × 160 hr)", value: -16_800, sign: "−", color: "#6d28d9" },
+            { label: "Business surplus (no business tithe)", value: 9_908, sign: "=", color: "#065f46", note: "goes entirely to debt" },
+            { label: "— Bobbie take-home ($2k bi-weekly)", value: -4_000, sign: "−", color: "#6d28d9", note: "from draw · personal spending" },
+            { label: "— Tithe (10% of take-home · first claim)", value: -400, sign: "−", color: "#6d28d9", note: "personal · on drawings only" },
+            { label: "— From draw to debt", value: 12_400, sign: "=", color: "#065f46", note: "draw $16,800 − $4,000 − $400" },
+            { label: "Total stacked toward debt", value: STACK_MONTHLY, sign: "→", color: "#92400e", bold: true },
           ].map((row) => (
             <div
               key={row.label}
@@ -526,8 +531,8 @@ export function DebtAttackPage() {
           Rules of the plan · non-negotiable
         </p>
         {[
-          { icon: DollarSign, color: "#065f46", rule: "Personal spending stays at $8,000/mo ($4,000 bi-weekly) until the last debt clears. No lifestyle creep before the finish line." },
-          { icon: CheckCircle2, color: "#065f46", rule: "The business tithe (10% of $39,200 billed = $3,920/mo) is paid off the top. One tithe, first — no separate tithe on personal spending." },
+          { icon: DollarSign, color: "#065f46", rule: "Personal take-home stays at $2,000 bi-weekly ($4,000/mo) until the last debt clears. No lifestyle creep before the finish line." },
+          { icon: CheckCircle2, color: "#065f46", rule: "Tithe is the first claim on practitioner drawings — not on revenue. During debt attack: 10% of $4,000/mo take-home = $400/mo. One tithe, on the draw. Permanent rule." },
           { icon: Shield, color: "#c2410c", rule: "The $20,000 buffer is untouchable once built. It absorbs a bad month without breaking the debt plan." },
           { icon: Zap, color: "#6d28d9", rule: "$40k dies before $72k. Clearing the smaller one first gives a real psychological win and frees the full stack for the bigger one." },
           { icon: Trophy, color: "#92400e", rule: "Debt-free is the trigger for a drawings increase — not a contract renewal, not a good month, not a feeling. The date on the plan." },

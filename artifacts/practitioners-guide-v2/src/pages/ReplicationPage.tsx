@@ -122,7 +122,7 @@ export function ReplicationPage() {
             />
             <TravelItem
               title="Three-phase surplus deployment"
-              body="Tithe (10% of revenue, off the top) first. Capital recovery second. Launch one tool that pays for itself third. Reserve / Innovation (75/25) fourth. Order is non-negotiable — Giving is what you decided, not what was left, and the discipline is what makes the war chest real."
+              body="Practitioner tithe (10% of draw, first claim on drawings) first — this is personal, not a revenue deduction. Capital recovery second. Launch one tool that pays for itself third. Reserve / Innovation (75/25) fourth. Order is non-negotiable — Giving is what you decided, not what was left, and the discipline is what makes the war chest real."
             />
             <TravelItem
               title="Pre-baked renegotiation triggers"

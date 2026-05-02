@@ -4,9 +4,12 @@
  * Layout (revised 2026-05-02):
  *   1. Monthly business P&L waterfall (always visible):
  *      Revenue → COGS (subcontractors) → Gross Profit → Overhead
- *      → Tithe → Practitioner Drawings → Profit Margin
+ *      → Practitioner Drawings → Profit Margin (business surplus)
+ *      NOTE: Tithe is NOT a business deduction — it is the first claim on
+ *      Bobbie's personal draw (10% of draw = $1,680/mo steady-state).
  *   2. KPI cards: Practitioner Drawings · Profit Margin · Overhead · COGS
  *   3. Accordion: Practitioner annual cash (draw × 12 + Brightside + tax)
+ *      — includes tithe row (first claim on draw, $1,680/mo)
  *   4. Footnotes
  */
 
@@ -32,8 +35,8 @@ export function PersonalCashPage() {
   const leadDraw     = a.roster[0].monthlyLoaded;          // 16,800
   const tylerSub     = a.roster[1]?.monthlyLoaded ?? 0;    // 11,200
   const overhead     = a.overheadsJunAugTotal;              // 1,292
-  const tithe        = a.titheMonthly;                      // 3,920
-  const profitMargin = a.monthlySurplusJunAug;              // 5,988
+  const tithe        = a.titheMonthly;                      // 1,680 — on draw, not revenue
+  const profitMargin = a.monthlySurplusJunAug;              // 9,908 — no business tithe
   const grossProfit  = a.fee - tylerSub;                    // 28,000
 
   return (
@@ -115,18 +118,6 @@ export function PersonalCashPage() {
               </td>
             </tr>
 
-            {/* Tithe */}
-            <tr className="border-b border-card-border text-muted-foreground">
-              <td className="px-4 py-3">
-                <span className="text-rose-600 mr-1">−</span>
-                Tithe ({a.tithePct}% of revenue)
-              </td>
-              <td className="px-4 py-3 text-xs">First claim — giving direction</td>
-              <td className="px-4 py-3 text-right num text-rose-600">
-                ({money(tithe)})
-              </td>
-            </tr>
-
             {/* Practitioner drawings */}
             <tr className="border-b border-card-border text-muted-foreground">
               <td className="px-4 py-3">
@@ -141,11 +132,11 @@ export function PersonalCashPage() {
               </td>
             </tr>
 
-            {/* Profit margin */}
+            {/* Profit margin / business surplus */}
             <tr className="bg-muted/30">
-              <td className="px-4 py-3 font-semibold">Profit margin</td>
+              <td className="px-4 py-3 font-semibold">Business surplus</td>
               <td className="px-4 py-3 text-xs text-muted-foreground">
-                {Math.round((profitMargin / a.fee) * 100)}% net margin · surplus waterfall TBD
+                {Math.round((profitMargin / a.fee) * 100)}% net margin · tithe on draw is separate
               </td>
               <td className="px-4 py-3 text-right num font-semibold text-emerald-700">
                 {money(profitMargin)}
@@ -207,10 +198,19 @@ export function PersonalCashPage() {
             <table className="w-full text-sm">
               <tbody>
                 <tr className="border-b border-card-border">
-                  <td className="py-2 pr-4 font-medium">Practitioner drawings ({a.termMonths} mo)</td>
+                  <td className="py-2 pr-4 font-medium">Practitioner draw ({a.termMonths} mo)</td>
                   <td className="py-2 pr-4 text-right num">{money(p.agencySalary18mo)}</td>
                   <td className="py-2 pr-4 text-xs text-muted-foreground">
-                    {money(leadDraw)}/mo × {a.termMonths} mo
+                    {money(leadDraw)}/mo × {a.termMonths} mo · gross
+                  </td>
+                </tr>
+                <tr className="border-b border-card-border text-muted-foreground">
+                  <td className="py-2 pr-4 italic">
+                    − Tithe ({a.tithePct}% of draw · first claim)
+                  </td>
+                  <td className="py-2 pr-4 text-right num italic">({money(tithe * a.termMonths)})</td>
+                  <td className="py-2 pr-4 text-xs italic">
+                    {money(tithe)}/mo · personal giving · not a business deduction
                   </td>
                 </tr>
                 <tr className="border-b border-card-border">

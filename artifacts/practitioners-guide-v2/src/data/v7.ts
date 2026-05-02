@@ -91,28 +91,31 @@ const v7BobbieMonthlyBilled = v7HoursPerMonth * v7BobbieRate; // 28,000
 const v7TylerMonthlyBilled  = v7HoursPerMonth * v7TylerRate;  // 11,200
 const v7TotalMonthlyBilled  = v7BobbieMonthlyBilled + v7TylerMonthlyBilled; // 39,200
 
-const v7TithePct     = 10;
-const v7TitheMonthly = v7TotalMonthlyBilled * 0.10; // 3,920
-
 const v7BobbieDrawMonthly = v7HoursPerMonth * v7BobbieNet; // 16,800
 const v7TylerCostMonthly  = v7TylerMonthlyBilled;          // 11,200
+
+const v7TithePct     = 10;
+// Tithe is first claim on practitioner DRAWINGS only — not on business revenue.
+// Rule (permanent): Bobbie tithes 10% of what she draws, not 10% of what the client pays.
+const v7TitheMonthly = v7BobbieDrawMonthly * 0.10; // 1,680  (10% × $16,800 draw)
 
 // V7 lean overheads (same as V6 — client pays the tech stack)
 const v7OverheadsMonthly = 1292; // space $500 + insurance/petty $500 + acct $125 + legal $167
 
+// Business surplus: tithe is personal (comes from Bobbie's draw), so NOT a business deduction.
 const v7MonthlySurplus =
-  v7TotalMonthlyBilled - v7TitheMonthly - v7BobbieDrawMonthly - v7TylerCostMonthly - v7OverheadsMonthly;
-// 39,200 - 3,920 - 16,800 - 11,200 - 1,292 = 5,988
+  v7TotalMonthlyBilled - v7BobbieDrawMonthly - v7TylerCostMonthly - v7OverheadsMonthly;
+// 39,200 - 16,800 - 11,200 - 1,292 = 9,908
 
 // ── Phase 2 × 12 months ───────────────────────────────────────────────────────
 
 const v7TermMonths   = 12;
 const v7Phase2Revenue  = v7TotalMonthlyBilled * v7TermMonths; // 470,400
-const v7Phase2Tithe    = v7TitheMonthly * v7TermMonths;       // 47,040
+const v7Phase2Tithe    = v7TitheMonthly * v7TermMonths;       // 20,160  (1,680 × 12 — on draw, not revenue)
 const v7Phase2Bobbie   = v7BobbieDrawMonthly * v7TermMonths;  // 201,600
 const v7Phase2Tyler    = v7TylerCostMonthly  * v7TermMonths;  // 134,400
 const v7Phase2Overhead = v7OverheadsMonthly  * v7TermMonths;  // 15,504
-const v7Phase2Surplus  = v7MonthlySurplus    * v7TermMonths;  // 71,856
+const v7Phase2Surplus  = v7MonthlySurplus    * v7TermMonths;  // 118,896  (9,908 × 12)
 
 // ── Phase 1 ───────────────────────────────────────────────────────────────────
 
@@ -124,7 +127,7 @@ const v7Phase1PostTithe = v7Phase1Flat - v7Phase1Tithe; // 22,500
 // ── Full project ──────────────────────────────────────────────────────────────
 
 const v7TotalRevenue = v7Phase1Flat + v7Phase2Revenue; // 495,400
-const v7TotalTithe   = v7Phase1Tithe + v7Phase2Tithe;  // 49,540
+const v7TotalTithe   = v7Phase1Tithe + v7Phase2Tithe;  // 22,660  (2,500 + 20,160)
 
 // ── Renegotiation triggers ────────────────────────────────────────────────────
 
@@ -205,12 +208,12 @@ const v7Agency = {
     "Code review + IT setup is a one-time cost (~$2k–$5k) rolled under Tyler's line when Deer Lake is confirmed. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment. Exact amounts TBD.",
   ),
 
-  costBasisJunAug: v7TitheMonthly + v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 33,212
-  costBasisSepOnward: v7TitheMonthly + v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 33,212
-  monthlySurplusJunAug: v7MonthlySurplus,    // 5,988
-  monthlySurplusSepOnward: v7MonthlySurplus, // 5,988
+  costBasisJunAug: v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 29,292  (no business tithe)
+  costBasisSepOnward: v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 29,292
+  monthlySurplusJunAug: v7MonthlySurplus,    // 9,908
+  monthlySurplusSepOnward: v7MonthlySurplus, // 9,908
   costBasisTag: confirmed(
-    "Tithe $3,920 + Bobbie draw $16,800 + Tyler sub $11,200 + overheads $1,292 = $33,212/mo. Monthly surplus $5,988.",
+    "Bobbie draw $16,800 + Tyler sub $11,200 + overheads $1,292 = $29,292/mo. Monthly business surplus $9,908. Practitioner tithe ($1,680/mo = 10% of draw) is Bobbie's personal first claim — paid from her draw, not a business deduction.",
   ),
 
   capitalRecoveryAmount: 0,
@@ -241,28 +244,28 @@ const v7Agency = {
   reserveTotal: 0,
   innovationTotal: 0,
   phase3Tag: tbd(
-    "Surplus waterfall allocation TBD. 12-month surplus at $5,988/mo = $71,856. Split between Reserve / Innovation / capital recovery will be locked at or before month-6 review.",
+    "Surplus waterfall allocation TBD. 12-month business surplus at $9,908/mo = $118,896. Practitioner tithe ($1,680/mo personal) separate. Split between Reserve / Innovation / capital recovery will be locked at or before month-6 review.",
   ),
 
   totals18mo: {
     revenue: v7Phase2Revenue,    // 470,400 (Phase 2 only — Phase 1 $25k shown separately)
-    tithe: v7Phase2Tithe,        // 47,040
-    payroll: v7Phase2Bobbie,     // 201,600 (Bobbie net draw)
+    tithe: v7Phase2Tithe,        // 20,160  (1,680/mo × 12 — tithe on practitioner draw, not revenue)
+    payroll: v7Phase2Bobbie,     // 201,600 (Bobbie gross draw; net of tithe = 181,440)
     overheads: v7Phase2Overhead + v7Phase2Tyler, // 134,400 Tyler + 15,504 OH = 149,904
-    surplusDeployed: v7Phase2Surplus, // 71,856
+    surplusDeployed: v7Phase2Surplus, // 118,896  (9,908/mo × 12)
     familyInfusionRecovery: 0,
     capitalRecovery: 0,
     brightsidePrelaunch: 0,
     reserve: 0,
     innovation: 0,
     tag: tbd(
-      "Phase 2 × 12 months. Revenue $470,400 · tithe $47,040 · Bobbie draw $201,600 · Tyler sub $134,400 · overheads $15,504 · surplus $71,856. Waterfall allocation TBD. Phase 1 ($25,000 flat trial) not included here.",
+      "Phase 2 × 12 months. Revenue $470,400 · Bobbie draw $201,600 (tithe $20,160 personal) · Tyler sub $134,400 · overheads $15,504 · business surplus $118,896. Tithe is first claim on practitioner draw, not a business deduction. Waterfall allocation TBD. Phase 1 ($25,000 flat trial) not included here.",
     ),
   },
 
   practitionerSalary18mo: v7Phase2Bobbie, // 201,600 — Bobbie net draw Phase 2 only
   practitionerSalaryTag: confirmed(
-    "Bobbie net draw: 160 hr/mo × $105/hr × 12 months = $201,600. This is the practitioner's income from the engagement. The $175/hr billed rate less the $70/hr Tyler pass-through leaves $105/hr net.",
+    "Bobbie gross draw: 160 hr/mo × $105/hr × 12 months = $201,600. Practitioner tithe (10% of draw = $1,680/mo = $20,160/yr) is first claim on the draw — personal obligation, not a business deduction. Net after tithe: $181,440.",
   ),
 
   reservePurposes: SHARED_RESERVE_PURPOSES,

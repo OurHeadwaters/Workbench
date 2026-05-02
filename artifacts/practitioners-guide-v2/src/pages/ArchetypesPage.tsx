@@ -121,12 +121,13 @@ export function ArchetypesPage() {
                     V7 is the current operating plan.
                   </p>
                   <p>
-                    <strong>Surplus waterfall (V7).</strong> Tithe (10% off the top, first claim,{" "}
-                    {money(a.titheMonthly)}/mo) → Bobbie draw ({money(a.roster[0].monthlyLoaded)}
-                    /mo) → Tyler subcontract ({money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo) →
-                    lean overheads ({money(a.overheadsJunAugTotal)}/mo) → surplus (
-                    {money(a.monthlySurplusJunAug)}/mo). Surplus waterfall allocation TBD at
-                    month-6 review.
+                    <strong>Business P&amp;L (V7).</strong> Revenue {money(a.totalMonthlyBilled)}/mo
+                    → Tyler sub ({money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo) → overheads (
+                    {money(a.overheadsJunAugTotal)}/mo) → Bobbie draw ({money(a.roster[0].monthlyLoaded)}
+                    /mo) → business surplus ({money(a.monthlySurplusJunAug)}/mo). Surplus waterfall
+                    allocation TBD at month-6 review.{" "}
+                    <strong>Practitioner tithe:</strong> {money(a.titheMonthly)}/mo = 10% of
+                    Bobbie's draw — personal first claim on drawings, not a business deduction.
                   </p>
                   <p>
                     <strong>What sits underneath the engagement — operator couple + software.</strong>{" "}
