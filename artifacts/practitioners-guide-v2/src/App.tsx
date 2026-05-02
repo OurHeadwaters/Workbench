@@ -17,6 +17,7 @@ import { ArchetypesPage } from "@/pages/ArchetypesPage";
 import { WorkbenchArchivePage } from "@/pages/WorkbenchArchivePage";
 import { RefundInvocationLetter } from "@/pages/RefundInvocationLetter";
 import { WorkflowPage } from "@/pages/WorkflowPage";
+import { DebtAttackPage } from "@/pages/DebtAttackPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/archetypes" component={ArchetypesPage} />
       <Route path="/workbench" component={WorkbenchArchivePage} />
       <Route path="/workflow" component={WorkflowPage} />
+      <Route path="/debt-attack" component={DebtAttackPage} />
       <Route
         path="/refund-invocation-letter"
         component={RefundInvocationLetter}
