@@ -304,11 +304,16 @@ export function HomePage() {
           </p>
           <a
             href="services"
-            className="inline-block font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 mb-6 hover:opacity-70 transition-opacity"
-            style={{ color: "hsl(var(--accent))" }}
+            className="flex items-center justify-between w-full px-5 py-4 rounded-sm mb-6 font-mono text-xs uppercase tracking-[0.18em] hover:opacity-90 transition-opacity"
+            style={{
+              background: "hsl(var(--accent) / 0.10)",
+              color: "hsl(var(--accent))",
+              border: "1px solid hsl(var(--accent) / 0.22)",
+            }}
             data-testid="link-services"
           >
-            What it looks like to build with Headwaters →
+            <span>What it looks like to build with Headwaters</span>
+            <span>→</span>
           </a>
 
           <div className="space-y-3" data-testid="work-cards">
