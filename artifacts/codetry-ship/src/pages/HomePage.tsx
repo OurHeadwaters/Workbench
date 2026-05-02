@@ -310,12 +310,16 @@ export function HomePage() {
               title="Building the store — a community economic guide"
               description="What it takes to stand up a community-owned store in northwestern Ontario: the 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations. Plain language, open numbers."
               testId="work-card-store"
+              thumb="thumb-store.png"
+              thumbAlt="Eagle over the headwaters — the story that sealed the direction"
             />
             <ComingSoonCard
               eyebrow="Co-op membership · Coming soon"
               title="Co-op Membership Platform"
               description="A membership and governance platform for community-owned co-ops in the 807. Pending a vote from the pilot community before public launch."
               testId="work-card-coop"
+              thumb="thumb-coop.png"
+              thumbAlt="Co-op membership platform — two ways to join, mission and vision"
             />
             <WorkCard
               eyebrow="Northern food systems · Knowledge commons"
@@ -566,30 +570,43 @@ interface ComingSoonCardProps {
   title: string;
   description: string;
   testId: string;
+  thumb?: string;
+  thumbAlt?: string;
 }
 
-function ComingSoonCard({ eyebrow, title, description, testId }: ComingSoonCardProps) {
+function ComingSoonCard({ eyebrow, title, description, testId, thumb, thumbAlt }: ComingSoonCardProps) {
   return (
     <div
-      className="block rounded-md border bg-card p-5 sm:p-6 opacity-75"
+      className="block rounded-md border bg-card opacity-75 overflow-hidden"
       style={{ borderColor: "hsl(var(--card-border))", borderStyle: "dashed" }}
       data-testid={testId}
     >
-      <p
-        className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
-        style={{ color: "hsl(var(--accent))" }}
-      >
-        {eyebrow}
-      </p>
-      <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
-        {title}
-      </p>
-      <p
-        className="font-serif text-[14px] leading-[1.55]"
-        style={{ color: "hsl(var(--muted-foreground))" }}
-      >
-        {description}
-      </p>
+      {thumb && (
+        <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          <img
+            src={`${import.meta.env.BASE_URL}${thumb}`}
+            alt={thumbAlt ?? title}
+            className="w-full h-full object-cover object-top"
+          />
+        </div>
+      )}
+      <div className="p-5 sm:p-6">
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          style={{ color: "hsl(var(--accent))" }}
+        >
+          {eyebrow}
+        </p>
+        <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
+          {title}
+        </p>
+        <p
+          className="font-serif text-[14px] leading-[1.55]"
+          style={{ color: "hsl(var(--muted-foreground))" }}
+        >
+          {description}
+        </p>
+      </div>
     </div>
   );
 }
