@@ -14,6 +14,7 @@ import {
   Repeat,
   ScrollText,
   Layers,
+  ArrowRight,
 } from "lucide-react";
 
 interface NavItem {
@@ -25,6 +26,7 @@ interface NavItem {
 
 export const NAV: NavItem[] = [
   { href: "/", label: "Index", icon: BookOpen },
+  { href: "/workflow", label: "Workflow", icon: ArrowRight, accent: "#c2410c" },
   { href: "/salts", label: BUCKETS.salts.name, icon: Salad, accent: BUCKETS.salts.accent },
   {
     href: "/contracts",
