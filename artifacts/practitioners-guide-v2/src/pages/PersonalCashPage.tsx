@@ -42,11 +42,7 @@ export function PersonalCashPage() {
   const a = scenario.contracts.agency;
   const bs = scenario.brightside.surplusDeployment;
 
-  // Billing-level values (what the client pays — not Bobbie's draw)
-  const bobbieBilled = a.roster[0].monthlyLoaded + a.roster[1]?.monthlyLoaded ?? 0;
-  // roster[0].monthlyLoaded = 16,800 (Bobbie net × hrs); roster[1] = 11,200 (Tyler)
-  // Bobbie billed to client = 160 × $175 = $28,000; Tyler billed = 160 × $70 = $11,200
-  const tylerSub    = a.roster[1]?.monthlyLoaded ?? 0;  // 11,200
+  const tylerSub    = a.roster[1]?.monthlyLoaded ?? 0;  // 11,200 — Tyler pass-through
   const overhead    = a.overheadsJunAugTotal;            // 1,292
   const grossProfit = a.fee - tylerSub;                  // 28,000
 
