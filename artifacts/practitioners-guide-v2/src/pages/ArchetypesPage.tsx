@@ -142,7 +142,7 @@ export function ArchetypesPage() {
                   <p>
                     <strong>Phase 1 trial.</strong> $25,000 flat · 8 weeks · Bobbie solo ·
                     40 hr/wk. Intentionally below Bobbie's cost at full hours ($33,600 draw
-                    vs $22,500 post-tithe revenue). The $11,100 gap is the entry price for a
+                    vs $25,000 flat fee). The $8,600 gap is the entry price for a
                     bounded, below-cost trial. Hardware (computer + server ~$3k–$4k) deferred
                     until ongoing commitment is confirmed.
                   </p>
@@ -251,9 +251,9 @@ export function ArchetypesPage() {
           <AccordionContent className="px-4 pb-4">
             <ul className="space-y-2 text-sm leading-relaxed list-disc pl-5">
               <li>
-                <strong>Tithe-first surplus discipline.</strong> 10% off the top of revenue, first
-                claim, before cost basis or any capital allocation. The tithe is what was decided,
-                not what was left.
+                <strong>Tithe-first drawing discipline.</strong> 10% of practitioner draw — first
+                claim on drawings, not on revenue. The tithe is what was decided, not what was left.
+                Personal obligation on Bobbie's draw; not a business expense or a revenue deduction.
               </li>
               <li>
                 <strong>No ongoing owner take from agency surplus.</strong> The Codetry archetype's
@@ -354,9 +354,8 @@ export function ArchetypesPage() {
             <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
               V3 is preserved as the workspace anchor so persisted scratch realities stay valid.
               V5 is preserved as a historical baseline ($90k/mo Codetry archetype). V6 is
-              preserved as a historical baseline ($150/hr Bobbie). The rest of the guide reads
-              from V7 (updated rates, $175/hr). The Operating Framework page lets you toggle
-              between V7, V6, and V5.
+              preserved as a historical baseline ($150/hr Bobbie). V7 (updated rates, $175/hr)
+              is the current single source of truth — the guide reads from V7 only.
             </p>
           </AccordionContent>
         </AccordionItem>

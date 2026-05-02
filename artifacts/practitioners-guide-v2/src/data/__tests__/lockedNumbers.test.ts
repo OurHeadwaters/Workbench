@@ -684,10 +684,12 @@ describe("Scenario registry — V7 is the locked default; V6 and V5 are historic
     expect(SCENARIOS.v6).toBe(SCENARIO_V6);
   });
 
-  it("SCENARIO_ORDER lists v7 first (Current), v6 second (Prior), v5 third (Historical); V3 is intentionally absent from the toggle", () => {
-    expect(SCENARIO_ORDER).toEqual(["v7", "v6", "v5"]);
+  it("SCENARIO_ORDER contains only v7 (single source of truth — Prior tabs removed)", () => {
+    expect(SCENARIO_ORDER).toEqual(["v7"]);
     expect(SCENARIO_ORDER).not.toContain("v3");
     expect(SCENARIO_ORDER).not.toContain("v4");
+    expect(SCENARIO_ORDER).not.toContain("v5");
+    expect(SCENARIO_ORDER).not.toContain("v6");
   });
 
   it("DEFAULT_SCENARIO_ID is v7 (updated rates applied to Deer Lake)", () => {

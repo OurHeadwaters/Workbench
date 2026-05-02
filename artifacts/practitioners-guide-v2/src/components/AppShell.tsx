@@ -1,7 +1,6 @@
 import { Link, useLocation } from "wouter";
 import type { ReactNode } from "react";
 import { useScenario } from "@/lib/scenario";
-import { ScenarioToggle } from "./ScenarioToggle";
 import { BUCKETS } from "@/data/buckets";
 import { cn } from "@/lib/utils";
 import {
@@ -90,7 +89,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </Link>
           <div className="flex-1" />
-          <ScenarioToggle />
         </div>
       </header>
 

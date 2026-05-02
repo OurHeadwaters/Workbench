@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/accordion";
 
 export function ReplicationPage() {
-  const { scenario, scenarioId, setScenarioId } = useScenario();
+  const { scenario } = useScenario();
   const a = scenario.contracts.agency;
   const accent = scenario.accent;
   const accentSoft = scenario.accentSoft;
@@ -73,16 +73,6 @@ export function ReplicationPage() {
             style={{ backgroundColor: accentSoft, color: accentInk }}
           >
             Worked example: <strong>{scenario.name}</strong> — {scenario.tagline}
-            {scenarioId !== "v4" ? (
-              <button
-                type="button"
-                onClick={() => setScenarioId("v4")}
-                className="ml-2 underline opacity-80 hover:opacity-100"
-                data-testid="replication-switch-to-v4"
-              >
-                switch to V4
-              </button>
-            ) : null}
           </div>
         </div>
       </header>
@@ -118,11 +108,11 @@ export function ReplicationPage() {
             />
             <TravelItem
               title="Fee → margin formula"
-              body={`Fee is set so the post-Sep operating margin (pre-tithe) lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(operatingMarginPct, 1)} margin. The tithe (10% off the top) is a separate discipline above the surplus waterfall.`}
+              body={`Fee is set so the post-Sep operating margin lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(operatingMarginPct, 1)} margin. Practitioner tithe (10% of draw) is a personal discipline — settled from the draw after business accounting.`}
             />
             <TravelItem
               title="Three-phase surplus deployment"
-              body="Practitioner tithe (10% of draw, first claim on drawings) first — this is personal, not a revenue deduction. Capital recovery second. Launch one tool that pays for itself third. Reserve / Innovation (75/25) fourth. Order is non-negotiable — Giving is what you decided, not what was left, and the discipline is what makes the war chest real."
+              body="Business surplus waterfall: capital recovery first; launch one tool that pays for itself; Reserve / Innovation (75/25). Separately, the practitioner's personal tithe (10% of draw, first claim on drawings) is settled before personal spending — not a business deduction, not in the waterfall. Order is non-negotiable — Giving is what you decided, not what was left."
             />
             <TravelItem
               title="Pre-baked renegotiation triggers"
@@ -239,11 +229,12 @@ export function ReplicationPage() {
                 That intersection is rare, and the price reflects it.
               </p>
               <p className="mt-3 text-sm text-muted-foreground">
-                Said plainly: it's a 35–40% operating margin (pre-tithe) against a{" "}
-                {a.roster.length}-role team I run end to end — 10% off the top
-                goes to Giving (tithe-first, before anything else), the rest is
+                Said plainly: it's a 35–40% operating margin against a{" "}
+                {a.roster.length}-role team I run end to end — the surplus goes to
                 recovered capital, one tool that pays for itself, and a Reserve /
                 Innovation split the value-delivered audit defends each year.
+                Separately: my tithe (10% of what I draw) is the first claim on my
+                drawings — personal discipline, not a business line.
               </p>
               <p className="mt-3 text-sm text-muted-foreground">
                 And underneath that team, on the buyer's books: a two-person
@@ -443,9 +434,8 @@ export function ReplicationPage() {
           <AccordionContent className="px-4 pb-5 pt-0">
             <ol className="list-decimal pl-5 text-sm space-y-2 text-muted-foreground">
               <li>
-                Open this page <strong>with V4 active</strong> on the toggle. The
-                worked example reads cleanly off the page so you don't have to
-                paraphrase numbers from memory.
+                Open this page — the worked example (V7) reads cleanly off the page
+                so you don't have to paraphrase numbers from memory.
               </li>
               <li>
                 Walk the buyer through the <strong>"Travels"</strong> column first

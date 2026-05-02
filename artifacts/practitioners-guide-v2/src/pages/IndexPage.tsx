@@ -202,7 +202,7 @@ export function IndexPage() {
         <p className="mt-3 text-base text-muted-foreground max-w-3xl leading-relaxed">
           A working source of truth organized the way the founder thinks: Salts (Parr's Jars),
           Community Contracts, and Software / Hardware / Training (Brightside). Every figure
-          carries a confirmed tag with the date the founder locked it. V6 (hourly subcontract,
+          carries a confirmed tag with the date the founder locked it. V7 (updated rates,
           Deer Lake) is the locked default.{" "}
           <Link
             href="/archetypes"
@@ -211,7 +211,7 @@ export function IndexPage() {
           >
             Archetypes page
           </Link>{" "}
-          for the V3 → V4 → V5 → V6 lineage.
+          for the V3 → V4 → V5 → V6 → V7 lineage.
         </p>
         <div
           className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"

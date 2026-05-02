@@ -55,26 +55,28 @@ import {
  *   Total:                            $1,292/mo
  *
  * The numbers (computed below):
- *   Phase 1: $25,000 flat · 10% tithe ($2,500) · post-tithe $22,500
- *            Bobbie cost 8 × 40 × $105 = $33,600 → runs $11,100 below cost (intentional)
+ *   Phase 1: $25,000 flat fee.
+ *            Bobbie cost at full hours: 8 × 40 × $105 = $33,600 → $8,600 below the flat fee (intentional entry gap)
  *
  *   Phase 2 monthly (160 hr/mo each):
  *     Bobbie billed:  160 × $175 = $28,000
  *     Tyler billed:   160 × $70  = $11,200
  *     Total billed:               $39,200
- *     Tithe (10%):                 $3,920
- *     Bobbie draw (160 × $105):   $16,800
+ *     Bobbie draw (160 × $105):   $16,800  ← what the business pays Bobbie
  *     Tyler sub:                  $11,200
  *     Overheads:                   $1,292
- *     Monthly surplus:             $5,988
+ *     Business surplus:            $9,908   (no tithe deducted — tithe is personal)
+ *
+ *   Bobbie's personal tithe (separate from business P&L):
+ *     During debt attack: 10% × $4,000 take-home = $400/mo
+ *     Steady-state:       10% × $16,800 draw      = $1,680/mo
  *
  *   Phase 2 × 12 months:
  *     Revenue:    $39,200 × 12 = $470,400
- *     Tithe:       $3,920 × 12 =  $47,040
- *     Bobbie draw:$16,800 × 12 = $201,600
+ *     Bobbie draw:$16,800 × 12 = $201,600  (tithe is personal — not deducted here)
  *     Tyler sub:  $11,200 × 12 = $134,400
  *     Overheads:   $1,292 × 12 =  $15,504
- *     Surplus:     $5,988 × 12 =  $71,856 (waterfall TBD)
+ *     Surplus:     $9,908 × 12 = $118,896  (business surplus; waterfall TBD)
  *
  *   Full project (Phase 1 + Phase 2): $495,400 total revenue
  */
@@ -193,8 +195,8 @@ const v7Agency = {
   ),
 
   tithePct: v7TithePct,
-  titheMonthly: v7TitheMonthly, // 3,920
-  titheTotal: v7Phase2Tithe,    // 47,040 (Phase 2 only)
+  titheMonthly: v7TitheMonthly, // 1,680  (10% × $16,800 draw; steady-state)
+  titheTotal: v7Phase2Tithe,    // 20,160 (1,680 × 12 mo — personal, not a business deduction)
 
   familyInfusionRecovery: 0,
   familyInfusionRecoveryTag: confirmed(

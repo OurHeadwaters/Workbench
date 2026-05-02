@@ -34,7 +34,7 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
  * Scenarios surfaced in the user-facing scenario toggle, in display order.
  * V3 is intentionally not in this list — see the file-level comment.
  */
-export const SCENARIO_ORDER: ScenarioId[] = ["v7", "v6", "v5"];
+export const SCENARIO_ORDER: ScenarioId[] = ["v7"];
 
 export const DEFAULT_SCENARIO_ID: ScenarioId = "v7";
 

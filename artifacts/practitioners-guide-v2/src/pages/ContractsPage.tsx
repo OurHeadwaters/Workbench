@@ -52,31 +52,6 @@ export function ContractsPage() {
   const phaseBlocks: { key: string; node: ReactNode }[] = [];
   let phaseIndex = 0;
 
-  phaseBlocks.push({
-    key: "tithe",
-    node: (
-      <PhaseBlock
-        key="tithe"
-        index={phaseIndex++}
-        title={`Practitioner tithe · ${pct(a.tithePct)} of draw, first claim on drawings`}
-        tag={a.feeTag}
-        accent={b.accent}
-      >
-        <p className="text-sm text-muted-foreground">
-          Giving is the first claim on practitioner drawings — not on revenue. Paid from Bobbie's
-          draw before personal spending or any other allocation.{" "}
-          <strong className="text-foreground">{money(a.titheMonthly)}/mo</strong> for {a.termMonths}{" "}
-          months = <strong className="text-foreground">{money(a.titheTotal)}</strong> over the
-          engagement.
-        </p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Dave Ramsey discipline: the tithe is what you decided, not what was left. This is a
-          personal obligation on Bobbie's draw, not a business expense — the business surplus
-          ({money(a.monthlySurplusJunAug)}/mo) is separate and goes to capital recovery / waterfall.
-        </p>
-      </PhaseBlock>
-    ),
-  });
 
   if (hasFamilyInfusionRecovery) {
     phaseBlocks.push({
@@ -138,7 +113,7 @@ export function ContractsPage() {
           accent={b.accent}
         >
           <p className="text-sm text-muted-foreground">
-            The post-tithe agency surplus this month funds Brightside's pre-launch one-time costs
+            The agency surplus this month funds Brightside's pre-launch one-time costs
             in a single concentrated month: {money(a.brightsidePrelaunchSpend)}.
           </p>
           <p className="mt-2 text-sm">
@@ -248,15 +223,6 @@ export function ContractsPage() {
           testId="kpi-agency-fee"
         />
         <MoneyKpi
-          label={`Tithe (${pct(a.tithePct)}, off the top)`}
-          value={a.titheMonthly}
-          unit="/mo"
-          tag={a.feeTag}
-          accent={b.accent}
-          hint={`First claim · ${a.termMonths}-mo total ${money(a.titheTotal)}`}
-          testId="kpi-agency-tithe"
-        />
-        <MoneyKpi
           label="Cost basis (Sep+)"
           value={a.costBasisSepOnward}
           unit="/mo"
@@ -267,12 +233,12 @@ export function ContractsPage() {
           testId="kpi-agency-cost-basis"
         />
         <MoneyKpi
-          label="Post-tithe surplus (Sep+)"
+          label="Business surplus (Sep+)"
           value={a.monthlySurplusSepOnward}
           unit="/mo"
           tag={a.costBasisTag}
           accent={b.accent}
-          hint={`Jun–Aug: ${money(a.monthlySurplusJunAug)}/mo`}
+          hint={`Jun–Aug: ${money(a.monthlySurplusJunAug)}/mo · tithe is personal, not deducted here`}
           testId="kpi-agency-surplus"
         />
       </div>
