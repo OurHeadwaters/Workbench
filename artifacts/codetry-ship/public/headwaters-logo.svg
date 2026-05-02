@@ -1,0 +1,61 @@
+<svg width="480" height="200" viewBox="0 0 480 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- cream background -->
+  <rect width="480" height="200" fill="#EDE9E0"/>
+
+  <!-- halo circle -->
+  <circle cx="100" cy="100" r="62" stroke="#C47A3A" stroke-width="5" fill="none" opacity="0.85"/>
+
+  <!-- eagle silhouette (simplified bald eagle in flight, wings spread) -->
+  <g transform="translate(100,100)" fill="#2A3D2E">
+    <!-- body -->
+    <ellipse cx="0" cy="2" rx="10" ry="7" />
+    <!-- head (white implied by lighter fill) -->
+    <ellipse cx="10" cy="-5" rx="6" ry="5" fill="#EDE9E0"/>
+    <!-- beak -->
+    <path d="M15,-4 L21,-1 L15,1 Z" fill="#C47A3A"/>
+    <!-- tail -->
+    <path d="M-9,4 L-22,10 L-22,4 L-14,-1 Z" fill="#EDE9E0"/>
+    <!-- left wing (viewer's left = eagle's right) -->
+    <path d="M-2,-2 C-18,-22 -52,-28 -65,-18 C-52,-14 -30,-8 -10,2 Z"/>
+    <!-- right wing -->
+    <path d="M2,-2 C18,-22 52,-28 65,-18 C52,-14 30,-8 10,2 Z"/>
+    <!-- wing feather tips left -->
+    <path d="M-65,-18 C-68,-22 -65,-26 -60,-22 C-62,-26 -58,-30 -54,-25 C-56,-29 -52,-32 -48,-27 Z" fill="#2A3D2E"/>
+    <!-- wing feather tips right -->
+    <path d="M65,-18 C68,-22 65,-26 60,-22 C62,-26 58,-30 54,-25 C56,-29 52,-32 48,-27 Z" fill="#2A3D2E"/>
+    <!-- talons -->
+    <path d="M4,8 L2,16 M6,9 L7,17 M8,9 L11,16" stroke="#2A3D2E" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- treeline silhouette at base -->
+    <path d="M-62,38 L-55,22 L-48,35 L-42,16 L-35,30 L-28,12 L-20,28 L-12,8 L-4,24 L4,8 L12,28 L20,12 L28,30 L35,16 L42,35 L48,22 L55,38 Z" fill="#2A3D2E" opacity="0.35" transform="translate(0, 28)"/>
+  </g>
+
+  <!-- wordmark -->
+  <text
+    x="200" y="78"
+    font-family="'Iowan Old Style', Georgia, 'Times New Roman', serif"
+    font-size="42"
+    font-weight="600"
+    letter-spacing="4"
+    fill="#2A3D2E"
+  >HEADWATERS</text>
+
+  <line x1="200" y1="92" x2="460" y2="92" stroke="#2A3D2E" stroke-width="0.75" opacity="0.3"/>
+
+  <text
+    x="200" y="114"
+    font-family="'JetBrains Mono', 'Menlo', monospace"
+    font-size="11"
+    letter-spacing="3"
+    fill="#7A4F2A"
+    opacity="0.9"
+  >NORTHWESTERN ONTARIO</text>
+
+  <text
+    x="200" y="148"
+    font-family="'Iowan Old Style', Georgia, serif"
+    font-size="16"
+    fill="#2A3D2E"
+    opacity="0.55"
+    font-style="italic"
+  >Food systems. Plain language. Open numbers.</text>
+</svg>
