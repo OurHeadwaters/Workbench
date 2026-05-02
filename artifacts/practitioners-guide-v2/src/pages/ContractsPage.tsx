@@ -38,8 +38,8 @@ export function ContractsPage() {
   const hasFamilyInfusionRecovery = a.familyInfusionRecovery > 0;
   const hasBrightsideLaunchPhase = a.brightsidePrelaunchSpend > 0;
 
+  // Tithe is personal (first claim on practitioner draw), not a business waterfall step.
   const waterfallDescription = [
-    "tithe",
     "wages",
     hasFamilyInfusionRecovery ? "capital recovery — family infusion" : null,
     hasFamilyInfusionRecovery ? "capital recovery — business loan" : "capital recovery",
@@ -112,11 +112,11 @@ export function ContractsPage() {
       >
         <p className="text-sm text-muted-foreground">
           {hasFamilyInfusionRecovery
-            ? `Post-tithe surplus from August onward retires the ${money(a.capitalRecoveryAmount)} bank-loan leg. `
-            : `All post-tithe agency surplus retires the ${money(a.capitalRecoveryAmount)} debt stack. `}
+            ? `Business surplus from August onward retires the ${money(a.capitalRecoveryAmount)} bank-loan leg. `
+            : `All business surplus retires the ${money(a.capitalRecoveryAmount)} debt stack. `}
           {a.capitalRecoveryDescription}{" "}
           <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this
-          scenario's post-tithe monthly surplus.
+          scenario's monthly business surplus.
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
           Booked as <strong>"Capital Recovery"</strong> — distinct line, separate from
@@ -556,7 +556,7 @@ export function ContractsPage() {
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
               <p className="text-xs text-muted-foreground mb-3">
-                Strict order: {waterfallDescription}. Giving is what you decided, not what was left.
+                Business surplus waterfall (strict order): {waterfallDescription}. Practitioner tithe ({a.tithePct}% of draw = {money(a.titheMonthly)}/mo) is a personal first claim on Bobbie's draw — settled before the surplus waterfall runs.
               </p>
               <div className="space-y-4">{phaseBlocks.map((p) => p.node)}</div>
             </AccordionContent>
