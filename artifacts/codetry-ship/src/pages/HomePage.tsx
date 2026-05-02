@@ -67,13 +67,6 @@ export function HomePage() {
               href="/library/"
               testId="work-card-library"
             />
-            <WorkCard
-              eyebrow="Method · Practitioner's reference"
-              title="Practitioner's Guide"
-              description="The method behind the work: how a single practitioner moves from idea to contract to fulfillment, prices the engagement, and hands the work back to the community at the end."
-              href="/practitioners-guide-v2/"
-              testId="work-card-guide"
-            />
           </div>
         </section>
 

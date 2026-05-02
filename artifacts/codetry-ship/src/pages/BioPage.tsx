@@ -253,11 +253,6 @@ export function BioPage() {
               data-testid="work-list"
             >
               <WorkLink
-                href="/practitioners-guide-v2/"
-                label="Practitioner's Guide"
-                testId="work-practitioners-guide"
-              />
-              <WorkLink
                 href="/codetry-handbook/"
                 label="Codetry Handbook"
                 testId="work-codetry-handbook"
