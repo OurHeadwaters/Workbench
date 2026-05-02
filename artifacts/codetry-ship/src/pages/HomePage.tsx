@@ -53,12 +53,11 @@ export function HomePage() {
           </div>
 
           <div className="space-y-3" data-testid="work-cards">
-            <WorkCard
-              eyebrow="Pilot project · Community store"
-              title="Community store — operating plan"
-              description="A full operating plan for a fly-in First Nation community store in northwestern Ontario: cost stack, staffing, freight, co-op structure, phase-lock schedule. Built as a pilot to show what the finished work looks like before an engagement begins."
-              href="/deer-lake-walkthrough/"
-              testId="work-card-deer-lake"
+            <ComingSoonCard
+              eyebrow="Community store · Launching soon"
+              title="Building the store — a community economic guide"
+              description="What it takes to stand up a community-owned store in northwestern Ontario: the 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations. Plain language, open numbers."
+              testId="work-card-store"
             />
             <WorkCard
               eyebrow="Northern food systems · Knowledge commons"
@@ -145,6 +144,39 @@ export function HomePage() {
 
       </div>
     </main>
+  );
+}
+
+interface ComingSoonCardProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  testId: string;
+}
+
+function ComingSoonCard({ eyebrow, title, description, testId }: ComingSoonCardProps) {
+  return (
+    <div
+      className="block rounded-md border bg-card p-5 sm:p-6 opacity-75"
+      style={{ borderColor: "hsl(var(--card-border))", borderStyle: "dashed" }}
+      data-testid={testId}
+    >
+      <p
+        className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+        style={{ color: "hsl(var(--accent))" }}
+      >
+        {eyebrow}
+      </p>
+      <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
+        {title}
+      </p>
+      <p
+        className="font-serif text-[14px] leading-[1.55]"
+        style={{ color: "hsl(var(--muted-foreground))" }}
+      >
+        {description}
+      </p>
+    </div>
   );
 }
 
