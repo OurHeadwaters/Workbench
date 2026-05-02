@@ -145,7 +145,7 @@ export default function WhoWorks() {
           <Reveal label="Employment at full run">
             <p>
               <span className="font-semibold">Four full-time roles:</span>{" "}
-              contractor couple (on the contractor's payroll), Headwaters Practitioner (invoiced as an independent consultant at $150/hr), and Distribution Lead Tyler (invoiced through Tyler's own business at $70/hr — Tyler + his helper, not a Headwaters payroll position). No Ontario employer obligations on the Headwaters side.
+              contractor couple (on the contractor's payroll), Headwaters Practitioner (invoiced as an independent consultant), and Distribution Lead Tyler (invoiced through Tyler's own business — Tyler + his helper, not a Headwaters payroll position). No Ontario employer obligations on the Headwaters side.
             </p>
             <p>
               A <span className="font-semibold">band casual pool of 15+ people</span> getting paid hours each week — restocks, market tables, open shifts. The work stays local and flexible.

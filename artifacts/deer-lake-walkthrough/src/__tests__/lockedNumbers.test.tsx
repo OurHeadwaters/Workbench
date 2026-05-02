@@ -4,15 +4,14 @@ import Ask from "../sections/Ask";
 import Recap from "../sections/Recap";
 import WhoWorks from "../sections/WhoWorks";
 
-// Locks the canonical ~$41k/mo Deer Lake fee in the walkthrough.
+// Locks the two-stage Deer Lake fee model in the walkthrough.
 // Source of truth: actual Headwaters Deer Lake engagement rates (updated
-// task #597 — reframe from employee rates to independent-business rates):
-//   Practitioner (independent consultant) $150/hr × 160 hrs = $24,000/mo
-//   Tyler subcontract (Tyler's business, Tyler + helper) $70/hr × 160 hrs = $11,200/mo
-//   IT/Support partial ~$900/mo
-//   Overhead $5,000/mo
-//   Total ≈ $41,100/mo → displayed as ~$41,000/mo, ~$492,000/yr
-//   Gas card and insurance at cost on top.
+// for two-stage model — task pricing update):
+//   Stage 1 — planning trial: $25,000 flat (8 weeks × $80/hr, practitioner solo)
+//   Stage 2 — distribution live: $42,000/month
+//     Tyler subcontracted for distribution joins the Practitioner.
+//     IT/Support partial ~$900/mo + overhead.
+//     Gas card and insurance at cost on top.
 // No Ontario employer payroll obligations on either Headwaters party.
 // This file guards the Ask + Recap copy so the numbers can't drift.
 //
@@ -35,50 +34,46 @@ import WhoWorks from "../sections/WhoWorks";
 // BandCouncilSummary.tsx in the Deer Lake store-plan deck, where it
 // is locked by that deck's lockedNumbers.test.ts.
 
-describe("Deer Lake walkthrough — Ask reveal locks the ~$41k/mo Headwaters fee", () => {
+describe("Deer Lake walkthrough — Ask reveal locks the two-stage Headwaters fee", () => {
   const html = renderToStaticMarkup(<Ask />);
 
-  it("names the ~$492,000 first-year Headwaters fee total", () => {
-    expect(html).toContain("$492,000");
+  it("names the Stage 1 planning trial fee of $25,000", () => {
+    expect(html).toContain("$25,000");
   });
 
-  it("names the ~$41,000 a month rate", () => {
-    expect(html).toContain("$41,000");
+  it("names the $80/hr trial rate", () => {
+    expect(html).toContain("$80/hr");
   });
 
-  it("frames the spend over twelve months so per-month math is unambiguous", () => {
-    expect(html).toMatch(/twelve months|12 months/);
+  it("names the Stage 2 monthly rate of $42,000", () => {
+    expect(html).toContain("$42,000");
   });
 
-  it("names the $150/hr practitioner rate", () => {
-    expect(html).toContain("$150/hr");
-  });
-
-  it("names the $70/hr Tyler subcontract rate", () => {
-    expect(html).toContain("$70/hr");
+  it("names Tyler as subcontracted for distribution in Stage 2", () => {
+    expect(html).toContain("Tyler subcontracted for distribution");
   });
 });
 
-describe("Deer Lake walkthrough — Recap Ask row locks the compact ~$41k/mo Headwaters fee", () => {
+describe("Deer Lake walkthrough — Recap Ask row locks the two-stage fee", () => {
   // Scope assertions to the Ask row specifically: each Recap row
   // renders as <label-cell><body-cell>, so the body text we care about
-  // sits in the ~250 characters immediately following the ">Ask<"
+  // sits in the ~400 characters immediately following the ">Ask<"
   // label cell. Slicing there isolates this row from the other five.
   const html = renderToStaticMarkup(<Recap />);
   const askLabelIdx = html.indexOf(">Ask<");
-  const askRowSlice = askLabelIdx >= 0 ? html.slice(askLabelIdx, askLabelIdx + 500) : "";
+  const askRowSlice = askLabelIdx >= 0 ? html.slice(askLabelIdx, askLabelIdx + 600) : "";
 
   it("isolates the Ask row from the rendered Recap", () => {
     expect(askLabelIdx).toBeGreaterThanOrEqual(0);
     expect(askRowSlice.length).toBeGreaterThan(0);
   });
 
-  it("Ask row names the ~$492k year-one total in compact form", () => {
-    expect(askRowSlice).toContain("$492k");
+  it("Ask row names the Stage 1 $25,000 trial fee", () => {
+    expect(askRowSlice).toContain("$25,000");
   });
 
-  it("Ask row names the ~$41k/mo rate in compact form", () => {
-    expect(askRowSlice).toContain("$41k/mo");
+  it("Ask row names the Stage 2 $42,000/mo rate", () => {
+    expect(askRowSlice).toContain("$42,000/mo");
   });
 });
 

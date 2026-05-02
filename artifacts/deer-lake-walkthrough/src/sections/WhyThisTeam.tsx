@@ -204,14 +204,14 @@ export default function WhyThisTeam() {
               className="serif text-[16px] leading-[1.5] mt-3"
               style={{ color: "var(--color-text)" }}
             >
-              Deer Lake engagement:{" "}
-              <span className="font-semibold">~$41,000/month</span> —
-              Practitioner invoices at $150/hr (independent consultant); Tyler's
-              company invoices at $70/hr, covering Tyler + his helper on the
-              ground; IT/Support partial at ~$900/mo; plus $5,000/month
-              overhead. No employer payroll obligations — both parties invoice
-              as independent businesses. Gas card and insurance billed at cost
-              on top.
+              Deer Lake engagement — two stages.{" "}
+              <span className="font-semibold">Stage 1 (planning trial): $25,000 flat</span>{" "}
+              — eight weeks at $80/hr, practitioner solo, no team hired.{" "}
+              <span className="font-semibold">Stage 2 (distribution live): $42,000/month</span>{" "}
+              — Tyler subcontracted for distribution joins the Practitioner;
+              IT/Support partial; overhead. No employer payroll obligations —
+              both parties invoice as independent businesses. Gas card and
+              insurance billed at cost on top.
             </p>
             <div
               className="mono text-[11px] uppercase tracking-[0.18em] mt-4"

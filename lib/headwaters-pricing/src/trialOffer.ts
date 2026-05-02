@@ -24,8 +24,8 @@
  * "fourteen (14) calendar days" ≡ TRIAL_REFUND_INVOCATION_DAYS, etc.).
  */
 
-export const TRIAL_FEE_USD = 40_000;
-export const TRIAL_INSTALLMENT_USD = 20_000;
+export const TRIAL_FEE_USD = 25_000;
+export const TRIAL_INSTALLMENT_USD = 12_500;
 export const TRIAL_DURATION_WEEKS = 8;
 export const TRIAL_REFUND_INVOCATION_DAYS = 14;
 export const TRIAL_REFUND_PAYMENT_DAYS = 30;
@@ -46,7 +46,7 @@ export const TRIAL_WEEK_8_REVIEW_DAY = TRIAL_DURATION_WEEKS * 7;
  * Verbatim block).
  */
 export const TRIAL_HEADLINE =
-  "$40,000 flat. Eight weeks. Solo practitioner. Money back if we don't deliver.";
+  "$25,000 flat. Eight weeks. Solo practitioner. Money back if we don't deliver.";
 
 /**
  * Section eyebrow used on the Step 0 call-out across all surfaces.
@@ -61,7 +61,7 @@ export const TRIAL_EYEBROW = "Step 0 · Try us for eight weeks";
  * label on every surface.
  */
 export const TRIAL_FEE_LINE =
-  "$40,000 flat for eight weeks, paid $20,000 on signing and $20,000 at the start of week four.";
+  "$25,000 flat for eight weeks (8 weeks × $80/hr, practitioner solo), paid $12,500 on signing and $12,500 at the start of week four.";
 
 /**
  * What the contractor and band do not have to commit during the trial.
@@ -94,7 +94,7 @@ export const TRIAL_ACCEPTANCE_CRITERIA: readonly string[] = [
   "Steering committee seated and charter signed — three council members, two community members named, terms of reference adopted by council motion.",
   "Six-month co-design plan adopted by the steering committee — store layout, opening hours, and pricing principles documented and accepted in committee minutes.",
   "Cold-chain pilot scope agreed in writing with the existing store — lane plan, ninety-day pilot duration, and operational hand-offs signed by both parties, ready to launch.",
-  "Year-one budget and cash plan handed to council in writing — Step 1 cost basis at ~$41,000/month (Practitioner $150/hr independent consultant + Tyler's company $70/hr subcontract, covering Tyler and a second hand + IT/Support partial + $5,000/mo overhead), plus gas card and insurance at cost.",
+  "Year-one budget and cash plan handed to council in writing — Stage 2 at $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial + overhead included), plus gas card and insurance at cost.",
 ] as const;
 
 /**
@@ -104,7 +104,7 @@ export const TRIAL_ACCEPTANCE_CRITERIA: readonly string[] = [
  * to the numeric constants above.
  */
 export const TRIAL_REFUND_MECHANIC =
-  "At the week-eight review meeting the contractor judges the four criteria above. If two or more are not met, Headwaters refunds the full $40,000 within thirty (30) calendar days. The contractor invokes the refund in writing within fourteen (14) calendar days of the review; an invocation made later than that is out of time and the trial is deemed accepted. Contractor's option: convert the $40,000 to a service credit of equal value applied against the first invoice of Step 1 instead.";
+  "At the week-eight review meeting the contractor judges the four criteria above. If two or more are not met, Headwaters refunds the full $25,000 within thirty (30) calendar days. The contractor invokes the refund in writing within fourteen (14) calendar days of the review; an invocation made later than that is out of time and the trial is deemed accepted. Contractor's option: convert the $25,000 to a service credit of equal value applied against the first invoice of Stage 2 instead.";
 
 /**
  * The "Step 0 is the on-ramp" framing line that closes every Step 0
@@ -114,7 +114,7 @@ export const TRIAL_REFUND_MECHANIC =
  * partial) and the worst-case / best-case outcomes for the band.
  */
 export const TRIAL_FRAMING_LINE =
-  "Step 0 is the on-ramp to Step 1, not a replacement. The cold-chain pilot itself, the software build, and the staff training all sit inside Step 1 (~$41,000-a-month Headwaters engagement — Practitioner invoicing at $150/hr as an independent consultant, Tyler's company at $70/hr covering Tyler and a second hand, IT/Support partial), not the trial. Worst case for the band: eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at week eight Step 1 converts on the same paper.";
+  "Stage 1 is the on-ramp to Stage 2, not a replacement. The cold-chain pilot itself, the software build, and the staff training all sit inside Stage 2 ($42,000/month — Tyler subcontracted for distribution joins the Practitioner, IT/Support partial included), not the trial. Worst case for the band: eight weeks of paid solo work, four written deliverables in hand, full refund issued. Best case: at week eight Stage 2 converts on the same paper.";
 
 /**
  * "What survives a refund" paragraph used in the legal §7 of the
@@ -131,7 +131,7 @@ export const TRIAL_WHAT_SURVIVES_REFUND =
  * unambiguous.
  */
 export const TRIAL_CONVERSION_TO_STEP_1 =
-  "If the contractor accepts the trial deliverables at the week-eight review and elects to proceed, the trial closes and Step 1 of the Deer Lake engagement opens on the same paper — the ~$41,000-a-month Headwaters engagement (Practitioner at $150/hr as an independent consultant; Tyler's company at $70/hr, covering Tyler and a second hand; IT/Support partial) described in the Deer Lake Walkthrough. The $40,000 trial fee is not credited against the Step 1 monthly fee; the trial bought planning and preparation, Step 1 buys the build.";
+  "If the contractor accepts the trial deliverables at the week-eight review and elects to proceed, the trial closes and Stage 2 of the Deer Lake engagement opens on the same paper — $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial included) as described in the Deer Lake Walkthrough. The $25,000 trial fee is not credited against the Stage 2 monthly fee; the trial bought planning and preparation, Stage 2 buys the build.";
 
 /**
  * Convenience: the four labelled "How much / How long / What you get /
@@ -340,7 +340,7 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     meetings:
       "Steering committee meeting #2 (first read of the co-design plan). Community input session #1 (open community meeting). Existing-store MOU draft review.",
     gatingDecision:
-      "Second $20,000 installment invoiced at the start of the week.",
+      "Second $12,500 installment invoiced at the start of the week.",
     acceptanceCriterionDelivered: null,
   },
   {
@@ -383,9 +383,9 @@ export const TRIAL_TIMELINE: readonly TrialTimelineWeek[] = [
     windowLabel: "Days 50–56",
     focus: "Year-one budget to council · week-eight review (day 56)",
     deliverables:
-      "Year-one budget and cash plan handed to council in writing — Step 1 cost basis at ~$41,000/month (Practitioner $150/hr independent consultant + Tyler's company $70/hr subcontract, covering Tyler and a second hand + IT/Support partial + $5,000/mo overhead), plus gas card and insurance at cost.",
+      "Year-one budget and cash plan handed to council in writing — Stage 2 at $42,000/month (Tyler subcontracted for distribution joins the Practitioner; IT/Support partial + overhead included), plus gas card and insurance at cost.",
     meetings:
-      "Council session for the budget hand-off. The week-eight review meeting with the contractor — fifty-six (56) calendar days from signing day — at which the contractor judges all four §7 acceptance criteria and elects: convert to Step 1, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $40,000 to a service credit against the first Step 1 invoice.",
+      "Council session for the budget hand-off. The week-eight review meeting with the contractor — fifty-six (56) calendar days from signing day — at which the contractor judges all four §7 acceptance criteria and elects: convert to Stage 2, invoke the refund (within fourteen (14) calendar days of this meeting), or convert the $25,000 to a service credit against the first Stage 2 invoice.",
     gatingDecision:
       "Week-eight review decision. Refund-invocation deadline runs from this meeting; an invocation made later than fourteen (14) calendar days is out of time and the trial is deemed accepted.",
     acceptanceCriterionDelivered: 3,

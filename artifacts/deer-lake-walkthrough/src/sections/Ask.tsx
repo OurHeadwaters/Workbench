@@ -472,17 +472,22 @@ export default function Ask() {
             </ol>
           </Reveal>
 
-          <Reveal label="What this first year costs">
+          <Reveal label="What this costs, by stage">
             <p>
-              <span className="font-semibold">~$492,000 over twelve months</span>{" "}
-              — ~$41,000 a month to Headwaters. The Practitioner invoices at $150/hr as an independent consultant. Tyler's company invoices at $70/hr, bringing Tyler and a second hand on the ground. IT/Support invoiced at cost (~$900/mo), plus $5,000/month overhead. No employer payroll obligations on either party — both invoice through their own businesses. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
+              <span className="font-semibold">Stage 1 — planning trial: $25,000 flat.</span>{" "}
+              Eight weeks at $80/hr, practitioner solo. No team hired, no day-one bridge required.
+            </p>
+            <p>
+              <span className="font-semibold">Stage 2 — distribution live: $42,000/month.</span>{" "}
+              Tyler subcontracted for distribution joins the Practitioner. IT/Support invoiced at cost (~$900/mo), plus overhead. No employer payroll obligations on either party — both invoice through their own businesses. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
             </p>
             <p>
               No grants in hand. Paid from band reserves — the planner
               shows the path. Most spending lands near the end, against
-              the cold-chain pilot. Walk away after step three and the
-              band keeps the truck route, the software, and the bill
-              stops.
+              the cold-chain pilot. Walk away after the trial and the
+              band keeps the four written deliverables. Walk away after
+              the cold-chain pilot and the band keeps the route, the
+              software, and the bill stops.
             </p>
           </Reveal>
 

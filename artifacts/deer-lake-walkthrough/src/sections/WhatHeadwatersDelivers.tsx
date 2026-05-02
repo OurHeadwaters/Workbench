@@ -105,8 +105,7 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5] mt-2"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Step 1 · ~$41,000 a
-            month.</span> Food is moving. Tyler (Distribution Lead, invoiced through Tyler's own business) and IT/Support (invoiced at cost) join the Practitioner on the Headwaters side. Cold-chain pilot, software, training, day-one gear. Below: what Step 1 buys.
+            <span className="font-semibold">Stage 2 · $42,000/month.</span> Food is moving. Tyler (subcontracted for distribution, invoiced through Tyler's own business) and IT/Support (invoiced at cost) join the Practitioner on the Headwaters side. Cold-chain pilot, software, training, day-one gear. Below: what Stage 2 buys.
           </p>
         </div>
 
@@ -136,9 +135,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                <span className="font-semibold">~$41,000/month</span> to
-                Headwaters — labour and overhead combined. Plus gas card at
-                cost and insurance on top.
+                <span className="font-semibold">Stage 1 — planning trial: $25,000 flat</span> (8 weeks · $80/hr · practitioner solo). <span className="font-semibold">Stage 2 — distribution live: $42,000/month</span> to Headwaters — Tyler subcontracted for distribution joins the Practitioner. Plus gas card at cost and insurance on top.
               </dd>
             </div>
             <div>
@@ -152,7 +149,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                Practitioner $150/hr (independent consultant) · Tyler's company $70/hr (Tyler + helper on the ground, subcontract through Tyler's business) · IT/Support ~$900/mo partial · $5,000/mo overhead. No employer payroll obligations on either party. Your operator couple stays on your payroll.
+                Trial (Stage 1): practitioner solo at $80/hr · no team hired. Stage 2: Tyler's company subcontracted for distribution (Tyler + helper on the ground) · IT/Support ~$900/mo partial · overhead. No employer payroll obligations on either party. Your operator couple stays on your payroll.
               </dd>
             </div>
             <div>
