@@ -281,18 +281,21 @@ export function BioPage() {
                 label="Community store plan"
                 testId="work-community-store-plan"
                 target="_blank"
+                swatchColor="#2E7D55"
               />
               <WorkLink
                 href="/codetry-ship/infographics/coop-membership-platform.html"
                 label="Co-op membership platform"
                 testId="work-coop-membership-platform"
                 target="_blank"
+                swatchColor="#1A7A7A"
               />
               <WorkLink
                 href="/codetry-ship/infographics/custom-internal-tool.html"
                 label="Custom internal tool"
                 testId="work-custom-internal-tool"
                 target="_blank"
+                swatchColor="#B5711A"
               />
             </ul>
           </section>
@@ -444,12 +447,20 @@ interface WorkLinkProps {
   label: string;
   testId: string;
   target?: string;
+  swatchColor?: string;
 }
 
-function WorkLink({ href, label, testId, target }: WorkLinkProps) {
+function WorkLink({ href, label, testId, target, swatchColor }: WorkLinkProps) {
   const printUrl = buildPrintUrl(href);
   return (
-    <li>
+    <li className="flex items-center gap-2">
+      {swatchColor && (
+        <span
+          aria-hidden="true"
+          className="inline-block shrink-0 rounded-sm print:hidden"
+          style={{ width: 10, height: 10, backgroundColor: swatchColor }}
+        />
+      )}
       <a
         href={href}
         className="bio-work-link underline-offset-4 hover:underline"
