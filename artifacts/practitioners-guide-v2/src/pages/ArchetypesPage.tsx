@@ -121,7 +121,7 @@ export function ArchetypesPage() {
                     V7 is the current operating plan.
                   </p>
                   <p>
-                    <strong>Business P&amp;L (V7).</strong> Revenue {money(a.totalMonthlyBilled)}/mo
+                    <strong>Business P&amp;L (V7).</strong> Revenue {money(a.fee)}/mo
                     → Tyler sub ({money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo) → overheads (
                     {money(a.overheadsJunAugTotal)}/mo) → Bobbie draw ({money(a.roster[0].monthlyLoaded)}
                     /mo) → business surplus ({money(a.monthlySurplusJunAug)}/mo). Surplus waterfall
