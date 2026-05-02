@@ -82,18 +82,17 @@ export function HomePage() {
           </p>
         </header>
 
-        {/* ── hero photo ── swap src when real photo is ready */}
+        {/* ── hero photo ── */}
         <div
           className="mt-10 w-full overflow-hidden rounded-md"
-          style={{ aspectRatio: "16/9", background: "hsl(var(--card))", border: "1px solid hsl(var(--card-border))" }}
+          style={{ aspectRatio: "16/9" }}
           data-testid="hero-photo-slot"
         >
-          {/* TODO: replace with <img src={heroPhoto} alt="..." className="w-full h-full object-cover" /> */}
-          <div className="w-full h-full grid place-items-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              photo coming
-            </p>
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}hero-harvest.jpeg`}
+            alt="Community potato harvest — neighbours of all ages sorting potatoes together in a field near Dryden, Ontario"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <hr
@@ -400,15 +399,14 @@ export function HomePage() {
           <a
             href="bio"
             className="block mb-6 w-full overflow-hidden rounded-md group"
-            style={{ aspectRatio: "4/3", maxHeight: "320px", background: "hsl(var(--card))", border: "1px solid hsl(var(--card-border))" }}
+            style={{ aspectRatio: "4/3", maxHeight: "320px" }}
             data-testid="bio-photo-slot"
           >
-            {/* TODO: replace inner div with <img src={bobbiePhoto} alt="Bobbie Parr" className="w-full h-full object-cover group-hover:opacity-90 transition-opacity" /> */}
-            <div className="w-full h-full grid place-items-center">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                photo coming
-              </p>
-            </div>
+            <img
+              src={`${import.meta.env.BASE_URL}bobbie-store.jpeg`}
+              alt="Bobbie Parr at Parr's Farm store with local produce and a child"
+              className="w-full h-full object-cover object-top group-hover:opacity-90 transition-opacity"
+            />
           </a>
 
           <p
