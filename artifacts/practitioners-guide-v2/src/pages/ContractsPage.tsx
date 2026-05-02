@@ -1,3 +1,12 @@
+/**
+ * ContractsPage — Community Contracts bucket.
+ *
+ * PROGRESSIVE DISCLOSURE PATTERN (see docs/design/progressive-disclosure.md):
+ *   - Bucket heading + KPI grid: always visible.
+ *   - All detail (roster table, overheads, surplus phases, renegotiation triggers): collapsed by default.
+ *   - 807 Grants → Benefits Plan: named action item, always visible in the Contracts bucket.
+ */
+
 import type { ReactNode } from "react";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
@@ -13,6 +22,13 @@ import { confirmed, tbd, type SourceTag } from "@/data/tags";
 import { buildContractsLedger } from "@/data/contractsLedger";
 import { ExportLedgerButtons } from "@/components/ExportLedgerButtons";
 import { ReinvestmentBucketsInteractive } from "@/components/ReinvestmentBucketsInteractive";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Gift, AlertCircle } from "lucide-react";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
@@ -22,10 +38,6 @@ export function ContractsPage() {
   const hasFamilyInfusionRecovery = a.familyInfusionRecovery > 0;
   const hasBrightsideLaunchPhase = a.brightsidePrelaunchSpend > 0;
 
-  // Compute the phases description string for the header — it's slightly
-  // different per scenario (V5 drops the Brightside Launch Month and splits
-  // Capital Recovery into two visible legs; V3/V4 carry the Brightside Launch
-  // Month and a single undivided Capital Recovery line).
   const waterfallDescription = [
     "tithe",
     "wages",
@@ -37,12 +49,6 @@ export function ContractsPage() {
     .filter(Boolean)
     .join(" → ");
 
-  const overheadsBreakdownLabel = `Overheads (3 mo Jun–Aug + ${a.termMonths - 3} mo Sep+)`;
-
-  // Build the surplus-deployment phase blocks dynamically so the phase
-  // numbering stays correct whether or not the scenario carries a separated
-  // family-infusion leg of Capital Recovery and/or a dedicated Brightside
-  // Launch Month.
   const phaseBlocks: { key: string; node: ReactNode }[] = [];
   let phaseIndex = 0;
 
@@ -84,21 +90,9 @@ export function ContractsPage() {
         >
           <p className="text-sm text-muted-foreground">{a.familyInfusionRecoveryDescription}</p>
           <p className="mt-2 text-xs text-muted-foreground">
-            This is the day-one bridge in this engagement: the {money(a.familyInfusionRecovery)}{" "}
-            family infusion is what got the two-person operator couple onto the cockpit — Square
-            at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit
-            tying them together — live before the first month's fee cleared. Retiring it in month
-            1 closes the bridge before the rest of the waterfall starts.
-          </p>
-          <p className="mt-2 text-xs text-muted-foreground">
             Tax-free return of principal to the founder's husband. Money flows business →
             husband, bypassing the founder's personal accounts. NOT compensation, NOT income, NOT
-            a deductible expense — the same character as the bank-loan leg below. The split-leg
-            framing is for visibility; see the{" "}
-            <a href="/archetypes" className="underline hover:text-foreground" data-testid="link-archetypes-from-bonus">
-              Archetypes page
-            </a>{" "}
-            for why Software/Sales-archetype engagements run this at $0.
+            a deductible expense.
           </p>
         </PhaseBlock>
       ),
@@ -202,11 +196,10 @@ export function ContractsPage() {
         </table>
         <p className="mt-2 text-xs text-muted-foreground">
           Renormalised from 50/25/25 → {a.reservePct}/{a.innovationPct} when Giving moved to a
-          tithe-first claim — the old 25 giving slice consolidated into Reserve. Founder retains
-          explicit option to shift more toward Innovation when it suits.
+          tithe-first claim.
           {hasBrightsideLaunchPhase
             ? null
-            : " V5 also routes Brightside's pre-launch spend through this Innovation bucket — there is no dedicated Brightside Launch Month phase in the V5 waterfall."}
+            : " V5 routes Brightside's pre-launch spend through this Innovation bucket — no dedicated Brightside Launch Month in the V5 waterfall."}
         </p>
       </PhaseBlock>
     ),
@@ -231,16 +224,10 @@ export function ContractsPage() {
             One agency line, one waterfall, every dollar accounted for.
           </h1>
           <p className="mt-3 text-muted-foreground max-w-3xl">
-            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo agency engagement starting {a.startDate}{" "}
-            against the {a.roster.length}-role Deer Lake team (
-            <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo payroll). Surplus deployment is
-            tithe-first: <Num tag={a.feeTag}>{pct(a.tithePct)}</Num> of revenue (
-            <Num tag={a.feeTag}>{money(a.titheMonthly)}</Num>/mo) goes to Giving off the top, then{" "}
-            {waterfallDescription
-              .split(" → ")
-              .slice(1)
-              .join(" → ")}
-            .
+            <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo starting {a.startDate} against the{" "}
+            {a.roster.length}-role Deer Lake team (
+            <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo payroll). Surplus waterfall:{" "}
+            {waterfallDescription}.
           </p>
         </div>
         <ExportLedgerButtons
@@ -249,10 +236,117 @@ export function ContractsPage() {
         />
       </header>
 
-      {/* ============ AGENCY ENGAGEMENT ============ */}
+      {/* ── KPI Grid — always visible ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <MoneyKpi
+          label="Monthly fee"
+          value={a.fee}
+          unit="/mo"
+          tag={a.feeTag}
+          accent={b.accent}
+          testId="kpi-agency-fee"
+        />
+        <MoneyKpi
+          label={`Tithe (${pct(a.tithePct)}, off the top)`}
+          value={a.titheMonthly}
+          unit="/mo"
+          tag={a.feeTag}
+          accent={b.accent}
+          hint={`First claim · ${a.termMonths}-mo total ${money(a.titheTotal)}`}
+          testId="kpi-agency-tithe"
+        />
+        <MoneyKpi
+          label="Cost basis (Sep+)"
+          value={a.costBasisSepOnward}
+          unit="/mo"
+          tag={a.costBasisTag}
+          tone="muted"
+          accent={b.accent}
+          hint={`Jun–Aug: ${money(a.costBasisJunAug)}/mo`}
+          testId="kpi-agency-cost-basis"
+        />
+        <MoneyKpi
+          label="Post-tithe surplus (Sep+)"
+          value={a.monthlySurplusSepOnward}
+          unit="/mo"
+          tag={a.costBasisTag}
+          accent={b.accent}
+          hint={`Jun–Aug: ${money(a.monthlySurplusJunAug)}/mo`}
+          testId="kpi-agency-surplus"
+        />
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <MoneyKpi
+          label={`${a.termMonths}-mo surplus deployed`}
+          value={a.totals18mo.surplusDeployed}
+          tag={a.totals18mo.tag}
+          tone="positive"
+          accent={b.accent}
+          hint={
+            hasFamilyInfusionRecovery
+              ? "Capital Recovery (family m1 + loan Aug→Oct) + Reserve / Innovation"
+              : "Capital recovery + Brightside + Reserve / Innovation"
+          }
+          testId="kpi-agency-18mo"
+        />
+        {hasFamilyInfusionRecovery ? (
+          <MoneyKpi
+            label="Capital Recovery — family infusion"
+            value={a.familyInfusionRecovery}
+            tag={a.familyInfusionRecoveryTag}
+            accent={b.accent}
+            hint="Paid in month 1 — tax-free debt repayment (NOT income)"
+            testId="kpi-agency-family-infusion-recovery"
+          />
+        ) : null}
+      </div>
+
+      {/* ── 807 Grants Action Item ── */}
+      <div
+        className="rounded-xl border border-orange-200 bg-orange-50 p-4"
+        data-testid="contracts-807-grants-action"
+      >
+        <div className="flex items-start gap-3">
+          <div className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0 bg-orange-100 text-orange-700 mt-0.5">
+            <Gift className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-semibold text-orange-900">
+                Action Item: Get 807 to apply for grants → benefits plan build-out
+              </p>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200">
+                Open · Practitioner owns this
+              </span>
+            </div>
+            <p className="text-xs text-orange-800 mt-1.5 leading-relaxed">
+              Facilitate 807 Co-op applying for grants (LFIF, FedNor CEDP, or equivalent
+              benefits-plan stream) to fund a team benefits plan build-out. 807 must be the
+              proponent. This removes the benefits cost from the agency fee waterfall entirely.
+              <strong className="text-orange-900"> Status: open — grant not yet identified or submitted.</strong>
+            </p>
+            <div className="mt-2 text-xs text-orange-700 grid grid-cols-3 gap-2">
+              <div>
+                <p className="font-semibold">Owner</p>
+                <p>Practitioner (you)</p>
+              </div>
+              <div>
+                <p className="font-semibold">Proponent</p>
+                <p>807 Co-op board</p>
+              </div>
+              <div>
+                <p className="font-semibold">Grant applied</p>
+                <p className="italic text-orange-600">Not yet identified</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── AGENCY ENGAGEMENT ── */}
       <div id="agency" className="scroll-mt-24">
         <h2
-          className="text-2xl font-semibold mb-2"
+          className="text-2xl font-semibold mb-1"
           style={{ fontFamily: "var(--app-font-serif)", color: b.accentInk }}
         >
           {money(a.fee)}/mo agency engagement
@@ -262,349 +356,270 @@ export function ContractsPage() {
           {a.renegotiateMonth}. Buyer: {a.buyerStatus}.
         </p>
 
-        {a.renegotiationTriggers.length > 0 ? (
-          <div className="mb-6">
-            <SectionCard
-              title={`Pre-baked renegotiation triggers · ${a.renegotiationTriggers.length}`}
-              subtitle={`Step changes the contract takes at the renegotiation point — pre-baked so the founder is not negotiating from scratch at month ${a.renegotiateMonth}. Each row names the condition, the evidence required, and the fee + lead-draw step.`}
-              tag={a.feeTag}
-              accent={b.accent}
+        <Accordion type="multiple" className="space-y-3">
+
+          {/* Renegotiation Triggers */}
+          {a.renegotiationTriggers.length > 0 && (
+            <AccordionItem
+              value="renegotiation-triggers"
+              className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+              style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
             >
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                <div className="flex items-baseline gap-3 text-left">
+                  <span className="font-semibold text-sm">
+                    Pre-baked renegotiation triggers · {a.renegotiationTriggers.length}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Month {a.renegotiateMonth} step → {money(a.renegotiationTriggers[0]?.feeStepTo ?? 0)}/mo
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <p className="text-xs text-muted-foreground mb-3">
+                  Step changes the contract takes at the renegotiation point — pre-baked so the
+                  founder is not negotiating from scratch at month {a.renegotiateMonth}.
+                </p>
+                <div className="overflow-x-auto -mx-2 px-2">
+                  <table className="w-full text-sm min-w-[640px]" data-testid="renegotiation-triggers-table">
+                    <thead className="text-left text-muted-foreground">
+                      <tr className="border-b border-card-border">
+                        <th className="py-2 pr-4 font-medium">Step</th>
+                        <th className="py-2 pr-4 font-medium">Condition</th>
+                        <th className="py-2 pr-4 font-medium text-right num">Fee → $/mo</th>
+                        <th className="py-2 pr-4 font-medium text-right num">Lead draw → $/mo</th>
+                        <th className="py-2 pr-4 font-medium">Evidence required</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {a.renegotiationTriggers.map((t) => (
+                        <tr
+                          key={t.step}
+                          className="border-b border-card-border align-top"
+                          data-testid={`renegotiation-trigger-${t.step.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                        >
+                          <td className="py-2 pr-4 font-medium">{t.step}</td>
+                          <td className="py-2 pr-4 text-muted-foreground">{t.condition}</td>
+                          <td className="py-2 pr-4 text-right num font-medium">
+                            <Num tag={a.feeTag}>{money(t.feeStepTo)}</Num>
+                          </td>
+                          <td className="py-2 pr-4 text-right num font-medium">
+                            <Num tag={a.practitionerSalaryTag}>{money(t.drawStepTo)}</Num>
+                          </td>
+                          <td className="py-2 pr-4 text-xs text-muted-foreground">{t.evidenceRequired}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Triggers describe what the contract <strong>steps to</strong> when conditions are
+                  met — not folded into the published {a.termMonths}-month totals. Published numbers
+                  reflect the base fee ({money(a.fee)}/mo) and lead draw (
+                  {money(a.roster[0].monthlyLoaded)}/mo) for all {a.termMonths} months.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+
+          {/* Team Roster */}
+          <AccordionItem
+            value="team-roster"
+            className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+            style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
+          >
+            <AccordionTrigger className="px-4 py-3 hover:no-underline">
+              <div className="flex items-baseline gap-3 text-left">
+                <span className="font-semibold text-sm">
+                  Team roster — {money(a.payrollTotal)}/mo payroll
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {a.roster.length} roles · lead draw {money(a.roster[0].monthlyLoaded)}/mo
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <ConfirmedTag tag={a.rosterTag} className="mb-3" />
               <div className="overflow-x-auto -mx-2 px-2">
-                <table className="w-full text-sm min-w-[640px]" data-testid="renegotiation-triggers-table">
+                <table className="w-full text-sm min-w-[520px]">
                   <thead className="text-left text-muted-foreground">
                     <tr className="border-b border-card-border">
-                      <th className="py-2 pr-4 font-medium">Step</th>
-                      <th className="py-2 pr-4 font-medium">Condition</th>
-                      <th className="py-2 pr-4 font-medium text-right num">Fee → $/mo</th>
-                      <th className="py-2 pr-4 font-medium text-right num">Lead draw → $/mo</th>
-                      <th className="py-2 pr-4 font-medium">Evidence required</th>
+                      <th className="py-2 pr-4 font-medium">Role</th>
+                      <th className="py-2 pr-4 font-medium text-right num">$/mo loaded</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {a.renegotiationTriggers.map((t) => (
+                    {a.roster.map((r) => (
                       <tr
-                        key={t.step}
+                        key={r.role}
                         className="border-b border-card-border align-top"
-                        data-testid={`renegotiation-trigger-${t.step.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                        data-testid={`roster-${r.role.toLowerCase().replace(/[^a-z]/g, "-")}`}
                       >
-                        <td className="py-2 pr-4 font-medium">{t.step}</td>
-                        <td className="py-2 pr-4 text-muted-foreground">{t.condition}</td>
-                        <td className="py-2 pr-4 text-right num font-medium">
-                          <Num tag={a.feeTag}>{money(t.feeStepTo)}</Num>
+                        <td className="py-2 pr-4">
+                          <div className="font-medium">{r.role}</div>
+                          {r.notes ? (
+                            <div className="text-xs text-muted-foreground mt-0.5">{r.notes}</div>
+                          ) : null}
                         </td>
-                        <td className="py-2 pr-4 text-right num font-medium">
-                          <Num tag={a.practitionerSalaryTag}>{money(t.drawStepTo)}</Num>
+                        <td className="py-2 pr-4 text-right num">
+                          <Num tag={a.rosterTag}>{money(r.monthlyLoaded)}</Num>
                         </td>
-                        <td className="py-2 pr-4 text-xs text-muted-foreground">{t.evidenceRequired}</td>
                       </tr>
                     ))}
+                    <tr className="font-semibold">
+                      <td className="py-2 pr-4">Payroll subtotal</td>
+                      <td className="py-2 pr-4 text-right num">
+                        <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>
+                      </td>
+                    </tr>
+                    <tr className="text-muted-foreground" data-testid="row-team-incentives">
+                      <td className="py-2 pr-4">
+                        <div className="font-medium">{a.teamIncentivesName}</div>
+                        <div className="text-xs">
+                          Visible-but-TBD line — surfaced so the team-incentives bucket stays in
+                          the conversation; dollar amount not yet pinned.
+                        </div>
+                      </td>
+                      <td className="py-2 pr-4 text-right num">
+                        {a.teamIncentivesAmount === null ? (
+                          <ConfirmedTag tag={a.teamIncentivesTag} />
+                        ) : (
+                          <Num tag={a.teamIncentivesTag}>{money(a.teamIncentivesAmount)}</Num>
+                        )}
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                Triggers describe what the contract <strong>steps to</strong> when the condition is
-                met — they are not folded into the published {a.termMonths}-month totals on this
-                page. Published numbers reflect the base fee ({money(a.fee)}/mo) and lead draw (
-                {money(a.roster[0].monthlyLoaded)}/mo) for all {a.termMonths} months.
-              </p>
-            </SectionCard>
-          </div>
-        ) : null}
+              <div className="mt-4 p-3 rounded-md bg-muted/40 text-xs text-muted-foreground space-y-2">
+                <p>
+                  <strong className="text-foreground">Underneath this team — operator couple on the cockpit.</strong>{" "}
+                  Sam &amp; Jess, brought in and paid by the contractor (same setup as the band's
+                  hotel). Square at the till, QuickBooks on the books, Local Line for producers,
+                  the Headwaters cockpit tying them together. On the buyer's payroll, not the{" "}
+                  {money(a.payrollTotal)}/mo Codetry line. The Code Reviewer seat keeps this stack
+                  honest — quarterly software review, every code path that touches money.
+                </p>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-          <MoneyKpi
-            label="Monthly fee"
-            value={a.fee}
-            unit="/mo"
-            tag={a.feeTag}
-            accent={b.accent}
-            testId="kpi-agency-fee"
-          />
-          <MoneyKpi
-            label={`Tithe (${pct(a.tithePct)}, off the top)`}
-            value={a.titheMonthly}
-            unit="/mo"
-            tag={a.feeTag}
-            accent={b.accent}
-            hint={`First claim on revenue · ${a.termMonths}-mo total ${money(a.titheTotal)}`}
-            testId="kpi-agency-tithe"
-          />
-          <MoneyKpi
-            label="Cost basis (Sep+)"
-            value={a.costBasisSepOnward}
-            unit="/mo"
-            tag={a.costBasisTag}
-            tone="muted"
-            accent={b.accent}
-            hint={`Jun–Aug: ${money(a.costBasisJunAug)}/mo`}
-            testId="kpi-agency-cost-basis"
-          />
-          <MoneyKpi
-            label="Post-tithe surplus (Sep+)"
-            value={a.monthlySurplusSepOnward}
-            unit="/mo"
-            tag={a.costBasisTag}
-            accent={b.accent}
-            hint={`Jun–Aug: ${money(a.monthlySurplusJunAug)}/mo`}
-            testId="kpi-agency-surplus"
-          />
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          <MoneyKpi
-            label={`${a.termMonths}-mo surplus deployed`}
-            value={a.totals18mo.surplusDeployed}
-            tag={a.totals18mo.tag}
-            tone="positive"
-            accent={b.accent}
-            hint={
-              hasFamilyInfusionRecovery
-                ? "Capital Recovery (family m1 + loan Aug→Oct) + Reserve / Innovation, after the tithe"
-                : "Capital recovery + Brightside + Reserve / Innovation, after the tithe"
-            }
-            testId="kpi-agency-18mo"
-          />
-          {hasFamilyInfusionRecovery ? (
-            <MoneyKpi
-              label="Capital Recovery — family infusion"
-              value={a.familyInfusionRecovery}
-              tag={a.familyInfusionRecoveryTag}
-              accent={b.accent}
-              hint="Paid in month 1 — tax-free debt repayment to founder's husband (NOT income)"
-              testId="kpi-agency-family-infusion-recovery"
-            />
-          ) : null}
-        </div>
-
-        <SectionCard
-          title={`Team roster — ${money(a.payrollTotal)}/mo payroll`}
-          tag={a.rosterTag}
-          accent={b.accent}
-        >
-          <div className="overflow-x-auto -mx-2 px-2">
-            <table className="w-full text-sm min-w-[520px]">
-              <thead className="text-left text-muted-foreground">
-                <tr className="border-b border-card-border">
-                  <th className="py-2 pr-4 font-medium">Role</th>
-                  <th className="py-2 pr-4 font-medium text-right num">$/mo loaded</th>
-                </tr>
-              </thead>
-              <tbody>
-                {a.roster.map((r) => (
-                  <tr key={r.role} className="border-b border-card-border align-top" data-testid={`roster-${r.role.toLowerCase().replace(/[^a-z]/g, "-")}`}>
-                    <td className="py-2 pr-4">
-                      <div className="font-medium">{r.role}</div>
-                      {r.notes ? <div className="text-xs text-muted-foreground mt-0.5">{r.notes}</div> : null}
-                    </td>
-                    <td className="py-2 pr-4 text-right num">
-                      <Num tag={a.rosterTag}>{money(r.monthlyLoaded)}</Num>
-                    </td>
-                  </tr>
-                ))}
-                <tr className="font-semibold">
-                  <td className="py-2 pr-4">Payroll subtotal</td>
-                  <td className="py-2 pr-4 text-right num">
-                    <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>
-                  </td>
-                </tr>
-                {/* Team incentives — visible-but-TBD line. Surfaced as a named row
-                    so the planning conversation never silently drops the
-                    team-incentives bucket; dollar amount has not been pinned yet. */}
-                <tr
-                  className="text-muted-foreground"
-                  data-testid="row-team-incentives"
-                >
-                  <td className="py-2 pr-4">
-                    <div className="font-medium">{a.teamIncentivesName}</div>
-                    <div className="text-xs">
-                      Visible-but-TBD line — surfaced so the team-incentives bucket stays in the
-                      conversation; dollar amount has not been pinned yet.
-                    </div>
-                  </td>
-                  <td className="py-2 pr-4 text-right num">
-                    {a.teamIncentivesAmount === null ? (
-                      <ConfirmedTag tag={a.teamIncentivesTag} />
-                    ) : (
-                      <Num tag={a.teamIncentivesTag}>{money(a.teamIncentivesAmount)}</Num>
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </SectionCard>
-
-        <div className="mt-4">
-          <SectionCard
-            title="Underneath this team — the two-person operator couple on the cockpit"
-            subtitle="The Codetry roster above is what the buyer is paying for. What they're getting, on the ground at the store, is a two-person operator couple sitting on serious software — that's the layer that makes the cost basis on this page hold."
-            tag={confirmed(
-              "Operator-couple + software framing carried verbatim from the Deer Lake Walkthrough's WhoWorks section, the Deer Lake Store Plan deck's StaffingModel slide, and the V3 Practitioner Operating Plan deck's TheSixPeople slide. The 'Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together' line is the shared phrase across all four surfaces.",
-            )}
-            accent={b.accent}
+          {/* Overheads */}
+          <AccordionItem
+            value="overheads"
+            className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+            style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
           >
-            <div className="space-y-3 text-sm leading-relaxed">
-              <p>
-                <strong>Sam &amp; Jess on the cockpit.</strong> A two-person
-                operator couple, brought in and paid by the contractor — same
-                setup as the band's hotel. Two on payroll at the store, not a
-                row of managers. It is the only way the math on this page
-                works at this size: a leaner store-floor headcount keeps the
-                buyer's payroll line small while the {a.roster.length}-role
-                Codetry team above carries the discipline, the software, and
-                the bookkeeping.
-              </p>
-              <p>
-                <strong>Serious software underneath them.</strong> Square at
-                the till, QuickBooks on the books, Local Line for producers,
-                the Headwaters cockpit tying them together. Doors stay open
-                through hunting season and bad weather. Truck leaves Dryden
-                loaded even when one operator is out. The Code Reviewer seat
-                in the roster above is the line that keeps this stack
-                honest — quarterly software review, every code path that
-                touches money checked.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Naming note. The operator couple is not on the{" "}
-                {money(a.payrollTotal)}/mo Codetry payroll above — they're on
-                the buyer's books, downstream of the agency engagement. The
-                roster on this page is the team the buyer doesn't have to
-                hire; the operator couple is the team the buyer does.
-              </p>
-            </div>
-          </SectionCard>
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <OverheadCard
-            title={`Overheads — Jun–Aug 2026 · ${money(a.overheadsJunAugTotal)}/mo`}
-            rows={a.overheadsJunAug}
-            total={a.overheadsJunAugTotal}
-            tag={a.overheadsTag}
-            accent={b.accent}
-            travelTbd={tbd("Practitioner visits ~3 days/mo")}
-          />
-          <OverheadCard
-            title={`Overheads — Sep 2026 onward · ${money(a.overheadsSepOnwardTotal)}/mo`}
-            rows={a.overheadsSepOnward}
-            total={a.overheadsSepOnwardTotal}
-            tag={a.overheadsTag}
-            accent={b.accent}
-            travelTbd={tbd("Practitioner visits ~3 days/mo")}
-          />
-        </div>
-
-        <div className="mt-6">
-          <SectionCard
-            title={`Surplus deployment — ${waterfallDescription}`}
-            subtitle={`Strict order: ${waterfallDescription}. Giving is what you decided, not what was left.`}
-            tag={a.totals18mo.tag}
-            accent={b.accent}
-          >
-            <div className="space-y-4">{phaseBlocks.map((p) => p.node)}</div>
-          </SectionCard>
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <SectionCard title="Reserve — purpose" accent={b.accent}>
-            <ol className="list-decimal pl-5 text-sm space-y-1.5 text-muted-foreground">
-              {a.reservePurposes.map((p, i) => (
-                <li key={i}><span className="text-foreground">{p}</span></li>
-              ))}
-            </ol>
-            <p className="mt-3 text-xs text-muted-foreground italic">
-              Naming note. <em>Reserve</em> here is the agency P&L line — a 75% hold-back of post-tithe surplus that funds the next reserve / next pilot. It is a different object from the codetry-handbook's <em>Reservoir</em> (the household stablecoin wallet that holds RLUSD between rainfall and channelling into buckets). The household wallet is downstream of the household's own income, not of this agency's surplus.
-            </p>
-          </SectionCard>
-          <SectionCard title="Giving — directional intent (where the tithe goes)" accent={b.accent}>
-            <p className="text-sm text-muted-foreground">{a.givingDirection}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Tithe rate: <strong className="text-foreground">{pct(a.tithePct)} of revenue</strong>{" "}
-              · Locked monthly:{" "}
-              <strong className="text-foreground">{money(a.titheMonthly)}</strong> ·{" "}
-              {a.termMonths}-mo total:{" "}
-              <strong className="text-foreground">{money(a.titheTotal)}</strong>
-            </p>
-          </SectionCard>
-        </div>
-
-        <div className="mt-6">
-          <ReinvestmentBucketsInteractive accent={b.accent} accentInk={b.accentInk} />
-        </div>
-
-        <div className="mt-4">
-          <SectionCard
-            title={`${a.termMonths}-month engagement totals`}
-            subtitle={`${a.startDate} → engagement window`}
-            tag={a.totals18mo.tag}
-            accent={b.accent}
-          >
-            <table className="w-full text-sm">
-              <tbody>
-                <PLRow label={`Revenue (${money(a.fee)} × ${a.termMonths})`} value={a.totals18mo.revenue} bold />
-                <PLRow label={`Tithe — Giving (${pct(a.tithePct)} off the top, first claim)`} value={-a.totals18mo.tithe} />
-                <PLRow label={`Payroll (${money(a.payrollTotal)} × ${a.termMonths})`} value={-a.totals18mo.payroll} />
-                <PLRow label={overheadsBreakdownLabel} value={-a.totals18mo.overheads} />
-                <PLRow label="Total surplus deployed (post-tithe)" value={a.totals18mo.surplusDeployed} bold tone="positive" />
-                <tr><td colSpan={2} className="pt-3"><div className="border-t border-dashed border-card-border" /></td></tr>
-                {hasFamilyInfusionRecovery ? (
-                  <PLRow
-                    label="↳ Capital Recovery — family infusion (m1, tax-free debt repayment)"
-                    value={a.totals18mo.familyInfusionRecovery}
-                    tone="muted"
-                  />
-                ) : null}
-                <PLRow
-                  label={
-                    hasFamilyInfusionRecovery
-                      ? "↳ Capital Recovery — business loan (Aug → Oct)"
-                      : "↳ Capital Recovery"
-                  }
-                  value={a.totals18mo.capitalRecovery}
-                  tone="muted"
+            <AccordionTrigger className="px-4 py-3 hover:no-underline">
+              <div className="flex items-baseline gap-3 text-left">
+                <span className="font-semibold text-sm">Overheads</span>
+                <span className="text-xs text-muted-foreground">
+                  Jun–Aug {money(a.overheadsJunAugTotal)}/mo · Sep+ {money(a.overheadsSepOnwardTotal)}/mo
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <ConfirmedTag tag={a.overheadsTag} className="mb-3" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <OverheadCard
+                  title={`Jun–Aug 2026 · ${money(a.overheadsJunAugTotal)}/mo`}
+                  rows={a.overheadsJunAug}
+                  total={a.overheadsJunAugTotal}
+                  tag={a.overheadsTag}
+                  travelTbd={tbd("Practitioner visits ~3 days/mo")}
                 />
-                {hasBrightsideLaunchPhase ? (
-                  <PLRow label="↳ Brightside one-time pre-launch" value={a.totals18mo.brightsidePrelaunch} tone="muted" />
-                ) : null}
-                <PLRow label="↳ Reserve (Phase 3)" value={a.totals18mo.reserve} tone="muted" />
-                <PLRow label="↳ Innovation / R&D (Phase 3)" value={a.totals18mo.innovation} tone="muted" />
-              </tbody>
-            </table>
-          </SectionCard>
-        </div>
+                <OverheadCard
+                  title={`Sep 2026 onward · ${money(a.overheadsSepOnwardTotal)}/mo`}
+                  rows={a.overheadsSepOnward}
+                  total={a.overheadsSepOnwardTotal}
+                  tag={a.overheadsTag}
+                  travelTbd={tbd("Practitioner visits ~3 days/mo")}
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-        <div className="mt-4">
-          <SectionCard
-            title="Personal compensation footing"
-            subtitle="Transparency block — only personal cash from this bucket."
-            tag={a.practitionerSalaryTag}
-            accent={b.accent}
+          {/* Surplus Deployment */}
+          <AccordionItem
+            value="surplus-deployment"
+            className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+            style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
           >
-            <p className="text-sm">
-              <strong>Practitioner salary across {a.termMonths} months from the agency engagement:</strong>{" "}
-              <span className="num font-semibold">{money(a.practitionerSalary18mo)}</span>{" "}
-              <span className="text-muted-foreground">
-                (= {money(a.practitionerSalary18mo / (a.termMonths / 12))}/yr).
-              </span>
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              No ongoing owner take from the agency surplus, no profit-share, no dividend from the
-              agency line. Capital Recovery returns existing obligations to{" "}
-              {hasFamilyInfusionRecovery
-                ? "the founder's husband (family-infusion leg, m1) and the bank (business-loan leg, Aug → Oct)"
-                : "lender and family"}
-              ; both legs are tax-free debt repayment, not characterized as compensation and not
-              flowing through the founder personally. Brightside owner take is the founder's only
-              profit-share line — see Brightside.
-            </p>
-          </SectionCard>
-        </div>
+            <AccordionTrigger className="px-4 py-3 hover:no-underline">
+              <div className="flex items-baseline gap-3 text-left">
+                <span className="font-semibold text-sm">
+                  Surplus deployment — {money(a.totals18mo.surplusDeployed)} over {a.termMonths} mo
+                </span>
+                <span className="text-xs text-muted-foreground">{waterfallDescription}</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <p className="text-xs text-muted-foreground mb-3">
+                Strict order: {waterfallDescription}. Giving is what you decided, not what was left.
+              </p>
+              <div className="space-y-4">{phaseBlocks.map((p) => p.node)}</div>
+            </AccordionContent>
+          </AccordionItem>
 
-        <FootnoteList title="Agency footnotes" notes={AGENCY_FOOTNOTES} />
+          {/* Reserve purposes */}
+          <AccordionItem
+            value="reserve-giving"
+            className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+            style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
+          >
+            <AccordionTrigger className="px-4 py-3 hover:no-underline">
+              <div className="flex items-baseline gap-3 text-left">
+                <span className="font-semibold text-sm">Reserve purposes &amp; giving direction</span>
+                <span className="text-xs text-muted-foreground">
+                  {a.reservePurposes.length} reserve purposes
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-medium mb-2">Reserve — purpose</p>
+                  <ol className="list-decimal pl-5 space-y-1.5 text-muted-foreground">
+                    {a.reservePurposes.map((p, i) => (
+                      <li key={i}><span className="text-foreground">{p}</span></li>
+                    ))}
+                  </ol>
+                  <p className="mt-3 text-xs text-muted-foreground italic">
+                    Reserve is not a buffer against bad months — it is a named deployment target.
+                    These are the only purposes the Reserve bucket is pointed at.
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium mb-2">Giving — direction</p>
+                  <p className="text-muted-foreground leading-relaxed">{a.givingDirection}</p>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Reinvestment interactive */}
+          <AccordionItem
+            value="reinvestment"
+            className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+            style={{ borderLeftColor: b.accent, borderLeftWidth: "3px" }}
+          >
+            <AccordionTrigger className="px-4 py-3 hover:no-underline">
+              <span className="font-semibold text-sm">Reinvestment buckets — interactive</span>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <ReinvestmentBucketsInteractive accent={b.accent} accentInk={b.accentInk} />
+            </AccordionContent>
+          </AccordionItem>
+
+        </Accordion>
       </div>
+
+      <FootnoteList notes={AGENCY_FOOTNOTES} />
     </div>
   );
 }
+
+// ─── Sub-components ────────────────────────────────────────────────────────────
 
 function PhaseBlock({
   index,
@@ -615,23 +630,26 @@ function PhaseBlock({
 }: {
   index: number;
   title: string;
-  tag?: SourceTag;
+  tag: SourceTag;
   accent: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <div
-      className="rounded-lg border-l-4 bg-card/60 px-4 py-3"
-      style={{ borderColor: accent }}
-    >
-      <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
-        <h4 className="font-semibold text-foreground">
-          <span className="font-mono text-xs text-muted-foreground mr-2">PHASE {index}</span>
-          {title}
-        </h4>
-        {tag ? <ConfirmedTag tag={tag} /> : null}
+    <div className="flex gap-4">
+      <div className="flex flex-col items-center">
+        <div
+          className="h-7 w-7 rounded-full grid place-items-center text-xs font-bold text-white flex-shrink-0"
+          style={{ backgroundColor: accent }}
+        >
+          {index + 1}
+        </div>
+        <div className="flex-1 w-px bg-card-border mt-2" />
       </div>
-      {children}
+      <div className="flex-1 pb-4">
+        <p className="text-sm font-semibold mb-1">{title}</p>
+        <ConfirmedTag tag={tag} className="mb-2" />
+        {children}
+      </div>
     </div>
   );
 }
@@ -641,73 +659,54 @@ function OverheadCard({
   rows,
   total,
   tag,
-  accent,
   travelTbd,
 }: {
   title: string;
-  rows: { name: string; monthly: number | null; notes?: string; startsSeptember?: boolean }[];
+  rows: Array<{ name: string; monthly: number | null; notes?: string }>;
   total: number;
   tag: SourceTag;
-  accent: string;
   travelTbd: SourceTag;
 }) {
   return (
-    <SectionCard title={title} tag={tag} accent={accent}>
+    <div>
+      <p className="text-xs font-semibold text-muted-foreground mb-2">{title}</p>
       <table className="w-full text-sm">
         <tbody>
           {rows.map((r) => (
             <tr key={r.name} className="border-b border-card-border align-top">
               <td className="py-1.5 pr-4">
-                <div className="font-medium">{r.name}</div>
-                {r.notes ? <div className="text-xs text-muted-foreground">{r.notes}</div> : null}
+                <div className="font-medium text-sm">{r.name}</div>
+                {r.notes ? (
+                  <div className="text-xs text-muted-foreground">{r.notes}</div>
+                ) : null}
               </td>
-              <td className="py-1.5 pr-4 text-right num">
-                {r.monthly === null ? <ConfirmedTag tag={travelTbd} /> : money(r.monthly)}
+              <td className="py-1.5 text-right num text-sm">
+                {r.monthly === null ? (
+                  <span className="text-muted-foreground italic text-xs">TBD</span>
+                ) : (
+                  <Num tag={tag}>{money(r.monthly)}</Num>
+                )}
               </td>
             </tr>
           ))}
+          <tr className="border-b border-card-border align-top">
+            <td className="py-1.5 pr-4">
+              <div className="text-sm">Travel (practitioner)</div>
+              <div className="text-xs text-muted-foreground">~3 days/mo, TBD</div>
+            </td>
+            <td className="py-1.5 text-right num text-sm">
+              <ConfirmedTag tag={travelTbd} />
+            </td>
+          </tr>
           <tr className="font-semibold">
-            <td className="py-1.5 pr-4">Subtotal</td>
-            <td className="py-1.5 pr-4 text-right num">{money(total)}</td>
+            <td className="py-1.5 pr-4 text-sm">Subtotal</td>
+            <td className="py-1.5 text-right num text-sm">
+              <Num tag={tag}>{money(total)}</Num>
+            </td>
           </tr>
         </tbody>
       </table>
-    </SectionCard>
-  );
-}
-
-function PLRow({
-  label,
-  value,
-  bold,
-  tone,
-  tag,
-}: {
-  label: string;
-  value: number;
-  bold?: boolean;
-  tone?: "positive" | "muted";
-  tag?: SourceTag;
-}) {
-  const cls = [
-    "py-1.5 num",
-    bold ? "font-semibold" : "",
-    tone === "positive"
-      ? "text-[hsl(167_60%_22%)]"
-      : tone === "muted"
-        ? "text-muted-foreground"
-        : "text-foreground",
-  ].join(" ");
-  const sign = value < 0 ? "(" : "";
-  const close = value < 0 ? ")" : "";
-  const formatted = `${sign}${money(Math.abs(value))}${close}`;
-  return (
-    <tr className="border-b border-card-border">
-      <td className={`py-1.5 pr-4 ${bold ? "font-semibold" : ""}`}>{label}</td>
-      <td className={`${cls} text-right`}>
-        <Num tag={tag}>{formatted}</Num>
-      </td>
-    </tr>
+    </div>
   );
 }
 
@@ -725,9 +724,9 @@ function SplitRow({
   return (
     <tr className="border-b border-card-border">
       <td className="py-1.5 pr-4 font-medium">{label}</td>
-      <td className="py-1.5 pr-4 text-right num">{pct(pctVal)}</td>
+      <td className="py-1.5 pr-4 text-right num">{pctVal}%</td>
       <td className="py-1.5 pr-4 text-right num">{money(monthly)}</td>
-      <td className="py-1.5 pr-4 text-right num">{money(total)}</td>
+      <td className="py-1.5 text-right num">{money(total)}</td>
     </tr>
   );
 }
