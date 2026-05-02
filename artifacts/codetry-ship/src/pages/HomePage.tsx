@@ -82,6 +82,20 @@ export function HomePage() {
           </p>
         </header>
 
+        {/* ── hero photo ── swap src when real photo is ready */}
+        <div
+          className="mt-10 w-full overflow-hidden rounded-md"
+          style={{ aspectRatio: "16/9", background: "hsl(var(--card))", border: "1px solid hsl(var(--card-border))" }}
+          data-testid="hero-photo-slot"
+        >
+          {/* TODO: replace with <img src={heroPhoto} alt="..." className="w-full h-full object-cover" /> */}
+          <div className="w-full h-full grid place-items-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              photo coming
+            </p>
+          </div>
+        </div>
+
         <hr
           className="my-12 sm:my-16"
           style={{ borderColor: "hsl(var(--card-border))" }}
@@ -267,7 +281,7 @@ export function HomePage() {
 
         {/* ── the work ── */}
         <section data-testid="home-work">
-          <div className="flex items-baseline justify-between gap-3 mb-6">
+          <div className="flex items-baseline justify-between gap-3 mb-4">
             <h2
               className="font-serif text-2xl tracking-tight"
               data-testid="work-heading"
@@ -281,6 +295,15 @@ export function HomePage() {
               shipped · running · readable
             </p>
           </div>
+
+          <p
+            className="font-serif text-[15px] leading-[1.6] mb-6"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+            data-testid="work-explainer"
+          >
+            Headwaters builds software and operational tools for northern communities.
+            These are live and in use — not demos, not proposals.
+          </p>
 
           <div className="space-y-3" data-testid="work-cards">
             <ComingSoonCard
@@ -373,24 +396,39 @@ export function HomePage() {
               bobbie parr
             </p>
           </div>
+
+          <a
+            href="bio"
+            className="block mb-6 w-full overflow-hidden rounded-md group"
+            style={{ aspectRatio: "4/3", maxHeight: "320px", background: "hsl(var(--card))", border: "1px solid hsl(var(--card-border))" }}
+            data-testid="bio-photo-slot"
+          >
+            {/* TODO: replace inner div with <img src={bobbiePhoto} alt="Bobbie Parr" className="w-full h-full object-cover group-hover:opacity-90 transition-opacity" /> */}
+            <div className="w-full h-full grid place-items-center">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                photo coming
+              </p>
+            </div>
+          </a>
+
           <p
             className="font-serif text-[15px] leading-[1.6] mb-6"
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="about-body"
           >
             Single-practitioner, by design. Plain language, dollar-honest,
-            no startup-pitch tone. Rate card and full background on the bio page.
+            no startup-pitch tone. See what we offer and how we work.
           </p>
           <a
             href="bio"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-sm font-sans text-sm font-medium tracking-wide border transition-opacity hover:opacity-80"
+            className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide transition-opacity hover:opacity-90"
             style={{
-              borderColor: "hsl(var(--accent))",
-              color: "hsl(var(--accent))",
+              background: "hsl(var(--accent))",
+              color: "hsl(var(--background))",
             }}
             data-testid="link-bio"
           >
-            Rate card and full bio →
+            Our services →
           </a>
         </section>
 
