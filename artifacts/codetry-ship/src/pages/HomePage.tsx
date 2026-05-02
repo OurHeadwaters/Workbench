@@ -306,9 +306,8 @@ export function HomePage() {
             href="services"
             className="flex items-center justify-between w-full px-5 py-4 rounded-sm mb-6 font-mono text-xs uppercase tracking-[0.18em] hover:opacity-90 transition-opacity"
             style={{
-              background: "hsl(var(--accent) / 0.10)",
-              color: "hsl(var(--accent))",
-              border: "1px solid hsl(var(--accent) / 0.22)",
+              background: "hsl(var(--accent))",
+              color: "hsl(var(--accent-foreground))",
             }}
             data-testid="link-services"
           >

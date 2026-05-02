@@ -334,15 +334,15 @@ export function ServicesPage() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
-              href="../"
-              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors"
+              href={`${import.meta.env.BASE_URL}`}
+              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
             >
               Start a conversation →
             </a>
             <a
-              href="../bio"
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4"
+              href={`${import.meta.env.BASE_URL}bio`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               Read the bio
