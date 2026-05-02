@@ -9,6 +9,7 @@ import { SignedIn, SignedOut, RedirectToSignIn } from "@/lib/clerkGates";
 import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import Demo from "@/pages/Demo";
 import Standby from "@/pages/Standby";
 import Gate from "@/pages/Gate";
 import Dashboard from "@/pages/Dashboard";
@@ -114,6 +115,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/demo" component={Demo} />
       <Route path="/standby" component={Standby} />
       <Route path="/gate" component={Gate} />
       {/*

@@ -45,6 +45,9 @@ export default function Home() {
             <Link href="/sign-in">
               <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 h-14">Sign In</Button>
             </Link>
+            <Link href="/demo">
+              <Button variant="ghost" size="lg" className="w-full sm:w-auto text-lg px-8 h-14 text-muted-foreground">View Demo</Button>
+            </Link>
           </div>
         </SignedOut>
         <SignedIn>

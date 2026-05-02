@@ -66,6 +66,13 @@ export function HomePage() {
               href="/library/"
               testId="work-card-library"
             />
+            <DemoCard
+              eyebrow="Community ledger · Headwaters Books"
+              title="Open books — what a community store's finances look like"
+              description="A live demo of the bookkeeping tool: open records the band can read, the daily close the operators run each night, and the month-end pack the bookkeeper hands council. Sample data, no login."
+              href="/headwaters-books/demo"
+              testId="work-card-books-demo"
+            />
           </div>
         </section>
 
@@ -144,6 +151,47 @@ export function HomePage() {
 
       </div>
     </main>
+  );
+}
+
+interface DemoCardProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  href: string;
+  testId: string;
+}
+
+function DemoCard({ eyebrow, title, description, href, testId }: DemoCardProps) {
+  return (
+    <a
+      href={href}
+      className="block rounded-md border bg-card p-5 sm:p-6 transition-colors hover:border-accent"
+      style={{ borderColor: "hsl(var(--card-border))" }}
+      data-testid={testId}
+    >
+      <p
+        className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+        style={{ color: "hsl(var(--accent))" }}
+      >
+        {eyebrow}
+      </p>
+      <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
+        {title}
+      </p>
+      <p
+        className="font-serif text-[14px] leading-[1.55]"
+        style={{ color: "hsl(var(--muted-foreground))" }}
+      >
+        {description}
+      </p>
+      <p
+        className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em]"
+        style={{ color: "hsl(var(--accent))" }}
+      >
+        View demo →
+      </p>
+    </a>
   );
 }
 
