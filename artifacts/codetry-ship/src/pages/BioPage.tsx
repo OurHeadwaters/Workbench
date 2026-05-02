@@ -143,19 +143,19 @@ export function BioPage() {
               >
                 <RateRow
                   label="Trial period"
-                  amount="$150.00 / hour"
+                  amount="$175.00 / hour"
                   note="Project-based invoicing"
                   testId="rate-trial"
                 />
                 <RateRow
                   label="Full engagement"
-                  amount="$150.00 / hour"
+                  amount="$175.00 / hour"
                   note="Ongoing engagement, hourly"
                   testId="rate-fulltime"
                 />
                 <RateRow
                   label="Travel premium"
-                  amount="$150.00 / day"
+                  amount="$175.00 / day"
                   note="On days worked on-site"
                   testId="rate-travel"
                 />

@@ -675,23 +675,23 @@ describe("V3 ↔ V4 invariants — Salts and Brightside are the SAME object (can
   });
 });
 
-describe("Scenario registry — V6 is the locked default; V5 is the prior toggle option; V3 retained for migration / Compare anchor only", () => {
-  it("SCENARIOS contains v3, v4, v5, and v6 (V2 retired; V3 retained as workspace anchor; V5 retained as historical baseline)", () => {
-    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4", "v5", "v6"]);
+describe("Scenario registry — V7 is the locked default; V6 and V5 are historical baselines; V3 retained for migration / Compare anchor only", () => {
+  it("SCENARIOS contains v3, v4, v5, v6, and v7 (V2 retired; V3 retained as workspace anchor; V5/V6 retained as historical baselines)", () => {
+    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4", "v5", "v6", "v7"]);
     expect(SCENARIOS.v3).toBe(SCENARIO_V3);
     expect(SCENARIOS.v4).toBe(SCENARIO_V4);
     expect(SCENARIOS.v5).toBe(SCENARIO_V5);
     expect(SCENARIOS.v6).toBe(SCENARIO_V6);
   });
 
-  it("SCENARIO_ORDER lists v6 first (Current), v5 second (Prior); V3 is intentionally absent from the toggle", () => {
-    expect(SCENARIO_ORDER).toEqual(["v6", "v5"]);
+  it("SCENARIO_ORDER lists v7 first (Current), v6 second (Prior), v5 third (Historical); V3 is intentionally absent from the toggle", () => {
+    expect(SCENARIO_ORDER).toEqual(["v7", "v6", "v5"]);
     expect(SCENARIO_ORDER).not.toContain("v3");
     expect(SCENARIO_ORDER).not.toContain("v4");
   });
 
-  it("DEFAULT_SCENARIO_ID is v6 (hourly subcontract applied to Deer Lake)", () => {
-    expect(DEFAULT_SCENARIO_ID).toBe("v6");
+  it("DEFAULT_SCENARIO_ID is v7 (updated rates applied to Deer Lake)", () => {
+    expect(DEFAULT_SCENARIO_ID).toBe("v7");
   });
 });
 

@@ -2,44 +2,45 @@
  * DebtAttackPage — Bobbie's private debt attack plan.
  *
  * Three phases: buffer → Debt A ($40k) → Debt B ($72k).
- * Drawings locked at $2,400/mo. Tithe only on drawings.
- * All surplus above drawings goes to the active phase target.
- * Debt-free is the trigger to increase drawings.
+ * Personal spending: $4,000 bi-weekly ($8,000/mo) from Bobbie draw until debt-free.
+ * All engagement income above personal spending goes to the active phase target.
+ * Debt-free is the trigger to increase personal spending.
  *
- * Math:
- *   Monthly billed:    $35,200
- *   Tithe (10% of billed): $3,520   ← on business revenue
- *   Bobbie draw:       $12,800  (gross, from which she takes $2,400 drawings)
- *   Tyler sub:         $11,200
- *   Overheads:          $1,292
- *   Surplus:            $6,388/mo
+ * Math (V7 rates — Bobbie $175/hr billed, $105/hr net):
+ *   Monthly billed:          $39,200
+ *   Tithe (10% of billed):    $3,920   ← on business revenue
+ *   Bobbie draw:             $16,800   ($105/hr × 160 hr/mo)
+ *   Tyler sub:               $11,200
+ *   Overheads:                $1,292
+ *   Business surplus:         $5,988/mo
  *
- *   Drawings (personal): $2,400/mo ($1,200 bi-weekly)
- *   Tithe on drawings:     $240/mo (10% of $2,400 only — not of total billed again)
- *   Available to stack:  $6,388 - $2,400 = $3,988/mo
+ *   Bobbie personal spending: $8,000/mo ($4,000 bi-weekly from draw)
+ *   Unspent draw to debt:     $8,800   (draw $16,800 − spending $8,000)
+ *   Business surplus to debt: $5,988
+ *   Total stacked:           $14,788/mo
  *
- *   Phase 1 — buffer:  $20,000 ÷ $3,988 ≈ 5.0 months
- *   Phase 2 — $40k debt: $40,000 ÷ $3,988 ≈ 10.0 months
- *   Phase 3 — $72k debt: $72,000 ÷ $3,988 ≈ 18.1 months
- *   Total to debt-free: ~33 months from engagement start (Jun 2026 → Mar 2029)
+ *   Phase 1 — buffer:    $20,000 ÷ $14,788 ≈ 1.4 months
+ *   Phase 2 — $40k debt: $40,000 ÷ $14,788 ≈ 2.7 months
+ *   Phase 3 — $72k debt: $72,000 ÷ $14,788 ≈ 4.9 months
+ *   Total to debt-free: ~10 months from engagement start (Jun 2026 → Apr 2027)
  */
 
 import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SURPLUS_MONTHLY    = 6388;
-const DRAWINGS_MONTHLY   = 2400;   // $1,200 bi-weekly
-const TITHE_ON_DRAWINGS  = 240;    // 10% of drawings only
-const STACK_MONTHLY      = SURPLUS_MONTHLY - DRAWINGS_MONTHLY; // 3,988
+const BOBBIE_DRAW_MONTHLY = 16_800;  // $105/hr × 160 hr/mo (V7 rate)
+const PERSONAL_MONTHLY    = 8_000;   // $4,000 bi-weekly
+const SURPLUS_MONTHLY     = 5_988;   // business surplus after tithe + draw + Tyler + OH
+const STACK_MONTHLY       = (BOBBIE_DRAW_MONTHLY - PERSONAL_MONTHLY) + SURPLUS_MONTHLY; // 14,788
 
 const BUFFER_TARGET      = 20_000;
 const DEBT_A             = 40_000;
 const DEBT_B             = 72_000;
 
-const BUFFER_MONTHS      = Math.ceil(BUFFER_TARGET / STACK_MONTHLY); // 6
-const DEBT_A_MONTHS      = Math.ceil(DEBT_A / STACK_MONTHLY);        // 11
-const DEBT_B_MONTHS      = Math.ceil(DEBT_B / STACK_MONTHLY);        // 19
+const BUFFER_MONTHS      = Math.ceil(BUFFER_TARGET / STACK_MONTHLY); // 2
+const DEBT_A_MONTHS      = Math.ceil(DEBT_A / STACK_MONTHLY);        // 3
+const DEBT_B_MONTHS      = Math.ceil(DEBT_B / STACK_MONTHLY);        // 5
 const TOTAL_MONTHS       = BUFFER_MONTHS + DEBT_A_MONTHS + DEBT_B_MONTHS;
 
 // Start: June 2026 (Phase 2 engagement start)
@@ -322,7 +323,7 @@ export function DebtAttackPage() {
             Debt attack plan
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Buffer → $40k → $72k → debt free · drawings locked at {money(DRAWINGS_MONTHLY)}/mo until done
+            Buffer → $40k → $72k → debt free · $4,000 bi-weekly until debt-free
           </p>
         </div>
       </header>
@@ -337,8 +338,8 @@ export function DebtAttackPage() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Drawings/mo", value: money(DRAWINGS_MONTHLY), sub: "$1,200 bi-weekly", color: "#065f46" },
-            { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "surplus − drawings", color: "#c2410c" },
+            { label: "Personal/mo", value: money(PERSONAL_MONTHLY), sub: "$4,000 bi-weekly", color: "#065f46" },
+            { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "after personal spending", color: "#c2410c" },
             { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k", color: "#6d28d9" },
             { label: "Debt-free", value: DEBT_FREE_DATE.split(" ").slice(-1)[0], sub: DEBT_FREE_DATE, color: "#92400e" },
           ].map((item) => (
@@ -368,13 +369,12 @@ export function DebtAttackPage() {
         </p>
         <div className="space-y-2.5">
           {[
-            { label: "Total billed to client", value: 35_200, sign: "+", color: "#065f46" },
-            { label: "Tithe (10% of billed)", value: -3_520, sign: "−", color: "#c2410c", note: "on business revenue" },
+            { label: "Total billed to client", value: 39_200, sign: "+", color: "#065f46" },
+            { label: "Tithe (10% of billed)", value: -3_920, sign: "−", color: "#c2410c", note: "on business revenue" },
+            { label: "Bobbie personal ($4k bi-weekly)", value: -8_000, sign: "−", color: "#6d28d9", note: "from draw · remaining $8,800 → debt" },
             { label: "Tyler subcontract", value: -11_200, sign: "−", color: "#c2410c" },
             { label: "Overheads (lean)", value: -1_292, sign: "−", color: "#c2410c" },
-            { label: "Business surplus", value: 6_388, sign: "=", color: "#1e40af", bold: true },
-            { label: "Bobbie drawings", value: -2_400, sign: "−", color: "#6d28d9", note: "$1,200 bi-weekly · tithe on this only ($240)" },
-            { label: "Stacked toward debt", value: 3_988, sign: "=", color: "#92400e", bold: true },
+            { label: "Stacked toward debt", value: 14_788, sign: "=", color: "#92400e", bold: true },
           ].map((row) => (
             <div
               key={row.label}
@@ -444,7 +444,7 @@ export function DebtAttackPage() {
           monthly={STACK_MONTHLY}
           months={DEBT_A_MONTHS}
           doneDate={DEBT_A_DONE_DATE}
-          description={`Every dollar above drawings goes straight at the $40k. Nothing else. ${money(STACK_MONTHLY)}/mo × ~${DEBT_A_MONTHS} months. When it clears, you have buying power and breathing room — the same ${money(STACK_MONTHLY)}/mo now pivots entirely to the $72k.`}
+          description={`Every dollar above personal spending goes straight at the $40k. Nothing else. ${money(STACK_MONTHLY)}/mo × ~${DEBT_A_MONTHS} months. When it clears, you have buying power and breathing room — the same ${money(STACK_MONTHLY)}/mo now pivots entirely to the $72k.`}
         />
 
         <div className="flex justify-center">
@@ -462,7 +462,7 @@ export function DebtAttackPage() {
           monthly={STACK_MONTHLY}
           months={DEBT_B_MONTHS}
           doneDate={DEBT_FREE_DATE}
-          description={`The biggest block — but you arrive with momentum, no payment going to the $40k, and a proven system. ${money(STACK_MONTHLY)}/mo × ~${DEBT_B_MONTHS} months. The finish line is ${DEBT_FREE_DATE}. Drawings increase the day the last payment clears.`}
+          description={`The biggest block — but you arrive with momentum, no payment going to the $40k, and a proven system. ${money(STACK_MONTHLY)}/mo × ~${DEBT_B_MONTHS} months. The finish line is ${DEBT_FREE_DATE}. Personal spending steps up the day the last payment clears.`}
         />
       </div>
 
@@ -526,8 +526,8 @@ export function DebtAttackPage() {
           Rules of the plan · non-negotiable
         </p>
         {[
-          { icon: DollarSign, color: "#065f46", rule: "Drawings stay at $2,400/mo ($1,200 bi-weekly) until the last debt clears. No lifestyle creep before the finish line." },
-          { icon: CheckCircle2, color: "#065f46", rule: "Tithe only on drawings ($240/mo) — not on total billed revenue. That is the correct application of the principle to an owner draw." },
+          { icon: DollarSign, color: "#065f46", rule: "Personal spending stays at $8,000/mo ($4,000 bi-weekly) until the last debt clears. No lifestyle creep before the finish line." },
+          { icon: CheckCircle2, color: "#065f46", rule: "The business tithe (10% of $39,200 billed = $3,920/mo) is paid off the top. One tithe, first — no separate tithe on personal spending." },
           { icon: Shield, color: "#c2410c", rule: "The $20,000 buffer is untouchable once built. It absorbs a bad month without breaking the debt plan." },
           { icon: Zap, color: "#6d28d9", rule: "$40k dies before $72k. Clearing the smaller one first gives a real psychological win and frees the full stack for the bigger one." },
           { icon: Trophy, color: "#92400e", rule: "Debt-free is the trigger for a drawings increase — not a contract renewal, not a good month, not a feeling. The date on the plan." },

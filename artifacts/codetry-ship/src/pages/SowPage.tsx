@@ -82,7 +82,7 @@ export function SowPage() {
               </div>
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 mb-0.5">Rate</p>
-                <p className="font-serif text-foreground">$150.00 / hr</p>
+                <p className="font-serif text-foreground">$175.00 / hr</p>
               </div>
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 mb-0.5">Billing</p>
@@ -151,7 +151,7 @@ export function SowPage() {
                 Work begins on a task-by-task basis at the hourly rate above. No minimum hour commitment is required to start. Hours are logged and billed every two weeks with a plain-language summary of work completed.
               </p>
               <p>
-                Travel to site is billed at an additional <strong>$150.00 per travel day</strong>. Expenses (fuel, accommodation, meals) are reimbursed at cost with receipts.
+                Travel to site is billed at an additional <strong>$175.00 per travel day</strong>. Expenses (fuel, accommodation, meals) are reimbursed at cost with receipts.
               </p>
               <p>
                 Either party may pause or end the engagement with two weeks' written notice. All work product and digital assets produced remain the property of the community.
@@ -173,7 +173,7 @@ export function SowPage() {
                 Reply to this document with the first task or question you'd like work started on. That's the start date. No contract ceremony required — a written reply counts as authorization to begin.
               </p>
               <p>
-                If you'd prefer a trial period first: a bounded scope of work at the standard $150.00/hr rate. No ceremony required — a written reply is authorization to begin. The rate is the same for trial and for the full engagement.
+                If you'd prefer a trial period first: a bounded scope of work at the standard $175.00/hr rate. No ceremony required — a written reply is authorization to begin. The rate is the same for trial and for the full engagement.
               </p>
             </div>
 

@@ -105,7 +105,7 @@ export default function WhatHeadwatersDelivers() {
             className="serif text-[15px] leading-[1.5] mt-2"
             style={{ color: "var(--color-text)" }}
           >
-            <span className="font-semibold">Stage 2 · $42,000/month.</span> Food is moving. Tyler (subcontracted for distribution, invoiced through Tyler's own business) and IT/Support (invoiced at cost) join the Practitioner on the Headwaters side. Cold-chain pilot, software, training, day-one gear. Below: what Stage 2 buys.
+            <span className="font-semibold">Stage 2 · $39,200/month.</span> Food is moving. Tyler (subcontracted for distribution, invoiced through Tyler's own business) joins the Practitioner on the Headwaters side. Cold-chain pilot, software, training, day-one gear. Below: what Stage 2 buys.
           </p>
         </div>
 
@@ -135,7 +135,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                <span className="font-semibold">Stage 1 — planning trial: $25,000 flat</span> (8 weeks · $150/hr billed rate · practitioner solo · below cost — entry price). <span className="font-semibold">Stage 2 — distribution live: $35,200/month</span> to Headwaters — Bobbie $150/hr + Tyler $70/hr, 160 hr/mo each. Plus gas card at cost and insurance on top.
+                <span className="font-semibold">Stage 1 — planning trial: $25,000 flat</span> (8 weeks · $175/hr billed rate · practitioner solo · below cost — entry price). <span className="font-semibold">Stage 2 — distribution live: $39,200/month</span> to Headwaters — Bobbie $175/hr + Tyler $70/hr, 160 hr/mo each. Plus gas card at cost and insurance on top.
               </dd>
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                Trial (Stage 1): practitioner solo at $150/hr billed · no team hired. Stage 2: Bobbie $150/hr + Tyler's company subcontracted for distribution $70/hr · 160 hr/mo each · no IT/Support line (rolled under Tyler). No employer payroll obligations on either party. Your operator couple stays on your payroll.
+                Trial (Stage 1): practitioner solo at $175/hr billed · no team hired. Stage 2: Bobbie $175/hr + Tyler's company subcontracted for distribution $70/hr · 160 hr/mo each · no IT/Support line (rolled under Tyler). No employer payroll obligations on either party. Your operator couple stays on your payroll.
               </dd>
             </div>
             <div>

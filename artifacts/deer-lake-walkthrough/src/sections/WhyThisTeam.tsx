@@ -206,9 +206,9 @@ export default function WhyThisTeam() {
             >
               Two stages.{" "}
               <span className="font-semibold">Stage 1 (planning trial): $25,000 flat</span>{" "}
-              — eight weeks at $150/hr billed rate, practitioner solo, no team hired.{" "}
-              <span className="font-semibold">Stage 2 (distribution live): $35,200/month</span>{" "}
-              — Bobbie $150/hr + Tyler subcontracted for distribution $70/hr, 160 hr/mo each.
+              — eight weeks at $175/hr billed rate, practitioner solo, no team hired.{" "}
+              <span className="font-semibold">Stage 2 (distribution live): $39,200/month</span>{" "}
+              — Bobbie $175/hr + Tyler subcontracted for distribution $70/hr, 160 hr/mo each.
               No employer payroll obligations —
               both parties invoice as independent businesses. Gas card and
               insurance billed at cost on top.

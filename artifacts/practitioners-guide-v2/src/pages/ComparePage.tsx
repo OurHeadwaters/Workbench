@@ -62,6 +62,7 @@ export function ComparePage() {
   const v4 = SCENARIOS.v4;
   const v5 = SCENARIOS.v5;
   const v6 = SCENARIOS.v6;
+  const v7 = SCENARIOS.v7;
 
   const [state, setState] = useState<AltRealityState>(() => loadAltRealityState());
 
@@ -119,8 +120,8 @@ export function ComparePage() {
             V3 anchored. Alternative realities to the right.
           </h1>
           <p className="mt-2 text-muted-foreground max-w-3xl">
-            <strong className="text-foreground">V6 is the guide's locked default</strong> — the
-            rest of the guide (Index, Contracts, Salts, Brightside) reads V6 numbers.{" "}
+            <strong className="text-foreground">V7 is the guide's locked default</strong> — the
+            rest of the guide (Index, Contracts, Salts, Brightside) reads V7 numbers.{" "}
             <strong className="text-foreground">V3 is the workspace anchor</strong> — the
             left-column baseline every alternative reality is measured against. Both can be true
             at once. Edit any row, lock what you've decided, and read the Δ-vs-V3 cell live.
@@ -129,13 +130,19 @@ export function ComparePage() {
       </header>
 
       {/* ── Scenario cards — always visible ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <ScenarioCard
+          scenario={v7}
+          active={scenarioId === "v7"}
+          onActivate={() => setScenarioId("v7")}
+          locked
+          subtitle="Guide locked default · all other pages read from this"
+        />
         <ScenarioCard
           scenario={v6}
           active={scenarioId === "v6"}
           onActivate={() => setScenarioId("v6")}
-          locked
-          subtitle="Guide locked default · all other pages read from this"
+          subtitle="Historical baseline · $150/hr Bobbie + $70/hr Tyler"
         />
         <ScenarioCard
           scenario={v5}
@@ -345,10 +352,10 @@ export function ComparePage() {
             <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
               <li>
                 <strong className="text-foreground">V3 is the workspace anchor, not the guide default.</strong>{" "}
-                V5 (Codetry archetype, Deer Lake) is the guide's locked default — every other page
-                reads V5 numbers. V3 is the workspace anchor here: the left column mirrors V3
+                V7 (updated rates, $175/hr Bobbie) is the guide's locked default — every other page
+                reads V7 numbers. V3 is the workspace anchor here: the left column mirrors V3
                 exactly so any alternative reality you sketch is measured against the same
-                founding baseline the V3→V4→V5 lineage was built on.
+                founding baseline the V3→V4→V5→V6→V7 lineage was built on.
               </li>
               <li>
                 <strong className="text-foreground">Alternative realities are scratch space.</strong>{" "}
@@ -370,7 +377,7 @@ export function ComparePage() {
                 >
                   Contracts page <ArrowRight className="inline h-3 w-3" />
                 </Link>{" "}
-                and have the conversation against the locked V5 numbers, using your alt reality as the
+                and have the conversation against the locked V7 numbers, using your alt reality as the
                 proposed counter-offer.
               </li>
             </ul>
@@ -387,7 +394,7 @@ export function ComparePage() {
               <div className="flex items-baseline gap-3">
                 <span className="font-semibold text-sm">How we got here</span>
                 <span className="text-xs text-muted-foreground">
-                  V2 retired · V3 workspace anchor · V4 right-priced · V5 historical baseline · V6 guide locked default
+                  V2 retired · V3 workspace anchor · V4 right-priced · V5 historical baseline · V6 historical baseline · V7 guide locked default
                 </span>
               </div>
             </div>
@@ -395,13 +402,23 @@ export function ComparePage() {
           <AccordionContent className="px-4 pb-4">
             <div className="text-sm text-muted-foreground space-y-3">
               <div>
-                <p className="font-medium text-foreground mb-1">V6 — Hourly subcontract (guide locked default · 2026-05-02)</p>
+                <p className="font-medium text-foreground mb-1">V7 — Updated rates (guide locked default · 2026-05-02)</p>
+                <p>
+                  Bobbie $175/hr + Tyler $70/hr (RFF sub), 160 hr/mo each. $39,200/mo total billed.
+                  Bobbie nets $105/hr ($16,800/mo draw); Tyler's $70/hr is a direct pass-through.
+                  Phase 1: $25,000 flat 8-week trial (intentionally below cost — $11,100 entry gap).
+                  Lean overheads ($1,292/mo — client pays tech stack). Monthly surplus $5,988;
+                  12-month surplus $71,856. Waterfall TBD. V7 is the scenario all other guide pages read from.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground mb-1">V6 — Hourly subcontract (historical baseline · locked 2026-05-02)</p>
                 <p>
                   Bobbie $150/hr + Tyler $70/hr (RFF sub), 160 hr/mo each. $35,200/mo total billed.
                   Bobbie nets $80/hr ($12,800/mo draw); Tyler's $70/hr is a direct pass-through.
-                  Phase 1: $25,000 flat 8-week trial (intentionally below cost — entry price).
+                  Phase 1: $25,000 flat 8-week trial (intentionally below cost — $3,100 entry gap).
                   Lean overheads ($1,292/mo — client pays tech stack). Monthly surplus $6,388;
-                  12-month surplus $76,656. Waterfall TBD. V6 is the scenario all other guide pages read from.
+                  12-month surplus $76,656. Preserved as a historical baseline — V7 is the current plan.
                 </p>
               </div>
               <div>
@@ -410,7 +427,7 @@ export function ComparePage() {
                   $90k/mo × 12 months against a 4-role Day-1 team ($43.5k/mo payroll). Capital
                   Recovery split into two visible legs: $40k family-infusion m1 + $72k
                   business-loan Aug → Oct. Phase 3 Reserve / Innovation 75/25. Preserved as a
-                  historical baseline — V6 is the current operating plan.
+                  historical baseline — V7 is the current operating plan.
                 </p>
               </div>
               <div>
@@ -419,7 +436,7 @@ export function ComparePage() {
                   $105k/mo × 18 months against the 7-role roster. V4 is pre-seeded as the first
                   alternative reality in this workspace — V4's right-priced numbers make the
                   Δ-vs-V3 math read cleanly. Compare it in the workspace; the guide's operating
-                  plan is V5.
+                  plan is V7.
                 </p>
               </div>
               <div>
@@ -427,7 +444,7 @@ export function ComparePage() {
                 <p>
                   $90k/mo × 18 months against a 6-role lean roster ($60k/mo payroll). V3 is the
                   workspace anchor — left column here, read-only, the baseline every alternative
-                  reality is measured against. The rest of the guide reads V5, not V3.
+                  reality is measured against. The rest of the guide reads V7, not V3.
                 </p>
               </div>
               <div>

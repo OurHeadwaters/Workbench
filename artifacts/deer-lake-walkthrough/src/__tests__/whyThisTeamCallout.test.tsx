@@ -4,15 +4,15 @@ import WhyThisTeam from "../sections/WhyThisTeam";
 
 /**
  * Locks the Practitioner Operating Plan callout inside WhyThisTeam
- * against silent drift (task #535, updated for V6 hourly subcontract model).
+ * against silent drift (task #535, updated for V7 hourly subcontract model).
  *
  * The callout keeps the one-pager's eyebrow and $60k+/month headline
  * (general framing for what this class of engagement costs) but the
  * tier-ladder paragraph was replaced with the Deer Lake-specific two-
- * stage cost breakdown (V6):
- *   Stage 1 — planning trial: $25,000 flat (8 weeks · $150/hr billed · practitioner solo)
- *   Stage 2 — distribution live: $35,200/month
- *     Bobbie $150/hr + Tyler subcontracted for distribution $70/hr, 160 hr/mo each.
+ * stage cost breakdown (V7):
+ *   Stage 1 — planning trial: $25,000 flat (8 weeks · $175/hr billed · practitioner solo)
+ *   Stage 2 — distribution live: $39,200/month
+ *     Bobbie $175/hr + Tyler subcontracted for distribution $70/hr, 160 hr/mo each.
  *     Gas card and insurance at cost on top.
  *     No employer payroll obligations on either party.
  *     No separate IT/Support line (rolled under Tyler).
@@ -41,12 +41,12 @@ describe("Deer Lake walkthrough — WhyThisTeam Practitioner Operating Plan call
     expect(html).toContain("$25,000");
   });
 
-  it("names the $150/hr billed practitioner rate", () => {
-    expect(html).toContain("$150/hr");
+  it("names the $175/hr billed practitioner rate", () => {
+    expect(html).toContain("$175/hr");
   });
 
-  it("names the Stage 2 $35,200/month rate", () => {
-    expect(html).toContain("$35,200/month");
+  it("names the Stage 2 $39,200/month rate", () => {
+    expect(html).toContain("$39,200/month");
   });
 
   it("names Tyler as subcontracted for distribution in Stage 2", () => {

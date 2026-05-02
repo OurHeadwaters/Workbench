@@ -102,11 +102,11 @@ export function ArchetypesPage() {
                     front without disguising the substance.
                   </p>
                   <p>
-                    <strong>Canonical example — V6 (current).</strong> Deer Lake. Bobbie bills{" "}
-                    {money(a.roster[0].monthlyLoaded + 11200)}/mo total (160 hr × $150) + Tyler{" "}
+                    <strong>Canonical example — V7 (current).</strong> Deer Lake. Bobbie bills{" "}
+                    {money(a.roster[0].monthlyLoaded + 11200)}/mo total (160 hr × $175) + Tyler{" "}
                     {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo (160 hr × $70 pass-through
                     subcontract). Total billed: {money(a.fee)}/mo × {a.termMonths} months.
-                    Bobbie nets {money(a.roster[0].monthlyLoaded)}/mo ($80/hr).
+                    Bobbie nets {money(a.roster[0].monthlyLoaded)}/mo ($105/hr).
                     Lean overheads {money(a.overheadsJunAugTotal)}/mo (space + insurance +
                     accountant + legal — client pays tech stack). Monthly surplus{" "}
                     {money(a.monthlySurplusJunAug)}; 12-month surplus{" "}
@@ -118,10 +118,10 @@ export function ArchetypesPage() {
                     ($43.5k/mo payroll), with Capital Recovery split into a $40k family-infusion
                     leg (month 1) and $72k business-loan leg (Aug → Oct), and a Phase 3
                     Reserve / Innovation 75/25 split. V5 is preserved as a historical baseline.
-                    V6 is the current operating plan.
+                    V7 is the current operating plan.
                   </p>
                   <p>
-                    <strong>Surplus waterfall (V6).</strong> Tithe (10% off the top, first claim,{" "}
+                    <strong>Surplus waterfall (V7).</strong> Tithe (10% off the top, first claim,{" "}
                     {money(a.titheMonthly)}/mo) → Bobbie draw ({money(a.roster[0].monthlyLoaded)}
                     /mo) → Tyler subcontract ({money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo) →
                     lean overheads ({money(a.overheadsJunAugTotal)}/mo) → surplus (
@@ -140,8 +140,8 @@ export function ArchetypesPage() {
                   </p>
                   <p>
                     <strong>Phase 1 trial.</strong> $25,000 flat · 8 weeks · Bobbie solo ·
-                    40 hr/wk. Intentionally below Bobbie's cost at full hours ($25,600 draw
-                    vs $22,500 post-tithe revenue). The $3,100 gap is the entry price for a
+                    40 hr/wk. Intentionally below Bobbie's cost at full hours ($33,600 draw
+                    vs $22,500 post-tithe revenue). The $11,100 gap is the entry price for a
                     bounded, below-cost trial. Hardware (computer + server ~$3k–$4k) deferred
                     until ongoing commitment is confirmed.
                   </p>
@@ -281,9 +281,9 @@ export function ArchetypesPage() {
         >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-baseline gap-3 text-left">
-              <span className="font-semibold text-sm">V3 → V4 → V5 → V6 — the lineage</span>
+              <span className="font-semibold text-sm">V3 → V4 → V5 → V6 → V7 — the lineage</span>
               <span className="text-xs text-muted-foreground">
-                V6 is the locked default · $150/hr Bobbie + $70/hr Tyler · 160 hr/mo · $35,200/mo billed
+                V7 is the locked default · $175/hr Bobbie + $70/hr Tyler · 160 hr/mo · $39,200/mo billed
               </span>
             </div>
           </AccordionTrigger>
@@ -329,12 +329,21 @@ export function ArchetypesPage() {
                     <td className="py-2 pr-4 num">$40k m1</td>
                     <td className="py-2 pr-4 num">$72k (loan only)</td>
                   </tr>
-                  <tr className="font-semibold" style={{ background: ACCENT_SOFT, color: ACCENT_INK }}>
-                    <td className="py-2 pr-4">V6 — Hourly subcontract (current)</td>
-                    <td className="py-2 pr-4">Locked default</td>
+                  <tr className="border-b border-card-border">
+                    <td className="py-2 pr-4 font-medium">V6 — Hourly subcontract</td>
+                    <td className="py-2 pr-4 text-muted-foreground">Historical baseline</td>
                     <td className="py-2 pr-4 num">$35,200/mo × 12 mo</td>
                     <td className="py-2 pr-4 num">2 (Bobbie + Tyler)</td>
                     <td className="py-2 pr-4 num">$12,800/mo net</td>
+                    <td className="py-2 pr-4 num">—</td>
+                    <td className="py-2 pr-4 num">TBD</td>
+                  </tr>
+                  <tr className="font-semibold" style={{ background: ACCENT_SOFT, color: ACCENT_INK }}>
+                    <td className="py-2 pr-4">V7 — Updated rates (current)</td>
+                    <td className="py-2 pr-4">Locked default</td>
+                    <td className="py-2 pr-4 num">$39,200/mo × 12 mo</td>
+                    <td className="py-2 pr-4 num">2 (Bobbie + Tyler)</td>
+                    <td className="py-2 pr-4 num">$16,800/mo net</td>
                     <td className="py-2 pr-4 num">—</td>
                     <td className="py-2 pr-4 num">TBD</td>
                   </tr>
@@ -343,9 +352,10 @@ export function ArchetypesPage() {
             </div>
             <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
               V3 is preserved as the workspace anchor so persisted scratch realities stay valid.
-              V5 is preserved as a historical baseline ($90k/mo Codetry archetype). The rest of
-              the guide reads from V6 (hourly subcontract). The Operating Framework page lets you
-              toggle V6 ↔ V5 to compare the current model to the prior baseline.
+              V5 is preserved as a historical baseline ($90k/mo Codetry archetype). V6 is
+              preserved as a historical baseline ($150/hr Bobbie). The rest of the guide reads
+              from V7 (updated rates, $175/hr). The Operating Framework page lets you toggle
+              between V7, V6, and V5.
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -367,7 +377,7 @@ export function ArchetypesPage() {
           data-testid="link-to-contracts"
         >
           <Home className="h-4 w-4" />
-          See V6 on the Contracts page
+          See V7 on the Contracts page
         </Link>
       </div>
     </div>

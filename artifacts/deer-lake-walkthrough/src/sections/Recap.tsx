@@ -16,7 +16,7 @@ export default function Recap() {
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → community. Two cold trucks."],
     ["Back home", "~$125k–$200k of grocery margin stays in the community year one. 4 FT roles (contractor couple + Headwaters practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
-    ["Ask", "Stage 1 — planning trial: $25,000 flat (8 weeks, practitioner solo). Stage 2 — Bobbie $150/hr + Tyler $70/hr, 160 hr/mo each: $35,200/mo + gas & insurance at cost. Band reserves. Most spending near the end, on the cold-chain pilot."],
+    ["Ask", "Stage 1 — planning trial: $25,000 flat (8 weeks, practitioner solo). Stage 2 — Bobbie $175/hr + Tyler $70/hr, 160 hr/mo each: $39,200/mo + gas & insurance at cost. Band reserves. Most spending near the end, on the cold-chain pilot."],
     ["Off-ramp", "Walk away in Nov 2026 with the truck route, the software, the people trained."],
   ];
 
