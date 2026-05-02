@@ -82,7 +82,7 @@ export function SowPage() {
               </div>
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 mb-0.5">Rate</p>
-                <p className="font-serif text-foreground">$80.00 / hr</p>
+                <p className="font-serif text-foreground">$150.00 / hr</p>
               </div>
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 mb-0.5">Billing</p>
@@ -173,7 +173,7 @@ export function SowPage() {
                 Reply to this document with the first task or question you'd like work started on. That's the start date. No contract ceremony required — a written reply counts as authorization to begin.
               </p>
               <p>
-                If you'd prefer a trial period first: the first 10 hours are billed at the standard rate of $150.00/hr (matching the trial rate on my public rate card). If you want to continue after that, the rate drops to $80.00/hr for the full engagement.
+                If you'd prefer a trial period first: a bounded scope of work at the standard $150.00/hr rate. No ceremony required — a written reply is authorization to begin. The rate is the same for trial and for the full engagement.
               </p>
             </div>
 

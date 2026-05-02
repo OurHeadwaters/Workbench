@@ -5,13 +5,13 @@ import Recap from "../sections/Recap";
 import WhoWorks from "../sections/WhoWorks";
 
 // Locks the two-stage Deer Lake fee model in the walkthrough.
-// Source of truth: actual Headwaters Deer Lake engagement rates (updated
-// for two-stage model — task pricing update):
-//   Stage 1 — planning trial: $25,000 flat (8 weeks × $80/hr, practitioner solo)
-//   Stage 2 — distribution live: $42,000/month
-//     Tyler subcontracted for distribution joins the Practitioner.
-//     IT/Support partial ~$900/mo + overhead.
-//     Gas card and insurance at cost on top.
+// Source of truth: V6 Headwaters Deer Lake engagement rates (hourly subcontract):
+//   Stage 1 — planning trial: $25,000 flat (8 weeks · $150/hr billed · practitioner solo)
+//             Below cost — intentional entry price (8 wk × 40 hr × $150 = $48k full cost).
+//   Stage 2 — distribution live: $35,200/month
+//     Bobbie $150/hr × 160 hr/mo = $24,000
+//     Tyler subcontracted for distribution $70/hr × 160 hr/mo = $11,200
+//     Gas card and insurance at cost on top. No IT/Support line (rolled under Tyler).
 // No Ontario employer payroll obligations on either Headwaters party.
 // This file guards the Ask + Recap copy so the numbers can't drift.
 //
@@ -41,12 +41,12 @@ describe("Deer Lake walkthrough — Ask reveal locks the two-stage Headwaters fe
     expect(html).toContain("$25,000");
   });
 
-  it("names the $80/hr trial rate", () => {
-    expect(html).toContain("$80/hr");
+  it("names the $150/hr billed rate for Stage 1", () => {
+    expect(html).toContain("$150/hr");
   });
 
-  it("names the Stage 2 monthly rate of $42,000", () => {
-    expect(html).toContain("$42,000");
+  it("names the Stage 2 monthly rate of $35,200", () => {
+    expect(html).toContain("$35,200");
   });
 
   it("names Tyler as subcontracted for distribution in Stage 2", () => {
@@ -72,8 +72,8 @@ describe("Deer Lake walkthrough — Recap Ask row locks the two-stage fee", () =
     expect(askRowSlice).toContain("$25,000");
   });
 
-  it("Ask row names the Stage 2 $42,000/mo rate", () => {
-    expect(askRowSlice).toContain("$42,000/mo");
+  it("Ask row names the Stage 2 $35,200/mo rate", () => {
+    expect(askRowSlice).toContain("$35,200/mo");
   });
 });
 

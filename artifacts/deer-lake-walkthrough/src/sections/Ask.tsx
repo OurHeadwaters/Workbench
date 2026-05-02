@@ -475,11 +475,11 @@ export default function Ask() {
           <Reveal label="What this costs, by stage">
             <p>
               <span className="font-semibold">Stage 1 — planning trial: $25,000 flat.</span>{" "}
-              Eight weeks at $80/hr, practitioner solo. No team hired, no day-one bridge required.
+              Eight weeks · $150/hr billed rate · practitioner solo. No team hired. The flat fee is intentionally below full-cost — a bounded entry price so the band can walk away before committing.
             </p>
             <p>
-              <span className="font-semibold">Stage 2 — distribution live: $42,000/month.</span>{" "}
-              Tyler subcontracted for distribution joins the Practitioner. IT/Support invoiced at cost (~$900/mo), plus overhead. No employer payroll obligations on either party — both invoice through their own businesses. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
+              <span className="font-semibold">Stage 2 — distribution live: $35,200/month.</span>{" "}
+              Bobbie $150/hr + Tyler $70/hr, 160 hr/mo each. Tyler subcontracted for distribution — client sees two line items. No employer payroll obligations on either party — both invoice through their own businesses. Gas card and insurance billed at cost on top. You bring the operator couple on your own payroll.
             </p>
             <p>
               No grants in hand. Paid from band reserves — the planner

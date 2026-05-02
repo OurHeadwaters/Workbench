@@ -148,8 +148,8 @@ export function BioPage() {
                   testId="rate-trial"
                 />
                 <RateRow
-                  label="Full-time engagement"
-                  amount="$80.00 / hour"
+                  label="Full engagement"
+                  amount="$150.00 / hour"
                   note="Ongoing engagement, hourly"
                   testId="rate-fulltime"
                 />

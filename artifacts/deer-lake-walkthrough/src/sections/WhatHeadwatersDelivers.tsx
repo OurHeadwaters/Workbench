@@ -135,7 +135,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                <span className="font-semibold">Stage 1 — planning trial: $25,000 flat</span> (8 weeks · $80/hr · practitioner solo). <span className="font-semibold">Stage 2 — distribution live: $42,000/month</span> to Headwaters — Tyler subcontracted for distribution joins the Practitioner. Plus gas card at cost and insurance on top.
+                <span className="font-semibold">Stage 1 — planning trial: $25,000 flat</span> (8 weeks · $150/hr billed rate · practitioner solo · below cost — entry price). <span className="font-semibold">Stage 2 — distribution live: $35,200/month</span> to Headwaters — Bobbie $150/hr + Tyler $70/hr, 160 hr/mo each. Plus gas card at cost and insurance on top.
               </dd>
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function WhatHeadwatersDelivers() {
                 className="serif text-[14.5px] leading-[1.5] mt-0.5"
                 style={{ color: "var(--color-text)" }}
               >
-                Trial (Stage 1): practitioner solo at $80/hr · no team hired. Stage 2: Tyler's company subcontracted for distribution (Tyler + helper on the ground) · IT/Support ~$900/mo partial · overhead. No employer payroll obligations on either party. Your operator couple stays on your payroll.
+                Trial (Stage 1): practitioner solo at $150/hr billed · no team hired. Stage 2: Bobbie $150/hr + Tyler's company subcontracted for distribution $70/hr · 160 hr/mo each · no IT/Support line (rolled under Tyler). No employer payroll obligations on either party. Your operator couple stays on your payroll.
               </dd>
             </div>
             <div>
