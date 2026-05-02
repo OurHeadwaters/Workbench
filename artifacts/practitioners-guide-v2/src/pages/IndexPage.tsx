@@ -302,14 +302,14 @@ export function IndexPage() {
             signal="Next phase"
             signalLabel="if trial lands"
             badge={<StatusBadge status="next" label="Gated on trial" />}
-            summary="Hourly subcontract: Bobbie $150/hr + Tyler $70/hr RFF sub, 160 hr/mo each. $35,200/mo total billed. Unlocks when the $25k trial target closes."
+            summary="Hourly subcontract: Bobbie $175/hr + Tyler $70/hr RFF sub, 160 hr/mo each. $39,200/mo total billed. Unlocks when the $25k trial target closes."
             accentColor="#7A4E2D"
             testId="pipeline-deer-lake"
             detail={
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
                   <strong className="text-foreground">Engagement shape:</strong> Bobbie{" "}
-                  {a.roster[0].monthlyLoaded > 0 ? `${money(a.roster[0].monthlyLoaded)}/mo net draw` : ""} (160 hr × $150 billed, $80 net) +
+                  {a.roster[0].monthlyLoaded > 0 ? `${money(a.roster[0].monthlyLoaded)}/mo net draw` : ""} (160 hr × $175 billed, $105 net) +
                   Tyler {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo sub (160 hr × $70 pass-through).
                   Total billed: {money(a.fee)}/mo. Monthly surplus: {money(a.monthlySurplusJunAug)}.
                 </p>
@@ -412,7 +412,7 @@ export function IndexPage() {
                     <ul className="space-y-1 text-muted-foreground list-disc pl-4">
                       <li>
                         <strong className="text-foreground">Hard no:</strong> Council passes a BCR
-                        (or written notice) declining the hourly engagement ($35,200/mo billed) or
+                        (or written notice) declining the hourly engagement ($39,200/mo billed) or
                         the $25k trial. Act same day.
                       </li>
                       <li>
