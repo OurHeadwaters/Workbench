@@ -280,15 +280,15 @@ export function HomePage() {
 
         {/* ── the work ── */}
         <section data-testid="home-work">
-          <div className="flex items-baseline justify-between gap-3 mb-4">
+          <div className="mb-4">
             <h2
-              className="font-serif text-2xl tracking-tight"
+              className="font-serif text-3xl tracking-tight mb-1"
               data-testid="work-heading"
             >
               The work
             </h2>
             <p
-              className="font-mono text-[10px] uppercase tracking-[0.22em]"
+              className="font-mono text-xs uppercase tracking-[0.22em]"
               style={{ color: "hsl(var(--accent))" }}
             >
               shipped · running · readable
@@ -397,15 +397,15 @@ export function HomePage() {
 
         {/* ── about ── */}
         <section data-testid="home-about">
-          <div className="flex items-baseline justify-between gap-3 mb-5">
+          <div className="mb-5">
             <h2
-              className="font-serif text-2xl tracking-tight"
+              className="font-serif text-3xl tracking-tight mb-1"
               data-testid="about-heading"
             >
               The practitioner
             </h2>
             <p
-              className="font-mono text-[10px] uppercase tracking-[0.22em]"
+              className="font-mono text-xs uppercase tracking-[0.22em]"
               style={{ color: "hsl(var(--accent))" }}
             >
               bobbie parr
@@ -540,7 +540,7 @@ function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }
       )}
       <div className="p-5 sm:p-6">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
           style={{ color: "hsl(var(--accent))" }}
         >
           {eyebrow}
@@ -555,7 +555,7 @@ function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }
           {description}
         </p>
         <p
-          className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em]"
+          className="mt-3 font-mono text-xs uppercase tracking-[0.18em]"
           style={{ color: "hsl(var(--accent))" }}
         >
           View demo →
@@ -592,7 +592,7 @@ function ComingSoonCard({ eyebrow, title, description, testId, thumb, thumbAlt }
       )}
       <div className="p-5 sm:p-6">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
           style={{ color: "hsl(var(--accent))" }}
         >
           {eyebrow}
@@ -643,7 +643,7 @@ function WorkCard({ eyebrow, title, description, href, testId, external, thumb, 
       )}
       <div className="p-5 sm:p-6">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
           style={{ color: "hsl(var(--accent))" }}
         >
           {eyebrow}
