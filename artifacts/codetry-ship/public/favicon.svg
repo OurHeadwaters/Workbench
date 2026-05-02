@@ -1,3 +1,28 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+  <!-- evergreen background -->
+  <rect width="180" height="180" rx="36" fill="#2A3D2E"/>
+  <!-- halo circle -->
+  <circle cx="90" cy="84" r="54" stroke="#C47A3A" stroke-width="5" fill="none" opacity="0.9"/>
+  <!-- eagle silhouette -->
+  <g transform="translate(90,80)" fill="#EDE9E0">
+    <!-- body -->
+    <ellipse cx="0" cy="4" rx="8" ry="6"/>
+    <!-- head -->
+    <ellipse cx="9" cy="-3" rx="5.5" ry="4.5"/>
+    <!-- beak -->
+    <path d="M13,-2 L18,1 L13,2.5 Z" fill="#C47A3A"/>
+    <!-- tail -->
+    <path d="M-8,5 L-19,10 L-19,4 L-12,0 Z"/>
+    <!-- left wing -->
+    <path d="M-2,1 C-16,-18 -44,-24 -55,-14 C-44,-10 -25,-5 -9,4 Z"/>
+    <!-- right wing -->
+    <path d="M2,1 C16,-18 44,-24 55,-14 C44,-10 25,-5 9,4 Z"/>
+    <!-- feather tips left -->
+    <path d="M-54,-15 L-58,-21 M-48,-18 L-51,-25 M-42,-20 L-44,-26" stroke="#EDE9E0" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <!-- feather tips right -->
+    <path d="M54,-15 L58,-21 M48,-18 L51,-25 M42,-20 L44,-26" stroke="#EDE9E0" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- treeline -->
+  <path d="M36,128 L42,116 L48,125 L54,110 L60,120 L67,106 L74,118 L80,100 L87,115 L94,100 L100,115 L107,100 L113,118 L120,106 L127,120 L133,110 L139,125 L145,116 L150,128 Z"
+    fill="#EDE9E0" opacity="0.18"/>
 </svg>

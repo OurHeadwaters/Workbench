@@ -57,13 +57,12 @@ export function HomePage() {
 
         {/* ── header ── */}
         <header className="space-y-4" data-testid="home-header">
-          <p
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: "hsl(var(--accent))" }}
+          <img
+            src={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
+            alt="Headwaters — Northwestern Ontario"
+            className="w-full max-w-[420px]"
             data-testid="home-eyebrow"
-          >
-            headwaters · northwestern ontario
-          </p>
+          />
           <h1
             className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight"
             data-testid="home-title"
