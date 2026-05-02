@@ -13,6 +13,12 @@ import {
 import { SectionCard } from "@/components/SectionCard";
 import { confirmed } from "@/data/tags";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   RENAME_MAP,
   DRIFT_SYMBOL_MEANINGS,
   STATUS_MEANINGS,
@@ -154,7 +160,8 @@ export function CodetryDisciplinePage() {
   const reviewedAndKept = RENAME_MAP.filter((r) => r.drift.length === 0);
 
   return (
-    <div className="space-y-8" data-testid="page-codetry">
+    <div className="space-y-6" data-testid="page-codetry">
+      {/* ── Page header — always visible ── */}
       <header className="flex items-start gap-3">
         <div
           className="h-10 w-10 rounded-md grid place-items-center flex-shrink-0"
@@ -172,16 +179,11 @@ export function CodetryDisciplinePage() {
           >
             The names are the architecture.
           </h1>
-          <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
-            The numbers in this guide are kept honest by the Confirmed tags and
-            the ledgers. The <em>names</em> in this guide are kept honest by a
-            quieter discipline. This page documents that discipline: the
-            codetry test, what drift looks like here, what's load-bearing and
-            not allowed to drift, three worked examples from the recent audit,
-            and the full audit table itself.
+          <p className="mt-2 text-muted-foreground max-w-3xl">
+            If you change a name, you change the spec.
           </p>
           <div
-            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
+            className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}
           >
             Reading: the discipline behind the rest of the guide
@@ -189,277 +191,325 @@ export function CodetryDisciplinePage() {
         </div>
       </header>
 
+      {/* ── Bucket sections — headings always visible, detail collapsed ── */}
+      <Accordion type="multiple" className="space-y-3">
 
-      <SectionCard
-        title="The codetry test"
-        subtitle="One sentence. The whole discipline collapses into this if you forget everything else."
-        tag={confirmed(
-          "Codetry test as stated in the codetry-handbook, §1.4 — naming IS architecture.",
-        )}
-        accent={ACCENT}
-      >
-        <div className="flex items-start gap-3">
-          <TestTube2
-            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
-            style={{ color: ACCENT_INK }}
-          />
-          <div className="flex-1 min-w-0 space-y-4">
-            <div
-              className="rounded-md border-l-4 px-4 py-3 text-base leading-relaxed"
-              style={{
-                borderLeftColor: ACCENT,
-                backgroundColor: ACCENT_SOFT,
-                color: ACCENT_INK,
-                fontFamily: "var(--app-font-serif)",
-              }}
-            >
-              If you change a name, you change the spec.
+        {/* 1. The codetry test */}
+        <AccordionItem
+          value="codetry-test"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-codetry-test"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <TestTube2 className="h-4 w-4 flex-shrink-0 opacity-60" style={{ color: ACCENT_INK }} />
+              <span className="font-semibold text-sm">The codetry test</span>
+              <span
+                className="text-xs px-2 py-0.5 rounded-md font-medium"
+                style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}
+              >
+                If you change a name, you change the spec.
+              </span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              That is the whole rule. A rename is a refactor of the model, not
-              a copy edit. Pages, tests, ledgers, and the conversation the
-              founder has with the buyer all move together — or the guide stops
-              meaning what it says.
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Consequence: any time a contributor wants to rename a noun in
-              this guide, they walk the rename through the audit table below.
-              The map is read-only on this page; it lives at{" "}
-              <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                artifacts/practitioners-guide-v2/docs/rename-map.md
-              </code>
-              .
-            </p>
-          </div>
-        </div>
-      </SectionCard>
-
-
-      <SectionCard
-        title="What drift looks like here"
-        subtitle="The four symptoms the audit watches for. Same letters appear in the Drift column of the map below."
-        accent={ACCENT}
-      >
-        <div className="flex items-start gap-3">
-          <AlertTriangle
-            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
-            style={{ color: ACCENT_INK }}
-          />
-          <div className="flex-1 min-w-0">
-            <ul className="space-y-3 text-sm">
-              {(["G", "U", "D", "A"] as DriftSymbol[]).map((sym) => (
-                <li
-                  key={sym}
-                  className="flex items-start gap-3"
-                  data-testid={`drift-symptom-${sym}`}
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4 flex items-start gap-3">
+              <div className="flex-1 min-w-0 space-y-4">
+                <div
+                  className="rounded-md border-l-4 px-4 py-3 text-base leading-relaxed"
+                  style={{
+                    borderLeftColor: ACCENT,
+                    backgroundColor: ACCENT_SOFT,
+                    color: ACCENT_INK,
+                    fontFamily: "var(--app-font-serif)",
+                  }}
                 >
-                  <span
-                    className="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-md text-sm font-bold flex-shrink-0"
-                    style={{
-                      backgroundColor: ACCENT_SOFT,
-                      color: ACCENT_INK,
-                    }}
-                    aria-hidden
+                  If you change a name, you change the spec.
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  That is the whole rule. A rename is a refactor of the model, not
+                  a copy edit. Pages, tests, ledgers, and the conversation the
+                  founder has with the buyer all move together — or the guide stops
+                  meaning what it says.
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Consequence: any time a contributor wants to rename a noun in
+                  this guide, they walk the rename through the audit table below.
+                  The map is read-only on this page; it lives at{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    artifacts/practitioners-guide-v2/docs/rename-map.md
+                  </code>
+                  .
+                </p>
+                <p className="text-xs text-muted-foreground border-t pt-3 border-card-border">
+                  Codetry test as stated in the codetry-handbook, §1.4 — naming IS architecture.
+                </p>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* 2. What drift looks like here */}
+        <AccordionItem
+          value="drift-symptoms"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-drift-symptoms"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <AlertTriangle className="h-4 w-4 flex-shrink-0 opacity-60" style={{ color: ACCENT_INK }} />
+              <span className="font-semibold text-sm">What drift looks like here</span>
+              <span className="text-xs text-muted-foreground">4 symptoms · G U D A</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4">
+              <ul className="space-y-3 text-sm">
+                {(["G", "U", "D", "A"] as DriftSymbol[]).map((sym) => (
+                  <li
+                    key={sym}
+                    className="flex items-start gap-3"
+                    data-testid={`drift-symptom-${sym}`}
                   >
-                    {sym}
-                  </span>
-                  <p className="text-[0.95rem] text-muted-foreground leading-relaxed">
-                    {DRIFT_SYMBOL_MEANINGS[sym]}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-xs text-muted-foreground border-t pt-3 border-card-border">
-              Some rows in the map carry no drift symbol — those are nouns the
-              audit walked past intentionally and recorded as load-bearing.
-              They live in the table so future maintainers can see what was
-              <em> considered</em>, not just what was renamed.
-            </p>
-          </div>
-        </div>
-      </SectionCard>
+                    <span
+                      className="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-md text-sm font-bold flex-shrink-0"
+                      style={{
+                        backgroundColor: ACCENT_SOFT,
+                        color: ACCENT_INK,
+                      }}
+                      aria-hidden
+                    >
+                      {sym}
+                    </span>
+                    <p className="text-[0.95rem] text-muted-foreground leading-relaxed">
+                      {DRIFT_SYMBOL_MEANINGS[sym]}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-xs text-muted-foreground border-t pt-3 border-card-border">
+                Some rows in the map carry no drift symbol — those are nouns the
+                audit walked past intentionally and recorded as load-bearing.
+                They live in the table so future maintainers can see what was
+                <em> considered</em>, not just what was renamed.
+              </p>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-
-      <SectionCard
-        title="What's load-bearing in this guide"
-        subtitle="The names below are protected — renaming any of them is a re-spec, not a refactor. They appear in the audit map with no drift symbol so the protection is visible alongside the proposed renames."
-        accent={ACCENT}
-      >
-        <div className="flex items-start gap-3">
-          <Anchor
-            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
-            style={{ color: ACCENT_INK }}
-          />
-          <div className="flex-1 min-w-0">
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-              {PROTECTED_LIST.map((p) => (
-                <li
-                  key={p.name}
-                  className="rounded-md border border-card-border bg-card/60 p-3"
-                  data-testid={`protected-${slug(p.name)}`}
-                >
-                  <p
-                    className="text-base font-semibold text-foreground"
-                    style={{ fontFamily: "var(--app-font-serif)" }}
+        {/* 3. What's load-bearing */}
+        <AccordionItem
+          value="load-bearing"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-load-bearing"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <Anchor className="h-4 w-4 flex-shrink-0 opacity-60" style={{ color: ACCENT_INK }} />
+              <span className="font-semibold text-sm">What's load-bearing in this guide</span>
+              <span className="text-xs text-muted-foreground">{PROTECTED_LIST.length} protected names</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4">
+              <p className="text-xs text-muted-foreground mb-3">
+                The names below are protected — renaming any of them is a re-spec, not a refactor.
+              </p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                {PROTECTED_LIST.map((p) => (
+                  <li
+                    key={p.name}
+                    className="rounded-md border border-card-border bg-card/60 p-3"
+                    data-testid={`protected-${slug(p.name)}`}
                   >
-                    {p.name}
-                  </p>
-                  <p className="mt-1 text-[0.9rem] text-muted-foreground leading-relaxed">
-                    {p.carries}
-                  </p>
-                </li>
+                    <p
+                      className="text-base font-semibold text-foreground"
+                      style={{ fontFamily: "var(--app-font-serif)" }}
+                    >
+                      {p.name}
+                    </p>
+                    <p className="mt-1 text-[0.9rem] text-muted-foreground leading-relaxed">
+                      {p.carries}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* 4. Three worked examples */}
+        <AccordionItem
+          value="worked-examples"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-worked-examples"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <ListChecks className="h-4 w-4 flex-shrink-0 opacity-60" style={{ color: ACCENT_INK }} />
+              <span className="font-semibold text-sm">Three examples from the audit</span>
+              <span className="text-xs text-muted-foreground">
+                Rows #{WORKED_EXAMPLES.map((e) => e.row).join(", #")} · proposed status
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4 space-y-6">
+              <p className="text-xs text-muted-foreground">
+                Each row is still in <code className="bg-muted px-1 py-0.5 rounded">proposed</code> status.
+                Covers duplicate metaphor (G), descriptor/metaphor swap (D), and UI-framework leak (U).
+              </p>
+              {WORKED_EXAMPLES.map((ex) => (
+                <WorkedExample key={ex.letter} example={ex} />
               ))}
-            </ul>
-          </div>
-        </div>
-      </SectionCard>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-
-      <SectionCard
-        title="Three examples from the audit"
-        subtitle="Each of the three rows below is still in `proposed` status — the founder has not yet accepted them. The point of showing them here is to walk through what the discipline looks like in flight, not to claim the renames have already landed. Picked term-by-term to cover the three main drift symptoms — duplicate metaphor, duplicate-as-swap, and UI-framework leak — without re-litigating any single big rename inside this page."
-        tag={confirmed(
-          `Worked examples drawn from rows #${WORKED_EXAMPLES.map((e) => e.row).join(", #")} of the rename map.`,
-        )}
-        accent={ACCENT}
-      >
-        <div className="flex items-start gap-3">
-          <ListChecks
-            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
-            style={{ color: ACCENT_INK }}
-          />
-          <div className="flex-1 min-w-0 space-y-6">
-            {WORKED_EXAMPLES.map((ex) => (
-              <WorkedExample key={ex.letter} example={ex} />
-            ))}
-          </div>
-        </div>
-      </SectionCard>
-
-
-      <SectionCard
-        title="The drift map"
-        subtitle={`Read-only view of the audit's rename map — ${RENAME_MAP.length} rows in total (${driftRows.length} flagged for drift, ${reviewedAndKept.length} reviewed and kept). The source of truth is docs/rename-map.md; this page re-renders whatever the maintainer last wrote there.`}
-        accent={ACCENT}
-      >
-        <div className="space-y-4">
-          <StatusLegend />
-          <DriftMapTable rows={RENAME_MAP} />
-          <p className="text-xs text-muted-foreground">
-            <strong className="text-foreground">A note on status.</strong> The
-            audit produced this map; the founder walks it row-by-row. A row's
-            status reads as the audit left it the last time the markdown was
-            saved. The implementation pass moves only{" "}
-            <code className="text-xs px-1 py-0.5 rounded bg-muted">
-              approved
-            </code>{" "}
-            rows to{" "}
-            <code className="text-xs px-1 py-0.5 rounded bg-muted">
-              applied
-            </code>{" "}
-            — nothing else transitions on its own.
-          </p>
-        </div>
-      </SectionCard>
-
-
-      <SectionCard
-        title="Keeping it from drifting again"
-        subtitle="Two practices and two links. That's all the maintenance the discipline asks for."
-        accent={ACCENT}
-      >
-        <div className="flex items-start gap-3">
-          <Hammer
-            className="h-6 w-6 flex-shrink-0 opacity-60 mt-0.5"
-            style={{ color: ACCENT_INK }}
-          />
-          <div className="flex-1 min-w-0 space-y-4">
-            <ol className="list-decimal pl-5 text-sm text-muted-foreground space-y-3 leading-relaxed">
-              <li>
-                <strong className="text-foreground">
-                  Edit the markdown, not the page.
-                </strong>{" "}
-                When a new rename is considered — by the founder, a contractor,
-                a reader who notices a drift — add a row to{" "}
-                <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                  docs/rename-map.md
-                </code>{" "}
-                with status{" "}
-                <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                  proposed
-                </code>
-                . This page picks it up the next build.
-              </li>
-              <li>
-                <strong className="text-foreground">
-                  Walk the table top to bottom.
-                </strong>{" "}
-                Set each row to{" "}
-                <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                  approved
-                </code>
-                ,{" "}
-                <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                  rejected
-                </code>
-                , or{" "}
-                <code className="text-xs px-1 py-0.5 rounded bg-muted">
-                  deferred
-                </code>
-                . Rejected and deferred rows stay in the document as the record
-                of what was considered and walked past. Only{" "}
+        {/* 5. The drift map */}
+        <AccordionItem
+          value="drift-map"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-drift-map"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <span className="font-semibold text-sm">The drift map</span>
+              <span className="text-xs text-muted-foreground">
+                {RENAME_MAP.length} rows · {driftRows.length} flagged · {reviewedAndKept.length} kept
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4 space-y-4">
+              <StatusLegend />
+              <DriftMapTable rows={RENAME_MAP} />
+              <p className="text-xs text-muted-foreground">
+                <strong className="text-foreground">A note on status.</strong> The
+                audit produced this map; the founder walks it row-by-row. A row's
+                status reads as the audit left it the last time the markdown was
+                saved. The implementation pass moves only{" "}
                 <code className="text-xs px-1 py-0.5 rounded bg-muted">
                   approved
                 </code>{" "}
-                rows are ever applied; the implementation pass updates them to{" "}
+                rows to{" "}
                 <code className="text-xs px-1 py-0.5 rounded bg-muted">
                   applied
                 </code>{" "}
-                after the rename actually lands.
-              </li>
-            </ol>
-
-            <div
-              className="rounded-md border px-4 py-3 text-sm space-y-3"
-              style={{
-                borderColor: ACCENT,
-                backgroundColor: ACCENT_SOFT,
-                color: ACCENT_INK,
-              }}
-            >
-              <p className="font-semibold">Where to read more</p>
-              <ul className="space-y-2 text-[0.9rem]">
-                <li>
-                  The deeper philosophy — what codetry is, who it serves, the
-                  saltbox principle, the both-states principle — lives in the{" "}
-                  <a
-                    href="/codetry-handbook/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-baseline gap-1 font-semibold underline decoration-dotted underline-offset-2 hover:no-underline"
-                    style={{ color: ACCENT_INK }}
-                    data-testid="codetry-handbook-link"
-                  >
-                    codetry-handbook
-                    <ExternalLink className="inline h-3 w-3" aria-hidden />
-                  </a>{" "}
-                  (the mobile artifact titled{" "}
-                  <em>Headwaters: How a Community Runs Its Own Economy</em>).
-                  Open it in a new tab and read it alongside this page.
-                </li>
-                <li>
-                  The cross-artifact rename sweep — taking the discipline from
-                  this guide out across every other artifact in the project —
-                  is queued as its own task and will produce a single
-                  cross-project rename map. This page only governs renames{" "}
-                  <em>inside</em> the practitioner's guide.
-                </li>
-              </ul>
+                — nothing else transitions on its own.
+              </p>
             </div>
-          </div>
-        </div>
-      </SectionCard>
+          </AccordionContent>
+        </AccordionItem>
 
+        {/* 6. Keeping it from drifting again */}
+        <AccordionItem
+          value="maintenance"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT }}
+          data-testid="section-maintenance"
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center gap-3 text-left flex-wrap min-w-0">
+              <Hammer className="h-4 w-4 flex-shrink-0 opacity-60" style={{ color: ACCENT_INK }} />
+              <span className="font-semibold text-sm">Keeping it from drifting again</span>
+              <span className="text-xs text-muted-foreground">Edit the markdown · walk the table</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4 border-t border-card-border">
+            <div className="pt-4 space-y-4">
+              <ol className="list-decimal pl-5 text-sm text-muted-foreground space-y-3 leading-relaxed">
+                <li>
+                  <strong className="text-foreground">
+                    Edit the markdown, not the page.
+                  </strong>{" "}
+                  When a new rename is considered — by the founder, a contractor,
+                  a reader who notices a drift — add a row to{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    docs/rename-map.md
+                  </code>{" "}
+                  with status{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    proposed
+                  </code>
+                  . This page picks it up the next build.
+                </li>
+                <li>
+                  <strong className="text-foreground">
+                    Walk the table top to bottom.
+                  </strong>{" "}
+                  Set each row to{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    approved
+                  </code>
+                  ,{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    rejected
+                  </code>
+                  , or{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    deferred
+                  </code>
+                  . Rejected and deferred rows stay in the document as the record
+                  of what was considered and walked past. Only{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    approved
+                  </code>{" "}
+                  rows are ever applied; the implementation pass updates them to{" "}
+                  <code className="text-xs px-1 py-0.5 rounded bg-muted">
+                    applied
+                  </code>{" "}
+                  after the rename actually lands.
+                </li>
+              </ol>
+
+              <div
+                className="rounded-md border px-4 py-3 text-sm space-y-3"
+                style={{
+                  borderColor: ACCENT,
+                  backgroundColor: ACCENT_SOFT,
+                  color: ACCENT_INK,
+                }}
+              >
+                <p className="font-semibold">Where to read more</p>
+                <ul className="space-y-2 text-[0.9rem]">
+                  <li>
+                    The deeper philosophy — what codetry is, who it serves, the
+                    saltbox principle, the both-states principle — lives in the{" "}
+                    <a
+                      href="/codetry-handbook/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-baseline gap-1 font-semibold underline decoration-dotted underline-offset-2 hover:no-underline"
+                      style={{ color: ACCENT_INK }}
+                      data-testid="codetry-handbook-link"
+                    >
+                      codetry-handbook
+                      <ExternalLink className="inline h-3 w-3" aria-hidden />
+                    </a>{" "}
+                    (the mobile artifact titled{" "}
+                    <em>Headwaters: How a Community Runs Its Own Economy</em>).
+                    Open it in a new tab and read it alongside this page.
+                  </li>
+                  <li>
+                    The cross-artifact rename sweep — taking the discipline from
+                    this guide out across every other artifact in the project —
+                    is queued as its own task and will produce a single
+                    cross-project rename map. This page only governs renames{" "}
+                    <em>inside</em> the practitioner's guide.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+      </Accordion>
 
       <nav
         className="flex items-center justify-between gap-4 pt-4 border-t border-card-border"
