@@ -21,8 +21,6 @@
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
-import { FootnoteList } from "@/components/FootnoteList";
-import { PERSONAL_CASH_FOOTNOTES } from "@/data/footnotes";
 import { money } from "@/lib/format";
 import {
   Accordion,
@@ -340,7 +338,6 @@ export function PersonalCashPage() {
 
       </Accordion>
 
-      <FootnoteList notes={PERSONAL_CASH_FOOTNOTES} />
     </div>
   );
 }
