@@ -93,7 +93,7 @@ export function BioPage() {
             >
               <p>
                 Bobbie is a Northwestern Ontario practitioner working in
-                food systems. Recreation degree, years on the ground in
+                food systems. Community development degree, years on the ground in
                 northern communities, and the founder and operator of
                 Parr&rsquo;s Jars — a small preserves business out of the
                 bush near Dryden that keeps her hands in the actual work
