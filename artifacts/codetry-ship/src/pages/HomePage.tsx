@@ -59,6 +59,12 @@ export function HomePage() {
               description="What it takes to stand up a community-owned store in northwestern Ontario: the 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations. Plain language, open numbers."
               testId="work-card-store"
             />
+            <ComingSoonCard
+              eyebrow="Co-op membership · Coming soon"
+              title="Co-op Membership Platform"
+              description="A membership and governance platform for community-owned co-ops in the 807. Pending a vote from the pilot community before public launch."
+              testId="work-card-coop"
+            />
             <WorkCard
               eyebrow="Northern food systems · Knowledge commons"
               title="Northern Food Systems Research Library"
@@ -72,6 +78,46 @@ export function HomePage() {
               description="A live demo of the bookkeeping tool: open records the band can read, the daily close the operators run each night, and the month-end pack the bookkeeper hands council. Sample data, no login."
               href="/headwaters-books/demo"
               testId="work-card-books-demo"
+            />
+            <WorkCard
+              eyebrow="Grants · Northern communities"
+              title="Grants Finder"
+              description="A searchable index of funding available to northern and Indigenous communities — grants, programs, and deadlines in one place."
+              href="https://community-knowledge-hub.replit.app/grants/"
+              external
+              testId="work-card-grants"
+            />
+            <WorkCard
+              eyebrow="Personal finance · Headwaters"
+              title="Headwaters Finance"
+              description="Your money has been free-ranging. A personal finance tool that maps where money goes, built for people who move faster than any folder system."
+              href="https://x-buckets-vision.replit.app/"
+              external
+              testId="work-card-finance"
+            />
+            <WorkCard
+              eyebrow="Operations · For entrepreneurs"
+              title="Rootwork"
+              description="A calm command center for builders who can't sit still. Drop in the chaos — voice memos, screenshots, half-finished ideas — and find what you need in seconds."
+              href="https://community-knowledge-hub.replit.app/studio/"
+              external
+              testId="work-card-rootwork"
+            />
+            <WorkCard
+              eyebrow="Health · Long-term care"
+              title="Bright Side"
+              description="A recreation therapy companion for LTC homes — activity planning, resident engagement, and documentation built for the people on the floor."
+              href="https://health-support-hub.replit.app/"
+              external
+              testId="work-card-brightside"
+            />
+            <WorkCard
+              eyebrow="Journalling · Public and private"
+              title="Dam Days"
+              description="A journal that knows what to keep to yourself and what to share. Public entries, private pages, one place."
+              href="https://conversation-log.replit.app/"
+              external
+              testId="work-card-damdays"
             />
           </div>
         </section>
@@ -234,12 +280,15 @@ interface WorkCardProps {
   description: string;
   href: string;
   testId: string;
+  external?: boolean;
 }
 
-function WorkCard({ eyebrow, title, description, href, testId }: WorkCardProps) {
+function WorkCard({ eyebrow, title, description, href, testId, external }: WorkCardProps) {
   return (
     <a
       href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
       className="block rounded-md border bg-card p-5 sm:p-6 transition-colors hover:border-accent"
       style={{ borderColor: "hsl(var(--card-border))" }}
       data-testid={testId}
