@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { SCENARIO_V3 } from "../v3";
 import { SCENARIO_V4 } from "../v4";
 import { SCENARIO_V5 } from "../v5";
+import { SCENARIO_V6 } from "../v6";
 import { SCENARIOS, SCENARIO_ORDER, DEFAULT_SCENARIO_ID } from "../scenarios";
 import { buildContractsLedger } from "../contractsLedger";
 import { buildBrightsideLedger } from "../brightsideLedger";
@@ -674,21 +675,23 @@ describe("V3 ↔ V4 invariants — Salts and Brightside are the SAME object (can
   });
 });
 
-describe("Scenario registry — V5 is the locked default; V4 is the prior toggle option; V3 retained for migration / Compare anchor only", () => {
-  it("SCENARIOS contains v3, v4, and v5 (V2 retired; V3 retained as the workspace anchor for migration + Compare seed)", () => {
-    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4", "v5"]);
+describe("Scenario registry — V6 is the locked default; V5 is the prior toggle option; V3 retained for migration / Compare anchor only", () => {
+  it("SCENARIOS contains v3, v4, v5, and v6 (V2 retired; V3 retained as workspace anchor; V5 retained as historical baseline)", () => {
+    expect(Object.keys(SCENARIOS).sort()).toEqual(["v3", "v4", "v5", "v6"]);
     expect(SCENARIOS.v3).toBe(SCENARIO_V3);
     expect(SCENARIOS.v4).toBe(SCENARIO_V4);
     expect(SCENARIOS.v5).toBe(SCENARIO_V5);
+    expect(SCENARIOS.v6).toBe(SCENARIO_V6);
   });
 
-  it("SCENARIO_ORDER lists v5 first (Current), v4 second (Prior); V3 is intentionally absent from the toggle", () => {
-    expect(SCENARIO_ORDER).toEqual(["v5", "v4"]);
+  it("SCENARIO_ORDER lists v6 first (Current), v5 second (Prior); V3 is intentionally absent from the toggle", () => {
+    expect(SCENARIO_ORDER).toEqual(["v6", "v5"]);
     expect(SCENARIO_ORDER).not.toContain("v3");
+    expect(SCENARIO_ORDER).not.toContain("v4");
   });
 
-  it("DEFAULT_SCENARIO_ID is v5 (the Codetry-archetype baseline applied to Deer Lake)", () => {
-    expect(DEFAULT_SCENARIO_ID).toBe("v5");
+  it("DEFAULT_SCENARIO_ID is v6 (hourly subcontract applied to Deer Lake)", () => {
+    expect(DEFAULT_SCENARIO_ID).toBe("v6");
   });
 });
 
@@ -932,23 +935,22 @@ describe("V5 personal compensation — locked headline numbers", () => {
   });
 });
 
-describe("V3 ↔ V4 ↔ V5 invariants — Salts and Brightside are the SAME object across all three (cannot drift)", () => {
-  it("Salts bucket is the SHARED_SALTS object across V3, V4, and V5", () => {
+describe("V3 ↔ V4 ↔ V5 ↔ V6 invariants — Salts and Brightside are the SAME object across all four (cannot drift)", () => {
+  it("Salts bucket is the SHARED_SALTS object across V3, V4, V5, and V6", () => {
     expect(SCENARIO_V3.salts).toBe(SHARED_SALTS);
     expect(SCENARIO_V4.salts).toBe(SHARED_SALTS);
     expect(SCENARIO_V5.salts).toBe(SHARED_SALTS);
+    expect(SCENARIO_V6.salts).toBe(SHARED_SALTS);
   });
 
-  it("Brightside bucket is the SHARED_BRIGHTSIDE object across V3, V4, and V5", () => {
+  it("Brightside bucket is the SHARED_BRIGHTSIDE object across V3, V4, V5, and V6", () => {
     expect(SCENARIO_V3.brightside).toBe(SHARED_BRIGHTSIDE);
     expect(SCENARIO_V4.brightside).toBe(SHARED_BRIGHTSIDE);
     expect(SCENARIO_V5.brightside).toBe(SHARED_BRIGHTSIDE);
+    expect(SCENARIO_V6.brightside).toBe(SHARED_BRIGHTSIDE);
   });
 
-  it("V5 lead draw lifts to $18k/mo (above V3/V4 $14k/mo); brightside owner take stays identical across V3/V4/V5 (sourced from SHARED_BRIGHTSIDE)", () => {
-    // Per-month draw is the right comparison — V5's 12-month window means
-    // total agency salary is lower in absolute dollars even though the
-    // monthly draw is higher.
+  it("V5 lead draw lifts to $18k/mo (above V3/V4 $14k/mo); brightside owner take stays identical across all scenarios", () => {
     expect(SCENARIO_V5.contracts.agency.roster[0].monthlyLoaded).toBeGreaterThan(
       SCENARIO_V3.contracts.agency.roster[0].monthlyLoaded,
     );
@@ -958,6 +960,145 @@ describe("V3 ↔ V4 ↔ V5 invariants — Salts and Brightside are the SAME obje
       SCENARIO_V3.personal.brightsideOwnerTake,
     );
     expect(SCENARIO_V5.personal.brightsideOwnerTake).toBe(
+      SHARED_BRIGHTSIDE.surplusDeployment.ownerTake,
+    );
+    expect(SCENARIO_V6.personal.brightsideOwnerTake).toBe(
+      SHARED_BRIGHTSIDE.surplusDeployment.ownerTake,
+    );
+  });
+});
+
+describe("V6 — Hourly subcontract (Deer Lake) — locked headline numbers", () => {
+  // Source of truth: v6.ts spec note + 2026-05-02 confirmed numbers.
+  // Bobbie $150/hr × 160 hr/mo = $24,000 billed; nets $80/hr = $12,800 draw.
+  // Tyler $70/hr × 160 hr/mo = $11,200 billed/paid (pass-through subcontract).
+  // Total monthly billed: $35,200. Tithe 10% = $3,520. Lean overheads $1,292.
+  // Monthly surplus: $35,200 - $3,520 - $12,800 - $11,200 - $1,292 = $6,388.
+  const agency = SCENARIO_V6.contracts.agency;
+
+  it("engagement structure: $35,200/mo total billed, 12-month term, starting June 1 2026", () => {
+    expect(agency.fee).toBe(35200);
+    expect(agency.termMonths).toBe(12);
+    expect(agency.renegotiateMonth).toBe(12);
+    expect(agency.startDate).toBe("June 1, 2026");
+  });
+
+  it("rates: Bobbie 160 hr × $150 = $24,000 billed; Tyler 160 hr × $70 = $11,200; total $35,200", () => {
+    const bobbieBilled = 160 * 150; // 24,000
+    const tylerBilled  = 160 * 70;  // 11,200
+    expect(bobbieBilled + tylerBilled).toBe(agency.fee);
+    expect(bobbieBilled + tylerBilled).toBe(35200);
+  });
+
+  it("roster: 2-person lean team (Bobbie $12,800 net draw + Tyler $11,200 sub pass-through)", () => {
+    expect(agency.roster).toHaveLength(2);
+    expect(agency.roster[0].role).toBe("Practitioner / Lead (Bobbie)");
+    expect(agency.roster[1].role).toBe("Distribution (Tyler — RFF subcontract)");
+    expect(agency.roster[0].monthlyLoaded).toBe(12800); // Bobbie net draw
+    expect(agency.roster[1].monthlyLoaded).toBe(11200); // Tyler sub
+  });
+
+  it("payrollTotal is combined draws: Bobbie $12,800 + Tyler $11,200 = $24,000", () => {
+    expect(agency.payrollTotal).toBe(24000);
+    expect(agency.roster[0].monthlyLoaded + agency.roster[1].monthlyLoaded).toBe(
+      agency.payrollTotal,
+    );
+  });
+
+  it("tithe: 10% of $35,200 = $3,520/mo; $42,240 over 12 months", () => {
+    expect(agency.tithePct).toBe(10);
+    expect(agency.titheMonthly).toBe(3520);
+    expect(agency.titheTotal).toBe(42240);
+    expect(agency.fee * 0.10).toBe(agency.titheMonthly);
+    expect(agency.titheMonthly * agency.termMonths).toBe(agency.titheTotal);
+  });
+
+  it("lean overheads: $1,292/mo (space $500 + insurance/petty $500 + accountant $125 + legal $167)", () => {
+    expect(agency.overheadsJunAugTotal).toBe(1292);
+    expect(agency.overheadsSepOnwardTotal).toBe(1292); // same — lean OH does not step up
+    const items = agency.overheadsJunAug;
+    expect(items.find((o) => o.name.includes("Space"))?.monthly).toBe(500);
+    expect(items.find((o) => o.name.includes("Insurance"))?.monthly).toBe(500);
+    expect(items.find((o) => o.name.includes("Accountant"))?.monthly).toBe(125);
+    expect(items.find((o) => o.name.includes("Legal"))?.monthly).toBe(167);
+    expect(items.reduce((s, o) => s + o.monthly, 0)).toBe(1292);
+  });
+
+  it("monthly surplus: $35,200 - $3,520 tithe - $12,800 Bobbie - $11,200 Tyler - $1,292 OH = $6,388", () => {
+    expect(agency.monthlySurplusJunAug).toBe(6388);
+    expect(agency.monthlySurplusSepOnward).toBe(6388);
+    expect(
+      agency.fee - agency.titheMonthly - agency.roster[0].monthlyLoaded -
+      agency.roster[1].monthlyLoaded - agency.overheadsJunAugTotal,
+    ).toBe(6388);
+  });
+
+  it("V6 carries no family-infusion or capital-recovery leg inside the engagement waterfall", () => {
+    expect(agency.familyInfusionRecovery).toBe(0);
+    expect(agency.capitalRecoveryAmount).toBe(0);
+    expect(agency.capitalRecoveryMonths).toBe(0);
+    expect(agency.brightsidePrelaunchSpend).toBe(0);
+    expect(agency.phase3Months).toBe(0);
+  });
+
+  it("V6 scenario status is locked; id is 'v6'", () => {
+    expect(SCENARIO_V6.id).toBe("v6");
+    expect(SCENARIO_V6.status).toBe("locked");
+  });
+});
+
+describe("V6 12-month surplus deployment math — $422,400 revenue, $76,656 surplus", () => {
+  const agency = SCENARIO_V6.contracts.agency;
+  const totals = agency.totals18mo;
+
+  it("revenue: $35,200 × 12 = $422,400", () => {
+    expect(totals.revenue).toBe(422400);
+    expect(agency.fee * agency.termMonths).toBe(totals.revenue);
+  });
+
+  it("tithe: 10% × 12 mo = $42,240", () => {
+    expect(totals.tithe).toBe(42240);
+    expect(totals.revenue * 0.10).toBe(totals.tithe);
+  });
+
+  it("payroll (Bobbie draw): $12,800 × 12 = $153,600", () => {
+    expect(totals.payroll).toBe(153600);
+    expect(agency.roster[0].monthlyLoaded * agency.termMonths).toBe(totals.payroll);
+  });
+
+  it("surplus deployed: $35,200 − $3,520 − $12,800 − $11,200 − $1,292) × 12 = $76,656", () => {
+    expect(totals.surplusDeployed).toBe(76656);
+    expect(agency.monthlySurplusJunAug * agency.termMonths).toBe(totals.surplusDeployed);
+  });
+
+  it("waterfall allocations are zero / TBD — not locked yet (capital recovery, reserve, innovation)", () => {
+    expect(totals.familyInfusionRecovery).toBe(0);
+    expect(totals.capitalRecovery).toBe(0);
+    expect(totals.brightsidePrelaunch).toBe(0);
+    expect(totals.reserve).toBe(0);
+    expect(totals.innovation).toBe(0);
+    expect(totals.tag.kind).toBe("tbd");
+  });
+});
+
+describe("V6 personal compensation — locked headline numbers", () => {
+  const personal = SCENARIO_V6.personal;
+
+  it("Bobbie draw $153,600 (Phase 2 × 12 mo) + Brightside owner take $31,000 = $184,600 total", () => {
+    expect(personal.agencySalary18mo).toBe(153600);
+    expect(personal.brightsideOwnerTake).toBe(31000);
+    expect(personal.total18mo).toBe(184600);
+    expect(personal.agencySalary18mo + personal.brightsideOwnerTake).toBe(
+      personal.total18mo,
+    );
+  });
+
+  it("capital recovery is 0 — not carried inside the V6 engagement waterfall", () => {
+    expect(personal.capitalRecovery).toBe(0);
+  });
+
+  it("Brightside owner take is sourced from SHARED_BRIGHTSIDE (cannot drift)", () => {
+    expect(personal.brightsideOwnerTake).toBe(
       SHARED_BRIGHTSIDE.surplusDeployment.ownerTake,
     );
   });

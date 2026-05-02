@@ -43,7 +43,7 @@ export function ArchetypesPage() {
           Codetry vs Software / Sales — two archetypes, one operating discipline.
         </h1>
         <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
-          As of 2026-04-29 the model carries <strong>two project archetypes</strong>. The
+          As of 2026-05-02 the model carries <strong>two project archetypes</strong>. The
           tithe-first surplus discipline and the no-owner-take-from-agency stance are held
           identical across both. Expand each card for the full narrative.
         </p>
@@ -102,48 +102,48 @@ export function ArchetypesPage() {
                     front without disguising the substance.
                   </p>
                   <p>
-                    <strong>Canonical example.</strong> Deer Lake (V5). {money(a.fee)}/mo agency
-                    fee × {a.termMonths} months against a {a.roster.length}-role Day-1 team (
-                    {money(a.payrollTotal)}/mo loaded payroll). Capital Recovery{" "}
-                    {money(a.familyInfusionRecovery + a.capitalRecoveryAmount)} total, shown as
-                    two legs: {money(a.familyInfusionRecovery)} family-infusion leg in month 1 and{" "}
-                    {money(a.capitalRecoveryAmount)} business-loan leg Aug → Oct. Phase 3{" "}
-                    {money(a.totals18mo.reserve + a.totals18mo.innovation)} split{" "}
-                    {a.reservePct}/{a.innovationPct} Reserve / Innovation.
+                    <strong>Canonical example — V6 (current).</strong> Deer Lake. Bobbie bills{" "}
+                    {money(a.roster[0].monthlyLoaded + 11200)}/mo total (160 hr × $150) + Tyler{" "}
+                    {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo (160 hr × $70 pass-through
+                    subcontract). Total billed: {money(a.fee)}/mo × {a.termMonths} months.
+                    Bobbie nets {money(a.roster[0].monthlyLoaded)}/mo ($80/hr).
+                    Lean overheads {money(a.overheadsJunAugTotal)}/mo (space + insurance +
+                    accountant + legal — client pays tech stack). Monthly surplus{" "}
+                    {money(a.monthlySurplusJunAug)}; 12-month surplus{" "}
+                    {money(a.totals18mo.surplusDeployed)}. Waterfall TBD.
                   </p>
                   <p>
-                    <strong>Surplus waterfall.</strong> Tithe (10% off the top, first claim) →
-                    Wages → Capital Recovery — family infusion → Capital Recovery — business loan →
-                    Reserve / Innovation. The Brightside Launch Month phase is dropped from the
-                    agency waterfall — Brightside's pre-launch is funded out of the Innovation
-                    bucket once Phase 3 is deployed.
+                    <strong>V5 (prior baseline — $90k/mo Codetry archetype).</strong> The V5
+                    model carried a $90k/mo flat agency fee against a 4-role Day-1 team
+                    ($43.5k/mo payroll), with Capital Recovery split into a $40k family-infusion
+                    leg (month 1) and $72k business-loan leg (Aug → Oct), and a Phase 3
+                    Reserve / Innovation 75/25 split. V5 is preserved as a historical baseline.
+                    V6 is the current operating plan.
                   </p>
                   <p>
-                    <strong>Why front-load the family infusion.</strong> The founder's husband put
-                    $40k of family capital into the business. Retiring that obligation in month 1
-                    gives the family stack its closure early, lets the business carry only the
-                    bank-loan leg through Aug → Oct, and makes the personal-guarantee piece visible
-                    as a discrete sibling line. Both legs are tax-free debt repayment — money flows
-                    business → husband or business → bank, never through the founder personally.
-                    NOT compensation, NOT income, NOT a deductible expense.
+                    <strong>Surplus waterfall (V6).</strong> Tithe (10% off the top, first claim,{" "}
+                    {money(a.titheMonthly)}/mo) → Bobbie draw ({money(a.roster[0].monthlyLoaded)}
+                    /mo) → Tyler subcontract ({money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo) →
+                    lean overheads ({money(a.overheadsJunAugTotal)}/mo) → surplus (
+                    {money(a.monthlySurplusJunAug)}/mo). Surplus waterfall allocation TBD at
+                    month-6 review.
                   </p>
                   <p>
-                    <strong>What sits underneath the team — operator couple + software.</strong>{" "}
-                    The Codetry roster is what the buyer is paying for; what they're getting, on
-                    the ground at the store, is a two-person operator couple — Sam &amp; Jess on
-                    the cockpit — brought in and paid by the contractor. Square at the till,
-                    QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying
-                    them together. On the buyer's payroll, not the {money(a.payrollTotal)}/mo
-                    Codetry payroll. That's the shape that makes a cost-plus-35% structure fit
-                    inside a community's world at this size.
+                    <strong>What sits underneath the engagement — operator couple + software.</strong>{" "}
+                    What the buyer is getting on the ground at the store is a two-person operator
+                    couple — Sam &amp; Jess on the cockpit — brought in and paid by the contractor.
+                    Square at the till, QuickBooks on the books, Local Line for producers, the
+                    Headwaters cockpit tying them together. On the buyer's payroll, not the{" "}
+                    {money(a.fee)}/mo billing. Tyler (RFF) handles distribution at Sioux Lookout
+                    and Deer Lake. Code review + IT setup is a one-time cost (~$2k–$5k) rolled
+                    under Tyler's subcontract line when the engagement is confirmed.
                   </p>
                   <p>
-                    <strong>Deferred roles (gated, not deleted).</strong> The V4 7-role roster
-                    carried <em>IT/Tech</em>, <em>Community Development Associate</em>, and{" "}
-                    <em>Junior Analyst / Field</em> seats that V5 leaves off the Day-1 cost basis.
-                    They're deferred and gated against the month-12 renegotiation triggers — when a
-                    trigger fires, the engagement steps back up toward the V4 right-priced fee and
-                    these seats reappear.
+                    <strong>Phase 1 trial.</strong> $25,000 flat · 8 weeks · Bobbie solo ·
+                    40 hr/wk. Intentionally below Bobbie's cost at full hours ($25,600 draw
+                    vs $22,500 post-tithe revenue). The $3,100 gap is the entry price for a
+                    bounded, below-cost trial. Hardware (computer + server ~$3k–$4k) deferred
+                    until ongoing commitment is confirmed.
                   </p>
                 </div>
               </AccordionContent>
@@ -281,9 +281,9 @@ export function ArchetypesPage() {
         >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-baseline gap-3 text-left">
-              <span className="font-semibold text-sm">V3 → V4 → V5 — the lineage</span>
+              <span className="font-semibold text-sm">V3 → V4 → V5 → V6 — the lineage</span>
               <span className="text-xs text-muted-foreground">
-                V5 is the locked default · $90k × 12 mo · 4-role · $18k lead draw
+                V6 is the locked default · $150/hr Bobbie + $70/hr Tyler · 160 hr/mo · $35,200/mo billed
               </span>
             </div>
           </AccordionTrigger>
@@ -320,22 +320,32 @@ export function ArchetypesPage() {
                     <td className="py-2 pr-4 num">—</td>
                     <td className="py-2 pr-4 num">$112k</td>
                   </tr>
-                  <tr className="font-semibold" style={{ background: ACCENT_SOFT, color: ACCENT_INK }}>
-                    <td className="py-2 pr-4">V5 — Codetry archetype (current)</td>
-                    <td className="py-2 pr-4">Locked default</td>
+                  <tr className="border-b border-card-border">
+                    <td className="py-2 pr-4 font-medium">V5 — Codetry archetype</td>
+                    <td className="py-2 pr-4 text-muted-foreground">Historical baseline</td>
                     <td className="py-2 pr-4 num">$90k × 12 mo</td>
                     <td className="py-2 pr-4 num">4 roles</td>
-                    <td className="py-2 pr-4 num">$18k/mo</td>
+                    <td className="py-2 pr-4 num">$18k/mo draw</td>
                     <td className="py-2 pr-4 num">$40k m1</td>
                     <td className="py-2 pr-4 num">$72k (loan only)</td>
+                  </tr>
+                  <tr className="font-semibold" style={{ background: ACCENT_SOFT, color: ACCENT_INK }}>
+                    <td className="py-2 pr-4">V6 — Hourly subcontract (current)</td>
+                    <td className="py-2 pr-4">Locked default</td>
+                    <td className="py-2 pr-4 num">$35,200/mo × 12 mo</td>
+                    <td className="py-2 pr-4 num">2 (Bobbie + Tyler)</td>
+                    <td className="py-2 pr-4 num">$12,800/mo net</td>
+                    <td className="py-2 pr-4 num">—</td>
+                    <td className="py-2 pr-4 num">TBD</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-              V3 is preserved as the workspace anchor so persisted scratch realities stay valid;
-              the rest of the guide reads from V5. The Operating Framework page lets you toggle
-              V5 ↔ V4 to compare the published default to the right-priced baseline.
+              V3 is preserved as the workspace anchor so persisted scratch realities stay valid.
+              V5 is preserved as a historical baseline ($90k/mo Codetry archetype). The rest of
+              the guide reads from V6 (hourly subcontract). The Operating Framework page lets you
+              toggle V6 ↔ V5 to compare the current model to the prior baseline.
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -357,7 +367,7 @@ export function ArchetypesPage() {
           data-testid="link-to-contracts"
         >
           <Home className="h-4 w-4" />
-          See V5 on the Contracts page
+          See V6 on the Contracts page
         </Link>
       </div>
     </div>

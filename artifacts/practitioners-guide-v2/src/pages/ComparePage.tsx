@@ -61,6 +61,7 @@ export function ComparePage() {
   const v3 = SCENARIOS.v3;
   const v4 = SCENARIOS.v4;
   const v5 = SCENARIOS.v5;
+  const v6 = SCENARIOS.v6;
 
   const [state, setState] = useState<AltRealityState>(() => loadAltRealityState());
 
@@ -118,8 +119,8 @@ export function ComparePage() {
             V3 anchored. Alternative realities to the right.
           </h1>
           <p className="mt-2 text-muted-foreground max-w-3xl">
-            <strong className="text-foreground">V5 is the guide's locked default</strong> — the
-            rest of the guide (Index, Contracts, Salts, Brightside) reads V5 numbers.{" "}
+            <strong className="text-foreground">V6 is the guide's locked default</strong> — the
+            rest of the guide (Index, Contracts, Salts, Brightside) reads V6 numbers.{" "}
             <strong className="text-foreground">V3 is the workspace anchor</strong> — the
             left-column baseline every alternative reality is measured against. Both can be true
             at once. Edit any row, lock what you've decided, and read the Δ-vs-V3 cell live.
@@ -130,23 +131,23 @@ export function ComparePage() {
       {/* ── Scenario cards — always visible ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <ScenarioCard
+          scenario={v6}
+          active={scenarioId === "v6"}
+          onActivate={() => setScenarioId("v6")}
+          locked
+          subtitle="Guide locked default · all other pages read from this"
+        />
+        <ScenarioCard
           scenario={v5}
           active={scenarioId === "v5"}
           onActivate={() => setScenarioId("v5")}
-          locked
-          subtitle="Guide locked default · all other pages read from this"
+          subtitle="Historical baseline · $90k/mo Codetry archetype"
         />
         <ScenarioCard
           scenario={v3}
           active={scenarioId === "v3"}
           onActivate={() => setScenarioId("v3")}
           subtitle="Workspace anchor · left column of the table below"
-        />
-        <ScenarioCard
-          scenario={v4}
-          active={scenarioId === "v4"}
-          onActivate={() => setScenarioId("v4")}
-          subtitle="Right-priced · pre-loaded as the first alternative reality"
         />
       </div>
 
@@ -386,7 +387,7 @@ export function ComparePage() {
               <div className="flex items-baseline gap-3">
                 <span className="font-semibold text-sm">How we got here</span>
                 <span className="text-xs text-muted-foreground">
-                  V2 retired · V3 workspace anchor · V4 right-priced · V5 guide locked default
+                  V2 retired · V3 workspace anchor · V4 right-priced · V5 historical baseline · V6 guide locked default
                 </span>
               </div>
             </div>
@@ -394,13 +395,22 @@ export function ComparePage() {
           <AccordionContent className="px-4 pb-4">
             <div className="text-sm text-muted-foreground space-y-3">
               <div>
-                <p className="font-medium text-foreground mb-1">V5 — Codetry archetype (guide locked default · 2026-04-29)</p>
+                <p className="font-medium text-foreground mb-1">V6 — Hourly subcontract (guide locked default · 2026-05-02)</p>
+                <p>
+                  Bobbie $150/hr + Tyler $70/hr (RFF sub), 160 hr/mo each. $35,200/mo total billed.
+                  Bobbie nets $80/hr ($12,800/mo draw); Tyler's $70/hr is a direct pass-through.
+                  Phase 1: $25,000 flat 8-week trial (intentionally below cost — entry price).
+                  Lean overheads ($1,292/mo — client pays tech stack). Monthly surplus $6,388;
+                  12-month surplus $76,656. Waterfall TBD. V6 is the scenario all other guide pages read from.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground mb-1">V5 — Codetry archetype (historical baseline · locked 2026-04-29)</p>
                 <p>
                   $90k/mo × 12 months against a 4-role Day-1 team ($43.5k/mo payroll). Capital
                   Recovery split into two visible legs: $40k family-infusion m1 + $72k
-                  business-loan Aug → Oct. Phase 3 Reserve / Innovation 75/25. Brightside
-                  pre-launch funded from the Innovation bucket — no dedicated Brightside Launch
-                  Month in the agency waterfall. V5 is the scenario all other guide pages read from.
+                  business-loan Aug → Oct. Phase 3 Reserve / Innovation 75/25. Preserved as a
+                  historical baseline — V6 is the current operating plan.
                 </p>
               </div>
               <div>

@@ -202,7 +202,7 @@ export function IndexPage() {
         <p className="mt-3 text-base text-muted-foreground max-w-3xl leading-relaxed">
           A working source of truth organized the way the founder thinks: Salts (Parr's Jars),
           Community Contracts, and Software / Hardware / Training (Brightside). Every figure
-          carries a confirmed tag with the date the founder locked it. V5 (Codetry archetype,
+          carries a confirmed tag with the date the founder locked it. V6 (hourly subcontract,
           Deer Lake) is the locked default.{" "}
           <Link
             href="/archetypes"
@@ -211,7 +211,7 @@ export function IndexPage() {
           >
             Archetypes page
           </Link>{" "}
-          for the V3 → V4 → V5 lineage.
+          for the V3 → V4 → V5 → V6 lineage.
         </p>
         <div
           className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
@@ -302,15 +302,16 @@ export function IndexPage() {
             signal="Next phase"
             signalLabel="if trial lands"
             badge={<StatusBadge status="next" label="Gated on trial" />}
-            summary="Full-stack engagement at $90k/mo × 12 months. 4-role team. Unlocks when the $25k trial target closes."
+            summary="Hourly subcontract: Bobbie $150/hr + Tyler $70/hr RFF sub, 160 hr/mo each. $35,200/mo total billed. Unlocks when the $25k trial target closes."
             accentColor="#7A4E2D"
             testId="pipeline-deer-lake"
             detail={
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Engagement shape:</strong> {money(a.fee)}/mo
-                  × {a.termMonths} months against the {a.roster.length}-role Day-1 team (
-                  {money(a.payrollTotal)}/mo payroll).
+                  <strong className="text-foreground">Engagement shape:</strong> Bobbie{" "}
+                  {a.roster[0].monthlyLoaded > 0 ? `${money(a.roster[0].monthlyLoaded)}/mo net draw` : ""} (160 hr × $150 billed, $80 net) +
+                  Tyler {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo sub (160 hr × $70 pass-through).
+                  Total billed: {money(a.fee)}/mo. Monthly surplus: {money(a.monthlySurplusJunAug)}.
                 </p>
                 <p>
                   <strong className="text-foreground">Gate condition:</strong> $25k trial target
@@ -411,8 +412,8 @@ export function IndexPage() {
                     <ul className="space-y-1 text-muted-foreground list-disc pl-4">
                       <li>
                         <strong className="text-foreground">Hard no:</strong> Council passes a BCR
-                        (or written notice) declining the $90k/mo full-stack or $35k Layer-1
-                        software-only contract. Act same day.
+                        (or written notice) declining the hourly engagement ($35,200/mo billed) or
+                        the $25k trial. Act same day.
                       </li>
                       <li>
                         <strong className="text-foreground">Stall past soft date:</strong> No BCR,
