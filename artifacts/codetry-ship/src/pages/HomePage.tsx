@@ -96,12 +96,6 @@ export function HomePage() {
             >
               Start a conversation
             </h2>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.22em]"
-              style={{ color: "hsl(var(--accent))" }}
-            >
-              no ceremony required
-            </p>
           </div>
 
           <div className="space-y-4 font-serif text-[15px] leading-[1.6] mb-8" data-testid="intake-intro">
