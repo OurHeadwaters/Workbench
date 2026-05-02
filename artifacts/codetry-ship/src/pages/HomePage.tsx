@@ -337,9 +337,11 @@ export function HomePage() {
               eyebrow="Grants · Northern communities"
               title="Grants Finder"
               description="A searchable index of funding available to northern and Indigenous communities — grants, programs, and deadlines in one place."
-              href="https://community-knowledge-hub.replit.app/grants/"
+              href="https://community-knowledge-hub.replit.app/infographics/grants-finder.html"
               external
               testId="work-card-grants"
+              thumb="thumb-grants.png"
+              thumbAlt="Grants Finder — AI-powered grant matching for regional food and small business"
             />
             <WorkCard
               eyebrow="Personal finance · Headwaters"
