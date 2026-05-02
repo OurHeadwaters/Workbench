@@ -2,27 +2,28 @@
  * DebtAttackPage — Bobbie's private debt attack plan.
  *
  * Three phases: buffer → Debt A ($40k) → Debt B ($72k).
- * Personal take-home: $2,000 bi-weekly ($4,000/mo) from Bobbie draw until debt-free.
+ * Bobbie draws only $4,000/mo from the business during debt attack — the
+ * rest ($12,800) is forgone and stays as business surplus going to debt.
  * Tithe rule (permanent): first claim on practitioner DRAWINGS only — not on revenue.
- *   During debt attack: tithe on $4,000/mo take-home = $400/mo.
- * All engagement income above personal spending + tithe goes to the active phase target.
- * Debt-free is the trigger to increase personal spending.
+ *   During debt attack: 10% × $4,000 draw = $400/mo tithe.
+ *   Personal take-home: $4,000 − $400 = $3,600/mo ($1,800 bi-weekly).
+ * Draw is fully consumed by tithe + take-home — nothing routes from draw to debt.
+ * All debt attack firepower comes from the business surplus.
  *
  * Math (V7 rates — Bobbie $175/hr billed, $105/hr net):
- *   Monthly billed:            $39,200
- *   Tyler sub:                ($11,200)
- *   Overheads:                 ($1,292)
- *   Bobbie draw:              ($16,800)  ($105/hr × 160 hr/mo)
- *   Business surplus:          $9,908/mo  (no business tithe — tithe is personal)
+ *   Monthly billed:              $39,200
+ *   Tyler sub:                  ($11,200)
+ *   Overheads:                   ($1,292)
+ *   Bobbie draw (DA: $4k only):  ($4,000)  contractual $16,800/mo; $12,800 forgone
+ *   Business surplus:            $22,708/mo  (all goes to debt — no draw routing needed)
  *
- *   From draw — personal take-home: ($4,000)  ($2,000 bi-weekly)
- *   From draw — tithe (10% of $4k):   ($400)  first claim on drawings
- *   From draw — to debt:            $12,400  ($16,800 − $4,000 − $400)
- *   Total stacked:                  $22,308/mo  ($12,400 from draw + $9,908 surplus)
+ *   From draw — tithe (10% × $4,000): ($400)  first claim on drawings
+ *   From draw — take-home:          ($3,600)  $1,800 bi-weekly · draw fully consumed
+ *   Total stacked toward debt:      $22,708/mo  (all business surplus)
  *
- *   Phase 1 — buffer:    $20,000 ÷ $22,308 ≈ 0.9 months → 1 month
- *   Phase 2 — $40k debt: $40,000 ÷ $22,308 ≈ 1.8 months → 2 months
- *   Phase 3 — $72k debt: $72,000 ÷ $22,308 ≈ 3.2 months → 4 months
+ *   Phase 1 — buffer:    $20,000 ÷ $22,708 ≈ 0.9 months → 1 month
+ *   Phase 2 — $40k debt: $40,000 ÷ $22,708 ≈ 1.8 months → 2 months
+ *   Phase 3 — $72k debt: $72,000 ÷ $22,708 ≈ 3.2 months → 4 months
  *   Total to debt-free: ~7 months from engagement start (Jun 2026 → Jan 2027)
  */
 
@@ -30,11 +31,11 @@ import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const BOBBIE_DRAW_MONTHLY = 16_800;  // $105/hr × 160 hr/mo (V7 rate)
-const PERSONAL_MONTHLY    = 4_000;   // $2,000 bi-weekly take-home during debt attack
-const TITHE_MONTHLY       = 400;     // 10% of $4,000 take-home — first claim on drawings, NOT on revenue
-const SURPLUS_MONTHLY     = 9_908;   // business surplus: revenue − draw − Tyler − OH (no business tithe)
-const STACK_MONTHLY       = (BOBBIE_DRAW_MONTHLY - PERSONAL_MONTHLY - TITHE_MONTHLY) + SURPLUS_MONTHLY; // 22,308
+const DA_DRAW_MONTHLY  = 4_000;   // only draw taken — contractual $16,800/mo; $12,800 forgone to surplus
+const TITHE_MONTHLY    = 400;     // 10% of draw — first claim on drawings, NOT on revenue
+const PERSONAL_MONTHLY = DA_DRAW_MONTHLY - TITHE_MONTHLY; // 3,600 — $1,800 bi-weekly take-home
+const SURPLUS_MONTHLY  = 22_708;  // business surplus: $39,200 − $11,200 − $1,292 − $4,000 draw
+const STACK_MONTHLY    = SURPLUS_MONTHLY; // 22,708 — draw fully consumed by tithe + take-home
 
 const BUFFER_TARGET      = 20_000;
 const DEBT_A             = 40_000;
@@ -325,7 +326,7 @@ export function DebtAttackPage() {
             Debt attack plan
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Buffer → $40k → $72k → debt free · $2,000 bi-weekly take-home during debt attack
+            Buffer → $40k → $72k → debt free · $4,000/mo draw · $3,600 take-home · $22,708 to debt
           </p>
         </div>
       </header>
@@ -340,7 +341,7 @@ export function DebtAttackPage() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Personal/mo", value: money(PERSONAL_MONTHLY), sub: "$2,000 bi-weekly", color: "#065f46" },
+            { label: "Take-home/mo", value: money(PERSONAL_MONTHLY), sub: "$1,800 bi-weekly · after tithe", color: "#065f46" },
             { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "after personal spending", color: "#c2410c" },
             { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k", color: "#6d28d9" },
             { label: "Debt-free", value: DEBT_FREE_DATE.split(" ").slice(-1)[0], sub: DEBT_FREE_DATE, color: "#92400e" },
@@ -374,11 +375,10 @@ export function DebtAttackPage() {
             { label: "Total billed to client", value: 39_200, sign: "+", color: "#065f46" },
             { label: "Tyler subcontract", value: -11_200, sign: "−", color: "#c2410c" },
             { label: "Overheads (lean)", value: -1_292, sign: "−", color: "#c2410c" },
-            { label: "Bobbie draw ($105/hr × 160 hr)", value: -16_800, sign: "−", color: "#6d28d9" },
-            { label: "Business surplus (no business tithe)", value: 9_908, sign: "=", color: "#065f46", note: "goes entirely to debt" },
-            { label: "— Bobbie take-home ($2k bi-weekly)", value: -4_000, sign: "−", color: "#6d28d9", note: "from draw · personal spending" },
-            { label: "— Tithe (10% of take-home · first claim)", value: -400, sign: "−", color: "#6d28d9", note: "personal · on drawings only" },
-            { label: "— From draw to debt", value: 12_400, sign: "=", color: "#065f46", note: "draw $16,800 − $4,000 − $400" },
+            { label: "Bobbie draw (debt-attack: $4k only · $12,800 forgone)", value: -4_000, sign: "−", color: "#6d28d9" },
+            { label: "Business surplus → debt", value: 22_708, sign: "=", color: "#065f46", note: "all stacked toward debt" },
+            { label: "— Tithe (10% of draw · first claim)", value: -400, sign: "−", color: "#6d28d9", note: "personal · on drawings only" },
+            { label: "— Take-home ($1,800 bi-weekly)", value: -3_600, sign: "−", color: "#6d28d9", note: "draw fully consumed · nothing left to route" },
             { label: "Total stacked toward debt", value: STACK_MONTHLY, sign: "→", color: "#92400e", bold: true },
           ].map((row) => (
             <div
@@ -531,8 +531,8 @@ export function DebtAttackPage() {
           Rules of the plan · non-negotiable
         </p>
         {[
-          { icon: DollarSign, color: "#065f46", rule: "Personal take-home stays at $2,000 bi-weekly ($4,000/mo) until the last debt clears. No lifestyle creep before the finish line." },
-          { icon: CheckCircle2, color: "#065f46", rule: "Tithe is the first claim on practitioner drawings — not on revenue. During debt attack: 10% of $4,000/mo take-home = $400/mo. One tithe, on the draw. Permanent rule." },
+          { icon: DollarSign, color: "#065f46", rule: "Bobbie draws only $4,000/mo from the business. After the $400 tithe, take-home is $3,600/mo ($1,800 bi-weekly). No lifestyle creep before the finish line." },
+          { icon: CheckCircle2, color: "#065f46", rule: "Tithe is the first claim on practitioner drawings — not on revenue. During debt attack: 10% × $4,000 draw = $400/mo. One tithe, on the draw. Permanent rule." },
           { icon: Shield, color: "#c2410c", rule: "The $20,000 buffer is untouchable once built. It absorbs a bad month without breaking the debt plan." },
           { icon: Zap, color: "#6d28d9", rule: "$40k dies before $72k. Clearing the smaller one first gives a real psychological win and frees the full stack for the bigger one." },
           { icon: Trophy, color: "#92400e", rule: "Debt-free is the trigger for a drawings increase — not a contract renewal, not a good month, not a feeling. The date on the plan." },
