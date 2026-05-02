@@ -330,6 +330,8 @@ export function HomePage() {
               description="A live demo of the bookkeeping tool: open records the band can read, the daily close the operators run each night, and the month-end pack the bookkeeper hands council. Sample data, no login."
               href="/headwaters-books/demo"
               testId="work-card-books-demo"
+              thumb="thumb-books.jpg"
+              thumbAlt="Headwaters Books open-records ledger showing revenue, costs, and recent postings"
             />
             <WorkCard
               eyebrow="Grants · Northern communities"
@@ -346,6 +348,8 @@ export function HomePage() {
               href="https://x-buckets-vision.replit.app/"
               external
               testId="work-card-finance"
+              thumb="thumb-finance.png"
+              thumbAlt="Headwaters Finance onboarding screen"
             />
             <WorkCard
               eyebrow="Operations · For entrepreneurs"
@@ -354,6 +358,8 @@ export function HomePage() {
               href="https://community-knowledge-hub.replit.app/studio/"
               external
               testId="work-card-rootwork"
+              thumb="thumb-rootwork.png"
+              thumbAlt="Rootwork landing page"
             />
             <WorkCard
               eyebrow="Health · Long-term care"
@@ -362,6 +368,8 @@ export function HomePage() {
               href="https://health-support-hub.replit.app/"
               external
               testId="work-card-brightside"
+              thumb="thumb-brightside.png"
+              thumbAlt="Bright Side sign-in screen"
             />
             <WorkCard
               eyebrow="Journalling · Public and private"
@@ -370,6 +378,8 @@ export function HomePage() {
               href="https://conversation-log.replit.app/"
               external
               testId="work-card-damdays"
+              thumb="thumb-damdays.png"
+              thumbAlt="Dam Days journal landing page with beaver illustration"
             />
           </div>
         </section>
@@ -501,37 +511,50 @@ interface DemoCardProps {
   description: string;
   href: string;
   testId: string;
+  thumb?: string;
+  thumbAlt?: string;
 }
 
-function DemoCard({ eyebrow, title, description, href, testId }: DemoCardProps) {
+function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }: DemoCardProps) {
   return (
     <a
       href={href}
-      className="block rounded-md border bg-card p-5 sm:p-6 transition-colors hover:border-accent"
+      className="block rounded-md border bg-card transition-colors hover:border-accent overflow-hidden"
       style={{ borderColor: "hsl(var(--card-border))" }}
       data-testid={testId}
     >
-      <p
-        className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
-        style={{ color: "hsl(var(--accent))" }}
-      >
-        {eyebrow}
-      </p>
-      <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
-        {title}
-      </p>
-      <p
-        className="font-serif text-[14px] leading-[1.55]"
-        style={{ color: "hsl(var(--muted-foreground))" }}
-      >
-        {description}
-      </p>
-      <p
-        className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em]"
-        style={{ color: "hsl(var(--accent))" }}
-      >
-        View demo →
-      </p>
+      {thumb && (
+        <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          <img
+            src={`${import.meta.env.BASE_URL}${thumb}`}
+            alt={thumbAlt ?? title}
+            className="w-full h-full object-cover object-top"
+          />
+        </div>
+      )}
+      <div className="p-5 sm:p-6">
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          style={{ color: "hsl(var(--accent))" }}
+        >
+          {eyebrow}
+        </p>
+        <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
+          {title}
+        </p>
+        <p
+          className="font-serif text-[14px] leading-[1.55]"
+          style={{ color: "hsl(var(--muted-foreground))" }}
+        >
+          {description}
+        </p>
+        <p
+          className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em]"
+          style={{ color: "hsl(var(--accent))" }}
+        >
+          View demo →
+        </p>
+      </div>
     </a>
   );
 }
@@ -576,33 +599,46 @@ interface WorkCardProps {
   href: string;
   testId: string;
   external?: boolean;
+  thumb?: string;
+  thumbAlt?: string;
 }
 
-function WorkCard({ eyebrow, title, description, href, testId, external }: WorkCardProps) {
+function WorkCard({ eyebrow, title, description, href, testId, external, thumb, thumbAlt }: WorkCardProps) {
   return (
     <a
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="block rounded-md border bg-card p-5 sm:p-6 transition-colors hover:border-accent"
+      className="block rounded-md border bg-card transition-colors hover:border-accent overflow-hidden"
       style={{ borderColor: "hsl(var(--card-border))" }}
       data-testid={testId}
     >
-      <p
-        className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
-        style={{ color: "hsl(var(--accent))" }}
-      >
-        {eyebrow}
-      </p>
-      <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
-        {title}
-      </p>
-      <p
-        className="font-serif text-[14px] leading-[1.55]"
-        style={{ color: "hsl(var(--muted-foreground))" }}
-      >
-        {description}
-      </p>
+      {thumb && (
+        <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          <img
+            src={`${import.meta.env.BASE_URL}${thumb}`}
+            alt={thumbAlt ?? title}
+            className="w-full h-full object-cover object-top"
+          />
+        </div>
+      )}
+      <div className="p-5 sm:p-6">
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.2em] mb-2"
+          style={{ color: "hsl(var(--accent))" }}
+        >
+          {eyebrow}
+        </p>
+        <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
+          {title}
+        </p>
+        <p
+          className="font-serif text-[14px] leading-[1.55]"
+          style={{ color: "hsl(var(--muted-foreground))" }}
+        >
+          {description}
+        </p>
+      </div>
     </a>
   );
 }
