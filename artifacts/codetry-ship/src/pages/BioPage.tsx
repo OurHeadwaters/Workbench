@@ -103,10 +103,9 @@ export function BioPage() {
                 She is the practitioner behind Headwaters and the codetry
                 practice: the author of the Practitioner Operating Plan,
                 the Codetry Handbook, and the community store operating
-                plan the contractor is reading right now. The work is
-                shipped, not proposed — a constellation of running
-                artifacts the chief, the contractor, and the council can
-                open and read for themselves.
+                plan. The work is shipped, not proposed — a constellation
+                of running artifacts anyone can open and read for
+                themselves.
               </p>
               <p>
                 She works as a single practitioner, by design. The shape
