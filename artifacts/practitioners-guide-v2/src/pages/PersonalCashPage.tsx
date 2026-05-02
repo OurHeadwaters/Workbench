@@ -1,20 +1,21 @@
 /**
  * PersonalCashPage — business P&L waterfall + practitioner drawings.
  *
- * Layout (revised 2026-05-02):
- *   1. Monthly business P&L waterfall (always visible):
- *      Revenue → COGS → Gross Profit → Overhead → Gross draw → Business surplus
+ * Layout:
+ *   1. Monthly business P&L waterfall (debt-attack mode):
+ *      Revenue → COGS → Gross Profit → Overhead → Draw (DA: $4k only) → Business surplus
  *      NOTE: Tithe is NOT a business deduction — personal, first claim on draw.
- *   2. Debt-attack draw allocation: where the $16,800 gross draw goes
- *      ($4,000 take-home · $400 tithe · $12,400 → debt)
+ *   2. Draw allocation: where the $4,000 draw goes (tithe · take-home)
  *   3. KPI cards: Personal take-home · Business surplus · Overhead · COGS
- *   4. Accordion: Annual personal cash (draw breakdown + Brightside + tax)
+ *   4. Accordion: Annual personal cash breakdown
  *   5. Footnotes
  *
- * Debt-attack constants (hard-coded — not in scenario model):
- *   Personal take-home: $2,000 bi-weekly = $4,000/mo
- *   Tithe:              10% of take-home = $400/mo
- *   To debt:            $16,800 − $4,000 − $400 = $12,400/mo
+ * Debt-attack constants (hard-coded — practitioner decision, not a contract term):
+ *   Draw from business: $4,000/mo — only draw taken during debt attack
+ *   Tithe:             10% of draw = $400/mo (first claim on drawings)
+ *   Personal take-home: $4,000 − $400 = $3,600/mo ($1,800 bi-weekly)
+ *   Forgone draw:       $16,800 contractual draw − $4,000 = $12,800 stays in business surplus
+ *   Business surplus:   $39,200 − $11,200 − $1,292 − $4,000 = $22,708/mo → all to debt
  */
 
 import { useScenario } from "@/lib/scenario";
@@ -30,23 +31,28 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// ── Debt-attack personal constants (until $40k + $72k debts are cleared) ──────
-const DA_TAKE_HOME_MO = 4_000;   // $2,000 bi-weekly — personal spending
-const DA_TITHE_MO     = 400;     // 10% of take-home — first claim on drawings
-// DA_TO_DEBT_MO computed from draw below
+// ── Debt-attack personal constants (until capital buffer + debt cleared) ───────
+const DA_DRAW_MO      = 4_000;  // only draw taken from business — rest forgone to surplus
+const DA_TITHE_MO     = 400;    // 10% of draw — first claim on drawings, personal obligation
+const DA_TAKE_HOME_MO = DA_DRAW_MO - DA_TITHE_MO; // 3,600 — actual spending money
 
 export function PersonalCashPage() {
   const { scenario } = useScenario();
   const p = scenario.personal;
   const a = scenario.contracts.agency;
   const bs = scenario.brightside.surplusDeployment;
-  const leadDraw    = a.roster[0].monthlyLoaded;          // 16,800 — gross draw from business
-  const tylerSub    = a.roster[1]?.monthlyLoaded ?? 0;    // 11,200
-  const overhead    = a.overheadsJunAugTotal;              // 1,292
-  const surplus     = a.monthlySurplusJunAug;              // 9,908 — business surplus (no business tithe)
-  const grossProfit = a.fee - tylerSub;                    // 28,000
 
-  const DA_TO_DEBT_MO = leadDraw - DA_TAKE_HOME_MO - DA_TITHE_MO; // 12,400
+  // Billing-level values (what the client pays — not Bobbie's draw)
+  const bobbieBilled = a.roster[0].monthlyLoaded + a.roster[1]?.monthlyLoaded ?? 0;
+  // roster[0].monthlyLoaded = 16,800 (Bobbie net × hrs); roster[1] = 11,200 (Tyler)
+  // Bobbie billed to client = 160 × $175 = $28,000; Tyler billed = 160 × $70 = $11,200
+  const tylerSub    = a.roster[1]?.monthlyLoaded ?? 0;  // 11,200
+  const overhead    = a.overheadsJunAugTotal;            // 1,292
+  const grossProfit = a.fee - tylerSub;                  // 28,000
+
+  // Debt-attack business surplus — uses actual DA draw, not full contractual draw
+  const daBusinessSurplus =
+    a.fee - tylerSub - overhead - DA_DRAW_MO; // 39,200 − 11,200 − 1,292 − 4,000 = 22,708
 
   return (
     <div className="space-y-6" data-testid="page-personal-cash">
@@ -63,17 +69,24 @@ export function PersonalCashPage() {
           Where every dollar goes, in plain English.
         </h1>
         <p className="mt-3 text-muted-foreground max-w-3xl">
-          Business waterfall first — then where the gross draw splits during
-          the debt attack ($2,000 bi-weekly take-home · tithe · debt repayment).
+          Debt-attack mode: Bobbie draws only $4,000/mo from the business — the
+          rest is forgone and stays as business surplus, all of which goes to
+          debt. Tithe ($400) is first claim on the draw; take-home is $3,600.
         </p>
       </header>
 
-      {/* ── Monthly P&L waterfall — always visible ── */}
+      {/* ── Monthly P&L waterfall — debt-attack mode ── */}
       <div className="rounded-xl border border-card-border bg-card overflow-hidden">
-        <div className="px-4 py-3 border-b border-card-border">
+        <div className="px-4 py-3 border-b border-card-border flex items-center gap-2">
           <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-            Monthly business P&L
+            Monthly business P&L — debt attack
           </p>
+          <span
+            className="text-[9px] font-mono uppercase tracking-[0.18em] px-2 py-0.5 rounded-full font-bold"
+            style={{ background: "#fef3c7", color: "#92400e" }}
+          >
+            Until debt-free
+          </span>
         </div>
         <table className="w-full text-sm">
           <tbody>
@@ -81,7 +94,7 @@ export function PersonalCashPage() {
             <tr className="border-b border-card-border">
               <td className="px-4 py-3 font-medium">Revenue</td>
               <td className="px-4 py-3 text-xs text-muted-foreground">
-                Bobbie {money(leadDraw + tylerSub)} + Tyler {money(tylerSub)} billed to client
+                Bobbie {money(a.fee - tylerSub)} + Tyler {money(tylerSub)} billed to client
               </td>
               <td className="px-4 py-3 text-right num font-semibold">
                 {money(a.fee)}
@@ -127,17 +140,17 @@ export function PersonalCashPage() {
               </td>
             </tr>
 
-            {/* Gross draw — business transaction */}
+            {/* Draw — debt-attack only: $4,000 not $16,800 */}
             <tr className="border-b border-card-border text-muted-foreground">
               <td className="px-4 py-3">
                 <span className="text-rose-600 mr-1">−</span>
-                <span>Gross draw to Bobbie</span>
+                <span>Draw to Bobbie</span>
               </td>
               <td className="px-4 py-3 text-xs">
-                160 hr × $105 net · see draw allocation below
+                debt-attack draw only · contractual rate is $16,800/mo · $12,800 forgone to surplus
               </td>
               <td className="px-4 py-3 text-right num text-rose-600">
-                ({money(leadDraw)})
+                ({money(DA_DRAW_MO)})
               </td>
             </tr>
 
@@ -145,21 +158,21 @@ export function PersonalCashPage() {
             <tr className="bg-muted/30">
               <td className="px-4 py-3 font-semibold">Business surplus</td>
               <td className="px-4 py-3 text-xs text-muted-foreground">
-                {Math.round((surplus / a.fee) * 100)}% net margin · all goes to debt
+                {Math.round((daBusinessSurplus / a.fee) * 100)}% net margin · all goes to debt
               </td>
               <td className="px-4 py-3 text-right num font-semibold text-emerald-700">
-                {money(surplus)}
+                {money(daBusinessSurplus)}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* ── Draw allocation — debt attack ── */}
+      {/* ── Draw allocation ── */}
       <div className="rounded-xl border border-card-border bg-card overflow-hidden">
         <div className="px-4 py-3 border-b border-card-border flex items-center gap-2">
           <p className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-            Draw allocation · debt attack mode
+            Draw allocation
           </p>
           <span
             className="text-[9px] font-mono uppercase tracking-[0.18em] px-2 py-0.5 rounded-full font-bold"
@@ -171,34 +184,22 @@ export function PersonalCashPage() {
         <table className="w-full text-sm">
           <tbody>
             <tr className="border-b border-card-border">
-              <td className="px-4 py-3 font-medium">Gross draw received</td>
-              <td className="px-4 py-3 text-xs text-muted-foreground">from business</td>
-              <td className="px-4 py-3 text-right num font-semibold">{money(leadDraw)}</td>
+              <td className="px-4 py-3 font-medium">Draw received</td>
+              <td className="px-4 py-3 text-xs text-muted-foreground">from business · only amount taken</td>
+              <td className="px-4 py-3 text-right num font-semibold">{money(DA_DRAW_MO)}</td>
             </tr>
             <tr className="border-b border-card-border text-muted-foreground">
               <td className="px-4 py-3">
                 <span className="text-rose-600 mr-1">−</span>
-                Tithe (10% of take-home · first claim)
+                Tithe (10% · first claim)
               </td>
-              <td className="px-4 py-3 text-xs">personal · on drawings only · not business expense</td>
+              <td className="px-4 py-3 text-xs">personal · on drawings only · not a business expense</td>
               <td className="px-4 py-3 text-right num text-rose-600">({money(DA_TITHE_MO)})</td>
             </tr>
-            <tr className="border-b border-card-border text-muted-foreground">
-              <td className="px-4 py-3">
-                <span className="text-rose-600 mr-1">−</span>
-                Personal take-home
-              </td>
-              <td className="px-4 py-3 text-xs">$2,000 bi-weekly · living expenses</td>
-              <td className="px-4 py-3 text-right num text-rose-600">({money(DA_TAKE_HOME_MO)})</td>
-            </tr>
             <tr className="bg-muted/30">
-              <td className="px-4 py-3 font-semibold">From draw → debt repayment</td>
-              <td className="px-4 py-3 text-xs text-muted-foreground">
-                draw − tithe − take-home · plus {money(surplus)}/mo business surplus
-              </td>
-              <td className="px-4 py-3 text-right num font-semibold text-emerald-700">
-                {money(DA_TO_DEBT_MO)}
-              </td>
+              <td className="px-4 py-3 font-semibold">Personal take-home</td>
+              <td className="px-4 py-3 text-xs text-muted-foreground">$1,800 bi-weekly · living expenses · draw fully consumed</td>
+              <td className="px-4 py-3 text-right num font-semibold">{money(DA_TAKE_HOME_MO)}</td>
             </tr>
           </tbody>
         </table>
@@ -207,10 +208,10 @@ export function PersonalCashPage() {
           style={{ background: "hsl(var(--muted)/0.4)" }}
         >
           <span className="text-xs text-muted-foreground">
-            Total stacked toward debt per month
+            Total stacked toward debt per month (business surplus only)
           </span>
           <span className="text-sm font-bold tabular-nums" style={{ color: "#92400e" }}>
-            {money(DA_TO_DEBT_MO + surplus)}
+            {money(daBusinessSurplus)}
           </span>
         </div>
       </div>
@@ -221,14 +222,14 @@ export function PersonalCashPage() {
           label="Personal take-home"
           value={DA_TAKE_HOME_MO}
           tag={a.costBasisTag}
-          hint="$2,000 bi-weekly · debt attack · steady-state TBD"
+          hint="$1,800 bi-weekly · after $400 tithe · debt attack"
           testId="kpi-personal-agency"
         />
         <MoneyKpi
-          label="Business surplus"
-          value={surplus}
+          label="Business surplus → debt"
+          value={daBusinessSurplus}
           tag={a.costBasisTag}
-          hint={`${Math.round((surplus / a.fee) * 100)}% net · ${money(surplus * a.termMonths)} over ${a.termMonths} mo`}
+          hint={`${Math.round((daBusinessSurplus / a.fee) * 100)}% net · ${money(daBusinessSurplus * a.termMonths)} over ${a.termMonths} mo`}
           tone="positive"
           testId="kpi-personal-total"
         />
@@ -257,9 +258,9 @@ export function PersonalCashPage() {
         >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-baseline gap-3 text-left">
-              <span className="font-semibold text-sm">Gross draw — annual allocation</span>
+              <span className="font-semibold text-sm">Draw — annual (debt-attack basis)</span>
               <span className="text-xs text-muted-foreground">
-                {money(p.agencySalary18mo)} gross · debt attack breakdown
+                {money(DA_DRAW_MO * a.termMonths)} drawn · {money(daBusinessSurplus * a.termMonths)} surplus to debt
               </span>
             </div>
           </AccordionTrigger>
@@ -267,37 +268,35 @@ export function PersonalCashPage() {
             <table className="w-full text-sm">
               <tbody>
                 <tr className="border-b border-card-border">
-                  <td className="py-2 pr-4 font-medium">Gross draw ({a.termMonths} mo)</td>
-                  <td className="py-2 pr-4 text-right num">{money(p.agencySalary18mo)}</td>
+                  <td className="py-2 pr-4 font-medium">Draw from business ({a.termMonths} mo)</td>
+                  <td className="py-2 pr-4 text-right num">{money(DA_DRAW_MO * a.termMonths)}</td>
                   <td className="py-2 pr-4 text-xs text-muted-foreground">
-                    {money(leadDraw)}/mo × {a.termMonths} mo
+                    {money(DA_DRAW_MO)}/mo · contractual rate {money(a.roster[0].monthlyLoaded)}/mo forgone
                   </td>
                 </tr>
                 <tr className="border-b border-card-border text-muted-foreground">
                   <td className="py-2 pr-4 italic">
-                    − Tithe ({a.tithePct}% of take-home · first claim)
+                    − Tithe ({a.tithePct}% of draw · first claim)
                   </td>
                   <td className="py-2 pr-4 text-right num italic">({money(DA_TITHE_MO * a.termMonths)})</td>
                   <td className="py-2 pr-4 text-xs italic">
                     {money(DA_TITHE_MO)}/mo · personal giving
                   </td>
                 </tr>
-                <tr className="border-b border-card-border text-muted-foreground">
-                  <td className="py-2 pr-4 italic">
-                    − Personal take-home ($2k bi-weekly)
-                  </td>
-                  <td className="py-2 pr-4 text-right num italic">({money(DA_TAKE_HOME_MO * a.termMonths)})</td>
-                  <td className="py-2 pr-4 text-xs italic">
-                    {money(DA_TAKE_HOME_MO)}/mo · living expenses
+                <tr className="border-b border-card-border">
+                  <td className="py-2 pr-4 font-medium">Personal take-home ({a.termMonths} mo)</td>
+                  <td className="py-2 pr-4 text-right num">{money(DA_TAKE_HOME_MO * a.termMonths)}</td>
+                  <td className="py-2 pr-4 text-xs text-muted-foreground">
+                    {money(DA_TAKE_HOME_MO)}/mo · draw fully consumed by tithe + living
                   </td>
                 </tr>
-                <tr className="border-b border-card-border text-muted-foreground">
-                  <td className="py-2 pr-4 italic">
-                    → Debt repayment (from draw)
+                <tr className="border-b border-card-border">
+                  <td className="py-2 pr-4 font-medium">
+                    Business surplus to debt ({a.termMonths} mo)
                   </td>
-                  <td className="py-2 pr-4 text-right num italic">{money(DA_TO_DEBT_MO * a.termMonths)}</td>
-                  <td className="py-2 pr-4 text-xs italic">
-                    {money(DA_TO_DEBT_MO)}/mo → $40k + $72k
+                  <td className="py-2 pr-4 text-right num text-emerald-700">{money(daBusinessSurplus * a.termMonths)}</td>
+                  <td className="py-2 pr-4 text-xs text-muted-foreground">
+                    {money(daBusinessSurplus)}/mo · entire business surplus → $40k + $72k
                   </td>
                 </tr>
                 <tr className="border-b border-card-border">
