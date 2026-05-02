@@ -295,13 +295,21 @@ export function HomePage() {
           </div>
 
           <p
-            className="font-serif text-[15px] leading-[1.6] mb-6"
+            className="font-serif text-[15px] leading-[1.6] mb-3"
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="work-explainer"
           >
             Headwaters builds software and operational tools for northern communities.
             These are live and in use — not demos, not proposals.
           </p>
+          <a
+            href="services"
+            className="inline-block font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 mb-6 hover:opacity-70 transition-opacity"
+            style={{ color: "hsl(var(--accent))" }}
+            data-testid="link-services"
+          >
+            What it looks like to build with Headwaters →
+          </a>
 
           <div className="space-y-3" data-testid="work-cards">
             <ComingSoonCard

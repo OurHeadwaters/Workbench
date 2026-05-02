@@ -10,6 +10,7 @@ import { HomePage } from "@/pages/HomePage";
 import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
+import { ServicesPage } from "@/pages/ServicesPage";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/bio" component={BioPage} />
+      <Route path="/services" component={ServicesPage} />
       <Route path="/sign-on" component={SignOnPage} />
       <Route path="/manifest" component={ManifestPage} />
       <Route path="/sow" component={SowPage} />
