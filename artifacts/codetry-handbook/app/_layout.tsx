@@ -28,6 +28,7 @@ import { SyncErrorBanner } from "@/components/SyncErrorBanner";
 import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
 import { HandbookContentProvider } from "@/contexts/HandbookContentContext";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
+import { StackProvider } from "@/contexts/StackContext";
 import { initNetworkWatcher } from "@/lib/saveStatus";
 
 initNetworkWatcher();
@@ -55,6 +56,8 @@ function RootLayoutNav() {
       <Stack.Screen name="path" />
       <Stack.Screen name="driver" />
       <Stack.Screen name="word-walk" />
+      <Stack.Screen name="stack" />
+      <Stack.Screen name="stack/[id]" />
     </Stack>
   );
 }
@@ -85,10 +88,12 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <ReaderStateProvider>
-                <RootLayoutNav />
-                <SyncErrorBanner />
-                <LastReadSaveNotice />
-                <UpdateAvailableBanner />
+                <StackProvider>
+                  <RootLayoutNav />
+                  <SyncErrorBanner />
+                  <LastReadSaveNotice />
+                  <UpdateAvailableBanner />
+                </StackProvider>
               </ReaderStateProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>

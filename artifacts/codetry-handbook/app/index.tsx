@@ -385,6 +385,46 @@ export default function FrontPage() {
             →
           </Text>
         </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
+          onPress={() => router.push("/stack")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              The Stack
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              Bite-sized question-cards, one at a time. Pick a card,
+              work through the steps, capture your answers. Every open
+              question is a trail, not a mountain.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
 
         <View style={{ height: 32 }} />
 
