@@ -64,6 +64,10 @@ const REQUIRED_PATHS: Array<{ label: string; file: string }> = [
 
 const CANDIDATE_PATHS: Array<{ label: string; glob: string }> = [
   {
+    label: "deer-lake-walkthrough · WhoWorks.tsx (archived — content moved to /community-store)",
+    glob: repoPath("artifacts/deer-lake-walkthrough/src/sections"),
+  },
+  {
     label: "deer-lake-store-plan · StaffingModel slide",
     glob: repoPath("artifacts/deer-lake-store-plan/src"),
   },

@@ -1,7 +1,7 @@
 /**
  * DebtAttackPage — Bobbie's private debt attack plan.
  *
- * Three phases: buffer → Debt A ($40k) → Debt B ($72k).
+ * Two phases: buffer → Debt B ($72k) → debt free.
  * Bobbie draws only $4,000/mo from the business during debt attack — the
  * rest ($12,800) is forgone and stays as business surplus going to debt.
  * Tithe rule (permanent): first claim on practitioner DRAWINGS only — not on revenue.
@@ -9,16 +9,17 @@
  *   Personal take-home: $4,000 − $400 = $3,600/mo ($1,800 bi-weekly).
  * Draw is fully consumed by tithe + take-home — nothing routes from draw to debt.
  * All debt attack firepower comes from the business surplus.
+ * After the $72k is cleared, drawings simply increase.
  *
  * Math shown below is a SCENARIO based on unconfirmed V7 rates.
- * The debt amounts ($40k, $72k) and draw decisions ($4k/mo, tithe rule) are real.
+ * The debt amount ($72k) and draw decisions ($4k/mo, tithe rule) are real.
  * The surplus ($22,708/mo) and all timelines are projections that shift
  * when a real engagement rate is locked. Treat the phases as a framework,
  * not a calendar.
  */
 
 import { Link } from "wouter";
-import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Shield, Trophy, TrendingDown, Calendar, DollarSign, ArrowLeft } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -29,13 +30,11 @@ const SURPLUS_MONTHLY  = 22_708;  // business surplus: $39,200 − $11,200 − $
 const STACK_MONTHLY    = SURPLUS_MONTHLY; // 22,708 — draw fully consumed by tithe + take-home
 
 const BUFFER_TARGET      = 20_000;
-const DEBT_A             = 40_000;
 const DEBT_B             = 72_000;
 
 const BUFFER_MONTHS      = Math.ceil(BUFFER_TARGET / STACK_MONTHLY); // 2
-const DEBT_A_MONTHS      = Math.ceil(DEBT_A / STACK_MONTHLY);        // 3
 const DEBT_B_MONTHS      = Math.ceil(DEBT_B / STACK_MONTHLY);        // 5
-const TOTAL_MONTHS       = BUFFER_MONTHS + DEBT_A_MONTHS + DEBT_B_MONTHS;
+const TOTAL_MONTHS       = BUFFER_MONTHS + DEBT_B_MONTHS;
 
 // Start: June 2026 (Phase 2 engagement start)
 const START_YEAR  = 2026;
@@ -47,7 +46,6 @@ function addMonths(year: number, month: number, add: number) {
 }
 
 const BUFFER_DONE_DATE = addMonths(START_YEAR, START_MONTH, BUFFER_MONTHS);
-const DEBT_A_DONE_DATE = addMonths(START_YEAR, START_MONTH, BUFFER_MONTHS + DEBT_A_MONTHS);
 const DEBT_FREE_DATE   = addMonths(START_YEAR, START_MONTH, TOTAL_MONTHS);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -260,27 +258,9 @@ export function DebtAttackPage() {
     });
   }
 
-  // Phase 2 — $40k debt
+  // Phase 2 — $72k debt
   cumulative = 0;
-  let monthOffset = BUFFER_MONTHS;
-  for (let m = 1; m <= DEBT_A_MONTHS; m++) {
-    cumulative = Math.min(cumulative + STACK_MONTHLY, DEBT_A);
-    const date = addMonths(START_YEAR, START_MONTH, monthOffset + m - 1);
-    const remaining = DEBT_A - cumulative;
-    const isLast = remaining === 0;
-    rows.push({
-      month: monthOffset + m,
-      label: date,
-      phase: "Debt A — $40k",
-      color: "#c2410c",
-      cumulative,
-      note: isLast ? "$40k cleared ✓" : `${money(remaining)} remaining`,
-    });
-  }
-
-  // Phase 3 — $72k debt
-  cumulative = 0;
-  monthOffset = BUFFER_MONTHS + DEBT_A_MONTHS;
+  const monthOffset = BUFFER_MONTHS;
   for (let m = 1; m <= DEBT_B_MONTHS; m++) {
     cumulative = Math.min(cumulative + STACK_MONTHLY, DEBT_B);
     const date = addMonths(START_YEAR, START_MONTH, monthOffset + m - 1);
@@ -289,7 +269,7 @@ export function DebtAttackPage() {
     rows.push({
       month: monthOffset + m,
       label: date,
-      phase: "Debt B — $72k",
+      phase: "Debt — $72k",
       color: "#6d28d9",
       cumulative,
       note: isLast ? "DEBT FREE ✓" : `${money(remaining)} remaining`,
@@ -325,7 +305,7 @@ export function DebtAttackPage() {
             Debt attack plan
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Buffer → $40k → $72k → debt free · $4,000/mo draw · $3,600 take-home · surplus TBD until engagement locks
+            Buffer → $72k → debt free · $4,000/mo draw · $3,600 take-home · surplus TBD until engagement locks
           </p>
         </div>
       </header>
@@ -342,7 +322,7 @@ export function DebtAttackPage() {
           {[
             { label: "Take-home/mo", value: money(PERSONAL_MONTHLY), sub: "$1,800 bi-weekly · after tithe · confirmed", color: "#065f46" },
             { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "scenario — V7 rates unconfirmed", color: "#c2410c" },
-            { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k · confirmed", color: "#6d28d9" },
+            { label: "Total debt", value: money(DEBT_B), sub: "$72k · confirmed", color: "#6d28d9" },
             { label: "Debt-free", value: "TBD", sub: DEBT_FREE_DATE + " (V7 scenario)", color: "#92400e" },
           ].map((item) => (
             <div key={item.label} className="text-center">
@@ -412,10 +392,10 @@ export function DebtAttackPage() {
         </div>
       </div>
 
-      {/* Three phase cards */}
+      {/* Two phase cards */}
       <div className="space-y-4">
         <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
-          Three phases · in order
+          Two phases · in order
         </p>
 
         <PhaseCard
@@ -439,24 +419,6 @@ export function DebtAttackPage() {
 
         <PhaseCard
           phase="Phase 2"
-          icon={Zap}
-          label="Kill the $40,000 debt"
-          color="#c2410c"
-          colorSoft="#ffedd5"
-          colorInk="#9a3412"
-          target={DEBT_A}
-          monthly={STACK_MONTHLY}
-          months={DEBT_A_MONTHS}
-          doneDate={DEBT_A_DONE_DATE}
-          description={`Every dollar above personal spending goes straight at the $40k. Nothing else. ${money(STACK_MONTHLY)}/mo × ~${DEBT_A_MONTHS} months. When it clears, you have buying power and breathing room — the same ${money(STACK_MONTHLY)}/mo now pivots entirely to the $72k.`}
-        />
-
-        <div className="flex justify-center">
-          <div className="text-muted-foreground opacity-40 text-xl">↓</div>
-        </div>
-
-        <PhaseCard
-          phase="Phase 3"
           icon={Trophy}
           label="Kill the $72,000 debt"
           color="#6d28d9"
@@ -466,7 +428,7 @@ export function DebtAttackPage() {
           monthly={STACK_MONTHLY}
           months={DEBT_B_MONTHS}
           doneDate={DEBT_FREE_DATE}
-          description={`The biggest block — but you arrive with momentum, no payment going to the $40k, and a proven system. ${money(STACK_MONTHLY)}/mo × ~${DEBT_B_MONTHS} months. The finish line is ${DEBT_FREE_DATE}. Personal spending steps up the day the last payment clears.`}
+          description={`Every dollar above personal spending goes straight at the $72k. Nothing else. ${money(STACK_MONTHLY)}/mo × ~${DEBT_B_MONTHS} months. The finish line is ${DEBT_FREE_DATE}. Personal spending steps up the day the last payment clears.`}
         />
       </div>
 
@@ -488,10 +450,9 @@ export function DebtAttackPage() {
         <p className="mt-2 text-sm text-amber-800">
           Debt free · {TOTAL_MONTHS} months from engagement start · drawings increase from here
         </p>
-        <div className="mt-4 grid grid-cols-3 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3">
           {[
             { label: "Buffer done", value: BUFFER_DONE_DATE, months: `Month ${BUFFER_MONTHS}` },
-            { label: "$40k cleared", value: DEBT_A_DONE_DATE, months: `Month ${BUFFER_MONTHS + DEBT_A_MONTHS}` },
             { label: "Debt free", value: DEBT_FREE_DATE, months: `Month ${TOTAL_MONTHS}` },
           ].map((m) => (
             <div key={m.label} className="rounded-lg p-3" style={{ background: "#fde68a" }}>
@@ -508,7 +469,7 @@ export function DebtAttackPage() {
         className="rounded-xl border overflow-hidden"
         style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
       >
-        <div className="p-4 border-b flex items-center gap-3" style={{ borderColor: "hsl(var(--card-border))" }}>
+        <div className="p-4 border-b flex items-center gap-3" style={{ borderColor: "hsl(var(--card-border))" }}> 
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
             Month-by-month · cumulative progress per phase
@@ -533,7 +494,6 @@ export function DebtAttackPage() {
           { icon: DollarSign, color: "#065f46", rule: "Bobbie draws only $4,000/mo from the business. After the $400 tithe, take-home is $3,600/mo ($1,800 bi-weekly). No lifestyle creep before the finish line." },
           { icon: CheckCircle2, color: "#065f46", rule: "Tithe is the first claim on practitioner drawings — not on revenue. During debt attack: 10% × $4,000 draw = $400/mo. One tithe, on the draw. Permanent rule." },
           { icon: Shield, color: "#c2410c", rule: "The $20,000 buffer is untouchable once built. It absorbs a bad month without breaking the debt plan." },
-          { icon: Zap, color: "#6d28d9", rule: "$40k dies before $72k. Clearing the smaller one first gives a real psychological win and frees the full stack for the bigger one." },
           { icon: Trophy, color: "#92400e", rule: "Debt-free is the trigger for a drawings increase — not a contract renewal, not a good month, not a feeling. The date on the plan." },
         ].map(({ icon: Icon, color, rule }) => (
           <div key={rule.slice(0, 20)} className="flex items-start gap-3">
