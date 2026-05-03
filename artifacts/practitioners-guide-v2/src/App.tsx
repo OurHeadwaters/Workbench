@@ -19,6 +19,7 @@ import { RefundInvocationLetter } from "@/pages/RefundInvocationLetter";
 import { WorkflowPage } from "@/pages/WorkflowPage";
 import { DebtAttackPage } from "@/pages/DebtAttackPage";
 import { PilotTwoPage } from "@/pages/PilotTwoPage";
+import { PromotionalPlanPage } from "@/pages/PromotionalPlanPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/workflow" component={WorkflowPage} />
       <Route path="/debt-attack" component={DebtAttackPage} />
       <Route path="/pilot-two" component={PilotTwoPage} />
+      <Route path="/promo-plan" component={PromotionalPlanPage} />
       <Route
         path="/refund-invocation-letter"
         component={RefundInvocationLetter}

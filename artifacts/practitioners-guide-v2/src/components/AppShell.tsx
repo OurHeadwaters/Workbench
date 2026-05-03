@@ -16,6 +16,7 @@ import {
   ArrowRight,
   TrendingDown,
   Target,
+  Megaphone,
 } from "lucide-react";
 
 interface NavItem {
@@ -30,6 +31,7 @@ export const NAV: NavItem[] = [
   { href: "/workflow", label: "Workflow", icon: ArrowRight, accent: "#c2410c" },
   { href: "/debt-attack", label: "Debt attack", icon: TrendingDown, accent: "#6d28d9" },
   { href: "/salts", label: BUCKETS.salts.name, icon: Salad, accent: BUCKETS.salts.accent },
+  { href: "/promo-plan", label: "Promotional Plan", icon: Megaphone, accent: "#7A4E2D" },
   {
     href: "/contracts",
     label: BUCKETS.contracts.name,

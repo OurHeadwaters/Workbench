@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
 import { triageGates, routeDescriptors } from "@/data/inquiryTriage";
 import { windDownActions } from "@/data/studioWindDown";
 import { leaseToolingActions } from "@/data/leaseToolingActions";
@@ -22,6 +23,14 @@ const sectionLead = "text-sm text-muted-foreground mb-6 max-w-3xl";
 export function WorkbenchArchivePage() {
   return (
     <div className="space-y-12 max-w-5xl">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       <header className="space-y-3 border-b pb-6" style={{ borderColor: "hsl(var(--card-border))" }}>
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
           Field tools · archive

@@ -159,9 +159,9 @@ export function IndexPage() {
       href: "/salts",
       icon: Salad,
       headline: money(scenario.salts.pAndL.netCash),
-      headlineLabel: "net cash / yr",
+      headlineLabel: "net cash / yr (model)",
       blurb:
-        "Parr's Jars salt: 4 channels, $5.50 per-jar cost, 1,190 jars/yr steady state. Sustainable on family hands.",
+        "Parr's Jars salt: 4 channels, $5.50 blended per-jar cost estimate. Volume and farmers market math are planning assumptions — not yet tracked against batch records.",
       tag: scenario.salts.pAndL.tag,
     },
     {
@@ -169,8 +169,8 @@ export function IndexPage() {
       href: "/contracts",
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
-      headlineLabel: `${a.termMonths}-mo surplus deployed`,
-      blurb: `Hourly engagement · ${a.roster.length}-person lean team · tithe-first waterfall. Rates TBD. Surplus waterfall TBD.`,
+      headlineLabel: `${a.termMonths}-mo surplus (scenario)`,
+      blurb: `Hourly engagement · $175/hr lead · $70/hr support · trial-first. Two-person lean team. Rates confirmed; contract not yet signed.`,
       tag: a.totals18mo.tag,
     },
     {
@@ -178,9 +178,9 @@ export function IndexPage() {
       href: "/brightside",
       icon: Cpu,
       headline: money(scenario.brightside.surplusDeployment.surplus),
-      headlineLabel: "post-tithe surplus (50/50 split)",
+      headlineLabel: "surplus scenario (pre-revenue)",
       blurb:
-        "Recreation Therapy SaaS for LTC. Founder builds, founder sells. Owner take is the founder's only profit-share line.",
+        "Recreation Therapy SaaS for LTC. Pre-revenue — no pilot site committed. The $120k revenue figure is a modelling scenario, not a plan.",
       tag: scenario.brightside.surplusDeployment.tag,
     },
   ];
@@ -476,7 +476,7 @@ export function IndexPage() {
           The Three Buckets
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Every dollar accounted for. Click into a bucket for the full locked ledger.
+          Each bucket opens with a one-line honest status. Numbers lock when contracts do.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {buckets.map((b) => {

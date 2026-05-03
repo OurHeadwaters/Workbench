@@ -1,4 +1,4 @@
-import { confirmed } from "./tags";
+import { confirmed, provisional } from "./tags";
 import type {
   BrightsideScenario,
   OverheadRow,
@@ -22,6 +22,27 @@ import type {
  * keep planning surfaces focused on the live agency engagement and the
  * Deer Lake roster — the 807 grant is no longer carried as a planning
  * line in the guide.
+ *
+ * ── Reality-check status (as of 2026-05-03) ──────────────────────────────
+ * CONFIRMED ACTUALS (locked against real records):
+ *   - perJarCogs: $5.50 blended — structure confirmed; actual ingredient costs
+ *     tracked against purchase records.
+ *   - Brightside pricing tiers, setup fee, training fee — set by founder decision.
+ *   - Brightside buildModel (founder time = $0 cash, engineer cap $20k) — set.
+ *
+ * PLANNING ASSUMPTIONS (not yet observed / not yet contracted):
+ *   - SHARED_SALTS.channelTotals (1,190 jars/yr) — planning target; no season
+ *     of batch records confirms this throughput. Farmers market volume (45 jars)
+ *     is the founder's conservative estimate, not a measured average.
+ *   - SHARED_SALTS.operating (stall costs, craft fair schedule) — assumed rates
+ *     that need to be confirmed with market coordinators.
+ *   - SHARED_SALTS.pAndL.netCash ($1,298) — follows from channel totals above;
+ *     not an observed cash figure.
+ *   - SHARED_BRIGHTSIDE.revenueTarget (cumulative18mo: $120,000, ~22 facilities)
+ *     — modelling scenario; no pilot site has committed. Revenue window is
+ *     late Q4 2026 / early Q1 2027 at earliest.
+ *   - SHARED_BRIGHTSIDE.surplusDeployment — all derived from the revenue scenario.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 
 export const SHARED_SALTS: SaltsScenario = {
@@ -30,7 +51,7 @@ export const SHARED_SALTS: SaltsScenario = {
     jar: 1.0,
     label: 1.0,
     total: 5.5,
-    tag: confirmed("blended average across four blends"),
+    tag: provisional("working estimate — ingredient costs not reconciled against purchase receipts"),
   },
   channels: [
     {
@@ -75,7 +96,7 @@ export const SHARED_SALTS: SaltsScenario = {
     revenue: 10693,
     cogs: 6545,
     grossMargin: 4148,
-    tag: confirmed(),
+    tag: provisional("planning target — annual volume not yet tracked against batch records"),
   },
   operating: {
     batchCadence: "every ~6 weeks (~8–9 batches/yr)",
@@ -86,7 +107,7 @@ export const SHARED_SALTS: SaltsScenario = {
     marketsOverheadTotal: 1050,
     subscriptionsAnnual: 1800,
     subscriptionsAllocationPct: 30,
-    tag: confirmed(),
+    tag: provisional("stall costs and market schedule are estimates — confirm with market coordinators"),
   },
   pAndL: {
     revenue: 10693,
@@ -94,7 +115,7 @@ export const SHARED_SALTS: SaltsScenario = {
     marketsOverhead: 1050,
     subscriptions: 1800,
     netCash: 1298,
-    tag: confirmed(),
+    tag: provisional("derived from channel volume estimates — not an observed cash figure"),
   },
   shadowLabour: {
     sessionJars: 500,
@@ -104,7 +125,7 @@ export const SHARED_SALTS: SaltsScenario = {
     benchHourly: 30,
     annualCost: 858,
     adjustedNet: 440,
-    tag: confirmed(),
+    tag: provisional("hours/session estimated, not timed against actual batch records"),
   },
   mapleSyrup: {
     cases: 12,
@@ -147,7 +168,7 @@ export const SHARED_BRIGHTSIDE: BrightsideScenario = {
     customerRamp: "0 → ~22 LTC facilities over 18 months",
     mixAssumption: "~60% Tier 1 / ~40% Tier 2 + per-resident overage; ~70% training attach",
     revenueStartWindow: "late Q4 2026 / early Q1 2027 (post-launch + first sales cycle)",
-    tag: confirmed(),
+    tag: provisional("modelling scenario — no pilot site has committed; pre-revenue"),
   },
   costBasis: {
     prelaunchOneTime: [
@@ -186,7 +207,7 @@ export const SHARED_BRIGHTSIDE: BrightsideScenario = {
     ownerTakePct: 50,
     retained: 31000,
     ownerTake: 31000,
-    tag: confirmed("Tithe-first: 10% off the top of Brightside revenue, then 50/50 split on what's left."),
+    tag: provisional("derived from $120k revenue scenario — no LTC site committed"),
   },
   downsideCoverage: {
     sourceBucket: "Agency Innovation / R&D (Phase 3)",

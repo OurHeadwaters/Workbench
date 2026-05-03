@@ -18,6 +18,8 @@
  *   Business surplus:   $39,200 − $11,200 − $1,292 − $4,000 = $22,708/mo → all to debt
  */
 
+import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
@@ -51,6 +53,14 @@ export function PersonalCashPage() {
   return (
     <div className="space-y-6" data-testid="page-personal-cash">
       <ProvisionalBanner />
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
 
       <header>
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">

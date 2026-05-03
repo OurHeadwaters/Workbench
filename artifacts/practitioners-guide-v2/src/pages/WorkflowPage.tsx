@@ -7,6 +7,7 @@
  * directly from this single reference page.
  */
 
+import { Link } from "wouter";
 import {
   Globe,
   BookOpenCheck,
@@ -16,6 +17,7 @@ import {
   FlaskConical,
   ExternalLink,
   ArrowRight,
+  ArrowLeft,
   Wrench,
 } from "lucide-react";
 
@@ -264,6 +266,14 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
 export function WorkflowPage() {
   return (
     <div className="space-y-6" data-testid="page-workflow">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       {/* Page header */}
       <header className="flex items-start gap-3">
         <div

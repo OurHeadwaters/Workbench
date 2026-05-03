@@ -5,8 +5,16 @@
  *   - Bucket heading + KPI grid: always visible.
  *   - Per-jar cost breakdown, channel volume table, operating costs, P&L, maple syrup: collapsed.
  *   - Decision signals at a glance: 4 KPI cards (per-jar cost, revenue, net cash, net after shadow labour).
+ *
+ * HONEST STATUS: "Still building actuals"
+ *   The numbers here are model assumptions + early estimates, not locked actuals.
+ *   The per-jar cost ($5.50 blended) is a reasonable working number but has not been
+ *   reconciled against actual batch records. Channel volumes (1,190 jars/yr "steady state")
+ *   are planning targets, not observed throughput. Farmers market is especially speculative.
+ *   Framing questions appear below each section to anchor what needs to be confirmed.
  */
 
+import { Link } from "wouter";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
@@ -24,6 +32,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ArrowLeft, HelpCircle } from "lucide-react";
 
 export function SaltsPage() {
   const { scenario } = useScenario();
@@ -34,6 +43,16 @@ export function SaltsPage() {
     <div className="space-y-6" data-testid="page-salts">
       <ProvisionalBanner />
 
+      {/* ── Back to dashboard ── */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
+
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p
@@ -42,15 +61,19 @@ export function SaltsPage() {
           >
             {b.name} · {b.tagline}
           </p>
-          <h1
-            className="mt-2 text-3xl font-semibold"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
-            Sustainable on family hands.
-          </h1>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <h1
+              className="text-3xl font-semibold"
+              style={{ fontFamily: "var(--app-font-serif)" }}
+            >
+              Sustainable on family hands.
+            </h1>
+            <StatusBadge status="modelling" label="Still building actuals" />
+          </div>
           <p className="mt-3 text-muted-foreground max-w-3xl">
-            One blended per-jar cost. Four channels, 1,190 jars/yr steady state, $1,298/yr net.
-            The economic story is honest only when you carry the shadow-labour line.
+            The structure is honest: one blended per-jar cost, four channels, $0 cash labour.
+            The volumes and the farmers market math are planning assumptions, not observed throughput.
+            Numbers here lock when batch records and market receipts are tracked against them.
           </p>
         </div>
         <ExportLedgerButtons
@@ -62,22 +85,22 @@ export function SaltsPage() {
       {/* ── KPI Grid — always visible ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MoneyKpi
-          label="Per-jar cost"
+          label="Per-jar cost (blended est.)"
           value={s.perJarCogs.total}
           tag={s.perJarCogs.tag}
           accent={b.accent}
           testId="kpi-cogs"
         />
         <MoneyKpi
-          label="Annual revenue"
+          label="Annual revenue (model)"
           value={s.pAndL.revenue}
           tag={s.pAndL.tag}
           accent={b.accent}
-          hint={`${num(s.channelTotals.jars)} jars/yr`}
+          hint={`${num(s.channelTotals.jars)} jars/yr — planning target`}
           testId="kpi-revenue"
         />
         <MoneyKpi
-          label="Net cash / yr"
+          label="Net cash / yr (model)"
           value={s.pAndL.netCash}
           tag={s.pAndL.tag}
           tone="positive"
@@ -95,6 +118,39 @@ export function SaltsPage() {
         />
       </div>
 
+      {/* ── Framing questions ── */}
+      <div
+        className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+        data-testid="salts-framing-questions"
+      >
+        <div className="flex items-start gap-3">
+          <HelpCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="space-y-3 text-sm">
+            <p className="font-semibold text-amber-900">
+              Questions that need real answers before any of these numbers lock
+            </p>
+            <div className="space-y-2 text-amber-800">
+              <FramingQuestion
+                q="How many jars actually come out of a single batch?"
+                context="The 1,190/yr steady-state assumes ~8–9 batches/yr × a batch size that hasn't been measured against actual production records. Track the next three batches."
+              />
+              <FramingQuestion
+                q="What does a jar actually cost to produce, per blend?"
+                context="$5.50 is a blended average. Real per-jar cost varies by blend (salt type, additives, label design). When you have batch-level supply receipts, break this per-blend."
+              />
+              <FramingQuestion
+                q="What does a farmers market slot actually cost — and what does a day need to gross to be worth it?"
+                context="$450/yr market cost assumes 15 weeks × $30/stall. Is that the actual Dryden Farmers' Market rate? What are setup, travel, and time costs? What revenue covers break-even?"
+              />
+              <FramingQuestion
+                q="What is the realistic jars-per-market-day range?"
+                context="45 jars/season (3/wk × 15 wks) is the low end estimate. What did the last market season actually produce? Track this before committing to a stall booking."
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── Detail sections — collapsed by default ── */}
       <Accordion type="multiple" className="space-y-3">
 
@@ -107,13 +163,14 @@ export function SaltsPage() {
             <div className="flex items-baseline gap-3 text-left">
               <span className="font-semibold text-sm">Per-jar build cost</span>
               <span className="text-xs text-muted-foreground">
-                {money(s.perJarCogs.total, 2)} blended · break per-blend when ready
+                {money(s.perJarCogs.total, 2)} blended estimate · break per-blend when batch records exist
               </span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <p className="text-xs text-muted-foreground mb-3">
-              Blended average across four blends — break per-blend when ready.
+              Blended average across four blends — a reasonable working number, not a reconciled actual.
+              Break per-blend when batch supply receipts are tracked.
             </p>
             <table className="w-full text-sm">
               <thead className="text-left text-muted-foreground">
@@ -142,7 +199,7 @@ export function SaltsPage() {
                   </td>
                 </tr>
                 <tr className="font-semibold">
-                  <td className="py-2 pr-4">Per-jar cost</td>
+                  <td className="py-2 pr-4">Per-jar cost (blended)</td>
                   <td className="py-2 pr-4 text-right num">
                     <Num tag={s.perJarCogs.tag}>{money(s.perJarCogs.total, 2)}</Num>
                   </td>
@@ -161,13 +218,15 @@ export function SaltsPage() {
             <div className="flex items-baseline gap-3 text-left">
               <span className="font-semibold text-sm">Channel volumes, pricing &amp; margin</span>
               <span className="text-xs text-muted-foreground">
-                {num(s.channelTotals.jars)} jars · {money(s.channelTotals.grossMargin)} gross margin
+                {num(s.channelTotals.jars)} jars — planning target · {money(s.channelTotals.grossMargin)} gross margin
               </span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <p className="text-xs text-muted-foreground mb-3">
-              Annual, steady-state. Wholesale baseline reflects 9-case backlog from existing accounts.
+              Annual planning targets — not observed actuals. Wholesale baseline reflects the
+              9-case backlog from existing accounts (closest to a real number here). Farmers market
+              volume is the founder's low-end estimate; confirm against last season's receipts.
             </p>
             <div className="overflow-x-auto -mx-2 px-2">
               <table className="w-full text-sm min-w-[640px]">
@@ -212,7 +271,7 @@ export function SaltsPage() {
                     </tr>
                   ))}
                   <tr className="font-semibold">
-                    <td className="py-2 pr-4">TOTAL salt</td>
+                    <td className="py-2 pr-4">TOTAL salt (planning target)</td>
                     <td className="py-2 pr-4 text-right num">
                       <Num tag={s.channelTotals.tag}>{num(s.channelTotals.jars)}</Num>
                     </td>
@@ -261,8 +320,8 @@ export function SaltsPage() {
                 tag={s.operating.tag}
               />
               <Row
-                label="Markets — farmers"
-                value={`${money(s.operating.marketsFarmersAnnual)} (15 wks × $30)`}
+                label="Markets — farmers (15 wks × $30 est.)"
+                value={`${money(s.operating.marketsFarmersAnnual)} — confirm stall rate`}
                 tag={s.operating.tag}
               />
               <Row
@@ -286,7 +345,7 @@ export function SaltsPage() {
         >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-baseline gap-3 text-left">
-              <span className="font-semibold text-sm">Salts P&amp;L summary (cash, annual)</span>
+              <span className="font-semibold text-sm">Salts P&amp;L summary (model, annual)</span>
               <span className="text-xs text-muted-foreground">
                 Net {money(s.pAndL.netCash)} · shadow-adj {money(s.shadowLabour.adjustedNet)}
               </span>
@@ -295,8 +354,8 @@ export function SaltsPage() {
           <AccordionContent className="px-4 pb-4">
             <table className="w-full text-sm">
               <tbody>
-                <PLRow label="Revenue" value={s.pAndL.revenue} tag={s.pAndL.tag} />
-                <PLRow label="Per-jar cost" value={-s.pAndL.cogs} tag={s.pAndL.tag} />
+                <PLRow label="Revenue (planning target)" value={s.pAndL.revenue} tag={s.pAndL.tag} />
+                <PLRow label="Per-jar cost (blended est.)" value={-s.pAndL.cogs} tag={s.pAndL.tag} />
                 <PLRow label="Markets overhead" value={-s.pAndL.marketsOverhead} tag={s.pAndL.tag} />
                 <PLRow
                   label="Subscriptions (30% allocation)"
@@ -304,7 +363,7 @@ export function SaltsPage() {
                   tag={s.pAndL.tag}
                 />
                 <PLRow
-                  label="Net cash"
+                  label="Net cash (model)"
                   value={s.pAndL.netCash}
                   bold
                   tone="positive"
@@ -365,6 +424,34 @@ export function SaltsPage() {
       </Accordion>
 
       <FootnoteList notes={SALTS_FOOTNOTES} />
+    </div>
+  );
+}
+
+function StatusBadge({
+  status,
+  label,
+}: {
+  status: "at-steady-state" | "modelling" | "pre-revenue";
+  label: string;
+}) {
+  const styles: Record<string, string> = {
+    "at-steady-state": "bg-emerald-50 text-emerald-800 border border-emerald-200",
+    modelling: "bg-amber-50 text-amber-800 border border-amber-200",
+    "pre-revenue": "bg-blue-50 text-blue-800 border border-blue-200",
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+      {label}
+    </span>
+  );
+}
+
+function FramingQuestion({ q, context }: { q: string; context: string }) {
+  return (
+    <div className="space-y-0.5">
+      <p className="font-medium text-amber-900">→ {q}</p>
+      <p className="text-xs text-amber-700 leading-relaxed pl-3">{context}</p>
     </div>
   );
 }

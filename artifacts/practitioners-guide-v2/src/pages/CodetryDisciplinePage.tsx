@@ -161,6 +161,14 @@ export function CodetryDisciplinePage() {
 
   return (
     <div className="space-y-6" data-testid="page-codetry">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       {/* ── Page header — always visible ── */}
       <header className="flex items-start gap-3">
         <div

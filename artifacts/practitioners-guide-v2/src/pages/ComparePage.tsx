@@ -45,6 +45,7 @@ import {
   X,
   History,
   ArrowRight,
+  ArrowLeft,
   CheckCircle2,
 } from "lucide-react";
 import { Link } from "wouter";
@@ -105,6 +106,14 @@ export function ComparePage() {
 
   return (
     <div className="space-y-6" data-testid="page-compare">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       <header className="flex items-start gap-3">
         <div className="h-10 w-10 rounded-md bg-muted grid place-items-center flex-shrink-0">
           <GitCompareArrows className="h-5 w-5" />

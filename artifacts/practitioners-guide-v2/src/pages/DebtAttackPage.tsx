@@ -17,7 +17,8 @@
  * not a calendar.
  */
 
-import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign } from "lucide-react";
+import { Link } from "wouter";
+import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign, ArrowLeft } from "lucide-react";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -297,6 +298,14 @@ export function DebtAttackPage() {
 
   return (
     <div className="space-y-6" data-testid="page-debt-attack">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       {/* Header */}
       <header className="flex items-start gap-3">
         <div

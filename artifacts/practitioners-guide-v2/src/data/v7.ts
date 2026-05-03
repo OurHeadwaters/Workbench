@@ -1,4 +1,4 @@
-import { confirmed, tbd } from "./tags";
+import { confirmed, provisional, tbd } from "./tags";
 import type { RenegotiationTrigger, Scenario } from "./types";
 import {
   SHARED_BRIGHTSIDE,
@@ -153,8 +153,8 @@ const v7Agency = {
   renegotiateMonth: 12,
   startDate: "June 1, 2026",
   buyerStatus: "TBD (band council vs father — affects political weight, not the math)",
-  feeTag: tbd(
-    "Hourly structure is the working model. Questions to confirm: What rate does the client budget support? How many hours per month? What does the client need to see on the invoice? Rates TBD until a contract is signed.",
+  feeTag: provisional(
+    "Rates confirmed: $175/hr lead · $70/hr support (Ship Manifest). Monthly billed total depends on hours agreed — scenario projects 160 hr/mo each. Contract not yet signed.",
   ),
 
   roster: [
@@ -172,8 +172,8 @@ const v7Agency = {
     },
   ],
   payrollTotal: v7BobbieDrawMonthly + v7TylerCostMonthly, // 28,000 combined draws
-  rosterTag: tbd(
-    "Two-person lean structure is the working model: Bobbie (lead) + Tyler (RFF sub for distribution). Questions to confirm: What is the right hours split? What does each role's monthly cost need to be? TBD until a contract is signed.",
+  rosterTag: provisional(
+    "Rates confirmed: Bobbie $175/hr lead, Tyler $70/hr support (Ship Manifest). Two-person lean structure is the working model. Hours split and contract terms TBD until a contract is signed.",
   ),
 
   overheadsJunAug: [
@@ -214,8 +214,8 @@ const v7Agency = {
   costBasisSepOnward: v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 29,292
   monthlySurplusJunAug: v7MonthlySurplus,    // 9,908
   monthlySurplusSepOnward: v7MonthlySurplus, // 9,908
-  costBasisTag: tbd(
-    "Cost basis is a scenario projection. Key question: what monthly billing total covers team costs, overheads, and leaves a meaningful debt-attack surplus? All figures here derive from unconfirmed rates — they become real when a contract is signed.",
+  costBasisTag: provisional(
+    "Rates confirmed ($175/hr lead · $70/hr support), but monthly billing totals are scenario projections that depend on hours agreed. All derived numbers become real when a contract is signed.",
   ),
 
   capitalRecoveryAmount: 0,
@@ -291,15 +291,15 @@ export const SCENARIO_V7: Scenario = {
   name: "V7 — Deer Lake rate scenario",
   short: "V7",
   tagline:
-    "Brainstorming scenario · hourly structure · lean two-person team · rates and surplus TBD until a contract is signed",
+    "Rate scenario applied to Deer Lake · $175/hr lead · $70/hr support · trial-first · contract not yet signed",
   description:
-    "Rate exploration applied to Deer Lake. The structure — Bobbie as lead, Tyler as RFF sub, hourly billing, lean overheads — is the working model. The specific rates and all derived numbers are brainstorming inputs, not commitments. Key questions: What rate does the client budget support? What does the engagement need to cover? What monthly surplus is needed to attack the debt? Phase 1 shape: bounded 8-week trial, intentionally below full cost — an entry posture, not a revenue target. Phase 2 waterfall TBD pending a signed contract.",
+    "Deer Lake rate scenario. Rates are confirmed: $175/hr lead (Bobbie) · $70/hr support (Tyler, RFF sub). The two-person lean structure is the working model. Monthly billing totals and surplus projections are scenario outputs that depend on hours agreed — they become real when a contract is signed. Phase 1: bounded 8-week trial at a flat $25,000 — intentionally below full cost as an entry posture. Phase 2 waterfall TBD pending a signed contract.",
   accent: "#3A5F8A",
   accentSoft: "#DDE8F5",
   accentInk: "#1A2E44",
   status: "provisional",
   statusNote:
-    "These figures are a brainstorming scenario — not locked targets. The only confirmed number in the pipeline is the $12,000 portal fee. Hourly rates, monthly billing totals, and surplus projections become real the day a contract is signed.",
+    "Rates are confirmed: $175/hr lead · $70/hr support (Ship Manifest). Monthly billing totals and surplus projections are scenario outputs — they depend on hours agreed and become real when a contract is signed. The only other confirmed number is the $12,000 portal fee.",
   salts: SHARED_SALTS,
   contracts: { agency: v7Agency },
   brightside: SHARED_BRIGHTSIDE,

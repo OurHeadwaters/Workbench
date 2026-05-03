@@ -8,6 +8,7 @@
  */
 
 import type { ReactNode } from "react";
+import { Link } from "wouter";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { SectionCard } from "@/components/SectionCard";
@@ -28,7 +29,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Gift, AlertCircle } from "lucide-react";
+import { Gift, AlertCircle, ArrowLeft } from "lucide-react";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
@@ -185,6 +186,16 @@ export function ContractsPage() {
     <div className="space-y-8" data-testid="page-contracts">
       <ProvisionalBanner />
 
+      {/* ── Back to dashboard ── */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
+
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p
@@ -193,17 +204,26 @@ export function ContractsPage() {
           >
             {b.name} · {money(a.fee)}/mo agency engagement
           </p>
-          <h1
-            className="mt-2 text-3xl font-semibold"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
-            One agency line, one waterfall, every dollar accounted for.
-          </h1>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <h1
+              className="text-3xl font-semibold"
+              style={{ fontFamily: "var(--app-font-serif)" }}
+            >
+              One agency line, one waterfall, every dollar accounted for.
+            </h1>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+              Contract not yet signed
+            </span>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+              Rates set · $175/hr lead · $70/hr support
+            </span>
+          </div>
           <p className="mt-3 text-muted-foreground max-w-3xl">
             <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo starting {a.startDate} against the{" "}
             {a.roster.length}-role Deer Lake team (
             <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo payroll). Surplus waterfall:{" "}
-            {waterfallDescription}.
+            {waterfallDescription}. The Ship Manifest publishes a trial-first hourly engagement
+            model; these rates and that structure are what the guide models.
           </p>
         </div>
         <ExportLedgerButtons
@@ -212,10 +232,24 @@ export function ContractsPage() {
         />
       </header>
 
+      {/* ── How the fee is derived ── */}
+      <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+        <p className="text-sm font-semibold text-blue-900 mb-1">
+          How this engagement works — trial-first, hourly
+        </p>
+        <p className="text-xs text-blue-800 leading-relaxed">
+          The Ship Manifest offer is trial-first and hourly: six weeks, bounded scope, no retainer.
+          The figures below model a <em>full engagement</em> at confirmed rates
+          ($175/hr lead · $70/hr support) against the Deer Lake roster — they show what the math
+          looks like if a contract lands and runs. None of this is locked until a contract is signed.
+          Treat the monthly-fee line as a scenario derived from projected hours, not a quoted retainer.
+        </p>
+      </div>
+
       {/* ── KPI Grid — always visible ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MoneyKpi
-          label="Monthly fee"
+          label="Monthly fee (scenario)"
           value={a.fee}
           unit="/mo"
           tag={a.feeTag}

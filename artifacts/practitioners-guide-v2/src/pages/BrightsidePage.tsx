@@ -2,11 +2,17 @@
  * BrightsidePage — Software / Hardware / Training bucket.
  *
  * PROGRESSIVE DISCLOSURE PATTERN (see docs/design/progressive-disclosure.md):
- *   - Bucket heading + KPI grid: always visible.
+ *   - Bucket heading + status: always visible.
  *   - Product detail, pricing table, cost breakdown, surplus deployment: collapsed by default.
- *   - Decision signals at a glance: 4 KPI cards (revenue target, cost, surplus, owner take).
+ *
+ * HONEST STATUS: "Pre-revenue"
+ *   The $120k cumulative revenue figure is a modelling scenario, not a plan.
+ *   No LTC pilot site has committed. No first sales cycle has closed.
+ *   This section replaces the fake target with framing questions around
+ *   first pilot commitment and the real cost-to-revenue path.
  */
 
+import { Link } from "wouter";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
@@ -22,6 +28,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ArrowLeft, HelpCircle } from "lucide-react";
 
 export function BrightsidePage() {
   const { scenario } = useScenario();
@@ -32,6 +39,16 @@ export function BrightsidePage() {
     <div className="space-y-6" data-testid="page-brightside">
       <ProvisionalBanner />
 
+      {/* ── Back to dashboard ── */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
+
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p
@@ -40,15 +57,19 @@ export function BrightsidePage() {
           >
             {b.name} · Brightside RT-LTC
           </p>
-          <h1
-            className="mt-2 text-3xl font-semibold"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
-            Recreation Therapy software for Long-Term Care.
-          </h1>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <h1
+              className="text-3xl font-semibold"
+              style={{ fontFamily: "var(--app-font-serif)" }}
+            >
+              Recreation Therapy software for Long-Term Care.
+            </h1>
+            <StatusBadge status="pre-revenue" label="Pre-revenue" />
+          </div>
           <p className="mt-3 text-muted-foreground max-w-3xl">
-            Mobile-first SaaS. Founder builds, founder sells. No incremental headcount beyond the
-            contract engineer. Tithe-first, then 50/50 split on what's left.
+            Mobile-first SaaS. Founder builds, founder sells. No incremental headcount beyond
+            the contract engineer. The pricing model and cost basis are confirmed — but no LTC
+            site has committed to a pilot yet. Revenue is a modelling scenario, not a plan.
           </p>
         </div>
         <ExportLedgerButtons
@@ -57,14 +78,55 @@ export function BrightsidePage() {
         />
       </header>
 
-      {/* ── KPI Grid — always visible ── */}
+      {/* ── Framing questions — pre-revenue stage ── */}
+      <div
+        className="rounded-xl border border-blue-200 bg-blue-50 p-4"
+        data-testid="brightside-framing-questions"
+      >
+        <div className="flex items-start gap-3">
+          <HelpCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div className="space-y-3 text-sm">
+            <p className="font-semibold text-blue-900">
+              Questions that determine whether {money(bs.surplusDeployment.revenue)} is achievable
+            </p>
+            <p className="text-xs text-blue-700">
+              The {money(bs.surplusDeployment.revenue)} cumulative revenue figure is a modelling
+              input — what the math needs to be true to produce the surplus shown below.
+              None of these conditions are met yet.
+            </p>
+            <div className="space-y-2 text-blue-800">
+              <FramingQuestion
+                q="What would a pilot LTC site actually commit to?"
+                context={`A signed pilot at Tier 1 ($${bs.pricing.tier1.monthly}/mo) + setup ($${bs.pricing.setupFee}) is the first real revenue event. What does a yes from an LTC administrator look like, and what do they need to see before signing?`}
+              />
+              <FramingQuestion
+                q="What is the real cost to get to first revenue?"
+                context={`The pre-launch one-time spend is ${money(bs.costBasis.prelaunchTotal)} (engineer cap ${money(bs.buildModel.prelaunchEngineerCap)} + PHIPA/PIPEDA audit $5k + legal $3k). First revenue window: ${bs.revenueTarget.revenueStartWindow}. What milestones gate payment of each cost line?`}
+              />
+              <FramingQuestion
+                q="What is the minimum customer count to break even on recurring costs?"
+                context={`Recurring monthly cost is ${money(bs.costBasis.recurringMonthlyTotal)}/mo. At ${money(bs.pricing.tier1.monthly)}/mo per Tier 1 facility, that's ${Math.ceil(bs.costBasis.recurringMonthlyTotal / bs.pricing.tier1.monthly)} facilities to cover recurring costs. How long does the first sales cycle take?`}
+              />
+              <FramingQuestion
+                q="What does the 22-facility ramp actually require?"
+                context={`The model assumes 0 → ~22 LTC facilities over 18 months. What are the real barriers — PHIPA compliance, facility IT procurement cycles, staff training capacity? Build the honest ramp before counting on the revenue.`}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── KPI Grid — modelling figures, clearly labelled ── */}
+      <p className="text-xs text-muted-foreground font-medium uppercase tracking-[0.15em]">
+        Modelling scenario — numbers lock when a pilot site commits
+      </p>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MoneyKpi
-          label="18-mo revenue target"
+          label="18-mo revenue scenario"
           value={bs.revenueTarget.cumulative18mo}
           tag={bs.revenueTarget.tag}
           accent={b.accent}
-          hint={`Exit ARR ~${money(bs.revenueTarget.exitArr)}`}
+          hint={`Exit ARR ~${money(bs.revenueTarget.exitArr)} — not yet pursued`}
           testId="kpi-brightside-revenue"
         />
         <MoneyKpi
@@ -77,7 +139,7 @@ export function BrightsidePage() {
           testId="kpi-brightside-cost"
         />
         <MoneyKpi
-          label="Surplus over 18 mo"
+          label="Surplus (if scenario lands)"
           value={bs.surplusDeployment.surplus}
           tag={bs.surplusDeployment.tag}
           tone="positive"
@@ -85,12 +147,12 @@ export function BrightsidePage() {
           testId="kpi-brightside-surplus"
         />
         <MoneyKpi
-          label="Owner take (50%)"
+          label="Owner take 50% (scenario)"
           value={bs.surplusDeployment.ownerTake}
           tag={bs.surplusDeployment.tag}
           tone="positive"
           accent={b.accent}
-          hint="Founder's only profit-share line"
+          hint="Founder's only profit-share line — pre-revenue"
           testId="kpi-brightside-owner-take"
         />
       </div>
@@ -212,17 +274,21 @@ export function BrightsidePage() {
         >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-baseline gap-3 text-left">
-              <span className="font-semibold text-sm">18-month revenue target</span>
+              <span className="font-semibold text-sm">18-month revenue scenario</span>
               <span className="text-xs text-muted-foreground">
-                {money(bs.revenueTarget.cumulative18mo)} cumulative · exit ARR ~{money(bs.revenueTarget.exitArr)}
+                {money(bs.revenueTarget.cumulative18mo)} cumulative scenario · exit ARR ~{money(bs.revenueTarget.exitArr)}
               </span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <p className="text-xs text-muted-foreground mb-3">
+              This is a modelling scenario showing what needs to be true for the surplus math to work —
+              not a committed plan. No pilot site has signed. Revenue starts: {bs.revenueTarget.revenueStartWindow}.
+            </p>
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-              <Row label="Cumulative revenue target" value={money(bs.revenueTarget.cumulative18mo)} />
-              <Row label="Exit ARR" value={`~${money(bs.revenueTarget.exitArr)}`} />
-              <Row label="Customer ramp" value={bs.revenueTarget.customerRamp} />
+              <Row label="Cumulative revenue scenario" value={money(bs.revenueTarget.cumulative18mo)} />
+              <Row label="Exit ARR scenario" value={`~${money(bs.revenueTarget.exitArr)}`} />
+              <Row label="Customer ramp assumed" value={bs.revenueTarget.customerRamp} />
               <Row label="Mix assumption" value={bs.revenueTarget.mixAssumption} />
               <Row label="Revenue starts" value={bs.revenueTarget.revenueStartWindow} />
             </dl>
@@ -307,18 +373,19 @@ export function BrightsidePage() {
                 Surplus deployment — tithe-first, then {bs.surplusDeployment.retainedPct}/{bs.surplusDeployment.ownerTakePct} split
               </span>
               <span className="text-xs text-muted-foreground">
-                Owner take {money(bs.surplusDeployment.ownerTake)}
+                Owner take {money(bs.surplusDeployment.ownerTake)} (scenario)
               </span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <p className="text-xs text-muted-foreground mb-3">
               Brightside mirrors the agency-line tithe-first discipline: 10% off the top to Giving,
-              then cost basis, then a 50/50 split on what's left.
+              then cost basis, then a 50/50 split on what's left. These numbers apply if the
+              revenue scenario lands — they are not locked actuals.
             </p>
             <table className="w-full text-sm">
               <tbody>
-                <PLRow label="Revenue (target)" value={bs.surplusDeployment.revenue} />
+                <PLRow label="Revenue (scenario)" value={bs.surplusDeployment.revenue} />
                 <PLRow
                   label={`Tithe — Giving (${pct(bs.surplusDeployment.tithePct)} off the top, first claim)`}
                   value={-bs.surplusDeployment.tithe}
@@ -329,7 +396,7 @@ export function BrightsidePage() {
                   tone="muted"
                 />
                 <PLRow label="Cost basis" value={-bs.surplusDeployment.cost} />
-                <PLRow label="Surplus" value={bs.surplusDeployment.surplus} bold tone="positive" />
+                <PLRow label="Surplus (scenario)" value={bs.surplusDeployment.surplus} bold tone="positive" />
                 <tr>
                   <td colSpan={2} className="pt-3">
                     <div className="border-t border-dashed border-card-border" />
@@ -385,6 +452,34 @@ export function BrightsidePage() {
       </Accordion>
 
       <FootnoteList notes={BRIGHTSIDE_FOOTNOTES} />
+    </div>
+  );
+}
+
+function StatusBadge({
+  status,
+  label,
+}: {
+  status: "at-steady-state" | "modelling" | "pre-revenue";
+  label: string;
+}) {
+  const styles: Record<string, string> = {
+    "at-steady-state": "bg-emerald-50 text-emerald-800 border border-emerald-200",
+    modelling: "bg-amber-50 text-amber-800 border border-amber-200",
+    "pre-revenue": "bg-blue-50 text-blue-800 border border-blue-200",
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+      {label}
+    </span>
+  );
+}
+
+function FramingQuestion({ q, context }: { q: string; context: string }) {
+  return (
+    <div className="space-y-0.5">
+      <p className="font-medium text-blue-900">→ {q}</p>
+      <p className="text-xs text-blue-700 leading-relaxed pl-3">{context}</p>
     </div>
   );
 }

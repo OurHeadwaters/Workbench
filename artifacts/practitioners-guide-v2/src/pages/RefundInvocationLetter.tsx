@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
 import {
   TRIAL_FEE_USD,
   TRIAL_REFUND_INVOCATION_DAYS,
@@ -188,6 +189,14 @@ export function RefundInvocationLetter() {
 
   return (
     <div className="space-y-8 max-w-5xl">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
       <style>{`
         @media print {
           html, body { background: white !important; }
