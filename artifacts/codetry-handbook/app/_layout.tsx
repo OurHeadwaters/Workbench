@@ -53,6 +53,7 @@ function RootLayoutNav() {
       <Stack.Screen name="shared-vision" />
       <Stack.Screen name="standby" />
       <Stack.Screen name="path" />
+      <Stack.Screen name="driver" />
     </Stack>
   );
 }

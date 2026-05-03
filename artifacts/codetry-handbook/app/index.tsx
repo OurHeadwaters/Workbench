@@ -306,6 +306,46 @@ export default function FrontPage() {
             →
           </Text>
         </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
+          onPress={() => router.push("/driver")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              Daily Driver
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              Build backwards from your dream. One driver per project,
+              one action per day. Play out scenarios, track what's
+              pivotal, and keep moving when the road gets bumpy.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
 
         <View style={{ height: 32 }} />
 
