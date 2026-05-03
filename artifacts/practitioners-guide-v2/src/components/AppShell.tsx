@@ -138,7 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                       className="text-[8px] uppercase tracking-[0.14em] px-1 py-[1px] rounded leading-none shrink-0"
                       style={{ background: "rgba(184,90,62,0.15)", color: "#b85a3e", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", border: "1px solid rgba(184,90,62,0.30)" }}
                     >
-                      template
+                      dormant
                     </span>
                   )}
                 </Link>

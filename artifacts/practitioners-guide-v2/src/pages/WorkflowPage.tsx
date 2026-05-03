@@ -122,18 +122,15 @@ const STAGES: Stage[] = [
     role: "PITCH",
     title: "Client Walkthrough",
     description:
-      "The contractor-facing pitch deck. Walks the band council and construction contractor through the Deer Lake proposal — rework risk, phase locks, the ask, and the full cost breakdown. Designed to be read on a phone.",
+      "The community store pitch playbook. Walks a band council and construction contractor through the proposal — rework risk, phase locks, the ask, and the full toolkit. Designed to be read on a phone.",
     icon: Presentation,
     color: "#6d28d9",
     colorSoft: "#ede9fe",
     colorInk: "#5b21b6",
     links: [
-      { label: "Deer Lake Walkthrough", url: `${DEV}/deer-lake-walkthrough/`, note: "Full client pitch scroll" },
-      { label: "Phase lock sign-off", url: `${DEV}/deer-lake-walkthrough/phase-lock-signoff`, note: "Printable sign-off sheet" },
-      { label: "Build calendar", url: `${DEV}/deer-lake-walkthrough/planner`, note: "Phase gate date planner" },
-      { label: "Cockpit — home", url: `${DEV}/deer-lake-walkthrough/cockpit/home`, note: "Operator tablet surface" },
-      { label: "Cockpit — floor", url: `${DEV}/deer-lake-walkthrough/cockpit/floor`, note: "Floor plan & roles" },
-      { label: "Cockpit — till", url: `${DEV}/deer-lake-walkthrough/cockpit/till`, note: "Till & back-of-house" },
+      { label: "Community Store Playbook", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Full pitch walkthrough" },
+      { label: "Build calendar", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Phase gate date planner (open planner from playbook)" },
+      { label: "Operator cockpit", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Operator tablet surface (open cockpit from playbook)" },
     ],
   },
   {

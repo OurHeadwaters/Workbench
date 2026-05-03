@@ -10,10 +10,11 @@ import * as path from "path";
  *    the Headwaters cockpit tying them together"
  * — must appear verbatim on every surface that carries the operator-couple
  * framing. This test catches silent edits on any one surface before they
- * desync the four docs.
+ * desync the docs.
  *
  * Source surfaces threaded by tasks #531 / #539 / #545:
- *   1. deer-lake-walkthrough  WhoWorks.tsx          (source in repo)
+ *   1. deer-lake-walkthrough  WhoWorks.tsx — ARCHIVED (artifact deleted in task #652;
+ *      content moved to practitioners-guide-v2 communityStore with generic branding)
  *   2. deer-lake-store-plan   StaffingModel slide   (built artifact only — skipped until source lands)
  *   3. practitioner-operating-plan TheSixPeople/OnePager (built artifact only — skipped until source lands)
  *   4. practitioners-guide-v2 ContractsPage, ReplicationPage, ArchetypesPage (source in repo)
@@ -41,12 +42,6 @@ function fileContainsPhrase(filePath: string): boolean {
 }
 
 const REQUIRED_PATHS: Array<{ label: string; file: string }> = [
-  {
-    label: "deer-lake-walkthrough · WhoWorks.tsx",
-    file: repoPath(
-      "artifacts/deer-lake-walkthrough/src/sections/WhoWorks.tsx",
-    ),
-  },
   {
     label: "practitioners-guide-v2 · ContractsPage.tsx",
     file: repoPath(
