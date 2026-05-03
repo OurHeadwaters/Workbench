@@ -22,7 +22,10 @@ import {
   ChevronDown,
   ChevronUp,
   Smartphone,
+  Target,
+  ArrowRight,
 } from "lucide-react";
+import { FOCUS_AREAS, type FocusArea } from "@/data/whatsNext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -275,6 +278,16 @@ export function SargeHQPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // ─── What's Next focus ─────────────────────────────────────────────────────
+  const [activeFocus, setActiveFocus] = useState<FocusArea | null>(() => {
+    try {
+      const stored = localStorage.getItem("pgv2.whatsnext.focus");
+      return stored ? (FOCUS_AREAS.find((f) => f.id === stored) ?? null) : null;
+    } catch {
+      return null;
+    }
+  });
+
   // Derived
   const doneCount = cards.filter((c) => c.status === "done").length;
   const isLocked = week?.isLocked ?? false;
@@ -353,6 +366,34 @@ export function SargeHQPage() {
       [next[idx], next[swap]] = [next[swap]!, next[idx]!];
       return next.map((p, i) => ({ ...p, order: i }));
     });
+  }
+
+  // ─── Load focus steps as cards ───────────────────────────────────────────
+
+  function loadFocusSteps(focus: FocusArea) {
+    const priority: Priority = {
+      id: focus.id,
+      label: focus.title,
+      order: 0,
+      isActive: true,
+    };
+    setPriorities([priority]);
+    const newCards: SargeCard[] = focus.steps.map((step, i) => ({
+      id: uid(),
+      weekId: week?.id ?? "",
+      priorityId: focus.id,
+      priorityLabel: focus.title,
+      action: step.action,
+      context: step.detail,
+      status: "active",
+      order: i,
+      completedAt: null,
+      barrierNote: null,
+    }));
+    setCards(newCards);
+    flashSuccess(
+      `Loaded ${newCards.length} steps from "${focus.title}". Review and lock when ready.`,
+    );
   }
 
   // ─── Generate cards ──────────────────────────────────────────────────────
@@ -498,6 +539,54 @@ export function SargeHQPage() {
       {successMsg && (
         <div className="rounded-md bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800">
           {successMsg}
+        </div>
+      )}
+
+      {/* ─── What's Next focus banner ──────────────────────────────────────── */}
+      {activeFocus && !isLocked && (
+        <div
+          className="rounded-lg border p-4 flex flex-col sm:flex-row sm:items-start gap-4"
+          style={{ borderColor: activeFocus.accent + "40", backgroundColor: activeFocus.accentSoft }}
+        >
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Target className="h-4 w-4" style={{ color: activeFocus.accent }} />
+            <span
+              className="text-[10px] uppercase tracking-widest font-mono font-medium"
+              style={{ color: activeFocus.accentInk }}
+            >
+              Active focus from What&apos;s Next
+            </span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-base font-semibold leading-snug" style={{ color: activeFocus.accentInk, fontFamily: "var(--app-font-serif)" }}>
+              {activeFocus.title}
+            </p>
+            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: activeFocus.accentInk, opacity: 0.75 }}>
+              {activeFocus.whyNow}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => loadFocusSteps(activeFocus)}
+              disabled={cards.length > 0}
+              className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: activeFocus.accent,
+                color: "#fff",
+              }}
+              title={cards.length > 0 ? "Cards already loaded — unlock to start over" : undefined}
+            >
+              Load {activeFocus.steps.length} steps
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => setActiveFocus(null)}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Dismiss focus banner"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 

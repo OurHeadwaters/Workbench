@@ -235,6 +235,13 @@ export default function SargeCardStack() {
 
   const webTop = Platform.OS === "web" ? 67 : 0;
 
+  // ─── Focus label (from week priorities, if loaded from a What's Next focus) ──
+
+  const focusLabel: string | null =
+    week?.priorities && week.priorities.length === 1
+      ? (week.priorities[0]?.label ?? null)
+      : null;
+
   // ─── Derived card state ────────────────────────────────────────────────
 
   const activeCards = cards.filter((c) => c.status === "active");
@@ -389,6 +396,18 @@ export default function SargeCardStack() {
             {week?.weekOf ?? ""}
           </Text>
         </View>
+
+        {/* Focus label — shown when week was loaded from a What's Next focus */}
+        {focusLabel && hasCards && (
+          <View style={[styles.focusBanner, { backgroundColor: c.card, borderColor: c.border }]}>
+            <Text style={[styles.focusEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
+              THIS WEEK'S FOCUS
+            </Text>
+            <Text style={[styles.focusTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+              {focusLabel}
+            </Text>
+          </View>
+        )}
 
         {/* States */}
         {!hasCards && <EmptyState c={c} />}
@@ -656,6 +675,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 25,
     textAlign: "center",
+  },
+  // Focus banner
+  focusBanner: {
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 20,
+  },
+  focusEyebrow: {
+    fontSize: 9,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginBottom: 4,
+    opacity: 0.6,
+  },
+  focusTitle: {
+    fontSize: 17,
+    lineHeight: 23,
   },
   // Barrier modal
   modalOverlay: {
