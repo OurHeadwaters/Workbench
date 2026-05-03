@@ -71,3 +71,9 @@ id = "G4rBFOF4M8N-rPX4zhueg"
 uri = "file://exports/v3-slide6-closing.jpg"
 type = "image"
 title = "V3 · Slide 6 — Closing (mission anchor + tagline)"
+
+[[outputs]]
+id = "f3iDIa2M9nh8O1WuFsVu6"
+uri = "file://screenshots/owner-reconciliation.jpg"
+type = "image"
+title = "Owner Reconciliation — Parrs Jars → Headwaters Ontario Corp"

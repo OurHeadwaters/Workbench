@@ -19,7 +19,7 @@ export const ownerReconciliationSections: Section[] = [
     id: "went-in",
     title: "What went in — Parrs Jars sole proprietor era (pre-Nov 2024)",
     subtitle:
-      "Capital and costs contributed by the owner before the 807 Food Co-op took over operations.",
+      "Capital and costs contributed by the owner before Headwaters (Ontario Corp) took over operations.",
     items: [
       {
         description: "Line of credit — total charges (chart of accounts)",

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=390" />
+<title>Owner Reconciliation — Headwaters</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    background: #f9f6f0;
+    color: #1a2e1a;
+    width: 390px;
+    padding: 24px 20px 36px;
+  }
+  .eyebrow {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6b7f6b;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: bold;
+    color: #1a2e1a;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #5a7a5a;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .divider {
+    height: 1px;
+    background: #c8d8c0;
+    margin: 16px 0;
+  }
+
+  /* SCENARIO CARDS */
+  .scenario-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .scenario {
+    flex: 1;
+    border-radius: 8px;
+    padding: 14px 12px;
+  }
+  .scenario.sole {
+    background: #fff8ee;
+    border: 1.5px solid #e8c87a;
+  }
+  .scenario.coop {
+    background: #eef6ee;
+    border: 1.5px solid #7ab87a;
+  }
+  .scenario-label {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sole .scenario-label { color: #a07020; }
+  .coop .scenario-label { color: #2a6a2a; }
+  .scenario-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .scenario-desc {
+    font-size: 11px;
+    color: #5a6a5a;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* SECTION BLOCKS */
+  .section {
+    margin-bottom: 16px;
+  }
+  .section-header {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6b7f6b;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #d4e4cc;
+  }
+  .line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 0;
+    border-bottom: 1px solid #ece7e0;
+    gap: 8px;
+  }
+  .line:last-child { border-bottom: none; }
+  .line-desc {
+    font-size: 12px;
+    color: #2a3a2a;
+    flex: 1;
+    line-height: 1.4;
+  }
+  .line-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .line-amount {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    color: #1a2e1a;
+    white-space: nowrap;
+  }
+  .line-amount.negative { color: #8a2020; }
+  .line-amount.pending { color: #9a8a6a; font-weight: normal; font-style: italic; }
+  .badge {
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .badge.confirmed { background: #d4f0d4; color: #2a6a2a; border: 1px solid #a0d8a0; }
+  .badge.estimated { background: #fff0cc; color: #8a6010; border: 1px solid #e0c060; }
+  .badge.pending   { background: #ececec; color: #6a6a6a; border: 1px solid #c8c8c8; }
+
+  /* SUMMARY BOX */
+  .summary {
+    background: #1a2e1a;
+    color: #f0f6e8;
+    border-radius: 8px;
+    padding: 16px 14px;
+    margin: 18px 0;
+  }
+  .summary-label {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8ab88a;
+    margin-bottom: 10px;
+  }
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 3px 0;
+    border-bottom: 1px solid #2a4a2a;
+    color: #c8e0c8;
+  }
+  .summary-line:last-child { border-bottom: none; }
+  .summary-line.total {
+    font-weight: bold;
+    font-size: 14px;
+    color: #f0f6e8;
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+  .summary-line .amt {
+    font-family: 'Courier New', monospace;
+  }
+  .summary-line .amt.red { color: #f09090; }
+  .summary-line .amt.green { color: #90e090; font-size: 15px; }
+
+  /* QB CHECKLIST */
+  .qb-box {
+    background: #fff8ee;
+    border: 1.5px solid #e8c87a;
+    border-radius: 8px;
+    padding: 14px 12px;
+    margin-bottom: 16px;
+  }
+  .qb-label {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a07020;
+    margin-bottom: 8px;
+  }
+  .qb-item {
+    font-size: 11px;
+    color: #4a3a10;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0e0a0;
+    display: flex;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .qb-item:last-child { border-bottom: none; }
+  .qb-item::before { content: "□"; font-size: 13px; flex-shrink: 0; color: #c09030; }
+
+  /* FOOTER */
+  .footer {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #9aaa9a;
+    text-align: center;
+    margin-top: 20px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Headwaters Food Systems Agency · Dryden ON</p>
+<h1>Owner Reconciliation</h1>
+<p class="subtitle">Parrs Jars sole proprietor era → Headwaters Ontario Corp takeover</p>
+
+<div class="scenario-row">
+  <div class="scenario sole">
+    <div class="scenario-label">Before</div>
+    <div class="scenario-title">Parrs Jars<br/>Sole Proprietor</div>
+    <div class="scenario-desc">Bobbie personally funded, operated &amp; absorbed risk. Pre-Nov 2024.</div>
+  </div>
+  <div class="scenario coop">
+    <div class="scenario-label">After</div>
+    <div class="scenario-title">Headwaters<br/>Ontario Corp</div>
+    <div class="scenario-desc">Headwaters takes over operations. 807 Food Co-op purchases assets via Invoice #001056. Nov 2024 onward.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-header">What went in — Parrs Jars era</div>
+
+  <div class="line">
+    <div class="line-desc">Line of credit — total charges</div>
+    <div class="line-right">
+      <span class="line-amount">~$26,337</span>
+      <span class="badge estimated">Estimated</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">Personal funds advanced (outside LOC)</div>
+    <div class="line-right">
+      <span class="line-amount pending">Pending QB</span>
+      <span class="badge pending">Pending</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">Equipment contributed (fair-market value)</div>
+    <div class="line-right">
+      <span class="line-amount pending">Pending QB</span>
+      <span class="badge pending">Pending</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">Owner time / sweat equity</div>
+    <div class="line-right">
+      <span class="line-amount pending">Not monetised</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">P&amp;L net loss — sole-prop period</div>
+    <div class="line-right">
+      <span class="line-amount pending">Pending QB</span>
+      <span class="badge pending">Pending</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">What came back out — Invoice #001056</div>
+
+  <div class="line">
+    <div class="line-desc">Trailer (main unit)</div>
+    <div class="line-right">
+      <span class="line-amount">$17,950.00</span>
+      <span class="badge confirmed">Confirmed</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">Trailer upgrades <em style="font-size:10px;color:#8a6010">(paid · not yet delivered — liability)</em></div>
+    <div class="line-right">
+      <span class="line-amount">$9,995.00</span>
+      <span class="badge confirmed">Confirmed</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">Canning supplies</div>
+    <div class="line-right">
+      <span class="line-amount">$2,500.00</span>
+      <span class="badge confirmed">Confirmed</span>
+    </div>
+  </div>
+  <div class="line">
+    <div class="line-desc">HST collected (13%)</div>
+    <div class="line-right">
+      <span class="line-amount">$3,957.85</span>
+      <span class="badge confirmed">Confirmed</span>
+    </div>
+  </div>
+  <div class="line" style="border-top:1px solid #c8d8c0; margin-top:4px; padding-top:8px">
+    <div class="line-desc" style="font-weight:bold">Invoice #001056 total received</div>
+    <div class="line-right">
+      <span class="line-amount" style="font-size:14px">$34,402.85</span>
+      <span class="badge confirmed">Paid Jun 19/25</span>
+    </div>
+  </div>
+</div>
+
+<div class="summary">
+  <div class="summary-label">Net cash applied to owner reimbursement</div>
+  <div class="summary-line">
+    <span>Gross received</span>
+    <span class="amt">$34,402.85</span>
+  </div>
+  <div class="summary-line">
+    <span>Less HST (remit to CRA)</span>
+    <span class="amt red">−$3,957.85</span>
+  </div>
+  <div class="summary-line">
+    <span>Less upgrade liability (not delivered)</span>
+    <span class="amt red">−$9,995.00</span>
+  </div>
+  <div class="summary-line total">
+    <span>Net to owner</span>
+    <span class="amt green">$20,450.00</span>
+  </div>
+</div>
+
+<div class="qb-box">
+  <div class="qb-label">Still needed from QuickBooks</div>
+  <div class="qb-item">Balance Sheet — as of Oct 31, 2024</div>
+  <div class="qb-item">Transaction Detail by Account — sole-prop full history</div>
+  <div class="qb-item">Profit &amp; Loss — sole-prop period (HST refund/remittance)</div>
+  <div class="qb-item">Customer Balance Detail — 807 Food Co-op (all dates)</div>
+</div>
+
+<div class="footer">Headwaters Books · Updated 2026-05-03 · Pending items reduce the net figure</div>
+
+</body>
+</html>
