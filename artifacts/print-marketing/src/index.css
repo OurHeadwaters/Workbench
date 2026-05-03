@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --cream:        #f4ede0;
+  --cream-dark:   #ebe2d0;
+  --evergreen:    #1f3d2e;
+  --evergreen-mid:#2e5c44;
+  --evergreen-light: #4a7c61;
+  --rust:         #b85a3e;
+  --rust-dark:    #9a4530;
+  --rust-light:   #d4866a;
+  --ink:          #2b2116;
+  --muted:        #6b7665;
+
+  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-serif);
+}
+
+.print-page {
+  background: white;
+  width: 8.5in;
+  min-height: 11in;
+  margin: 2rem auto;
+  padding: 0.6in 0.65in;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.13);
+  position: relative;
+}
+
+.print-page-landscape {
+  background: white;
+  width: 11in;
+  min-height: 8.5in;
+  margin: 2rem auto;
+  padding: 0.55in 0.65in;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.13);
+  position: relative;
+}
+
+.btn-print {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--evergreen);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn-print:hover { background: var(--evergreen-mid); }
+
+.screen-nav {
+  background: var(--cream-dark);
+  border-bottom: 1px solid rgba(31,61,46,0.12);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.screen-nav a {
+  color: var(--evergreen);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.screen-nav a:hover { text-decoration: underline; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .print-page, .print-page-landscape {
+    margin: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    min-height: unset !important;
+  }
+  @page {
+    margin: 0.5in;
+    size: letter portrait;
+  }
+  .print-landscape @page {
+    size: letter landscape;
+  }
+}
