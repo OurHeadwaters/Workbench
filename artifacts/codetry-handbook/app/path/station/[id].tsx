@@ -636,6 +636,8 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   backRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 18,
   },
   backLink: {
