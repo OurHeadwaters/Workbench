@@ -10,6 +10,7 @@ import handbookRouter from "./handbook";
 import refundInvocationRouter from "./refundInvocation";
 import deadheadRouter from "./deadhead";
 import intakeRouter from "./intake";
+import wordWalkRouter from "./wordWalk";
 
 const router: IRouter = Router();
 
@@ -22,6 +23,7 @@ router.use("/wordpile", wordpileRouter);
 router.use("/ship-manifest", shipManifestRouter);
 router.use("/handbook", handbookRouter);
 router.use("/refund-invocation", refundInvocationRouter);
+router.use("/word-walk", wordWalkRouter);
 router.use("/", intakeRouter);
 router.use("/", deadheadRouter);
 

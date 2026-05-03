@@ -346,6 +346,45 @@ export default function FrontPage() {
             →
           </Text>
         </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
+          onPress={() => router.push("/word-walk")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            {
+              borderColor: c.rule,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: c.foreground, fontFamily: SERIF_BOLD },
+              ]}
+            >
+              Word Walk
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+              ]}
+            >
+              Five codetry words a day, one choice at a time. Your
+              decision lands in the guide the moment you tap.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: c.mutedForeground, fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
 
         <View style={{ height: 32 }} />
 

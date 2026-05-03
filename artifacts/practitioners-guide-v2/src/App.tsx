@@ -50,7 +50,7 @@ function Router() {
         path="/refund-invocation-letter"
         component={RefundInvocationLetter}
       />
-      <Route path="/community-store" component={CommunityStorePage} />
+      <Route path="/community-store/:rest*" component={CommunityStorePage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -54,6 +54,7 @@ function RootLayoutNav() {
       <Stack.Screen name="standby" />
       <Stack.Screen name="path" />
       <Stack.Screen name="driver" />
+      <Stack.Screen name="word-walk" />
     </Stack>
   );
 }
