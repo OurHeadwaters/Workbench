@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 
 const salts = [
@@ -27,9 +28,80 @@ function PrintNav() {
 }
 
 export default function PriceList() {
+  const [specials, setSpecials] = useState([
+    { name: "", price: "" },
+    { name: "", price: "" },
+    { name: "", price: "" },
+  ]);
+
+  function updateSpecial(index: number, field: "name" | "price", value: string) {
+    setSpecials((prev) => prev.map((s, i) => i === index ? { ...s, [field]: value } : s));
+  }
+
+  const filledSpecials = specials.filter((s) => s.name.trim() !== "");
+
   return (
     <>
       <PrintNav />
+
+      {/* Specials editor — screen only, never prints */}
+      <div className="no-print" style={{ maxWidth: 680, margin: "0 auto 1.5rem", padding: "0 1rem" }}>
+        <div style={{ background: "white", border: "1.5px solid var(--rust)", borderRadius: 8, padding: "1.1rem 1.25rem" }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 700, color: "var(--rust)", marginBottom: "0.25rem" }}>
+            This Week's Specials
+          </h2>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--muted)", marginBottom: "0.9rem", lineHeight: 1.5 }}>
+            Fill in up to 3 specials below. They'll appear at the bottom of the printed price list. Leave a row blank to skip it.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            {specials.map((s, i) => (
+              <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", width: "1.2rem", textAlign: "center", flexShrink: 0 }}>
+                  {i + 1}.
+                </span>
+                <input
+                  type="text"
+                  placeholder="Product name"
+                  value={s.name}
+                  onChange={(e) => updateSpecial(i, "name", e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "0.45rem 0.65rem",
+                    border: "1px solid rgba(31,61,46,0.22)",
+                    borderRadius: 5,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.875rem",
+                    color: "var(--ink)",
+                    outline: "none",
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="Price (e.g. $10.00)"
+                  value={s.price}
+                  onChange={(e) => updateSpecial(i, "price", e.target.value)}
+                  style={{
+                    width: "9rem",
+                    padding: "0.45rem 0.65rem",
+                    border: "1px solid rgba(31,61,46,0.22)",
+                    borderRadius: 5,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.875rem",
+                    color: "var(--ink)",
+                    outline: "none",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+          {filledSpecials.length === 0 && (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", marginTop: "0.75rem", fontStyle: "italic" }}>
+              No specials entered yet — the section will be hidden on the printed page.
+            </p>
+          )}
+        </div>
+      </div>
+
       <div className="print-page" style={{ fontFamily: "var(--font-sans)" }}>
         {/* Header */}
         <div style={{ borderBottom: "3px solid var(--evergreen)", paddingBottom: "0.6rem", marginBottom: "1.1rem", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
@@ -114,6 +186,31 @@ export default function PriceList() {
             </tbody>
           </table>
         </div>
+
+        {/* This Week's Specials — only shown when at least one special is filled in */}
+        {filledSpecials.length > 0 && (
+          <div style={{ marginBottom: "1.5rem" }}>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 700, color: "var(--rust)", borderLeft: "3px solid var(--rust)", paddingLeft: "0.55rem", marginBottom: "0.65rem" }}>
+              ★ This Week's Specials
+            </h2>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "var(--rust)", color: "white" }}>
+                  <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "left" }}>Special Item</th>
+                  <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "right", width: "20%" }}>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filledSpecials.map((s, i) => (
+                  <tr key={i} style={{ background: i % 2 === 0 ? "white" : "#fff8f5" }}>
+                    <td style={{ padding: "0.55rem 0.6rem", fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "0.95rem", color: "var(--ink)" }}>{s.name}</td>
+                    <td style={{ padding: "0.55rem 0.6rem", fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "1rem", textAlign: "right", color: "var(--rust)" }}>{s.price || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Notes */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.2rem" }}>
