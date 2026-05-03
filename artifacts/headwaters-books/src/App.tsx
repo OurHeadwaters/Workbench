@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider, SignIn, SignUp, useAuth } from "@clerk/react";
-import { SignedIn, SignedOut, RedirectToSignIn } from "@/lib/clerkGates";
+import { RedirectToSignIn } from "@/lib/clerkGates";
 import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
@@ -92,20 +92,34 @@ interface ProtectedRouteProps {
   nest?: boolean;
 }
 
+function ProtectedContent({
+  params,
+  Component,
+}: {
+  params: RouteParams;
+  Component: React.ComponentType<{ params: RouteParams }>;
+}) {
+  const { isLoaded, isSignedIn } = useAuth();
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+  if (!isSignedIn) return <RedirectToSignIn />;
+  return (
+    <Layout>
+      <Component params={params} />
+    </Layout>
+  );
+}
+
 function ProtectedRoute({ component: Component, ...rest }: ProtectedRouteProps) {
   return (
     <Route {...rest}>
       {(params: RouteParams) => (
-        <>
-          <SignedIn>
-            <Layout>
-              <Component params={params} />
-            </Layout>
-          </SignedIn>
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-        </>
+        <ProtectedContent params={params} Component={Component} />
       )}
     </Route>
   );

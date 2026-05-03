@@ -16,16 +16,16 @@ function SignedInInner({ children }: { children: ReactNode }) {
 }
 
 export function SignedOut({ children }: { children: ReactNode }) {
-  return (
-    <ClerkLoaded>
-      <SignedOutInner>{children}</SignedOutInner>
-    </ClerkLoaded>
-  );
+  return <SignedOutInner>{children}</SignedOutInner>;
 }
 
 function SignedOutInner({ children }: { children: ReactNode }) {
-  const { isSignedIn } = useAuth();
-  return !isSignedIn ? <>{children}</> : null;
+  const { isLoaded, isSignedIn } = useAuth();
+  // Optimistic: assume signed-out until Clerk confirms the user IS signed in.
+  // This ensures sign-in buttons always render even when Clerk is slow to
+  // initialize or the domain has not yet been whitelisted in the Clerk dashboard.
+  if (isLoaded && isSignedIn) return null;
+  return <>{children}</>;
 }
 
 export function RedirectToSignIn() {
