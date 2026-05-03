@@ -425,6 +425,45 @@ export default function FrontPage() {
             →
           </Text>
         </Pressable>
+        <View style={{ height: 12 }} />
+        <Pressable
+          onPress={() => router.push("/sarge")}
+          style={({ pressed }) => [
+            styles.toolRow,
+            styles.sargeRow,
+            {
+              borderColor: "#0F766E",
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[
+                styles.toolTitle,
+                { color: "#0F766E", fontFamily: SERIF_BOLD },
+              ]}
+            >
+              Sarge
+            </Text>
+            <Text
+              style={[
+                styles.toolBlurb,
+                { color: "#0F766E", fontFamily: SERIF_ITALIC, opacity: 0.8 },
+              ]}
+            >
+              Your weekly card stack. One action at a time. Done or stuck — no stalling, no doom lists.
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.toolArrow,
+              { color: "#0F766E", fontFamily: MONO },
+            ]}
+          >
+            →
+          </Text>
+        </Pressable>
 
         <View style={{ height: 32 }} />
 
@@ -599,5 +638,8 @@ const styles = StyleSheet.create({
   toolArrow: {
     fontSize: 18,
     letterSpacing: 1,
+  },
+  sargeRow: {
+    backgroundColor: "rgba(15,118,110,0.04)",
   },
 });

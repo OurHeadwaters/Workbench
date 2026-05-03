@@ -11,6 +11,7 @@ import refundInvocationRouter from "./refundInvocation";
 import deadheadRouter from "./deadhead";
 import intakeRouter from "./intake";
 import wordWalkRouter from "./wordWalk";
+import sargeRouter from "./sarge";
 
 const router: IRouter = Router();
 
@@ -24,6 +25,7 @@ router.use("/ship-manifest", shipManifestRouter);
 router.use("/handbook", handbookRouter);
 router.use("/refund-invocation", refundInvocationRouter);
 router.use("/word-walk", wordWalkRouter);
+router.use("/sarge", sargeRouter);
 router.use("/", intakeRouter);
 router.use("/", deadheadRouter);
 

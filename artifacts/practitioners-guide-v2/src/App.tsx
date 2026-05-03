@@ -23,6 +23,7 @@ import { PromotionalPlanPage } from "@/pages/PromotionalPlanPage";
 import { WhatNextPage } from "@/pages/WhatNextPage";
 import { PortfolioPage } from "@/pages/PortfolioPage";
 import CommunityStorePage from "@/pages/CommunityStorePage";
+import { SargeHQPage } from "@/pages/SargeHQPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function Router() {
         component={RefundInvocationLetter}
       />
       <Route path="/community-store/:rest*" component={CommunityStorePage} />
+      <Route path="/sarge" component={SargeHQPage} />
       <Route component={NotFound} />
     </Switch>
   );
