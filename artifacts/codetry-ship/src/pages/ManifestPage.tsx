@@ -136,8 +136,7 @@ export function ManifestPage() {
 
         {entries && entries.length > 0 ? (
           <ul
-            className="mt-8 divide-y"
-            style={{ borderColor: "hsl(var(--card-border))" }}
+            className="mt-8 space-y-4"
             data-testid="manifest-list"
           >
             {entries.map((e) => (
@@ -165,20 +164,38 @@ export function ManifestPage() {
 
 function ManifestRow({ entry }: { entry: ManifestEntry }) {
   return (
-    <li className="py-6" data-testid={`manifest-row-${entry.id}`}>
-      <div className="flex flex-wrap items-baseline justify-between gap-4">
-        <div className="space-y-1">
-          <p className="font-serif text-xl">{entry.name}</p>
+    <li
+      className="rounded-sm border px-5 py-5"
+      style={{
+        borderColor: "hsl(var(--card-border))",
+        backgroundColor: "hsl(var(--card))",
+      }}
+      data-testid={`manifest-row-${entry.id}`}
+    >
+      {/* Top row — name + date/status */}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-0.5">
+          <p className="font-serif text-xl leading-snug">{entry.name}</p>
           <p
-            className="font-mono text-xs"
+            className="font-mono text-xs leading-relaxed"
             style={{ color: "hsl(var(--muted-foreground))" }}
           >
             {entry.email}
-            {entry.org ? ` · ${entry.org}` : ""}
-            {entry.role ? ` · ${entry.role}` : ""}
+            {entry.org ? (
+              <>
+                <span className="mx-1.5 opacity-40">·</span>
+                {entry.org}
+              </>
+            ) : null}
+            {entry.role ? (
+              <>
+                <span className="mx-1.5 opacity-40">·</span>
+                {entry.role}
+              </>
+            ) : null}
           </p>
         </div>
-        <div className="text-right">
+        <div className="text-right shrink-0">
           <p
             className="font-mono text-[11px] uppercase tracking-[0.18em]"
             style={{ color: "hsl(var(--muted-foreground))" }}
@@ -191,27 +208,44 @@ function ManifestRow({ entry }: { entry: ManifestEntry }) {
           </p>
         </div>
       </div>
-      {entry.wouldBring ? (
-        <p className="mt-3 font-serif text-base">
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em] mr-2"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            brings
-          </span>
-          {entry.wouldBring}
-        </p>
-      ) : null}
-      {entry.wouldWant ? (
-        <p className="mt-2 font-serif text-base">
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em] mr-2"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            wants
-          </span>
-          {entry.wouldWant}
-        </p>
+
+      {/* Brings / Wants — stacked blocks, visually distinct */}
+      {(entry.wouldBring || entry.wouldWant) ? (
+        <div
+          className="mt-4 grid gap-3"
+          style={{
+            gridTemplateColumns: entry.wouldBring && entry.wouldWant ? "1fr 1fr" : "1fr",
+          }}
+        >
+          {entry.wouldBring ? (
+            <div
+              className="rounded-sm px-4 py-3"
+              style={{ backgroundColor: "hsl(var(--accent) / 0.08)", borderLeft: "3px solid hsl(var(--accent))" }}
+            >
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.2em] mb-1.5"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                brings
+              </p>
+              <p className="font-serif text-base leading-snug">{entry.wouldBring}</p>
+            </div>
+          ) : null}
+          {entry.wouldWant ? (
+            <div
+              className="rounded-sm px-4 py-3"
+              style={{ backgroundColor: "hsl(var(--muted) / 0.5)", borderLeft: "3px solid hsl(var(--card-border))" }}
+            >
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.2em] mb-1.5"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                wants
+              </p>
+              <p className="font-serif text-base leading-snug">{entry.wouldWant}</p>
+            </div>
+          ) : null}
+        </div>
       ) : null}
     </li>
   );
