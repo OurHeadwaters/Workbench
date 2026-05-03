@@ -73,9 +73,6 @@ const SEED_PRIORITIES: Omit<Priority, "order">[] = [
 
 const API = "/api/sarge";
 
-function uid(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
 
 function currentISOWeek(): string {
   const now = new Date();
@@ -339,7 +336,7 @@ export function SargeHQPage() {
 
   function addPriority() {
     const newP: Priority = {
-      id: uid(),
+      id: crypto.randomUUID(),
       label: "",
       order: priorities.length,
       isActive: true,
@@ -379,7 +376,7 @@ export function SargeHQPage() {
     };
     setPriorities([priority]);
     const newCards: SargeCard[] = focus.steps.map((step, i) => ({
-      id: uid(),
+      id: crypto.randomUUID(),
       weekId: week?.id ?? "",
       priorityId: focus.id,
       priorityLabel: focus.title,
@@ -417,7 +414,7 @@ export function SargeHQPage() {
         cards: Omit<SargeCard, "id" | "weekId" | "status" | "order" | "completedAt" | "barrierNote">[];
       };
       const generated: SargeCard[] = data.cards.map((c, i) => ({
-        id: uid(),
+        id: crypto.randomUUID(),
         weekId: week?.id ?? "",
         priorityId: c.priorityId,
         priorityLabel: c.priorityLabel,

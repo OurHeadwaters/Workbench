@@ -148,38 +148,43 @@ router.post("/week", async (req, res) => {
     if (cards.length > 0) {
       for (let i = 0; i < cards.length; i++) {
         const c = cards[i] as Record<string, unknown>;
+        const UUID_RE =
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         const cardId =
-          typeof c.id === "string" && c.id ? c.id : undefined;
+          typeof c.id === "string" && UUID_RE.test(c.id) ? c.id : undefined;
         const action =
           typeof c.action === "string" ? c.action.trim() : "";
         if (!action) continue;
 
-        if (cardId) {
-          await db
-            .update(sargeCardsTable)
-            .set({
-              action,
-              context:
-                typeof c.context === "string" ? c.context : null,
-              priorityLabel:
-                typeof c.priorityLabel === "string" ? c.priorityLabel : "",
-              order: typeof c.order === "number" ? c.order : i,
-              updatedAt: now,
-            })
-            .where(eq(sargeCardsTable.id, cardId));
-        } else {
-          await db.insert(sargeCardsTable).values({
+        const priorityId =
+          typeof c.priorityId === "string" ? c.priorityId : "misc";
+        const priorityLabel =
+          typeof c.priorityLabel === "string" ? c.priorityLabel : "Misc";
+        const context = typeof c.context === "string" ? c.context : null;
+        const order = typeof c.order === "number" ? c.order : i;
+
+        await db
+          .insert(sargeCardsTable)
+          .values({
+            ...(cardId ? { id: cardId } : {}),
             weekId,
-            priorityId:
-              typeof c.priorityId === "string" ? c.priorityId : "misc",
-            priorityLabel:
-              typeof c.priorityLabel === "string" ? c.priorityLabel : "Misc",
+            priorityId,
+            priorityLabel,
             action,
-            context: typeof c.context === "string" ? c.context : null,
+            context,
             status: "active",
-            order: typeof c.order === "number" ? c.order : i,
+            order,
+          })
+          .onConflictDoUpdate({
+            target: sargeCardsTable.id,
+            set: {
+              action,
+              context,
+              priorityLabel,
+              order,
+              updatedAt: now,
+            },
           });
-        }
       }
     }
 
