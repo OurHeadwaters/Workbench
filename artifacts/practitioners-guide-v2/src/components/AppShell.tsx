@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { useScenario } from "@/lib/scenario";
 import { BUCKETS } from "@/data/buckets";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,8 @@ import {
   Compass,
   LayoutGrid,
   Store,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 
 interface NavItem {
@@ -60,12 +63,79 @@ export const NAV: NavItem[] = [
   { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e", dormant: true },
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+function ScrollToTop() {
   const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location]);
+  return null;
+}
+
+function ArrowNav() {
+  const [location, setLocation] = useLocation();
+
+  const currentIndex = NAV.findIndex((item) =>
+    item.href === "/" ? location === "/" : location.startsWith(item.href),
+  );
+
+  const activeIndex = currentIndex === -1 ? 0 : currentIndex;
+  const prevItem = activeIndex > 0 ? NAV[activeIndex - 1] : null;
+  const nextItem = activeIndex < NAV.length - 1 ? NAV[activeIndex + 1] : null;
+  const currentItem = NAV[activeIndex];
+
+  return (
+    <div
+      className="hidden lg:flex fixed left-4 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-3"
+      data-testid="arrow-nav"
+    >
+      <button
+        onClick={() => prevItem && setLocation(prevItem.href)}
+        disabled={!prevItem}
+        aria-label={prevItem ? `Go to ${prevItem.label}` : "No previous section"}
+        data-testid="arrow-nav-up"
+        className={cn(
+          "h-14 w-14 rounded-xl flex items-center justify-center transition-all shadow-lg",
+          "bg-primary text-primary-foreground hover:opacity-90 active:scale-95",
+          !prevItem && "opacity-0 pointer-events-none",
+        )}
+      >
+        <ChevronUp className="h-8 w-8" strokeWidth={2.5} />
+      </button>
+
+      <div className="flex flex-col items-center gap-1 max-w-[56px]">
+        <span
+          className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold text-center leading-tight"
+          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", maxHeight: "96px" }}
+          title={currentItem?.label}
+        >
+          {currentItem?.label}
+        </span>
+      </div>
+
+      <button
+        onClick={() => nextItem && setLocation(nextItem.href)}
+        disabled={!nextItem}
+        aria-label={nextItem ? `Go to ${nextItem.label}` : "No next section"}
+        data-testid="arrow-nav-down"
+        className={cn(
+          "h-14 w-14 rounded-xl flex items-center justify-center transition-all shadow-lg",
+          "bg-primary text-primary-foreground hover:opacity-90 active:scale-95",
+          !nextItem && "opacity-0 pointer-events-none",
+        )}
+      >
+        <ChevronDown className="h-8 w-8" strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
   const { scenario } = useScenario();
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
+
       <header
         className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-40"
         style={{
@@ -103,50 +173,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-8">
-        <aside className="hidden lg:block">
-          <nav className="sticky top-24 space-y-1" data-testid="sidebar-nav">
-            {NAV.map((item) => {
-              const active =
-                item.href === "/"
-                  ? location === "/"
-                  : location.startsWith(item.href);
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
-                    active
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                      : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
-                  )}
-                  data-testid={`nav-${item.href.replace("/", "") || "index"}`}
-                >
-                  <span
-                    className="inline-block h-2 w-2 rounded-full"
-                    style={{
-                      backgroundColor: item.accent ?? "transparent",
-                      border: item.accent ? "none" : "1px dashed currentColor",
-                    }}
-                  />
-                  <Icon className="h-4 w-4 flex-shrink-0 opacity-70" />
-                  <span className="truncate flex-1">{item.label}</span>
-                  {item.dormant && (
-                    <span
-                      className="text-[8px] uppercase tracking-[0.14em] px-1 py-[1px] rounded leading-none shrink-0"
-                      style={{ background: "rgba(184,90,62,0.15)", color: "#b85a3e", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", border: "1px solid rgba(184,90,62,0.30)" }}
-                    >
-                      dormant
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
+      <ArrowNav />
 
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
         <main className="min-w-0">{children}</main>
       </div>
 
