@@ -1,4 +1,6 @@
-// The trail map: station list with locked/unlocked/completed markers.
+// The trail map: stations grouped by phase with locked/unlocked/completed
+// markers. Replaces the 5-star ConstellationMap now that the path has 20
+// stations across five phases.
 
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
@@ -13,11 +15,11 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ConstellationMap } from "@/components/path/ConstellationMap";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
 import {
+  PIONEER_PHASES,
   pioneerPathStationExcerpt,
   type PioneerStation,
 } from "@/data/pioneerPath";
@@ -28,6 +30,17 @@ const SERIF_ITALIC = "Lora_400Regular_Italic";
 const SERIF_BOLD = "Lora_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
+const ROMAN: Record<number, string> = {
+  1: "I",   2: "II",   3: "III",  4: "IV",   5: "V",
+  6: "VI",  7: "VII",  8: "VIII", 9: "IX",   10: "X",
+  11: "XI", 12: "XII", 13: "XIII",14: "XIV",  15: "XV",
+  16: "XVI",17: "XVII",18: "XVIII",19: "XIX", 20: "XX",
+};
+
+const PHASE_ROMAN: Record<number, string> = {
+  1: "I", 2: "II", 3: "III", 4: "IV", 5: "V",
+};
+
 export default function PathHome() {
   const c = useColors();
   const insets = useSafeAreaInsets();
@@ -37,9 +50,9 @@ export default function PathHome() {
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
-  // Long-press peek: opens a card with subtitle + first sentence.
   const [peek, setPeek] = useState<PioneerStation | null>(null);
   const closePeek = useCallback(() => setPeek(null), []);
+
   const peekFirstSentence = useMemo(() => {
     if (!peek) return "";
     const blocks = pioneerPathStationExcerpt(peek.id);
@@ -55,13 +68,14 @@ export default function PathHome() {
 
   const completedCount = PIONEER_STATIONS.filter((s) => isCompleted(s.id)).length;
   const total = PIONEER_STATIONS.length;
+
   const progressLabel = ready
     ? completedCount === 0
-      ? "Five stations · the first is open"
+      ? "Twenty stations · the first is open"
       : completedCount === total
-        ? "Five of five · the trail is walked"
+        ? "All twenty · the trail is walked"
         : `${completedCount} of ${total} walked`
-    : "Five stations · the first is open";
+    : "Twenty stations · the first is open";
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
@@ -80,89 +94,168 @@ export default function PathHome() {
           accessibilityLabel="Back to the handbook"
           style={styles.backRow}
         >
-          <Text
-            style={[
-              styles.backLink,
-              { color: c.mutedForeground, fontFamily: MONO },
-            ]}
-          >
+          <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
             ← Back to the handbook
           </Text>
         </Pressable>
 
-        <Text
-          style={[styles.eyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
-        >
+        <Text style={[styles.eyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
           A WALKED EDITION
         </Text>
         <Text style={[styles.title, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
           The Pioneer Path
         </Text>
-        <Text
-          style={[styles.subtitle, { color: c.foreground, fontFamily: SERIF_ITALIC }]}
-        >
-          Five stations. Listen, read, do, then unlock the next.
+        <Text style={[styles.subtitle, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+          Twenty stations, five phases. Listen, read, do, then unlock the next.
         </Text>
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
-        <Text
-          style={[styles.openingPara, { color: c.foreground, fontFamily: SERIF }]}
-        >
-          The handbook is for reading. The Path is for walking. Each
-          station gives you a short voiceover, a short reading from the
-          chapter it draws from, and one thing to do on your own ground
-          before the next station opens.
+        <Text style={[styles.openingPara, { color: c.foreground, fontFamily: SERIF }]}>
+          The handbook is for reading. The Path is for walking. Each station
+          gives you a short voiceover, a short reading from the chapter it
+          draws from, and one thing to do on your own ground before the next
+          station opens.
         </Text>
 
-        <Text
-          style={[styles.progressLabel, { color: c.mutedForeground, fontFamily: MONO }]}
-        >
+        <Text style={[styles.progressLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
           {progressLabel}
         </Text>
 
-        <View style={styles.trail}>
-          <ConstellationMap
-            stations={PIONEER_STATIONS}
-            stateOf={(id) =>
-              isCompleted(id)
-                ? "completed"
-                : isUnlocked(id)
-                  ? "unlocked"
-                  : "locked"
-            }
-            onStarPress={(station) => {
-              const unlocked = isUnlocked(station.id);
-              if (!unlocked) {
-                // Locked stars open the peek so the reader can read a
-                // one-line teaser of what's ahead — same affordance as
-                // the long-press, kept reachable on tap because the
-                // star itself is the only handle on the constellation.
-                setPeek(station);
-                return;
-              }
-              router.push({
-                pathname: "/path/station/[id]",
-                params: { id: station.id },
-              });
-            }}
-            onStarLongPress={(station) => setPeek(station)}
-          />
-        </View>
+        {PIONEER_PHASES.map((phase) => {
+          const phaseStations = PIONEER_STATIONS.filter(
+            (s) => s.phase === phase.number,
+          );
+          return (
+            <View key={phase.number} style={styles.phaseBlock}>
+              <View style={[styles.phaseHeaderRow, { borderBottomColor: c.rule }]}>
+                <Text
+                  style={[styles.phaseEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
+                >
+                  PHASE {PHASE_ROMAN[phase.number]}
+                </Text>
+                <Text
+                  style={[styles.phaseLabel, { color: c.foreground, fontFamily: SERIF_BOLD }]}
+                >
+                  {phase.label}
+                </Text>
+                <Text
+                  style={[styles.phaseDesc, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}
+                >
+                  {phase.description}
+                </Text>
+              </View>
+
+              {phaseStations.map((station, i) => {
+                const completed = isCompleted(station.id);
+                const unlocked = isUnlocked(station.id);
+                const isCurrent =
+                  unlocked && !completed;
+                const isLast = i === phaseStations.length - 1;
+
+                return (
+                  <Pressable
+                    key={station.id}
+                    onPress={() => {
+                      if (!unlocked) {
+                        setPeek(station);
+                        return;
+                      }
+                      router.push({
+                        pathname: "/path/station/[id]",
+                        params: { id: station.id },
+                      });
+                    }}
+                    onLongPress={() => setPeek(station)}
+                    style={({ pressed }) => [
+                      styles.stationRow,
+                      !isLast && styles.stationRowBorder,
+                      { borderBottomColor: c.rule, opacity: pressed ? 0.7 : 1 },
+                    ]}
+                  >
+                    <View style={styles.stationLeft}>
+                      <View
+                        style={[
+                          styles.stationDot,
+                          completed
+                            ? { backgroundColor: c.foreground }
+                            : isCurrent
+                              ? {
+                                  backgroundColor: "transparent",
+                                  borderWidth: 2,
+                                  borderColor: c.foreground,
+                                }
+                              : {
+                                  backgroundColor: "transparent",
+                                  borderWidth: 1,
+                                  borderColor: c.mutedForeground,
+                                },
+                        ]}
+                      >
+                        {completed ? (
+                          <Text style={[styles.dotCheck, { color: c.background }]}>✓</Text>
+                        ) : null}
+                      </View>
+                    </View>
+
+                    <View style={styles.stationMid}>
+                      <Text
+                        style={[
+                          styles.stationOrdinal,
+                          {
+                            color: c.mutedForeground,
+                            fontFamily: MONO,
+                            opacity: unlocked ? 1 : 0.45,
+                          },
+                        ]}
+                      >
+                        {ROMAN[station.ordinal] ?? station.ordinal}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stationName,
+                          {
+                            color: c.foreground,
+                            fontFamily: isCurrent ? SERIF_BOLD : SERIF,
+                            opacity: unlocked ? 1 : 0.4,
+                          },
+                        ]}
+                      >
+                        {station.name}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.stationSub,
+                          {
+                            color: c.mutedForeground,
+                            fontFamily: SERIF_ITALIC,
+                            opacity: unlocked ? 1 : 0.35,
+                          },
+                        ]}
+                      >
+                        {station.subtitle}
+                      </Text>
+                    </View>
+
+                    {unlocked && !completed ? (
+                      <Text style={[styles.chevron, { color: c.mutedForeground }]}>›</Text>
+                    ) : null}
+                  </Pressable>
+                );
+              })}
+            </View>
+          );
+        })}
 
         <View style={[styles.endRule, { backgroundColor: c.rule }]} />
-        <Text
-          style={[styles.foot, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}
-        >
-          The trail is yours. Nothing on the Path syncs anywhere or
-          tells anyone what you walked. Mark a station done when you've
-          done the thing the station asks.
+        <Text style={[styles.foot, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+          The trail is yours. Nothing on the Path syncs anywhere or tells
+          anyone what you walked. Mark a station done when you've done the
+          thing the station asks.
         </Text>
 
         <Pressable onPress={cycleTheme} style={styles.themeRow} hitSlop={8}>
-          <Text
-            style={[styles.themeLabel, { color: c.mutedForeground, fontFamily: MONO }]}
-          >
+          <Text style={[styles.themeLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
             {theme === "dark" ? "Light campsite" : "Dark campfire"}
           </Text>
         </Pressable>
@@ -186,11 +279,9 @@ export default function PathHome() {
               <Text
                 style={[styles.peekEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
               >
-                STATION {peek.ordinal} · PEEK
+                STATION {ROMAN[peek.ordinal] ?? peek.ordinal} · PEEK
               </Text>
-              <Text
-                style={[styles.peekTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}
-              >
+              <Text style={[styles.peekTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
                 {peek.name}
               </Text>
               <Text
@@ -199,19 +290,14 @@ export default function PathHome() {
                 {peek.subtitle}
               </Text>
               {peekFirstSentence ? (
-                <Text
-                  style={[styles.peekBody, { color: c.foreground, fontFamily: SERIF }]}
-                >
+                <Text style={[styles.peekBody, { color: c.foreground, fontFamily: SERIF }]}>
                   {peekFirstSentence}
                 </Text>
               ) : null}
               <View style={styles.peekActions}>
                 <Pressable
                   onPress={closePeek}
-                  style={({ pressed }) => [
-                    styles.peekClose,
-                    { opacity: pressed ? 0.6 : 1 },
-                  ]}
+                  style={({ pressed }) => [styles.peekClose, { opacity: pressed ? 0.6 : 1 }]}
                 >
                   <Text
                     style={[styles.peekCloseLabel, { color: c.mutedForeground, fontFamily: MONO }]}
@@ -231,10 +317,7 @@ export default function PathHome() {
                     }}
                     style={({ pressed }) => [
                       styles.peekOpenBtn,
-                      {
-                        backgroundColor: c.foreground,
-                        opacity: pressed ? 0.7 : 1,
-                      },
+                      { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 },
                     ]}
                   >
                     <Text
@@ -245,7 +328,10 @@ export default function PathHome() {
                   </Pressable>
                 ) : (
                   <Text
-                    style={[styles.peekLockedLabel, { color: c.mutedForeground, fontFamily: MONO }]}
+                    style={[
+                      styles.peekLockedLabel,
+                      { color: c.mutedForeground, fontFamily: MONO },
+                    ]}
                   >
                     Walk the previous station first
                   </Text>
@@ -308,11 +394,78 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 1.4,
     textTransform: "uppercase",
-    marginBottom: 14,
+    marginBottom: 20,
   },
-  trail: {
-    marginTop: 4,
+  phaseBlock: {
     marginBottom: 32,
+  },
+  phaseHeaderRow: {
+    paddingBottom: 10,
+    marginBottom: 4,
+    borderBottomWidth: 1,
+  },
+  phaseEyebrow: {
+    fontSize: 10,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    marginBottom: 3,
+  },
+  phaseLabel: {
+    fontSize: 18,
+    lineHeight: 22,
+    letterSpacing: 0.3,
+    marginBottom: 3,
+  },
+  phaseDesc: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  stationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 13,
+    gap: 12,
+  },
+  stationRowBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  stationLeft: {
+    width: 28,
+    alignItems: "center",
+  },
+  stationDot: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dotCheck: {
+    fontSize: 11,
+    lineHeight: 13,
+    fontWeight: "700",
+  },
+  stationMid: {
+    flex: 1,
+  },
+  stationOrdinal: {
+    fontSize: 9,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+    marginBottom: 1,
+  },
+  stationName: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  stationSub: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 1,
+  },
+  chevron: {
+    fontSize: 22,
+    lineHeight: 24,
   },
   endRule: {
     height: 1,

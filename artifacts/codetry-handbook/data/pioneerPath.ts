@@ -1,9 +1,16 @@
-// Headwaters: The Pioneer Path
+// Headwaters: The Pioneer Path — 20 stations, five phases.
 //
 // The Path is the same source material as the handbook, walked instead of
 // read. Each station names a load-bearing piece of the codetry corpus and
 // asks the reader to *do* one thing on the ground before the next station
 // unlocks. This file is the only data file the Path screens read.
+//
+// Five phases:
+//   I   — Read Your Community     (stations 1–5)   diagnose what's already there
+//   II  — Name Your Model         (stations 6–9)   identify the right shape
+//   III — Make Your First Agreement (stations 10–13) translate and commit
+//   IV  — Build the Floor         (stations 14–16) buffer · tithe · reserve
+//   V   — Hold the Line           (stations 17–20) renegotiate · replicate · hand off
 //
 // Vocabulary discipline: station ids match the constellation primitive
 // ids where one exists (the-standby, the-gate). Excerpts are drawn from
@@ -13,60 +20,61 @@
 import { CHAPTERS, type Block } from "./handbook";
 import { constellation } from "./constellation";
 
-// A sponsor or expert who has visited a station along the path. The
-// distinction matters: §5.8 names sponsors as those who stand behind
-// the work materially, and experts as those who stand beside the work
-// in their own discipline. The two roles are kept separate so a
-// sponsor whose money becomes the basis on which their expertise is
-// then accepted — the §5.6 inspector-standing failure mode — stays
-// visible and refusable rather than collapsed into a single "supporter".
+// A sponsor or expert who has visited a station along the path.
 export type PioneerVisitor = {
-  // Stable slug-cased id used for keyed React renders.
   id: string;
-  // Display name in the visitor's preferred form.
   name: string;
-  // §5.8 distinction. Sponsor = stands behind materially. Expert = stands
-  // beside in their own discipline. The chapter resists collapsing them.
   role: "sponsor" | "expert";
-  // Single short note in the visitor's own voice, left at this station.
-  // Bounded by §5.8: one station, one note, in their own voice.
   note: string;
+};
+
+export type PioneerPhase = {
+  number: number;         // 1–5
+  label: string;          // display label
+  description: string;    // one-line description shown above the phase's stations
 };
 
 export type PioneerStation = {
   id: string;
-  ordinal: number; // 1-indexed position on the trail
-  name: string; // display name on the trail marker
-  subtitle: string; // one-line caption shown under the marker
-  // The chapter in the existing handbook this station is drawn from.
-  // Used both for the "Read" excerpt and for the "From the library"
-  // deep-link at the bottom of the station screen.
+  ordinal: number;        // 1-indexed position on the full trail (1–20)
+  phase: number;          // which phase this station belongs to (1–5)
+  name: string;
+  subtitle: string;
   sourceChapterId: string;
-  // The single tangible action the station asks the reader to perform.
-  // One action, not a checklist. Keep it doable in an afternoon.
   doPrompt: string;
-  // Stable filename slug for the narration MP3. The audio file is
-  // expected at public/narration/<narrationSlug>.mp3 — drop a new MP3
-  // with this name and the player picks it up automatically on next
-  // load. No code change required to publish a recording.
   narrationSlug: string;
-  // Optional list of sponsors and experts who have visited this
-  // station, per §5.8 ("Sponsors and experts — base first, then
-  // networking outward"). Empty/undefined by design at the time of
-  // writing — the absence is the §5.8 argument made visible. Real
-  // visitors are added one at a time as the base walks the path and
-  // earns the standing to invite.
   visitors?: PioneerVisitor[];
 };
 
-// Resolve a constellation primitive's auto-generated chapter id. The
-// founding-primitive chapters are generated at handbook build time as
-// `3-{zoneCount + i + 1}`; rather than recompute that arithmetic here we
-// look them up by primitive name in the chapter title, the same trick
-// app/standby/index.tsx uses. Returns the first Part III chapter as a
-// fallback so a missing primitive never crashes the trail at module
-// load time — the station screens can render with the wrong source
-// chapter rather than the whole app failing to mount.
+// The five phases — used by the path index to group stations visually.
+export const PIONEER_PHASES: PioneerPhase[] = [
+  {
+    number: 1,
+    label: "Read Your Community",
+    description: "Before building anything, see what's already there.",
+  },
+  {
+    number: 2,
+    label: "Name Your Model",
+    description: "Identify the right shape before you commit to a structure.",
+  },
+  {
+    number: 3,
+    label: "Make Your First Agreement",
+    description: "Practice the translation, then make one real commitment.",
+  },
+  {
+    number: 4,
+    label: "Build the Floor",
+    description: "Establish the stability mechanisms before you grow.",
+  },
+  {
+    number: 5,
+    label: "Hold the Line",
+    description: "Build the habits that make the model last past the first person.",
+  },
+];
+
 function findPrimitiveChapterId(primitiveId: string): string {
   const primitive = constellation.constellationWidePrimitives.find(
     (p) => p.id === primitiveId,
@@ -84,9 +92,13 @@ function findPrimitiveChapterId(primitiveId: string): string {
 }
 
 export const PIONEER_STATIONS: PioneerStation[] = [
+
+  // ── Phase I — Read Your Community ─────────────────────────────────────────
+
   {
     id: "the-saltbox",
     ordinal: 1,
+    phase: 1,
     name: "The Saltbox",
     subtitle: "Where every beam carries weight",
     sourceChapterId: "1-2",
@@ -97,16 +109,101 @@ export const PIONEER_STATIONS: PioneerStation[] = [
   {
     id: "both-states",
     ordinal: 2,
+    phase: 1,
     name: "Both-States",
     subtitle: "One word, two tempos",
     sourceChapterId: "1-3",
     doPrompt:
-      "Pick one thing on your homestead that runs in two tempos — a pump that's mostly off but sometimes everything, a pantry that's mostly still but sometimes a kitchen. Write its name down. Then write the second name you almost gave it before you settled on one.",
+      "Pick one thing in your community that runs in two tempos — mostly quiet but sometimes everything. Write its name. Then write the second name you almost gave it.",
     narrationSlug: "both-states",
   },
   {
-    id: "both-sides",
+    id: "the-ledger-walk",
     ordinal: 3,
+    phase: 1,
+    name: "The Ledger Walk",
+    subtitle: "Follow the money before you move it",
+    sourceChapterId: "4-3",
+    doPrompt:
+      "Go through one week of purchases in your community — groceries, fuel, building supplies, anything bought from outside. Write down where each dollar went. At the bottom, write one number: how much left your community that week. Keep the paper.",
+    narrationSlug: "the-ledger-walk",
+  },
+  {
+    id: "the-names",
+    ordinal: 4,
+    phase: 1,
+    name: "The Names",
+    subtitle: "The connective tissue you already have",
+    sourceChapterId: "4-1",
+    doPrompt:
+      "Write down three names — real people in your community — who you would trust to hold a hard conversation honestly. Not a role, not a title. Three actual names. Fold the paper and keep it somewhere you'll find it. These are your connective tissue.",
+    narrationSlug: "the-names",
+  },
+  {
+    id: "the-gap",
+    ordinal: 5,
+    phase: 1,
+    name: "The Gap",
+    subtitle: "What leaves your community every week",
+    sourceChapterId: "5-5",
+    doPrompt:
+      "Name one thing your community buys every week from somewhere outside — food, fuel, a service — that someone in your community could provide. Write the name of the thing. Next to it, write the name of one person in your community who already knows how to make or do it.",
+    narrationSlug: "the-gap",
+  },
+
+  // ── Phase II — Name Your Model ─────────────────────────────────────────────
+
+  {
+    id: "the-archetype",
+    ordinal: 6,
+    phase: 2,
+    name: "The Archetype",
+    subtitle: "Which shape fits before you build it",
+    sourceChapterId: "3-0",
+    doPrompt:
+      "Read the four shapes: The Store, The Agency, The Platform, The Cooperative. Write down which one your community is already closest to — even if it's informal and unnamed. Then write one sentence about why that shape fits. Don't pick the most ambitious one. Pick the truest one.",
+    narrationSlug: "the-archetype",
+  },
+  {
+    id: "the-first-trade",
+    ordinal: 7,
+    phase: 2,
+    name: "The First Trade",
+    subtitle: "What moves informally already",
+    sourceChapterId: "4-2",
+    doPrompt:
+      "Name one exchange that already happens in your community without money changing hands — a favour, a barter, a standing agreement. Write: who gives, who receives, what moves, and what makes it work. Then write: what would change if that exchange had a name and a simple agreement behind it?",
+    narrationSlug: "the-first-trade",
+  },
+  {
+    id: "the-floor",
+    ordinal: 8,
+    phase: 2,
+    name: "The Floor",
+    subtitle: "The minimum before you think about growing",
+    sourceChapterId: "1-5",
+    doPrompt:
+      "Write down the minimum monthly number that keeps your community's most critical function running — not thriving, just running. One number. Then write the three things that number has to cover. This is your floor. Post it somewhere visible.",
+    narrationSlug: "the-floor",
+  },
+  {
+    id: "the-waterfall",
+    ordinal: 9,
+    phase: 2,
+    name: "The Waterfall",
+    subtitle: "The order that makes a dollar last",
+    sourceChapterId: "3-1",
+    doPrompt:
+      "On a piece of paper, draw a simple flow: if your community's first trade brought in $1,000, where would it go — in what order? Draw the sequence top to bottom. Each box gets one label in your community's own words. The order is the decision.",
+    narrationSlug: "the-waterfall",
+  },
+
+  // ── Phase III — Make Your First Agreement ──────────────────────────────────
+
+  {
+    id: "both-sides",
+    ordinal: 10,
+    phase: 3,
     name: "Both-Sides",
     subtitle: "One word, two rooms",
     sourceChapterId: "1-4",
@@ -116,7 +213,8 @@ export const PIONEER_STATIONS: PioneerStation[] = [
   },
   {
     id: "the-standby",
-    ordinal: 4,
+    ordinal: 11,
+    phase: 3,
     name: "The Standby",
     subtitle: "Always-on, until it isn't",
     sourceChapterId: findPrimitiveChapterId("the-standby"),
@@ -126,13 +224,108 @@ export const PIONEER_STATIONS: PioneerStation[] = [
   },
   {
     id: "the-gate",
-    ordinal: 5,
+    ordinal: 12,
+    phase: 3,
     name: "The Gate",
     subtitle: "A calm passage between two dialects",
     sourceChapterId: findPrimitiveChapterId("the-gate"),
     doPrompt:
       "Take one piece of mail from a regulator, banker, or government office. Underline every word in it your family wouldn't say at the table. Write your family's word in the margin next to each one. Keep both.",
     narrationSlug: "the-gate",
+  },
+  {
+    id: "the-agreement",
+    ordinal: 13,
+    phase: 3,
+    name: "The Agreement",
+    subtitle: "The same thing, said two ways",
+    sourceChapterId: "4-4",
+    doPrompt:
+      "Write one paragraph describing the first trade you named in Station 7. Write it twice: once in your community's own words, the way you'd explain it at a kitchen table. Once in the way you'd write it on a form or say it to a banker. Keep both. The gap between them is the work.",
+    narrationSlug: "the-agreement",
+  },
+
+  // ── Phase IV — Build the Floor ─────────────────────────────────────────────
+
+  {
+    id: "the-buffer",
+    ordinal: 14,
+    phase: 4,
+    name: "The Buffer",
+    subtitle: "The firewall before the debt plan",
+    sourceChapterId: "4-6",
+    doPrompt:
+      "How many months could your community's most critical function keep running if your main income stopped tomorrow? Write the honest number — not the optimistic one. If you don't know, write 'unknown.' That is also the answer. Now write one thing that would make that number one month longer.",
+    narrationSlug: "the-buffer",
+  },
+  {
+    id: "the-tithe",
+    ordinal: 15,
+    phase: 4,
+    name: "The Tithe",
+    subtitle: "First claim, not last",
+    sourceChapterId: "0-1",
+    doPrompt:
+      "Name what your community already gives back — to the land, to elders, to those who have less, to the next generation. Write the practice down, even if it's informal and has no dollar amount attached. This is your tithe. It goes first, before the rest of the waterfall.",
+    narrationSlug: "the-tithe",
+  },
+  {
+    id: "the-reserve",
+    ordinal: 16,
+    phase: 4,
+    name: "The Reserve",
+    subtitle: "Where extra goes when there's extra",
+    sourceChapterId: "4-5",
+    doPrompt:
+      "Write one rule for where extra goes when there's extra. Not a wish — a rule: 'When we have more than X, Y goes to Z.' If you don't have a rule yet, write the one that feels right. Write it in your community's language. Post it next to the waterfall you drew in Station 9.",
+    narrationSlug: "the-reserve",
+  },
+
+  // ── Phase V — Hold the Line ────────────────────────────────────────────────
+
+  {
+    id: "the-renegotiation",
+    ordinal: 17,
+    phase: 5,
+    name: "The Renegotiation",
+    subtitle: "Name the trigger before you need it",
+    sourceChapterId: "4-3",
+    doPrompt:
+      "Write down the three things that would have to change before you'd go back to the table and ask for different terms. Not feelings — conditions. 'When the store turns a profit for three months in a row.' 'When the grant runs out.' 'When the hours double.' Name the triggers before you need them.",
+    narrationSlug: "the-renegotiation",
+  },
+  {
+    id: "the-replication",
+    ordinal: 18,
+    phase: 5,
+    name: "The Replication",
+    subtitle: "Who walks this after you",
+    sourceChapterId: "4-7",
+    doPrompt:
+      "Name one person in your community who could walk this path after you — who could run this model if you stepped back. Write their name. Write the one thing they would need to learn that they don't already know. That gap is your next teaching.",
+    narrationSlug: "the-replication",
+  },
+  {
+    id: "the-handoff",
+    ordinal: 19,
+    phase: 5,
+    name: "The Handoff",
+    subtitle: "Three load-bearing sentences for the next person",
+    sourceChapterId: "1-7",
+    doPrompt:
+      "Write the three things the next person needs to know to pick this up if you're not there. Not the full plan — three load-bearing sentences: the floor number, the waterfall order, and the name of the gate person. One page, in plain language, somewhere they can find it.",
+    narrationSlug: "the-handoff",
+  },
+  {
+    id: "the-return",
+    ordinal: 20,
+    phase: 5,
+    name: "The Return",
+    subtitle: "What Tuesday morning looks like when it works",
+    sourceChapterId: "1-0",
+    doPrompt:
+      "Write one paragraph: what does your community look like in five years if this works? Not a grant objective, not an economic development target. What does it actually feel like on a Tuesday morning? Write it in your own words, in the language your community uses at the table.",
+    narrationSlug: "the-return",
   },
 ];
 
@@ -153,13 +346,6 @@ export function getPioneerNeighbors(id: string): {
   };
 }
 
-// Pull the Read excerpt for a station from the existing handbook chapter
-// content — the handbook chapters are the single source of truth for the
-// prose, so the Path never carries its own copy that could drift from
-// the book. We collect the first few prose blocks (paragraphs, pulls,
-// callouts) up to a soft character budget and hand them back as the
-// rendered Block[] the existing ChapterBlock component already knows
-// how to draw.
 export function pioneerPathStationExcerpt(stationId: string): Block[] {
   const station = getPioneerStation(stationId);
   if (!station) return [];
@@ -171,14 +357,10 @@ export function pioneerPathStationExcerpt(stationId: string): Block[] {
   const SOFT_BUDGET = 1400;
 
   for (const block of chapter.blocks) {
-    // Skip the auto-generated principle citation blocks and meta
-    // small-text blocks at the top of founding-primitive chapters; the
-    // Path wants prose, not the chapter's eyebrow metadata.
     if (block.kind === "small") continue;
 
     out.push(block);
 
-    // Accumulate text length for budget tracking.
     if (
       block.kind === "para" ||
       block.kind === "callout" ||
