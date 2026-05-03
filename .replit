@@ -93,4 +93,4 @@ channel = "stable-25_05"
 
 [userenv.shared]
 VITE_CLERK_PUBLISHABLE_KEY = "pk_test_ZGl2ZXJzZS1waG9lbml4LTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
-HEADWATERS_OWNER_EMAIL = "parrsjars@gmail.com"
+HEADWATERS_OWNER_EMAIL = "parrsjars@gmail.com,bobbie@ourheadwaters.ca"

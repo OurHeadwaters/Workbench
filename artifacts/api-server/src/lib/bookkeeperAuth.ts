@@ -23,11 +23,20 @@ export function isValidRole(value: unknown): value is BookkeeperRole {
   );
 }
 
-// The owner email is seeded from env at server boot. Anyone signing in with
-// this email gets promoted to "owner" automatically; everyone else lands as
-// "food_handler" by default until an owner promotes them.
-const OWNER_EMAIL =
-  (process.env.HEADWATERS_OWNER_EMAIL ?? "").trim().toLowerCase() || null;
+// Owner emails are seeded from env at server boot. HEADWATERS_OWNER_EMAIL
+// may be a single address or a comma-separated list. Anyone signing in
+// with one of these emails is promoted to "owner" automatically; everyone
+// else lands as "food_handler" by default until an owner promotes them.
+const OWNER_EMAILS: Set<string> = new Set(
+  (process.env.HEADWATERS_OWNER_EMAIL ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean),
+);
+
+function isOwnerEmail(email: string): boolean {
+  return OWNER_EMAILS.has(email.trim().toLowerCase());
+}
 
 export interface BookkeeperUser {
   id: string;
@@ -92,9 +101,7 @@ export async function loadBookkeeperUser(
     if (!email) return null;
 
     const initialRole: BookkeeperRole =
-      OWNER_EMAIL && email.toLowerCase() === OWNER_EMAIL
-        ? "owner"
-        : "food_handler";
+      isOwnerEmail(email) ? "owner" : "food_handler";
 
     const inserted = await db
       .insert(bookkeeperUsersTable)
@@ -114,11 +121,7 @@ export async function loadBookkeeperUser(
     const updates: Partial<typeof bookkeeperUsersTable.$inferInsert> = {
       lastSeenAt: new Date(),
     };
-    if (
-      OWNER_EMAIL &&
-      row.email.toLowerCase() === OWNER_EMAIL &&
-      row.role !== "owner"
-    ) {
+    if (isOwnerEmail(row.email) && row.role !== "owner") {
       updates.role = "owner";
     }
     await db
