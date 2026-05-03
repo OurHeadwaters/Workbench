@@ -481,6 +481,7 @@ export default function ChapterScreen() {
           hasPartLanding ? goToPartLanding() : router.push("/contents")
         }
         onToggleBookmark={onToggleChapterBookmark}
+        onHome={() => router.replace("/")}
       />
 
       <BottomChrome

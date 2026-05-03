@@ -90,12 +90,12 @@ export default function PathHome() {
         showsVerticalScrollIndicator={false}
       >
         <Pressable
-          onPress={() => router.back()}
-          accessibilityLabel="Back to the handbook"
+          onPress={() => router.replace("/")}
+          accessibilityLabel="Home"
           style={styles.backRow}
         >
           <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
-            ← Back to the handbook
+            ← Home
           </Text>
         </Pressable>
 

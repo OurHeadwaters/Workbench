@@ -22,6 +22,7 @@ export function TopChrome({
   bookmarkActive,
   onBack,
   onToggleBookmark,
+  onHome,
 }: {
   visible: boolean;
   partLabel: string;
@@ -29,6 +30,7 @@ export function TopChrome({
   bookmarkActive: boolean;
   onBack: () => void;
   onToggleBookmark: () => void;
+  onHome?: () => void;
 }) {
   const c = useColors();
   const insets = useSafeAreaInsets();
@@ -50,10 +52,20 @@ export function TopChrome({
         onPress={onBack}
         hitSlop={12}
         style={styles.iconBtn}
-        accessibilityLabel="Back to contents"
+        accessibilityLabel="Back"
       >
         <Ionicons name="chevron-back" size={22} color={c.foreground} />
       </Pressable>
+      {onHome ? (
+        <Pressable
+          onPress={onHome}
+          hitSlop={12}
+          style={styles.iconBtn}
+          accessibilityLabel="Home"
+        >
+          <Ionicons name="home-outline" size={20} color={c.foreground} />
+        </Pressable>
+      ) : null}
       <View style={styles.topCenter}>
         <Text
           style={[

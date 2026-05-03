@@ -210,15 +210,24 @@ export default function StationScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <Pressable
-          onPress={() => router.replace("/path")}
-          accessibilityLabel="Back to the trail"
-          style={styles.backRow}
-        >
-          <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
-            ← Back to the trail
-          </Text>
-        </Pressable>
+        <View style={styles.backRow}>
+          <Pressable
+            onPress={() => router.replace("/path")}
+            accessibilityLabel="Back to the trail"
+          >
+            <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
+              ← Trail
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => router.replace("/")}
+            accessibilityLabel="Home"
+          >
+            <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
+              Home →
+            </Text>
+          </Pressable>
+        </View>
 
         <Text
           style={[styles.eyebrow, { color: c.mutedForeground, fontFamily: MONO }]}

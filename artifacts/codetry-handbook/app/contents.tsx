@@ -62,7 +62,14 @@ export default function Contents() {
         >
           Contents
         </Text>
-        <View style={styles.iconBtn} />
+        <Pressable
+          onPress={() => router.replace("/")}
+          hitSlop={12}
+          style={styles.iconBtn}
+          accessibilityLabel="Home"
+        >
+          <Ionicons name="home-outline" size={20} color={c.foreground} />
+        </Pressable>
       </View>
 
       <ScrollView

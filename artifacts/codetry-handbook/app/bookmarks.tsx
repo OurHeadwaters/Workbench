@@ -81,6 +81,14 @@ export default function Bookmarks() {
         <View style={styles.syncSlot}>
           <SyncStatusPill showLabel />
         </View>
+        <Pressable
+          onPress={() => router.replace("/")}
+          hitSlop={12}
+          style={styles.iconBtn}
+          accessibilityLabel="Home"
+        >
+          <Ionicons name="home-outline" size={20} color={c.foreground} />
+        </Pressable>
       </View>
 
       {bookmarks.length === 0 ? (
