@@ -21,6 +21,7 @@ import Submissions from "@/pages/Submissions";
 import Submit from "@/pages/Submit";
 import Handlers from "@/pages/Handlers";
 import Users from "@/pages/Users";
+import Reconciliation from "@/pages/Reconciliation";
 import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
@@ -149,6 +150,7 @@ function Router() {
       <ProtectedRoute path="/submit" component={Submit} />
       <ProtectedRoute path="/handlers" component={Handlers} />
       <ProtectedRoute path="/users" component={Users} />
+      <ProtectedRoute path="/reconciliation" component={Reconciliation} />
       <Route component={NotFound} />
     </Switch>
   );

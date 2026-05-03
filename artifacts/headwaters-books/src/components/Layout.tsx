@@ -13,7 +13,8 @@ import {
   ShieldCheck, 
   Bell,
   LogOut,
-  Loader2
+  Loader2,
+  GitMerge
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -59,6 +60,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/handlers", label: "Food Handlers", icon: Bell, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/users", label: "Users", icon: Users, roles: ["owner"] },
     { href: "/audit", label: "Audit Log", icon: ShieldCheck, roles: ["owner"] },
+    { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
   ];
 
   const visibleNav = navItems.filter(item => item.roles.includes(role));
