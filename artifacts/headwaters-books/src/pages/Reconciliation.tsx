@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   ownerReconciliationSections,
   quickBooksReportsNeeded,
+  changelogEntries,
   INVOICE_GROSS_RECEIVED,
   INVOICE_HST,
   INVOICE_UPGRADE_LIABILITY,
@@ -25,7 +26,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, AlertTriangle, FileText, Printer } from "lucide-react";
+import { ChevronDown, ChevronRight, AlertTriangle, FileText, Printer, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const fmt = (val: number | null) =>
@@ -126,6 +127,7 @@ function ReconciliationSection({
 
 export default function Reconciliation() {
   const [qbOpen, setQbOpen] = useState(false);
+  const [changelogOpen, setChangelogOpen] = useState(false);
 
   const conservativeNet = NET_CASH_AFTER_LIABILITIES - ESTIMATED_IN_TOTAL;
   const conservativeOwed = conservativeNet < 0;
@@ -307,6 +309,79 @@ export default function Reconciliation() {
                       <span className="text-sm text-muted-foreground"> — {report.dateRange}</span>
                       <p className="text-xs text-muted-foreground mt-0.5">{report.purpose}</p>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </div>
+        </Card>
+      </Collapsible>
+      {/* Change history — collapsible */}
+      <Collapsible open={changelogOpen} onOpenChange={setChangelogOpen} className="print:block">
+        <Card className="print:shadow-none">
+          <CollapsibleTrigger asChild>
+            <CardHeader className="cursor-pointer hover:bg-muted/30 transition-colors rounded-t-lg print:cursor-default print:pointer-events-none">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <CardTitle className="text-base">Change history</CardTitle>
+                    <CardDescription className="text-sm">
+                      Audit trail of what changed and when — {changelogEntries.length} entries
+                    </CardDescription>
+                  </div>
+                </div>
+                <span className="print:hidden">
+                  {changelogOpen ? (
+                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </span>
+              </div>
+            </CardHeader>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="print:hidden">
+            <CardContent className="pt-0">
+              <div className="border-t border-border pt-4 space-y-3">
+                {changelogEntries.map((entry, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-4 p-3 rounded-md border border-border bg-muted/20"
+                  >
+                    <time
+                      dateTime={entry.date}
+                      className="shrink-0 font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-0.5 whitespace-nowrap"
+                    >
+                      {new Date(entry.date + "T00:00:00").toLocaleDateString("en-CA", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <p className="text-sm text-foreground leading-relaxed">{entry.description}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </CollapsibleContent>
+          {/* Always visible in print */}
+          <div className="hidden print:block">
+            <CardContent className="pt-0">
+              <div className="border-t border-border pt-4 space-y-3">
+                {changelogEntries.map((entry, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <time
+                      dateTime={entry.date}
+                      className="shrink-0 font-mono text-xs font-semibold whitespace-nowrap mt-0.5"
+                    >
+                      {new Date(entry.date + "T00:00:00").toLocaleDateString("en-CA", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <p className="text-xs text-foreground leading-relaxed">{entry.description}</p>
                   </div>
                 ))}
               </div>

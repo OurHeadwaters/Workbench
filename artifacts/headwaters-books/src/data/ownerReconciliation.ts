@@ -170,3 +170,31 @@ export const NET_CASH_AFTER_LIABILITIES =
   INVOICE_GROSS_RECEIVED - INVOICE_HST - INVOICE_UPGRADE_LIABILITY;
 export const CONFIRMED_OUT_TOTAL = INVOICE_GROSS_RECEIVED;
 export const ESTIMATED_IN_TOTAL = 26337.0;
+
+export interface ChangelogEntry {
+  date: string;
+  description: string;
+}
+
+export const changelogEntries: ChangelogEntry[] = [
+  {
+    date: "2026-05-03",
+    description:
+      "Invoice #001056 confirmed paid — status updated from Estimated to Confirmed across all four line items (trailer, upgrades, canning supplies, HST). Payment had been received June 19, 2025 via bank draft; now recorded as Confirmed in the reconciliation.",
+  },
+  {
+    date: "2026-05-03",
+    description:
+      "Trailer upgrades ($9,995) flagged as outstanding liability — goods paid for on Invoice #001056 but not yet delivered to the co-op. Added to Outstanding / in-dispute section.",
+  },
+  {
+    date: "2026-05-03",
+    description:
+      "Summary callout added showing net cash applied to owner reimbursement ($20,450.00) after HST and upgrade liability deductions.",
+  },
+  {
+    date: "2026-05-03",
+    description:
+      "Initial reconciliation page created. Line-of-credit total (~$26,337) marked Estimated pending Transaction Detail by Account export from QuickBooks. Personal funds advanced, equipment value, and P&L loss remain Pending QB.",
+  },
+];
