@@ -346,9 +346,134 @@
         text-transform: uppercase;
         text-align: right;
       }
+
+      /* ── PRINT BUTTON (screen only) ── */
+      .print-bar {
+        text-align: center;
+        padding: 14px 0 10px;
+        background: #EDE4CC;
+      }
+      .print-btn {
+        display: inline-block;
+        padding: 8px 22px;
+        background: var(--amber);
+        color: #fff;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        letter-spacing: 0.02em;
+      }
+      .print-btn:hover { background: var(--amber-mid); }
+
+      /* ── PRINT STYLES ── */
+      @media print {
+        @page { size: letter portrait; margin: 0; }
+
+        html {
+          width: 8.5in;
+          height: 11in;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
+
+        body {
+          width: 8.5in;
+          height: 11in;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          background: white;
+          display: flex;
+          justify-content: center;
+        }
+
+        .print-bar { display: none; }
+
+        .page {
+          width: 800px;
+          flex-shrink: 0;
+          box-shadow: none;
+          transform: scale(0.74);
+          transform-origin: top center;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .header {
+          padding: 22px 32px 18px;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .body { padding: 16px 32px 18px; }
+
+        .divider { margin: 10px 0; }
+
+        .section-head {
+          margin-top: 12px;
+          margin-bottom: 7px;
+        }
+        .section-head:first-child { margin-top: 0; }
+
+        .cap-card,
+        .arc-stage,
+        .deliverable-card,
+        .stat-row,
+        .stat-cell {
+          page-break-inside: avoid;
+          break-inside: avoid;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .cap-grid,
+        .arc-row,
+        .deliverables-grid {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+
+        .arc-row {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .arc-stage.active {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .principle-banner {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+
+        .footer {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="print-bar">
+      <button class="print-btn" onclick="window.print()">Download / Print</button>
+    </div>
     <div class="page">
 
       <!-- HEADER -->

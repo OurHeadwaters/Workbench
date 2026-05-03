@@ -277,9 +277,109 @@
         text-transform: uppercase;
         text-align: right;
       }
+
+      /* ── PRINT BUTTON (screen only) ── */
+      .print-bar {
+        text-align: center;
+        padding: 14px 0 10px;
+        background: #E8F0EC;
+      }
+      .print-btn {
+        display: inline-block;
+        padding: 8px 22px;
+        background: var(--green);
+        color: #fff;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        letter-spacing: 0.02em;
+      }
+      .print-btn:hover { background: var(--green-mid); }
+
+      /* ── PRINT STYLES ── */
+      @media print {
+        @page { size: letter portrait; margin: 0; }
+
+        html {
+          width: 8.5in;
+          height: 11in;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
+
+        body {
+          width: 8.5in;
+          height: 11in;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          background: white;
+          display: flex;
+          justify-content: center;
+        }
+
+        .print-bar { display: none; }
+
+        .page {
+          width: 800px;
+          flex-shrink: 0;
+          box-shadow: none;
+          transform: scale(0.84);
+          transform-origin: top center;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .header {
+          padding: 24px 32px 20px;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .body { padding: 18px 32px 20px; }
+
+        .divider { margin: 12px 0; }
+
+        .section-head {
+          margin-top: 14px;
+          margin-bottom: 8px;
+        }
+        .section-head:first-child { margin-top: 0; }
+
+        .cap-card,
+        .phase-card,
+        .stat-row,
+        .stat-cell {
+          page-break-inside: avoid;
+          break-inside: avoid;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .cap-grid { page-break-inside: avoid; break-inside: avoid; }
+        .phase-row { page-break-inside: avoid; break-inside: avoid; }
+
+        .footer {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color-adjust: exact;
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="print-bar">
+      <button class="print-btn" onclick="window.print()">Download / Print</button>
+    </div>
     <div class="page">
 
       <!-- HEADER -->
