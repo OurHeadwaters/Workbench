@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useScenario } from "@/lib/scenario";
 import { BUCKETS } from "@/data/buckets";
-import { cn } from "@/lib/utils";
 import {
   BookOpen,
   Salad,
@@ -21,8 +20,6 @@ import {
   Compass,
   LayoutGrid,
   Store,
-  ChevronUp,
-  ChevronDown,
   Smartphone,
 } from "lucide-react";
 
@@ -73,63 +70,6 @@ function ScrollToTop() {
   return null;
 }
 
-function ArrowNav() {
-  const [location, setLocation] = useLocation();
-
-  const currentIndex = NAV.findIndex((item) =>
-    item.href === "/" ? location === "/" : location.startsWith(item.href),
-  );
-
-  const activeIndex = currentIndex === -1 ? 0 : currentIndex;
-  const prevItem = activeIndex > 0 ? NAV[activeIndex - 1] : null;
-  const nextItem = activeIndex < NAV.length - 1 ? NAV[activeIndex + 1] : null;
-  const currentItem = NAV[activeIndex];
-
-  return (
-    <div
-      className="hidden lg:flex fixed left-4 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-3"
-      data-testid="arrow-nav"
-    >
-      <button
-        onClick={() => prevItem && setLocation(prevItem.href)}
-        disabled={!prevItem}
-        aria-label={prevItem ? `Go to ${prevItem.label}` : "No previous section"}
-        data-testid="arrow-nav-up"
-        className={cn(
-          "h-14 w-14 rounded-xl flex items-center justify-center transition-all shadow-lg",
-          "bg-primary text-primary-foreground hover:opacity-90 active:scale-95",
-          !prevItem && "opacity-0 pointer-events-none",
-        )}
-      >
-        <ChevronUp className="h-8 w-8" strokeWidth={2.5} />
-      </button>
-
-      <div className="flex flex-col items-center gap-1 max-w-[56px]">
-        <span
-          className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold text-center leading-tight"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", maxHeight: "96px" }}
-          title={currentItem?.label}
-        >
-          {currentItem?.label}
-        </span>
-      </div>
-
-      <button
-        onClick={() => nextItem && setLocation(nextItem.href)}
-        disabled={!nextItem}
-        aria-label={nextItem ? `Go to ${nextItem.label}` : "No next section"}
-        data-testid="arrow-nav-down"
-        className={cn(
-          "h-14 w-14 rounded-xl flex items-center justify-center transition-all shadow-lg",
-          "bg-primary text-primary-foreground hover:opacity-90 active:scale-95",
-          !nextItem && "opacity-0 pointer-events-none",
-        )}
-      >
-        <ChevronDown className="h-8 w-8" strokeWidth={2.5} />
-      </button>
-    </div>
-  );
-}
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { scenario } = useScenario();
@@ -174,8 +114,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="flex-1" />
         </div>
       </header>
-
-      <ArrowNav />
 
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
         <main className="min-w-0">{children}</main>
