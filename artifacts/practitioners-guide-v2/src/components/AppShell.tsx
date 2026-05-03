@@ -19,6 +19,7 @@ import {
   Megaphone,
   Compass,
   LayoutGrid,
+  Store,
 } from "lucide-react";
 
 interface NavItem {
@@ -55,6 +56,7 @@ export const NAV: NavItem[] = [
   { href: "/pilot-two", label: "Pilot #2", icon: Target, accent: "#B45309" },
   { href: "/workbench", label: "Workbench", icon: ScrollText, accent: "#7A2E12" },
   { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
+  { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {

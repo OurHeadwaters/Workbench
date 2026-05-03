@@ -254,3 +254,16 @@
 
   .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 }
+
+/* ─── Community Store Playbook theme ─────────────────────────────────── */
+.cs-theme {
+  --cs-bg:          #f4ede0;
+  --cs-paper:       #ebe2d0;
+  --cs-rule:        rgba(31, 61, 46, 0.18);
+  --cs-primary:     #1f3d2e;
+  --cs-accent:      #e9c8a8;
+  --cs-accent-warm: #b85a3e;
+  --cs-text:        #2b2116;
+  --cs-muted:       #6b7665;
+}
+

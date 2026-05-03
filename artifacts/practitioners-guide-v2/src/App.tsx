@@ -22,6 +22,7 @@ import { PilotTwoPage } from "@/pages/PilotTwoPage";
 import { PromotionalPlanPage } from "@/pages/PromotionalPlanPage";
 import { WhatNextPage } from "@/pages/WhatNextPage";
 import { PortfolioPage } from "@/pages/PortfolioPage";
+import CommunityStorePage from "@/pages/CommunityStorePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ function Router() {
         path="/refund-invocation-letter"
         component={RefundInvocationLetter}
       />
+      <Route path="/community-store" component={CommunityStorePage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -9,11 +9,18 @@ describe("AppShell NAV", () => {
     expect(codetry!.accent).toBe("#3B2A6E");
   });
 
-  it("places the codetry chapter last, after Replication", () => {
+  it("places the codetry chapter after Replication", () => {
     const replicationIdx = NAV.findIndex((item) => item.href === "/replication");
     const codetryIdx = NAV.findIndex((item) => item.href === "/codetry");
     expect(replicationIdx).toBeGreaterThanOrEqual(0);
-    expect(codetryIdx).toBe(NAV.length - 1);
     expect(codetryIdx).toBeGreaterThan(replicationIdx);
+  });
+
+  it("includes the Community Store Playbook nav item as the last entry", () => {
+    const csIdx = NAV.findIndex((item) => item.href === "/community-store");
+    expect(csIdx).toBeGreaterThanOrEqual(0);
+    expect(csIdx).toBe(NAV.length - 1);
+    expect(NAV[csIdx].label).toBe("Community Store Playbook");
+    expect(NAV[csIdx].accent).toBe("#b85a3e");
   });
 });
