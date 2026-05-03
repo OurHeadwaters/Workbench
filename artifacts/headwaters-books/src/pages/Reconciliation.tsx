@@ -6,8 +6,13 @@ import {
   INVOICE_GROSS_RECEIVED,
   INVOICE_HST,
   INVOICE_UPGRADE_LIABILITY,
-  NET_CASH_AFTER_LIABILITIES,
-  ESTIMATED_IN_TOTAL,
+  ADDITIONAL_INVOICES_GROSS,
+  TOTAL_GROSS_RECEIVED,
+  TOTAL_HST,
+  TOTAL_NET_AFTER_ALL_LIABILITIES,
+  GM_LOAN,
+  LOAN_GAP,
+  ACCOUNT_BALANCE,
   type StatusTag,
 } from "@/data/ownerReconciliation";
 import {
@@ -129,8 +134,6 @@ export default function Reconciliation() {
   const [qbOpen, setQbOpen] = useState(false);
   const [changelogOpen, setChangelogOpen] = useState(false);
 
-  const conservativeNet = NET_CASH_AFTER_LIABILITIES - ESTIMATED_IN_TOTAL;
-  const conservativeOwed = conservativeNet < 0;
 
   return (
     <div className="space-y-8 pb-16 print:pb-4">
@@ -139,8 +142,8 @@ export default function Reconciliation() {
         <div>
           <h1 className="text-3xl font-serif font-bold text-foreground">Owner Reconciliation</h1>
           <p className="text-muted-foreground mt-2">
-            Sole proprietor era (Parrs Jars, pre-Nov 2024) vs. 807 Food Co-op transition.
-            Real numbers confirmed through Invoice #001056; remaining rows pending QuickBooks export.
+            Parrs Jars sole proprietor era (pre-Nov 2024) → Headwaters Ontario Corp.
+            All invoices issued from Parrs Jars to 807 Food Co-op; proceeds treated as personal income / capital contribution.
           </p>
         </div>
         <Button
@@ -158,7 +161,7 @@ export default function Reconciliation() {
       <div className="hidden print:block">
         <h1 className="text-2xl font-serif font-bold">Owner Reconciliation — Headwaters Books</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Parrs Jars (sole proprietorship, pre-Nov 2024) → 807 Food Co-op transition
+          Parrs Jars (sole proprietorship, pre-Nov 2024) → Headwaters Ontario Corp
         </p>
         <p className="text-xs text-muted-foreground mt-0.5">Printed {new Date().toLocaleDateString("en-CA")}</p>
       </div>
@@ -168,64 +171,85 @@ export default function Reconciliation() {
         <AlertTriangle className="h-4 w-4 text-primary" />
         <AlertDescription className="space-y-3">
           <div>
-            <p className="font-semibold text-foreground mb-2">
-              Current best estimate — partial, pending QuickBooks confirmation
+            <p className="font-semibold text-foreground mb-3">
+              Current position — confirmed invoices vs. GM loan outstanding
             </p>
 
-            {/* Step 1: what the invoice actually paid */}
+            {/* Step 1: all invoices received */}
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 1 — What the invoice paid (confirmed)
+              Step 1 — All Parrs Jars invoices to 807 Food Co-op (confirmed)
             </p>
             <div className="text-sm space-y-0.5 mb-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Gross received — Invoice #001056, June 19, 2025 (bank draft)</span>
+                <span className="text-muted-foreground pl-3">Invoice #001056 — Jun 19, 2025 (bank draft)</span>
                 <span className="font-mono font-medium text-foreground tabular-nums">{fmt(INVOICE_GROSS_RECEIVED)}</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Less: HST collected — must be remitted to CRA (13%)</span>
-                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(INVOICE_HST)})</span>
-              </div>
-              <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Less: trailer upgrades — paid but not yet delivered (liability to co-op)</span>
-                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(INVOICE_UPGRADE_LIABILITY)})</span>
+                <span className="text-muted-foreground pl-3">Invoices #001057, #001062, #001066 — 2025–2026</span>
+                <span className="font-mono font-medium text-foreground tabular-nums">{fmt(ADDITIONAL_INVOICES_GROSS)}</span>
               </div>
               <div className="flex justify-between items-baseline border-t border-primary/20 pt-1 mt-1">
-                <span className="font-medium text-foreground pl-3">Net cash applied to owner reimbursement (confirmed)</span>
-                <span className="font-mono font-semibold text-foreground tabular-nums">{fmt(NET_CASH_AFTER_LIABILITIES)}</span>
+                <span className="font-medium text-foreground pl-3">Total gross received from co-op</span>
+                <span className="font-mono font-semibold text-foreground tabular-nums">{fmt(TOTAL_GROSS_RECEIVED)}</span>
               </div>
             </div>
 
-            {/* Step 2: vs. what went in */}
+            {/* Step 2: deductions */}
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 2 — Less what the owner put in (estimated — pending QB)
+              Step 2 — Deductions
             </p>
             <div className="text-sm space-y-0.5 mb-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Estimated line-of-credit total (unconfirmed — see Transaction Detail by Account)</span>
-                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(ESTIMATED_IN_TOTAL)})</span>
+                <span className="text-muted-foreground pl-3">Total HST collected — remitted to CRA</span>
+                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(TOTAL_HST)})</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Personal funds advanced, equipment, P&amp;L loss</span>
-                <span className="font-mono text-muted-foreground tabular-nums italic">pending QB</span>
+                <span className="text-muted-foreground pl-3">Trailer upgrades — paid but not yet delivered (liability to co-op)</span>
+                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(INVOICE_UPGRADE_LIABILITY)})</span>
+              </div>
+              <div className="flex justify-between items-baseline border-t border-primary/20 pt-1 mt-1">
+                <span className="font-medium text-foreground pl-3">Net cash returned to owner (confirmed)</span>
+                <span className="font-mono font-semibold text-emerald-700 tabular-nums">{fmt(TOTAL_NET_AFTER_ALL_LIABILITIES)}</span>
               </div>
             </div>
 
-            {/* Conservative net */}
-            <div className="flex justify-between items-baseline border-t-2 border-primary/30 pt-2">
-              <span className="font-semibold text-foreground">
-                Preliminary net — LOC only, excluding other pending QB items
-              </span>
-              <span className={`font-mono font-bold tabular-nums text-base ${conservativeOwed ? "text-destructive" : "text-emerald-700"}`}>
-                {conservativeOwed ? `(${fmt(Math.abs(conservativeNet))}) owed to owner` : `${fmt(conservativeNet)} surplus`}
-              </span>
+            {/* Step 3: against GM loan */}
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+              Step 3 — Against LFIF loan outstanding (GM · Parrs Jars personal)
+            </p>
+            <div className="text-sm space-y-0.5 mb-3">
+              <div className="flex justify-between items-baseline">
+                <span className="text-muted-foreground pl-3">LFIF loan balance — Parrs Jars personal (GM)</span>
+                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(GM_LOAN)})</span>
+              </div>
+              <div className="flex justify-between items-baseline border-t-2 border-destructive/30 pt-2 mt-1">
+                <span className="font-semibold text-foreground">Gap remaining on loan (before QB items)</span>
+                <span className="font-mono font-bold tabular-nums text-base text-destructive">({fmt(LOAN_GAP)}) still owed</span>
+              </div>
+            </div>
+
+            {/* Account balance callout */}
+            <div className="flex justify-between items-center border border-amber-200 bg-amber-50 rounded-md px-3 py-2 mb-3">
+              <span className="text-sm font-medium text-amber-900">Headwaters account balance — after HST payment</span>
+              <span className="font-mono font-semibold text-amber-900 tabular-nums">{fmt(ACCOUNT_BALANCE)}</span>
+            </div>
+
+            {/* Step 4: pending QB may reduce gap */}
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+              Step 4 — May reduce gap (all pending QuickBooks)
+            </p>
+            <div className="text-sm space-y-0.5">
+              <div className="flex justify-between items-baseline">
+                <span className="text-muted-foreground pl-3">LOC charges, personal funds advanced, equipment FMV, P&amp;L loss</span>
+                <span className="font-mono text-muted-foreground tabular-nums italic">pending QB</span>
+              </div>
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground leading-relaxed border-t border-primary/10 pt-2">
-            <strong>Do not rely on this estimate for decisions.</strong> The figures above exclude personal funds
-            advanced, equipment value at transition, operating P&amp;L loss, any prior 807 Food Co-op receivable,
-            and the HST remittance/refund position — all pending the four QuickBooks exports listed below.
-            The trailer-upgrade liability ({fmt(INVOICE_UPGRADE_LIABILITY)}) also resolves on delivery.
+            <strong>Do not rely on this for decisions.</strong> The ~{fmt(LOAN_GAP)} gap may shrink once QB exports confirm
+            personal funds advanced, equipment FMV, and operating P&amp;L. Personal income tax (~$6,100 est.) on the
+            2025–2026 invoice proceeds also applies. Upgrade liability ({fmt(INVOICE_UPGRADE_LIABILITY)}) resolves on delivery.
           </p>
           <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">

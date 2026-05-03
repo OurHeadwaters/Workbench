@@ -19,12 +19,20 @@ export const ownerReconciliationSections: Section[] = [
     id: "went-in",
     title: "What went in — Parrs Jars sole proprietor era (pre-Nov 2024)",
     subtitle:
-      "Capital and costs contributed by the owner before Headwaters (Ontario Corp) took over operations.",
+      "Capital, debt, and costs contributed by the owner before Headwaters (Ontario Corp) took over operations.",
     items: [
+      {
+        description: "LFIF loan — Parrs Jars personal liability (GM)",
+        amount: 72000.0,
+        sourceOrNote:
+          "Government loan held personally by Bobbie under Parrs Jars. Full balance outstanding. To be serviced from Headwaters draws.",
+        status: "confirmed",
+      },
       {
         description: "Line of credit — total charges (chart of accounts)",
         amount: 26337.0,
-        sourceOrNote: "Chart of accounts — estimated pending QuickBooks Transaction Detail by Account export",
+        sourceOrNote:
+          "Chart of accounts — estimated pending QuickBooks Transaction Detail by Account export",
         status: "estimated",
       },
       {
@@ -55,9 +63,9 @@ export const ownerReconciliationSections: Section[] = [
   },
   {
     id: "came-out",
-    title: "What came back out — Invoice #001056 (807 Food Co-op purchase)",
+    title: "What came back — Invoice #001056 (Jun 2025)",
     subtitle:
-      "Equipment sold to the co-op. Invoice #001056 paid in full June 19, 2025 via bank draft.",
+      "Equipment sold to 807 Food Co-op. Invoice #001056 paid in full June 19, 2025 via bank draft.",
     items: [
       {
         description: "Trailer (main unit)",
@@ -68,7 +76,8 @@ export const ownerReconciliationSections: Section[] = [
       {
         description: "Trailer upgrades",
         amount: 9995.0,
-        sourceOrNote: "Invoice #001056 — line 2 · NOTE: received but not yet delivered — liability to co-op (see Outstanding section)",
+        sourceOrNote:
+          "Invoice #001056 — line 2 · NOTE: received but not yet delivered — liability to co-op (see Outstanding section)",
         status: "confirmed",
       },
       {
@@ -92,6 +101,42 @@ export const ownerReconciliationSections: Section[] = [
     ],
   },
   {
+    id: "came-out-2025",
+    title: "What came back — Invoices #001057, #001062, #001066 (2025–2026)",
+    subtitle:
+      "Additional Parrs Jars equipment sold to 807 Food Co-op. Proceeds deposited into Headwaters account — treated as Bobbie personal income / capital contribution to corp.",
+    items: [
+      {
+        description: "Invoice #001057 — Grow beds, light panels, freeze dryer",
+        amount: 17967.0,
+        sourceOrNote:
+          "Invoice #001057 · Jul 2, 2025 · due Aug 1, 2025 · incl. HST $2,067 · subtotal $15,900",
+        status: "confirmed",
+      },
+      {
+        description: "Invoice #001062 — Kitchen equipment (tables, chairs, coolers, dehydrator)",
+        amount: 2486.0,
+        sourceOrNote:
+          "Invoice #001062 · Mar 12, 2026 · incl. HST $286 · subtotal $2,200",
+        status: "confirmed",
+      },
+      {
+        description: "Invoice #001066 — LFIF final shelving / supply cabinet",
+        amount: 508.5,
+        sourceOrNote:
+          "Invoice #001066 · Mar 27, 2026 · incl. HST $58.50 · subtotal $450",
+        status: "confirmed",
+      },
+      {
+        description: "Invoices #001057 / #001062 / #001066 — total received",
+        amount: 20961.5,
+        sourceOrNote:
+          "Deposited into Headwaters Ontario Inc account. Personal income tax (~$6,100 est.) payable on net proceeds. Capital contribution to Headwaters.",
+        status: "confirmed",
+      },
+    ],
+  },
+  {
     id: "outstanding",
     title: "Outstanding / in-dispute",
     subtitle:
@@ -100,25 +145,35 @@ export const ownerReconciliationSections: Section[] = [
       {
         description: "Trailer upgrades — received but not yet delivered to the co-op",
         amount: 9995.0,
-        sourceOrNote: "Flagged as liability: goods paid for but delivery pending. Co-op holds a claim on this amount until delivered.",
+        sourceOrNote:
+          "Flagged as liability: goods paid for but delivery pending. Co-op holds a claim on this amount until delivered.",
         status: "confirmed",
+      },
+      {
+        description: "Personal tax on 2025–2026 invoice proceeds (~income from Parrs Jars equipment sales)",
+        amount: 6100.0,
+        sourceOrNote:
+          "Estimated at ~33% marginal on $18,550 net proceeds. File/amend personal return for year(s) received. HST already sorted separately.",
+        status: "estimated",
       },
       {
         description: "Net co-op owes owner (excluding pending QB items)",
         amount: null,
-        sourceOrNote: "Cannot be calculated until pending QB exports fill in sole-prop line-of-credit and P&L totals",
+        sourceOrNote:
+          "Cannot be calculated until pending QB exports fill in sole-prop line-of-credit and P&L totals",
         status: "pending-qb",
       },
       {
         description: "Customer balance — 807 Food Co-op (any prior receivable)",
         amount: null,
-        sourceOrNote: "Pending QB export — Customer Balance Detail for 807 Food Co-op",
+        sourceOrNote:
+          "Pending QB export — Customer Balance Detail for 807 Food Co-op",
         status: "pending-qb",
       },
       {
         description: "HST remittance / refund owing to CRA for sole-prop period",
         amount: null,
-        sourceOrNote: "Pending QB export — P&L sole-prop period",
+        sourceOrNote: "Pending QB export — P&L sole-prop period. Current HST sorted.",
         status: "pending-qb",
       },
     ],
@@ -163,13 +218,27 @@ export const quickBooksReportsNeeded: QuickBooksReport[] = [
   },
 ];
 
+export const GM_LOAN = 72000.0;
+export const ACCOUNT_BALANCE = 4000.0;
+
 export const INVOICE_GROSS_RECEIVED = 34402.85;
 export const INVOICE_HST = 3957.85;
 export const INVOICE_UPGRADE_LIABILITY = 9995.0;
+
+export const ADDITIONAL_INVOICES_GROSS = 20961.5;
+export const ADDITIONAL_INVOICES_HST = 2411.5;
+
+export const TOTAL_GROSS_RECEIVED = INVOICE_GROSS_RECEIVED + ADDITIONAL_INVOICES_GROSS;
+export const TOTAL_HST = INVOICE_HST + ADDITIONAL_INVOICES_HST;
+export const TOTAL_NET_AFTER_ALL_LIABILITIES =
+  TOTAL_GROSS_RECEIVED - TOTAL_HST - INVOICE_UPGRADE_LIABILITY;
+
 export const NET_CASH_AFTER_LIABILITIES =
   INVOICE_GROSS_RECEIVED - INVOICE_HST - INVOICE_UPGRADE_LIABILITY;
 export const CONFIRMED_OUT_TOTAL = INVOICE_GROSS_RECEIVED;
 export const ESTIMATED_IN_TOTAL = 26337.0;
+
+export const LOAN_GAP = GM_LOAN - TOTAL_NET_AFTER_ALL_LIABILITIES;
 
 export interface ChangelogEntry {
   date: string;
@@ -177,6 +246,21 @@ export interface ChangelogEntry {
 }
 
 export const changelogEntries: ChangelogEntry[] = [
+  {
+    date: "2026-05-03",
+    description:
+      "GM loan ($72,000 LFIF, Parrs Jars personal) added to reconciliation. Three additional invoices (#001057 $17,967 · #001062 $2,486 · #001066 $508.50) confirmed and added as 2025–2026 equipment sales section. Current Headwaters account balance ($4,000 after HST payment) noted. Revised gap: ~$33,000 remaining on loan before QB items.",
+  },
+  {
+    date: "2026-05-03",
+    description:
+      "Decision recorded: 2025–2026 invoice proceeds deposited into Headwaters account treated as Bobbie personal income from Parrs Jars equipment sales, with corresponding capital contribution to Headwaters Ontario Corp. Personal income tax (~$6,100 est.) to be filed/amended accordingly.",
+  },
+  {
+    date: "2026-05-03",
+    description:
+      "Entity corrected: 'Headwaters Ontario Corp' replaces '807 Food Co-op' as the successor entity in all non-invoice framing. 807 Food Co-op references retained only where factually accurate (invoice counterparty).",
+  },
   {
     date: "2026-05-03",
     description:
