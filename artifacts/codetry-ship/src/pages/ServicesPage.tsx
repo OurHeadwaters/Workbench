@@ -330,6 +330,9 @@ export function ServicesPage() {
                 </div>
               ))}
             </div>
+            <p className="font-serif text-[12px] italic leading-[1.6] mt-5" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
+              Headwaters operates as one lead practitioner with a bench of specialist subcontractors brought in by project need. The rate funds that full delivery system — so you're not carrying the overhead of assembling a team yourself.
+            </p>
           </div>
 
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
