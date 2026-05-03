@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import QRCodeStamp from "../components/QRCodeStamp";
 
 function PrintNav() {
   return (
@@ -110,17 +111,20 @@ export default function PosterMarket() {
             <div style={{ background: "var(--evergreen)", borderRadius: 8, padding: "0.3in 0.4in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", marginBottom: "0.1rem" }}>
-                  headwatersdevelopment.ca
+                  ourheadwaters.ca
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.7)" }}>
-                  bobbie@headwatersdevelopment.ca
+                  bobbie@ourheadwaters.ca
                 </p>
               </div>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.75)", lineHeight: 1.6 }}>
-                  Dryden, Ontario<br />
-                  <span style={{ fontSize: "0.7rem", opacity: 0.6 }}>Treaty 3 Territory</span>
-                </p>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+                <div style={{ textAlign: "right" }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.75)", lineHeight: 1.6 }}>
+                    Dryden, Ontario<br />
+                    <span style={{ fontSize: "0.7rem", opacity: 0.6 }}>Treaty 3 Territory</span>
+                  </p>
+                </div>
+                <QRCodeStamp light />
               </div>
             </div>
           </div>

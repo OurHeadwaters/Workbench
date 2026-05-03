@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import QRCodeStamp from "../components/QRCodeStamp";
 
 function PrintNav() {
   return (
@@ -82,9 +83,12 @@ export default function MarketDisplay() {
           <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontStyle: "italic", color: "var(--evergreen)" }}>
             Ask us about wholesale pricing and custom gift sets
           </span>
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>
-            bobbie@headwatersdevelopment.ca
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>
+              bobbie@ourheadwaters.ca
+            </span>
+            <QRCodeStamp />
+          </div>
         </div>
       </div>
     </>

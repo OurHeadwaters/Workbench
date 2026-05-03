@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import QRCodeStamp from "../components/QRCodeStamp";
 
 function PrintNav() {
   return (
@@ -98,9 +99,12 @@ export default function PosterParrsJars() {
                   Every Saturday · 8 am – 1 pm
                 </p>
               </div>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.75)" }}>headwatersdevelopment.ca</p>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.5)" }}>bobbie@headwatersdevelopment.ca</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+                <div style={{ textAlign: "right" }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.75)" }}>ourheadwaters.ca</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.5)" }}>bobbie@ourheadwaters.ca</p>
+                </div>
+                <QRCodeStamp light />
               </div>
             </div>
           </div>

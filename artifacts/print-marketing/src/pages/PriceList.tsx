@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import QRCodeStamp from "../components/QRCodeStamp";
 
 const salts = [
   { name: "Dryden Smokehouse Salt", desc: "Cold-smoked over maple wood, rich and savoury", market: "$12.00", wholesale: "$8.50" },
@@ -119,9 +120,9 @@ export default function PriceList() {
           <div style={{ textAlign: "right" }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.7 }}>
               Bobbie Parr<br />
-              bobbie@headwatersdevelopment.ca<br />
+              bobbie@ourheadwaters.ca<br />
               Dryden Farmers Market — Saturdays, 8 am–1 pm<br />
-              headwatersdevelopment.ca
+              ourheadwaters.ca
             </p>
           </div>
         </div>
@@ -234,7 +235,10 @@ export default function PriceList() {
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--rust)" }} />
             <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontStyle: "italic", color: "var(--evergreen)" }}>Parr's Jars — Handcrafted in Dryden, Ontario</span>
           </div>
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>Prices subject to change · headwatersdevelopment.ca</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>Prices subject to change</span>
+            <QRCodeStamp />
+          </div>
         </div>
       </div>
     </>

@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import QRCodeStamp from "../components/QRCodeStamp";
 
 function PrintNav() {
   return (
@@ -95,14 +96,17 @@ export default function PosterServices() {
           </div>
 
           {/* Footer */}
-          <div style={{ padding: "0.3in 0.65in 0.4in", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <div style={{ padding: "0.3in 0.65in 0.4in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.05rem" }}>Headwaters Development Services</p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)" }}>headwatersdevelopment.ca</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)" }}>ourheadwaters.ca</p>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)" }}>hello@headwatersdevelopment.ca</p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(107,118,101,0.65)" }}>Dryden, Ontario</p>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+              <div style={{ textAlign: "right" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(107,118,101,0.65)" }}>Dryden, Ontario</p>
+              </div>
+              <QRCodeStamp />
             </div>
           </div>
         </div>
