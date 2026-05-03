@@ -170,7 +170,7 @@ export function IndexPage() {
       icon: Handshake,
       headline: money(a.totals18mo.surplusDeployed),
       headlineLabel: `${a.termMonths}-mo surplus deployed`,
-      blurb: `${money(a.fee)}/mo agency · ${a.roster.length}-role team · tithe-first waterfall. Capital recovery then Reserve / Innovation.`,
+      blurb: `Hourly engagement · ${a.roster.length}-person lean team · tithe-first waterfall. Rates TBD. Surplus waterfall TBD.`,
       tag: a.totals18mo.tag,
     },
     {
@@ -197,13 +197,13 @@ export function IndexPage() {
           className="mt-2 text-3xl sm:text-4xl font-semibold leading-tight"
           style={{ fontFamily: "var(--app-font-serif)" }}
         >
-          Three coloured buckets, every dollar locked line by line.
+          Three coloured buckets. Frameworks and open questions — numbers lock when contracts do.
         </h1>
         <p className="mt-3 text-base text-muted-foreground max-w-3xl leading-relaxed">
-          A working source of truth organized the way the founder thinks: Salts (Parr's Jars),
-          Community Contracts, and Software / Hardware / Training (Brightside). Every figure
-          carries a confirmed tag with the date the founder locked it. V7 (updated rates,
-          Deer Lake) is the locked default.{" "}
+          A working thinking tool organized the way the founder thinks: Salts (Parr's Jars),
+          Community Contracts, and Software / Hardware / Training (Brightside). One confirmed
+          number in the pipeline: the $12,000 portal fee. Everything else is a scenario and
+          a question until a contract is signed.{" "}
           <Link
             href="/archetypes"
             className="underline hover:text-foreground"
@@ -230,7 +230,7 @@ export function IndexPage() {
           Active Pipeline
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Real numbers locked as of 2026-04-29. Decision signals only — expand each card for detail.
+          One confirmed item. Everything else is a framework and a question — expand each card for context.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -262,29 +262,31 @@ export function IndexPage() {
             }
           />
 
-          {/* $25k Trial Target */}
+          {/* Trial window */}
           <PipelineCard
             icon={Target}
-            title="Trial Target"
-            signal="$25,000"
-            signalLabel="in the next 6 weeks"
+            title="Trial Window"
+            signal="What does yes look like?"
+            signalLabel="for Deer Lake"
             badge={<StatusBadge status="active" label="Active pursuit" />}
-            summary="6-week window to hit $25k — the bridge to Deer Lake store distribution. Primary client is Deer Lake."
+            summary="A bounded trial is the opening posture. Questions: What scope proves value? What does the council need to see to commit to a longer engagement?"
             accentColor="#1A5FA8"
             testId="pipeline-trial-target"
             detail={
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Target:</strong> $25,000 confirmed in the
-                  next 6 weeks.
+                  <strong className="text-foreground">Opening posture:</strong> A bounded,
+                  intentionally below-cost trial — not a revenue target. The goal is to prove value
+                  in a contained window, then transition to an ongoing engagement.
                 </p>
                 <p>
                   <strong className="text-foreground">Primary client:</strong> Deer Lake. Store
-                  distribution is the next phase if this trial lands.
+                  distribution is the next phase if the trial lands.
                 </p>
                 <p>
-                  <strong className="text-foreground">What success unlocks:</strong> Deer Lake
-                  store distribution engagement at the full $90k/mo V5 rate.
+                  <strong className="text-foreground">Key questions:</strong> What scope does the
+                  council need to see? What's the minimum that demonstrates the model? What does a
+                  yes from the council actually look like?
                 </p>
                 <p>
                   <strong className="text-foreground">If this doesn't land:</strong> Plan B fires.
@@ -302,23 +304,25 @@ export function IndexPage() {
             signal="Next phase"
             signalLabel="if trial lands"
             badge={<StatusBadge status="next" label="Gated on trial" />}
-            summary="Hourly subcontract: Bobbie $175/hr + Tyler $70/hr RFF sub, 160 hr/mo each. $39,200/mo total billed. Unlocks when the $25k trial target closes."
+            summary="Hourly structure: Bobbie lead + Tyler RFF sub. Rate, hours, and total billing TBD — what does the engagement need to cover, and what does the client budget support?"
             accentColor="#7A4E2D"
             testId="pipeline-deer-lake"
             detail={
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Engagement shape:</strong> Bobbie{" "}
-                  {a.roster[0].monthlyLoaded > 0 ? `${money(a.roster[0].monthlyLoaded)}/mo net draw` : ""} (160 hr × $175 billed, $105 net) +
-                  Tyler {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo sub (160 hr × $70 pass-through).
-                  Total billed: {money(a.fee)}/mo. Monthly surplus: {money(a.monthlySurplusJunAug)}.
+                  <strong className="text-foreground">Engagement shape:</strong> Two-person lean
+                  team — Bobbie as lead, Tyler as RFF sub for distribution. Hourly billing; client
+                  sees two line items. Specific rates and hours are scenario inputs, not confirmed
+                  figures.
                 </p>
                 <p>
-                  <strong className="text-foreground">Gate condition:</strong> $25k trial target
-                  closes within the 6-week window.
+                  <strong className="text-foreground">Key questions:</strong> What rate does the
+                  client budget support? What hours per month does the work actually require? What
+                  monthly surplus does the engagement need to generate to attack the debt?
                 </p>
                 <p>
-                  <strong className="text-foreground">Start date target:</strong> {a.startDate}.
+                  <strong className="text-foreground">Gate condition:</strong> Trial closes and
+                  council commits to an ongoing engagement.
                 </p>
                 <p>
                   <strong className="text-foreground">Buyer:</strong> {a.buyerStatus}. Affects
@@ -328,7 +332,7 @@ export function IndexPage() {
                   href="/contracts"
                   className="inline-flex items-center gap-1 text-xs font-medium underline hover:text-foreground mt-1"
                 >
-                  Full V5 contracts detail <ChevronRight className="h-3 w-3" />
+                  Full scenario detail <ChevronRight className="h-3 w-3" />
                 </Link>
               </div>
             }
@@ -412,8 +416,8 @@ export function IndexPage() {
                     <ul className="space-y-1 text-muted-foreground list-disc pl-4">
                       <li>
                         <strong className="text-foreground">Hard no:</strong> Council passes a BCR
-                        (or written notice) declining the hourly engagement ($39,200/mo billed) or
-                        the $25k trial. Act same day.
+                        (or written notice) declining the hourly engagement or the trial. Act same
+                        day.
                       </li>
                       <li>
                         <strong className="text-foreground">Stall past soft date:</strong> No BCR,

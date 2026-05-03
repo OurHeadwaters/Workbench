@@ -54,7 +54,7 @@ export const triggerConditions: TriggerCondition[] = [
   {
     label: "Hard no from Deer Lake council",
     signal:
-      "Council passes a BCR (or sends written notice) declining the $90k/mo full-stack engagement, the $35k Layer-1 software-only contract, or both.",
+      "Council passes a BCR (or sends written notice) declining the hourly engagement, the trial, or both.",
     decisionDate: "Same day the BCR / written notice lands.",
     thenDo:
       "Stand down the Deer Lake-specific bridge ask, freeze Pilot #1 spend, and open Plan B at §3 Outreach — start with the IFNA cluster the same week.",
@@ -93,7 +93,7 @@ export const triggerConditions: TriggerCondition[] = [
   {
     label: "Bridge capital does not land",
     signal:
-      "Day-one bridge funding (~$181k recommended scenario) is not committed by the funder/financier listed in the runway plan, even if Deer Lake is otherwise on track.",
+      "Day-one bridge funding is not committed by the funder/financier listed in the runway plan by the deadline, even if Deer Lake is otherwise on track.",
     decisionDate: "2026-05-30 (one-month buffer before the soft Deer Lake date).",
     thenDo:
       "Drop to the $48k cost-basis floor (Scenario A), defer the Senior Engineer #2 / Outreach / Trainer hires, and use the protected runway to work Plan B outreach in parallel with Deer Lake.",
@@ -126,7 +126,7 @@ export const reframedPitch: { paragraphs: string[]; confidence: Confidence } = {
   paragraphs: [
     "Headwaters builds the operating system for a small northern community store, end-to-end: the freight rigging, the POS configuration, the procurement dashboard a council can read, the household-level pricing the membership can check, and the back-office (bookkeeping, payroll, CRA) that keeps it all in compliance. The store itself is the band's. The infrastructure that runs it ships in a box, comes pre-tuned to the corridor the community already uses, and is staffed locally from day one — Headwaters' people are not flown in to live there.",
     "What the community gets in year one: a working store on a corridor that already moves food (Thunder Bay → Sioux Lookout → Dryden, plus a winter-road or air-freight lane to the reserve); a procurement dashboard that shows where every dollar went, and what was saved against the previous baseline; household-level pricing visible to members in their own portal; and a paid trial period for the local hire the council picks to operate the hub. What the community does not get: a consultant on retainer with no exit, a brand refresh, a deck for investors, or any service the community could already do for itself.",
-    "What it costs: a Layer-1 software-only contract starts at $35,000/year and gives the council the dashboards, the POS configuration, and the back-office tooling. A full-stack engagement (recommended for a community standing up a store from scratch) is $90,000/month for twelve months, reviewed at month six, with a 35% reinvestment markup that funds the next reserve's install. Travel and freight pass through at cost — never marked up. The full pricing model, the cost basis line by line, and the year-one value-delivered audit template are public on the Practitioner Operating Plan one-pager — there is nothing about how the money moves that the council cannot see before signing.",
+    "What it costs: rates and scope are transparent and public — nothing about how the money moves that the council cannot see before signing. The engagement is hourly, reviewed at month six, with a reinvestment component that funds the next community's install. Travel and freight pass through at cost — never marked up. The full cost basis, line by line, and the year-one value-delivered audit template are available on the Practitioner Operating Plan one-pager.",
   ],
   confidence: {
     kind: "seed",

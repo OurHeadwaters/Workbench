@@ -153,8 +153,8 @@ const v7Agency = {
   renegotiateMonth: 12,
   startDate: "June 1, 2026",
   buyerStatus: "TBD (band council vs father — affects political weight, not the math)",
-  feeTag: confirmed(
-    "Hourly structure: Bobbie 160 hr/mo × $175 = $28,000 + Tyler 160 hr/mo × $70 = $11,200. Total monthly billed $39,200. Client sees two line items. Bobbie nets $105/hr; Tyler's $70/hr is a direct pass-through subcontract.",
+  feeTag: tbd(
+    "Hourly structure is the working model. Questions to confirm: What rate does the client budget support? How many hours per month? What does the client need to see on the invoice? Rates TBD until a contract is signed.",
   ),
 
   roster: [
@@ -172,8 +172,8 @@ const v7Agency = {
     },
   ],
   payrollTotal: v7BobbieDrawMonthly + v7TylerCostMonthly, // 28,000 combined draws
-  rosterTag: confirmed(
-    "Two-person lean structure: Bobbie (lead, $16,800/mo net draw) + Tyler (sub, $11,200/mo pass-through). Client pays tech stack — no separate tooling overhead. Code/IT is a one-time cost under Tyler's line.",
+  rosterTag: tbd(
+    "Two-person lean structure is the working model: Bobbie (lead) + Tyler (RFF sub for distribution). Questions to confirm: What is the right hours split? What does each role's monthly cost need to be? TBD until a contract is signed.",
   ),
 
   overheadsJunAug: [
@@ -214,8 +214,8 @@ const v7Agency = {
   costBasisSepOnward: v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 29,292
   monthlySurplusJunAug: v7MonthlySurplus,    // 9,908
   monthlySurplusSepOnward: v7MonthlySurplus, // 9,908
-  costBasisTag: confirmed(
-    "Bobbie draw $16,800 + Tyler sub $11,200 + overheads $1,292 = $29,292/mo. Monthly business surplus $9,908. Practitioner tithe ($1,680/mo = 10% of draw) is Bobbie's personal first claim — paid from her draw, not a business deduction.",
+  costBasisTag: tbd(
+    "Cost basis is a scenario projection. Key question: what monthly billing total covers team costs, overheads, and leaves a meaningful debt-attack surplus? All figures here derive from unconfirmed rates — they become real when a contract is signed.",
   ),
 
   capitalRecoveryAmount: 0,
@@ -288,16 +288,18 @@ const v7Personal = {
 
 export const SCENARIO_V7: Scenario = {
   id: "v7",
-  name: "V7 — Updated rates (Deer Lake)",
+  name: "V7 — Deer Lake rate scenario",
   short: "V7",
   tagline:
-    "$175/hr Bobbie · $70/hr Tyler (RFF sub) · 160 hr/mo each · lean overheads · surplus waterfall TBD",
+    "Brainstorming scenario · hourly structure · lean two-person team · rates and surplus TBD until a contract is signed",
   description:
-    "Market-rate hourly structure applied to Deer Lake. Bobbie bills $175/hr (nets $105/hr), Tyler bills $70/hr as a pass-through subcontract for distribution — both 40 hr/wk. Phase 1: $25,000 flat 8-week trial (intentionally below cost — $11,100 entry gap). Phase 2: $39,200/mo billed, $5,988/mo surplus after tithe + draws + lean overheads. Surplus waterfall TBD. V6 ($150/hr) preserved as historical baseline.",
+    "Rate exploration applied to Deer Lake. The structure — Bobbie as lead, Tyler as RFF sub, hourly billing, lean overheads — is the working model. The specific rates and all derived numbers are brainstorming inputs, not commitments. Key questions: What rate does the client budget support? What does the engagement need to cover? What monthly surplus is needed to attack the debt? Phase 1 shape: bounded 8-week trial, intentionally below full cost — an entry posture, not a revenue target. Phase 2 waterfall TBD pending a signed contract.",
   accent: "#3A5F8A",
   accentSoft: "#DDE8F5",
   accentInk: "#1A2E44",
-  status: "locked",
+  status: "provisional",
+  statusNote:
+    "These figures are a brainstorming scenario — not locked targets. The only confirmed number in the pipeline is the $12,000 portal fee. Hourly rates, monthly billing totals, and surplus projections become real the day a contract is signed.",
   salts: SHARED_SALTS,
   contracts: { agency: v7Agency },
   brightside: SHARED_BRIGHTSIDE,

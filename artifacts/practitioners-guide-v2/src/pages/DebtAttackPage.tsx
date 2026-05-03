@@ -10,21 +10,11 @@
  * Draw is fully consumed by tithe + take-home — nothing routes from draw to debt.
  * All debt attack firepower comes from the business surplus.
  *
- * Math (V7 rates — Bobbie $175/hr billed, $105/hr net):
- *   Monthly billed:              $39,200
- *   Tyler sub:                  ($11,200)
- *   Overheads:                   ($1,292)
- *   Bobbie draw (DA: $4k only):  ($4,000)  contractual $16,800/mo; $12,800 forgone
- *   Business surplus:            $22,708/mo  (all goes to debt — no draw routing needed)
- *
- *   From draw — tithe (10% × $4,000): ($400)  first claim on drawings
- *   From draw — take-home:          ($3,600)  $1,800 bi-weekly · draw fully consumed
- *   Total stacked toward debt:      $22,708/mo  (all business surplus)
- *
- *   Phase 1 — buffer:    $20,000 ÷ $22,708 ≈ 0.9 months → 1 month
- *   Phase 2 — $40k debt: $40,000 ÷ $22,708 ≈ 1.8 months → 2 months
- *   Phase 3 — $72k debt: $72,000 ÷ $22,708 ≈ 3.2 months → 4 months
- *   Total to debt-free: ~7 months from engagement start (Jun 2026 → Jan 2027)
+ * Math shown below is a SCENARIO based on unconfirmed V7 rates.
+ * The debt amounts ($40k, $72k) and draw decisions ($4k/mo, tithe rule) are real.
+ * The surplus ($22,708/mo) and all timelines are projections that shift
+ * when a real engagement rate is locked. Treat the phases as a framework,
+ * not a calendar.
  */
 
 import { CheckCircle2, Shield, Zap, Trophy, TrendingDown, Calendar, DollarSign } from "lucide-react";
@@ -326,7 +316,7 @@ export function DebtAttackPage() {
             Debt attack plan
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Buffer → $40k → $72k → debt free · $4,000/mo draw · $3,600 take-home · $22,708 to debt
+            Buffer → $40k → $72k → debt free · $4,000/mo draw · $3,600 take-home · surplus TBD until engagement locks
           </p>
         </div>
       </header>
@@ -337,14 +327,14 @@ export function DebtAttackPage() {
         style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted)/0.4)" }}
       >
         <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          The whole plan at a glance
+          The whole plan at a glance · stacked/mo and timeline are scenario projections
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: "Take-home/mo", value: money(PERSONAL_MONTHLY), sub: "$1,800 bi-weekly · after tithe", color: "#065f46" },
-            { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "after personal spending", color: "#c2410c" },
-            { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k", color: "#6d28d9" },
-            { label: "Debt-free", value: DEBT_FREE_DATE.split(" ").slice(-1)[0], sub: DEBT_FREE_DATE, color: "#92400e" },
+            { label: "Take-home/mo", value: money(PERSONAL_MONTHLY), sub: "$1,800 bi-weekly · after tithe · confirmed", color: "#065f46" },
+            { label: "Stacked/mo", value: money(STACK_MONTHLY), sub: "scenario — V7 rates unconfirmed", color: "#c2410c" },
+            { label: "Total debt", value: money(DEBT_A + DEBT_B), sub: "$40k + $72k · confirmed", color: "#6d28d9" },
+            { label: "Debt-free", value: "TBD", sub: DEBT_FREE_DATE + " (V7 scenario)", color: "#92400e" },
           ].map((item) => (
             <div key={item.label} className="text-center">
               <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-1">
@@ -368,7 +358,7 @@ export function DebtAttackPage() {
         style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
       >
         <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          Monthly cash flow · how the stack is built
+          Monthly cash flow · scenario projection based on V7 rates (unconfirmed)
         </p>
         <div className="space-y-2.5">
           {[
@@ -478,7 +468,7 @@ export function DebtAttackPage() {
       >
         <Trophy className="h-8 w-8 mx-auto mb-3" style={{ color: "#92400e" }} />
         <p className="text-[10px] font-mono uppercase tracking-[0.2em] mb-2" style={{ color: "#92400e" }}>
-          Target finish line
+          Scenario projection · timeline shifts when a rate is locked
         </p>
         <p
           className="text-3xl font-bold"
