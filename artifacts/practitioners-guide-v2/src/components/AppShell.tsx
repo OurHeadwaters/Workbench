@@ -59,8 +59,8 @@ export const NAV: NavItem[] = [
   { href: "/replication", label: "Replication", icon: Repeat },
   { href: "/pilot-two", label: "Pilot #2", icon: Target, accent: "#B45309" },
   { href: "/workbench", label: "Workbench", icon: ScrollText, accent: "#7A2E12" },
-  { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
   { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e", dormant: true },
+  { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
 ];
 
 function ScrollToTop() {

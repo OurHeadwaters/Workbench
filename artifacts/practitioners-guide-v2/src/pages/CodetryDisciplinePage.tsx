@@ -134,11 +134,6 @@ const PROTECTED_LIST: { name: string; carries: string }[] = [
       "the dot-and-tooltip provenance system. A number without one is provisional or TBD by definition.",
   },
   {
-    name: "Footnote",
-    carries:
-      "the founder's word for mid-page provenance notes. The notes tail of every page reads as a single discipline.",
-  },
-  {
     name: "Ledger",
     carries:
       "the founder's word for the line-by-line backing data. The export buttons say what they do.",
@@ -147,11 +142,6 @@ const PROTECTED_LIST: { name: string; carries: string }[] = [
     name: "Shadow labour",
     carries:
       "labour the books don't see. The codetry-aligned name is in the table already.",
-  },
-  {
-    name: "Hub Coordinator (Dryden)",
-    carries:
-      "a load-bearing named role from the Deer Lake roster sync. Listed so the audit shows it walked past intentionally.",
   },
 ];
 
