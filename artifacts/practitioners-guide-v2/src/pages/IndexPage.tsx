@@ -16,11 +16,13 @@
  */
 
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { BUCKETS } from "@/data/buckets";
 import { money } from "@/lib/format";
+import { FOCUS_AREAS, type FocusArea } from "@/data/whatsNext";
 import {
   Accordion,
   AccordionContent,
@@ -42,7 +44,16 @@ import {
   MapPin,
   Gift,
   ChevronRight,
+  Compass,
 } from "lucide-react";
+
+const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
+
+function readActiveFocus(): FocusArea | null {
+  if (typeof window === "undefined") return null;
+  const v = window.localStorage.getItem(FOCUS_STORAGE_KEY);
+  return FOCUS_AREAS.find((a) => a.id === v) ?? null;
+}
 
 // ─── Pipeline status badges ──────────────────────────────────────────────────
 
@@ -152,6 +163,10 @@ function PipelineCard({
 export function IndexPage() {
   const { scenario } = useScenario();
   const a = scenario.contracts.agency;
+  const [activeFocus, setActiveFocus] = useState<FocusArea | null>(null);
+  useEffect(() => {
+    setActiveFocus(readActiveFocus());
+  }, []);
 
   const buckets = [
     {
@@ -188,6 +203,44 @@ export function IndexPage() {
   return (
     <div className="space-y-8" data-testid="page-index">
       <ProvisionalBanner />
+
+      {/* ── Active focus nudge ── */}
+      {activeFocus ? (
+        <Link
+          href="/what-next"
+          className="flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm transition-colors hover:shadow-sm"
+          style={{
+            borderColor: activeFocus.accent + "66",
+            backgroundColor: activeFocus.accentSoft,
+            color: activeFocus.accentInk,
+          }}
+          data-testid="active-focus-nudge"
+        >
+          <span className="flex items-center gap-2">
+            <Compass className="h-4 w-4 flex-shrink-0" />
+            <span>
+              <strong>Your focus:</strong> {activeFocus.title}
+            </span>
+          </span>
+          <span className="flex items-center gap-1 text-xs opacity-70">
+            Open coaching view <ChevronRight className="h-3 w-3" />
+          </span>
+        </Link>
+      ) : (
+        <Link
+          href="/what-next"
+          className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm text-teal-800 transition-colors hover:bg-teal-100"
+          data-testid="what-next-prompt"
+        >
+          <span className="flex items-center gap-2">
+            <Compass className="h-4 w-4 flex-shrink-0" />
+            <span>Not sure what to work on next?</span>
+          </span>
+          <span className="flex items-center gap-1 text-xs opacity-70">
+            Open the coaching view <ChevronRight className="h-3 w-3" />
+          </span>
+        </Link>
+      )}
 
       <header id="index-after-prologue" className="scroll-mt-20">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">

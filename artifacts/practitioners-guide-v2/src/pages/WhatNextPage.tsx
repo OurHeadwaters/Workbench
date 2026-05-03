@@ -1,0 +1,436 @@
+/**
+ * WhatNextPage — Business coaching "What's Next" view.
+ *
+ * PROGRESSIVE DISCLOSURE PATTERN (see docs/design/progressive-disclosure.md):
+ *   - "Where You Are" summary panel: always visible (3 signal rows).
+ *   - Focus-area cards: always visible at card level.
+ *   - Step detail: collapses inside each card (accordion).
+ *   - Selected focus is persisted to localStorage.
+ */
+
+import { useState, useEffect } from "react";
+import { Link } from "wouter";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  Handshake,
+  Salad,
+  Cpu,
+  Zap,
+  TrendingUp,
+  Flame,
+} from "lucide-react";
+import { FOCUS_AREAS, type FocusArea, type EffortPayoff } from "@/data/whatsNext";
+import { useScenario } from "@/lib/scenario";
+import { money } from "@/lib/format";
+
+const STORAGE_KEY = "pgv2.whatsnext.focus";
+
+function readStoredFocus(): FocusArea["id"] | null {
+  if (typeof window === "undefined") return null;
+  const v = window.localStorage.getItem(STORAGE_KEY);
+  if (v === "contracts" || v === "salts" || v === "brightside") return v;
+  return null;
+}
+
+function saveStoredFocus(id: FocusArea["id"] | null) {
+  if (typeof window === "undefined") return;
+  if (id === null) {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } else {
+    window.localStorage.setItem(STORAGE_KEY, id);
+  }
+}
+
+// ─── Effort / payoff badge ────────────────────────────────────────────────────
+
+function EffortBadge({ ep, label }: { ep: EffortPayoff; label: string }) {
+  const styles: Record<EffortPayoff, string> = {
+    "fast-low-risk": "bg-emerald-50 text-emerald-800 border border-emerald-200",
+    "medium-high-payoff": "bg-blue-50 text-blue-800 border border-blue-200",
+    "slow-burn-high-upside": "bg-violet-50 text-violet-800 border border-violet-200",
+  };
+  const Icon: Record<EffortPayoff, typeof Zap> = {
+    "fast-low-risk": Zap,
+    "medium-high-payoff": TrendingUp,
+    "slow-burn-high-upside": Flame,
+  };
+  const I = Icon[ep];
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[ep]}`}
+    >
+      <I className="h-3 w-3" />
+      {label}
+    </span>
+  );
+}
+
+// ─── Focus area icon map ──────────────────────────────────────────────────────
+
+const AREA_ICONS: Record<FocusArea["id"], typeof Handshake> = {
+  contracts: Handshake,
+  salts: Salad,
+  brightside: Cpu,
+};
+
+// ─── Focus area card ─────────────────────────────────────────────────────────
+
+function FocusCard({
+  area,
+  selected,
+  expanded,
+  onSelect,
+  onToggleExpand,
+}: {
+  area: FocusArea;
+  selected: boolean;
+  expanded: boolean;
+  onSelect: (id: FocusArea["id"] | null) => void;
+  onToggleExpand: (id: FocusArea["id"]) => void;
+}) {
+  const Icon = AREA_ICONS[area.id];
+
+  function handleSelect() {
+    if (selected) {
+      onSelect(null);
+    } else {
+      onSelect(area.id);
+    }
+  }
+
+  return (
+    <div
+      className="rounded-xl border bg-card overflow-hidden transition-shadow"
+      style={{
+        borderTopColor: area.accent,
+        borderTopWidth: "4px",
+        borderColor: selected ? area.accent : undefined,
+        boxShadow: selected ? `0 0 0 2px ${area.accent}33` : undefined,
+      }}
+      data-testid={`focus-card-${area.id}`}
+    >
+      {/* Card header — always visible */}
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div
+            className="h-9 w-9 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
+            style={{ backgroundColor: area.accentSoft, color: area.accentInk }}
+          >
+            <Icon className="h-5 w-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2 flex-wrap">
+              <div>
+                <p className="text-sm font-semibold">{area.title}</p>
+                <p className="text-xs text-muted-foreground">{area.subtitle}</p>
+              </div>
+              {selected && (
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+                  style={{
+                    backgroundColor: area.accentSoft,
+                    color: area.accentInk,
+                    borderColor: area.accent + "55",
+                  }}
+                >
+                  <CheckCircle2 className="h-3 w-3" />
+                  Your focus
+                </span>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+              {area.whyNow}
+            </p>
+            <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+              <EffortBadge ep={area.effortPayoff} label={area.effortLabel} />
+              <span className="text-xs text-muted-foreground">{area.payoffLabel}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Action row */}
+      <div
+        className="border-t px-4 py-2.5 flex items-center justify-between gap-3"
+        style={{ borderColor: "hsl(var(--card-border))" }}
+      >
+        <button
+          type="button"
+          onClick={handleSelect}
+          className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
+          style={
+            selected
+              ? { backgroundColor: area.accent, color: "#fff" }
+              : { backgroundColor: area.accentSoft, color: area.accentInk }
+          }
+          data-testid={`focus-select-${area.id}`}
+        >
+          {selected ? "Clear focus" : "Make this my focus"}
+        </button>
+        <button
+          type="button"
+          onClick={() => onToggleExpand(area.id)}
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          data-testid={`focus-expand-${area.id}`}
+        >
+          {expanded ? (
+            <>
+              Hide steps <ChevronUp className="h-3.5 w-3.5" />
+            </>
+          ) : (
+            <>
+              Show {area.steps.length} next steps <ChevronDown className="h-3.5 w-3.5" />
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Steps — expanded */}
+      {expanded && (
+        <div
+          className="border-t px-4 pb-4 pt-3 space-y-3"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+          data-testid={`focus-steps-${area.id}`}
+        >
+          {area.steps.map((step, i) => (
+            <div key={i} className="flex gap-3">
+              <div
+                className="flex-shrink-0 h-5 w-5 rounded-full grid place-items-center text-[10px] font-bold mt-0.5"
+                style={{ backgroundColor: area.accentSoft, color: area.accentInk }}
+              >
+                {i + 1}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium">{step.action}</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                  {step.detail}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Where You Are summary ────────────────────────────────────────────────────
+//
+// Content is derived from the current scenario state via useScenario().
+// Key status signals (tag.kind), amounts (netCash, fee, surplus), and framing
+// adapt as scenario data changes. Two values are confirmed constants that are
+// not yet typed in the Scenario interface but are sourced from the same scenario
+// data file (v7.ts): the $12,000 807 portal fee and the $175/$70 hourly rates.
+// These are named as constants here so a future type addition requires only one
+// change, not a search across prose.
+const PORTAL_FEE = 12_000; // 807 Co-op portal fee — confirmed, in v7.ts description
+const LEAD_RATE = 175; // $/hr billed lead rate — v7BobbieRate in v7.ts
+const SUPPORT_RATE = 70; // $/hr billed support rate — Tyler subcontract rate in v7.ts
+
+function WhereYouAre() {
+  const { scenario } = useScenario();
+  const a = scenario.contracts.agency;
+  const s = scenario.salts;
+  const bs = scenario.brightside;
+
+  const contractConfirmed = a.feeTag.kind === "confirmed";
+  const saltsIsProvisional = s.pAndL.tag.kind !== "confirmed";
+  const brightsidePreRevenue = bs.surplusDeployment.tag.kind !== "confirmed";
+
+  // Build confirmed list from live scenario fields
+  const confirmedItems: string[] = [
+    `${money(PORTAL_FEE)} 807 portal development fee — confirmed revenue, the bridge that opens the trial window.`,
+    `Agency rates set at $${LEAD_RATE}/hr lead · $${SUPPORT_RATE}/hr support${contractConfirmed ? " — under contract." : " — contract not yet signed."}`,
+    `Salts ${saltsIsProvisional ? "cash-positive at model" : "cash-positive"}: ~${money(s.pAndL.netCash)}/yr${saltsIsProvisional ? " on planning targets" : ""}.`,
+  ];
+
+  // Build in-motion list from live scenario fields
+  const inMotionItems: string[] = [
+    contractConfirmed
+      ? `Deer Lake contract active — ${money(a.fee)}/mo engagement starting ${a.startDate}.`
+      : "Deer Lake trial: posture set, scope not yet defined, council date not yet booked.",
+    "807 grants → benefits plan: open action item, grant not yet identified.",
+    brightsidePreRevenue
+      ? `Brightside pre-revenue: pricing modelled (${money(bs.pricing.tier1.monthly)}/mo Tier 1), no pilot LTC site in conversation.`
+      : `Brightside in market — ${money(bs.revenueTarget.cumulative18mo)} cumulative revenue scenario active.`,
+  ];
+
+  // Tension derived from scenario state
+  const tension = contractConfirmed
+    ? `The agency waterfall is running — ${money(a.monthlySurplusSepOnward)}/mo business surplus attacking ${money(a.capitalRecoveryAmount)} in capital recovery. The key risk is Brightside: ${money(bs.surplusDeployment.surplus)} surplus scenario requires a pilot LTC site to commit.`
+    : `One confirmed number ($12k portal fee) and a wide-open trial window. The business needs a signed contract to activate the ${money(a.monthlySurplusJunAug)}–${money(a.monthlySurplusSepOnward)}/mo agency surplus — and the runway clock is running.`;
+
+  return (
+    <div
+      className="rounded-xl border border-card-border bg-card p-5 space-y-4"
+      data-testid="where-you-are-panel"
+    >
+      <h2
+        className="text-lg font-semibold"
+        style={{ fontFamily: "var(--app-font-serif)" }}
+      >
+        Where you are right now
+      </h2>
+
+      <div className="space-y-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 flex items-center gap-1.5">
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          What's confirmed
+        </p>
+        <ul className="space-y-1 pl-5">
+          {confirmedItems.map((item, i) => (
+            <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700 flex items-center gap-1.5">
+          <Clock className="h-3.5 w-3.5" />
+          What's in motion
+        </p>
+        <ul className="space-y-1 pl-5">
+          {inMotionItems.map((item, i) => (
+            <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div
+        className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+        data-testid="core-tension"
+      >
+        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 flex items-center gap-1.5 mb-1">
+          <AlertTriangle className="h-3.5 w-3.5" />
+          The core tension right now
+        </p>
+        <p className="text-sm text-amber-900 leading-relaxed">{tension}</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main page ────────────────────────────────────────────────────────────────
+
+export function WhatNextPage() {
+  const [activeFocus, setActiveFocus] = useState<FocusArea["id"] | null>(
+    () => readStoredFocus(),
+  );
+  // Centrally track which card is expanded so selecting a new card auto-collapses others.
+  // On first render, auto-expand the persisted selected card if one exists.
+  const [expandedId, setExpandedId] = useState<FocusArea["id"] | null>(
+    () => readStoredFocus(),
+  );
+
+  useEffect(() => {
+    saveStoredFocus(activeFocus);
+  }, [activeFocus]);
+
+  function handleSelect(id: FocusArea["id"] | null) {
+    setActiveFocus(id);
+    if (id !== null) {
+      setExpandedId(id); // selecting a card expands it and collapses others
+    }
+  }
+
+  function handleToggleExpand(id: FocusArea["id"]) {
+    setExpandedId((prev) => (prev === id ? null : id));
+  }
+
+  const activeArea = activeFocus
+    ? FOCUS_AREAS.find((a) => a.id === activeFocus) ?? null
+    : null;
+
+  return (
+    <div className="space-y-8" data-testid="page-what-next">
+      {/* ── Back ── */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="back-to-dashboard"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Dashboard
+      </Link>
+
+      {/* ── Header ── */}
+      <header>
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          Practitioner's Guide · Coaching
+        </p>
+        <h1
+          className="mt-2 text-3xl sm:text-4xl font-semibold leading-tight"
+          style={{ fontFamily: "var(--app-font-serif)" }}
+        >
+          What's next?
+        </h1>
+        <p className="mt-3 text-base text-muted-foreground max-w-2xl leading-relaxed">
+          A plain-language read of where the business is right now, and 2–3 concrete focus
+          areas with specific next steps. Pick one and come back to it — your choice is saved.
+        </p>
+        {activeArea && (
+          <div
+            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
+            style={{ backgroundColor: activeArea.accentSoft, color: activeArea.accentInk }}
+            data-testid="active-focus-banner"
+          >
+            Active focus:{" "}
+            <strong>{activeArea.title}</strong>
+          </div>
+        )}
+      </header>
+
+      {/* ── Where You Are ── */}
+      <WhereYouAre />
+
+      {/* ── Focus areas ── */}
+      <section>
+        <h2
+          className="text-xl font-semibold mb-1"
+          style={{ fontFamily: "var(--app-font-serif)" }}
+        >
+          Choose a focus area
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Select one area to work on. Each card shows what's realistic given current momentum.
+          Expand any card to see specific next steps.
+        </p>
+        <div className="space-y-4">
+          {FOCUS_AREAS.map((area) => (
+            <FocusCard
+              key={area.id}
+              area={area}
+              selected={activeFocus === area.id}
+              expanded={expandedId === area.id}
+              onSelect={handleSelect}
+              onToggleExpand={handleToggleExpand}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ── Return prompt ── */}
+      {activeFocus && (
+        <div
+          className="rounded-xl border border-card-border bg-muted/40 p-4 text-sm text-muted-foreground"
+          data-testid="focus-return-prompt"
+        >
+          Your focus is saved. When you return to this page, you'll land back here with{" "}
+          <strong className="text-foreground">
+            {activeArea?.title}
+          </strong>{" "}
+          still selected.
+        </div>
+      )}
+    </div>
+  );
+}
