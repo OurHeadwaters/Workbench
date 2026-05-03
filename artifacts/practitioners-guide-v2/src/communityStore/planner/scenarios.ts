@@ -57,7 +57,7 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
     id: "selfFund",
     label: "Self-fund",
     mode: "self-fund",
-    caption: "Reserve capital pays for the store. Only grant: the 807 truck. Doors open spring 2027.",
+    caption: "Reserve capital pays for the store. Only grant: the regional partnership truck. Doors open spring 2027.",
     anchors: {
       contractOneStart: "2026-04-27",
       coldChainPilotStart: "2026-06-01",

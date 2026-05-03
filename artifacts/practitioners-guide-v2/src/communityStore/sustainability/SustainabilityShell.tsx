@@ -101,7 +101,7 @@ export function SustainabilityShell({
       </main>
 
       <footer className="text-[10px] uppercase tracking-[0.20em] text-center py-3" style={{ color: "var(--cs-muted)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
-        Community Store Playbook · Sustainability section · Headwaters
+        Community Store Playbook · Sustainability section
       </footer>
     </div>
   );

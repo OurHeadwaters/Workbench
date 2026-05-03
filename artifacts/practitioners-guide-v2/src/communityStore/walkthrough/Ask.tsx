@@ -147,7 +147,7 @@ export default function Ask({ onOpenPlanner }: { onOpenPlanner: () => void }) {
         <div className="mt-8 space-y-3">
           <Reveal label="The five-step version, broken out">
             <ol className="space-y-2 list-decimal pl-5">
-              <li>Pass a council motion to enter a one-year design phase with Headwaters.</li>
+              <li>Pass a council motion to enter a one-year design phase with the practice team.</li>
               <li>Form a steering committee — three council members, two community members.</li>
               <li>Co-design the store with the community over six months.</li>
               <li>Pilot the cold-chain truck with the existing store for ninety days.</li>
@@ -161,7 +161,7 @@ export default function Ask({ onOpenPlanner }: { onOpenPlanner: () => void }) {
           </Reveal>
           <Reveal label="What the band gets back, and how soon">
             <p><span className="font-semibold">About $125,000 to $200,000 of grocery margin stays in the community the first year.</span> Money flying south today at 58¢ on the dollar. The new store sells 30 to 40 percent of the community's grocery spend in year one, keeping 26¢ more of every dollar than the current store.</p>
-            <p>Plus <span className="font-semibold">four full-time roles</span> — contractor couple plus Headwaters practitioner and distribution lead — and a band casual pool of 15+ people getting paid hours each week.</p>
+            <p>Plus <span className="font-semibold">four full-time roles</span> — contractor couple plus the practitioner and distribution lead — and a band casual pool of 15+ people getting paid hours each week.</p>
           </Reveal>
           <Reveal label="What stays even if the community walks away" variant="ink">
             <p>The cold-chain truck route — built, tested, available to other communities.</p>

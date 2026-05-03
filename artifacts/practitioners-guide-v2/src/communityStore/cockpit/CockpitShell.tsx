@@ -74,7 +74,7 @@ export function CockpitShell({
       <main className="flex-1 min-w-0">{children}</main>
 
       <footer className="text-[10px] uppercase tracking-[0.20em] text-center py-3" style={{ color: "#6b7665", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
-        Visual mockup · Square + QuickBooks underneath · Headwaters layer on top
+        Visual mockup · Square + QuickBooks underneath · the practice layer on top
       </footer>
     </div>
   );

@@ -25,9 +25,9 @@ interface Zone {
 const ZONES: Zone[] = [
   { id: "till", label: "Front till", Icon: ShoppingBasket, area: "7 / 1 / 10 / 5", tone: "primary", tool: "Till screen — Square", doing: "Take sales. Print receipts. Count the float." },
   { id: "market", label: "Market table", Icon: Sparkles, area: "1 / 5 / 4 / 10", tone: "warm", tool: "Market log — Local Line catalog", doing: "Local food & gathered food. Producers come from the regional cycle." },
-  { id: "dry", label: "Dry shelves", Icon: Box, area: "4 / 5 / 8 / 13", tone: "paper", tool: "Shelf-count sheet — Headwaters layer", doing: "Walk the row, tap what's empty. Reorder lifts itself." },
-  { id: "coldwall", label: "Cooler / freezer wall", Icon: Refrigerator, area: "1 / 13 / 8 / 17", tone: "cool", tool: "Temp + spoilage log — Headwaters layer", doing: "Twice a day temp. Anything tossed is logged here." },
-  { id: "stock", label: "Stockroom", Icon: Snowflake, area: "8 / 13 / 10 / 17", tone: "paper", tool: "Stockroom count — Headwaters layer", doing: "What landed yesterday. What's still on the next truck." },
+  { id: "dry", label: "Dry shelves", Icon: Box, area: "4 / 5 / 8 / 13", tone: "paper", tool: "Shelf-count sheet — practice layer", doing: "Walk the row, tap what's empty. Reorder lifts itself." },
+  { id: "coldwall", label: "Cooler / freezer wall", Icon: Refrigerator, area: "1 / 13 / 8 / 17", tone: "cool", tool: "Temp + spoilage log — practice layer", doing: "Twice a day temp. Anything tossed is logged here." },
+  { id: "stock", label: "Stockroom", Icon: Snowflake, area: "8 / 13 / 10 / 17", tone: "paper", tool: "Stockroom count — practice layer", doing: "What landed yesterday. What's still on the next truck." },
   { id: "office", label: "Back office", Icon: ClipboardList, area: "1 / 1 / 4 / 5", tone: "primary", tool: "Manager screen — band sign-in only", doing: "Books, prices, payroll. Locked to the manager." },
   { id: "receiving", label: "Receiving door", Icon: Truck, area: "8 / 5 / 10 / 13", tone: "warm", tool: "Truck-in checklist — Local Line manifest", doing: "Crate by crate. Manifest comes in from Local Line. Operators tap to confirm." },
 ];

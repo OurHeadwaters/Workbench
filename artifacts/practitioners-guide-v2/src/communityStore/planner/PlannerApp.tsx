@@ -107,7 +107,7 @@ export default function PlannerApp({ onBack }: { onBack: () => void }) {
   const phase1Gates: GanttGate[] = mode === "self-fund"
     ? [
         { label: "Council commits to private spend", date: anchors.councilDecision, tone: "warm" },
-        { label: "Truck LFIF intake (807 partnership)", date: anchors.truckLfifIntake, tone: "tan" },
+        { label: "Truck LFIF intake (regional partnership)", date: anchors.truckLfifIntake, tone: "tan" },
         { label: "Funding-secured trigger", date: derived.fundingSecured, tone: "warm" },
       ]
     : [
@@ -146,7 +146,7 @@ export default function PlannerApp({ onBack }: { onBack: () => void }) {
   })();
 
   const phase2Caption = mode === "self-fund"
-    ? "Contract two. Triggered by council's private-spend vote. Doors at month five, handover at month nine. The 807-partnership truck arrives mid-build."
+    ? "Contract two. Triggered by council's private-spend vote. Doors at month five, handover at month nine. The regional-partnership truck arrives mid-build."
     : "Contract two. Triggered by funding secured. Doors open at month five, handover at month nine, NNC subsidy lands a few months after.";
 
   return (

@@ -1,9 +1,9 @@
 export default function Recap() {
   const rows: Array<[string, string]> = [
     ["What", "A community store. The band runs the floor. An operator couple on the cockpit."],
-    ["System", "Square + QuickBooks + Local Line + the Headwaters cockpit. Payroll stays small. Doors stay open. Truck stays on time."],
+    ["System", "Square + QuickBooks + Local Line + the operator cockpit. Payroll stays small. Doors stay open. Truck stays on time."],
     ["Route", "Thunder Bay → Sioux Lookout → Dryden → community. Two cold trucks."],
-    ["Back home", "~$125k–$200k of grocery margin stays in the community year one. 4 FT roles (contractor couple + Headwaters practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
+    ["Back home", "~$125k–$200k of grocery margin stays in the community year one. 4 FT roles (contractor couple + the practitioner + distribution lead) + band casual pool of 15+ getting paid hours weekly."],
     ["Stays", "Public price page. Household lookup. Written guide for running it."],
     ["Ask", "Stage 1 — planning trial: $25,000 flat (8 weeks, practitioner solo). Stage 2 — practitioner $175/hr + distribution lead $70/hr, 160 hr/mo each: $39,200/mo + gas & insurance at cost. Band reserves. Most spending near the end, on the cold-chain pilot."],
     ["Off-ramp", "Walk away with the truck route, the software, the people trained."],

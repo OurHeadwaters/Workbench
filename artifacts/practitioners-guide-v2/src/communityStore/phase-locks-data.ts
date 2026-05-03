@@ -51,6 +51,6 @@ export const PHASE_LOCKS: PhaseLockEntry[] = [
 
 export const SIGNOFF_COLUMNS = [
   "Chief / Band council",
-  "Headwaters practitioner",
+  "the practitioner",
   "Contractor foreman",
 ] as const;

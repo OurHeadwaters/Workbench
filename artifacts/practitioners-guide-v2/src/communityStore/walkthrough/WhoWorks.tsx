@@ -3,7 +3,7 @@ import { Reveal } from "../plannerReveal";
 export default function WhoWorks() {
   const bullets = [
     { tag: "Bullet 1 · A two-person operator couple", body: "The operator couple on the cockpit. Brought in and paid by the contractor — same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size." },
-    { tag: "Bullet 2 · Serious software underneath them", body: "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. Doors stay open through hunting season and bad weather. Truck leaves Dryden loaded even when one operator is out." },
+    { tag: "Bullet 2 · Serious software underneath them", body: "Square at the till, QuickBooks on the books, Local Line for producers, the operator cockpit tying them together. Doors stay open through hunting season and bad weather. Truck leaves Dryden loaded even when one operator is out." },
     { tag: "Bullet 3 · Margin comes home in year one", body: "About $125k–$200k of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar. Four full-time roles plus a band casual pool of 15+ people getting paid hours each week." },
   ];
 
@@ -34,16 +34,16 @@ export default function WhoWorks() {
               <li><div className="font-semibold">A calendar that bends.</div>Hunting season. Funerals. Hockey tournaments. Treaty days. Hours bend around community life.</li>
             </ul>
           </Reveal>
-          <Reveal label="Who from Headwaters touches it" variant="ink">
+          <Reveal label="Who from the practice team touches it" variant="ink">
             <p className="text-[13px] italic mb-2" style={{ color: "rgba(244,237,224,0.55)" }}>Trial: the practitioner alone. The distribution lead and IT come in when food is moving.</p>
             <ul className="space-y-2 list-none pl-0">
-              <li><span className="font-semibold">The practitioner.</span> Builds and maintains the software. The only Headwaters role during the trial.</li>
+              <li><span className="font-semibold">The practitioner.</span> Builds and maintains the software. The only practice-team role during the trial.</li>
               <li><span className="font-semibold">The distribution lead.</span> Handles Thunder Bay → community distribution in person. Runs the 1-ton truck and trailer.</li>
               <li><span className="font-semibold">IT/Assistant.</span> Domains, passwords, bookkeeping, troubleshooting. The distribution lead's on-the-ground support and the practitioner's IT backup.</li>
             </ul>
           </Reveal>
           <Reveal label="Employment at full run">
-            <p><span className="font-semibold">Four full-time roles:</span> contractor couple (on the contractor's payroll), Headwaters Practitioner (invoiced as an independent consultant), and Distribution Lead (invoiced through their own business — not a Headwaters payroll position). No Ontario employer obligations on the Headwaters side.</p>
+            <p><span className="font-semibold">Four full-time roles:</span> contractor couple (on the contractor's payroll), the practitioner (invoiced as an independent consultant), and Distribution Lead (invoiced through their own business — not on the practice team's payroll). No Ontario employer obligations on the practice-team side.</p>
             <p>A <span className="font-semibold">band casual pool of 15+ people</span> getting paid hours each week — restocks, market tables, open shifts. The work stays local and flexible.</p>
           </Reveal>
         </div>

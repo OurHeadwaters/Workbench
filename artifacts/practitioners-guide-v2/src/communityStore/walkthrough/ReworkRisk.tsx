@@ -4,7 +4,7 @@ export default function ReworkRisk() {
   const claims = [
     { tag: "Claim 1 · The symptom", head: "The doors got built too small.", body: "Rework is the symptom, not the cause. Every backtrack on this build is a decision that wasn't locked before the saw came out." },
     { tag: "Claim 2 · The cause", head: "The planning process has no rhyme or reason.", body: "Requirements drift mid-build. Decisions get reopened next week. Nobody owns the brief the construction work depends on." },
-    { tag: "Claim 3 · The fix", head: "Secure the plan. Build it once.", body: "Headwaters owns the operational brief — locked phase by phase — so the contractor never has to backtrack to fix what the plan should have caught." },
+    { tag: "Claim 3 · The fix", head: "Secure the plan. Build it once.", body: "The practitioner team owns the operational brief — locked phase by phase — so the contractor never has to backtrack to fix what the plan should have caught." },
   ];
 
   return (
@@ -15,7 +15,7 @@ export default function ReworkRisk() {
           The doors got built too small.
           <span className="italic font-normal block mt-2" style={{ color: "var(--cs-accent-warm)" }}>Because nobody owned the plan.</span>
         </h2>
-        <p className="text-[18px] leading-[1.55] mt-6 max-w-md" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>A door that's an inch too narrow isn't about the door. It's about a plan that wasn't locked before the wall went up. Headwaters locks the plan first — so the build only happens once.</p>
+        <p className="text-[18px] leading-[1.55] mt-6 max-w-md" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>A door that's an inch too narrow isn't about the door. It's about a plan that wasn't locked before the wall went up. The practitioner team locks the plan first — so the build only happens once.</p>
         <div className="mt-7 space-y-3">
           {claims.map((c) => (
             <div key={c.tag} className="rounded-xl p-4 border-l-4" style={{ background: "var(--cs-paper)", borderColor: "var(--cs-accent-warm)" }}>
@@ -35,7 +35,7 @@ export default function ReworkRisk() {
             <p>So decisions get reopened. There's no page anyone can point to and say "this was settled on the fourteenth, here's who signed it." The conversation gets had again, the wall gets moved again, the doors get built too small.</p>
           </Reveal>
           <Reveal label="What 'locking the plan' actually means here" variant="ink">
-            <p>Headwaters owns the plan start to finish. Before each construction phase, the plan locks: floor plan, cold-chain, where the till and freezer go, who does which job. Once locked, no reopening next Tuesday because somebody remembered something.</p>
+            <p>The practitioner team owns the plan start to finish. Before each construction phase, the plan locks: floor plan, cold-chain, where the till and freezer go, who does which job. Once locked, no reopening next Tuesday because somebody remembered something.</p>
             <p>The work is already shipped. The cockpit is the actual tablet the operators run — so the plan still works the day the doors open.</p>
           </Reveal>
         </div>

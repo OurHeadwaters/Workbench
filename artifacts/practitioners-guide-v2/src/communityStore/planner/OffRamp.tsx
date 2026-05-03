@@ -25,7 +25,7 @@ export function OffRamp({
               </p>
               <p className="serif text-[15px] leading-[1.55] mt-3 opacity-90">
                 Contract two activates on the funding-secured trigger in {fmtMonthYear(fundingSecured)}.
-                The 807-partnership LFIF for the ice-road truck still files in {fmtMonthYear(truckLfifIntake)} — but it gates only the vehicle, not the store.
+                The regional-partnership LFIF for the ice-road truck still files in {fmtMonthYear(truckLfifIntake)} — but it gates only the vehicle, not the store.
               </p>
             </>
           ) : (

@@ -4,7 +4,7 @@ export default function WhyThisTeam() {
   const claims = [
     { tag: "Claim 1 · We've already written this plan", head: "The operating plan exists.", body: "Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.", links: ["/practitioners-guide-v2/workbench"] },
     { tag: "Claim 2 · We've already built the software", head: "The bookkeeping system is live.", body: "The same patterns used for the community store till. Open it in another tab — the work isn't theoretical.", links: ["/headwaters-books/", "/library/"] },
-    { tag: "Claim 3 · We work with northern communities, not at them", head: "The method is written down.", body: "Headwaters has a practice with a name — codetry — and a handbook anyone can read. Seven parts, written down end to end.", links: ["/codetry-handbook/"] },
+    { tag: "Claim 3 · We work with northern communities, not at them", head: "The method is written down.", body: "The practitioner team has a practice with a name — codetry — and a handbook anyone can read. Seven parts, written down end to end.", links: ["/codetry-handbook/"] },
   ];
 
   return (
@@ -21,7 +21,7 @@ export default function WhyThisTeam() {
           <div className="text-[10.5px] uppercase tracking-[0.22em] mb-2" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>Hotel precedent · already running</div>
           <h3 className="text-[22px] leading-[1.2] font-semibold" style={{ color: "var(--cs-primary)", textWrap: "balance", fontFamily: "'Fraunces', Georgia, serif" }}>You've proved this model at the hotel.</h3>
           <p className="text-[15.5px] leading-[1.5] mt-3" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>Same setup as the band's hotel today. The contractor brings the couple. The band pays the contractor. The building works.</p>
-          <p className="text-[15.5px] leading-[1.5] mt-3" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>The store is harder — fresh food, faster turnover. That's why the contractor brings Headwaters in. Same setup, new food side.</p>
+          <p className="text-[15.5px] leading-[1.5] mt-3" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>The store is harder — fresh food, faster turnover. That's why the contractor brings the practice team in. Same setup, new food side.</p>
         </div>
 
         <div className="mt-7 space-y-3">
@@ -54,12 +54,12 @@ export default function WhyThisTeam() {
 
         <div className="mt-8 space-y-3">
           <Reveal label="What's inside the software">
-            <p><span className="font-semibold">Headwaters Books.</span> The bookkeeping the agency uses for its own books — same patterns the community store till will use.</p>
+            <p><span className="font-semibold">the bookkeeping system.</span> The bookkeeping the agency uses for its own books — same patterns the community store till will use.</p>
             <p><span className="font-semibold">Northern Food Systems Research Library.</span> A working library on northern food systems — already shipped.</p>
           </Reveal>
           <Reveal label="What's inside the method" variant="ink">
-            <p>The codetry handbook — <span className="italic">Headwaters: How a Community Runs Its Own Economy</span>. Seven parts. Read it on a phone.</p>
-            <p>Same method used at the kitchen table in Dryden, Thunder Bay, anywhere Headwaters works. Not a slide deck — a practice.</p>
+            <p>The codetry handbook — <span className="italic">How a Community Runs Its Own Economy</span>. Seven parts. Read it on a phone.</p>
+            <p>Same method used at the kitchen table in Dryden, Thunder Bay, anywhere this playbook applies. Not a slide deck — a practice.</p>
           </Reveal>
         </div>
       </div>

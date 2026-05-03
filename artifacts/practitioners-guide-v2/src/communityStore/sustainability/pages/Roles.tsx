@@ -39,7 +39,7 @@ export default function Roles() {
         <div className="text-[10.5px] uppercase tracking-[0.20em] mb-2" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>Who employs whom · across all six functions</div>
         <ul className="space-y-2 text-[14.5px] leading-[1.45] list-none pl-0" style={{ color: "var(--cs-text)" }}>
           <li><span className="font-semibold">Operator couple, on-call pod, named bench:</span> on the contractor's payroll — same model already running the band's hotel today.</li>
-          <li><span className="font-semibold">Practitioner, Distribution Lead, IT/Assistant:</span> on Headwaters' payroll. Practitioner (software), Distribution Lead (Thunder Bay → community, in person), IT/Assistant (bookkeeping, domains, distribution support). Engaged when food is flowing.</li>
+          <li><span className="font-semibold">Practitioner, Distribution Lead, IT/Assistant:</span> on the practice team's payroll. Practitioner (software), Distribution Lead (Thunder Bay → community, in person), IT/Assistant (bookkeeping, domains, distribution support). Engaged when food is flowing.</li>
           <li><span className="font-semibold">Community liaison, council oversight:</span> band, no payroll change.</li>
         </ul>
       </aside>

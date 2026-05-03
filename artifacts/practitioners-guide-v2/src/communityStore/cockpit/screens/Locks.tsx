@@ -30,7 +30,7 @@ const LAYER: Record<Layer, { label: string; bg: string; ink: string; border: str
   square: { label: "Square", bg: "#dcdfe6", ink: "#1f3d2e", border: "rgba(31,61,46,0.16)" },
   quickbooks: { label: "QuickBooks", bg: "#cfe0d8", ink: "#1f3d2e", border: "rgba(31,61,46,0.16)" },
   localline: { label: "Local Line", bg: "#e9c8a8", ink: "#7e3a25", border: "rgba(184,90,62,0.30)" },
-  headwaters: { label: "Headwaters", bg: "#f1d9c7", ink: "#7e3a25", border: "rgba(184,90,62,0.30)" },
+  headwaters: { label: "Practice layer", bg: "#f1d9c7", ink: "#7e3a25", border: "rgba(184,90,62,0.30)" },
 };
 
 function LayerTag({ layer }: { layer: Layer }) {
@@ -101,7 +101,7 @@ export default function Locks() {
           { layer: "square" as Layer, desc: "Sales, payments, the till. Already in the contractor's plan." },
           { layer: "quickbooks" as Layer, desc: "Bank, books, payroll. Already in the contractor's plan." },
           { layer: "localline" as Layer, desc: "Producer cycle & weekly orders. The regional producers already use it." },
-          { layer: "headwaters" as Layer, desc: "The glance-able operator layer on top. The right thing is the easy thing." },
+          { layer: "headwaters" as Layer, desc: "The operator surface layer on top. The right thing is the easy thing." },
         ]).map((item) => (
           <div key={item.layer}>
             <div className="mb-1"><LayerTag layer={item.layer} /></div>

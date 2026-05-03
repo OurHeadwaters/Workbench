@@ -27,6 +27,7 @@ interface NavItem {
   label: string;
   icon: typeof BookOpen;
   accent?: string;
+  dormant?: boolean;
 }
 
 export const NAV: NavItem[] = [
@@ -56,7 +57,7 @@ export const NAV: NavItem[] = [
   { href: "/pilot-two", label: "Pilot #2", icon: Target, accent: "#B45309" },
   { href: "/workbench", label: "Workbench", icon: ScrollText, accent: "#7A2E12" },
   { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
-  { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e" },
+  { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e", dormant: true },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -131,7 +132,15 @@ export function AppShell({ children }: { children: ReactNode }) {
                     }}
                   />
                   <Icon className="h-4 w-4 flex-shrink-0 opacity-70" />
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate flex-1">{item.label}</span>
+                  {item.dormant && (
+                    <span
+                      className="text-[8px] uppercase tracking-[0.14em] px-1 py-[1px] rounded leading-none shrink-0"
+                      style={{ background: "rgba(184,90,62,0.15)", color: "#b85a3e", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", border: "1px solid rgba(184,90,62,0.30)" }}
+                    >
+                      template
+                    </span>
+                  )}
                 </Link>
               );
             })}

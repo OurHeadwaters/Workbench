@@ -5,17 +5,17 @@ import {
   TRIAL_TIMELINE_OJ_REVIEW_DISCLAIMER,
 } from "@workspace/headwaters-pricing";
 
-export default function WhatHeadwatersDelivers() {
+export default function WhatTheTeamDelivers() {
   const lines = [
     { tag: "Line 1 · The store's operating system", head: "Till, books, open-records software.", body: "The cashier's screen, the daily close, the public price page, the household lookup — built once, owned by the band." },
-    { tag: "Line 2 · The way the food gets here", head: "Cold-chain plan, truck route, ninety-day pilot.", body: "Three lanes (truck on the road, winter-road truck, plane), planned route by route, tested before the store opens. Requires a 1-ton truck — budget line in the plan as either a used purchase or contractor lease to Headwaters." },
+    { tag: "Line 2 · The way the food gets here", head: "Cold-chain plan, truck route, ninety-day pilot.", body: "Three lanes (truck on the road, winter-road truck, plane), planned route by route, tested before the store opens. Requires a 1-ton truck — budget line in the plan as either a used purchase or contractor lease to the practice team." },
     { tag: "Line 3 · The people, trained", head: "Staff training, written guide, steering committee.", body: "Everyone learns every job. The band runs from a written guide, not from memory. A community board sits over the work." },
   ];
 
   return (
     <section id="cs-what-headwaters-delivers" className="w-full scroll-mt-20" style={{ background: "var(--cs-bg)" }}>
       <div className="mx-auto max-w-[36rem] px-6 pt-12 pb-16 flex flex-col">
-        <div className="text-[11px] uppercase tracking-[0.22em] mb-3" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>What Headwaters delivers</div>
+        <div className="text-[11px] uppercase tracking-[0.22em] mb-3" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>What the practice team delivers</div>
         <h2 className="text-[34px] leading-[1.1] font-medium" style={{ color: "var(--cs-primary)", textWrap: "balance", fontFamily: "'Fraunces', Georgia, serif" }}>
           Three line items.
           <span className="italic font-normal block mt-2" style={{ color: "var(--cs-accent-warm)" }}>One contract. One team that gets it done.</span>
@@ -80,7 +80,7 @@ export default function WhatHeadwatersDelivers() {
             <p>The Phase Planner lets the contractor flip between the self-fund and grant-funded scenarios live, with the cold-chain pilot back-loaded so the band can walk away after step three with the route built.</p>
           </Reveal>
           <Reveal label="Proof for line 3 — the training is already written down" variant="ink">
-            <p>The codetry handbook is the written method behind how Headwaters trains. Seven parts, every chapter readable on a phone — the same handbook the band staff will work from in their training materials.</p>
+            <p>The codetry handbook is the written method behind how the practice team trains. Seven parts, every chapter readable on a phone — the same handbook the band staff will work from in their training materials.</p>
             <p>The Practitioner's Guide is the reference the practitioner works from — contracts ledger, archetypes, personal-cash discipline.</p>
             <p className="text-[12px] uppercase tracking-[0.16em] mt-2" style={{ color: "rgba(244,237,224,0.7)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
               Open in another tab ·{" "}

@@ -26,7 +26,7 @@ const LOCKED: Capability[] = [
 const LAYER: Record<Capability["layer"], { label: string; bg: string; ink: string; border: string }> = {
   square: { label: "Square", bg: "#dcdfe6", ink: "#1f3d2e", border: "rgba(31,61,46,0.16)" },
   quickbooks: { label: "QuickBooks", bg: "#cfe0d8", ink: "#1f3d2e", border: "rgba(31,61,46,0.16)" },
-  headwaters: { label: "Headwaters layer", bg: "#f1d9c7", ink: "#7e3a25", border: "rgba(184,90,62,0.30)" },
+  headwaters: { label: "practice layer", bg: "#f1d9c7", ink: "#7e3a25", border: "rgba(184,90,62,0.30)" },
 };
 
 const SCOPE: Record<Capability["scope"], { label: string; ink: string }> = {
@@ -65,7 +65,7 @@ export default function Tooling({ onNavigateCockpit }: { onNavigateCockpit: () =
       <Reveal label="What survives turnover, exactly">
         <p><span className="font-semibold">Square.</span> The tills, the bookings, the product catalogue, the historical sales. Belongs to the band's Square account from day one.</p>
         <p><span className="font-semibold">QuickBooks.</span> The chart of accounts, the bank feeds, the payroll. Belongs to the band's QuickBooks account from day one.</p>
-        <p><span className="font-semibold">The Headwaters layer.</span> Open source on the band's behalf, hosted on the band's domain, exported on demand.</p>
+        <p><span className="font-semibold">The practice layer.</span> Open source on the band's behalf, hosted on the band's domain, exported on demand.</p>
       </Reveal>
     </PageFrame>
   );

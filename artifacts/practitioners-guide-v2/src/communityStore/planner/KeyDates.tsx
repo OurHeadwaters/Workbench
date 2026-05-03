@@ -6,7 +6,7 @@ export function KeyDates({ d, mode }: { d: Derived; mode: ScenarioMode }) {
   ];
 
   if (mode === "self-fund") {
-    if (d.truckLfifIntake) rows.push({ label: "Truck LFIF intake (807 partnership)", value: fmtShort(d.truckLfifIntake) });
+    if (d.truckLfifIntake) rows.push({ label: "Truck LFIF intake (regional partnership)", value: fmtShort(d.truckLfifIntake) });
     if (d.truckLfifDecision) rows.push({ label: "Truck LFIF decision", value: fmtShort(d.truckLfifDecision) });
   } else {
     if (d.applicationsFiled) rows.push({ label: "Applications filed", value: fmtShort(d.applicationsFiled) });
@@ -24,7 +24,7 @@ export function KeyDates({ d, mode }: { d: Derived; mode: ScenarioMode }) {
   );
 
   if (mode === "self-fund" && d.truckArrives) {
-    rows.push({ label: "Truck arrives (807 partnership)", value: fmtShort(d.truckArrives) });
+    rows.push({ label: "Truck arrives (regional partnership)", value: fmtShort(d.truckArrives) });
   }
 
   rows.push(

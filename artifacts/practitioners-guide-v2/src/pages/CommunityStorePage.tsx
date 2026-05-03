@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 import Prologue from "@/communityStore/walkthrough/Prologue";
 import WhatItIs from "@/communityStore/walkthrough/WhatItIs";
 import WhyCurrentFails from "@/communityStore/walkthrough/WhyCurrentFails";
@@ -19,6 +20,63 @@ import Recap from "@/communityStore/walkthrough/Recap";
 import CockpitApp from "@/communityStore/cockpit/CockpitApp";
 import PlannerApp from "@/communityStore/planner/PlannerApp";
 import SustainabilityApp from "@/communityStore/sustainability/SustainabilityApp";
+
+const BANNER_KEY = "cs-reactivation-banner-dismissed";
+
+function ReactivationBanner() {
+  const [dismissed, setDismissed] = useState(() => {
+    try { return localStorage.getItem(BANNER_KEY) === "1"; } catch { return false; }
+  });
+
+  if (dismissed) return null;
+
+  const dismiss = () => {
+    try { localStorage.setItem(BANNER_KEY, "1"); } catch { /* noop */ }
+    setDismissed(true);
+  };
+
+  return (
+    <div
+      data-testid="cs-reactivation-banner"
+      className="w-full border-b px-5 py-4"
+      style={{ background: "rgba(184,90,62,0.08)", borderColor: "rgba(184,90,62,0.30)" }}
+    >
+      <div className="max-w-[52rem] mx-auto flex items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <p
+            className="text-[10px] uppercase tracking-[0.22em] mb-2"
+            style={{ color: "#b85a3e", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}
+          >
+            Template — fill in before sharing
+          </p>
+          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+            {[
+              { label: "Community name", placeholder: "[e.g. — Wabigoon Lake First Nation]" },
+              { label: "Contractor name", placeholder: "[e.g. — the general contractor]" },
+              { label: "Phase dates", placeholder: "[e.g. — pilot May 2026 · build Jan 2027]" },
+              { label: "Funding path", placeholder: "[e.g. — ISC + LFIF grants / self-fund]" },
+            ].map(({ label, placeholder }) => (
+              <p key={label} className="text-[13px] leading-[1.4]" style={{ color: "#1f3d2e" }}>
+                <span className="font-semibold" style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}>{label}:</span>{" "}
+                <span style={{ color: "#7e3a25", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "12px" }}>{placeholder}</span>
+              </p>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={dismiss}
+          data-testid="cs-reactivation-banner-dismiss"
+          className="shrink-0 rounded p-1 transition-opacity hover:opacity-60"
+          style={{ color: "#b85a3e" }}
+          aria-label="Dismiss"
+        >
+          <X size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 type View =
   | "walkthrough"
@@ -102,6 +160,7 @@ export default function CommunityStorePage() {
       className="cs-theme w-full min-h-screen"
       data-testid="community-store-page"
     >
+      <ReactivationBanner />
       {view === "walkthrough" && (
         <Walkthrough
           onOpenCockpit={() => setView("cockpit")}

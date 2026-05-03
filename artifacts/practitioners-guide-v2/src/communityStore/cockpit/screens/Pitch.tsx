@@ -20,7 +20,7 @@ const STACK = [
   { name: "Square", role: "till + sales" },
   { name: "QuickBooks", role: "books + bank" },
   { name: "Local Line", role: "producer cycle · regional" },
-  { name: "Headwaters", role: "the operator layer" },
+  { name: "Practice layer", role: "the operator surface" },
 ];
 
 const REQUIRES = [

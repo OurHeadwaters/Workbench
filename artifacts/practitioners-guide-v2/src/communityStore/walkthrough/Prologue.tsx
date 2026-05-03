@@ -76,7 +76,7 @@ export default function Prologue() {
             className="italic text-[15px] text-center"
             style={{ color: "var(--cs-accent)", fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            The story that sealed Headwaters' fate.
+            The story that sealed the partnership's fate.
           </div>
           <button
             type="button"

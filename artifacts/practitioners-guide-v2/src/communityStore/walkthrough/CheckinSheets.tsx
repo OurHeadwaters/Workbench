@@ -35,7 +35,7 @@ export default function CheckinSheets({ onBack }: { onBack: () => void }) {
             <div key={week.week} data-testid={`cs-checkin-sheet-week-${week.week}`} className="rounded-2xl border p-6 print:rounded-none print:border-0 print:border-t print:p-6 print:break-after-page" style={{ background: "var(--cs-paper)", borderColor: "var(--cs-rule)" }}>
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>Headwaters trial · Check-in sheet</div>
+                  <div className="text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "var(--cs-accent-warm)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>Eight-week trial · Check-in sheet</div>
                   <div className="text-[22px] leading-[1.15] font-semibold" style={{ color: "var(--cs-primary)", fontFamily: "'Fraunces', Georgia, serif" }}>Week {week.week} of {TRIAL_TIMELINE.length} — {week.windowLabel}</div>
                   <div className="text-[16px] leading-[1.3] font-medium italic mt-1" style={{ color: "var(--cs-accent-warm)", fontFamily: "'Fraunces', Georgia, serif" }}>{week.focus}</div>
                   {ojiWeek && <div className="text-[14px] leading-[1.3] italic mt-0.5" style={{ color: "var(--cs-muted)", fontFamily: "'Fraunces', Georgia, serif" }} lang="oj">{ojiWeek.focus}</div>}

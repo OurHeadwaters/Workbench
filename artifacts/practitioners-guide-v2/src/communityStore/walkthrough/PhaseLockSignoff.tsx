@@ -42,7 +42,7 @@ export default function PhaseLockSignoff({ onBack }: { onBack: () => void }) {
             Three locks.{" "}
             <span className="italic font-normal" style={{ color: "var(--cs-accent-warm)" }}>One build, done once.</span>
           </h1>
-          <p className="text-[15px] leading-[1.5] mt-3 max-w-lg" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>One section per construction phase. Print, walk it onto the build site, and initial each phase when the decisions are settled. Signed copies go to the Chief's office, the Headwaters practitioner, and the contractor's file.</p>
+          <p className="text-[15px] leading-[1.5] mt-3 max-w-lg" style={{ color: "var(--cs-text)", fontFamily: "'Fraunces', Georgia, serif" }}>One section per construction phase. Print, walk it onto the build site, and initial each phase when the decisions are settled. Signed copies go to the Chief's office, the practitioner, and the contractor's file.</p>
         </div>
 
         <div className="space-y-6 print:space-y-4">

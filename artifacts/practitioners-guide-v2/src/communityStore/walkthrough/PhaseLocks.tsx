@@ -53,7 +53,7 @@ export default function PhaseLocks({ onOpenPlanner }: { onOpenPlanner: () => voi
               <li>Cold-chain footprint — freezer + cooler dimensions, dock placement, receiving aisle.</li>
               <li>Role design — operator-couple seats, flex roles, food-safety presence on day one.</li>
             </ul>
-            <p><span className="font-semibold">Signed by:</span> Chief (ratifies), Headwaters practitioner (owns the brief), contractor's site foreman (acknowledges and builds to it).</p>
+            <p><span className="font-semibold">Signed by:</span> Chief (ratifies), the practitioner (owns the brief), contractor's site foreman (acknowledges and builds to it).</p>
             <p style={{ borderLeft: "3px solid var(--cs-accent-warm)", paddingLeft: "0.75rem", opacity: 0.85 }}><span className="font-semibold">If this gate slips:</span> framing begins on an unlocked floor plan. The freezer may not fit through the door that gets built.</p>
           </Reveal>
 
@@ -65,7 +65,7 @@ export default function PhaseLocks({ onOpenPlanner }: { onOpenPlanner: () => voi
               <li>Back-of-house — receiving desk, manager workstation, cold-chain readout.</li>
               <li>Public-records hardware — open-records terminal, daily-close station, household-lookup screen.</li>
             </ul>
-            <p><span className="font-semibold">Signed by:</span> Headwaters practitioner (owns the brief), contractor's electrical sub (acknowledges and pulls to it), operator couple (walks the position before sign-off).</p>
+            <p><span className="font-semibold">Signed by:</span> the practitioner (owns the brief), contractor's electrical sub (acknowledges and pulls to it), operator couple (walks the position before sign-off).</p>
             <p style={{ borderLeft: "3px solid var(--cs-accent-warm)", paddingLeft: "0.75rem", opacity: 0.85 }}><span className="font-semibold">If this gate slips:</span> the electrician makes their best guess on outlet placement.</p>
           </Reveal>
 
@@ -77,7 +77,7 @@ export default function PhaseLocks({ onOpenPlanner }: { onOpenPlanner: () => voi
               <li>Public price page — every SKU, every price, readable on a phone.</li>
               <li>Opening-day staffing — operator couple + practitioner food-safety person, hour by hour.</li>
             </ul>
-            <p><span className="font-semibold">Signed by:</span> Chief (ratifies the public face), Headwaters practitioner (owns the brief and the price page), operator couple (commits to the opening-day schedule).</p>
+            <p><span className="font-semibold">Signed by:</span> Chief (ratifies the public face), the practitioner (owns the brief and the price page), operator couple (commits to the opening-day schedule).</p>
             <p style={{ borderLeft: "3px solid rgba(244,237,224,0.5)", paddingLeft: "0.75rem", opacity: 0.85 }}><span className="font-semibold">If this gate slips:</span> the band sees the price list on day one — simultaneously with the community.</p>
           </Reveal>
         </div>

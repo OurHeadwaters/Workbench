@@ -178,7 +178,7 @@ export default function Till({ onBack }: { onBack: () => void }) {
         </div>
       </div>
       <p className="mt-4 text-center text-[12px] uppercase tracking-[0.22em]" style={{ color: "#6b7665", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
-        Built on Square POS · subsidy + offline cache · Headwaters layer on top
+        Built on Square POS · subsidy + offline cache · practice layer on top
       </p>
     </section>
   );

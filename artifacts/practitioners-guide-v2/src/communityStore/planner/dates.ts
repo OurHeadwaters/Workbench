@@ -20,7 +20,7 @@ const ANCHOR_LABELS: Record<AnchorKey, string> = {
   lfifIntake: "LFIF intake opens",
   councilDecision: "Council commits to applications",
   iscDecision: "ISC Community Capital decision",
-  truckLfifIntake: "Truck LFIF intake (807 partnership)",
+  truckLfifIntake: "Truck LFIF intake (regional partnership)",
 };
 
 const ANCHOR_HINTS: Record<AnchorKey, string> = {
