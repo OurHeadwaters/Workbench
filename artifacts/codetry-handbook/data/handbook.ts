@@ -178,7 +178,7 @@ const partPrologue: Part = {
 const partI: Part = {
   roman: "I",
   title: "The Discipline",
-  blurb: "Why codetry exists, and what it is, in four short chapters.",
+  blurb: "The discipline itself — what it is, where it lives, and why the words you choose carry structural weight. The Grounding section laid the roots; this part names the moves.",
   chapters: [
     {
       id: "1-0",
@@ -538,9 +538,9 @@ const partI: Part = {
 
 const partII: Part = {
   roman: "DD",
-  title: "Adjacent Disciplines",
+  title: "Deep Dives",
   blurb:
-    "Five older disciplines codetry gets confused with — all honoured, all doing different work.",
+    "Optional deeper reading — you do not need this section to begin practising. If you understand what codetry is and you are ready to use it, go directly to the Field Ledger or set the book down and begin. These five chapters are here for practitioners who want to know exactly how codetry differs from the disciplines it most closely resembles. Return when a question of intellectual lineage arises.",
   kind: "backMatter",
   chapters: [
     {
@@ -550,6 +550,10 @@ const partII: Part = {
       partLabel: "Deep Dives",
       title: "Different from code poetry",
       blocks: [
+        {
+          kind: "callout",
+          text: "You have permission to skip this section entirely. If you understand what codetry is and you are ready to practise it, the Field Ledger is the next stop — or set the book down and begin. These chapters are for the practitioner who wants to know precisely how codetry stands in relation to the disciplines it most resembles. They are not required reading; they are a depth resource to return to when a question of lineage arises.",
+        },
         {
           kind: "para",
           text:
@@ -926,7 +930,7 @@ const partIII: Part = {
   roman: "II",
   title: "The Constellation: 7 Zones and 2 Primitives",
   blurb:
-    "The worked examples that happened to be in front of the practitioner when codetry got named — seven zones and two primitives. The list is open: more primitives may join the constellation as the discipline meets new ground.",
+    "The discipline applied to a real community economy. Seven zones and two primitives, each name chosen by the rules Part I named. These are the worked examples that were in front of the practitioner when codetry got named. The list is open; your own constellation will look different.",
   chapters: [
     {
       id: "3-0",
@@ -979,7 +983,7 @@ const partIV: Part = {
   roman: "III",
   title: "The Practice",
   blurb:
-    "Six moves the codetry practitioner makes — in the field, with people, in the working language of the room. Then Zone 0: the household ground those moves are made on.",
+    "The practitioner in the field. Six moves for working with communities, then Zone 0 — the household as the first and most durable ground. Bobbie's practice is the example here. Yours will be the proof.",
   chapters: [
     {
       id: "4-1",
@@ -1906,15 +1910,15 @@ const teacherList: Block[] = constellation.teachers.map((t) => ({
 }));
 
 const partV: Part = {
-  roman: "IV",
+  roman: "G",
   title: "Grounding",
-  blurb: "The four teachers, the axiom, and the lineage codetry stands inside.",
+  blurb: "Start here. The teachers whose thinking this practice grows from, the axiom it runs on, and the reading lineages that trained the practitioner's ear. Understand the roots and the discipline in Part I will make immediate sense. Understand the soil before you plant.",
   chapters: [
     {
       id: "5-1",
       number: "4.1",
-      partRoman: "IV",
-      partLabel: "IV · Grounding",
+      partRoman: "G",
+      partLabel: "Grounding",
       title: "The four teachers and the axiom",
       blocks: [
         {
@@ -1941,8 +1945,8 @@ const partV: Part = {
     {
       id: "5-2",
       number: "4.2",
-      partRoman: "IV",
-      partLabel: "IV · Grounding",
+      partRoman: "G",
+      partLabel: "Grounding",
       title: "Lineage",
       blocks: [
         {
@@ -2048,8 +2052,8 @@ const partV: Part = {
     {
       id: "5-3",
       number: "4.3",
-      partRoman: "IV",
-      partLabel: "IV · Grounding",
+      partRoman: "G",
+      partLabel: "Grounding",
       title: "The reading lineage — fiction",
       blocks: [
         {
@@ -2233,8 +2237,8 @@ const partV: Part = {
     {
       id: "5-4",
       number: "4.4",
-      partRoman: "IV",
-      partLabel: "IV · Grounding",
+      partRoman: "G",
+      partLabel: "Grounding",
       title: "The reading lineage — nonfiction",
       blocks: [
         {
@@ -3687,7 +3691,7 @@ const partColophon: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partPrologue, partI, partIII, partIV, partV, partVI, partII, partVII, partColophon];
+export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partVI, partII, partVII, partColophon];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
