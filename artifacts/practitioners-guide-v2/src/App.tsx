@@ -13,6 +13,7 @@ import { PersonalCashPage } from "@/pages/PersonalCashPage";
 import { ComparePage } from "@/pages/ComparePage";
 import { ReplicationPage } from "@/pages/ReplicationPage";
 import { CodetryDisciplinePage } from "@/pages/CodetryDisciplinePage";
+import { CodetryPhilosophyPage } from "@/pages/CodetryPhilosophyPage";
 import { ArchetypesPage } from "@/pages/ArchetypesPage";
 import { WorkbenchArchivePage } from "@/pages/WorkbenchArchivePage";
 import { RefundInvocationLetter } from "@/pages/RefundInvocationLetter";
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/personal-cash" component={PersonalCashPage} />
       <Route path="/compare" component={ComparePage} />
       <Route path="/replication" component={ReplicationPage} />
+      <Route path="/codetry-philosophy" component={CodetryPhilosophyPage} />
       <Route path="/codetry" component={CodetryDisciplinePage} />
       <Route path="/archetypes" component={ArchetypesPage} />
       <Route path="/workbench" component={WorkbenchArchivePage} />

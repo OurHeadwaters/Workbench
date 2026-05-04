@@ -477,8 +477,20 @@ export function CodetryDisciplinePage() {
                 <p className="font-semibold">Where to read more</p>
                 <ul className="space-y-2 text-[0.9rem]">
                   <li>
-                    The deeper philosophy — what codetry is, who it serves, the
-                    saltbox principle, the both-states principle — lives in the{" "}
+                    <Link
+                      href="/codetry-philosophy"
+                      className="font-semibold underline decoration-dotted underline-offset-2 hover:no-underline"
+                      style={{ color: ACCENT_INK }}
+                      data-testid="codetry-philosophy-link"
+                    >
+                      Codetry — the discipline
+                    </Link>
+                    {" "}— the founding document: the architecture claim,
+                    the community practitioner lens, how Codetry diverges from literate programming,
+                    kitchen table talk, and the controlled burn.
+                  </li>
+                  <li>
+                    The deeper philosophy also lives in the{" "}
                     <a
                       href="/codetry-handbook/"
                       target="_blank"
@@ -492,7 +504,6 @@ export function CodetryDisciplinePage() {
                     </a>{" "}
                     (the mobile artifact titled{" "}
                     <em>Headwaters: How a Community Runs Its Own Economy</em>).
-                    Open it in a new tab and read it alongside this page.
                   </li>
                   <li>
                     The cross-artifact rename sweep — taking the discipline from
