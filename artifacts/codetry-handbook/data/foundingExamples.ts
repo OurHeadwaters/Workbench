@@ -77,7 +77,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
     primitiveId: "the-gate",
     titleSuffix: "language across institutional boundaries",
     whyTwoSided: [
-      { kind: "subhead", text: "Why the umbrella is two-sided" },
+      { kind: "subhead", text: "Why the umbrella name has to hold both sides" },
       {
         kind: "para",
         text:
@@ -86,7 +86,7 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "para",
         text:
-          "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* rung for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across.",
+          "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across.",
       },
       {
         kind: "callout",
