@@ -185,10 +185,10 @@ export function PromotionalPlanPage() {
             One-paragraph pitch — grounded in real rates + trial-first offer
           </p>
           <p className="text-sm leading-relaxed">
-            Headwaters is a single-practitioner consultancy based in Dryden, Ontario, built for
-            northern and Indigenous community economic development. The work is operational: store
-            plans, food hub design, membership platforms, and custom internal tools — written in
-            plain language, dollar-honest, and built to run without an outside consultant on retainer.
+            Headwaters builds operational tools that fit the team you have — not the team the
+            software assumes you should be. The work is for northern and Indigenous community
+            economic development: store plans, food hub design, membership platforms, and custom
+            internal tools — written in plain language, dollar-honest, shipped complete, no retainer.
             The usual first step is a bounded six-week trial at an hourly rate ($175/hr lead,
             $70/hr support) — no retainer, no long commitment. If the fit is right, it continues.
             If not, you leave with something useful and no obligation to keep going. Full pricing
@@ -235,7 +235,7 @@ export function PromotionalPlanPage() {
                   {
                     type: "NAN economic development",
                     why: "Corridor-wide pitch venue, potential for multi-community introductions. Coldest start but highest multiplier if it lands.",
-                    hook: "A model that travels — same operating structure, different community. One practitioner, corridor-wide reach.",
+                    hook: "A model that travels — same operating structure, different community. Practitioner-built tools, corridor-wide reach.",
                   },
                 ].map((org, i) => (
                   <div

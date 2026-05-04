@@ -108,12 +108,10 @@ export function BioPage() {
                 themselves.
               </p>
               <p>
-                She works as a single practitioner, by design. The shape
-                of the business is the constellation: one person, a
-                handful of tightly-named artifacts, and the discipline of
-                building the boat in the open. The voice is the same
-                across all of it — plain, dollar-honest, no startup-pitch
-                tone.
+                The tools are practitioner-built: designed around the team
+                a community actually has, not the org chart the software
+                assumes. The voice is the same across all of it — plain,
+                dollar-honest, no startup-pitch tone.
               </p>
             </section>
 

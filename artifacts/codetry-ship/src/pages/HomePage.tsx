@@ -74,10 +74,8 @@ export function HomePage() {
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="home-tagline"
           >
-            Headwaters is a single-practitioner consultancy based in Dryden,
-            Ontario. The work is operational: store plans, food hub design,
-            community economic development — written in plain language, dollar-honest,
-            and built to run without an outside consultant on retainer.
+            Headwaters builds operational tools that fit the team you have —
+            not the team the software assumes you should be.
           </p>
         </header>
 
@@ -459,7 +457,7 @@ export function HomePage() {
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="about-body"
           >
-            Single-practitioner, by design. Plain language, dollar-honest,
+            Practitioner-built. Plain language, dollar-honest,
             no startup-pitch tone. See what we offer and how we work.
           </p>
           <a
