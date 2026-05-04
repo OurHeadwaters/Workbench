@@ -84,6 +84,34 @@ function getApiBase(): string {
   return domain ? `https://${domain}/api/sarge` : "/api/sarge";
 }
 
+// ─── Merge remote week with local status overrides ────────────────────────────
+//
+// Exported as a pure function so it can be unit-tested independently of the
+// React provider.
+//
+// Merge rules:
+//   - Local status, completedAt, barrierNote always win — Bobbie may have
+//     acted on the device before a sync came back.
+//   - Remote card content (action, context, order) always wins — the desktop
+//     is the source of truth for those fields.
+//   - The result is sorted by the server-assigned `order` field so card
+//     position is stable even if the API returns rows in an arbitrary sequence.
+
+export function mergeCards(remote: SargeCard[], local: SargeCard[]): SargeCard[] {
+  const localMap = new Map(local.map((c) => [c.id, c]));
+  const merged = remote.map((r) => {
+    const l = localMap.get(r.id);
+    if (!l) return r;
+    return {
+      ...r,
+      status: l.status,
+      completedAt: l.completedAt,
+      barrierNote: l.barrierNote,
+    };
+  });
+  return merged.sort((a, b) => a.order - b.order);
+}
+
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function SargeProvider({ children }: { children: React.ReactNode }) {
@@ -107,26 +135,6 @@ export function SargeProvider({ children }: { children: React.ReactNode }) {
     setActiveCardIndexState(i);
     AsyncStorage.setItem(KEY_ACTIVE, String(i)).catch(() => {});
   }, []);
-
-  // ─── Merge remote week with local status overrides ───────────────────────
-  //
-  // Local status always wins — Bobbie may have marked things done on the
-  // device before a sync came back. Remote card content (action, context)
-  // always wins because the desktop is the source of truth for those.
-
-  function mergeCards(remote: SargeCard[], local: SargeCard[]): SargeCard[] {
-    const localMap = new Map(local.map((c) => [c.id, c]));
-    return remote.map((r) => {
-      const l = localMap.get(r.id);
-      if (!l) return r;
-      return {
-        ...r,
-        status: l.status,
-        completedAt: l.completedAt,
-        barrierNote: l.barrierNote,
-      };
-    });
-  }
 
   // ─── Fetch from API ──────────────────────────────────────────────────────
 

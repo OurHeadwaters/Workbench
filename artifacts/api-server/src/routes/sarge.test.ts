@@ -145,6 +145,7 @@ interface WeekCard {
   id: string;
   action: string;
   status: string;
+  order: number;
   barrierNote: string | null;
   completedAt: string | null;
 }
@@ -453,6 +454,54 @@ describe("sarge — PATCH /card/:id validation", () => {
         },
       );
       expect(res.status).toBe(404);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+describe("sarge — card order is stable across mid-week syncs", () => {
+  it("GET /week/current returns cards sorted by order after a status PATCH", async () => {
+    const h = await startHarness();
+    try {
+      // Create a locked week with three cards in a deliberate order
+      const saved = await postWeek(h.base, {
+        weekOf: "2026-W22",
+        priorities: [{ id: "ops", label: "Ops", order: 0, isActive: true }],
+        isLocked: true,
+        cards: [
+          { priorityId: "ops", priorityLabel: "Ops", action: "Third task",  context: null, order: 2 },
+          { priorityId: "ops", priorityLabel: "Ops", action: "First task",  context: null, order: 0 },
+          { priorityId: "ops", priorityLabel: "Ops", action: "Second task", context: null, order: 1 },
+        ],
+      });
+
+      expect(saved.week.cards).toHaveLength(3);
+
+      // Verify the API already returns them sorted by order on initial fetch
+      const initial = await getCurrentWeek(h.base);
+      const initialOrders = initial.week!.cards.map((c) => c.order);
+      expect(initialOrders).toEqual([0, 1, 2]);
+      const initialActions = initial.week!.cards.map((c) => c.action);
+      expect(initialActions).toEqual(["First task", "Second task", "Third task"]);
+
+      // Simulate Bobbie marking the first card done mid-week
+      const firstCardId = initial.week!.cards[0]!.id;
+      await patchCard(h.base, firstCardId, "done");
+
+      // Mid-week sync: GET /week/current — order must still be 0, 1, 2
+      const afterSync = await getCurrentWeek(h.base);
+      expect(afterSync.week).not.toBeNull();
+      expect(afterSync.week!.cards).toHaveLength(3);
+
+      const syncedOrders = afterSync.week!.cards.map((c) => c.order);
+      expect(syncedOrders).toEqual([0, 1, 2]);
+
+      // The done card must still be in position 0 (top of the locked stack)
+      const doneCard = afterSync.week!.cards.find((c) => c.id === firstCardId);
+      expect(doneCard).toBeDefined();
+      expect(doneCard!.status).toBe("done");
+      expect(doneCard!.order).toBe(0);
     } finally {
       await h.close();
     }
