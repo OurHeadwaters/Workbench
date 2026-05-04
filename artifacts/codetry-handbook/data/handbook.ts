@@ -319,7 +319,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "*The Standby* (worked out in §2.10) is the cleanest worked example so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two tempos. The people, the stock, the vocabulary are all one — only the cadence changes.",
+            "*The Standby* (worked out in §2.10) is the cleanest worked example so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two states — resting and activated. The people, the stock, the vocabulary are all one — only the cadence changes.",
         },
         {
           kind: "para",
