@@ -31,12 +31,6 @@ type = "pdf"
 title = "Practitioner Operating Plan — One Page Summary"
 
 [[outputs]]
-id = "Sf2si534tgz-veerfdVpO"
-uri = "file://exports/foundation-snapshot.jpg"
-type = "image"
-title = "V3 Foundation Snapshot — Six Numbers Locked"
-
-[[outputs]]
 id = "HxQVk89lC7RngybuL5gwG"
 uri = "file://exports/v3-slide1-cover.jpg"
 type = "image"
@@ -47,24 +41,6 @@ id = "NNsGsK3RI4tf8FGwXv--W"
 uri = "file://exports/v3-slide2-slabgrassland.jpg"
 type = "image"
 title = "V3 · Slide 2 — The Slab Cracks. The Grassland Holds. (new)"
-
-[[outputs]]
-id = "6kBZtk7zyZe-ImsC9UPs3"
-uri = "file://exports/v3-slide3-sixpeople.jpg"
-type = "image"
-title = "V3 · Slide 3 — The Six People (new lean roster)"
-
-[[outputs]]
-id = "LSZnEmi7AEVTI-aFwHNlK"
-uri = "file://exports/v3-slide4-revenue.jpg"
-type = "image"
-title = "V3 · Slide 4 — Three Revenue Layers (new product framing)"
-
-[[outputs]]
-id = "pxUYEAYQ_Hl-_x8cebwzN"
-uri = "file://exports/v3-slide5-yearone.jpg"
-type = "image"
-title = "V3 · Slide 5 — The Honest Cash Picture (Y1 gap surfaced)"
 
 [[outputs]]
 id = "G4rBFOF4M8N-rPX4zhueg"

@@ -5,6 +5,10 @@ import MarketDisplay from "@/pages/MarketDisplay";
 import PosterParrsJars from "@/pages/PosterParrsJars";
 import PosterServices from "@/pages/PosterServices";
 import PosterMarket from "@/pages/PosterMarket";
+import BusinessCard from "@/pages/BusinessCard";
+import Letterhead from "@/pages/Letterhead";
+import LogoFormats from "@/pages/LogoFormats";
+import SquareSetup from "@/pages/SquareSetup";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +20,10 @@ function Router() {
       <Route path="/poster-parrs-jars" component={PosterParrsJars} />
       <Route path="/poster-services" component={PosterServices} />
       <Route path="/poster-market" component={PosterMarket} />
+      <Route path="/business-card" component={BusinessCard} />
+      <Route path="/letterhead" component={Letterhead} />
+      <Route path="/logo-formats" component={LogoFormats} />
+      <Route path="/square-setup" component={SquareSetup} />
       <Route component={NotFound} />
     </Switch>
   );

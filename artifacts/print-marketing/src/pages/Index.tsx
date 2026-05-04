@@ -2,6 +2,34 @@ import { Link } from "wouter";
 
 const pieces = [
   {
+    href: "/business-card",
+    title: "Business Card",
+    label: "Headwaters",
+    desc: "3.5×2 in two-sided card. Front: dark evergreen with wordmark. Back: cream with contact details — email, text-preferred number, web, location. Fill in your phone number before sending to print.",
+    icon: "💳",
+  },
+  {
+    href: "/letterhead",
+    title: "Letterhead",
+    label: "Headwaters",
+    desc: "8.5×11 portrait letter template with Headwaters header band, contact block, date/recipient area, ruled body lines, and a signature footer. Print and write, or use as a PDF base.",
+    icon: "📄",
+  },
+  {
+    href: "/logo-formats",
+    title: "Logo Formats",
+    label: "Brand marks",
+    desc: "Full wordmark, compact wordmark, and icon mark in light, dark, and rust colourways. Includes the brand palette, typography reference, and usage notes for Square, email, and print.",
+    icon: "🏷️",
+  },
+  {
+    href: "/square-setup",
+    title: "Square — Update from Parr's Jars to Headwaters",
+    label: "Square identity",
+    desc: "Copy-paste-ready text for every Square business profile field, plus a step-by-step walkthrough for changing the account name without losing product categories or sales history.",
+    icon: "🟦",
+  },
+  {
     href: "/price-list",
     title: "Price List",
     label: "Parr's Jars",
