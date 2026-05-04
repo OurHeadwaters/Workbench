@@ -319,7 +319,9 @@ export function HomePage() {
             <ComingSoonCard
               eyebrow="Community store · Launching soon"
               title="Building the store — a community economic guide"
-              description="What it takes to stand up a community-owned store in northwestern Ontario: the 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations. Plain language, open numbers."
+              hook="A community-owned store, built from the ground up."
+              detail="The 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations — plain language, open numbers."
+              accent="rust"
               testId="work-card-store"
               thumb="thumb-store.png"
               thumbAlt="Eagle over the headwaters — the story that sealed the direction"
@@ -327,7 +329,9 @@ export function HomePage() {
             <ComingSoonCard
               eyebrow="Co-op membership · Coming soon"
               title="Co-op Membership Platform"
-              description="A membership and governance platform for community-owned co-ops in the 807. Pending a vote from the pilot community before public launch."
+              hook="Membership and governance for community-owned co-ops."
+              detail="Pending a vote from the pilot community before public launch."
+              accent="amber"
               testId="work-card-coop"
               thumb="thumb-coop.png"
               thumbAlt="Co-op membership platform — two ways to join, mission and vision"
@@ -335,14 +339,18 @@ export function HomePage() {
             <WorkCard
               eyebrow="Northern food systems · Knowledge commons"
               title="Northern Food Systems Research Library"
-              description="A curated, searchable library of food systems research, producer contacts, and community case studies for northern and Indigenous communities. Open for contributors."
+              hook="Searchable food systems research for northern communities."
+              detail="Curated producer contacts, policy documents, and community case studies — open for contributors."
+              accent="evergreen"
               href="/library/"
               testId="work-card-library"
             />
             <DemoCard
               eyebrow="Community ledger · Headwaters Books"
               title="Open books — what a community store's finances look like"
-              description="A live demo of the bookkeeping tool: open records the band can read, the daily close the operators run each night, and the month-end pack the bookkeeper hands council. Sample data, no login."
+              hook="What a community store's finances actually look like."
+              detail="Open records the band can read, the daily close operators run each night, and the month-end pack for council. Sample data, no login."
+              accent="rust"
               href="/headwaters-books/demo"
               testId="work-card-books-demo"
               thumb="thumb-books.jpg"
@@ -351,7 +359,9 @@ export function HomePage() {
             <WorkCard
               eyebrow="Grants · Northern communities"
               title="Grants Finder"
-              description="A searchable index of funding available to northern and Indigenous communities — grants, programs, and deadlines in one place."
+              hook="Every funding source for northern and Indigenous communities."
+              detail="Grants, programs, and deadlines in one searchable index."
+              accent="evergreen"
               href="https://community-knowledge-hub.replit.app/infographics/grants-finder.html"
               external
               testId="work-card-grants"
@@ -361,7 +371,9 @@ export function HomePage() {
             <WorkCard
               eyebrow="Personal finance · Headwaters"
               title="Headwaters Finance"
-              description="Your money has been free-ranging. A personal finance tool that maps where money goes, built for people who move faster than any folder system."
+              hook="A personal finance tool built for fast-moving people."
+              detail="Maps where money goes for people who move faster than any folder system."
+              accent="amber"
               href="https://x-buckets-vision.replit.app/"
               external
               testId="work-card-finance"
@@ -371,7 +383,9 @@ export function HomePage() {
             <WorkCard
               eyebrow="Operations · For entrepreneurs"
               title="Rootwork"
-              description="A calm command center for builders who can't sit still. Private and self-hosted — your notes stay yours. Drop in the chaos, find what you need in seconds."
+              hook="A calm command center for builders who can't sit still."
+              detail="Private and self-hosted — drop in the chaos, find what you need in seconds."
+              accent="sage"
               href="https://community-knowledge-hub.replit.app/studio/"
               external
               testId="work-card-rootwork"
@@ -381,7 +395,9 @@ export function HomePage() {
             <WorkCard
               eyebrow="Health · Long-term care"
               title="Bright Side"
-              description="A recreation therapy companion for LTC homes — activity planning, resident engagement, and documentation built for the people on the floor."
+              hook="Recreation therapy companion for long-term care homes."
+              detail="Activity planning, resident engagement, and documentation built for the people on the floor."
+              accent="sage"
               href="https://health-support-hub.replit.app/"
               external
               testId="work-card-brightside"
@@ -391,7 +407,9 @@ export function HomePage() {
             <WorkCard
               eyebrow="Journalling · Public and private"
               title="Dam Days"
-              description="A journal that knows what to keep to yourself and what to share. Public entries, private pages, one place."
+              hook="A journal that knows what to keep — and what to share."
+              detail="Public entries, private pages, one place."
+              accent="amber"
               href="https://conversation-log.replit.app/"
               external
               testId="work-card-damdays"
@@ -522,22 +540,55 @@ function IntakeField({
   );
 }
 
+type CardAccent = "rust" | "evergreen" | "sage" | "amber";
+
+const ACCENT_STYLES: Record<CardAccent, { border: string; bg: string }> = {
+  rust:      { border: "hsl(14 64% 36%)",  bg: "hsla(14, 64%, 36%, 0.045)" },
+  evergreen: { border: "hsl(145 36% 22%)", bg: "hsla(145, 36%, 22%, 0.05)" },
+  sage:      { border: "hsl(145 18% 45%)", bg: "hsla(145, 18%, 45%, 0.05)" },
+  amber:     { border: "hsl(30 40% 50%)",  bg: "hsla(30, 40%, 50%, 0.045)" },
+};
+
+function CardDescription({ hook, detail }: { hook: string; detail: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="font-serif text-[15px] font-medium leading-[1.45]">
+        {hook}
+      </p>
+      <p
+        className="font-serif text-[13px] leading-[1.55]"
+        style={{ color: "hsl(var(--muted-foreground))" }}
+      >
+        {detail}
+      </p>
+    </div>
+  );
+}
+
 interface DemoCardProps {
   eyebrow: string;
   title: string;
-  description: string;
   href: string;
   testId: string;
+  accent?: CardAccent;
+  hook?: string;
+  detail?: string;
+  description?: string;
   thumb?: string;
   thumbAlt?: string;
 }
 
-function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }: DemoCardProps) {
+function DemoCard({ eyebrow, title, hook, detail, description, href, testId, accent = "rust", thumb, thumbAlt }: DemoCardProps) {
+  const { border, bg } = ACCENT_STYLES[accent];
   return (
     <a
       href={href}
-      className="block rounded-md border bg-card transition-colors hover:border-accent overflow-hidden"
-      style={{ borderColor: "hsl(var(--card-border))" }}
+      className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
+      style={{
+        borderColor: "hsl(var(--card-border))",
+        borderLeft: `3px solid ${border}`,
+        background: bg,
+      }}
       data-testid={testId}
     >
       {thumb && (
@@ -552,22 +603,23 @@ function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }
       <div className="p-5 sm:p-6">
         <p
           className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: "hsl(var(--accent))" }}
+          style={{ color: border }}
         >
           {eyebrow}
         </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
-        <p
-          className="font-serif text-[14px] leading-[1.55]"
-          style={{ color: "hsl(var(--muted-foreground))" }}
-        >
-          {description}
-        </p>
+        {hook && detail ? (
+          <CardDescription hook={hook} detail={detail} />
+        ) : (
+          <p className="font-serif text-[14px] leading-[1.55]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            {description}
+          </p>
+        )}
         <p
           className="mt-3 font-mono text-xs uppercase tracking-[0.18em]"
-          style={{ color: "hsl(var(--accent))" }}
+          style={{ color: border }}
         >
           View demo →
         </p>
@@ -579,17 +631,26 @@ function DemoCard({ eyebrow, title, description, href, testId, thumb, thumbAlt }
 interface ComingSoonCardProps {
   eyebrow: string;
   title: string;
-  description: string;
   testId: string;
+  accent?: CardAccent;
+  hook?: string;
+  detail?: string;
+  description?: string;
   thumb?: string;
   thumbAlt?: string;
 }
 
-function ComingSoonCard({ eyebrow, title, description, testId, thumb, thumbAlt }: ComingSoonCardProps) {
+function ComingSoonCard({ eyebrow, title, hook, detail, description, testId, accent = "amber", thumb, thumbAlt }: ComingSoonCardProps) {
+  const { border, bg } = ACCENT_STYLES[accent];
   return (
     <div
-      className="block rounded-md border bg-card opacity-75 overflow-hidden"
-      style={{ borderColor: "hsl(var(--card-border))", borderStyle: "dashed" }}
+      className="block rounded-md border opacity-75 overflow-hidden"
+      style={{
+        borderColor: "hsl(var(--card-border))",
+        borderStyle: "dashed",
+        borderLeft: `3px solid ${border}`,
+        background: bg,
+      }}
       data-testid={testId}
     >
       {thumb && (
@@ -604,19 +665,20 @@ function ComingSoonCard({ eyebrow, title, description, testId, thumb, thumbAlt }
       <div className="p-5 sm:p-6">
         <p
           className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: "hsl(var(--accent))" }}
+          style={{ color: border }}
         >
           {eyebrow}
         </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
-        <p
-          className="font-serif text-[14px] leading-[1.55]"
-          style={{ color: "hsl(var(--muted-foreground))" }}
-        >
-          {description}
-        </p>
+        {hook && detail ? (
+          <CardDescription hook={hook} detail={detail} />
+        ) : (
+          <p className="font-serif text-[14px] leading-[1.55]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            {description}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -625,22 +687,30 @@ function ComingSoonCard({ eyebrow, title, description, testId, thumb, thumbAlt }
 interface WorkCardProps {
   eyebrow: string;
   title: string;
-  description: string;
   href: string;
   testId: string;
+  accent?: CardAccent;
+  hook?: string;
+  detail?: string;
+  description?: string;
   external?: boolean;
   thumb?: string;
   thumbAlt?: string;
 }
 
-function WorkCard({ eyebrow, title, description, href, testId, external, thumb, thumbAlt }: WorkCardProps) {
+function WorkCard({ eyebrow, title, hook, detail, description, href, testId, accent = "evergreen", external, thumb, thumbAlt }: WorkCardProps) {
+  const { border, bg } = ACCENT_STYLES[accent];
   return (
     <a
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="block rounded-md border bg-card transition-colors hover:border-accent overflow-hidden"
-      style={{ borderColor: "hsl(var(--card-border))" }}
+      className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
+      style={{
+        borderColor: "hsl(var(--card-border))",
+        borderLeft: `3px solid ${border}`,
+        background: bg,
+      }}
       data-testid={testId}
     >
       {thumb && (
@@ -655,19 +725,20 @@ function WorkCard({ eyebrow, title, description, href, testId, external, thumb, 
       <div className="p-5 sm:p-6">
         <p
           className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: "hsl(var(--accent))" }}
+          style={{ color: border }}
         >
           {eyebrow}
         </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
-        <p
-          className="font-serif text-[14px] leading-[1.55]"
-          style={{ color: "hsl(var(--muted-foreground))" }}
-        >
-          {description}
-        </p>
+        {hook && detail ? (
+          <CardDescription hook={hook} detail={detail} />
+        ) : (
+          <p className="font-serif text-[14px] leading-[1.55]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            {description}
+          </p>
+        )}
       </div>
     </a>
   );
