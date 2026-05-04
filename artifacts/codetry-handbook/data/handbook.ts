@@ -1354,6 +1354,34 @@ const partIV: Part = {
             "Where the room already has live opinions on the material — and in northern Ontario, hempcrete is a real conversation, not a hypothetical — the teaching recruits engagement that already exists rather than generating it from scratch.",
         },
         { kind: "rule" },
+        { kind: "subhead", text: "The fable version" },
+        {
+          kind: "para",
+          text: "Not every room thinks in buildings. Some rooms think in stories. The Ant and the Grasshopper is the teaching move for those rooms — the same principle, running in the grammar of a fable rather than the grammar of a construction site.",
+        },
+        {
+          kind: "para",
+          text: "The grasshopper's argument is internally coherent: abundance is everywhere, anytime he grows hungry he can hop through the field, there's no use doing extra work when the time could be better spent. The ant does not argue. The ant keeps working — storing a little extra each day, reading the pattern of the seasons, preparing for the weather he knows will come. History repeats itself, after all.",
+        },
+        {
+          kind: "para",
+          text: "When winter arrives, the grasshopper watches the last blade of grass disappear. The fable's lesson is not *be afraid*. It is *the pattern was legible, the preparation was available, and the name for what the ant was doing is the same name the Jarista uses: Preservation Season*. The ant was a Zone 0 practitioner running the Standby. The field was the supply chain. Winter was the activated state.",
+        },
+        {
+          kind: "callout",
+          text: "The fable teaches what the building teaches. The ant is not paranoid — the ant is reading the pattern. Winter is coming is not a threat; it is a calendar.",
+        },
+        { kind: "rule" },
+        { kind: "subhead", text: "The garden version" },
+        {
+          kind: "para",
+          text: "A third room thinks in gardens. For that room: designing community is like designing a garden. You need intentional placement of boundaries and intentional facilitation of interactions. Forcing community is like designing a garden in a swamp — you can do everything else right, but you're always going to be covered in muck.",
+        },
+        {
+          kind: "para",
+          text: "The garden metaphor reaches the voluntarist principle without naming it as such. Voluntary interactions and clear boundaries are what let grassroots community flourish — the same principle the architect states through load-bearing walls and the fable states through winter storage. Three entry points, one discipline.",
+        },
+        { kind: "rule" },
         { kind: "subhead", text: "The first room" },
         {
           kind: "para",
@@ -1443,6 +1471,26 @@ const partIV: Part = {
           kind: "para",
           text: "The Jarista is not a certification. It is a posture — the household practitioner who has decided that the jar is the unit of measure for their food system, the season is the calendar they plan by, and the shelf is the first line of resilience when supply chains tighten. In a constellation context, the Jarista is the Zone 0 counterpart of the Zone 2 practitioner who runs the Operating Plan. Both are named practitioners. Both are running a system. The Zone 2 practitioner names and protects the vocabulary of the constellation's institutions; the Jarista names and protects the vocabulary of the household that the constellation exists to serve.",
         },
+        {
+          kind: "subhead",
+          text: "Where the name came from.",
+        },
+        {
+          kind: "para",
+          text: "Before *Jarista* there was *Parrs Jars* — the product business that grew from a household practice of freeze-drying excess hydroponics and microgreens, blending them into smoked salts, and sourcing from local farms. *Parrs Jars* named the product. It did not name the practitioner or the practice behind it. The business name held the jars; it did not hold the system.",
+        },
+        {
+          kind: "para",
+          text: "Before that, the practitioner called it a *depression business* — a phrase that arrived precisely: working with what you have and sticking things in jars, that's got 1930 written all over it. The depression business framing held the ethos (make-do, preserve, extend, waste nothing) but pointed backward toward scarcity rather than forward toward practice. The rename test: if the business is called a *depression business*, it is defined by what it is prepared for rather than by what it does. *Jarista* names the doer. The posture travels even when the depression doesn't arrive.",
+        },
+        {
+          kind: "para",
+          text: "The constellation also had a prior umbrella name: *Above Parr Solutions* — a name for an organization that offered community development services and preparedness content. Run the rename test: replace *Headwaters* with *Above Parr Solutions* and ask what changes. *Above Parr* is a personal reference (the practitioner's own surname), a wordplay on *par*, and a qualifier (*above*) that implies the baseline is scarcity. *Headwaters* carries source, upstream, small-and-first, and the whole watershed metaphor in one word — and it carries none of the practitioner's name, which means it belongs to the community rather than to its founder. The rename from *Above Parr Solutions* to *Headwaters* is the codetry move applied to the constellation's own umbrella: the word that fits the structure replaced the word that fit the person.",
+        },
+        {
+          kind: "callout",
+          text: "Parrs Jars named the product. Depression business named the ethos. Jarista names the practitioner and the practice. Above Parr Solutions named the founder. Headwaters names the system. The rename is the discipline working on itself.",
+        },
       ],
     },
     {
@@ -1489,6 +1537,34 @@ const partIV: Part = {
         {
           kind: "callout",
           text: "The Jar Kitchen is a design decision, not a decorating style. The jar is load-bearing: rename it out and the whole system of seasonal storage, portion planning, and bulk sourcing has to be redesigned around whatever container replaced it.",
+        },
+        {
+          kind: "subhead",
+          text: "The three properties.",
+        },
+        {
+          kind: "para",
+          text: "The jar holds its place in the Jar Kitchen for three reasons, all structural: it is resilient, versatile, and honest.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Resilient* — jars don't break under pressure. They seal against air, moisture, and contamination. The Jarista who builds a food system around jars is building around a container that was designed for exactly the conditions preservation creates: heat, acid, pressure, time. A jar full of tomatoes from August will still be a jar full of tomatoes in February. That is not a property of a plastic tub or a zip-lock bag.",
+            "*Versatile* — the same jar serves as a drinking glass, a ferment vessel, a dry-goods container, a sprouting jar, a portioned lunch, and a gift. The container system does not require translation between functions. The pint jar that held last summer's salsa holds this morning's overnight oats. The system runs on one container vocabulary.",
+            "*Honest* — you can see what's inside. The Seasonal Shelf is auditable at a glance: what month things came in, what colour they are, how much is left. The jar does not hide its contents. This is an architectural property, not an aesthetic one: a shelf you can read without opening anything is a shelf you can manage without a spreadsheet.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "The circular economy origin.",
+        },
+        {
+          kind: "para",
+          text: "The Parrs Jars product line — the green salt, the Salty Onion — was born from the Jar Kitchen's circular economy logic. The household was growing microgreens and hydroponics and ending up with more than the kitchen could use fresh. Freeze-drying the excess preserved the nutrition without the jar. Mixing the freeze-dried greens into smoked Himalayan salt with homegrown tomato powder produced a product: the green salt. The Salty Onion followed from the same logic — a massive harvest of onions and greens from Walls Farm and the garden, freeze-dried and blended. The jar held the output; the circular economy produced the input.",
+        },
+        {
+          kind: "para",
+          text: "The product line was a Zone 0 practice producing Zone 3 commercial output. The Jar Kitchen didn't start as a business. It started as a household system that generated abundance — and the abundance had to go somewhere. That is the direction the Jar Kitchen runs: from abundance toward meals, toward products, toward community, not from market demand backward into production.",
         },
       ],
     },
@@ -1673,8 +1749,148 @@ const partIV: Part = {
           text: "Preservation Season is the household's annual activation of its own Standby. The co-op's Standby (Zone 3) runs the same both-states discipline at the community scale. The household Jarista and the co-op's Standby practitioner are running the same system at different scales, in the same vocabulary, on the same calendar. When the Standby activates at the co-op level — a freight disruption, a weather event, a supply-chain failure — the Jarista's Preservation Season work is exactly what the household draws on to stay fed while the community-level response mobilizes.",
         },
         {
+          kind: "subhead",
+          text: "The verification signal.",
+        },
+        {
+          kind: "para",
+          text: "The codetry practitioner has the rename test. The Jarista has the ping. When a jar seals properly — the lid pulled down by the vacuum formed as the hot contents cool — it produces a single sharp sound. That ping is the verification signal: the jar sealed, the work held, the preserve is shelf-stable. There is no ambiguity. The lid either pings or it doesn't. If it doesn't, the jar goes in the fridge and gets eaten this week. The batch that pings goes on the Seasonal Shelf.",
+        },
+        {
+          kind: "para",
+          text: "Self-sufficiency measured as a percentage starts with that ping. A household at 5% self-sufficiency — a backyard garden and a few jars — hears that sound occasionally. A household at 85% — growing year-round, collaborating with the community, preserving the season's abundance, and changing eating habits to suit the territory rather than the grocery flyer — hears it through the whole of Preservation Season. The percentage climbs ping by ping.",
+        },
+        {
           kind: "callout",
-          text: "Preservation Season is the resting state of the Standby made visible at household scale. The shelf that is full in November is the work that was done in August, September, and October — before anyone knew whether the winter would require it.",
+          text: "There's nothing like the ping of a lid sealing to make you feel accomplished. It is the discipline's verification in the plainest possible form: the work held.",
+        },
+        { kind: "rule" },
+        {
+          kind: "para",
+          text: "A note from the territory: the farmers market attendance in Dryden has been declining. Producers are exiting because the regulatory barriers are high and the customer base is thin. If the Seasonal Shelf matters — if the Jarista's practice matters — then buying locally is not a preference. It is maintenance. A community that does not support its local producers will one day find that no local producers remain. The Jarista's shelf and the farmer's market table are the same system, viewed from two directions.",
+        },
+      ],
+    },
+    {
+      id: "4-15",
+      number: "3.15",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "Zone 0 — The Homestead",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · physical infrastructure · the ground beneath the Jar Kitchen.",
+        },
+        {
+          kind: "para",
+          text: "The Jar Kitchen sits inside a larger system: the homestead. The homestead is Zone 0's physical infrastructure — the named systems that keep the household running when external systems fail. The Jar Kitchen preserves the food. The homestead keeps the house warm, the water flowing, and the growing going regardless of what the grid, the supply chain, or the season is doing.",
+        },
+        {
+          kind: "para",
+          text: "Self-sufficiency as a percentage is the honest metric for Zone 0 infrastructure. Not *are you prepared* — a yes/no that has no calibration — but *what percentage of your household's needs can you meet from within your own systems right now*. A backyard garden and a jar or two is 5%. Three heating systems, a spring-fed well with a manual pump, year-round indoor growing, and a full Seasonal Shelf is closer to 85%. The gap between those two numbers is the infrastructure build — and it is a decade of work, not a weekend project.",
+        },
+        {
+          kind: "subhead",
+          text: "The named systems of the homestead.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Three heating systems* — not one. The load-bearing rule for Zone 0 in a northern climate: no single heating system is the only heating system. A wood fireplace, a backup propane or oil furnace, and a passive solar or radiant floor arrangement each carry a different part of the load. When one fails — in a power outage, in a fuel shortage, in a mechanical breakdown — the others hold the house. The third system is the one that runs when neither of the first two can.",
+            "*Gravity-fed septic* — waste management that does not require electricity or a pump to function. The infrastructure that continues to work when the power is out. Most homeowners in the city never think about the pump that runs their septic; the Zone 0 practitioner makes sure the system works without one.",
+            "*Manual well pump for the spring-fed well* — drinking water that does not require the grid. The spring-fed source and the manual pump together are the household's water independence: the pump operates when the power is out, the spring replenishes when the aquifer is whole. Named as two systems working together, not as a single appliance.",
+            "*Gardens and indoor growing systems* — the Jar Kitchen's supply chain, located on the homestead. Outdoor gardens for summer abundance; kratky hydroponics and indoor growing systems for year-round production. The indoor system extends the growing season past what the northern Ontario climate allows outside, and produces the microgreens and greens that feed the Jar Kitchen's circular economy.",
+            "*Pantry rotation systems* — the organizational discipline that connects the Harvest Hold and the Seasonal Shelf into one managed reserve. First-in-first-out, dated labels, gap tracking. The system that turns a storage space into a working pantry.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "Infrastructure before skills.",
+        },
+        {
+          kind: "para",
+          text: "The infrastructure is not the most valuable thing the homestead builds. The skills are. The heating systems, the well pump, the gardens — these are capital. The knowledge of how to use them, repair them, extend them, and teach them is the compounding asset. A household with three heating systems and no one who knows how to tend a wood fire is less resilient than a household with one heating system and three people who know how to use it. Infrastructure names the capability. Skills hold it.",
+        },
+        {
+          kind: "callout",
+          text: "Start where you are, with what you have. 5% is a beginning, not a failure. The homestead build is a decade of compounding decisions, not a single preparedness purchase.",
+        },
+      ],
+    },
+    {
+      id: "4-16",
+      number: "3.16",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "From scared to prepared",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the practitioner's arc · 2011 to present.",
+        },
+        {
+          kind: "para",
+          text: "It was spring 2020. The practitioner was walking a baby's stroller around the yard, watching a three-year-old move through the grass. The world was in disarray, and underneath the noise of it was one clear question: what would happen to this region if the truckers went on strike? At that moment the local co-op was gone, the farmers market was uncertain, and the grocery stores' shelves ran on three days of just-in-time supply. The answer to the question was not acceptable. So the practitioner started planning a business.",
+        },
+        {
+          kind: "para",
+          text: "That moment in March 2020 was not the beginning. It was the activation. The beginning was 2011, when learning how money works led to a decade of quieter preparation: building the homestead's three heating systems, installing the manual well pump for the spring-fed well, expanding the gardens, learning hydroponics and microgreens, tripling down on food preservation, acquiring chickens. Working during the time of abundance for the time of hardship the patterns suggested was coming.",
+        },
+        {
+          kind: "para",
+          text: "The practitioner called it a *depression business* from the start — working with what you have and sticking things in jars, that's got 1930 written all over it. The business had a name: *Parrs Jars*. The umbrella organization had a name: *Above Parr Solutions*. Both names were honest about their moment. Neither was built to carry the full weight of what came next.",
+        },
+        {
+          kind: "subhead",
+          text: "The naming arc.",
+        },
+        {
+          kind: "para",
+          text: "By July 2020 the business was running. By the time the constellation had taken shape, the names had all been tested. *Parrs Jars* named the product; *Jarista* named the practitioner and the practice. *Above Parr Solutions* named the organization after its founder; *Headwaters* named it after the system — the source that feeds the whole watershed. The rename test had been run on the practitioner's own prior work, and the constellation had come out the other side.",
+        },
+        {
+          kind: "para",
+          text: "The five courses Bobbie had been building — Preservation, Preparedness, Permaculture, Seasonal Living, Decentralization — turned out to be the zone practices, waiting for the architecture that would let them stand together as a system rather than as a product list. Same content. New structure. The naming gave the content its shape.",
+        },
+        {
+          kind: "subhead",
+          text: "What grassroots community is for.",
+        },
+        {
+          kind: "para",
+          text: "The 807 Food Co-op was built from the same logic as the Jar Kitchen: start the cart rolling. Knowing that a local food hub would not be the final answer — but also knowing that forward motion is easier to redirect than stillness — the practitioner built the infrastructure and began pursuing distribution. Collaborators arrived. The co-op took shape. The Zone 0 household practice had generated Zone 3 infrastructure.",
+        },
+        {
+          kind: "para",
+          text: "The regulatory walls were real. The health unit required lab testing for each farm ingredient in the freeze-dried salt blends, and recommended switching to commercial ingredients instead — which was done, to meet orders, and which cost the product its story. The co-op lost its farmers market exempt status after three years of building the model to meet those regulations. Grant applications for food safety equipment were denied. The in-person market attendance fell. The juice, for many local producers, stopped being worth the squeeze.",
+        },
+        {
+          kind: "para",
+          text: "None of that changed the thesis. *Grassroots community and productive local economies are the only fighting chance.* The Jarista does not wait for the regulatory environment to become favourable before building the Seasonal Shelf. The community does not wait for grant approval before learning to preserve. The work is done during the time of abundance, before anyone knows whether the activated state is coming. That is the Standby principle, applied to a practitioner's own life.",
+        },
+        {
+          kind: "subhead",
+          text: "What the practitioner commits to.",
+        },
+        {
+          kind: "list",
+          items: [
+            "Building food skills — the compounding asset of the homestead.",
+            "Inspiring community — showing up, because community makes everything easier and developing community is not easy.",
+            "Helping others — mentorship, the co-op's incubation program, sharing the decade of learning.",
+            "Productive hobbies — hunting, fishing, foraging, trapping. Not hobbies in the leisure sense. Named as primary sourcing channels.",
+            "Raising good men who think for themselves and practice empathy — the multi-generational frame. The constellation is not built for this generation alone.",
+          ],
+        },
+        {
+          kind: "callout",
+          text: "A depression may be around the corner but being depressed never has to be a reality we face. The world is your oyster in good times and bad when you build your life around the simple things that matter.",
+        },
+        { kind: "rule" },
+        {
+          kind: "para",
+          text: "Freedom is not granted. Freedom is claimed — one Preservation Season at a time, one jar at a time, one community institution at a time. The discipline codetry adds is small: name the thing correctly, test the name by trying to rename it, and refuse to let the generic vocabulary quietly erase what makes the practice specific. The Jarista, the Jar Kitchen, the Seasonal Shelf, the Harvest Hold, the Bulk Round, Preservation Season — these names are the practice made legible. Keep them.",
         },
       ],
     },
@@ -1707,6 +1923,12 @@ const partV: Part = {
             "Codetry is not a school of thought. It is a practice that grew up listening to four teachers in particular. They are named here, in their own words where possible, because the discipline cannot be honestly read without them.",
         },
         ...teacherList,
+        { kind: "rule" },
+        { kind: "subhead", text: "One more — from further back." },
+        {
+          kind: "para",
+          text: "Lao Tzu is not in the constellation manifest. He predates the discipline by about 2,500 years and he did not run a podcast. But the *Tao Te Ching*'s twenty-second chapter is the oldest statement the practitioner knows of the principle that codetry practices: *Yield and overcome. Bend and be straight. Empty and be full. Wear out and be new. Have little and gain. Have much and be confused.* The way that names naming is not the eternal naming. That is not a paradox to escape — it is the first instruction. The name is always downstream of the thing. The discipline is keeping the name close enough to the thing that the distance between them is survivable.",
+        },
         { kind: "rule" },
         { kind: "subhead", text: "The axiom" },
         { kind: "pull", text: constellation.grammar.axiom },

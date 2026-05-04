@@ -71,6 +71,20 @@ const pieces = [
     desc: "Print-ready one-pager defining the eleven core terms of the Headwaters vocabulary: constellation, primitive, zone, The Standby, resting/activated state, The Gate, bright side, massity, refused, both-states, both-sides. Forward it, pin it, hand it out.",
     icon: "📖",
   },
+  {
+    href: "/salt-of-the-earth-club",
+    title: "Salt of the Earth Club",
+    label: "Jarista",
+    desc: "Product sheet for the Jarista salt line — the Green Salt, the Salty Onion, and seasonal releases. Covers the circular economy origin, the three jar properties, and how to join the club. Leave at the market table or mail with orders.",
+    icon: "🧂",
+  },
+  {
+    href: "/going-digital",
+    title: "Going Digital — Online Courses",
+    label: "Headwaters",
+    desc: "A5/letter flyer announcing the five Headwaters online courses: Preservation, Preparedness, Permaculture, Seasonal Living, and Decentralization. Hand out at in-person events, pin on community boards, or include with jar orders.",
+    icon: "🌐",
+  },
 ];
 
 export default function Index() {

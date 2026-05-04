@@ -1,0 +1,43 @@
+Title: Daily Living Assistant
+
+Description: A simple, user-friendly program designed to help people who have difficulty keeping up with activities of daily living. The program focuses on providing a clear structure, timely reminders, and easy customization for users to improve their daily routines and enhance their quality of life.
+
+Features:
+
+1. Personalized User Profile
+   - Users create a profile to input their personal information, preferences, and areas they need assistance with.
+
+2. Customizable Daily Schedule
+   - Users can input daily routines, tasks, and activities.
+   - The schedule is displayed in a simple, clear format.
+   - Users can set time frames for each activity, including start and end times.
+
+3. Task Manager
+   - Allows users to add, edit, or delete tasks as needed.
+   - Tasks can be categorized based on priority or type (e.g. self-care, household chores, work tasks).
+   - Users can set reminders for tasks, choosing the days and times they want to be reminded.
+
+4. Progress Tracker
+   - Tracks the user's completion of tasks and goals.
+   - Provides a summary of completed tasks, pending tasks, and achievements.
+
+5. Visual Representations
+   - Daily, weekly, and monthly calendars with color-coded tasks to help users visually distinguish different types of activities and plan their routines.
+
+6. Smart Reminders and Notifications
+   - Sends notifications through email or text message to remind users about their tasks and activities.
+   - Adaptive notification frequency based on user preferences and task importance.
+
+7. Voice Assistant Integration
+   - Integration with popular voice assistants like Google Assistant, Amazon Alexa, or Apple Siri to provide hands-free assistance.
+
+8. Accessible User Interface
+   - The program offers an accessible interface with customization options for font size, colors, text-to-speech, and other accessibility features.
+
+9. Data Synchronization
+   - The program can be synchronized across multiple devices, allowing users to access their daily schedules and reminders anytime, anywhere.
+
+10. Offline Mode
+    - Enables users to access their schedules and task lists even without an internet connection.
+
+To implement this program, a team of software developers, UX/UI designers, and accessibility experts will design and develop the application for different platforms like desktop, web, and mobile. This program must comply with accessibility guidelines to ensure it is usable by people with various abilities and difficulties in their daily living. Must be printable to put into a binder or make a spiral book. 

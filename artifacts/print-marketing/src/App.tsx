@@ -10,6 +10,8 @@ import Letterhead from "@/pages/Letterhead";
 import LogoFormats from "@/pages/LogoFormats";
 import SquareSetup from "@/pages/SquareSetup";
 import VocabularySheet from "@/pages/VocabularySheet";
+import SaltOfTheEarthClub from "@/pages/SaltOfTheEarthClub";
+import GoingDigital from "@/pages/GoingDigital";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,6 +28,8 @@ function Router() {
       <Route path="/logo-formats" component={LogoFormats} />
       <Route path="/square-setup" component={SquareSetup} />
       <Route path="/vocabulary" component={VocabularySheet} />
+      <Route path="/salt-of-the-earth-club" component={SaltOfTheEarthClub} />
+      <Route path="/going-digital" component={GoingDigital} />
       <Route component={NotFound} />
     </Switch>
   );
