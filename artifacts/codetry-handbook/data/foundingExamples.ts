@@ -34,21 +34,21 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
     primitiveId: "the-standby",
     titleSuffix: "the constellation's first non-zone primitive",
     whyTwoSided: [
-      { kind: "subhead", text: "Why the umbrella is two-sided" },
+      { kind: "subhead", text: "Why the umbrella has to hold both states" },
       {
         kind: "para",
         text:
-          "The Standby holds two registers that an outside system would almost certainly split apart. On one side is a slow, always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. On the other side is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. Two sides, one umbrella.",
+          "The Standby is one piece of infrastructure that moves between two operational states. The resting state is always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. The activated state is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. One infrastructure, two states.",
       },
       {
         kind: "para",
         text:
-          "If the slow side and the fast side were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge, and the moment a call opened the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens: pick the slow side, ask whether the umbrella name still fits the fast side; pick the fast side, ask whether the umbrella name still fits the slow side. *Standby* passes both — *on standby* and *standby stock* are the same posture in different tempos. *Pantry* and *Call* each pass only one.",
+          "If the resting state and the activated state were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge, and the moment a call opened the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens: pick the resting state, ask whether the umbrella name still holds in the activated state; pick the activated state, ask whether the umbrella name still holds in the resting state. *Standby* passes both — *on standby* and *standby stock* are the same posture in either state. *Pantry* and *Call* each pass only one.",
       },
       {
         kind: "callout",
         text:
-          "The two-sidedness here is *temporal*: one system, two tempos. Slow side and fast side are the same plumbing running at different rates.",
+          "The both-states principle applies here: one piece of infrastructure — the Standby — that moves between a resting state and an activated state. The name names the pipe, not the valve position. *Standby* holds in either state.",
       },
     ],
     crossZoneReads: [
@@ -61,16 +61,16 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
     ],
     takeaway: {
       pull:
-        "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+        "When a system is one piece of infrastructure that moves between a resting state and an activated state, the name has to hold in either state without bending — or the system will fork into two systems with two cultures.",
       closingPara:
         "The Standby is the constellation's first non-zone primitive. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now registered as a named principle in the manifest, available the next time a primitive has to do double duty.",
     },
     openQuestions: [
-      "What is the right cadence for the slow side's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
+      "What is the right cadence for the resting state's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
       "Does standby stock get ledgered the way money does in Zone 1, or is it deliberately kept off the books — held by the household and the co-op directly, outside the financial primitives — so the act of stocking does not become an act of accounting?",
       "When two calls overlap (a fire call open while a freight call is still standing down), do they share a single active rung, or does each call get its own ladder running in parallel? The manifest currently assumes one call at a time.",
       "How does the practitioner know when *not* to open a call? An over-eager active rung erodes the discipline as fast as a missed one does, and there is no rejected-alternative entry yet for *did not open the call when we should have*.",
-      "When does a long fast side stop being a fast side and become the new slow side? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the slow side without losing the debrief?",
+      "When does a prolonged activated state stop being an activated state and become the new resting state? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the resting state without losing the debrief?",
     ],
   },
   {
@@ -91,13 +91,13 @@ export const FOUNDING_EXAMPLE_COMMENTARY: FoundingExampleCommentary[] = [
       {
         kind: "callout",
         text:
-          "The two-sidedness here is *contextual*: one system, two contexts. Bright side and massity are the same plumbing facing different rooms.",
+          "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and massity both look at it at once; the name has to hold from either direction.",
       },
       { kind: "subhead", text: "How this differs from the Standby" },
       {
         kind: "para",
         text:
-          "The Standby's two sides are *temporal* — the same system in slow and fast tempo. The Gate's two sides are *contextual* — the same system facing two audiences that hold different vocabularies as legitimate. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
+          "The Standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once; the name has to hold from either direction. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
       },
     ],
     crossZoneReads: [
