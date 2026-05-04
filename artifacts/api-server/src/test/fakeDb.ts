@@ -184,10 +184,23 @@ function cmp(av: unknown, bv: unknown): number {
   return String(av) < String(bv) ? -1 : 1;
 }
 
-function applyOrders(rows: Row[], orders: Order[], joined = false): Row[] {
+// Drizzle allows passing a raw column to orderBy() (implies ascending).
+// We accept both wrapped Order objects and bare Col references.
+type OrderArg = Order | Col;
+
+function resolveOrderArg(o: OrderArg): { col: Col; kind: "asc" | "desc" } {
+  if ("kind" in o && (o.kind === "asc" || o.kind === "desc")) {
+    return o as Order;
+  }
+  // Bare Col — treat as ascending (drizzle default)
+  return { col: o as Col, kind: "asc" };
+}
+
+function applyOrders(rows: Row[], orders: OrderArg[], joined = false): Row[] {
   if (orders.length === 0) return rows;
   return [...rows].sort((a, b) => {
-    for (const o of orders) {
+    for (const raw of orders) {
+      const o = resolveOrderArg(raw);
       const c = cmp(getColValue(a, o.col, joined), getColValue(b, o.col, joined));
       if (c !== 0) return o.kind === "asc" ? c : -c;
     }
@@ -204,7 +217,7 @@ function makeSelect(
   projection?: Record<string, Col | FakeTable>,
 ) {
   let where: Pred | null = null;
-  let orders: Order[] = [];
+  let orders: OrderArg[] = [];
   let limit: number | null = null;
   let offset: number | null = null;
   const joins: Join[] = [];
@@ -273,7 +286,7 @@ function makeSelect(
       where = p;
       return builder;
     },
-    orderBy(...os: Order[]) {
+    orderBy(...os: OrderArg[]) {
       orders = os;
       return builder;
     },
