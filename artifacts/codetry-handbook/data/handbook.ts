@@ -239,12 +239,12 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "Other systems run in *two tempos at once* — a slow side and a fast side that are the *same room* read at different speeds. The temptation, every time, is to name each tempo separately and let them grow into two systems. The both-states principle is the codetry move that resists that.",
+            "Other systems are one piece of infrastructure that moves between two operational states — resting and activated, quiet and live, the gas line closed and the gas line open. The infrastructure does not change; the state does. The temptation, every time, is to name each state separately and let them grow into two systems. The both-states principle is the codetry move that resists that.",
         },
         {
           kind: "callout",
           text:
-            "When a system has a slow tempo and a fast tempo that are the same plumbing read at different speeds, the umbrella name has to ride from one tempo to the other without bending, or the system will fork into two systems with two cadences and two cultures.",
+            "When a system is one piece of infrastructure that moves between a resting state and an activated state, the umbrella name has to name the infrastructure — not the state it is currently in. A name that names the state will force a fork the moment the other state arrives.",
         },
         { kind: "subhead", text: "The Standby as the worked example." },
         {
@@ -255,18 +255,18 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "Two early candidate names were rejected for failing the test. *The Common Pantry* held the slow side beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the active-monitoring posture but could not hold the slow shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
+            "Two early candidate names were rejected for failing the test. *The Common Pantry* held the resting state beautifully — a pantry is by definition always-on — but could not hold an active fire call without straining. *The Watch* held the activated posture but could not hold the resting shelf of stock without bending into a permanent vigil. Both survived as *sub-shelves* inside The Standby; neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have two systems — one for *the pantry* and one for *the call* — with two cultures, two cadences, and two vocabularies for the same underlying thing.",
         },
         { kind: "subhead", text: "How to spot a both-states name." },
         {
           kind: "para",
           text:
-            "Pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung*, the name is holding both faces and the system is one system.",
+            "Pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. If the answer to either question is *not really*, the name is doing one job and the system has already started forking. If the answer to both is *yes — same word, different rung*, the name is holding both states and the system is one system.",
         },
         {
           kind: "para",
           text:
-            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to hold two tempos at once. Its sibling principle — *both-sides*, for systems that hold two contexts in one tempo — is taken up next.",
+            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to hold two operational states at once. Its sibling principle — *both-sides*, for systems that face two contexts simultaneously — is taken up next.",
         },
       ],
     },
@@ -280,7 +280,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The both-states principle holds when a system runs in two tempos. A second class of system runs in one tempo but in two contexts at once — two audiences holding two different vocabularies as legitimate, neither willing to give up theirs to the other. The temptation, every time, is to name each side separately and let them grow into two pipes facing two rooms. The both-sides principle is the codetry move that resists that.",
+            "The both-states principle holds when a system moves between two operational states over time. A different class of problem does not move at all — it faces two rooms simultaneously, always, from the moment it is named. Two audiences hold two different vocabularies as legitimate, neither willing to give up theirs to the other, and both look at the same membrane at the same time. The temptation is to name each side separately and let them grow into two pipes facing two rooms. The both-sides principle is the codetry move that resists that.",
         },
         {
           kind: "callout",
@@ -298,16 +298,27 @@ const partI: Part = {
           text:
             "Two early candidate names were rejected for failing the principle. *Translator* held the directional work but flattened the membrane into pure transaction — a translator processes; a gate decides whether to. *Glossary* held the dictionary side beautifully — a glossary is by definition a registered correspondence — but could not hold the active posture of substituting in real documents, the ledger of past substitutions, or the *refused* rung for source-side language with no honest target-side equivalent. Both survived as *sub-shelves* inside The Gate (Mappings, Substitutions); neither could be the umbrella name. If either had been adopted as the umbrella, the constellation would now have a one-way pipe and a shelf of words — with no posture deciding whether language *should* cross at all, and no record kept that both names exist for the same thing.",
         },
-        { kind: "subhead", text: "How the two two-sided tests differ." },
+        { kind: "subhead", text: "Every bar passes its own test." },
         {
           kind: "para",
           text:
-            "Both tests are pick-one-side-then-the-other, but the axis is different. The both-states test picks a *tempo*: pick the slow side first and ask whether the noun also fits the fast side, then pick the fast side and ask whether the noun also fits the slow side. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects massity, then pick the massity side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding both sides and the system is one system.",
+            "The both-sides test does not stop at the umbrella name. Every function — every bar — added to the Gate after the frame has been named must pass the same test independently. The Gate is a gate because each bar faces both rooms. A bar that only faces one room is not a bar; it is a wall panel, and a Gate built of wall panels is a wall. The principle runs on the frame and then repeats, bar by bar, as the primitive grows.",
         },
         {
           kind: "para",
           text:
-            "The Standby's two sides are *temporal* — the same plumbing in slow and fast tempo. The Gate's two sides are *contextual* — the same plumbing facing two audiences that hold different vocabularies as legitimate. A future primitive may need a third axis (densities? scales? jurisdictions?); the constellation manifest's `principles` array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
+            "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar.",
+        },
+        { kind: "subhead", text: "How the tempo test and the context test differ." },
+        {
+          kind: "para",
+          text:
+            "Both tests are pick-one-then-the-other, but the axis is different. The both-states test picks a *state*: pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects massity, then pick the massity side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding and the system is one system.",
+        },
+        {
+          kind: "para",
+          text:
+            "The Standby's two *states* are temporal — the system moves between them, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once, and the name has to hold from either direction. A future primitive may need a third axis (densities? scales? jurisdictions?); the constellation manifest's `principles` array is open-ended on purpose — the discipline travels, the worked examples accumulate.",
         },
         {
           kind: "para",
