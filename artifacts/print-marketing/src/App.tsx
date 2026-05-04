@@ -9,6 +9,7 @@ import BusinessCard from "@/pages/BusinessCard";
 import Letterhead from "@/pages/Letterhead";
 import LogoFormats from "@/pages/LogoFormats";
 import SquareSetup from "@/pages/SquareSetup";
+import VocabularySheet from "@/pages/VocabularySheet";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/letterhead" component={Letterhead} />
       <Route path="/logo-formats" component={LogoFormats} />
       <Route path="/square-setup" component={SquareSetup} />
+      <Route path="/vocabulary" component={VocabularySheet} />
       <Route component={NotFound} />
     </Switch>
   );

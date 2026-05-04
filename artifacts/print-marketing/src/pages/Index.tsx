@@ -64,6 +64,13 @@ const pieces = [
     desc: '"Find us at the market" poster combining Parr\'s Jars and the Headwaters tagline. Directs people to the website and market schedule. Useful for community boards and hallways.',
     icon: "📌",
   },
+  {
+    href: "/vocabulary",
+    title: "Core Vocabulary — Codetry Handbook",
+    label: "Handbook",
+    desc: "Print-ready one-pager defining the eleven core terms of the Headwaters vocabulary: constellation, primitive, zone, The Standby, resting/activated state, The Gate, bright side, massity, refused, both-states, both-sides. Forward it, pin it, hand it out.",
+    icon: "📖",
+  },
 ];
 
 export default function Index() {

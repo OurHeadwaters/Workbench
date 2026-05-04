@@ -103,6 +103,75 @@ const partPrologue: Part = {
         },
       ],
     },
+    {
+      id: "0-2",
+      number: "P.2",
+      partRoman: "P",
+      partLabel: "P · Prologue",
+      title: "What this is",
+      blocks: [
+        {
+          kind: "small",
+          text: "Prologue · for the practitioner who found this · the front door.",
+        },
+        {
+          kind: "para",
+          text: "The words you use to describe your economy determine what your economy can become. This is not a rhetorical claim. It is a practical one.",
+        },
+        {
+          kind: "subhead",
+          text: "Language is not neutral.",
+        },
+        {
+          kind: "para",
+          text: "When a northern food co-op uses the word *resident* instead of *neighbour*, something real changes — the relationship implied, the obligation carried, the culture formed. When a practitioner names their emergency food reserve *The Call* and their ongoing stock discipline *The Pantry*, they end up with two separate systems, two separate cultures, and a handoff they have to invent under fire. When a funder asks a community to describe its *bank account* and the community's word for that thing is *channel*, the translation is not neutral — something is lost, or flattened, or colonized in the language itself.",
+        },
+        {
+          kind: "subhead",
+          text: "This handbook is a vocabulary.",
+        },
+        {
+          kind: "para",
+          text: "Not a framework, not a methodology, not a strategic plan. A vocabulary — the specific, precise, weight-tested words that a community needs to run its own economy without importing someone else's assumptions along with the terminology.",
+        },
+        {
+          kind: "para",
+          text: "It was built in Headwaters, a small constellation of economic systems serving northwestern Ontario — food, money, knowledge, emergency preparedness, land. The words here emerged from practice: from the specific moment when the wrong word caused a real problem, and the right word had to be found. They have been tested in the field, rejected when they didn't hold, and revised when the context changed.",
+        },
+        {
+          kind: "subhead",
+          text: "What a primitive is.",
+        },
+        {
+          kind: "para",
+          text: "The vocabulary is organized around *primitives* — named systems that do a specific job inside the constellation. Each primitive has a name chosen to hold across every context in which it appears. The Standby, for instance, is not a pantry and not an emergency callout. It is the single system that holds both — in its resting state, an always-on preparation discipline; in its activated state, a fast collective response. One word. Both states. The name does not bend.",
+        },
+        {
+          kind: "para",
+          text: "The Gate is not a translator and not a filter. It is the membrane between the community's own language — *neighbour, channel, standby stock, the watch* — and the language that regulators, funders, and bankers will accept. The Gate holds both sides simultaneously, all the time, and it knows when a word has no honest equivalent in the other language and refuses to substitute.",
+        },
+        {
+          kind: "callout",
+          text: "The *refused* outcome is not a failure. It is a discipline. Some words do not cross. Protecting the word is more important than completing the translation.",
+        },
+        {
+          kind: "subhead",
+          text: "Who this is for.",
+        },
+        {
+          kind: "para",
+          text: "This is not neutral technical vocabulary. It is a set of claims about how a community economy works, encoded in the words used to run it. If your vocabulary is borrowed from grant applications, from SaaS platforms, from government forms — your economy will slowly take the shape of those forms. If your vocabulary is built from your own practice, named by your own practitioners, tested in your own conditions — your economy has a chance to stay yours.",
+        },
+        {
+          kind: "pull",
+          text: "This handbook is for practitioners: people who are already running something, who are frustrated by language that almost fits, and who are ready to name what they are actually doing with precision.",
+        },
+        {
+          kind: "para",
+          text: "It is not for everyone. It is for the people who feel the friction of the wrong word at the exact moment when the right word would have mattered.",
+        },
+      ],
+    },
   ],
 };
 
