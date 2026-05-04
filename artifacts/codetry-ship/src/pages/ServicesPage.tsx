@@ -25,7 +25,7 @@ export function ServicesPage() {
             A tool your team actually uses.
           </h1>
           <p className="font-serif text-lg italic mb-6 opacity-75">
-            Three types of work. One practitioner. No retainer required.
+            Three types of work. Clear scope. No retainer required.
           </p>
           <div
             className="rounded-md p-5 max-w-2xl font-serif text-[15px] leading-[1.6]"
@@ -331,7 +331,7 @@ export function ServicesPage() {
               ))}
             </div>
             <p className="font-serif text-[12px] italic leading-[1.6] mt-5" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
-              Headwaters operates as one lead practitioner with a bench of specialist subcontractors brought in by project need. The rate funds that full delivery system — so you're not carrying the overhead of assembling a team yourself.
+              Headwaters brings in specialist subcontractors by project need. The rate funds that full delivery system — you get the right person for each phase without carrying the overhead of assembling a team yourself.
             </p>
           </div>
 
