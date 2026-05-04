@@ -167,7 +167,7 @@ function Card({ variant }: { variant: "front" | "back" }) {
       <div style={{ display: "flex", flexDirection: "column", gap: "0.07in" }}>
         {[
           { label: "email", value: "bobbie@ourheadwaters.ca" },
-          { label: "text", value: "(___) ___-____ · text preferred" },
+          { label: "text", value: "807 220 3654 · text preferred" },
           { label: "web", value: "ourheadwaters.ca" },
           { label: "base", value: "Dryden, Ontario" },
         ].map(({ label, value }) => (
@@ -253,8 +253,7 @@ export default function BusinessCard() {
               lineHeight: 1.55,
             }}
           >
-            Front (dark) and back (light). Add your phone number to the back
-            before sending to print. Fill the blank on the <em>text</em> line.
+            Front (dark) and back (light). Ready to send to print.
           </p>
 
           <div
@@ -309,7 +308,7 @@ export default function BusinessCard() {
                   marginBottom: "0.6rem",
                 }}
               >
-                Back — fill in your number before printing
+                Back
               </p>
               <Card variant="back" />
             </div>

@@ -82,7 +82,7 @@ export default function Letterhead() {
             <div style={{ textAlign: "right", flexShrink: 0 }}>
               {[
                 "bobbie@ourheadwaters.ca",
-                "(___) ___-____ · text preferred",
+                "807 220 3654 · text preferred",
                 "ourheadwaters.ca",
                 "Dryden, Ontario",
               ].map((line) => (
