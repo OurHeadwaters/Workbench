@@ -979,7 +979,7 @@ const partIV: Part = {
   roman: "III",
   title: "The Practice",
   blurb:
-    "Six moves the codetry practitioner makes — in the field, with people, in the working language of the room.",
+    "Six moves the codetry practitioner makes — in the field, with people, in the working language of the room. Then Zone 0: the household ground those moves are made on.",
   chapters: [
     {
       id: "4-1",
@@ -1364,6 +1364,317 @@ const partIV: Part = {
           kind: "callout",
           text:
             "Don't teach codetry as theory. Show the audience the principle they have already been using in buildings, then let them feel it on a word they care about. The flinch is the proof; the named decision is the receipt.",
+        },
+      ],
+    },
+    {
+      id: "4-8",
+      number: "3.8",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "Zone 0 — The Household",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the ground · where everything else in the constellation flows from.",
+        },
+        {
+          kind: "para",
+          text: "The constellation has six zones and two constellation-wide primitives. Zone 0 is not where the work starts — it is what the work is for. Every other zone, every primitive, every gate and standby and ledger in the system exists to protect what happens in Zone 0: the household, the family, the daily practice of keeping people warm and fed and free.",
+        },
+        {
+          kind: "para",
+          text: "Zone 0 in the permaculture sense is the human body and the home. In the Headwaters constellation it is both: the household as the economic and relational unit that every other zone is downstream of. *The household balance is the source of the whole watershed.* Zone 1 (Headwaters) is downstream. Zone 3 (the co-op) is downstream. Even Zone 4 (the land) is downstream from the household that is tending it. Get Zone 0 right and every other zone has a stable source to draw from.",
+        },
+        {
+          kind: "subhead",
+          text: "What the practitioner does in Zone 0.",
+        },
+        {
+          kind: "para",
+          text: "The six moves of §3.1–§3.7 all apply in Zone 0. Listen for the noun: the household practitioner says *the pantry*, *the jar kitchen*, *the seasonal shelf*, *the canning season* — not *food storage*, not *meal prep*, not *inventory management*. Write those nouns down and refuse to translate them. Test the name by trying to rename it. Hold the metaphor to the medium. Run the both-states test when the system has two tempos (the resting shelf and the harvest push).",
+        },
+        {
+          kind: "para",
+          text: "The chapters that follow are not a how-to guide. They are the vocabulary of Zone 0 practice — the named systems a household runs, the nouns those systems load their weight onto, and the tests that tell the practitioner when a name is doing real work versus when it is decoration. The practices themselves — fermentation, canning, cold storage, bulk sourcing, seasonal meal planning — are older than codetry and will survive it. What codetry adds is the naming discipline that keeps those practices legible to the people inside them and resistant to the generic vocabulary that would slowly erase what makes them specific.",
+        },
+        {
+          kind: "callout",
+          text: "Zone 0 is not the smallest zone. It is the source zone. Everything else is downstream.",
+        },
+      ],
+    },
+    {
+      id: "4-9",
+      number: "3.9",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "The Jarista",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the named practitioner · bright-side identity.",
+        },
+        {
+          kind: "para",
+          text: "Every practice needs a named practitioner. *Jarista* is the bright-side name for the household practitioner who runs a jar-centred, seasonally-organized food system. Not a home cook, not a food preservationist, not a homesteader. A Jarista — the person who has built the jar into the infrastructure of the household rather than treating preservation as a seasonal hobby.",
+        },
+        {
+          kind: "subhead",
+          text: "Why this name and not another.",
+        },
+        {
+          kind: "para",
+          text: "The rename test: replace *Jarista* with *home cook*. What changes? *Home cook* describes someone who prepares meals. It carries no information about preservation, about seasonal sourcing, about the long-game of building a household that can run independently of the grocery store for weeks or months. Replace *Jarista* with *food preservationist* and you keep the preservation dimension but lose the daily kitchen practice — the Jarista cooks from jars, not just into jars. The word holds both directions in one.",
+        },
+        {
+          kind: "para",
+          text: "It is also a bright-side word with no massity equivalent. When a Jarista speaks to a grant officer, a public health inspector, or a food hub coordinator, they use whatever language the context requires — *home food producer*, *small-scale preservationist*, *food security practitioner*. But at home, in the kitchen, in the co-op's training program, the word is *Jarista*. The Gate logs the translation; the bright-side noun stays unchanged.",
+        },
+        {
+          kind: "callout",
+          text: "The Jarista is a both-sides word: the household practitioner in their own language on the bright side; *food producer* or *preservationist* on the massity side. The Gate holds the translation. The name stays.",
+        },
+        {
+          kind: "subhead",
+          text: "Who the Jarista is in the constellation.",
+        },
+        {
+          kind: "para",
+          text: "The Jarista is not a certification. It is a posture — the household practitioner who has decided that the jar is the unit of measure for their food system, the season is the calendar they plan by, and the shelf is the first line of resilience when supply chains tighten. In a constellation context, the Jarista is the Zone 0 counterpart of the Zone 2 practitioner who runs the Operating Plan. Both are named practitioners. Both are running a system. The Zone 2 practitioner names and protects the vocabulary of the constellation's institutions; the Jarista names and protects the vocabulary of the household that the constellation exists to serve.",
+        },
+      ],
+    },
+    {
+      id: "4-10",
+      number: "3.10",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "The Jar Kitchen",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the named space · the infrastructure of seasonal living.",
+        },
+        {
+          kind: "para",
+          text: "The Jar Kitchen is not a kitchen that happens to have jars in it. It is a kitchen where the jar is the primary unit of storage — the default container that the Jarista thinks and plans around. Tupperware is a visitor. The jar is the resident.",
+        },
+        {
+          kind: "subhead",
+          text: "The rename test.",
+        },
+        {
+          kind: "para",
+          text: "Rename *The Jar Kitchen* to *The Kitchen*. What changes? The principle disappears — that this kitchen is organized around a specific container, a specific preservation posture, a specific relationship between what is grown this season and what will be eaten next February. *The Kitchen* is every kitchen. *The Jar Kitchen* is a named system with a named organizing principle.",
+        },
+        {
+          kind: "para",
+          text: "Rename it to *The Pantry*. What changes? The pantry is where food is stored; the jar kitchen is also where food is prepared, transformed, and preserved. The pantry is static; the jar kitchen is active. The pantry receives; the jar kitchen produces. The name carries the direction of movement, not just the location.",
+        },
+        {
+          kind: "subhead",
+          text: "What the Jar Kitchen holds.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Wide-mouth jars* — the standard unit. Pints for single-meal portions, quarts for soups and stocks and fruit, half-pints for ferments and condiments. The size vocabulary is consistent across the whole system.",
+            "*The Seasonal Shelf* — the always-changing inventory of what was preserved this season and is being drawn down through the year. Not a static pantry. A living shelf.",
+            "*The Bulk Corner* — dry goods in jars: grains, legumes, spices, nuts. Sourced in bulk, stored in the same container system, requiring no translation between storage and use.",
+            "*Fermentation station* — the active culture corner. Crocks, airlocks, cloth-covered jars of something alive. The Jar Kitchen has a living edge that most kitchens do not.",
+            "*Immersion blender, wide-mouth lids, jar tongs* — the tools specific to the Jar Kitchen. Not interchangeable with the general kitchen toolkit. Named by their function in the system.",
+          ],
+        },
+        {
+          kind: "callout",
+          text: "The Jar Kitchen is a design decision, not a decorating style. The jar is load-bearing: rename it out and the whole system of seasonal storage, portion planning, and bulk sourcing has to be redesigned around whatever container replaced it.",
+        },
+      ],
+    },
+    {
+      id: "4-11",
+      number: "3.11",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "Sourcing",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · farm to jar · bright-side sourcing in a northern food system.",
+        },
+        {
+          kind: "para",
+          text: "The Jarista does not shop. They source. The distinction is not semantic decoration — it is the load-bearing difference between a household that takes what is available and a household that builds relationships with what is grown nearby and plans around what the season will offer.",
+        },
+        {
+          kind: "subhead",
+          text: "The vocabulary of sourcing.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*The Bulk Round* — the seasonal sourcing run. Not a grocery trip, not a shopping day. A round: a planned circuit of farms, markets, and co-op pickups that brings the season's abundance home in one efficient move. The naming carries the shape of the thing — a route, not a transaction.",
+            "*The Farm Gate* — the direct producer relationship. Buying at the farm gate rather than through a retailer keeps the multiplier local: research on northern food systems suggests that every dollar spent at the farm gate generates up to $2.30 in the wider local economy, compared to a fraction of that when the same dollar flows through a distant supply chain.",
+            "*The Market Table* — the farmers market as a sourcing channel. Distinct from the Farm Gate in that it is curated by season and geography: what is on the table this week is what is ready this week in this territory.",
+            "*Wild harvest* — hunting, trapping, fishing, and foraging as sourcing channels. Not hobbies. Not supplements to a grocery habit. Named as primary sourcing channels that the Jarista plans the year around.",
+            "*The Canning Club* — the shared-production arrangement where several Jarsitas pool a production kitchen, labour, and bulk sourcing to process seasonal abundance more efficiently than any one household could alone.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "Sourcing in a northern food system.",
+        },
+        {
+          kind: "para",
+          text: "In northwestern Ontario, the season for local fresh produce is short and the distances between producers are long. The Jarista's sourcing practice is built for this specific geography: a short, intense harvest window, a long storage season, a preference for wild harvest over tender annual crops, and a co-op supply network that extends what any one household can source on its own. The names of the sourcing channels carry this geography — they are not imports from a southern growing culture.",
+        },
+        {
+          kind: "callout",
+          text: "Sourcing is not the same as shopping. Shopping is reactive — you take what the supply chain offers. Sourcing is intentional — you build relationships with what the territory produces and plan your preservation season around the calendar of the land.",
+        },
+      ],
+    },
+    {
+      id: "4-12",
+      number: "3.12",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "The Seasonal Shelf",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the living pantry · seasonal rhythm made visible.",
+        },
+        {
+          kind: "para",
+          text: "The Seasonal Shelf is not a pantry. A pantry is static — you stock it and draw from it and restock it when it runs low. The Seasonal Shelf is a living inventory that moves with the year: full in October after the harvest push, drawn down through winter and spring, nearly empty by May, and beginning to fill again when the first summer crops arrive. The trajectory is the system.",
+        },
+        {
+          kind: "subhead",
+          text: "The rename test.",
+        },
+        {
+          kind: "para",
+          text: "Rename *Seasonal Shelf* to *Pantry*. The trajectory disappears. A pantry is managed to stay full; the Seasonal Shelf is managed to cycle. The Jarista who calls it a pantry will manage it like a pantry — buying to replace what is gone, without reference to the season. The Jarista who names it a Seasonal Shelf will manage it differently: watching the trajectory, planning the preservation season to refill at the right moment, drawing down intentionally in late spring to make room for the next season's abundance.",
+        },
+        {
+          kind: "subhead",
+          text: "What the Seasonal Shelf tracks.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Preserved goods* — jars of what was processed at peak season: tomatoes in August, berries in July, beans in September, venison from November. The shelf's language is the month things came in, not the month they were purchased.",
+            "*Dry storage* — grains, legumes, nuts, dried mushrooms, dehydrated vegetables. The bulk round's non-perishable output. Stored in the jar system, rotated by date.",
+            "*The Freezer Register* — the Seasonal Shelf has a cold counterpart: the harvest hold in the freezer, tracked with the same seasonal vocabulary. Blanched and frozen beans from August. Rendered fat from the fall slaughter. Smoked fish from the spring run.",
+            "*Gap tracking* — the Jarista watches what runs out before the next season rather than what they forgot to buy. The gaps in the Seasonal Shelf at April are the planning inputs for the next harvest push.",
+          ],
+        },
+        {
+          kind: "para",
+          text: "Whole food prep in the Jar Kitchen is organized around the Seasonal Shelf. The week's meals are drawn from what is on the shelf and the freezer register, not from a meal plan built against a grocery flyer. The planning direction is reversed: from abundance toward meals, not from meals toward shopping.",
+        },
+        {
+          kind: "callout",
+          text: "The Seasonal Shelf is managed to cycle, not to stay full. A shelf at zero in May means the system worked. A shelf that never empties means the rotation has stalled and something is aging past its best.",
+        },
+      ],
+    },
+    {
+      id: "4-13",
+      number: "3.13",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "The Harvest Hold",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the freezer system · holding seasonal abundance across the year.",
+        },
+        {
+          kind: "para",
+          text: "The freezer is not a backup refrigerator. In the Jar Kitchen it is the Harvest Hold — a deliberately managed seasonal reserve that is stocked during the harvest push and drawn down through the year. The name carries the purpose: *hold* is active, not passive; *harvest* ties it to the season that filled it.",
+        },
+        {
+          kind: "subhead",
+          text: "The rename test.",
+        },
+        {
+          kind: "para",
+          text: "Rename *Harvest Hold* to *Freezer*. You have named an appliance. Rename it to *Frozen Storage* and you have named a function but not a system. The Harvest Hold is a managed reserve with a fill cycle, a draw-down trajectory, a rotation discipline, and a seasonal calendar. The word *freezer* carries none of this. A freezer is where leftovers go. The Harvest Hold is where the season goes.",
+        },
+        {
+          kind: "subhead",
+          text: "How the Harvest Hold works.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Flash freezing* — freezing individual portions on a sheet before bagging, so the Harvest Hold contains loose usable portions rather than a solid brick that has to be thawed whole. The technique is named; it is not just a tip.",
+            "*Year-round inventory* — the Harvest Hold is tracked with the same discipline as the Seasonal Shelf. What came in when, in what quantity, at what stage of processing. The register is the discipline.",
+            "*Rotation* — oldest items forward, newest behind. The Harvest Hold that is not rotated is not a hold; it is an accumulation. Rotation is what makes the hold a system rather than a pile.",
+            "*Pressure canning as an alternative* — some things the Harvest Hold stores in the freezer could instead be shelf-stable in the jar system. Pressure-canned meats and stocks move from the freezer column to the Seasonal Shelf column, reducing the Harvest Hold's load and extending the household's resilience beyond a power outage.",
+          ],
+        },
+        {
+          kind: "para",
+          text: "The Harvest Hold and the Seasonal Shelf together are the household's two-sided reserve: one cold and perishable in an infrastructure sense, one shelf-stable and infrastructure-independent. The Standby principle applies at the household scale — the name that holds both the Harvest Hold and the Seasonal Shelf together is *the reserve*, and a household that manages both as one system is more resilient than one that manages them separately.",
+        },
+        {
+          kind: "callout",
+          text: "The Harvest Hold is filled once a year and drawn down all year. A freezer is used every week. The difference is a management posture, not an appliance.",
+        },
+      ],
+    },
+    {
+      id: "4-14",
+      number: "3.14",
+      partRoman: "III",
+      partLabel: "III · The Practice",
+      title: "Preservation Season",
+      blocks: [
+        {
+          kind: "small",
+          text: "Zone 0 · the activated state · when the household Standby fills itself.",
+        },
+        {
+          kind: "para",
+          text: "Preservation Season is the activated state of Zone 0. The resting state is the Seasonal Shelf being slowly drawn down, the Harvest Hold running its rotation, the Jarista cooking from what is there. Preservation Season is when the bulk round returns full, the jars come out of storage, the lids are ordered, and the Jar Kitchen runs at full capacity for days or weeks. Same infrastructure, different tempo. Both states have a name.",
+        },
+        {
+          kind: "subhead",
+          text: "The both-states test at household scale.",
+        },
+        {
+          kind: "para",
+          text: "The name *Preservation Season* holds both states only if the Jarista carries both in one posture — the shelf is being maintained even when Preservation Season is not active, and the seasonal push is anticipated during the long draw-down of winter. A Jarista who only preserves and never draws down has a hoard. A Jarista who only draws down and never preserves has an empty shelf by March. The system requires both states to be named and practiced.",
+        },
+        {
+          kind: "subhead",
+          text: "The techniques of Preservation Season.",
+        },
+        {
+          kind: "list",
+          items: [
+            "*Water bath canning* — for high-acid foods: tomatoes, fruits, pickles, fermented vegetables. The entry-level preservation technique; the one that fills most of the Seasonal Shelf.",
+            "*Pressure canning* — for low-acid foods: meats, stocks, beans, corn. Requires a pressure canner. Produces shelf-stable jars of what would otherwise have to live in the Harvest Hold.",
+            "*Fermentation and pickling* — small-batch, live-culture preservation. Sauerkraut, kimchi, brine pickles, kvass. The ferment station's output. Not the same as canning — ferments are alive and managed, not sealed and static.",
+            "*Dehydrating* — mushrooms, herbs, berries, apple rings, jerky. Low-tech, energy-efficient, and the technique most compatible with a wood-heated household during a power outage.",
+            "*Rendering and smoking* — fat, lard, smoked fish, smoked meat. The traditional preservation techniques of the territory, carried forward in the Jar Kitchen because they work in this climate and with these species.",
+          ],
+        },
+        {
+          kind: "subhead",
+          text: "Preservation Season and the Household Standby.",
+        },
+        {
+          kind: "para",
+          text: "Preservation Season is the household's annual activation of its own Standby. The co-op's Standby (Zone 3) runs the same both-states discipline at the community scale. The household Jarista and the co-op's Standby practitioner are running the same system at different scales, in the same vocabulary, on the same calendar. When the Standby activates at the co-op level — a freight disruption, a weather event, a supply-chain failure — the Jarista's Preservation Season work is exactly what the household draws on to stay fed while the community-level response mobilizes.",
+        },
+        {
+          kind: "callout",
+          text: "Preservation Season is the resting state of the Standby made visible at household scale. The shelf that is full in November is the work that was done in August, September, and October — before anyone knew whether the winter would require it.",
         },
       ],
     },
