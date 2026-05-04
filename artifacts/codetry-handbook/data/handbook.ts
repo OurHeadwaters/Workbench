@@ -266,7 +266,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to hold two operational states at once. Its sibling principle — *both-sides*, for systems that face two contexts simultaneously — is taken up next.",
+            "The principle is registered in the constellation manifest as `principles.both-states` and is cited every time a new primitive is asked to hold two operational states at once. The companion principle — for systems that face two contexts simultaneously rather than moving between two states — is taken up next.",
         },
       ],
     },
