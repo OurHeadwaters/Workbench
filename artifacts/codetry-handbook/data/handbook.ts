@@ -298,7 +298,7 @@ const partI: Part = {
       number: "1.3",
       partRoman: "I",
       partLabel: "I · The Discipline",
-      title: "The both-states principle — names that hold one system across two tempos",
+      title: "The both-states principle — names that hold one system across two states",
       blocks: [
         {
           kind: "para",
