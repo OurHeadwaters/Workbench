@@ -225,6 +225,10 @@ const partI: Part = {
       title: "Why codetry exists",
       blocks: [
         {
+          kind: "pull",
+          text: "Codetry is the discipline of turning problems into coordinated action through precise shared language and repeatable small moves. It is built for households and communities that must allocate their own water, time, fuel, attention, and capital when larger systems cannot or will not.",
+        },
+        {
           kind: "para",
           text:
             "Before the mechanics — the naming, the drift detection, the saltbox principle, the naming session — it is worth saying plainly what this discipline is hedging against, and what it is not claiming to do.",

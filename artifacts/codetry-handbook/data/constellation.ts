@@ -84,8 +84,8 @@ export type ConstellationSnapshot = {
 };
 
 export const constellation: ConstellationSnapshot = {
-  "version": "0.5.6",
-  "lastUpdated": "2026-04-29",
+  "version": "0.5.7",
+  "lastUpdated": "2026-05-05",
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
