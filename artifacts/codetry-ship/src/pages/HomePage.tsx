@@ -53,31 +53,59 @@ export function HomePage() {
 
   return (
     <main className="home-page min-h-screen w-full bg-background text-foreground">
-      <div className="mx-auto max-w-[52rem] px-6 sm:px-8 py-16 sm:py-24">
 
-        {/* ── header ── */}
-        <header className="space-y-4" data-testid="home-header">
+      {/* ── hero ── */}
+      <section
+        className="relative overflow-hidden px-6 sm:px-10 pt-16 pb-14"
+        style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 96%)" }}
+        data-testid="home-header"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-16 -right-16 w-80 h-80 rounded-full opacity-10"
+          style={{ background: "hsl(38 36% 94%)" }}
+        />
+        <div className="relative mx-auto max-w-[52rem]">
           <img
             src={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
             alt="Headwaters — Northwestern Ontario"
-            className="w-full max-w-[420px]"
+            className="w-full max-w-[320px] mb-6 opacity-90"
             data-testid="home-eyebrow"
           />
           <h1
-            className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight"
+            className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3"
             data-testid="home-title"
           >
             Food systems planning<br className="hidden sm:block" /> for northern communities.
           </h1>
           <p
-            className="font-serif text-lg sm:text-xl leading-relaxed max-w-2xl"
-            style={{ color: "hsl(var(--muted-foreground))" }}
+            className="font-serif text-lg italic mb-8 opacity-75"
             data-testid="home-tagline"
           >
-            Headwaters builds operational tools that fit the team you have —
-            not the team the software assumes you should be.
+            Practitioner-built tools that fit the team you have — not the team the software assumes.
           </p>
-        </header>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <a
+              href="#conversation"
+              className="inline-flex items-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{ background: "hsl(var(--accent))", color: "hsl(38 36% 96%)" }}
+              data-testid="hero-cta-primary"
+            >
+              Start a conversation →
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}services`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80 opacity-70"
+              style={{ color: "hsl(38 36% 96%)" }}
+              data-testid="hero-cta-services"
+            >
+              What it looks like to build →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
 
         {/* ── hero photo ── */}
         <div
@@ -97,212 +125,40 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
-        {/* ── start a conversation ── */}
-        <section data-testid="home-intake">
-          <div className="flex items-baseline justify-between gap-3 mb-6">
-            <h2
-              className="font-serif text-2xl tracking-tight"
-              data-testid="intake-heading"
-            >
-              Start a conversation
-            </h2>
-          </div>
-
-          <div className="space-y-4 font-serif text-[15px] leading-[1.6] mb-8" data-testid="intake-intro">
-            <p>
-              The usual first step is a trial period: a bounded scope of work
-              at an hourly rate, no retainer, no long commitment. If the fit
-              is right, it continues. If not, you leave with something useful
-              and no obligation to keep going.
-            </p>
-            <p>
-              Tell us a little about your community and what you are trying
-              to build. That is enough to start.
-            </p>
-          </div>
-
-          {confirmedName ? (
-            <div
-              className="rounded-md border bg-card p-7 sm:p-9 space-y-4"
-              style={{ borderColor: "hsl(var(--card-border))" }}
-              role="status"
-              aria-live="polite"
-              data-testid="intake-confirmation"
-            >
-              <p
-                className="font-mono text-[11px] uppercase tracking-[0.22em]"
-                style={{ color: "hsl(var(--accent))" }}
-              >
-                received
-              </p>
-              <h3 className="font-serif text-2xl leading-tight">
-                Thank you, {confirmedName}.
-              </h3>
-              <p className="font-serif text-base leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
-                We have your message. Bobbie will read it and write back
-                with a plain-language response — no sales pitch, no proposal
-                deck. Usually within a day or two.
-              </p>
-              <button
-                type="button"
-                onClick={() => setConfirmedName(null)}
-                className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
-                data-testid="intake-send-another"
-              >
-                send another message
-              </button>
-            </div>
-          ) : (
-            <form
-              onSubmit={onSubmit}
-              className="space-y-5"
-              data-testid="form-intake"
-              noValidate
-            >
-              {/* honeypot */}
-              <div
-                aria-hidden="true"
-                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}
-              >
-                <label>
-                  Website
-                  <input
-                    type="text"
-                    name="website"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={form.website}
-                    onChange={(e) => setForm({ ...form, website: e.target.value })}
-                  />
-                </label>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-5">
-                <IntakeField
-                  id="intake-name"
-                  label="Your name"
-                  required
-                  value={form.name}
-                  onChange={(v) => setForm({ ...form, name: v })}
-                  testId="input-intake-name"
-                />
-                <IntakeField
-                  id="intake-email"
-                  label="Email"
-                  required
-                  type="email"
-                  value={form.email}
-                  onChange={(v) => setForm({ ...form, email: v })}
-                  testId="input-intake-email"
-                />
-                <IntakeField
-                  id="intake-community"
-                  label="Community or organisation"
-                  required
-                  value={form.community}
-                  onChange={(v) => setForm({ ...form, community: v })}
-                  testId="input-intake-community"
-                />
-                <IntakeField
-                  id="intake-role"
-                  label="Your role (optional)"
-                  value={form.role}
-                  onChange={(v) => setForm({ ...form, role: v })}
-                  testId="input-intake-role"
-                  placeholder="Chief, Manager, Director…"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="intake-need"
-                  className="block font-sans text-sm font-medium"
-                >
-                  What are you trying to build?{" "}
-                  <span style={{ color: "hsl(var(--accent))" }}>*</span>
-                </label>
-                <textarea
-                  id="intake-need"
-                  required
-                  rows={4}
-                  value={form.whatTheyNeed}
-                  onChange={(e) => setForm({ ...form, whatTheyNeed: e.target.value })}
-                  placeholder="A sentence or two is enough. What is the problem, and what would a good outcome look like for your community?"
-                  className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2 resize-y"
-                  style={{ borderColor: "hsl(var(--card-border))" }}
-                  data-testid="input-intake-need"
-                />
-              </div>
-
-              {error ? (
-                <p
-                  role="alert"
-                  className="font-sans text-sm text-destructive"
-                  data-testid="intake-error"
-                >
-                  {error}
-                </p>
-              ) : null}
-
-              <div className="flex flex-wrap items-center gap-5 pt-1">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{
-                    background: "hsl(var(--accent))",
-                    color: "hsl(var(--background))",
-                  }}
-                  data-testid="button-intake-submit"
-                >
-                  {submitting ? "Sending…" : "Send message"}
-                </button>
-                <a
-                  href="mailto:bobbie@ourheadwaters.ca"
-                  className="font-mono text-[11px] uppercase tracking-[0.18em] opacity-60 hover:opacity-90"
-                  style={{ color: "hsl(var(--foreground))" }}
-                  data-testid="intake-email-fallback"
-                >
-                  or email directly →
-                </a>
-              </div>
-            </form>
-          )}
-        </section>
-
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-        />
-
         {/* ── the work ── */}
         <section data-testid="home-work">
-          <div className="mb-4">
+          <div
+            className="rounded-md px-5 py-4 mb-8 relative overflow-hidden"
+            style={{ background: "hsl(145 36% 22%)", color: "hsl(38 36% 96%)" }}
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
+              style={{ background: "hsl(38 36% 94%)" }}
+            />
+            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
+              shipped · running · readable
+            </p>
             <h2
-              className="font-serif text-3xl tracking-tight mb-1"
+              className="font-serif text-2xl sm:text-3xl tracking-tight"
               data-testid="work-heading"
             >
               The work
             </h2>
-            <p
-              className="font-mono text-xs uppercase tracking-[0.22em]"
-              style={{ color: "hsl(var(--accent))" }}
-            >
-              shipped · running · readable
-            </p>
           </div>
 
           <p
-            className="font-serif text-[15px] leading-[1.6] mb-3"
+            className="font-serif text-[15px] leading-[1.6] mb-5"
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="work-explainer"
           >
             Headwaters builds software and operational tools for northern communities.
             These are live and in use — not demos, not proposals.
           </p>
+
           <a
-            href="services"
-            className="flex items-center justify-between w-full px-5 py-4 rounded-sm mb-6 font-mono text-xs uppercase tracking-[0.18em] hover:opacity-90 transition-opacity"
+            href={`${import.meta.env.BASE_URL}services`}
+            className="flex items-center justify-between w-full px-5 py-4 rounded-sm mb-8 font-mono text-xs uppercase tracking-[0.18em] hover:opacity-90 transition-opacity"
             style={{
               background: "hsl(var(--accent))",
               color: "hsl(var(--accent-foreground))",
@@ -422,25 +278,285 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
-        {/* ── about ── */}
-        <section data-testid="home-about">
-          <div className="mb-5">
-            <h2
-              className="font-serif text-3xl tracking-tight mb-1"
-              data-testid="about-heading"
-            >
-              The practitioner
-            </h2>
+        {/* ── how it starts ── */}
+        <section data-testid="home-how-it-starts">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            the first step
+          </p>
+          <h2
+            className="font-serif text-3xl tracking-tight mb-1"
+            data-testid="how-it-starts-heading"
+          >
+            A trial period, not a contract
+          </h2>
+          <p
+            className="font-serif text-[15px] italic mb-8"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            The usual first step is a bounded scope at an hourly rate. No retainer, no long commitment.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
+            {[
+              { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
+              { step: "2", label: "Trial period", body: "Six weeks, hourly rate, bounded scope. Stop at any point." },
+              { step: "3", label: "Decision point", body: "If the fit is right, it continues. If not, you leave with something useful and no obligation." },
+              { step: "4", label: "Continue", body: "A clear scope, clear deliverables, clear end point. Renewed only if the work calls for it." },
+            ].map(({ step, label, body }) => (
+              <div
+                key={step}
+                className="rounded-md border bg-card p-5"
+                style={{ borderColor: "hsl(var(--card-border))" }}
+              >
+                <div
+                  className="font-mono text-[11px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+                >
+                  {step}
+                </div>
+                <p className="font-serif text-[15px] font-medium tracking-tight mb-1.5">{label}</p>
+                <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                  {body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="rounded-md border p-6 sm:p-8"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
+              the rate structure
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                { label: "Trial period", value: "$175 / hour", note: "Six-week bounded scope. Stop at any point." },
+                { label: "Active engagement", value: "$175 / hour", note: "Billed against a defined scope, not open-ended." },
+                { label: "Travel premium", value: "$175 / day", note: "On days worked on-site. Expenses at cost." },
+              ].map(({ label, value, note }) => (
+                <div key={label}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
+                  <p className="font-serif text-2xl font-medium tracking-tight mb-1">{value}</p>
+                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
+                </div>
+              ))}
+            </div>
             <p
-              className="font-mono text-xs uppercase tracking-[0.22em]"
-              style={{ color: "hsl(var(--accent))" }}
+              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
             >
-              bobbie parr
+              All rates CAD · excludes HST
+            </p>
+          </div>
+        </section>
+
+        <hr
+          className="my-12 sm:my-16"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        />
+
+        {/* ── start a conversation ── */}
+        <section id="conversation" data-testid="home-intake">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            get in touch
+          </p>
+          <h2
+            className="font-serif text-3xl tracking-tight mb-1"
+            data-testid="intake-heading"
+          >
+            Start a conversation
+          </h2>
+
+          <div className="space-y-4 font-serif text-[15px] leading-[1.6] mt-4 mb-8" data-testid="intake-intro">
+            <p>
+              Tell us a little about your community and what you are trying to build.
+              That is enough to start. Bobbie will write back with a plain-language
+              response — no sales pitch, no proposal deck. Usually within a day or two.
             </p>
           </div>
 
+          {confirmedName ? (
+            <div
+              className="rounded-md border bg-card p-7 sm:p-9 space-y-4"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+              role="status"
+              aria-live="polite"
+              data-testid="intake-confirmation"
+            >
+              <p
+                className="font-mono text-[11px] uppercase tracking-[0.22em]"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                received
+              </p>
+              <h3 className="font-serif text-2xl leading-tight">
+                Thank you, {confirmedName}.
+              </h3>
+              <p className="font-serif text-base leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
+                We have your message. Bobbie will read it and write back — no sales pitch, no proposal deck.
+              </p>
+              <button
+                type="button"
+                onClick={() => setConfirmedName(null)}
+                className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                data-testid="intake-send-another"
+              >
+                send another message
+              </button>
+            </div>
+          ) : (
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5"
+              data-testid="form-intake"
+              noValidate
+            >
+              {/* honeypot */}
+              <div
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}
+              >
+                <label>
+                  Website
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.website}
+                    onChange={(e) => setForm({ ...form, website: e.target.value })}
+                  />
+                </label>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <IntakeField
+                  id="intake-name"
+                  label="Your name"
+                  required
+                  value={form.name}
+                  onChange={(v) => setForm({ ...form, name: v })}
+                  testId="input-intake-name"
+                />
+                <IntakeField
+                  id="intake-email"
+                  label="Email"
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(v) => setForm({ ...form, email: v })}
+                  testId="input-intake-email"
+                />
+                <IntakeField
+                  id="intake-community"
+                  label="Community or organisation"
+                  required
+                  value={form.community}
+                  onChange={(v) => setForm({ ...form, community: v })}
+                  testId="input-intake-community"
+                />
+                <IntakeField
+                  id="intake-role"
+                  label="Your role (optional)"
+                  value={form.role}
+                  onChange={(v) => setForm({ ...form, role: v })}
+                  testId="input-intake-role"
+                  placeholder="Chief, Manager, Director…"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="intake-need"
+                  className="block font-sans text-sm font-medium"
+                >
+                  What are you trying to build?{" "}
+                  <span style={{ color: "hsl(var(--accent))" }}>*</span>
+                </label>
+                <textarea
+                  id="intake-need"
+                  required
+                  rows={4}
+                  value={form.whatTheyNeed}
+                  onChange={(e) => setForm({ ...form, whatTheyNeed: e.target.value })}
+                  placeholder="A sentence or two is enough. What is the problem, and what would a good outcome look like for your community?"
+                  className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2 resize-y"
+                  style={{ borderColor: "hsl(var(--card-border))" }}
+                  data-testid="input-intake-need"
+                />
+              </div>
+
+              {error ? (
+                <p
+                  role="alert"
+                  className="font-sans text-sm text-destructive"
+                  data-testid="intake-error"
+                >
+                  {error}
+                </p>
+              ) : null}
+
+              <div className="flex flex-wrap items-center gap-5 pt-1">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    background: "hsl(var(--accent))",
+                    color: "hsl(var(--accent-foreground))",
+                  }}
+                  data-testid="button-intake-submit"
+                >
+                  {submitting ? "Sending…" : "Send message →"}
+                </button>
+                <a
+                  href="mailto:bobbie@ourheadwaters.ca"
+                  className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  data-testid="intake-email-fallback"
+                >
+                  or email directly
+                </a>
+              </div>
+            </form>
+          )}
+        </section>
+
+        <hr
+          className="my-12 sm:my-16"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        />
+
+        {/* ── the practitioner ── */}
+        <section data-testid="home-about">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            the practitioner
+          </p>
+          <h2
+            className="font-serif text-3xl tracking-tight mb-1"
+            data-testid="about-heading"
+          >
+            Bobbie Parr
+          </h2>
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.18em] mb-6"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            headwaters · dryden, ontario
+          </p>
+
           <a
-            href="bio"
+            href={`${import.meta.env.BASE_URL}bio`}
             className="block mb-6 w-full overflow-hidden rounded-md group"
             style={{ aspectRatio: "4/3", maxHeight: "320px" }}
             data-testid="bio-photo-slot"
@@ -453,24 +569,34 @@ export function HomePage() {
           </a>
 
           <p
-            className="font-serif text-[15px] leading-[1.6] mb-6"
+            className="font-serif text-[15px] leading-[1.6] mb-8"
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="about-body"
           >
-            Practitioner-built. Plain language, dollar-honest,
-            no startup-pitch tone. See what we offer and how we work.
+            Northwestern Ontario practitioner. Community development degree, years on the ground in
+            northern communities, and the founder of Parr&rsquo;s Jars — a small preserves business
+            out of the bush near Dryden that keeps her hands in the actual work the operating plans
+            are about. The voice is the same across all of it: plain, dollar-honest, no startup-pitch tone.
           </p>
-          <a
-            href="bio"
-            className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide transition-opacity hover:opacity-90"
-            style={{
-              background: "hsl(var(--accent))",
-              color: "hsl(var(--background))",
-            }}
-            data-testid="link-bio"
-          >
-            Our services →
-          </a>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <a
+              href="#conversation"
+              className="inline-flex items-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+              data-testid="about-cta-conversation"
+            >
+              Start a conversation →
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}bio`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+              data-testid="link-bio"
+            >
+              Read the bio
+            </a>
+          </div>
         </section>
 
         {/* ── footer ── */}
@@ -701,14 +827,14 @@ function WorkCard({ eyebrow, title, hook, detail, description, href, testId, acc
   return (
     <a
       href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
       className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
       style={{
         borderColor: "hsl(var(--card-border))",
         borderLeft: `3px solid ${border}`,
         background: bg,
       }}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
       data-testid={testId}
     >
       {thumb && (
@@ -737,6 +863,12 @@ function WorkCard({ eyebrow, title, hook, detail, description, href, testId, acc
             {description}
           </p>
         )}
+        <p
+          className="mt-3 font-mono text-xs uppercase tracking-[0.18em]"
+          style={{ color: border }}
+        >
+          {external ? "Open →" : "Read →"}
+        </p>
       </div>
     </a>
   );
