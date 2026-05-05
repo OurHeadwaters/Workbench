@@ -452,12 +452,17 @@
         { "name": "Estimate → actual → variance loop", "rule": "Karen records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent." },
         { "name": "Pre-zone parked thread", "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home." }
       ],
+      "latentThreads": [
+        { "name": "Provincial inspection reform", "note": "Real Z4 territory — wrong tool from here. Policy/advocacy layer, not CCM ops software. Pick up when there's a clear product surface." },
+        { "name": "Butcher-pay / workforce", "note": "Real Z4 territory — abattoir workforce compensation. Adjacent to the kill-floor ledger but not the v0.1 centerpiece. Pick up after share split is proven." },
+        { "name": "Mobile abattoir routing", "note": "Real Z4 territory — routing for travelling slaughter units. Logistics layer the CCM tool doesn't touch yet. Wrong tool from here, right zone." }
+      ],
       "crossZoneSeams": [
         { "to": "Zone 1 (Headwaters)", "seam": "Black Barn's Local Line export (pending) is real cash-flow from a Z4 pilot producer. If they're a Headwaters household, the same numbers feed both apps — don't double-instrument; one captures, the other reads." },
         { "to": "Zone 3 (CKH)", "seam": "Heavy overlap on end-customer base (Dryden + corridor). The CCM share-box pickup audience and the 807 members portal audience are largely the same people. Worth a shared anonymized customer-ID convention before either app commits to its own." },
         { "to": "Zone 2 (Workbench)", "seam": "Deal-flow from CCM (sector contacts: Karen, Lisa, Dave, Tim, Marie, Lisa Koshel, the four other regional abattoirs) is operating-plan-relevant. Z4 keeps the interview notes; Z2 keeps the relationship cadence." },
         { "to": "Zone 5 (Shallows)", "seam": "Nothing live; one candidate skip-stone — 'abattoir as commons, not service' — half-formed, may eventually float there." },
-        { "to": "Pre-zone (Brainstorm Library)", "seam": "Homestead-sitter parked. Plus latent threads: provincial inspection reform, butcher-pay/workforce, mobile abattoir routing. All real, all wrong-tool-from-here." }
+        { "to": "Pre-zone (Brainstorm Library)", "seam": "Homestead-sitter parked — genuinely unsorted (probably Z0, possibly Z5). The three Z4 latent threads (provincial inspection reform, butcher-pay/workforce, mobile abattoir routing) live in Z4.latentThreads — sorted to this zone, deferred on the tool." }
       ],
       "requestsToZone2": [
         "Confirmation of canonical name — Cloverbelt Country Meats (real coop) vs Coleman Custom Meats (test/demo branding in live UI). Intentional separation or drift?",
@@ -589,10 +594,7 @@
       },
       "proposedSeeds": {
         "fromZ4RegenRevolution": [
-          "Homestead-sitter / childcare app for farm families (discovered during Black Barn discovery; deliberately not absorbed into Z4. Probably Z0, possibly Z5 eventually.)",
-          "Provincial inspection reform (latent thread)",
-          "Butcher-pay / workforce (latent thread)",
-          "Mobile abattoir routing (latent thread)"
+          "Homestead-sitter / childcare app for farm families (discovered during Black Barn discovery; deliberately not absorbed into Z4. Probably Z0, possibly Z5 eventually.)"
         ]
       }
     }
