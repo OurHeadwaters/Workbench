@@ -378,7 +378,7 @@ const partI: Part = {
           text:
             "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar.",
         },
-        { kind: "subhead", text: "How the tempo test and the context test differ." },
+        { kind: "subhead", text: "How the both-states test and the both-sides test differ." },
         {
           kind: "para",
           text:
