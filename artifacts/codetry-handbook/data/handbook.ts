@@ -1471,7 +1471,7 @@ const partIV: Part = {
         },
         {
           kind: "para",
-          text: "The six moves of §3.1–§3.7 all apply in Zone 0. Listen for the noun: the household practitioner says *the pantry*, *the jar kitchen*, *the seasonal shelf*, *the canning season* — not *food storage*, not *meal prep*, not *inventory management*. Write those nouns down and refuse to translate them. Test the name by trying to rename it. Hold the metaphor to the medium. Run the both-states test when the system has two tempos (the resting shelf and the harvest push).",
+          text: "The six moves of §3.1–§3.7 all apply in Zone 0. Listen for the noun: the household practitioner says *the pantry*, *the jar kitchen*, *the seasonal shelf*, *the canning season* — not *food storage*, not *meal prep*, not *inventory management*. Write those nouns down and refuse to translate them. Test the name by trying to rename it. Hold the metaphor to the medium. Run the both-states test when the system has two states (the resting shelf and the harvest push).",
         },
         {
           kind: "para",
