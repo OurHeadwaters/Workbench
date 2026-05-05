@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { useColors } from "@/hooks/useColors";
 import { useReader } from "@/contexts/ReaderState";
@@ -325,6 +326,56 @@ export function ChapterBlock({
           ]}
         />,
       );
+    case "tool":
+      return (
+        <Pressable
+          onPress={() => router.push(block.route as any)}
+          style={({ pressed }) => [
+            styles.toolCard,
+            {
+              borderColor: c.primary,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.primary,
+                fontFamily: MONO,
+                fontSize: smallSize,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 6,
+              }}
+            >
+              Try it →
+            </Text>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: SERIF_BOLD,
+                fontSize: subheadSize,
+                lineHeight: subheadSize * 1.3,
+              }}
+            >
+              {block.label}
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 15 * fontScale,
+                lineHeight: 15 * fontScale * 1.5,
+                marginTop: 3,
+              }}
+            >
+              {block.hint}
+            </Text>
+          </View>
+        </Pressable>
+      );
   }
 }
 
@@ -380,5 +431,14 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: 20,
     opacity: 0.6,
+  },
+  toolCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderRadius: 2,
+    marginVertical: 12,
   },
 });

@@ -10,7 +10,8 @@ export type Block =
   | { kind: "examples"; items: WorkedExample[] }
   | { kind: "list"; items: string[] }
   | { kind: "ordered"; items: string[] }
-  | { kind: "rule" };
+  | { kind: "rule" }
+  | { kind: "tool"; label: string; hint: string; route: string };
 
 export type Chapter = {
   id: string;
@@ -100,6 +101,12 @@ const partPrologue: Part = {
           kind: "para",
           text:
             "The chapter you are reading now returns later, in §5.7, in a different register — there as the open question of who this work is for, named structurally rather than spoken aloud. The two readings are meant to bracket the discipline: the invocation at the front, the kept-open question at the back, and the practice in between.",
+        },
+        {
+          kind: "tool",
+          label: "The Pioneer Path",
+          hint: "The handbook walked, not read. Five stations — each with a short voiceover, a reading, and one thing to do before the next opens.",
+          route: "/path",
         },
       ],
     },
@@ -193,6 +200,12 @@ const partPrologue: Part = {
         {
           kind: "callout",
           text: "Then throw them away. The only correct way to read this book is to come out the other end building something that has nothing to do with a food co-op in Dryden — unless, of course, that is exactly where you are.",
+        },
+        {
+          kind: "tool",
+          label: "Word Walk",
+          hint: "Five codetry words a day, one deliberate choice at a time. Use it to build vocabulary as you read — not before, not after.",
+          route: "/word-walk",
         },
       ],
     },
@@ -1047,6 +1060,12 @@ const partIV: Part = {
           text:
             "From the ledger — §FL.2 (Codetry Test 002) is this rule made permanent: the Zone 1 word map locks in the watershed nouns the community had already been using and refuses to swap them for generic equivalents. §FL.5 (Codetry Test 005) records the same rule pulling the Earn destination back to the community-native *Lake* after several generic candidates were tried.",
         },
+        {
+          kind: "tool",
+          label: "Shared Vision",
+          hint: "Describe what you are building like a familiar object — a bucket, a shelf, a jar — and hand off a clear plan to your team or agent.",
+          route: "/shared-vision",
+        },
       ],
     },
     {
@@ -1844,6 +1863,12 @@ const partIV: Part = {
           kind: "callout",
           text: "Start where you are, with what you have. 5% is a beginning, not a failure. The homestead build is a decade of compounding decisions, not a single preparedness purchase.",
         },
+        {
+          kind: "tool",
+          label: "The Standby — household checklist",
+          hint: "Zone 0 saltbox version. Water, fuel, meds, kid-care, contact tree, power, waste — the same rungs the co-op uses, at household scale.",
+          route: "/standby",
+        },
       ],
     },
     {
@@ -1919,6 +1944,18 @@ const partIV: Part = {
         {
           kind: "para",
           text: "Freedom is not granted. Freedom is claimed — one Preservation Season at a time, one jar at a time, one community institution at a time. The discipline codetry adds is small: name the thing correctly, test the name by trying to rename it, and refuse to let the generic vocabulary quietly erase what makes the practice specific. The Jarista, the Jar Kitchen, the Seasonal Shelf, the Harvest Hold, the Bulk Round, Preservation Season — these names are the practice made legible. Keep them.",
+        },
+        {
+          kind: "tool",
+          label: "Daily Driver",
+          hint: "Build backwards from your dream. One driver per project, one action per day. Track what is pivotal and keep moving when the road changes.",
+          route: "/driver",
+        },
+        {
+          kind: "tool",
+          label: "Sarge",
+          hint: "Your weekly card stack. Done or stuck — no doom lists, no stalling. One action at a time.",
+          route: "/sarge",
         },
       ],
     },
@@ -2602,6 +2639,12 @@ const partVI: Part = {
           kind: "callout",
           text:
             "Tokenisation shreds the noun — the model's tokenisation, and the chain's. The discipline's answer, on both fronts, is not yet written. This chapter is a place to keep the question — and to return to it as the tokenisers, the training corpora, the on-chain primitives, and the practice itself change shape.",
+        },
+        {
+          kind: "tool",
+          label: "The Stack",
+          hint: "Bite-sized question cards, one at a time. Pick a card, work the steps, capture your answers. Open questions become trails, not mountains.",
+          route: "/stack",
         },
       ],
     },

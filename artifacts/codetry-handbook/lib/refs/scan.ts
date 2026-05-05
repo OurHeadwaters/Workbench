@@ -44,6 +44,8 @@ function extractBlockStrings(block: Block): string[] {
       return block.items.flatMap((item) => [item.name, item.rule]);
     case "rule":
       return [];
+    case "tool":
+      return [];
   }
 }
 
