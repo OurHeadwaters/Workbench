@@ -1,0 +1,111 @@
+**Updated Read & Refinement Round (as of now, still v0.5.6)**
+
+I just pulled the live page again. The **technical changes** show up nicely: cleaner Markdown rendering, better spacing, the “→” arrows as visual calls-to-action, and a more polished single-page flow. The poetic voice is intact, but it still feels a little dense and abstract in places. The allocation/entrepreneurial lens we discussed isn’t woven in yet.
+
+Here’s my next targeted refinement.
+
+### 1. Revised Main Page (Copy-Paste Ready – v0.5.7)
+
+```markdown
+# Headwaters: How a Community Runs Its Own Economy
+**A CODETRY HANDBOOK**
+
+**Headwaters**  
+How a Community Runs Its Own Economy
+
+There is no shortage of problems, but solutions begin the moment we allocate our own resources.
+
+When distant systems leave us underwater, communities need a practical discipline to breathe, decide, and build. **Codetry** is that discipline: precise language + repeatable moves + daily action. Think stone-mason precision and lifeguard clarity — every word and every choice locks the next one in place.
+
+**v0.5.7 · May 2026 · offline-readable**
+
+[Begin → Pioneer Path (P.1)](/codetry-handbook/pioneer)  
+[Your Operating Plan →](/your-plan)
+
+### Companion Tools (Use Daily)
+
+**Shared Vision**  
+Describe the outcome like a familiar object — a bucket, shelf, or jar — then hand off a clear plan to your agent or team. Clear nouns beat vague hopes.
+
+**The Standby — Household/Co-op Checklist**  
+Zone 0 saltbox version. Same rungs the whole community uses: water, fuel, meds, kid-care, contact tree, power, waste.
+
+**The Pioneer Path**  
+The handbook *walked*, not read. Five stations. Voiceover + short reading + one immediate action before the next unlocks.
+
+**Daily Driver**  
+Build backwards from the dream. One driver per project. One action per day. Track scenarios and pivots when the road changes.
+
+**Word Walk**  
+Five codetry words a day. One deliberate choice at a time. Your decision updates the guide instantly.
+
+**The Stack**  
+Bite-sized question cards. Pick one, work the steps, capture answers. Open questions become trails, not mountains.
+
+**Sarge**  
+Weekly action cards. Done or stuck — no doom lists, no stalling.
+
+### In Five Parts
+
+**G — Grounding**  
+Start here. Teachers, axiom, and lineages. Understand the soil before you plant.  
+*(Core axiom: Economics is allocation. Finite resources, infinite uses. Entrepreneurs and markets solve the information problem better than central planners.)*
+
+**I — The Discipline**  
+What codetry *is*, where it lives, and why words carry structural weight. Clear language enables better local allocation.
+
+**II — The Constellation: 7 Zones + 2 Primitives**  
+Applied to a real northern community economy. Worked examples you can copy or replace. The list stays open.
+
+**III — The Practice**  
+Six field moves + Zone 0 (household as unbreakable base). Bobbie’s practice is the example. Yours is the proof.
+
+**V — Open Questions**  
+Honest gaps. These chapters stay live so the discipline evolves with real use.
+
+Drawn from the Practitioner Operating Plan. The discipline travels; the examples adapt.
+```
+
+**Key improvements in this version**:
+
+- Stronger opener that immediately signals **allocation** without losing your original poetry.
+- Shorter tool descriptions — higher signal, easier scanning.
+- Explicit but brief tie-in to the economic reality in Grounding (easy to expand later).
+- Version bump + clean navigation cues.
+- Keeps the warm, practical tone while making it more actionable.
+
+### 2. Quick Wins You Can Do Today (Technical + Content)
+
+- **Bump the version** to 0.5.7 and update the date on the live page.
+- **Add a top nav bar** (simple HTML or Markdown links) on every sub-page once you create them:
+  - Home | Grounding | Discipline | Constellation | Practice | Open Questions | Tools
+- **Make tools interactive** where possible:
+  - Daily Driver & Sarge → simple persistent checklists (localStorage or Replit DB).
+  - Shared Vision → a form that generates a clean handoff text block.
+  - Word Walk → a daily counter or streak tracker.
+- **Print/PDF button** — one JS snippet that hides nav and prints the current view cleanly.
+- **Mobile/offline polish** — add a manifest and service worker if not already there (Replit makes this easy).
+
+### 3. Suggested Content Expansions (Short Sections to Add)
+
+**For Grounding page (new or expanded):**
+
+> **The Axiom**  
+> Economics is not primarily about money or fairness. It is about allocation: deciding where scarce resources go when there are infinite possible uses.  
+> Distributed knowledge + skin in the game (entrepreneurs, markets, prices, profit signals) consistently outperforms centralized planning. This is why codetry starts at Zone 0 and radiates outward through clear language and daily moves — so communities can become their own effective capital allocators.
+
+**For The Discipline page:**
+Add a one-paragraph definition:
+
+> Codetry is the discipline of turning problems into coordinated action through precise shared language and repeatable small moves. It is built for households and communities that must allocate their own water, time, fuel, attention, and capital when larger systems cannot or will not.
+
+### 4. Next Iteration Priorities
+
+1. **Create the five sub-pages** (even with short placeholder text) so the handbook feels complete.
+2. **List the actual 7 Zones + 2 Primitives** on the Constellation page — this is what people will want to see and adapt.
+3. **Test the full Pioneer Path** end-to-end and note any friction.
+4. **Add one real example** from your own practice in Part III.
+
+This round keeps everything you love about the original while making it sharper, more purposeful, and directly useful for communities facing real allocation challenges.
+
+Drop the updated link again (or share a specific sub-page/tool), and I’ll do another targeted pass — line edits, new sections, or interactive prototypes. What do you want to focus on next: Grounding axiom, the 7 Zones, making one tool interactive, or something else?
