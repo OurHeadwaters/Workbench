@@ -188,40 +188,70 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          IN FIVE PARTS
+          BEGIN — TAP ANY PART
         </Text>
         {PARTS.filter(
           (p) => p.kind !== "backMatter" && p.kind !== "frontMatter",
-        ).map((p) => (
-          <View key={p.roman} style={styles.partRow}>
-            <Text
-              style={[
-                styles.partRoman,
-                { color: c.mutedForeground, fontFamily: MONO },
+        ).map((p) => {
+          const firstChapter = CHAPTERS.find((ch) => ch.partRoman === p.roman);
+          return (
+            <Pressable
+              key={p.roman}
+              onPress={() => {
+                if (firstChapter) {
+                  router.push({
+                    pathname: "/chapter/[id]",
+                    params: { id: firstChapter.id },
+                  });
+                }
+              }}
+              style={({ pressed }) => [
+                styles.partRow,
+                {
+                  borderBottomColor: c.rule,
+                  opacity: pressed ? 0.65 : 1,
+                },
               ]}
             >
-              {p.roman}
-            </Text>
-            <View style={{ flex: 1 }}>
               <Text
                 style={[
-                  styles.partTitle,
-                  { color: c.foreground, fontFamily: SERIF_BOLD },
+                  styles.partRoman,
+                  { color: c.mutedForeground, fontFamily: MONO },
                 ]}
               >
-                {p.title}
+                {p.roman}
               </Text>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[
+                    styles.partTitle,
+                    { color: c.foreground, fontFamily: SERIF_BOLD },
+                  ]}
+                >
+                  {p.title}
+                </Text>
+                <Text
+                  style={[
+                    styles.partBlurb,
+                    { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+                  ]}
+                >
+                  {p.blurb}
+                </Text>
+              </View>
               <Text
-                style={[
-                  styles.partBlurb,
-                  { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
-                ]}
+                style={{
+                  color: c.mutedForeground,
+                  fontFamily: MONO,
+                  fontSize: 18,
+                  paddingTop: 2,
+                }}
               >
-                {p.blurb}
+                →
               </Text>
-            </View>
-          </View>
-        ))}
+            </Pressable>
+          );
+        })}
 
         <View style={{ height: 32 }} />
         <Text
@@ -311,6 +341,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 16,
     paddingVertical: 14,
+    borderBottomWidth: 1,
   },
   partRoman: {
     fontSize: 13,
