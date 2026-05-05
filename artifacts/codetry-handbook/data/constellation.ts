@@ -606,7 +606,16 @@ export const constellation: ConstellationSnapshot = {
       "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint."
     }
   ],
-  "preZone": [],
+  "preZone": [
+    {
+      "zone": -1,
+      "name": "Brainstorm Library",
+      "domain": "Seed bank — ideas before they're sorted into a zone",
+      "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
+      "status": "pending",
+      "context": "awaiting agent context-pack"
+    }
+  ],
   "z3": {
     "zone": 3,
     "name": "Community Knowledge Hub",

@@ -360,7 +360,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "*The Standby* (worked out in §2.7) is the cleanest worked example so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two states — resting and activated. The people, the stock, the vocabulary are all one — only the cadence changes.",
+            "*The Standby* (worked out in §2.8) is the cleanest worked example so far. The Standby names both the always-on shelf (preparation, *standby stock*, *the watch* as a posture) and the active event (a *call*, the *active* rung on the ladder, the *debrief* once it stands down). One word, two states — resting and activated. The people, the stock, the vocabulary are all one — only the cadence changes.",
         },
         {
           kind: "para",
@@ -401,7 +401,7 @@ const partI: Part = {
         {
           kind: "para",
           text:
-            "The constellation's second non-zone primitive — *The Gate* (worked out in §2.8) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts.",
+            "The constellation's second non-zone primitive — *The Gate* (worked out in §2.9) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts.",
         },
         {
           kind: "para",
@@ -2827,7 +2827,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§5.4 closed by saying the next set of boundary tests is already visible and the practice owes itself a name for what runs them. The work has been done in the corpus from the beginning — *the rename test* of §3.2, the trailblazer's burn of §5.4, the bricklayer's master of §5.3 calling out the wandering line three courses in — but the role doing the work has not been named. This chapter names it. The role is *the inspector*. The act the inspector performs has the same structural shape as *the gate* (§2.8) and *the standby* (§2.7): one named primitive, two faces. Where the standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated — and the gate's two *sides* are contextual — both face the membrane at once, each from its own legitimate vocabulary — the inspector's two faces are *operational*. The inspector certifies a name is load-bearing *by* pulling on it, and pulls on a name *in order to* certify what holds. The pull is the certification. The bind is the result of a successful pull. One inspection, two readings.",
+            "§5.4 closed by saying the next set of boundary tests is already visible and the practice owes itself a name for what runs them. The work has been done in the corpus from the beginning — *the rename test* of §3.2, the trailblazer's burn of §5.4, the bricklayer's master of §5.3 calling out the wandering line three courses in — but the role doing the work has not been named. This chapter names it. The role is *the inspector*. The act the inspector performs has the same structural shape as *the gate* (§2.9) and *the standby* (§2.8): one named primitive, two faces. Where the standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated — and the gate's two *sides* are contextual — both face the membrane at once, each from its own legitimate vocabulary — the inspector's two faces are *operational*. The inspector certifies a name is load-bearing *by* pulling on it, and pulls on a name *in order to* certify what holds. The pull is the certification. The bind is the result of a successful pull. One inspection, two readings.",
         },
         {
           kind: "subhead",
@@ -2868,7 +2868,7 @@ const partVI: Part = {
         {
           kind: "para",
           text:
-            "§2.8 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.8 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it.",
+            "§2.9 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.9 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it.",
         },
         {
           kind: "subhead",
