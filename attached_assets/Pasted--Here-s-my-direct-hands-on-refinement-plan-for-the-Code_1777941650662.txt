@@ -1,0 +1,113 @@
+**Here’s my direct, hands-on refinement plan** for the Codetry Handbook on your Replit app. I’ll give you:
+
+1. **Immediate copy-paste upgrades** to the main page (https://northern-store-plan.replit.app/codetry-handbook/).
+2. **Structural/architectural suggestions** for better flow and usability.
+3. **Integration of the allocation/entrepreneurial lens** from our last conversation (Musk + playground + Mises).
+4. **Actionable next steps** you and your agent can implement today.
+
+### 1. Revised Main Page (Full Copy-Paste Ready)
+
+Replace the current content with this tightened, higher-signal version. It keeps your voice, cuts fluff, sharpens the promise, and explicitly ties into resource allocation.
+
+```markdown
+# Headwaters: How a Community Runs Its Own Economy
+**A CODETRY HANDBOOK**
+
+**Headwaters**  
+How a Community Runs Its Own Economy
+
+There is no shortage of problems. Solutions begin the moment we choose to allocate our own resources.
+
+When distant systems fail or leave us underwater, communities need a practical discipline to breathe, decide, and build. **Codetry** is that discipline: precise language + repeatable moves + daily action. Think stone-mason precision and lifeguard clarity — every word locks the next one in place.
+
+**v0.5.7 · May 2026 · offline-readable**
+
+[Begin → Pioneer Path (P.1)](/codetry-handbook/pioneer)  
+[Practitioner's Operating Plan →](/your-plan)
+
+### Companion Tools (Use These Daily)
+
+**Shared Vision**  
+Describe the outcome like a familiar object — a bucket, shelf, or jar — then hand off a clear plan to your agent or team. Clear nouns beat vague hopes.
+
+**The Standby — Household/Co-op Checklist**  
+Zone 0 saltbox version. Same rungs the whole community uses: water, fuel, meds, kid-care, contact tree, power, waste.
+
+**Pioneer Path**  
+The handbook *walked*, not read. Five stations. Each has a short voiceover, one reading, and one immediate action before the next unlocks.
+
+**Daily Driver**  
+Build backwards from the dream. One driver per project. One action per day. Scenario tracking for when the road changes.
+
+**Word Walk**  
+Five codetry words per day. One deliberate choice at a time. Your decision updates the guide instantly.
+
+**The Stack**  
+Bite-sized question cards. Pick one, work the steps, capture answers. Open questions become trails, not mountains.
+
+**Sarge**  
+Weekly action cards. Done or stuck — no doom-scrolling lists, no stalling.
+
+### In Five Parts
+
+**G — Grounding**  
+The teachers, axiom, and lineages. Understand the soil first. (Allocation reality: economics is deciding where scarce resources go. Markets + entrepreneurs solve this better than central planners.)
+
+**I — The Discipline**  
+What codetry *is*, where it lives, and why words carry structural weight. Clear language = better local allocation.
+
+**II — The Constellation: 7 Zones + 2 Primitives**  
+Applied to a real northern community economy. Worked examples (yours are welcome to replace them). The list stays open.
+
+**III — The Practice**  
+Six field moves + Zone 0 (household as unbreakable base). Bobbie's practice is the example. Yours is the proof.
+
+**V — Open Questions**  
+Live gaps. These stay honest and editable. The discipline evolves in public.
+
+Drawn from the Practitioner Operating Plan. The discipline travels; the examples adapt.
+```
+
+**Why these changes?**
+
+- Stronger opener ties directly to **allocation** (your Musk insight).
+- Shorter, scannable, action-first.
+- Version bump + date for momentum.
+- Explicit Grounding nod to the economic reality without turning it political.
+
+### 2. Architectural Improvements (Tell Your Replit Agent)
+
+- **Make it multi-page** for better “walked, not read” feel:
+  - `/codetry-handbook/` → landing/TOC (above)
+  - `/codetry-handbook/grounding`
+  - `/codetry-handbook/discipline`
+  - `/codetry-handbook/constellation` (list the 7 zones here)
+  - `/codetry-handbook/practice` (six moves + Zone 0 details)
+  - `/codetry-handbook/open-questions`
+- Add a simple navigation bar at the top of every page.
+- For tools (Shared Vision, Daily Driver, etc.): Turn them into actual interactive Replit pages or simple forms that save to localStorage (so it works offline).
+- Add a printable/PDF export button (one click → clean single document).
+- Dark/light mode + larger fonts for northern/older users.
+
+### 3. Deeper Integration: Allocation as Core Axiom
+
+Add this short section to **Grounding** (new page):
+
+> **The Axiom**  
+> Economics is allocation: finite resources, infinite possible uses.  
+> Markets and entrepreneurs solve the information problem through prices, profit signals, and skin in the game. Centralized systems cannot.  
+> Codetry operationalizes this truth at community scale — households and co-ops allocating their own water, time, fuel, attention, and capital with clarity and speed.
+
+This makes the handbook philosophically grounded without alienating readers. It directly answers “why this discipline matters now.”
+
+### 4. Immediate Next Steps for You + Agent
+
+1. **Today**: Paste the revised landing page. Bump version to 0.5.7.
+2. **This week**: Create the five sub-pages with placeholders (even short ones). Flesh out the 7 Zones if you haven’t already.
+3. **Companion tools**: Prioritize making **Daily Driver** and **Sarge** actually functional (simple checklists that persist).
+4. **Test flow**: Do the full Pioneer Path yourself. Time it. Note friction.
+5. **Share**: Add a “Fork this handbook for your community” button or template.
+
+This version is tighter, more professional, and directly leverages the allocation insight you love — while staying true to the pioneer, practical, northern ethos.
+
+Drop the updated Replit link once it’s live (or share specific tool pages), and I’ll review line-by-line or help prototype the interactive parts. We can iterate fast. What part do you want to tackle first — Grounding content, a specific tool, or the Constellation zones?
