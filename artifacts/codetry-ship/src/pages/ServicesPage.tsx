@@ -48,8 +48,8 @@ export function ServicesPage() {
         <div className="mx-auto max-w-[52rem] px-6 sm:px-8 flex gap-0 overflow-x-auto">
           {[
             { href: "#store", label: "Community store" },
-            { href: "#coop", label: "Co-op platform" },
-            { href: "#tool", label: "Custom tool" },
+            { href: "#platform", label: "Co-op platform" },
+            { href: "#custom", label: "Custom tool" },
             { href: "#start", label: "How it starts" },
           ].map(({ href, label }) => (
             <a
@@ -140,7 +140,7 @@ export function ServicesPage() {
         {/* ══════════════════════════════════════
             SECTION 2 — CO-OP MEMBERSHIP PLATFORM
         ══════════════════════════════════════ */}
-        <section id="coop" className="pt-14 pb-10">
+        <section id="platform" className="pt-14 pb-10">
           <SectionBand color="hsl(145 36% 22%)" label="Governance + digital infrastructure">
             From paper bylaws to a working member platform
           </SectionBand>
@@ -205,7 +205,7 @@ export function ServicesPage() {
         {/* ══════════════════════════════════════
             SECTION 3 — CUSTOM INTERNAL TOOL
         ══════════════════════════════════════ */}
-        <section id="tool" className="pt-14 pb-10">
+        <section id="custom" className="pt-14 pb-10">
           <SectionBand color="hsl(145 18% 32%)" label="Operations · Built for your team">
             A tool your team actually uses — not another thing to learn
           </SectionBand>

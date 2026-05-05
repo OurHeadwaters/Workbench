@@ -177,23 +177,26 @@ export function HomePage() {
                 blurb: "Site selection, co-op structure, band financing, and day-one operations.",
                 color: "hsl(14 64% 36%)",
                 fg: "hsl(38 36% 96%)",
+                anchor: "store",
               },
               {
                 label: "Platform & co-op",
                 blurb: "Membership systems, governance tools, and shared community infrastructure.",
                 color: "hsl(145 36% 22%)",
                 fg: "hsl(38 36% 96%)",
+                anchor: "platform",
               },
               {
                 label: "Custom tool",
                 blurb: "Purpose-built software for the specific problem in front of you.",
                 color: "hsl(30 40% 50%)",
                 fg: "hsl(38 36% 96%)",
+                anchor: "custom",
               },
-            ].map(({ label, blurb, color, fg }) => (
+            ].map(({ label, blurb, color, fg, anchor }) => (
               <a
                 key={label}
-                href={`${import.meta.env.BASE_URL}services`}
+                href={`${import.meta.env.BASE_URL}services#${anchor}`}
                 className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
