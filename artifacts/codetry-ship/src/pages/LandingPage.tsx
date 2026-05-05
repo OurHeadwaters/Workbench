@@ -5,6 +5,7 @@ interface ToolCard {
   title: string;
   description: string;
   href: string;
+  displayPath: string;
   accent: string;
   accentFg: string;
   testId: string;
@@ -17,6 +18,7 @@ const TOOLS: ToolCard[] = [
     description:
       "Curated food systems research, producer contacts, and policy documents for northern communities — open and searchable.",
     href: "/library/",
+    displayPath: "/library/",
     accent: "hsl(145 36% 22%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-library",
@@ -26,7 +28,8 @@ const TOOLS: ToolCard[] = [
     title: "Community Store Guide",
     description:
       "Step-by-step operational guide for building a community-owned store — site selection, co-op structure, financing, and day-one operations.",
-    href: "/guide/",
+    href: "/practitioners-guide-v2/",
+    displayPath: "/guide/",
     accent: "hsl(14 64% 36%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-guide",
@@ -36,7 +39,8 @@ const TOOLS: ToolCard[] = [
     title: "How a Community Runs Its Own Economy",
     description:
       "A plain-language handbook explaining how community economics actually works — written for band members, not consultants.",
-    href: "/handbook/",
+    href: "/codetry-handbook/",
+    displayPath: "/handbook/",
     accent: "hsl(30 40% 50%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-handbook",
@@ -46,7 +50,8 @@ const TOOLS: ToolCard[] = [
     title: "Headwaters Books",
     description:
       "What a community store's finances actually look like — open records the band can read, the daily close operators run, and the month-end pack for council.",
-    href: "/books/",
+    href: "/headwaters-books/",
+    displayPath: "/books/",
     accent: "hsl(145 28% 30%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-books",
@@ -56,7 +61,8 @@ const TOOLS: ToolCard[] = [
     title: "Print Marketing Suite",
     description:
       "Ready-to-print posters, flyers, and signage for store openings and community events — designed for the team on the ground.",
-    href: "/print/",
+    href: "/print-marketing/",
+    displayPath: "/print/",
     accent: "hsl(14 50% 44%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-print",
@@ -199,7 +205,7 @@ export function LandingPage() {
                   className="font-mono text-[10px] tracking-[0.14em] shrink-0 sm:ml-8"
                   style={{ color: tool.accent, opacity: 0.8 }}
                 >
-                  ourheadwaters.ca{tool.href}
+                  ourheadwaters.ca{tool.displayPath}
                 </p>
               </div>
             </a>
