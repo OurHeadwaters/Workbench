@@ -11,6 +11,7 @@ import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 import { ServicesPage } from "@/pages/ServicesPage";
+import { SiteNav } from "@/components/SiteNav";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <div className="print:hidden">
+            <SiteNav />
+          </div>
           <Router />
         </WouterRouter>
         <Toaster />
