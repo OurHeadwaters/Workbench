@@ -1522,26 +1522,6 @@ const partIV: Part = {
           kind: "para",
           text: "The Jarista is not a certification. It is a posture — the household practitioner who has decided that the jar is the unit of measure for their food system, the season is the calendar they plan by, and the shelf is the first line of resilience when supply chains tighten. In a constellation context, the Jarista is the Zone 0 counterpart of the Zone 2 practitioner who runs the Operating Plan. Both are named practitioners. Both are running a system. The Zone 2 practitioner names and protects the vocabulary of the constellation's institutions; the Jarista names and protects the vocabulary of the household that the constellation exists to serve.",
         },
-        {
-          kind: "subhead",
-          text: "Where the name came from.",
-        },
-        {
-          kind: "para",
-          text: "Before *Jarista* there was *Parrs Jars* — the product business that grew from a household practice of freeze-drying excess hydroponics and microgreens, blending them into smoked salts, and sourcing from local farms. *Parrs Jars* named the product. It did not name the practitioner or the practice behind it. The business name held the jars; it did not hold the system.",
-        },
-        {
-          kind: "para",
-          text: "Before that, the practitioner called it a *depression business* — a phrase that arrived precisely: working with what you have and sticking things in jars, that's got 1930 written all over it. The depression business framing held the ethos (make-do, preserve, extend, waste nothing) but pointed backward toward scarcity rather than forward toward practice. The rename test: if the business is called a *depression business*, it is defined by what it is prepared for rather than by what it does. *Jarista* names the doer. The posture travels even when the depression doesn't arrive.",
-        },
-        {
-          kind: "para",
-          text: "The constellation also had a prior umbrella name: *Above Parr Solutions* — a name for an organization that offered community development services and preparedness content. Run the rename test: replace *Headwaters* with *Above Parr Solutions* and ask what changes. *Above Parr* is a personal reference (the practitioner's own surname), a wordplay on *par*, and a qualifier (*above*) that implies the baseline is scarcity. *Headwaters* carries source, upstream, small-and-first, and the whole watershed metaphor in one word — and it carries none of the practitioner's name, which means it belongs to the community rather than to its founder. The rename from *Above Parr Solutions* to *Headwaters* is the codetry move applied to the constellation's own umbrella: the word that fits the structure replaced the word that fit the person.",
-        },
-        {
-          kind: "callout",
-          text: "Parrs Jars named the product. Depression business named the ethos. Jarista names the practitioner and the practice. Above Parr Solutions named the founder. Headwaters names the system. The rename is the discipline working on itself.",
-        },
       ],
     },
     {
@@ -1784,11 +1764,11 @@ const partIV: Part = {
         {
           kind: "list",
           items: [
-            "*Water bath canning* — for high-acid foods: tomatoes, fruits, pickles, fermented vegetables. The entry-level preservation technique; the one that fills most of the Seasonal Shelf.",
-            "*Pressure canning* — for low-acid foods: meats, stocks, beans, corn. Requires a pressure canner. Produces shelf-stable jars of what would otherwise have to live in the Harvest Hold.",
-            "*Fermentation and pickling* — small-batch, live-culture preservation. Sauerkraut, kimchi, brine pickles, kvass. The ferment station's output. Not the same as canning — ferments are alive and managed, not sealed and static.",
-            "*Dehydrating* — mushrooms, herbs, berries, apple rings, jerky. Low-tech, energy-efficient, and the technique most compatible with a wood-heated household during a power outage.",
-            "*Rendering and smoking* — fat, lard, smoked fish, smoked meat. The traditional preservation techniques of the territory, carried forward in the Jar Kitchen because they work in this climate and with these species.",
+            "*Water bath canning* — high-acid foods: tomatoes, fruits, pickles. The entry technique; fills most of the Seasonal Shelf.",
+            "*Pressure canning* — low-acid foods: meats, stocks, beans. Moves what would live in the freezer onto the shelf instead.",
+            "*Fermentation and pickling* — live-culture, small-batch. Ferments are managed, not sealed — a different discipline than canning.",
+            "*Dehydrating* — mushrooms, herbs, berries, jerky. Low-tech and the most resilient technique during a power outage.",
+            "*Rendering and smoking* — fat, lard, smoked fish and meat. The territory's traditional preservation methods, still the right ones for this climate.",
           ],
         },
         {
@@ -1808,10 +1788,6 @@ const partIV: Part = {
           text: "The codetry practitioner has the rename test. The Jarista has the ping. When a jar seals properly — the lid pulled down by the vacuum formed as the hot contents cool — it produces a single sharp sound. That ping is the verification signal: the jar sealed, the work held, the preserve is shelf-stable. There is no ambiguity. The lid either pings or it doesn't. If it doesn't, the jar goes in the fridge and gets eaten this week. The batch that pings goes on the Seasonal Shelf.",
         },
         {
-          kind: "para",
-          text: "Self-sufficiency measured as a percentage starts with that ping. A household at 5% self-sufficiency — a backyard garden and a few jars — hears that sound occasionally. A household at 85% — growing year-round, collaborating with the community, preserving the season's abundance, and changing eating habits to suit the territory rather than the grocery flyer — hears it through the whole of Preservation Season. The percentage climbs ping by ping.",
-        },
-        {
           kind: "callout",
           text: "There's nothing like the ping of a lid sealing to make you feel accomplished. It is the discipline's verification in the plainest possible form: the work held.",
         },
@@ -1827,7 +1803,7 @@ const partIV: Part = {
       number: "3.15",
       partRoman: "III",
       partLabel: "III · The Practice",
-      title: "Zone 0 — The Homestead",
+      title: "The Homestead",
       blocks: [
         {
           kind: "small",
