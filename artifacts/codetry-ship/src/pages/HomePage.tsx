@@ -66,12 +66,20 @@ export function HomePage() {
           style={{ background: "hsl(38 36% 94%)" }}
         />
         <div className="relative mx-auto max-w-[52rem]">
-          <img
-            src={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
-            alt="Headwaters — Northwestern Ontario"
-            className="w-full max-w-[320px] mb-6 opacity-90"
+
+          {/* Logo on a cream badge so the dark SVG text reads on the dark hero */}
+          <div
+            className="mb-7 inline-block rounded-sm px-3 py-2"
+            style={{ background: "hsla(38, 36%, 94%, 0.92)" }}
             data-testid="home-eyebrow"
-          />
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
+              alt="Headwaters — Northwestern Ontario"
+              className="block w-full max-w-[300px]"
+            />
+          </div>
+
           <h1
             className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3"
             data-testid="home-title"
@@ -84,10 +92,12 @@ export function HomePage() {
           >
             Practitioner-built tools that fit the team you have — not the team the software assumes.
           </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+
+          {/* Two real buttons side by side */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <a
               href="#conversation"
-              className="inline-flex items-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "hsl(var(--accent))", color: "hsl(38 36% 96%)" }}
               data-testid="hero-cta-primary"
             >
@@ -95,8 +105,8 @@ export function HomePage() {
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80 opacity-70"
-              style={{ color: "hsl(38 36% 96%)" }}
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] border transition-opacity hover:opacity-90"
+              style={{ borderColor: "hsla(38, 36%, 96%, 0.55)", color: "hsl(38 36% 96%)" }}
               data-testid="hero-cta-services"
             >
               What it looks like to build →
@@ -148,7 +158,7 @@ export function HomePage() {
           </div>
 
           <p
-            className="font-serif text-[15px] leading-[1.6] mb-5"
+            className="font-serif text-[15px] leading-[1.6] mb-6"
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="work-explainer"
           >
@@ -156,18 +166,57 @@ export function HomePage() {
             These are live and in use — not demos, not proposals.
           </p>
 
-          <a
-            href={`${import.meta.env.BASE_URL}services`}
-            className="flex items-center justify-between w-full px-5 py-4 rounded-sm mb-8 font-mono text-xs uppercase tracking-[0.18em] hover:opacity-90 transition-opacity"
-            style={{
-              background: "hsl(var(--accent))",
-              color: "hsl(var(--accent-foreground))",
-            }}
+          {/* ── three entry cards replacing the blunt full-width services button ── */}
+          <div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8"
             data-testid="link-services"
           >
-            <span>What it looks like to build with Headwaters</span>
-            <span>→</span>
-          </a>
+            {[
+              {
+                label: "Community store",
+                blurb: "Site selection, co-op structure, band financing, and day-one operations.",
+                color: "hsl(14 64% 36%)",
+                fg: "hsl(38 36% 96%)",
+              },
+              {
+                label: "Platform & co-op",
+                blurb: "Membership systems, governance tools, and shared community infrastructure.",
+                color: "hsl(145 36% 22%)",
+                fg: "hsl(38 36% 96%)",
+              },
+              {
+                label: "Custom tool",
+                blurb: "Purpose-built software for the specific problem in front of you.",
+                color: "hsl(30 40% 50%)",
+                fg: "hsl(38 36% 96%)",
+              },
+            ].map(({ label, blurb, color, fg }) => (
+              <a
+                key={label}
+                href={`${import.meta.env.BASE_URL}services`}
+                className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
+                style={{ borderColor: "hsl(var(--card-border))" }}
+              >
+                <div className="px-4 py-3" style={{ background: color, color: fg }}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em]">{label}</p>
+                </div>
+                <div className="px-4 py-3" style={{ background: "hsl(var(--card))" }}>
+                  <p
+                    className="font-serif text-[13px] leading-[1.5] mb-2"
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                  >
+                    {blurb}
+                  </p>
+                  <p
+                    className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                    style={{ color }}
+                  >
+                    See examples →
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
 
           <div className="space-y-3" data-testid="work-cards">
             <ComingSoonCard
@@ -666,11 +715,11 @@ function IntakeField({
 
 type CardAccent = "rust" | "evergreen" | "sage" | "amber";
 
-const ACCENT_STYLES: Record<CardAccent, { border: string; bg: string }> = {
-  rust:      { border: "hsl(14 64% 36%)",  bg: "hsla(14, 64%, 36%, 0.045)" },
-  evergreen: { border: "hsl(145 36% 22%)", bg: "hsla(145, 36%, 22%, 0.05)" },
-  sage:      { border: "hsl(145 18% 45%)", bg: "hsla(145, 18%, 45%, 0.05)" },
-  amber:     { border: "hsl(30 40% 50%)",  bg: "hsla(30, 40%, 50%, 0.045)" },
+const ACCENT_STYLES: Record<CardAccent, { border: string; bg: string; band: string; bandFg: string }> = {
+  rust:      { border: "hsl(14 64% 36%)",  bg: "hsl(var(--card))", band: "hsl(14 64% 36%)",  bandFg: "hsl(38 36% 96%)" },
+  evergreen: { border: "hsl(145 36% 22%)", bg: "hsl(var(--card))", band: "hsl(145 36% 22%)", bandFg: "hsl(38 36% 96%)" },
+  sage:      { border: "hsl(145 18% 45%)", bg: "hsl(var(--card))", band: "hsl(145 18% 45%)", bandFg: "hsl(38 36% 96%)" },
+  amber:     { border: "hsl(30 40% 50%)",  bg: "hsl(var(--card))", band: "hsl(30 40% 50%)",  bandFg: "hsl(38 36% 96%)" },
 };
 
 function CardDescription({ hook, detail }: { hook: string; detail: string }) {
@@ -703,18 +752,21 @@ interface DemoCardProps {
 }
 
 function DemoCard({ eyebrow, title, hook, detail, description, href, testId, accent = "rust", thumb, thumbAlt }: DemoCardProps) {
-  const { border, bg } = ACCENT_STYLES[accent];
+  const { border, bg, band, bandFg } = ACCENT_STYLES[accent];
   return (
     <a
       href={href}
       className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
-      style={{
-        borderColor: "hsl(var(--card-border))",
-        borderLeft: `3px solid ${border}`,
-        background: bg,
-      }}
+      style={{ borderColor: "hsl(var(--card-border))", background: bg }}
       data-testid={testId}
     >
+      {/* coloured header band */}
+      <div
+        className={`px-5 ${thumb ? "py-3" : "py-7"}`}
+        style={{ background: band, color: bandFg }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em]">{eyebrow}</p>
+      </div>
       {thumb && (
         <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
           <img
@@ -725,12 +777,6 @@ function DemoCard({ eyebrow, title, hook, detail, description, href, testId, acc
         </div>
       )}
       <div className="p-5 sm:p-6">
-        <p
-          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: border }}
-        >
-          {eyebrow}
-        </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
@@ -765,18 +811,24 @@ interface ComingSoonCardProps {
 }
 
 function ComingSoonCard({ eyebrow, title, hook, detail, description, testId, accent = "amber", thumb, thumbAlt }: ComingSoonCardProps) {
-  const { border, bg } = ACCENT_STYLES[accent];
+  const { border, bg, band, bandFg } = ACCENT_STYLES[accent];
   return (
     <div
-      className="block rounded-md border opacity-75 overflow-hidden"
+      className="block rounded-md border overflow-hidden opacity-75"
       style={{
         borderColor: "hsl(var(--card-border))",
         borderStyle: "dashed",
-        borderLeft: `3px solid ${border}`,
         background: bg,
       }}
       data-testid={testId}
     >
+      {/* coloured header band */}
+      <div
+        className={`px-5 ${thumb ? "py-3" : "py-7"}`}
+        style={{ background: band, color: bandFg, opacity: 0.85 }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em]">{eyebrow}</p>
+      </div>
       {thumb && (
         <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
           <img
@@ -787,12 +839,6 @@ function ComingSoonCard({ eyebrow, title, hook, detail, description, testId, acc
         </div>
       )}
       <div className="p-5 sm:p-6">
-        <p
-          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: border }}
-        >
-          {eyebrow}
-        </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
@@ -823,20 +869,23 @@ interface WorkCardProps {
 }
 
 function WorkCard({ eyebrow, title, hook, detail, description, href, testId, accent = "evergreen", external, thumb, thumbAlt }: WorkCardProps) {
-  const { border, bg } = ACCENT_STYLES[accent];
+  const { border, bg, band, bandFg } = ACCENT_STYLES[accent];
   return (
     <a
       href={href}
       className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
-      style={{
-        borderColor: "hsl(var(--card-border))",
-        borderLeft: `3px solid ${border}`,
-        background: bg,
-      }}
+      style={{ borderColor: "hsl(var(--card-border))", background: bg }}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       data-testid={testId}
     >
+      {/* coloured header band */}
+      <div
+        className={`px-5 ${thumb ? "py-3" : "py-7"}`}
+        style={{ background: band, color: bandFg }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em]">{eyebrow}</p>
+      </div>
       {thumb && (
         <div className="w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
           <img
@@ -847,12 +896,6 @@ function WorkCard({ eyebrow, title, hook, detail, description, href, testId, acc
         </div>
       )}
       <div className="p-5 sm:p-6">
-        <p
-          className="font-mono text-xs uppercase tracking-[0.2em] mb-2"
-          style={{ color: border }}
-        >
-          {eyebrow}
-        </p>
         <p className="font-serif text-[17px] font-medium tracking-tight mb-2">
           {title}
         </p>
