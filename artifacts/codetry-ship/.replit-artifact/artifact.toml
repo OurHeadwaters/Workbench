@@ -22,6 +22,16 @@ build = [ "pnpm", "--filter", "@workspace/codetry-ship", "run", "build" ]
 publicDir = "artifacts/codetry-ship/dist/public"
 serve = "static"
 
+[[services.production.redirects]]
+from = "/codetry-ship"
+to = "/"
+status = 301
+
+[[services.production.redirects]]
+from = "/codetry-ship/*"
+to = "/:splat"
+status = 301
+
 [[services.production.rewrites]]
 from = "/*"
 to = "/index.html"
