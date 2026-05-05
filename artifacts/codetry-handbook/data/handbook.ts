@@ -94,7 +94,7 @@ const partPrologue: Part = {
         {
           kind: "para",
           text:
-            "Five parts follow. Part I names what the discipline is and what it is hedging against. Parts III, IV, V build the practice — the constellation of seven zones and two primitives, the moves the practitioner makes, and the grounding the moves rest on. Part VI keeps the open questions open, in writing, so the discipline cannot quietly resolve them by attrition. Part II — Adjacent Disciplines — sits behind the spine as a reference: what codetry is not, named precisely, so the work it is doing stays its own.",
+            "Begin with Grounding — the teachers, the axiom, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.",
         },
         {
           kind: "para",
@@ -169,6 +169,30 @@ const partPrologue: Part = {
         {
           kind: "para",
           text: "It is not for everyone. It is for the people who feel the friction of the wrong word at the exact moment when the right word would have mattered.",
+        },
+        {
+          kind: "subhead",
+          text: "About the vocabulary.",
+        },
+        {
+          kind: "para",
+          text: "This handbook introduces specific words — *primitive*, *zone*, *constellation*, *The Gate*, *The Standby*, *resting state*, *activated state*. Each word was chosen because the generic alternative came with someone else's assumptions embedded in it. You do not have to adopt the vocabulary wholesale to use the discipline. But each time a specific word appears, it is there because the generic word was not precise enough to do the job without importing a foreign frame along with it.",
+        },
+        {
+          kind: "para",
+          text: "The test for any word in this handbook is in §1.1: try to rename it. If the rename costs nothing — if the thing it named still stands — the word was decoration. If the rename takes something structural with it, the word was load-bearing, and it was load-bearing for a reason. Run that test on anything here that feels like jargon. It will tell you whether the word is earning its place.",
+        },
+        {
+          kind: "subhead",
+          text: "The examples are Bobbie's. The discipline is yours.",
+        },
+        {
+          kind: "para",
+          text: "The worked examples in this handbook come from one practitioner's specific context — a small constellation in northwestern Ontario, on Treaty 3 Territory, centred in Dryden. A food co-op. A jar kitchen. A spring-fed well with a manual pump. Those examples are here because a discipline without a real example is not a discipline; it is a wish. Use them to understand the moves.",
+        },
+        {
+          kind: "callout",
+          text: "Then throw them away. The only correct way to read this book is to come out the other end building something that has nothing to do with a food co-op in Dryden — unless, of course, that is exactly where you are.",
         },
       ],
     },
