@@ -8,6 +8,7 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
+  { href: "/home",     label: "Home" },
   { href: "/services", label: "The work" },
   { href: "/bio",      label: "About" },
 ];
@@ -119,7 +120,7 @@ export function SiteNav() {
               );
             })}
             <a
-              href={`${base}/#conversation`}
+              href={`${base}/home#conversation`}
               className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
               style={{
                 background: "hsl(var(--accent))",
@@ -203,7 +204,7 @@ export function SiteNav() {
             );
           })}
           <a
-            href={`${base}/#conversation`}
+            href={`${base}/home#conversation`}
             className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
             style={{
               background: "hsl(var(--accent))",

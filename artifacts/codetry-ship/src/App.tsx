@@ -7,6 +7,7 @@ import { SignOnPage } from "@/pages/SignOnPage";
 import { ManifestPage } from "@/pages/ManifestPage";
 import { BioPage } from "@/pages/BioPage";
 import { HomePage } from "@/pages/HomePage";
+import { LandingPage } from "@/pages/LandingPage";
 import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
@@ -18,7 +19,8 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={HomePage} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/home" component={HomePage} />
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
       <Route path="/sign-on" component={SignOnPage} />
