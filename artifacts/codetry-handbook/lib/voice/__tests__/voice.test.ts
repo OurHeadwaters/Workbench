@@ -116,7 +116,6 @@ describe("grade-9 voice — constellation manifest", () => {
       { name: "primitive.rejectedAlternatives[].reason", pattern: /\.rejectedAlternatives\[\d+\]\.reason$/ },
       { name: "zone.domain", pattern: /\.domain$/ },
       { name: "zone.tagline", pattern: /\.tagline$/ },
-      { name: "zone.context", pattern: /\.context$/ },
     ];
     const missing = expectedLeaves
       .filter(({ pattern }) => !CONSTELLATION_COPY.some((b) => pattern.test(b.file)))

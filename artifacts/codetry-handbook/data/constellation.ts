@@ -334,17 +334,6 @@ export const constellation: ConstellationSnapshot = {
       "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief)."
     },
     {
-      "zone": 0,
-      "slot": "centralized",
-      "name": "Bright Side",
-      "domain": "Centralized homes / care institutions — long-term care recreation therapy",
-      "url": "https://health-support-hub.replit.app/",
-      "status": "in development — pilot probe Q4 2026",
-      "tagline": "What's the fence to peek over?",
-      "context": "PHI-free posture is what holds the product up — the product is what care directors can deploy without a privacy-impact assessment cycle. Bundle decision-maker is the Kenora District Homes for the Aged board; Princess Court does not sign independently.",
-      "standby": "Reads The Standby as the institutional standby checklist — facility-side mirror of the co-op's standby stock list (medications, water, generator fuel, comfort supplies). Same rungs, same nouns, scaled to the dwelling unit instead of the household."
-    },
-    {
       "zone": 1,
       "name": "Headwaters",
       "formerNames": [
@@ -459,31 +448,6 @@ export const constellation: ConstellationSnapshot = {
         }
       ],
       "standby": "Reads The Standby as a standby budget envelope that sleeves up automatically during an active call — drought routes a water-cost envelope, fire routes a supply-cost envelope, freight routes a stockpile-cost envelope. Channel/Bridge verbs already model the flex; Standby gives the trigger language."
-    },
-    {
-      "zone": 1,
-      "name": "Family Buckets",
-      "domain": "Kid-allowance + courage sibling to Headwaters",
-      "url": "https://family-buckets.replit.app/family-buckets/",
-      "status": "live",
-      "workedExamples": [
-        {
-          "name": "Bucket kinds",
-          "rule": "savings (target + cadence) and memory (entries + optional photo URL). Courage Bucket = named memory preset."
-        },
-        {
-          "name": "Allowance modes",
-          "rule": "manual / auto_planner / auto_xrpl. The XRPL path queues a pending payout; the parent still signs in-wallet. Automation never bypasses the signing hand."
-        },
-        {
-          "name": "Notifications",
-          "rule": "in-app inbox + opt-in email (Resend) + opt-in web-push (allowlisted endpoints, SSRF-guarded), per-family channel preference, deep-link into approval banner. The alert and the action live one tap apart."
-        },
-        {
-          "name": "Wallet handoff (v1)",
-          "rule": "pay-xrpl returns txjson + deep link; parent pastes resulting hash to confirm. Real Xaman swap is a known follow-up. The seam is real even when the transport is mocked."
-        }
-      ]
     },
     {
       "zone": 2,
@@ -607,7 +571,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Pre-zone parked thread",
-          "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Belongs in the Brainstorm Library until it finds its own zone (probably Z0, possibly Z5)."
+          "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
         }
       ],
       "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector → call → first-touched node is the modeling unit."
@@ -642,16 +606,7 @@ export const constellation: ConstellationSnapshot = {
       "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint."
     }
   ],
-  "preZone": [
-    {
-      "zone": -1,
-      "name": "Brainstorm Library",
-      "domain": "Seed bank — ideas before they're sorted into a zone",
-      "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
-      "status": "pending",
-      "context": "awaiting agent context-pack"
-    }
-  ],
+  "preZone": [],
   "z3": {
     "zone": 3,
     "name": "Community Knowledge Hub",
