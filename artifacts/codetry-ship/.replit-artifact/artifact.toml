@@ -1,5 +1,5 @@
 kind = "web"
-previewPath = "/codetry-ship/"
+previewPath = "/"
 title = "Codetry Ship — Crew Manifest"
 version = "1.0.0"
 id = "artifacts/codetry-ship"
@@ -11,7 +11,7 @@ version = "1.0.0"
 
 [[services]]
 name = "web"
-paths = [ "/codetry-ship/" ]
+paths = [ "/" ]
 localPort = 21384
 
 [services.development]
@@ -28,4 +28,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "21384"
-BASE_PATH = "/codetry-ship/"
+BASE_PATH = "/"
