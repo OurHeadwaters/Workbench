@@ -81,7 +81,7 @@ The six-phase engagement methodology is documented in Chapter 2. The rate sheet 
 
 Chapter 5 §The structure of what follows describes the full book in this order:
 
-1. **Grounding** — the teachers, the axiom, and the reading lineages
+1. **Grounding** — the teachers, Thunder, and the reading lineages
 2. **Part I** — the discipline: what it is, where it lives, the three or four moves it makes
 3. **Part II** — the discipline applied to a real community economy (seven zones, two primitives)
 4. **Part III** — the practitioner in the field, including Zone 0 as first ground
@@ -89,9 +89,9 @@ Chapter 5 §The structure of what follows describes the full book in this order:
 6. **Deep Dives** — optional; five chapters on how codetry differs from the disciplines it most closely resembles
 7. **Field Ledger** — the practical entry point for practitioners ready to begin
 
-The five completed chapters (Ch1–Ch5) map approximately to the Part I and Part II register. Grounding (the reading lineages and the axiom behind the discipline) has no dedicated draft. Part III (the practitioner in the field, Zone 0 household as the first ground) has no dedicated draft. The Field Ledger does not exist.
+The five completed chapters (Ch1–Ch5) map approximately to the Part I and Part II register. Grounding (the reading lineages and Thunder) now exists in the handbook as a built section (teachers, Thunder, pioneer path). The Field Ledger also now exists as a built section in the handbook (11 entries, §FL.1–§FL.11). Part III (the practitioner in the field, Zone 0 household as the first ground) still has no dedicated draft.
 
-**What is open:** Whether Grounding, Part III, and the Field Ledger are to be drafted in this book, held for a second volume, or addressed by reclassifying existing material. The chapter numbering and the structural map in Ch5 need to be consistent with whatever decision is made — if the current five chapters *are* the book, the structural description in Ch5 needs to reflect that.
+**What remains open:** Part III only. Grounding and the Field Ledger are built. The question is whether Part III is to be drafted in this book, held for a second volume, or addressed by reclassifying existing material (e.g., Constellation chapters). The chapter numbering and the structural map in Ch5 need to be consistent with whatever decision is made.
 
 ---
 
