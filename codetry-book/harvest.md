@@ -6,6 +6,7 @@
 **Supplemented:** 2026-05-06 (Task #785) — community-knowledge-hub external sweep; projects 3–6 swept via live URL fetch; project 8 attempted (SPA shell, no prose recovered).
 **Supplemented:** 2026-05-06 — Task #796: X Buckets Vision (External project 1) swept; 11 passages added (1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K).
 **Supplemented:** 2026-05-06 (Task #803) — Bright Side (project 7) and Saltbox (project 10) swept via JS bundle extraction; merge conflicts from Tasks #784 and #785 resolved; passages 2-X, 2-Y, 2-Z, 3-O, 3-P, 4-U, 4-V, 4-W, 4-X, 4-Y, 5-K, UG-J through UG-Q added.
+**Supplemented:** 2026-05-06 (Task #801) — X Buckets Vision (project 1) swept via live bundle extraction; 11 passages added (1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M) plus full water-metaphor vocabulary map (3-P). Merge conflicts from Tasks #784 and #785 resolved: community-knowledge-hub passages renumbered to 3-O, 4-U, 4-V, 5-K, UG-J, UG-K.
 **Supplemented:** 2026-05-06 — Task #797: External projects 3–10 swept; 14 passages added (1-R, 1-S, 2-U, 2-V, 2-W, 2-X, 3-O, 3-P, 4-U, 4-V, UG-J, UG-K, UG-L, UG-M). Sources: Rootwork studio bundle, health-support-hub bundle, community-knowledge-hub bundle (main app + three infographic HTML pages), legacy-gatekeeper bundle, salt-box bundle.
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
@@ -271,6 +272,22 @@ The founding confession, immediately below the hero section:
 > She's learned a lot since then.
 
 `community-knowledge-hub/assets/index-Ct-KiV08.js` — preserving course, "What Bobbie Learned Running a Community Kitchen" lesson opening
+
+---
+
+### 1-W · Your money has been free-ranging — the Zone 1 founding premise
+
+**Source:** `x-buckets-vision/gettingStartedTour.slides[0]` — first onboarding slide, headline and body; the founding diagnosis of the Zone 1 problem before the vocabulary is introduced
+
+---
+
+### 1-X · You are the dam keeper — the onboarding close
+
+> Every drop has a job now.
+>
+> Payday becomes a ritual, not a scramble. You are the dam keeper. This is your headwaters — and nothing escapes without purpose.
+
+**Source:** `x-buckets-vision/gettingStartedTour.slides[2]` — third and final onboarding slide, headline and body; the phrase that names the user's role in the water metaphor
 
 ---
 
@@ -952,6 +969,7 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 
 ### 3-P · Saltbox methodology cards — naming what homeschool families already do
 
+<<<<<<< HEAD
 The style descriptions from the Saltbox learning-style tour (verbatim from each methodology card):
 
 > **Charlotte Mason** — Mornings stay short. You read aloud from a real book — not a textbook — and your child narrates it back in her own words. Afternoons are wide open: nature walks, handicrafts, copywork, watercolor. Atmosphere matters as much as the lesson.
@@ -1018,6 +1036,7 @@ Cautions embedded in the tour (also verbatim):
 
 **Source:** `x-buckets/src/copy/droughtMode` — toggle label, subtitle, and active-banner copy; the named state for income disruption; "drought" as a first-class system state rather than an error condition
 =======
+<<<<<<< HEAD
 ### 3-O · A working seasonal-foods business — no off-season
 
 > A working seasonal-foods business is a year of well-timed, narrow harvest windows, with the in-between months spent processing, blending, packaging, and selling. There is no off-season — only different seasons.
@@ -1036,6 +1055,64 @@ Cautions embedded in the tour (also verbatim):
 
 `community-knowledge-hub/assets/index-Ct-KiV08.js` — regen beef course, "Telling Your Story" lesson opening
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+=======
+`community-knowledge-hub/studio/ — closing CTA section`
+
+---
+
+### 3-P · The water-metaphor vocabulary map — X Buckets Vision word-locked names
+
+The full locked vocabulary from the X Buckets Vision PWA, verbatim from the production bundle `C` copy object:
+
+> **Rainfall** — income landing in the reservoir; "every dollar of stablecoin income is rainfall caught in your Reservoir"
+>
+> **Reservoir** — the total budgeted balance; every bucket draws from here — every dollar accounted for
+>
+> **Siphon** — bills; the label rendered on the payday flow node; leaves before you see the money
+>
+> **Rain Barrel** — emergency reserve; a CA$1,500 starter Rain Barrel turns most surprises into a problem you can solve, not a debt spiral; the full Rain Barrel is months of essentials
+>
+> **Stream** — fast-moving money; groceries, gas, fun — all accounted for before you spend; the daily operating budget
+>
+> **Water Tower** — savings fortress; emergency fund, debt payoff, long-term goals — the savings that build your future, drop by drop
+>
+> **Spring** — where income flows in — automatically routed to where it matters
+>
+> **Watershed** — the original app name; storage keys, table names, and schema still use this root after the surface rebrand to Headwaters
+>
+> **Community Well** — shared XRPL pool; members vote where it flows each round; tip the shared peer pool
+>
+> **Water Wheel** — passive earner; set it up once, it drips while you sleep; fills a Private Lake with idle RLUSD, drips yield into savings buckets
+>
+> **Private Lake** — self-custody DeFi liquidity pool; every swap that flows through drips a small current back to the Water Wheel, around the clock
+>
+> **Giving Well** — donate XRP appreciation tax-smart, before any sale; the well is filled from unrealized gain
+>
+> **Drought Mode** — reduced or lost income mode; targets scaled to actual rainfall landing
+>
+> **Payday Planner** — plan every paycheck before it lands; set income streams, recurring bills, and savings targets; execute in one tap on payday
+
+**Source:** `x-buckets-vision` bundle — `C` copy object, `flowNodeSiphon`, `flowNodeReservoir`, `foundationCoach`, `earn`, `communityWell`, `givingWell`, `convertXrp`, `droughtMode`, `payday`, and `spotlightTour` fields; the locked vocabulary the app refuses to translate into generic budget terms (the rename test in action: rename "Buckets" to "Categories" and the UI starts suggesting balances can grow by clicking)
+
+---
+
+### 3-Q · The bamboo spring stages — XRP Spring as six-stage metaphor artwork
+
+> **Stage 1 · Pristine pool** — The soil is ready. Awaiting first drop.
+>
+> **Stage 2 · Roots weaving** — Roots forming. 10 XRP → roots stabilize.
+>
+> **Stage 3 · Lush roots** — Next milestone. Bamboo peeks at 25 XRP.
+>
+> **Stage 4 · Tiny bamboo peeking** — First culm broke surface. Grove establishes at 75 XRP.
+>
+> **Stage 5 · Producing grove** — Grove is establishing. Canopy multiplies at 200 XRP.
+>
+> **Stage 6 · Grow & multiply** — Grove fully established. Roots run deep — earnings compound.
+
+**Source:** `x-buckets-vision/bambooSpring` — the six-stage metaphor rendered in the XRP Spring savings tab; extends the envelope-budget metaphor from data model into visual artwork across six growth milestones (the "six-stage bamboo growth scene" referenced in passage 1-L)
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+>>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ---
 
@@ -1389,6 +1466,7 @@ Region-specific design rationale:
 
 ---
 
+<<<<<<< HEAD
 ### 4-W · Local-first by design — Saltbox architecture principle
 
 > Local-only by default. No accounts, no telemetry. Live Follow-Along is opt-in. Your backup is yours to carry.
@@ -1473,6 +1551,7 @@ The same principle stated from the content layer:
 
 **Source:** `x-buckets/src/copy/xrpSpring` — `springFooter`, `sectionLabel`, `tagline`, `givingWellBannerBody`, `givingWellInactive` constants; the XRP Spring tab copy; "the underground spring beneath your buckets" as the one-sentence architectural description of XRP's role in the constellation
 =======
+<<<<<<< HEAD
 ### 4-U · "There is a place called Bright Side" — the Gate origin narrative
 
 > There is a place called Bright Side, where they call you "neighbour", not "resident".
@@ -1509,6 +1588,48 @@ What-box description:
 
 `community-knowledge-hub/infographics/standby-supplies.html` — header tagline, what-box, and "What Makes It Northern" section
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+=======
+### 4-W · The intentional pause — where the habit actually changes
+
+> A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
+
+**Source:** `x-buckets-vision/walletInlineFaq` — response to "How is this different from a regular budget?"; the design rationale for envelope budgeting as constraint-by-metaphor
+
+---
+
+### 4-X · The celebration — what pouring the payday is
+
+> This is the celebration. We channel the income across your buckets in one move. Your funds never leave your wallet — they're just arranged.
+
+The exhortation rendered immediately before the pour action:
+
+> Every drop you channel is the habit that got you here — keep the coil tight.
+
+**Source:** `x-buckets-vision/payday.pourHelpBody` and `payday.makeItRainSubEnthusiast` — help copy and motivational sub-copy rendered at Step 4 · Pour the Payday
+
+---
+
+### 4-Y · Drought Mode — plan to thrive when it rains again
+
+> Reduced or lost income? Tighten the flow — plan to thrive when it rains again.
+
+The active-mode banner:
+
+> Targets are scaled to your reduced income. Stay the course — the rains return.
+
+**Source:** `x-buckets-vision/droughtMode.toggleSubtitle` and `droughtMode.activeBannerSub` — the toggle subtitle and live banner rendered when Drought Mode is active; the water metaphor holds through income disruption
+
+---
+
+### 4-Z · Rain Barrel — the foundation coach framing
+
+> High-interest debt is a leak in your reservoir — every dollar there is one less drop catching rain.
+>
+> A CA$1,500 starter Rain Barrel turns most surprises into a problem you can solve, not a debt spiral.
+
+**Source:** `x-buckets-vision/foundationCoach.subDrainage` and `foundationCoach.subStarter` — the Foundation Coach step descriptions; debt reframed as drainage rather than obligation, emergency reserve reframed as a Rain Barrel rather than a fund
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+>>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ---
 
@@ -1765,6 +1886,7 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
+<<<<<<< HEAD
 ### UG-L · A saltbox is — naming the origin
 
 > A saltbox is the wooden box of preserving salt by the kitchen door — taken a pinch at a time, all year. This app is shaped like one.
@@ -1851,6 +1973,7 @@ The tour framing line:
 
 **Source:** `x-buckets/src/copy/faq` — FAQ item answering "How is this different from a regular budget?"; the founder's full discipline argument in one paragraph
 =======
+<<<<<<< HEAD
 ### UG-J · Rootwork — the six values the studio builds by
 
 > **Person-centred.** We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
@@ -1911,6 +2034,22 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 
 `rootwork/studio/assets/index-CPXk3mY2.js` — Legal Compass about/description text; the cleanest articulation of what the tool does and why it distinguishes between safety-based rules and incumbent-protection rules
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+=======
+### UG-L · Zone 0 is daily — permaculture zoning applied to household finance
+
+> Zones sort buckets by how often you tend them — Zone 0 is daily and closest, Zone 5 is the furthest, longest-term.
+
+**Source:** `x-buckets-vision/zoneIntro.body` — the optional permaculture zone view description; the same six-zone permaculture model used across the constellation applied directly to household spending buckets
+
+---
+
+### UG-M · Your keys, your money — the non-custodial declaration
+
+> Your keys, your money. Headwaters is non-custodial — we never touch your funds, and every transaction is signed by you in your own wallet.
+
+**Source:** `x-buckets-vision` bundle — `whatsNew` changelog entry "Your keys, your money" headline and body; the sovereignty claim stated in plain language for a household budget tool
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+>>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ---
 
@@ -1930,7 +2069,11 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 **Former names:** xBuckets, Watershed
 **Constellation zone:** Zone 1 — household finance, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #801). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (React SPA; prose extracted from minified production bundle `index-CGcLuc1T.js` and sub-bundles). Passages recovered: 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M. Full water-metaphor vocabulary map recovered (Rainfall, Reservoir, Siphon, Rain Barrel, Stream, Water Tower, Spring, Watershed, Community Well, Water Wheel, Private Lake, Giving Well, Drought Mode, Payday Planner). XRP Spring bamboo growth scene recovered as six-stage artwork sequence. Aquifer and Glacier not present in current bundle — these names may belong to an earlier xBuckets era not accessible in the live app. Git history and conversation logs not accessible from this environment.
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ---
 
@@ -2060,6 +2203,7 @@ The following projects were identified in the codebase and may also contain harv
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction
 =======
@@ -2074,6 +2218,10 @@ The following projects were identified in the codebase and may also contain harv
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #803 Bright Side + Saltbox external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–7, 10)
 >>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
+=======
+**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #801 X Buckets Vision external sweep)
+**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–6, 8) + X Buckets Vision live-bundle extraction
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ### Live files read
 
@@ -2156,6 +2304,7 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 **External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
 >>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
 =======
+<<<<<<< HEAD
 **Total passages:** 100 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +14 from external projects 3–10 sweep in Task #797)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
@@ -2180,6 +2329,13 @@ All 8 codebases were not directly accessible from this environment. Prose was ex
 
 *All passages confirmed verbatim. No synthesis or composition.*
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+=======
+**Total passages:** 110 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 net new from Task #785 community-knowledge-hub live-URL sweep after renumbering; +10 from Task #801 X Buckets Vision external sweep — 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M)
+**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
+**Conversation history:** Not accessible from this environment.
+**External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 8); 3 remaining (projects 7, 9, 10). See "Pending External Sweeps" section above.
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+>>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ### Dam Days sweep notes (Task #784)
 
@@ -2198,6 +2354,7 @@ The Dam Days codebase (`https://conversation-log.replit.app/`) was not directly 
 | `dam-days/src/pages/Takes.tsx` | UG-H |
 | `dam-days/src/pages/Dedication.tsx` (reader prompt) | UG-I |
 
+<<<<<<< HEAD
 ### Bright Side sweep notes (Task #803)
 
 The Bright Side codebase (`https://health-support-hub.replit.app/`) was not directly accessible. Prose extracted from `/assets/index-CxSI5g0R.js` using string-literal extraction and natural-language filtering. Source file paths inferred from component context.
@@ -2220,5 +2377,23 @@ The Saltbox codebase (`https://salt-box.replit.app/`) was not directly accessibl
 | `salt-box/src/data/methodologies.ts` or tour cards | 3-P (seven methodology cards), UG-M (tour intro/close) |
 | `salt-box/src/data/quotes.ts` | UG-N (watching you on the trampoline) |
 | `salt-box/src/pages/Recap.tsx` or family recap | UG-O (snapshot preamble) |
+=======
+### X Buckets Vision sweep notes (Task #801)
+
+The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not directly accessible from this environment. Prose was extracted from the compiled, minified production JS bundle (`/assets/index-CGcLuc1T.js`, 257 KB) and the `headwaters-plus` sub-bundle using string-literal extraction. Source file paths are inferred from component structure visible in the bundle. Git history and conversation logs were not accessible. Aquifer and Glacier vocabulary terms (referenced in the task) were not present in the current bundle — likely belong to an earlier xBuckets era.
+
+| Source (inferred) | Passages recovered |
+|---|---|
+| `x-buckets-vision/gettingStartedTour.slides[0]` | 1-S |
+| `x-buckets-vision/gettingStartedTour.slides[2]` | 1-T |
+| `x-buckets-vision` bundle — `C` copy object + spotlightTour + foundationCoach | 3-P (full vocabulary map) |
+| `x-buckets-vision/bambooSpring` | 3-Q |
+| `x-buckets-vision/walletInlineFaq` | 4-W |
+| `x-buckets-vision/payday.pourHelpBody` + `makeItRainSubEnthusiast` | 4-X |
+| `x-buckets-vision/droughtMode.toggleSubtitle` + `activeBannerSub` | 4-Y |
+| `x-buckets-vision/foundationCoach.subDrainage` + `subStarter` | 4-Z |
+| `x-buckets-vision/zoneIntro.body` | UG-L |
+| `x-buckets-vision` bundle — whatsNew changelog | UG-M |
+>>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 *All passages confirmed verbatim. No synthesis or composition.*
