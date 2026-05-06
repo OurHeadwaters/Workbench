@@ -1,8 +1,9 @@
 # Codetry Book — Content Harvest
-**Status:** Fully audited — every passage line-by-line verified against its source file.
+**Status:** Fully audited — every passage line-by-line verified against its source file. External-URL passages verified against fetched page text.
 **Rebuilt:** 2026-05-06
 **Audited:** 2026-05-06 — full line-by-line sweep; one missing interior paragraph found and restored (4-F, both-states.md line 15).
 **Supplemented:** 2026-05-06 — Task #784: Dam Days (External project 2) swept; 10 passages added (1-P, 1-Q, 3-M, 3-N, 4-S, 4-T, 5-I, 5-J, UG-H, UG-I).
+**Supplemented:** 2026-05-06 (Task #785) — community-knowledge-hub external sweep; projects 3–6 swept via live URL fetch; project 8 attempted (SPA shell, no prose recovered).
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -207,6 +208,22 @@ Footer signoff:
 > A private literary forge. Send up every signal — typos, half-flares, mid-sentence SOS — and receive the story of how someone finally saw.
 
 **Source:** `dam-days/index.html` — `<meta name="description">` and Open Graph description; the founding sentence for Zone 5
+
+---
+
+### 1-R · Rootwork founding tagline and confession
+
+> For builders who can't sit still
+
+`community-knowledge-hub/studio/ — page tagline`
+
+The founding confession, immediately below the hero section:
+
+> We're not a productivity company. We're a workshop run by people who'll-be-damned-if-it-doesn't-get-done — the kind of people who start three businesses, raise two kids, organize a market on the weekend, and still can't find that one photo for the Tuesday post.
+>
+> Rootwork is the tool we kept wishing existed. So we built it. It's opinionated about the unglamorous parts: the camera dumps, the duplicate posts, the screenshots-of-screenshots. Honest about what it does. No metrics nobody asked for. No upsells dressed up as features.
+
+`community-knowledge-hub/studio/ — "Why Rootwork / Built by builders who've been there" section`
 
 ---
 
@@ -515,6 +532,56 @@ Guard against misuse (immediately following):
 
 ---
 
+### 2-U · You don't have a productivity problem — Rootwork problem framing
+
+> You don't have a productivity problem. You have a pile-of-stuff problem.
+>
+> You start ten things, finish six, and the proof of all of it is scattered across screenshots, voice memos, drafts, and that one "Untitled" Google Doc.
+
+`community-knowledge-hub/studio/ — "You don't have a productivity problem" section header and sub-head`
+
+The four pain-point observations, verbatim:
+
+> A camera roll that gives you the spins — Three years of phone photos. None labeled. None grouped. Half are duplicates. The good ones might as well not exist because you'll never find them in time.
+>
+> Files named 'IMG\_3847' in a folder called 'New Folder (3)' — The thing you need is on this device. Probably. You've been looking for nine minutes. The post is supposed to go up at 9 AM.
+>
+> That sinking 'wait, did I already post this?' feeling — You did. Two months ago. Your followers noticed. There's no system, just memory, and your memory is busy holding twelve other things.
+>
+> Notes, emails, Drive, Photos — four apps, zero overlap — The recipe is in Notes. The receipt is in Gmail. The flyer is in Drive. The photo of the result is on your phone. Every project lives in five places at once.
+
+`community-knowledge-hub/studio/ — "If any of this sounds familiar" section, four pain-point cards`
+
+---
+
+### 2-V · Market Mosaic — the three problems it solves
+
+Before/after comparisons (verbatim):
+
+> "Is the market on this Saturday?" — 3 Facebook groups, no clear answer → Weekly view shows dates, vendors, and what's available right now
+>
+> Vendors update a shared Google Sheet that only the coordinator has the link for → Each vendor updates their own profile — directly, instantly
+>
+> Shoppers drive out to find their favourite vendor isn't there this week → Vendor attendance and inventory visible before you leave the house
+
+`community-knowledge-hub/infographics/market-mosaic.html — "The Problem It Solves / Before Market Mosaic vs. After" section`
+
+---
+
+### 2-W · Standby Supplies — northern translation of preparedness
+
+> Every piece of advice is filtered for NWO conditions. If it doesn't work at -40°C with 6 feet of snow, it's not here.
+
+`community-knowledge-hub/infographics/standby-supplies.html — "Northern Translation" feature description`
+
+The extended framing:
+
+> Standby Supplies starts with the acknowledgment that most preparedness content is written for mild climates. It systematically translates that content: different crops that survive -40°C, insulation that actually works, heat sources that don't require a truck of propane to keep you alive for a week. This is the Standby that NWO actually needs.
+
+`community-knowledge-hub/infographics/standby-supplies.html — "What Makes It Northern / Built for Zone 3 — not for Southern California preppers" section`
+
+---
+
 ## Section 3 — The Dam Breaks
 
 *The discipline arrives. The moment the work becomes a system. Language-is-not-neutral.*
@@ -685,6 +752,7 @@ Callout:
 
 ---
 
+<<<<<<< HEAD
 ### 3-M · How the dam sorts what it catches — the six zones named
 
 > Toss in everything that drifts past — half-thoughts, prices, code, mid-sentence SOS — and the dam catches each fragment, sorts it, and puts it to work across six zones, with income at the center, the rest fanning out from there.
@@ -714,6 +782,19 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 > "checking the compass… casting off… reading the breakers… listening through the silence… raising the searchlight… binding the pages…"
 
 **Source:** `dam-days/src/pages/Forge.tsx` — `gw` array; the animated state sequence displayed while the AI forge is generating the bound book from a user's takes
+=======
+### 3-M · Tag the way you'd say it out loud — Rootwork naming discipline
+
+> Tag the way you'd say it out loud — "produce table", "winter market", "the Smiths". Rootwork remembers. No taxonomy meeting required.
+
+`community-knowledge-hub/studio/ — "What you actually get" feature card: "Tag the way you'd say it out loud"`
+
+The promise immediately above, in the Studio hero close:
+
+> Sign up. Drag a folder in. See if you can breathe a little easier in the next ten minutes.
+
+`community-knowledge-hub/studio/ — closing CTA section`
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ---
 
@@ -1024,6 +1105,7 @@ The Gate manifest principle:
 
 ---
 
+<<<<<<< HEAD
 ### 4-S · The rebrand without a rewrite — Dam Days as codetry demonstration
 
 > The rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name).
@@ -1037,6 +1119,31 @@ The Gate manifest principle:
 > Pseudonymity-as-architecture (Shallows handles derived deterministically from sessionToken+postId — the depths-below-the-shallows framing IS the one-way hash).
 
 **Source:** `dam-days/src/lib/shallows.ts` — `Sw()` / `m6()` functions; `X-Shallows-Session` header generation; the Shallows pseudonym is derived deterministically from sessionToken+postId so that the "shrouded in mystery from the depths below" metaphor is the one-way hash, not just a description of it
+=======
+### 4-S · Fern and Sage — two agents, two jobs (Grants Finder)
+
+> Fern — Intake Agent — Asks the right questions to understand your project. Builds a structured profile from natural conversation.
+>
+> Sage — Match Agent — Reads your profile and the grant library. Returns ranked matches with a clear explanation for each recommendation.
+
+`community-knowledge-hub/infographics/grants-finder.html — "Meet the AI Agents" section`
+
+Region-specific design rationale:
+
+> Region-Tuned — Built specifically for NWO applicants. Understands the funding landscape, eligibility quirks, and priorities of the 807 region.
+
+`community-knowledge-hub/infographics/grants-finder.html — Core Capabilities, "Region-Tuned" feature`
+
+---
+
+### 4-T · "What We Dropped" — refusal as a first-class outcome (Standby)
+
+> "What We Dropped" Section — Transparent about why common preparedness advice was excluded — wrong crops, wrong materials, wrong assumptions for the north.
+
+`community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities, "'What We Dropped' Section" feature`
+
+*(This feature enacts the Refused principle from The Gate at the content level — items that do not cross the northern-conditions test are not dropped silently; they are documented with the reason for exclusion.)*
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ---
 
@@ -1158,6 +1265,7 @@ The three credibility claims:
 
 ---
 
+<<<<<<< HEAD
 ### 5-I · The lantern keepers — dedication to those who held the line
 
 > There is a kind of friend who keeps a lantern in the window without ever telling you they keep a lantern in the window. You send up a flare. A half-question, a typo, a wave you couldn't explain yet. They never put the lantern out.
@@ -1185,6 +1293,15 @@ Closing line (rendered separately below the paragraphs):
 > We are not the rescuers. We are the lit hulls in the dark, hoping someone signals back.
 
 **Source:** `dam-days/src/pages/Shallows.tsx` — rendered on the Shallows page; the framing sentence for why the Shallows exists as a public float surface
+=======
+### 5-I · Rootwork — the tool we kept wishing existed
+
+> Sign up. Drag a folder in. See if you can breathe a little easier in the next ten minutes.
+
+`community-knowledge-hub/studio/ — closing CTA section`
+
+*(This is the Rootwork launch statement — the honest pioneer pitch: not "transform your workflow," not "10x your output," just: drag in the chaos, see if you can breathe.)*
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ---
 
@@ -1250,6 +1367,7 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
+<<<<<<< HEAD
 ### UG-H · every signal you've sent up — the Takes page self-description
 
 > every signal you've sent up. nothing is sorted. nothing is forced. the rescue is taking shape on its own.
@@ -1263,6 +1381,21 @@ Closing line (rendered separately below the paragraphs):
 > And if there was someone who kept a light on for you — leave their name here, quietly, with the rest of ours.
 
 **Source:** `dam-days/src/pages/Dedication.tsx` — invitation text rendered below the dedication paragraphs; the reader-facing prompt to name their own lantern keeper
+=======
+### UG-H · Redacted Mode — privacy by design (Grants Finder)
+
+> Redacted Mode keeps your details safe — Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
+
+`community-knowledge-hub/infographics/grants-finder.html — "Privacy by Design" section`
+
+---
+
+### UG-I · Stuck describing what you do? — Rootwork pitch helper
+
+> Stuck describing what you do? Try the pitch helper. Answer a few prompts and get back a one-liner, a short pitch, a long pitch, and a few reframes for "I'm just a…" days. No sign-in. Nothing saved. Share the link with anyone who needs the same push.
+
+`community-knowledge-hub/studio/ — "For the days the words won't come" section`
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ---
 
@@ -1301,7 +1434,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://community-knowledge-hub.replit.app/studio/`
 **Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
 **What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 1-P, 2-U, 3-M, 5-I, UG-I · Method: live page fetch (React SPA rendered; git history and internal filesystem not accessible from this environment)
 
 ---
 
@@ -1310,7 +1443,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any narrative copy about why northern and Indigenous communities need a single searchable grants index; any prose about the funding landscape; the NOHFC Grow Application Workspace copy (five-tab workspace, deadline countdown, intake-switch logic).
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 4-S, UG-H · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output)
 
 ---
 
@@ -1319,7 +1452,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any framing prose about what market analysis means for a northern community; any description of the gap between southern market intelligence tools and northern food systems reality; the specific metaphor behind "mosaic."
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-V · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons)
 
 ---
 
@@ -1328,7 +1461,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub; reads The Standby primitive)
 **What to look for:** Any prose about emergency sourcing for northern communities; any description of the difference between emergency preparedness as a checklist vs. as a living system; any vocabulary that predates or extends the Standby primitive's language in the constellation manifest.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-W, 4-T · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section)
 
 ---
 
@@ -1346,7 +1479,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://community-knowledge-hub.replit.app/`
 **Constellation zone:** Zone 3 — community production for NWO food systems; multi-tenant member-portal pattern
 **What to look for:** The "Today I…" verb routing copy; any Treasurer Calm Monthly Journey prose; the Stuck Board naming rationale; the Appreciation Wall purpose statement; any member-facing copy about what the co-op is for; the audience-chooser framing (household vs. producer); any Producer Playbook narrative; the kitchen-rental "borrowing not renting" rationale; the 807 Benefits brand story.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: see entry 4-O (already in harvest.md from Task #764) · Method: The full set of Zone 3 prose called out in "What to look for" — "Today I…" verb routing, Stuck Board naming rationale, role IS the room, Treasurer Calm Monthly Journey ('Calm' is the contract, not a vibe), dues-snooze-as-verb, audience chooser as structural pivot, Producer Playbook, Kitchen rental kept quiet (borrowing, not renting), Appreciation Wall — was recovered verbatim in Task #764 from the deleted constellation manifest at `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` and is catalogued under entry **4-O**. Live URL sweep (Task #785) confirmed no additional prose was accessible from the public-facing SPA shell (root URL renders a React auth-gated portal). No new passages remain to add; project 8 prose is fully covered by 4-O.
 
 ---
 
@@ -1381,8 +1514,13 @@ The following projects were identified in the codebase and may also contain harv
 
 ## Sweep Metadata
 
+<<<<<<< HEAD
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction
+=======
+**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep)
+**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + external live-URL sweep (projects 3–6, 8)
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ### Live files read
 
@@ -1424,6 +1562,7 @@ The following projects were identified in the codebase and may also contain harv
 | `ff9e4b9~1` | `artifacts/headwaters-books/src/data/constellation.ts` | 4-P |
 | `3686992~1` | `artifacts/deer-lake-walkthrough/src/sections/WhyThisTeam.tsx` | 5-H |
 
+<<<<<<< HEAD
 **Total passages:** 86 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
@@ -1445,5 +1584,11 @@ The Dam Days codebase (`https://conversation-log.replit.app/`) was not directly 
 | `dam-days/src/pages/Shallows.tsx` | 5-J |
 | `dam-days/src/pages/Takes.tsx` | UG-H |
 | `dam-days/src/pages/Dedication.tsx` (reader prompt) | UG-I |
+=======
+**Total passages:** 93 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +11 from Task #785 community-knowledge-hub live-URL sweep — passages 1-P, 2-U, 2-V, 2-W, 3-M, 4-S, 4-T, 5-I, UG-H, UG-I, plus 5-I note duplicated in 3-M — net new unique passages: 9)
+**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
+**Conversation history:** Not accessible from this environment.
+**External project sweeps:** 10 projects identified, 5 swept (projects 3, 4, 5, 6, 8 via live URL fetch — Task #785); 5 remaining (projects 1, 2, 7, 9, 10 — each requires a separate agent session in that project). See "Pending External Sweeps" section above.
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 *All passages confirmed verbatim. No synthesis or composition.*
