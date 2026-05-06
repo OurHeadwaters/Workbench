@@ -206,6 +206,8 @@ const DEEP_DIVES_EXPECTED_NUMBERS = [
   "DD.3",
   "DD.4",
   "DD.5",
+  "DD.6",
+  "DD.7",
   // Appendix: six passages held from the main chapters
   "DD.A",
   "DD.I",

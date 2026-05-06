@@ -332,12 +332,20 @@
               "text": "Kent Beck's *Extreme Programming Explained* and the agile lineage that grew from it built one of the most consequential pieces of codetry-shaped work in the prior literature without naming it as such: the metaphor *system metaphor* itself. XP's original twelve practices included *system metaphor* as a load-bearing element — the team agrees on a shared overarching metaphor for the system, and the metaphor disciplines naming throughout. The practice quietly fell out of fashion in the agile mainstream (it was the first XP practice most teams dropped), but the underlying claim — that a single chosen metaphor can constrain a system's structure across a whole codebase — is the bet codetry generalises into community institutions."
             },
             {
+              "kind": "callout",
+              "text": "Go deeper → §DD.6"
+            },
+            {
               "kind": "subhead",
               "text": "Brooks and *No Silver Bullet* (1986)"
             },
             {
               "kind": "para",
               "text": "Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* drew the line codetry's whole verification standard rests on. Brooks distinguished between *essence* — the irreducible conceptual structure of the software — and *accident* — the parts that exist only because of the substrate. Codetry's claim that *the metaphor must be inspectable in the name itself* (§3.6) is a claim about *essence*: the name is not an accident of the substrate (a label, a string field, a UI affordance), it is part of the system's essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended. Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident, which is the line codetry walks across."
+            },
+            {
+              "kind": "callout",
+              "text": "Go deeper → §DD.7"
             },
             {
               "kind": "subhead",
@@ -3941,6 +3949,84 @@
           ]
         },
         {
+          "id": "2-6",
+          "number": "DD.6",
+          "partRoman": "DD",
+          "partLabel": "Deep Dives",
+          "title": "Different from XP and the system metaphor",
+          "blocks": [
+            {
+              "kind": "para",
+              "text": "The sixth discipline codetry shares ancestry with is the agile lineage that Kent Beck started with *Extreme Programming Explained* in 1999. XP built one of the most consequential pieces of codetry-shaped work in the prior literature without naming it as such: the practice called *system metaphor*."
+            },
+            {
+              "kind": "para",
+              "text": "XP's original twelve practices included *system metaphor* as a load-bearing element. The team agrees on a single shared overarching metaphor for the system — a naming spine that disciplines the whole codebase. Every object, every method, every boundary takes its name from the same metaphor, so a reader moving from the schema to the UI to the tests hears one coherent story throughout."
+            },
+            {
+              "kind": "subhead",
+              "text": "What happened to the system metaphor practice."
+            },
+            {
+              "kind": "para",
+              "text": "It was the first XP practice most teams dropped. The agile mainstream quietly set it aside — it was hard to explain, hard to evaluate in a retrospective, and it produced the most visible arguments on a team that could not agree on what the metaphor should be. Kent Beck later acknowledged that the practice had been the hardest one to teach, and the Scrum and Kanban traditions that grew from XP's roots did not carry it forward. By the time the agile mainstream solidified in the mid-2000s, *system metaphor* was a footnote."
+            },
+            {
+              "kind": "subhead",
+              "text": "Codetry is what the system metaphor practice was trying to name."
+            },
+            {
+              "kind": "para",
+              "text": "The underlying claim — that a single chosen metaphor can and should constrain a system's naming throughout the entire codebase — is exactly the bet codetry generalises. Where XP applied it inside software teams, codetry extends it into community institutions where the domain experts are the people who live in the place. Where XP's system metaphor was evaluated by team agreement, codetry's rename test (§3.2) makes the same evaluation falsifiable at the level of the individual noun: hold the rest of the system constant, swap the word, read what shifts in the conversation."
+            },
+            {
+              "kind": "para",
+              "text": "The reason the practice fell out of use is instructive: *system metaphor* was described as a big, whole-team design choice, a single metaphor chosen up front for the entire system. That framing made it feel architectural and intimidating. Codetry's move is to apply the same discipline noun by noun, workbench session by workbench session, so the metaphor does not need to be chosen all at once — it is held incrementally, one rename at a time, and the rename test is the tool that holds it."
+            },
+            {
+              "kind": "callout",
+              "text": "XP's system metaphor said: name the whole codebase from a single metaphor. Codetry says: hold that discipline one noun at a time, and make the hold testable at the kitchen table rather than the whiteboard."
+            }
+          ]
+        },
+        {
+          "id": "2-7",
+          "number": "DD.7",
+          "partRoman": "DD",
+          "partLabel": "Deep Dives",
+          "title": "Different from Brooks and the essence/accident distinction",
+          "blocks": [
+            {
+              "kind": "para",
+              "text": "The seventh lineage codetry rests on is Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* (1986). Where most of the prior literature named in §4.2 is a sibling or a cousin, Brooks drew the philosophical line that codetry's entire verification standard rests on."
+            },
+            {
+              "kind": "subhead",
+              "text": "The essence/accident distinction."
+            },
+            {
+              "kind": "para",
+              "text": "Brooks distinguished between *essence* — the irreducible conceptual structure of the software, the problem the system is actually for — and *accident* — the parts that exist only because of the substrate, the choice of language, the deployment environment, the framework imposed by the organisation. The hard parts of software, Brooks argued, are in the essence: the conceptual complexity of the problem itself. No accidental improvement — faster compilers, better tools, more expressive languages — can dissolve essential complexity, only reduce the cost of carrying it."
+            },
+            {
+              "kind": "subhead",
+              "text": "Where codetry walks across the line Brooks drew."
+            },
+            {
+              "kind": "para",
+              "text": "Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident. A label in a UI, a string field in a schema, an affordance on a button — each of these could be treated as an accident of the substrate, a presentational choice that can be changed without touching the system's conceptual structure. Codetry's claim is that the name a community uses for its own institution is not an accident — it is part of the essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended."
+            },
+            {
+              "kind": "para",
+              "text": "Codetry's §3.6 standard — *the metaphor must be inspectable in the name itself* — is a claim about essence: the name is not a surface label sitting on top of the system's real structure, it is part of the real structure, and the rename test exists to keep it there. When a *saltbox* becomes a *household container* in the schema, the essential conceptual relationship between the word and the community has been dissolved and replaced with an accidental one — the kind of word a software engineer would choose rather than the kind of word the person who lives in the place already uses."
+            },
+            {
+              "kind": "callout",
+              "text": "Brooks drew the line between essence and accident in software. Codetry walks across that line and claims the community's word for its own institution as essence — and treats every translation away from it as an accident the system should not have been allowed to accumulate."
+            }
+          ]
+        },
+        {
           "id": "dd-intro",
           "number": "DD.A",
           "partRoman": "DD",
@@ -5491,12 +5577,20 @@
           "text": "Kent Beck's *Extreme Programming Explained* and the agile lineage that grew from it built one of the most consequential pieces of codetry-shaped work in the prior literature without naming it as such: the metaphor *system metaphor* itself. XP's original twelve practices included *system metaphor* as a load-bearing element — the team agrees on a shared overarching metaphor for the system, and the metaphor disciplines naming throughout. The practice quietly fell out of fashion in the agile mainstream (it was the first XP practice most teams dropped), but the underlying claim — that a single chosen metaphor can constrain a system's structure across a whole codebase — is the bet codetry generalises into community institutions."
         },
         {
+          "kind": "callout",
+          "text": "Go deeper → §DD.6"
+        },
+        {
           "kind": "subhead",
           "text": "Brooks and *No Silver Bullet* (1986)"
         },
         {
           "kind": "para",
           "text": "Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* drew the line codetry's whole verification standard rests on. Brooks distinguished between *essence* — the irreducible conceptual structure of the software — and *accident* — the parts that exist only because of the substrate. Codetry's claim that *the metaphor must be inspectable in the name itself* (§3.6) is a claim about *essence*: the name is not an accident of the substrate (a label, a string field, a UI affordance), it is part of the system's essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended. Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident, which is the line codetry walks across."
+        },
+        {
+          "kind": "callout",
+          "text": "Go deeper → §DD.7"
         },
         {
           "kind": "subhead",
@@ -9053,6 +9147,84 @@
         {
           "kind": "callout",
           "text": "Capital allocation at scale wants the best allocator to keep allocating. Codetry wants the best allocator to write down how, and then leave the chair to the community that owns the work."
+        }
+      ]
+    },
+    {
+      "id": "2-6",
+      "number": "DD.6",
+      "partRoman": "DD",
+      "partLabel": "Deep Dives",
+      "title": "Different from XP and the system metaphor",
+      "blocks": [
+        {
+          "kind": "para",
+          "text": "The sixth discipline codetry shares ancestry with is the agile lineage that Kent Beck started with *Extreme Programming Explained* in 1999. XP built one of the most consequential pieces of codetry-shaped work in the prior literature without naming it as such: the practice called *system metaphor*."
+        },
+        {
+          "kind": "para",
+          "text": "XP's original twelve practices included *system metaphor* as a load-bearing element. The team agrees on a single shared overarching metaphor for the system — a naming spine that disciplines the whole codebase. Every object, every method, every boundary takes its name from the same metaphor, so a reader moving from the schema to the UI to the tests hears one coherent story throughout."
+        },
+        {
+          "kind": "subhead",
+          "text": "What happened to the system metaphor practice."
+        },
+        {
+          "kind": "para",
+          "text": "It was the first XP practice most teams dropped. The agile mainstream quietly set it aside — it was hard to explain, hard to evaluate in a retrospective, and it produced the most visible arguments on a team that could not agree on what the metaphor should be. Kent Beck later acknowledged that the practice had been the hardest one to teach, and the Scrum and Kanban traditions that grew from XP's roots did not carry it forward. By the time the agile mainstream solidified in the mid-2000s, *system metaphor* was a footnote."
+        },
+        {
+          "kind": "subhead",
+          "text": "Codetry is what the system metaphor practice was trying to name."
+        },
+        {
+          "kind": "para",
+          "text": "The underlying claim — that a single chosen metaphor can and should constrain a system's naming throughout the entire codebase — is exactly the bet codetry generalises. Where XP applied it inside software teams, codetry extends it into community institutions where the domain experts are the people who live in the place. Where XP's system metaphor was evaluated by team agreement, codetry's rename test (§3.2) makes the same evaluation falsifiable at the level of the individual noun: hold the rest of the system constant, swap the word, read what shifts in the conversation."
+        },
+        {
+          "kind": "para",
+          "text": "The reason the practice fell out of use is instructive: *system metaphor* was described as a big, whole-team design choice, a single metaphor chosen up front for the entire system. That framing made it feel architectural and intimidating. Codetry's move is to apply the same discipline noun by noun, workbench session by workbench session, so the metaphor does not need to be chosen all at once — it is held incrementally, one rename at a time, and the rename test is the tool that holds it."
+        },
+        {
+          "kind": "callout",
+          "text": "XP's system metaphor said: name the whole codebase from a single metaphor. Codetry says: hold that discipline one noun at a time, and make the hold testable at the kitchen table rather than the whiteboard."
+        }
+      ]
+    },
+    {
+      "id": "2-7",
+      "number": "DD.7",
+      "partRoman": "DD",
+      "partLabel": "Deep Dives",
+      "title": "Different from Brooks and the essence/accident distinction",
+      "blocks": [
+        {
+          "kind": "para",
+          "text": "The seventh lineage codetry rests on is Fred Brooks' *No Silver Bullet — Essence and Accident in Software Engineering* (1986). Where most of the prior literature named in §4.2 is a sibling or a cousin, Brooks drew the philosophical line that codetry's entire verification standard rests on."
+        },
+        {
+          "kind": "subhead",
+          "text": "The essence/accident distinction."
+        },
+        {
+          "kind": "para",
+          "text": "Brooks distinguished between *essence* — the irreducible conceptual structure of the software, the problem the system is actually for — and *accident* — the parts that exist only because of the substrate, the choice of language, the deployment environment, the framework imposed by the organisation. The hard parts of software, Brooks argued, are in the essence: the conceptual complexity of the problem itself. No accidental improvement — faster compilers, better tools, more expressive languages — can dissolve essential complexity, only reduce the cost of carrying it."
+        },
+        {
+          "kind": "subhead",
+          "text": "Where codetry walks across the line Brooks drew."
+        },
+        {
+          "kind": "para",
+          "text": "Brooks did not write about names. He drew the line that says names *can* belong to essence rather than accident. A label in a UI, a string field in a schema, an affordance on a button — each of these could be treated as an accident of the substrate, a presentational choice that can be changed without touching the system's conceptual structure. Codetry's claim is that the name a community uses for its own institution is not an accident — it is part of the essential structure, and a discipline that does not protect it is leaving the load-bearing layer undefended."
+        },
+        {
+          "kind": "para",
+          "text": "Codetry's §3.6 standard — *the metaphor must be inspectable in the name itself* — is a claim about essence: the name is not a surface label sitting on top of the system's real structure, it is part of the real structure, and the rename test exists to keep it there. When a *saltbox* becomes a *household container* in the schema, the essential conceptual relationship between the word and the community has been dissolved and replaced with an accidental one — the kind of word a software engineer would choose rather than the kind of word the person who lives in the place already uses."
+        },
+        {
+          "kind": "callout",
+          "text": "Brooks drew the line between essence and accident in software. Codetry walks across that line and claims the community's word for its own institution as essence — and treats every translation away from it as an accident the system should not have been allowed to accumulate."
         }
       ]
     },
