@@ -287,6 +287,18 @@ function PrintBlock({ block }: { block: Block }) {
           ))}
         </View>
       );
+    case "tool":
+      return (
+        <View style={styles.toolNote}>
+          <Text style={[styles.toolNoteLabel, { fontFamily: MONO }]}>
+            Try it
+          </Text>
+          <Text style={[styles.toolNoteText, { fontFamily: SERIF_ITALIC }]}>
+            {block.label}
+            {block.hint ? ` — ${block.hint}` : ""}
+          </Text>
+        </View>
+      );
     case "rule":
       return <View style={styles.midRule} />;
   }
@@ -487,6 +499,26 @@ const styles = StyleSheet.create({
     color: INK,
     marginBottom: 4,
     letterSpacing: 0.1,
+  },
+  toolNote: {
+    borderLeftWidth: 3,
+    borderLeftColor: MUTED,
+    paddingLeft: 12,
+    paddingVertical: 8,
+    marginVertical: 10,
+    backgroundColor: "#f7f6f3",
+  },
+  toolNoteLabel: {
+    fontSize: 9,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+    color: MUTED,
+    marginBottom: 3,
+  },
+  toolNoteText: {
+    fontSize: 12.5,
+    lineHeight: 19,
+    color: INK,
   },
   midRule: {
     height: 1,
