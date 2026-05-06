@@ -299,6 +299,26 @@ export function HomePage() {
               thumbAlt="Rootwork landing page"
             />
             <WorkCard
+              eyebrow="Market intelligence · Northern food systems"
+              title="Market Mosaic"
+              hook="Market analysis built for northern communities."
+              detail="An interactive snapshot of northern food markets — who's buying, what they need, and where the gaps are."
+              accent="evergreen"
+              href="https://community-knowledge-hub.replit.app/infographics/market-mosaic.html"
+              external
+              testId="work-card-market-mosaic"
+            />
+            <WorkCard
+              eyebrow="Supply chain · Northern communities"
+              title="Standby Supplies"
+              hook="Northern supply chain reference and emergency sourcing."
+              detail="A ready reference for sourcing food and supplies when the usual options fall through."
+              accent="amber"
+              href="https://community-knowledge-hub.replit.app/infographics/standby-supplies.html"
+              external
+              testId="work-card-standby-supplies"
+            />
+            <WorkCard
               eyebrow="Health · Long-term care"
               title="Bright Side"
               hook="Recreation therapy companion for long-term care homes."

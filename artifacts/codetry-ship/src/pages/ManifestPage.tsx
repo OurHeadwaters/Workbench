@@ -62,7 +62,7 @@ export function ManifestPage() {
               className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: "hsl(var(--accent))" }}
             >
-              codetry · ship · operator
+              headwaters · operator
             </p>
             <h1 className="font-serif text-3xl tracking-tight">
               Crew manifest
@@ -303,7 +303,7 @@ function LoginGate({ onAuthed }: { onAuthed: (token: string) => void }) {
             className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: "hsl(var(--accent))" }}
           >
-            codetry · ship · operator
+            headwaters · operator
           </p>
           <h1 className="font-serif text-2xl">Operator passphrase</h1>
           <p

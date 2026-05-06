@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
+import { getStoredOwnerToken } from "@/lib/api";
 
 interface NavLink {
   href: string;
@@ -9,7 +10,7 @@ interface NavLink {
 
 const NAV_LINKS: NavLink[] = [
   { href: "/home",     label: "Home" },
-  { href: "/services", label: "The work" },
+  { href: "/services", label: "The Work" },
   { href: "/bio",      label: "About" },
 ];
 
@@ -21,8 +22,21 @@ function isActive(path: string, location: string): boolean {
 export function SiteNav() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const [authed, setAuthed] = useState(() => Boolean(getStoredOwnerToken()));
   const drawerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    function syncAuth() {
+      setAuthed(Boolean(getStoredOwnerToken()));
+    }
+    window.addEventListener("storage", syncAuth);
+    window.addEventListener("headwaters:auth-change", syncAuth);
+    return () => {
+      window.removeEventListener("storage", syncAuth);
+      window.removeEventListener("headwaters:auth-change", syncAuth);
+    };
+  }, []);
 
   const onDarkHero = location === "/";
 
@@ -119,8 +133,26 @@ export function SiteNav() {
                 </a>
               );
             })}
+            {authed && (
+              <a
+                href={`${base}/workbench`}
+                className="px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                style={{
+                  color: isActive("/workbench", location)
+                    ? dark ? "hsl(38 36% 94%)" : "hsl(var(--foreground))"
+                    : dark ? "rgba(235,225,210,0.60)" : "hsl(var(--muted-foreground))",
+                  background: isActive("/workbench", location)
+                    ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
+                    : "transparent",
+                }}
+                aria-current={isActive("/workbench", location) ? "page" : undefined}
+                data-testid="nav-link-workbench"
+              >
+                Workbench
+              </a>
+            )}
             <a
-              href={`${base}/home#conversation`}
+              href={`${base}/sign-on`}
               className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
               style={{
                 background: "hsl(var(--accent))",
@@ -128,7 +160,7 @@ export function SiteNav() {
               }}
               data-testid="nav-cta"
             >
-              Start a conversation
+              Sign on
             </a>
           </div>
 
@@ -203,8 +235,22 @@ export function SiteNav() {
               </a>
             );
           })}
+          {authed && (
+            <a
+              href={`${base}/workbench`}
+              className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
+              style={{
+                color: isActive("/workbench", location) ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+                background: isActive("/workbench", location) ? "hsl(var(--muted))" : "transparent",
+              }}
+              aria-current={isActive("/workbench", location) ? "page" : undefined}
+              data-testid="mobile-nav-link-workbench"
+            >
+              Workbench
+            </a>
+          )}
           <a
-            href={`${base}/home#conversation`}
+            href={`${base}/sign-on`}
             className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
             style={{
               background: "hsl(var(--accent))",
@@ -212,7 +258,7 @@ export function SiteNav() {
             }}
             data-testid="mobile-nav-cta"
           >
-            Start a conversation →
+            Sign on →
           </a>
           <div
             className="mt-3 pt-3 border-t"

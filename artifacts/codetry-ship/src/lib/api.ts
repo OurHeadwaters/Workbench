@@ -82,6 +82,7 @@ export function setStoredOwnerToken(token: string | null): void {
   try {
     if (token === null) window.localStorage.removeItem(TOKEN_KEY);
     else window.localStorage.setItem(TOKEN_KEY, token);
+    window.dispatchEvent(new Event("headwaters:auth-change"));
   } catch {
     // localStorage may be unavailable; no-op
   }

@@ -89,7 +89,7 @@ function IntakeView({ token, onSignOut }: { token: string; onSignOut: () => void
               className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: "hsl(var(--accent))" }}
             >
-              codetry · deadhead · intake
+              headwaters · deadhead · intake
             </p>
             <h1 className="font-serif text-3xl tracking-tight">
               Deadhead intake
@@ -383,7 +383,7 @@ function LoginGate({ onAuthed }: { onAuthed: (token: string) => void }) {
             className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: "hsl(var(--accent))" }}
           >
-            codetry · deadhead · operator
+            headwaters · deadhead · operator
           </p>
           <h1 className="font-serif text-2xl">Operator passphrase</h1>
           <p

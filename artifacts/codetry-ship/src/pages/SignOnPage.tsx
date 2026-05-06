@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
-import { ApiError, postSignOn } from "@/lib/api";
+import { useLocation } from "wouter";
+import { ApiError, postSignOn, fetchManifest, setStoredOwnerToken } from "@/lib/api";
 
 interface FormState {
   name: string;
@@ -22,6 +23,7 @@ const EMPTY: FormState = {
 };
 
 export function SignOnPage() {
+  const [, navigate] = useLocation();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export function SignOnPage() {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("Could not reach the ship just now. Try again in a moment.");
+        setError("Could not reach the server just now. Try again in a moment.");
       }
     } finally {
       setSubmitting(false);
@@ -64,13 +66,13 @@ export function SignOnPage() {
             style={{ color: "hsl(var(--accent))" }}
             data-testid="header-eyebrow"
           >
-            codetry · ship
+            headwaters
           </p>
           <h1
             className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight"
             data-testid="header-title"
           >
-            Sign on to the ship.
+            Sign on.
           </h1>
         </header>
 
@@ -82,26 +84,26 @@ export function SignOnPage() {
         >
           <blockquote className="font-serif text-xl sm:text-2xl leading-snug">
             <p>
-              Codetry is the practice of building the boat in the open — naming
-              every plank, weighing every nail, and telling the people on the
-              shore exactly where you mean to sail before you ask them to come
-              aboard.
+              Headwaters is the practice of building in the open — naming
+              every decision, sharing every number, and telling the people in
+              the community exactly what is being built before asking them
+              to come aboard.
             </p>
           </blockquote>
-          <p className="mt-4 signoff">— from the codetry manifesto</p>
+          <p className="mt-4 signoff">— from the headwaters approach</p>
         </section>
 
-        {/* ----------------------------- ship metaphor ----------------------------- */}
+        {/* ----------------------------- about ----------------------------- */}
         <section
           className="mt-12 sm:mt-16 space-y-5 font-serif text-base sm:text-lg leading-relaxed"
           data-testid="section-ship"
         >
           <p>
-            A ship is a strange thing to ask people to join. You can&rsquo;t
-            inspect the keel from the dock. You can&rsquo;t test the rigging
-            until the wind comes up. The crew you sail with is the crew you
-            cast off with — there&rsquo;s no quietly stepping back to land
-            once the lines are off the cleat.
+            Building a community economy takes time, honesty, and people who
+            are willing to stay with it. You can&rsquo;t inspect the foundation
+            from the outside. You can&rsquo;t test the store until the doors
+            open. The community you build with is the community you live with
+            — there&rsquo;s no quietly stepping back once the work begins.
           </p>
           <p>
             So this is the part where we tell you what we&rsquo;re building,
@@ -113,7 +115,7 @@ export function SignOnPage() {
             people who actually have to live with the result.
           </p>
           <p>
-            If you&rsquo;d like a place on the manifest, the form below is
+            If you&rsquo;d like a place on the list, the form below is
             how. We&rsquo;ll save your name. We&rsquo;ll write you back when
             there&rsquo;s something concrete to share. We won&rsquo;t put you
             on a list, sell anything to you, or make you a fundraising
@@ -140,7 +142,7 @@ export function SignOnPage() {
                 signed on
               </p>
               <h2 className="font-serif text-2xl sm:text-3xl leading-tight">
-                {confirmedName}, your name is on the ship.
+                {confirmedName}, your name is on the list.
               </h2>
               <p className="font-serif text-base sm:text-lg leading-relaxed text-muted-foreground">
                 We saved what you wrote. We&rsquo;ll send a short note to the
@@ -157,7 +159,7 @@ export function SignOnPage() {
                   sign someone else on
                 </button>
               </div>
-              <p className="signoff pt-4">— codetry</p>
+              <p className="signoff pt-4">— headwaters</p>
             </div>
           ) : (
             <form
@@ -261,31 +263,97 @@ export function SignOnPage() {
                   className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
                   data-testid="button-signon"
                 >
-                  {submitting ? "Signing on…" : "Put my name on the ship"}
+                  {submitting ? "Signing on…" : "Put my name on the list"}
                 </button>
-                <p className="signoff">— codetry</p>
+                <p className="signoff">— headwaters</p>
               </div>
             </form>
           )}
         </section>
 
+        {/* ----------------------------- operator access ----------------------------- */}
+        <OperatorAccess onAuthed={() => navigate("/workbench")} />
+
         {/* ----------------------------- footer ----------------------------- */}
         <footer
-          className="mt-20 pt-8 border-t flex flex-wrap items-center justify-between gap-4"
+          className="mt-12 pt-8 border-t flex flex-wrap items-center justify-between gap-4"
           style={{ borderColor: "hsl(var(--card-border))" }}
           data-testid="footer"
         >
-          <p className="signoff">codetry · ship · {new Date().getFullYear()}</p>
-          <a
-            href="manifest"
-            className="signoff underline underline-offset-4 hover:opacity-80"
-            data-testid="link-operator"
-          >
-            operator
-          </a>
+          <p className="signoff">headwaters · {new Date().getFullYear()}</p>
         </footer>
       </div>
     </main>
+  );
+}
+
+function OperatorAccess({ onAuthed }: { onAuthed: () => void }) {
+  const [pass, setPass] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      await fetchManifest(pass);
+      setStoredOwnerToken(pass);
+      onAuthed();
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setError("Wrong passphrase.");
+      } else {
+        setError("Could not verify. Try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section
+      className="mt-16 pt-10 border-t"
+      style={{ borderColor: "hsl(var(--card-border))" }}
+      data-testid="section-operator"
+    >
+      <p
+        className="font-mono text-[10px] uppercase tracking-[0.22em] mb-4"
+        style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}
+      >
+        Operator access
+      </p>
+      <form onSubmit={onSubmit} className="flex items-start gap-3 max-w-sm" data-testid="form-operator">
+        <input
+          type="password"
+          required
+          value={pass}
+          onChange={(e) => setPass(e.target.value)}
+          placeholder="Passphrase"
+          className="flex-1 rounded-sm border bg-input px-3 py-2 font-sans text-sm focus:outline-none focus:ring-2"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+          data-testid="input-operator-passphrase"
+        />
+        <button
+          type="submit"
+          disabled={submitting}
+          className="shrink-0 inline-flex items-center px-4 py-2 rounded-sm font-mono text-[10px] uppercase tracking-[0.18em] bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          data-testid="button-operator-submit"
+        >
+          {submitting ? "…" : "Enter"}
+        </button>
+      </form>
+      {error ? (
+        <p
+          role="alert"
+          className="mt-2 font-sans text-xs text-destructive"
+          data-testid="operator-error"
+        >
+          {error}
+        </p>
+      ) : null}
+    </section>
   );
 }
 

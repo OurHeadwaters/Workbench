@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,9 +12,18 @@ import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 import { ServicesPage } from "@/pages/ServicesPage";
+import { WorkbenchPage } from "@/pages/WorkbenchPage";
 import { SiteNav } from "@/components/SiteNav";
+import { getStoredOwnerToken } from "@/lib/api";
 
 const queryClient = new QueryClient();
+
+function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+  if (!getStoredOwnerToken()) {
+    return <Redirect to="/sign-on" />;
+  }
+  return <Component />;
+}
 
 function Router() {
   return (
@@ -24,10 +33,20 @@ function Router() {
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
       <Route path="/sign-on" component={SignOnPage} />
-      <Route path="/manifest" component={ManifestPage} />
-      <Route path="/sow" component={SowPage} />
+      <Route path="/workbench">
+        {() => <ProtectedRoute component={WorkbenchPage} />}
+      </Route>
+      <Route path="/manifest">
+        {() => <ProtectedRoute component={ManifestPage} />}
+      </Route>
+      <Route path="/sow">
+        {() => <ProtectedRoute component={SowPage} />}
+      </Route>
       <Route path="/bright-side" component={BrightSidePage} />
-      <Route path="/deadhead/intake" component={DeadheadIntakePage} />
+      <Route path="/deadhead/intake">
+        {() => <ProtectedRoute component={DeadheadIntakePage} />}
+      </Route>
+
       <Route component={NotFound} />
     </Switch>
   );
