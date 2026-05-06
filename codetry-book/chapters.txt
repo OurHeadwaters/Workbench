@@ -1,0 +1,14 @@
+# chapters.txt — canonical reading order for the manuscript
+#
+# Each line is a filename relative to codetry-book/drafts/.
+# assemble-manuscript.sh reads this file in order to build manuscript.md.
+#
+# BEFORE renaming or moving any draft file, update this list to match.
+# Lines starting with # and blank lines are ignored.
+
+01-the-headwaters.md
+02-watching-the-beavers.md
+03-the-dam-breaks.md
+04-codetry-as-architecture.md
+05-sons-and-daughters-of-thunder.md
+appendix-deep-dives.md

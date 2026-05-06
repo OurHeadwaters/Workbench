@@ -13,15 +13,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DRAFTS="$SCRIPT_DIR/drafts"
 OUT="$SCRIPT_DIR/manuscript.md"
+MANIFEST="$SCRIPT_DIR/chapters.txt"
 
-CHAPTERS=(
-  "01-the-headwaters.md"
-  "02-watching-the-beavers.md"
-  "03-the-dam-breaks.md"
-  "04-codetry-as-architecture.md"
-  "05-sons-and-daughters-of-thunder.md"
-  "appendix-deep-dives.md"
-)
+if [[ ! -f "$MANIFEST" ]]; then
+  echo "ERROR: chapter manifest not found: $MANIFEST" >&2
+  exit 1
+fi
+
+# Read chapters.txt, skipping blank lines and comment lines.
+mapfile -t CHAPTERS < <(grep -v '^\s*#' "$MANIFEST" | grep -v '^\s*$')
 
 {
   echo "<!-- GENERATED FILE — do not edit by hand. Run assemble-manuscript.sh to regenerate. -->"
