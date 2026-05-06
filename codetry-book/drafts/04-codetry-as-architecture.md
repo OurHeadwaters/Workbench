@@ -2,6 +2,7 @@
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
 *Continuity pass 2026-05-06 — two adjustments made. (1) Cross-chapter repetition resolved: the budget/Watershed contrast and the Siphon paragraph appeared verbatim in both §The governance stake and §The name changes the tool; the preview block in §The governance stake was removed so the full treatment sits only in §The name changes the tool where the example catalog lives. (2) Naming note added to "bright side" vocabulary entry: the term originates in dementia care practice — an effective support person cannot hold massity's frame of reality and do the work simultaneously; you have to enter the client's reality. Not because that side is better, but because certain things are only visible from inside it. Source logged in harvest as passage 4-U-i. "Bright side" (lowercase) remains distinct from the capitalized "Bright Side" care home product in Ch2. Tone: architectural and definitional — appropriate as the capstone chapter.*
+*Continuity pass 2026-05-06 (Ch5 + Appendix extension) — one vocabulary addition made. "Centralized disruption" was present in Ch4 body text (§The Standby, full six-word vocabulary) but absent from the formal vocabulary list. The Appendix Deep Dives treat it as a named term-of-art in the full Standby role definition; for consistency it is now added to the formal vocabulary list after The Standby entry. The eight Gate sub-terms (mapping, substitution, category, translation, calm membrane, plus the four-rung severity ladder terms) were reviewed and judged consistent with the vocabulary list's intentionally minimal scope — they are sub-shelves named in body text and expanded in the Appendix, not primitives requiring formal list entries. Ch4→Ch5 boundary reviewed and confirmed intentional (see Ch5 continuity note).*
 
 ---
 
@@ -188,6 +189,8 @@ It is a quiet discipline. Most of it is naming. These are the terms the discipli
 **Zone** — A domain of practice inside the constellation: household, finance, knowledge, emergency preparedness, land, and public. Primitives are hosted in zones but read by all zones.
 
 **The Standby** — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name.
+
+**Centralized disruption** — The class of event that activates The Standby: conditions that temporarily remove or degrade a shared infrastructure the whole constellation depends on. Examples: drought, fire, smoke, flood, ice, power failure, water outage, freight disruption, payment system failure, pandemic, evacuation, postponed AGM, key-person-down. Named as a class so the constellation can distinguish a Standby call — centralized, shared, requiring the full primitive — from a household-level crisis handled inside Zone 0.
 
 **Resting state / Activated state** — The two operational states of The Standby. The infrastructure is the same in either state; only the valve position changes. The name holds in both. Resting: preparation. Activated: response.
 

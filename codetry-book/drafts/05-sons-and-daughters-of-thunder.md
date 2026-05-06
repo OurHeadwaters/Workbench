@@ -2,6 +2,7 @@
 
 *First full draft · assembled from harvest.md Section 5 · for founder review*
 *Draft date: 2026-05-06 · Status: UNEDITED — return to founder before any further revision*
+*Continuity pass 2026-05-06 — Ch4→Ch5 boundary confirmed as intentional: Ch4 closes on the discipline's axiom ("the names kept their promises"); Ch5 opens on the posture that earns that trust ("stillness… knowing the dam holds"). No explicit bridge added — the juxtaposition carries the load; a reader completing Ch4 arrives at Ch5's stillness as the earned exhale after the architectural vocabulary chapter. Ch5 vocabulary checked against Ch4 vocabulary section: no new primitives introduced. "Practice" and "practitioner" are operating concepts treated as already established from Ch1–Ch3; no new vocabulary entries required. The "exit is handover, not compound" framing extends the practitioner's relationship to the constellation without introducing a new named primitive. The constellation and bright-side references in §The structure of what follows and §The closing test are consistent with Ch4 definitions.*
 
 ---
 
