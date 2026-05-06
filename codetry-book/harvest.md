@@ -697,6 +697,8 @@ One-sentence claim (callout):
 
 > The Standby is the constellation's first non-zone primitive.
 >
+> It holds two registers that an outside system would almost certainly split apart.
+>
 > On one side is a slow, always-on practice. The pantry shelf is stocked. The contact tree is current. The generator gets test-started. The watch reads the morning advisory before anything is happening.
 >
 > On the other side is a fast, episodic event. A fire call opens. The rosters flip. The standby stock comes out where everyone can see it. And the system runs in *active* until the call stands down.
@@ -704,6 +706,10 @@ One-sentence claim (callout):
 > Two sides. One umbrella.
 >
 > If the slow side and the fast side were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge. And the moment a call opened, the practitioner would discover that the people who keep the pantry are not the people who run the call. The handoff would have to be invented under fire.
+>
+> The both-states test catches this before it happens. Pick the slow side, ask whether the umbrella name still fits the fast side. Pick the fast side, ask whether the umbrella name still fits the slow side. *Standby* passes both. *On standby*, and *standby stock*, are the same posture in different tempos.
+>
+> The two-sidedness here is *temporal*. One system, two tempos. Slow side and fast side are the same plumbing running at different rates.
 >
 > So when you walk back outside — what fails first on your homestead when the power goes out? Don't fix it yet. Just name it, in your own words, in pencil, where you can see it tomorrow.
 
@@ -713,13 +719,21 @@ One-sentence claim (callout):
 
 ### 4-H · Both-sides — narration (Station 3)
 
+> The both-states principle holds when a system runs in two tempos.
+>
 > A second class of system runs in one tempo, but in two contexts at once. Two audiences, holding two different vocabularies as legitimate. Neither willing to give up theirs to the other.
 >
 > The temptation, every time, is to name each side separately, and let them grow into two pipes facing two rooms. The both-sides principle is the codetry move that resists that.
 >
+> When a system has language that has to live in two contexts that hold different vocabularies as legitimate — the umbrella name has to fit both contexts in one word. Or the system will pick a dialect, and lose the other room.
+>
 > Take *The Gate*. The Gate names both the *bright side* — the constellation's own dialect: *neighbour*, *channel*, *the books*, *standby stock*, *the watch* — and *massity* — the mass-society dialect: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer* — inside one umbrella that does not pick a side. One word, two contexts.
 >
 > Two candidates were rejected. *Translator* held the directional work — but flattened the membrane into pure transaction. A translator processes; a gate decides whether to. *Glossary* held the dictionary side — but couldn't hold the active posture of substituting words inside real documents, the ledger of past substitutions, or the *refused* rung for source-side language with no honest target-side equivalent.
+>
+> Both survived as sub-shelves inside The Gate. Neither could be the umbrella name.
+>
+> The both-states test picks a tempo. The both-sides test picks a context. Pick the bright side, and ask whether the umbrella name still respects massity. Pick the massity side, and ask whether the umbrella name still respects the bright side.
 >
 > Same word, different room. That is the test.
 
@@ -731,13 +745,21 @@ One-sentence claim (callout):
 
 > The Gate is the constellation's second non-zone primitive — language across institutional boundaries.
 >
+> It holds two registers that an outside system wouldn't even recognise as siblings.
+>
 > On one side is the *bright side* — the constellation's own dialect. The words a community uses with itself, in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*.
 >
 > On the other side is *massity* — mass-society dialect. The language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*.
 >
 > Neither side is wrong inside its own context. Each side is unfit currency in the other's context.
 >
+> If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture.
+>
 > The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction. It logs every substitution, so the bright-side noun stays on file alongside the massity equivalent. And it has a *refused* rung — for source-side language that has no honest target-side equivalent, and would lose its meaning under any substitution.
+>
+> The two-sidedness here is *contextual*. One system, two contexts. Bright side and massity are the same plumbing facing different rooms.
+>
+> The Standby's two sides were *temporal*. The Gate's two sides are *contextual*. The Standby's principle is *both-states*. The Gate's principle is *both-sides*. Both are now registered as named principles in the manifest.
 >
 > So here is what to bring back from this last station. Take one piece of mail from a regulator, a banker, or a government office. Underline every word in it your family wouldn't say at the table. Write your family's word in the margin, next to each one.
 >
@@ -1038,11 +1060,11 @@ The three credibility claims:
 | `artifacts/headwaters-books/src/components/EaglePrologue.tsx` | 1-A |
 | `artifacts/codetry-ship/src/pages/BioPage.tsx` | 1-B |
 | `artifacts/codetry-handbook/data/handbook.ts` | 1-C, 3-A–G, 4-A–E, 4-K, 5-A–G |
-| `artifacts/codetry-handbook/public/narration/the-saltbox.md` | 4-D |
-| `artifacts/codetry-handbook/public/narration/both-states.md` | 4-F |
-| `artifacts/codetry-handbook/public/narration/both-sides.md` | 4-H |
-| `artifacts/codetry-handbook/public/narration/the-standby.md` | 4-G |
-| `artifacts/codetry-handbook/public/narration/the-gate.md` | 4-I |
+| `artifacts/codetry-handbook/public/narration/the-saltbox.md` | 4-D (full script) |
+| `artifacts/codetry-handbook/public/narration/both-states.md` | 4-F (full script) |
+| `artifacts/codetry-handbook/public/narration/both-sides.md` | 4-H (full script — missing paragraphs added 2026-05-06) |
+| `artifacts/codetry-handbook/public/narration/the-standby.md` | 4-G (full script — missing paragraphs added 2026-05-06) |
+| `artifacts/codetry-handbook/public/narration/the-gate.md` | 4-I (full script — missing paragraphs added 2026-05-06) |
 | `artifacts/print-marketing/src/pages/VocabularySheet.tsx` | 4-J |
 | `artifacts/print-marketing/src/pages/SaltOfTheEarthClub.tsx` | 1-D, 1-E, 1-F |
 | `artifacts/print-marketing/src/pages/GoingDigital.tsx` | 1-G, 1-H, 1-I, UG-D |
