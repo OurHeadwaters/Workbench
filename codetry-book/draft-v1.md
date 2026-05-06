@@ -673,11 +673,11 @@ The headwaters are behind us. The water moves.
 
 **Unplaced Gems status:**
 - UG-A (type-driven design callout) — included at the close of Chapter 4
-- UG-B (both-states and both-sides compared) — not included; content covered by the chapter's own structure
-- UG-C (Refused at bar level) — not included; held for Deep Dives material
+- UG-B (both-states and both-sides compared) — placed in `codetry-book/drafts/appendix-deep-dives.md` (Deep Dives, Section III)
+- UG-C (Refused at bar level) — placed in `codetry-book/drafts/appendix-deep-dives.md` (Deep Dives, Section IV)
 - UG-D (Preparedness as a living system) — not included; the Standby chapter covers this ground in full
-- UG-E (single-facility tool) — not included; Bright Side chapter's register handled separately
-- UG-F (Northern Store Plan methodology note) — not included; the six-phase section in Chapter 2 does this work
+- UG-E (single-facility tool) — placed in `codetry-book/drafts/appendix-deep-dives.md` (Deep Dives, Section V)
+- UG-F (Northern Store Plan methodology note) — placed in `codetry-book/drafts/appendix-deep-dives.md` (Deep Dives, Section VI)
 
 **Per-section files** with full editorial notes:
 - `codetry-book/drafts/01-the-headwaters.md` — second pass, founder-reviewed
@@ -685,10 +685,11 @@ The headwaters are behind us. The water moves.
 - `codetry-book/drafts/03-the-dam-breaks.md` — first draft with ordering notes
 - `codetry-book/drafts/04-codetry-as-architecture.md` — first draft with structural decisions flagged
 - `codetry-book/drafts/05-sons-and-daughters-of-thunder.md` — first draft with placement questions
+- `codetry-book/drafts/appendix-deep-dives.md` — six held passages (4-L, 4-M, UG-B, UG-C, UG-E, UG-F); full technical depth for readers who want to go further
 
 **Open questions for founder — across all chapters:**
 1. Naming Deer Lake explicitly in Chapter 2 (currently unnamed)
 2. Real names Sam, Jess, and Gilles in Chapter 2 — pseudonymize or confirm consent?
 3. Whether 5-H (the open-the-work invitation from the deleted Deer Lake artifact) belongs in Chapter 5 or as an appendix
 4. Whether the ship coda at the end of Chapter 5 repeats Chapter 1 too closely or serves as intended callback
-5. Deep Dives placement — 4-L, 4-M, UG-B, UG-C are strong candidates for an appendix section not yet drafted
+5. ~~Deep Dives placement — 4-L, 4-M, UG-B, UG-C are strong candidates for an appendix section not yet drafted~~ — **Closed.** Appendix drafted and registered as `codetry-book/drafts/appendix-deep-dives.md`; 4-L, 4-M, UG-B, UG-C, UG-E, and UG-F are all placed there.
