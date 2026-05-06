@@ -45,10 +45,24 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     section: "formal",
   },
   {
+    term: "Codetry",
+    chapter: "Ch3 origin, Ch4 vocabulary",
+    definition:
+      "The practice of building software whose primary load-bearing material is metaphor. The naming is the architecture; the code is the medium that makes the metaphor real, clickable, and runnable. The unit of care is the name: the chosen noun carries the constraint, and the schema, the UI, and the verbs of the app follow from it. Rename a primitive — Buckets to Categories, Practitioner to Founder — and the structure quietly changes shape underneath the name. (Ch3 states the definition in full; this entry formalises it in the vocabulary. \u201cCodetry disciplines\u201d is the collective descriptor for the named practices — constellation, primitives, principles — that codetry runs on; it is not a separate entry.)",
+    section: "formal",
+  },
+  {
     term: "Constellation",
     chapter: "Ch4",
     definition:
       "The full set of economic systems a community runs together. Not a network (which implies optional connection) and not an organization (which implies a single structure). A constellation: distinct systems, gravitationally related, each doing its own job.",
+    section: "formal",
+  },
+  {
+    term: "Drift",
+    chapter: "Ch3 / Ch4",
+    definition:
+      "The failure that occurs when a community's load-bearing noun is translated — even into a cleaner, more general, or more reusable noun — without the community's recognition or consent. Drift is not announced as a loss; each move feels like cleanup, like progress, like professionalism. The codetry-test exists because drift is invisible to the type checker and obvious to the person who handed you the word. (Codetry-test is the informal name for the discipline's ongoing verification posture — when in doubt, check against the human who gave you the word, not against the literature or the model; it is not a separate named procedure.)",
     section: "formal",
   },
   {
@@ -59,10 +73,24 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     section: "formal",
   },
   {
+    term: "Knowledge creep / Language drift",
+    chapter: "Ch3 / Ch4",
+    definition:
+      "Two named failure modes that together constitute drift in practice. Knowledge creep: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck — the concept stays but the noun wanders. Language drift: the books becomes the ledger becomes the financial management module — the noun is swapped for a cleaner, more general one and the original word is no longer in the room. Neither announces itself as a loss.",
+    section: "formal",
+  },
+  {
     term: "Massity",
     chapter: "Ch4",
     definition:
       "Mass-society dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.",
+    section: "formal",
+  },
+  {
+    term: "Practitioner",
+    chapter: "Ch1–Ch5, Ch4 vocabulary",
+    definition:
+      "A person practicing codetry within a community: listening for the noun the community already uses, refusing to translate it into something cleaner, and verifying against the person who handed them the word rather than against the literature, the model, or their own better idea. A posture, not a role specification. The practitioner's exit is handover, not compound. (Practitioner's workbench: the practitioner's own named tool — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be. The rename from \u201cfounder's dashboard\u201d to \u201cpractitioner's workbench\u201d is itself a codetry move; practitioner's workbench is a sub-entry, not a standalone primitive.)",
     section: "formal",
   },
   {
@@ -97,7 +125,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Zone",
     chapter: "Ch4",
     definition:
-      "A domain of practice inside the constellation: household, finance, knowledge, emergency preparedness, land, and public. Primitives are hosted in zones but read by all zones.",
+      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Headwaters Zone 1, Dam Days Zone 5 — and are consistent with this enumeration.)",
     section: "formal",
   },
 
@@ -172,84 +200,6 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
       "The auditable record of what crossed the Gate and what changed in the crossing.",
     section: "appendix",
     group: "The Gate",
-  },
-
-  {
-    term: "Codetry",
-    chapter: "Ch3",
-    definition:
-      `Defined in Ch3: \u201cthe practice of building software whose primary load-bearing material is metaphor. The naming is the architecture; the code is the medium that makes the metaphor real, clickable, and runnable.\u201d Pending formal vocabulary entry in Ch4.`,
-    section: "flagged",
-  },
-  {
-    term: "Codetry disciplines",
-    chapter: "Ch1",
-    definition:
-      `Appears in Ch1: \u201cthe codetry disciplines that hold community institutions together when the external systems fail.\u201d Treated as a plural implying a set of named practices. No enumeration or formal definition provided.`,
-    section: "flagged",
-  },
-  {
-    term: "Codetry-test",
-    chapter: "Ch3 / Ch4",
-    definition:
-      `Used in Ch3: \u201cthe codetry-test exists because that slip is invisible to the type checker and obvious to the person who handed you the word.\u201d Referenced as a named check, but the test itself has no standalone definition or procedure.`,
-    section: "flagged",
-  },
-  {
-    term: "Cockpit",
-    chapter: "Ch2",
-    definition:
-      `Used in Ch2 to describe the two-person operating structure for the community store: \u201cTwo people on the cockpit.\u201d Appears to mean the minimal operational crew plus the software layer beneath them. Used multiple times as a named concept but never formally defined.`,
-    section: "flagged",
-  },
-  {
-    term: "Drift",
-    chapter: "Ch3 / Ch4",
-    definition:
-      `Named as a key failure mode in Ch3: \u201ctranslation away from that noun \u2014 even into a cleaner, more general, more reusable noun \u2014 is treated as drift, not as cleanup.\u201d Central to the discipline's argument but lacking a standalone formal definition.`,
-    section: "flagged",
-  },
-  {
-    term: "Knowledge creep / Language drift",
-    chapter: "Ch3",
-    definition:
-      `Two distinct failure modes named in Ch3. Knowledge creep: \u201ca word a person used in a kitchen ends up, three meetings later, as a different word in a deck.\u201d Language drift: \u201cthe books becomes the ledger becomes the financial management module.\u201d Both used as named phenomena without formal entries.`,
-    section: "flagged",
-  },
-  {
-    term: "Literate programming",
-    chapter: "Ch1 / Ch3",
-    definition:
-      `Used in Ch1 as a horizon concept (\u201cliterate programming is only the first small sail\u201d) and defined briefly in Ch3 in comparison to codetry: \u201cLiterate programming makes the reasoning the source. Codetry makes the metaphor the source.\u201d No standalone formal definition given.`,
-    section: "flagged",
-  },
-  {
-    term: "Practitioner / Practitioner's workbench",
-    chapter: "Ch1 / Ch2 / Ch3 / Ch5",
-    definition:
-      `Practitioner is used from Ch1 onward and Ch5 explicitly notes it is \u201ctreated as already established from Ch1\u2013Ch3.\u201d The practitioner's workbench is named in Ch3 as the rename of \u201cfounder's dashboard.\u201d Neither receives a formal vocabulary entry.`,
-    section: "flagged",
-  },
-  {
-    term: "The Siphon",
-    chapter: "Ch4",
-    definition:
-      `Appears in Ch4 \u00a7The name changes the tool: \u201cThe Siphon is the bill that leaves before you see the money.\u201d Used as a named structural concept within Headwaters' envelope-budget vocabulary, but not in the formal vocabulary list.`,
-    section: "flagged",
-  },
-  {
-    term: "The Stuck Board",
-    chapter: "Ch4",
-    definition:
-      `Named in Ch4 \u00a7The name changes the tool: \u201cThe Stuck Board: the name is the spec. Things get stuck; the board surfaces them with owner-tags and last-touch timestamps.\u201d Treated as a codetry worked example but has no vocabulary entry.`,
-    section: "flagged",
-  },
-  {
-    term: "Zone 0 / Zone 1 / Zone 5",
-    chapter: "Ch1 / Ch4",
-    definition:
-      "Ch1 uses Zone 0, Zone 1, and Zone 5 as named identifiers before Zone is defined in Ch4. The Ch4 vocabulary defines Zone as a concept but does not enumerate which domains correspond to which zone numbers or explain the numbering scheme.",
-    section: "flagged",
   },
 ];
 
