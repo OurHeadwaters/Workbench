@@ -179,6 +179,51 @@ export default function FrontPage() {
           </Pressable>
         </View>
 
+        <Pressable
+          onPress={() => router.push("/author")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              {"Author\u2019s Desk"}
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              {"Your constellation, in your words"}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
 
         <View style={{ height: 32 }} />
 
@@ -387,5 +432,15 @@ const styles = StyleSheet.create({
   },
   sargeRow: {
     backgroundColor: "rgba(15,118,110,0.04)",
+  },
+  authorBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderRadius: 4,
   },
 });

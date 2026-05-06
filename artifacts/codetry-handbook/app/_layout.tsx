@@ -29,6 +29,7 @@ import { UpdateAvailableBanner } from "@/components/UpdateAvailableBanner";
 import { HandbookContentProvider } from "@/contexts/HandbookContentContext";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
 import { StackProvider } from "@/contexts/StackContext";
+import { AuthorProvider } from "@/lib/authorStore";
 import { initNetworkWatcher } from "@/lib/saveStatus";
 
 initNetworkWatcher();
@@ -59,6 +60,7 @@ function RootLayoutNav() {
       <Stack.Screen name="stack" />
       <Stack.Screen name="stack/[id]" />
       <Stack.Screen name="sarge" />
+      <Stack.Screen name="author" />
     </Stack>
   );
 }
@@ -89,12 +91,14 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <ReaderStateProvider>
-                <StackProvider>
-                  <RootLayoutNav />
-                  <SyncErrorBanner />
-                  <LastReadSaveNotice />
-                  <UpdateAvailableBanner />
-                </StackProvider>
+                <AuthorProvider>
+                  <StackProvider>
+                    <RootLayoutNav />
+                    <SyncErrorBanner />
+                    <LastReadSaveNotice />
+                    <UpdateAvailableBanner />
+                  </StackProvider>
+                </AuthorProvider>
               </ReaderStateProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
