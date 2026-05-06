@@ -1,6 +1,7 @@
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { downloadAsPdf, type PaperFormat } from "@/lib/pdf";
+import { usePreview } from "@/context/PreviewContext";
 
 interface PrintNavProps {
   targetId: string;
@@ -18,18 +19,7 @@ export function PrintNav({
   pdfApiPath,
 }: PrintNavProps) {
   const [loading, setLoading] = useState(false);
-  const [previewing, setPreviewing] = useState(false);
-
-  useEffect(() => {
-    if (previewing) {
-      document.body.classList.add("print-preview");
-    } else {
-      document.body.classList.remove("print-preview");
-    }
-    return () => {
-      document.body.classList.remove("print-preview");
-    };
-  }, [previewing]);
+  const { previewing, setPreviewing } = usePreview();
 
   async function handlePdf() {
     if (pdfApiPath) {
@@ -69,7 +59,7 @@ export function PrintNav({
       <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
         <button
           className={`btn-preview${previewing ? " btn-preview--active" : ""}`}
-          onClick={() => setPreviewing((v) => !v)}
+          onClick={() => setPreviewing(!previewing)}
           aria-pressed={previewing}
         >
           {previewing ? "✕ Exit preview" : "🖨 Preview print layout"}

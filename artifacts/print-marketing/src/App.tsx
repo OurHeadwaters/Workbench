@@ -1,4 +1,5 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
+import { PreviewProvider } from "@/context/PreviewContext";
 import Index from "@/pages/Index";
 import PriceList from "@/pages/PriceList";
 import MarketDisplay from "@/pages/MarketDisplay";
@@ -39,8 +40,10 @@ function Router() {
 
 export default function App() {
   return (
-    <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-      <Router />
-    </WouterRouter>
+    <PreviewProvider>
+      <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <Router />
+      </WouterRouter>
+    </PreviewProvider>
   );
 }
