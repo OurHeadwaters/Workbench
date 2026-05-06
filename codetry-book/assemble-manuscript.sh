@@ -3,6 +3,10 @@
 # Concatenates draft chapters in reading order into a single manuscript.md.
 # Run from the repo root or from within codetry-book/.
 # Output: codetry-book/manuscript.md  (generated — do not edit by hand)
+#
+# NOTE FOR CONTRIBUTORS: manuscript.md is listed in .gitignore and must never
+# be committed. Edit the source files in codetry-book/drafts/ instead, then
+# run this script to regenerate the assembled manuscript locally.
 
 set -euo pipefail
 
