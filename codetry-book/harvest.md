@@ -612,7 +612,6 @@ Guard against misuse (immediately following):
 
 ---
 
-<<<<<<< HEAD
 ### 2-U · You don't have a productivity problem — Rootwork problem framing
 
 > You don't have a productivity problem. You have a pile-of-stuff problem.
@@ -638,7 +637,6 @@ The four pain-point observations, verbatim:
 ### 2-V · Market Mosaic — the three problems it solves
 
 Before/after comparisons (verbatim):
-=======
 ### 2-U · The boreal larder — what foraging means in NWO
 
 > The boreal forest that surrounds Dryden, Wabigoon, Sioux Lookout and Kenora is one of the most generous larders on the continent. Wild rice in the shallow lakes. Chaga on the birches. Labrador tea, wintergreen, and sweet gale in the muskeg. Rosehips, blueberries, raspberries, saskatoons, hazelnuts. If you know what you are looking at, almost every walk in the bush in this region is a walk past food.
@@ -666,7 +664,6 @@ What-box description:
 > A unified discovery platform for regional farmers' markets. Shoppers see what's available this week across all vendors without scrolling Facebook. Vendors claim their listing and keep it current. Market coordinators run the whole show from one dashboard.
 
 Before/after problem framing:
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 > "Is the market on this Saturday?" — 3 Facebook groups, no clear answer → Weekly view shows dates, vendors, and what's available right now
 >
@@ -674,7 +671,6 @@ Before/after problem framing:
 >
 > Shoppers drive out to find their favourite vendor isn't there this week → Vendor attendance and inventory visible before you leave the house
 
-<<<<<<< HEAD
 `community-knowledge-hub/infographics/market-mosaic.html — "The Problem It Solves / Before Market Mosaic vs. After" section`
 
 ---
@@ -744,7 +740,6 @@ Handover prompts for outgoing HCA (verbatim):
 > Pick a few small joys to offer today. Pop them all and this resident takes the floor.
 
 `health-support-hub.replit.app — resident facesheet, joys setup; the instruction for configuring daily joys per resident`
-=======
 `community-knowledge-hub/infographics/market-mosaic.html` — header tagline, what-box, and before/after problem grid
 
 ---
@@ -768,7 +763,6 @@ Privacy framing:
 > Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
 
 `community-knowledge-hub/infographics/grants-finder.html` — header tagline, what-box, feature grid, and privacy section
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -942,11 +936,6 @@ Callout:
 
 ---
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 ### 3-M · How the dam sorts what it catches — the six zones named
 
 > Toss in everything that drifts past — half-thoughts, prices, code, mid-sentence SOS — and the dam catches each fragment, sorts it, and puts it to work across six zones, with income at the center, the rest fanning out from there.
@@ -979,7 +968,6 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 
 ---
 
-<<<<<<< HEAD
 ### 3-O · Tag the way you'd say it out loud — Rootwork naming discipline
 
 > Tag the way you'd say it out loud — "produce table", "winter market", "the Smiths". Rootwork remembers. No taxonomy meeting required.
@@ -990,7 +978,6 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 
 ### 3-P · Saltbox methodology cards — naming what homeschool families already do
 
-<<<<<<< HEAD
 The style descriptions from the Saltbox learning-style tour (verbatim from each methodology card):
 
 > **Charlotte Mason** — Mornings stay short. You read aloud from a real book — not a textbook — and your child narrates it back in her own words. Afternoons are wide open: nature walks, handicrafts, copywork, watercolor. Atmosphere matters as much as the lesson.
@@ -1056,8 +1043,6 @@ Cautions embedded in the tour (also verbatim):
 > Drought Mode is on. Targets are scaled to your reduced income. Stay the course — the rains return.
 
 **Source:** `x-buckets/src/copy/droughtMode` — toggle label, subtitle, and active-banner copy; the named state for income disruption; "drought" as a first-class system state rather than an error condition
-=======
-<<<<<<< HEAD
 ### 3-O · A working seasonal-foods business — no off-season
 
 > A working seasonal-foods business is a year of well-timed, narrow harvest windows, with the in-between months spent processing, blending, packaging, and selling. There is no off-season — only different seasons.
@@ -1075,10 +1060,7 @@ Cautions embedded in the tour (also verbatim):
 > In a region like Northwestern Ontario, where local food culture is growing but the market is small, your story is one of your most important competitive advantages.
 
 `community-knowledge-hub/assets/index-Ct-KiV08.js` — regen beef course, "Telling Your Story" lesson opening
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
-=======
 `community-knowledge-hub/studio/ — closing CTA section`
-<<<<<<< HEAD
 
 ---
 
@@ -1133,11 +1115,6 @@ The full locked vocabulary from the X Buckets Vision PWA, verbatim from the prod
 > **Stage 6 · Grow & multiply** — Grove fully established. Roots run deep — earnings compound.
 
 **Source:** `x-buckets-vision/bambooSpring` — the six-stage metaphor rendered in the XRP Spring savings tab; extends the envelope-budget metaphor from data model into visual artwork across six growth milestones (the "six-stage bamboo growth scene" referenced in passage 1-L)
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
->>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
-=======
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
-=======
 ---
 
 ### 3-M · The first formal codetry test — the rule discovered
@@ -1292,8 +1269,6 @@ Dam Days entry:
 > Two kinds of test now. *What does the surface say.* And *what does the surface put first.* They catch different defects on the same card.
 
 `x-buckets-vision · docs/codetry/007-lp-position-card-survives-vocab-sweep.md` — "The rule discovered" section and Dam Days entry
->>>>>>> af82b05 (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
->>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
@@ -1604,11 +1579,6 @@ The Gate manifest principle:
 
 ---
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 ### 4-S · The rebrand without a rewrite — Dam Days as codetry demonstration
 
 > The rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name).
@@ -1625,7 +1595,6 @@ The Gate manifest principle:
 
 ---
 
-<<<<<<< HEAD
 ### 4-U · Fern and Sage — two agents, two jobs (Grants Finder)
 
 > Fern — Intake Agent — Asks the right questions to understand your project. Builds a structured profile from natural conversation.
@@ -1649,11 +1618,9 @@ Region-specific design rationale:
 `community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities, "'What We Dropped' Section" feature`
 
 *(This feature enacts the Refused principle from The Gate at the content level — items that do not cross the northern-conditions test are not dropped silently; they are documented with the reason for exclusion.)*
-<<<<<<< HEAD
 
 ---
 
-<<<<<<< HEAD
 ### 4-W · Local-first by design — Saltbox architecture principle
 
 > Local-only by default. No accounts, no telemetry. Live Follow-Along is opt-in. Your backup is yours to carry.
@@ -1757,8 +1724,6 @@ The complete set of manifesto principles from the Rootwork About page, verbatim:
 > Giving Well — rises when your spring runs strong.
 
 **Source:** `x-buckets/src/copy/xrpSpring` — `springFooter`, `sectionLabel`, `tagline`, `givingWellBannerBody`, `givingWellInactive` constants; the XRP Spring tab copy; "the underground spring beneath your buckets" as the one-sentence architectural description of XRP's role in the constellation
-=======
-<<<<<<< HEAD
 ### 4-U · "There is a place called Bright Side" — the Gate origin narrative
 
 > There is a place called Bright Side, where they call you "neighbour", not "resident".
@@ -1794,8 +1759,6 @@ What-box description:
 > Standby Supplies starts with the acknowledgment that most preparedness content is written for mild climates. It systematically translates that content: different crops that survive -40°C, insulation that actually works, heat sources that don't require a truck of propane to keep you alive for a week. This is the Standby that NWO actually needs.
 
 `community-knowledge-hub/infographics/standby-supplies.html` — header tagline, what-box, and "What Makes It Northern" section
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
-=======
 ### 4-W · The intentional pause — where the habit actually changes
 
 > A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
@@ -1835,11 +1798,6 @@ The active-mode banner:
 > A CA$1,500 starter Rain Barrel turns most surprises into a problem you can solve, not a debt spiral.
 
 **Source:** `x-buckets-vision/foundationCoach.subDrainage` and `foundationCoach.subStarter` — the Foundation Coach step descriptions; debt reframed as drainage rather than obligation, emergency reserve reframed as a Rain Barrel rather than a fund
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
->>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
-=======
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
-=======
 ---
 
 ### 4-S · Codetry's lineage — what is genuinely new
@@ -1897,8 +1855,6 @@ Where the metaphor strains (naming the leak is itself the codetry move):
 > Real bamboo establishes over years and is famously hard to remove (rhizomes). XRP swings in hours, and a holding can crash on you in ways a grove cannot. The metaphor is true on regeneration and vernacular; looser on cadence and reversibility. We bound every metaphor we use.
 
 `x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Coda — and while we're naming materials: bamboo-field"
->>>>>>> af82b05 (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
->>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
@@ -2138,7 +2094,6 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
-<<<<<<< HEAD
 ### UG-J · Redacted Mode — privacy by design (Grants Finder)
 
 > Redacted Mode keeps your details safe — Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
@@ -2155,7 +2110,6 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
-<<<<<<< HEAD
 ### UG-L · A saltbox is — naming the origin
 
 > A saltbox is the wooden box of preserving salt by the kitchen door — taken a pinch at a time, all year. This app is shaped like one.
@@ -2261,8 +2215,6 @@ The tour framing line:
 > A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
 
 **Source:** `x-buckets/src/copy/faq` — FAQ item answering "How is this different from a regular budget?"; the founder's full discipline argument in one paragraph
-=======
-<<<<<<< HEAD
 ### UG-J · Rootwork — the six values the studio builds by
 
 > **Person-centred.** We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
@@ -2322,8 +2274,6 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 > The Legal Compass is an orientation tool for producers in Northwestern Ontario. It names statutes, surfaces exemptions and loopholes, and tells you straight whether a rule exists for safety reasons or to protect an incumbent monopoly.
 
 `rootwork/studio/assets/index-CPXk3mY2.js` — Legal Compass about/description text; the cleanest articulation of what the tool does and why it distinguishes between safety-based rules and incumbent-protection rules
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
-=======
 ### UG-L · Zone 0 is daily — permaculture zoning applied to household finance
 
 > Zones sort buckets by how often you tend them — Zone 0 is daily and closest, Zone 5 is the furthest, longest-term.
@@ -2337,8 +2287,6 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 > Your keys, your money. Headwaters is non-custodial — we never touch your funds, and every transaction is signed by you in your own wallet.
 
 **Source:** `x-buckets-vision` bundle — `whatsNew` changelog entry "Your keys, your money" headline and body; the sovereignty claim stated in plain language for a household budget tool
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
->>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ---
 
@@ -2384,6 +2332,78 @@ Dam Days entry from Test 008:
 
 ---
 
+### UG-R · Find the money that fits your project — Grants Finder overview
+
+> Find the money that fits your project — without the paperwork maze.
+>
+> An AI grant-matching assistant tuned for Northwestern Ontario. Two AI agents interview you, analyze your project, and surface the grants most likely to fund it — ranked by fit, not alphabet.
+
+`community-knowledge-hub/infographics/grants-finder.html — header tagline and what-box summary`
+
+---
+
+### UG-S · Grant Library and Application Pipeline — the administrative backbone (Grants Finder)
+
+> Grant Library: A curated database of available grants (NOHFC and more), kept updated by the team. Each grant includes eligibility rules, deadlines, and amounts.
+>
+> Application Pipeline: Track applications from draft to submission. See which grants you've applied to, their status, and what's coming due.
+>
+> Two specialized agents work together on your application — Fern asks the right questions to understand your project and builds a structured profile from natural conversation. Sage reads your profile and the grant library, returning ranked matches with a clear explanation for each recommendation.
+
+`community-knowledge-hub/infographics/grants-finder.html — Core Capabilities (Grant Library, Application Pipeline) and Meet the AI Agents section`
+
+---
+
+### UG-T · The one trustworthy front door — Market Mosaic overview
+
+> The one trustworthy front door for what's at market this week.
+>
+> A unified discovery platform for regional farmers' markets. Shoppers see what's available this week across all vendors without scrolling Facebook. Vendors claim their listing and keep it current. Market coordinators run the whole show from one dashboard.
+
+`community-knowledge-hub/infographics/market-mosaic.html — header tagline and what-box summary`
+
+---
+
+### UG-U · Three roles, one platform — Market Mosaic user framing
+
+> Three roles, one platform.
+>
+> Shoppers — see what's at market this week, no account required.
+>
+> Vendors — claim listing, update inventory, build a following.
+>
+> Coordinators — manage dates, vendor roster, and region settings.
+>
+> Built to serve multiple markets across different regions. Starting with the 807, expanding to wherever there are vendors who need to be found.
+
+`community-knowledge-hub/infographics/market-mosaic.html — "Who It Serves" section and Multi-Region Support feature card`
+
+---
+
+### UG-V · Does this actually work in Northwestern Ontario? — Standby Supplies overview
+
+> Preparedness advice that actually works at -40°C.
+>
+> A curated preparedness guide translated specifically for extreme northern climates. Takes the best advice from survival and homestead resources and asks the hard question: does this actually work in Northwestern Ontario?
+
+`community-knowledge-hub/infographics/standby-supplies.html — header tagline and what-box summary`
+
+---
+
+### UG-W · Seasonal right now + home-first — Standby Supplies enacted framing
+
+> Seasonal Right Now View: Each month surfaces the recommendations most relevant to your current season — what to stock, fix, or prepare for before the next freeze or thaw.
+>
+> Home-First Framing: Grounded in real northern homesteads, not post-apocalyptic prepper fantasy. Practical for a family staying warm when the power goes out.
+>
+> Curated Source Citations: Each recommendation links to its original source — The Survival Podcast, regional agriculture guides — with the northern filter clearly explained.
+>
+> Six preparedness categories: Food · Water · Gear · Energy & Heat · Medical · Skills
+
+`community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities (Seasonal Right Now View, Home-First Framing, Curated Source Citations) and Six Preparedness Categories section`
+
+---
+
 ## Pending External Sweeps
 
 *The cross-project sweep prompt (`codetry-book/cross-project-prompt.md`) must be run in each project listed below by opening that project in Replit, pasting the full prompt as a new agent message, and folding the returned structured markdown into this file under the correct section headings. Source labels should identify the external project (e.g. `dam-days/src/pages/Home.tsx` rather than `artifacts/...`).*
@@ -2398,15 +2418,9 @@ Dam Days entry from Test 008:
 **Former names:** xBuckets, Watershed
 **Constellation zone:** Zone 1 — household finance, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
-<<<<<<< HEAD
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #801). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (React SPA; prose extracted from minified production bundle `index-CGcLuc1T.js` and sub-bundles). Passages recovered: 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M. Full water-metaphor vocabulary map recovered (Rainfall, Reservoir, Siphon, Rain Barrel, Stream, Water Tower, Spring, Watershed, Community Well, Water Wheel, Private Lake, Giving Well, Drought Mode, Payday Planner). XRP Spring bamboo growth scene recovered as six-stage artwork sequence. Aquifer and Glacier not present in current bundle — these names may belong to an earlier xBuckets era not accessible in the live app. Git history and conversation logs not accessible from this environment.
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06. Content recovered from 10 codetry test docs (Tests 001–010) and the Lineage & Hempcrete meta-doc, all available in `attached_assets/` as pasted conversation artifacts. Passages folded into: Section 3 (3-M through 3-T — the naming tests, locked word map, Dam Days entries), Section 4 (4-S through 4-U — lineage findings, hempcrete meta-doc version, bamboo-field coda), Unplaced Gems (UG-H, UG-I — calm states rule, topology-is-a-noun-game). Source labels use `x-buckets-vision · docs/codetry/[filename]`.
->>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
@@ -2425,15 +2439,9 @@ Dam Days entry from Test 008:
 **URL:** `https://community-knowledge-hub.replit.app/studio/`
 **Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
 **What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
-<<<<<<< HEAD
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 1-P, 2-U, 3-M, 5-I, UG-I · Method: live page fetch (React SPA rendered; git history and internal filesystem not accessible from this environment)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from the compiled production bundle at `https://community-knowledge-hub.replit.app/studio/assets/index-CPXk3mY2.js`. Passages recovered: 1-R (origin statement), UG-J (six values), UG-M (Legal Compass description). The 807 member gate copy and calm command center hero were confirmed; origin/values met quality bar; gate copy and hero did not add beyond what UG-M captures. Rootwork manifesto page and Legal Compass description page were both accessible via the bundle.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #814). Re-swept via JS bundle extraction from the live app at `https://community-knowledge-hub.replit.app/studio/` (React SPA; prose extracted from the minified production bundle `/studio/assets/index-CPXk3mY2.js`). Prior shallow sweep (Task #785) recovered 5 passages via SPA render; full bundle extraction added 8 more: 1-U (origin story + manifesto preamble), 1-V (calm command center hero framing), 4-Z (six manifesto principles verbatim), UG-R (cedar crate / Parr's Jars metaphor), UG-S (membership framing). Previously recovered: 1-R, 2-U, 3-O, 5-K, UG-K. Git history and conversation logs not accessible from this environment.
->>>>>>> 51add22 (Task #814: Sweep Rootwork (External project 3) via JS bundle extraction and fold into harvest)
 
 ---
 
@@ -2442,11 +2450,9 @@ Dam Days entry from Test 008:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any narrative copy about why northern and Indigenous communities need a single searchable grants index; any prose about the funding landscape; the NOHFC Grow Application Workspace copy (five-tab workspace, deadline countdown, intake-switch logic).
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 4-S, UG-H · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`. Passages recovered: 2-X (tagline, what-box, Fern/Sage agent descriptions, Redacted Mode privacy framing). All prose available on the page was extracted; NOHFC workspace copy and deeper funding-landscape narrative were not present in the static HTML.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 4-U, UG-J, UG-R, UG-S · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output; tagline, what-box, Grant Library, Application Pipeline, and agent-card prose added in Task #815)
 
 ---
 
@@ -2455,11 +2461,9 @@ Dam Days entry from Test 008:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any framing prose about what market analysis means for a northern community; any description of the gap between southern market intelligence tools and northern food systems reality; the specific metaphor behind "mosaic."
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-V · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`. Passages recovered: 2-W (tagline, what-box, before/after problem grid). The specific "mosaic" metaphor rationale was not present in the HTML; the "one trustworthy front door" tagline and before/after framing were the primary quality prose.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 2-V, UG-T, UG-U · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons; tagline, what-box, and three-roles framing added in Task #815)
 
 ---
 
@@ -2468,11 +2472,9 @@ Dam Days entry from Test 008:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub; reads The Standby primitive)
 **What to look for:** Any prose about emergency sourcing for northern communities; any description of the difference between emergency preparedness as a checklist vs. as a living system; any vocabulary that predates or extends the Standby primitive's language in the constellation manifest.
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-W, 4-T · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section)
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`. Passages recovered: 4-V (tagline, what-box, "What Makes It Northern" section). The northern-translation framing was present and meets quality bar. Emergency sourcing narrative and living-system vs. checklist copy were not present in the static HTML.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 2-W, 4-V, UG-V, UG-W · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section; tagline, what-box, seasonal right now view, home-first framing, curated citations, and six-category list added in Task #815)
 
 ---
 
@@ -2481,11 +2483,8 @@ Dam Days entry from Test 008:
 **URL:** `https://health-support-hub.replit.app/`
 **Constellation zone:** Zone 0 (Bright Side / Saltbox — the institutional saltbox: long-term care, recreation therapy)
 **What to look for:** Any manifesto or philosophy copy about recreation therapy for long-term care; any prose about what a good shift looks like; any description of the tool's relationship to the staff's existing knowledge; any copy about how documentation should follow the worker, not the other way around. Note: the codetry-ship BrightSidePage.tsx already has some of this (entries 2-F, 2-G) — look for anything beyond what's already in harvest.md.
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://health-support-hub.replit.app/` (React SPA; codebase not directly accessible from this environment; prose extracted from the minified production bundle). Passages recovered: 2-X (shadows system), 2-Y (shift-tone prompts + handover prompts), 2-Z (small joys system), 4-Y (people-first display rule), UG-P (pilot sites), UG-Q (warm companion tagline). The shadow metaphor, shift-tone prompt rotation, and joys-reset-overnight copy are all beyond what was in codetry-ship BrightSidePage.tsx. The Bobbie's 2014 intake reference was also recovered (prompt metadata in the memory-profile wizard). Conversation logs and git history not accessible from this environment.
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://health-support-hub.replit.app/assets/index-CxSI5g0R.js`. Passages recovered: UG-L (six pieces of joy vocabulary: warm companion, shadows, add small joys, memory profile label, sparks empty state, celebration copy). These are distinct from the codetry-ship BrightSidePage.tsx passages already in harvest (2-F, 2-G, UG-E). The staff-facing "good shift" vocabulary was the primary quality prose recoverable from the bundle.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -2494,11 +2493,8 @@ Dam Days entry from Test 008:
 **URL:** `https://community-knowledge-hub.replit.app/`
 **Constellation zone:** Zone 3 — community production for NWO food systems; multi-tenant member-portal pattern
 **What to look for:** The "Today I…" verb routing copy; any Treasurer Calm Monthly Journey prose; the Stuck Board naming rationale; the Appreciation Wall purpose statement; any member-facing copy about what the co-op is for; the audience-chooser framing (household vs. producer); any Producer Playbook narrative; the kitchen-rental "borrowing not renting" rationale; the 807 Benefits brand story.
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: see entry 4-O (already in harvest.md from Task #764) · Method: The full set of Zone 3 prose called out in "What to look for" — "Today I…" verb routing, Stuck Board naming rationale, role IS the room, Treasurer Calm Monthly Journey ('Calm' is the contract, not a vibe), dues-snooze-as-verb, audience chooser as structural pivot, Producer Playbook, Kitchen rental kept quiet (borrowing, not renting), Appreciation Wall — was recovered verbatim in Task #764 from the deleted constellation manifest at `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` and is catalogued under entry **4-O**. Live URL sweep (Task #785) confirmed no additional prose was accessible from the public-facing SPA shell (root URL renders a React auth-gated portal). No new passages remain to add; project 8 prose is fully covered by 4-O.
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://community-knowledge-hub.replit.app/assets/index-Ct-KiV08.js`. Passages recovered: 1-S (Parrs Jars origin), 2-U (boreal larder), 2-V (preserving food as community act), 3-O (working seasonal-foods business / no off-season), 3-P (regenerative beef storytellers). The "Today I…" verb routing copy, Treasurer Calm Monthly Journey, Stuck Board rationale, and Appreciation Wall prose were not identified as distinct narrative passages meeting the quality bar in this sweep; they appear primarily as UI labels rather than prose.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -2516,11 +2512,8 @@ Dam Days entry from Test 008:
 **URL:** `https://salt-box.replit.app/`
 **Constellation zone:** Zone 0 — decentralized homes; homeschool day companion, local-first per family
 **What to look for:** Any onboarding or philosophy copy about Lock-In Wins, Brave Moments, Gentle Words, Quote of the Day; any narrative about the no-scoring rule (the fish-climbing-a-tree principle); any copy about what Saltbox is for beyond the feature list; the founding story for why a homeschool companion was built; any prose about Zone 0 holding both the family on the land and the elder in the care home.
-<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://salt-box.replit.app/` (React SPA; prose extracted from the minified production bundle). Passages recovered: 3-P (methodology cards — seven named homeschool styles, verbatim), 4-W (local-first architecture), 4-X (no-scoring rule + brave moments/lock-in wins framing), UG-L (saltbox naming origin), UG-M (methodology tour — quiet language, no quiz), UG-N (watching you on the trampoline — founder moment), UG-O (family recap preamble). The no-scoring rule is enacted in the running app as UG confirmed (4-X). The fish-climbing-a-tree principle was not found verbatim in the bundle; the concept is present in constellation entry 1-K and app entry 4-X. Conversation logs and git history not accessible from this environment.
-=======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://salt-box.replit.app/assets/index-k5Dz6fv4.js`. Passages recovered: UG-K (core-values grid: what the box holds, preserves, doesn't shout, and what you take a pinch of). Lock-In Wins privacy note, emergency drill parent copy, and day-play vocabulary were identified; key quality prose folded into UG-K. No-scoring founding narrative and Zone 0 both/and framing (family on land + elder in care home) were not present as explicit prose in the bundle.
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -2537,28 +2530,16 @@ The following projects were identified in the codebase and may also contain harv
 
 ## Sweep Metadata
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction
-=======
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + external live-URL sweep (projects 3–6, 8)
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
-=======
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #796 X Buckets Vision external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + X Buckets Vision live-bundle extraction
->>>>>>> 38a0560 (Task #796: Sweep X Buckets Vision (External project 1) into the book harvest)
-=======
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #803 Bright Side + Saltbox external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–7, 10)
->>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
-=======
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #801 X Buckets Vision external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–6, 8) + X Buckets Vision live-bundle extraction
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 ### Live files read
 
@@ -2601,14 +2582,8 @@ The following projects were identified in the codebase and may also contain harv
 | `ff9e4b9~1` | `artifacts/headwaters-books/src/data/constellation.ts` | 4-P |
 | `3686992~1` | `artifacts/deer-lake-walkthrough/src/sections/WhyThisTeam.tsx` | 5-H |
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 **Total passages:** 86 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784)
-=======
 **Total passages:** 97 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +11 from X Buckets Vision external sweep in Task #796)
->>>>>>> 38a0560 (Task #796: Sweep X Buckets Vision (External project 1) into the book harvest)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
 **External project sweeps:** 10 projects identified, 2 swept (Dam Days / External project 2; X Buckets Vision / External project 1). Remaining 8 require a separate agent session in each project. See "Pending External Sweeps" section above.
@@ -2634,15 +2609,11 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 *All passages confirmed verbatim. No synthesis or composition. Named vocabulary recovered: Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Community Well, Giving Well, Abundance Bridge, Payday Ripple, Captain's Log, XRP Spring (bamboo stages 1–6).*
 
 ---
-=======
 **Total passages:** ~133 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution; +8 from Task #814 Rootwork JS bundle re-sweep)
+**Total passages:** ~120 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
-<<<<<<< HEAD
 **External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
->>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
-=======
-<<<<<<< HEAD
 **Total passages:** 100 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +14 from external projects 3–10 sweep in Task #797)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
@@ -2666,17 +2637,30 @@ All 8 codebases were not directly accessible from this environment. Prose was ex
 | `salt-box/assets/index-k5Dz6fv4.js` (core-values grid) | UG-K |
 
 *All passages confirmed verbatim. No synthesis or composition.*
->>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
-=======
 **Total passages:** 110 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 net new from Task #785 community-knowledge-hub live-URL sweep after renumbering; +10 from Task #801 X Buckets Vision external sweep — 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
 **External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 8); 3 remaining (projects 7, 9, 10). See "Pending External Sweeps" section above.
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
->>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
-=======
 **External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 2 remaining (project 9 / Legacy Gatekeeper, and any beyond the 10 named). See "Pending External Sweeps" section above.
->>>>>>> 51add22 (Task #814: Sweep Rootwork (External project 3) via JS bundle extraction and fold into harvest)
+
+**Total passages:** ~126 (all prior + 6 from Task #815 Zone 3 infographic depth sweep: UG-R, UG-S, UG-T, UG-U, UG-V, UG-W)
+**Supplemented:** 2026-05-06 (Task #815) — Zone 3 infographic depth sweep; external projects 4, 5, 6 re-fetched and all remaining prose recovered; 6 new UG passages added.
+**External project sweeps:** 10 projects identified, 7 swept and deepened (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 2 remaining (projects 1, 9). See "Pending External Sweeps" section.
+
+### Zone 3 infographic sweep notes (Task #815)
+
+All three Zone 3 infographic pages fetched via live HTTP GET (static HTML, no bundle extraction required). All prose recovered verbatim from rendered HTML. Git history and conversation logs not accessible from this environment.
+
+| Source | Passages recovered |
+|---|---|
+| `community-knowledge-hub/infographics/grants-finder.html` — header tagline + what-box | UG-R |
+| `community-knowledge-hub/infographics/grants-finder.html` — Grant Library, Application Pipeline, agent cards | UG-S |
+| `community-knowledge-hub/infographics/market-mosaic.html` — header tagline + what-box | UG-T |
+| `community-knowledge-hub/infographics/market-mosaic.html` — "Who It Serves" + Multi-Region Support | UG-U |
+| `community-knowledge-hub/infographics/standby-supplies.html` — header tagline + what-box | UG-V |
+| `community-knowledge-hub/infographics/standby-supplies.html` — Seasonal Right Now, Home-First, Citations, six categories | UG-W |
+
+*All passages confirmed verbatim. No synthesis or composition. Prior sweep (Task #785) had recovered 2-V (Market Mosaic problem table), 2-W (Standby Northern Translation), 4-U (Grants Finder Fern/Sage agents), 4-V (Standby What We Dropped), UG-J (Grants Finder Redacted Mode). Task #815 added the six overview + framing passages not captured in the first pass.*
 
 ### Dam Days sweep notes (Task #784)
 
@@ -2695,7 +2679,6 @@ The Dam Days codebase (`https://conversation-log.replit.app/`) was not directly 
 | `dam-days/src/pages/Takes.tsx` | UG-H |
 | `dam-days/src/pages/Dedication.tsx` (reader prompt) | UG-I |
 
-<<<<<<< HEAD
 ### Bright Side sweep notes (Task #803)
 
 The Bright Side codebase (`https://health-support-hub.replit.app/`) was not directly accessible. Prose extracted from `/assets/index-CxSI5g0R.js` using string-literal extraction and natural-language filtering. Source file paths inferred from component context.
@@ -2718,7 +2701,6 @@ The Saltbox codebase (`https://salt-box.replit.app/`) was not directly accessibl
 | `salt-box/src/data/methodologies.ts` or tour cards | 3-P (seven methodology cards), UG-M (tour intro/close) |
 | `salt-box/src/data/quotes.ts` | UG-N (watching you on the trampoline) |
 | `salt-box/src/pages/Recap.tsx` or family recap | UG-O (snapshot preamble) |
-=======
 ### X Buckets Vision sweep notes (Task #801)
 
 The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not directly accessible from this environment. Prose was extracted from the compiled, minified production JS bundle (`/assets/index-CGcLuc1T.js`, 257 KB) and the `headwaters-plus` sub-bundle using string-literal extraction. Source file paths are inferred from component structure visible in the bundle. Git history and conversation logs were not accessible. Aquifer and Glacier vocabulary terms (referenced in the task) were not present in the current bundle — likely belong to an earlier xBuckets era.
@@ -2735,7 +2717,6 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 | `x-buckets-vision/foundationCoach.subDrainage` + `subStarter` | 4-Z |
 | `x-buckets-vision/zoneIntro.body` | UG-L |
 | `x-buckets-vision` bundle — whatsNew changelog | UG-M |
->>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 *All passages confirmed verbatim. No synthesis or composition.*
 
