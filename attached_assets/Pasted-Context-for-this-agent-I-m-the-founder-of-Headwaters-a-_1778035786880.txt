@@ -1,0 +1,32 @@
+Context for this agent:
+
+I'm the founder of Headwaters, a company that builds and licences a white-label co-op management platform. The first tenant is the 807 Food Co-operative & Hub, built in a separate Replit project. This Headwaters project is the platform layer — the registry, admin, and future home for onboarding new co-ops.
+
+Here is the full architecture of the 807 Replit project so you understand what you're connecting to:
+
+The 807 project is a pnpm monorepo (React + Vite frontend, Express 5 backend, TypeScript, Drizzle ORM, Clerk auth, Square payments, Resend email). It has a single shared api-server that serves all apps.
+
+Business model: Headwaters licences the platform to co-ops. 807 uses it free until they exit deficit, then pays 20% of platform revenue. Future co-ops pay a licence fee from day one. Members earn referral credits and can receive payouts.
+
+Multi-tenancy: Two patterns exist in the codebase. A static "tenant seam" (config files at artifacts/807-benefits/src/config/tenant.ts and artifacts/api-server/src/config/tenant.ts) currently hardcodes the "807" tenant but is structured to support more. The Market Mosaic feature already uses a mature DB-driven pattern (mm_tenants table, tenant_id FK on all tables, slug-based routing) — this is the target pattern for the rest of the platform.
+
+Auth: Clerk, single instance. Roles stored in Clerk private metadata (role: "admin", boardSeats: []). No JWT templates. A custom Clerk proxy runs at /api/__clerk for custom domain support. Moving to Clerk Organizations is the preferred path for isolating users per co-op.
+
+Target architecture for the platform:
+
+headwaters.co (this project)
+├── Public registry of co-ops
+├── Co-op onboarding flow
+└── Licence management + revenue tracking
+portal.807hub.com  →  807 api-server (tenant: "807")
+portal.rivercoop.ca → 807 api-server (tenant: "rivercoop")
+Single deployment in the 807 project handles all co-op portals. Domain-based tenant routing. The Headwaters site (this project) communicates with the 807 api-server using a platform_admin role (not yet built).
+
+Phase plan:
+
+Make the 807 portal fully tenant-agnostic (runtime tenant resolution from domain, config in DB)
+Build this Headwaters site: registry, onboarding, licence status, revenue tracking
+Add licensing records, revenue share calculation, and member referral payouts
+My preference is iterative, small steps. Please ask before major architectural changes or new external dependencies.
+
+That's everything the agent needs to understand the lay of the land and start working on the Headwaters side.
