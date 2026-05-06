@@ -12,11 +12,13 @@ import deadheadRouter from "./deadhead";
 import intakeRouter from "./intake";
 import wordWalkRouter from "./wordWalk";
 import sargeRouter from "./sarge";
+import pdfRouter from "./pdf";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(storageRouter);
+router.use("/pdf", pdfRouter);
 router.use("/library", libraryRouter);
 router.use("/check-in", checkinRouter);
 router.use("/bookkeeper", bookkeeperRouter);

@@ -7,6 +7,7 @@ interface PrintNavProps {
   filename: string;
   format?: PaperFormat;
   orientation?: "portrait" | "landscape";
+  pdfApiPath?: string;
 }
 
 export function PrintNav({
@@ -14,6 +15,7 @@ export function PrintNav({
   filename,
   format = "letter",
   orientation = "portrait",
+  pdfApiPath,
 }: PrintNavProps) {
   const [loading, setLoading] = useState(false);
   const [previewing, setPreviewing] = useState(false);
@@ -30,6 +32,29 @@ export function PrintNav({
   }, [previewing]);
 
   async function handlePdf() {
+    if (pdfApiPath) {
+      setLoading(true);
+      try {
+        const response = await fetch(pdfApiPath);
+        if (!response.ok) throw new Error(`Server returned ${response.status}`);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("PDF download failed:", err);
+        alert("PDF generation failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     setLoading(true);
     try {
       await downloadAsPdf(targetId, filename, { format, orientation });
