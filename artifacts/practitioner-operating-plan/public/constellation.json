@@ -347,7 +347,7 @@
     {
       "zone": 2,
       "name": "Practitioner Operating Plan",
-      "aliases": ["This site", "Workbench"],
+      "aliases": ["This site"],
       "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
       "url": "https://northern-store-plan.replit.app/codetry-handbook/",
       "status": "live (you are here)",
@@ -424,7 +424,7 @@
       "zone": 3,
       "name": "Community Knowledge Hub",
       "memberFacingBrand": "807 Benefits",
-      "aliases": ["807 Benefits", "807 Food Co-op"],
+      "aliases": ["807 Benefits", "807 Food Co-op", "Commons"],
       "zoneShorthand": "Main crops",
       "domain": "Community production for NWO food systems — multi-tenant member-portal pattern",
       "url": "https://community-knowledge-hub.replit.app/",

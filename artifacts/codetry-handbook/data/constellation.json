@@ -566,8 +566,7 @@
       "zone": 2,
       "name": "Workbench",
       "aliases": [
-        "This site",
-        "Workbench"
+        "This site"
       ],
       "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
       "url": "https://northern-store-plan.replit.app/codetry-handbook/",
@@ -669,6 +668,7 @@
       "memberFacingBrand": "807 Benefits",
       "aliases": [
         "807 Benefits",
+        "807 Food Co-op",
         "Commons"
       ],
       "zoneShorthand": "Main crops",
