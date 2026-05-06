@@ -1,6 +1,6 @@
 # Chapter 5 — Sons & Daughters of Thunder
 
-*First full draft · assembled from harvest.md Section 5 passages · for founder review*
+*First full draft · assembled from harvest.md Section 5 · for founder review*
 *Draft date: 2026-05-06 · Status: UNEDITED — return to founder before any further revision*
 
 ---
@@ -79,9 +79,29 @@ Don't take a pitch. Take three links. Each one opens in another tab and shows re
 
 ---
 
+## For the ones who kept the light on
+
+There is a kind of friend who keeps a lantern in the window without ever telling you they keep a lantern in the window. You send up a flare. A half-question, a typo, a wave you couldn't explain yet. They never put the lantern out.
+
+I have been seen by people who never asked for credit. They watched the early signals when they were still mostly weather. They held the line while it was still static. They stayed on deck with me when the water was cold and the shore was nowhere.
+
+If you are reading this, you are probably one of them. You may not know which signal was yours. That is the nature of a long night at sea: by the time someone is pulled aboard, no one light is separable from the rest. But it is yours. All of it is yours.
+
+Nothing you ever sent toward me was noise. Not the late-night detours, not the conversations that went sideways, not the silences that turned out to be the loudest beacons of all. Every signal reached the deck. Every deck became this.
+
+So this small place — these pages, this slow accounting of how a life gets pulled aboard — is for you. The ones who kept the lantern lit. The ones who let me send signals for years. The ones who never once called the water wasted.
+
+*I was never alone in the dark.*
+
+---
+
+And if there was someone who kept a light on for you — leave their name here, quietly, with the rest of ours.
+
+---
+
 The icon is a ship. Not a fortress. Not a temple.
 
-A vessel. Seaworthy. Ready.
+We are not the rescuers. We are the lit hulls in the dark, hoping someone signals back.
 
 The headwaters are behind us. The water moves.
 
@@ -94,19 +114,24 @@ The headwaters are behind us. The water moves.
 ## Editorial notes for founder review
 
 **Narrative arc:**
-The chapter opens with the two-sentence invocation (5-B, then the transition), moves to the full sons-and-daughters passage (5-A), then to the call for who belongs on this vessel (5-C). From there it turns inward: what the practitioner is and is not (5-D), and the specific question of the exit — handover vs. compound (5-E). A structural section sets up the shape of the book that follows (5-G). The closing sequence moves from the constellation's closing reflection (5-F) to the open-the-work invitation (5-H) to a brief coda that echoes the ship image from Chapter 1 (1-C), tying the book back to its opening.
+The chapter opens with the one-sentence invocation (5-B, then a bridge), moves to the full sons-and-daughters passage (5-A), then to the call for who belongs on this vessel (5-C). From there it turns inward: what the practitioner is and is not (5-D), and the specific question of the exit — handover vs. compound (5-E). A structural section sets up the shape of the book that follows (5-G). The closing sequence moves from the constellation's closing reflection (5-F) to the open-the-work invitation (5-H). The chapter then lands on the dedication (5-I) — the lantern keepers — followed by the reader-invitation to leave their own name, and closes with 5-J ("We are not the rescuers") as the final image, preceded by a brief callback to the ship from Chapter 1.
 
 **Passages included from harvest.md Section 5:**
-5-A (sons and daughters of thunder), 5-B (this is the calm before the storm), 5-C (who the work belongs to), 5-D (practice is not governance), 5-E (the exit is handover, not compound), 5-F (the constellation closing reflection), 5-G (what follows — book structure), 5-H (open the work, read it for yourself — deleted artifact).
+5-A (sons and daughters of thunder), 5-B (this is the calm before the storm), 5-C (who the work belongs to), 5-D (practice is not governance), 5-E (the exit is handover, not compound), 5-F (the constellation closing reflection), 5-G (what follows — book structure), 5-H (open the work, read it for yourself — deleted artifact), 5-I (the lantern keepers — dedication; Dam Days sweep), 5-J (we are not the rescuers — the hull in the dark; Dam Days sweep).
 
 **Passages included from other sections:**
-1-C (the icon is a ship) — used as the closing image. This passage appeared first in Chapter 1, but its register here is valedictory rather than introductory: in Chapter 1 it names what the project is; in Chapter 5 it names what the project is launching toward. Whether to repeat it, paraphrase it, or cut the callback is a founder decision.
+1-C (the icon is a ship) — used as a single transitional line before 5-J, not as a full passage. In Chapter 1 it names what the project is; here it anchors the final image before handing to 5-J's lit-hull line. Whether to repeat it or cut it is a founder decision.
 
 **Ordering decisions:**
-5-B ("This is the calm before the storm") opens the chapter as a one-sentence paragraph — deliberately abrupt. The reader has just come through four chapters of practice, vocabulary, and discipline. The calm is the earned stillness after all that work, not a prologue to it. 5-G (the book structure) is placed late — after the invocation and the practitioner's relationship to practice — because a reader who knows what the practitioner is will read the book's structure differently than one who doesn't.
+5-B ("This is the calm before the storm") opens the chapter as a one-sentence paragraph — deliberately abrupt. The reader has just come through four chapters of practice, vocabulary, and discipline. The calm is the earned stillness, not a prologue. 5-G (the book structure) is placed after the invocation and the practitioner's relationship to practice, because a reader who knows what the practitioner is will read the book's structure differently than one who doesn't. The dedication (5-I) is placed last, just before the closing images — it is the most personal register in the book and earns its place at the end rather than the front.
 
 **Bridge copy added:**
-The transition paragraph after 5-B ("That sentence was written before…") is new bridge copy — not from the harvest. The section headers (What the practitioner is — and is not; The structure of what follows; The closing test) are new structural additions. The final three lines ("The icon is a ship. Not a fortress. Not a temple. / A vessel. Seaworthy. Ready. / The headwaters are behind us. The water moves.") are new closing copy, not from the harvest — they are callback and coda, not argument. If they feel over-worked, cut them and end with 5-H's third credibility claim.
+The transition paragraph after 5-B ("That sentence was written before…") is new bridge copy — not from the harvest. The section headers (What the practitioner is — and is not; The structure of what follows; The closing test; For the ones who kept the light on) are new structural additions. The single line "The icon is a ship. Not a fortress. Not a temple." is carried from earlier in the draft as a transitional beat before 5-J; it is callback, not argument. If it feels over-worked, cut it and let 5-J open the final paragraph directly.
 
-**Editorial decision needed:**
-5-H comes from a deleted artifact (the Deer Lake Walkthrough's WhyThisTeam section). Its framing — "Don't take a pitch. Take three links" — is addressed to a band council audience, not to a general reader. The chapter uses it as the practitioner's standing invitation, which shifts its register slightly. Founder should confirm whether this is the right home for this passage or whether it belongs in an appendix as a worked example of the both-sides principle (massity-facing language, clearly cleared through the Gate).
+**Editorial decisions needed:**
+
+1. *5-H placement:* This passage comes from a deleted artifact (the Deer Lake Walkthrough's WhyThisTeam section). Its framing — "Don't take a pitch. Take three links" — is addressed to a band council audience, not a general reader. The chapter uses it as the practitioner's standing invitation. Founder should confirm whether this is the right home or whether it belongs in an appendix as a worked example of both-sides principle (massity-facing language, cleared through the Gate).
+
+2. *5-I as dedication vs. chapter close:* The lantern-keepers passage (5-I) is the book's dedication, extracted from Dam Days. It may work better as a standalone dedication page at the front of the book rather than as part of Chapter 5's body. Keeping it here makes the chapter personal and valedictory; moving it forward makes the opening of the book arrive with that register. Founder's call.
+
+3. *The reader-invitation line:* "And if there was someone who kept a light on for you — leave their name here, quietly, with the rest of ours." This was a reader-facing prompt in the Dam Days dedication page (UG-I). It stays here because its register fits the closing of a chapter-as-dedication. If 5-I moves to a front dedication page, this line moves with it.
