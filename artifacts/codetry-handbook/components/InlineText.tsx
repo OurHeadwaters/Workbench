@@ -5,7 +5,8 @@ import { CHAPTERS } from "@/data/handbook";
 
 type Run =
   | { kind: "text"; text: string; italic: boolean }
-  | { kind: "ref"; text: string; chapterId: string };
+  | { kind: "ref"; text: string; chapterId: string }
+  | { kind: "glossary"; text: string; term: string };
 
 const NUMBER_TO_CHAPTER_ID: ReadonlyMap<string, string> = new Map(
   CHAPTERS.map((c) => [c.number, c.id]),
@@ -18,50 +19,118 @@ const NUMBER_TO_CHAPTER_ID: ReadonlyMap<string, string> = new Map(
 const REF_RE = /§([A-Za-z0-9]+)\.(\d+)/g;
 const ITALIC_RE = /\*([^*]+)\*/g;
 
-function pushTextWithRefs(out: Run[], plain: string, withRefs: boolean) {
-  if (!withRefs) {
+function escapeRegex(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function buildGlossaryRe(terms: string[]): RegExp | null {
+  if (terms.length === 0) return null;
+  // Sort longest-first so multi-word terms match before shorter sub-terms.
+  const sorted = [...terms].sort((a, b) => b.length - a.length);
+  // Use word boundaries (\b) so partial-word matches are excluded.
+  // Terms starting/ending with "The " or punctuation handle the boundary naturally.
+  const pattern = sorted.map((t) => `\\b${escapeRegex(t)}\\b`).join("|");
+  return new RegExp(`(${pattern})`, "gi");
+}
+
+function splitByGlossary(
+  text: string,
+  re: RegExp,
+  termNorm: Map<string, string>,
+): Run[] {
+  const out: Run[] = [];
+  re.lastIndex = 0;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    if (m.index > last) {
+      out.push({ kind: "text", text: text.slice(last, m.index), italic: false });
+    }
+    const matched = m[0];
+    const canonical = termNorm.get(matched.toLowerCase()) ?? matched;
+    out.push({ kind: "glossary", text: matched, term: canonical });
+    last = m.index + matched.length;
+  }
+  if (last < text.length) {
+    out.push({ kind: "text", text: text.slice(last), italic: false });
+  }
+  return out;
+}
+
+function pushTextWithRefs(
+  out: Run[],
+  plain: string,
+  withRefs: boolean,
+  glossaryRe: RegExp | null,
+  termNorm: Map<string, string>,
+) {
+  if (!withRefs && !glossaryRe) {
     if (plain.length > 0) out.push({ kind: "text", text: plain, italic: false });
     return;
   }
-  let last = 0;
-  let m: RegExpExecArray | null;
-  REF_RE.lastIndex = 0;
-  while ((m = REF_RE.exec(plain))) {
-    if (m.index > last) {
-      out.push({
-        kind: "text",
-        text: plain.slice(last, m.index),
-        italic: false,
-      });
+
+  // Collect ref segments first, then apply glossary to plain segments.
+  const intermediate: Run[] = [];
+
+  if (withRefs) {
+    let last = 0;
+    let m: RegExpExecArray | null;
+    REF_RE.lastIndex = 0;
+    while ((m = REF_RE.exec(plain))) {
+      if (m.index > last) {
+        intermediate.push({
+          kind: "text",
+          text: plain.slice(last, m.index),
+          italic: false,
+        });
+      }
+      const number = `${m[1]}.${m[2]}`;
+      const id = NUMBER_TO_CHAPTER_ID.get(number);
+      if (id) {
+        intermediate.push({ kind: "ref", text: m[0], chapterId: id });
+      } else {
+        intermediate.push({ kind: "text", text: m[0], italic: false });
+      }
+      last = m.index + m[0].length;
     }
-    const number = `${m[1]}.${m[2]}`;
-    const id = NUMBER_TO_CHAPTER_ID.get(number);
-    if (id) {
-      out.push({ kind: "ref", text: m[0], chapterId: id });
-    } else {
-      out.push({ kind: "text", text: m[0], italic: false });
+    if (last < plain.length) {
+      intermediate.push({ kind: "text", text: plain.slice(last), italic: false });
     }
-    last = m.index + m[0].length;
+  } else {
+    if (plain.length > 0)
+      intermediate.push({ kind: "text", text: plain, italic: false });
   }
-  if (last < plain.length) {
-    out.push({ kind: "text", text: plain.slice(last), italic: false });
+
+  // Now apply glossary splitting to plain text runs only.
+  for (const run of intermediate) {
+    if (run.kind === "text" && !run.italic && glossaryRe) {
+      const sub = splitByGlossary(run.text, glossaryRe, termNorm);
+      for (const s of sub) out.push(s);
+    } else {
+      out.push(run);
+    }
   }
 }
 
-function parse(text: string, withRefs: boolean): Run[] {
+function parse(
+  text: string,
+  withRefs: boolean,
+  glossaryRe: RegExp | null,
+  termNorm: Map<string, string>,
+): Run[] {
   const out: Run[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
   ITALIC_RE.lastIndex = 0;
   while ((m = ITALIC_RE.exec(text))) {
     if (m.index > last) {
-      pushTextWithRefs(out, text.slice(last, m.index), withRefs);
+      pushTextWithRefs(out, text.slice(last, m.index), withRefs, glossaryRe, termNorm);
     }
     out.push({ kind: "text", text: m[1], italic: true });
     last = m.index + m[0].length;
   }
   if (last < text.length) {
-    pushTextWithRefs(out, text.slice(last), withRefs);
+    pushTextWithRefs(out, text.slice(last), withRefs, glossaryRe, termNorm);
   }
   return out;
 }
@@ -72,15 +141,36 @@ export function InlineText({
   italicStyle,
   onPressRef,
   refStyle,
+  glossaryTerms,
+  onPressGlossaryTerm,
+  glossaryTermStyle,
 }: {
   text: string;
   style?: StyleProp<TextStyle>;
   italicStyle?: StyleProp<TextStyle>;
   onPressRef?: (chapterId: string) => void;
   refStyle?: StyleProp<TextStyle>;
+  glossaryTerms?: string[];
+  onPressGlossaryTerm?: (term: string) => void;
+  glossaryTermStyle?: StyleProp<TextStyle>;
 }) {
   const withRefs = !!onPressRef;
-  const runs = useMemo(() => parse(text, withRefs), [text, withRefs]);
+
+  const { glossaryRe, termNorm } = useMemo(() => {
+    if (!glossaryTerms || glossaryTerms.length === 0 || !onPressGlossaryTerm) {
+      return { glossaryRe: null, termNorm: new Map<string, string>() };
+    }
+    const re = buildGlossaryRe(glossaryTerms);
+    const norm = new Map<string, string>();
+    for (const t of glossaryTerms) norm.set(t.toLowerCase(), t);
+    return { glossaryRe: re, termNorm: norm };
+  }, [glossaryTerms, onPressGlossaryTerm]);
+
+  const runs = useMemo(
+    () => parse(text, withRefs, glossaryRe, termNorm),
+    [text, withRefs, glossaryRe, termNorm],
+  );
+
   return (
     <Text style={style}>
       {runs.map((r, i) => {
@@ -92,6 +182,20 @@ export function InlineText({
               onPress={() => onPressRef?.(r.chapterId)}
               accessibilityRole="link"
               accessibilityLabel={`Section ${r.text.slice(1)}`}
+              suppressHighlighting
+            >
+              {r.text}
+            </Text>
+          );
+        }
+        if (r.kind === "glossary") {
+          return (
+            <Text
+              key={i}
+              style={glossaryTermStyle}
+              onPress={() => onPressGlossaryTerm?.(r.term)}
+              accessibilityRole="link"
+              accessibilityLabel={`Glossary: ${r.term}`}
               suppressHighlighting
             >
               {r.text}

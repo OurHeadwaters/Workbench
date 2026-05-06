@@ -24,9 +24,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ChapterBlock } from "@/components/ChapterBlock";
 import { BottomChrome, TopChrome } from "@/components/Chrome";
+import { GlossaryTermSheet } from "@/components/GlossaryTermSheet";
 import { useReader } from "@/contexts/ReaderState";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
 import { chapterExcerpt } from "@/data/handbook";
+import { GLOSSARY_ENTRIES } from "@/data/glossary";
 import { useColors } from "@/hooks/useColors";
 
 const SERIF_BOLD = "Lora_700Bold";
@@ -62,8 +64,10 @@ export default function ChapterScreen() {
 
   const chapter = getChapter(id);
   const { prev, next, index } = useMemo(() => getNeighbors(id), [id, getNeighbors]);
+  const glossaryTerms = useMemo(() => GLOSSARY_ENTRIES.map((e) => e.term), []);
   const [chromeVisible, setChromeVisible] = useState(true);
   const [highlightedBlockIndex, setHighlightedBlockIndex] = useState<number | null>(null);
+  const [activeGlossaryTerm, setActiveGlossaryTerm] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
   const lastSavedY = useRef(0);
   const currentScrollYRef = useRef(0);
@@ -417,6 +421,8 @@ export default function ChapterScreen() {
                 bookmarked={bookmarked}
                 onPressRef={blockOnPressRef}
                 highlighted={i === highlightedBlockIndex}
+                glossaryTerms={glossaryTerms}
+                onPressGlossaryTerm={setActiveGlossaryTerm}
               />
             );
           })}
@@ -501,6 +507,11 @@ export default function ChapterScreen() {
         hasNext={!!next}
         showPractitionerVoice={showPractitionerVoice}
         onTogglePractitionerVoice={togglePractitionerVoice}
+      />
+
+      <GlossaryTermSheet
+        term={activeGlossaryTerm}
+        onClose={() => setActiveGlossaryTerm(null)}
       />
     </View>
   );

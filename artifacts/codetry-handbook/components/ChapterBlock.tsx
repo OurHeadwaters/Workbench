@@ -20,6 +20,8 @@ export function ChapterBlock({
   bookmarked,
   onPressRef,
   highlighted,
+  glossaryTerms,
+  onPressGlossaryTerm,
 }: {
   block: Block;
   fontScale: number;
@@ -27,6 +29,8 @@ export function ChapterBlock({
   bookmarked?: boolean;
   onPressRef?: (chapterId: string) => void;
   highlighted?: boolean;
+  glossaryTerms?: string[];
+  onPressGlossaryTerm?: (term: string) => void;
 }) {
   const c = useColors();
   const { theme } = useReader();
@@ -42,6 +46,12 @@ export function ChapterBlock({
     fontFamily: SERIF_BOLD,
     textDecorationLine: "underline" as const,
     textDecorationColor: c.muted,
+  };
+  const glossaryTermStyle = {
+    color: c.foreground,
+    textDecorationLine: "underline" as const,
+    textDecorationStyle: "dotted" as const,
+    textDecorationColor: c.primary,
   };
 
   const glowAnim = useRef(new Animated.Value(0)).current;
@@ -118,6 +128,9 @@ export function ChapterBlock({
             italicStyle={{ fontFamily: SERIF_ITALIC }}
             onPressRef={onPressRef}
             refStyle={refStyle}
+            glossaryTerms={glossaryTerms}
+            onPressGlossaryTerm={onPressGlossaryTerm}
+            glossaryTermStyle={glossaryTermStyle}
           />
         </Pressable>,
       );
@@ -138,6 +151,9 @@ export function ChapterBlock({
             }}
             onPressRef={onPressRef}
             refStyle={refStyle}
+            glossaryTerms={glossaryTerms}
+            onPressGlossaryTerm={onPressGlossaryTerm}
+            glossaryTermStyle={glossaryTermStyle}
           />
         </View>,
       );
@@ -204,6 +220,9 @@ export function ChapterBlock({
             italicStyle={{ fontFamily: SERIF_ITALIC }}
             onPressRef={onPressRef}
             refStyle={refStyle}
+            glossaryTerms={glossaryTerms}
+            onPressGlossaryTerm={onPressGlossaryTerm}
+            glossaryTermStyle={glossaryTermStyle}
           />
         </View>,
       );
@@ -307,6 +326,9 @@ export function ChapterBlock({
                 italicStyle={{ fontFamily: SERIF_ITALIC }}
                 onPressRef={onPressRef}
                 refStyle={refStyle}
+                glossaryTerms={glossaryTerms}
+                onPressGlossaryTerm={onPressGlossaryTerm}
+                glossaryTermStyle={glossaryTermStyle}
               />
             </View>
           ))}
@@ -344,6 +366,9 @@ export function ChapterBlock({
                 italicStyle={{ fontFamily: SERIF_ITALIC }}
                 onPressRef={onPressRef}
                 refStyle={refStyle}
+                glossaryTerms={glossaryTerms}
+                onPressGlossaryTerm={onPressGlossaryTerm}
+                glossaryTermStyle={glossaryTermStyle}
               />
             </Pressable>
           ))}
@@ -389,6 +414,8 @@ export function ChapterBlock({
                   fontScale={fontScale}
                   onLongPress={onLongPress}
                   onPressRef={onPressRef}
+                  glossaryTerms={glossaryTerms}
+                  onPressGlossaryTerm={onPressGlossaryTerm}
                 />
               ))
             : null}

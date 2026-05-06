@@ -20,6 +20,8 @@ import {
   type GlossaryEntry,
   type GlossarySection,
 } from "@/data/glossary";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 
 const SERIF = "Lora_400Regular";
 const SERIF_ITALIC = "Lora_400Regular_Italic";
@@ -138,7 +140,14 @@ function SectionHeader({
 export default function Glossary() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const [query, setQuery] = useState("");
+  const params = useLocalSearchParams<{ q?: string }>();
+  const paramQ = typeof params.q === "string" ? params.q : "";
+  const [query, setQuery] = useState(paramQ);
+
+  useEffect(() => {
+    setQuery(paramQ);
+  }, [paramQ]);
+
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
