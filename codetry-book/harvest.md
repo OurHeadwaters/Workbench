@@ -8,6 +8,7 @@
 **Supplemented:** 2026-05-06 (Task #803) — Bright Side (project 7) and Saltbox (project 10) swept via JS bundle extraction; merge conflicts from Tasks #784 and #785 resolved; passages 2-X, 2-Y, 2-Z, 3-O, 3-P, 4-U, 4-V, 4-W, 4-X, 4-Y, 5-K, UG-J through UG-Q added.
 **Supplemented:** 2026-05-06 (Task #801) — X Buckets Vision (project 1) swept via live bundle extraction; 11 passages added (1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M) plus full water-metaphor vocabulary map (3-P). Merge conflicts from Tasks #784 and #785 resolved: community-knowledge-hub passages renumbered to 3-O, 4-U, 4-V, 5-K, UG-J, UG-K.
 **Supplemented:** 2026-05-06 — Task #797: External projects 3–10 swept; 14 passages added (1-R, 1-S, 2-U, 2-V, 2-W, 2-X, 3-O, 3-P, 4-U, 4-V, UG-J, UG-K, UG-L, UG-M). Sources: Rootwork studio bundle, health-support-hub bundle, community-knowledge-hub bundle (main app + three infographic HTML pages), legacy-gatekeeper bundle, salt-box bundle.
+**Updated:** 2026-05-06 — X Buckets Vision external sweep complete. Added 3-M through 3-T (Section 3), 4-S through 4-U (Section 4), UG-H through UG-I (Unplaced Gems). Total passage count: Section 1 (1-A–1-O + 6 deleted), Section 2 (2-A–2-T + 4 deleted), Section 3 (3-A–3-T + 4 deleted), Section 4 (4-A–4-U + 7 deleted), Section 5 (5-A–5-H), Unplaced Gems (UG-A–UG-I).
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -926,6 +927,11 @@ Callout:
 
 ---
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 ### 3-M · How the dam sorts what it catches — the six zones named
 
 > Toss in everything that drifts past — half-thoughts, prices, code, mid-sentence SOS — and the dam catches each fragment, sorts it, and puts it to work across six zones, with income at the center, the rest fanning out from there.
@@ -1057,6 +1063,7 @@ Cautions embedded in the tour (also verbatim):
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 =======
 `community-knowledge-hub/studio/ — closing CTA section`
+<<<<<<< HEAD
 
 ---
 
@@ -1113,6 +1120,165 @@ The full locked vocabulary from the X Buckets Vision PWA, verbatim from the prod
 **Source:** `x-buckets-vision/bambooSpring` — the six-stage metaphor rendered in the XRP Spring savings tab; extends the envelope-budget metaphor from data model into visual artwork across six growth milestones (the "six-stage bamboo growth scene" referenced in passage 1-L)
 >>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 >>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+=======
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+=======
+---
+
+### 3-M · The first formal codetry test — the rule discovered
+
+> **One word → one referent.** In codetry, every metaphor word in the surface UI must point to exactly one thing in the architecture. The moment a word names two actions, it names neither.
+
+Word map after the test (no overlaps):
+
+| Word     | Refers to                                                  |
+| -------- | ---------------------------------------------------------- |
+| Rainfall | Income arriving this payday (paycheck + side gig combined) |
+| Siphon   | Bills auto-paid out of the rainfall before the reservoir   |
+| Reservoir | The stablecoin wallet — what's left after the siphon      |
+| Channel  | The act of distributing reservoir → buckets ("every drop") |
+| Bucket   | A named envelope (Groceries, Rent share, Transit, …)       |
+
+> Each word, one job. None overlap. The metaphor IS the architecture, end to end, with no slack between word and referent.
+
+`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — "The rule discovered" section; word map and paragraph immediately following
+
+---
+
+### 3-N · Payday — words bearing weight (Dam Days entry)
+
+> **Today, in the Payday tab, the rain stopped meaning anything because it was meaning three things at once. Three CTAs all called it down. I froze.**
+>
+> Rule: one word → one referent. Otherwise the words are just decoration and codetry collapses into code-poetry.
+>
+> Fix on the canvas — Variant A. Rain stays as income only. Siphon takes the bills. Reservoir takes what's left. Channel pours into buckets. Each word has exactly one job. The words bear weight again.
+>
+> First formal codetry test. The rule was already there; the test gave it a name.
+
+`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — Dam Days entry (private by default; share to the Shallows? — y / n)
+
+---
+
+### 3-O · Locked vocabulary drifts on merges
+
+> **Locked vocabulary drifts on merges unless something machine-checked holds it.** The map being written down in a doc is necessary but not sufficient. The word map needs at least one mechanical witness — a forbidden-strings unit test, an ESLint rule, a copy-snapshot diff, or all three — that fails the build when a banned word appears on a surface it doesn't own.
+
+Continuation:
+
+> This sighting is what graduates the rule from "discipline a person holds" to "contract the toolchain enforces." A discipline degrades on every rebase, every long branch, every fast merge. A contract doesn't.
+
+`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — "Sighting 2 — the rebase that silently un-did the fix"
+
+---
+
+### 3-P · The locked Zone 1 word map — full table
+
+The result of Test 002: every metaphor word in Zone 1 locked to exactly one referent, in English and French.
+
+| Word             | Refers to                                                                     | FR                  |
+| ---------------- | ----------------------------------------------------------------------------- | ------------------- |
+| Rainfall         | Income arriving this payday (paycheck + side gig combined)                    | Pluie               |
+| Siphon           | Auto-bills drawn before income reaches the Reservoir                          | Siphon              |
+| Reservoir        | The stablecoin wallet — what's left after the siphon                          | Réservoir           |
+| Channel *(verb)* | Distributing the Reservoir into named Buckets (act of "every drop")           | Canaliser           |
+| Bucket           | A named envelope (Groceries, Rent share, Transit, …)                          | Compartiment        |
+| Cloud Cover      | Compound interest — the weather that keeps producing rain                     | Couverture nuageuse |
+| Rain Barrel      | Emergency fund — short-term reserve for surprises                             | Baril de pluie      |
+| Aquifer          | Long-term savings — the deep reserve that fills slowly                        | Aquifère            |
+| Glacier          | Tax-advantaged accounts (RRSP, TFSA) — savings the tax authority leaves alone | Glacier             |
+| Watershed        | Diversified income streams (one fragile stream → many resilient ones)         | Bassin versant      |
+| Bridge *(verb)*  | Above-tap-cap transfers (the Abundance Bridge sheet)                          | Traverser le pont   |
+| Public Lake      | Regulated / credit-union yield product (advisor-mode Earn destination)        | Lac public          |
+| Private Lake     | DeFi liquidity pool (enthusiast-mode Earn destination, self-custody)          | Lac privé           |
+| Lake current     | The small fee paid into a Private/Public Lake each time a swap flows through it; the Drip Harvester's earnings are its share of those currents | Courant du lac |
+| Fill *(verb)*    | The act of putting idle RLUSD into a Lake                                     | Remplir             |
+| Drainage         | Debt payoff — the opposite move from Channel                                  | Drainage            |
+
+> **One word → one referent, held across the whole zone.** Test 001 named the rule on one screen. Test 002 is what it costs to honour the rule across a constellation. Where one word was doing two jobs, we coined or recovered a second word so each job has a name of its own.
+
+`x-buckets-vision · docs/codetry/002-zone-1-words-locked.md` — "Locked Zone 1 word map" table and "The rule discovered" section
+
+---
+
+### 3-Q · The word map locked — Dam Days entry
+
+> **Today the word map for Zone 1 went from "mostly held" to "locked". The Reservoir is the wallet. The Aquifer is the deep reserve. The Rain Barrel is the emergency fund. The Glacier is the tax shelter. Cloud Cover is the compounding. Watershed is the diversified streams. Channel is the act of distributing the Reservoir into Buckets. Bridge is the above-cap transfer. Drainage is debt payoff. Public Lake is the regulated yield. Private Lake is the DeFi liquidity pool. Lake current is the swap fee. Fill is the verb for idle RLUSD entering a Lake.**
+>
+> Rule: one word → one referent, held across the whole zone. Test 001 named the rule. Test 002 paid its cost — by coining or recovering a word for every job that didn't have one.
+>
+> The map is small enough to teach in a single breath. That's the measure: if the map can't be taught in a breath, it isn't locked.
+
+`x-buckets-vision · docs/codetry/002-zone-1-words-locked.md` — Dam Days entry
+
+---
+
+### 3-R · One register per screen (Test 003 — the first formal rejection)
+
+Rule discovered:
+
+> **One register per screen.** The codetry rule from test 001 (one word → one referent) extends to the screen as a whole: a single product surface should carry a single metaphor register, not two competing ones. A metaphor that lives honestly in the lineage doc may still be the wrong word for a surface, if that surface already belongs to a different register.
+
+Dam Days entry:
+
+> **Today, on the canvas, I tried the bamboo field on the wallet chip right under "Channel the rainfall." Variant A cracked at "Cut into rainfall" — bamboo and water fighting on one screen. Variant B was just noise. Variant 0, the plain chip, kept doing its job.**
+>
+> Rule: one register per screen. The metaphor that's right in the lineage doc can still be the wrong word for a surface — if the surface already belongs to a different register.
+>
+> Bamboo field stays in the lineage doc. The wallet chip stays as plumbing. First rejected codetry test — and the rejection itself is the finding.
+
+`x-buckets-vision · docs/codetry/003-bamboo-field-on-wallet-chip.md` — "The rule discovered" section and Dam Days entry
+
+---
+
+### 3-S · Silence about the metaphor is permission for DeFi (Test 005)
+
+Rule discovered:
+
+> **Vocabulary defects compound where the metaphor is most asked to do work.** Test 001 cleaned a screen where two CTAs collided on one word. Test 002 locked a zone where a few words drifted across surfaces. Test 005 cleans a screen where the locked map was dropped entirely and four foreign registers rushed in to fill the gap. The rule is the same — one word, one referent — but the cost of dropping it scales with the number of registers that get to colonise the silence.
+
+Sharpened:
+
+> **Silence about the metaphor is permission for DeFi.** The Earn surface inherited "agent / fleet / deploy / LP / AMM / sweep / 24/7 / no rug pulls" not because anyone designed it that way but because nobody held the locked map there. Foreign registers fill unmapped territory the same way weeds fill unplanted soil.
+
+Dam Days entry:
+
+> **Today the Earn tab spoke seventeen words it had no business speaking. Agent. Fleet. Deploy. AMM. LP. APR. Pool shares. Sweep. 24/7. No rug pulls. The locked map was right there in `copy.en.ts`, being honoured on the Payday tab and the Reservoir hero and the lessons — and dropped the moment the surface touched DeFi. Four registers rushed in to fill the silence.**
+>
+> Rule: vocabulary defects compound where the metaphor is most asked to do work. Silence about the metaphor is permission for DeFi.
+>
+> Variant A swept the surface. The Drip Harvester is just a Drip Harvester now. Pools became Parks (already in the lessons; only the screen was holding out). Sweep became Drip. APR became "about $X per $100 / month from Park tolls". And one new word — *Park toll* — joined the locked map.
+>
+> The map stays small enough to teach in a single breath. *Park toll* is the fourteenth word in it.
+
+`x-buckets-vision · docs/codetry/005-drip-harvester-reads-as-defi-noise.md` — "The rule discovered" section and Dam Days entry
+
+---
+
+### 3-T · A vocabulary sweep cleans words; it does not clean layout (Test 007)
+
+Rule discovered:
+
+> **A vocabulary sweep cleans words; it does not clean layout.** Test 005 replaced "AMM pool" with "Private Park" and "LP Position" with "Parked in [Park]" on this exact card, and the card looked better for it. But the *card itself* — the choice to show four equally weighted stats, the choice to omit IL, the choice to quote the drip rate as a constant — survived the sweep untouched, because words and layout are independent failure modes. The locked map can be perfectly held while the surface still answers the wrong question first, hides the warning the household most needs, and lies (by typography, not by the number) about whether the drip rate is stable.
+
+Sharpened:
+
+> **Clean words on a noisy card still read as a noisy card.** Vocabulary tests do not graduate layout; layout tests do.
+
+Dam Days entry:
+
+> **Today the LP-position card looked clean and read wrong. Test 005 had swept it — Park instead of pool, drip instead of sweep, "$X / mo per $100 parked" instead of APR — and the words were honest. The card was not. Four stat tiles all the same size, no answer to which one matters, no warning that RLUSD and XRP can drift apart in price, no hint that the drip rate moves with traffic.**
+>
+> Rule: a vocabulary sweep cleans words; it does not clean layout. Clean words on a noisy card still read as a noisy card.
+>
+> Variant A held the words Test 005 had earned and rebuilt the card around them. One hero block — *drip earned so far*, the next drip's threshold, the progress bar with a single sentence under it. Two sub-stats. A toll-history band labelled honestly as a typical range until we have real snapshots. And the impermanent-loss heads-up, finally living next to the parked money instead of three taps away in a Learn drawer.
+>
+> The card now answers one question first. It puts the warning where the warning has to be. And it stops pretending the drip rate is a constant.
+>
+> Two kinds of test now. *What does the surface say.* And *what does the surface put first.* They catch different defects on the same card.
+
+`x-buckets-vision · docs/codetry/007-lp-position-card-survives-vocab-sweep.md` — "The rule discovered" section and Dam Days entry
+>>>>>>> af82b05 (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
+>>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
@@ -1423,6 +1589,11 @@ The Gate manifest principle:
 
 ---
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 ### 4-S · The rebrand without a rewrite — Dam Days as codetry demonstration
 
 > The rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name).
@@ -1463,6 +1634,7 @@ Region-specific design rationale:
 `community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities, "'What We Dropped' Section" feature`
 
 *(This feature enacts the Refused principle from The Gate at the content level — items that do not cross the northern-conditions test are not dropped silently; they are documented with the reason for exclusion.)*
+<<<<<<< HEAD
 
 ---
 
@@ -1630,6 +1802,68 @@ The active-mode banner:
 **Source:** `x-buckets-vision/foundationCoach.subDrainage` and `foundationCoach.subStarter` — the Foundation Coach step descriptions; debt reframed as drainage rather than obligation, emergency reserve reframed as a Rain Barrel rather than a fund
 >>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 >>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+=======
+>>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+=======
+---
+
+### 4-S · Codetry's lineage — what is genuinely new
+
+The four things narrowly scoped as genuinely original in the discipline:
+
+> **The three-way binding.** UI metaphor word ↔ code identifier ↔ user mental model, treated as a single contract. Most prior art binds two of these. Codetry insists on all three, simultaneously, and treats a break in any leg as a defect rather than a translation issue.
+>
+> **The falsifiable per-screen test ritual, with a written record.** Numbered tests (001, 002, …), a stated falsifier per test, a status line tracking whether the rule held when shipped. Prior art treats naming as ongoing hygiene; codetry treats it as a test event with a date and a verdict.
+>
+> **The diagnostic heuristic.** "When a user hesitates at a screen, the first move is to look for a word doing two jobs." A specific, first-resort debugging move sitting on top of the rule. Lineage in usability heuristics; stated as a tool, not a guideline.
+>
+> **The name.** Codetry — the joining of code and poetry, with a resonance to carpentry (a craft of cuts and joins). Naming the practice makes it referenceable, which is what lets it be tested at all.
+
+The strongest defensible claim from the same document:
+
+> Codetry is a new discipline that makes an old principle — the metaphor IS the architecture — operational and testable at the UI surface, one word and one referent at a time.
+
+`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Finding 1 — Lineage and what's new" and "The strongest defensible claim"
+
+---
+
+### 4-T · Codetry is hempcrete — the meta-doc version
+
+> Codetry is hempcrete. Not steel, and not paint.
+
+Three reasons the metaphor fits (from the same document):
+
+> **Composite of old materials.** Hempcrete is lime + hemp shiv + water — old ingredients, new mix. Codetry is Ubiquitous Language + System Metaphor + Nielsen #2 + Lakoff + content design + naming-things — old ingredients, new mix. Neither material is invented from nothing; both are recombinations whose value is in the combining.
+>
+> **Infill, not frame.** Hempcrete is non-load-bearing; a hempcrete building still needs a structural frame (timber, usually). Codetry is non-load-bearing; a codetry-disciplined product still needs the structural frame of the actual product — working code, real flows, a coherent domain model. Codetry alone cannot hold a product up. Codetry inside a sound frame makes the product breathable and warm.
+>
+> **Ethical-aesthetic as well as functional.** Hempcrete is chosen partly because it sequesters carbon and breathes; the moral and sensory case is part of why anyone uses it at all. Codetry is chosen partly because the metaphor IS the architecture and the product carries the dignity of meaning what it says. The aesthetic is part of the spec, not a finish applied at the end.
+
+`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Finding 2 — Hempcrete (what kind of thing codetry is)"
+
+*Note: the hempcrete metaphor also appears in the handbook (4-E), sourced from `handbook.ts`. The meta-doc version here is a different pass at the same argument — more compressed, and set explicitly against "not steel, not paint." Both deserve to sit in the file.*
+
+---
+
+### 4-U · The bamboo field — upstream as crop
+
+> A short applied note, not a third finding. Once you accept codetry is hempcrete (the practice), the next honest question is what to call the upstream the product actually draws from. In Headwaters that upstream is XRP, and the right word for it — by the same naming discipline this doc is about — is the bamboo field.
+
+Three reasons the metaphor fits:
+
+> **Renewable upstream.** A bamboo field is a working crop that quietly regrows. You walk past it most days without noticing. On payday, you cut some — the swap to RLUSD — and the cut bamboo becomes rainfall that fills the reservoir. The field is not the wall of the building; it is part of what the building is downstream of.
+>
+> **Vernacular crop, not financial instrument.** Calling XRP "the bamboo field" refuses the portfolio register. It frames the holding the same way a kitchen garden frames a tomato plant: a working part of the household, not an asset class. That matches the Zone 1 voice, and it keeps the dignity-of-meaning-what-it-says rule that the hempcrete finding names.
+>
+> **Standing, not flowing, not held.** Rainfall flows. The reservoir holds a worked-out amount. The bamboo field stands. Three different states, three different words — the same one-word-one-referent rule that test 001 discovered, applied one step further upstream than 001 reached.
+
+Where the metaphor strains (naming the leak is itself the codetry move):
+
+> Real bamboo establishes over years and is famously hard to remove (rhizomes). XRP swings in hours, and a holding can crash on you in ways a grove cannot. The metaphor is true on regeneration and vernacular; looser on cadence and reversibility. We bound every metaphor we use.
+
+`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Coda — and while we're naming materials: bamboo-field"
+>>>>>>> af82b05 (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
+>>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
@@ -2055,6 +2289,46 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 
 ---
 
+### UG-H · Calm states earn their loudness back (Test 004)
+
+Rule discovered:
+
+> **Surface state mirrors cycle state, and calm states earn their loudness back.** A calm state is the default surface for any architectural state that doesn't require user action. The loud controls don't disappear — they retreat behind a quiet, named disclosure that the user can summon on demand. The default is calm; loudness has to earn itself back by being asked for.
+
+Dam Days entry:
+
+> **Today, looking at the Payday tab, I noticed the Wobble-targets text-link under the flow ribbon and the Tinker-with-the-plan disclosure under the rest card cut the same silhouette on the screen. Two unrelated tasks. Two different motions of the work. One shape.**
+>
+> Rule: surface state mirrors cycle state, and calm states earn their loudness back. The default is calm. Loud controls retreat behind a quiet text-link the user can summon on demand. They don't disappear; they wait until asked.
+>
+> First temperature-family rule. First rule named from a convergence — shipped twice in production before being recognised. The test isn't the shipping; the test is the recognition.
+
+`x-buckets-vision · docs/codetry/004-calm-states-earn-their-loudness.md` — "The rule discovered" section and Dam Days entry
+
+---
+
+### UG-I · Topology is a noun-game (Tests 006 and 008)
+
+From Test 006 — rule discovered:
+
+> **Topology earns its place at the top of the surface when the stations the money passes through cannot be inferred from the cards below.** A ribbon or flow diagram at the top of an Earn surface is not decoration — it is the architectural claim that the route is the message. Earn without topology claims that the destinations are independent. Earn with topology claims they are one river running through stations. The claim has to be the claim you're actually making.
+
+From Test 008 — rule discovered:
+
+> **Topology is a noun-game.** The ribbon that holds the Earn flow is only as clear as the nouns inside it. A circle that says "Reservoir" and a circle that says "Private Lake" and an arrow between them named "Fill" is a sentence. Every word in that sentence is load-bearing. Swap any one of them for a generic ("Account → Pool → Transfer") and the sentence dissolves into a diagram that could describe any fintech product on earth.
+
+Dam Days entry from Test 008:
+
+> **Today the Earn ribbon grew a fourth circle and a sentence. The four nouns (Reservoir → Drip Harvester → Private Lake, Public Lake) finally made the route legible without a legend.**
+>
+> Rule: topology is a noun-game. The ribbon is only as clear as the nouns inside it.
+
+`x-buckets-vision · docs/codetry/006-earn-tab-earns-a-roof.md` — "The rule discovered" section; `x-buckets-vision · docs/codetry/008-earn-ribbon-fourth-circle.md` — "The rule discovered" section and Dam Days entry
+
+---
+
+---
+
 ## Pending External Sweeps
 
 *The cross-project sweep prompt (`codetry-book/cross-project-prompt.md`) must be run in each project listed below by opening that project in Replit, pasting the full prompt as a new agent message, and folding the returned structured markdown into this file under the correct section headings. Source labels should identify the external project (e.g. `dam-days/src/pages/Home.tsx` rather than `artifacts/...`).*
@@ -2070,10 +2344,14 @@ Six pieces of UI copy that name what a good shift looks like from the inside:
 **Constellation zone:** Zone 1 — household finance, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
 =======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #801). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (React SPA; prose extracted from minified production bundle `index-CGcLuc1T.js` and sub-bundles). Passages recovered: 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M. Full water-metaphor vocabulary map recovered (Rainfall, Reservoir, Siphon, Rain Barrel, Stream, Water Tower, Spring, Watershed, Community Well, Water Wheel, Private Lake, Giving Well, Drought Mode, Payday Planner). XRP Spring bamboo growth scene recovered as six-stage artwork sequence. Aquifer and Glacier not present in current bundle — these names may belong to an earlier xBuckets era not accessible in the live app. Git history and conversation logs not accessible from this environment.
 >>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06. Content recovered from 10 codetry test docs (Tests 001–010) and the Lineage & Hempcrete meta-doc, all available in `attached_assets/` as pasted conversation artifacts. Passages folded into: Section 3 (3-M through 3-T — the naming tests, locked word map, Dam Days entries), Section 4 (4-S through 4-U — lineage findings, hempcrete meta-doc version, bamboo-field coda), Unplaced Gems (UG-H, UG-I — calm states rule, topology-is-a-noun-game). Source labels use `x-buckets-vision · docs/codetry/[filename]`.
+>>>>>>> 42729ad (Task #783: X Buckets Vision sweep folded into codetry-book/harvest.md)
 
 ---
 
