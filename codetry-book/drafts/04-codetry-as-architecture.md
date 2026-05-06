@@ -182,11 +182,15 @@ Type-driven design makes illegal states unrepresentable. Codetry makes drifted n
 
 It is a quiet discipline. Most of it is naming. These are the terms the discipline runs on. A practitioner who knows these words can name any new primitive they encounter.
 
+**Codetry** — The practice of building software whose primary load-bearing material is metaphor. The naming is the architecture; the code is the medium that makes the metaphor real, clickable, and runnable. The unit of care is the name: the chosen noun carries the constraint, and the schema, the UI, and the verbs of the app follow from it. Rename a primitive — *Buckets* to *Categories*, *Practitioner* to *Founder* — and the structure quietly changes shape underneath the name. *(First stated in Ch3; this entry formalises the self-description in the vocabulary. "Codetry disciplines" is the collective name for the named practices — constellation, primitives, principles — that codetry runs on.)*
+
+**Practitioner** — A person practicing codetry within a community: listening for the noun the community already uses, refusing to translate it into something cleaner, and verifying against the person who handed them the word rather than against the literature, the model, or their own better idea. A posture, not a role specification. The practitioner's exit is handover, not compound — the discipline is shipped as method, not held as advantage. *(Practitioner's workbench: the practitioner's own named tool — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be. The rename from "founder's dashboard" to "practitioner's workbench" is itself a codetry move.)*
+
 **Constellation** — The full set of economic systems a community runs together. Not a network (which implies optional connection) and not an organization (which implies a single structure). A constellation: distinct systems, gravitationally related, each doing its own job.
 
 **Primitive** — A named system inside the constellation that does a specific, irreducible job. Each primitive has a name chosen to hold across every context in which it appears — zones, seasons, personnel, tempo.
 
-**Zone** — A domain of practice inside the constellation: household, finance, knowledge, emergency preparedness, land, and public. Primitives are hosted in zones but read by all zones.
+**Zone** — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones.
 
 **The Standby** — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name.
 
@@ -209,6 +213,10 @@ It is a quiet discipline. Most of it is naming. These are the terms the discipli
 **Both-states (principle)** — A test for naming a primitive that moves between tempos: does the name hold in the resting state and the activated state? If the name bends to fit only one tempo, the system will eventually fork into two systems with two cultures.
 
 **Both-sides (principle)** — A test for naming a primitive that faces two contexts simultaneously: does the name hold from the bright side and from the massity side? If the name privileges one context, the membrane becomes a wall.
+
+**Drift** — The failure that occurs when a community's load-bearing noun is translated — even into a cleaner, more general, or more reusable noun — without the community's recognition or consent. Drift is not announced as a loss; each move feels like cleanup, like progress, like professionalism. The codetry-test exists because drift is invisible to the type checker and obvious to the person who handed you the word. *(Codetry-test is the informal name for the discipline's ongoing verification posture: when in doubt, check against the human who gave you the word, not against the literature or the model.)*
+
+**Knowledge creep / Language drift** — Two named failure modes that together constitute drift in practice. *Knowledge creep*: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck — the concept stays but the noun wanders through a chain of meetings. *Language drift*: *the books* becomes *the ledger* becomes *the financial management module* — the noun is swapped for a cleaner, more general one and the original word is no longer in the room. Neither announces itself as a loss.
 
 ---
 

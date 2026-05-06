@@ -1,7 +1,7 @@
 # Vocabulary Reference Sheet
 ## Codetry: All Formally Defined Terms, Ch1–Ch5 and Appendix
 
-*Single-page compiled glossary for practitioners. Each entry notes the chapter where the term is first formally introduced. Terms used across chapters before their formal definition are marked "(foreshadowed in ChX)". Terms present in the text but lacking a formal definition are collected in the Flagged Terms section at the end.*
+*Single-page compiled glossary for practitioners. Each entry notes the chapter where the term is first formally introduced. Terms used across chapters before their formal definition are marked "(foreshadowed in ChX)". Terms that were present in the text but lacked a formal definition have been resolved; their decisions are recorded in the Resolved Flagged Terms section at the end.*
 
 *Source chapters: Ch1 — The Headwaters · Ch2 — Watching the Beavers · Ch3 — The Dam Breaks · Ch4 — Codetry as Architecture · Ch5 — Sons & Daughters of Thunder · App — Appendix: Deep Dives*
 
@@ -21,11 +21,19 @@
 
 **Centralized disruption** (Ch4, added to formal vocabulary in continuity pass 2026-05-06) — The class of event that activates The Standby: conditions that temporarily remove or degrade a shared infrastructure the whole constellation depends on. Examples: drought, fire, smoke, flood, ice, power failure, water outage, freight disruption, payment system failure, pandemic, evacuation, postponed AGM, key-person-down. Named as a class so the constellation can distinguish a Standby call from a household-level crisis handled inside Zone 0.
 
+**Codetry** (Ch3 origin, Ch4 vocabulary addition 2026-05-06) — The practice of building software whose primary load-bearing material is metaphor. The naming is the architecture; the code is the medium that makes the metaphor real, clickable, and runnable. The unit of care is the name: the chosen noun carries the constraint, and the schema, the UI, and the verbs of the app follow from it. Rename a primitive — *Buckets* to *Categories*, *Practitioner* to *Founder* — and the structure quietly changes shape underneath the name. *(Ch3 states the definition in full; this entry formalises it in the vocabulary. "Codetry disciplines" is the collective descriptor for the named practices — constellation, primitives, principles — that codetry runs on; it is not a separate entry.)*
+
 **Constellation** (Ch4, foreshadowed in Ch1 and Ch3) — The full set of economic systems a community runs together. Not a network (which implies optional connection) and not an organization (which implies a single structure). A constellation: distinct systems, gravitationally related, each doing its own job.
+
+**Drift** (Ch3 and Ch4, Ch4 vocabulary addition 2026-05-06) — The failure that occurs when a community's load-bearing noun is translated — even into a cleaner, more general, or more reusable noun — without the community's recognition or consent. Drift is not announced as a loss; each move feels like cleanup, like progress, like professionalism. The codetry-test exists because drift is invisible to the type checker and obvious to the person who handed you the word. *(Codetry-test is the informal name for the discipline's ongoing verification posture — when in doubt, check against the human who gave you the word, not against the literature or the model; it is not a separate named procedure.)*
 
 **The Gate** (Ch4) — The primitive that holds the community's own language (bright side) and institutional language (massity) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent. The constellation's second non-zone primitive. Full eight-word vocabulary: see Appendix I.
 
+**Knowledge creep / Language drift** (Ch3, Ch4 vocabulary addition 2026-05-06) — Two named failure modes that together constitute drift in practice. *Knowledge creep*: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck — the concept stays but the noun wanders. *Language drift*: *the books* becomes *the ledger* becomes *the financial management module* — the noun is swapped for a cleaner, more general one and the original word is no longer in the room. Neither announces itself as a loss.
+
 **Massity** (Ch4) — Mass-society dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.
+
+**Practitioner** (Ch1–Ch5, Ch4 vocabulary addition 2026-05-06) — A person practicing codetry within a community: listening for the noun the community already uses, refusing to translate it into something cleaner, and verifying against the person who handed them the word rather than against the literature, the model, or their own better idea. A posture, not a role specification. The practitioner's exit is handover, not compound. *(Practitioner's workbench: the practitioner's own named tool — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be. The rename from "founder's dashboard" to "practitioner's workbench" is itself a codetry move; "practitioner's workbench" is a sub-entry, not a standalone primitive.)*
 
 **Primitive** (Ch4) — A named system inside the constellation that does a specific, irreducible job. Each primitive has a name chosen to hold across every context in which it appears — zones, seasons, personnel, tempo.
 
@@ -35,7 +43,7 @@
 
 **The Standby** (Ch4) — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name. The constellation's first non-zone primitive. Full six-word vocabulary: see Appendix I.
 
-**Zone** (Ch4, foreshadowed in Ch1) — A domain of practice inside the constellation: household, finance, knowledge, emergency preparedness, land, and public. Primitives are hosted in zones but read by all zones.
+**Zone** (Ch4, foreshadowed in Ch1; enumeration added 2026-05-06) — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. *(Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Headwaters Zone 1, Dam Days Zone 5 — and are consistent with this enumeration.)*
 
 ---
 
@@ -75,58 +83,47 @@
 
 ---
 
-## Flagged Terms — Used in Text, No Formal Definition
+## Resolved Flagged Terms — Decisions Applied 2026-05-06
 
-*The following terms appear across one or more chapters as load-bearing concepts but do not have a formal entry in Ch4's vocabulary section. Each is flagged for founder decision: define formally, or confirm as intentionally undefined.*
+*The terms below were flagged as load-bearing concepts appearing across one or more chapters without a formal vocabulary entry. Each has now received a founder decision. Decisions fall into three categories: (A) added to Ch4 vocabulary and this reference sheet; (B) absorbed into an existing entry; (C) confirmed as intentional non-entry. Note on count: the task that initiated this pass described "10 flagged terms," but the reference sheet itself had always listed 11 (the original footer confirmed "Total flagged terms: 11"). All 11 are resolved here.*
 
 ---
 
-**Codetry** *(defined in Ch3, not in Ch4 vocabulary list)*
-Ch3 provides a full working definition: *"the practice of building software whose primary load-bearing material is metaphor. The naming is the architecture; the code is the medium that makes the metaphor real, clickable, and runnable."* This is the discipline's own name. A formal vocabulary entry would make the self-description explicit in the glossary.
-→ *Founder decision: add to Ch4 vocabulary list, or confirm that the Ch3 definition is sufficient and intentionally not duplicated.*
+**Codetry** — *Decision A: added to Ch4 vocabulary.*
+Ch3 provides the origin definition; the entry in the Formal Vocabulary section above formalises it in the glossary. The self-description is now explicit in the reference sheet.
 
-**Codetry disciplines** *(Ch1, no definition)*
-Appears in the Ch1 continuity note and in the body: *"the codetry disciplines that hold community institutions together when the external systems fail."* Treated as a plural, implying a set of named practices. No enumeration or definition provided anywhere.
-→ *Founder decision: enumerate, define, or clarify relationship to "primitive" and "principle."*
+**Codetry disciplines** — *Decision B: absorbed into the Codetry entry.*
+"Codetry disciplines" is the collective descriptor for the named practices — constellation, primitives, principles — that codetry runs on. It is not a separate named primitive. The Codetry vocabulary entry notes this.
 
-**Codetry-test** *(Ch3, Ch4, no formal definition)*
-Used in Ch3: *"the codetry-test exists because that slip is invisible to the type checker and obvious to the person who handed you the word."* Referenced as a named check, but the test itself is never given a standalone definition or procedure.
-→ *Founder decision: define the codetry-test as a vocabulary entry, or absorb into the both-states/both-sides principles.*
+**Codetry-test** — *Decision B: absorbed into the Drift entry.*
+"Codetry-test" is the informal name for the discipline's ongoing verification posture (check against the person who handed you the word, not against the literature or the model). It describes how drift is detected, not a separate named procedure. The Drift vocabulary entry names and places it.
 
-**Cockpit** *(Ch2, no definition)*
-Used in Ch2 to describe the two-person operating structure for the community store: *"Two people on the cockpit."* Appears to mean the minimal operational crew plus the software layer beneath them. Used multiple times as a named concept but never formally defined.
-→ *Founder decision: define as a term-of-art, or treat as plain language that does not require a vocabulary entry.*
+**Cockpit** *(Ch2)* — *Decision C: confirmed as plain language.*
+"Cockpit" is used in Ch2's operational register (dollar-honest, fieldwork voice) to name the minimal two-person operating crew plus the software layer beneath them. It is a field term native to Ch2's register, not a constellation primitive requiring a formal definition. No vocabulary entry.
 
-**Drift** *(Ch3 and Ch4, no formal definition)*
-Named as a key failure mode in Ch3: *"Codetry insists the noun must come from the community itself… which means translation away from that noun — even into a cleaner, more general, more reusable noun — is treated as drift, not as cleanup."* Central to the discipline's argument but never given a standalone formal definition.
-→ *Founder decision: add a formal vocabulary entry, or confirm drift is defined adequately in context.*
+**Drift** — *Decision A: added to Ch4 vocabulary.*
+Central failure mode in Ch3 and Ch4. Now a formal vocabulary entry. The codetry-test is named within this entry as the detection posture.
 
-**Knowledge creep / Language drift** *(Ch3, no formal definition)*
-Ch3 names two distinct failure modes: *knowledge creep* ("a word a person used in a kitchen ends up, three meetings later, as a different word in a deck") and *language drift* ("the books becomes the ledger becomes the financial management module"). Both are used as named phenomena without formal entries.
-→ *Founder decision: add to vocabulary or confirm as illustrative examples, not named primitives.*
+**Knowledge creep / Language drift** — *Decision A: added to Ch4 vocabulary.*
+Two distinct named failure modes introduced in Ch3 that together describe how drift operates in practice. Both are now formal vocabulary entries (combined entry).
 
-**Literate programming** *(Ch1 and Ch3, no formal definition)*
-Used in Ch1 as a horizon concept (*"literate programming is only the first small sail"*) and defined briefly in Ch3 in comparison to codetry: *"Literate programming makes the reasoning the source. Codetry makes the metaphor the source."* No standalone formal definition given.
-→ *Founder decision: add a brief formal definition, or confirm the comparison in Ch3 is sufficient.*
+**Literate programming** *(Ch1 and Ch3)* — *Decision C: confirmed as reference to prior art.*
+Literate programming is a prior-art concept from software practice, not a codetry-native term. Ch3's comparison ("Literate programming makes the reasoning the source. Codetry makes the metaphor the source.") is sufficient — it defines the relationship, not the prior art. No vocabulary entry is needed for a term the discipline borrows and then departs from.
 
-**Practitioner / Practitioner's workbench** *(Ch1, Ch2, Ch3, Ch5, no formal definition)*
-*Practitioner* is used from Ch1 onward and Ch5 explicitly notes it is *"treated as already established from Ch1–Ch3."* The practitioner's workbench is named in Ch3 as the rename of "founder's dashboard." Neither receives a formal vocabulary entry.
-→ *Founder decision: confirm practitioner is deliberately left undefined (a posture, not a role specification), or add a concise definition.*
+**Practitioner / Practitioner's workbench** — *Decision A: Practitioner added to Ch4 vocabulary.*
+Practitioner is too central to leave without an entry — it is the operative identity from Ch1 through Ch5. The entry defines it as a posture, not a role specification, and absorbs practitioner's workbench as a sub-entry (the rename from "founder's dashboard" is itself a worked example of the discipline).
 
-**The Siphon** *(Ch4, no formal definition)*
-Appears in Ch4 §The name changes the tool: *"The Siphon is the bill that leaves before you see the money."* Used as a named structural concept within Headwaters' envelope-budget vocabulary, but not in the formal vocabulary list.
-→ *Founder decision: add to vocabulary, or flag as Zone 1 internal vocabulary not requiring a cross-constellation entry.*
+**The Siphon** *(Ch4)* — *Decision C: confirmed as Zone 1 internal vocabulary.*
+"The Siphon is the bill that leaves before you see the money." This is envelope-budget vocabulary belonging to the Headwaters Zone 1 app. It is a named concept within Zone 1's internal vocabulary, not a cross-constellation primitive requiring a formal entry in the shared glossary.
 
-**The Stuck Board** *(Ch4, no formal definition)*
-Named in Ch4 §The name changes the tool: *"The Stuck Board: the name is the spec. Things get stuck; the board surfaces them with owner-tags and last-touch timestamps."* Treated as a codetry worked example but has no vocabulary entry.
-→ *Founder decision: define as a named primitive or confirm as an illustrative example only.*
+**The Stuck Board** *(Ch4)* — *Decision C: confirmed as illustrative example.*
+The Stuck Board demonstrates the codetry principle that the name is the spec — it is a worked example in Ch4 §The name changes the tool. It is not itself a named primitive of the constellation. No vocabulary entry.
 
-**Zone 0 / Zone 1 / Zone 5** *(Ch1, Zone defined in Ch4)*
-Ch1 uses Zone 0, Zone 1, and Zone 5 as named identifiers before Zone is defined in Ch4. The Ch4 vocabulary defines Zone as a concept but does not enumerate which domains correspond to which zone numbers or explain the numbering scheme.
-→ *Founder decision: add a zone enumeration table to the vocabulary, or confirm zone numbers are defined elsewhere (e.g. the Codetry Handbook).*
+**Zone 0 / Zone 1 / Zone 5** — *Decision A: zone enumeration added to the Zone entry.*
+The Zone entry in the Formal Vocabulary section above now enumerates all six zones by number: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. The numbered zone names used throughout Ch1–Ch5 (Saltbox Zone Zero, Headwaters Zone 1, Dam Days Zone 5) are consistent with this enumeration.
 
 ---
 
 *End of vocabulary reference sheet.*
-*Total formally defined terms: 13 (Ch4 vocabulary list) + 10 (Appendix sub-terms) = 23 entries*
-*Total flagged terms: 11*
+*Total formally defined terms: 17 (Ch4 vocabulary list) + 10 (Appendix sub-terms) = 27 entries*
+*Resolved flagged terms: 11 (4 added to vocabulary · 2 absorbed into existing entries · 5 confirmed as non-entries)*
