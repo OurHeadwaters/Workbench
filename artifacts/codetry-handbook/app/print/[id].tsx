@@ -246,6 +246,35 @@ function PrintBlock({ block }: { block: Block }) {
           ))}
         </View>
       );
+    case "teachers":
+      return (
+        <View style={styles.teachersPanel}>
+          <Text style={[styles.teachersLabel, { fontFamily: MONO }]}>
+            Meet the teachers
+          </Text>
+          {block.items.map((teacher, i) => (
+            <View
+              key={teacher.name}
+              style={[
+                styles.teacherRow,
+                i < block.items.length - 1 && styles.teacherRowDivider,
+              ]}
+            >
+              <Text style={[styles.teacherName, { fontFamily: SERIF_BOLD }]}>
+                {teacher.name}
+              </Text>
+              <Text style={[styles.teacherRole, { fontFamily: SERIF_ITALIC }]}>
+                {teacher.role}
+              </Text>
+              {teacher.url ? (
+                <Text style={[styles.teacherUrl, { fontFamily: MONO }]}>
+                  {teacher.url}
+                </Text>
+              ) : null}
+            </View>
+          ))}
+        </View>
+      );
     case "rule":
       return <View style={styles.midRule} />;
   }
@@ -393,6 +422,46 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: INK,
     marginBottom: 3,
+  },
+  teachersPanel: {
+    borderWidth: 1,
+    borderColor: RULE,
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 6,
+    marginVertical: 10,
+  },
+  teachersLabel: {
+    fontSize: 9.5,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: MUTED,
+    marginBottom: 8,
+  },
+  teacherRow: {
+    paddingVertical: 8,
+  },
+  teacherRowDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: RULE,
+  },
+  teacherName: {
+    fontSize: 13.5,
+    lineHeight: 19,
+    color: INK,
+  },
+  teacherRole: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: MUTED,
+    marginTop: 1,
+  },
+  teacherUrl: {
+    fontSize: 9.5,
+    lineHeight: 15,
+    color: MUTED,
+    letterSpacing: 0.3,
+    marginTop: 2,
   },
   midRule: {
     height: 1,
