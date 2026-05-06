@@ -1,7 +1,6 @@
 # Chapter 2 — Watching the Beavers
 
-*First full draft · assembled from harvest.md Section 2 passages · for founder review*
-*Draft date: 2026-05-06 · Status: cleared for wider review — community referred to as "the northern band" (generic, no specific community named); pseudonyms permanent; no consent steps outstanding*
+*Second pass · founder-reviewed · decisions applied 2026-05-06*
 
 ---
 
@@ -152,59 +151,4 @@ You watch the beavers build the dam because you are building one too.
 
 ---
 
-*End of Chapter 2 draft.*
-
----
-
-## Editorial notes — decisions resolved 2026-05-06
-
-**Narrative arc:**
-The chapter follows this arc: the raw numbers of northern food insecurity (one store, no choice) → what community ownership changes (58¢ → 84¢) → how the store keeps working (two on the cockpit, software underneath) → the contract and its three deliverables → the cockpit's three promises → the methodology (six phases) → what the plan is not → governance-first principle → the care home parallel (Bright Side) → how to start → the practitioner's own revenue map → the practitioner's own financial discipline (debt-attack mode) → closing image.
-
-**Passages included from harvest.md Section 2:**
-2-M (one store, no other choice — the stats), 2-L (band ownership, 58¢ → 84¢), 2-N (built to keep working — cockpit + margin home), 2-O (three line items, one contract), 2-P (cockpit three promises), 2-B (six-phase plan), 2-C (what it is not), 2-D (governance first), 2-E (tool built around your operation), 2-F (Bright Side clipboard), 2-G (builder's confession), 2-H (reply to this document / engagement terms), 2-I (community contracts, salts + syrup, Start9), 2-J (market stall is not just a product channel), 2-K (every Start9 buyer is a warm lead), 2-Q (debt-attack mode).
-
-**Passages held back:**
-- 2-A (the research-frame passage from why-stores-fail.tsx) — useful as a footnote or source citation, but its register is database/artifact documentation rather than field observation. Recommend referencing the Research Library rather than quoting it directly in the chapter body.
-
-**Community store deleted-artifact material (2-L, 2-M, 2-N, 2-O, 2-P) — decisions made:**
-
-1. **Naming the community — resolved: generic term "northern band" used permanently.**
-   The community is not named and will not be named. The chapter refers to it only as "the northern band" — a generic descriptor, not a proper name. This closes the naming question without requiring band consultation. No reversal is planned; if one were ever considered, band consent would still be required before proceeding.
-
-2. **Sam & Jess — resolved: pseudonymized to Chris and Morgan.**
-   No confirmation of consent was available. Real names have been replaced with gender-neutral pseudonyms that match the register of the original. If the individuals are later confirmed as willing to be named, this is a two-word find-and-replace.
-
-3. **Gilles — resolved: pseudonymized to René.**
-   Same reasoning as above. René preserves the francophone Northern Ontario cultural register of the original name without identifying the individual. Revert to the real name only with explicit consent.
-
-4. **The $125k–$200k figure — resolved: footnoted as a projection with source.**
-   The chapter already framed it as "About $125,000–$200,000 of grocery margin stays in the community the first year" — correct framing, not presented as an actuality. Footnote [^1] has been added making the projection basis explicit: margin-rate analysis applied to estimated community grocery spend, sourced to the deleted artifact passages. No change to the body text was needed beyond adding the footnote marker.
-
-5. **Verbatim vs. paraphrased — resolved: left close to verbatim, no further paraphrasing.**
-   The harvest passages are tight and field-tested. Paraphrasing them would dilute the register without adding accuracy. The pseudonymization above is the only material change to the source passages.
-
----
-
-**Consent status — on record 2026-05-06 · updated 2026-05-06**
-
-Decision recorded for founder file. Four questions, four answers:
-
-| Question | Decision | Consent required? |
-|---|---|---|
-| Name the community? | **No — referred to as "the northern band" (generic term, permanent)** | Not required. Generic term names no specific community. |
-| Name Sam & Jess? | **No — pseudonymized to Chris and Morgan, permanent** | Not required in current form. Required before reverting to real names. |
-| Name Gilles? | **No — pseudonymized to René, permanent** | Not required in current form. Required before reverting to real name. |
-| Use the $125k–$200k figures? | **Yes — footnoted as modelled projection, source cited** | Not required. Figures are analytical, not attributed to individuals. |
-
-**Naming question — closed.** Using "the northern band" as a generic descriptor rather than a proper place name means no specific community is identified. Band consultation is not required for the chapter in this form. If any future version moves to naming a real community, band consent would be required before that publication.
-
-**Current clearance:** Chapter 2 in its present form — community referred to generically as "the northern band," operators pseudonymized, figures footnoted — is cleared for wider review and distribution outside the working circle. No consent steps are outstanding.
-
-**Where bridging was added:**
-Short plain-prose transitions between passages, matching the founder's register — declarative, no metaphor-stretching. The opening and closing lines ("You don't understand a food system by reading about it" and "You watch the beavers build the dam because you are building one too") are new bridge copy, not from the harvest. If either feels off-register, they can be cut without breaking the chapter's structure.
-
-**Ordering decisions:**
-- The chapter opens with the community store numbers (2-M) rather than the research framing (2-A) because it is more immediate — you are watching, not reading about watching.
-- The practitioner's personal economics (2-I, 2-J, 2-K, 2-Q) come last because they are the interior discipline that makes the public-facing work possible. The arc moves from community economics outward, then turns inward.
-- Bright Side (2-F, 2-G) appears between the methodology and the engagement terms, as a parallel field rather than a digression — the same governance-first, tool-follows-practice logic applies in care as in community food systems.
+*End of Chapter 2.*
