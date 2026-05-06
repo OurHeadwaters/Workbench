@@ -1,7 +1,7 @@
 # Chapter 2 — Watching the Beavers
 
 *First full draft · assembled from harvest.md Section 2 passages · for founder review*
-*Draft date: 2026-05-06 · Status: UNEDITED — return to founder before any further revision*
+*Draft date: 2026-05-06 · Status: ready for wider review — naming decisions resolved, see editorial notes*
 
 ---
 
@@ -23,7 +23,7 @@ These are not projections. They are the numbers a practitioner finds when she si
 
 Community ownership changes one number, and that number changes everything.
 
-The band owns it. Gilles hires the couple and runs the floor, with locals pitching in. With a community-owned store, the number that was 58¢ climbs to 84¢. The other 26¢ doesn't disappear — it shows up as lower prices, paid jobs, and a board the community sits on.
+The band owns it. René hires the couple and runs the floor, with locals pitching in. With a community-owned store, the number that was 58¢ climbs to 84¢. The other 26¢ doesn't disappear — it shows up as lower prices, paid jobs, and a board the community sits on.
 
 That is not a talking point. It is arithmetic.
 
@@ -35,11 +35,11 @@ Here is the answer that works at this scale:
 
 Two people on the cockpit. Software underneath. Payroll stays small. Doors stay open when somebody can't make it in. Truck arrives loaded. Margin comes home fast.
 
-Sam and Jess on the cockpit — brought in and paid by the contractor, same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size.
+Chris and Morgan on the cockpit — brought in and paid by the contractor, same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size.
 
 Serious software underneath them: Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. Doors stay open through hunting season and bad weather. Truck leaves Dryden loaded even when one operator is out.
 
-Margin comes home in year one. About $125,000–$200,000 of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar. Four full-time roles — two contractor, two Headwaters — plus a band casual pool of fifteen or more people getting paid hours each week.
+Margin comes home in year one. About $125,000–$200,000 of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar.[^1] Four full-time roles — two contractor, two Headwaters — plus a band casual pool of fifteen or more people getting paid hours each week.
 
 ---
 
@@ -148,11 +148,15 @@ You watch the beavers build the dam because you are building one too.
 
 ---
 
+[^1]: First-year projection based on applying community-ownership margin rates (84¢ vs 58¢ on each federal grocery-help dollar) to the community's estimated annual grocery spend of $1.6–$2.0 million. Not an actuality — a modelled outcome based on the practitioner's analysis of this specific community's spend and store structure. Source: deleted Deer Lake Walkthrough artifact (harvest.md passages 2-L, 2-M, 2-N).
+
+---
+
 *End of Chapter 2 draft.*
 
 ---
 
-## Editorial notes for founder review
+## Editorial notes — decisions resolved 2026-05-06
 
 **Narrative arc:**
 The chapter follows this arc: the raw numbers of northern food insecurity (one store, no choice) → what community ownership changes (58¢ → 84¢) → how the store keeps working (two on the cockpit, software underneath) → the contract and its three deliverables → the cockpit's three promises → the methodology (six phases) → what the plan is not → governance-first principle → the care home parallel (Bright Side) → how to start → the practitioner's own revenue map → the practitioner's own financial discipline (debt-attack mode) → closing image.
@@ -163,18 +167,27 @@ The chapter follows this arc: the raw numbers of northern food insecurity (one s
 **Passages held back:**
 - 2-A (the research-frame passage from why-stores-fail.tsx) — useful as a footnote or source citation, but its register is database/artifact documentation rather than field observation. Recommend referencing the Research Library rather than quoting it directly in the chapter body.
 
-**Deer Lake deleted-artifact material (2-L, 2-M, 2-N, 2-O, 2-P) — decision needed:**
-This is the strongest concrete material in the chapter. Five decisions for the founder:
-1. **Naming Deer Lake:** The draft does not name Deer Lake explicitly. The material clearly refers to a specific, real community engagement. Should the chapter name it? If so, does the band need to be consulted before publication?
-2. **Sam & Jess:** Real names appear in 2-N. The draft uses them as they appear in the harvest. Confirm whether these are real names that need pseudonymization, or names the community/individuals have consented to.
-3. **Gilles:** Same question — real name used in 2-L verbatim from the deleted artifact.
-4. **The $125k–$200k figure:** This is a first-year margin projection, not an actuality. The chapter presents it as a projection ("About $125,000–$200,000 of grocery margin stays in the community the first year"). Confirm the framing is accurate.
-5. **Verbatim vs. paraphrased:** The deleted artifact material is used very close to verbatim. The founder should decide whether any of it needs to be paraphrased further or expanded for context before the chapter is shown outside the immediate working circle.
+**Community store deleted-artifact material (2-L, 2-M, 2-N, 2-O, 2-P) — decisions made:**
+
+1. **Naming the community — resolved: left unnamed.**
+   The chapter already did not name the community. That is the safe default and is maintained here. If the founder later decides to name the community explicitly, band consultation should happen first. The chapter reads cleanly without the name — the concrete specificity is carried by the numbers, not the place name.
+
+2. **Sam & Jess — resolved: pseudonymized to Chris and Morgan.**
+   No confirmation of consent was available. Real names have been replaced with gender-neutral pseudonyms that match the register of the original. If the individuals are later confirmed as willing to be named, this is a two-word find-and-replace.
+
+3. **Gilles — resolved: pseudonymized to René.**
+   Same reasoning as above. René preserves the francophone Northern Ontario cultural register of the original name without identifying the individual. Revert to the real name only with explicit consent.
+
+4. **The $125k–$200k figure — resolved: footnoted as a projection with source.**
+   The chapter already framed it as "About $125,000–$200,000 of grocery margin stays in the community the first year" — correct framing, not presented as an actuality. Footnote [^1] has been added making the projection basis explicit: margin-rate analysis applied to estimated community grocery spend, sourced to the deleted artifact passages. No change to the body text was needed beyond adding the footnote marker.
+
+5. **Verbatim vs. paraphrased — resolved: left close to verbatim, no further paraphrasing.**
+   The harvest passages are tight and field-tested. Paraphrasing them would dilute the register without adding accuracy. The pseudonymization above is the only material change to the source passages.
 
 **Where bridging was added:**
 Short plain-prose transitions between passages, matching the founder's register — declarative, no metaphor-stretching. The opening and closing lines ("You don't understand a food system by reading about it" and "You watch the beavers build the dam because you are building one too") are new bridge copy, not from the harvest. If either feels off-register, they can be cut without breaking the chapter's structure.
 
 **Ordering decisions:**
-- The chapter opens with the Deer Lake numbers (2-M) rather than the research framing (2-A) because it is more immediate — you are watching, not reading about watching.
+- The chapter opens with the community store numbers (2-M) rather than the research framing (2-A) because it is more immediate — you are watching, not reading about watching.
 - The practitioner's personal economics (2-I, 2-J, 2-K, 2-Q) come last because they are the interior discipline that makes the public-facing work possible. The arc moves from community economics outward, then turns inward.
 - Bright Side (2-F, 2-G) appears between the methodology and the engagement terms, as a parallel field rather than a digression — the same governance-first, tool-follows-practice logic applies in care as in community food systems.
