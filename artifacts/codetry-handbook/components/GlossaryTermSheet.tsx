@@ -14,6 +14,7 @@ import { router } from "expo-router";
 
 import { useColors } from "@/hooks/useColors";
 import { GLOSSARY_ENTRIES, type GlossaryEntry } from "@/data/glossary";
+import { useReader } from "@/contexts/ReaderState";
 
 const SERIF = "Lora_400Regular";
 const SERIF_ITALIC = "Lora_400Regular_Italic";
@@ -40,9 +41,10 @@ export function GlossaryTermSheet({ term, onClose }: Props) {
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const visible = term !== null;
+  const { toggleGlossaryTerm, isGlossaryTermBookmarked, recordLookedUp } = useReader();
 
   useEffect(() => {
-    if (visible) {
+    if (visible && term) {
       slideAnim.setValue(300);
       fadeAnim.setValue(0);
       Animated.parallel([
@@ -57,6 +59,7 @@ export function GlossaryTermSheet({ term, onClose }: Props) {
           useNativeDriver: true,
         }),
       ]).start();
+      recordLookedUp(term);
     }
   }, [visible, term]);
 
@@ -85,6 +88,7 @@ export function GlossaryTermSheet({ term, onClose }: Props) {
   if (!visible) return null;
 
   const entry = findEntry(term!);
+  const bookmarked = isGlossaryTermBookmarked(term!);
 
   const badgeColor =
     !entry
@@ -156,6 +160,18 @@ export function GlossaryTermSheet({ term, onClose }: Props) {
                 </Text>
               </View>
             ) : null}
+            <Pressable
+              onPress={() => toggleGlossaryTerm(term!)}
+              hitSlop={12}
+              style={styles.iconBtn}
+              accessibilityLabel={bookmarked ? "Remove from My Terms" : "Save to My Terms"}
+            >
+              <Ionicons
+                name={bookmarked ? "bookmark" : "bookmark-outline"}
+                size={20}
+                color={bookmarked ? c.primary : c.mutedForeground}
+              />
+            </Pressable>
             <Pressable
               onPress={handleClose}
               hitSlop={12}
@@ -242,7 +258,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 4,
     flexShrink: 0,
     marginTop: 2,
   },
@@ -264,6 +280,12 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 10,
     letterSpacing: 0.8,
+  },
+  iconBtn: {
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
   },
   closeBtn: {
     width: 32,

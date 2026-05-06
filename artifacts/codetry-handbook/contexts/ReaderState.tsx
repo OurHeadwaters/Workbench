@@ -42,6 +42,8 @@ const KEYS = {
   bookmarks: `${NS}:bookmarks`,
   lastRead: `${NS}:lastRead`,
   practitionerVoice: `${NS}:practitionerVoice`,
+  glossaryTerms: `${NS}:glossaryTerms`,
+  lookedUpTerms: `${NS}:lookedUpTerms`,
 };
 
 // One opId per logical setting so a fresh edit replaces (not stacks on
@@ -53,6 +55,8 @@ const OP = {
   bookmarks: "bookmarks",
   lastRead: "lastRead",
   practitionerVoice: "practitionerVoice",
+  glossaryTerms: "glossaryTerms",
+  lookedUpTerms: "lookedUpTerms",
 } as const;
 
 const FONT_STEPS = [0.85, 0.92, 1.0, 1.1, 1.2, 1.3, 1.45] as const;
@@ -83,9 +87,19 @@ type ReaderContextValue = {
   takeOriginBlockIndex: (chapterId: string) => number | null;
   showPractitionerVoice: boolean;
   togglePractitionerVoice: () => void;
+  glossaryTerms: string[];
+  toggleGlossaryTerm: (term: string) => void;
+  isGlossaryTermBookmarked: (term: string) => boolean;
+  lookedUpTerms: string[];
+  recordLookedUp: (term: string) => void;
+  isLookedUp: (term: string) => boolean;
 };
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
+
+function normalizeTerm(s: string) {
+  return s.toLowerCase().replace(/['']/g, "'");
+}
 
 export function ReaderStateProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
@@ -95,6 +109,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
   const [showPractitionerVoice, setShowPractitionerVoice] = useState<boolean>(true);
+  const [glossaryTerms, setGlossaryTerms] = useState<string[]>([]);
+  const [lookedUpTerms, setLookedUpTerms] = useState<string[]>([]);
   const scrollMapRef = useRef<Record<string, number>>({});
   const originScrollMapRef = useRef<Record<string, number>>({});
   const originBlockIndexMapRef = useRef<Record<string, number>>({});
@@ -105,17 +121,21 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const fontStepRef = useRef<number>(DEFAULT_STEP);
   const bookmarksRef = useRef<Bookmark[]>([]);
   const showPractitionerVoiceRef = useRef<boolean>(true);
+  const glossaryTermsRef = useRef<string[]>([]);
+  const lookedUpTermsRef = useRef<string[]>([]);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const [tm, fs, bm, lr, pv] = await Promise.all([
+        const [tm, fs, bm, lr, pv, gt, lu] = await Promise.all([
           AsyncStorage.getItem(KEYS.themeMode),
           AsyncStorage.getItem(KEYS.fontScale),
           AsyncStorage.getItem(KEYS.bookmarks),
           AsyncStorage.getItem(KEYS.lastRead),
           AsyncStorage.getItem(KEYS.practitionerVoice),
+          AsyncStorage.getItem(KEYS.glossaryTerms),
+          AsyncStorage.getItem(KEYS.lookedUpTerms),
         ]);
         if (cancelled) return;
         if (tm === "light" || tm === "dark" || tm === "system") {
@@ -154,6 +174,24 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
           const val = pv !== "false";
           setShowPractitionerVoice(val);
           showPractitionerVoiceRef.current = val;
+        }
+        if (gt) {
+          try {
+            const parsed = JSON.parse(gt);
+            if (Array.isArray(parsed)) {
+              setGlossaryTerms(parsed as string[]);
+              glossaryTermsRef.current = parsed as string[];
+            }
+          } catch {}
+        }
+        if (lu) {
+          try {
+            const parsed = JSON.parse(lu);
+            if (Array.isArray(parsed)) {
+              setLookedUpTerms(parsed as string[]);
+              lookedUpTermsRef.current = parsed as string[];
+            }
+          } catch {}
         }
       } finally {
         if (!cancelled) setReady(true);
@@ -223,6 +261,22 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
     [persist],
   );
 
+  const writeGlossaryTerms = useCallback(
+    (label: string) =>
+      persist(OP.glossaryTerms, label, () =>
+        storage.setItem(KEYS.glossaryTerms, JSON.stringify(glossaryTermsRef.current)),
+      ),
+    [persist],
+  );
+
+  const writeLookedUpTerms = useCallback(
+    (label: string) =>
+      persist(OP.lookedUpTerms, label, () =>
+        storage.setItem(KEYS.lookedUpTerms, JSON.stringify(lookedUpTermsRef.current)),
+      ),
+    [persist],
+  );
+
   const togglePractitionerVoice = useCallback(() => {
     const next = !showPractitionerVoiceRef.current;
     showPractitionerVoiceRef.current = next;
@@ -282,7 +336,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       const fresh: Bookmark = { ...b, id, createdAt: Date.now() };
       updateBookmarks(
         [fresh, ...bookmarksRef.current],
-        `your bookmark on “${b.chapterTitle}”`,
+        `your bookmark on "${b.chapterTitle}"`,
       );
     },
     [updateBookmarks],
@@ -295,7 +349,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       updateBookmarks(
         next,
         target
-          ? `removing your bookmark on “${target.chapterTitle}”`
+          ? `removing your bookmark on "${target.chapterTitle}"`
           : "your bookmark change",
       );
     },
@@ -308,6 +362,42 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
         (b) => b.chapterId === chapterId && b.excerpt === excerpt,
       ),
     [bookmarks],
+  );
+
+  const toggleGlossaryTerm = useCallback(
+    (term: string) => {
+      const key = normalizeTerm(term);
+      const current = glossaryTermsRef.current;
+      const next = current.includes(key)
+        ? current.filter((t) => t !== key)
+        : [key, ...current];
+      glossaryTermsRef.current = next;
+      setGlossaryTerms(next);
+      void writeGlossaryTerms(`your glossary bookmark for "${term}"`);
+    },
+    [writeGlossaryTerms],
+  );
+
+  const isGlossaryTermBookmarked = useCallback(
+    (term: string) => glossaryTerms.includes(normalizeTerm(term)),
+    [glossaryTerms],
+  );
+
+  const recordLookedUp = useCallback(
+    (term: string) => {
+      const key = normalizeTerm(term);
+      if (lookedUpTermsRef.current.includes(key)) return;
+      const next = [key, ...lookedUpTermsRef.current];
+      lookedUpTermsRef.current = next;
+      setLookedUpTerms(next);
+      void writeLookedUpTerms(`viewing "${term}"`);
+    },
+    [writeLookedUpTerms],
+  );
+
+  const isLookedUp = useCallback(
+    (term: string) => lookedUpTerms.includes(normalizeTerm(term)),
+    [lookedUpTerms],
   );
 
   // Last-read writes fire on every scroll pause; they have nothing
@@ -411,6 +501,12 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       takeOriginBlockIndex,
       showPractitionerVoice,
       togglePractitionerVoice,
+      glossaryTerms,
+      toggleGlossaryTerm,
+      isGlossaryTermBookmarked,
+      lookedUpTerms,
+      recordLookedUp,
+      isLookedUp,
     }),
     [
       ready,
@@ -437,6 +533,12 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       takeOriginBlockIndex,
       showPractitionerVoice,
       togglePractitionerVoice,
+      glossaryTerms,
+      toggleGlossaryTerm,
+      isGlossaryTermBookmarked,
+      lookedUpTerms,
+      recordLookedUp,
+      isLookedUp,
     ],
   );
 
