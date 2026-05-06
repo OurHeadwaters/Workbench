@@ -199,6 +199,14 @@ const DEEP_DIVES_EXPECTED_NUMBERS = [
   "DD.3",
   "DD.4",
   "DD.5",
+  // Appendix: six passages held from the main chapters
+  "DD.A",
+  "DD.I",
+  "DD.II",
+  "DD.III",
+  "DD.IV",
+  "DD.V",
+  "DD.VI",
 ];
 
 const FIELD_LEDGER_EXPECTED_NUMBERS = [
