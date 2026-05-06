@@ -40,22 +40,16 @@ The pseudonymization decision has been made and applied in the chapter file. The
 
 ---
 
-## OQ-3 — Live links in Ch5 §The closing test
+## OQ-3 — Live links in Ch5 §The closing test — RESOLVED 2026-05-06
 
 **Source:** Ch5 §The closing test
-**Status:** Open — the passage stays in Chapter 5 (Q3 decided), but the links it calls for are not written.
+**Status:** Resolved. Three URLs identified from live artifacts and inserted into `codetry-book/drafts/05-sons-and-daughters-of-thunder.md`.
 
-The passage reads: *"Don't take a pitch. Take three links."* It names three specific claims:
+- **Claim 1** → https://ourheadwaters.ca/practitioners-guide-v2/ (the practitioner's guide — the operational plan, slide by slide)
+- **Claim 2** → https://ourheadwaters.ca/community-store-walkthrough/ (the community store patterns, live)
+- **Claim 3** → https://ourheadwaters.ca/codetry-handbook/ (the handbook, seven parts)
 
-- **Claim 1** — We've already written this plan. (The operational plan, dollar-honest, slide by slide.)
-- **Claim 2** — We've already built the software. (The community store patterns, live and openable.)
-- **Claim 3** — We work with northern communities, not at them. (The handbook, seven parts, written down end to end.)
-
-The prose describes what each link shows, but no URLs appear in the draft. The passage is addressed to a band council audience in its source artifact; in Chapter 5 it operates as the practitioner's standing invitation. Either way, the links have to resolve to something real.
-
-**What is open:** The three URLs. They may already exist as live artifacts in the workspace; if so, they need to be identified, confirmed as public-facing, and inserted into the draft. If any of the three claims links to an artifact not yet fully public, that readiness question must be resolved before the chapter goes out.
-
-**What changes when it resolves:** Three URLs are inserted into the Ch5 text after each numbered claim. The draft can hold placeholder brackets until the URLs are confirmed.
+All three artifacts are live and public-facing. URLs appear in the Ch5 draft after each claim.
 
 ---
 

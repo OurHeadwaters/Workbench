@@ -54,7 +54,7 @@ Capital allocation at scale wants the best allocator to keep allocating. Codetry
 
 The book ahead has a clear order.
 
-Begin with Grounding — the teachers, the axiom, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.
+Begin with Grounding — the teachers, Thunder, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.
 
 ---
 
@@ -75,10 +75,13 @@ Open the work. Read it for yourself.
 Don't take a pitch. Take three links. Each one opens in another tab and shows real work already shipped for northern food systems.
 
 **Claim 1 — We've already written this plan.** Not a proposal — a real operational plan, dollar-honest, slide by slide. Read it before the meeting.
+→ https://ourheadwaters.ca/practitioners-guide-v2/
 
 **Claim 2 — We've already built the software.** The same patterns used for the community store till. Open it in another tab — the work isn't theoretical.
+→ https://ourheadwaters.ca/community-store-walkthrough/
 
 **Claim 3 — We work with northern communities, not at them.** Headwaters has a practice with a name — codetry — and a handbook anyone can read. Seven parts, written down end to end.
+→ https://ourheadwaters.ca/codetry-handbook/
 
 ---
 
