@@ -26,7 +26,7 @@ export default function PosterParrsJars() {
             </p>
 
             {/* Brand name */}
-            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "5.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 0.92, letterSpacing: "-0.03em", marginBottom: "0.1in" }}>
+            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "5.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: "0.1in", paddingBottom: "0.06em", overflow: "visible" }}>
               Parr's<br />Jars
             </h1>
 
