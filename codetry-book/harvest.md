@@ -171,6 +171,28 @@ Footer signoff:
 
 ---
 
+### 1-N · A dam day — origin of Zone 5
+
+> A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.
+>
+> The Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 5 (The Margin), `opening` field
+
+---
+
+### 1-O · The saltbox morning — Zone 0 origin
+
+> Sitting on the deck with the morning sun and a cup of black coffee. Getting cold, but that's nothing new. Watching the children play outside — and then all of a sudden there's a moment. There's always a beautiful moment to capture. A moment where we wonder: will this ever cross my mind again? Will they remember? Saltbox is the reminder of the things that are true and unshakeable. The sunny moments that make the boreal winters worth bearing. The spring days when the outdoors is the parent and we can just enjoy documenting the ride.
+>
+> The no-scoring rule comes from this: a measure of a fish's worth cannot be how well it can climb a tree. We each have our individual strengths, and when channeled, those strengths allow a waterfall of value that was never dammed. With a proper saltbox, the children grow brave in their own time — and the dams that don't need breaking down the line are the fruit of that patience.
+>
+> Zone 0 holds both the family on the land and the elder in the care home. They are just homes in different stages, and they deserve the same value placed on their life stage.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 0 (Saltbox), `opening` field
+
+---
+
 ## Section 2 — Watching the Beavers
 
 *Field observations. What community economics actually looks like. The practitioner's view the consultant doesn't have.*
@@ -428,6 +450,54 @@ Sub-text:
 
 ---
 
+### 2-R · Treasurer is the job nobody wants
+
+> Treasurer is the job nobody wants. Some try and fail; a few do well. It is a big commitment for a volunteer organization, and this generation does not have the same bookkeeping skills that the last one had. Nobody wants to step up because they do not want to mess up.
+>
+> The answer is not to lower the standard — it is to make the job fail-safe, stress-free, and easy as pie for the people willing to take it on. Calm is the contract. The name is not a vibe; it is a promise the system makes to the person who was brave enough to say yes.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 3 (Commons), `opening` field
+
+---
+
+### 2-S · One person touching it all — Zone 4 field observation
+
+> It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.
+>
+> The producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.
+>
+> The word they use is not "regenerative." It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 4 (Arc), `opening` field
+
+---
+
+### 2-T · Slab construction and grassland — the northern thesis
+
+> The western economic model is *slab construction*. It assumes a foundation already exists — concrete poured, utilities run, regulation set, banks lending, supply chains working, workforce showing up Monday to Friday. The slab is the social infrastructure that makes "small business" a sensible unit of analysis.
+>
+> The North is *grassland*. The foundation is real; it's a different one. Land that flexes with the season. Workforce that flexes with the cycle. Demand that's lumpy. Capital that doesn't flow on western terms. Roads that come and go with the ice. Authority that lives in relationships, not regulation.
+>
+> Neither is worse. They are different foundations, and the design rules are different.
+>
+> The colonial mistake — and Headwaters owns its share of "we" in this — is to look at grassland and see *failed slab*. To say "the workforce isn't reliable enough" instead of "we designed the work for the wrong rhythm."
+
+`docs/headwaters-thesis-context.md, lines 13–20`
+
+Pull-quote:
+
+> Northern reserves need infrastructure as materially good as anything in the south, built on the foundation that's actually there, with materials and methods that fit it. Not less. Different.
+
+`docs/headwaters-thesis-context.md, line 22`
+
+Guard against misuse (immediately following):
+
+> Guard against the romanticized misuse: "grassland-native" is not "grassland-lite." The store has to actually run. The food has to actually arrive. The books have to actually balance. Grassland design has to be as load-bearing as slab design, achieved through different shapes.
+
+`docs/headwaters-thesis-context.md, lines 23–24`
+
+---
+
 ## Section 3 — The Dam Breaks
 
 *The discipline arrives. The moment the work becomes a system. Language-is-not-neutral.*
@@ -585,6 +655,16 @@ Callout:
 > Envelope categories. You can only pour from one to another, never summon water from nothing. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking.
 
 `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/data/codetryVsLiterate.ts` (codetry.workedExample)
+
+---
+
+### 3-L · "Founder feels odd" — the practitioner renaming
+
+> "Founder" feels odd. You don't found a community — you practice within it. You join to help. You have the phone calls, take the actions, practice listening. We practice these things because we know we need to. Crafting all day is what makes life that extra bit sweeter.
+>
+> This is not a founder's dashboard. It is a practitioner's workbench — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 2 (Workbench), `opening` field
 
 ---
 
@@ -877,6 +957,24 @@ The Gate manifest principle:
 
 ---
 
+### 4-Q · Budget evokes restriction; Watershed invokes flow
+
+> The word "budget" evokes restriction, tightening. "Watershed" invokes flow, abundance. That difference is not cosmetic — it changes what the person holding the tool believes is possible before they touch a single number.
+>
+> The Siphon is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word "expense" implies.
+
+`artifacts/codetry-handbook/data/constellation.ts` — zone 1 (Headwaters), `opening` field
+
+---
+
+### 4-R · Gate Refused — Parr's Jars smoked salt (a real crossing that failed)
+
+> *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The massity-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest massity equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.
+
+`artifacts/codetry-handbook/data/foundingExamples.ts` — `"the-gate"` commentary, `crossZoneReads[0]` (Zone 0 cross-zone read)
+
+---
+
 ## Section 5 — Sons & Daughters of Thunder
 
 *The invocation. Pioneer training. The exit. Who the work belongs to.*
@@ -1049,12 +1147,131 @@ The three credibility claims:
 
 ---
 
+### UG-G · The volunteer seed — pre-zone Brainstorm Library opening
+
+> Think of it as a volunteer seed. One that fell from last year's harvest and found a little water and sunshine on its own. Not a parking lot — ideas parked don't grow. Not a curated library — you don't browse volunteer seeds; you notice them. If cultivated, who knows what they could become?
+
+`artifacts/codetry-handbook/data/constellation.ts` — `preZone[0]` (Brainstorm Library, zone –1), `opening` field
+
+---
+
+---
+
+## Pending External Sweeps
+
+*The cross-project sweep prompt (`codetry-book/cross-project-prompt.md`) must be run in each project listed below by opening that project in Replit, pasting the full prompt as a new agent message, and folding the returned structured markdown into this file under the correct section headings. Source labels should identify the external project (e.g. `dam-days/src/pages/Home.tsx` rather than `artifacts/...`).*
+
+*These projects cannot be accessed from within this environment. Each sweep requires a separate agent session in that project.*
+
+---
+
+### External project 1 — X Buckets Vision (Zone 1 · Headwaters)
+
+**URL:** `https://x-buckets-vision.replit.app/`
+**Former names:** xBuckets, Watershed
+**Constellation zone:** Zone 1 — household finance, XRPL stablecoin envelope-budgeting PWA
+**What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 2 — Dam Days (Zone 5 · The Margin)
+
+**URL:** `https://conversation-log.replit.app/`
+**Former name:** Watershed (URL and storage namespace still active)
+**Constellation zone:** Zone 5 — wild/observation journal; private capture (takes) with opt-in float to the Shallows
+**What to look for:** The "slowly at first, then all at once" epigraph; Forge system prompt prose; the rebrand-without-a-rewrite documentation; the Shallows pseudonymity rationale; any prose about dam days as creative hyperfocus; "typos as fingerprints" implementation comments; the bound-book generation copy.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 3 — Rootwork
+
+**URL:** `https://community-knowledge-hub.replit.app/studio/`
+**Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
+**What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 4 — Grants Finder
+
+**URL:** `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`
+**Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
+**What to look for:** Any narrative copy about why northern and Indigenous communities need a single searchable grants index; any prose about the funding landscape; the NOHFC Grow Application Workspace copy (five-tab workspace, deadline countdown, intake-switch logic).
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 5 — Market Mosaic
+
+**URL:** `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`
+**Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
+**What to look for:** Any framing prose about what market analysis means for a northern community; any description of the gap between southern market intelligence tools and northern food systems reality; the specific metaphor behind "mosaic."
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 6 — Standby Supplies
+
+**URL:** `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`
+**Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub; reads The Standby primitive)
+**What to look for:** Any prose about emergency sourcing for northern communities; any description of the difference between emergency preparedness as a checklist vs. as a living system; any vocabulary that predates or extends the Standby primitive's language in the constellation manifest.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 7 — Bright Side (health-support-hub)
+
+**URL:** `https://health-support-hub.replit.app/`
+**Constellation zone:** Zone 0 (Bright Side / Saltbox — the institutional saltbox: long-term care, recreation therapy)
+**What to look for:** Any manifesto or philosophy copy about recreation therapy for long-term care; any prose about what a good shift looks like; any description of the tool's relationship to the staff's existing knowledge; any copy about how documentation should follow the worker, not the other way around. Note: the codetry-ship BrightSidePage.tsx already has some of this (entries 2-F, 2-G) — look for anything beyond what's already in harvest.md.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 8 — community-knowledge-hub (Zone 3 Commons)
+
+**URL:** `https://community-knowledge-hub.replit.app/`
+**Constellation zone:** Zone 3 — community production for NWO food systems; multi-tenant member-portal pattern
+**What to look for:** The "Today I…" verb routing copy; any Treasurer Calm Monthly Journey prose; the Stuck Board naming rationale; the Appreciation Wall purpose statement; any member-facing copy about what the co-op is for; the audience-chooser framing (household vs. producer); any Producer Playbook narrative; the kitchen-rental "borrowing not renting" rationale; the 807 Benefits brand story.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 9 — Legacy Gatekeeper
+
+**URL:** `https://legacy-gatekeeper.replit.app/`
+**Constellation zone:** Pre-Zone 3 / historical — the original surface for the Gate primitive before it moved in-constellation
+**What to look for:** Any original framing prose about why a gate between community vocabulary and institutional language was needed; any early versions of the bright-side/massity vocabulary that predate the handbook's current language; any deleted copy about the translation problem; the historical rationale for the Gatekeeper name before it was renamed to The Gate.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### External project 10 — Saltbox (Zone 0)
+
+**URL:** `https://salt-box.replit.app/`
+**Constellation zone:** Zone 0 — decentralized homes; homeschool day companion, local-first per family
+**What to look for:** Any onboarding or philosophy copy about Lock-In Wins, Brave Moments, Gentle Words, Quote of the Day; any narrative about the no-scoring rule (the fish-climbing-a-tree principle); any copy about what Saltbox is for beyond the feature list; the founding story for why a homeschool companion was built; any prose about Zone 0 holding both the family on the land and the elder in the care home.
+**Sweep status:** ⬜ Not yet run
+
+---
+
+### Additional external projects (beyond the 10 named)
+
+The following projects were identified in the codebase and may also contain harvestable prose. Run the sweep prompt in each if the founder confirms they are in scope.
+
+| Project | URL | Notes |
+|---|---|---|
+| Regen Revolution Zone 4 | `https://regen-revolution-zone-4.replit.app/` | Zone 4 — conventional-to-regenerative track for regen beef in NWO. Look for Karen / Black Barn discovery prose, "don't fix my book" rationale, per-customer share split narrative. |
+| Brainstorm Library | `https://replit.com/@xbucketsapp/Brainstorm-Library?s=app` | Pre-Zone (zone –1) seed bank. Look for any "volunteer seed" framing beyond the `opening` field already harvested in UG-G. |
+
 ---
 
 ## Sweep Metadata
 
-**Sweep date:** 2026-05-06
-**Sweep type:** Full — live codebase + git history deleted files
+**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep)
+**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep
 
 ### Live files read
 
@@ -1076,6 +1293,9 @@ The three credibility claims:
 | `artifacts/codetry-ship/src/pages/SowPage.tsx` | 2-H |
 | `artifacts/practitioners-guide-v2/src/data/portfolio.ts` | 2-I, 2-J, 2-K, UG-F |
 | `artifacts/library/src/pages/why-stores-fail.tsx` | 2-A |
+| `artifacts/codetry-handbook/data/constellation.ts` | 1-N (Z5 opening), 1-O (Z0 opening), 2-R (Z3 opening), 2-S (Z4 opening), 3-L (Z2 opening), 4-Q (Z1 opening), UG-G (pre-zone opening) |
+| `artifacts/codetry-handbook/data/foundingExamples.ts` | 4-R (Gate Refused — Parr's Jars) |
+| `docs/headwaters-thesis-context.md` | 2-T (slab/grassland thesis) |
 
 ### Git history — deleted files recovered
 
@@ -1093,8 +1313,9 @@ The three credibility claims:
 | `ff9e4b9~1` | `artifacts/headwaters-books/src/data/constellation.ts` | 4-P |
 | `3686992~1` | `artifacts/deer-lake-walkthrough/src/sections/WhyThisTeam.tsx` | 5-H |
 
-**Total passages:** 59 (sections 1–5 + Unplaced Gems)
+**Total passages:** 76 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
+**External project sweeps:** 10 projects identified, 0 swept — each requires a separate agent session in that project. See "Pending External Sweeps" section above for project list, URLs, and what to look for.
 
 *All passages confirmed verbatim. No synthesis or composition.*
