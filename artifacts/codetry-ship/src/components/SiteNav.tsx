@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { getStoredOwnerToken } from "@/lib/api";
+import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
 
 interface NavLink {
   href: string;
@@ -151,17 +151,32 @@ export function SiteNav() {
                 Workbench
               </a>
             )}
-            <a
-              href={`${base}/sign-on`}
-              className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
-              style={{
-                background: "hsl(var(--accent))",
-                color: "hsl(var(--accent-foreground))",
-              }}
-              data-testid="nav-cta"
-            >
-              Sign on
-            </a>
+            {authed ? (
+              <button
+                type="button"
+                onClick={() => setStoredOwnerToken(null)}
+                className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+                style={{
+                  color: dark ? "rgba(235,225,210,0.60)" : "hsl(var(--muted-foreground))",
+                  border: `1px solid ${dark ? "rgba(255,255,255,0.15)" : "hsl(var(--card-border))"}`,
+                }}
+                data-testid="nav-sign-out"
+              >
+                Sign out
+              </button>
+            ) : (
+              <a
+                href={`${base}/sign-on`}
+                className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
+                style={{
+                  background: "hsl(var(--accent))",
+                  color: "hsl(var(--accent-foreground))",
+                }}
+                data-testid="nav-cta"
+              >
+                Sign on
+              </a>
+            )}
           </div>
 
           {/* ── mobile hamburger ── */}
@@ -249,17 +264,32 @@ export function SiteNav() {
               Workbench
             </a>
           )}
-          <a
-            href={`${base}/sign-on`}
-            className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
-            style={{
-              background: "hsl(var(--accent))",
-              color: "hsl(var(--accent-foreground))",
-            }}
-            data-testid="mobile-nav-cta"
-          >
-            Sign on →
-          </a>
+          {authed ? (
+            <button
+              type="button"
+              onClick={() => setStoredOwnerToken(null)}
+              className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-left transition-opacity hover:opacity-80"
+              style={{
+                color: "hsl(var(--muted-foreground))",
+                border: "1px solid hsl(var(--card-border))",
+              }}
+              data-testid="mobile-nav-sign-out"
+            >
+              Sign out
+            </button>
+          ) : (
+            <a
+              href={`${base}/sign-on`}
+              className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
+              style={{
+                background: "hsl(var(--accent))",
+                color: "hsl(var(--accent-foreground))",
+              }}
+              data-testid="mobile-nav-cta"
+            >
+              Sign on →
+            </a>
+          )}
           <div
             className="mt-3 pt-3 border-t"
             style={{ borderColor: "hsl(var(--card-border))" }}

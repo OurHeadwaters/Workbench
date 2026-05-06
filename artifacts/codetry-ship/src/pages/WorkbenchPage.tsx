@@ -155,7 +155,13 @@ export function WorkbenchPage() {
   useEffect(() => {
     if (!getStoredOwnerToken()) {
       navigate("/sign-on");
+      return;
     }
+    function onAuthChange() {
+      if (!getStoredOwnerToken()) navigate("/sign-on");
+    }
+    window.addEventListener("headwaters:auth-change", onAuthChange);
+    return () => window.removeEventListener("headwaters:auth-change", onAuthChange);
   }, [navigate]);
 
   if (!getStoredOwnerToken()) {
