@@ -3,17 +3,28 @@ import { describe, expect, it } from "vitest";
 import { PARTS } from "@/data/handbook";
 
 /**
- * Structural guard for Part III, the Coda, and the four back-matter parts.
+ * Structural guard for the Prologue, Part I, Part II, Part III, the Coda,
+ * and the four back-matter parts.
  *
  * History: §FL.1 (Test 001) showed that a chapter's vocabulary can
  * silently drift during a merge. The same risk applies to chapter
- * count and ordering — a dropped or reordered chapter in any of these
- * parts would not surface at runtime. These assertions make any such
- * change a visible CI failure.
+ * count and ordering — a dropped or reordered chapter in any part
+ * would not surface at runtime. These assertions make any such change
+ * a visible CI failure.
  *
- * Part III (roman "III") holds the practitioner-in-the-field chapters:
- * 3.1–3.7 (six moves), 3.8–3.15 (Zone 0 applied), and 3.17–3.21
- * (Zone 1–5 applied). Note that 3.16 is intentionally absent.
+ * Prologue (roman "P") holds exactly two chapters: P.1 and P.2.
+ *
+ * Part I (roman "I") holds eight chapters: 1.0–1.7.
+ *
+ * Part II (roman "II") holds eleven chapters: 2.0 (intro), 2.1–2.7
+ * (seven zone chapters built from allZones = zones + preZone),
+ * 2.8–2.9 (two constellation-wide primitive chapters), and 2.10
+ * (closing reflection). Note: if the constellation.json zone or
+ * primitive count changes, this test will fail by design.
+ *
+ * Part III (roman "III") holds the practitioner-in-the-field chapters
+ * currently authored: 3.1–3.7 (the six moves). Chapters 3.8–3.21 are
+ * planned future content; this list must be extended as they are written.
  *
  * The Coda (roman "CODA") holds exactly one capstone chapter:
  * "From scared to prepared" (id "coda-1").
@@ -24,6 +35,33 @@ import { PARTS } from "@/data/handbook";
  *   Field Ledger    (roman "FL") — §FL.1–§FL.11
  *   Colophon        (roman "C")  — single chapter "C"
  */
+
+const PART_PROLOGUE_EXPECTED_NUMBERS = ["P.1", "P.2"];
+
+const PART_I_EXPECTED_NUMBERS = [
+  "1.0",
+  "1.1",
+  "1.2",
+  "1.3",
+  "1.4",
+  "1.5",
+  "1.6",
+  "1.7",
+];
+
+const PART_II_EXPECTED_NUMBERS = [
+  "2.0",
+  "2.1",
+  "2.2",
+  "2.3",
+  "2.4",
+  "2.5",
+  "2.6",
+  "2.7",
+  "2.8",
+  "2.9",
+  "2.10",
+];
 
 // NOTE: Chapters 3.8–3.21 (Zone 0 applied and Zone 1–5 applied) are not yet
 // authored in the data. Follow-up #746 tracks adding them. This list is the
@@ -37,6 +75,63 @@ const PART_III_EXPECTED_NUMBERS = [
   "3.6",
   "3.7",
 ];
+
+describe("handbook structure guard — Prologue, Parts I and II", () => {
+  const partP = PARTS.find((p) => p.roman === "P");
+  const partI = PARTS.find((p) => p.roman === "I");
+  const partII = PARTS.find((p) => p.roman === "II");
+
+  describe("Prologue (roman P) chapter count and ordering", () => {
+    it("exists in PARTS", () => {
+      expect(
+        partP,
+        'PARTS does not contain a part with roman "P" — the Prologue may have been dropped or its roman key changed',
+      ).toBeDefined();
+    });
+
+    it("contains exactly the expected chapter numbers in order", () => {
+      const actual = (partP?.chapters ?? []).map((ch) => ch.number);
+      expect(
+        actual,
+        `Prologue chapter numbers do not match. Expected:\n  ${PART_PROLOGUE_EXPECTED_NUMBERS.join(", ")}\nGot:\n  ${actual.join(", ")}`,
+      ).toEqual(PART_PROLOGUE_EXPECTED_NUMBERS);
+    });
+  });
+
+  describe("Part I (roman I) chapter count and ordering", () => {
+    it("exists in PARTS", () => {
+      expect(
+        partI,
+        'PARTS does not contain a part with roman "I" — the part may have been dropped or its roman key changed',
+      ).toBeDefined();
+    });
+
+    it("contains exactly the expected chapter numbers in order", () => {
+      const actual = (partI?.chapters ?? []).map((ch) => ch.number);
+      expect(
+        actual,
+        `Part I chapter numbers do not match. Expected:\n  ${PART_I_EXPECTED_NUMBERS.join(", ")}\nGot:\n  ${actual.join(", ")}`,
+      ).toEqual(PART_I_EXPECTED_NUMBERS);
+    });
+  });
+
+  describe("Part II (roman II) chapter count and ordering", () => {
+    it("exists in PARTS", () => {
+      expect(
+        partII,
+        'PARTS does not contain a part with roman "II" — the part may have been dropped or its roman key changed',
+      ).toBeDefined();
+    });
+
+    it("contains exactly the expected chapter numbers in order", () => {
+      const actual = (partII?.chapters ?? []).map((ch) => ch.number);
+      expect(
+        actual,
+        `Part II chapter numbers do not match. Expected:\n  ${PART_II_EXPECTED_NUMBERS.join(", ")}\nGot:\n  ${actual.join(", ")}`,
+      ).toEqual(PART_II_EXPECTED_NUMBERS);
+    });
+  });
+});
 
 describe("handbook structure guard — Part III and Coda", () => {
   const partIII = PARTS.find((p) => p.roman === "III");
