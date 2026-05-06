@@ -12,6 +12,7 @@ import { SowPage } from "@/pages/SowPage";
 import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 import { ServicesPage } from "@/pages/ServicesPage";
+import { WorkPage } from "@/pages/WorkPage";
 import { WorkbenchPage } from "@/pages/WorkbenchPage";
 import { OperatorPage } from "@/pages/OperatorPage";
 import { SiteNav } from "@/components/SiteNav";
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/home" component={HomePage} />
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
+      <Route path="/work" component={WorkPage} />
       <Route path="/sign-on" component={SignOnPage} />
       <Route path="/operator" component={OperatorPage} />
       <Route path="/workbench">

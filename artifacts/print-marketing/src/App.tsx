@@ -14,6 +14,7 @@ import VocabularySheet from "@/pages/VocabularySheet";
 import SaltOfTheEarthClub from "@/pages/SaltOfTheEarthClub";
 import GoingDigital from "@/pages/GoingDigital";
 import RackCardIndigenous from "@/pages/RackCardIndigenous";
+import CapabilityStatement from "@/pages/CapabilityStatement";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/salt-of-the-earth-club" component={SaltOfTheEarthClub} />
       <Route path="/going-digital" component={GoingDigital} />
       <Route path="/rack-card-indigenous" component={RackCardIndigenous} />
+      <Route path="/capability-statement" component={CapabilityStatement} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -80,6 +80,18 @@ export function HomePage() {
             />
           </div>
 
+          <p
+            className="font-serif text-xl sm:text-2xl font-medium mb-2 leading-tight"
+            data-testid="home-practitioner-byline"
+          >
+            <a
+              href={`${import.meta.env.BASE_URL}bio`}
+              className="hover:opacity-80 transition-opacity"
+              style={{ color: "hsl(38 36% 96%)" }}
+            >
+              Bobbie Parr — practitioner, Headwaters
+            </a>
+          </p>
           <h1
             className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3"
             data-testid="home-title"

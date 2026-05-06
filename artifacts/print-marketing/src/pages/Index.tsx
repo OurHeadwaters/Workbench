@@ -92,6 +92,13 @@ const pieces = [
     desc: "4×9 in rack card for band offices, friendship centres, First Nations businesses, and cork boards. Summarises Headwaters community services: co-op platforms, community stores, band council software, and food systems.",
     icon: "📌",
   },
+  {
+    href: "/capability-statement",
+    title: "Capability Statement",
+    label: "Headwaters",
+    desc: "Print-ready one-pager for procurement packages and first introductions. Covers who Headwaters is, the three service types, the $175/hr trial model, two case studies in brief, and contact details. Letter size (8.5×11).",
+    icon: "📋",
+  },
 ];
 
 export default function Index() {

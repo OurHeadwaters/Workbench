@@ -250,14 +250,24 @@ export function BioPage() {
               data-testid="work-list"
             >
               <WorkLink
+                href={`${import.meta.env.BASE_URL}work`}
+                label="Case studies — Parr's Jars + 807 Food Co-op"
+                testId="work-case-studies-bio"
+              />
+              <WorkLink
+                href="/print-marketing/capability-statement"
+                label="Capability statement"
+                testId="work-capability-statement"
+              />
+              <WorkLink
                 href="/codetry-handbook/"
                 label="Codetry Handbook"
                 testId="work-codetry-handbook"
               />
               <WorkLink
-                href="/deer-lake-walkthrough/"
+                href="/community-store-walkthrough/"
                 label="Community store walkthrough"
-                testId="work-deer-lake-walkthrough"
+                testId="work-community-store-walkthrough"
               />
               <WorkLink
                 href="/library/"

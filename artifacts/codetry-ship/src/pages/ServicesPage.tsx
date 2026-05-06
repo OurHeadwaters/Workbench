@@ -66,6 +66,21 @@ export function ServicesPage() {
 
       <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
 
+        {/* ── who this is for ── */}
+        <section className="pt-10 pb-2">
+          <div
+            className="rounded-md border px-6 py-5"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-2" style={{ color: "hsl(var(--accent))" }}>
+              who this is for
+            </p>
+            <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              Headwaters works with band councils and community organizations in Northwestern Ontario that are planning or running a community-owned store, a food co-op, or a purpose-built internal tool. If your organization is in the early stages of asking "how would we even start?" — that is the right moment to reach out.
+            </p>
+          </div>
+        </section>
+
         {/* ══════════════════════════════════════
             SECTION 1 — COMMUNITY STORE PLAN
         ══════════════════════════════════════ */}
@@ -319,8 +334,8 @@ export function ServicesPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { label: "Trial period", value: "Hourly", note: "Six-week bounded scope. Stop at any point." },
-                { label: "Active engagement", value: "Hourly", note: "Billed against a defined scope, not open-ended." },
+                { label: "Trial period", value: "$175 / hour", note: "Six-week bounded scope. Stop at any point." },
+                { label: "Active engagement", value: "$175 / hour", note: "Billed against a defined scope, not open-ended." },
                 { label: "Ongoing iteration", value: "As needed", note: "Small changes, fast turnaround. No retainer required." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
@@ -330,7 +345,13 @@ export function ServicesPage() {
                 </div>
               ))}
             </div>
-            <p className="font-serif text-[12px] italic leading-[1.6] mt-5" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
+            >
+              All rates CAD · excludes HST
+            </p>
+            <p className="font-serif text-[12px] italic leading-[1.6] mt-3" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
               Headwaters brings in specialist subcontractors by project need. The rate funds that full delivery system — you get the right person for each phase without carrying the overhead of assembling a team yourself.
             </p>
           </div>
@@ -349,6 +370,13 @@ export function ServicesPage() {
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               Read the bio
+            </a>
+            <a
+              href="/print-marketing/capability-statement"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              Capability statement →
             </a>
           </div>
         </section>
