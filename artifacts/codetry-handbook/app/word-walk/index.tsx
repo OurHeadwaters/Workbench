@@ -38,6 +38,7 @@ export default function WordWalkHub() {
     allDone,
     counts,
     error,
+    retry,
   } = useWordWalk();
 
   const totalRows = rows.length;
@@ -92,6 +93,17 @@ export default function WordWalkHub() {
             <Text style={[styles.errorText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
               {error}
             </Text>
+            <Pressable
+              onPress={retry}
+              style={({ pressed }) => [
+                styles.retryBtn,
+                { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Text style={[styles.retryBtnText, { color: c.foreground, fontFamily: MONO }]}>
+                Try again →
+              </Text>
+            </Pressable>
           </View>
         ) : allDone ? (
           <CompletionView
@@ -295,7 +307,19 @@ const styles = StyleSheet.create({
   rule: { height: 1, marginVertical: 24, opacity: 0.7 },
   loading: { fontSize: 12, letterSpacing: 1.4, textTransform: "uppercase" },
   errorBox: { borderWidth: 1, borderRadius: 4, padding: 16 },
-  errorText: { fontSize: 15, lineHeight: 22 },
+  errorText: { fontSize: 15, lineHeight: 22, marginBottom: 16 },
+  retryBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderRadius: 4,
+    alignSelf: "flex-start",
+  },
+  retryBtnText: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
   progressCard: {
     borderWidth: 1,
     borderRadius: 4,

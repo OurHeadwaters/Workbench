@@ -9,9 +9,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const API_BASE = process.env.EXPO_PUBLIC_DOMAIN
-  ? `https://${process.env.EXPO_PUBLIC_DOMAIN}/api-server/api/word-walk`
-  : "/api-server/api/word-walk";
+// The API server is registered at /api on the shared Replit proxy.
+// EXPO_PUBLIC_DOMAIN is set in production (deployed app).
+// EXPO_PUBLIC_API_DOMAIN is set in .env for dev (the Replit dev domain,
+// needed because Expo apps bypass the shared proxy and relative URLs
+// would resolve against the Expo dev server instead).
+const _apiOrigin = process.env.EXPO_PUBLIC_DOMAIN
+  ? `https://${process.env.EXPO_PUBLIC_DOMAIN}`
+  : process.env.EXPO_PUBLIC_API_DOMAIN
+  ? `https://${process.env.EXPO_PUBLIC_API_DOMAIN}`
+  : "";
+
+const API_BASE = `${_apiOrigin}/api/word-walk`;
 
 const CACHE_KEY = "word_walk_rows_v1";
 const TODAY_KEY = "word_walk_today_v1";
@@ -53,6 +62,7 @@ export interface UseWordWalkResult {
   counts: { proposed: number; approved: number; rejected: number; deferred: number; applied: number };
   decide: (rowId: number, verdict: Verdict) => Promise<void>;
   error: string | null;
+  retry: () => void;
 }
 
 export function useWordWalk(): UseWordWalkResult {
@@ -61,6 +71,7 @@ export function useWordWalk(): UseWordWalkResult {
   const [todayDecided, setTodayDecided] = useState<Array<{ rowId: number; verdict: Verdict }>>([]);
   const [todayQueue, setTodayQueue] = useState<WordRow[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const initializedRef = useRef(false);
 
   const buildQueue = useCallback(
@@ -73,6 +84,13 @@ export function useWordWalk(): UseWordWalkResult {
     },
     [],
   );
+
+  const retry = useCallback(() => {
+    initializedRef.current = false;
+    setReady(false);
+    setError(null);
+    setRetryCount((n) => n + 1);
+  }, []);
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -120,18 +138,19 @@ export function useWordWalk(): UseWordWalkResult {
           setRows(freshRows);
           setTodayQueue(buildQueue(freshRows, todayRec.decided));
           await AsyncStorage.setItem(CACHE_KEY, JSON.stringify({ rows: freshRows }));
+          setError(null);
         } else {
           if (cachedRows.length === 0) setError("Could not load word list from server.");
         }
-      } catch (e) {
-        if (cachedRows.length === 0) setError("Network error loading word list.");
+      } catch {
+        if (cachedRows.length === 0) setError("Unable to connect to the server. Check your connection and try again.");
       }
 
       setReady(true);
     }
 
     void init();
-  }, [buildQueue]);
+  }, [buildQueue, retryCount]);
 
   const decide = useCallback(
     async (rowId: number, verdict: Verdict) => {
@@ -201,5 +220,6 @@ export function useWordWalk(): UseWordWalkResult {
     counts,
     decide,
     error,
+    retry,
   };
 }
