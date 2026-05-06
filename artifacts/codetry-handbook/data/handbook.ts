@@ -4109,7 +4109,7 @@ const partVII: Part = {
 
 const partColophon: Part = {
   roman: "C",
-  title: "Colophon",
+  title: "The Source",
   blurb:
     "How this handbook was authored, and the spirit in which it is offered.",
   kind: "backMatter",
@@ -4118,8 +4118,8 @@ const partColophon: Part = {
       id: "5-6",
       number: "C",
       partRoman: "C",
-      partLabel: "Colophon",
-      title: "Colophon",
+      partLabel: "The Source",
+      title: "The Source",
       blocks: [
         {
           kind: "para",
