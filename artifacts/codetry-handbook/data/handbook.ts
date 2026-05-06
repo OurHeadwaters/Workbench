@@ -2432,11 +2432,19 @@ const partV: Part = {
           text:
             "From Perl in the late 1980s to the Stanford Code Poetry Slam, Mez Breeze, Nick Montfort, and Ishac Bertran's *code {poems}* anthology — a tradition of source code as poem. Adjacent and respected.",
         },
+        {
+          kind: "callout",
+          text: "Go deeper → §DD.1",
+        },
         { kind: "subhead", text: "Literate programming (Knuth, 1984)" },
         {
           kind: "para",
           text:
             "Donald Knuth's WEB and CWEB; Org-mode Babel, Jupyter, R Markdown, and Quarto carry the practice today. Document is the source; code is woven from prose. The discipline closest to codetry in this lineage — and, on the reading §5.1 lands on, the discipline codetry sits one floor underneath rather than across the room from: literate programming verifies by exposing the reasoning, but the woven program only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims, and holding those names is the move codetry is for.",
+        },
+        {
+          kind: "callout",
+          text: "Go deeper → §DD.2",
         },
         { kind: "subhead", text: "The earlier book (2017)" },
         {
@@ -2455,6 +2463,10 @@ const partV: Part = {
           kind: "para",
           text:
             "Eric Evans' *Domain-Driven Design* and the bounded-context, ubiquitous-language vocabulary it seeded. DDD's *ubiquitous language* is the closest single phrase in the prior literature to what codetry asks of a name: a word that has to live in the conversation, the whiteboard, and the code at once, with no translation step in between. §DD.3 already named DDD as a sibling discipline to codetry; this chapter names it as a *root*. The rename test of §3.2 is the same move DDD's bounded-context boundary already half-described — codetry's contribution is to make the test sharp at the level of the individual noun rather than the bounded context, and to apply it outside enterprise software, in community institutions where the *domain experts* are the people who live in the place.",
+        },
+        {
+          kind: "callout",
+          text: "Go deeper → §DD.3",
         },
         { kind: "subhead", text: "Beck and the XP/agile vocabulary (1999 →)" },
         {
