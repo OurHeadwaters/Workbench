@@ -165,17 +165,35 @@ export function SiteNav() {
                 Sign out
               </button>
             ) : (
-              <a
-                href={`${base}/sign-on`}
-                className="ml-3 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
-                style={{
-                  background: "hsl(var(--accent))",
-                  color: "hsl(var(--accent-foreground))",
-                }}
-                data-testid="nav-cta"
-              >
-                Sign on
-              </a>
+              <>
+                <a
+                  href={`${base}/operator`}
+                  className="px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                  style={{
+                    color: isActive("/operator", location)
+                      ? dark ? "hsl(38 36% 94%)" : "hsl(var(--foreground))"
+                      : dark ? "rgba(235,225,210,0.60)" : "hsl(var(--muted-foreground))",
+                    background: isActive("/operator", location)
+                      ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
+                      : "transparent",
+                  }}
+                  aria-current={isActive("/operator", location) ? "page" : undefined}
+                  data-testid="nav-operator"
+                >
+                  Operator
+                </a>
+                <a
+                  href={`${base}/sign-on`}
+                  className="ml-1 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90"
+                  style={{
+                    background: "hsl(var(--accent))",
+                    color: "hsl(var(--accent-foreground))",
+                  }}
+                  data-testid="nav-cta"
+                >
+                  Sign on
+                </a>
+              </>
             )}
           </div>
 
@@ -278,17 +296,31 @@ export function SiteNav() {
               Sign out
             </button>
           ) : (
-            <a
-              href={`${base}/sign-on`}
-              className="mt-2 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
-              style={{
-                background: "hsl(var(--accent))",
-                color: "hsl(var(--accent-foreground))",
-              }}
-              data-testid="mobile-nav-cta"
-            >
-              Sign on →
-            </a>
+            <>
+              <a
+                href={`${base}/operator`}
+                className="px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
+                style={{
+                  color: isActive("/operator", location) ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+                  background: isActive("/operator", location) ? "hsl(var(--muted))" : "transparent",
+                }}
+                aria-current={isActive("/operator", location) ? "page" : undefined}
+                data-testid="mobile-nav-operator"
+              >
+                Operator
+              </a>
+              <a
+                href={`${base}/sign-on`}
+                className="mt-1 px-4 py-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.2em] text-center transition-opacity hover:opacity-90"
+                style={{
+                  background: "hsl(var(--accent))",
+                  color: "hsl(var(--accent-foreground))",
+                }}
+                data-testid="mobile-nav-cta"
+              >
+                Sign on →
+              </a>
+            </>
           )}
           <div
             className="mt-3 pt-3 border-t"

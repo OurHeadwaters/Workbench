@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
-import { useLocation } from "wouter";
-import { ApiError, postSignOn, fetchManifest, setStoredOwnerToken } from "@/lib/api";
+import { Link } from "wouter";
+import { ApiError, postSignOn } from "@/lib/api";
 
 interface FormState {
   name: string;
@@ -23,7 +23,6 @@ const EMPTY: FormState = {
 };
 
 export function SignOnPage() {
-  const [, navigate] = useLocation();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +74,28 @@ export function SignOnPage() {
             Sign on.
           </h1>
         </header>
+
+        {/* ----------------------------- operator callout ----------------------------- */}
+        <div
+          className="mt-8 flex items-center gap-3 rounded-sm border px-5 py-3.5"
+          style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
+          data-testid="operator-callout"
+        >
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.22em] shrink-0"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            Operator?
+          </span>
+          <Link
+            href="/operator"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+            style={{ color: "hsl(var(--accent))" }}
+            data-testid="operator-callout-link"
+          >
+            Sign in with your passphrase →
+          </Link>
+        </div>
 
         {/* ----------------------------- manifesto quote ----------------------------- */}
         <section
@@ -271,9 +292,6 @@ export function SignOnPage() {
           )}
         </section>
 
-        {/* ----------------------------- operator access ----------------------------- */}
-        <OperatorAccess onAuthed={() => navigate("/workbench")} />
-
         {/* ----------------------------- footer ----------------------------- */}
         <footer
           className="mt-12 pt-8 border-t flex flex-wrap items-center justify-between gap-4"
@@ -287,75 +305,6 @@ export function SignOnPage() {
   );
 }
 
-function OperatorAccess({ onAuthed }: { onAuthed: () => void }) {
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (submitting) return;
-    setError(null);
-    setSubmitting(true);
-    try {
-      await fetchManifest(pass);
-      setStoredOwnerToken(pass);
-      onAuthed();
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setError("Wrong passphrase.");
-      } else {
-        setError("Could not verify. Try again.");
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <section
-      className="mt-16 pt-10 border-t"
-      style={{ borderColor: "hsl(var(--card-border))" }}
-      data-testid="section-operator"
-    >
-      <p
-        className="font-mono text-[10px] uppercase tracking-[0.22em] mb-4"
-        style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}
-      >
-        Operator access
-      </p>
-      <form onSubmit={onSubmit} className="flex items-start gap-3 max-w-sm" data-testid="form-operator">
-        <input
-          type="password"
-          required
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          placeholder="Passphrase"
-          className="flex-1 rounded-sm border bg-input px-3 py-2 font-sans text-sm focus:outline-none focus:ring-2"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-          data-testid="input-operator-passphrase"
-        />
-        <button
-          type="submit"
-          disabled={submitting}
-          className="shrink-0 inline-flex items-center px-4 py-2 rounded-sm font-mono text-[10px] uppercase tracking-[0.18em] bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60"
-          data-testid="button-operator-submit"
-        >
-          {submitting ? "…" : "Enter"}
-        </button>
-      </form>
-      {error ? (
-        <p
-          role="alert"
-          className="mt-2 font-sans text-xs text-destructive"
-          data-testid="operator-error"
-        >
-          {error}
-        </p>
-      ) : null}
-    </section>
-  );
-}
 
 interface FieldProps {
   id: string;

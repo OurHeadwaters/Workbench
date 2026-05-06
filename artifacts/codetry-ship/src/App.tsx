@@ -13,6 +13,7 @@ import { BrightSidePage } from "@/pages/BrightSidePage";
 import { DeadheadIntakePage } from "@/pages/DeadheadIntakePage";
 import { ServicesPage } from "@/pages/ServicesPage";
 import { WorkbenchPage } from "@/pages/WorkbenchPage";
+import { OperatorPage } from "@/pages/OperatorPage";
 import { SiteNav } from "@/components/SiteNav";
 import { getStoredOwnerToken } from "@/lib/api";
 
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
       <Route path="/sign-on" component={SignOnPage} />
+      <Route path="/operator" component={OperatorPage} />
       <Route path="/workbench">
         {() => <ProtectedRoute component={WorkbenchPage} />}
       </Route>
