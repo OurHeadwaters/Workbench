@@ -148,9 +148,13 @@ export default function PartLanding() {
             { color: c.mutedForeground, fontFamily: MONO },
           ]}
         >
-          {`${part.chapters.length} ${
-            part.chapters.length === 1 ? "QUESTION" : "QUESTIONS"
-          } KEPT OPEN`}
+          {roman === "V"
+            ? `${part.chapters.length} ${
+                part.chapters.length === 1 ? "QUESTION" : "QUESTIONS"
+              } KEPT OPEN`
+            : `${part.chapters.length} ${
+                part.chapters.length === 1 ? "CHAPTER" : "CHAPTERS"
+              }`}
         </Text>
 
         {part.chapters.map((ch, i) => {
@@ -254,8 +258,9 @@ export default function PartLanding() {
             { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
           ]}
         >
-          Returned to as the answer changes. New open questions appear here when
-          the discipline meets a thing it cannot yet answer.
+          {roman === "V"
+            ? "Returned to as the answer changes. New open questions appear here when the discipline meets a thing it cannot yet answer."
+            : `Part ${roman} — ${part.title}.`}
         </Text>
       </ScrollView>
     </View>

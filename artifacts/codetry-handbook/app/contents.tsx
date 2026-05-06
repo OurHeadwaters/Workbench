@@ -84,9 +84,11 @@ export default function Contents() {
         {PARTS.map((p, idx) => {
           const isBackMatter = p.kind === "backMatter";
           const prev = idx > 0 ? PARTS[idx - 1] : undefined;
+          const isCoda = p.roman === "CODA";
           const showBackMatterDivider =
-            isBackMatter && (!prev || prev.kind !== "backMatter");
-          const hasLanding = p.roman === "V";
+            isBackMatter && !isCoda && (!prev || prev.kind !== "backMatter");
+          const showCodaDivider = isCoda;
+          const hasLanding = p.roman === "V" || p.roman === "III";
           const headContent = (
             <>
               <Text
@@ -147,6 +149,30 @@ export default function Contents() {
                     ]}
                   >
                     Back Matter
+                  </Text>
+                  <View
+                    style={[
+                      styles.backMatterRule,
+                      { backgroundColor: c.rule },
+                    ]}
+                  />
+                </View>
+              ) : null}
+              {showCodaDivider ? (
+                <View style={styles.backMatterDivider}>
+                  <View
+                    style={[
+                      styles.backMatterRule,
+                      { backgroundColor: c.rule },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.backMatterLabel,
+                      { color: c.mutedForeground, fontFamily: MONO },
+                    ]}
+                  >
+                    A Practitioner's Arc
                   </Text>
                   <View
                     style={[
