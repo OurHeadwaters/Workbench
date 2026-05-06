@@ -23,6 +23,13 @@ const workspaceRoot = findWorkspaceRoot(projectRoot);
 // case of the JSON manifest, a build-time copy step).
 const SOURCE = path.join(projectRoot, "data/constellation.json");
 const DEST = path.join(projectRoot, "data/constellation.ts");
+// JSON mirror: kept in sync automatically — do not edit by hand.
+// Source of truth: artifacts/codetry-handbook/data/constellation.json
+// Refresh: pnpm --filter @workspace/codetry-handbook run sync-constellation
+const MIRROR_JSON = path.join(
+  workspaceRoot,
+  "artifacts/practitioner-operating-plan/public/constellation.json",
+);
 
 // ---------------------------------------------------------------------------
 // ZONE_FIELD_SCHEMA — single source of truth for the bundled ConstellationZone
@@ -436,40 +443,83 @@ function main() {
   const next = render(snapshot);
 
   if (check) {
+    let checkFailed = false;
+
+    // Check 1: TypeScript snapshot
     const existing = fs.existsSync(DEST) ? fs.readFileSync(DEST, "utf-8") : "";
     if (existing === next) {
       console.log(
         `constellation snapshot is in sync (version=${snapshot.version}, lastUpdated=${snapshot.lastUpdated}).`,
       );
-      return;
+    } else {
+      const onDisk = readVersionFields(existing);
+      const versionDrifted =
+        onDisk.version !== snapshot.version ||
+        onDisk.lastUpdated !== snapshot.lastUpdated;
+
+      const lines = [
+        "constellation snapshot is OUT OF SYNC with the canonical manifest.",
+        `  on disk:   version=${onDisk.version} lastUpdated=${onDisk.lastUpdated}`,
+        `  canonical: version=${snapshot.version} lastUpdated=${snapshot.lastUpdated}`,
+        `  source:    artifacts/codetry-handbook/data/constellation.json`,
+        `  snapshot:  artifacts/codetry-handbook/data/constellation.ts`,
+        "",
+        versionDrifted
+          ? "  → version / lastUpdated have drifted; refresh the snapshot."
+          : "  → version matches but content drifted; refresh the snapshot.",
+        "",
+        "  refresh with:",
+        "    pnpm --filter @workspace/codetry-handbook run sync-constellation",
+      ];
+      console.error(lines.join("\n"));
+      checkFailed = true;
     }
 
-    const onDisk = readVersionFields(existing);
-    const versionDrifted =
-      onDisk.version !== snapshot.version ||
-      onDisk.lastUpdated !== snapshot.lastUpdated;
+    // Check 2: JSON mirror
+    const sourceRaw = fs.readFileSync(SOURCE, "utf-8");
+    const mirrorRaw = fs.existsSync(MIRROR_JSON)
+      ? fs.readFileSync(MIRROR_JSON, "utf-8")
+      : "";
+    if (mirrorRaw === sourceRaw) {
+      console.log(
+        `JSON mirror is in sync (${path.relative(workspaceRoot, MIRROR_JSON)}).`,
+      );
+    } else {
+      const mirrorVersion = readVersionFields(mirrorRaw);
+      const sourceVersion = readVersionFields(sourceRaw);
+      console.error(
+        [
+          "JSON mirror is OUT OF SYNC with the canonical manifest.",
+          `  mirror:    version=${mirrorVersion.version} lastUpdated=${mirrorVersion.lastUpdated}`,
+          `  canonical: version=${sourceVersion.version} lastUpdated=${sourceVersion.lastUpdated}`,
+          `  source:    artifacts/codetry-handbook/data/constellation.json`,
+          `  mirror:    artifacts/practitioner-operating-plan/public/constellation.json`,
+          "",
+          "  refresh with:",
+          "    pnpm --filter @workspace/codetry-handbook run sync-constellation",
+        ].join("\n"),
+      );
+      checkFailed = true;
+    }
 
-    const lines = [
-      "constellation snapshot is OUT OF SYNC with the canonical manifest.",
-      `  on disk:   version=${onDisk.version} lastUpdated=${onDisk.lastUpdated}`,
-      `  canonical: version=${snapshot.version} lastUpdated=${snapshot.lastUpdated}`,
-      `  source:    artifacts/codetry-handbook/data/constellation.json`,
-      `  snapshot:  artifacts/codetry-handbook/data/constellation.ts`,
-      "",
-      versionDrifted
-        ? "  → version / lastUpdated have drifted; refresh the snapshot."
-        : "  → version matches but content drifted; refresh the snapshot.",
-      "",
-      "  refresh with:",
-      "    pnpm --filter @workspace/codetry-handbook run sync-constellation",
-    ];
-    console.error(lines.join("\n"));
-    process.exit(1);
+    if (checkFailed) process.exit(1);
+    return;
   }
 
   fs.writeFileSync(DEST, next);
   console.log(
     `wrote ${path.relative(workspaceRoot, DEST)} (version=${snapshot.version}, lastUpdated=${snapshot.lastUpdated}).`,
+  );
+
+  // --- JSON mirror: copy canonical source to practitioner-operating-plan ---
+  const sourceRaw = fs.readFileSync(SOURCE, "utf-8");
+  const mirrorDir = path.dirname(MIRROR_JSON);
+  if (!fs.existsSync(mirrorDir)) {
+    fs.mkdirSync(mirrorDir, { recursive: true });
+  }
+  fs.writeFileSync(MIRROR_JSON, sourceRaw);
+  console.log(
+    `wrote ${path.relative(workspaceRoot, MIRROR_JSON)} (JSON mirror synced from source).`,
   );
 }
 
