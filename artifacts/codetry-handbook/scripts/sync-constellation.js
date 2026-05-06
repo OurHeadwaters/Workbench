@@ -24,32 +24,178 @@ const workspaceRoot = findWorkspaceRoot(projectRoot);
 const SOURCE = path.join(projectRoot, "data/constellation.json");
 const DEST = path.join(projectRoot, "data/constellation.ts");
 
+// ---------------------------------------------------------------------------
+// ZONE_FIELD_SCHEMA — single source of truth for the bundled ConstellationZone
+// snapshot. Drives both pickZone() (what gets copied from JSON) and the emitted
+// TypeScript type (what ConstellationZone looks like for consumers).
+//
+// To add a new field to the snapshot:
+//   1. Add an entry here. Prefix the key with '!' to mark it as required.
+//   2. Run `pnpm --filter @workspace/codetry-handbook run sync-constellation`
+//
+// No other changes are needed — pickZone and the TypeScript type update
+// automatically on the next sync run.
+// ---------------------------------------------------------------------------
+const ZONE_FIELD_SCHEMA = {
+  "!zone":            "number",
+  "slot":             "string",
+  "!name":            "string",
+  "!domain":          "string",
+  "!url":             "string | null",
+  "!status":          "string",
+  "formerNames":      "string[]",
+  "formerNamesNote":  "string",
+  "tagline":          "string",
+  "memberFacingBrand":"string",
+  "workedExamples":   "WorkedExample[]",
+  "context":          "string",
+  "standby":          "string",
+  "opening":          "string",
+  "inlinePrompt":     "string",
+  "reflections":      "string[]",
+};
+
+// Fields intentionally excluded from the snapshot. These are complex nested
+// objects or zone-specific metadata the handbook and other consumers do not
+// use. Adding a key here silences the "unhandled field" warning without
+// pulling it into the snapshot.
+const ZONE_EXCLUDED_FIELDS = new Set([
+  // Structural / cross-zone coordination objects
+  "sibling",
+  "coordinationHandles",
+  "coordinationHooks",
+  "interfaces",
+  "crossZoneSeams",
+  "crossZoneTouchpoints",
+  "offersToConstellation",
+  "requestsToZone2",
+  "willFlagToZone2Unprompted",
+  "readableByZone2WithoutAsking",
+  "claimedRequests",
+  "pingProtocol",
+  "latentThreads",
+  "z1Z5InterfaceStatus",
+  "z4Z5InterfaceStatus",
+  "z1Z3InterfaceStatus",
+  "z3Z4InterfaceStatus",
+  // Zone-specific descriptive metadata
+  "aliases",
+  "audience",
+  "cadence",
+  "namingWeight",
+  "agentCharter",
+  "anchorArtifact",
+  "centralizedNote",
+  "chokepointThesis",
+  "codetryObservations",
+  "constraints",
+  "currentSector",
+  "dataPosture",
+  "discoveryNotes",
+  "failureMode",
+  "fourTeachers",
+  "geography",
+  "inFlight",
+  "nonNegotiables",
+  "position",
+  "qa",
+  "revenueModel",
+  "role",
+  "scopeBound",
+  "statusLine",
+  "surfaces",
+  "tenancy",
+  "zoneShorthand",
+  // Miscellaneous
+  "addOns",
+  "alsoAt",
+  "namingNote",
+  "pointers",
+  "proposedInterfaces",
+  "proposedSeeds",
+  "solutionShape",
+  "knownGaps",
+]);
+
+// ---------------------------------------------------------------------------
+// pickZone — driven by ZONE_FIELD_SCHEMA. Adding a field to ZONE_FIELD_SCHEMA
+// automatically causes it to be picked here; no manual wiring needed.
+// ---------------------------------------------------------------------------
 function pickZone(z, { defaultZone } = {}) {
   const out = {};
-  out.zone = typeof z.zone === "number" ? z.zone : defaultZone;
-  if (z.slot !== undefined) out.slot = z.slot;
-  out.name = z.name;
-  if (z.formerNames !== undefined) out.formerNames = z.formerNames;
-  if (z.formerNamesNote !== undefined) out.formerNamesNote = z.formerNamesNote;
-  out.domain = z.domain;
-  out.url = z.url ?? null;
-  out.status = z.status;
-  if (z.tagline !== undefined) out.tagline = z.tagline;
-  if (z.memberFacingBrand !== undefined) {
-    out.memberFacingBrand = z.memberFacingBrand;
+  for (const rawKey of Object.keys(ZONE_FIELD_SCHEMA)) {
+    const key = rawKey.startsWith("!") ? rawKey.slice(1) : rawKey;
+
+    // Required fields with special coercion
+    if (key === "zone") {
+      out.zone = typeof z.zone === "number" ? z.zone : defaultZone;
+      continue;
+    }
+    if (key === "url") {
+      out.url = z.url ?? null;
+      continue;
+    }
+
+    // Array fields that need shape normalisation or safe copy
+    if (key === "workedExamples") {
+      if (Array.isArray(z.workedExamples)) {
+        out.workedExamples = z.workedExamples.map((w) => ({
+          name: w.name,
+          rule: w.rule,
+        }));
+      }
+      continue;
+    }
+    if (key === "reflections") {
+      if (Array.isArray(z.reflections)) out.reflections = z.reflections.slice();
+      continue;
+    }
+    if (key === "formerNames") {
+      if (Array.isArray(z.formerNames)) out.formerNames = z.formerNames.slice();
+      continue;
+    }
+
+    // All other schema fields: copy as-is when present
+    if (z[key] !== undefined) out[key] = z[key];
   }
-  if (Array.isArray(z.workedExamples)) {
-    out.workedExamples = z.workedExamples.map((w) => ({
-      name: w.name,
-      rule: w.rule,
-    }));
-  }
-  if (z.context !== undefined) out.context = z.context;
-  if (z.standby !== undefined) out.standby = z.standby;
-  if (z.opening !== undefined) out.opening = z.opening;
-  if (z.inlinePrompt !== undefined) out.inlinePrompt = z.inlinePrompt;
-  if (Array.isArray(z.reflections)) out.reflections = z.reflections.slice();
   return out;
+}
+
+// ---------------------------------------------------------------------------
+// deriveZoneType — generates the ConstellationZone TypeScript type block
+// directly from ZONE_FIELD_SCHEMA. No manual type editing needed.
+// ---------------------------------------------------------------------------
+function deriveZoneType() {
+  const lines = ["export type ConstellationZone = {"];
+  for (const [rawKey, tsType] of Object.entries(ZONE_FIELD_SCHEMA)) {
+    const required = rawKey.startsWith("!");
+    const key = required ? rawKey.slice(1) : rawKey;
+    lines.push(`  ${key}${required ? "" : "?"}:${tsType === "WorkedExample[]" ? " WorkedExample[]" : ` ${tsType}`};`);
+  }
+  lines.push("};");
+  return lines.join("\n") + "\n";
+}
+
+// ---------------------------------------------------------------------------
+// findUnhandledZoneFields — returns the set of keys present in the JSON zone
+// entries that are neither in ZONE_FIELD_SCHEMA nor in ZONE_EXCLUDED_FIELDS.
+// An empty set means the schema is complete.
+// ---------------------------------------------------------------------------
+function findUnhandledZoneFields(allZones) {
+  const knownKeys = new Set(
+    Object.keys(ZONE_FIELD_SCHEMA).map((k) =>
+      k.startsWith("!") ? k.slice(1) : k,
+    ),
+  );
+  const unhandled = new Set();
+  for (const z of allZones) {
+    for (const key of Object.keys(z)) {
+      if (!knownKeys.has(key) && !ZONE_EXCLUDED_FIELDS.has(key)) {
+        unhandled.add(key);
+      }
+    }
+  }
+  return unhandled;
 }
 
 // Derive a top-level pointer to the Zone 3 row that hosts The Standby
@@ -157,29 +303,16 @@ function render(snapshot) {
     `// reads from it for Part III; the books site, the mobile Pioneer Path, and the\n` +
     `// Practitioner Operating Plan all read the same JSON via package exports or a\n` +
     `// build-time copy step.\n` +
+    `//\n` +
+    `// ConstellationZone type is derived automatically from ZONE_FIELD_SCHEMA in\n` +
+    `// scripts/sync-constellation.js. To add a new zone field, edit that schema\n` +
+    `// and re-run this script — the type and pickZone() update together.\n` +
     `\n`;
 
   const types =
     `export type WorkedExample = { name: string; rule: string };\n` +
     `\n` +
-    `export type ConstellationZone = {\n` +
-    `  zone: number;\n` +
-    `  slot?: string;\n` +
-    `  name: string;\n` +
-    `  domain: string;\n` +
-    `  url: string | null;\n` +
-    `  status: string;\n` +
-    `  formerNames?: string[];\n` +
-    `  formerNamesNote?: string;\n` +
-    `  tagline?: string;\n` +
-    `  memberFacingBrand?: string;\n` +
-    `  workedExamples?: WorkedExample[];\n` +
-    `  context?: string;\n` +
-    `  standby?: string;\n` +
-    `  opening?: string;\n` +
-    `  inlinePrompt?: string;\n` +
-    `  reflections?: string[];\n` +
-    `};\n` +
+    deriveZoneType() +
     `\n` +
     `export type ConstellationZ3Pointer = {\n` +
     `  zone: number;\n` +
@@ -267,6 +400,38 @@ function main() {
   }
 
   const json = JSON.parse(fs.readFileSync(SOURCE, "utf-8"));
+
+  // --- Unhandled-field check: detect new JSON keys not yet in the schema ---
+  const allZones = [
+    ...(Array.isArray(json.zones) ? json.zones : []),
+    ...(Array.isArray(json.preZone) ? json.preZone : []),
+  ];
+  const unhandled = findUnhandledZoneFields(allZones);
+  if (unhandled.size > 0) {
+    const fieldList = [...unhandled].sort().map((f) => `    - ${f}`).join("\n");
+    const msg = [
+      "",
+      "  constellation.json has zone fields not registered in ZONE_FIELD_SCHEMA",
+      "  or ZONE_EXCLUDED_FIELDS (scripts/sync-constellation.js):",
+      "",
+      fieldList,
+      "",
+      "  To include a field in the bundled snapshot and TypeScript type:",
+      "    Add it to ZONE_FIELD_SCHEMA in scripts/sync-constellation.js,",
+      "    then re-run:  pnpm --filter @workspace/codetry-handbook run sync-constellation",
+      "",
+      "  To intentionally exclude a field from the snapshot:",
+      "    Add it to ZONE_EXCLUDED_FIELDS in scripts/sync-constellation.js.",
+      "",
+    ].join("\n");
+    if (check) {
+      console.error("constellation snapshot is OUT OF SYNC — unhandled zone fields:" + msg);
+      process.exit(1);
+    } else {
+      console.warn("WARNING — unhandled zone fields will be skipped in the snapshot:" + msg);
+    }
+  }
+
   const snapshot = buildSnapshot(json);
   const next = render(snapshot);
 

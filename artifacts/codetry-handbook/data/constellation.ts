@@ -8,6 +8,10 @@
 // reads from it for Part III; the books site, the mobile Pioneer Path, and the
 // Practitioner Operating Plan all read the same JSON via package exports or a
 // build-time copy step.
+//
+// ConstellationZone type is derived automatically from ZONE_FIELD_SCHEMA in
+// scripts/sync-constellation.js. To add a new zone field, edit that schema
+// and re-run this script — the type and pickZone() update together.
 
 export type WorkedExample = { name: string; rule: string };
 
@@ -346,14 +350,14 @@ export const constellation: ConstellationSnapshot = {
     {
       "zone": 1,
       "name": "Headwaters",
+      "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
+      "url": "https://x-buckets-vision.replit.app/",
+      "status": "live",
       "formerNames": [
         "xBuckets",
         "Watershed"
       ],
       "formerNamesNote": "Z5 reports 'Watershed' is still active at the URL/storage layer for Dam Days (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
-      "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
-      "url": "https://x-buckets-vision.replit.app/",
-      "status": "live",
       "tagline": "Channel every drop. Watch the ripple effect.",
       "workedExamples": [
         {
@@ -617,12 +621,12 @@ export const constellation: ConstellationSnapshot = {
     {
       "zone": 5,
       "name": "Dam Days and Shallows",
-      "formerNames": [
-        "Watershed (still active at URL + storage namespace)"
-      ],
       "domain": "Wild / observation — private capture (Dam Days takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "status": "live",
+      "formerNames": [
+        "Watershed (still active at URL + storage namespace)"
+      ],
       "workedExamples": [
         {
           "name": "The rebrand without a rewrite",
