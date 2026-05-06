@@ -165,15 +165,20 @@ type FilterTab = "all" | "mine";
 export default function Glossary() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ q?: string }>();
+  const params = useLocalSearchParams<{ q?: string; tab?: string }>();
   const paramQ = typeof params.q === "string" ? params.q : "";
+  const paramTab = params.tab === "mine" ? "mine" : "all";
   const [query, setQuery] = useState(paramQ);
-  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [activeTab, setActiveTab] = useState<FilterTab>(paramTab);
   const { glossaryTerms, toggleGlossaryTerm, isGlossaryTermBookmarked } = useReader();
 
   useEffect(() => {
     setQuery(paramQ);
   }, [paramQ]);
+
+  useEffect(() => {
+    if (params.tab === "mine") setActiveTab("mine");
+  }, [params.tab]);
 
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;

@@ -23,7 +23,7 @@ const MONO = "JetBrainsMono_500Medium";
 export default function FrontPage() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const { lastRead, bookmarks } = useReader();
+  const { lastRead, bookmarks, glossaryTerms } = useReader();
   const { CHAPTERS, getChapter, PARTS } = useHandbookContent();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
@@ -223,6 +223,55 @@ export default function FrontPage() {
             {"→"}
           </Text>
         </Pressable>
+
+        {glossaryTerms.length > 0 ? (
+          <Pressable
+            onPress={() =>
+              router.push({ pathname: "/glossary", params: { tab: "mine" } })
+            }
+            style={({ pressed }) => [
+              styles.authorBtn,
+              {
+                borderColor: c.primary,
+                backgroundColor: `${c.primary}0d`,
+                opacity: pressed ? 0.8 : 1,
+              },
+            ]}
+          >
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  color: c.primary,
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                {`My Terms · ${glossaryTerms.length}`}
+              </Text>
+              <Text
+                style={{
+                  color: c.mutedForeground,
+                  fontFamily: SERIF_ITALIC,
+                  fontSize: 13,
+                  marginTop: 3,
+                }}
+              >
+                Review your saved glossary terms
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: c.primary,
+                fontFamily: MONO,
+                fontSize: 18,
+              }}
+            >
+              {"→"}
+            </Text>
+          </Pressable>
+        ) : null}
 
         <Pressable
           onPress={() => router.push("/daily-prompt")}
