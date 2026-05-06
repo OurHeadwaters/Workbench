@@ -132,7 +132,7 @@ Footer signoff:
 
 ---
 
-### 1-J · Deer Lake Prologue — alternate eagle text (deleted artifact)
+### 1-J · Northern Band Prologue — alternate eagle text (deleted artifact)
 
 > I was writing this plan out on my deck, watching nature. I asked myself a question: *is this the right direction?*
 >
@@ -143,7 +143,7 @@ Footer signoff:
 > He flew in a slow circle. Then he flew out of sight.
 
 `commit:3686992~1 · artifacts/deer-lake-walkthrough/src/sections/Prologue.tsx`
-*(Deer Lake Walkthrough was archived as Community Store Playbook in commit 3686992. This is the version of the eagle narrative that lived in the deleted artifact's Prologue component — slight wording variation from the current EaglePrologue.tsx.)*
+*(Northern Band Walkthrough was archived as Community Store Playbook in commit 3686992. This is the version of the eagle narrative that lived in the deleted artifact's Prologue component — slight wording variation from the current EaglePrologue.tsx.)*
 
 ---
 

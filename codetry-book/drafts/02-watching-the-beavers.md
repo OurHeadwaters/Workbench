@@ -1,7 +1,7 @@
 # Chapter 2 — Watching the Beavers
 
 *First full draft · assembled from harvest.md Section 2 passages · for founder review*
-*Draft date: 2026-05-06 · Status: ready for wider review — naming decisions resolved, see editorial notes*
+*Draft date: 2026-05-06 · Status: cleared for wider review — community referred to as "the northern band" (generic, no specific community named); pseudonyms permanent; no consent steps outstanding*
 
 ---
 
@@ -148,7 +148,7 @@ You watch the beavers build the dam because you are building one too.
 
 ---
 
-[^1]: First-year projection based on applying community-ownership margin rates (84¢ vs 58¢ on each federal grocery-help dollar) to the community's estimated annual grocery spend of $1.6–$2.0 million. Not an actuality — a modelled outcome based on the practitioner's analysis of this specific community's spend and store structure. Source: deleted Deer Lake Walkthrough artifact (harvest.md passages 2-L, 2-M, 2-N).
+[^1]: First-year projection based on applying community-ownership margin rates (84¢ vs 58¢ on each federal grocery-help dollar) to the community's estimated annual grocery spend of $1.6–$2.0 million. Not an actuality — a modelled outcome based on the practitioner's analysis of this specific community's spend and store structure. Source: deleted Northern Band Walkthrough artifact (harvest.md passages 2-L, 2-M, 2-N).
 
 ---
 
@@ -169,8 +169,8 @@ The chapter follows this arc: the raw numbers of northern food insecurity (one s
 
 **Community store deleted-artifact material (2-L, 2-M, 2-N, 2-O, 2-P) — decisions made:**
 
-1. **Naming the community — resolved: left unnamed.**
-   The chapter already did not name the community. That is the safe default and is maintained here. If the founder later decides to name the community explicitly, band consultation should happen first. The chapter reads cleanly without the name — the concrete specificity is carried by the numbers, not the place name.
+1. **Naming the community — resolved: generic term "northern band" used permanently.**
+   The community is not named and will not be named. The chapter refers to it only as "the northern band" — a generic descriptor, not a proper name. This closes the naming question without requiring band consultation. No reversal is planned; if one were ever considered, band consent would still be required before proceeding.
 
 2. **Sam & Jess — resolved: pseudonymized to Chris and Morgan.**
    No confirmation of consent was available. Real names have been replaced with gender-neutral pseudonyms that match the register of the original. If the individuals are later confirmed as willing to be named, this is a two-word find-and-replace.
@@ -183,6 +183,23 @@ The chapter follows this arc: the raw numbers of northern food insecurity (one s
 
 5. **Verbatim vs. paraphrased — resolved: left close to verbatim, no further paraphrasing.**
    The harvest passages are tight and field-tested. Paraphrasing them would dilute the register without adding accuracy. The pseudonymization above is the only material change to the source passages.
+
+---
+
+**Consent status — on record 2026-05-06 · updated 2026-05-06**
+
+Decision recorded for founder file. Four questions, four answers:
+
+| Question | Decision | Consent required? |
+|---|---|---|
+| Name the community? | **No — referred to as "the northern band" (generic term, permanent)** | Not required. Generic term names no specific community. |
+| Name Sam & Jess? | **No — pseudonymized to Chris and Morgan, permanent** | Not required in current form. Required before reverting to real names. |
+| Name Gilles? | **No — pseudonymized to René, permanent** | Not required in current form. Required before reverting to real name. |
+| Use the $125k–$200k figures? | **Yes — footnoted as modelled projection, source cited** | Not required. Figures are analytical, not attributed to individuals. |
+
+**Naming question — closed.** Using "the northern band" as a generic descriptor rather than a proper place name means no specific community is identified. Band consultation is not required for the chapter in this form. If any future version moves to naming a real community, band consent would be required before that publication.
+
+**Current clearance:** Chapter 2 in its present form — community referred to generically as "the northern band," operators pseudonymized, figures footnoted — is cleared for wider review and distribution outside the working circle. No consent steps are outstanding.
 
 **Where bridging was added:**
 Short plain-prose transitions between passages, matching the founder's register — declarative, no metaphor-stretching. The opening and closing lines ("You don't understand a food system by reading about it" and "You watch the beavers build the dam because you are building one too") are new bridge copy, not from the harvest. If either feels off-register, they can be cut without breaking the chapter's structure.
