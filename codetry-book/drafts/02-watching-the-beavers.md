@@ -1,6 +1,7 @@
 # Chapter 2 — Watching the Beavers
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
+*Continuity pass 2026-05-06 — no text changes required. Ch2 opens without an explicit callback to Ch1; confirmed intentional (Ch1 is a prelude, Ch2 is where fieldwork begins). "Bright Side" (capitalized, line 106) is a care home product name — distinct from "bright side" (lowercase vocabulary term, Ch4 §The Gate); capitalization is the disambiguation. Dam-building metaphor (closing line) correctly sets up Ch3's title. 58¢/84¢ margin figures used consistently with the footnote-sourced analysis. Tone: operational and dollar-honest — appropriate fieldwork register.*
 
 ---
 

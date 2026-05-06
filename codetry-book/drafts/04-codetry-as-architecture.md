@@ -1,6 +1,7 @@
 # Chapter 4 — Codetry as Architecture
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
+*Continuity pass 2026-05-06 — two adjustments made. (1) Cross-chapter repetition resolved: the budget/Watershed contrast and the Siphon paragraph appeared verbatim in both §The governance stake and §The name changes the tool; the preview block in §The governance stake was removed so the full treatment sits only in §The name changes the tool where the example catalog lives. (2) Naming note added to "bright side" vocabulary entry: the term originates in dementia care practice — an effective support person cannot hold massity's frame of reality and do the work simultaneously; you have to enter the client's reality. Not because that side is better, but because certain things are only visible from inside it. Source logged in harvest as passage 4-U-i. "Bright side" (lowercase) remains distinct from the capitalized "Bright Side" care home product in Ch2. Tone: architectural and definitional — appropriate as the capstone chapter.*
 
 ---
 
@@ -49,16 +50,6 @@ The reason any of this matters beyond aesthetics is governance.
 Codetry is a verification discipline that keeps the structural language of a system rooted in the community that owns it, so that knowledge cannot creep, drift, or be tokenized away. It does not produce decentralized governance. It protects the substrate any genuine local governance has to be built out of: if the community's words survive, the community can govern itself in its own terms; if the words drift, governance ends up being conducted in someone else's language, which is the same thing as someone else governing.
 
 The saltbox is not a metaphor about aesthetics. It is a metaphor about who controls the load path.
-
----
-
-Here is what that control looks like in practice, before a single schema is opened.
-
-The word *budget* evokes restriction, tightening. The word *Watershed* invokes flow, abundance. That difference is not cosmetic — it changes what the person holding the tool believes is possible before they touch a single number.
-
-*The Siphon* is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word *expense* implies.
-
-The name is doing structural work. Nothing in the underlying data model has changed. The constraint that changes lives in the word.
 
 ---
 
@@ -203,6 +194,8 @@ It is a quiet discipline. Most of it is naming. These are the terms the discipli
 **The Gate** — The primitive that holds the community's own language (bright side) and institutional language (massity) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent.
 
 **Bright side** — The community's own dialect — the words a community uses with itself in its own kitchens, meetings, and ledgers. Neighbour. Channel. The books. Standby stock. The watch. Neither informal nor incorrect. Simply a different room.
+
+*The name comes from dementia care practice. In a care unit, an effective support person cannot hold massity's frame of reality and do the work at the same time — the client is living in their own reality, and you have to enter it. Not because that side is better, but because certain things are only visible from inside it. The bright side is not the optimistic side. It is the side you have to stand on to see at all.*
 
 **Massity** — Mass-society dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.
 

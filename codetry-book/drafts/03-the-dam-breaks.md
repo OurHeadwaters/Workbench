@@ -1,6 +1,7 @@
 # Chapter 3 — The Dam Breaks
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
+*Continuity pass 2026-05-06 — no text changes required. Explicit Ch2 callback at line 13 ("In Chapter 2, you watched the dam being built") confirmed present and correct. "Primitive" used at line 83 before its formal Ch4 definition — confirmed as intentional forward reference consistent with the chapter's role as a conceptual bridge. "Constellation" used at line 103 in the same forward-reference register as Ch1. Definition of codetry at end of chapter (line 81–83) correctly anticipates and sets up Ch4 §Codetry as Architecture. Tone: philosophical — appropriate as the pivot chapter between fieldwork (Ch2) and formal architecture (Ch4).*
 
 ---
 

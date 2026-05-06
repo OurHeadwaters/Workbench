@@ -1746,6 +1746,14 @@ Closing copy:
 
 ---
 
+### 4-U-i · "Bright side" — dementia care etymology (founder note, 2026-05-06)
+
+> Bright side was multifaceted, but born of the fact that in dementia care units, you must immerse yourself in their reality. You can't bind yourself to the constraints of massity and be an effective support person for the client if they are living with dementia. It's less that life is better on the bright side, but more that bathing in the sun of bright side is essential to peek over certain fences.
+
+*Source: founder oral note, continuity pass 2026-05-06. Not previously in harvest. Supplements 4-U. Carried into Ch4 vocabulary entry for "bright side."*
+
+---
+
 ### 4-V · Standby Supplies — preparedness translated for -40°C
 
 > Preparedness advice that actually works at -40°C.
