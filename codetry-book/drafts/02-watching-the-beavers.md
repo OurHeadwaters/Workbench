@@ -2,6 +2,7 @@
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
 *Continuity pass 2026-05-06 — no text changes required. Ch2 opens without an explicit callback to Ch1; confirmed intentional (Ch1 is a prelude, Ch2 is where fieldwork begins). "Bright Side" (capitalized, line 106) is a care home product name — distinct from "bright side" (lowercase vocabulary term, Ch4 §The Gate); capitalization is the disambiguation. Dam-building metaphor (closing line) correctly sets up Ch3's title. 58¢/84¢ margin figures used consistently with the footnote-sourced analysis. Tone: operational and dollar-honest — appropriate fieldwork register.*
+*Continuity pass 2026-05-06 (Ch4 vocabulary addition — "centralized disruption") — no text changes required. Ch2 contains no uses of "centralized disruption" or the term by any earlier name. The chapter does describe conditions that would constitute centralized disruption under the Ch4 definition (hunting season closures, bad weather, freight disruption, store-stays-open requirement) but treats these as operational realities, not as a named class of event. This is consistent with Ch2's role as fieldwork-before-theory; the formal naming of the class belongs to Ch4. No conflict with the formal Ch4 vocabulary entry.*
 
 ---
 

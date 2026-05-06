@@ -2,6 +2,7 @@
 
 *Second pass · founder-reviewed · decisions applied 2026-05-06*
 *Continuity pass 2026-05-06 — no text changes required. Vocabulary terms "constellation," "codetry disciplines," and Zone numbers (0, 1, 5) appear here as early foreshadowing before their formal definitions in Ch4; confirmed intentional. No explicit callback to a prior chapter (Ch1 is the opening); Ch2→Ch3→Ch4 each carry explicit inter-chapter bridges. Tone: personal and place-grounded — appropriate as the opening register before the fieldwork chapters.*
+*Continuity pass 2026-05-06 (Ch4 vocabulary addition — "centralized disruption") — no text changes required. Ch1 contains no uses of "centralized disruption" or related phrasing; the chapter operates at the level of place, practice, and tool-naming, without naming any class of disruptive event. No conflict with the formal Ch4 vocabulary entry.*
 
 ---
 
