@@ -3984,6 +3984,10 @@
               "text": "The reason the practice fell out of use is instructive: *system metaphor* was described as a big, whole-team design choice, a single metaphor chosen up front for the entire system. That framing made it feel architectural and intimidating. Codetry's move is to apply the same discipline noun by noun, workbench session by workbench session, so the metaphor does not need to be chosen all at once — it is held incrementally, one rename at a time, and the rename test is the tool that holds it."
             },
             {
+              "kind": "para",
+              "text": "XP's place in codetry's lineage is named in §4.2: XP is not only an ancestor discipline but one of the *roots* codetry sits on top of, and the *system metaphor* practice is the closest single element in the agile prior literature to the discipline of holding a noun against the rename test."
+            },
+            {
               "kind": "callout",
               "text": "XP's system metaphor said: name the whole codebase from a single metaphor. Codetry says: hold that discipline one noun at a time, and make the hold testable at the kitchen table rather than the whiteboard."
             }
@@ -4019,6 +4023,10 @@
             {
               "kind": "para",
               "text": "Codetry's §3.6 standard — *the metaphor must be inspectable in the name itself* — is a claim about essence: the name is not a surface label sitting on top of the system's real structure, it is part of the real structure, and the rename test exists to keep it there. When a *saltbox* becomes a *household container* in the schema, the essential conceptual relationship between the word and the community has been dissolved and replaced with an accidental one — the kind of word a software engineer would choose rather than the kind of word the person who lives in the place already uses."
+            },
+            {
+              "kind": "para",
+              "text": "Brooks' place in codetry's lineage is named in §4.2: *No Silver Bullet* is not only a philosophical antecedent but one of the *roots* codetry sits on top of, and the essence/accident distinction is the philosophical line the rename test exists to hold."
             },
             {
               "kind": "callout",
@@ -9186,6 +9194,10 @@
           "text": "The reason the practice fell out of use is instructive: *system metaphor* was described as a big, whole-team design choice, a single metaphor chosen up front for the entire system. That framing made it feel architectural and intimidating. Codetry's move is to apply the same discipline noun by noun, workbench session by workbench session, so the metaphor does not need to be chosen all at once — it is held incrementally, one rename at a time, and the rename test is the tool that holds it."
         },
         {
+          "kind": "para",
+          "text": "XP's place in codetry's lineage is named in §4.2: XP is not only an ancestor discipline but one of the *roots* codetry sits on top of, and the *system metaphor* practice is the closest single element in the agile prior literature to the discipline of holding a noun against the rename test."
+        },
+        {
           "kind": "callout",
           "text": "XP's system metaphor said: name the whole codebase from a single metaphor. Codetry says: hold that discipline one noun at a time, and make the hold testable at the kitchen table rather than the whiteboard."
         }
@@ -9221,6 +9233,10 @@
         {
           "kind": "para",
           "text": "Codetry's §3.6 standard — *the metaphor must be inspectable in the name itself* — is a claim about essence: the name is not a surface label sitting on top of the system's real structure, it is part of the real structure, and the rename test exists to keep it there. When a *saltbox* becomes a *household container* in the schema, the essential conceptual relationship between the word and the community has been dissolved and replaced with an accidental one — the kind of word a software engineer would choose rather than the kind of word the person who lives in the place already uses."
+        },
+        {
+          "kind": "para",
+          "text": "Brooks' place in codetry's lineage is named in §4.2: *No Silver Bullet* is not only a philosophical antecedent but one of the *roots* codetry sits on top of, and the essence/accident distinction is the philosophical line the rename test exists to hold."
         },
         {
           "kind": "callout",
