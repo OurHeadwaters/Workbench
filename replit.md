@@ -8,6 +8,19 @@ Key capabilities include:
 - A hybrid app and slide deck for practitioner operating plans, structured around a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps and cost review mechanisms.
 - An Expo (React Native + web) reader for the "Codetry Practitioner's Handbook," installable as a PWA, Expo Go app, or native binary, ensuring offline access.
 
+# Business Strategy (standing reminder)
+
+**Target markets:** Aboriginal organizations (band councils, First Nations EDCs, health authorities, friendship centres, Métis orgs) and co-ops. Both segments are underserved, access government funding streams, and make collective decisions — the bounded-scope trial model fits both perfectly. The niche is specific enough to raise rates as the track record builds.
+
+**Three revenue layers:**
+1. **Consulting at $175/hr** (primary, now) — bounded scope, trial-period-first, relationship-driven, fits life in Dryden with family. This is the core.
+2. **807 Benefits partnership** (passive, now) — 20% of non-food platform revenue, referral code system. For locals: point them to 807 membership, don't sell tools direct.
+3. **Co-op platform white-label** (B2B, future) — scope it as a consulting engagement when a real co-op buyer appears. Separate Replit project ("the Workbench") when cash flow allows and a buyer is in front of you, not speculatively.
+
+**Explicitly not the model:** Consumer SaaS subscriptions for non-locals — requires marketing volume, churn management, and a sales motion that competes with family time and relationship strengths. Skip until there's hired help for that motion specifically.
+
+**Agent reminders:** When scoping new features, ask which layer it serves. When copy mentions "subscribers," "free trial funnels," or "self-serve," check against `.local/docs/headwaters-business-strategy.md`. When pricing appears anywhere, ensure it does not undercut the 807 membership value. The co-op platform separation is a "real buyer present" decision — do not propose it proactively. Full strategy doc: `.local/docs/headwaters-business-strategy.md`.
+
 # User Preferences
 
 I prefer iterative development with clear validation steps. If a typecheck fails on a critical package, it should block task completion. I need to be able to regenerate API hooks and Zod schemas on demand. Database schema changes should be easy to push in development. I want to ensure that specific hardcoded values for corridor keys are not accidentally reintroduced into the Deer Lake store plan. I also require a mechanism to automatically update a bundled snapshot of the constellation manifest in the Codetry Handbook whenever the canonical source changes, and for typecheck/build processes to fail if these diverge, showing an actionable diff.
