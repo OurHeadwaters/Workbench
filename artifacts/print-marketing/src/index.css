@@ -75,6 +75,17 @@ td, th {
   -webkit-print-color-adjust: exact;
 }
 
+/* Cascade print-color-adjust to every nested element so browsers never strip
+   background colours from deeply-nested blocks (header bands, callout boxes,
+   table rows, etc.) even when they set their own background property.
+   Both the standard and the legacy -webkit- prefix are required for full
+   Chrome / Safari / Firefox coverage. */
+.page-letter *,
+.page-letter-landscape * {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
 /* Content padding helpers — pair with .page-letter / .page-letter-landscape */
 .print-page          { padding: 0.6in 0.65in; }
 .print-page-landscape { padding: 0.55in 0.65in; }
