@@ -123,7 +123,7 @@ The icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, 
 
 # Chapter 2 — Watching the Beavers
 
-*First full draft · assembled from harvest.md Section 2 passages · for founder review*
+*Second pass · founder-reviewed · decisions applied 2026-05-06*
 
 ---
 
@@ -145,7 +145,7 @@ These are not projections. They are the numbers a practitioner finds when she si
 
 Community ownership changes one number, and that number changes everything.
 
-The band owns it. Gilles hires the couple and runs the floor, with locals pitching in. With a community-owned store, the number that was 58¢ climbs to 84¢. The other 26¢ doesn't disappear — it shows up as lower prices, paid jobs, and a board the community sits on.
+The band owns it. René hires the couple and runs the floor, with locals pitching in. With a community-owned store, the number that was 58¢ climbs to 84¢. The other 26¢ doesn't disappear — it shows up as lower prices, paid jobs, and a board the community sits on.
 
 That is not a talking point. It is arithmetic.
 
@@ -157,11 +157,11 @@ Here is the answer that works at this scale:
 
 Two people on the cockpit. Software underneath. Payroll stays small. Doors stay open when somebody can't make it in. Truck arrives loaded. Margin comes home fast.
 
-Sam and Jess on the cockpit — brought in and paid by the contractor, same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size.
+Chris and Morgan on the cockpit — brought in and paid by the contractor, same setup as the band's hotel. Two on payroll, not a row of managers. Only way the math works at this size.
 
 Serious software underneath them: Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together. Doors stay open through hunting season and bad weather. Truck leaves Dryden loaded even when one operator is out.
 
-Margin comes home in year one. About $125,000–$200,000 of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar. Four full-time roles — two contractor, two Headwaters — plus a band casual pool of fifteen or more people getting paid hours each week.
+Margin comes home in year one. About $125,000–$200,000 of grocery margin stays in the community the first year — money that today flies south at 58¢ on the dollar.[^1] Four full-time roles — two contractor, two Headwaters — plus a band casual pool of fifteen or more people getting paid hours each week.
 
 ---
 
@@ -267,6 +267,10 @@ Debt-attack mode: draw only $4,000 a month from the business. The rest is forgon
 This is not austerity for its own sake. It is the posture that makes every other number in this chapter possible — the community margin that stays local, the system that doesn't depend on a single person, the handover that happens on purpose rather than by accident.
 
 You watch the beavers build the dam because you are building one too.
+
+---
+
+[^1]: First-year projection based on applying community-ownership margin rates (84¢ vs 58¢ on each federal grocery-help dollar) to the community's estimated annual grocery spend of $1.6–$2.0 million. Not an actuality — a modelled outcome based on the practitioner's analysis of this specific community's spend and store structure. Source: deleted Northern Band Walkthrough artifact (harvest.md passages 2-L, 2-M, 2-N).
 
 ---
 

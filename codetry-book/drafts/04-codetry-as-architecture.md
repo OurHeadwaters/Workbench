@@ -227,3 +227,25 @@ The only architecture that survives is the one whose names kept their promises.
 ---
 
 *End of Chapter 4.*
+
+---
+
+## Editorial notes for founder review
+
+**Narrative arc:**
+The chapter opens with the full definition and thesis (4-A, 4-B, 4-C), then moves through three architectural metaphors in sequence: the saltbox (4-D), the hempcrete wall (4-E), and then the two naming tests applied to the two non-zone primitives — both-states / The Standby (4-F, 4-G, 4-L) and both-sides / The Gate (4-H, 4-I, 4-M). The vocabulary sheet (4-J) is placed as a formal settling of terms after the reader has encountered every term in practice. The refused callout (4-K) appears as a closing note within the vocabulary. The chapter ends with three field examples from deleted working docs (4-N, 4-O) plus the type-driven callout (UG-A).
+
+**Passages included from harvest.md Section 4:**
+4-A, 4-B, 4-C (definition and thesis), 4-D (saltbox narration), 4-E (hempcrete metaphor), 4-F (both-states narration), 4-G (the Standby narration), 4-H (both-sides narration), 4-I (the Gate narration), 4-J (vocabulary sheet), 4-K (refused callout), 4-L (Standby full role prose — condensed), 4-M (Gate full role prose — condensed), 4-N (Regen Revolution / Karen's line), 4-O (Community Knowledge Hub), 4-P (constellation manifest principle — embedded in the Standby/Gate sections).
+
+**Unplaced Gems included:**
+UG-A (type-driven design callout) — placed at the close of the chapter as a crisp technical summary after the field examples. UG-B and UG-C were considered but not included: UG-B repeats what the chapter already covers, and UG-C's bar-metaphor framing needs more context than the chapter's register allows. Both are held for potential Deep Dives material.
+
+**Ordering decisions:**
+The saltbox precedes the hempcrete because the saltbox is the simpler, more intuitive image — a room that does weight-bearing work. Hempcrete is the harder, more precise claim (infill-not-facade, composite-not-monolithic). Both-states precedes both-sides because the Standby was the first primitive to generate the naming test; the Gate came second and its test was derived from the Standby's. The vocabulary sheet comes late, not early — a reader who encounters *massity* as a raw term before seeing it in context will miss its charge.
+
+**Q5 — Whether to draft the Deep Dives appendix now.**
+Decision: Hold. The Deep Dives appendix should be drafted after the second pass of Chapters 2–5 is complete, not before. The four candidates are noted and reserved: 4-L (Standby full role prose from deleted working doc — six-word vocabulary and four-rung severity ladder), 4-M (Gate full role prose from deleted working doc — eight-word vocabulary and four-rung severity ladder), UG-B (both-states and both-sides compared — the technical comparison that would repeat chapter material if placed in the main text), UG-C (The Refused bar at bar level — needs more context than the current chapter provides). 4-L and 4-M are the strongest candidates because the chapter already took condensed versions of both; the full prose is preserved in harvest.md and recoverable in one pass. UG-B and UG-C will need bridging prose written for them. The appendix shell can be created once the second pass is done.
+
+**Bridge copy added:**
+Section-header subheadings (The Saltbox, The Hempcrete Wall, Both-States, The Standby, Both-Sides, The Gate, The Vocabulary) are new structural additions — not in the harvest. They can be removed if the founder prefers a headingless flow. The final paragraph before the vocabulary sheet ("Elsewhere in the constellation…") is new bridge copy connecting 4-N and 4-O to the chapter's argument.
