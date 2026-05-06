@@ -1,7 +1,6 @@
 # Chapter 1 — The Headwaters
 
-*First full draft · assembled from harvest.md Section 1 passages · for founder review*
-*Draft date: 2026-05-06 · Status: UNEDITED — return to founder before any further revision*
+*Second pass · founder-reviewed · decisions applied 2026-05-06*
 
 ---
 
@@ -28,6 +27,16 @@ She is the practitioner behind Headwaters and the codetry practice: the author o
 The tools are practitioner-built: designed around the team a community actually has, not the org chart the software assumes. The voice is the same across all of it — plain, dollar-honest, no startup-pitch tone.
 
 *— bobbie parr · headwaters*
+
+---
+
+The political conviction underneath all of it has never been complicated:
+
+---
+
+"Grassroots community and productive local economies are the only fighting chance. A depression may be around the corner but being depressed never has to be a reality we face — not when you build your life around the simple things that matter."
+
+*— Bobbie Parr, Headwaters*
 
 ---
 
@@ -65,16 +74,6 @@ For years this content lived in farmers market conversations, community workshop
 
 ---
 
-The political conviction underneath all of it has never been complicated:
-
----
-
-"Grassroots community and productive local economies are the only fighting chance. A depression may be around the corner but being depressed never has to be a reality we face — not when you build your life around the simple things that matter."
-
-*— Bobbie Parr, Headwaters*
-
----
-
 One of those five courses names the discipline directly. This is what it teaches:
 
 ---
@@ -83,29 +82,19 @@ The philosophy and the practice: voluntary exchange, mutual aid, peer-to-peer co
 
 ---
 
-The constellation that emerged from this practice is not a theory. It is a set of running tools — each one doing a specific job in a household or community, each one held together by the same vocabulary. Here is what three of those zones looked like when they were first described:
+The constellation that emerged from this practice is not a theory. It is a set of running tools — each one doing a specific job in a household or community, each one held together by the same vocabulary. Three of those tools, briefly:
 
 ---
 
-**Saltbox · Zone 0**
-
-Homeschool day companion. Local-first per family — each household runs its own instance, nothing is shared because nothing needs to be. Worked examples: Lock-In Wins (15 quiet minutes is enough to count; no streaks, no scores), Gentle Words (a 6-line bank used sparingly so the words don't lose weight), Brave Moments (one-tap capture, surfaced in the seasonal Family Recap), Quote of the Day (deterministic per date), Live Follow-Along (opt-in only, lock-in count excluded from share payload), per-child Goals.
+**Saltbox · Zone 0** — A homeschool day companion built for the household, not the institution. Each family runs their own instance; nothing is shared because nothing needs to be. Quiet minutes count. Words are used sparingly so they don't lose weight.
 
 ---
 
-**Headwaters · Zone 1**
-
-Non-custodial XRPL envelope-budgeting PWA (was xBuckets / Watershed). The household balance is the source of the whole watershed; every other zone sits downstream. The cleanest demonstrations of metaphor-as-architecture: Buckets (envelopes — you can only pour from one to another, never summon water from nothing; rename to 'Categories' and the UI starts suggesting balances can grow by clicking), XRP Spring (savings above the 10-XRP network reserve, with a six-stage bamboo growth scene that extends the metaphor from data model into artwork), Community Well (monthly pooled tips round-distributed to community proposals — the well refilling).
+**Headwaters · Zone 1** — An envelope-budgeting app built on the XRPL. The household balance is the source of the whole watershed; every other zone sits downstream. You can only pour from one bucket to another — the software won't let you summon money from nothing.
 
 ---
 
-**Dam Days · Zone 5**
-
-Wild / observation; the skipping-rock zone. Default private (Dam Days takes via watershed.replit.app + Expo mobile), with a share affordance that floats a thought to the Shallows, shrouded in mystery from the depths below. The cleanest demonstrations of metaphor-as-architecture: the rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name), the Channel produces Z0-through-5 reads of the user's own life (the app teaches the meta-pattern by being it), pseudonymity-as-architecture (Shallows handles derived deterministically from sessionToken+postId — the depths-below-the-shallows framing IS the one-way hash), typos as fingerprints (the Forge mandates verbatim preservation; the bound book quotes the user's own typos back as evidence).
-
----
-
-These descriptions were written for a working document, not for publication. They carry the density of a thing being built rather than explained. That density is deliberate — the notes were written by a practitioner, for a practitioner, in the heat of construction. The editorial question for a later pass: how much of this interior language belongs in the published chapter, and how much belongs in an appendix or a footnote.
+**Dam Days · Zone 5** — The wild zone: observation, skipping rocks, private by default. A thought can be floated to the public Shallows, but what lives in the depths stays there. The rebrand from Watershed to Dam Days touched only display strings and prose — the bones of the thing were the metaphor underneath the name all along.
 
 ---
 
@@ -113,25 +102,4 @@ The icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, 
 
 ---
 
-*End of Chapter 1 draft.*
-
----
-
-## Editorial notes for founder review
-
-**What was selected and why:**
-The chapter follows this arc: founding moment (eagle) → who the practitioner is → the hands-in-the-work origin (Jar Kitchen) → product as seasonal proof (Green Salt) → knowledge moving from conversation to course → the political conviction underneath → the discipline named (Decentralization) → the constellation described from inside (three zone passages) → the closing image (the ship).
-
-**Passages included from harvest.md Section 1:**
-1-A (eagle, primary version), 1-B (who Bobbie is), 1-D (Jar Kitchen), 1-E (1930 pull quote), 1-F (Green Salt), 1-G (knowledge online), 1-H (grassroots economics), 1-I (Decentralization), 1-K (Saltbox Zone 0), 1-L (Headwaters Zone 1), 1-M (Dam Days Zone 5), 1-C (the ship, closing).
-
-**Passages held back:**
-- 1-J (alternate eagle text from deleted Deer Lake artifact) — similar enough to 1-A that running both would dilute the opening; suggest footnoting the variant wording rather than using it in the chapter body.
-
-**Where bridging was added:**
-Short italicized or plain-prose transitions between passages — marked by context. All bridging is minimal and attempts to match the founder's register: plain, declarative, no metaphor-stretching.
-
-**Decisions for founder to make:**
-1. The three constellation zone descriptions (1-K, 1-L, 1-M) are very dense interior language. Should they appear verbatim in the chapter, or condensed, or moved to a "how the constellation was first described" sidebar?
-2. The editorial note before the ship closing is an in-draft flag — it should be removed or resolved before any further pass.
-3. The 1930 pull quote and the grassroots economics quote both stand alone well. Is the ordering right — Jar Kitchen → pull quote → Green Salt → knowledge online → grassroots economics — or should the economics quote come earlier, closer to the founding conviction?
+*End of Chapter 1.*
