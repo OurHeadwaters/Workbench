@@ -301,6 +301,22 @@ function PrintBlock({ block }: { block: Block }) {
       );
     case "rule":
       return <View style={styles.midRule} />;
+    case "tool":
+      return (
+        <View style={styles.toolCard}>
+          <Text style={[styles.toolEyebrow, { fontFamily: MONO }]}>
+            Tool
+          </Text>
+          <Text style={[styles.toolLabel, { fontFamily: SERIF_BOLD }]}>
+            {block.label}
+          </Text>
+          {block.hint ? (
+            <Text style={[styles.toolHint, { fontFamily: SERIF_ITALIC }]}>
+              {block.hint}
+            </Text>
+          ) : null}
+        </View>
+      );
   }
   return null;
 }
@@ -524,6 +540,30 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: RULE,
     marginVertical: 16,
+  },
+  toolCard: {
+    borderWidth: 1,
+    borderColor: RULE,
+    padding: 14,
+    marginVertical: 10,
+  },
+  toolEyebrow: {
+    fontSize: 9.5,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: MUTED,
+    marginBottom: 4,
+  },
+  toolLabel: {
+    fontSize: 13.5,
+    lineHeight: 19,
+    color: INK,
+    marginBottom: 3,
+  },
+  toolHint: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: MUTED,
   },
   endRule: {
     height: 1,
