@@ -275,21 +275,21 @@ export function BioPage() {
                 testId="work-crew-manifest"
               />
               <WorkLink
-                href="/codetry-ship/infographics/community-store-plan.html"
+                href={`${import.meta.env.BASE_URL}infographics/community-store-plan.html`}
                 label="Community store plan"
                 testId="work-community-store-plan"
                 target="_blank"
                 swatchColor="#2E7D55"
               />
               <WorkLink
-                href="/codetry-ship/infographics/coop-membership-platform.html"
+                href={`${import.meta.env.BASE_URL}infographics/coop-membership-platform.html`}
                 label="Co-op membership platform"
                 testId="work-coop-membership-platform"
                 target="_blank"
                 swatchColor="#1A7A7A"
               />
               <WorkLink
-                href="/codetry-ship/infographics/custom-internal-tool.html"
+                href={`${import.meta.env.BASE_URL}infographics/custom-internal-tool.html`}
                 label="Custom internal tool"
                 testId="work-custom-internal-tool"
                 target="_blank"
