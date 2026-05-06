@@ -125,8 +125,45 @@ td, th {
 }
 .screen-nav a:hover { text-decoration: underline; }
 
+/* ── Print-preview mode (toggled via JS, mirrors @media print appearance) ── */
+.btn-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: var(--evergreen);
+  border: 1.5px solid var(--evergreen);
+  padding: 0.55rem 1.2rem;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn-preview:hover { background: var(--evergreen); color: white; }
+.btn-preview--active {
+  background: var(--evergreen);
+  color: white;
+}
+.btn-preview--active:hover { background: var(--evergreen-mid); }
+
+body.print-preview {
+  background: white;
+}
+body.print-preview .no-print {
+  display: none !important;
+}
+body.print-preview .page-letter,
+body.print-preview .page-letter-landscape {
+  box-shadow: none !important;
+  margin: 0 auto !important;
+}
+
 @media print {
-  .no-print { display: none !important; }
+  .no-print,
+  .screen-nav { display: none !important; }
   body { background: white; }
   .page-letter,
   .page-letter-landscape,
