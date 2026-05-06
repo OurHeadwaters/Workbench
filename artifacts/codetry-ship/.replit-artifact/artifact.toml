@@ -44,12 +44,22 @@ to = "/practitioners-guide-v2/"
 status = 301
 
 [[services.production.redirects]]
+from = "/guide/"
+to = "/practitioners-guide-v2/"
+status = 301
+
+[[services.production.redirects]]
 from = "/guide/*"
 to = "/practitioners-guide-v2/:splat"
 status = 301
 
 [[services.production.redirects]]
 from = "/handbook"
+to = "/codetry-handbook/"
+status = 301
+
+[[services.production.redirects]]
+from = "/handbook/"
 to = "/codetry-handbook/"
 status = 301
 
@@ -64,12 +74,22 @@ to = "/headwaters-books/"
 status = 301
 
 [[services.production.redirects]]
+from = "/books/"
+to = "/headwaters-books/"
+status = 301
+
+[[services.production.redirects]]
 from = "/books/*"
 to = "/headwaters-books/:splat"
 status = 301
 
 [[services.production.redirects]]
 from = "/print"
+to = "/print-marketing/"
+status = 301
+
+[[services.production.redirects]]
+from = "/print/"
 to = "/print-marketing/"
 status = 301
 
