@@ -50,18 +50,18 @@ export default function PosterParrsJars() {
 
             {/* Tagline */}
             <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.45rem", fontWeight: 400, color: "var(--cream)", lineHeight: 1.45, maxWidth: "4.8in", marginBottom: "0.45in" }}>
-              Small-batch artisan salts and pure Canadian maple syrup — crafted from the boreal north.
+              Small-batch artisan salts, pure Canadian maple syrup, and northern dog treats — crafted from the boreal north.
             </p>
 
             {/* Products */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.25in", marginBottom: "0.45in" }}>
               {[
-                { name: "Dryden Smokehouse Salt", note: "Cold-smoked over maple wood" },
-                { name: "Boreal Birch Salt", note: "Delicate birch-smoked finish" },
-                { name: "Wild Herb & Forest Salt", note: "Foraged herbs and spruce tip" },
-                { name: "Cedar & Lake Salt", note: "Cedar-kissed, northern shore" },
-                { name: "Northern Garlic Salt", note: "Roasted garlic and cracked pepper" },
-                { name: "Pure Maple Syrup", note: "Amber & dark grades, 250 mL · 500 mL" },
+                { name: "Salty Onion", note: "Caramelized onion and smoked sea salt" },
+                { name: "Salty Garlic", note: "Roasted garlic and cracked pepper" },
+                { name: "Salty Finish", note: "Flaky finishing salt, maple-smoked" },
+                { name: "Cheezy Salt", note: "Nutritional yeast and herb blend" },
+                { name: "Pure Maple Syrup", note: "Amber, Golden & Dark · 500 mL · 1 L" },
+                { name: "Dog Treats", note: "Beef Organs — single-ingredient, air-dried" },
               ].map((p) => (
                 <div key={p.name} style={{ borderLeft: "2px solid var(--rust)", paddingLeft: "0.55rem" }}>
                   <p style={{ fontFamily: "var(--font-serif)", fontWeight: 700, fontSize: "0.88rem", color: "var(--cream)", lineHeight: 1.2, marginBottom: "0.1rem" }}>{p.name}</p>
@@ -77,12 +77,12 @@ export default function PosterParrsJars() {
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$12</p>
               </div>
               <div style={{ background: "rgba(244,237,224,0.12)", borderRadius: 6, padding: "0.35rem 0.7rem", border: "1px solid rgba(244,237,224,0.2)" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Maple Syrup · 250 mL</p>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$14</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Maple Syrup · 500 mL</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$18</p>
               </div>
               <div style={{ background: "rgba(244,237,224,0.12)", borderRadius: 6, padding: "0.35rem 0.7rem", border: "1px solid rgba(244,237,224,0.2)" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Maple Syrup · 500 mL</p>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$24</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Maple Syrup · 1 L</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$27</p>
               </div>
             </div>
 

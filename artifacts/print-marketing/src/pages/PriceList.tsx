@@ -3,18 +3,23 @@ import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
 
 const salts = [
-  { name: "Dryden Smokehouse Salt", desc: "Cold-smoked over maple wood, rich and savoury", market: "$12.00", wholesale: "$8.50" },
-  { name: "Boreal Birch Salt", desc: "Delicate birch-smoked finish, light and versatile", market: "$12.00", wholesale: "$8.50" },
-  { name: "Wild Herb & Forest Salt", desc: "Foraged herbs, spruce tip and sage", market: "$12.00", wholesale: "$8.50" },
-  { name: "Cedar & Lake Salt", desc: "Cedar-kissed, inspired by northern shorelines", market: "$12.00", wholesale: "$8.50" },
-  { name: "Northern Garlic Salt", desc: "Roasted garlic and cracked pepper blend", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Onion", desc: "Caramelized onion and smoked sea salt blend", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Garlic", desc: "Roasted garlic and cracked pepper blend", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Finish", desc: "Flaky finishing salt, cold-smoked over maple wood", market: "$12.00", wholesale: "$8.50" },
+  { name: "Cheezy Salt", desc: "Nutritional yeast and herb blend, savoury and rich", market: "$12.00", wholesale: "$8.50" },
 ];
 
 const syrups = [
-  { name: "Amber Maple Syrup — 250 mL", desc: "Delicate flavour, light golden colour", market: "$14.00", wholesale: "$10.00" },
-  { name: "Amber Maple Syrup — 500 mL", desc: "Delicate flavour, light golden colour", market: "$24.00", wholesale: "$17.00" },
-  { name: "Dark Maple Syrup — 250 mL", desc: "Robust, full-bodied, ideal for cooking", market: "$14.00", wholesale: "$10.00" },
-  { name: "Dark Maple Syrup — 500 mL", desc: "Robust, full-bodied, ideal for cooking", market: "$24.00", wholesale: "$17.00" },
+  { name: "Amber Maple Syrup — 500 mL", desc: "Delicate flavour, light golden colour", market: "$18.00", wholesale: "$13.00" },
+  { name: "Amber Maple Syrup — 1 L", desc: "Delicate flavour, light golden colour", market: "$27.00", wholesale: "$19.00" },
+  { name: "Golden Maple Syrup — 500 mL", desc: "Rich golden flavour, smooth and sweet", market: "$18.00", wholesale: "$13.00" },
+  { name: "Golden Maple Syrup — 1 L", desc: "Rich golden flavour, smooth and sweet", market: "$27.00", wholesale: "$19.00" },
+  { name: "Dark Maple Syrup — 500 mL", desc: "Robust, full-bodied, ideal for cooking", market: "$18.00", wholesale: "$13.00" },
+  { name: "Dark Maple Syrup — 1 L", desc: "Robust, full-bodied, ideal for cooking", market: "$27.00", wholesale: "$19.00" },
+];
+
+const dogTreats = [
+  { name: "Dog Treats — Beef Organs", desc: "Single-ingredient, air-dried beef organ treats for dogs", market: "$12.00", wholesale: "$8.50" },
 ];
 
 function PrintNav() {
@@ -188,6 +193,33 @@ export default function PriceList() {
           </table>
         </div>
 
+        {/* Dog Treats section */}
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 700, color: "var(--evergreen)", borderLeft: "3px solid var(--rust)", paddingLeft: "0.55rem", marginBottom: "0.65rem" }}>
+            Dog Treats
+          </h2>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "var(--evergreen)", color: "white" }}>
+                <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "left" }}>Product</th>
+                <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "left", width: "36%" }}>Description</th>
+                <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "right", width: "14%" }}>Market</th>
+                <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.4rem 0.6rem", textAlign: "right", width: "14%" }}>Wholesale</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dogTreats.map((s, i) => (
+                <tr key={s.name} style={{ background: i % 2 === 0 ? "white" : "var(--cream)" }}>
+                  <td style={{ padding: "0.5rem 0.6rem", fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "0.88rem", color: "var(--ink)" }}>{s.name}</td>
+                  <td style={{ padding: "0.5rem 0.6rem", fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--muted)", fontStyle: "italic" }}>{s.desc}</td>
+                  <td style={{ padding: "0.5rem 0.6rem", fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.9rem", textAlign: "right", color: "var(--ink)" }}>{s.market}</td>
+                  <td style={{ padding: "0.5rem 0.6rem", fontFamily: "var(--font-sans)", fontWeight: 500, fontSize: "0.9rem", textAlign: "right", color: "var(--muted)" }}>{s.wholesale}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
         {/* This Week's Specials — only shown when at least one special is filled in */}
         {filledSpecials.length > 0 && (
           <div style={{ marginBottom: "1.5rem" }}>
@@ -218,7 +250,7 @@ export default function PriceList() {
           <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.75rem 0.9rem" }}>
             <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.3rem" }}>Wholesale Terms</h3>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.6 }}>
-              Minimum order: 12 units. Payment net-30 on approved accounts. Available for local shops, restaurants, and gift stores. Contact Bobbie to arrange.
+              Minimum order: 25 cases. Payment net-30 on approved accounts. Available for local shops, restaurants, and gift stores. Contact Bobbie to arrange.
             </p>
           </div>
           <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.75rem 0.9rem" }}>

@@ -70,9 +70,9 @@ export default function PosterMarket() {
             {/* Product highlights */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.25in", marginBottom: "0.4in" }}>
               {[
-                { label: "Smoked Salts", note: "5 varieties · 100 g jars", price: "$12" },
-                { label: "Maple Syrup", note: "Amber & Dark · 250 mL / 500 mL", price: "from $14" },
-                { label: "Seasonal Specials", note: "Ask us what's new this week", price: "varies" },
+                { label: "Smoked Salts", note: "4 varieties · 100 g jars", price: "$12" },
+                { label: "Maple Syrup", note: "Amber, Golden & Dark · 500 mL / 1 L", price: "from $18" },
+                { label: "Dog Treats", note: "Beef Organs · single-ingredient", price: "$12" },
               ].map((p) => (
                 <div key={p.label} style={{ background: "white", borderRadius: 6, padding: "0.3rem 0.4rem 0.35rem", border: "1px solid rgba(31,61,46,0.12)" }}>
                   <p style={{ fontFamily: "var(--font-serif)", fontWeight: 700, fontSize: "0.95rem", color: "var(--evergreen)", marginBottom: "0.05rem" }}>{p.label}</p>

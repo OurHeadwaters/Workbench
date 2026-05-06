@@ -46,34 +46,49 @@ export default function MarketDisplay() {
         </div>
 
         {/* Products grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.35in", flex: 1 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.25in", flex: 1 }}>
           {/* Salts card */}
-          <div style={{ background: "var(--cream)", borderRadius: 8, padding: "0.45in 0.4in", border: "2px solid var(--evergreen)", display: "flex", flexDirection: "column" }}>
+          <div style={{ background: "var(--cream)", borderRadius: 8, padding: "0.35in 0.3in", border: "2px solid var(--evergreen)", display: "flex", flexDirection: "column" }}>
             <div style={{ borderBottom: "2px solid var(--rust)", paddingBottom: "0.2rem", marginBottom: "0.3rem" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1rem" }}>Artisan</p>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1 }}>Smoked<br />Salts</h2>
+              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1 }}>Smoked<br />Salts</h2>
             </div>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "var(--muted)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
-              Cold-smoked over real wood. Birch, maple, and cedar smoke varieties. Wild herbs and northern botanicals. Each jar hand-blended in small batches.
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
+              Salty Onion, Salty Garlic, Salty Finish, and Cheezy Salt. Each jar hand-blended in small batches with northern ingredients.
             </p>
-            <div style={{ marginTop: "0.35in" }}>
+            <div style={{ marginTop: "0.25in" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.1rem" }}>100 g jar</p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "3.2rem", fontWeight: 900, color: "var(--rust)", lineHeight: 1 }}>$12</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.8rem", fontWeight: 900, color: "var(--rust)", lineHeight: 1 }}>$12</p>
             </div>
           </div>
 
           {/* Maple syrup card */}
-          <div style={{ background: "var(--evergreen)", borderRadius: 8, padding: "0.45in 0.4in", display: "flex", flexDirection: "column" }}>
+          <div style={{ background: "var(--evergreen)", borderRadius: 8, padding: "0.35in 0.3in", display: "flex", flexDirection: "column" }}>
             <div style={{ borderBottom: "2px solid var(--rust-light)", paddingBottom: "0.2rem", marginBottom: "0.3rem" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust-light)", marginBottom: "0.1rem" }}>Pure Canadian</p>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>Maple<br />Syrup</h2>
+              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>Maple<br />Syrup</h2>
             </div>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "rgba(244,237,224,0.78)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
-              Amber and dark grades available. Light and delicate to robust and full-bodied. Perfect on pancakes, in baking, or as a natural sweetener.
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(244,237,224,0.78)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
+              Amber, Golden, and Dark grades available. Light and delicate to robust and full-bodied. Perfect on pancakes, in baking, or as a natural sweetener.
             </p>
-            <div style={{ marginTop: "0.35in" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>250 mL · 500 mL</p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "3.2rem", fontWeight: 900, color: "var(--rust-light)", lineHeight: 1 }}>$14 – $24</p>
+            <div style={{ marginTop: "0.25in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>500 mL · 1 L</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.8rem", fontWeight: 900, color: "var(--rust-light)", lineHeight: 1 }}>$18 – $27</p>
+            </div>
+          </div>
+
+          {/* Dog Treats card */}
+          <div style={{ background: "var(--cream)", borderRadius: 8, padding: "0.35in 0.3in", border: "2px solid var(--evergreen)", display: "flex", flexDirection: "column" }}>
+            <div style={{ borderBottom: "2px solid var(--rust)", paddingBottom: "0.2rem", marginBottom: "0.3rem" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1rem" }}>Northern</p>
+              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1 }}>Dog<br />Treats</h2>
+            </div>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
+              Beef Organs — single-ingredient, air-dried treats. Simple, wholesome, and made for northern dogs.
+            </p>
+            <div style={{ marginTop: "0.25in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.1rem" }}>per bag</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.8rem", fontWeight: 900, color: "var(--rust)", lineHeight: 1 }}>$12</p>
             </div>
           </div>
         </div>
