@@ -161,6 +161,18 @@ body.print-preview .page-letter-landscape {
   margin: 0 auto !important;
 }
 
+/* ── Margin-edge guides: dashed inset at 0.5 in, preview-only ── */
+body.print-preview .page-letter::before,
+body.print-preview .page-letter-landscape::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0.5in;
+  border: 1px dashed rgba(0, 100, 200, 0.35);
+  pointer-events: none;
+  z-index: 9999;
+}
+
 @media print {
   .no-print,
   .screen-nav { display: none !important; }
@@ -174,6 +186,9 @@ body.print-preview .page-letter-landscape {
     width: 100% !important;
     min-height: unset !important;
   }
+  /* Never print margin guides */
+  .page-letter::before,
+  .page-letter-landscape::before { display: none !important; }
   /* DEFAULT PRINT SIZE: 8.5 × 11 in (letter) — matches .page-letter */
   @page {
     size: letter portrait;
