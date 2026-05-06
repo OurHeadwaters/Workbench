@@ -45,10 +45,10 @@ export default function PosterParrsJars() {
             {/* Products */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.25in", marginBottom: "0.45in" }}>
               {[
-                { name: "Salty Onion", note: "Caramelized onion and smoked sea salt" },
-                { name: "Salty Garlic", note: "Roasted garlic and cracked pepper" },
-                { name: "Salty Finish", note: "Flaky finishing salt, maple-smoked" },
-                { name: "Cheezy Salt", note: "Nutritional yeast and herb blend" },
+                { name: "Salty Onion", note: "Sea salt, onion powder, chive powder — flavour-forward on sourdough, eggs, avocado" },
+                { name: "Salty Garlic", note: "Sea salt, garlic powder, chive powder — perfect on butter, bread, everything" },
+                { name: "Salty Finish", note: "Sea salt, paprika, garlic & onion mix — anywhere you'd use smoked paprika" },
+                { name: "Cheezy Salt", note: "Nutritional yeast, sea salt, garlic & onion mix — dairy-free cheesy flavour, the best seller" },
                 { name: "Pure Maple Syrup", note: "Amber, Golden & Dark · 500 mL · 1 L" },
                 { name: "Dog Treats", note: "Beef Organs — single-ingredient, air-dried" },
               ].map((p) => (

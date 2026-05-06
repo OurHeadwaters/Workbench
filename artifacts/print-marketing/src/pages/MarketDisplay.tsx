@@ -43,7 +43,7 @@ export default function MarketDisplay() {
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1 }}>Smoked<br />Salts</h2>
             </div>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.55, marginTop: "0.2rem", flex: 1 }}>
-              Salty Onion, Salty Garlic, Salty Finish, and Cheezy Salt. Each jar hand-blended in small batches with northern ingredients.
+              Salty Onion, Salty Garlic, Salty Finish, and Cheezy Salt — four sea salt blends hand-blended in small batches. Flavour-forward and made to use every day.
             </p>
             <div style={{ marginTop: "0.25in" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.1rem" }}>100 g jar</p>
