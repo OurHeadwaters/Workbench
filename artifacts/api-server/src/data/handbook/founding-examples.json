@@ -6,39 +6,39 @@
       "whyTwoSided": [
         {
           "kind": "subhead",
-          "text": "Why the umbrella is two-sided"
+          "text": "Why the umbrella has to hold both states"
         },
         {
           "kind": "para",
-          "text": "The Standby holds two registers that an outside system would almost certainly split apart. On one side is a slow, always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. On the other side is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. Two sides, one umbrella."
+          "text": "The Standby is one piece of infrastructure that moves between two operational states. The resting state is always-on practice — the pantry shelf is stocked, the contact tree is current, the generator gets test-started, the watch reads the morning advisory before anything is happening. The activated state is a fast, episodic event — a fire call opens, the rosters flip, the standby stock comes out where everyone can see it, and the system runs in active until the call stands down. One infrastructure, two states."
         },
         {
           "kind": "para",
-          "text": "If the slow side and the fast side were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge, and the moment a call opened the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens: pick the slow side, ask whether the umbrella name still fits the fast side; pick the fast side, ask whether the umbrella name still fits the slow side. *Standby* passes both — *on standby* and *standby stock* are the same posture in different tempos. *Pantry* and *Call* each pass only one."
+          "text": "If the resting state and the activated state were named separately — *The Pantry* for the shelf, *The Call* for the event — the constellation would end up with two systems. One would have an inventory cadence and no event handling. The other would have an event handler and no preparation discipline. The cultures would diverge, and the moment a call opened the practitioner would discover that the people who keep the pantry are not the people who run the call, and the handoff would have to be invented under fire. The both-states test catches this before it happens: pick the resting state, ask whether the umbrella name still holds in the activated state; pick the activated state, ask whether the umbrella name still holds in the resting state. *Standby* passes both — *on standby* and *standby stock* are the same posture in either state. *Pantry* and *Call* each pass only one."
         },
         {
           "kind": "callout",
-          "text": "The two-sidedness here is *temporal*: one system, two tempos. Slow side and fast side are the same plumbing running at different rates."
+          "text": "The both-states principle applies here: one piece of infrastructure — the Standby — that moves between a resting state and an activated state. The name names the pipe, not the valve position. *Standby* holds in either state."
         }
       ],
       "crossZoneReads": [
         "Zone 0 (Saltbox + Bright Side) — household and institutional standby checklists mirror the co-op's standby stock list, item for item.",
         "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
-        "Zone 2 (Practitioner Operating Plan) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
-        "Zone 3 (Community Knowledge Hub) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
-        "Zone 4 (Regen Revolution) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
-        "Zone 5 (Dam Days and Shallows) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
+        "Zone 2 (Workbench) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
+        "Zone 3 (Commons) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
+        "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
+        "Zone 5 (The Margin) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
       ],
       "takeaway": {
-        "pull": "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
+        "pull": "When a system is one piece of infrastructure that moves between a resting state and an activated state, the name has to hold in either state without bending — or the system will fork into two systems with two cultures.",
         "closingPara": "The Standby is the constellation's first non-zone primitive. It is hosted in Zone 3 because that is where centralized disruptions are felt collectively first, but it is read by every zone — and the both-states principle it carries is now registered as a named principle in the manifest, available the next time a primitive has to do double duty."
       },
       "openQuestions": [
-        "What is the right cadence for the slow side's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
+        "What is the right cadence for the resting state's stock-check ritual that does not drift into bureaucratic ritual? Monthly is too easy to skip; weekly is too easy to resent; *whenever there's an advisory* is reactive, not standby.",
         "Does standby stock get ledgered the way money does in Zone 1, or is it deliberately kept off the books — held by the household and the co-op directly, outside the financial primitives — so the act of stocking does not become an act of accounting?",
         "When two calls overlap (a fire call open while a freight call is still standing down), do they share a single active rung, or does each call get its own ladder running in parallel? The manifest currently assumes one call at a time.",
         "How does the practitioner know when *not* to open a call? An over-eager active rung erodes the discipline as fast as a missed one does, and there is no rejected-alternative entry yet for *did not open the call when we should have*.",
-        "When does a long fast side stop being a fast side and become the new slow side? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the slow side without losing the debrief?"
+        "When does a prolonged activated state stop being an activated state and become the new resting state? A six-month freight outage is no longer a call — it is a new always-on. Does the system know how to absorb a call into the resting state without losing the debrief?"
       ]
     },
     {
@@ -47,7 +47,7 @@
       "whyTwoSided": [
         {
           "kind": "subhead",
-          "text": "Why the umbrella is two-sided"
+          "text": "Why the umbrella name has to hold both sides"
         },
         {
           "kind": "para",
@@ -55,11 +55,11 @@
         },
         {
           "kind": "para",
-          "text": "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* rung for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
+          "text": "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
         },
         {
           "kind": "callout",
-          "text": "The two-sidedness here is *contextual*: one system, two contexts. Bright side and massity are the same plumbing facing different rooms."
+          "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and massity both look at it at once; the name has to hold from either direction."
         },
         {
           "kind": "subhead",
@@ -67,16 +67,16 @@
         },
         {
           "kind": "para",
-          "text": "The Standby's two sides are *temporal* — the same system in slow and fast tempo. The Gate's two sides are *contextual* — the same system facing two audiences that hold different vocabularies as legitimate. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate."
+          "text": "The Standby's two *states* are temporal — the infrastructure is constant; the system moves between resting and activated, and the name has to hold in either. The Gate's two *sides* are contextual — both face the system at once; the name has to hold from either direction. The Standby's principle is *both-states*; the Gate's principle is *both-sides*. Both are now registered as named principles in the manifest. A future primitive may need a third axis (densities? scales? jurisdictions?) and the principles array is open-ended on purpose — the discipline travels, the worked examples accumulate."
         }
       ],
       "crossZoneReads": [
-        "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the massity word.",
+        "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the massity word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The massity-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest massity equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
         "Zone 1 (Headwaters) — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; massity says *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
-        "Zone 2 (Practitioner Operating Plan) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary; the workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
-        "Zone 3 (Community Knowledge Hub) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
-        "Zone 4 (Regen Revolution) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
-        "Zone 5 (Dam Days and Shallows) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor massity. The Gate handles bright-to-massity and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
+        "Zone 2 (Workbench) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary; the workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
+        "Zone 3 (Commons) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
+        "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
+        "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor massity. The Gate handles bright-to-massity and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
       ],
       "takeaway": {
         "pull": "When a system has language that has to live inside two contexts that do not trust each other, the metaphor must hold both sides without flattening either, or the system will pick a dialect and lose the other room.",

@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { build as esbuild } from "esbuild";
@@ -10,7 +11,23 @@ globalThis.require = createRequire(import.meta.url);
 
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
 
+function syncChapters() {
+  console.log("sync-chapters: regenerating chapters.json from handbook.ts…");
+  const result = spawnSync(
+    "node",
+    [path.resolve(artifactDir, "scripts/sync-chapters.mjs")],
+    { stdio: "inherit" },
+  );
+  if (result.status !== 0) {
+    throw new Error(
+      "sync-chapters failed — could not regenerate chapters.json from handbook.ts.",
+    );
+  }
+}
+
 async function buildAll() {
+  syncChapters();
+
   const distDir = path.resolve(artifactDir, "dist");
   await rm(distDir, { recursive: true, force: true });
 
