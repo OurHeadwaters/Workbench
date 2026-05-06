@@ -31,7 +31,11 @@ export default function PosterMarket() {
             </div>
 
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.3rem", fontWeight: 600, color: "var(--cream)", letterSpacing: "0.02em" }}>
-              3:00 – 6:00 pm · Dryden Arena
+              3:00 – 6:00 pm
+            </p>
+
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--rust-light)", margin: "0.15rem 0 0" }}>
+              Dryden Arena
             </p>
           </div>
 
