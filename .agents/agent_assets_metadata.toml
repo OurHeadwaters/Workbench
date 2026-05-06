@@ -24,6 +24,24 @@ uri = "file://artifacts/codetry-handbook/assets/images/icon.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "6LnoY04Suf_7gJNMap6KF"
+uri = "file://artifacts/print-marketing/public/service-store.png"
+type = "image"
+title = "community store interior illustration"
+
+[[generated]]
+id = "KuEs9bMOsc5S0eIbkhplF"
+uri = "file://artifacts/print-marketing/public/service-platform.png"
+type = "image"
+title = "co-op membership dashboard illustration"
+
+[[generated]]
+id = "WD0Z7rIfdKS4lLSBRD5WC"
+uri = "file://artifacts/print-marketing/public/service-tools.png"
+type = "image"
+title = "internal tools document desk illustration"
+
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"
