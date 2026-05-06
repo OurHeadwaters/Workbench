@@ -61,14 +61,14 @@ export default function StackHome() {
         </Pressable>
 
         <Text style={[styles.eyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
-          THE STACK
+          PRACTICE CARDS
         </Text>
         <Text style={[styles.title, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
-          Climb it together.
+          Test what has landed.
         </Text>
         <Text style={[styles.subtitle, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
-          Pick any card. Work through it step by step. Every open question is a
-          trail, not a mountain.
+          One card at a time. Each card asks whether a concept from the handbook
+          has been understood — not just read.
         </Text>
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />

@@ -44,6 +44,59 @@ interface StackContextValue {
 
 const StackContext = createContext<StackContextValue | null>(null);
 
+// ─── Pure hydration logic — exported for unit testing ─────────────────────────
+//
+// Reconstructs order and card states from the three raw AsyncStorage strings.
+// This is extracted so the session-persistence behaviour can be tested without
+// mounting a React tree or mocking AsyncStorage.
+
+export function hydrateStackState(
+  rawOrder: string | null,
+  rawAnswers: string | null,
+  rawDone: string | null,
+  allIds: string[],
+): { order: string[]; cardStates: Record<string, CardState> } {
+  let loadedOrder: string[] = allIds;
+
+  if (rawOrder) {
+    try {
+      const parsed: string[] = JSON.parse(rawOrder);
+      const validParsed = parsed.filter((id) => allIds.includes(id));
+      const missing = allIds.filter((id) => !validParsed.includes(id));
+      loadedOrder = [...validParsed, ...missing];
+    } catch {}
+  }
+
+  const loadedAnswers: Record<string, Record<string, string>> = {};
+  if (rawAnswers) {
+    try {
+      const parsed = JSON.parse(rawAnswers);
+      if (parsed && typeof parsed === "object") {
+        Object.assign(loadedAnswers, parsed);
+      }
+    } catch {}
+  }
+
+  const doneSet = new Set<string>();
+  if (rawDone) {
+    try {
+      const parsed: string[] = JSON.parse(rawDone);
+      if (Array.isArray(parsed)) parsed.forEach((id) => doneSet.add(id));
+    } catch {}
+  }
+
+  const cardStates: Record<string, CardState> = {};
+  for (const id of allIds) {
+    cardStates[id] = {
+      cardId: id,
+      status: doneSet.has(id) ? "done" : "active",
+      stepAnswers: loadedAnswers[id] ?? {},
+    };
+  }
+
+  return { order: loadedOrder, cardStates };
+}
+
 export function StackProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [order, setOrder] = useState<string[]>(() =>
@@ -72,43 +125,12 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
         if (cancelled) return;
 
         const allIds = STACK_CARDS.map((c) => c.id);
-        let loadedOrder: string[] = allIds;
-
-        if (rawOrder) {
-          try {
-            const parsed: string[] = JSON.parse(rawOrder);
-            const validParsed = parsed.filter((id) => allIds.includes(id));
-            const missing = allIds.filter((id) => !validParsed.includes(id));
-            loadedOrder = [...validParsed, ...missing];
-          } catch {}
-        }
-
-        const loadedAnswers: Record<string, Record<string, string>> = {};
-        if (rawAnswers) {
-          try {
-            const parsed = JSON.parse(rawAnswers);
-            if (parsed && typeof parsed === "object") {
-              Object.assign(loadedAnswers, parsed);
-            }
-          } catch {}
-        }
-
-        const doneSet = new Set<string>();
-        if (rawDone) {
-          try {
-            const parsed: string[] = JSON.parse(rawDone);
-            if (Array.isArray(parsed)) parsed.forEach((id) => doneSet.add(id));
-          } catch {}
-        }
-
-        const states: Record<string, CardState> = {};
-        for (const id of allIds) {
-          states[id] = {
-            cardId: id,
-            status: doneSet.has(id) ? "done" : "active",
-            stepAnswers: loadedAnswers[id] ?? {},
-          };
-        }
+        const { order: loadedOrder, cardStates: states } = hydrateStackState(
+          rawOrder,
+          rawAnswers,
+          rawDone,
+          allIds,
+        );
 
         setOrder(loadedOrder);
         orderRef.current = loadedOrder;

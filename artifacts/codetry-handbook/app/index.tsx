@@ -569,9 +569,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 1,
   },
-  sargeRow: {
-    backgroundColor: "rgba(15,118,110,0.04)",
-  },
   authorBtn: {
     flexDirection: "row",
     alignItems: "center",

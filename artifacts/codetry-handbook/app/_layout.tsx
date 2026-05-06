@@ -59,7 +59,6 @@ function RootLayoutNav() {
       <Stack.Screen name="word-walk" />
       <Stack.Screen name="stack" />
       <Stack.Screen name="stack/[id]" />
-      <Stack.Screen name="sarge" />
       <Stack.Screen name="author" />
       <Stack.Screen name="daily-prompt" />
     </Stack>

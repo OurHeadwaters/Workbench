@@ -24,10 +24,6 @@ args = "typecheck"
 task = "workflow.run"
 args = "test"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "sarge-tests"
-
 [[workflows.workflow]]
 name = "typecheck"
 author = "agent"
@@ -49,17 +45,6 @@ args = "pnpm --filter @workspace/practitioner-operating-plan run test && pnpm --
 
 [workflows.workflow.metadata]
 isValidation = true
-
-[[workflows.workflow]]
-name = "sarge-tests"
-author = "agent"
-
-[workflows.workflow.metadata]
-isValidation = true
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd artifacts/api-server && pnpm exec vitest run src/routes/sarge.test.ts"
 
 [agent]
 stack = "PNPM_WORKSPACE"

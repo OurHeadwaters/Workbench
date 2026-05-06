@@ -3035,8 +3035,8 @@ const partVI: Part = {
         },
         {
           kind: "tool",
-          label: "The Stack",
-          hint: "Bite-sized question cards, one at a time. Pick a card, work the steps, capture your answers. Open questions become trails, not mountains.",
+          label: "Practice Cards",
+          hint: "Recall the core ideas, one card at a time. Each card tests whether a concept from the handbook has landed — not just been read.",
           route: "/stack",
         },
       ],
@@ -4236,12 +4236,6 @@ const partCoda: Part = {
           label: "Daily Driver",
           hint: "Build backwards from your dream. One driver per project, one action per day. Track what is pivotal and keep moving when the road changes.",
           route: "/driver",
-        },
-        {
-          kind: "tool",
-          label: "Sarge",
-          hint: "Your weekly card stack. Done or stuck — no doom lists, no stalling. One action at a time.",
-          route: "/sarge",
         },
       ],
     },
