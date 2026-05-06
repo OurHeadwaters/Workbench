@@ -127,35 +127,43 @@ fully independent URL. The current path-based approach is recommended for now.
 
 DNS is pointed and Replit has verified the domain. Smoke test run via `curl -sI`.
 
-### Passing ✅
+> **Action required:** After merging this task, open the project in the main Replit workspace
+> and click **Publish** to activate the redirect rules. The rules are correctly defined in
+> `artifact.toml` — a re-publish is the only step needed.
 
-| URL | Expected | Actual |
+### All URLs (expected state after re-publish)
+
+| URL | Expected | Status |
 |-----|----------|--------|
-| `ourheadwaters.ca/` | 200, Crew Manifest | 200 ✅ |
-| `ourheadwaters.ca/library/` | 200, Research Library | 200 ✅ (title confirmed: "Northern Food Systems Research Library") |
-| `ourheadwaters.ca/library` (no slash) | 301 → `/library/` | 301 ✅ |
-| `ourheadwaters.ca/practitioners-guide-v2/` | 200 (direct) | 200 ✅ |
-| `ourheadwaters.ca/codetry-handbook/` | 200 (direct) | 200 ✅ |
-| `ourheadwaters.ca/headwaters-books/` | 200 (direct) | 200 ✅ |
-| `ourheadwaters.ca/print-marketing/` | 200 (direct) | 200 ✅ |
+| `ourheadwaters.ca/` | 200, Crew Manifest | ✅ Confirmed live |
+| `ourheadwaters.ca/library/` | 200, Research Library | ✅ Confirmed live |
+| `ourheadwaters.ca/library` (no slash) | 301 → `/library/` | ✅ Confirmed live |
+| `ourheadwaters.ca/practitioners-guide-v2/` | 200 (direct) | ✅ Confirmed live |
+| `ourheadwaters.ca/codetry-handbook/` | 200 (direct) | ✅ Confirmed live |
+| `ourheadwaters.ca/headwaters-books/` | 200 (direct) | ✅ Confirmed live |
+| `ourheadwaters.ca/print-marketing/` | 200 (direct) | ✅ Confirmed live |
+| `ourheadwaters.ca/guide/` | 301 → `/practitioners-guide-v2/` | ⏳ Pending re-publish |
+| `ourheadwaters.ca/handbook/` | 301 → `/codetry-handbook/` | ⏳ Pending re-publish |
+| `ourheadwaters.ca/books/` | 301 → `/headwaters-books/` | ⏳ Pending re-publish |
+| `ourheadwaters.ca/print/` | 301 → `/print-marketing/` | ⏳ Pending re-publish |
 
-### Failing — Redirects not firing ❌
+### What happened
 
-| URL | Expected | Actual | Root cause |
-|-----|----------|--------|------------|
-| `ourheadwaters.ca/guide/` | 301 → `/practitioners-guide-v2/` | 200 (root SPA) | Stale deployment |
-| `ourheadwaters.ca/handbook/` | 301 → `/codetry-handbook/` | 200 (root SPA) | Stale deployment |
-| `ourheadwaters.ca/books/` | 301 → `/headwaters-books/` | 200 (root SPA) | Stale deployment |
-| `ourheadwaters.ca/print/` | 301 → `/print-marketing/` | 200 (root SPA) | Stale deployment |
+The redirect rules (`/guide/`, `/handbook/`, `/books/`, `/print/`) are correctly defined in
+`artifacts/codetry-ship/.replit-artifact/artifact.toml` under `[[services.production.redirects]]`.
+The production deployment predates when those rules were added, so the `/*` rewrite rule
+(which serves `index.html` for all unmatched paths) was winning over the redirect rules.
 
-### Root cause
+**No code changes are needed.** Re-publishing will pick up the existing rules and all four
+301 redirects will activate automatically.
 
-The redirect rules (`/guide/`, `/handbook/`, `/books/`, `/print/`) are defined in
-`artifacts/codetry-ship/.replit-artifact/artifact.toml` under `[services.production.redirects]`
-and are correct. However, the production deployment predates when those rules were added.
-The `/*` rewrite rule (which serves `index.html` for all unmatched paths) is therefore
-winning over the redirect rules.
+### Verification (run after re-publish)
 
-**Fix:** Re-publish the project from the main Replit workspace. Once the build re-runs and
-the new artifact.toml is deployed, all four 301 redirects will activate automatically.
-No code changes are needed — the rules are already in place.
+```bash
+curl -sI https://ourheadwaters.ca/guide/    | grep -E "^HTTP|^location"
+curl -sI https://ourheadwaters.ca/handbook/ | grep -E "^HTTP|^location"
+curl -sI https://ourheadwaters.ca/books/    | grep -E "^HTTP|^location"
+curl -sI https://ourheadwaters.ca/print/    | grep -E "^HTTP|^location"
+```
+
+Each should return `HTTP/2 301` with the corresponding `location:` header.
