@@ -1460,11 +1460,20 @@ const partIV: Part = {
         },
       ],
     },
+  ],
+};
+
+const partQuietExamples: Part = {
+  roman: "IV",
+  title: "The Quiet Examples",
+  blurb:
+    "Six zones applied to one life. Zone 0's household economy — the Jar Kitchen, the Jarista, the Seasonal Shelf, the Homestead — and then the constellation: the operational centre, the operating plan, the co-op, the territory, the wild edge. These are not instructions. They are the practitioner's own example, offered as a map.",
+  chapters: [
     {
       id: "4-8",
-      number: "3.8",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.1",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 0 — The Household",
       blocks: [
         {
@@ -1499,9 +1508,9 @@ const partIV: Part = {
     },
     {
       id: "4-9",
-      number: "3.9",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.2",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "The Jarista",
       blocks: [
         {
@@ -1540,9 +1549,9 @@ const partIV: Part = {
     },
     {
       id: "4-10",
-      number: "3.10",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.3",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "The Jar Kitchen",
       blocks: [
         {
@@ -1621,9 +1630,9 @@ const partIV: Part = {
     },
     {
       id: "4-11",
-      number: "3.11",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.4",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Sourcing",
       blocks: [
         {
@@ -1664,9 +1673,9 @@ const partIV: Part = {
     },
     {
       id: "4-12",
-      number: "3.12",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.5",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "The Seasonal Shelf",
       blocks: [
         {
@@ -1710,9 +1719,9 @@ const partIV: Part = {
     },
     {
       id: "4-13",
-      number: "3.13",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.6",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "The Harvest Hold",
       blocks: [
         {
@@ -1762,9 +1771,9 @@ const partIV: Part = {
     },
     {
       id: "4-14",
-      number: "3.14",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.7",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Preservation Season",
       blocks: [
         {
@@ -1832,9 +1841,9 @@ const partIV: Part = {
     },
     {
       id: "4-15",
-      number: "3.15",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.8",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "The Homestead",
       blocks: [
         {
@@ -1885,9 +1894,9 @@ const partIV: Part = {
     },
     {
       id: "3-17",
-      number: "3.17",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.9",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 1 — The Operational Centre",
       blocks: [
         {
@@ -1914,9 +1923,9 @@ const partIV: Part = {
     },
     {
       id: "3-18",
-      number: "3.18",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.10",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 2 — The Operating Plan",
       blocks: [
         {
@@ -1943,9 +1952,9 @@ const partIV: Part = {
     },
     {
       id: "3-19",
-      number: "3.19",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.11",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 3 — The Co-op",
       blocks: [
         {
@@ -1980,9 +1989,9 @@ const partIV: Part = {
     },
     {
       id: "3-20",
-      number: "3.20",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.12",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 4 — The Territory",
       blocks: [
         {
@@ -2009,9 +2018,9 @@ const partIV: Part = {
     },
     {
       id: "3-21",
-      number: "3.21",
-      partRoman: "III",
-      partLabel: "III · The Practice",
+      number: "4.13",
+      partRoman: "IV",
+      partLabel: "IV · The Quiet Examples",
       title: "Zone 5 — The Wild Edge",
       blocks: [
         {
@@ -2028,7 +2037,7 @@ const partIV: Part = {
         },
         {
           kind: "para",
-          text: "Rename *wild harvest* or *the wild edge* to *supplemental sourcing* or *subsistence*. What changes? Supplemental sourcing is what a restaurant calls it when the seasonal special comes from a local forager. Subsistence names a survival minimum — the bare floor below which a community cannot fall. Wild harvest names a practice: seasonal, relational, skilled, deliberately scheduled. The Jarista's sourcing vocabulary (§3.11) holds *harvest*, *forage*, *the bulk round*, *the seasonal push* — all of which imply an active practitioner choosing to go to the source on the source's own terms. *Supplemental* and *subsistence* are external assessments of quantity. *Wild harvest* is the practitioner's name for a full system.",
+          text: "Rename *wild harvest* or *the wild edge* to *supplemental sourcing* or *subsistence*. What changes? Supplemental sourcing is what a restaurant calls it when the seasonal special comes from a local forager. Subsistence names a survival minimum — the bare floor below which a community cannot fall. Wild harvest names a practice: seasonal, relational, skilled, deliberately scheduled. The Jarista's sourcing vocabulary (§4.4) holds *harvest*, *forage*, *the bulk round*, *the seasonal push* — all of which imply an active practitioner choosing to go to the source on the source's own terms. *Supplemental* and *subsistence* are external assessments of quantity. *Wild harvest* is the practitioner's name for a full system.",
         },
         {
           kind: "subhead",
@@ -3940,7 +3949,7 @@ const partCoda: Part = {
   ],
 };
 
-export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partVI, partII, partVII, partCoda, partColophon];
+export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partQuietExamples, partVI, partII, partVII, partCoda, partColophon];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
