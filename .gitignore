@@ -53,3 +53,6 @@ artifacts/*/src/data/.slide-thumbnails/
 
 # Playwright test runner output
 test-results/
+
+# Generated manuscript (rebuild with codetry-book/assemble-manuscript.sh)
+codetry-book/manuscript.md
