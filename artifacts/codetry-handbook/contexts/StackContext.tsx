@@ -37,6 +37,7 @@ interface StackContextValue {
   completeCard: (cardId: string) => void;
   setStepAnswer: (cardId: string, stepId: string, text: string) => void;
   getStepAnswer: (cardId: string, stepId: string) => string;
+  resetAll: () => void;
   activeCards: string[];
   doneCards: string[];
   topCardId: string | null;
@@ -222,6 +223,23 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const resetAll = useCallback(() => {
+    const allIds = STACK_CARDS.map((c) => c.id);
+    const freshStates: Record<string, CardState> = {};
+    for (const id of allIds) {
+      freshStates[id] = { cardId: id, status: "active", stepAnswers: {} };
+    }
+    setOrder(allIds);
+    orderRef.current = allIds;
+    setCardStates(freshStates);
+    cardStatesRef.current = freshStates;
+    Promise.all([
+      AsyncStorage.removeItem(KEY_ORDER),
+      AsyncStorage.removeItem(KEY_ANSWERS),
+      AsyncStorage.removeItem(KEY_DONE),
+    ]).catch(() => {});
+  }, []);
+
   const activeCards = useMemo(
     () => order.filter((id) => cardStates[id]?.status !== "done"),
     [order, cardStates],
@@ -243,6 +261,7 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
       completeCard,
       setStepAnswer,
       getStepAnswer,
+      resetAll,
       activeCards,
       doneCards,
       topCardId,
@@ -255,6 +274,7 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
       completeCard,
       setStepAnswer,
       getStepAnswer,
+      resetAll,
       activeCards,
       doneCards,
       topCardId,

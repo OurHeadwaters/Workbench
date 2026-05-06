@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Platform,
   Pressable,
@@ -26,7 +26,8 @@ function getCard(id: string) {
 export default function StackHome() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const { ready, activeCards, doneCards, skipCard } = useStack();
+  const { ready, activeCards, doneCards, skipCard, resetAll } = useStack();
+  const [confirmReset, setConfirmReset] = useState(false);
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
@@ -325,6 +326,58 @@ export default function StackHome() {
                 </Pressable>
               );
             })}
+
+            {/* Reset deck */}
+            <View style={{ height: 20 }} />
+            {confirmReset ? (
+              <View style={[styles.confirmBox, { borderColor: c.rule }]}>
+                <Text style={[styles.confirmText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+                  This will clear all done marks and saved answers. Start fresh?
+                </Text>
+                <View style={styles.confirmActions}>
+                  <Pressable
+                    onPress={() => setConfirmReset(false)}
+                    style={({ pressed }) => [
+                      styles.confirmCancel,
+                      { borderColor: c.rule, opacity: pressed ? 0.6 : 1 },
+                    ]}
+                    accessibilityLabel="Cancel reset"
+                  >
+                    <Text style={[styles.confirmCancelLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                      Cancel
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      setConfirmReset(false);
+                      resetAll();
+                    }}
+                    style={({ pressed }) => [
+                      styles.confirmOk,
+                      { borderColor: c.rule, opacity: pressed ? 0.6 : 1 },
+                    ]}
+                    accessibilityLabel="Confirm reset deck"
+                  >
+                    <Text style={[styles.confirmOkLabel, { color: c.foreground, fontFamily: MONO }]}>
+                      Yes, reset
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            ) : (
+              <Pressable
+                onPress={() => setConfirmReset(true)}
+                style={({ pressed }) => [
+                  styles.resetBtn,
+                  { borderColor: c.rule, opacity: pressed ? 0.6 : 1 },
+                ]}
+                accessibilityLabel="Reset deck"
+              >
+                <Text style={[styles.resetLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                  Reset deck
+                </Text>
+              </Pressable>
+            )}
           </>
         )}
       </ScrollView>
@@ -471,4 +524,56 @@ const styles = StyleSheet.create({
   allDoneWrap: { paddingTop: 8 },
   allDoneTitle: { fontSize: 26, lineHeight: 32 },
   allDoneBody: { fontSize: 16, lineHeight: 25, marginTop: 12 },
+
+  resetBtn: {
+    alignSelf: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  resetLabel: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+
+  confirmBox: {
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 16,
+    gap: 14,
+  },
+  confirmText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  confirmActions: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  confirmCancel: {
+    flex: 1,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  confirmCancelLabel: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  confirmOk: {
+    flex: 1,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  confirmOkLabel: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
 });
