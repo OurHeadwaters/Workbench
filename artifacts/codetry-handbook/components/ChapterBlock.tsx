@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, LayoutAnimation, Platform, Pressable, StyleSheet, Text, UIManager, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
@@ -30,6 +30,7 @@ export function ChapterBlock({
 }) {
   const c = useColors();
   const { theme } = useReader();
+  const [examplesOpen, setExamplesOpen] = useState(false);
   const baseSize = 17 * fontScale;
   const lineHeight = baseSize * 1.55;
   const smallSize = 13 * fontScale;
@@ -205,49 +206,79 @@ export function ChapterBlock({
           />
         </View>,
       );
-    case "examples":
+    case "examples": {
+      const itemCount = block.items.length;
+      const handleToggle = () => {
+        if (Platform.OS === "android") {
+          UIManager.setLayoutAnimationEnabledExperimental?.(true);
+        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setExamplesOpen((prev) => !prev);
+      };
       return wrapWithGlow(
         <View style={styles.examples}>
-          {block.items.map((ex, i) => {
-            const handleLong = onLongPress
-              ? () => onLongPress(`${ex.name} — ${ex.rule}`)
-              : undefined;
-            return (
-              <Pressable
-                key={`${ex.name}-${i}`}
-                onLongPress={handleLong}
-                delayLongPress={350}
-                style={[
-                  styles.exampleItem,
-                  { borderColor: c.rule },
-                ]}
-              >
-                <InlineText
-                  text={ex.name}
-                  style={{
-                    color: c.foreground,
-                    fontFamily: MONO,
-                    fontSize: smallSize,
-                    letterSpacing: 0.8,
-                    textTransform: "uppercase",
-                    marginBottom: 4,
-                  }}
-                />
-                <InlineText
-                  text={ex.rule}
-                  style={{
-                    color: c.foreground,
-                    fontFamily: SERIF,
-                    fontSize: baseSize,
-                    lineHeight,
-                  }}
-                  italicStyle={{ fontFamily: SERIF_ITALIC }}
-                />
-              </Pressable>
-            );
-          })}
+          <Pressable
+            onPress={handleToggle}
+            style={[styles.examplesHeader, { borderColor: c.rule }]}
+          >
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: MONO,
+                fontSize: smallSize,
+                letterSpacing: 0.6,
+                textTransform: "uppercase",
+                flex: 1,
+              }}
+            >
+              {`Worked examples · ${itemCount} term${itemCount === 1 ? "" : "s"}`}
+            </Text>
+            <Ionicons
+              name={examplesOpen ? "chevron-up" : "chevron-down"}
+              size={14}
+              color={c.mutedForeground}
+            />
+          </Pressable>
+          {examplesOpen
+            ? block.items.map((ex, i) => {
+                const handleLong = onLongPress
+                  ? () => onLongPress(`${ex.name} — ${ex.rule}`)
+                  : undefined;
+                return (
+                  <Pressable
+                    key={`${ex.name}-${i}`}
+                    onLongPress={handleLong}
+                    delayLongPress={350}
+                    style={[styles.exampleItem, { borderColor: c.rule }]}
+                  >
+                    <InlineText
+                      text={ex.name}
+                      style={{
+                        color: c.foreground,
+                        fontFamily: MONO,
+                        fontSize: smallSize,
+                        letterSpacing: 0.8,
+                        textTransform: "uppercase",
+                        marginBottom: 4,
+                      }}
+                    />
+                    <InlineText
+                      text={ex.rule}
+                      style={{
+                        color: c.foreground,
+                        fontFamily: SERIF,
+                        fontSize: baseSize,
+                        lineHeight,
+                      }}
+                      italicStyle={{ fontFamily: SERIF_ITALIC }}
+                    />
+                  </Pressable>
+                );
+              })
+            : null}
         </View>,
       );
+    }
     case "list":
       return wrapWithGlow(
         <View style={styles.list}>
@@ -417,6 +448,14 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   examples: { marginVertical: 8 },
+  examplesHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+    marginBottom: 0,
+  },
   exampleItem: {
     borderTopWidth: 1,
     paddingVertical: 14,
