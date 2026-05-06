@@ -180,6 +180,51 @@ export default function FrontPage() {
         </View>
 
         <Pressable
+          onPress={() => router.push("/glossary")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Glossary
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              All formally defined terms, searchable
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
+        <Pressable
           onPress={() => router.push("/daily-prompt")}
           style={({ pressed }) => [
             styles.authorBtn,
