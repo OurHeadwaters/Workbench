@@ -1,19 +1,16 @@
 # Chapter 3 — The Dam Breaks
 
-*First full draft · assembled from harvest.md Section 3 passages · for founder review*
-*Draft date: 2026-05-06 · Status: UNEDITED — return to founder before any further revision*
+*Second pass · founder-reviewed · decisions applied 2026-05-06*
 
 ---
 
-The discipline arrives here.
-
-Not as a theory. As a problem that kept happening and needed a name.
-
----
+When a northern food co-op uses the word *resident* instead of *neighbour*, something real changes — the relationship implied, the obligation carried, the culture formed. When a practitioner names their emergency food reserve *The Call* and their ongoing stock discipline *The Pantry*, they end up with two separate systems, two separate cultures, and a handoff they have to invent under fire. When a funder asks a community to describe its *bank account* and the community's word for that thing is *channel*, the translation is not neutral — something is lost, or flattened, or colonized in the language itself.
 
 The words you use to describe your economy determine what your economy can become. This is not a rhetorical claim. It is a practical one.
 
-When a northern food co-op uses the word *resident* instead of *neighbour*, something real changes — the relationship implied, the obligation carried, the culture formed. When a practitioner names their emergency food reserve *The Call* and their ongoing stock discipline *The Pantry*, they end up with two separate systems, two separate cultures, and a handoff they have to invent under fire. When a funder asks a community to describe its *bank account* and the community's word for that thing is *channel*, the translation is not neutral — something is lost, or flattened, or colonized in the language itself.
+---
+
+In Chapter 2, you watched the dam being built — the infrastructure of a northern community economy: the store, the food systems, the seasonal rhythms, the practitioner's workbench. Here is the moment it becomes a system. Not through a breakthrough. Through a name.
 
 ---
 
@@ -57,7 +54,9 @@ The codetry practitioner's first move is to write down the noun the community us
 
 The discipline agrees with Domain-Driven Design this far: the language outside the code should be the language inside the code.
 
-Then it asks a harder question. *Whose language?*
+(Domain-Driven Design — DDD — is a software practice that says your code should be named to match the world it models: a banking app uses *account* and *transaction*, not *record* and *event*. The field has been standard in software since the early 2000s.)
+
+Then the discipline asks a harder question. *Whose language?*
 
 DDD typically lands on the domain expert — the analyst, the consultant, the senior engineer who has just spent a week in workshops tidying the vocabulary up. Codetry insists the noun must come from the community itself, in the form the community already uses it, before any tidying.
 
@@ -83,7 +82,13 @@ Codetry is the practice of building software whose primary load-bearing material
 
 The unit of care is the name. The truth lives in the metaphor — the chosen noun carries the constraint; the schema, the UI, and the verbs of the app follow from it. Code is generated from named structure. Rename a primitive — *Buckets* to *Categories*, *Practitioner* to *Founder* — and the structure quietly changes shape underneath the name.
 
-It relates to literate programming this way: literate programming makes the reasoning the source; codetry makes the metaphor the source. Both are don't-trust-verify moves — show the work where the work actually does the work. But the point of departure is the noun, not the argument.
+It relates to literate programming this way:
+
+> Literate programming makes the reasoning the source. Codetry makes the metaphor the source.
+
+> Both are don't-trust-verify moves — show the work where the work actually does the work.
+
+The point of departure is the noun, not the argument.
 
 ---
 
@@ -91,7 +96,7 @@ The clearest worked example is small enough to hold in one sentence.
 
 *Buckets.* Envelope categories. You can only pour from one to another — you cannot summon water from nothing. Rename to *Categories* and the UI starts quietly suggesting balances can grow by clicking. The name was doing structural work. The rename was not neutral. The constraint that protected the community's money lived in the word.
 
-That is what the dam breaks means. Not a collapse. A moment of clarity about what has been holding.
+That is what the dam breaks means. Not a collapse. A moment of clarity about what has been holding — the realization that the name was load-bearing all along, and always had been. The dam didn't break. You finally saw what it was made of.
 
 ---
 
@@ -101,45 +106,4 @@ Then throw them away. The only correct way to read this book is to come out the 
 
 ---
 
-*End of Chapter 3 draft.*
-
----
-
-## Editorial notes for founder review
-
-**Narrative arc:**
-The chapter follows this arc: the practitioner claim (language is not neutral) → what Codetry hedges against (the four modes of vocabulary loss: creep, drift, tokenization, vendor translation) → the invisible nature of each loss → what this handbook is, and isn't (vocabulary, not framework) → where it was built (Headwaters, Treaty 3, practice) → who it's for (the practitioner who feels the friction) → the first move (listen for the noun, refuse to translate it) → the harder question DDD doesn't ask (whose word survives the schema?) → drift as a technical failure, not just a cultural one → the principle applied to the practitioner's own tools (Founder → Practitioner rename) → the definition (naming IS architecture) → the relationship to literate programming (metaphor-source, not reasoning-source) → the canonical worked example (Buckets/Categories) → the dam breaks image → worked-examples caveat (throw Dryden away, unless you're there).
-
-**Passages included from harvest.md Section 3:**
-3-A (language is not neutral + resident/neighbour + channel/bank account), 3-B (the hedge — four modes of loss + invisible until too late), 3-C (this handbook is a vocabulary + built in Headwaters + tested in the field), 3-D (non-neutral vocabulary + who this is for + the friction of the wrong word), 3-E (listen for the noun + translation temptation + practitioner's first move + noun-is-foundation pull-quote + rule callout), 3-F (DDD vs. Codetry + saltbox drift + codetry-test callout), 3-L (Founder feels odd — the practitioner renaming her own tool), 3-J (Codetry definition — naming is architecture, unit of care, where truth lives, rename changes structure), 3-H (thesis — metaphor-source vs. reasoning-source), 3-I (both are don't-trust-verify), 3-K (Buckets canonical example), 3-G (worked examples caveat + throw them away callout).
-
-**Passages held back:**
-None — all twelve sub-sections (3-A through 3-L) are represented. 3-H and 3-I are brief and folded into a single bridging paragraph rather than quoted verbatim, since standing alone they read as notes rather than prose.
-
-**Ordering decisions:**
-- 3-A opens the chapter because the claim (language is not neutral) is the thesis from which everything follows.
-- 3-B follows immediately — the claim needs the evidence of what actually happens when you ignore it.
-- 3-C and 3-D define the object (the handbook) and the reader (the practitioner) — placed here so the practitioner knows what they're holding before the how-to material arrives.
-- 3-E (listen for the noun) is the first concrete move — comes after the stakes are established.
-- 3-F (whose word survives the schema) deepens 3-E with the DDD comparison — moves from practice to theory, in that order, not the reverse.
-- 3-L (Founder → Practitioner rename) appears immediately after 3-F as a first-person demonstration of the schema-drift principle applied to the practitioner's own tool. Placing it here grounds the abstract comparison in a concrete, personal example before the formal definition arrives.
-- 3-J, 3-H, 3-I (definition + literate programming) appear after the practitioner examples, not before — the definition earns its precision from the examples, rather than requiring the reader to accept it on faith.
-- 3-K (Buckets) is the demonstration — one worked example, as close to the definition as possible.
-- 3-G (caveat) closes the chapter because it is permission to leave: don't carry Dryden with you unless you're there.
-
-**Bridging copy added (not from harvest):**
-- Opening ("The discipline arrives here. Not as a theory. As a problem that kept happening and needed a name.")
-- "So this handbook is a vocabulary" (transition into 3-C)
-- "The practitioner's first move is not to build. It is to listen." (transition into 3-E)
-- "The discipline agrees with Domain-Driven Design this far" (transition into 3-F — sets up the comparison without quoting the DDD section verbatim)
-- "Here is the definition the discipline lands on." (transition into 3-J)
-- The literate-programming paragraph bridge (connecting 3-J → 3-H/3-I)
-- "The clearest worked example is small enough to hold in one sentence." (transition into 3-K)
-- "That is what the dam breaks means. Not a collapse. A moment of clarity about what has been holding." (closing image — new copy, not from harvest)
-
-**Decisions for the founder:**
-1. **The dam breaks image:** The closing line ("Not a collapse. A moment of clarity about what has been holding.") interprets the chapter title metaphorically. If the title is meant to carry a different weight — e.g., referring specifically to the moment the system becomes real, or to a beaver-dam callback from Chapter 2 — the close may need adjustment.
-2. **DDD framing:** The passage comparing Codetry to Domain-Driven Design assumes the reader has at least passing familiarity with DDD. If this chapter is aimed at non-technical community practitioners, the comparison could be cut or collapsed to a single sentence. If it stays, a one-line gloss on DDD ("DDD is the software practice of naming your code to match the business domain") may be worth adding.
-3. **Tone register check at opening:** "Not as a theory. As a problem that kept happening and needed a name." is declarative and plain but slightly more abstract than Chapter 2's opening ("You don't understand a food system by reading about it"). If Chapter 3 should open with a concrete scene rather than a claim, the 3-A resident/neighbour passage could open the chapter instead, and the claim could follow.
-4. **3-H and 3-I handling:** The two literate-programming passages are folded into paraphrase rather than quoted. If the founder prefers them verbatim (for precision or attribution reasons), they can be set off as pull-quotes rather than woven into the bridge paragraph.
-5. **Chapter 2 callback:** "The dam breaks" may carry an echo of Chapter 2's beaver-dam imagery. A one-sentence callback could be added near the opening if that resonance is intentional — e.g., "In Chapter 2, you watched the dam being built. Here is the moment it becomes a system." Currently the chapter stands alone; the callback is optional.
+*End of Chapter 3.*
