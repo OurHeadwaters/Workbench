@@ -31,8 +31,9 @@ CHAPTERS=(
   for chapter in "${CHAPTERS[@]}"; do
     src="$DRAFTS/$chapter"
     if [[ ! -f "$src" ]]; then
-      echo "WARNING: $src not found — skipping" >&2
-      continue
+      echo "ERROR: expected chapter file is missing: $src" >&2
+      echo "Assembly aborted. Restore or recreate the file, then re-run assemble-manuscript.sh." >&2
+      exit 1
     fi
 
     if [[ $first -eq 0 ]]; then
