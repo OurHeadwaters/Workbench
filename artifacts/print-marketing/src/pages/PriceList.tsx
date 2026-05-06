@@ -3,10 +3,10 @@ import QRCodeStamp from "../components/QRCodeStamp";
 import { PrintNav } from "../components/PrintNav";
 
 const salts = [
-  { name: "Salty Onion", desc: "Caramelized onion and smoked sea salt blend", market: "$12.00", wholesale: "$8.50" },
-  { name: "Salty Garlic", desc: "Roasted garlic and cracked pepper blend", market: "$12.00", wholesale: "$8.50" },
-  { name: "Salty Finish", desc: "Flaky finishing salt, cold-smoked over maple wood", market: "$12.00", wholesale: "$8.50" },
-  { name: "Cheezy Salt", desc: "Nutritional yeast and herb blend, savoury and rich", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Onion", desc: "Sea salt, onion powder, chive powder — the one that started it all. Flavour-forward on sourdough, eggs, avocado.", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Garlic", desc: "Sea salt, garlic powder, chive powder — for when garlic breath doesn't matter. Perfect on butter, bread, everything.", market: "$12.00", wholesale: "$8.50" },
+  { name: "Salty Finish", desc: "Sea salt, paprika, garlic & onion mix — reach for this anywhere you'd use smoked paprika: wings, pork, devilled eggs.", market: "$12.00", wholesale: "$8.50" },
+  { name: "Cheezy Salt", desc: "Nutritional yeast, sea salt, garlic & onion mix — the best seller. Dairy-free cheesy flavour, brilliant stirred into broth.", market: "$12.00", wholesale: "$8.50" },
 ];
 
 const syrups = [
@@ -14,8 +14,8 @@ const syrups = [
   { name: "Amber Maple Syrup — 1 L", desc: "Delicate flavour, light golden colour", market: "$27.00", wholesale: "$19.00" },
   { name: "Golden Maple Syrup — 500 mL", desc: "Rich golden flavour, smooth and sweet", market: "$18.00", wholesale: "$13.00" },
   { name: "Golden Maple Syrup — 1 L", desc: "Rich golden flavour, smooth and sweet", market: "$27.00", wholesale: "$19.00" },
-  { name: "Dark Maple Syrup — 500 mL", desc: "Robust, full-bodied, ideal for cooking", market: "$18.00", wholesale: "$13.00" },
-  { name: "Dark Maple Syrup — 1 L", desc: "Robust, full-bodied, ideal for cooking", market: "$27.00", wholesale: "$19.00" },
+  { name: "Dark Maple Syrup — 500 mL", desc: "Robust, full-bodied — best for baking, marinades, and glazes", market: "$18.00", wholesale: "$13.00" },
+  { name: "Dark Maple Syrup — 1 L", desc: "Robust, full-bodied — best for baking, marinades, and glazes", market: "$27.00", wholesale: "$19.00" },
 ];
 
 const dogTreats = [
@@ -115,7 +115,7 @@ export default function PriceList() {
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)", lineHeight: 1.7 }}>
               Bobbie Parr<br />
               bobbie@ourheadwaters.ca<br />
-              Dryden Farmers Market — Saturdays, 8 am–1 pm<br />
+              Dryden Farmers Market — Dryden Arena, Sat 3–6 pm, mid June–mid September<br />
               ourheadwaters.ca
             </p>
           </div>
@@ -124,7 +124,7 @@ export default function PriceList() {
         {/* Decorative rule */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.7rem", marginBottom: "1.1rem" }}>
           <div style={{ height: 1, background: "var(--rust)", flex: 1 }} />
-          <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--rust)", fontStyle: "italic" }}>2025 Price List</span>
+          <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--rust)", fontStyle: "italic" }}>2026 Season</span>
           <div style={{ height: 1, background: "var(--rust)", flex: 1 }} />
         </div>
 
@@ -157,9 +157,12 @@ export default function PriceList() {
 
         {/* Maple Syrup section */}
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 700, color: "var(--evergreen)", borderLeft: "3px solid var(--rust)", paddingLeft: "0.55rem", marginBottom: "0.65rem" }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 700, color: "var(--evergreen)", borderLeft: "3px solid var(--rust)", paddingLeft: "0.55rem", marginBottom: "0.25rem" }}>
             Pure Canadian Maple Syrup
           </h2>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)", fontStyle: "italic", marginBottom: "0.55rem", paddingLeft: "0.55rem" }}>
+            Sourced from Sidders &amp; Sons, Cochenour, ON — three generations of maple farming. Dark grade is best for baking.
+          </p>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "var(--evergreen)", color: "white" }}>

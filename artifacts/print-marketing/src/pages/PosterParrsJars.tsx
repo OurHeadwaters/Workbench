@@ -82,10 +82,10 @@ export default function PosterParrsJars() {
             <div style={{ borderTop: "1px solid rgba(244,237,224,0.2)", paddingTop: "0.35rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 600, color: "var(--cream)", marginBottom: "0.05rem" }}>
-                  Dryden Farmers Market
+                  Dryden Farmers Market — Dryden Arena
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.65)" }}>
-                  Every Saturday · 8 am – 1 pm
+                  Saturdays 3–6 pm · mid June–mid September
                 </p>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>

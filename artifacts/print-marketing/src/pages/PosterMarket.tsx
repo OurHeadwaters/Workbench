@@ -27,11 +27,11 @@ export default function PosterMarket() {
 
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", margin: "0.25rem 0" }}>
               <div style={{ height: 2, background: "var(--rust)", width: "1.2in" }} />
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--rust-light)" }}>Every Saturday</p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--rust-light)" }}>Saturdays · mid June–mid September</p>
             </div>
 
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.3rem", fontWeight: 600, color: "var(--cream)", letterSpacing: "0.02em" }}>
-              8:00 am – 1:00 pm
+              3:00 – 6:00 pm · Dryden Arena
             </p>
           </div>
 
