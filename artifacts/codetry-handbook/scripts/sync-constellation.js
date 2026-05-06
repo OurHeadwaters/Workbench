@@ -301,7 +301,7 @@ function render(snapshot) {
     `// This is a *bundled snapshot* of the canonical constellation manifest, which\n` +
     `// now lives inside the codetry-handbook artifact (Task #562). The handbook\n` +
     `// reads from it for Part III; the books site, the mobile Pioneer Path, and the\n` +
-    `// Practitioner Operating Plan all read the same JSON via package exports or a\n` +
+    `// Workbench and other artifacts all read the same JSON via package exports or a\n` +
     `// build-time copy step.\n` +
     `//\n` +
     `// ConstellationZone type is derived automatically from ZONE_FIELD_SCHEMA in\n` +

@@ -350,8 +350,8 @@ export default function FrontPage() {
             { color: c.mutedForeground, fontFamily: SERIF },
           ]}
         >
-          Drawn from the Practitioner Operating Plan's constellation manifest. The
-          discipline travels; the examples don't.
+          Drawn from the constellation manifest. The discipline travels; the
+          examples don't.
         </Text>
       </ScrollView>
     </View>

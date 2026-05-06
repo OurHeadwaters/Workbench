@@ -88,7 +88,7 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z2",
-    name: "Practitioner Operating Plan",
+    name: "Workbench",
     subtitle: "Zone 2 \u00b7 the workbench \u00b7 you are here",
     prompts: [
       {
@@ -120,8 +120,8 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z3",
-    name: "807 Food Co-op",
-    subtitle: "Zone 3 \u00b7 Community Knowledge Hub \u00b7 community production",
+    name: "Commons",
+    subtitle: "Zone 3 \u00b7 commons \u00b7 community production",
     prompts: [
       {
         id: "z3-01",
@@ -157,8 +157,8 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z4",
-    name: "Regen Revolution",
-    subtitle: "Zone 4 \u00b7 regen beef in NWO \u00b7 abattoir as the chokepoint",
+    name: "Arc",
+    subtitle: "Zone 4 \u00b7 the arc \u00b7 in motion",
     prompts: [
       {
         id: "z4-01",
@@ -189,12 +189,12 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   },
   {
     id: "z5",
-    name: "Dam Days",
+    name: "The Margin",
     subtitle: "Zone 5 \u00b7 wild observation \u00b7 private first, shared by choice",
     prompts: [
       {
         id: "z5-01",
-        question: "What\u2019s a Dam Days take \u2014 not the definition, a real one you remember keeping?",
+        question: "What\u2019s a take in The Margin \u2014 not the definition, a real one you remember keeping?",
         hint: "Describe a specific take. What you noticed, what made you write it down.",
       },
       {
@@ -204,7 +204,7 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
       },
       {
         id: "z5-03",
-        question: "What\u2019s the difference between a thought staying in Dam Days and floating to the Shallows?",
+        question: "What\u2019s the difference between a thought staying in The Margin and floating to the Shallows?",
         hint: "What makes you choose to share? What makes you keep something private?",
       },
       {
@@ -214,12 +214,12 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
       },
       {
         id: "z5-05",
-        question: "What\u2019s the relationship between Dam Days and the rest of the constellation?",
+        question: "What\u2019s the relationship between The Margin and the rest of the constellation?",
         hint: "It\u2019s Zone 5 \u2014 the outermost zone. What does that position mean?",
       },
       {
         id: "z5-06",
-        question: "What would be lost if you made Dam Days public by default?",
+        question: "What would be lost if you made The Margin public by default?",
         hint: "Why does privacy-first matter for this kind of thinking?",
       },
     ],

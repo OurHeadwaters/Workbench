@@ -1963,7 +1963,7 @@ const partQuietExamples: Part = {
         },
         {
           kind: "para",
-          text: "Zone 3 is community economic infrastructure — the institutions that sit between the practitioner and the wider market and hold collective assets on behalf of members. In Headwaters, Zone 3 is the 807 Food Co-op: a community-owned food hub that sources from local producers, aggregates supply, and distributes to neighbours through a membership model. Zone 3 is not an organizational structure sitting beside the constellation; it is the layer where Zone 0's household abundance becomes Zone 3's community supply, and where the Standby discipline runs at community scale.",
+          text: "Zone 3 is community economic infrastructure — the institutions that sit between the practitioner and the wider market and hold collective assets on behalf of members. In Headwaters, the Commons zone is a community-owned food hub that sources from local producers, aggregates supply, and distributes to neighbours through a membership model. Zone 3 is not an organizational structure sitting beside the constellation; it is the layer where Zone 0's household abundance becomes Zone 3's community supply, and where the Standby discipline runs at community scale.",
         },
         {
           kind: "subhead",
@@ -3899,7 +3899,7 @@ const partCoda: Part = {
         },
         {
           kind: "para",
-          text: "The 807 Food Co-op was built from the same logic as the Jar Kitchen: start the cart rolling. Knowing that a local food hub would not be the final answer — but also knowing that forward motion is easier to redirect than stillness — the practitioner built the infrastructure and began pursuing distribution. Collaborators arrived. The co-op took shape. The Zone 0 household practice had generated Zone 3 infrastructure.",
+          text: "The Commons zone was built from the same logic as the Jar Kitchen: start the cart rolling. Knowing that a local food hub would not be the final answer — but also knowing that forward motion is easier to redirect than stillness — the practitioner built the infrastructure and began pursuing distribution. Collaborators arrived. The co-op took shape. The Zone 0 household practice had generated Zone 3 infrastructure.",
         },
         {
           kind: "para",

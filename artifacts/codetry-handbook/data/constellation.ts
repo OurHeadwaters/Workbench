@@ -6,7 +6,7 @@
 // This is a *bundled snapshot* of the canonical constellation manifest, which
 // now lives inside the codetry-handbook artifact (Task #562). The handbook
 // reads from it for Part III; the books site, the mobile Pioneer Path, and the
-// Practitioner Operating Plan all read the same JSON via package exports or a
+// Workbench and other artifacts all read the same JSON via package exports or a
 // build-time copy step.
 //
 // ConstellationZone type is derived automatically from ZONE_FIELD_SCHEMA in
@@ -357,7 +357,7 @@ export const constellation: ConstellationSnapshot = {
         "xBuckets",
         "Watershed"
       ],
-      "formerNamesNote": "Z5 reports 'Watershed' is still active at the URL/storage layer for Dam Days (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
+      "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
       "tagline": "Channel every drop. Watch the ripple effect.",
       "workedExamples": [
         {
@@ -472,7 +472,7 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 2,
-      "name": "Practitioner Operating Plan",
+      "name": "Workbench",
       "domain": "Business / operating workbench — deal-flow, weekly steps, cost review, codetry working-doc, synthesis across all the zones",
       "url": "https://northern-store-plan.replit.app/codetry-handbook/",
       "status": "live (you are here)",
@@ -509,7 +509,7 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 3,
-      "name": "Community Knowledge Hub",
+      "name": "Commons",
       "domain": "Community production for NWO food systems — multi-tenant member-portal pattern",
       "url": "https://community-knowledge-hub.replit.app/",
       "status": "live",
@@ -553,7 +553,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Tenant seam",
-          "rule": "tenant.headerProductLabel, tenant.legalName, board contact routing in api-server/src/config/board.ts — anywhere the app would say '807 Food Co-op' goes through the seam. The seam is what makes Z3 a pattern for community production, not a one-off for Dryden."
+          "rule": "tenant.headerProductLabel, tenant.legalName, board contact routing in api-server/src/config/board.ts — anywhere the app would say the co-op name goes through the seam. The seam is what makes the Commons zone a pattern for community production, not a one-off for Dryden."
         },
         {
           "name": "Kitchen rental kept quiet",
@@ -575,7 +575,7 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 4,
-      "name": "Regen Revolution",
+      "name": "Arc",
       "domain": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO",
       "url": "https://regen-revolution-zone-4.replit.app/",
       "status": "live (v0.1 anchor shipping)",
@@ -620,8 +620,8 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 5,
-      "name": "Dam Days and Shallows",
-      "domain": "Wild / observation — private capture (Dam Days takes) with structured channel-out and opt-in float to the Shallows",
+      "name": "The Margin",
+      "domain": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "status": "live",
       "formerNames": [
@@ -630,7 +630,7 @@ export const constellation: ConstellationSnapshot = {
       "workedExamples": [
         {
           "name": "The rebrand without a rewrite",
-          "rule": "Watershed → Dam Days touched display strings, prose, and the Forge prompt. It did not touch chapter IDs, storage keys, table names, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name."
+          "rule": "Watershed → The Margin touched display strings, prose, and the Forge prompt. It did not touch chapter IDs, storage keys, table names, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name."
         },
         {
           "name": "Slowly at first, then all at once",
@@ -645,7 +645,7 @@ export const constellation: ConstellationSnapshot = {
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
       ],
-      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint.",
+      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
       "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",
       "reflections": [
@@ -673,7 +673,7 @@ export const constellation: ConstellationSnapshot = {
   ],
   "z3": {
     "zone": 3,
-    "name": "Community Knowledge Hub",
+    "name": "Commons",
     "memberFacingBrand": "807 Benefits",
     "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun."
   }
