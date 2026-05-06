@@ -87,6 +87,12 @@ export default function Home() {
               The Gate — bright-side ↔ massity ledger
             </span>
           </Link>
+          <span className="text-muted-foreground/40" aria-hidden>·</span>
+          <Link href="/read">
+            <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
+              Read the draft manuscript
+            </span>
+          </Link>
         </div>
         <div>&copy; {new Date().getFullYear()} Headwaters Food Systems Agency.</div>
       </footer>
