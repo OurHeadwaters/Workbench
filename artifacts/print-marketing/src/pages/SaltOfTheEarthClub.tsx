@@ -1,16 +1,5 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const products = [
   {
@@ -43,8 +32,9 @@ const howItWorks = [
 export default function SaltOfTheEarthClub() {
   return (
     <>
-      <PrintNav />
+      <PrintNav targetId="pdf-target" filename="salt-of-the-earth-club.pdf" />
       <div
+        id="pdf-target"
         className="print-page"
         style={{
           padding: 0,

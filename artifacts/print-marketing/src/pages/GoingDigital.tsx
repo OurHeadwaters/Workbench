@@ -1,16 +1,5 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const offerings = [
   {
@@ -43,8 +32,9 @@ const offerings = [
 export default function GoingDigital() {
   return (
     <>
-      <PrintNav />
+      <PrintNav targetId="pdf-target" filename="headwaters-going-digital.pdf" />
       <div
+        id="pdf-target"
         className="print-page"
         style={{
           padding: 0,

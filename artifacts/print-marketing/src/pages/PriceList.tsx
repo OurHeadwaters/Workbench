@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
+import { PrintNav } from "../components/PrintNav";
 
 const salts = [
   { name: "Salty Onion", desc: "Caramelized onion and smoked sea salt blend", market: "$12.00", wholesale: "$8.50" },
@@ -22,17 +22,6 @@ const dogTreats = [
   { name: "Dog Treats — Beef Organs", desc: "Single-ingredient, air-dried beef organ treats for dogs", market: "$12.00", wholesale: "$8.50" },
 ];
 
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
-
 export default function PriceList() {
   const [specials, setSpecials] = useState([
     { name: "", price: "" },
@@ -48,7 +37,7 @@ export default function PriceList() {
 
   return (
     <>
-      <PrintNav />
+      <PrintNav targetId="pdf-target" filename="parrs-jars-price-list.pdf" />
 
       {/* Specials editor — screen only, never prints */}
       <div className="no-print" style={{ maxWidth: 680, margin: "0 auto 1.5rem", padding: "0 1rem" }}>
@@ -108,7 +97,7 @@ export default function PriceList() {
         </div>
       </div>
 
-      <div className="print-page" style={{ fontFamily: "var(--font-sans)" }}>
+      <div id="pdf-target" className="print-page" style={{ fontFamily: "var(--font-sans)" }}>
         {/* Header */}
         <div style={{ borderBottom: "3px solid var(--evergreen)", paddingBottom: "0.6rem", marginBottom: "1.1rem", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
           <div>

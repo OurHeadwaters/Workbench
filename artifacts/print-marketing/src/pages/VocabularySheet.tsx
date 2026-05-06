@@ -1,16 +1,5 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const terms: { term: string; sub?: string; def: string; note?: string }[] = [
   {
@@ -66,8 +55,9 @@ const terms: { term: string; sub?: string; def: string; note?: string }[] = [
 export default function VocabularySheet() {
   return (
     <>
-      <PrintNav />
+      <PrintNav targetId="pdf-target" filename="headwaters-vocabulary.pdf" />
       <div
+        id="pdf-target"
         className="print-page"
         style={{
           padding: 0,

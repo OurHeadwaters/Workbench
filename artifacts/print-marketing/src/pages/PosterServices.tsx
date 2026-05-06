@@ -1,16 +1,5 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const services = [
   {
@@ -36,8 +25,8 @@ const services = [
 export default function PosterServices() {
   return (
     <>
-      <PrintNav />
-      <div className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
+      <PrintNav targetId="pdf-target" filename="headwaters-poster-services.pdf" />
+      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
 
           {/* Header block */}

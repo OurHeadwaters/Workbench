@@ -1,22 +1,11 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 export default function PosterParrsJars() {
   return (
     <>
-      <PrintNav />
-      <div className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--evergreen)", minHeight: "11in" }}>
+      <PrintNav targetId="pdf-target" filename="parrs-jars-poster.pdf" />
+      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--evergreen)", minHeight: "11in" }}>
 
         {/* Full-bleed background */}
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>

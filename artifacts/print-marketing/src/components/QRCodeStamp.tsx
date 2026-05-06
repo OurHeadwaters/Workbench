@@ -4,9 +4,10 @@ const URL = "https://ourheadwaters.ca";
 
 interface QRCodeStampProps {
   light?: boolean;
+  size?: number;
 }
 
-export default function QRCodeStamp({ light = false }: QRCodeStampProps) {
+export default function QRCodeStamp({ light = false, size = 72 }: QRCodeStampProps) {
   return (
     <div
       style={{
@@ -27,7 +28,7 @@ export default function QRCodeStamp({ light = false }: QRCodeStampProps) {
       >
         <QRCodeSVG
           value={URL}
-          size={72}
+          size={size}
           level="M"
           fgColor="#1f3d2e"
           bgColor="white"

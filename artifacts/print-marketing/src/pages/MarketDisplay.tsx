@@ -1,22 +1,11 @@
-import { Link } from "wouter";
 import QRCodeStamp from "../components/QRCodeStamp";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 export default function MarketDisplay() {
   return (
     <>
-      <PrintNav />
-      <div className="print-page" style={{ padding: "0.5in 0.6in", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "11in" }}>
+      <PrintNav targetId="pdf-target" filename="parrs-jars-market-display.pdf" />
+      <div id="pdf-target" className="print-page" style={{ padding: "0.5in 0.6in", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "11in" }}>
 
         {/* Top band */}
         <div style={{ background: "var(--evergreen)", margin: "-0.5in -0.6in 0", padding: "0.55rem 0.7in", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

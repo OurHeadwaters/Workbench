@@ -85,6 +85,13 @@ const pieces = [
     desc: "A5/letter flyer announcing the five Headwaters online courses: Preservation, Preparedness, Permaculture, Seasonal Living, and Decentralization. Hand out at in-person events, pin on community boards, or include with jar orders.",
     icon: "🌐",
   },
+  {
+    href: "/rack-card-indigenous",
+    title: "Rack Card — Indigenous & Community Orgs",
+    label: "Headwaters",
+    desc: "4×9 in rack card for band offices, friendship centres, First Nations businesses, and cork boards. Summarises Headwaters community services: co-op platforms, community stores, band council software, and food systems.",
+    icon: "📌",
+  },
 ];
 
 export default function Index() {
@@ -99,7 +106,7 @@ export default function Index() {
             Print Marketing Suite
           </h1>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", opacity: 0.82, maxWidth: 520, lineHeight: 1.6 }}>
-            Print-ready materials for Parr's Jars and Headwaters Development Services. Open any piece, then use your browser's Print function to produce a clean, press-ready page.
+            Print-ready materials for Parr's Jars and Headwaters Development Services. Open any piece, click Download PDF, and send straight to your printer or a print shop.
           </p>
         </div>
       </div>
@@ -128,7 +135,7 @@ export default function Index() {
         </div>
 
         <div style={{ marginTop: "2rem", padding: "1rem 1.25rem", background: "rgba(31,61,46,0.06)", borderRadius: 6, fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.6 }}>
-          <strong style={{ color: "var(--evergreen)" }}>Printing tip:</strong> Open any piece and click the <strong>Print</strong> button. In your browser print dialog, set paper to Letter, margins to Default or Minimum, and enable "Background graphics" for full-colour output.
+          <strong style={{ color: "var(--evergreen)" }}>How to print:</strong> Open any piece and click <strong>Download PDF</strong>. The PDF is sized correctly for the piece — letter (8.5×11) for posters and price lists, 3.5×2 for business cards, 4×9 for the rack card. Send straight to your printer or a print shop.
         </div>
       </div>
     </div>

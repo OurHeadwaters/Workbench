@@ -1,15 +1,4 @@
-import { Link } from "wouter";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const EVERGREEN = "#1f3d2e";
 const CREAM = "#f4ede0";
@@ -19,8 +8,8 @@ const MUTED = "#6b7665";
 export default function Letterhead() {
   return (
     <>
-      <PrintNav />
-      <div className="print-page" style={{ padding: 0, overflow: "hidden" }}>
+      <PrintNav targetId="pdf-target" filename="headwaters-letterhead.pdf" />
+      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden" }}>
         <div style={{ display: "flex", flexDirection: "column", minHeight: "11in" }}>
 
           {/* Header band */}

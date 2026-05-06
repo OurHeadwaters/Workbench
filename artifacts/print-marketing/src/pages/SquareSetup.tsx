@@ -1,15 +1,4 @@
-import { Link } from "wouter";
-
-function PrintNav() {
-  return (
-    <div className="no-print screen-nav">
-      <Link href="/">← Back to suite</Link>
-      <button className="btn-print" onClick={() => window.print()}>
-        🖨 Print this page
-      </button>
-    </div>
-  );
-}
+import { PrintNav } from "../components/PrintNav";
 
 const EVERGREEN = "#1f3d2e";
 const CREAM = "#f4ede0";
@@ -149,8 +138,9 @@ function Step({ n, title, body, sub }: StepProps) {
 export default function SquareSetup() {
   return (
     <>
-      <PrintNav />
+      <PrintNav targetId="pdf-target" filename="headwaters-square-setup.pdf" />
       <div
+        id="pdf-target"
         style={{
           minHeight: "100vh",
           background: "#ece6db",
