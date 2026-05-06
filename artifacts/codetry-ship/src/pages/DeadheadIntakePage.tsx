@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import {
   ApiError,
   fetchDeadheadIntake,
@@ -6,7 +7,6 @@ import {
   patchDeadheadItem,
   getStoredOwnerToken,
   setStoredOwnerToken,
-  fetchManifest,
   type DeadheadItem,
   type FlushLogEntry,
 } from "@/lib/api";
@@ -14,16 +14,27 @@ import {
 type StatusFilter = "all" | "new" | "reviewed" | "smashed";
 
 export function DeadheadIntakePage() {
-  const [token, setToken] = useState<string | null>(getStoredOwnerToken());
+  const [, navigate] = useLocation();
+  const token = getStoredOwnerToken() ?? "";
 
-  if (!token) {
-    return <LoginGate onAuthed={(t) => setToken(t)} />;
-  }
+  useEffect(() => {
+    if (!token) {
+      navigate("/sign-on");
+    }
+  }, [token, navigate]);
 
-  return <IntakeView token={token} onSignOut={() => { setStoredOwnerToken(null); setToken(null); }} />;
+  const handleSignOut = () => {
+    setStoredOwnerToken(null);
+    navigate("/sign-on");
+  };
+
+  if (!token) return null;
+
+  return <IntakeView token={token} onSignOut={handleSignOut} />;
 }
 
 function IntakeView({ token, onSignOut }: { token: string; onSignOut: () => void }) {
+  const [, navigate] = useLocation();
   const [items, setItems] = useState<DeadheadItem[] | null>(null);
   const [log, setLog] = useState<FlushLogEntry[] | null>(null);
   const [filter, setFilter] = useState<StatusFilter>("all");
@@ -44,10 +55,11 @@ function IntakeView({ token, onSignOut }: { token: string; onSignOut: () => void
       })
       .catch((err) => {
         if (err instanceof ApiError) {
-          setError(err.message);
           if (err.status === 401) {
             setStoredOwnerToken(null);
-            onSignOut();
+            navigate("/sign-on");
+          } else {
+            setError(err.message);
           }
         } else {
           setError("Failed to load deadhead data.");
@@ -343,93 +355,5 @@ function IntakeRow({
         </div>
       </div>
     </li>
-  );
-}
-
-function LoginGate({ onAuthed }: { onAuthed: (token: string) => void }) {
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (submitting) return;
-    setError(null);
-    setSubmitting(true);
-    try {
-      await fetchManifest(pass);
-      setStoredOwnerToken(pass);
-      onAuthed(pass);
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setError("Wrong passphrase.");
-      } else {
-        setError("Could not verify just now. Try again.");
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <main className="min-h-screen w-full bg-background text-foreground grid place-items-center px-6">
-      <form
-        onSubmit={onSubmit}
-        className="w-full max-w-sm space-y-6"
-        data-testid="form-login"
-      >
-        <div className="space-y-2">
-          <p
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            headwaters · deadhead · operator
-          </p>
-          <h1 className="font-serif text-2xl">Operator passphrase</h1>
-          <p
-            className="font-sans text-sm"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            The deadhead intake is private. Sign in with the operator passphrase
-            to vet flushed tasks.
-          </p>
-        </div>
-        <input
-          id="passphrase"
-          type="password"
-          required
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          autoFocus
-          className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-          data-testid="input-passphrase"
-        />
-        {error ? (
-          <p
-            role="alert"
-            className="font-sans text-sm text-destructive"
-            data-testid="login-error"
-          >
-            {error}
-          </p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full inline-flex items-center justify-center px-4 py-2 rounded-sm font-sans text-sm bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60"
-          data-testid="button-login"
-        >
-          {submitting ? "Checking…" : "Sign in"}
-        </button>
-        <a
-          href="./"
-          className="signoff block text-center underline underline-offset-4 hover:opacity-80"
-          data-testid="link-back"
-        >
-          ← back to the sign-on page
-        </a>
-      </form>
-    </main>
   );
 }

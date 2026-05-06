@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import {
   ApiError,
   downloadManifestCsv,
@@ -9,14 +10,18 @@ import {
 } from "@/lib/api";
 
 export function ManifestPage() {
-  const [token, setToken] = useState<string | null>(getStoredOwnerToken());
+  const [, navigate] = useLocation();
+  const token = getStoredOwnerToken() ?? "";
   const [entries, setEntries] = useState<ManifestEntry[] | null>(null);
   const [count, setCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      navigate("/sign-on");
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -29,10 +34,11 @@ export function ManifestPage() {
       .catch((err) => {
         if (cancelled) return;
         if (err instanceof ApiError) {
-          setError(err.message);
           if (err.status === 401) {
             setStoredOwnerToken(null);
-            setToken(null);
+            navigate("/sign-on");
+          } else {
+            setError(err.message);
           }
         } else {
           setError("Failed to load manifest.");
@@ -44,11 +50,9 @@ export function ManifestPage() {
     return () => {
       cancelled = true;
     };
-  }, [token]);
+  }, [token, navigate]);
 
-  if (!token) {
-    return <LoginGate onAuthed={(t) => setToken(t)} />;
-  }
+  if (!token) return null;
 
   return (
     <main className="min-h-screen w-full bg-background text-foreground">
@@ -96,8 +100,7 @@ export function ManifestPage() {
               type="button"
               onClick={() => {
                 setStoredOwnerToken(null);
-                setToken(null);
-                setEntries(null);
+                navigate("/sign-on");
               }}
               className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               data-testid="button-signout"
@@ -262,94 +265,5 @@ function StatusPill({ label, status }: { label: string; status: string | null })
     <span style={{ color: colour }}>
       {label}:{status ?? "—"}
     </span>
-  );
-}
-
-function LoginGate({ onAuthed }: { onAuthed: (token: string) => void }) {
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (submitting) return;
-    setError(null);
-    setSubmitting(true);
-    try {
-      // Validate by attempting a real fetch with the passphrase as token.
-      await fetchManifest(pass);
-      setStoredOwnerToken(pass);
-      onAuthed(pass);
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setError("Wrong passphrase.");
-      } else {
-        setError("Could not verify just now. Try again.");
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <main className="min-h-screen w-full bg-background text-foreground grid place-items-center px-6">
-      <form
-        onSubmit={onSubmit}
-        className="w-full max-w-sm space-y-6"
-        data-testid="form-login"
-      >
-        <div className="space-y-2">
-          <p
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            headwaters · operator
-          </p>
-          <h1 className="font-serif text-2xl">Operator passphrase</h1>
-          <p
-            className="font-sans text-sm"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            The crew manifest is private. Sign in with the operator passphrase
-            to read it.
-          </p>
-        </div>
-        <input
-          id="passphrase"
-          type="password"
-          required
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          autoFocus
-          className="block w-full rounded-sm border bg-input px-3 py-2 font-sans text-base focus:outline-none focus:ring-2"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-          data-testid="input-passphrase"
-        />
-        {error ? (
-          <p
-            role="alert"
-            className="font-sans text-sm text-destructive"
-            data-testid="login-error"
-          >
-            {error}
-          </p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full inline-flex items-center justify-center px-4 py-2 rounded-sm font-sans text-sm bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60"
-          data-testid="button-login"
-        >
-          {submitting ? "Checking…" : "Sign in"}
-        </button>
-        <a
-          href="./"
-          className="signoff block text-center underline underline-offset-4 hover:opacity-80"
-          data-testid="link-back"
-        >
-          ← back to the sign-on page
-        </a>
-      </form>
-    </main>
   );
 }
