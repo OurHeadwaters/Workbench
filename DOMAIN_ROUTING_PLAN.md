@@ -127,11 +127,13 @@ fully independent URL. The current path-based approach is recommended for now.
 
 DNS is pointed and Replit has verified the domain. Smoke test run via `curl -sI`.
 
-> **Action required:** After merging this task, open the project in the main Replit workspace
-> and click **Publish** to activate the redirect rules. The rules are correctly defined in
-> `artifact.toml` — a re-publish is the only step needed.
+> **Action required:** The re-publish has **not yet occurred**. Smoke test run on 2026-05-06
+> confirms all four short-URL paths still return HTTP 200 (the `/*` catch-all rewrite is still
+> winning). Open the project in the main Replit workspace and click **Publish** to activate the
+> redirect rules. The rules are correctly defined in `artifact.toml` — a re-publish is the only
+> step needed. After re-publishing, re-run the verification commands below and update this table.
 
-### All URLs (expected state after re-publish)
+### All URLs
 
 | URL | Expected | Status |
 |-----|----------|--------|
@@ -142,17 +144,17 @@ DNS is pointed and Replit has verified the domain. Smoke test run via `curl -sI`
 | `ourheadwaters.ca/codetry-handbook/` | 200 (direct) | ✅ Confirmed live |
 | `ourheadwaters.ca/headwaters-books/` | 200 (direct) | ✅ Confirmed live |
 | `ourheadwaters.ca/print-marketing/` | 200 (direct) | ✅ Confirmed live |
-| `ourheadwaters.ca/guide/` | 301 → `/practitioners-guide-v2/` | ⏳ Pending re-publish |
-| `ourheadwaters.ca/handbook/` | 301 → `/codetry-handbook/` | ⏳ Pending re-publish |
-| `ourheadwaters.ca/books/` | 301 → `/headwaters-books/` | ⏳ Pending re-publish |
-| `ourheadwaters.ca/print/` | 301 → `/print-marketing/` | ⏳ Pending re-publish |
+| `ourheadwaters.ca/guide/` | 301 → `/practitioners-guide-v2/` | ⏳ Returns 200 — re-publish needed |
+| `ourheadwaters.ca/handbook/` | 301 → `/codetry-handbook/` | ⏳ Returns 200 — re-publish needed |
+| `ourheadwaters.ca/books/` | 301 → `/headwaters-books/` | ⏳ Returns 200 — re-publish needed |
+| `ourheadwaters.ca/print/` | 301 → `/print-marketing/` | ⏳ Returns 200 — re-publish needed |
 
 ### What happened
 
 The redirect rules (`/guide/`, `/handbook/`, `/books/`, `/print/`) are correctly defined in
 `artifacts/codetry-ship/.replit-artifact/artifact.toml` under `[[services.production.redirects]]`.
 The production deployment predates when those rules were added, so the `/*` rewrite rule
-(which serves `index.html` for all unmatched paths) was winning over the redirect rules.
+(which serves `index.html` for all unmatched paths) is still winning over the redirect rules.
 
 **No code changes are needed.** Re-publishing will pick up the existing rules and all four
 301 redirects will activate automatically.
@@ -167,3 +169,4 @@ curl -sI https://ourheadwaters.ca/print/    | grep -E "^HTTP|^location"
 ```
 
 Each should return `HTTP/2 301` with the corresponding `location:` header.
+When all four pass, update the four ⏳ rows above to ✅.
