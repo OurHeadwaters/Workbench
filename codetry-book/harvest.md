@@ -1,6 +1,7 @@
 # Codetry Book — Content Harvest
-**Status:** Verified rebuild — every passage is verbatim from a confirmed file + line.
+**Status:** Fully audited — every passage line-by-line verified against its source file.
 **Rebuilt:** 2026-05-06
+**Audited:** 2026-05-06 — full line-by-line sweep; one missing interior paragraph found and restored (4-F, both-states.md line 15).
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -681,6 +682,8 @@ One-sentence claim (callout):
 >
 > The temptation, every time, is to name each tempo separately, and let them grow into two systems. The both-states principle is the codetry move that resists that.
 >
+> When a system has a slow tempo and a fast tempo that are the same plumbing read at different speeds — the umbrella name has to ride from one tempo to the other without bending. Or the system will fork into two systems, with two cadences, and two cultures.
+>
 > Take *The Standby*. The Standby names both the always-on shelf — the pantry, the standby stock, the watch as a posture — and the active event — a call, the active rung on the ladder, the debrief once it stands down. One word, two tempos. The people, the stock, the vocabulary are all one. Only the cadence changes.
 >
 > Two early candidates were rejected. *The Common Pantry* held the slow side beautifully — but couldn't hold an active fire call without straining. *The Watch* held the active posture — but couldn't hold the slow shelf of stock without bending into a permanent vigil.
@@ -1061,7 +1064,7 @@ The three credibility claims:
 | `artifacts/codetry-ship/src/pages/BioPage.tsx` | 1-B |
 | `artifacts/codetry-handbook/data/handbook.ts` | 1-C, 3-A–G, 4-A–E, 4-K, 5-A–G |
 | `artifacts/codetry-handbook/public/narration/the-saltbox.md` | 4-D (full script) |
-| `artifacts/codetry-handbook/public/narration/both-states.md` | 4-F (full script) |
+| `artifacts/codetry-handbook/public/narration/both-states.md` | 4-F (full script — missing paragraph restored 2026-05-06 audit) |
 | `artifacts/codetry-handbook/public/narration/both-sides.md` | 4-H (full script — missing paragraphs added 2026-05-06) |
 | `artifacts/codetry-handbook/public/narration/the-standby.md` | 4-G (full script — missing paragraphs added 2026-05-06) |
 | `artifacts/codetry-handbook/public/narration/the-gate.md` | 4-I (full script — missing paragraphs added 2026-05-06) |
