@@ -355,6 +355,17 @@ export function HomePage() {
               thumbAlt="Dam Days journal landing page with beaver illustration"
             />
           </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href={`${import.meta.env.BASE_URL}work`}
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] border-b pb-0.5 transition-opacity hover:opacity-70"
+              style={{ color: "hsl(var(--accent))", borderColor: "hsl(var(--accent))" }}
+              data-testid="work-see-case-studies"
+            >
+              See case studies →
+            </a>
+          </div>
         </section>
 
         <hr
