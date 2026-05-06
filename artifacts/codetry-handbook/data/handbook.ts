@@ -832,8 +832,12 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
     z.zone < 0 ? "Pre-zone" : `Zone ${z.zone}${z.slot ? ` · ${z.slot}` : ""}`;
   const blocks: Block[] = [
     { kind: "small", text: zoneLabel },
-    { kind: "para", text: z.domain },
   ];
+  if (z.opening) {
+    blocks.push({ kind: "para", text: z.opening });
+    blocks.push({ kind: "rule" });
+  }
+  blocks.push({ kind: "para", text: z.domain });
   if (z.tagline) blocks.push({ kind: "pull", text: z.tagline });
   if (z.formerNames && z.formerNames.length > 0) {
     blocks.push({
@@ -855,6 +859,14 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
         z.context ??
         "Worked examples not yet written. The slot is named; the carpentry is still ahead.",
     });
+  }
+  if (z.inlinePrompt) {
+    blocks.push({ kind: "pull", text: z.inlinePrompt });
+  }
+  if (z.reflections && z.reflections.length > 0) {
+    blocks.push({ kind: "rule" });
+    blocks.push({ kind: "subhead", text: "Reflect" });
+    blocks.push({ kind: "list", items: z.reflections });
   }
   return {
     id: `3-${i + 1}`,

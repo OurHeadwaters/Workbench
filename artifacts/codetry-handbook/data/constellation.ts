@@ -25,6 +25,9 @@ export type ConstellationZone = {
   workedExamples?: WorkedExample[];
   context?: string;
   standby?: string;
+  opening?: string;
+  inlinePrompt?: string;
+  reflections?: string[];
 };
 
 export type ConstellationZ3Pointer = {
@@ -331,7 +334,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "Goal lives with the child, the tip meets them where they are. No streaks, no leaderboards. (Goals row in flight: #175 milestone badges, #176 starter-goal suggestions, #177 stalled-goal nudge — Z0 agent will send a delta before this row locks.)"
         }
       ],
-      "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief)."
+      "standby": "Reads The Standby (constellation-wide primitive) as the household standby checklist — a per-family list mirroring the co-op's standby stock list, item for item, so the household side of a centralized disruption is named with the same vocabulary the co-op uses. Same rungs (advisory / standby / active / standdown), same nouns (a call, the watch, the debrief).",
+      "opening": "Sitting on the deck with the morning sun and a cup of black coffee. Getting cold, but that's nothing new. Watching the children play outside — and then all of a sudden there's a moment. There's always a beautiful moment to capture. A moment where we wonder: will this ever cross my mind again? Will they remember? Saltbox is the reminder of the things that are true and unshakeable. The sunny moments that make the boreal winters worth bearing. The spring days when the outdoors is the parent and we can just enjoy documenting the ride.\n\nThe no-scoring rule comes from this: a measure of a fish's worth cannot be how well it can climb a tree. We each have our individual strengths, and when channeled, those strengths allow a waterfall of value that was never dammed. With a proper saltbox, the children grow brave in their own time — and the dams that don't need breaking down the line are the fruit of that patience.\n\nZone 0 holds both the family on the land and the elder in the care home. They are just homes in different stages, and they deserve the same value placed on their life stage.",
+      "inlinePrompt": "What moment from this week would you regret losing? Name it before the day ends.",
+      "reflections": [
+        "What are the things that are true and unshakeable in your household right now?",
+        "Where are you measuring a fish by how well it climbs a tree?",
+        "What would it look like to let someone grow brave in their own time instead of pushing the pace?"
+      ]
     },
     {
       "zone": 1,
@@ -447,7 +457,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "Roughly 600 lines of procedural-music machinery — kick/snare scheduler, synth functions, chord timeline, LFO, music bus, per-scene chord-morph effect — sat behind ENABLE_PROCEDURAL_MUSIC = false for months in the Headwaters promo video's audio file, shaping how the file read and what future contributors thought the system did. Named as 'feature behind a flag' it was untouchable; named honestly as scaffolding pretending to be engine, it could be deleted, and ambient-audio.ts collapsed from 933 lines to ~330 with no change in runtime behavior. A flag that has been off long enough to forget why it was added is not a feature toggle — it is a name lying about the system's intent, and the honest move is to delete it."
         }
       ],
-      "standby": "Reads The Standby as a standby budget envelope that sleeves up automatically during an active call — drought routes a water-cost envelope, fire routes a supply-cost envelope, freight routes a stockpile-cost envelope. Channel/Bridge verbs already model the flex; Standby gives the trigger language."
+      "standby": "Reads The Standby as a standby budget envelope that sleeves up automatically during an active call — drought routes a water-cost envelope, fire routes a supply-cost envelope, freight routes a stockpile-cost envelope. Channel/Bridge verbs already model the flex; Standby gives the trigger language.",
+      "opening": "The word \"budget\" evokes restriction, tightening. \"Watershed\" invokes flow, abundance. That difference is not cosmetic — it changes what the person holding the tool believes is possible before they touch a single number.\n\nThe Siphon is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word \"expense\" implies.",
+      "inlinePrompt": "Pick one name in this zone and try to rename it. What cracks?",
+      "reflections": [
+        "What in your financial life feels like restriction — and what would it feel like as flow instead?",
+        "Where is your siphon larger than you chose it to be?",
+        "What would it mean to channel every drop on purpose this week?"
+      ]
     },
     {
       "zone": 2,
@@ -477,7 +494,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "the version-controlled paper trail of the practice. Renaming to 'Design system' would erase that codetry is the practice naming itself."
         }
       ],
-      "standby": "Reads The Standby as the cross-zone synthesis the workbench is for — standby debriefs surface here as a recurring weekly-steps item once a call has stood down. The workbench keeps no live call state; it keeps the after-action read across zones."
+      "standby": "Reads The Standby as the cross-zone synthesis the workbench is for — standby debriefs surface here as a recurring weekly-steps item once a call has stood down. The workbench keeps no live call state; it keeps the after-action read across zones.",
+      "opening": "\"Founder\" feels odd. You don't found a community — you practice within it. You join to help. You have the phone calls, take the actions, practice listening. We practice these things because we know we need to. Crafting all day is what makes life that extra bit sweeter.\n\nThis is not a founder's dashboard. It is a practitioner's workbench — the place where the week is planned, the costs are walked, and the work is kept honest against what was said it would be.",
+      "inlinePrompt": "What are you practicing this week that you weren't practicing a year ago?",
+      "reflections": [
+        "Where are you still using the language of a founder when you mean the work of a practitioner?",
+        "What step have you been carrying over longest — and what would it mean to set it down instead of forward?",
+        "Who in the community did you listen to this week?"
+      ]
     },
     {
       "zone": 3,
@@ -536,7 +560,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "members pin thank-you notes to other members. A first-class surface, not a footer widget — gratitude has its own room because the system says it matters."
         }
       ],
-      "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun."
+      "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first — at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun.",
+      "opening": "Treasurer is the job nobody wants. Some try and fail; a few do well. It is a big commitment for a volunteer organization, and this generation does not have the same bookkeeping skills that the last one had. Nobody wants to step up because they do not want to mess up.\n\nThe answer is not to lower the standard — it is to make the job fail-safe, stress-free, and easy as pie for the people willing to take it on. Calm is the contract. The name is not a vibe; it is a promise the system makes to the person who was brave enough to say yes.",
+      "inlinePrompt": "What job in your community has gone unfilled because it felt too risky to get wrong?",
+      "reflections": [
+        "Where in your organization is bravery being asked for without a safety net underneath it?",
+        "What would change if the hardest volunteer job was also the most supported one?",
+        "Who said yes to something difficult recently — and did they hear that it was noticed?"
+      ]
     },
     {
       "zone": 4,
@@ -574,7 +605,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
         }
       ],
-      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector → call → first-touched node is the modeling unit."
+      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector → call → first-touched node is the modeling unit.",
+      "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
+      "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
+      "reflections": [
+        "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
+        "What do you call what you do? Not what the movement calls it — what you call it.",
+        "What would systematic look like for one part of your operation this season?"
+      ]
     },
     {
       "zone": 5,
@@ -603,7 +641,14 @@ export const constellation: ConstellationSnapshot = {
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
       ],
-      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint."
+      "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in Dam Days unless its author chooses to float it. The Standby gives the chapter hint.",
+      "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
+      "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",
+      "reflections": [
+        "What is sitting in the muck right now that might be worth cleaning off?",
+        "How do you know when a day is a dam day versus a day that just got away from you?",
+        "What would it mean to trust the dam day instead of fighting it?"
+      ]
     }
   ],
   "preZone": [
@@ -613,7 +658,13 @@ export const constellation: ConstellationSnapshot = {
       "domain": "Seed bank — ideas before they're sorted into a zone",
       "url": "https://replit.com/@xbucketsapp/Brainstorm-Library?s=app",
       "status": "pending",
-      "context": "awaiting agent context-pack"
+      "context": "awaiting agent context-pack",
+      "opening": "Think of it as a volunteer seed. One that fell from last year's harvest and found a little water and sunshine on its own. Not a parking lot — ideas parked don't grow. Not a curated library — you don't browse volunteer seeds; you notice them. If cultivated, who knows what they could become?",
+      "inlinePrompt": "What idea have you been walking past for months that might just be waiting for the right season?",
+      "reflections": [
+        "What is sitting in your seed bed right now that you have not yet named?",
+        "When did an idea that had no zone find its place — and what gave it the opening?"
+      ]
     }
   ],
   "z3": {

@@ -46,6 +46,9 @@ function pickZone(z, { defaultZone } = {}) {
   }
   if (z.context !== undefined) out.context = z.context;
   if (z.standby !== undefined) out.standby = z.standby;
+  if (z.opening !== undefined) out.opening = z.opening;
+  if (z.inlinePrompt !== undefined) out.inlinePrompt = z.inlinePrompt;
+  if (Array.isArray(z.reflections)) out.reflections = z.reflections.slice();
   return out;
 }
 
@@ -173,6 +176,9 @@ function render(snapshot) {
     `  workedExamples?: WorkedExample[];\n` +
     `  context?: string;\n` +
     `  standby?: string;\n` +
+    `  opening?: string;\n` +
+    `  inlinePrompt?: string;\n` +
+    `  reflections?: string[];\n` +
     `};\n` +
     `\n` +
     `export type ConstellationZ3Pointer = {\n` +
