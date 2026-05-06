@@ -9,7 +9,6 @@ import { IndexPage } from "@/pages/IndexPage";
 import { SaltsPage } from "@/pages/SaltsPage";
 import { ContractsPage } from "@/pages/ContractsPage";
 import { BrightsidePage } from "@/pages/BrightsidePage";
-import { PersonalCashPage } from "@/pages/PersonalCashPage";
 import { ComparePage } from "@/pages/ComparePage";
 import { ReplicationPage } from "@/pages/ReplicationPage";
 import { CodetryDisciplinePage } from "@/pages/CodetryDisciplinePage";
@@ -36,7 +35,6 @@ function Router() {
       <Route path="/salts" component={SaltsPage} />
       <Route path="/contracts" component={ContractsPage} />
       <Route path="/brightside" component={BrightsidePage} />
-      <Route path="/personal-cash" component={PersonalCashPage} />
       <Route path="/compare" component={ComparePage} />
       <Route path="/replication" component={ReplicationPage} />
       <Route path="/codetry-philosophy" component={CodetryPhilosophyPage} />

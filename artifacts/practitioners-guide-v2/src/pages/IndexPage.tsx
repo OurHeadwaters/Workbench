@@ -33,7 +33,6 @@ import {
   Salad,
   Handshake,
   Cpu,
-  Wallet,
   GitCompareArrows,
   ArrowRight,
   Repeat,
@@ -582,34 +581,6 @@ export function IndexPage() {
 
       {/* ============ UTILITIES ============ */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Link
-          href="/personal-cash"
-          className="rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow"
-          data-testid="card-personal-cash"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-md grid place-items-center bg-muted text-foreground">
-              <Wallet className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Personal cash transparency</p>
-              <p className="text-xs text-muted-foreground">All sources, engagement window, in one place</p>
-            </div>
-          </div>
-          <p
-            className="mt-4 text-2xl font-semibold num"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
-            {money(scenario.personal.total18mo)}
-            <span className="text-sm text-muted-foreground font-normal ml-2">
-              over {a.termMonths} mo · ~{money(scenario.personal.perYear)}/yr
-            </span>
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Agency salary + Brightside owner take. Capital Recovery shown separately as debt repayment, NOT income.
-          </p>
-        </Link>
-
         <Link
           href="/compare"
           className="rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow"

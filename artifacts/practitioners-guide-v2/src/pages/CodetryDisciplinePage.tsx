@@ -90,7 +90,7 @@ export const WORKED_EXAMPLES: WorkedExampleSpec[] = [
     replacement:
       "Component renames to *HeadlineNumber*. No user-visible string changes; ~6 import sites move. The codetry weight is in stopping the SaaS word from being the file name future contributors see when they open the component.",
     landsAt:
-      "One file rename plus the imports on every page that shows a headline number — Salts, Contracts, Brightside, Personal cash, Index, and the Operating framework.",
+      "One file rename plus the imports on every page that shows a headline number — Salts, Contracts, Brightside, Index, and the Operating framework.",
   },
 ];
 

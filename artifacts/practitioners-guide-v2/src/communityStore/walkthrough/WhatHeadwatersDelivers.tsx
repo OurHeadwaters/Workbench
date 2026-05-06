@@ -81,7 +81,7 @@ export default function WhatTheTeamDelivers() {
           </Reveal>
           <Reveal label="Proof for line 3 — the training is already written down" variant="ink">
             <p>The codetry handbook is the written method behind how the practice team trains. Seven parts, every chapter readable on a phone — the same handbook the band staff will work from in their training materials.</p>
-            <p>The Practitioner's Guide is the reference the practitioner works from — contracts ledger, archetypes, personal-cash discipline.</p>
+            <p>The Practitioner's Guide is the reference the practitioner works from — contracts ledger, archetypes.</p>
             <p className="text-[12px] uppercase tracking-[0.16em] mt-2" style={{ color: "rgba(244,237,224,0.7)", fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
               Open in another tab ·{" "}
               <a href="/codetry-handbook/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:no-underline" style={{ color: "rgba(244,237,224,0.95)" }}>/codetry-handbook</a>{" "}·{" "}

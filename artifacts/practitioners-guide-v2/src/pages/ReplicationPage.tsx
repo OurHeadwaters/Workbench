@@ -117,11 +117,11 @@ export function ReplicationPage() {
             />
             <TravelItem
               title="Fee → margin formula"
-              body={`Fee is set so the post-Sep operating margin lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(operatingMarginPct, 1)} margin. Practitioner tithe (10% of draw) is a personal discipline — settled from the draw after business accounting.`}
+              body={`Fee is set so the post-Sep operating margin lands at 35–40% against the same roster. In the worked example: ${money(a.fee)}/mo fee against ${money(a.costBasisSepOnward)}/mo cost basis = ${pct(operatingMarginPct, 1)} margin.`}
             />
             <TravelItem
               title="Three-phase surplus deployment"
-              body="Business surplus waterfall: capital recovery first; launch one tool that pays for itself; Reserve / Innovation (75/25). Separately, the practitioner's personal tithe (10% of draw, first claim on drawings) is settled before personal spending — not a business deduction, not in the waterfall. Order is non-negotiable — Giving is what you decided, not what was left."
+              body="Business surplus waterfall: capital recovery first; launch one tool that pays for itself; Reserve / Innovation (75/25). Order is non-negotiable."
             />
             <TravelItem
               title="Pre-baked renegotiation triggers"
@@ -242,8 +242,6 @@ export function ReplicationPage() {
                 {a.roster.length}-role team I run end to end — the surplus goes to
                 recovered capital, one tool that pays for itself, and a Reserve /
                 Innovation split the value-delivered audit defends each year.
-                Separately: my tithe (10% of what I draw) is the first claim on my
-                drawings — personal discipline, not a business line.
               </p>
               <p className="mt-3 text-sm text-muted-foreground">
                 And underneath that team, on the buyer's books: a two-person
@@ -363,7 +361,7 @@ export function ReplicationPage() {
                 <Milestone
                   label="Day-1"
                   kicker="Open"
-                  body="Deer Lake store opens. Working POS, working freight lane, working transparency stack — the system is running before any second-reserve conversation begins."
+                  body="Deer Lake store opens. Working POS, working freight lane — the system is running before any second-reserve conversation begins."
                   accentInk={accentInk}
                   accentSoft={accentSoft}
                 />
