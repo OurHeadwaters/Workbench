@@ -48,6 +48,8 @@ function extractBlockStrings(block: Block): string[] {
       return [];
     case "tool":
       return [];
+    case "teachers":
+      return [];
   }
 }
 

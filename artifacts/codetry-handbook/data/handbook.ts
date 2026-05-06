@@ -1,6 +1,8 @@
 import { constellation, type WorkedExample } from "./constellation";
 import { findFoundingExampleCommentary } from "./foundingExamples";
 
+export type TeacherLink = { name: string; role: string; url: string | null };
+
 export type Block = (
   | { kind: "para"; text: string }
   | { kind: "subhead"; text: string }
@@ -13,6 +15,7 @@ export type Block = (
   | { kind: "rule" }
   | { kind: "tool"; label: string; hint: string; route: string }
   | { kind: "collapsible"; label: string; blocks: Block[] }
+  | { kind: "teachers"; items: TeacherLink[] }
 ) & { practitioner?: true };
 
 export type Chapter = {
@@ -97,7 +100,7 @@ const partPrologue: Part = {
         {
           kind: "para",
           text:
-            "Begin with Grounding — the teachers, the axiom, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.",
+            "Begin with Grounding — the teachers, Thunder, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.",
         },
         {
           kind: "para",
@@ -2366,14 +2369,14 @@ const teacherList: Block[] = constellation.teachers.map((t) => ({
 const partV: Part = {
   roman: "G",
   title: "Grounding",
-  blurb: "Start here. The teachers whose thinking this practice grows from, the axiom it runs on, and the reading lineages that trained the practitioner's ear. Understand the roots and the discipline in Part I will make immediate sense. Understand the soil before you plant.",
+  blurb: "Start here. The teachers whose thinking this practice grows from, Thunder — the statement that arrives before you can reason about it — and the reading lineages that trained the practitioner's ear. Understand the roots and the discipline in Part I will make immediate sense. Understand the soil before you plant.",
   chapters: [
     {
       id: "5-1",
       number: "4.1",
       partRoman: "G",
       partLabel: "Grounding",
-      title: "The four teachers and the axiom",
+      title: "The four teachers and Thunder",
       blocks: [
         {
           kind: "para",
@@ -2388,11 +2391,26 @@ const partV: Part = {
           text: "Lao Tzu is not in the constellation manifest. He predates the discipline by about 2,500 years and he did not run a podcast. But the *Tao Te Ching*'s twenty-second chapter is the oldest statement the practitioner knows of the principle that codetry practices: *Yield and overcome. Bend and be straight. Empty and be full. Wear out and be new. Have little and gain. Have much and be confused.* The way that names naming is not the eternal naming. That is not a paradox to escape — it is the first instruction. The name is always downstream of the thing. The discipline is keeping the name close enough to the thing that the distance between them is survivable.",
         },
         { kind: "rule" },
-        { kind: "subhead", text: "The axiom" },
-        { kind: "pull", text: constellation.grammar.axiom },
+        { kind: "subhead", text: "Thunder" },
+        { kind: "pull", text: constellation.grammar.thunder },
         {
           kind: "small",
-          text: "From the constellation manifest, grammar.axiom.",
+          text: "From the constellation manifest, grammar.thunder.",
+        },
+        {
+          kind: "teachers",
+          items: [
+            ...constellation.teachers.map((t) => ({
+              name: t.name,
+              role: t.channel ? t.channel : "peer-to-peer network",
+              url: t.url ?? null,
+            })),
+            {
+              name: "Lao Tzu",
+              role: "Tao Te Ching — the oldest statement the practitioner knows of this principle",
+              url: "https://www.gutenberg.org/ebooks/216",
+            },
+          ],
         },
       ],
     },
@@ -4134,7 +4152,7 @@ const partColophon: Part = {
         {
           kind: "para",
           text:
-            "The discipline named here is offered in the spirit of the four teachers above and the axiom alongside them.",
+            "The discipline named here is offered in the spirit of the four teachers above and Thunder alongside them.",
         },
         { kind: "rule" },
         {

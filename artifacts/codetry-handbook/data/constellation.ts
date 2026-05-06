@@ -45,6 +45,7 @@ export type Teacher = {
   name: string;
   channel: string | null;
   tagline: string;
+  url?: string;
 };
 
 export type ConstellationPrinciple = {
@@ -80,7 +81,7 @@ export type ConstellationSnapshot = {
   grammar: {
     practice: string;
     zoneSystem: string;
-    axiom: string;
+    thunder: string;
   };
   principles: ConstellationPrinciple[];
   constellationWidePrimitives: ConstellationWidePrimitive[];
@@ -96,7 +97,7 @@ export const constellation: ConstellationSnapshot = {
   "grammar": {
     "practice": "codetry — naming IS architecture (distinct from code-poetry)",
     "zoneSystem": "permaculture 0–5",
-    "axiom": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
+    "thunder": "there is no shortage of problems, but when we look for solutions it all becomes a little easier"
   },
   "principles": [
     {
@@ -286,22 +287,26 @@ export const constellation: ConstellationSnapshot = {
     {
       "name": "Jack Spirko",
       "channel": "The Survival Podcast",
-      "tagline": "for if times get tough or even if they don't"
+      "tagline": "for if times get tough or even if they don't",
+      "url": "https://www.thesurvivalpodcast.com/"
     },
     {
       "name": "Joel Salatin",
       "channel": "The Lunatic Farmer",
-      "tagline": "frequent meditations on food and farming that bring a wise and humble conscience to practice, policy, and participation"
+      "tagline": "frequent meditations on food and farming that bring a wise and humble conscience to practice, policy, and participation",
+      "url": "https://www.thelunaticfarmer.com/"
     },
     {
       "name": "Nicole Sauce",
       "channel": "Living Free in Tennessee",
-      "tagline": "build the life you choose on your terms"
+      "tagline": "build the life you choose on your terms",
+      "url": "https://www.livingfreeintennessee.com/"
     },
     {
       "name": "Freedom Cells",
       "channel": null,
-      "tagline": "peer-to-peer community organization, co-founded by Derrick Broze and John Bush"
+      "tagline": "peer-to-peer community organization, co-founded by Derrick Broze and John Bush",
+      "url": "https://freedomcells.org/"
     }
   ],
   "zones": [

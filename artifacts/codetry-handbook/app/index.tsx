@@ -80,7 +80,7 @@ export default function FrontPage() {
             { color: c.pullQuote, fontFamily: SERIF_ITALIC },
           ]}
         >
-          {constellation.grammar.axiom}
+          {constellation.grammar.thunder}
         </Text>
         <View
           style={[styles.lifePreserverRule, { backgroundColor: c.rule }]}

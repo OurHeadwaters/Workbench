@@ -276,7 +276,7 @@ function buildSnapshot(json) {
     grammar: {
       practice: json.grammar.practice,
       zoneSystem: json.grammar.zoneSystem,
-      axiom: json.grammar.axiom,
+      thunder: json.grammar.thunder,
     },
     principles: (Array.isArray(json.principles) ? json.principles : []).map(
       pickPrinciple,
@@ -289,6 +289,7 @@ function buildSnapshot(json) {
       name: t.name,
       channel: t.channel ?? null,
       tagline: t.tagline,
+      ...(t.url !== undefined ? { url: t.url } : {}),
     })),
     zones: json.zones.map((z) => pickZone(z)),
     preZone: (Array.isArray(json.preZone) ? json.preZone : []).map((z) =>
@@ -332,6 +333,7 @@ function render(snapshot) {
     `  name: string;\n` +
     `  channel: string | null;\n` +
     `  tagline: string;\n` +
+    `  url?: string;\n` +
     `};\n` +
     `\n` +
     `export type ConstellationPrinciple = {\n` +
@@ -367,7 +369,7 @@ function render(snapshot) {
     `  grammar: {\n` +
     `    practice: string;\n` +
     `    zoneSystem: string;\n` +
-    `    axiom: string;\n` +
+    `    thunder: string;\n` +
     `  };\n` +
     `  principles: ConstellationPrinciple[];\n` +
     `  constellationWidePrimitives: ConstellationWidePrimitive[];\n` +

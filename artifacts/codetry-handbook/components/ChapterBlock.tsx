@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, LayoutAnimation, Platform, Pressable, StyleSheet, Text, UIManager, View } from "react-native";
+import { Animated, LayoutAnimation, Linking, Platform, Pressable, StyleSheet, Text, UIManager, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
@@ -422,6 +422,37 @@ export function ChapterBlock({
         </View>,
       );
     }
+    case "teachers":
+      return wrapWithGlow(
+        <View style={[styles.teachersPanel, { borderColor: c.rule, backgroundColor: c.card }]}>
+          <Text style={{ color: c.mutedForeground, fontFamily: MONO, fontSize: smallSize, letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 10 }}>
+            Meet the teachers
+          </Text>
+          {block.items.map((teacher, i) => (
+            <Pressable
+              key={teacher.name}
+              onPress={teacher.url ? () => Linking.openURL(teacher.url!).catch(() => {}) : undefined}
+              style={({ pressed }) => [
+                styles.teacherRow,
+                i < block.items.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.rule },
+                pressed && teacher.url ? { opacity: 0.65 } : null,
+              ]}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: c.foreground, fontFamily: SERIF_BOLD, fontSize: subheadSize, lineHeight: subheadSize * 1.35 }}>
+                  {teacher.name}
+                </Text>
+                <Text style={{ color: c.mutedForeground, fontFamily: SERIF_ITALIC, fontSize: smallSize * 1.1, lineHeight: smallSize * 1.6, marginTop: 2 }}>
+                  {teacher.role}
+                </Text>
+              </View>
+              {teacher.url ? (
+                <Ionicons name="open-outline" size={14} color={c.mutedForeground} style={{ marginTop: 4 }} />
+              ) : null}
+            </Pressable>
+          ))}
+        </View>,
+      );
     case "rule":
       return wrapWithGlow(
         <View
@@ -539,6 +570,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     paddingVertical: 6,
+  },
+  teachersPanel: {
+    borderWidth: 1,
+    borderRadius: 2,
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 6,
+    marginVertical: 12,
+  },
+  teacherRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    gap: 10,
   },
   rule: {
     height: 1,
