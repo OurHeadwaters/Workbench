@@ -41,6 +41,7 @@ const KEYS = {
   fontScale: `${NS}:fontScale`,
   bookmarks: `${NS}:bookmarks`,
   lastRead: `${NS}:lastRead`,
+  practitionerVoice: `${NS}:practitionerVoice`,
 };
 
 // One opId per logical setting so a fresh edit replaces (not stacks on
@@ -51,6 +52,7 @@ const OP = {
   fontScale: "fontScale",
   bookmarks: "bookmarks",
   lastRead: "lastRead",
+  practitionerVoice: "practitionerVoice",
 } as const;
 
 const FONT_STEPS = [0.85, 0.92, 1.0, 1.1, 1.2, 1.3, 1.45] as const;
@@ -79,6 +81,8 @@ type ReaderContextValue = {
   takeOriginScroll: (chapterId: string) => number | null;
   saveOriginBlockIndex: (chapterId: string, n: number) => void;
   takeOriginBlockIndex: (chapterId: string) => number | null;
+  showPractitionerVoice: boolean;
+  togglePractitionerVoice: () => void;
 };
 
 const ReaderContext = createContext<ReaderContextValue | null>(null);
@@ -90,6 +94,7 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const [fontStep, setFontStep] = useState<number>(DEFAULT_STEP);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastRead | null>(null);
+  const [showPractitionerVoice, setShowPractitionerVoice] = useState<boolean>(true);
   const scrollMapRef = useRef<Record<string, number>>({});
   const originScrollMapRef = useRef<Record<string, number>>({});
   const originBlockIndexMapRef = useRef<Record<string, number>>({});
@@ -99,16 +104,18 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
   const themeModeRef = useRef<ThemeMode>("system");
   const fontStepRef = useRef<number>(DEFAULT_STEP);
   const bookmarksRef = useRef<Bookmark[]>([]);
+  const showPractitionerVoiceRef = useRef<boolean>(true);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const [tm, fs, bm, lr] = await Promise.all([
+        const [tm, fs, bm, lr, pv] = await Promise.all([
           AsyncStorage.getItem(KEYS.themeMode),
           AsyncStorage.getItem(KEYS.fontScale),
           AsyncStorage.getItem(KEYS.bookmarks),
           AsyncStorage.getItem(KEYS.lastRead),
+          AsyncStorage.getItem(KEYS.practitionerVoice),
         ]);
         if (cancelled) return;
         if (tm === "light" || tm === "dark" || tm === "system") {
@@ -142,6 +149,11 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
               });
             }
           } catch {}
+        }
+        if (pv !== null) {
+          const val = pv !== "false";
+          setShowPractitionerVoice(val);
+          showPractitionerVoiceRef.current = val;
         }
       } finally {
         if (!cancelled) setReady(true);
@@ -199,6 +211,24 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       ),
     [persist],
   );
+
+  const writePractitionerVoice = useCallback(
+    (label: string) =>
+      persist(OP.practitionerVoice, label, () =>
+        storage.setItem(
+          KEYS.practitionerVoice,
+          String(showPractitionerVoiceRef.current),
+        ),
+      ),
+    [persist],
+  );
+
+  const togglePractitionerVoice = useCallback(() => {
+    const next = !showPractitionerVoiceRef.current;
+    showPractitionerVoiceRef.current = next;
+    setShowPractitionerVoice(next);
+    void writePractitionerVoice("your practitioner voice setting");
+  }, [writePractitionerVoice]);
 
   const setThemeMode = useCallback(
     (m: ThemeMode) => {
@@ -379,6 +409,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       takeOriginScroll,
       saveOriginBlockIndex,
       takeOriginBlockIndex,
+      showPractitionerVoice,
+      togglePractitionerVoice,
     }),
     [
       ready,
@@ -403,6 +435,8 @@ export function ReaderStateProvider({ children }: { children: React.ReactNode })
       takeOriginScroll,
       saveOriginBlockIndex,
       takeOriginBlockIndex,
+      showPractitionerVoice,
+      togglePractitionerVoice,
     ],
   );
 

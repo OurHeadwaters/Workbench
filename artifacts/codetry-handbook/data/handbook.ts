@@ -1,7 +1,7 @@
 import { constellation, type WorkedExample } from "./constellation";
 import { findFoundingExampleCommentary } from "./foundingExamples";
 
-export type Block =
+export type Block = (
   | { kind: "para"; text: string }
   | { kind: "subhead"; text: string }
   | { kind: "small"; text: string }
@@ -11,7 +11,8 @@ export type Block =
   | { kind: "list"; items: string[] }
   | { kind: "ordered"; items: string[] }
   | { kind: "rule" }
-  | { kind: "tool"; label: string; hint: string; route: string };
+  | { kind: "tool"; label: string; hint: string; route: string }
+) & { practitioner?: true };
 
 export type Chapter = {
   id: string;
@@ -834,8 +835,8 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
     { kind: "small", text: zoneLabel },
   ];
   if (z.opening) {
-    blocks.push({ kind: "para", text: z.opening });
-    blocks.push({ kind: "rule" });
+    blocks.push({ kind: "para", text: z.opening, practitioner: true });
+    blocks.push({ kind: "rule", practitioner: true });
   }
   blocks.push({ kind: "para", text: z.domain });
   if (z.tagline) blocks.push({ kind: "pull", text: z.tagline });
@@ -861,12 +862,12 @@ const zoneChapters: Chapter[] = allZones.map((z, i) => {
     });
   }
   if (z.inlinePrompt) {
-    blocks.push({ kind: "pull", text: z.inlinePrompt });
+    blocks.push({ kind: "pull", text: z.inlinePrompt, practitioner: true });
   }
   if (z.reflections && z.reflections.length > 0) {
-    blocks.push({ kind: "rule" });
-    blocks.push({ kind: "subhead", text: "Reflect" });
-    blocks.push({ kind: "list", items: z.reflections });
+    blocks.push({ kind: "rule", practitioner: true });
+    blocks.push({ kind: "subhead", text: "Reflect", practitioner: true });
+    blocks.push({ kind: "list", items: z.reflections, practitioner: true });
   }
   return {
     id: `3-${i + 1}`,

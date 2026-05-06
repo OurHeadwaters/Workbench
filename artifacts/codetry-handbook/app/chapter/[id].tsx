@@ -55,6 +55,8 @@ export default function ChapterScreen() {
     takeOriginScroll,
     saveOriginBlockIndex,
     takeOriginBlockIndex,
+    showPractitionerVoice,
+    togglePractitionerVoice,
   } = useReader();
   const { CHAPTERS, getChapter, getNeighbors } = useHandbookContent();
 
@@ -395,7 +397,9 @@ export default function ChapterScreen() {
           </Text>
           <View style={[styles.titleRule, { backgroundColor: c.rule }]} />
 
-          {chapter.blocks.map((b, i) => {
+          {chapter.blocks
+            .filter((b) => !b.practitioner || showPractitionerVoice)
+            .map((b, i) => {
             const text =
               b.kind === "para" || b.kind === "callout" || b.kind === "pull"
                 ? b.text
@@ -495,6 +499,8 @@ export default function ChapterScreen() {
         onNext={goNext}
         hasPrev={!!prev}
         hasNext={!!next}
+        showPractitionerVoice={showPractitionerVoice}
+        onTogglePractitionerVoice={togglePractitionerVoice}
       />
     </View>
   );

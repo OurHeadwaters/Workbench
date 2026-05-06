@@ -121,6 +121,8 @@ export function BottomChrome({
   onNext,
   hasPrev,
   hasNext,
+  showPractitionerVoice,
+  onTogglePractitionerVoice,
 }: {
   visible: boolean;
   onDecreaseFont: () => void;
@@ -132,6 +134,8 @@ export function BottomChrome({
   onNext: () => void;
   hasPrev: boolean;
   hasNext: boolean;
+  showPractitionerVoice?: boolean;
+  onTogglePractitionerVoice?: () => void;
 }) {
   const c = useColors();
   const { themeMode } = useReader();
@@ -198,6 +202,24 @@ export function BottomChrome({
       >
         <Ionicons name={themeIcon as any} size={18} color={c.foreground} />
       </Pressable>
+      {onTogglePractitionerVoice !== undefined ? (
+        <Pressable
+          onPress={onTogglePractitionerVoice}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityLabel={
+            showPractitionerVoice
+              ? "Hide practitioner voice"
+              : "Show practitioner voice"
+          }
+        >
+          <Ionicons
+            name={showPractitionerVoice ? "mic-outline" : "mic-off-outline"}
+            size={18}
+            color={showPractitionerVoice ? c.foreground : c.mutedForeground}
+          />
+        </Pressable>
+      ) : null}
       <Pressable
         onPress={onShare}
         hitSlop={10}
