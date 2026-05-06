@@ -5,15 +5,29 @@
 
 ---
 
-Chapter 3 ended with a definition.
+Codetry is the practice of building software whose primary load-bearing material is metaphor. The naming is not decoration on a database. The naming *is* the architecture, and the code is the medium that makes the metaphor real, clickable, and runnable.
 
-This chapter shows what the definition looks like when it is standing up.
+It is a quiet discipline. Most of it is naming. Most of the rest is refusing to translate the names the community handed you into the words the industry would have preferred. The little that is left is the work of building the system honestly enough that the names keep their promises.
 
 ---
 
+The single-sentence definition, for the record:
+
+Codetry — naming IS architecture (distinct from code-poetry).
+
+And the thesis, stated in full:
+
+Codetry is a verification discipline that keeps the structural language of a system rooted in the community that owns it, so that knowledge cannot creep, drift, or be tokenized away. It does not produce decentralized governance. It protects the substrate any genuine local governance has to be built out of: if the community's words survive, the community can govern itself in its own terms; if the words drift, governance ends up being conducted in someone else's language, which is the same thing as someone else governing.
+
+---
+
+## The Saltbox
+
+To understand how the naming does the structural work, start with a building.
+
 A codetry app is named the way a saltbox house is built — every beam carries weight.
 
-When we say *Saltbox Zone Zero*, we don't mean it as a label. The name is the design spec. It carries that the household is Zone Zero. It carries that this is the saltbox-house itself. And it carries that everything else in the system flows from this center.
+When we say *Saltbox Zone Zero*, we don't mean it as a label. The name is the design spec. It carries that the household is Zone Zero. It carries that this is the saltbox-house itself. And it carries that everything else in the system flows from this centre.
 
 Change the name, and you have changed the structure.
 
@@ -21,39 +35,29 @@ Codetry borrows from the cold-climate vernacular. A saltbox house wasn't designe
 
 Codetry asks the same of software. Let the form-language do the structural work. Let the name carry the weight a column would otherwise carry.
 
+Here is what to bring with you, into the next room of your day.
+
+Walk through your home and pick the one room that does the most jobs. Write down — by hand, on paper — the three jobs it carries.
+
+Then tape the paper to the doorframe.
+
+That paper is your first piece of codetry. The room hasn't changed. But now its name is doing the work the architect's drawing used to do.
+
 ---
 
-The metaphor that runs through the whole discipline is architectural. *Load-bearing*, *foundation*, *the wall*, *the room*, *the surface* — every one of those words enters the handbook borrowed from a building. The kind of building it has in mind is not the steel-and-glass office tower, not the suburban stick-frame house, but a hempcrete wall — a composite of a structural frame with an insulating, breathable infill. Codetry is a hempcrete discipline.
+## The Hempcrete Wall
+
+The metaphor that runs through the whole discipline is architectural. *Load-bearing*, *foundation*, *the wall*, *the room*, *the surface* — every one of those words enters the handbook borrowed from a building. This chapter is the one place the borrowing gets explicit and the practitioner names the *kind* of building they have in mind: not the steel-and-glass office tower, not the suburban stick-frame house, but a hempcrete wall — a composite of a structural frame with an insulating, breathable infill. Codetry is a hempcrete discipline.
 
 Hempcrete is a composite building material made from the woody core of the hemp plant (*hurd* or *shiv*) bound with a lime-based binder. It is not a structural material on its own. It is laid as an infill around a load-bearing frame — typically timber — and once cured, it provides insulation, hygrothermal regulation (it breathes water vapour rather than trapping it), fire resistance, and a wall that quietly continues to absorb carbon over its working life.
 
 *Infill, not facade.* Hempcrete sits *inside* the wall — between the structural studs of the frame, breathing in both directions, doing its work in the body of the building. It is not a cladding bolted on the outside for appearance. The codetry name is the same: it is not a label sprayed on the outside of a system that was designed without it. It is the load-distributing infill that lives between the structural type and the surface affordance, and the system only works the way the room expects it to because the infill is doing its job *inside* the wall.
 
-> Codetry is hempcrete: a composite discipline whose *names* are the breathing infill laid between the structural frame of *type* and the surface skin of *affordance*, doing the climate-regulating, carbon-sequestering, ethical-aesthetic work that no single layer in the system was holding before.
+Codetry is hempcrete: a composite discipline whose *names* are the breathing infill laid between the structural frame of *type* and the surface skin of *affordance*, doing the climate-regulating, carbon-sequestering, ethical-aesthetic work that no single layer in the system was holding before.
 
 ---
 
-The reason any of this matters beyond aesthetics is governance.
-
-Codetry is a verification discipline that keeps the structural language of a system rooted in the community that owns it, so that knowledge cannot creep, drift, or be tokenized away. It does not produce decentralized governance. It protects the substrate any genuine local governance has to be built out of: if the community's words survive, the community can govern itself in its own terms; if the words drift, governance ends up being conducted in someone else's language, which is the same thing as someone else governing.
-
-The saltbox is not a metaphor about aesthetics. It is a metaphor about who controls the load path.
-
----
-
-Here is what that control looks like in practice, before a single schema is opened.
-
-The word *budget* evokes restriction, tightening. The word *Watershed* invokes flow, abundance. That difference is not cosmetic — it changes what the person holding the tool believes is possible before they touch a single number.
-
-*The Siphon* is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word *expense* implies.
-
-The name is doing structural work. Nothing in the underlying data model has changed. The constraint that changes lives in the word.
-
----
-
-The discipline has two structural tests for names.
-
-The first is **both-states**.
+## Both-States: One Name Across Two Tempos
 
 Some systems run in one register, and only need a name that fits that register. A *bucket* holds money in an envelope-budget app and never has to do anything else. The noun does one job, and does it cleanly.
 
@@ -63,9 +67,21 @@ The temptation, every time, is to name each tempo separately, and let them grow 
 
 When a system has a slow tempo and a fast tempo that are the same plumbing read at different speeds — the umbrella name has to ride from one tempo to the other without bending. Or the system will fork into two systems, with two cadences, and two cultures.
 
-The constellation's first non-zone primitive demonstrates the test.
+Take *The Standby*. The Standby names both the always-on shelf — the pantry, the standby stock, the watch as a posture — and the active event — a call, the active rung on the ladder, the debrief once it stands down. One word, two tempos. The people, the stock, the vocabulary are all one. Only the cadence changes.
 
-*The Standby* holds two registers that an outside system would almost certainly split apart.
+Two early candidates were rejected. *The Common Pantry* held the slow side beautifully — but couldn't hold an active fire call without straining. *The Watch* held the active posture — but couldn't hold the slow shelf of stock without bending into a permanent vigil.
+
+Both survived as sub-shelves inside The Standby. Neither could be the umbrella name.
+
+So here is the test. Pick the slow side first, and ask whether the noun also fits the fast side. Then pick the fast side, and ask whether the noun also fits the slow side. If the answer to either question is *not really* — the name is doing one job, and the system has already started forking.
+
+---
+
+## The Standby
+
+The Standby is the constellation's first non-zone primitive.
+
+It holds two registers that an outside system would almost certainly split apart.
 
 On one side is a slow, always-on practice. The pantry shelf is stocked. The contact tree is current. The generator gets test-started. The watch reads the morning advisory before anything is happening.
 
@@ -77,25 +93,43 @@ If the slow side and the fast side were named separately — *The Pantry* for th
 
 The both-states test catches this before it happens. Pick the slow side, ask whether the umbrella name still fits the fast side. Pick the fast side, ask whether the umbrella name still fits the slow side. *Standby* passes both. *On standby*, and *standby stock*, are the same posture in different tempos.
 
-Two early candidates were rejected. *The Common Pantry* held the slow side beautifully — but couldn't hold an active fire call without straining. *The Watch* held the active posture — but couldn't hold the slow shelf of stock without bending into a permanent vigil.
+The two-sidedness here is *temporal*. One system, two tempos. Slow side and fast side are the same plumbing running at different rates.
 
-Both survived as sub-shelves inside The Standby. Neither could be the umbrella name.
+So when you walk back outside — what fails first on your homestead when the power goes out? Don't fix it yet. Just name it, in your own words, in pencil, where you can see it tomorrow.
 
-The two-sidedness of The Standby is *temporal*. One system, two tempos. Slow side and fast side are the same plumbing running at different rates.
+The full six-word vocabulary of the Standby, in brief: *the Standby* (umbrella and always-on state), *a call* (a specific active event), *the watch* (active-monitoring posture), *standby stock* (the always-on reserves), *the debrief* (after-action synthesis), *centralized disruption* (the class of event). Four rungs on the severity ladder: advisory / standby / active / standdown.
+
+The principle the Standby introduced to the constellation: **the name has to hold both states.** When a system has both a slow side and a fast side, the name has to do both jobs in one word, or the system will fork into two systems with two cultures.
 
 ---
 
-The second structural test is **both-sides**.
+## Both-Sides: One Name Across Two Contexts
 
-The both-states principle holds when a system runs in two tempos. A second class of system runs in one tempo, but in two contexts at once. Two audiences, holding two different vocabularies as legitimate. Neither willing to give up theirs to the other.
+The both-states principle holds when a system runs in two tempos.
+
+A second class of system runs in one tempo, but in two contexts at once. Two audiences, holding two different vocabularies as legitimate. Neither willing to give up theirs to the other.
 
 The temptation, every time, is to name each side separately, and let them grow into two pipes facing two rooms. The both-sides principle is the codetry move that resists that.
 
 When a system has language that has to live in two contexts that hold different vocabularies as legitimate — the umbrella name has to fit both contexts in one word. Or the system will pick a dialect, and lose the other room.
 
-The constellation's second non-zone primitive demonstrates the test.
+Take *The Gate*. The Gate names both the *bright side* — the constellation's own dialect: *neighbour*, *channel*, *the books*, *standby stock*, *the watch* — and *massity* — the mass-society dialect: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer* — inside one umbrella that does not pick a side. One word, two contexts.
 
-*The Gate* holds two registers that an outside system wouldn't even recognise as siblings.
+Two candidates were rejected. *Translator* held the directional work — but flattened the membrane into pure transaction. A translator processes; a gate decides whether to. *Glossary* held the dictionary side — but couldn't hold the active posture of substituting words inside real documents, the ledger of past substitutions, or the *refused* rung for source-side language with no honest target-side equivalent.
+
+Both survived as sub-shelves inside The Gate. Neither could be the umbrella name.
+
+The both-states test picks a tempo. The both-sides test picks a context. Pick the bright side, and ask whether the umbrella name still respects massity. Pick the massity side, and ask whether the umbrella name still respects the bright side.
+
+Same word, different room. That is the test.
+
+---
+
+## The Gate
+
+The Gate is the constellation's second non-zone primitive — language across institutional boundaries.
+
+It holds two registers that an outside system wouldn't even recognise as siblings.
 
 On one side is the *bright side* — the constellation's own dialect. The words a community uses with itself, in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*.
 
@@ -107,27 +141,21 @@ If the two sides were named separately — *Translator* for the bright-to-massit
 
 The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction. It logs every substitution, so the bright-side noun stays on file alongside the massity equivalent. And it has a *refused* rung — for source-side language that has no honest target-side equivalent, and would lose its meaning under any substitution.
 
-The two-sidedness of The Gate is *contextual*. One system, two contexts. Bright side and massity are the same plumbing facing different rooms.
+The two-sidedness here is *contextual*. One system, two contexts. Bright side and massity are the same plumbing facing different rooms.
 
-The both-states test picks a tempo. The both-sides test picks a context. Same word, different room. That is the test.
+The Standby's two sides were *temporal*. The Gate's two sides are *contextual*. The Standby's principle is *both-states*. The Gate's principle is *both-sides*. Both are now registered as named principles in the manifest.
 
----
+So here is what to bring back from this last station. Take one piece of mail from a regulator, a banker, or a government office. Underline every word in it your family wouldn't say at the table. Write your family's word in the margin, next to each one.
 
-The *refused* outcome is not a failure. It is a discipline.
+Keep both. The two together are the gate.
 
-In 2020, a Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The massity-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest massity equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe.
-
-The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.
-
-> The *refused* outcome is not a failure. It is a discipline. Some words do not cross. Protecting the word is more important than completing the translation.
+The *refused* outcome is not a failure. It is a discipline. Some words do not cross. Protecting the word is more important than completing the translation.
 
 ---
 
-It is a quiet discipline. Most of it is naming. Most of the rest is refusing to translate the names the community handed you into the words the industry would have preferred. The little that is left is the work of building the system honestly enough that the names keep their promises.
+## The Vocabulary, Set Down in One Place
 
-Here is the vocabulary the discipline itself uses.
-
----
+These are the terms a practitioner needs in order to work inside the constellation. They are set down here verbatim, as they appear in the Vocabulary Sheet.
 
 **Constellation** — The full set of economic systems a community runs together. Not a network (which implies optional connection) and not an organization (which implies a single structure). A constellation: distinct systems, gravitationally related, each doing its own job.
 
@@ -147,19 +175,23 @@ Here is the vocabulary the discipline itself uses.
 
 **Refused** — A Gate outcome for source-side language that has no honest equivalent in the target dialect. The word does not cross. The document notes the gap. Protecting the word is more important than completing the translation.
 
-> *Refused is a first-class outcome — not a failure, not a footnote.*
+*Refused is a first-class outcome — not a failure, not a footnote.*
 
-**Both-states** — A test for naming a primitive that moves between tempos: does the name hold in the resting state and the activated state? If the name bends to fit only one tempo, the system will eventually fork into two systems with two cultures.
+**Both-states (principle)** — A test for naming a primitive that moves between tempos: does the name hold in the resting state and the activated state? If the name bends to fit only one tempo, the system will eventually fork into two systems with two cultures.
 
-**Both-sides** — A test for naming a primitive that faces two contexts simultaneously: does the name hold from the bright side and from the massity side? If the name privileges one context, the membrane becomes a wall.
+**Both-sides (principle)** — A test for naming a primitive that faces two contexts simultaneously: does the name hold from the bright side and from the massity side? If the name privileges one context, the membrane becomes a wall.
 
 ---
 
-The vocabulary is not decoration. It is the architecture.
+Elsewhere in the constellation, the same discipline keeps proving itself.
 
-Every term above is a load-bearing noun. Remove one and something in the system loses its shape — not at the type level, not at the test level, but at the level of the person who has to make a decision under fire and reaches for a word.
+In regenerative beef production — the highest-leverage chokepoint in northwestern Ontario is not pasture and not customers, it is abattoir capacity. When the centerpiece of the booking tool was renamed from *cut sheet management* to *per-customer share split*, the schema, the success metrics, and the build sequence all changed in one move. The name rewrote the system without touching a line of code.
 
-Codetry is a quiet discipline. Most of it is naming. And the names — if the practitioner does the work correctly — are what survive.
+And from a cattle rancher named Karen, one of the sharpest demonstrations of the discipline on record: when she named her paper ledger as a working artifact — not a legacy system to be replaced but the actual working record of her operation — the naming removed a feature from the build. The booking calendar was cut from version 0.1 because the ledger made it unnecessary. *Don't fix my book.* Her line. Two codetry tone-lines followed: *failures land on the tool, not on her* / *make it easier for Karen to say no, not just easier to say yes.* The name as protection, not just as architecture.
+
+In the community knowledge hub, *Today I…* verbs route the practitioner through the platform: *Today I cook and preserve / gather / order / learn / trade / help.* The verb is the route. The role is the room: board chair, treasurer, secretary, operations each get their own room rather than one admin dashboard. And the treasurer's experience is named *Calm Monthly Journey* — not as a vibe but as a contract. Confidence meter. Lookahead. Snooze-expiry. Monthly digest. *Calm* is the spec.
+
+Type-driven design makes illegal states unrepresentable. Codetry makes drifted nouns unshippable — and treats a perfectly typed model with the wrong word as drift the type checker can't see.
 
 ---
 
@@ -170,6 +202,7 @@ Codetry is a quiet discipline. Most of it is naming. And the names — if the pr
 ## Editorial notes for founder review
 
 **Narrative arc:**
+<<<<<<< HEAD
 The chapter follows this arc: bridge from Chapter 3 (the definition is now established — this chapter shows it standing up) → the saltbox principle (form IS function; change the name, change the structure) → the hempcrete metaphor (infill, not facade; the name is inside the wall, not bolted to the outside) → the governance stake (codetry protects the substrate for self-governance; if words drift, governance does too) → naming that changes belief before the schema opens (Watershed vs. Budget; The Siphon) → the first structural test: both-states (The Standby — one name, two tempos; slow side and fast side; the two rejected candidates) → the second structural test: both-sides (The Gate — one name, two contexts; bright side and massity; what crosses and what refuses) → the refused outcome in practice (Parr's Jars smoked salt — a real crossing that failed) → the refused callout (first-class outcome, not failure) → closing bridge ("it is a quiet discipline") → the vocabulary (the named terms of the discipline, in a compressed reference block) → close (the vocabulary is the architecture).
 
 **Passages included from harvest.md Section 4:**
@@ -214,3 +247,21 @@ The chapter follows this arc: bridge from Chapter 3 (the definition is now estab
 4. **4-N and 4-O (Regen Revolution and Knowledge Hub):** Both contain excellent examples of metaphor-as-architecture from different community contexts. Currently held back to keep the chapter's examples anchored in the Headwaters constellation. If the founder wants this chapter to demonstrate the discipline's portability beyond one context, 4-N and 4-O could be added as a section between the Gate and the vocabulary block — "The same moves appear elsewhere."
 5. **Tone at the vocabulary block:** The vocabulary reference block is currently set as a flat definition list, matching its source (the print-marketing vocabulary sheet). If the founder prefers the definitions woven into narrative rather than standing as a formal glossary, each term could be introduced in prose with a pull-quote for the definition. Current format assumes the list is the right register for a reference the practitioner returns to.
 6. **Chapter 3 callback:** Chapter 3 closed with the Buckets example and the "dam breaks" image. Chapter 4 does not explicitly echo that close. If the founder wants a callback — something like "That constraint lived in the word. Here is what the structure built on top of it looks like" — a one-sentence bridge at the very opening could connect the two chapters more explicitly.
+=======
+The chapter opens with the full definition and thesis (4-A, 4-B, 4-C), then moves through three architectural metaphors in sequence: the saltbox (4-D), the hempcrete wall (4-E), and then the two naming tests applied to the two non-zone primitives — both-states / The Standby (4-F, 4-G, 4-L) and both-sides / The Gate (4-H, 4-I, 4-M). The vocabulary sheet (4-J) is placed as a formal settling of terms after the reader has encountered every term in practice. The refused callout (4-K) appears as a closing note within the vocabulary. The chapter ends with three field examples from deleted working docs (4-N, 4-O) plus the type-driven callout (UG-A).
+
+**Passages included from harvest.md Section 4:**
+4-A, 4-B, 4-C (definition and thesis), 4-D (saltbox narration), 4-E (hempcrete metaphor), 4-F (both-states narration), 4-G (the Standby narration), 4-H (both-sides narration), 4-I (the Gate narration), 4-J (vocabulary sheet), 4-K (refused callout), 4-L (Standby full role prose — condensed), 4-M (Gate full role prose — condensed), 4-N (Regen Revolution / Karen's line), 4-O (Community Knowledge Hub), 4-P (constellation manifest principle — embedded in the Standby/Gate sections).
+
+**Unplaced Gems included:**
+UG-A (type-driven design callout) — placed at the close of the chapter as a crisp technical summary after the field examples. UG-B and UG-C were considered but not included: UG-B repeats what the chapter already covers, and UG-C's bar-metaphor framing needs more context than the chapter's register allows. Both are held for potential Deep Dives material.
+
+**Ordering decisions:**
+The saltbox precedes the hempcrete because the saltbox is the simpler, more intuitive image — a room that does weight-bearing work. Hempcrete is the harder, more precise claim (infill-not-facade, composite-not-monolithic). Both-states precedes both-sides because the Standby was the first primitive to generate the naming test; the Gate came second and its test was derived from the Standby's. The vocabulary sheet comes late, not early — a reader who encounters *massity* as a raw term before seeing it in context will miss its charge.
+
+**Editorial decision needed — deleted-artifact material (4-L, 4-M):**
+The full role prose for the Standby (4-L) and the Gate (4-M) from the deleted working doc is condensed in this draft into the constellation-vocabulary notes and closing field examples. The full verbatim passages are long and dense; including them in full would shift the chapter's register toward reference manual. Founder should decide whether to restore them in full as a Deep Dive appendix or keep them condensed as they appear here.
+
+**Bridge copy added:**
+Section-header subheadings (The Saltbox, The Hempcrete Wall, Both-States, The Standby, Both-Sides, The Gate, The Vocabulary) are new structural additions — not in the harvest. They can be removed if the founder prefers a headingless flow. The final paragraph before the vocabulary sheet ("Elsewhere in the constellation…") is new bridge copy connecting 4-N and 4-O to the chapter's argument.
+>>>>>>> fa839aa (task-781: Turn harvest into formatted first-draft chapter for the book)
