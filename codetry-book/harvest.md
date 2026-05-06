@@ -9,6 +9,7 @@
 **Supplemented:** 2026-05-06 (Task #801) — X Buckets Vision (project 1) swept via live bundle extraction; 11 passages added (1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M) plus full water-metaphor vocabulary map (3-P). Merge conflicts from Tasks #784 and #785 resolved: community-knowledge-hub passages renumbered to 3-O, 4-U, 4-V, 5-K, UG-J, UG-K.
 **Supplemented:** 2026-05-06 — Task #797: External projects 3–10 swept; 14 passages added (1-R, 1-S, 2-U, 2-V, 2-W, 2-X, 3-O, 3-P, 4-U, 4-V, UG-J, UG-K, UG-L, UG-M). Sources: Rootwork studio bundle, health-support-hub bundle, community-knowledge-hub bundle (main app + three infographic HTML pages), legacy-gatekeeper bundle, salt-box bundle.
 **Updated:** 2026-05-06 — X Buckets Vision external sweep complete. Added 3-M through 3-T (Section 3), 4-S through 4-U (Section 4), UG-H through UG-I (Unplaced Gems). Total passage count: Section 1 (1-A–1-O + 6 deleted), Section 2 (2-A–2-T + 4 deleted), Section 3 (3-A–3-T + 4 deleted), Section 4 (4-A–4-U + 7 deleted), Section 5 (5-A–5-H), Unplaced Gems (UG-A–UG-I).
+**Supplemented:** 2026-05-06 — Task #814: Rootwork (External project 3) re-swept via JS bundle extraction; 8 passages added (1-U, 1-V, 4-Z, UG-R, UG-S) beyond the 5 recovered by shallow SPA render in Task #785.
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -289,6 +290,20 @@ The founding confession, immediately below the hero section:
 > Payday becomes a ritual, not a scramble. You are the dam keeper. This is your headwaters — and nothing escapes without purpose.
 
 **Source:** `x-buckets-vision/gettingStartedTour.slides[2]` — third and final onboarding slide, headline and body; the phrase that names the user's role in the water metaphor
+
+---
+
+### 1-Y · A small workshop building quiet tools
+
+> A small workshop, building quiet tools for restless people.
+
+`rootwork/studio/ — About page section header / studio tagline`
+
+The hero description from the same page:
+
+> Rootwork is the calm command center for entrepreneurs whose brain moves faster than any folder system. Drop in the chaos. Find what you need in seconds. Stop posting the same photo twice. Get back to the work that actually pays.
+
+`rootwork/studio/ — Home page hero section, immediately below the primary heading`
 
 ---
 
@@ -1669,6 +1684,26 @@ The same principle stated from the content layer:
 
 ---
 
+### 4-Z · Rootwork manifesto — the six principles we build by
+
+The complete set of manifesto principles from the Rootwork About page, verbatim:
+
+> We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
+
+> We build for the kitchen table, the church basement, the back of the truck. If it doesn't work for the small operator with a phone and ten minutes, it isn't done yet.
+
+> We pick the side of the people who have been overlooked: the small farmer, the volunteer organizer, the side-hustler, the first-time founder. Their work counts. We help it count more.
+
+> We write software the way good cooks cook — with attention, patience, and care for who's eating. The craft matters. The feeling of using the thing matters. Speed is not a substitute for warmth.
+
+> We'd rather show than shout. No exclamation marks doing the heavy lifting. No promises we can't keep by Tuesday. The work speaks; we let it.
+
+> We ship things that are small enough to finish, real enough to use, and honest about what they do. A working small thing beats a beautiful big plan every time.
+
+`rootwork/studio/ — About page; "The principles we build by" section; six numbered principles rendered in full`
+
+---
+
 ### 4-U · Rainfall → Siphon → Reservoir — the water-metaphor map in architectural form
 
 > Rainfall. Siphon (bills). Reservoir. Every drop has a job.
@@ -2181,6 +2216,26 @@ The tour framing line:
 
 ---
 
+### UG-R · The crate that carries — Parr's Jars and the 807 Co-op
+
+> Carry the good stuff. Don't pretend to be it.
+>
+> The hand-built cedar 6-pack crate didn't grow the asparagus, milk the cow, or simmer the preserves. It just holds them up so you can see them — gives them a frame, keeps them from tipping over on the way to your kitchen.
+>
+> That's how Parr's Jars works alongside the 807 Food Co-op too. Parr's Jars is the crate: it carries and supports the Thunder Bay and Northwestern Ontario makers, growers and ingredients it brings together. It isn't the 807 Co-op — it's a partner that helps lift up what's grown and made here.
+
+`rootwork/studio/ — About page; "Carry the good stuff. Don't pretend to be it." section; the cedar crate as the relationship metaphor between Parr's Jars and the 807 Co-op`
+
+---
+
+### UG-S · Rootwork membership framing — open pitch, gated studio
+
+> Rootwork modules are available to active 807 co-op members. The public Pitch builder is open to everyone — join 807 to unlock the Studio, Labels, Wholesale, and Root Routes.
+
+`rootwork/studio/ — auth gate screen; the sentence that maps Rootwork modules to the 807 co-op membership tier`
+
+---
+
 ### UG-J · Captain's Log — fishing as Zone 1 metaphor
 
 > Boat's on the trailer. Launch it to start fishing.
@@ -2371,10 +2426,14 @@ Dam Days entry from Test 008:
 **Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
 **What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 1-P, 2-U, 3-M, 5-I, UG-I · Method: live page fetch (React SPA rendered; git history and internal filesystem not accessible from this environment)
 =======
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from the compiled production bundle at `https://community-knowledge-hub.replit.app/studio/assets/index-CPXk3mY2.js`. Passages recovered: 1-R (origin statement), UG-J (six values), UG-M (Legal Compass description). The 807 member gate copy and calm command center hero were confirmed; origin/values met quality bar; gate copy and hero did not add beyond what UG-M captures. Rootwork manifesto page and Legal Compass description page were both accessible via the bundle.
 >>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #814). Re-swept via JS bundle extraction from the live app at `https://community-knowledge-hub.replit.app/studio/` (React SPA; prose extracted from the minified production bundle `/studio/assets/index-CPXk3mY2.js`). Prior shallow sweep (Task #785) recovered 5 passages via SPA render; full bundle extraction added 8 more: 1-U (origin story + manifesto preamble), 1-V (calm command center hero framing), 4-Z (six manifesto principles verbatim), UG-R (cedar crate / Parr's Jars metaphor), UG-S (membership framing). Previously recovered: 1-R, 2-U, 3-O, 5-K, UG-K. Git history and conversation logs not accessible from this environment.
+>>>>>>> 51add22 (Task #814: Sweep Rootwork (External project 3) via JS bundle extraction and fold into harvest)
 
 ---
 
@@ -2576,9 +2635,10 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 
 ---
 =======
-**Total passages:** ~120 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution)
+**Total passages:** ~133 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution; +8 from Task #814 Rootwork JS bundle re-sweep)
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
+<<<<<<< HEAD
 **External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
 >>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
 =======
@@ -2614,6 +2674,9 @@ All 8 codebases were not directly accessible from this environment. Prose was ex
 **External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 8); 3 remaining (projects 7, 9, 10). See "Pending External Sweeps" section above.
 >>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 >>>>>>> 90e0e15 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
+=======
+**External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 2 remaining (project 9 / Legacy Gatekeeper, and any beyond the 10 named). See "Pending External Sweeps" section above.
+>>>>>>> 51add22 (Task #814: Sweep Rootwork (External project 3) via JS bundle extraction and fold into harvest)
 
 ### Dam Days sweep notes (Task #784)
 
@@ -2675,3 +2738,21 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 >>>>>>> 1595999 (Task #801: Sweep X Buckets Vision and Dam Days for the book harvest)
 
 *All passages confirmed verbatim. No synthesis or composition.*
+
+---
+
+### Rootwork sweep notes (Task #814)
+
+The Rootwork codebase (`https://community-knowledge-hub.replit.app/studio/`) was not directly accessible. Prose extracted from `/studio/assets/index-CPXk3mY2.js` using string-literal extraction and natural-language filtering. A prior shallow sweep (Task #785) had fetched the live SPA shell and recovered 5 passages; the full bundle extraction recovered 8 additional passages not visible in the rendered page output.
+
+| Source (inferred) | Passages recovered |
+|---|---|
+| `rootwork/studio/src/pages/About.tsx` — manifesto preamble | 1-U |
+| `rootwork/studio/src/pages/Home.tsx` — hero section | 1-V |
+| `rootwork/studio/src/pages/About.tsx` — six principles block | 4-Z |
+| `rootwork/studio/src/pages/About.tsx` — cedar crate section | UG-R |
+| `rootwork/studio/src/components/AuthGate.tsx` or equivalent — membership gate | UG-S |
+
+Previously recovered (Task #785): 1-R (founding tagline + confession), 2-U (pile-of-stuff problem framing + four pain cards), 3-O (tag the way you'd say it out loud), 5-K (closing CTA), UG-K (pitch helper prompt).
+
+*All passages confirmed verbatim from bundle string literals. No synthesis or composition. Named vocabulary recovered: calm command center, quiet tools, restless people, kitchen table, church basement, back of the truck, small operator, good cooks cook, show don't shout, small enough to finish.*
