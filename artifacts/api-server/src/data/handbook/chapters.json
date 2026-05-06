@@ -3763,6 +3763,10 @@
               "text": "But the poem in code poetry lives *inside* the source. In codetry the poem lives *as* the architecture, and the source is what makes it run."
             },
             {
+              "kind": "para",
+              "text": "Code poetry's place in codetry's awareness is named in §4.2: it is the adjacent tradition the lineage chapter meets first — *adjacent and respected*, in the chapter's words, rather than a root — and the contrast named there (source as poem versus naming as architecture) is the one that clears the ground before §4.2 goes on to name the disciplines codetry actually sits on top of."
+            },
+            {
               "kind": "callout",
               "text": "Code poetry: the source is the poem. Codetry: the naming is the architecture, and the source is what makes the naming hold."
             }
@@ -3802,6 +3806,10 @@
             {
               "kind": "para",
               "text": "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in adjacent rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §5.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry, which makes the discipline that holds those names a precondition for the weave rather than a sibling to it."
+            },
+            {
+              "kind": "para",
+              "text": "Literate programming's place in codetry's lineage is named in §4.2: it is not only the nearest discipline in the prior literature but the one codetry sits one floor underneath rather than across the room from, and Knuth's *don't trust; verify by showing the reasoning in the medium where the work lives* is the closest single move in the prior literature to the discipline of making the metaphor inspectable in the name itself."
             }
           ]
         },
@@ -3894,6 +3902,10 @@
               "text": "Type-driven design verifies the model against the compiler. Codetry verifies the model against the person who handed you the word. Both are *don't trust; verify* moves; they verify against different witnesses."
             },
             {
+              "kind": "para",
+              "text": "Type-driven design's place in codetry's awareness is named in §4.2 as a near neighbour inside the broader *the model carries the architecture* lineage: both disciplines refuse the older arrangement where the model is a thin layer of records, and the distinction §4.2 maps — the type system as witness versus the person who handed you the word — is where the two disciplines part ways inside the same conviction."
+            },
+            {
               "kind": "callout",
               "text": "Type-driven design makes illegal states unrepresentable. Codetry makes drifted nouns unshippable — and treats a perfectly typed model with the wrong word as drift the type checker can't see."
             }
@@ -3941,6 +3953,10 @@
             {
               "kind": "para",
               "text": "Both schools agree that profit is a signal. They disagree on who reads it. Capital allocation at scale reads the signal at the cap table. Codetry insists the signal must also be readable at the kitchen table — the cost stack, the markup, the truck cost on a page the household sees."
+            },
+            {
+              "kind": "para",
+              "text": "The capital-allocation tradition's place in codetry's awareness is named in §4.2 through the premise both schools share: the local reader sees what the distant planner cannot, and the distinction §4.2 holds is the exit — compound versus handover, the growing chair versus the written method the community can run without the author."
             },
             {
               "kind": "callout",
@@ -8973,6 +8989,10 @@
           "text": "But the poem in code poetry lives *inside* the source. In codetry the poem lives *as* the architecture, and the source is what makes it run."
         },
         {
+          "kind": "para",
+          "text": "Code poetry's place in codetry's awareness is named in §4.2: it is the adjacent tradition the lineage chapter meets first — *adjacent and respected*, in the chapter's words, rather than a root — and the contrast named there (source as poem versus naming as architecture) is the one that clears the ground before §4.2 goes on to name the disciplines codetry actually sits on top of."
+        },
+        {
           "kind": "callout",
           "text": "Code poetry: the source is the poem. Codetry: the naming is the architecture, and the source is what makes the naming hold."
         }
@@ -9012,6 +9032,10 @@
         {
           "kind": "para",
           "text": "Knuth's discipline is named here with the same respect already extended to code poetry. It is older, it is deeper in the literature, and both it and codetry are *don't trust; verify* moves: show your work in the medium where the work actually lives. Literate programming verifies by exposing the reasoning. Codetry verifies by making the metaphor inspectable in the name itself. The temptation in this chapter is to leave it there, with the two disciplines doing parallel work in adjacent rooms — and the contrast above does hold at the level of *what each discipline is for*. The relationship between them is taken up again, less politely, in §5.1: the woven document only does what its prose says it does to the extent that the names inside the source carry the metaphor the prose claims they carry, which makes the discipline that holds those names a precondition for the weave rather than a sibling to it."
+        },
+        {
+          "kind": "para",
+          "text": "Literate programming's place in codetry's lineage is named in §4.2: it is not only the nearest discipline in the prior literature but the one codetry sits one floor underneath rather than across the room from, and Knuth's *don't trust; verify by showing the reasoning in the medium where the work lives* is the closest single move in the prior literature to the discipline of making the metaphor inspectable in the name itself."
         }
       ]
     },
@@ -9104,6 +9128,10 @@
           "text": "Type-driven design verifies the model against the compiler. Codetry verifies the model against the person who handed you the word. Both are *don't trust; verify* moves; they verify against different witnesses."
         },
         {
+          "kind": "para",
+          "text": "Type-driven design's place in codetry's awareness is named in §4.2 as a near neighbour inside the broader *the model carries the architecture* lineage: both disciplines refuse the older arrangement where the model is a thin layer of records, and the distinction §4.2 maps — the type system as witness versus the person who handed you the word — is where the two disciplines part ways inside the same conviction."
+        },
+        {
           "kind": "callout",
           "text": "Type-driven design makes illegal states unrepresentable. Codetry makes drifted nouns unshippable — and treats a perfectly typed model with the wrong word as drift the type checker can't see."
         }
@@ -9151,6 +9179,10 @@
         {
           "kind": "para",
           "text": "Both schools agree that profit is a signal. They disagree on who reads it. Capital allocation at scale reads the signal at the cap table. Codetry insists the signal must also be readable at the kitchen table — the cost stack, the markup, the truck cost on a page the household sees."
+        },
+        {
+          "kind": "para",
+          "text": "The capital-allocation tradition's place in codetry's awareness is named in §4.2 through the premise both schools share: the local reader sees what the distant planner cannot, and the distinction §4.2 holds is the exit — compound versus handover, the growing chair versus the written method the community can run without the author."
         },
         {
           "kind": "callout",
