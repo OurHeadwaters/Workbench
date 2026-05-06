@@ -5,6 +5,7 @@
 **Supplemented:** 2026-05-06 — Task #784: Dam Days (External project 2) swept; 10 passages added (1-P, 1-Q, 3-M, 3-N, 4-S, 4-T, 5-I, 5-J, UG-H, UG-I).
 **Supplemented:** 2026-05-06 (Task #785) — community-knowledge-hub external sweep; projects 3–6 swept via live URL fetch; project 8 attempted (SPA shell, no prose recovered).
 **Supplemented:** 2026-05-06 — Task #796: X Buckets Vision (External project 1) swept; 11 passages added (1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K).
+**Supplemented:** 2026-05-06 (Task #803) — Bright Side (project 7) and Saltbox (project 10) swept via JS bundle extraction; merge conflicts from Tasks #784 and #785 resolved; passages 2-X, 2-Y, 2-Z, 3-O, 3-P, 4-U, 4-V, 4-W, 4-X, 4-Y, 5-K, UG-J through UG-Q added.
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -607,6 +608,60 @@ The extended framing:
 
 ---
 
+### 2-X · The shadows system — what stands between staff and a good shift
+
+> Bright Side leads with the shadows between you and a good day. Tap one to act on it.
+
+`health-support-hub.replit.app — shift home screen; the primary navigation metaphor for the app's daily workflow`
+
+Shadow-selection onboarding:
+
+> Choose the shadow groups your floor is working through today. Bright Side will lead with these on the home screen and tailor prompts for them.
+
+`health-support-hub.replit.app — shadow setup screen; the instruction for configuring the shift focus`
+
+---
+
+### 2-Y · Set the tone for this shift — the practitioner's prompts
+
+The shift-tone prompts Bright Side surfaces for each shift handover (verbatim from the app's prompt rotation):
+
+> Set the tone for this shift — anyone needing a quiet moment after dinner?
+>
+> Set the tone for this shift — what worked in the lounge?
+>
+> Set the tone for this shift — music picks landing well right now?
+>
+> Set the tone for this shift — who's been on their own too long?
+>
+> Set the tone for this shift — any group plans falling flat, and what's a swap?
+>
+> Set the tone for this shift — anyone returning from outing, energy check?
+
+`health-support-hub.replit.app — shift-feed prompt rotation; the six prompts that cycle through the shift-handover card, each one naming a specific thing a good shift notices`
+
+Handover prompts for outgoing HCA (verbatim):
+
+> What does the next HCA need to know first?
+>
+> Anyone needing extra hands at meal or bedtime?
+
+`health-support-hub.replit.app — handover notes screen; the two prompts that surface for the outgoing care aide`
+
+---
+
+### 2-Z · Small joys — the daily reset
+
+> Small joys staff can offer every day. Pop one when it happens — they reset overnight.
+
+`health-support-hub.replit.app — resident facesheet, joys section; the description of how the joys system works`
+
+> Pick a few small joys to offer today. Pop them all and this resident takes the floor.
+
+`health-support-hub.replit.app — resident facesheet, joys setup; the instruction for configuring daily joys per resident`
+
+---
+
 ## Section 3 — The Dam Breaks
 
 *The discipline arrives. The moment the work becomes a system. Language-is-not-neutral.*
@@ -777,7 +832,6 @@ Callout:
 
 ---
 
-<<<<<<< HEAD
 ### 3-M · How the dam sorts what it catches — the six zones named
 
 > Toss in everything that drifts past — half-thoughts, prices, code, mid-sentence SOS — and the dam catches each fragment, sorts it, and puts it to work across six zones, with income at the center, the rest fanning out from there.
@@ -807,19 +861,48 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 > "checking the compass… casting off… reading the breakers… listening through the silence… raising the searchlight… binding the pages…"
 
 **Source:** `dam-days/src/pages/Forge.tsx` — `gw` array; the animated state sequence displayed while the AI forge is generating the bound book from a user's takes
-=======
-### 3-M · Tag the way you'd say it out loud — Rootwork naming discipline
+
+---
+
+### 3-O · Tag the way you'd say it out loud — Rootwork naming discipline
 
 > Tag the way you'd say it out loud — "produce table", "winter market", "the Smiths". Rootwork remembers. No taxonomy meeting required.
 
 `community-knowledge-hub/studio/ — "What you actually get" feature card: "Tag the way you'd say it out loud"`
 
-The promise immediately above, in the Studio hero close:
+---
 
-> Sign up. Drag a folder in. See if you can breathe a little easier in the next ten minutes.
+### 3-P · Saltbox methodology cards — naming what homeschool families already do
 
-`community-knowledge-hub/studio/ — closing CTA section`
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+The style descriptions from the Saltbox learning-style tour (verbatim from each methodology card):
+
+> **Charlotte Mason** — Mornings stay short. You read aloud from a real book — not a textbook — and your child narrates it back in her own words. Afternoons are wide open: nature walks, handicrafts, copywork, watercolor. Atmosphere matters as much as the lesson.
+
+> **Wild + Free / Charlotte Mason aesthetic** — A morning basket of read-alouds and poetry. Long stretches outdoors. Handicrafts, nature journals, big paper, real tools. A rhythm rather than a schedule. The aesthetic is real, but the substance underneath is living books and time outside.
+
+> **Classical** — Memory work, Latin or vocabulary roots, history on a timeline, structured grammar and writing. The youngest grades sing and chant; older kids debate and write essays. There is a plan, and the plan is the point.
+
+> **Waldorf** — Main-lesson blocks (one subject deep for three or four weeks), beeswax and watercolor, handwork like knitting, festivals tied to the seasons. Reading often starts later than mainstream school. Screens stay scarce in the early years.
+
+> **Unit Studies** — A six-week dive into Ancient Egypt or oceans or the human body. History reading, geography map, science experiment, art project, a cookbook from the region — all of it threads through the same theme. Multiple ages can sit at the same table.
+
+> **Unschooling** — No set lesson plan. The kid pulls — toward bugs, baking, a YouTube rabbit hole, a sewing project — and you keep the path clear and resourced. You document the learning after the fact rather than scheduling it ahead.
+
+> **Eclectic** — A literature spine from one tradition. A math curriculum from another. Unit studies when you feel like it. Unschooling on Fridays. A loose rhythm rather than a schedule. The plan changes when the kid changes.
+
+`salt-box.replit.app — learning style tour; seven methodology cards, verbatim descriptions`
+
+Cautions embedded in the tour (also verbatim):
+
+> [Charlotte Mason] — Mornings stay short. You read aloud from a real book — not a textbook…
+>
+> [Wild + Free] — Looks effortless on Instagram. It is not. The freedom needs a quiet structure underneath or days dissolve.
+>
+> [Waldorf] — Materials cost adds up. The philosophical pieces (Steiner) are not for everyone — feel free to take what fits.
+>
+> [Unschooling] — Hard to explain to grandparents. Requires you to recognize learning when it doesn't look like school.
+
+`salt-box.replit.app — learning style tour; caution notes at the base of each card`
 
 ---
 
@@ -1166,7 +1249,6 @@ The Gate manifest principle:
 
 ---
 
-<<<<<<< HEAD
 ### 4-S · The rebrand without a rewrite — Dam Days as codetry demonstration
 
 > The rebrand without a rewrite (Watershed → Dam Days touched display strings and prose; chapter IDs / storage keys / table names / schema all held — the bones were the metaphor underneath the name).
@@ -1180,8 +1262,10 @@ The Gate manifest principle:
 > Pseudonymity-as-architecture (Shallows handles derived deterministically from sessionToken+postId — the depths-below-the-shallows framing IS the one-way hash).
 
 **Source:** `dam-days/src/lib/shallows.ts` — `Sw()` / `m6()` functions; `X-Shallows-Session` header generation; the Shallows pseudonym is derived deterministically from sessionToken+postId so that the "shrouded in mystery from the depths below" metaphor is the one-way hash, not just a description of it
-=======
-### 4-S · Fern and Sage — two agents, two jobs (Grants Finder)
+
+---
+
+### 4-U · Fern and Sage — two agents, two jobs (Grants Finder)
 
 > Fern — Intake Agent — Asks the right questions to understand your project. Builds a structured profile from natural conversation.
 >
@@ -1197,14 +1281,43 @@ Region-specific design rationale:
 
 ---
 
-### 4-T · "What We Dropped" — refusal as a first-class outcome (Standby)
+### 4-V · "What We Dropped" — refusal as a first-class outcome (Standby)
 
 > "What We Dropped" Section — Transparent about why common preparedness advice was excluded — wrong crops, wrong materials, wrong assumptions for the north.
 
 `community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities, "'What We Dropped' Section" feature`
 
 *(This feature enacts the Refused principle from The Gate at the content level — items that do not cross the northern-conditions test are not dropped silently; they are documented with the reason for exclusion.)*
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+
+---
+
+### 4-W · Local-first by design — Saltbox architecture principle
+
+> Local-only by default. No accounts, no telemetry. Live Follow-Along is opt-in. Your backup is yours to carry.
+
+`salt-box.replit.app — app settings / data philosophy screen`
+
+---
+
+### 4-X · No streaks. No leaderboards. — the no-scoring rule enacted
+
+> No streaks. No leaderboards. No notifications. The lock-in ring is silent. Empty weeks aren't shamed.
+
+`salt-box.replit.app — onboarding / philosophy screen; the no-scoring rule from constellation entry 1-K implemented in the running app`
+
+The same principle stated from the content layer:
+
+> Brave moments, lock-in wins, badges, your seasonal recap. Kept like salt: preserved, never measured against a score.
+
+`salt-box.replit.app — features overview screen`
+
+---
+
+### 4-Y · People first — Bright Side display rule
+
+> People first — photos and names lead, room numbers stay on the right.
+
+`health-support-hub.replit.app — resident list view; the design principle encoded in every list rendering in the app`
 
 ---
 
@@ -1382,7 +1495,6 @@ The three credibility claims:
 
 ---
 
-<<<<<<< HEAD
 ### 5-I · The lantern keepers — dedication to those who held the line
 
 > There is a kind of friend who keeps a lantern in the window without ever telling you they keep a lantern in the window. You send up a flare. A half-question, a typo, a wave you couldn't explain yet. They never put the lantern out.
@@ -1410,15 +1522,16 @@ Closing line (rendered separately below the paragraphs):
 > We are not the rescuers. We are the lit hulls in the dark, hoping someone signals back.
 
 **Source:** `dam-days/src/pages/Shallows.tsx` — rendered on the Shallows page; the framing sentence for why the Shallows exists as a public float surface
-=======
-### 5-I · Rootwork — the tool we kept wishing existed
+
+---
+
+### 5-K · Rootwork — the tool we kept wishing existed
 
 > Sign up. Drag a folder in. See if you can breathe a little easier in the next ten minutes.
 
 `community-knowledge-hub/studio/ — closing CTA section`
 
 *(This is the Rootwork launch statement — the honest pioneer pitch: not "transform your workflow," not "10x your output," just: drag in the chaos, see if you can breathe.)*
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
 
 ---
 
@@ -1484,7 +1597,6 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
-<<<<<<< HEAD
 ### UG-H · every signal you've sent up — the Takes page self-description
 
 > every signal you've sent up. nothing is sorted. nothing is forced. the rescue is taking shape on its own.
@@ -1498,8 +1610,10 @@ Closing line (rendered separately below the paragraphs):
 > And if there was someone who kept a light on for you — leave their name here, quietly, with the rest of ours.
 
 **Source:** `dam-days/src/pages/Dedication.tsx` — invitation text rendered below the dedication paragraphs; the reader-facing prompt to name their own lantern keeper
-=======
-### UG-H · Redacted Mode — privacy by design (Grants Finder)
+
+---
+
+### UG-J · Redacted Mode — privacy by design (Grants Finder)
 
 > Redacted Mode keeps your details safe — Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
 
@@ -1507,12 +1621,71 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
-### UG-I · Stuck describing what you do? — Rootwork pitch helper
+### UG-K · Stuck describing what you do? — Rootwork pitch helper
 
 > Stuck describing what you do? Try the pitch helper. Answer a few prompts and get back a one-liner, a short pitch, a long pitch, and a few reframes for "I'm just a…" days. No sign-in. Nothing saved. Share the link with anyone who needs the same push.
 
 `community-knowledge-hub/studio/ — "For the days the words won't come" section`
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+
+---
+
+### UG-L · A saltbox is — naming the origin
+
+> A saltbox is the wooden box of preserving salt by the kitchen door — taken a pinch at a time, all year. This app is shaped like one.
+
+`salt-box.replit.app — onboarding intro screen; the sentence that explains the name`
+
+---
+
+### UG-M · The methodology tour — quiet language for real families
+
+> There are dozens of names for what homeschool families do. None of them are tests. None of them are clubs you have to join. The point of this tour is to give you words for what you're already doing — and to show you what's possible if you ever want to shift. Read one card a day, or seven in a row. Saltbox will remember where you stopped.
+
+`salt-box.replit.app — learning style tour intro screen`
+
+The close of the tour:
+
+> You don't have to pick. You don't have to print this. You can come back from Settings → Learning whenever you'd like to re-read a card or look something up. Saltbox will not nudge you about methodology again unless you ask, or unless your real days start pointing somewhere on their own.
+
+`salt-box.replit.app — learning style tour closing screen`
+
+The tour framing line:
+
+> Quiet language for the way real homeschool families do it. No quiz, no scoring, no club to join. Read a card when you want — Saltbox will not push you toward any one of them.
+
+`salt-box.replit.app — learning style tour feature description`
+
+---
+
+### UG-N · Watching you on the trampoline — a founder moment
+
+> Watching you on the trampoline is both experiencing intense fear and intense joy. Fear because it is so easy to get hurt. Joy because them conquering that fear means that I'm raising courageous men in a world that needs them.
+
+`salt-box.replit.app — parenting quotes collection; sourced as a user-contributed or founder-seeded quote in the daily quote rotation`
+
+---
+
+### UG-O · This is a snapshot from our home learning
+
+> This is a snapshot from our home learning. We follow our kids' curiosity rather than a strict schedule, so the work shows up in many shapes — books read, projects built, conversations followed, places visited. What's in here was real this week.
+
+`salt-box.replit.app — Family Recap export preamble; the paragraph that introduces the weekly recap to grandparents and others`
+
+---
+
+### UG-P · Bright Side pilot sites
+
+> PHI-free pilot · Princess Court · Patricia Gardens · CL Dryden · DRHC
+
+`health-support-hub.replit.app — PHI-free export footer; the four named pilot facilities embedded in every Bright Side generated document`
+
+---
+
+### UG-Q · Warm companion for the team — Bright Side tagline
+
+> A warm companion for the team — surfacing the next small thing worth doing for each resident.
+
+`health-support-hub.replit.app — lobby / onboarding screen; the primary tagline for the app's purpose`
 
 ---
 
@@ -1615,7 +1788,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://health-support-hub.replit.app/`
 **Constellation zone:** Zone 0 (Bright Side / Saltbox — the institutional saltbox: long-term care, recreation therapy)
 **What to look for:** Any manifesto or philosophy copy about recreation therapy for long-term care; any prose about what a good shift looks like; any description of the tool's relationship to the staff's existing knowledge; any copy about how documentation should follow the worker, not the other way around. Note: the codetry-ship BrightSidePage.tsx already has some of this (entries 2-F, 2-G) — look for anything beyond what's already in harvest.md.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://health-support-hub.replit.app/` (React SPA; codebase not directly accessible from this environment; prose extracted from the minified production bundle). Passages recovered: 2-X (shadows system), 2-Y (shift-tone prompts + handover prompts), 2-Z (small joys system), 4-Y (people-first display rule), UG-P (pilot sites), UG-Q (warm companion tagline). The shadow metaphor, shift-tone prompt rotation, and joys-reset-overnight copy are all beyond what was in codetry-ship BrightSidePage.tsx. The Bobbie's 2014 intake reference was also recovered (prompt metadata in the memory-profile wizard). Conversation logs and git history not accessible from this environment.
 
 ---
 
@@ -1642,7 +1815,7 @@ Closing line (rendered separately below the paragraphs):
 **URL:** `https://salt-box.replit.app/`
 **Constellation zone:** Zone 0 — decentralized homes; homeschool day companion, local-first per family
 **What to look for:** Any onboarding or philosophy copy about Lock-In Wins, Brave Moments, Gentle Words, Quote of the Day; any narrative about the no-scoring rule (the fish-climbing-a-tree principle); any copy about what Saltbox is for beyond the feature list; the founding story for why a homeschool companion was built; any prose about Zone 0 holding both the family on the land and the elder in the care home.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://salt-box.replit.app/` (React SPA; prose extracted from the minified production bundle). Passages recovered: 3-P (methodology cards — seven named homeschool styles, verbatim), 4-W (local-first architecture), 4-X (no-scoring rule + brave moments/lock-in wins framing), UG-L (saltbox naming origin), UG-M (methodology tour — quiet language, no quiz), UG-N (watching you on the trampoline — founder moment), UG-O (family recap preamble). The no-scoring rule is enacted in the running app as UG confirmed (4-X). The fish-climbing-a-tree principle was not found verbatim in the bundle; the concept is present in constellation entry 1-K and app entry 4-X. Conversation logs and git history not accessible from this environment.
 
 ---
 
@@ -1661,6 +1834,7 @@ The following projects were identified in the codebase and may also contain harv
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction
 =======
@@ -1671,6 +1845,10 @@ The following projects were identified in the codebase and may also contain harv
 **Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #796 X Buckets Vision external sweep)
 **Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + X Buckets Vision live-bundle extraction
 >>>>>>> 38a0560 (Task #796: Sweep X Buckets Vision (External project 1) into the book harvest)
+=======
+**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #803 Bright Side + Saltbox external sweep)
+**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–7, 10)
+>>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
 
 ### Live files read
 
@@ -1715,6 +1893,7 @@ The following projects were identified in the codebase and may also contain harv
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Total passages:** 86 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784)
 =======
 **Total passages:** 97 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +11 from X Buckets Vision external sweep in Task #796)
@@ -1744,6 +1923,12 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 *All passages confirmed verbatim. No synthesis or composition. Named vocabulary recovered: Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Community Well, Giving Well, Abundance Bridge, Payday Ripple, Captain's Log, XRP Spring (bamboo stages 1–6).*
 
 ---
+=======
+**Total passages:** ~120 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution)
+**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
+**Conversation history:** Not accessible from this environment.
+**External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
+>>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
 
 ### Dam Days sweep notes (Task #784)
 
@@ -1761,11 +1946,28 @@ The Dam Days codebase (`https://conversation-log.replit.app/`) was not directly 
 | `dam-days/src/pages/Shallows.tsx` | 5-J |
 | `dam-days/src/pages/Takes.tsx` | UG-H |
 | `dam-days/src/pages/Dedication.tsx` (reader prompt) | UG-I |
-=======
-**Total passages:** 93 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +11 from Task #785 community-knowledge-hub live-URL sweep — passages 1-P, 2-U, 2-V, 2-W, 3-M, 4-S, 4-T, 5-I, UG-H, UG-I, plus 5-I note duplicated in 3-M — net new unique passages: 9)
-**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
-**Conversation history:** Not accessible from this environment.
-**External project sweeps:** 10 projects identified, 5 swept (projects 3, 4, 5, 6, 8 via live URL fetch — Task #785); 5 remaining (projects 1, 2, 7, 9, 10 — each requires a separate agent session in that project). See "Pending External Sweeps" section above.
->>>>>>> e16a4e6 (Task #785: Run sweep prompt in community-knowledge-hub and fold results into harvest.md)
+
+### Bright Side sweep notes (Task #803)
+
+The Bright Side codebase (`https://health-support-hub.replit.app/`) was not directly accessible. Prose extracted from `/assets/index-CxSI5g0R.js` using string-literal extraction and natural-language filtering. Source file paths inferred from component context.
+
+| Source (inferred) | Passages recovered |
+|---|---|
+| `health-support-hub/src/pages/Home.tsx` or lobby screen | UG-Q (warm companion tagline) |
+| `health-support-hub/src/pages/ShiftFeed.tsx` or shift home | 2-X (shadows system) |
+| `health-support-hub/src/components/ShiftTonePrompts` | 2-Y (six shift-tone prompts + handover prompts) |
+| `health-support-hub/src/pages/ResidentFacesheet.tsx` | 2-Z (small joys), 4-Y (people first) |
+| `health-support-hub/src/lib/exports` | UG-P (pilot sites) |
+
+### Saltbox sweep notes (Task #803)
+
+The Saltbox codebase (`https://salt-box.replit.app/`) was not directly accessible. Prose extracted from `/assets/index-k5Dz6fv4.js` using string-literal extraction and natural-language filtering.
+
+| Source (inferred) | Passages recovered |
+|---|---|
+| `salt-box/src/pages/Onboarding.tsx` or settings | UG-L (saltbox naming origin), 4-W (local-first), 4-X (no-scoring) |
+| `salt-box/src/data/methodologies.ts` or tour cards | 3-P (seven methodology cards), UG-M (tour intro/close) |
+| `salt-box/src/data/quotes.ts` | UG-N (watching you on the trampoline) |
+| `salt-box/src/pages/Recap.tsx` or family recap | UG-O (snapshot preamble) |
 
 *All passages confirmed verbatim. No synthesis or composition.*
