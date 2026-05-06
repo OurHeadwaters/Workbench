@@ -6,10 +6,7 @@
 **Supplemented:** 2026-05-06 (Task #785) — community-knowledge-hub external sweep; projects 3–6 swept via live URL fetch; project 8 attempted (SPA shell, no prose recovered).
 **Supplemented:** 2026-05-06 — Task #796: X Buckets Vision (External project 1) swept; 11 passages added (1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K).
 **Supplemented:** 2026-05-06 (Task #803) — Bright Side (project 7) and Saltbox (project 10) swept via JS bundle extraction; merge conflicts from Tasks #784 and #785 resolved; passages 2-X, 2-Y, 2-Z, 3-O, 3-P, 4-U, 4-V, 4-W, 4-X, 4-Y, 5-K, UG-J through UG-Q added.
-**Supplemented:** 2026-05-06 (Task #801) — X Buckets Vision (project 1) swept via live bundle extraction; 11 passages added (1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M) plus full water-metaphor vocabulary map (3-P). Merge conflicts from Tasks #784 and #785 resolved: community-knowledge-hub passages renumbered to 3-O, 4-U, 4-V, 5-K, UG-J, UG-K.
-**Supplemented:** 2026-05-06 — Task #797: External projects 3–10 swept; 14 passages added (1-R, 1-S, 2-U, 2-V, 2-W, 2-X, 3-O, 3-P, 4-U, 4-V, UG-J, UG-K, UG-L, UG-M). Sources: Rootwork studio bundle, health-support-hub bundle, community-knowledge-hub bundle (main app + three infographic HTML pages), legacy-gatekeeper bundle, salt-box bundle.
-**Updated:** 2026-05-06 — X Buckets Vision external sweep complete. Added 3-M through 3-T (Section 3), 4-S through 4-U (Section 4), UG-H through UG-I (Unplaced Gems). Total passage count: Section 1 (1-A–1-O + 6 deleted), Section 2 (2-A–2-T + 4 deleted), Section 3 (3-A–3-T + 4 deleted), Section 4 (4-A–4-U + 7 deleted), Section 5 (5-A–5-H), Unplaced Gems (UG-A–UG-I).
-**Supplemented:** 2026-05-06 — Task #814: Rootwork (External project 3) re-swept via JS bundle extraction; 8 passages added (1-U, 1-V, 4-Z, UG-R, UG-S) beyond the 5 recovered by shallow SPA render in Task #785.
+**Supplemented:** 2026-05-06 (Task #802) — Legacy Gatekeeper (project 9) swept via live URL fetch; 5 passages added (3-P, 3-Q, 4-W, 4-X, UG-L); merge conflicts from Tasks #784 and #785 resolved (renumbered duplicate passage IDs 4-S→4-U, 4-T→4-V, 5-I→5-K, UG-H→UG-J, UG-I→UG-K).
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -254,56 +251,6 @@ The founding confession, immediately below the hero section:
 > Every dollar of stablecoin income is rainfall caught in your Reservoir — automatically channeled into named buckets so nothing escapes and every drop has a purpose.
 
 **Source:** `x-buckets/src/copy/tagline` + `x-buckets/src/copy/coreMechanic` — the tagline and coreMechanic constants; the two sentences that describe what Zone 1 is for
-
----
-
-### 1-U · Rootwork started the way most honest things do
-
-> Rootwork started the way most honest things do — out of frustration with what was on offer, and a stubborn feeling that it could be kinder, slower, and more useful.
->
-> This page is the manifesto: the principles we build by, said out loud so we can be held to them. If they sound like the kind of software you've been wishing existed, you're in the right place.
-
-`rootwork/studio/assets/index-CPXk3mY2.js` — manifesto/about page opening; the Rootwork origin statement
-
----
-
-### 1-V · Parrs Jars launched in the summer of 2020
-
-> Parrs Jars launched in the summer of 2020 — in the middle of a pandemic, when local food systems were strained and people were newly aware of how fragile their food supply was. Bobbie Parr started with a newsletter, some subscription crates, and a commitment to keeping local food accessible in Dryden.
->
-> She's learned a lot since then.
-
-`community-knowledge-hub/assets/index-Ct-KiV08.js` — preserving course, "What Bobbie Learned Running a Community Kitchen" lesson opening
-
----
-
-### 1-W · Your money has been free-ranging — the Zone 1 founding premise
-
-**Source:** `x-buckets-vision/gettingStartedTour.slides[0]` — first onboarding slide, headline and body; the founding diagnosis of the Zone 1 problem before the vocabulary is introduced
-
----
-
-### 1-X · You are the dam keeper — the onboarding close
-
-> Every drop has a job now.
->
-> Payday becomes a ritual, not a scramble. You are the dam keeper. This is your headwaters — and nothing escapes without purpose.
-
-**Source:** `x-buckets-vision/gettingStartedTour.slides[2]` — third and final onboarding slide, headline and body; the phrase that names the user's role in the water metaphor
-
----
-
-### 1-Y · A small workshop building quiet tools
-
-> A small workshop, building quiet tools for restless people.
-
-`rootwork/studio/ — About page section header / studio tagline`
-
-The hero description from the same page:
-
-> Rootwork is the calm command center for entrepreneurs whose brain moves faster than any folder system. Drop in the chaos. Find what you need in seconds. Stop posting the same photo twice. Get back to the work that actually pays.
-
-`rootwork/studio/ — Home page hero section, immediately below the primary heading`
 
 ---
 
@@ -637,33 +584,6 @@ The four pain-point observations, verbatim:
 ### 2-V · Market Mosaic — the three problems it solves
 
 Before/after comparisons (verbatim):
-### 2-U · The boreal larder — what foraging means in NWO
-
-> The boreal forest that surrounds Dryden, Wabigoon, Sioux Lookout and Kenora is one of the most generous larders on the continent. Wild rice in the shallow lakes. Chaga on the birches. Labrador tea, wintergreen, and sweet gale in the muskeg. Rosehips, blueberries, raspberries, saskatoons, hazelnuts. If you know what you are looking at, almost every walk in the bush in this region is a walk past food.
-
-`community-knowledge-hub/assets/index-Ct-KiV08.js` — foraged north course, "What Foraging Means in Northwestern Ontario" lesson opening
-
----
-
-### 2-V · Preserving food is a community act
-
-> Preserving food is, at its core, a community act. It was how families in Northwestern Ontario — and Indigenous communities in this region for generations before — survived the winter. It spread knowledge between households, created bonds between gardeners and kitchens, and built a culture of self-reliance that the modern grocery store has nearly erased.
->
-> Bobbie's work at Parrs Jars is about recovering that culture for the 21st century.
-
-`community-knowledge-hub/assets/index-Ct-KiV08.js` — preserving course, "What Bobbie Learned Running a Community Kitchen," community kitchen section; context: the lesson cites a Parrs Jars newsletter headline, "Building Community Is Essential For Resilience," and then names it as the organizing principle of everything Bobbie does
-
----
-
-### 2-W · The one trustworthy front door — Market Mosaic
-
-> The one trustworthy front door for what's at market this week.
-
-What-box description:
-
-> A unified discovery platform for regional farmers' markets. Shoppers see what's available this week across all vendors without scrolling Facebook. Vendors claim their listing and keep it current. Market coordinators run the whole show from one dashboard.
-
-Before/after problem framing:
 
 > "Is the market on this Saturday?" — 3 Facebook groups, no clear answer → Weekly view shows dates, vendors, and what's available right now
 >
@@ -740,29 +660,6 @@ Handover prompts for outgoing HCA (verbatim):
 > Pick a few small joys to offer today. Pop them all and this resident takes the floor.
 
 `health-support-hub.replit.app — resident facesheet, joys setup; the instruction for configuring daily joys per resident`
-`community-knowledge-hub/infographics/market-mosaic.html` — header tagline, what-box, and before/after problem grid
-
----
-
-### 2-X · Find the money that fits your project — Grants Finder
-
-> Find the money that fits your project — without the paperwork maze.
-
-What-box description:
-
-> An AI grant-matching assistant tuned for Northwestern Ontario. Two AI agents interview you, analyze your project, and surface the grants most likely to fund it — ranked by fit, not alphabet.
-
-Agent descriptions:
-
-> **Fern — Intake Agent:** A conversational AI that interviews you about your project — goals, location, sector, budget — and builds your grant profile automatically.
->
-> **Sage — Match Agent:** Analyzes your profile against the grant library and narrates the best matches with plain-English explanations of why each grant fits.
-
-Privacy framing:
-
-> Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
-
-`community-knowledge-hub/infographics/grants-finder.html` — header tagline, what-box, feature grid, and privacy section
 
 ---
 
@@ -1010,7 +907,25 @@ Cautions embedded in the tour (also verbatim):
 
 ---
 
-### 3-O · The Bamboo Spring — the XRP Spring growth stages
+### 3-U · "There is a place called Bright Side" — the Gate founding sentence
+
+> "There is a place called Bright Side, where they call you 'neighbour', not 'resident'."
+
+**Source:** `legacy-gatekeeper.replit.app/about` — opening pull-quote on the about page; the sentence that names the membrane before the tool is explained
+
+---
+
+### 3-V · The Gate rationale — so we built it
+
+> On the other side of the gate is Massity — a sprawling, indifferent castle of legacy systems: laws, regulations, banking, privacy bureaucracy, politics. We can't change Massity, and pragmatically, it's not worth going to prison over a "silly" word like neighbour vs resident.
+>
+> So we built The Gate.
+
+**Source:** `legacy-gatekeeper.replit.app/about` — founding paragraph immediately below the pull-quote; the earliest published rationale for why the Gate primitive was built
+
+---
+
+### 3-R · The Bamboo Spring — the XRP Spring growth stages
 
 > Stage 1 · Pristine pool — The soil is ready. Awaiting first drop.
 >
@@ -1028,7 +943,7 @@ Cautions embedded in the tour (also verbatim):
 
 ---
 
-### 3-P · The pause — the discipline arriving
+### 3-S · The pause — the discipline arriving
 
 > "The pause between receiving money and spending it is where financial discipline lives. Headwaters makes that pause automatic."
 
@@ -1036,239 +951,13 @@ Cautions embedded in the tour (also verbatim):
 
 ---
 
-### 3-Q · Drought Mode — plan to thrive when it rains again
+### 3-T · Drought Mode — plan to thrive when it rains again
 
 > Drought Mode — Reduced or lost income? Tighten the flow — plan to thrive when it rains again.
 >
 > Drought Mode is on. Targets are scaled to your reduced income. Stay the course — the rains return.
 
 **Source:** `x-buckets/src/copy/droughtMode` — toggle label, subtitle, and active-banner copy; the named state for income disruption; "drought" as a first-class system state rather than an error condition
-### 3-O · A working seasonal-foods business — no off-season
-
-> A working seasonal-foods business is a year of well-timed, narrow harvest windows, with the in-between months spent processing, blending, packaging, and selling. There is no off-season — only different seasons.
->
-> If you are thinking about even hobby-level foraging in this region, the single most useful thing you can do is build your own version of this calendar. Walk the same patches in the same week each year. Note when the first leaves come in, when the first fruits ripen, when the last harvest is. Five years of notes is more valuable than any book.
-
-`community-knowledge-hub/assets/index-Ct-KiV08.js` — foraged north course, boreal harvest calendar lesson closing; the Foraged North discipline named in plain terms
-
----
-
-### 3-P · Telling your story — the regenerative beef thesis
-
-> The most successful regenerative beef producers are not just farmers — they are storytellers. The quality of their product can't be seen in a grocery store freezer case. It has to be communicated. Customers don't just buy the beef; they buy the values, the land, the practice, and the relationship.
->
-> In a region like Northwestern Ontario, where local food culture is growing but the market is small, your story is one of your most important competitive advantages.
-
-`community-knowledge-hub/assets/index-Ct-KiV08.js` — regen beef course, "Telling Your Story" lesson opening
-`community-knowledge-hub/studio/ — closing CTA section`
-
----
-
-### 3-P · The water-metaphor vocabulary map — X Buckets Vision word-locked names
-
-The full locked vocabulary from the X Buckets Vision PWA, verbatim from the production bundle `C` copy object:
-
-> **Rainfall** — income landing in the reservoir; "every dollar of stablecoin income is rainfall caught in your Reservoir"
->
-> **Reservoir** — the total budgeted balance; every bucket draws from here — every dollar accounted for
->
-> **Siphon** — bills; the label rendered on the payday flow node; leaves before you see the money
->
-> **Rain Barrel** — emergency reserve; a CA$1,500 starter Rain Barrel turns most surprises into a problem you can solve, not a debt spiral; the full Rain Barrel is months of essentials
->
-> **Stream** — fast-moving money; groceries, gas, fun — all accounted for before you spend; the daily operating budget
->
-> **Water Tower** — savings fortress; emergency fund, debt payoff, long-term goals — the savings that build your future, drop by drop
->
-> **Spring** — where income flows in — automatically routed to where it matters
->
-> **Watershed** — the original app name; storage keys, table names, and schema still use this root after the surface rebrand to Headwaters
->
-> **Community Well** — shared XRPL pool; members vote where it flows each round; tip the shared peer pool
->
-> **Water Wheel** — passive earner; set it up once, it drips while you sleep; fills a Private Lake with idle RLUSD, drips yield into savings buckets
->
-> **Private Lake** — self-custody DeFi liquidity pool; every swap that flows through drips a small current back to the Water Wheel, around the clock
->
-> **Giving Well** — donate XRP appreciation tax-smart, before any sale; the well is filled from unrealized gain
->
-> **Drought Mode** — reduced or lost income mode; targets scaled to actual rainfall landing
->
-> **Payday Planner** — plan every paycheck before it lands; set income streams, recurring bills, and savings targets; execute in one tap on payday
-
-**Source:** `x-buckets-vision` bundle — `C` copy object, `flowNodeSiphon`, `flowNodeReservoir`, `foundationCoach`, `earn`, `communityWell`, `givingWell`, `convertXrp`, `droughtMode`, `payday`, and `spotlightTour` fields; the locked vocabulary the app refuses to translate into generic budget terms (the rename test in action: rename "Buckets" to "Categories" and the UI starts suggesting balances can grow by clicking)
-
----
-
-### 3-Q · The bamboo spring stages — XRP Spring as six-stage metaphor artwork
-
-> **Stage 1 · Pristine pool** — The soil is ready. Awaiting first drop.
->
-> **Stage 2 · Roots weaving** — Roots forming. 10 XRP → roots stabilize.
->
-> **Stage 3 · Lush roots** — Next milestone. Bamboo peeks at 25 XRP.
->
-> **Stage 4 · Tiny bamboo peeking** — First culm broke surface. Grove establishes at 75 XRP.
->
-> **Stage 5 · Producing grove** — Grove is establishing. Canopy multiplies at 200 XRP.
->
-> **Stage 6 · Grow & multiply** — Grove fully established. Roots run deep — earnings compound.
-
-**Source:** `x-buckets-vision/bambooSpring` — the six-stage metaphor rendered in the XRP Spring savings tab; extends the envelope-budget metaphor from data model into visual artwork across six growth milestones (the "six-stage bamboo growth scene" referenced in passage 1-L)
----
-
-### 3-M · The first formal codetry test — the rule discovered
-
-> **One word → one referent.** In codetry, every metaphor word in the surface UI must point to exactly one thing in the architecture. The moment a word names two actions, it names neither.
-
-Word map after the test (no overlaps):
-
-| Word     | Refers to                                                  |
-| -------- | ---------------------------------------------------------- |
-| Rainfall | Income arriving this payday (paycheck + side gig combined) |
-| Siphon   | Bills auto-paid out of the rainfall before the reservoir   |
-| Reservoir | The stablecoin wallet — what's left after the siphon      |
-| Channel  | The act of distributing reservoir → buckets ("every drop") |
-| Bucket   | A named envelope (Groceries, Rent share, Transit, …)       |
-
-> Each word, one job. None overlap. The metaphor IS the architecture, end to end, with no slack between word and referent.
-
-`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — "The rule discovered" section; word map and paragraph immediately following
-
----
-
-### 3-N · Payday — words bearing weight (Dam Days entry)
-
-> **Today, in the Payday tab, the rain stopped meaning anything because it was meaning three things at once. Three CTAs all called it down. I froze.**
->
-> Rule: one word → one referent. Otherwise the words are just decoration and codetry collapses into code-poetry.
->
-> Fix on the canvas — Variant A. Rain stays as income only. Siphon takes the bills. Reservoir takes what's left. Channel pours into buckets. Each word has exactly one job. The words bear weight again.
->
-> First formal codetry test. The rule was already there; the test gave it a name.
-
-`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — Dam Days entry (private by default; share to the Shallows? — y / n)
-
----
-
-### 3-O · Locked vocabulary drifts on merges
-
-> **Locked vocabulary drifts on merges unless something machine-checked holds it.** The map being written down in a doc is necessary but not sufficient. The word map needs at least one mechanical witness — a forbidden-strings unit test, an ESLint rule, a copy-snapshot diff, or all three — that fails the build when a banned word appears on a surface it doesn't own.
-
-Continuation:
-
-> This sighting is what graduates the rule from "discipline a person holds" to "contract the toolchain enforces." A discipline degrades on every rebase, every long branch, every fast merge. A contract doesn't.
-
-`x-buckets-vision · docs/codetry/001-payday-words-bearing-weight.md` — "Sighting 2 — the rebase that silently un-did the fix"
-
----
-
-### 3-P · The locked Zone 1 word map — full table
-
-The result of Test 002: every metaphor word in Zone 1 locked to exactly one referent, in English and French.
-
-| Word             | Refers to                                                                     | FR                  |
-| ---------------- | ----------------------------------------------------------------------------- | ------------------- |
-| Rainfall         | Income arriving this payday (paycheck + side gig combined)                    | Pluie               |
-| Siphon           | Auto-bills drawn before income reaches the Reservoir                          | Siphon              |
-| Reservoir        | The stablecoin wallet — what's left after the siphon                          | Réservoir           |
-| Channel *(verb)* | Distributing the Reservoir into named Buckets (act of "every drop")           | Canaliser           |
-| Bucket           | A named envelope (Groceries, Rent share, Transit, …)                          | Compartiment        |
-| Cloud Cover      | Compound interest — the weather that keeps producing rain                     | Couverture nuageuse |
-| Rain Barrel      | Emergency fund — short-term reserve for surprises                             | Baril de pluie      |
-| Aquifer          | Long-term savings — the deep reserve that fills slowly                        | Aquifère            |
-| Glacier          | Tax-advantaged accounts (RRSP, TFSA) — savings the tax authority leaves alone | Glacier             |
-| Watershed        | Diversified income streams (one fragile stream → many resilient ones)         | Bassin versant      |
-| Bridge *(verb)*  | Above-tap-cap transfers (the Abundance Bridge sheet)                          | Traverser le pont   |
-| Public Lake      | Regulated / credit-union yield product (advisor-mode Earn destination)        | Lac public          |
-| Private Lake     | DeFi liquidity pool (enthusiast-mode Earn destination, self-custody)          | Lac privé           |
-| Lake current     | The small fee paid into a Private/Public Lake each time a swap flows through it; the Drip Harvester's earnings are its share of those currents | Courant du lac |
-| Fill *(verb)*    | The act of putting idle RLUSD into a Lake                                     | Remplir             |
-| Drainage         | Debt payoff — the opposite move from Channel                                  | Drainage            |
-
-> **One word → one referent, held across the whole zone.** Test 001 named the rule on one screen. Test 002 is what it costs to honour the rule across a constellation. Where one word was doing two jobs, we coined or recovered a second word so each job has a name of its own.
-
-`x-buckets-vision · docs/codetry/002-zone-1-words-locked.md` — "Locked Zone 1 word map" table and "The rule discovered" section
-
----
-
-### 3-Q · The word map locked — Dam Days entry
-
-> **Today the word map for Zone 1 went from "mostly held" to "locked". The Reservoir is the wallet. The Aquifer is the deep reserve. The Rain Barrel is the emergency fund. The Glacier is the tax shelter. Cloud Cover is the compounding. Watershed is the diversified streams. Channel is the act of distributing the Reservoir into Buckets. Bridge is the above-cap transfer. Drainage is debt payoff. Public Lake is the regulated yield. Private Lake is the DeFi liquidity pool. Lake current is the swap fee. Fill is the verb for idle RLUSD entering a Lake.**
->
-> Rule: one word → one referent, held across the whole zone. Test 001 named the rule. Test 002 paid its cost — by coining or recovering a word for every job that didn't have one.
->
-> The map is small enough to teach in a single breath. That's the measure: if the map can't be taught in a breath, it isn't locked.
-
-`x-buckets-vision · docs/codetry/002-zone-1-words-locked.md` — Dam Days entry
-
----
-
-### 3-R · One register per screen (Test 003 — the first formal rejection)
-
-Rule discovered:
-
-> **One register per screen.** The codetry rule from test 001 (one word → one referent) extends to the screen as a whole: a single product surface should carry a single metaphor register, not two competing ones. A metaphor that lives honestly in the lineage doc may still be the wrong word for a surface, if that surface already belongs to a different register.
-
-Dam Days entry:
-
-> **Today, on the canvas, I tried the bamboo field on the wallet chip right under "Channel the rainfall." Variant A cracked at "Cut into rainfall" — bamboo and water fighting on one screen. Variant B was just noise. Variant 0, the plain chip, kept doing its job.**
->
-> Rule: one register per screen. The metaphor that's right in the lineage doc can still be the wrong word for a surface — if the surface already belongs to a different register.
->
-> Bamboo field stays in the lineage doc. The wallet chip stays as plumbing. First rejected codetry test — and the rejection itself is the finding.
-
-`x-buckets-vision · docs/codetry/003-bamboo-field-on-wallet-chip.md` — "The rule discovered" section and Dam Days entry
-
----
-
-### 3-S · Silence about the metaphor is permission for DeFi (Test 005)
-
-Rule discovered:
-
-> **Vocabulary defects compound where the metaphor is most asked to do work.** Test 001 cleaned a screen where two CTAs collided on one word. Test 002 locked a zone where a few words drifted across surfaces. Test 005 cleans a screen where the locked map was dropped entirely and four foreign registers rushed in to fill the gap. The rule is the same — one word, one referent — but the cost of dropping it scales with the number of registers that get to colonise the silence.
-
-Sharpened:
-
-> **Silence about the metaphor is permission for DeFi.** The Earn surface inherited "agent / fleet / deploy / LP / AMM / sweep / 24/7 / no rug pulls" not because anyone designed it that way but because nobody held the locked map there. Foreign registers fill unmapped territory the same way weeds fill unplanted soil.
-
-Dam Days entry:
-
-> **Today the Earn tab spoke seventeen words it had no business speaking. Agent. Fleet. Deploy. AMM. LP. APR. Pool shares. Sweep. 24/7. No rug pulls. The locked map was right there in `copy.en.ts`, being honoured on the Payday tab and the Reservoir hero and the lessons — and dropped the moment the surface touched DeFi. Four registers rushed in to fill the silence.**
->
-> Rule: vocabulary defects compound where the metaphor is most asked to do work. Silence about the metaphor is permission for DeFi.
->
-> Variant A swept the surface. The Drip Harvester is just a Drip Harvester now. Pools became Parks (already in the lessons; only the screen was holding out). Sweep became Drip. APR became "about $X per $100 / month from Park tolls". And one new word — *Park toll* — joined the locked map.
->
-> The map stays small enough to teach in a single breath. *Park toll* is the fourteenth word in it.
-
-`x-buckets-vision · docs/codetry/005-drip-harvester-reads-as-defi-noise.md` — "The rule discovered" section and Dam Days entry
-
----
-
-### 3-T · A vocabulary sweep cleans words; it does not clean layout (Test 007)
-
-Rule discovered:
-
-> **A vocabulary sweep cleans words; it does not clean layout.** Test 005 replaced "AMM pool" with "Private Park" and "LP Position" with "Parked in [Park]" on this exact card, and the card looked better for it. But the *card itself* — the choice to show four equally weighted stats, the choice to omit IL, the choice to quote the drip rate as a constant — survived the sweep untouched, because words and layout are independent failure modes. The locked map can be perfectly held while the surface still answers the wrong question first, hides the warning the household most needs, and lies (by typography, not by the number) about whether the drip rate is stable.
-
-Sharpened:
-
-> **Clean words on a noisy card still read as a noisy card.** Vocabulary tests do not graduate layout; layout tests do.
-
-Dam Days entry:
-
-> **Today the LP-position card looked clean and read wrong. Test 005 had swept it — Park instead of pool, drip instead of sweep, "$X / mo per $100 parked" instead of APR — and the words were honest. The card was not. Four stat tiles all the same size, no answer to which one matters, no warning that RLUSD and XRP can drift apart in price, no hint that the drip rate moves with traffic.**
->
-> Rule: a vocabulary sweep cleans words; it does not clean layout. Clean words on a noisy card still read as a noisy card.
->
-> Variant A held the words Test 005 had earned and rebuilt the card around them. One hero block — *drip earned so far*, the next drip's threshold, the progress bar with a single sentence under it. Two sub-stats. A toll-history band labelled honestly as a typical range until we have real snapshots. And the impermanent-loss heads-up, finally living next to the parked money instead of three taps away in a Learn drawer.
->
-> The card now answers one question first. It puts the warning where the warning has to be. And it stops pretending the drip rate is a constant.
->
-> Two kinds of test now. *What does the surface say.* And *what does the surface put first.* They catch different defects on the same card.
-
-`x-buckets-vision · docs/codetry/007-lp-position-card-survives-vocab-sweep.md` — "The rule discovered" section and Dam Days entry
 
 ---
 
@@ -1643,7 +1332,7 @@ The same principle stated from the content layer:
 
 ---
 
-### 4-Y · People first — Bright Side display rule
+### 4-AC · People first — Bright Side display rule
 
 > People first — photos and names lead, room numbers stay on the right.
 
@@ -1651,27 +1340,25 @@ The same principle stated from the content layer:
 
 ---
 
-### 4-Z · Rootwork manifesto — the six principles we build by
+### 4-AD · The Gate operational description — language stays warm
 
-The complete set of manifesto principles from the Rootwork About page, verbatim:
+> Inside the fence, the language stays warm. When something has to leave — an outgoing letter, a regulatory notice, a banking statement — it passes through the gate and the required words are quietly substituted in. Massity gets what it demands. Bright Side keeps its voice.
 
-> We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
-
-> We build for the kitchen table, the church basement, the back of the truck. If it doesn't work for the small operator with a phone and ten minutes, it isn't done yet.
-
-> We pick the side of the people who have been overlooked: the small farmer, the volunteer organizer, the side-hustler, the first-time founder. Their work counts. We help it count more.
-
-> We write software the way good cooks cook — with attention, patience, and care for who's eating. The craft matters. The feeling of using the thing matters. Speed is not a substitute for warmth.
-
-> We'd rather show than shout. No exclamation marks doing the heavy lifting. No promises we can't keep by Tuesday. The work speaks; we let it.
-
-> We ship things that are small enough to finish, real enough to use, and honest about what they do. A working small thing beats a beautiful big plan every time.
-
-`rootwork/studio/ — About page; "The principles we build by" section; six numbered principles rendered in full`
+**Source:** `legacy-gatekeeper.replit.app/about` — "Two Worlds Meeting" section, first paragraph; describes the Gate's mechanics as a membrane rather than a wall
 
 ---
 
-### 4-U · Rainfall → Siphon → Reservoir — the water-metaphor map in architectural form
+### 4-AE · The Gate is a working tool, not a manifesto
+
+> The Gate is a working tool, not a manifesto. It is the calm, confident gatekeeper. There is a sense of inside (warm, intentional, considered) and outside (formal, cold, immovable). The gate itself is the membrane. You are on the inside, looking out.
+>
+> This tool is your quiet, capable advocate. It does the boring legal-language work so you don't have to change how you speak when you are home.
+
+**Source:** `legacy-gatekeeper.replit.app/about` — "Two Worlds Meeting" section, second and third paragraphs; the founding design intent for the Gate primitive before it moved in-constellation
+
+---
+
+### 4-Y · Rainfall → Siphon → Reservoir — the water-metaphor map in architectural form
 
 > Rainfall. Siphon (bills). Reservoir. Every drop has a job.
 >
@@ -1685,7 +1372,7 @@ The complete set of manifesto principles from the Rootwork About page, verbatim:
 
 ---
 
-### 4-V · Foundation Coach — Rain Barrel as named primitive
+### 4-Z · Foundation Coach — Rain Barrel as named primitive
 
 > Plug the drainage first. High-interest debt is a leak in your reservoir — every dollar there is one less drop catching rain.
 >
@@ -1699,7 +1386,7 @@ The complete set of manifesto principles from the Rootwork About page, verbatim:
 
 ---
 
-### 4-W · Water Wheel / Private Lake — the named passive-yield system
+### 4-AA · Water Wheel / Private Lake — the named passive-yield system
 
 > A Private Lake is a self-custody DeFi liquidity pool you fill with idle RLUSD. Imagine a vending machine loaded with RLUSD and XRP — whenever someone swaps one for the other, your Lake collects a small current automatically. When you deposit, you become one of the Lake's owners and the currents drip back to you.
 >
@@ -1713,7 +1400,7 @@ The complete set of manifesto principles from the Rootwork About page, verbatim:
 
 ---
 
-### 4-X · XRP Spring — the underground spring beneath your buckets
+### 4-AB · XRP Spring — the underground spring beneath your buckets
 
 > XRP powers reserves, pool liquidity, and instant settlement — the underground spring beneath your buckets.
 >
@@ -1724,145 +1411,6 @@ The complete set of manifesto principles from the Rootwork About page, verbatim:
 > Giving Well — rises when your spring runs strong.
 
 **Source:** `x-buckets/src/copy/xrpSpring` — `springFooter`, `sectionLabel`, `tagline`, `givingWellBannerBody`, `givingWellInactive` constants; the XRP Spring tab copy; "the underground spring beneath your buckets" as the one-sentence architectural description of XRP's role in the constellation
-### 4-U · "There is a place called Bright Side" — the Gate origin narrative
-
-> There is a place called Bright Side, where they call you "neighbour", not "resident".
-
-> On the other side of the gate is Massity — a sprawling, indifferent castle of legacy systems: laws, regulations, banking, privacy bureaucracy, politics. We can't change Massity, and pragmatically, it's not worth going to prison over a "silly" word like neighbour vs resident.
->
-> So we built The Gate.
->
-> Inside the fence, the language stays warm. When something has to leave — an outgoing letter, a regulatory notice, a banking statement — it passes through the gate and the required words are quietly substituted in. Massity gets what it demands. Bright Side keeps its voice.
-
-Callout box ("Two Worlds Meeting"):
-
-> The Gate is a working tool, not a manifesto. It is the calm, confident gatekeeper. There is a sense of inside (warm, intentional, considered) and outside (formal, cold, immovable). The gate itself is the membrane. You are on the inside, looking out.
-
-Closing copy:
-
-> This tool is your quiet, capable advocate. It does the boring legal-language work so you don't have to change how you speak when you are home.
-
-`legacy-gatekeeper/assets/index-D7dpvClJ.js` — about page, Gate origin narrative in full; the founding description of why The Gate was built, written in a register predating the handbook's abstract vocabulary (no "both-sides principle," no "mapping/substitution" — just the story told plainly)
-
----
-
-### 4-U-i · "Bright side" — dementia care etymology (founder note, 2026-05-06)
-
-> Bright side was multifaceted, but born of the fact that in dementia care units, you must immerse yourself in their reality. You can't bind yourself to the constraints of massity and be an effective support person for the client if they are living with dementia. It's less that life is better on the bright side, but more that bathing in the sun of bright side is essential to peek over certain fences.
-
-*Source: founder oral note, continuity pass 2026-05-06. Not previously in harvest. Supplements 4-U. Carried into Ch4 vocabulary entry for "bright side."*
-
----
-
-### 4-V · Standby Supplies — preparedness translated for -40°C
-
-> Preparedness advice that actually works at -40°C.
-
-What-box description:
-
-> A curated preparedness guide translated specifically for extreme northern climates. Takes the best advice from survival and homestead resources and asks the hard question: does this actually work in Northwestern Ontario?
-
-"What Makes It Northern" section:
-
-> Standby Supplies starts with the acknowledgment that most preparedness content is written for mild climates. It systematically translates that content: different crops that survive -40°C, insulation that actually works, heat sources that don't require a truck of propane to keep you alive for a week. This is the Standby that NWO actually needs.
-
-`community-knowledge-hub/infographics/standby-supplies.html` — header tagline, what-box, and "What Makes It Northern" section
-### 4-W · The intentional pause — where the habit actually changes
-
-> A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
-
-**Source:** `x-buckets-vision/walletInlineFaq` — response to "How is this different from a regular budget?"; the design rationale for envelope budgeting as constraint-by-metaphor
-
----
-
-### 4-X · The celebration — what pouring the payday is
-
-> This is the celebration. We channel the income across your buckets in one move. Your funds never leave your wallet — they're just arranged.
-
-The exhortation rendered immediately before the pour action:
-
-> Every drop you channel is the habit that got you here — keep the coil tight.
-
-**Source:** `x-buckets-vision/payday.pourHelpBody` and `payday.makeItRainSubEnthusiast` — help copy and motivational sub-copy rendered at Step 4 · Pour the Payday
-
----
-
-### 4-Y · Drought Mode — plan to thrive when it rains again
-
-> Reduced or lost income? Tighten the flow — plan to thrive when it rains again.
-
-The active-mode banner:
-
-> Targets are scaled to your reduced income. Stay the course — the rains return.
-
-**Source:** `x-buckets-vision/droughtMode.toggleSubtitle` and `droughtMode.activeBannerSub` — the toggle subtitle and live banner rendered when Drought Mode is active; the water metaphor holds through income disruption
-
----
-
-### 4-Z · Rain Barrel — the foundation coach framing
-
-> High-interest debt is a leak in your reservoir — every dollar there is one less drop catching rain.
->
-> A CA$1,500 starter Rain Barrel turns most surprises into a problem you can solve, not a debt spiral.
-
-**Source:** `x-buckets-vision/foundationCoach.subDrainage` and `foundationCoach.subStarter` — the Foundation Coach step descriptions; debt reframed as drainage rather than obligation, emergency reserve reframed as a Rain Barrel rather than a fund
----
-
-### 4-S · Codetry's lineage — what is genuinely new
-
-The four things narrowly scoped as genuinely original in the discipline:
-
-> **The three-way binding.** UI metaphor word ↔ code identifier ↔ user mental model, treated as a single contract. Most prior art binds two of these. Codetry insists on all three, simultaneously, and treats a break in any leg as a defect rather than a translation issue.
->
-> **The falsifiable per-screen test ritual, with a written record.** Numbered tests (001, 002, …), a stated falsifier per test, a status line tracking whether the rule held when shipped. Prior art treats naming as ongoing hygiene; codetry treats it as a test event with a date and a verdict.
->
-> **The diagnostic heuristic.** "When a user hesitates at a screen, the first move is to look for a word doing two jobs." A specific, first-resort debugging move sitting on top of the rule. Lineage in usability heuristics; stated as a tool, not a guideline.
->
-> **The name.** Codetry — the joining of code and poetry, with a resonance to carpentry (a craft of cuts and joins). Naming the practice makes it referenceable, which is what lets it be tested at all.
-
-The strongest defensible claim from the same document:
-
-> Codetry is a new discipline that makes an old principle — the metaphor IS the architecture — operational and testable at the UI surface, one word and one referent at a time.
-
-`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Finding 1 — Lineage and what's new" and "The strongest defensible claim"
-
----
-
-### 4-T · Codetry is hempcrete — the meta-doc version
-
-> Codetry is hempcrete. Not steel, and not paint.
-
-Three reasons the metaphor fits (from the same document):
-
-> **Composite of old materials.** Hempcrete is lime + hemp shiv + water — old ingredients, new mix. Codetry is Ubiquitous Language + System Metaphor + Nielsen #2 + Lakoff + content design + naming-things — old ingredients, new mix. Neither material is invented from nothing; both are recombinations whose value is in the combining.
->
-> **Infill, not frame.** Hempcrete is non-load-bearing; a hempcrete building still needs a structural frame (timber, usually). Codetry is non-load-bearing; a codetry-disciplined product still needs the structural frame of the actual product — working code, real flows, a coherent domain model. Codetry alone cannot hold a product up. Codetry inside a sound frame makes the product breathable and warm.
->
-> **Ethical-aesthetic as well as functional.** Hempcrete is chosen partly because it sequesters carbon and breathes; the moral and sensory case is part of why anyone uses it at all. Codetry is chosen partly because the metaphor IS the architecture and the product carries the dignity of meaning what it says. The aesthetic is part of the spec, not a finish applied at the end.
-
-`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Finding 2 — Hempcrete (what kind of thing codetry is)"
-
-*Note: the hempcrete metaphor also appears in the handbook (4-E), sourced from `handbook.ts`. The meta-doc version here is a different pass at the same argument — more compressed, and set explicitly against "not steel, not paint." Both deserve to sit in the file.*
-
----
-
-### 4-U · The bamboo field — upstream as crop
-
-> A short applied note, not a third finding. Once you accept codetry is hempcrete (the practice), the next honest question is what to call the upstream the product actually draws from. In Headwaters that upstream is XRP, and the right word for it — by the same naming discipline this doc is about — is the bamboo field.
-
-Three reasons the metaphor fits:
-
-> **Renewable upstream.** A bamboo field is a working crop that quietly regrows. You walk past it most days without noticing. On payday, you cut some — the swap to RLUSD — and the cut bamboo becomes rainfall that fills the reservoir. The field is not the wall of the building; it is part of what the building is downstream of.
->
-> **Vernacular crop, not financial instrument.** Calling XRP "the bamboo field" refuses the portfolio register. It frames the holding the same way a kitchen garden frames a tomato plant: a working part of the household, not an asset class. That matches the Zone 1 voice, and it keeps the dignity-of-meaning-what-it-says rule that the hempcrete finding names.
->
-> **Standing, not flowing, not held.** Rainfall flows. The reservoir holds a worked-out amount. The bamboo field stands. Three different states, three different words — the same one-word-one-referent rule that test 001 discovered, applied one step further upstream than 001 reached.
-
-Where the metaphor strains (naming the leak is itself the codetry move):
-
-> Real bamboo establishes over years and is famously hard to remove (rhizomes). XRP swings in hours, and a holding can crash on you in ways a grove cannot. The metaphor is true on regeneration and vernacular; looser on cadence and reversibility. We bound every metaphor we use.
-
-`x-buckets-vision · docs/codetry/lineage-and-hempcrete.md` — "Coda — and while we're naming materials: bamboo-field"
 
 ---
 
@@ -2126,7 +1674,7 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
-### UG-M · The methodology tour — quiet language for real families
+### UG-R · The methodology tour — quiet language for real families
 
 > There are dozens of names for what homeschool families do. None of them are tests. None of them are clubs you have to join. The point of this tour is to give you words for what you're already doing — and to show you what's possible if you ever want to shift. Read one card a day, or seven in a row. Saltbox will remember where you stopped.
 
@@ -2146,7 +1694,7 @@ The tour framing line:
 
 ---
 
-### UG-N · Watching you on the trampoline — a founder moment
+### UG-S · Watching you on the trampoline — a founder moment
 
 > Watching you on the trampoline is both experiencing intense fear and intense joy. Fear because it is so easy to get hurt. Joy because them conquering that fear means that I'm raising courageous men in a world that needs them.
 
@@ -2178,27 +1726,47 @@ The tour framing line:
 
 ---
 
-### UG-R · The crate that carries — Parr's Jars and the 807 Co-op
+### UG-T · The Gate's original working glossary — bright-side to massity pairs
 
-> Carry the good stuff. Don't pretend to be it.
->
-> The hand-built cedar 6-pack crate didn't grow the asparagus, milk the cow, or simmer the preserves. It just holds them up so you can see them — gives them a frame, keeps them from tipping over on the way to your kitchen.
->
-> That's how Parr's Jars works alongside the 807 Food Co-op too. Parr's Jars is the crate: it carries and supports the Thunder Bay and Northwestern Ontario makers, growers and ingredients it brings together. It isn't the 807 Co-op — it's a partner that helps lift up what's grown and made here.
+The earliest published vocabulary list enacting the Gate primitive, recovered from the live mapping registry at `https://legacy-gatekeeper.replit.app/mappings`:
 
-`rootwork/studio/ — About page; "Carry the good stuff. Don't pretend to be it." section; the cedar crate as the relationship metaphor between Parr's Jars and the 807 Co-op`
+> **neighbour** → resident *(pragmatism — Local housing statute requires 'resident' in official occupancy correspondence)*
+>
+> **send** → remit *(banking — Standard banking parlance for outgoing transfers)*
+>
+> **money** → funds *(banking — 'Funds' is the standard term in account statements and notices)*
+>
+> **fee** → service charge *(banking — Truth-in-Lending disclosure requires the formal term 'service charge')*
+>
+> **loan** → extension of credit *(banking — Truth-in-Lending Act terminology; 'extension of credit' is the defined term in Regulation Z)*
+>
+> **overdue** → past due as of the statement date *(banking — Fair Debt Collection Practices Act requires precise temporal framing)*
+>
+> **everyone** → all eligible parties *(politics — Inclusive-language directive: outgoing public communications require precise eligibility framing)*
+>
+> **rules** → ordinances *(politics — Municipal communications standard: refer to local ordinances by their formal name)*
+>
+> **stand for** → advocate for *(politics — Public-affairs style guide: official statements use 'advocate' rather than colloquial 'stand for')*
+>
+> **we have to** → the company is required to *(regulations — Regulatory disclosure: passive corporate phrasing required in compliance notices)*
+>
+> **you can** → you are entitled to *(regulations — Consumer-protection regulation requires explicit entitlement framing)*
+>
+> **contract** → binding agreement *(regulations — Plain-language disclosure rule requires 'binding agreement' for first-mention in consumer documents)*
+>
+> **your info** → your personal data *(privacy — GDPR-aligned policy requires the formal term 'personal data' in privacy notices)*
+>
+> **delete** → erase pursuant to your right of erasure *(privacy — Right-to-erasure communications must reference the underlying statutory right)*
+>
+> **share** → disclose to third parties *(privacy — Disclosure obligations require explicit third-party language)*
+>
+> **track** → process *(privacy — Data-handling regulation: 'process' is the defined statutory verb; 'track' is informal and ambiguous)*
+
+**Source:** `legacy-gatekeeper.replit.app/mappings` — the full active mapping registry; these are the original registered Gate crossings, each with a category and the massity-side rationale for the substitution
 
 ---
 
-### UG-S · Rootwork membership framing — open pitch, gated studio
-
-> Rootwork modules are available to active 807 co-op members. The public Pitch builder is open to everyone — join 807 to unlock the Studio, Labels, Wholesale, and Root Routes.
-
-`rootwork/studio/ — auth gate screen; the sentence that maps Rootwork modules to the 807 co-op membership tier`
-
----
-
-### UG-J · Captain's Log — fishing as Zone 1 metaphor
+### UG-M · Captain's Log — fishing as Zone 1 metaphor
 
 > Boat's on the trailer. Launch it to start fishing.
 >
@@ -2218,197 +1786,13 @@ The tour framing line:
 
 ---
 
-### UG-K · A traditional budget — the discipline argument
+### UG-N · A traditional budget — the discipline argument
 
 > A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
 
 **Source:** `x-buckets/src/copy/faq` — FAQ item answering "How is this different from a regular budget?"; the founder's full discipline argument in one paragraph
-### UG-J · Rootwork — the six values the studio builds by
-
-> **Person-centred.** We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
-
-> **Grassroots by default.** We build for the kitchen table, the church basement, the back of the truck. If it doesn't work for the small operator with a phone and ten minutes, it isn't done yet.
-
-> **Champion the underdog.** We pick the side of the people who have been overlooked: the small farmer, the volunteer organizer, the side-hustler, the first-time founder. Their work counts. We help it count more.
-
-> **Vibe coding with love.** We write software the way good cooks cook — with attention, patience, and care for who's eating. The craft matters. The feeling of using the thing matters. Speed is not a substitute for warmth.
-
-> **Quiet confidence over hype.** We'd rather show than shout. No exclamation marks doing the heavy lifting. No promises we can't keep by Tuesday. The work speaks; we let it.
-
-> **Small, finishable, real.** We ship things that are small enough to finish, real enough to use, and honest about what they do. A working small thing beats a beautiful big plan every time.
-
-`rootwork/studio/assets/index-CPXk3mY2.js` — "What we build by" section; the six values stated publicly and committed to being held to; note that these are the values for the Rootwork studio (Zone 3), not the broader constellation, but they name the aesthetic and ethical posture that runs through all the projects
 
 ---
-
-### UG-K · Saltbox — what the box holds, preserves, and doesn't shout
-
-Four cells from the Saltbox core-values grid:
-
-> **What the box holds.** Today's plan, the lock-in card, gentle words, the daily quote, each kid's featured goal. Small daily doses, taken from the same trusted box.
-
-> **What the box preserves.** Brave moments, lock-in wins, badges, your seasonal recap. Kept like salt: preserved, never measured against a score.
-
-> **What the box doesn't shout.** No streaks. No leaderboards. No notifications. The lock-in ring is silent. Empty weeks aren't shamed.
-
-> **What you take a pinch of, when you're ready.** Sunday's prep brief, the weekly stalled-goals check-in, custom starters — take what fits the morning and leave the rest.
-
-`salt-box/assets/index-k5Dz6fv4.js` — Saltbox core-values grid, four cells; the architectural description of what Saltbox is and is not, in the same register as the saltbox-as-container prose already in the handbook
-
----
-
-### UG-L · Bright Side — joy vocabulary (warm companion, shadows, small joys)
-
-Six pieces of UI copy that name what a good shift looks like from the inside:
-
-> A warm companion for the team — surfacing the next small thing worth doing for each resident.
-
-> Bright Side leads with the shadows between you and a good day. Tap one to act on it.
-
-> Add a few small joys you can offer this resident every day. Pop one when it happens.
-
-> Things that bring them alive — songs, places, foods, jokes, hobbies.
-
-> The first one is the hardest. After that, the page fills up on its own.
-
-> Everyone here lit up every joy bubble today. Wave hi when you pass them.
-
-`health-support-hub/assets/index-CxSI5g0R.js` — landing page intro, home screen subtitle, resident joy form label, memory profile label, sparks-of-joy empty state, and today's-brightest celebration copy respectively
-
----
-
-### UG-M · "The Legal Compass" — Rootwork's plain-English law orientation tool
-
-> The Legal Compass is an orientation tool for producers in Northwestern Ontario. It names statutes, surfaces exemptions and loopholes, and tells you straight whether a rule exists for safety reasons or to protect an incumbent monopoly.
-
-`rootwork/studio/assets/index-CPXk3mY2.js` — Legal Compass about/description text; the cleanest articulation of what the tool does and why it distinguishes between safety-based rules and incumbent-protection rules
-### UG-L · Zone 0 is daily — permaculture zoning applied to household finance
-
-> Zones sort buckets by how often you tend them — Zone 0 is daily and closest, Zone 5 is the furthest, longest-term.
-
-**Source:** `x-buckets-vision/zoneIntro.body` — the optional permaculture zone view description; the same six-zone permaculture model used across the constellation applied directly to household spending buckets
-
----
-
-### UG-M · Your keys, your money — the non-custodial declaration
-
-> Your keys, your money. Headwaters is non-custodial — we never touch your funds, and every transaction is signed by you in your own wallet.
-
-**Source:** `x-buckets-vision` bundle — `whatsNew` changelog entry "Your keys, your money" headline and body; the sovereignty claim stated in plain language for a household budget tool
-
----
-
----
-
-### UG-H · Calm states earn their loudness back (Test 004)
-
-Rule discovered:
-
-> **Surface state mirrors cycle state, and calm states earn their loudness back.** A calm state is the default surface for any architectural state that doesn't require user action. The loud controls don't disappear — they retreat behind a quiet, named disclosure that the user can summon on demand. The default is calm; loudness has to earn itself back by being asked for.
-
-Dam Days entry:
-
-> **Today, looking at the Payday tab, I noticed the Wobble-targets text-link under the flow ribbon and the Tinker-with-the-plan disclosure under the rest card cut the same silhouette on the screen. Two unrelated tasks. Two different motions of the work. One shape.**
->
-> Rule: surface state mirrors cycle state, and calm states earn their loudness back. The default is calm. Loud controls retreat behind a quiet text-link the user can summon on demand. They don't disappear; they wait until asked.
->
-> First temperature-family rule. First rule named from a convergence — shipped twice in production before being recognised. The test isn't the shipping; the test is the recognition.
-
-`x-buckets-vision · docs/codetry/004-calm-states-earn-their-loudness.md` — "The rule discovered" section and Dam Days entry
-
----
-
-### UG-I · Topology is a noun-game (Tests 006 and 008)
-
-From Test 006 — rule discovered:
-
-> **Topology earns its place at the top of the surface when the stations the money passes through cannot be inferred from the cards below.** A ribbon or flow diagram at the top of an Earn surface is not decoration — it is the architectural claim that the route is the message. Earn without topology claims that the destinations are independent. Earn with topology claims they are one river running through stations. The claim has to be the claim you're actually making.
-
-From Test 008 — rule discovered:
-
-> **Topology is a noun-game.** The ribbon that holds the Earn flow is only as clear as the nouns inside it. A circle that says "Reservoir" and a circle that says "Private Lake" and an arrow between them named "Fill" is a sentence. Every word in that sentence is load-bearing. Swap any one of them for a generic ("Account → Pool → Transfer") and the sentence dissolves into a diagram that could describe any fintech product on earth.
-
-Dam Days entry from Test 008:
-
-> **Today the Earn ribbon grew a fourth circle and a sentence. The four nouns (Reservoir → Drip Harvester → Private Lake, Public Lake) finally made the route legible without a legend.**
->
-> Rule: topology is a noun-game. The ribbon is only as clear as the nouns inside it.
-
-`x-buckets-vision · docs/codetry/006-earn-tab-earns-a-roof.md` — "The rule discovered" section; `x-buckets-vision · docs/codetry/008-earn-ribbon-fourth-circle.md` — "The rule discovered" section and Dam Days entry
-
----
-
----
-
-### UG-R · Find the money that fits your project — Grants Finder overview
-
-> Find the money that fits your project — without the paperwork maze.
->
-> An AI grant-matching assistant tuned for Northwestern Ontario. Two AI agents interview you, analyze your project, and surface the grants most likely to fund it — ranked by fit, not alphabet.
-
-`community-knowledge-hub/infographics/grants-finder.html — header tagline and what-box summary`
-
----
-
-### UG-S · Grant Library and Application Pipeline — the administrative backbone (Grants Finder)
-
-> Grant Library: A curated database of available grants (NOHFC and more), kept updated by the team. Each grant includes eligibility rules, deadlines, and amounts.
->
-> Application Pipeline: Track applications from draft to submission. See which grants you've applied to, their status, and what's coming due.
->
-> Two specialized agents work together on your application — Fern asks the right questions to understand your project and builds a structured profile from natural conversation. Sage reads your profile and the grant library, returning ranked matches with a clear explanation for each recommendation.
-
-`community-knowledge-hub/infographics/grants-finder.html — Core Capabilities (Grant Library, Application Pipeline) and Meet the AI Agents section`
-
----
-
-### UG-T · The one trustworthy front door — Market Mosaic overview
-
-> The one trustworthy front door for what's at market this week.
->
-> A unified discovery platform for regional farmers' markets. Shoppers see what's available this week across all vendors without scrolling Facebook. Vendors claim their listing and keep it current. Market coordinators run the whole show from one dashboard.
-
-`community-knowledge-hub/infographics/market-mosaic.html — header tagline and what-box summary`
-
----
-
-### UG-U · Three roles, one platform — Market Mosaic user framing
-
-> Three roles, one platform.
->
-> Shoppers — see what's at market this week, no account required.
->
-> Vendors — claim listing, update inventory, build a following.
->
-> Coordinators — manage dates, vendor roster, and region settings.
->
-> Built to serve multiple markets across different regions. Starting with the 807, expanding to wherever there are vendors who need to be found.
-
-`community-knowledge-hub/infographics/market-mosaic.html — "Who It Serves" section and Multi-Region Support feature card`
-
----
-
-### UG-V · Does this actually work in Northwestern Ontario? — Standby Supplies overview
-
-> Preparedness advice that actually works at -40°C.
->
-> A curated preparedness guide translated specifically for extreme northern climates. Takes the best advice from survival and homestead resources and asks the hard question: does this actually work in Northwestern Ontario?
-
-`community-knowledge-hub/infographics/standby-supplies.html — header tagline and what-box summary`
-
----
-
-### UG-W · Seasonal right now + home-first — Standby Supplies enacted framing
-
-> Seasonal Right Now View: Each month surfaces the recommendations most relevant to your current season — what to stock, fix, or prepare for before the next freeze or thaw.
->
-> Home-First Framing: Grounded in real northern homesteads, not post-apocalyptic prepper fantasy. Practical for a family staying warm when the power goes out.
->
-> Curated Source Citations: Each recommendation links to its original source — The Survival Podcast, regional agriculture guides — with the northern filter clearly explained.
->
-> Six preparedness categories: Food · Water · Gear · Energy & Heat · Medical · Skills
-
-`community-knowledge-hub/infographics/standby-supplies.html — Core Capabilities (Seasonal Right Now View, Home-First Framing, Curated Source Citations) and Six Preparedness Categories section`
 
 ---
 
@@ -2427,8 +1811,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 1 — household finance, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #801). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (React SPA; prose extracted from minified production bundle `index-CGcLuc1T.js` and sub-bundles). Passages recovered: 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M. Full water-metaphor vocabulary map recovered (Rainfall, Reservoir, Siphon, Rain Barrel, Stream, Water Tower, Spring, Watershed, Community Well, Water Wheel, Private Lake, Giving Well, Drought Mode, Payday Planner). XRP Spring bamboo growth scene recovered as six-stage artwork sequence. Aquifer and Glacier not present in current bundle — these names may belong to an earlier xBuckets era not accessible in the live app. Git history and conversation logs not accessible from this environment.
-**Sweep status:** ✅ Complete — 2026-05-06. Content recovered from 10 codetry test docs (Tests 001–010) and the Lineage & Hempcrete meta-doc, all available in `attached_assets/` as pasted conversation artifacts. Passages folded into: Section 3 (3-M through 3-T — the naming tests, locked word map, Dam Days entries), Section 4 (4-S through 4-U — lineage findings, hempcrete meta-doc version, bamboo-field coda), Unplaced Gems (UG-H, UG-I — calm states rule, topology-is-a-noun-game). Source labels use `x-buckets-vision · docs/codetry/[filename]`.
 
 ---
 
@@ -2448,8 +1830,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
 **What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 1-P, 2-U, 3-M, 5-I, UG-I · Method: live page fetch (React SPA rendered; git history and internal filesystem not accessible from this environment)
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from the compiled production bundle at `https://community-knowledge-hub.replit.app/studio/assets/index-CPXk3mY2.js`. Passages recovered: 1-R (origin statement), UG-J (six values), UG-M (Legal Compass description). The 807 member gate copy and calm command center hero were confirmed; origin/values met quality bar; gate copy and hero did not add beyond what UG-M captures. Rootwork manifesto page and Legal Compass description page were both accessible via the bundle.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #814). Re-swept via JS bundle extraction from the live app at `https://community-knowledge-hub.replit.app/studio/` (React SPA; prose extracted from the minified production bundle `/studio/assets/index-CPXk3mY2.js`). Prior shallow sweep (Task #785) recovered 5 passages via SPA render; full bundle extraction added 8 more: 1-U (origin story + manifesto preamble), 1-V (calm command center hero framing), 4-Z (six manifesto principles verbatim), UG-R (cedar crate / Parr's Jars metaphor), UG-S (membership framing). Previously recovered: 1-R, 2-U, 3-O, 5-K, UG-K. Git history and conversation logs not accessible from this environment.
 
 ---
 
@@ -2459,8 +1839,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any narrative copy about why northern and Indigenous communities need a single searchable grants index; any prose about the funding landscape; the NOHFC Grow Application Workspace copy (five-tab workspace, deadline countdown, intake-switch logic).
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 4-S, UG-H · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output)
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`. Passages recovered: 2-X (tagline, what-box, Fern/Sage agent descriptions, Redacted Mode privacy framing). All prose available on the page was extracted; NOHFC workspace copy and deeper funding-landscape narrative were not present in the static HTML.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 4-U, UG-J, UG-R, UG-S · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output; tagline, what-box, Grant Library, Application Pipeline, and agent-card prose added in Task #815)
 
 ---
 
@@ -2470,8 +1848,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any framing prose about what market analysis means for a northern community; any description of the gap between southern market intelligence tools and northern food systems reality; the specific metaphor behind "mosaic."
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-V · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons)
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`. Passages recovered: 2-W (tagline, what-box, before/after problem grid). The specific "mosaic" metaphor rationale was not present in the HTML; the "one trustworthy front door" tagline and before/after framing were the primary quality prose.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 2-V, UG-T, UG-U · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons; tagline, what-box, and three-roles framing added in Task #815)
 
 ---
 
@@ -2481,8 +1857,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub; reads The Standby primitive)
 **What to look for:** Any prose about emergency sourcing for northern communities; any description of the difference between emergency preparedness as a checklist vs. as a living system; any vocabulary that predates or extends the Standby primitive's language in the constellation manifest.
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-W, 4-T · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section)
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`. Passages recovered: 4-V (tagline, what-box, "What Makes It Northern" section). The northern-translation framing was present and meets quality bar. Emergency sourcing narrative and living-system vs. checklist copy were not present in the static HTML.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #785); deepened 2026-05-06 (Task #815) · Passages recovered: 2-W, 4-V, UG-V, UG-W · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section; tagline, what-box, seasonal right now view, home-first framing, curated citations, and six-category list added in Task #815)
 
 ---
 
@@ -2492,7 +1866,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 0 (Bright Side / Saltbox — the institutional saltbox: long-term care, recreation therapy)
 **What to look for:** Any manifesto or philosophy copy about recreation therapy for long-term care; any prose about what a good shift looks like; any description of the tool's relationship to the staff's existing knowledge; any copy about how documentation should follow the worker, not the other way around. Note: the codetry-ship BrightSidePage.tsx already has some of this (entries 2-F, 2-G) — look for anything beyond what's already in harvest.md.
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://health-support-hub.replit.app/` (React SPA; codebase not directly accessible from this environment; prose extracted from the minified production bundle). Passages recovered: 2-X (shadows system), 2-Y (shift-tone prompts + handover prompts), 2-Z (small joys system), 4-Y (people-first display rule), UG-P (pilot sites), UG-Q (warm companion tagline). The shadow metaphor, shift-tone prompt rotation, and joys-reset-overnight copy are all beyond what was in codetry-ship BrightSidePage.tsx. The Bobbie's 2014 intake reference was also recovered (prompt metadata in the memory-profile wizard). Conversation logs and git history not accessible from this environment.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://health-support-hub.replit.app/assets/index-CxSI5g0R.js`. Passages recovered: UG-L (six pieces of joy vocabulary: warm companion, shadows, add small joys, memory profile label, sparks empty state, celebration copy). These are distinct from the codetry-ship BrightSidePage.tsx passages already in harvest (2-F, 2-G, UG-E). The staff-facing "good shift" vocabulary was the primary quality prose recoverable from the bundle.
 
 ---
 
@@ -2502,7 +1875,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 3 — community production for NWO food systems; multi-tenant member-portal pattern
 **What to look for:** The "Today I…" verb routing copy; any Treasurer Calm Monthly Journey prose; the Stuck Board naming rationale; the Appreciation Wall purpose statement; any member-facing copy about what the co-op is for; the audience-chooser framing (household vs. producer); any Producer Playbook narrative; the kitchen-rental "borrowing not renting" rationale; the 807 Benefits brand story.
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: see entry 4-O (already in harvest.md from Task #764) · Method: The full set of Zone 3 prose called out in "What to look for" — "Today I…" verb routing, Stuck Board naming rationale, role IS the room, Treasurer Calm Monthly Journey ('Calm' is the contract, not a vibe), dues-snooze-as-verb, audience chooser as structural pivot, Producer Playbook, Kitchen rental kept quiet (borrowing, not renting), Appreciation Wall — was recovered verbatim in Task #764 from the deleted constellation manifest at `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` and is catalogued under entry **4-O**. Live URL sweep (Task #785) confirmed no additional prose was accessible from the public-facing SPA shell (root URL renders a React auth-gated portal). No new passages remain to add; project 8 prose is fully covered by 4-O.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://community-knowledge-hub.replit.app/assets/index-Ct-KiV08.js`. Passages recovered: 1-S (Parrs Jars origin), 2-U (boreal larder), 2-V (preserving food as community act), 3-O (working seasonal-foods business / no off-season), 3-P (regenerative beef storytellers). The "Today I…" verb routing copy, Treasurer Calm Monthly Journey, Stuck Board rationale, and Appreciation Wall prose were not identified as distinct narrative passages meeting the quality bar in this sweep; they appear primarily as UI labels rather than prose.
 
 ---
 
@@ -2511,7 +1883,7 @@ Dam Days entry from Test 008:
 **URL:** `https://legacy-gatekeeper.replit.app/`
 **Constellation zone:** Pre-Zone 3 / historical — the original surface for the Gate primitive before it moved in-constellation
 **What to look for:** Any original framing prose about why a gate between community vocabulary and institutional language was needed; any early versions of the bright-side/massity vocabulary that predate the handbook's current language; any deleted copy about the translation problem; the historical rationale for the Gatekeeper name before it was renamed to The Gate.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://legacy-gatekeeper.replit.app/assets/index-D7dpvClJ.js`. Passages recovered: 4-U (full Gate origin narrative — "There is a place called Bright Side…" through "This tool is your quiet, capable advocate"). This is the founding narrative predating the handbook's abstract vocabulary (no "both-sides principle" yet, just the story). Early bright-side/massity vocabulary present; Gate was named The Gate from the beginning.
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #802). Swept via live URL fetch of all accessible pages (/about, /translate, /mappings, /history). Git history and conversation logs not accessible. Passages recovered: 3-U ("There is a place called Bright Side" — founding pull-quote), 3-V (Gate rationale — "So we built The Gate"), 4-AD (operational description — "language stays warm"), 4-AE (the Gate as working tool, not manifesto), UG-T (full original mapping registry, 16 bright-side → massity pairs with rationale). IDs renumbered from originals (3-P, 3-Q, 4-W, 4-X, UG-L) to avoid collision with Tasks #803 and #796. The "Inside (Bright Side)" / "Outside (Massity)" / "Pass Through Gate" UI labels on the /translate page confirmed as the earliest published version of this vocabulary — predates the handbook's current framing. No prose about the Gatekeeper name origin or its pre-rename rationale was recoverable from the public-facing pages.
 
 ---
 
@@ -2521,7 +1893,6 @@ Dam Days entry from Test 008:
 **Constellation zone:** Zone 0 — decentralized homes; homeschool day companion, local-first per family
 **What to look for:** Any onboarding or philosophy copy about Lock-In Wins, Brave Moments, Gentle Words, Quote of the Day; any narrative about the no-scoring rule (the fish-climbing-a-tree principle); any copy about what Saltbox is for beyond the feature list; the founding story for why a homeschool companion was built; any prose about Zone 0 holding both the family on the land and the elder in the care home.
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://salt-box.replit.app/` (React SPA; prose extracted from the minified production bundle). Passages recovered: 3-P (methodology cards — seven named homeschool styles, verbatim), 4-W (local-first architecture), 4-X (no-scoring rule + brave moments/lock-in wins framing), UG-L (saltbox naming origin), UG-M (methodology tour — quiet language, no quiz), UG-N (watching you on the trampoline — founder moment), UG-O (family recap preamble). The no-scoring rule is enacted in the running app as UG confirmed (4-X). The fish-climbing-a-tree principle was not found verbatim in the bundle; the concept is present in constellation entry 1-K and app entry 4-X. Conversation logs and git history not accessible from this environment.
-**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://salt-box.replit.app/assets/index-k5Dz6fv4.js`. Passages recovered: UG-K (core-values grid: what the box holds, preserves, doesn't shout, and what you take a pinch of). Lock-In Wins privacy note, emergency drill parent copy, and day-play vocabulary were identified; key quality prose folded into UG-K. No-scoring founding narrative and Zone 0 both/and framing (family on land + elder in care home) were not present as explicit prose in the bundle.
 
 ---
 
@@ -2538,16 +1909,8 @@ The following projects were identified in the codebase and may also contain harv
 
 ## Sweep Metadata
 
-**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep)
-**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction
-**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep)
-**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + external live-URL sweep (projects 3–6, 8)
-**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #796 X Buckets Vision external sweep)
-**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + X Buckets Vision live-bundle extraction
-**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #803 Bright Side + Saltbox external sweep)
-**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–7, 10)
-**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #801 X Buckets Vision external sweep)
-**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + external live-URL sweep (projects 3–6, 8) + X Buckets Vision live-bundle extraction
+**Sweep date:** 2026-05-06 (initial); supplemented 2026-05-06 (Task #764 in-project sweep); supplemented 2026-05-06 (Task #784 Dam Days external sweep); supplemented 2026-05-06 (Task #785 community-knowledge-hub external sweep); supplemented 2026-05-06 (Task #796 X Buckets Vision external sweep); supplemented 2026-05-06 (Task #803 Bright Side + Saltbox external sweep); supplemented 2026-05-06 (Task #802 Legacy Gatekeeper external sweep)
+**Sweep type:** Full — live codebase + git history deleted files + in-project supplemental sweep + Dam Days live-bundle extraction + X Buckets Vision live-bundle extraction + external live-URL sweep (projects 3–7, 10) + Legacy Gatekeeper live-URL sweep (project 9)
 
 ### Live files read
 
@@ -2590,11 +1953,10 @@ The following projects were identified in the codebase and may also contain harv
 | `ff9e4b9~1` | `artifacts/headwaters-books/src/data/constellation.ts` | 4-P |
 | `3686992~1` | `artifacts/deer-lake-walkthrough/src/sections/WhyThisTeam.tsx` | 5-H |
 
-**Total passages:** 86 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784)
-**Total passages:** 97 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +11 from X Buckets Vision external sweep in Task #796)
+**Total passages:** 130 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub sweep (net unique after renumbering); +11 from Task #796 X Buckets Vision sweep — 1-R, 1-S, 3-R, 3-S, 3-T, 4-Y, 4-Z, 4-AA, 4-AB, UG-M, UG-N; +13 from Task #803 Bright Side + Saltbox sweep — 2-X, 2-Y, 2-Z, 3-P, 4-W, 4-X, 4-AC, UG-L, UG-O, UG-P, UG-Q, UG-R, UG-S; +5 from Task #802 Legacy Gatekeeper sweep — 3-U, 3-V, 4-AD, 4-AE, UG-T (IDs renumbered from 3-P, 3-Q, 4-W, 4-X, UG-L to avoid collision with Task #803))
 **Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
 **Conversation history:** Not accessible from this environment.
-**External project sweeps:** 10 projects identified, 2 swept (Dam Days / External project 2; X Buckets Vision / External project 1). Remaining 8 require a separate agent session in each project. See "Pending External Sweeps" section above.
+**External project sweeps:** 10 projects identified, 9 swept (project 1 — X Buckets Vision; project 2 — Dam Days; projects 3–7, 10 via live URL fetch; project 9 — Legacy Gatekeeper). 1 remaining (Regen Revolution). See "Pending External Sweeps" section above.
 
 ### X Buckets Vision sweep notes (Task #796)
 
@@ -2604,71 +1966,19 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 |---|---|
 | `x-buckets/src/copy/gettingStartedTour` (slides array) | 1-R |
 | `x-buckets/src/copy/tagline` + `coreMechanic` constants | 1-S |
-| `x-buckets/src/copy/bambooSpring` (stage label/progress constants) | 3-O |
-| `x-buckets/src/copy/howItWorks.bigIdeaQuote` | 3-P |
-| `x-buckets/src/copy/droughtMode` (toggle + banner copy) | 3-Q |
-| `x-buckets/src/copy/paydayFlow` + `bridge.subtitle` | 4-U |
-| `x-buckets/src/copy/foundationCoach` (sub* constants) | 4-V |
-| `x-buckets/src/copy/learnModules` (pool/safe/rlusd/sweep entries) | 4-W |
-| `x-buckets/src/copy/xrpSpring` (springFooter + tagline + givingWell*) | 4-X |
-| `x-buckets/src/copy/captainsLog` (status constants) | UG-J |
-| `x-buckets/src/copy/faq` (budget comparison answer) | UG-K |
+| `x-buckets/src/copy/bambooSpring` (stage label/progress constants) | 3-R |
+| `x-buckets/src/copy/howItWorks.bigIdeaQuote` | 3-S |
+| `x-buckets/src/copy/droughtMode` (toggle + banner copy) | 3-T |
+| `x-buckets/src/copy/paydayFlow` + `bridge.subtitle` | 4-Y |
+| `x-buckets/src/copy/foundationCoach` (sub* constants) | 4-Z |
+| `x-buckets/src/copy/learnModules` (pool/safe/rlusd/sweep entries) | 4-AA |
+| `x-buckets/src/copy/xrpSpring` (springFooter + tagline + givingWell*) | 4-AB |
+| `x-buckets/src/copy/captainsLog` (status constants) | UG-M |
+| `x-buckets/src/copy/faq` (budget comparison answer) | UG-N |
 
-*All passages confirmed verbatim. No synthesis or composition. Named vocabulary recovered: Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Community Well, Giving Well, Abundance Bridge, Payday Ripple, Captain's Log, XRP Spring (bamboo stages 1–6).*
+*All passages confirmed verbatim. No synthesis or composition. Named vocabulary recovered: Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Community Well, Giving Well, Abundance Bridge, Payday Ripple, Captain's Log, XRP Spring (bamboo stages 1–6). IDs renumbered during Task #802 rebase to avoid collisions with Tasks #785 and #802 passages.*
 
 ---
-**Total passages:** ~133 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution; +8 from Task #814 Rootwork JS bundle re-sweep)
-**Total passages:** ~120 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 from Task #785 community-knowledge-hub live-URL sweep; +~18 from Task #803 Bright Side + Saltbox sweep + merge conflict resolution)
-**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
-**Conversation history:** Not accessible from this environment.
-**External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
-**Total passages:** 100 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +14 from external projects 3–10 sweep in Task #797)
-**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
-**Conversation history:** Not accessible from this environment.
-**External project sweeps:** 10 projects identified, 9 swept (Dam Days / External project 2 in Task #784; projects 3–10 in Task #797). External project 1 (X Buckets Vision) remains unswept — requires a separate agent session.
-
-### External projects 3–10 sweep notes (Task #797)
-
-All 8 codebases were not directly accessible from this environment. Prose was extracted from compiled, minified production JS bundles using Python string-literal extraction, plus direct HTTP fetch of three static HTML infographic pages. All quoted text recovered verbatim from bundle string literals or HTML source. Source file paths are inferred from component structure visible in the bundle (route paths, array constants, component names).
-
-| Source | Passages recovered |
-|---|---|
-| `rootwork/studio/assets/index-CPXk3mY2.js` (manifesto + about) | 1-R, UG-J, UG-M |
-| `community-knowledge-hub/assets/index-Ct-KiV08.js` (preserving course) | 1-S, 2-V |
-| `community-knowledge-hub/assets/index-Ct-KiV08.js` (foraged north course) | 2-U, 3-O |
-| `community-knowledge-hub/assets/index-Ct-KiV08.js` (regen beef course) | 3-P |
-| `community-knowledge-hub/infographics/grants-finder.html` | 2-X |
-| `community-knowledge-hub/infographics/market-mosaic.html` | 2-W |
-| `community-knowledge-hub/infographics/standby-supplies.html` | 4-V |
-| `health-support-hub/assets/index-CxSI5g0R.js` (resident joy UI) | UG-L |
-| `legacy-gatekeeper/assets/index-D7dpvClJ.js` (about page) | 4-U |
-| `salt-box/assets/index-k5Dz6fv4.js` (core-values grid) | UG-K |
-
-*All passages confirmed verbatim. No synthesis or composition.*
-**Total passages:** 110 (sections 1–5 + Unplaced Gems; +17 from Task #764 in-project supplemental sweep; +10 from Task #784 Dam Days external sweep; +9 net new from Task #785 community-knowledge-hub live-URL sweep after renumbering; +10 from Task #801 X Buckets Vision external sweep — 1-S, 1-T, 3-P, 3-Q, 4-W, 4-X, 4-Y, 4-Z, UG-L, UG-M)
-**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
-**Conversation history:** Not accessible from this environment.
-**External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 8); 3 remaining (projects 7, 9, 10). See "Pending External Sweeps" section above.
-**External project sweeps:** 10 projects identified, 7 swept (projects 1, 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 2 remaining (project 9 / Legacy Gatekeeper, and any beyond the 10 named). See "Pending External Sweeps" section above.
-
-**Total passages:** ~126 (all prior + 6 from Task #815 Zone 3 infographic depth sweep: UG-R, UG-S, UG-T, UG-U, UG-V, UG-W)
-**Supplemented:** 2026-05-06 (Task #815) — Zone 3 infographic depth sweep; external projects 4, 5, 6 re-fetched and all remaining prose recovered; 6 new UG passages added.
-**External project sweeps:** 10 projects identified, 7 swept and deepened (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 2 remaining (projects 1, 9). See "Pending External Sweeps" section.
-
-### Zone 3 infographic sweep notes (Task #815)
-
-All three Zone 3 infographic pages fetched via live HTTP GET (static HTML, no bundle extraction required). All prose recovered verbatim from rendered HTML. Git history and conversation logs not accessible from this environment.
-
-| Source | Passages recovered |
-|---|---|
-| `community-knowledge-hub/infographics/grants-finder.html` — header tagline + what-box | UG-R |
-| `community-knowledge-hub/infographics/grants-finder.html` — Grant Library, Application Pipeline, agent cards | UG-S |
-| `community-knowledge-hub/infographics/market-mosaic.html` — header tagline + what-box | UG-T |
-| `community-knowledge-hub/infographics/market-mosaic.html` — "Who It Serves" + Multi-Region Support | UG-U |
-| `community-knowledge-hub/infographics/standby-supplies.html` — header tagline + what-box | UG-V |
-| `community-knowledge-hub/infographics/standby-supplies.html` — Seasonal Right Now, Home-First, Citations, six categories | UG-W |
-
-*All passages confirmed verbatim. No synthesis or composition. Prior sweep (Task #785) had recovered 2-V (Market Mosaic problem table), 2-W (Standby Northern Translation), 4-U (Grants Finder Fern/Sage agents), 4-V (Standby What We Dropped), UG-J (Grants Finder Redacted Mode). Task #815 added the six overview + framing passages not captured in the first pass.*
 
 ### Dam Days sweep notes (Task #784)
 
@@ -2696,7 +2006,7 @@ The Bright Side codebase (`https://health-support-hub.replit.app/`) was not dire
 | `health-support-hub/src/pages/Home.tsx` or lobby screen | UG-Q (warm companion tagline) |
 | `health-support-hub/src/pages/ShiftFeed.tsx` or shift home | 2-X (shadows system) |
 | `health-support-hub/src/components/ShiftTonePrompts` | 2-Y (six shift-tone prompts + handover prompts) |
-| `health-support-hub/src/pages/ResidentFacesheet.tsx` | 2-Z (small joys), 4-Y (people first) |
+| `health-support-hub/src/pages/ResidentFacesheet.tsx` | 2-Z (small joys), 4-AC (people first; ID renumbered from 4-Y to avoid collision with X Buckets 4-Y) |
 | `health-support-hub/src/lib/exports` | UG-P (pilot sites) |
 
 ### Saltbox sweep notes (Task #803)
@@ -2706,42 +2016,20 @@ The Saltbox codebase (`https://salt-box.replit.app/`) was not directly accessibl
 | Source (inferred) | Passages recovered |
 |---|---|
 | `salt-box/src/pages/Onboarding.tsx` or settings | UG-L (saltbox naming origin), 4-W (local-first), 4-X (no-scoring) |
-| `salt-box/src/data/methodologies.ts` or tour cards | 3-P (seven methodology cards), UG-M (tour intro/close) |
-| `salt-box/src/data/quotes.ts` | UG-N (watching you on the trampoline) |
+| `salt-box/src/data/methodologies.ts` or tour cards | 3-P (seven methodology cards), UG-R (tour intro/close; ID renumbered from UG-M to avoid collision with X Buckets UG-M) |
+| `salt-box/src/data/quotes.ts` | UG-S (watching you on the trampoline; ID renumbered from UG-N to avoid collision with X Buckets UG-N) |
 | `salt-box/src/pages/Recap.tsx` or family recap | UG-O (snapshot preamble) |
-### X Buckets Vision sweep notes (Task #801)
 
-The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not directly accessible from this environment. Prose was extracted from the compiled, minified production JS bundle (`/assets/index-CGcLuc1T.js`, 257 KB) and the `headwaters-plus` sub-bundle using string-literal extraction. Source file paths are inferred from component structure visible in the bundle. Git history and conversation logs were not accessible. Aquifer and Glacier vocabulary terms (referenced in the task) were not present in the current bundle — likely belong to an earlier xBuckets era.
+### Legacy Gatekeeper sweep notes (Task #802)
 
-| Source (inferred) | Passages recovered |
+The Legacy Gatekeeper codebase (`https://legacy-gatekeeper.replit.app/`) was swept via live URL fetch of all accessible pages (home, /about, /translate, /mappings, /history). Git history and conversation logs were not accessible from this environment. The about page contained the primary founder-voiced prose; the mappings page contained the original working vocabulary registry. The translate page confirmed the "Inside (Bright Side)" / "Outside (Massity)" / "Pass Through Gate" UI framing as the earliest published version of this vocabulary.
+
+| Source | Passages recovered |
 |---|---|
-| `x-buckets-vision/gettingStartedTour.slides[0]` | 1-S |
-| `x-buckets-vision/gettingStartedTour.slides[2]` | 1-T |
-| `x-buckets-vision` bundle — `C` copy object + spotlightTour + foundationCoach | 3-P (full vocabulary map) |
-| `x-buckets-vision/bambooSpring` | 3-Q |
-| `x-buckets-vision/walletInlineFaq` | 4-W |
-| `x-buckets-vision/payday.pourHelpBody` + `makeItRainSubEnthusiast` | 4-X |
-| `x-buckets-vision/droughtMode.toggleSubtitle` + `activeBannerSub` | 4-Y |
-| `x-buckets-vision/foundationCoach.subDrainage` + `subStarter` | 4-Z |
-| `x-buckets-vision/zoneIntro.body` | UG-L |
-| `x-buckets-vision` bundle — whatsNew changelog | UG-M |
+| `legacy-gatekeeper.replit.app/about` (pull-quote) | 3-U (ID renumbered from 3-P to avoid collision with Task #803 Saltbox 3-P) |
+| `legacy-gatekeeper.replit.app/about` (founding paragraph) | 3-V (ID renumbered from 3-Q to avoid collision with existing IDs) |
+| `legacy-gatekeeper.replit.app/about` ("Two Worlds Meeting" §1) | 4-AD (ID renumbered from 4-W to avoid collision with Task #803 Saltbox 4-W) |
+| `legacy-gatekeeper.replit.app/about` ("Two Worlds Meeting" §2–3) | 4-AE (ID renumbered from 4-X to avoid collision with Task #803 Saltbox 4-X) |
+| `legacy-gatekeeper.replit.app/mappings` (full active registry) | UG-T (ID renumbered from UG-L to avoid collision with Task #803 Saltbox UG-L) |
 
 *All passages confirmed verbatim. No synthesis or composition.*
-
----
-
-### Rootwork sweep notes (Task #814)
-
-The Rootwork codebase (`https://community-knowledge-hub.replit.app/studio/`) was not directly accessible. Prose extracted from `/studio/assets/index-CPXk3mY2.js` using string-literal extraction and natural-language filtering. A prior shallow sweep (Task #785) had fetched the live SPA shell and recovered 5 passages; the full bundle extraction recovered 8 additional passages not visible in the rendered page output.
-
-| Source (inferred) | Passages recovered |
-|---|---|
-| `rootwork/studio/src/pages/About.tsx` — manifesto preamble | 1-U |
-| `rootwork/studio/src/pages/Home.tsx` — hero section | 1-V |
-| `rootwork/studio/src/pages/About.tsx` — six principles block | 4-Z |
-| `rootwork/studio/src/pages/About.tsx` — cedar crate section | UG-R |
-| `rootwork/studio/src/components/AuthGate.tsx` or equivalent — membership gate | UG-S |
-
-Previously recovered (Task #785): 1-R (founding tagline + confession), 2-U (pile-of-stuff problem framing + four pain cards), 3-O (tag the way you'd say it out loud), 5-K (closing CTA), UG-K (pitch helper prompt).
-
-*All passages confirmed verbatim from bundle string literals. No synthesis or composition. Named vocabulary recovered: calm command center, quiet tools, restless people, kitchen table, church basement, back of the truck, small operator, good cooks cook, show don't shout, small enough to finish.*
