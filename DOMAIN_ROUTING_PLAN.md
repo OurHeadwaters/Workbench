@@ -120,3 +120,42 @@ fully independent URL. The current path-based approach is recommended for now.
 5. **Click Verify** in Replit once DNS propagates (can take up to 48 hours, usually
    under 1 hour).
 6. Done — `ourheadwaters.ca` and all subpaths are live.
+
+---
+
+## Live Smoke-Test Results — 2026-05-06
+
+DNS is pointed and Replit has verified the domain. Smoke test run via `curl -sI`.
+
+### Passing ✅
+
+| URL | Expected | Actual |
+|-----|----------|--------|
+| `ourheadwaters.ca/` | 200, Crew Manifest | 200 ✅ |
+| `ourheadwaters.ca/library/` | 200, Research Library | 200 ✅ (title confirmed: "Northern Food Systems Research Library") |
+| `ourheadwaters.ca/library` (no slash) | 301 → `/library/` | 301 ✅ |
+| `ourheadwaters.ca/practitioners-guide-v2/` | 200 (direct) | 200 ✅ |
+| `ourheadwaters.ca/codetry-handbook/` | 200 (direct) | 200 ✅ |
+| `ourheadwaters.ca/headwaters-books/` | 200 (direct) | 200 ✅ |
+| `ourheadwaters.ca/print-marketing/` | 200 (direct) | 200 ✅ |
+
+### Failing — Redirects not firing ❌
+
+| URL | Expected | Actual | Root cause |
+|-----|----------|--------|------------|
+| `ourheadwaters.ca/guide/` | 301 → `/practitioners-guide-v2/` | 200 (root SPA) | Stale deployment |
+| `ourheadwaters.ca/handbook/` | 301 → `/codetry-handbook/` | 200 (root SPA) | Stale deployment |
+| `ourheadwaters.ca/books/` | 301 → `/headwaters-books/` | 200 (root SPA) | Stale deployment |
+| `ourheadwaters.ca/print/` | 301 → `/print-marketing/` | 200 (root SPA) | Stale deployment |
+
+### Root cause
+
+The redirect rules (`/guide/`, `/handbook/`, `/books/`, `/print/`) are defined in
+`artifacts/codetry-ship/.replit-artifact/artifact.toml` under `[services.production.redirects]`
+and are correct. However, the production deployment predates when those rules were added.
+The `/*` rewrite rule (which serves `index.html` for all unmatched paths) is therefore
+winning over the redirect rules.
+
+**Fix:** Re-publish the project from the main Replit workspace. Once the build re-runs and
+the new artifact.toml is deployed, all four 301 redirects will activate automatically.
+No code changes are needed — the rules are already in place.
