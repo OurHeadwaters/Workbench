@@ -31,6 +31,7 @@ export function ChapterBlock({
   const c = useColors();
   const { theme } = useReader();
   const [examplesOpen, setExamplesOpen] = useState(false);
+  const [collapsibleOpen, setCollapsibleOpen] = useState(false);
   const baseSize = 17 * fontScale;
   const lineHeight = baseSize * 1.55;
   const smallSize = 13 * fontScale;
@@ -348,6 +349,52 @@ export function ChapterBlock({
           ))}
         </View>,
       );
+    case "collapsible": {
+      const handleCollapsibleToggle = () => {
+        if (Platform.OS === "android") {
+          UIManager.setLayoutAnimationEnabledExperimental?.(true);
+        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setCollapsibleOpen((prev) => !prev);
+      };
+      return wrapWithGlow(
+        <View style={styles.examples}>
+          <Pressable
+            onPress={handleCollapsibleToggle}
+            style={[styles.examplesHeader, { borderColor: c.rule }]}
+          >
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: MONO,
+                fontSize: smallSize,
+                letterSpacing: 0.6,
+                textTransform: "uppercase",
+                flex: 1,
+              }}
+            >
+              {block.label}
+            </Text>
+            <Ionicons
+              name={collapsibleOpen ? "chevron-up" : "chevron-down"}
+              size={14}
+              color={c.mutedForeground}
+            />
+          </Pressable>
+          {collapsibleOpen
+            ? block.blocks.map((innerBlock, i) => (
+                <ChapterBlock
+                  key={i}
+                  block={innerBlock}
+                  fontScale={fontScale}
+                  onLongPress={onLongPress}
+                  onPressRef={onPressRef}
+                />
+              ))
+            : null}
+        </View>,
+      );
+    }
     case "rule":
       return wrapWithGlow(
         <View

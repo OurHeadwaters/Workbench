@@ -42,6 +42,8 @@ function extractBlockStrings(block: Block): string[] {
       // WorkedExample objects carry name + rule. Both are reader-facing
       // and could in principle hold a §X.Y pointer.
       return block.items.flatMap((item) => [item.name, item.rule]);
+    case "collapsible":
+      return block.blocks.flatMap(extractBlockStrings);
     case "rule":
       return [];
     case "tool":
