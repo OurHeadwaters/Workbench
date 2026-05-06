@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { getStoredOwnerToken } from "@/lib/api";
+import { getStoredOwnerToken, setStoredOwnerToken } from "@/lib/api";
 
 const BASE = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -152,6 +152,11 @@ function ToolCard({ tool }: { tool: ToolEntry }) {
 export function WorkbenchPage() {
   const [, navigate] = useLocation();
 
+  function handleSignOut() {
+    setStoredOwnerToken(null);
+    navigate("/sign-on");
+  }
+
   useEffect(() => {
     if (!getStoredOwnerToken()) {
       navigate("/sign-on");
@@ -256,6 +261,14 @@ export function WorkbenchPage() {
           >
             headwaters · dryden, ontario
           </p>
+          <button
+            onClick={handleSignOut}
+            data-testid="workbench-sign-out"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80 transition-opacity"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            Sign out →
+          </button>
         </footer>
 
       </div>
