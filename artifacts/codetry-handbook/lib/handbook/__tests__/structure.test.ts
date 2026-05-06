@@ -26,14 +26,13 @@ import { PARTS } from "@/data/handbook";
  * currently authored: 3.1–3.7 (the six moves). Chapters 3.8–3.21 are
  * planned future content; this list must be extended as they are written.
  *
- * The Coda (roman "CODA") holds exactly one capstone chapter:
- * "From scared to prepared" (id "coda-1").
+ * The Conclusion (roman "CODA") holds exactly two chapters in order:
+ * "From scared to prepared" (id "coda-1") then "The Source" (id "5-6").
  *
  * Back-matter parts covered here:
  *   Open Questions  (roman "V")  — §5.1–§5.8
  *   Deep Dives      (roman "DD") — §DD.1–§DD.5
  *   Field Ledger    (roman "FL") — §FL.1–§FL.11
- *   Colophon        (roman "C")  — single chapter "C"
  */
 
 const PART_PROLOGUE_EXPECTED_NUMBERS = ["P.1", "P.2"];
@@ -133,9 +132,9 @@ describe("handbook structure guard — Prologue, Parts I and II", () => {
   });
 });
 
-describe("handbook structure guard — Part III and Coda", () => {
+describe("handbook structure guard — Part III and Conclusion", () => {
   const partIII = PARTS.find((p) => p.roman === "III");
-  const partCoda = PARTS.find((p) => p.roman === "CODA");
+  const partConclusion = PARTS.find((p) => p.roman === "CODA");
 
   describe("Part III (roman III) chapter count and ordering", () => {
     it("exists in PARTS", () => {
@@ -154,28 +153,36 @@ describe("handbook structure guard — Part III and Coda", () => {
     });
   });
 
-  describe("Coda (roman CODA) chapter count and id", () => {
+  describe("Conclusion (roman CODA) chapter count and ids", () => {
     it("exists in PARTS", () => {
       expect(
-        partCoda,
-        'PARTS does not contain a part with roman "CODA" — the Coda may have been dropped or its roman key changed',
+        partConclusion,
+        'PARTS does not contain a part with roman "CODA" — the Conclusion may have been dropped or its roman key changed',
       ).toBeDefined();
     });
 
-    it("contains exactly one chapter", () => {
-      const count = partCoda?.chapters.length ?? 0;
+    it("contains exactly two chapters", () => {
+      const count = partConclusion?.chapters.length ?? 0;
       expect(
         count,
-        `Coda must have exactly 1 chapter but found ${count}`,
-      ).toBe(1);
+        `Conclusion must have exactly 2 chapters but found ${count}`,
+      ).toBe(2);
     });
 
-    it('the single Coda chapter has id "coda-1"', () => {
-      const id = partCoda?.chapters[0]?.id;
+    it('the first Conclusion chapter has id "coda-1"', () => {
+      const id = partConclusion?.chapters[0]?.id;
       expect(
         id,
-        `Coda chapter id must be "coda-1" but found "${id}"`,
+        `First Conclusion chapter id must be "coda-1" but found "${id}"`,
       ).toBe("coda-1");
+    });
+
+    it('the second Conclusion chapter has id "5-6"', () => {
+      const id = partConclusion?.chapters[1]?.id;
+      expect(
+        id,
+        `Second Conclusion chapter id must be "5-6" but found "${id}"`,
+      ).toBe("5-6");
     });
   });
 });
@@ -227,7 +234,6 @@ describe("handbook structure guard — back-matter parts", () => {
   const partOpenQuestions = PARTS.find((p) => p.roman === "V");
   const partDeepDives = PARTS.find((p) => p.roman === "DD");
   const partFieldLedger = PARTS.find((p) => p.roman === "FL");
-  const partColophon = PARTS.find((p) => p.roman === "C");
 
   describe("Open Questions (roman V) chapter count and ordering", () => {
     it("exists in PARTS", () => {
@@ -280,28 +286,4 @@ describe("handbook structure guard — back-matter parts", () => {
     });
   });
 
-  describe("Colophon (roman C) chapter count and number", () => {
-    it("exists in PARTS", () => {
-      expect(
-        partColophon,
-        'PARTS does not contain a part with roman "C" — the Colophon may have been dropped or its roman key changed',
-      ).toBeDefined();
-    });
-
-    it("contains exactly one chapter", () => {
-      const count = partColophon?.chapters.length ?? 0;
-      expect(
-        count,
-        `Colophon must have exactly 1 chapter but found ${count}`,
-      ).toBe(1);
-    });
-
-    it('the single Colophon chapter has number "C"', () => {
-      const num = partColophon?.chapters[0]?.number;
-      expect(
-        num,
-        `Colophon chapter number must be "C" but found "${num}"`,
-      ).toBe("C");
-    });
-  });
 });

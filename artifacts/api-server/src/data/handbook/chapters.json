@@ -5048,8 +5048,8 @@
     },
     {
       "roman": "CODA",
-      "title": "A Practitioner's Arc",
-      "blurb": "The practitioner's own arc — from scared to prepared, from 2011 to present. A deliberate close to the handbook, where the discipline named in Parts I–III is held against a practitioner's real decade of decisions.",
+      "title": "Conclusion",
+      "blurb": "The practitioner's own arc — from scared to prepared, from 2011 to present — and the source from which this handbook was drawn.",
       "kind": "backMatter",
       "chapters": [
         {
@@ -5135,19 +5135,11 @@
               "route": "/driver"
             }
           ]
-        }
-      ]
-    },
-    {
-      "roman": "C",
-      "title": "The Source",
-      "blurb": "How this handbook was authored, and the spirit in which it is offered.",
-      "kind": "backMatter",
-      "chapters": [
+        },
         {
           "id": "5-6",
           "number": "C",
-          "partRoman": "C",
+          "partRoman": "CODA",
           "partLabel": "The Source",
           "title": "The Source",
           "blocks": [
@@ -10247,7 +10239,7 @@
     {
       "id": "5-6",
       "number": "C",
-      "partRoman": "C",
+      "partRoman": "CODA",
       "partLabel": "The Source",
       "title": "The Source",
       "blocks": [

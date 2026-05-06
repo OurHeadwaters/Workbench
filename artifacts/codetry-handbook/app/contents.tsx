@@ -172,7 +172,7 @@ export default function Contents() {
                       { color: c.mutedForeground, fontFamily: MONO },
                     ]}
                   >
-                    A Practitioner's Arc
+                    Conclusion
                   </Text>
                   <View
                     style={[

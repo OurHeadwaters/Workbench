@@ -4137,54 +4137,10 @@ const partVII: Part = {
 };
 
 
-const partColophon: Part = {
-  roman: "C",
-  title: "The Source",
-  blurb:
-    "How this handbook was authored, and the spirit in which it is offered.",
-  kind: "backMatter",
-  chapters: [
-    {
-      id: "5-6",
-      number: "C",
-      partRoman: "C",
-      partLabel: "The Source",
-      title: "The Source",
-      blocks: [
-        {
-          kind: "para",
-          text:
-            "This handbook was authored in 2026 alongside the constellation it draws its founding examples from. The constellation lives at the practitioner's working URL; the canonical Codetry working-doc lives at /practitioner-operating-plan/codetry; the machine-readable constellation manifest, frozen as a snapshot in this app, lives at /practitioner-operating-plan/constellation.json.",
-        },
-        {
-          kind: "para",
-          text:
-            "Voice and editorial decisions follow the constellation's own quiet, declarative register. No marketing.",
-        },
-        {
-          kind: "para",
-          text:
-            "The discipline named here is offered in the spirit of the four teachers above and Thunder alongside them.",
-        },
-        { kind: "rule" },
-        {
-          kind: "para",
-          text:
-            "For the community development practitioners who pick this up: the names will be your own. Use the discipline; throw away the examples. That is the only correct way to read this book.",
-        },
-        {
-          kind: "small",
-          text: `Snapshot v${constellation.version} · ${constellation.lastUpdated}. Offline-readable. State held under codetry-handbook:v1.`,
-        },
-      ],
-    },
-  ],
-};
-
-const partCoda: Part = {
+const partConclusion: Part = {
   roman: "CODA",
-  title: "A Practitioner's Arc",
-  blurb: "The practitioner's own arc — from scared to prepared, from 2011 to present. A deliberate close to the handbook, where the discipline named in Parts I–III is held against a practitioner's real decade of decisions.",
+  title: "Conclusion",
+  blurb: "The practitioner's own arc — from scared to prepared, from 2011 to present — and the source from which this handbook was drawn.",
   kind: "backMatter",
   chapters: [
     {
@@ -4269,10 +4225,44 @@ const partCoda: Part = {
         },
       ],
     },
+    {
+      id: "5-6",
+      number: "C",
+      partRoman: "CODA",
+      partLabel: "The Source",
+      title: "The Source",
+      blocks: [
+        {
+          kind: "para",
+          text:
+            "This handbook was authored in 2026 alongside the constellation it draws its founding examples from. The constellation lives at the practitioner's working URL; the canonical Codetry working-doc lives at /practitioner-operating-plan/codetry; the machine-readable constellation manifest, frozen as a snapshot in this app, lives at /practitioner-operating-plan/constellation.json.",
+        },
+        {
+          kind: "para",
+          text:
+            "Voice and editorial decisions follow the constellation's own quiet, declarative register. No marketing.",
+        },
+        {
+          kind: "para",
+          text:
+            "The discipline named here is offered in the spirit of the four teachers above and Thunder alongside them.",
+        },
+        { kind: "rule" },
+        {
+          kind: "para",
+          text:
+            "For the community development practitioners who pick this up: the names will be your own. Use the discipline; throw away the examples. That is the only correct way to read this book.",
+        },
+        {
+          kind: "small",
+          text: `Snapshot v${constellation.version} · ${constellation.lastUpdated}. Offline-readable. State held under codetry-handbook:v1.`,
+        },
+      ],
+    },
   ],
 };
 
-export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partQuietExamples, partVI, partII, partVII, partCoda, partColophon];
+export const PARTS: Part[] = [partPrologue, partV, partI, partIII, partIV, partQuietExamples, partVI, partII, partVII, partConclusion];
 
 export const CHAPTERS: Chapter[] = PARTS.flatMap((p) => p.chapters);
 
