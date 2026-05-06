@@ -275,6 +275,18 @@ function PrintBlock({ block }: { block: Block }) {
           ))}
         </View>
       );
+    case "collapsible":
+      return (
+        <View style={styles.collapsible}>
+          <InlineText
+            text={block.label}
+            style={[styles.collapsibleLabel, { fontFamily: SERIF_BOLD }]}
+          />
+          {block.blocks.map((inner, i) => (
+            <PrintBlock key={i} block={inner} />
+          ))}
+        </View>
+      );
     case "rule":
       return <View style={styles.midRule} />;
   }
@@ -462,6 +474,19 @@ const styles = StyleSheet.create({
     color: MUTED,
     letterSpacing: 0.3,
     marginTop: 2,
+  },
+  collapsible: {
+    borderLeftWidth: 2,
+    borderLeftColor: RULE,
+    paddingLeft: 12,
+    marginVertical: 10,
+  },
+  collapsibleLabel: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: INK,
+    marginBottom: 4,
+    letterSpacing: 0.1,
   },
   midRule: {
     height: 1,
