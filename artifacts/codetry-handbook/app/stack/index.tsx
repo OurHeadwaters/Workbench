@@ -26,7 +26,7 @@ function getCard(id: string) {
 export default function StackHome() {
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const { ready, activeCards, doneCards, skipCard, resetAll } = useStack();
+  const { ready, activeCards, doneCards, flaggedCards, skipCard, resetAll, cardStates } = useStack();
   const [confirmReset, setConfirmReset] = useState(false);
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
@@ -38,6 +38,7 @@ export default function StackHome() {
   const topId = activeCards[0] ?? null;
   const peekIds = activeCards.slice(1, 4);
   const topCard = topId ? getCard(topId) : null;
+  const flaggedCount = flaggedCards.length;
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
@@ -71,6 +72,14 @@ export default function StackHome() {
           One card at a time. Each card asks whether a concept from the handbook
           has been understood — not just read.
         </Text>
+
+        {flaggedCount > 0 && (
+          <View style={[styles.flaggedBanner, { backgroundColor: c.card, borderColor: c.rule }]}>
+            <Text style={[styles.flaggedBannerText, { color: c.mutedForeground, fontFamily: MONO }]}>
+              ⚑ {flaggedCount} {flaggedCount === 1 ? "card" : "cards"} flagged for revisit
+            </Text>
+          </View>
+        )}
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
@@ -135,6 +144,7 @@ export default function StackHome() {
                     ]}
                   >
                     {topCard.category.toUpperCase()}
+                    {cardStates[topId]?.status === "flagged" ? "  ·  ⚑ REVISIT" : ""}
                   </Text>
                   <Text
                     style={[
@@ -217,6 +227,7 @@ export default function StackHome() {
                 {activeCards.map((id) => {
                   const card = getCard(id);
                   if (!card) return null;
+                  const isFlagged = cardStates[id]?.status === "flagged";
                   return (
                     <Pressable
                       key={id}
@@ -239,6 +250,7 @@ export default function StackHome() {
                           ]}
                         >
                           {card.category.toUpperCase()}
+                          {isFlagged ? "  ·  ⚑ REVISIT" : ""}
                         </Text>
                         <Text
                           style={[
@@ -421,6 +433,18 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 38, lineHeight: 42, letterSpacing: 0.3 },
   subtitle: { fontSize: 16, lineHeight: 24, marginTop: 6 },
+  flaggedBanner: {
+    marginTop: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+  flaggedBannerText: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
   rule: { height: 1, marginVertical: 20, opacity: 0.7 },
   sectionLabel: {
     fontSize: 10,

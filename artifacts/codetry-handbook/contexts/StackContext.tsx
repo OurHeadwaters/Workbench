@@ -15,8 +15,9 @@ const NS = "codetry-handbook:stack:v1";
 const KEY_ORDER = `${NS}:order`;
 const KEY_ANSWERS = `${NS}:answers`;
 const KEY_DONE = `${NS}:done`;
+const KEY_FLAGGED = `${NS}:flagged`;
 
-export type CardStatus = "active" | "done";
+export type CardStatus = "active" | "done" | "flagged";
 
 export interface StepAnswer {
   stepId: string;
@@ -35,11 +36,13 @@ interface StackContextValue {
   cardStates: Record<string, CardState>;
   skipCard: (cardId: string) => void;
   completeCard: (cardId: string) => void;
+  flagCard: (cardId: string) => void;
   setStepAnswer: (cardId: string, stepId: string, text: string) => void;
   getStepAnswer: (cardId: string, stepId: string) => string;
   resetAll: () => void;
   activeCards: string[];
   doneCards: string[];
+  flaggedCards: string[];
   topCardId: string | null;
 }
 
@@ -47,7 +50,7 @@ const StackContext = createContext<StackContextValue | null>(null);
 
 // ─── Pure hydration logic — exported for unit testing ─────────────────────────
 //
-// Reconstructs order and card states from the three raw AsyncStorage strings.
+// Reconstructs order and card states from the four raw AsyncStorage strings.
 // This is extracted so the session-persistence behaviour can be tested without
 // mounting a React tree or mocking AsyncStorage.
 
@@ -55,6 +58,7 @@ export function hydrateStackState(
   rawOrder: string | null,
   rawAnswers: string | null,
   rawDone: string | null,
+  rawFlagged: string | null,
   allIds: string[],
 ): { order: string[]; cardStates: Record<string, CardState> } {
   let loadedOrder: string[] = allIds;
@@ -86,11 +90,22 @@ export function hydrateStackState(
     } catch {}
   }
 
+  const flaggedSet = new Set<string>();
+  if (rawFlagged) {
+    try {
+      const parsed: string[] = JSON.parse(rawFlagged);
+      if (Array.isArray(parsed)) parsed.forEach((id) => flaggedSet.add(id));
+    } catch {}
+  }
+
   const cardStates: Record<string, CardState> = {};
   for (const id of allIds) {
+    let status: CardStatus = "active";
+    if (doneSet.has(id)) status = "done";
+    else if (flaggedSet.has(id)) status = "flagged";
     cardStates[id] = {
       cardId: id,
-      status: doneSet.has(id) ? "done" : "active",
+      status,
       stepAnswers: loadedAnswers[id] ?? {},
     };
   }
@@ -118,10 +133,11 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
     let cancelled = false;
     (async () => {
       try {
-        const [rawOrder, rawAnswers, rawDone] = await Promise.all([
+        const [rawOrder, rawAnswers, rawDone, rawFlagged] = await Promise.all([
           AsyncStorage.getItem(KEY_ORDER),
           AsyncStorage.getItem(KEY_ANSWERS),
           AsyncStorage.getItem(KEY_DONE),
+          AsyncStorage.getItem(KEY_FLAGGED),
         ]);
         if (cancelled) return;
 
@@ -130,6 +146,7 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
           rawOrder,
           rawAnswers,
           rawDone,
+          rawFlagged,
           allIds,
         );
 
@@ -165,6 +182,13 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
     AsyncStorage.setItem(KEY_DONE, JSON.stringify(done)).catch(() => {});
   }, []);
 
+  const persistFlagged = useCallback((states: Record<string, CardState>) => {
+    const flagged = Object.values(states)
+      .filter((s) => s.status === "flagged")
+      .map((s) => s.cardId);
+    AsyncStorage.setItem(KEY_FLAGGED, JSON.stringify(flagged)).catch(() => {});
+  }, []);
+
   const skipCard = useCallback(
     (cardId: string) => {
       setOrder((prev) => {
@@ -187,10 +211,33 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
         };
         cardStatesRef.current = next;
         persistDone(next);
+        persistFlagged(next);
         return next;
       });
     },
-    [persistDone],
+    [persistDone, persistFlagged],
+  );
+
+  const flagCard = useCallback(
+    (cardId: string) => {
+      setCardStates((prev) => {
+        const next = {
+          ...prev,
+          [cardId]: { ...prev[cardId], status: "flagged" as CardStatus },
+        };
+        cardStatesRef.current = next;
+        persistFlagged(next);
+        return next;
+      });
+      setOrder((prev) => {
+        const without = prev.filter((id) => id !== cardId);
+        const next = [...without, cardId];
+        orderRef.current = next;
+        persistOrder(next);
+        return next;
+      });
+    },
+    [persistFlagged, persistOrder],
   );
 
   const setStepAnswer = useCallback(
@@ -250,6 +297,11 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
     [order, cardStates],
   );
 
+  const flaggedCards = useMemo(
+    () => order.filter((id) => cardStates[id]?.status === "flagged"),
+    [order, cardStates],
+  );
+
   const topCardId = activeCards[0] ?? null;
 
   const value = useMemo<StackContextValue>(
@@ -259,11 +311,13 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
       cardStates,
       skipCard,
       completeCard,
+      flagCard,
       setStepAnswer,
       getStepAnswer,
       resetAll,
       activeCards,
       doneCards,
+      flaggedCards,
       topCardId,
     }),
     [
@@ -272,11 +326,13 @@ export function StackProvider({ children }: { children: React.ReactNode }) {
       cardStates,
       skipCard,
       completeCard,
+      flagCard,
       setStepAnswer,
       getStepAnswer,
       resetAll,
       activeCards,
       doneCards,
+      flaggedCards,
       topCardId,
     ],
   );

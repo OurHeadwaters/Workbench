@@ -26,17 +26,19 @@ export default function StackCardDetail() {
   const id = typeof params.id === "string" ? params.id : "";
   const c = useColors();
   const insets = useSafeAreaInsets();
-  const { cardStates, completeCard, setStepAnswer, getStepAnswer } = useStack();
+  const { cardStates, completeCard, flagCard, setStepAnswer, getStepAnswer } = useStack();
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
   const card = STACK_CARDS.find((c) => c.id === id);
   const cardState = cardStates[id];
   const isDone = cardState?.status === "done";
+  const isFlagged = cardState?.status === "flagged";
 
   const [currentStep, setCurrentStep] = useState(0);
   const [doneAnim] = useState(() => new Animated.Value(isDone ? 1 : 0));
   const [showDone, setShowDone] = useState(isDone);
+  const [showFlagged, setShowFlagged] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -58,6 +60,14 @@ export default function StackCardDetail() {
       router.replace("/stack");
     }, 900);
   }, [id, completeCard, doneAnim]);
+
+  const handleFlagCard = useCallback(() => {
+    flagCard(id);
+    setShowFlagged(true);
+    setTimeout(() => {
+      router.replace("/stack");
+    }, 900);
+  }, [id, flagCard]);
 
   if (!card) {
     return (
@@ -97,6 +107,8 @@ export default function StackCardDetail() {
     outputRange: [1, 1.05, 1],
   });
 
+  const statusLabel = isDone ? "  ·  DONE ✓" : isFlagged ? "  ·  REVISIT ⚑" : "";
+
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
       <ScrollView
@@ -124,7 +136,7 @@ export default function StackCardDetail() {
         {/* Card header */}
         <Text style={[styles.category, { color: c.mutedForeground, fontFamily: MONO }]}>
           {card.category.toUpperCase()}
-          {isDone ? "  ·  DONE ✓" : ""}
+          {statusLabel}
         </Text>
         <Text style={[styles.question, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
           {card.question}
@@ -270,37 +282,54 @@ export default function StackCardDetail() {
 
         <View style={{ height: 28 }} />
 
-        {/* Done button */}
+        {/* Action buttons */}
         {!isDone ? (
-          <Animated.View style={{ transform: [{ scale: doneScale }] }}>
-            <Pressable
-              onPress={allAnswered ? handleMarkDone : undefined}
-              style={({ pressed }) => [
-                styles.doneBtn,
-                {
-                  backgroundColor: allAnswered ? c.foreground : c.rule,
-                  opacity: pressed && allAnswered ? 0.85 : 1,
-                },
-              ]}
-              accessibilityLabel={
-                allAnswered ? "Mark card done" : "Answer all steps to mark done"
-              }
-            >
-              <Text
-                style={[
-                  styles.doneBtnLabel,
+          <>
+            <Animated.View style={{ transform: [{ scale: doneScale }] }}>
+              <Pressable
+                onPress={allAnswered ? handleMarkDone : undefined}
+                style={({ pressed }) => [
+                  styles.doneBtn,
                   {
-                    color: allAnswered ? c.background : c.mutedForeground,
-                    fontFamily: MONO,
+                    backgroundColor: allAnswered ? c.foreground : c.rule,
+                    opacity: pressed && allAnswered ? 0.85 : 1,
                   },
                 ]}
+                accessibilityLabel={
+                  allAnswered ? "Mark card done" : "Answer all steps to mark done"
+                }
               >
-                {allAnswered
-                  ? "Done — mark it complete ✓"
-                  : `Answer all ${totalSteps} steps to complete`}
-              </Text>
-            </Pressable>
-          </Animated.View>
+                <Text
+                  style={[
+                    styles.doneBtnLabel,
+                    {
+                      color: allAnswered ? c.background : c.mutedForeground,
+                      fontFamily: MONO,
+                    },
+                  ]}
+                >
+                  {allAnswered
+                    ? "Done — mark it complete ✓"
+                    : `Answer all ${totalSteps} steps to complete`}
+                </Text>
+              </Pressable>
+            </Animated.View>
+
+            {!showFlagged && (
+              <Pressable
+                onPress={handleFlagCard}
+                style={({ pressed }) => [
+                  styles.fuzzyBtn,
+                  { borderColor: c.rule, opacity: pressed ? 0.7 : 1 },
+                ]}
+                accessibilityLabel="Still fuzzy — revisit later"
+              >
+                <Text style={[styles.fuzzyBtnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                  ⚑ Still fuzzy — revisit later
+                </Text>
+              </Pressable>
+            )}
+          </>
         ) : (
           <View
             style={[
@@ -327,6 +356,17 @@ export default function StackCardDetail() {
             ]}
           >
             Nice work. Returning to the deck…
+          </Text>
+        )}
+
+        {showFlagged && (
+          <Text
+            style={[
+              styles.doneMessage,
+              { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
+            ]}
+          >
+            Flagged for later. Returning to the deck…
           </Text>
         )}
       </ScrollView>
@@ -436,6 +476,19 @@ const styles = StyleSheet.create({
   doneBtnLabel: {
     fontSize: 12,
     letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  fuzzyBtn: {
+    marginTop: 10,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    borderWidth: 1,
+    alignItems: "center",
+  },
+  fuzzyBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.2,
     textTransform: "uppercase",
   },
   doneMessage: {
