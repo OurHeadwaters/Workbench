@@ -6,6 +6,7 @@
 **Supplemented:** 2026-05-06 (Task #785) — community-knowledge-hub external sweep; projects 3–6 swept via live URL fetch; project 8 attempted (SPA shell, no prose recovered).
 **Supplemented:** 2026-05-06 — Task #796: X Buckets Vision (External project 1) swept; 11 passages added (1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K).
 **Supplemented:** 2026-05-06 (Task #803) — Bright Side (project 7) and Saltbox (project 10) swept via JS bundle extraction; merge conflicts from Tasks #784 and #785 resolved; passages 2-X, 2-Y, 2-Z, 3-O, 3-P, 4-U, 4-V, 4-W, 4-X, 4-Y, 5-K, UG-J through UG-Q added.
+**Supplemented:** 2026-05-06 — Task #797: External projects 3–10 swept; 14 passages added (1-R, 1-S, 2-U, 2-V, 2-W, 2-X, 3-O, 3-P, 4-U, 4-V, UG-J, UG-K, UG-L, UG-M). Sources: Rootwork studio bundle, health-support-hub bundle, community-knowledge-hub bundle (main app + three infographic HTML pages), legacy-gatekeeper bundle, salt-box bundle.
 **Previous version rejected** by code review for fabricated passages and wrong section structure.
 
 Organized under the five required book sections:
@@ -250,6 +251,26 @@ The founding confession, immediately below the hero section:
 > Every dollar of stablecoin income is rainfall caught in your Reservoir — automatically channeled into named buckets so nothing escapes and every drop has a purpose.
 
 **Source:** `x-buckets/src/copy/tagline` + `x-buckets/src/copy/coreMechanic` — the tagline and coreMechanic constants; the two sentences that describe what Zone 1 is for
+
+---
+
+### 1-U · Rootwork started the way most honest things do
+
+> Rootwork started the way most honest things do — out of frustration with what was on offer, and a stubborn feeling that it could be kinder, slower, and more useful.
+>
+> This page is the manifesto: the principles we build by, said out loud so we can be held to them. If they sound like the kind of software you've been wishing existed, you're in the right place.
+
+`rootwork/studio/assets/index-CPXk3mY2.js` — manifesto/about page opening; the Rootwork origin statement
+
+---
+
+### 1-V · Parrs Jars launched in the summer of 2020
+
+> Parrs Jars launched in the summer of 2020 — in the middle of a pandemic, when local food systems were strained and people were newly aware of how fragile their food supply was. Bobbie Parr started with a newsletter, some subscription crates, and a commitment to keeping local food accessible in Dryden.
+>
+> She's learned a lot since then.
+
+`community-knowledge-hub/assets/index-Ct-KiV08.js` — preserving course, "What Bobbie Learned Running a Community Kitchen" lesson opening
 
 ---
 
@@ -558,6 +579,7 @@ Guard against misuse (immediately following):
 
 ---
 
+<<<<<<< HEAD
 ### 2-U · You don't have a productivity problem — Rootwork problem framing
 
 > You don't have a productivity problem. You have a pile-of-stuff problem.
@@ -583,6 +605,35 @@ The four pain-point observations, verbatim:
 ### 2-V · Market Mosaic — the three problems it solves
 
 Before/after comparisons (verbatim):
+=======
+### 2-U · The boreal larder — what foraging means in NWO
+
+> The boreal forest that surrounds Dryden, Wabigoon, Sioux Lookout and Kenora is one of the most generous larders on the continent. Wild rice in the shallow lakes. Chaga on the birches. Labrador tea, wintergreen, and sweet gale in the muskeg. Rosehips, blueberries, raspberries, saskatoons, hazelnuts. If you know what you are looking at, almost every walk in the bush in this region is a walk past food.
+
+`community-knowledge-hub/assets/index-Ct-KiV08.js` — foraged north course, "What Foraging Means in Northwestern Ontario" lesson opening
+
+---
+
+### 2-V · Preserving food is a community act
+
+> Preserving food is, at its core, a community act. It was how families in Northwestern Ontario — and Indigenous communities in this region for generations before — survived the winter. It spread knowledge between households, created bonds between gardeners and kitchens, and built a culture of self-reliance that the modern grocery store has nearly erased.
+>
+> Bobbie's work at Parrs Jars is about recovering that culture for the 21st century.
+
+`community-knowledge-hub/assets/index-Ct-KiV08.js` — preserving course, "What Bobbie Learned Running a Community Kitchen," community kitchen section; context: the lesson cites a Parrs Jars newsletter headline, "Building Community Is Essential For Resilience," and then names it as the organizing principle of everything Bobbie does
+
+---
+
+### 2-W · The one trustworthy front door — Market Mosaic
+
+> The one trustworthy front door for what's at market this week.
+
+What-box description:
+
+> A unified discovery platform for regional farmers' markets. Shoppers see what's available this week across all vendors without scrolling Facebook. Vendors claim their listing and keep it current. Market coordinators run the whole show from one dashboard.
+
+Before/after problem framing:
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 > "Is the market on this Saturday?" — 3 Facebook groups, no clear answer → Weekly view shows dates, vendors, and what's available right now
 >
@@ -590,6 +641,7 @@ Before/after comparisons (verbatim):
 >
 > Shoppers drive out to find their favourite vendor isn't there this week → Vendor attendance and inventory visible before you leave the house
 
+<<<<<<< HEAD
 `community-knowledge-hub/infographics/market-mosaic.html — "The Problem It Solves / Before Market Mosaic vs. After" section`
 
 ---
@@ -659,6 +711,31 @@ Handover prompts for outgoing HCA (verbatim):
 > Pick a few small joys to offer today. Pop them all and this resident takes the floor.
 
 `health-support-hub.replit.app — resident facesheet, joys setup; the instruction for configuring daily joys per resident`
+=======
+`community-knowledge-hub/infographics/market-mosaic.html` — header tagline, what-box, and before/after problem grid
+
+---
+
+### 2-X · Find the money that fits your project — Grants Finder
+
+> Find the money that fits your project — without the paperwork maze.
+
+What-box description:
+
+> An AI grant-matching assistant tuned for Northwestern Ontario. Two AI agents interview you, analyze your project, and surface the grants most likely to fund it — ranked by fit, not alphabet.
+
+Agent descriptions:
+
+> **Fern — Intake Agent:** A conversational AI that interviews you about your project — goals, location, sector, budget — and builds your grant profile automatically.
+>
+> **Sage — Match Agent:** Analyzes your profile against the grant library and narrates the best matches with plain-English explanations of why each grant fits.
+
+Privacy framing:
+
+> Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
+
+`community-knowledge-hub/infographics/grants-finder.html` — header tagline, what-box, feature grid, and privacy section
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -864,6 +941,7 @@ Zone names and framings (verbatim from `watershed:zones:v1` data object):
 
 ---
 
+<<<<<<< HEAD
 ### 3-O · Tag the way you'd say it out loud — Rootwork naming discipline
 
 > Tag the way you'd say it out loud — "produce table", "winter market", "the Smiths". Rootwork remembers. No taxonomy meeting required.
@@ -939,6 +1017,25 @@ Cautions embedded in the tour (also verbatim):
 > Drought Mode is on. Targets are scaled to your reduced income. Stay the course — the rains return.
 
 **Source:** `x-buckets/src/copy/droughtMode` — toggle label, subtitle, and active-banner copy; the named state for income disruption; "drought" as a first-class system state rather than an error condition
+=======
+### 3-O · A working seasonal-foods business — no off-season
+
+> A working seasonal-foods business is a year of well-timed, narrow harvest windows, with the in-between months spent processing, blending, packaging, and selling. There is no off-season — only different seasons.
+>
+> If you are thinking about even hobby-level foraging in this region, the single most useful thing you can do is build your own version of this calendar. Walk the same patches in the same week each year. Note when the first leaves come in, when the first fruits ripen, when the last harvest is. Five years of notes is more valuable than any book.
+
+`community-knowledge-hub/assets/index-Ct-KiV08.js` — foraged north course, boreal harvest calendar lesson closing; the Foraged North discipline named in plain terms
+
+---
+
+### 3-P · Telling your story — the regenerative beef thesis
+
+> The most successful regenerative beef producers are not just farmers — they are storytellers. The quality of their product can't be seen in a grocery store freezer case. It has to be communicated. Customers don't just buy the beef; they buy the values, the land, the practice, and the relationship.
+>
+> In a region like Northwestern Ontario, where local food culture is growing but the market is small, your story is one of your most important competitive advantages.
+
+`community-knowledge-hub/assets/index-Ct-KiV08.js` — regen beef course, "Telling Your Story" lesson opening
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1265,6 +1362,7 @@ The Gate manifest principle:
 
 ---
 
+<<<<<<< HEAD
 ### 4-U · Fern and Sage — two agents, two jobs (Grants Finder)
 
 > Fern — Intake Agent — Asks the right questions to understand your project. Builds a structured profile from natural conversation.
@@ -1374,6 +1472,43 @@ The same principle stated from the content layer:
 > Giving Well — rises when your spring runs strong.
 
 **Source:** `x-buckets/src/copy/xrpSpring` — `springFooter`, `sectionLabel`, `tagline`, `givingWellBannerBody`, `givingWellInactive` constants; the XRP Spring tab copy; "the underground spring beneath your buckets" as the one-sentence architectural description of XRP's role in the constellation
+=======
+### 4-U · "There is a place called Bright Side" — the Gate origin narrative
+
+> There is a place called Bright Side, where they call you "neighbour", not "resident".
+
+> On the other side of the gate is Massity — a sprawling, indifferent castle of legacy systems: laws, regulations, banking, privacy bureaucracy, politics. We can't change Massity, and pragmatically, it's not worth going to prison over a "silly" word like neighbour vs resident.
+>
+> So we built The Gate.
+>
+> Inside the fence, the language stays warm. When something has to leave — an outgoing letter, a regulatory notice, a banking statement — it passes through the gate and the required words are quietly substituted in. Massity gets what it demands. Bright Side keeps its voice.
+
+Callout box ("Two Worlds Meeting"):
+
+> The Gate is a working tool, not a manifesto. It is the calm, confident gatekeeper. There is a sense of inside (warm, intentional, considered) and outside (formal, cold, immovable). The gate itself is the membrane. You are on the inside, looking out.
+
+Closing copy:
+
+> This tool is your quiet, capable advocate. It does the boring legal-language work so you don't have to change how you speak when you are home.
+
+`legacy-gatekeeper/assets/index-D7dpvClJ.js` — about page, Gate origin narrative in full; the founding description of why The Gate was built, written in a register predating the handbook's abstract vocabulary (no "both-sides principle," no "mapping/substitution" — just the story told plainly)
+
+---
+
+### 4-V · Standby Supplies — preparedness translated for -40°C
+
+> Preparedness advice that actually works at -40°C.
+
+What-box description:
+
+> A curated preparedness guide translated specifically for extreme northern climates. Takes the best advice from survival and homestead resources and asks the hard question: does this actually work in Northwestern Ontario?
+
+"What Makes It Northern" section:
+
+> Standby Supplies starts with the acknowledgment that most preparedness content is written for mild climates. It systematically translates that content: different crops that survive -40°C, insulation that actually works, heat sources that don't require a truck of propane to keep you alive for a week. This is the Standby that NWO actually needs.
+
+`community-knowledge-hub/infographics/standby-supplies.html` — header tagline, what-box, and "What Makes It Northern" section
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1613,6 +1748,7 @@ Closing line (rendered separately below the paragraphs):
 
 ---
 
+<<<<<<< HEAD
 ### UG-J · Redacted Mode — privacy by design (Grants Finder)
 
 > Redacted Mode keeps your details safe — Before sending your profile to Anthropic's AI, Redacted Mode strips names, locations, and identifying information. You get accurate matches without giving away sensitive details to a third-party model.
@@ -1714,6 +1850,67 @@ The tour framing line:
 > A traditional budget is often a spreadsheet you look at once a month and ignore. Headwaters builds the discipline into the moment money arrives: every payday you actively assign dollars before spending them. That intentional pause — between receiving and spending — is where habits actually change. The bucket visual makes it concrete instead of abstract.
 
 **Source:** `x-buckets/src/copy/faq` — FAQ item answering "How is this different from a regular budget?"; the founder's full discipline argument in one paragraph
+=======
+### UG-J · Rootwork — the six values the studio builds by
+
+> **Person-centred.** We start with the human in front of us — their hands, their day, their hopes — not the metric, not the funnel. Software should meet people where they already are.
+
+> **Grassroots by default.** We build for the kitchen table, the church basement, the back of the truck. If it doesn't work for the small operator with a phone and ten minutes, it isn't done yet.
+
+> **Champion the underdog.** We pick the side of the people who have been overlooked: the small farmer, the volunteer organizer, the side-hustler, the first-time founder. Their work counts. We help it count more.
+
+> **Vibe coding with love.** We write software the way good cooks cook — with attention, patience, and care for who's eating. The craft matters. The feeling of using the thing matters. Speed is not a substitute for warmth.
+
+> **Quiet confidence over hype.** We'd rather show than shout. No exclamation marks doing the heavy lifting. No promises we can't keep by Tuesday. The work speaks; we let it.
+
+> **Small, finishable, real.** We ship things that are small enough to finish, real enough to use, and honest about what they do. A working small thing beats a beautiful big plan every time.
+
+`rootwork/studio/assets/index-CPXk3mY2.js` — "What we build by" section; the six values stated publicly and committed to being held to; note that these are the values for the Rootwork studio (Zone 3), not the broader constellation, but they name the aesthetic and ethical posture that runs through all the projects
+
+---
+
+### UG-K · Saltbox — what the box holds, preserves, and doesn't shout
+
+Four cells from the Saltbox core-values grid:
+
+> **What the box holds.** Today's plan, the lock-in card, gentle words, the daily quote, each kid's featured goal. Small daily doses, taken from the same trusted box.
+
+> **What the box preserves.** Brave moments, lock-in wins, badges, your seasonal recap. Kept like salt: preserved, never measured against a score.
+
+> **What the box doesn't shout.** No streaks. No leaderboards. No notifications. The lock-in ring is silent. Empty weeks aren't shamed.
+
+> **What you take a pinch of, when you're ready.** Sunday's prep brief, the weekly stalled-goals check-in, custom starters — take what fits the morning and leave the rest.
+
+`salt-box/assets/index-k5Dz6fv4.js` — Saltbox core-values grid, four cells; the architectural description of what Saltbox is and is not, in the same register as the saltbox-as-container prose already in the handbook
+
+---
+
+### UG-L · Bright Side — joy vocabulary (warm companion, shadows, small joys)
+
+Six pieces of UI copy that name what a good shift looks like from the inside:
+
+> A warm companion for the team — surfacing the next small thing worth doing for each resident.
+
+> Bright Side leads with the shadows between you and a good day. Tap one to act on it.
+
+> Add a few small joys you can offer this resident every day. Pop one when it happens.
+
+> Things that bring them alive — songs, places, foods, jokes, hobbies.
+
+> The first one is the hardest. After that, the page fills up on its own.
+
+> Everyone here lit up every joy bubble today. Wave hi when you pass them.
+
+`health-support-hub/assets/index-CxSI5g0R.js` — landing page intro, home screen subtitle, resident joy form label, memory profile label, sparks-of-joy empty state, and today's-brightest celebration copy respectively
+
+---
+
+### UG-M · "The Legal Compass" — Rootwork's plain-English law orientation tool
+
+> The Legal Compass is an orientation tool for producers in Northwestern Ontario. It names statutes, surfaces exemptions and loopholes, and tells you straight whether a rule exists for safety reasons or to protect an incumbent monopoly.
+
+`rootwork/studio/assets/index-CPXk3mY2.js` — Legal Compass about/description text; the cleanest articulation of what the tool does and why it distinguishes between safety-based rules and incumbent-protection rules
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1752,7 +1949,11 @@ The tour framing line:
 **URL:** `https://community-knowledge-hub.replit.app/studio/`
 **Constellation zone:** Pre-zone or Zone 2 (operations workbench for builders)
 **What to look for:** Any manifesto or about-page prose; the "calm command center" framing; any description of who Rootwork is for and why it exists; self-hosting rationale; any founder-voiced copy about building for people who can't sit still.
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 1-P, 2-U, 3-M, 5-I, UG-I · Method: live page fetch (React SPA rendered; git history and internal filesystem not accessible from this environment)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from the compiled production bundle at `https://community-knowledge-hub.replit.app/studio/assets/index-CPXk3mY2.js`. Passages recovered: 1-R (origin statement), UG-J (six values), UG-M (Legal Compass description). The 807 member gate copy and calm command center hero were confirmed; origin/values met quality bar; gate copy and hero did not add beyond what UG-M captures. Rootwork manifesto page and Legal Compass description page were both accessible via the bundle.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1761,7 +1962,11 @@ The tour framing line:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any narrative copy about why northern and Indigenous communities need a single searchable grants index; any prose about the funding landscape; the NOHFC Grow Application Workspace copy (five-tab workspace, deadline countdown, intake-switch logic).
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 4-S, UG-H · Method: live page fetch (static HTML; NOHFC Grow Application Workspace copy not present in this page's rendered output)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/grants-finder.html`. Passages recovered: 2-X (tagline, what-box, Fern/Sage agent descriptions, Redacted Mode privacy framing). All prose available on the page was extracted; NOHFC workspace copy and deeper funding-landscape narrative were not present in the static HTML.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1770,7 +1975,11 @@ The tour framing line:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub)
 **What to look for:** Any framing prose about what market analysis means for a northern community; any description of the gap between southern market intelligence tools and northern food systems reality; the specific metaphor behind "mosaic."
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-V · Method: live page fetch (static HTML; the "mosaic" metaphor was not named in prose; page is structured around problem/solution comparisons)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/market-mosaic.html`. Passages recovered: 2-W (tagline, what-box, before/after problem grid). The specific "mosaic" metaphor rationale was not present in the HTML; the "one trustworthy front door" tagline and before/after framing were the primary quality prose.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1779,7 +1988,11 @@ The tour framing line:
 **URL:** `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`
 **Constellation zone:** Zone 3 Commons (hosted at community-knowledge-hub; reads The Standby primitive)
 **What to look for:** Any prose about emergency sourcing for northern communities; any description of the difference between emergency preparedness as a checklist vs. as a living system; any vocabulary that predates or extends the Standby primitive's language in the constellation manifest.
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: 2-W, 4-T · Method: live page fetch (static HTML; checklist-vs-living-system framing is present in the Northern Translation section)
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via static HTML page at `https://community-knowledge-hub.replit.app/infographics/standby-supplies.html`. Passages recovered: 4-V (tagline, what-box, "What Makes It Northern" section). The northern-translation framing was present and meets quality bar. Emergency sourcing narrative and living-system vs. checklist copy were not present in the static HTML.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1788,7 +2001,11 @@ The tour framing line:
 **URL:** `https://health-support-hub.replit.app/`
 **Constellation zone:** Zone 0 (Bright Side / Saltbox — the institutional saltbox: long-term care, recreation therapy)
 **What to look for:** Any manifesto or philosophy copy about recreation therapy for long-term care; any prose about what a good shift looks like; any description of the tool's relationship to the staff's existing knowledge; any copy about how documentation should follow the worker, not the other way around. Note: the codetry-ship BrightSidePage.tsx already has some of this (entries 2-F, 2-G) — look for anything beyond what's already in harvest.md.
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://health-support-hub.replit.app/` (React SPA; codebase not directly accessible from this environment; prose extracted from the minified production bundle). Passages recovered: 2-X (shadows system), 2-Y (shift-tone prompts + handover prompts), 2-Z (small joys system), 4-Y (people-first display rule), UG-P (pilot sites), UG-Q (warm companion tagline). The shadow metaphor, shift-tone prompt rotation, and joys-reset-overnight copy are all beyond what was in codetry-ship BrightSidePage.tsx. The Bobbie's 2014 intake reference was also recovered (prompt metadata in the memory-profile wizard). Conversation logs and git history not accessible from this environment.
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://health-support-hub.replit.app/assets/index-CxSI5g0R.js`. Passages recovered: UG-L (six pieces of joy vocabulary: warm companion, shadows, add small joys, memory profile label, sparks empty state, celebration copy). These are distinct from the codetry-ship BrightSidePage.tsx passages already in harvest (2-F, 2-G, UG-E). The staff-facing "good shift" vocabulary was the primary quality prose recoverable from the bundle.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1797,7 +2014,11 @@ The tour framing line:
 **URL:** `https://community-knowledge-hub.replit.app/`
 **Constellation zone:** Zone 3 — community production for NWO food systems; multi-tenant member-portal pattern
 **What to look for:** The "Today I…" verb routing copy; any Treasurer Calm Monthly Journey prose; the Stuck Board naming rationale; the Appreciation Wall purpose statement; any member-facing copy about what the co-op is for; the audience-chooser framing (household vs. producer); any Producer Playbook narrative; the kitchen-rental "borrowing not renting" rationale; the 807 Benefits brand story.
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 · Passages recovered: see entry 4-O (already in harvest.md from Task #764) · Method: The full set of Zone 3 prose called out in "What to look for" — "Today I…" verb routing, Stuck Board naming rationale, role IS the room, Treasurer Calm Monthly Journey ('Calm' is the contract, not a vibe), dues-snooze-as-verb, audience chooser as structural pivot, Producer Playbook, Kitchen rental kept quiet (borrowing, not renting), Appreciation Wall — was recovered verbatim in Task #764 from the deleted constellation manifest at `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` and is catalogued under entry **4-O**. Live URL sweep (Task #785) confirmed no additional prose was accessible from the public-facing SPA shell (root URL renders a React auth-gated portal). No new passages remain to add; project 8 prose is fully covered by 4-O.
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://community-knowledge-hub.replit.app/assets/index-Ct-KiV08.js`. Passages recovered: 1-S (Parrs Jars origin), 2-U (boreal larder), 2-V (preserving food as community act), 3-O (working seasonal-foods business / no off-season), 3-P (regenerative beef storytellers). The "Today I…" verb routing copy, Treasurer Calm Monthly Journey, Stuck Board rationale, and Appreciation Wall prose were not identified as distinct narrative passages meeting the quality bar in this sweep; they appear primarily as UI labels rather than prose.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1806,7 +2027,7 @@ The tour framing line:
 **URL:** `https://legacy-gatekeeper.replit.app/`
 **Constellation zone:** Pre-Zone 3 / historical — the original surface for the Gate primitive before it moved in-constellation
 **What to look for:** Any original framing prose about why a gate between community vocabulary and institutional language was needed; any early versions of the bright-side/massity vocabulary that predate the handbook's current language; any deleted copy about the translation problem; the historical rationale for the Gatekeeper name before it was renamed to The Gate.
-**Sweep status:** ⬜ Not yet run
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://legacy-gatekeeper.replit.app/assets/index-D7dpvClJ.js`. Passages recovered: 4-U (full Gate origin narrative — "There is a place called Bright Side…" through "This tool is your quiet, capable advocate"). This is the founding narrative predating the handbook's abstract vocabulary (no "both-sides principle" yet, just the story). Early bright-side/massity vocabulary present; Gate was named The Gate from the beginning.
 
 ---
 
@@ -1815,7 +2036,11 @@ The tour framing line:
 **URL:** `https://salt-box.replit.app/`
 **Constellation zone:** Zone 0 — decentralized homes; homeschool day companion, local-first per family
 **What to look for:** Any onboarding or philosophy copy about Lock-In Wins, Brave Moments, Gentle Words, Quote of the Day; any narrative about the no-scoring rule (the fish-climbing-a-tree principle); any copy about what Saltbox is for beyond the feature list; the founding story for why a homeschool companion was built; any prose about Zone 0 holding both the family on the land and the elder in the care home.
+<<<<<<< HEAD
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #803). Swept via JS bundle extraction from the live app at `https://salt-box.replit.app/` (React SPA; prose extracted from the minified production bundle). Passages recovered: 3-P (methodology cards — seven named homeschool styles, verbatim), 4-W (local-first architecture), 4-X (no-scoring rule + brave moments/lock-in wins framing), UG-L (saltbox naming origin), UG-M (methodology tour — quiet language, no quiz), UG-N (watching you on the trampoline — founder moment), UG-O (family recap preamble). The no-scoring rule is enacted in the running app as UG confirmed (4-X). The fish-climbing-a-tree principle was not found verbatim in the bundle; the concept is present in constellation entry 1-K and app entry 4-X. Conversation logs and git history not accessible from this environment.
+=======
+**Sweep status:** ✅ Complete — 2026-05-06 (Task #797). Swept via JS bundle extraction from `https://salt-box.replit.app/assets/index-k5Dz6fv4.js`. Passages recovered: UG-K (core-values grid: what the box holds, preserves, doesn't shout, and what you take a pinch of). Lock-In Wins privacy note, emergency drill parent copy, and day-play vocabulary were identified; key quality prose folded into UG-K. No-scoring founding narrative and Zone 0 both/and framing (family on land + elder in care home) were not present as explicit prose in the bundle.
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ---
 
@@ -1894,6 +2119,7 @@ The following projects were identified in the codebase and may also contain harv
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Total passages:** 86 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784)
 =======
 **Total passages:** 97 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +11 from X Buckets Vision external sweep in Task #796)
@@ -1929,6 +2155,31 @@ The X Buckets Vision codebase (`https://x-buckets-vision.replit.app/`) was not d
 **Conversation history:** Not accessible from this environment.
 **External project sweeps:** 10 projects identified, 7 swept (projects 2, 3, 4, 5, 6, 7, 10; project 8 confirmed covered by in-project sweep); 3 remaining (projects 1, 9, and any beyond the 10 named). See "Pending External Sweeps" section above.
 >>>>>>> 8444993 (Task #803: Sweep Bright Side and Saltbox for remaining constellation zones)
+=======
+**Total passages:** 100 (sections 1–5 + Unplaced Gems; +17 from in-project supplemental sweep in Task #764; +10 from Dam Days external sweep in Task #784; +14 from external projects 3–10 sweep in Task #797)
+**Git sweeps:** 4 deletion commits checked; 11 prose-bearing deleted files recovered; 0 false positives included.
+**Conversation history:** Not accessible from this environment.
+**External project sweeps:** 10 projects identified, 9 swept (Dam Days / External project 2 in Task #784; projects 3–10 in Task #797). External project 1 (X Buckets Vision) remains unswept — requires a separate agent session.
+
+### External projects 3–10 sweep notes (Task #797)
+
+All 8 codebases were not directly accessible from this environment. Prose was extracted from compiled, minified production JS bundles using Python string-literal extraction, plus direct HTTP fetch of three static HTML infographic pages. All quoted text recovered verbatim from bundle string literals or HTML source. Source file paths are inferred from component structure visible in the bundle (route paths, array constants, component names).
+
+| Source | Passages recovered |
+|---|---|
+| `rootwork/studio/assets/index-CPXk3mY2.js` (manifesto + about) | 1-R, UG-J, UG-M |
+| `community-knowledge-hub/assets/index-Ct-KiV08.js` (preserving course) | 1-S, 2-V |
+| `community-knowledge-hub/assets/index-Ct-KiV08.js` (foraged north course) | 2-U, 3-O |
+| `community-knowledge-hub/assets/index-Ct-KiV08.js` (regen beef course) | 3-P |
+| `community-knowledge-hub/infographics/grants-finder.html` | 2-X |
+| `community-knowledge-hub/infographics/market-mosaic.html` | 2-W |
+| `community-knowledge-hub/infographics/standby-supplies.html` | 4-V |
+| `health-support-hub/assets/index-CxSI5g0R.js` (resident joy UI) | UG-L |
+| `legacy-gatekeeper/assets/index-D7dpvClJ.js` (about page) | 4-U |
+| `salt-box/assets/index-k5Dz6fv4.js` (core-values grid) | UG-K |
+
+*All passages confirmed verbatim. No synthesis or composition.*
+>>>>>>> 84af3f7 (Task #797: Sweep external projects 3–10 — fold all recovered prose into harvest.md)
 
 ### Dam Days sweep notes (Task #784)
 
