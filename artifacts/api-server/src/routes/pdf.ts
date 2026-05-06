@@ -6,6 +6,8 @@ import { generateCapabilityStatementHtml } from "../lib/capabilityStatementHtml"
 
 const router: IRouter = Router();
 
+let capabilityStatementCache: Buffer | null = null;
+
 function getChromiumPath(): string {
   try {
     const path = execSync("which chromium || which chromium-browser || which google-chrome", {
@@ -79,6 +81,17 @@ router.get("/services-poster.pdf", async (_req, res) => {
 });
 
 router.get("/capability-statement.pdf", async (_req, res) => {
+  if (capabilityStatementCache) {
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": 'attachment; filename="headwaters-capability-statement.pdf"',
+      "Content-Length": capabilityStatementCache.length,
+      "Cache-Control": "no-cache",
+    });
+    res.send(capabilityStatementCache);
+    return;
+  }
+
   let browser;
   try {
     const chromiumPath = getChromiumPath();
@@ -107,13 +120,15 @@ router.get("/capability-statement.pdf", async (_req, res) => {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     });
 
+    capabilityStatementCache = Buffer.from(pdfBuffer);
+
     res.set({
       "Content-Type": "application/pdf",
       "Content-Disposition": 'attachment; filename="headwaters-capability-statement.pdf"',
-      "Content-Length": pdfBuffer.length,
+      "Content-Length": capabilityStatementCache.length,
       "Cache-Control": "no-cache",
     });
-    res.send(Buffer.from(pdfBuffer));
+    res.send(capabilityStatementCache);
   } catch (err) {
     console.error("PDF generation failed:", err);
     res.status(500).json({ error: "PDF generation failed" });
