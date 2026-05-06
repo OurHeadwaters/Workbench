@@ -200,8 +200,8 @@ export default function BusinessCard() {
       <PrintNav targetId="pdf-target" filename="headwaters-business-card.pdf" />
       <div
         id="pdf-target"
+        className="print-page page-letter"
         style={{
-          minHeight: "100vh",
           background: "#e8e2d8",
           padding: "2.5rem 1.5rem",
         }}

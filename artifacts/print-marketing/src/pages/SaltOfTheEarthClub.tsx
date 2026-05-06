@@ -35,7 +35,7 @@ export default function SaltOfTheEarthClub() {
       <PrintNav targetId="pdf-target" filename="salt-of-the-earth-club.pdf" />
       <div
         id="pdf-target"
-        className="print-page"
+        className="print-page page-letter"
         style={{
           padding: 0,
           overflow: "hidden",

@@ -42,25 +42,42 @@ td, th {
   text-rendering: optimizeLegibility;
 }
 
-.print-page {
+/* ─────────────────────────────────────────────────────────────────────────
+   DEFAULT PRINT SIZE: 8.5 × 11 in (letter).
+   .page-letter is the single source of truth for letter dimensions.
+   Apply it to the root element of every print page.
+   .print-page adds the standard content padding on top of .page-letter —
+   always use them together: class="print-page page-letter"
+   Landscape pieces use .page-letter-landscape instead of .page-letter.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Canonical letter-size container — owns all sizing and print properties */
+.page-letter {
   background: white;
   width: 8.5in;
   min-height: 11in;
   margin: 2rem auto;
-  padding: 0.6in 0.65in;
   box-shadow: 0 4px 40px rgba(0,0,0,0.13);
   position: relative;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
-.print-page-landscape {
+/* Canonical landscape container (11 × 8.5 in) */
+.page-letter-landscape {
   background: white;
   width: 11in;
   min-height: 8.5in;
   margin: 2rem auto;
-  padding: 0.55in 0.65in;
   box-shadow: 0 4px 40px rgba(0,0,0,0.13);
   position: relative;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
+
+/* Content padding helpers — pair with .page-letter / .page-letter-landscape */
+.print-page          { padding: 0.6in 0.65in; }
+.print-page-landscape { padding: 0.55in 0.65in; }
 
 .btn-print {
   display: inline-flex;
@@ -100,17 +117,18 @@ td, th {
 @media print {
   .no-print { display: none !important; }
   body { background: white; }
-  .print-page, .print-page-landscape {
+  .page-letter,
+  .page-letter-landscape,
+  .print-page,
+  .print-page-landscape {
     margin: 0 !important;
     box-shadow: none !important;
     width: 100% !important;
     min-height: unset !important;
   }
+  /* DEFAULT PRINT SIZE: 8.5 × 11 in (letter) — matches .page-letter */
   @page {
-    margin: 0.5in;
     size: letter portrait;
-  }
-  .print-landscape @page {
-    size: letter landscape;
+    margin: 0.5in;
   }
 }

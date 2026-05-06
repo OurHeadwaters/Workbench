@@ -11,7 +11,7 @@ export default function PosterMarket() {
   return (
     <>
       <PrintNav targetId="pdf-target" filename="headwaters-poster-market.pdf" />
-      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
 
           {/* Decorative background shapes */}

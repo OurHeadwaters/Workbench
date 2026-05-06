@@ -35,7 +35,7 @@ export default function GoingDigital() {
       <PrintNav targetId="pdf-target" filename="headwaters-going-digital.pdf" />
       <div
         id="pdf-target"
-        className="print-page"
+        className="print-page page-letter"
         style={{
           padding: 0,
           overflow: "hidden",

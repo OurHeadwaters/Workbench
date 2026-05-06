@@ -1,6 +1,11 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+// DEFAULT PRINT SIZE: 8.5 × 11 in (letter).
+// All programmatic PDF exports use "letter" (8.5 × 11 in) by default.
+// Pass a custom format only for pieces that explicitly require a different size
+// (e.g. the 4 × 9 rack card).
+
 export type PaperFormat = "letter" | "tabloid" | [number, number];
 
 export interface PdfOptions {

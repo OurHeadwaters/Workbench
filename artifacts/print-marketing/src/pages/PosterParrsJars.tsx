@@ -5,7 +5,7 @@ export default function PosterParrsJars() {
   return (
     <>
       <PrintNav targetId="pdf-target" filename="parrs-jars-poster.pdf" />
-      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden", background: "var(--evergreen)", minHeight: "11in" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--evergreen)", minHeight: "11in" }}>
 
         {/* Full-bleed background */}
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>

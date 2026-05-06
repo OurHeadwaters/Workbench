@@ -9,7 +9,7 @@ export default function Letterhead() {
   return (
     <>
       <PrintNav targetId="pdf-target" filename="headwaters-letterhead.pdf" />
-      <div id="pdf-target" className="print-page" style={{ padding: 0, overflow: "hidden" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden" }}>
         <div style={{ display: "flex", flexDirection: "column", minHeight: "11in" }}>
 
           {/* Header band */}

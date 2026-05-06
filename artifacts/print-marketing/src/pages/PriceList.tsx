@@ -97,7 +97,7 @@ export default function PriceList() {
         </div>
       </div>
 
-      <div id="pdf-target" className="print-page" style={{ fontFamily: "var(--font-sans)" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ fontFamily: "var(--font-sans)" }}>
         {/* Header */}
         <div style={{ borderBottom: "3px solid var(--evergreen)", paddingBottom: "0.6rem", marginBottom: "1.1rem", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
           <div>

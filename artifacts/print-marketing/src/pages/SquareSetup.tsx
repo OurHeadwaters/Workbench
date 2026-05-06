@@ -141,8 +141,8 @@ export default function SquareSetup() {
       <PrintNav targetId="pdf-target" filename="headwaters-square-setup.pdf" />
       <div
         id="pdf-target"
+        className="print-page page-letter"
         style={{
-          minHeight: "100vh",
           background: "#ece6db",
           padding: "2.5rem 1.5rem 4rem",
         }}

@@ -58,7 +58,7 @@ export default function VocabularySheet() {
       <PrintNav targetId="pdf-target" filename="headwaters-vocabulary.pdf" />
       <div
         id="pdf-target"
-        className="print-page"
+        className="print-page page-letter"
         style={{
           padding: 0,
           overflow: "hidden",

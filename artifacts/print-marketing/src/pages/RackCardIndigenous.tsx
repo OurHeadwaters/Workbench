@@ -36,8 +36,8 @@ export default function RackCardIndigenous() {
       />
 
       <div
+        className="page-letter"
         style={{
-          minHeight: "100vh",
           background: "#d8d2c8",
           display: "flex",
           alignItems: "flex-start",
