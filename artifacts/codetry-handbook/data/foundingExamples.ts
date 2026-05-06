@@ -3,8 +3,8 @@
 //
 // The constellation manifest is the source-of-truth for each primitive's
 // vocabulary, severity ladder, sub-shelves, and rejected alternatives.
-// The commentary here is *handbook authorial*: the why-this-was-chosen-
-// as-two-sided exploration, the per-primitive cross-zone reads, the
+// The commentary here is *handbook authorial*: the both-states /
+// both-sides exploration, the per-primitive cross-zone reads, the
 // takeaway pull, and the open questions the practitioner is still
 // sitting with. Keeping it next to handbook.ts (not inside the manifest)
 // keeps the manifest from accumulating handbook copy and lets the same
