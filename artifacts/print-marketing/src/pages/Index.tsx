@@ -106,6 +106,13 @@ const pieces = [
     desc: "One-page scope document and rate sheet for the northern community store engagement. Six phases, $25,000 fixed or $175/hr, plain-language deliverables. Hand this to a band council to make it easy to say yes. Letter size (8.5×11).",
     icon: "📐",
   },
+  {
+    href: "/tsp-guest-form",
+    title: "TSP Guest Application — Bobbie Parr, Fall 2026",
+    label: "Media",
+    desc: "Updated Survival Podcast guest submission form for Bobbie's second appearance. Covers the arc from Parr's Jars and the co-op through the Deer Lake store build and the Codetry discipline — with ten suggested questions for Jack. Letter size (8.5×11).",
+    icon: "🎙️",
+  },
 ];
 
 export default function Index() {

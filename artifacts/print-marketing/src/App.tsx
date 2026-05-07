@@ -16,6 +16,7 @@ import GoingDigital from "@/pages/GoingDigital";
 import RackCardIndigenous from "@/pages/RackCardIndigenous";
 import CapabilityStatement from "@/pages/CapabilityStatement";
 import ScopeRateSheet from "@/pages/ScopeRateSheet";
+import TspGuestForm from "@/pages/TspGuestForm";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/rack-card-indigenous" component={RackCardIndigenous} />
       <Route path="/capability-statement" component={CapabilityStatement} />
       <Route path="/scope-rate-sheet" component={ScopeRateSheet} />
+      <Route path="/tsp-guest-form" component={TspGuestForm} />
       <Route component={NotFound} />
     </Switch>
   );
