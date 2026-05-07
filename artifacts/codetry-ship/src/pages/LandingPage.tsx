@@ -273,9 +273,9 @@ export function LandingPage() {
                 </span>
               </div>
 
-              {/* description + url */}
+              {/* description */}
               <div
-                className="px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                className="px-5 py-4"
                 style={{ background: "hsl(38 32% 97%)" }}
               >
                 <p
@@ -283,12 +283,6 @@ export function LandingPage() {
                   style={{ color: "hsl(145 12% 36%)" }}
                 >
                   {tool.description}
-                </p>
-                <p
-                  className="font-mono text-[10px] tracking-[0.14em] shrink-0 sm:ml-8"
-                  style={{ color: tool.accent, opacity: 0.8 }}
-                >
-                  {tool.external ? tool.displayPath : `ourheadwaters.ca${tool.displayPath}`}
                 </p>
               </div>
             </a>
