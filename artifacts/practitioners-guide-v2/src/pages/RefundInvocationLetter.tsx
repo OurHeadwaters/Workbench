@@ -351,7 +351,7 @@ export function RefundInvocationLetter() {
                 type="text"
                 value={contractorOrg}
                 onChange={(e) => setContractorOrg(e.target.value)}
-                placeholder="e.g. Deer Lake First Nation Development Corp."
+                placeholder="e.g. Northern Band Development Corp."
                 className="w-full rounded-md border px-3 py-2 bg-background"
                 style={{ borderColor: "hsl(var(--card-border))" }}
                 data-testid="input-contractor-org"

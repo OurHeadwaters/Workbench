@@ -4,11 +4,11 @@ import { SAMPLE } from "./sampleData";
 /**
  * Chrome-free shell for the public /embed/* routes.
  *
- * The embeds load inside the Deer Lake walkthrough as iframes. They
+ * The embeds load inside the Northern Band walkthrough as iframes. They
  * must look like the real product — same palette, same components —
  * but carry no top nav, no sidebar, no footer, and no Clerk gate. The
  * only persistent UI element a councillor sees on every embed is the
- * "Sample · Deer Lake demo" badge so the demo numbers can never be
+ * "Sample · Northern Band demo" badge so the demo numbers can never be
  * confused for the band's real numbers.
  */
 export function EmbedShell({

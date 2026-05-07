@@ -227,7 +227,7 @@ export function buildDefaultState(): AltRealityState {
     id: "v4-seed",
     name: "Prior — Right-priced (V4)",
     note:
-      "V4 right-priced baseline — fee at $105k/mo against the 7-role Deer Lake roster. Surfaced as the Prior reality in the toggle framing because V5's renegotiation triggers step back up toward this fee once the value-delivered audit lands.",
+      "V4 right-priced baseline — fee at $105k/mo against the 7-role Northern Band roster. Surfaced as the Prior reality in the toggle framing because V5's renegotiation triggers step back up toward this fee once the value-delivered audit lands.",
     rows,
   };
   return { realities: [reality], activeId: reality.id };

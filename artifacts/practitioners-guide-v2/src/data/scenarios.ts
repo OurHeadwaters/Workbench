@@ -10,7 +10,7 @@ import { SCENARIO_V7 } from "./v7";
  *
  * V7 is the locked default operating framework as of 2026-05-02 — the
  * updated hourly subcontracting model (Bobbie $175/hr, Tyler $70/hr RFF sub)
- * applied to Deer Lake. V6 ($150/hr Bobbie, $70/hr Tyler) is preserved as
+ * applied to Northern Band. V6 ($150/hr Bobbie, $70/hr Tyler) is preserved as
  * a historical baseline. V5 ($90k/mo Codetry archetype) is preserved as a
  * further historical baseline. V4 (Right-priced) is the earlier right-priced
  * baseline. V3 (Lean team) is the workspace anchor.

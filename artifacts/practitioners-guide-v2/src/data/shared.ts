@@ -20,7 +20,7 @@ import type {
  * live scenario. V2 was retired on 2026-04-26 in favour of V3 (lean team).
  * The 807 CDP grant block was retired from the guide on 2026-04-28 to
  * keep planning surfaces focused on the live agency engagement and the
- * Deer Lake roster — the 807 grant is no longer carried as a planning
+ * Northern Band roster — the 807 grant is no longer carried as a planning
  * line in the guide.
  *
  * ── Reality-check status (as of 2026-05-03) ──────────────────────────────
@@ -225,7 +225,7 @@ const SHARED_OVERHEADS_BASE: OverheadRow[] = [
   { name: "Recurring tech ops", monthly: 2200, notes: "Cloud, phone plans, monitoring" },
   { name: "Accountant ($1,500/yr ÷ 12)", monthly: 125, notes: "Year-end only" },
   { name: "Legal ($2,000/yr ÷ 12)", monthly: 167 },
-  { name: "Deer Lake travel (3 days/mo)", monthly: null, notes: "TBD — practitioner visits, will be locked at follow-up" },
+  { name: "Northern Band travel (3 days/mo)", monthly: null, notes: "TBD — practitioner visits, will be locked at follow-up" },
 ];
 
 export const SHARED_OVERHEADS_JUN_AUG: OverheadRow[] = SHARED_OVERHEADS_BASE;
@@ -246,4 +246,4 @@ export const SHARED_RESERVE_PURPOSES: string[] = [
 ];
 
 export const SHARED_GIVING_DIRECTION =
-  "NW Ontario organizations and reserves, starting with the Dryden–Deer Lake corridor as the first targets.";
+  "NW Ontario organizations and reserves, starting with the Dryden–Northern Band corridor as the first targets.";

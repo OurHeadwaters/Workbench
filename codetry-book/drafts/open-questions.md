@@ -17,13 +17,11 @@ Each question below is genuinely open: no decision has been applied to the affec
 ## OQ-1 — Community consent to name the First Nation community
 
 **Source:** Ch2 editorial notes, Q1
-**Status:** Open — decision applied (keep unnamed), but consent itself has not been obtained.
+**Status:** ~~Open~~ **Resolved 2026-05-07**
 
-Throughout Chapter 2, the community is referred to as "a northern community" — the community's name is withheld until the community has reviewed the chapter and confirmed they are comfortable being identified. This is the correct posture. It is not the resolved posture.
+Throughout Chapter 2, the community is referred to as "a northern community." The founder decision (2026-05-07) is that the community is named **Northern Band** across all working documents — practitioners-guide-v2, handbook, book drafts, and all data files. The placeholder "Deer Lake" used in internal working files has been replaced with "Northern Band" in a full workspace sweep.
 
-**What is open:** When and how will the consent conversation happen, with whom at the community, and who initiates it? Until that question has a name and a date attached to it, community consent is an intention, not a plan.
-
-**What changes when it resolves:** A single find-and-replace pass in Ch2 and draft-v1.md replaces "a northern community" with the community's name. No prose rewrite required — the sentence structure was built to absorb the name cleanly.
+**What changed:** "Deer Lake" / "Deer Lake First Nation" / "deer-lake" / "deerLake" replaced with "Northern Band" / "northern-band" / "northernBand" across all artifacts and draft files. No specific geographic or band name is used publicly at this time.
 
 ---
 

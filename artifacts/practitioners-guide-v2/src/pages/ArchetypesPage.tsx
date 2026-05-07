@@ -110,7 +110,7 @@ export function ArchetypesPage() {
                     front without disguising the substance.
                   </p>
                   <p>
-                    <strong>Canonical example — V7 (current).</strong> Deer Lake. Bobbie bills{" "}
+                    <strong>Canonical example — V7 (current).</strong> Northern Band. Bobbie bills{" "}
                     {money(a.roster[0].monthlyLoaded + 11200)}/mo total (160 hr × $175) + Tyler{" "}
                     {money(a.roster[1]?.monthlyLoaded ?? 11200)}/mo (160 hr × $70 pass-through
                     subcontract). Total billed: {money(a.fee)}/mo × {a.termMonths} months.
@@ -144,7 +144,7 @@ export function ArchetypesPage() {
                     Square at the till, QuickBooks on the books, Local Line for producers, the
                     Headwaters cockpit tying them together. On the buyer's payroll, not the{" "}
                     {money(a.fee)}/mo billing. Tyler (RFF) handles distribution at Sioux Lookout
-                    and Deer Lake. Code review + IT setup is a one-time cost (~$2k–$5k) rolled
+                    and Northern Band. Code review + IT setup is a one-time cost (~$2k–$5k) rolled
                     under Tyler's subcontract line when the engagement is confirmed.
                   </p>
                   <p>
@@ -229,7 +229,7 @@ export function ArchetypesPage() {
                     <strong>Where it lives in this guide.</strong> The Software/Sales archetype
                     does not carry a numbered V-scenario in the workspace because its economics
                     are book-kept inside the existing Brightside scenario. The numbered scenarios
-                    (V3, V4, V5) all describe Codetry-archetype variations applied to Deer Lake.
+                    (V3, V4, V5) all describe Codetry-archetype variations applied to Northern Band.
                   </p>
                 </div>
               </AccordionContent>

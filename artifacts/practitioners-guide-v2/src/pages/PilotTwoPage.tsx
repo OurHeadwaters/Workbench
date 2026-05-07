@@ -5,7 +5,7 @@
  * pitch without rebuilding anything from scratch:
  *
  *   1. Community Targeting Scorecard — rank 3–5 candidates across five criteria
- *   2. Template Adaptation Checklist — every Deer Lake variable + status toggles
+ *   2. Template Adaptation Checklist — every Northern Band variable + status toggles
  *   3. Financial Model Adapter — community-size toggle re-scales the headline numbers
  *   4. Pitch Sequence Card — four-step card stack, designed to be read on a phone
  *
@@ -232,7 +232,7 @@ function CommunityTargetingScorecard() {
     if (warmScore <= 2) {
       return "Warm contact is the gap. Get an intro before outbound — no cold-call on a band council.";
     }
-    return "Balanced score across criteria. Worth the first conversation once Deer Lake Day-90 audit lands.";
+    return "Balanced score across criteria. Worth the first conversation once Northern Band Day-90 audit lands.";
   }
 
   return (
@@ -371,7 +371,7 @@ interface ChecklistItem {
   id: string;
   category: string;
   variable: string;
-  deerLakeValue: string;
+  northernBandValue: string;
   replaceWith: string;
 }
 
@@ -380,84 +380,84 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
     id: "economic-baseline",
     category: "Economics",
     variable: "Community economic spend baseline",
-    deerLakeValue: "$1.6–2.0M leaves the community annually in grocery spend",
+    northernBandValue: "$1.6–2.0M leaves the community annually in grocery spend",
     replaceWith: "Run the same leakage calculation for the new community using Stats Canada and NN spend data.",
   },
   {
     id: "cents-on-dollar",
     category: "Economics",
     variable: "Nutrition North efficiency stat",
-    deerLakeValue: "Only 58¢ of every federal grocery help dollar reaches the shelf",
+    northernBandValue: "Only 58¢ of every federal grocery help dollar reaches the shelf",
     replaceWith: "Pull the NN annual report for the specific community code. Stat varies by store and subsidy class.",
   },
   {
     id: "distribution-route",
     category: "Logistics",
     variable: "Distribution route",
-    deerLakeValue: "Dryden aggregation hub → Deer Lake (fly-in or winter road)",
+    northernBandValue: "Dryden aggregation hub → Northern Band (fly-in or winter road)",
     replaceWith: "Map the new community's freight lane: drive-access, fly-in frequency, hub city, carrier options.",
   },
   {
     id: "staffing-precedent",
     category: "Staffing",
     variable: "Staffing precedent and loaded rates",
-    deerLakeValue: "4-role Day-1 team: Lead $18k, Ops & Food $13.5k, Code Reviewer $9.5k, Bookkeeper $2.5k",
+    northernBandValue: "4-role Day-1 team: Lead $18k, Ops & Food $13.5k, Code Reviewer $9.5k, Bookkeeper $2.5k",
     replaceWith: "Re-cost roles against the new community's labour market. The shape (4 roles) travels; the rates flex.",
   },
   {
     id: "language",
     category: "Community context",
     variable: "Language / dialect note",
-    deerLakeValue: "Oji-Cree community; materials flagged for translation (Task #11)",
+    northernBandValue: "Oji-Cree community; materials flagged for translation (Task #11)",
     replaceWith: "Identify the community language(s). Flag any materials that need translation before the pitch.",
   },
   {
     id: "grant-refs",
     category: "Funding",
     variable: "Grant program references",
-    deerLakeValue: "NOHFC Northern Economic Development Fund, Nutrition North subsidy stack",
+    northernBandValue: "NOHFC Northern Economic Development Fund, Nutrition North subsidy stack",
     replaceWith: "Pull the active grant programs for the new community's geography and timing. FCDF, NWRF, etc.",
   },
   {
     id: "population",
     category: "Economics",
     variable: "Community population size",
-    deerLakeValue: "Deer Lake First Nation: approximately 800–1,000 members (on-reserve ~500)",
+    northernBandValue: "Northern Band: approximately 800–1,000 members (on-reserve ~500)",
     replaceWith: "Determine on-reserve population. This drives the Financial Model Adapter size toggle (Section 3 below).",
   },
   {
     id: "buyer",
     category: "Deal structure",
     variable: "Buyer — band council vs contractor",
-    deerLakeValue: "TBD (band council vs father — affects political weight, not the math)",
+    northernBandValue: "TBD (band council vs father — affects political weight, not the math)",
     replaceWith: "Identify who signs the contract. Band council = higher political weight; contractor = faster close.",
   },
   {
     id: "travel-cadence",
     category: "Logistics",
     variable: "Travel cadence + per diem",
-    deerLakeValue: "Practitioner visits ~3 days/mo; flight + lodging still TBD",
+    northernBandValue: "Practitioner visits ~3 days/mo; flight + lodging still TBD",
     replaceWith: "Lock: fly or drive, hotel or billet, day-trips or week-sprints. Price into the overhead line.",
   },
   {
     id: "capital-recovery",
     category: "Deal structure",
     variable: "Capital recovery amount + leg structure",
-    deerLakeValue: "$40k family-infusion leg (m1) + $72k business-loan leg (Aug → Oct) = $112k total",
+    northernBandValue: "$40k family-infusion leg (m1) + $72k business-loan leg (Aug → Oct) = $112k total",
     replaceWith: "Recompute for the new debt stack. If no family infusion, the two-leg split collapses to one line.",
   },
   {
     id: "tool-pays-itself",
     category: "Phase 2",
     variable: "The one tool that pays for itself",
-    deerLakeValue: "Brightside RT-LTC SaaS — $28k pre-launch, $120k 18-mo revenue target",
+    northernBandValue: "Brightside RT-LTC SaaS — $28k pre-launch, $120k 18-mo revenue target",
     replaceWith: "Identify the Phase 2 product for this community × founder pair. The shape travels; the product is bespoke.",
   },
   {
     id: "audit-baseline",
     category: "Year-end",
     variable: "Value-delivered audit baseline numbers",
-    deerLakeValue: "Month-12 renegotiation triggers locked at V5 ($90k → $105k, draw $18k → $22k)",
+    northernBandValue: "Month-12 renegotiation triggers locked at V5 ($90k → $105k, draw $18k → $22k)",
     replaceWith: "Set the renegotiation triggers and the value-delivered audit benchmark at signing — not at month 12.",
   },
 ];
@@ -515,7 +515,7 @@ function TemplateAdaptationChecklist() {
           icon={CheckSquare}
           number="02"
           title="Template Adaptation Checklist"
-          subtitle="Every Deer Lake-specific variable. Tap a status badge to cycle: TBD → In Progress → Done. Survives a refresh."
+          subtitle="Every Northern Band-specific variable. Tap a status badge to cycle: TBD → In Progress → Done. Survives a refresh."
         />
 
         {/* Progress bar */}
@@ -572,10 +572,10 @@ function TemplateAdaptationChecklist() {
                         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div>
                             <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground mb-1">
-                              Deer Lake value
+                              Northern Band value
                             </p>
                             <p className="text-xs leading-relaxed text-muted-foreground">
-                              {item.deerLakeValue}
+                              {item.northernBandValue}
                             </p>
                           </div>
                           <div>
@@ -638,7 +638,7 @@ const SIZE_PRESETS: Record<CommunitySize, SizePreset> = {
     teamSize: 4,
     surplusRatePct: 28,
     notes:
-      "Deer Lake archetype. 4-role Day-1 team. $90k/mo fee. ~28% Year 1 surplus rate (V5 baseline: $306k surplus on $1.08M revenue).",
+      "Northern Band archetype. 4-role Day-1 team. $90k/mo fee. ~28% Year 1 surplus rate (V5 baseline: $306k surplus on $1.08M revenue).",
   },
   large: {
     label: "Large",
@@ -870,8 +870,8 @@ const PITCH_STEPS: PitchStep[] = [
     colorInk: "#1e3a8a",
     who: "The person who can make the intro. Could be a band member, a regional development officer, a shared peer contact, or anyone who already has trust in the room.",
     whatToSay:
-      '"I\'m working with Deer Lake on their community store — early results are strong. There\'s a similar setup that could work in [community]. Could you make an intro to the right person at band office?"',
-    leaveBehind: "The Deer Lake one-pager (once Day-90 audit is signed). One URL, printable.",
+      '"I\'m working with Northern Band on their community store — early results are strong. There\'s a similar setup that could work in [community]. Could you make an intro to the right person at band office?"',
+    leaveBehind: "The Northern Band one-pager (once Day-90 audit is signed). One URL, printable.",
     leaveBehindLabel: "One-pager link",
   },
   {
@@ -884,7 +884,7 @@ const PITCH_STEPS: PitchStep[] = [
     colorInk: "#064e3b",
     who: "The band manager or economic development officer — the person who prepares the agenda before council, not the one who votes on it.",
     whatToSay:
-      '"We\'re not selling a system — we\'re running the store with you. Deer Lake is 90 days in. Here\'s what the numbers look like. Would this be worth 30 minutes in front of Chief and Council?"',
+      '"We\'re not selling a system — we\'re running the store with you. Northern Band is 90 days in. Here\'s what the numbers look like. Would this be worth 30 minutes in front of Chief and Council?"',
     leaveBehind: "The cash-flow summary: one page, three numbers — Trial Ask, Monthly Rate, Year 1 Value Delivered.",
     leaveBehindLabel: "Cash-flow summary (Financial Model Adapter output)",
   },
@@ -898,9 +898,9 @@ const PITCH_STEPS: PitchStep[] = [
     colorInk: "#5b21b6",
     who: "Chief and council, or whoever holds the political authority to commit the band. This is the meeting that counts.",
     whatToSay:
-      '"Deer Lake\'s store was losing $2M a year out of the community. In 90 days we\'ve changed that. The same engagement — same team shape, same transparency stack — is available here. We\'re asking for [Trial Ask]. Here\'s exactly how it works."',
-    leaveBehind: "The Deer Lake Walkthrough link (the full pitch scroll). Designed to be read on a phone in the room.",
-    leaveBehindLabel: "Deer Lake Walkthrough",
+      '"Northern Band\'s store was losing $2M a year out of the community. In 90 days we\'ve changed that. The same engagement — same team shape, same transparency stack — is available here. We\'re asking for [Trial Ask]. Here\'s exactly how it works."',
+    leaveBehind: "The Northern Band Walkthrough link (the full pitch scroll). Designed to be read on a phone in the room.",
+    leaveBehindLabel: "Northern Band Walkthrough",
   },
   {
     id: "cfo",
@@ -1145,7 +1145,7 @@ export function PilotTwoPage() {
             The second engagement, ready to pitch.
           </h1>
           <p className="mt-2 text-muted-foreground max-w-3xl">
-            The Deer Lake toolkit is replicable. This chapter is the practitioner-facing
+            The Northern Band toolkit is replicable. This chapter is the practitioner-facing
             companion that walks Bobbie through targeting, adapting, and delivering the
             Pilot #2 pitch without rebuilding anything from scratch. Four tools — score,
             adapt, price, pitch.
@@ -1154,7 +1154,7 @@ export function PilotTwoPage() {
             className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}
           >
-            Trigger: Day-90 audited proof point from Deer Lake → open outbound
+            Trigger: Day-90 audited proof point from Northern Band → open outbound
           </div>
         </div>
       </header>

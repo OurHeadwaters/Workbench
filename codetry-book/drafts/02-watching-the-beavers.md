@@ -161,11 +161,11 @@ You watch the beavers build the dam because you are building one too.
 
 **Decisions applied in this pass (2026-05-06):**
 
-**Q1 — Whether to name Deer Lake explicitly.**
+**Q1 — Whether to name Northern Band explicitly.**
 Decision: Keep unnamed. Community consent is required before naming any specific First Nation in a public document. The text refers throughout to "a northern community" and "the community." This is the correct posture until the community has reviewed the chapter and confirmed they are comfortable being identified. When consent is obtained, "a northern community" can be replaced with the community's name in a single find-and-replace pass.
 
 **Q2 — Whether to pseudonymize Sam, Jess, and Gilles.**
-Decision: Pseudonymize. All three names appeared in the deleted Deer Lake Walkthrough artifact and carry identifiable detail about real individuals in a real community. Names changed in this pass: Gilles → René; Sam and Jess → Chris and Morgan. These are the names used in the final text above. The combined draft (draft-v1.md) must be updated to match — it still carries the original names from first assembly.
+Decision: Pseudonymize. All three names appeared in the deleted Northern Band Walkthrough artifact and carry identifiable detail about real individuals in a real community. Names changed in this pass: Gilles → René; Sam and Jess → Chris and Morgan. These are the names used in the final text above. The combined draft (draft-v1.md) must be updated to match — it still carries the original names from first assembly.
 
 **Passages included from harvest.md Section 2:**
 2-A (you don't understand a food system by reading about it), 2-B (one store, no other choice — the 58¢ statistic), 2-C (community ownership changes one number), 2-D (the store has to keep working — cockpit paragraph), 2-E (the contract — three line items), 2-F (the cockpit's three promises), 2-G (the six engagement phases), 2-H (what this plan is not), 2-I (platform follows governance), 2-J (Bright Side / residential care), 2-K (how the engagement begins — reply counts as authorization), 2-L, 2-M, 2-N (practitioner economics — community contracts, Parr's Jars, Start9), 2-O (the draw discipline — debt-attack mode).

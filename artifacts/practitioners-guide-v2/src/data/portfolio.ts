@@ -74,7 +74,7 @@ export const REVENUE_LINES: RevenueLine[] = [
       "Book the next 807 or GMPH call. Write the scope in one paragraph before you walk in.",
     steps: [
       {
-        action: "Confirm the Deer Lake trial scope and get a council date",
+        action: "Confirm the Northern Band trial scope and get a council date",
         detail:
           "The $12k portal fee is confirmed. The trial window is open. A specific council date with a written agenda converts this from a warm lead to a contract.",
       },
@@ -183,11 +183,11 @@ export const REVENUE_LINES: RevenueLine[] = [
   {
     id: "store-plan",
     name: "Northern Store Plan",
-    tagline: "White-label the Deer Lake methodology to any 807 store.",
+    tagline: "White-label the Northern Band methodology to any 807 store.",
     category: "Product",
     tier: "next",
     status: "building",
-    who: "Community stores, band council-run retail, co-op operators anywhere in the 807 area code. The Deer Lake engagement is Pilot #1 — every other store is a repeatable sale.",
+    who: "Community stores, band council-run retail, co-op operators anywhere in the 807 area code. The Northern Band engagement is Pilot #1 — every other store is a repeatable sale.",
     whyThisTier:
       "The methodology exists and is proven. The only thing missing is a one-page scope document and a rate sheet that makes it easy for a second client to say yes. This is the fastest path from 'one contract' to 'a business.'",
     nextAction:
@@ -196,7 +196,7 @@ export const REVENUE_LINES: RevenueLine[] = [
       {
         action: "Package the methodology into a deliverables list",
         detail:
-          "What did Deer Lake get? List the exact outputs: store plan document, financial model, governance template, implementation guide. This list is your product.",
+          "What did Northern Band get? List the exact outputs: store plan document, financial model, governance template, implementation guide. This list is your product.",
       },
       {
         action: "Set the white-label price",
@@ -309,7 +309,7 @@ export const REVENUE_LINES: RevenueLine[] = [
     status: "warm-lead",
     who: "Long-term care facility administrators. One specific warm lead already identified. Pricing and cost basis are fully modelled — the only missing piece is a pilot conversation.",
     whyThisTier:
-      "Real upside and a warm lead — but LTC procurement moves slowly and PHIPA compliance adds runway. Do not let this distract from Tier 1 cash. The best time to book the first LTC conversation is when the Deer Lake contract is signed and you have 20% of your week free.",
+      "Real upside and a warm lead — but LTC procurement moves slowly and PHIPA compliance adds runway. Do not let this distract from Tier 1 cash. The best time to book the first LTC conversation is when the Northern Band contract is signed and you have 20% of your week free.",
     nextAction:
       "Name the warm LTC contact and book a 20-minute call. Do not sell on the first call — ask about their therapy documentation workflow.",
     steps: [
@@ -350,7 +350,7 @@ export const REVENUE_LINES: RevenueLine[] = [
     whyThisTier:
       "Highest potential upside but most complex to execute. Credit union integration requires financial services compliance work. Investors Group is enterprise sales with a multi-month cycle. Crypto enthusiasts in the 807 are a small market. This should not receive meaningful attention until Tier 1 cash is stable and Tier 2 has at least one paying client.",
     nextAction:
-      "Do nothing on this until the Deer Lake contract is signed. Then decide: which of the three segments pulls first? That decision determines the entire build path.",
+      "Do nothing on this until the Northern Band contract is signed. Then decide: which of the three segments pulls first? That decision determines the entire build path.",
     steps: [
       {
         action: "Decide which of the three segments leads",

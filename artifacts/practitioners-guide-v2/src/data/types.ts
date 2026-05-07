@@ -120,7 +120,7 @@ export interface AgencyScenario {
    * front-loading legible — the substance is identical to V3/V4's
    * undivided $112k Capital Recovery line.
    *
-   * Codetry-archetype projects (Deer Lake, future boots-on-the-ground
+   * Codetry-archetype projects (Northern Band, future boots-on-the-ground
    * engagements) where the founder personally guaranteed family capital
    * carry a non-zero value here when that capital is being retired up
    * front; Software/Sales engagements run it at $0 because they don't

@@ -25,9 +25,9 @@ import {
  *   paid first, before cost basis or capital recovery). Dave Ramsey discipline:
  *   the tithe is what you decided, not what was left.
  *
- * 2026-04-28 update — Deer Lake roster sync.
- *   Roster reshaped to match the canonical Deer Lake team baked into the
- *   Operating Plan one-pager and the Deer Lake Store Plan StaffingModel
+ * 2026-04-28 update — Northern Band roster sync.
+ *   Roster reshaped to match the canonical Northern Band team baked into the
+ *   Operating Plan one-pager and the Northern Band Store Plan StaffingModel
  *   slide:
  *     - Practitioner / Lead draw drops $18,000/mo → $14,000/mo (the live
  *       founder draw on the OnePager A · floor cost basis).
@@ -51,8 +51,8 @@ import {
  */
 
 const v3Roster = [
-  { role: "Practitioner / Lead", monthlyLoaded: 14000, notes: "Engagement owner; visits Deer Lake ~3 days/mo" },
-  { role: "Hub Coordinator (Dryden)", monthlyLoaded: 8500, notes: "Phone, depot, day-of fires; Deer Lake distribution" },
+  { role: "Practitioner / Lead", monthlyLoaded: 14000, notes: "Engagement owner; visits Northern Band ~3 days/mo" },
+  { role: "Hub Coordinator (Dryden)", monthlyLoaded: 8500, notes: "Phone, depot, day-of fires; Northern Band distribution" },
   { role: "IT / Tech", monthlyLoaded: 9500, notes: "Technical advisor on call; quarterly software review; checks any code that touches money" },
   { role: "Community Development Associate", monthlyLoaded: 7500 },
   { role: "Food Handler (Dryden depot)", monthlyLoaded: 5000 },
@@ -118,7 +118,7 @@ const v3Agency = {
 
   roster: v3Roster,
   payrollTotal: v3PayrollTotal,
-  rosterTag: confirmed("7-role Deer Lake team — synced from the Operating Plan one-pager and Deer Lake StaffingModel slide on 2026-04-28. Adds Junior Analyst / Field, renames Operations Manager → Hub Coordinator, drops Practitioner draw $18k → $14k."),
+  rosterTag: confirmed("7-role Northern Band team — synced from the Operating Plan one-pager and Northern Band StaffingModel slide on 2026-04-28. Adds Junior Analyst / Field, renames Operations Manager → Hub Coordinator, drops Practitioner draw $18k → $14k."),
 
   overheadsJunAug: SHARED_OVERHEADS_JUN_AUG,
   overheadsJunAugTotal: SHARED_OVERHEADS_JUN_AUG_TOTAL,
@@ -183,7 +183,7 @@ const v3Agency = {
   },
 
   practitionerSalary18mo: v3Roster[0].monthlyLoaded * 18, // 252,000
-  practitionerSalaryTag: confirmed("Practitioner draw lowered to $14k/mo (was $18k) to match the canonical Deer Lake roster — $14k × 18 = $252k for the published 18 months."),
+  practitionerSalaryTag: confirmed("Practitioner draw lowered to $14k/mo (was $18k) to match the canonical Northern Band roster — $14k × 18 = $252k for the published 18 months."),
 
   reservePurposes: SHARED_RESERVE_PURPOSES,
   givingDirection: SHARED_GIVING_DIRECTION,
@@ -207,9 +207,9 @@ export const SCENARIO_V3: Scenario = {
   id: "v3",
   name: "V3 — Lean team",
   short: "V3",
-  tagline: "$90k/mo agency · 7-role Deer Lake team · tithe-first",
+  tagline: "$90k/mo agency · 7-role Northern Band team · tithe-first",
   description:
-    "The locked default operating framework. 7-role Deer Lake team ($53.5k/mo payroll), $90k/mo agency fee, tithe-first surplus deployment: 10% off the top to Giving, then capital recovery, then Brightside launch, then Reserve / Innovation. Salts and Brightside are scenario-neutral — only the team and the fee move when the engagement shape changes.",
+    "The locked default operating framework. 7-role Northern Band team ($53.5k/mo payroll), $90k/mo agency fee, tithe-first surplus deployment: 10% off the top to Giving, then capital recovery, then Brightside launch, then Reserve / Innovation. Salts and Brightside are scenario-neutral — only the team and the fee move when the engagement shape changes.",
   accent: "#B14A1F",
   accentSoft: "#FBE4D8",
   accentInk: "#5B2510",

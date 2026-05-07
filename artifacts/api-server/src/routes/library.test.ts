@@ -494,7 +494,7 @@ describe("library route — POST /share-links/by-token/:token/uploads", () => {
         unrelated: seedSubject("unrelated", "Unrelated"),
       };
       const bucketIds = {
-        deerLake: seedBucket("deer-lake-store", "Deer Lake Store"),
+        northernBand: seedBucket("northern-band-store", "Northern Band Store"),
         // An unrelated bucket that must NOT get attached.
         unrelated: seedBucket("unrelated-bucket", "Unrelated Bucket"),
       };
@@ -502,7 +502,7 @@ describe("library route — POST /share-links/by-token/:token/uploads", () => {
         token: "hank-presets",
         contributorId,
         presetSubjectSlugs: ["wild-rice", "traditional-foods"],
-        presetBucketSlugs: ["deer-lake-store"],
+        presetBucketSlugs: ["northern-band-store"],
       });
 
       const res = await fetch(
@@ -533,7 +533,7 @@ describe("library route — POST /share-links/by-token/:token/uploads", () => {
       const attachedBucketIds = tables.entryBucketsTable.__store
         .filter((r) => r.entryId === entryId)
         .map((r) => r.bucketId);
-      expect(attachedBucketIds).toEqual([bucketIds.deerLake]);
+      expect(attachedBucketIds).toEqual([bucketIds.northernBand]);
       expect(attachedBucketIds).not.toContain(bucketIds.unrelated);
     } finally {
       await h.close();

@@ -252,8 +252,8 @@ function WhereYouAre() {
   // Build in-motion list from live scenario fields
   const inMotionItems: string[] = [
     contractConfirmed
-      ? `Deer Lake contract active — ${money(a.fee)}/mo engagement starting ${a.startDate}.`
-      : "Deer Lake trial: posture set, scope not yet defined, council date not yet booked.",
+      ? `Northern Band contract active — ${money(a.fee)}/mo engagement starting ${a.startDate}.`
+      : "Northern Band trial: posture set, scope not yet defined, council date not yet booked.",
     "807 grants → benefits plan: open action item, grant not yet identified.",
     brightsidePreRevenue
       ? `Brightside pre-revenue: pricing modelled (${money(bs.pricing.tier1.monthly)}/mo Tier 1), no pilot LTC site in conversation.`

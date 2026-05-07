@@ -33,7 +33,7 @@ export const FOCUS_AREAS: FocusArea[] = [
   {
     id: "contracts",
     title: "Land the next contract",
-    subtitle: "Deer Lake trial window",
+    subtitle: "Northern Band trial window",
     whyNow:
       "The $12k portal fee is confirmed and the trial window is open — but the 2026-06-15 soft deadline is approaching fast. Every week without a council date is runway draining.",
     effortPayoff: "medium-high-payoff",

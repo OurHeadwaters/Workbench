@@ -137,11 +137,11 @@ function Router() {
       <Route path="/standby" component={Standby} />
       <Route path="/gate" component={Gate} />
       {/*
-        Public, chrome-free embed routes consumed by the Deer Lake
+        Public, chrome-free embed routes consumed by the Northern Band
         walkthrough's BookkeepingProof section as iframes. They render
         without Clerk auth so a councillor reading the walkthrough sees
         the books without hitting a sign-in wall, and they pull from a
-        shared "Sample · Deer Lake demo" dataset so the demo numbers
+        shared "Sample · Northern Band demo" dataset so the demo numbers
         can never be confused for the band's real numbers. See task
         #526 for the rationale.
       */}

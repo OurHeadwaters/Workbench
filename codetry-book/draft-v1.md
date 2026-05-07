@@ -695,8 +695,8 @@ The headwaters are behind us. The water moves.
 - `codetry-book/drafts/appendix-deep-dives.md` — six held passages (4-L, 4-M, UG-B, UG-C, UG-E, UG-F); full technical depth for readers who want to go further
 
 **Open questions for founder — across all chapters:**
-1. ~~Naming Deer Lake explicitly in Chapter 2 (currently unnamed)~~ — **Closed.** Decision: keep unnamed until community consent is obtained. Tracked as OQ-1 in `codetry-book/drafts/open-questions.md`.
+1. ~~Naming the community explicitly in Chapter 2~~ — **Closed.** Decision: community referred to as "Northern Band" in all working files. No specific geographic or band name used publicly at this time. See OQ-1 in `codetry-book/drafts/open-questions.md`.
 2. ~~Real names Sam, Jess, and Gilles in Chapter 2 — pseudonymize or confirm consent?~~ — **Closed.** Decision: pseudonymize. Names changed in chapter file (Gilles → René; Sam and Jess → Chris and Morgan). Confirmed 2026-05-07: body text in this combined draft does not carry the original names — no further reconciliation pass required.
-3. ~~Whether 5-H (the open-the-work invitation from the deleted Deer Lake artifact) belongs in Chapter 5 or as an appendix~~ — **Closed.** Decision: keep in Chapter 5. The passage is load-bearing.
+3. ~~Whether 5-H (the open-the-work invitation from the deleted Northern Band artifact) belongs in Chapter 5 or as an appendix~~ — **Closed.** Decision: keep in Chapter 5. The passage is load-bearing.
 4. ~~Whether the ship coda at the end of Chapter 5 repeats Chapter 1 too closely or serves as intended callback~~ — **Closed.** Decision: keep. The callback is a wanted echo; Chapter 1 announces the vessel, Chapter 5 uses it in a valedictory register.
 5. ~~Deep Dives placement — 4-L, 4-M, UG-B, UG-C are strong candidates for an appendix section not yet drafted~~ — **Closed.** Appendix drafted and registered as `codetry-book/drafts/appendix-deep-dives.md`; 4-L, 4-M, UG-B, UG-C, UG-E, and UG-F are all placed there.

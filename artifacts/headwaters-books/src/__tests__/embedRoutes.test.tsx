@@ -10,10 +10,10 @@ import { SAMPLE } from "../embed/sampleData";
 
 // Locks the three public embed routes shipped in task #526.
 //
-// The Deer Lake walkthrough loads these as iframes. Two contracts:
+// The Northern Band walkthrough loads these as iframes. Two contracts:
 //   1. Each embed renders its own surface (open-records, daily-close,
 //      month-end) populated from the shared sample dataset.
-//   2. Each embed wears the "Sample · Deer Lake demo" badge so a
+//   2. Each embed wears the "Sample · Northern Band demo" badge so a
 //      councillor never confuses the demo numbers for real numbers.
 //   3. The App Router registers all three routes as plain (un-gated)
 //      Routes so they don't sit behind Clerk auth.

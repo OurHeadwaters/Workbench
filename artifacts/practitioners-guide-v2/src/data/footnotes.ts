@@ -52,14 +52,14 @@ export const AGENCY_FOOTNOTES: Footnote[] = [
       "If the buyer is the band council, the personal-compensation lines and the tithe-first deployment structure carry political weight that should be visible in any conversation with them. If the buyer is the founder's father, this is family capital cycling. The guide should not pretend the buyer is determined when it isn't.",
   },
   {
-    id: "deer-lake-travel",
-    title: "Deer Lake travel is a known unknown",
+    id: "northern-band-travel",
+    title: "Northern Band travel is a known unknown",
     body:
       "The guide ships with a TBD placeholder; locking it requires the founder to estimate flight + lodging + per diem cadence honestly.",
   },
   {
     id: "hiring-authority",
-    title: "Hiring authority for Deer Lake store staff",
+    title: "Hiring authority for Northern Band store staff",
     body:
       "Unresolved. The guide documents the open question rather than assume an answer. Regardless of authority: systems and training are Headwaters-only (not outsourced).",
   },

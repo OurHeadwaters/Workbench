@@ -1,5 +1,5 @@
 /**
- * Shared "Deer Lake demo" sample dataset for the three public embed
+ * Shared "Northern Band demo" sample dataset for the three public embed
  * routes (/embed/open-records, /embed/daily-close, /embed/month-end).
  *
  * Hand-tuned to tell one coherent week-and-month story for the
@@ -8,7 +8,7 @@
  * month-end. No PII, no live numbers, no real bank data.
  *
  * Keep this file small and obviously demo-flavored. Every screen
- * built on this data wears a "Sample · Deer Lake demo" badge so a
+ * built on this data wears a "Sample · Northern Band demo" badge so a
  * councillor reading the walkthrough never confuses these numbers
  * for the real ones.
  */

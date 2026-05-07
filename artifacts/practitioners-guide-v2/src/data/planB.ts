@@ -52,12 +52,12 @@ export type TriggerCondition = {
 
 export const triggerConditions: TriggerCondition[] = [
   {
-    label: "Hard no from Deer Lake council",
+    label: "Hard no from Northern Band council",
     signal:
       "Council passes a BCR (or sends written notice) declining the hourly engagement, the trial, or both.",
     decisionDate: "Same day the BCR / written notice lands.",
     thenDo:
-      "Stand down the Deer Lake-specific bridge ask, freeze Pilot #1 spend, and open Plan B at §3 Outreach — start with the IFNA cluster the same week.",
+      "Stand down the Northern Band-specific bridge ask, freeze Pilot #1 spend, and open Plan B at §3 Outreach — start with the IFNA cluster the same week.",
     confidence: {
       kind: "seed",
       needs:
@@ -70,11 +70,11 @@ export const triggerConditions: TriggerCondition[] = [
       "No BCR, no signed contract, and no scheduled council date by the agreed-on soft decision date — i.e. the practitioner is still chasing a meeting, not a signature.",
     decisionDate: "2026-06-15 (soft date; revise once council calendar confirms).",
     thenDo:
-      "Send a one-paragraph 'I'm pivoting capacity' note through the existing Deer Lake channel, then begin the IFNA-cluster outreach in §3 without waiting for a reply.",
+      "Send a one-paragraph 'I'm pivoting capacity' note through the existing Northern Band channel, then begin the IFNA-cluster outreach in §3 without waiting for a reply.",
     confidence: {
       kind: "seed",
       needs:
-        "2026-06-15 is the executor's read of a reasonable soft date; needs the practitioner-confirmed date the Deer Lake council calendar is actually pointed at. Drop the confirmed date (and the meeting/call it anchors to) into `docs/partnerships/deer-lake.md`.",
+        "2026-06-15 is the executor's read of a reasonable soft date; needs the practitioner-confirmed date the Northern Band council calendar is actually pointed at. Drop the confirmed date (and the meeting/call it anchors to) into `docs/partnerships/northern-band.md`.",
     },
   },
   {
@@ -83,20 +83,20 @@ export const triggerConditions: TriggerCondition[] = [
       "Soft date passed, no contract, no concrete next council date on the calendar, and the bridge runway has burned past the M2 trough projection.",
     decisionDate: "2026-07-31 (hard date; non-negotiable in the runway model).",
     thenDo:
-      "Treat Deer Lake as paused (not killed). Move all team capacity onto Plan B. Submit the LFIF follow-on (§5) the same week, and schedule the first NAN economic development call.",
+      "Treat Northern Band as paused (not killed). Move all team capacity onto Plan B. Submit the LFIF follow-on (§5) the same week, and schedule the first NAN economic development call.",
     confidence: {
       kind: "seed",
       needs:
-        "2026-07-31 is derived from the runway model's M2 trough, not from a practitioner-confirmed walk-away point. Confirm (or revise) the date in `docs/partnerships/deer-lake.md` and reconcile against the Pilot #1 cost basis.",
+        "2026-07-31 is derived from the runway model's M2 trough, not from a practitioner-confirmed walk-away point. Confirm (or revise) the date in `docs/partnerships/northern-band.md` and reconcile against the Pilot #1 cost basis.",
     },
   },
   {
     label: "Bridge capital does not land",
     signal:
-      "Day-one bridge funding is not committed by the funder/financier listed in the runway plan by the deadline, even if Deer Lake is otherwise on track.",
-    decisionDate: "2026-05-30 (one-month buffer before the soft Deer Lake date).",
+      "Day-one bridge funding is not committed by the funder/financier listed in the runway plan by the deadline, even if Northern Band is otherwise on track.",
+    decisionDate: "2026-05-30 (one-month buffer before the soft Northern Band date).",
     thenDo:
-      "Drop to the $48k cost-basis floor (Scenario A), defer the Senior Engineer #2 / Outreach / Trainer hires, and use the protected runway to work Plan B outreach in parallel with Deer Lake.",
+      "Drop to the $48k cost-basis floor (Scenario A), defer the Senior Engineer #2 / Outreach / Trainer hires, and use the protected runway to work Plan B outreach in parallel with Northern Band.",
     confidence: {
       kind: "seed",
       needs:
@@ -106,10 +106,10 @@ export const triggerConditions: TriggerCondition[] = [
   {
     label: "Practitioner-side burnout signal",
     signal:
-      "Two consecutive weekly close-outs report the non-negotiables (kids' time, sleep, partner time) breached because of Deer Lake-specific firefighting.",
+      "Two consecutive weekly close-outs report the non-negotiables (kids' time, sleep, partner time) breached because of Northern Band-specific firefighting.",
     decisionDate: "End of the second flagged week.",
     thenDo:
-      "Hold the Deer Lake conversation at status quo (no new commitments), open Plan B's §3 Outreach in parallel, and use Plan B's slower cadence to break the sole-customer dependency before a third week breaches.",
+      "Hold the Northern Band conversation at status quo (no new commitments), open Plan B's §3 Outreach in parallel, and use Plan B's slower cadence to break the sole-customer dependency before a third week breaches.",
     confidence: {
       kind: "seed",
       needs:
@@ -131,7 +131,7 @@ export const reframedPitch: { paragraphs: string[]; confidence: Confidence } = {
   confidence: {
     kind: "seed",
     needs:
-      "Three paragraphs were drafted from the Deer Lake one-pager's vocabulary. Has never been read cold by anyone outside Headwaters. Needs: walk it past one tribal-council procurement officer (or economic-development director) and note the read in `docs/partnerships/<org>.md` — what they understood, what they tripped on, what they asked next. Flip to confirmed only after at least one such read is on file.",
+      "Three paragraphs were drafted from the Northern Band one-pager's vocabulary. Has never been read cold by anyone outside Headwaters. Needs: walk it past one tribal-council procurement officer (or economic-development director) and note the read in `docs/partnerships/<org>.md` — what they understood, what they tripped on, what they asked next. Flip to confirmed only after at least one such read is on file.",
   },
 };
 
@@ -197,7 +197,7 @@ export const outreachTargets: OutreachTarget[] = [
     circle: "warm",
     name: "Independent First Nations Alliance (IFNA) cluster — opening call",
     whyThem:
-      "Member communities sit on the same Thunder Bay → Sioux Lookout → Dryden corridor that already moves food for Deer Lake; the operational template carries over with the smallest delta.",
+      "Member communities sit on the same Thunder Bay → Sioux Lookout → Dryden corridor that already moves food for Northern Band; the operational template carries over with the smallest delta.",
     leadWith:
       "Same freight, same winter-road lane, same POS — different store, different council. 30 minutes to walk through the procurement dashboard and the price-visibility piece.",
     confidence: {
@@ -551,7 +551,7 @@ export const timelineMilestones: TimelineMilestone[] = [
     date: "2026-05-30",
     label: "Bridge-capital go/no-go",
     action:
-      "Confirm bridge ($181k recommended scenario) is committed in writing. If not, drop to Scenario A floor and start Plan B outreach in parallel — do not wait for Deer Lake.",
+      "Confirm bridge ($181k recommended scenario) is committed in writing. If not, drop to Scenario A floor and start Plan B outreach in parallel — do not wait for Northern Band.",
     triggerLabel: "Bridge capital does not land",
     confidence: {
       kind: "seed",
@@ -561,21 +561,21 @@ export const timelineMilestones: TimelineMilestone[] = [
   },
   {
     date: "2026-06-15",
-    label: "Soft Deer Lake decision date",
+    label: "Soft Northern Band decision date",
     action:
       "If no signed contract and no concrete next council date by today, send the 'pivoting capacity' note and begin outreach batch 1 to the IFNA cluster (§3 ranks 1–2) the same week.",
     triggerLabel: "Stall past the soft decision date",
     confidence: {
       kind: "seed",
       needs:
-        "Mirror of §1 trigger 'Stall past the soft decision date' — same source-of-truth gap. Confirm the date in `docs/partnerships/deer-lake.md` against the actual council calendar and flip both together.",
+        "Mirror of §1 trigger 'Stall past the soft decision date' — same source-of-truth gap. Confirm the date in `docs/partnerships/northern-band.md` against the actual council calendar and flip both together.",
     },
   },
   {
     date: "2026-06-30",
     label: "LFIF follow-on submission",
     action:
-      "Submit the Local Food Infrastructure Fund follow-on for the 807 Co-op infrastructure layer (§5, slot 1). Independent of the Deer Lake outcome — the application stands on its own.",
+      "Submit the Local Food Infrastructure Fund follow-on for the 807 Co-op infrastructure layer (§5, slot 1). Independent of the Northern Band outcome — the application stands on its own.",
     confidence: {
       kind: "seed",
       needs:
@@ -590,14 +590,14 @@ export const timelineMilestones: TimelineMilestone[] = [
     confidence: {
       kind: "seed",
       needs:
-        "Date is a placeholder ('two weeks after the soft Deer Lake decision'). Needs: confirmed contacts for the three tribal councils (see §3 ranks 3–5 seed reasons) — without those, this milestone is a calendar entry without a phone number to dial.",
+        "Date is a placeholder ('two weeks after the soft Northern Band decision'). Needs: confirmed contacts for the three tribal councils (see §3 ranks 3–5 seed reasons) — without those, this milestone is a calendar entry without a phone number to dial.",
     },
   },
   {
     date: "2026-07-31",
-    label: "Hard Deer Lake decision date",
+    label: "Hard Northern Band decision date",
     action:
-      "Treat Deer Lake as paused (not killed). Move all team capacity onto Plan B. Schedule the first NAN economic-development call (§3 rank 6) and submit the FedNor CEDP application (§5, slot 2).",
+      "Treat Northern Band as paused (not killed). Move all team capacity onto Plan B. Schedule the first NAN economic-development call (§3 rank 6) and submit the FedNor CEDP application (§5, slot 2).",
     triggerLabel: "Stall past the hard decision date",
     confidence: {
       kind: "seed",

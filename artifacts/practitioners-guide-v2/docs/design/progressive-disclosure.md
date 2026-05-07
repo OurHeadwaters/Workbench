@@ -51,7 +51,7 @@ Internal tools only:
 ## Where This Does NOT Apply
 
 Public-facing or client-facing content:
-- Deer Lake Walkthrough
+- Northern Band Walkthrough
 - Handbook public pages
 - Any client deck or one-pager
 

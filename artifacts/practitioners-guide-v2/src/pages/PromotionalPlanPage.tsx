@@ -219,7 +219,7 @@ export function PromotionalPlanPage() {
                   },
                   {
                     type: "Band offices and tribal councils (IFNA cluster, Shibogama, Windigo)",
-                    why: "Primary buyers for community store plans and food systems work. Warmest channel given Deer Lake pursuit. Same freight corridor, same operating environment.",
+                    why: "Primary buyers for community store plans and food systems work. Warmest channel given Northern Band pursuit. Same freight corridor, same operating environment.",
                     hook: "Store-in-a-box for a northern community: procurement dashboard, local hire plan, open financial model — the council can read every number before signing.",
                   },
                   {
@@ -295,8 +295,8 @@ export function PromotionalPlanPage() {
                   <tbody>
                     {[
                       { org: "807 Co-op", contact: "Known", status: "Active — portal dev confirmed", followUp: "Ongoing" },
-                      { org: "Deer Lake First Nation", contact: "Band council", status: "Active pursuit — trial window open", followUp: "2026-06-15 soft date" },
-                      { org: "IFNA cluster communities", contact: "TBD", status: "Plan B — warm outreach if Deer Lake stalls", followUp: "2026-07-31 hard deadline" },
+                      { org: "Northern Band", contact: "Band council", status: "Active pursuit — trial window open", followUp: "2026-06-15 soft date" },
+                      { org: "IFNA cluster communities", contact: "TBD", status: "Plan B — warm outreach if Northern Band stalls", followUp: "2026-07-31 hard deadline" },
                       { org: "Shibogama First Nations Council", contact: "TBD", status: "Plan B — queued", followUp: "After IFNA" },
                       { org: "SLFNHA", contact: "TBD", status: "Not started", followUp: "—" },
                       { org: "Dryden area credit union", contact: "TBD", status: "Not started", followUp: "—" },

@@ -12,7 +12,7 @@ import {
 } from "./shared";
 
 /**
- * V5 — Codetry archetype, applied to Deer Lake.
+ * V5 — Codetry archetype, applied to Northern Band.
  *
  * STATUS: LOCKED on 2026-04-29. V5 is the new default operating framework
  * — the rest of the guide reads from V5. V4 (Right-priced) and V3 (Lean
@@ -23,10 +23,10 @@ import {
  *   The old V3/V4 line carried the assumption that every Codetry engagement
  *   looked the same shape: one $90k–$105k/mo agency-style fee with a
  *   ~7-role team and an 18-month-anchored cost basis. As we mapped out the
- *   first non-Deer Lake engagements, that assumption broke — the
+ *   first non-Northern Band engagements, that assumption broke — the
  *   Software/Sales archetype (e.g. Jude's tool, Brightside SaaS, future
  *   licensed software products) doesn't carry the same boots-on-the-ground
- *   payroll, and Deer Lake's economics don't translate cleanly to a SaaS
+ *   payroll, and Northern Band's economics don't translate cleanly to a SaaS
  *   P&L. So as of 2026-04-29 we now carry two project archetypes:
  *
  *     - Codetry archetype — community engagement with a lead practitioner
@@ -34,7 +34,7 @@ import {
  *       (when family capital is in the stack) a front-loaded
  *       family-infusion leg of Capital Recovery to retire the personal
  *       guarantee up front. V5 is the canonical Codetry-archetype
- *       scenario, applied to Deer Lake.
+ *       scenario, applied to Northern Band.
  *
  *     - Software/Sales archetype — leveraged software/services revenue,
  *       no family-infusion stack (no personal guarantees in play), no
@@ -115,19 +115,19 @@ const v5Roster = [
     role: "Practitioner / Lead",
     monthlyLoaded: 18000,
     notes:
-      "Engagement owner; visits Deer Lake ~3 days/mo. Draw steps at the renegotiation triggers below.",
+      "Engagement owner; visits Northern Band ~3 days/mo. Draw steps at the renegotiation triggers below.",
   },
   {
     role: "Operations & Food (Dryden)",
     monthlyLoaded: 13500,
     notes:
-      "Phone, depot, day-of fires, food handling at the Dryden depot, Deer Lake distribution. Combines the V3/V4 Hub Coordinator and Food Handler seats into a single ops-and-food role.",
+      "Phone, depot, day-of fires, food handling at the Dryden depot, Northern Band distribution. Combines the V3/V4 Hub Coordinator and Food Handler seats into a single ops-and-food role.",
   },
   {
     role: "Code Reviewer",
     monthlyLoaded: 9500,
     notes:
-      "Technical advisor on call; quarterly software review; checks any code that touches money. Carried inside the Codetry-archetype roster because Deer Lake's checkout uses Codetry-built software end-to-end.",
+      "Technical advisor on call; quarterly software review; checks any code that touches money. Carried inside the Codetry-archetype roster because Northern Band's checkout uses Codetry-built software end-to-end.",
   },
   {
     role: "Bookkeeper / Admin",
@@ -346,12 +346,12 @@ const v5Personal = {
 
 export const SCENARIO_V5: Scenario = {
   id: "v5",
-  name: "V5 — Codetry archetype (Deer Lake)",
+  name: "V5 — Codetry archetype (Northern Band)",
   short: "V5",
   tagline:
     "$90k/mo agency · 4-role Day-1 team · 12-month engagement · split Capital Recovery (family m1 + loan Aug→Oct) · tithe-first",
   description:
-    "Codetry-archetype baseline applied to Deer Lake. Lean 4-role Day-1 team ($43.5k/mo payroll), $90k/mo agency fee, 12-month engagement window. Surplus waterfall: tithe → wages → Capital Recovery — family infusion ($40k, month 1) → Capital Recovery — business loan ($72k, Aug → Oct) → Reserve / Innovation. Both Capital Recovery legs are tax-free debt repayment — same character as V3/V4's undivided $112k line, just split for visibility. Renegotiation triggers reset to the $90k baseline — they describe stepping the fee back up toward the V4 right-priced range once the value-delivered audit lands.",
+    "Codetry-archetype baseline applied to Northern Band. Lean 4-role Day-1 team ($43.5k/mo payroll), $90k/mo agency fee, 12-month engagement window. Surplus waterfall: tithe → wages → Capital Recovery — family infusion ($40k, month 1) → Capital Recovery — business loan ($72k, Aug → Oct) → Reserve / Innovation. Both Capital Recovery legs are tax-free debt repayment — same character as V3/V4's undivided $112k line, just split for visibility. Renegotiation triggers reset to the $90k baseline — they describe stepping the fee back up toward the V4 right-priced range once the value-delivered audit lands.",
   accent: "#1F5B3F",
   accentSoft: "#DDF0E5",
   accentInk: "#0F2E20",

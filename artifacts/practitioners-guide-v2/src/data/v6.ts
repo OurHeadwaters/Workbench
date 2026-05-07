@@ -8,7 +8,7 @@ import {
 } from "./shared";
 
 /**
- * V6 — Hourly subcontracting model, applied to Deer Lake.
+ * V6 — Hourly subcontracting model, applied to Northern Band.
  *
  * STATUS: LOCKED on 2026-05-02. V6 is the new default operating framework.
  * V5 (Codetry archetype, $90k/mo agency fee) is preserved as a historical
@@ -22,7 +22,7 @@ import {
  *     - Bobbie bills at $150/hr, nets $80/hr (the $70 delta funds Tyler's
  *       subcontract pass-through directly — client sees two line items).
  *     - Tyler (RFF — boots on the ground for distribution at Sioux Lookout
- *       and Deer Lake) bills at $70/hr.
+ *       and Northern Band) bills at $70/hr.
  *     - Both work 40 hr/wk. Monthly billing basis: 4 wk × 40 hr = 160 hr/mo.
  *
  *   This is a two-person lean structure, not an agency fee. Bobbie's $12,800/mo
@@ -59,7 +59,7 @@ import {
  *   overheads were sized for a $90k/mo engagement. V6 uses only the lean subset above.
  *
  *   Code review + IT: one-time cost (a few weeks, ~$2k–$5k total), rolled under
- *   Tyler's subcontractor line when Deer Lake engagement is confirmed. Not a monthly
+ *   Tyler's subcontractor line when Northern Band engagement is confirmed. Not a monthly
  *   overhead line.
  *
  * The numbers (computed below):
@@ -140,7 +140,7 @@ const v6Triggers: RenegotiationTrigger[] = [
   {
     step: "Month 12 renegotiation",
     condition:
-      "Deer Lake store is operational, food is flowing, Tyler's role is established, and Bobbie's planning capacity is demonstrably landing value above the hourly cost.",
+      "Northern Band store is operational, food is flowing, Tyler's role is established, and Bobbie's planning capacity is demonstrably landing value above the hourly cost.",
     feeStepTo: 0, // not a flat fee — rate steps, not a fee
     drawStepTo: 0, // placeholder; real step is Bobbie rate → $175/hr or scope expansion
     evidenceRequired:
@@ -169,13 +169,13 @@ const v6Agency = {
       role: "Practitioner / Lead (Bobbie)",
       monthlyLoaded: v6BobbieDrawMonthly, // 12,800 net draw
       notes:
-        "160 hr/mo × $150 billed, $80 net draw. Engagement owner; visits Deer Lake as needed. The $70/hr delta funds Tyler's subcontract directly.",
+        "160 hr/mo × $150 billed, $80 net draw. Engagement owner; visits Northern Band as needed. The $70/hr delta funds Tyler's subcontract directly.",
     },
     {
       role: "Distribution (Tyler — RFF subcontract)",
       monthlyLoaded: v6TylerCostMonthly, // 11,200
       notes:
-        "160 hr/mo × $70. Boots on the ground for distribution at Sioux Lookout and Deer Lake. Billed to client, paid to Tyler as a pass-through subcontract. Code review + IT setup rolled under this line as a one-time cost when Deer Lake engagement is confirmed.",
+        "160 hr/mo × $70. Boots on the ground for distribution at Sioux Lookout and Northern Band. Billed to client, paid to Tyler as a pass-through subcontract. Code review + IT setup rolled under this line as a one-time cost when Northern Band engagement is confirmed.",
     },
   ],
   payrollTotal: v6BobbieDrawMonthly + v6TylerCostMonthly, // 24,000 combined draws
@@ -214,7 +214,7 @@ const v6Agency = {
   teamIncentivesName: "Tyler subcontract incentives / code-IT one-time",
   teamIncentivesAmount: null,
   teamIncentivesTag: tbd(
-    "Code review + IT setup is a one-time cost (~$2k–$5k) rolled under Tyler's line when Deer Lake is confirmed. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment. Exact amounts TBD.",
+    "Code review + IT setup is a one-time cost (~$2k–$5k) rolled under Tyler's line when Northern Band is confirmed. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment. Exact amounts TBD.",
   ),
 
   costBasisJunAug: v6TitheMonthly + v6BobbieDrawMonthly + v6TylerCostMonthly + v6OverheadsMonthly, // 28,812
@@ -295,12 +295,12 @@ const v6Personal = {
 
 export const SCENARIO_V6: Scenario = {
   id: "v6",
-  name: "V6 — Hourly subcontract (Deer Lake)",
+  name: "V6 — Hourly subcontract (Northern Band)",
   short: "V6",
   tagline:
     "$150/hr Bobbie · $70/hr Tyler (RFF sub) · 160 hr/mo each · lean overheads · surplus waterfall TBD",
   description:
-    "Hourly subcontracting model applied to Deer Lake. Bobbie bills $150/hr (nets $80/hr), Tyler bills $70/hr as a pass-through subcontract for distribution at Sioux Lookout and Deer Lake — both 40 hr/wk. Phase 1: $25,000 flat 8-week trial (intentionally below cost — entry price). Phase 2: $35,200/mo billed, $6,388/mo surplus after tithe + draws + lean overheads. Surplus waterfall TBD. V5 ($90k/mo agency) preserved as historical baseline.",
+    "Hourly subcontracting model applied to Northern Band. Bobbie bills $150/hr (nets $80/hr), Tyler bills $70/hr as a pass-through subcontract for distribution at Sioux Lookout and Northern Band — both 40 hr/wk. Phase 1: $25,000 flat 8-week trial (intentionally below cost — entry price). Phase 2: $35,200/mo billed, $6,388/mo surplus after tithe + draws + lean overheads. Surplus waterfall TBD. V5 ($90k/mo agency) preserved as historical baseline.",
   accent: "#3A5F8A",
   accentSoft: "#DDE8F5",
   accentInk: "#1A2E44",

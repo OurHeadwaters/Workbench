@@ -159,7 +159,7 @@ export function ReplicationPage() {
           <ul className="space-y-3 text-sm">
             <SwapItem
               title="Community name + buyer"
-              workedExample={`Deer Lake First Nation; buyer is ${a.buyerStatus}.`}
+              workedExample={`Northern Band; buyer is ${a.buyerStatus}.`}
               swapNote="In Pilot #2: replace with the new community's name and the political weight of the buyer (band council, regional service org, contractor's CFO)."
             />
             <SwapItem
@@ -352,7 +352,7 @@ export function ReplicationPage() {
               <p className="text-xs text-muted-foreground">
                 Day-90 audited proof point is the trigger that opens Pilot #2 outbound — not a
                 hypothesis. Mirrors the SellTimingOutbound slide in the Practitioner Operating Plan
-                deck and the Day-1/90/180 milestone strip on the Deer Lake Store deck.
+                deck and the Day-1/90/180 milestone strip on the Northern Band Store deck.
               </p>
               <div
                 className="grid grid-cols-1 md:grid-cols-3 gap-3"
@@ -361,7 +361,7 @@ export function ReplicationPage() {
                 <Milestone
                   label="Day-1"
                   kicker="Open"
-                  body="Deer Lake store opens. Working POS, working freight lane — the system is running before any second-reserve conversation begins."
+                  body="Northern Band store opens. Working POS, working freight lane — the system is running before any second-reserve conversation begins."
                   accentInk={accentInk}
                   accentSoft={accentSoft}
                 />
@@ -376,7 +376,7 @@ export function ReplicationPage() {
                 <Milestone
                   label="Day-180"
                   kicker="Pilot #2 signed"
-                  body="Pilot #2 lands as a paid engagement, not a written deliverable that preceded the sale. The case study writes itself out of the work — the way Deer Lake did."
+                  body="Pilot #2 lands as a paid engagement, not a written deliverable that preceded the sale. The case study writes itself out of the work — the way Northern Band did."
                   accentInk={accentInk}
                   accentSoft={accentSoft}
                 />

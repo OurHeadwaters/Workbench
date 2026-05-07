@@ -1023,7 +1023,7 @@ router.get("/short-links", withAuth, async (req, res) => {
 
 // Public resolve: no auth check. We deliberately return only the
 // payload + the (cosmetic) pileName so the recipient's import preview
-// can show "Importing 'Deer Lake' from a shared link". Owner identity
+// can show "Importing 'Northern Band' from a shared link". Owner identity
 // is never disclosed.
 router.get("/short-links/:slug", async (req, res) => {
   const slug = String(req.params.slug);

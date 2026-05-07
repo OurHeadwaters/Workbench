@@ -25,9 +25,9 @@ import {
  *   (25% of surplus) to a top-of-waterfall first claim on revenue (10% off
  *   the top).
  *
- * 2026-04-28 update — Deer Lake roster sync.
- *   Roster reshaped to match the canonical Deer Lake team baked into the
- *   Operating Plan one-pager and the Deer Lake Store Plan StaffingModel
+ * 2026-04-28 update — Northern Band roster sync.
+ *   Roster reshaped to match the canonical Northern Band team baked into the
+ *   Operating Plan one-pager and the Northern Band Store Plan StaffingModel
  *   slide — the same change applied to V3:
  *     - Practitioner / Lead draw drops $18,000/mo → $14,000/mo (matches the
  *       OnePager A · floor founder draw).
@@ -58,7 +58,7 @@ import {
  *   V4−V3 surplus-deployed invariant preserved: 519,444 − 276,444 = 243,000.
  *
  * The pricing story:
- *   - Same 7-role Deer Lake roster as V3 (the locked default). Payroll $53.5k/mo.
+ *   - Same 7-role Northern Band roster as V3 (the locked default). Payroll $53.5k/mo.
  *   - Fee at $105k/mo so the Sep-onward operating margin lands at ~37.2%
  *     (target band: 35–40%) before the tithe is taken.
  *   - Lead draw stays at $14k/mo for the published 18 months. The
@@ -67,8 +67,8 @@ import {
  */
 
 const v4Roster = [
-  { role: "Practitioner / Lead", monthlyLoaded: 14000, notes: "Engagement owner; visits Deer Lake ~3 days/mo. Draw steps at the renegotiation triggers below." },
-  { role: "Hub Coordinator (Dryden)", monthlyLoaded: 8500, notes: "Phone, depot, day-of fires; Deer Lake distribution" },
+  { role: "Practitioner / Lead", monthlyLoaded: 14000, notes: "Engagement owner; visits Northern Band ~3 days/mo. Draw steps at the renegotiation triggers below." },
+  { role: "Hub Coordinator (Dryden)", monthlyLoaded: 8500, notes: "Phone, depot, day-of fires; Northern Band distribution" },
   { role: "IT / Tech", monthlyLoaded: 9500, notes: "Technical advisor on call; quarterly software review; checks any code that touches money" },
   { role: "Community Development Associate", monthlyLoaded: 7500 },
   { role: "Food Handler (Dryden depot)", monthlyLoaded: 5000 },
@@ -154,12 +154,12 @@ const v4Agency = {
   startDate: "June 1, 2026",
   buyerStatus: "TBD (band council vs father — affects political weight, not the math)",
   feeTag: confirmed(
-    "Right-priced against the 7-role Deer Lake roster — Sep-onward operating margin (pre-tithe) lands at ~37.2% (target band 35–40%).",
+    "Right-priced against the 7-role Northern Band roster — Sep-onward operating margin (pre-tithe) lands at ~37.2% (target band 35–40%).",
   ),
 
   roster: v4Roster,
   payrollTotal: v4PayrollTotal,
-  rosterTag: confirmed("Same 7-role Deer Lake team as V3 — synced from the Operating Plan one-pager and the Deer Lake StaffingModel slide on 2026-04-28. Fee changes between V3 and V4; team shape does not."),
+  rosterTag: confirmed("Same 7-role Northern Band team as V3 — synced from the Operating Plan one-pager and the Northern Band StaffingModel slide on 2026-04-28. Fee changes between V3 and V4; team shape does not."),
 
   overheadsJunAug: SHARED_OVERHEADS_JUN_AUG,
   overheadsJunAugTotal: SHARED_OVERHEADS_JUN_AUG_TOTAL,
@@ -225,7 +225,7 @@ const v4Agency = {
 
   practitionerSalary18mo: v4Roster[0].monthlyLoaded * 18, // 252,000
   practitionerSalaryTag: confirmed(
-    "Lead salary held at $14k/mo × 18 = $252k for the published 18 months, matching the canonical Deer Lake roster. Renegotiation triggers describe the step at month 12.",
+    "Lead salary held at $14k/mo × 18 = $252k for the published 18 months, matching the canonical Northern Band roster. Renegotiation triggers describe the step at month 12.",
   ),
 
   reservePurposes: SHARED_RESERVE_PURPOSES,
@@ -242,7 +242,7 @@ const v4Personal = {
   ), // 188,667
   capitalRecovery: 112000,
   tag: confirmed(
-    "Lead draw stays at $14k/mo for the published 18 months under the 2026-04-28 Deer Lake roster sync. V4 personal-cash matches V3 personal-cash; the V4 advantage shows up in surplus deployment, not personal income. Brightside owner take dropped from $37k to $31k under the 2026-04-29 tithe-first revision. Renegotiation triggers (Contracts page) describe the post-month-12 step.",
+    "Lead draw stays at $14k/mo for the published 18 months under the 2026-04-28 Northern Band roster sync. V4 personal-cash matches V3 personal-cash; the V4 advantage shows up in surplus deployment, not personal income. Brightside owner take dropped from $37k to $31k under the 2026-04-29 tithe-first revision. Renegotiation triggers (Contracts page) describe the post-month-12 step.",
   ),
 };
 
@@ -250,9 +250,9 @@ export const SCENARIO_V4: Scenario = {
   id: "v4",
   name: "V4 — Right-priced",
   short: "V4",
-  tagline: "$105k/mo agency · 7-role Deer Lake team · ~37.2% operating margin · tithe-first",
+  tagline: "$105k/mo agency · 7-role Northern Band team · ~37.2% operating margin · tithe-first",
   description:
-    "Right-priced engagement against the same 7-role Deer Lake roster as V3. Fee at $105k/mo so the Sep-onward operating margin (pre-tithe) lands in the 35–40% band. Tithe-first deployment: 10% off the top to Giving, then capital recovery (4 mo Jun–Sep 2026), then Brightside launch (October 2026), then 13 months of Reserve / Innovation. Renegotiation triggers describe the month-12 step in the founder's voice — pre-baked, not negotiated from scratch later. Also seeded as the first alternative-reality tab on the Compare page.",
+    "Right-priced engagement against the same 7-role Northern Band roster as V3. Fee at $105k/mo so the Sep-onward operating margin (pre-tithe) lands in the 35–40% band. Tithe-first deployment: 10% off the top to Giving, then capital recovery (4 mo Jun–Sep 2026), then Brightside launch (October 2026), then 13 months of Reserve / Innovation. Renegotiation triggers describe the month-12 step in the founder's voice — pre-baked, not negotiated from scratch later. Also seeded as the first alternative-reality tab on the Compare page.",
   accent: "#3B2A6E",
   accentSoft: "#E6E1F2",
   accentInk: "#1F1640",

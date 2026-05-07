@@ -220,7 +220,7 @@ export function ContractsPage() {
           </div>
           <p className="mt-3 text-muted-foreground max-w-3xl">
             <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo starting {a.startDate} against the{" "}
-            {a.roster.length}-role Deer Lake team (
+            {a.roster.length}-role Northern Band team (
             <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo payroll). Surplus waterfall:{" "}
             {waterfallDescription}. The Ship Manifest publishes a trial-first hourly engagement
             model; these rates and that structure are what the guide models.
@@ -240,7 +240,7 @@ export function ContractsPage() {
         <p className="text-xs text-blue-800 leading-relaxed">
           The Ship Manifest offer is trial-first and hourly: six weeks, bounded scope, no retainer.
           The figures below model a <em>full engagement</em> at confirmed rates
-          ($175/hr lead · $70/hr support) against the Deer Lake roster — they show what the math
+          ($175/hr lead · $70/hr support) against the Northern Band roster — they show what the math
           looks like if a contract lands and runs. None of this is locked until a contract is signed.
           Treat the monthly-fee line as a scenario derived from projected hours, not a quoted retainer.
         </p>

@@ -21,8 +21,8 @@ import {
  * Source of truth: .local/tasks/practitioners-guide-v2.md (the founder's
  * canonical handbook spec). After V2 was retired on 2026-04-26 (full team,
  * $115k/mo) and the 807 CDP grant line was removed entirely on 2026-04-28
- * (Deer Lake docs are now the canonical source of practitioner team
- * structure), the live scenario set is V3 (locked default, 7-role Deer Lake
+ * (Northern Band docs are now the canonical source of practitioner team
+ * structure), the live scenario set is V3 (locked default, 7-role Northern Band
  * roster) and V4 (right-priced, same roster). The shared `SHARED_*` constants
  * in `data/shared.ts` are the single source of truth for everything Salts /
  * Brightside / overheads / reserve / giving — V3 and V4 import them by
@@ -131,11 +131,11 @@ describe("807 CDP line — fully retired (no contracts.cdp807 on either scenario
   });
 });
 
-describe("V3 Deer Lake-canonical agency line — locked headline numbers", () => {
+describe("V3 Northern Band-canonical agency line — locked headline numbers", () => {
   // Source of truth: .local/tasks/practitioners-guide-v3.md, plus the Deer
   // Lake walkthrough docs (which now own the practitioner team structure).
   // V3 was promoted to default on 2026-04-26 and re-rostered to the 7-role
-  // Deer Lake team on 2026-04-28 (added Hub Coordinator + Junior Analyst,
+  // Northern Band team on 2026-04-28 (added Hub Coordinator + Junior Analyst,
   // re-graded Practitioner to $14k/mo).
   const agency = SCENARIO_V3.contracts.agency;
 
@@ -146,13 +146,13 @@ describe("V3 Deer Lake-canonical agency line — locked headline numbers", () =>
     expect(agency.startDate).toBe("June 1, 2026");
   });
 
-  it("payroll: 7 roles totalling $53,500/mo (Deer Lake-canonical roster)", () => {
+  it("payroll: 7 roles totalling $53,500/mo (Northern Band-canonical roster)", () => {
     expect(agency.roster).toHaveLength(7);
     expect(agency.payrollTotal).toBe(53500);
     expect(agency.roster.reduce((s, r) => s + r.monthlyLoaded, 0)).toBe(53500);
   });
 
-  it("roster role names match the locked 7-role Deer Lake roster (Dryden depot serving Deer Lake distribution)", () => {
+  it("roster role names match the locked 7-role Northern Band roster (Dryden depot serving Northern Band distribution)", () => {
     const roles = agency.roster.map((r) => r.role);
     expect(roles).toEqual([
       "Practitioner / Lead",
@@ -167,7 +167,7 @@ describe("V3 Deer Lake-canonical agency line — locked headline numbers", () =>
     expect(roles).not.toContain("Transparency Stack Engineer");
     expect(roles).not.toContain("Operations Manager (Dryden)");
     // Hub Coordinator + Junior Analyst are the two seats added when the
-    // Deer Lake docs became the canonical source for team structure.
+    // Northern Band docs became the canonical source for team structure.
     expect(roles.some((r) => r.startsWith("Hub Coordinator"))).toBe(true);
     expect(roles.some((r) => r.startsWith("Junior Analyst"))).toBe(true);
   });
@@ -197,14 +197,14 @@ describe("V3 Deer Lake-canonical agency line — locked headline numbers", () =>
     expect(agency.fee - agency.titheMonthly - agency.costBasisSepOnward).toBe(agency.monthlySurplusSepOnward);
   });
 
-  it("capital recovery: $112k retired in ~8 months at the post-tithe $90k/mo fee (Deer Lake roster adds one month)", () => {
+  it("capital recovery: $112k retired in ~8 months at the post-tithe $90k/mo fee (Northern Band roster adds one month)", () => {
     expect(agency.capitalRecoveryAmount).toBe(112000);
     expect(agency.capitalRecoveryMonths).toBe(8);
     expect(agency.capitalRecoveryStartLabel).toBe("Jun 2026");
     expect(agency.capitalRecoveryEndLabel).toContain("Jan 2027");
   });
 
-  it("Brightside Launch Month: February 2027 (slipped one month by the Deer Lake roster), $28k spend, $12,992 short", () => {
+  it("Brightside Launch Month: February 2027 (slipped one month by the Northern Band roster), $28k spend, $12,992 short", () => {
     expect(agency.brightsideLaunchMonthLabel).toContain("February 2027");
     expect(agency.brightsidePrelaunchSpend).toBe(28000);
     expect(agency.brightsideLaunchSurplus).toBe(15008);
@@ -242,7 +242,7 @@ describe("V3 Deer Lake-canonical agency line — locked headline numbers", () =>
     expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
   });
 
-  it("practitioner salary: $252,000 across 18 months ($14k/mo × 18, Deer Lake re-grade)", () => {
+  it("practitioner salary: $252,000 across 18 months ($14k/mo × 18, Northern Band re-grade)", () => {
     expect(agency.practitionerSalary18mo).toBe(252000);
     expect(agency.roster[0].role).toBe("Practitioner / Lead");
     expect(agency.roster[0].monthlyLoaded).toBe(14000);
@@ -251,12 +251,12 @@ describe("V3 Deer Lake-canonical agency line — locked headline numbers", () =>
     );
   });
 
-  it("reserve has all four declared purposes; tithe (Giving) direction is NW Ontario / Dryden–Deer Lake", () => {
+  it("reserve has all four declared purposes; tithe (Giving) direction is NW Ontario / Dryden–Northern Band", () => {
     expect(agency.reservePurposes).toBe(SHARED_RESERVE_PURPOSES);
     expect(agency.reservePurposes).toHaveLength(4);
     expect(agency.givingDirection).toBe(SHARED_GIVING_DIRECTION);
     expect(agency.givingDirection).toContain("NW Ontario");
-    expect(agency.givingDirection).toContain("Dryden–Deer Lake");
+    expect(agency.givingDirection).toContain("Dryden–Northern Band");
   });
 });
 
@@ -394,7 +394,7 @@ describe("V3 personal compensation — locked headline numbers (post-tithe-first
 });
 
 describe("V4 right-priced agency line — locked headline numbers", () => {
-  // Source of truth: .local/tasks/task-174.md plus the Deer Lake roster sync
+  // Source of truth: .local/tasks/task-174.md plus the Northern Band roster sync
   // on 2026-04-28 (same 7-role roster as V3, only the fee differs).
   const agency = SCENARIO_V4.contracts.agency;
 
@@ -405,14 +405,14 @@ describe("V4 right-priced agency line — locked headline numbers", () => {
     expect(agency.startDate).toBe("June 1, 2026");
   });
 
-  it("payroll: 7 Deer Lake roles totalling $53,500/mo (same roster as V3)", () => {
+  it("payroll: 7 Northern Band roles totalling $53,500/mo (same roster as V3)", () => {
     expect(agency.roster).toHaveLength(7);
     expect(agency.payrollTotal).toBe(53500);
     expect(agency.roster.reduce((s, r) => s + r.monthlyLoaded, 0)).toBe(53500);
     expect(agency.payrollTotal).toBe(SCENARIO_V3.contracts.agency.payrollTotal);
   });
 
-  it("roster role names match the locked 7-role Deer Lake roster (same as V3)", () => {
+  it("roster role names match the locked 7-role Northern Band roster (same as V3)", () => {
     const roles = agency.roster.map((r) => r.role);
     expect(roles).toEqual([
       "Practitioner / Lead",
@@ -508,7 +508,7 @@ describe("V4 right-priced agency line — locked headline numbers", () => {
     expect(agency.phase3MonthlySurplus).toBe(agency.monthlySurplusSepOnward);
   });
 
-  it("practitioner salary unchanged from the Deer Lake re-grade: $252,000 across 18 months ($14k/mo × 18)", () => {
+  it("practitioner salary unchanged from the Northern Band re-grade: $252,000 across 18 months ($14k/mo × 18)", () => {
     expect(agency.practitionerSalary18mo).toBe(252000);
     expect(agency.roster[0].role).toBe("Practitioner / Lead");
     expect(agency.roster[0].monthlyLoaded).toBe(14000);
@@ -692,12 +692,12 @@ describe("Scenario registry — V7 is the locked default; V6 and V5 are historic
     expect(SCENARIO_ORDER).not.toContain("v6");
   });
 
-  it("DEFAULT_SCENARIO_ID is v7 (updated rates applied to Deer Lake)", () => {
+  it("DEFAULT_SCENARIO_ID is v7 (updated rates applied to Northern Band)", () => {
     expect(DEFAULT_SCENARIO_ID).toBe("v7");
   });
 });
 
-describe("V5 — Codetry archetype (Deer Lake) — locked headline numbers", () => {
+describe("V5 — Codetry archetype (Northern Band) — locked headline numbers", () => {
   // Source of truth: .local/tasks/practitioners-guide-v5.md plus the
   // 2026-04-29 spec note in v5.ts. V5 is the new default operating
   // framework; the rest of the guide reads from V5.
@@ -970,7 +970,7 @@ describe("V3 ↔ V4 ↔ V5 ↔ V6 invariants — Salts and Brightside are the SA
   });
 });
 
-describe("V6 — Hourly subcontract (Deer Lake) — locked headline numbers", () => {
+describe("V6 — Hourly subcontract (Northern Band) — locked headline numbers", () => {
   // Source of truth: v6.ts spec note + 2026-05-02 confirmed numbers.
   // Bobbie $150/hr × 160 hr/mo = $24,000 billed; nets $80/hr = $12,800 draw.
   // Tyler $70/hr × 160 hr/mo = $11,200 billed/paid (pass-through subcontract).

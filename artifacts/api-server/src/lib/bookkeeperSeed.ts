@@ -43,8 +43,8 @@ const COST_CENTRES: CostCentreSeed[] = [
   },
   {
     code: "SALT-01",
-    name: "Deer Lake — co-op store pilot",
-    parentEntity: "Deer Lake",
+    name: "Northern Band — co-op store pilot",
+    parentEntity: "Northern Band",
     description:
       "First operating cost-centre under the agency. Stub — will fill in as the pilot moves forward.",
     color: "#7a4d2e",

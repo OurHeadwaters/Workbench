@@ -8,7 +8,7 @@ import {
 } from "./shared";
 
 /**
- * V7 — Updated rate structure applied to Deer Lake.
+ * V7 — Updated rate structure applied to Northern Band.
  *
  * STATUS: LOCKED on 2026-05-02. V7 is the new default operating framework,
  * replacing V6. V6 (Bobbie $150/hr, Tyler $70/hr) is preserved as a
@@ -22,7 +22,7 @@ import {
  *     - Bobbie bills at $175/hr, nets $105/hr (the $70 delta still funds
  *       Tyler's subcontract pass-through — client sees two line items).
  *     - Tyler (RFF — boots on the ground for distribution at Sioux Lookout
- *       and Deer Lake) bills at $70/hr (unchanged).
+ *       and Northern Band) bills at $70/hr (unchanged).
  *     - Both work 40 hr/wk. Monthly billing basis: 4 wk × 40 hr = 160 hr/mo.
  *
  *   Rationale. Bobbie's work bundles community development strategy,
@@ -137,7 +137,7 @@ const v7Triggers: RenegotiationTrigger[] = [
   {
     step: "Month 12 renegotiation",
     condition:
-      "Deer Lake store is operational, food is flowing, Tyler's role is established, and Bobbie's planning capacity is demonstrably landing value above the hourly cost.",
+      "Northern Band store is operational, food is flowing, Tyler's role is established, and Bobbie's planning capacity is demonstrably landing value above the hourly cost.",
     feeStepTo: 0, // not a flat fee — rate steps, not a fee
     drawStepTo: 0, // placeholder; real step is Bobbie rate → $200/hr or scope expansion
     evidenceRequired:
@@ -162,13 +162,13 @@ const v7Agency = {
       role: "Practitioner / Lead (Bobbie)",
       monthlyLoaded: v7BobbieDrawMonthly, // 16,800 net draw
       notes:
-        "160 hr/mo × $175 billed, $105 net draw. Engagement owner; visits Deer Lake as needed. The $70/hr delta funds Tyler's subcontract directly.",
+        "160 hr/mo × $175 billed, $105 net draw. Engagement owner; visits Northern Band as needed. The $70/hr delta funds Tyler's subcontract directly.",
     },
     {
       role: "Distribution (Tyler — RFF subcontract)",
       monthlyLoaded: v7TylerCostMonthly, // 11,200
       notes:
-        "160 hr/mo × $70. Boots on the ground for distribution at Sioux Lookout and Deer Lake. Billed to client, paid to Tyler as a pass-through subcontract. Code review + IT setup rolled under this line as a one-time cost when Deer Lake engagement is confirmed.",
+        "160 hr/mo × $70. Boots on the ground for distribution at Sioux Lookout and Northern Band. Billed to client, paid to Tyler as a pass-through subcontract. Code review + IT setup rolled under this line as a one-time cost when Northern Band engagement is confirmed.",
     },
   ],
   payrollTotal: v7BobbieDrawMonthly + v7TylerCostMonthly, // 28,000 combined draws
@@ -207,7 +207,7 @@ const v7Agency = {
   teamIncentivesName: "Tyler subcontract incentives / code-IT one-time",
   teamIncentivesAmount: null,
   teamIncentivesTag: tbd(
-    "Code review + IT setup is a one-time cost (~$2k–$5k) rolled under Tyler's line when Deer Lake is confirmed. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment. Exact amounts TBD.",
+    "Code review + IT setup is a one-time cost (~$2k–$5k) rolled under Tyler's line when Northern Band is confirmed. Hardware (computer + server ~$3k–$4k) deferred until ongoing commitment. Exact amounts TBD.",
   ),
 
   costBasisJunAug: v7BobbieDrawMonthly + v7TylerCostMonthly + v7OverheadsMonthly, // 29,292  (no business tithe)
@@ -288,12 +288,12 @@ const v7Personal = {
 
 export const SCENARIO_V7: Scenario = {
   id: "v7",
-  name: "V7 — Deer Lake rate scenario",
+  name: "V7 — Northern Band rate scenario",
   short: "V7",
   tagline:
-    "Rate scenario applied to Deer Lake · $175/hr lead · $70/hr support · trial-first · contract not yet signed",
+    "Rate scenario applied to Northern Band · $175/hr lead · $70/hr support · trial-first · contract not yet signed",
   description:
-    "Deer Lake rate scenario. Rates are confirmed: $175/hr lead (Bobbie) · $70/hr support (Tyler, RFF sub). The two-person lean structure is the working model. Monthly billing totals and surplus projections are scenario outputs that depend on hours agreed — they become real when a contract is signed. Phase 1: bounded 8-week trial at a flat $25,000 — intentionally below full cost as an entry posture. Phase 2 waterfall TBD pending a signed contract.",
+    "Northern Band rate scenario. Rates are confirmed: $175/hr lead (Bobbie) · $70/hr support (Tyler, RFF sub). The two-person lean structure is the working model. Monthly billing totals and surplus projections are scenario outputs that depend on hours agreed — they become real when a contract is signed. Phase 1: bounded 8-week trial at a flat $25,000 — intentionally below full cost as an entry posture. Phase 2 waterfall TBD pending a signed contract.",
   accent: "#3A5F8A",
   accentSoft: "#DDE8F5",
   accentInk: "#1A2E44",

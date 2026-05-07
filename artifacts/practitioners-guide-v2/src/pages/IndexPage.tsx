@@ -10,7 +10,7 @@
  *
  * This rule applies to all internal tools (Practitioner's Guide, Operating Plan,
  * Ship Manifest, Library, Handbook internal views). It does NOT apply to
- * public-facing or client-facing content (Deer Lake deck, handbook public pages).
+ * public-facing or client-facing content (Northern Band deck, handbook public pages).
  *
  * See docs/design/progressive-disclosure.md for the canonical rule reference.
  */
@@ -319,7 +319,7 @@ export function IndexPage() {
             icon={Target}
             title="Trial Window"
             signal="What does yes look like?"
-            signalLabel="for Deer Lake"
+            signalLabel="for Northern Band"
             badge={<StatusBadge status="active" label="Active pursuit" />}
             summary="A bounded trial is the opening posture. Questions: What scope proves value? What does the council need to see to commit to a longer engagement?"
             accentColor="#1A5FA8"
@@ -332,7 +332,7 @@ export function IndexPage() {
                   in a contained window, then transition to an ongoing engagement.
                 </p>
                 <p>
-                  <strong className="text-foreground">Primary client:</strong> Deer Lake. Store
+                  <strong className="text-foreground">Primary client:</strong> Northern Band. Store
                   distribution is the next phase if the trial lands.
                 </p>
                 <p>
@@ -349,16 +349,16 @@ export function IndexPage() {
             }
           />
 
-          {/* Deer Lake Store Distribution */}
+          {/* Northern Band Store Distribution */}
           <PipelineCard
             icon={MapPin}
-            title="Deer Lake — Store Distribution"
+            title="Northern Band — Store Distribution"
             signal="Next phase"
             signalLabel="if trial lands"
             badge={<StatusBadge status="next" label="Gated on trial" />}
             summary="Hourly structure: Bobbie lead + Tyler RFF sub. Rate, hours, and total billing TBD — what does the engagement need to cover, and what does the client budget support?"
             accentColor="#7A4E2D"
-            testId="pipeline-deer-lake"
+            testId="pipeline-northern-band"
             detail={
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
@@ -449,7 +449,7 @@ export function IndexPage() {
                   <StatusBadge status="plan-b" label="Contingency" />
                 </div>
                 <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                  If Deer Lake doesn't materialize, actively search for alternate pilot community
+                  If Northern Band doesn't materialize, actively search for alternate pilot community
                   clients. This is a named, visible bucket — not a footnote. The trigger is clear,
                   the outreach list is built, and the reframed pitch is ready.
                 </p>
@@ -631,7 +631,7 @@ export function IndexPage() {
           <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
             The model written down: the role roster, the fee → margin formula, the pre-baked
             renegotiation triggers, the year-end value-delivered audit, and the positioning
-            narrative — alongside the things that swap per community. V5 (Deer Lake, Codetry
+            narrative — alongside the things that swap per community. V5 (Northern Band, Codetry
             archetype) is the worked example.
           </p>
         </Link>
