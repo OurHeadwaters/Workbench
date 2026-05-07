@@ -9,63 +9,143 @@ interface ToolCard {
   accent: string;
   accentFg: string;
   testId: string;
+  external?: boolean;
+}
+
+interface ComingSoonCard {
+  eyebrow: string;
+  title: string;
+  description: string;
+  accent: string;
+  testId: string;
 }
 
 const TOOLS: ToolCard[] = [
   {
-    eyebrow: "Knowledge commons",
-    title: "Research Library",
+    eyebrow: "Practitioner workspace · Operations",
+    title: "Saltbox",
+    description:
+      "A practitioner's home base — tasks, contacts, and notes in one calm workspace. Built for people who run things.",
+    href: "https://salt-box.replit.app/",
+    displayPath: "salt-box.replit.app",
+    accent: "hsl(145 36% 22%)",
+    accentFg: "hsl(38 36% 96%)",
+    testId: "tool-saltbox",
+    external: true,
+  },
+  {
+    eyebrow: "Operations · For entrepreneurs",
+    title: "Rootwork",
+    description:
+      "A calm command center for builders who can't sit still. Private and self-hosted — drop in the chaos, find what you need in seconds.",
+    href: "https://community-knowledge-hub.replit.app/studio/",
+    displayPath: "community-knowledge-hub.replit.app",
+    accent: "hsl(155 28% 28%)",
+    accentFg: "hsl(38 36% 96%)",
+    testId: "tool-rootwork",
+    external: true,
+  },
+  {
+    eyebrow: "Journalling · Public and private",
+    title: "Dam Days",
+    description:
+      "A journal that knows what to keep — and what to share. Public entries, private pages, one place.",
+    href: "https://conversation-log.replit.app/",
+    displayPath: "conversation-log.replit.app",
+    accent: "hsl(30 40% 50%)",
+    accentFg: "hsl(38 36% 96%)",
+    testId: "tool-damdays",
+    external: true,
+  },
+  {
+    eyebrow: "Knowledge commons · Northern food systems",
+    title: "Northern Food Systems Research Library",
     description:
       "Curated food systems research, producer contacts, and policy documents for northern communities — open and searchable.",
     href: "/library/",
     displayPath: "/library/",
-    accent: "hsl(145 36% 22%)",
+    accent: "hsl(145 28% 30%)",
     accentFg: "hsl(38 36% 96%)",
     testId: "tool-library",
   },
   {
-    eyebrow: "Practitioner's guide",
-    title: "Community Store Guide",
+    eyebrow: "Grants · Northern communities",
+    title: "Grants Finder",
     description:
-      "Step-by-step operational guide for building a community-owned store — site selection, co-op structure, financing, and day-one operations.",
-    href: "/practitioners-guide-v2/",
-    displayPath: "/guide/",
+      "Every funding source for northern and Indigenous communities — grants, programs, and deadlines in one searchable index.",
+    href: "https://community-knowledge-hub.replit.app/infographics/grants-finder.html",
+    displayPath: "community-knowledge-hub.replit.app",
     accent: "hsl(14 64% 36%)",
     accentFg: "hsl(38 36% 96%)",
-    testId: "tool-guide",
+    testId: "tool-grants",
+    external: true,
   },
   {
-    eyebrow: "Plain-language handbook",
-    title: "How a Community Runs Its Own Economy",
+    eyebrow: "Health · Long-term care",
+    title: "Bright Side",
     description:
-      "A plain-language handbook explaining how community economics actually works — written for band members, not consultants.",
-    href: "/codetry-handbook/",
-    displayPath: "/handbook/",
-    accent: "hsl(30 40% 50%)",
+      "Recreation therapy companion for long-term care homes — activity planning, resident engagement, and documentation built for the people on the floor.",
+    href: "https://health-support-hub.replit.app/",
+    displayPath: "health-support-hub.replit.app",
+    accent: "hsl(155 22% 34%)",
     accentFg: "hsl(38 36% 96%)",
-    testId: "tool-handbook",
+    testId: "tool-brightside",
+    external: true,
   },
   {
-    eyebrow: "Open financial records",
-    title: "Headwaters Books",
+    eyebrow: "Market intelligence · Northern food systems",
+    title: "Market Mosaic",
     description:
-      "What a community store's finances actually look like — open records the band can read, the daily close operators run, and the month-end pack for council.",
-    href: "/headwaters-books/",
-    displayPath: "/books/",
-    accent: "hsl(145 28% 30%)",
+      "An interactive snapshot of northern food markets — who's buying, what they need, and where the gaps are.",
+    href: "https://community-knowledge-hub.replit.app/infographics/market-mosaic.html",
+    displayPath: "community-knowledge-hub.replit.app",
+    accent: "hsl(145 36% 18%)",
     accentFg: "hsl(38 36% 96%)",
-    testId: "tool-books",
+    testId: "tool-market-mosaic",
+    external: true,
   },
   {
-    eyebrow: "Print & marketing",
-    title: "Print Marketing Suite",
+    eyebrow: "Supply chain · Northern communities",
+    title: "Standby Supplies",
     description:
-      "Ready-to-print posters, flyers, and signage for store openings and community events — designed for the team on the ground.",
-    href: "/print-marketing/",
-    displayPath: "/print/",
+      "A ready reference for sourcing food and supplies when the usual options fall through — northern supply chain and emergency sourcing.",
+    href: "https://community-knowledge-hub.replit.app/infographics/standby-supplies.html",
+    displayPath: "community-knowledge-hub.replit.app",
     accent: "hsl(14 50% 44%)",
     accentFg: "hsl(38 36% 96%)",
-    testId: "tool-print",
+    testId: "tool-standby-supplies",
+    external: true,
+  },
+  {
+    eyebrow: "Personal finance · Headwaters",
+    title: "Headwaters Finance",
+    description:
+      "A personal finance tool built for fast-moving people — maps where money goes for people who move faster than any folder system.",
+    href: "https://x-buckets-vision.replit.app/",
+    displayPath: "x-buckets-vision.replit.app",
+    accent: "hsl(30 45% 44%)",
+    accentFg: "hsl(38 36% 96%)",
+    testId: "tool-finance",
+    external: true,
+  },
+];
+
+const COMING_SOON: ComingSoonCard[] = [
+  {
+    eyebrow: "Community store · Launching soon",
+    title: "Community Store Guide",
+    description:
+      "Site selection, co-op structure, band financing, and day-one operations — a plain-language guide for building a community-owned store.",
+    accent: "hsl(14 64% 36%)",
+    testId: "tool-store-soon",
+  },
+  {
+    eyebrow: "Co-op membership · Coming soon",
+    title: "Co-op Membership Platform",
+    description:
+      "Membership and governance tools for community-owned co-ops — pending a vote from the pilot community before public launch.",
+    accent: "hsl(145 28% 30%)",
+    testId: "tool-coop-soon",
   },
 ];
 
@@ -165,6 +245,9 @@ export function LandingPage() {
             <a
               key={tool.testId}
               href={tool.href}
+              {...(tool.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               className="group block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
               style={{ borderColor: "hsl(145 14% 78%)" }}
               data-testid={tool.testId}
@@ -205,12 +288,63 @@ export function LandingPage() {
                   className="font-mono text-[10px] tracking-[0.14em] shrink-0 sm:ml-8"
                   style={{ color: tool.accent, opacity: 0.8 }}
                 >
-                  ourheadwaters.ca{tool.displayPath}
+                  {tool.external ? tool.displayPath : `ourheadwaters.ca${tool.displayPath}`}
                 </p>
               </div>
             </a>
           ))}
         </div>
+
+        {/* ── coming soon ── */}
+        {COMING_SOON.length > 0 && (
+          <div className="mt-8 space-y-3" data-testid="tools-coming-soon">
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.28em] mb-4"
+              style={{ color: "hsl(145 12% 36%)", opacity: 0.55 }}
+            >
+              In progress
+            </p>
+            {COMING_SOON.map((card) => (
+              <div
+                key={card.testId}
+                className="rounded-md border overflow-hidden opacity-60"
+                style={{ borderColor: "hsl(145 14% 78%)" }}
+                data-testid={card.testId}
+              >
+                <div
+                  className="px-5 py-3 flex items-center justify-between"
+                  style={{ background: card.accent, color: "hsl(38 36% 96%)" }}
+                >
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.24em] opacity-75 mb-0.5">
+                      {card.eyebrow}
+                    </p>
+                    <p className="font-serif text-lg sm:text-xl leading-tight font-medium">
+                      {card.title}
+                    </p>
+                  </div>
+                  <span
+                    className="font-mono text-[10px] uppercase tracking-[0.18em] opacity-60 shrink-0 ml-6 hidden sm:block"
+                    aria-hidden
+                  >
+                    Coming soon
+                  </span>
+                </div>
+                <div
+                  className="px-5 py-4"
+                  style={{ background: "hsl(38 32% 97%)" }}
+                >
+                  <p
+                    className="font-serif text-[14px] leading-[1.55]"
+                    style={{ color: "hsl(145 12% 36%)" }}
+                  >
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ── divider ── */}
