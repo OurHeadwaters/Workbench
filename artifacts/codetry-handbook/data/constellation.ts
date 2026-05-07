@@ -587,18 +587,18 @@ export const constellation: ConstellationSnapshot = {
       "workedExamples": [
         {
           "name": "Per-customer share split",
-          "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Karen strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
+          "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Jude strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
         },
         {
           "name": "Don't fix my book",
-          "rule": "Karen's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
+          "rule": "Jude's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
         },
         {
           "name": "Failures land on the tool, not on her",
           "rule": "Black Barn's tone note. Now an architectural constraint on every error state — operator-protective copy, not generic 'something went wrong'."
         },
         {
-          "name": "Make it easier for Karen to say no",
+          "name": "Make it easier for Jude to say no",
           "rule": "Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain."
         },
         {
@@ -607,14 +607,14 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Estimate → actual → variance loop",
-          "rule": "Karen records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
+          "rule": "Jude records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
         },
         {
           "name": "Pre-zone parked thread",
           "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
         }
       ],
-      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector → call → first-touched node is the modeling unit.",
+      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Jude herself. Sector → call → first-touched node is the modeling unit.",
       "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
       "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
       "reflections": [

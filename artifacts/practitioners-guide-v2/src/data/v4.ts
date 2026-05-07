@@ -130,11 +130,11 @@ const v4Triggers: RenegotiationTrigger[] = [
   {
     step: "Month 12 renegotiation",
     condition:
-      "Brightside is live (paying customers > 0) AND Karen's tool is in daily use at Headwaters.",
+      "Brightside is live (paying customers > 0) AND Jude's tool is in daily use at Headwaters.",
     feeStepTo: 115000,
     drawStepTo: 20000,
     evidenceRequired:
-      "Brightside billing dashboard + Karen tool usage log, both reviewed with the buyer at the month-12 sit-down.",
+      "Brightside billing dashboard + Jude tool usage log, both reviewed with the buyer at the month-12 sit-down.",
   },
   {
     step: "Month 18 renewal",

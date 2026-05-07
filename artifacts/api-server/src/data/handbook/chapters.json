@@ -1733,18 +1733,18 @@
               "items": [
                 {
                   "name": "Per-customer share split",
-                  "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Karen strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
+                  "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Jude strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
                 },
                 {
                   "name": "Don't fix my book",
-                  "rule": "Karen's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
+                  "rule": "Jude's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
                 },
                 {
                   "name": "Failures land on the tool, not on her",
                   "rule": "Black Barn's tone note. Now an architectural constraint on every error state — operator-protective copy, not generic 'something went wrong'."
                 },
                 {
-                  "name": "Make it easier for Karen to say no",
+                  "name": "Make it easier for Jude to say no",
                   "rule": "Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain."
                 },
                 {
@@ -1753,7 +1753,7 @@
                 },
                 {
                   "name": "Estimate → actual → variance loop",
-                  "rule": "Karen records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
+                  "rule": "Jude records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
                 },
                 {
                   "name": "Pre-zone parked thread",
@@ -2027,7 +2027,7 @@
                 "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
                 "Zone 2 (Workbench) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
                 "Zone 3 (Commons) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
-                "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
+                "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Jude).",
                 "Zone 5 (The Margin) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
               ]
             },
@@ -7168,18 +7168,18 @@
           "items": [
             {
               "name": "Per-customer share split",
-              "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Karen strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
+              "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Jude strawman optimized a symptom; the real work was the math after the kill — 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
             },
             {
               "name": "Don't fix my book",
-              "rule": "Karen's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
+              "rule": "Jude's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
             },
             {
               "name": "Failures land on the tool, not on her",
               "rule": "Black Barn's tone note. Now an architectural constraint on every error state — operator-protective copy, not generic 'something went wrong'."
             },
             {
-              "name": "Make it easier for Karen to say no",
+              "name": "Make it easier for Jude to say no",
               "rule": "Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain."
             },
             {
@@ -7188,7 +7188,7 @@
             },
             {
               "name": "Estimate → actual → variance loop",
-              "rule": "Karen records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
+              "rule": "Jude records real packaged weights; the same UI that showed '≈' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
             },
             {
               "name": "Pre-zone parked thread",
@@ -7462,7 +7462,7 @@
             "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
             "Zone 2 (Workbench) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
             "Zone 3 (Commons) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
-            "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
+            "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Jude).",
             "Zone 5 (The Margin) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
           ]
         },

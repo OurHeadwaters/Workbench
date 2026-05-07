@@ -24,7 +24,7 @@ import {
  *   looked the same shape: one $90k–$105k/mo agency-style fee with a
  *   ~7-role team and an 18-month-anchored cost basis. As we mapped out the
  *   first non-Deer Lake engagements, that assumption broke — the
- *   Software/Sales archetype (e.g. Karen's tool, Brightside SaaS, future
+ *   Software/Sales archetype (e.g. Jude's tool, Brightside SaaS, future
  *   licensed software products) doesn't carry the same boots-on-the-ground
  *   payroll, and Deer Lake's economics don't translate cleanly to a SaaS
  *   P&L. So as of 2026-04-29 we now carry two project archetypes:
@@ -39,7 +39,7 @@ import {
  *     - Software/Sales archetype — leveraged software/services revenue,
  *       no family-infusion stack (no personal guarantees in play), no
  *       12-month engagement window. Brightside is the canonical example;
- *       Karen's tool is the next one. The Software/Sales archetype is
+ *       Jude's tool is the next one. The Software/Sales archetype is
  *       described on the Archetypes page; it does not carry a numbered
  *       scenario in this workspace because its economics are book-kept
  *       inside the existing Brightside scenario.
@@ -207,11 +207,11 @@ const v5Triggers: RenegotiationTrigger[] = [
   {
     step: "Month 12 renegotiation",
     condition:
-      "Brightside is live (paying customers > 0) AND the Software/Sales-archetype products in flight (Karen's tool, etc.) are in daily use at Headwaters.",
+      "Brightside is live (paying customers > 0) AND the Software/Sales-archetype products in flight (Jude's tool, etc.) are in daily use at Headwaters.",
     feeStepTo: 105000,
     drawStepTo: 22000,
     evidenceRequired:
-      "Brightside billing dashboard + Karen tool usage log + month-12 sit-down with the buyer. Note the step-to is the V4 right-priced fee — V5 starts $15k below right-priced and the renegotiation steps the engagement up once the work is demonstrably landing.",
+      "Brightside billing dashboard + Jude tool usage log + month-12 sit-down with the buyer. Note the step-to is the V4 right-priced fee — V5 starts $15k below right-priced and the renegotiation steps the engagement up once the work is demonstrably landing.",
   },
   {
     step: "Month 18 renewal (Year-2 option)",

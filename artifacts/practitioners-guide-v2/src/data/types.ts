@@ -229,7 +229,7 @@ export interface AgencyScenario {
 export interface RenegotiationTrigger {
   /** Short label, e.g. "Month 12 renegotiation". */
   step: string;
-  /** Plain-language pre-condition, e.g. "Brightside is live AND Karen's tool in daily use". */
+  /** Plain-language pre-condition, e.g. "Brightside is live AND Jude's tool in daily use". */
   condition: string;
   /** Fee the contract steps to once the condition is met. */
   feeStepTo: number;

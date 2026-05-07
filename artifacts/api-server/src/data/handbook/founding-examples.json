@@ -26,7 +26,7 @@
         "Zone 1 (Headwaters) — a standby budget envelope sleeves up automatically during an active call (drought → water-cost envelope, fire → supply-cost envelope, freight → stockpile envelope).",
         "Zone 2 (Workbench) — standby debriefs surface here as the cross-zone synthesis the workbench is for; no live call state is kept on the workbench, only the after-action read.",
         "Zone 3 (Commons) — host zone. Centralized disruptions are felt collectively here first; call history is the record kept here; The Common Pantry and The Watch are the sub-shelves.",
-        "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Karen).",
+        "Zone 4 (Arc) — sector-level standby modeling: which industries have which fragilities to which calls (freight → packed weights, power → cold storage, key-person → Jude).",
         "Zone 5 (The Margin) — debriefs that someone wants to share publicly float to the Shallows; private-by-default holds."
       ],
       "takeaway": {

@@ -172,7 +172,7 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
       },
       {
         id: "z4-03",
-        question: "Who is Karen, and what does it mean that she\u2019s the pilot operator?",
+        question: "Who is Jude, and what does it mean that she\u2019s the pilot operator?",
         hint: "Tell me about the person. Why her, why now, why CCM?",
       },
       {

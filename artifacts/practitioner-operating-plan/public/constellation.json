@@ -610,7 +610,7 @@
         "needs": {
           "Z1 (Headwaters)": "household balance to gate weekly steps; Spring level to inform cost-review priority; Payday Planner / Surplus Pool to flag weeks with slack for new commitments",
           "Z3 (CKH)": "deal-flow signal \u2014 807 Co-op proposals matching Idea\u2192Pitch\u2192Contract\u2192Fulfillment\u2192Impact stages; producer activity as where workbench deals come from",
-          "Z4 (Arc)": "deal-flow from CCM sector contacts (Karen, Lisa, Dave, Tim, Marie, Lisa Koshel, four other regional abattoirs); industry-track tagging on deals",
+          "Z4 (Arc)": "deal-flow from CCM sector contacts (Jude, Lisa, Dave, Tim, Marie, Lisa Koshel, four other regional abattoirs); industry-track tagging on deals",
           "Z5 (The Margin)": "weekly digest of shallows-surfaced patterns to land in Today view as soft prompts. Z5 published concrete endpoints (/api/takes/sync, /api/channel, /api/dedications) Z2 can read today; an event bus (SSE) is offered if Z2 wants reactive coordination."
         },
         "offers": {
@@ -778,7 +778,7 @@
         "fullNameInRepo": "Cloverbelt Country Meats / Coleman Custom Meats coop (naming reconciliation pending \u2014 see openQuestions)",
         "location": "Oxdrift",
         "pilots": [
-          "Karen \u2014 operator",
+          "Jude \u2014 operator",
           "Black Barn Farm \u2014 pilot producer, 2 animals Aug + Oct",
           "Lisa Koshel \u2014 co-pilot, 1 animal Aug; CCM board, recused on tool votes"
         ],
@@ -786,22 +786,22 @@
         "surface": "Ops-side app + farmer self-serve portal with phone/email magic-code sign-in. Yield estimate \u2192 real packaged weights \u2192 variance feedback loop is live. Brute-force protection on sign-in is in.",
         "tech": "Express 5 / Drizzle / Postgres, OpenAPI codegen to React+Vite, pnpm monorepo"
       },
-      "discoveryNotes": "All filed under docs/regen-farming/abattoir/ \u2014 Karen, Black Barn, Lisa Koshel, plus regional landscape, rootwork bibliography, v0.1 spec (revised post-Karen), priorities-for-build, illustrative Local Line sample (real export still pending)",
+      "discoveryNotes": "All filed under docs/regen-farming/abattoir/ \u2014 Jude, Black Barn, Lisa Koshel, plus regional landscape, rootwork bibliography, v0.1 spec (revised post-Jude), priorities-for-build, illustrative Local Line sample (real export still pending)",
       "workedExamples": [
         {
           "name": "Per-customer share split",
-          "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Karen strawman optimized a symptom; the real work was the math after the kill \u2014 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
+          "rule": "replaced 'cut sheet management' as the v0.1 centerpiece. Pre-Jude strawman optimized a symptom; the real work was the math after the kill \u2014 6-14 customers, one animal, by hand, twice a week. Renaming the centerpiece rewrote the schema, the success metrics, and the build sequence in one move."
         },
         {
           "name": "Don't fix my book",
-          "rule": "Karen's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
+          "rule": "Jude's line. Dropped the booking calendar from v0.1 entirely. Naming her paper ledger as a working artifact (not a legacy obstacle) REMOVED a feature."
         },
         {
           "name": "Failures land on the tool, not on her",
           "rule": "Black Barn's tone note. Now an architectural constraint on every error state \u2014 operator-protective copy, not generic 'something went wrong'."
         },
         {
-          "name": "Make it easier for Karen to say no",
+          "name": "Make it easier for Jude to say no",
           "rule": "Lisa Koshel's add. A v0.1 design principle, not a feature: scope-creep guards, lock-date enforcement, no-button-that-just-absorbs-pain."
         },
         {
@@ -810,7 +810,7 @@
         },
         {
           "name": "Estimate \u2192 actual \u2192 variance loop",
-          "rule": "Karen records real packaged weights; the same UI that showed '\u2248' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
+          "rule": "Jude records real packaged weights; the same UI that showed '\u2248' to the farmer flips to 'Actual' when the data lands; the dashboard surfaces per-species variance; the constants in yield.ts stay tunable from that signal. Naming the whole cycle as a loop, not three features, kept it coherent."
         },
         {
           "name": "Pre-zone parked thread",
@@ -842,7 +842,7 @@
         },
         {
           "to": "Zone 2 (Workbench)",
-          "seam": "Deal-flow from CCM (sector contacts: Karen, Lisa, Dave, Tim, Marie, Lisa Koshel, the four other regional abattoirs) is operating-plan-relevant. Z4 keeps the interview notes; Z2 keeps the relationship cadence."
+          "seam": "Deal-flow from CCM (sector contacts: Jude, Lisa, Dave, Tim, Marie, Lisa Koshel, the four other regional abattoirs) is operating-plan-relevant. Z4 keeps the interview notes; Z2 keeps the relationship cadence."
         },
         {
           "to": "Zone 5 (Shallows)",
@@ -872,7 +872,7 @@
         "The project task list \u2014 every change lands as a numbered task with a commit message"
       ],
       "statusLine": "Z4, Q2 2026: v0.1 of the anchor app is shipping; first pilot animals booked for late-August through the regional coop; farmer-facing tools deliberately deferred until the chokepoint moves.",
-      "standby": "Reads The Standby as sector-level standby modeling \u2014 which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Karen herself. Sector \u2192 call \u2192 first-touched node is the modeling unit.",
+      "standby": "Reads The Standby as sector-level standby modeling \u2014 which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Jude herself. Sector \u2192 call \u2192 first-touched node is the modeling unit.",
       "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all \u2014 because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
       "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
       "reflections": [

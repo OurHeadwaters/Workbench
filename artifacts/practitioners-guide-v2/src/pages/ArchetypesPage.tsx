@@ -215,7 +215,7 @@ export function ArchetypesPage() {
                     target; tithe-first ({bs.tithePct}% off the top, {money(bs.tithe)}); cost
                     basis {money(bs.cost)}; post-tithe surplus {money(bs.surplus)}, split{" "}
                     {bs.ownerTakePct}/{bs.retainedPct} owner take / retained (
-                    {money(bs.ownerTake)} owner take). Karen's tool is the next instance of this
+                    {money(bs.ownerTake)} owner take). Jude's tool is the next instance of this
                     archetype.
                   </p>
                   <p>

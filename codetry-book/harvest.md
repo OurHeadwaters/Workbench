@@ -1222,7 +1222,7 @@ One-sentence claim (callout):
 
 ### 4-N · Regen Revolution — the "don't fix my book" line (deleted working doc)
 
-> Conventional-to-regenerative track for industries; current sector is regen beef in NWO through its highest-leverage chokepoint (abattoir capacity, not pasture or customers). The cleanest demonstrations of metaphor-as-architecture: 'Per-customer share split' replacing 'cut sheet management' (renaming the centerpiece rewrote schema, success metrics, and build sequence in one move), 'Don't fix my book' (Karen's line — naming her paper ledger as a working artifact REMOVED a feature, the booking calendar, from v0.1). Plus the tone-as-architecture lines: 'Failures land on the tool, not on her' / 'Make it easier for Karen to say no, not just easier to say yes.'
+> Conventional-to-regenerative track for industries; current sector is regen beef in NWO through its highest-leverage chokepoint (abattoir capacity, not pasture or customers). The cleanest demonstrations of metaphor-as-architecture: 'Per-customer share split' replacing 'cut sheet management' (renaming the centerpiece rewrote schema, success metrics, and build sequence in one move), 'Don't fix my book' (Jude's line — naming her paper ledger as a working artifact REMOVED a feature, the booking calendar, from v0.1). Plus the tone-as-architecture lines: 'Failures land on the tool, not on her' / 'Make it easier for Jude to say no, not just easier to say yes.'
 
 `commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` (constellation array, Regen Revolution Zone 4 entry)
 
@@ -1902,7 +1902,7 @@ The following projects were identified in the codebase and may also contain harv
 
 | Project | URL | Notes |
 |---|---|---|
-| Regen Revolution Zone 4 | `https://regen-revolution-zone-4.replit.app/` | Zone 4 — conventional-to-regenerative track for regen beef in NWO. Look for Karen / Black Barn discovery prose, "don't fix my book" rationale, per-customer share split narrative. |
+| Regen Revolution Zone 4 | `https://regen-revolution-zone-4.replit.app/` | Zone 4 — conventional-to-regenerative track for regen beef in NWO. Look for Jude / Black Barn discovery prose, "don't fix my book" rationale, per-customer share split narrative. |
 | Brainstorm Library | `https://replit.com/@xbucketsapp/Brainstorm-Library?s=app` | Pre-Zone (zone –1) seed bank. Look for any "volunteer seed" framing beyond the `opening` field already harvested in UG-G. |
 
 ---
