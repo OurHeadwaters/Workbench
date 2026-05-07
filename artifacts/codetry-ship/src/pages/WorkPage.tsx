@@ -30,7 +30,7 @@ export function WorkPage() {
         {/* ── Case Study 1: Parr's Jars ── */}
         <article data-testid="case-study-parrs-jars">
           <div
-            className="rounded-md px-5 py-4 mb-8 relative overflow-hidden"
+            className="rounded-md px-5 py-4 mb-5 relative overflow-hidden"
             style={{ background: "hsl(14 64% 36%)", color: "hsl(38 36% 96%)" }}
           >
             <div
@@ -38,13 +38,28 @@ export function WorkPage() {
               className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
               style={{ background: "hsl(38 36% 94%)" }}
             />
-            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-              Case study 01 · Brand identity
-            </p>
-            <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-              Parr's Jars — rebrand
-            </h2>
+            <div className="relative flex items-start justify-between gap-6">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
+                  Case study 01 · Brand identity
+                </p>
+                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
+                  Parr's Jars — rebrand
+                </h2>
+              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}thumb-rootwork.png`}
+                alt="Parr's Jars brand identity preview"
+                className="hidden sm:block shrink-0 rounded object-cover"
+                style={{ width: 110, height: 74, opacity: 0.88 }}
+              />
+            </div>
           </div>
+
+          {/* summary blurb */}
+          <p className="font-serif text-[15px] leading-[1.65] mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+            A small-batch preserves business had grown into two distinct lines — food products and community consulting — but was still running on one brand that fit neither. This engagement rebuilt the visual identity from the ground up so both sides of the business could stand on their own.
+          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-8">
             <section>
@@ -103,7 +118,7 @@ export function WorkPage() {
         {/* ── Case Study 2: 807 Food Co-op ── */}
         <article data-testid="case-study-807-food-coop">
           <div
-            className="rounded-md px-5 py-4 mb-8 relative overflow-hidden"
+            className="rounded-md px-5 py-4 mb-5 relative overflow-hidden"
             style={{ background: "hsl(145 36% 22%)", color: "hsl(38 36% 96%)" }}
           >
             <div
@@ -111,13 +126,28 @@ export function WorkPage() {
               className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
               style={{ background: "hsl(38 36% 94%)" }}
             />
-            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-              Case study 02 · Platform delivery · Founding board
-            </p>
-            <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-              807 Food Co-op — membership platform
-            </h2>
+            <div className="relative flex items-start justify-between gap-6">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
+                  Case study 02 · Platform delivery · Founding board
+                </p>
+                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
+                  807 Food Co-op — membership platform
+                </h2>
+              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}thumb-coop.png`}
+                alt="807 Food Co-op membership platform preview"
+                className="hidden sm:block shrink-0 rounded object-cover"
+                style={{ width: 110, height: 74, opacity: 0.88 }}
+              />
+            </div>
           </div>
+
+          {/* summary blurb */}
+          <p className="font-serif text-[15px] leading-[1.65] mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+            A Northwestern Ontario food co-op needed a complete member portal, producer onboarding system, and board governance tooling — all ready before launch, and built alongside the bylaws rather than after them. The platform builder also sat on the founding board.
+          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-8">
             <section>
