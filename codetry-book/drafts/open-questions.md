@@ -56,22 +56,24 @@ All three artifacts are live and public-facing. URLs appear in the Ch5 draft aft
 ## OQ-4 — Scope document and rate sheet for the northern store methodology
 
 **Source:** Appendix VI, final passage
-**Status:** Open — named as the missing step between one contract and a practice; not produced in any current chapter or artifact.
+**Status:** ~~Open~~ **Resolved 2026-05-07**
 
-Appendix VI closes with this note from the practitioner's own operating plan: *"The methodology exists and is proven. The only thing missing is a one-page scope document and a rate sheet that makes it easy for a second client to say yes. This is the fastest path from 'one contract' to 'a business.'"*
+The scope document and rate sheet now exist as a print-ready artifact in the Headwaters Print Marketing Suite:
 
-The six-phase engagement methodology is documented in Chapter 2. The rate sheet and scope document are not. The book names the gap; the gap remains.
+- **URL:** https://ourheadwaters.ca/print-marketing/scope-rate-sheet
+- **PDF download:** available via the Download PDF button on that page
+- **Content:** Six phases in order, $25,000 fixed / $175 hr rate, plain-language deliverables, what-is-included / what-this-is-not, dollar-honest note, contact block with QR code
 
-**What is open:** Whether the scope document and rate sheet are deliverables the book should include, link to, or simply name as the practitioner's next step. If they belong in the book, they need to be drafted. If they live outside the book (as a separate operational artifact), the Appendix VI passage may need a note pointing to where they are.
+The Appendix VI passage ("the only thing missing is a one-page scope document") is now satisfied by this artifact. If a book link is desired, the URL above can be inserted alongside the Appendix VI passage in the combined draft.
 
-**What changes when it resolves:** Either a new section or linked artifact is created, or the Appendix VI passage is updated with a pointer to where the scope document and rate sheet live.
+**Decision:** The scope document lives outside the book, in the print marketing suite. The book passage stands as-is — it names the gap at the time of writing, which was accurate. A footnote or inline URL may be added in a later editing pass.
 
 ---
 
 ## OQ-5 — Book structure sections not yet drafted
 
 **Source:** Ch5 §The structure of what follows
-**Status:** Open — the book's own stated structure names sections that do not yet exist as drafts.
+**Status:** ~~Open~~ **Resolved 2026-05-07**
 
 Chapter 5 §The structure of what follows describes the full book in this order:
 
@@ -85,7 +87,7 @@ Chapter 5 §The structure of what follows describes the full book in this order:
 
 The five completed chapters (Ch1–Ch5) map approximately to the Part I and Part II register. Grounding (the reading lineages and Thunder) now exists in the handbook as a built section (teachers, Thunder, pioneer path). The Field Ledger also now exists as a built section in the handbook (11 entries, §FL.1–§FL.11). Part III (the practitioner in the field, Zone 0 household as the first ground) still has no dedicated draft.
 
-**What remains open:** Part III only. Grounding and the Field Ledger are built. The question is whether Part III is to be drafted in this book, held for a second volume, or addressed by reclassifying existing material (e.g., Constellation chapters). The chapter numbering and the structural map in Ch5 need to be consistent with whatever decision is made.
+**Resolution:** All three sections now exist. Grounding and Field Ledger were built in a prior session. Part III (four chapters: 3.8–3.11) was drafted as `codetry-book/drafts/part-three-practitioner-in-the-field.md` and added to the handbook app as chapters pt3-1 through pt3-4 in the "The Practice" part. The full structural arc named in Ch5 §The structure of what follows is now complete.
 
 ---
 

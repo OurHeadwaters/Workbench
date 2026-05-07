@@ -15,6 +15,7 @@ import SaltOfTheEarthClub from "@/pages/SaltOfTheEarthClub";
 import GoingDigital from "@/pages/GoingDigital";
 import RackCardIndigenous from "@/pages/RackCardIndigenous";
 import CapabilityStatement from "@/pages/CapabilityStatement";
+import ScopeRateSheet from "@/pages/ScopeRateSheet";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/going-digital" component={GoingDigital} />
       <Route path="/rack-card-indigenous" component={RackCardIndigenous} />
       <Route path="/capability-statement" component={CapabilityStatement} />
+      <Route path="/scope-rate-sheet" component={ScopeRateSheet} />
       <Route component={NotFound} />
     </Switch>
   );
