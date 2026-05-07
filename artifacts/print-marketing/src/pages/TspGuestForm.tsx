@@ -167,6 +167,29 @@ export default function TspGuestForm() {
               </div>
             </section>
 
+            {/* Divider */}
+            <div style={{ height: 1, background: "rgba(31,61,46,0.14)" }} />
+
+            {/* Resources */}
+            <section>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1rem" }}>
+                Resources
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.06in 0.3in" }}>
+                {[
+                  { label: "Homestead & preserves", url: "parrsjars.ca" },
+                  { label: "Headwaters Development Services", url: "ourheadwaters.ca" },
+                  { label: "Codetry handbook & manifest", url: "ourheadwaters.ca/codetry-handbook/" },
+                  { label: "Replit — $10 in credits", url: "replit.com/refer/xbucketsapp" },
+                ].map(({ label, url }) => (
+                  <div key={url} style={{ display: "flex", flexDirection: "column" }}>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "var(--muted)", margin: 0, lineHeight: 1.3 }}>{label}</p>
+                    <p style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.62rem", color: "var(--evergreen)", margin: 0, lineHeight: 1.4 }}>{url}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             {/* Footer */}
             <div style={{ marginTop: "auto", paddingTop: "0.12in", borderTop: "1px solid rgba(31,61,46,0.15)", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
               <div>
