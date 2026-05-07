@@ -62,9 +62,8 @@ const PART_II_EXPECTED_NUMBERS = [
   "2.10",
 ];
 
-// NOTE: Chapters 3.8–3.21 (Zone 0 applied and Zone 1–5 applied) are not yet
-// authored in the data. Follow-up #746 tracks adding them. This list is the
-// current authoritative state; extend it as chapters are added.
+// Extended 2026-05-07: Part III chapters 3.8–3.11 added (practitioner in the
+// field: practice, the host, numbers, the feast). Follow-up #746 for 3.12+.
 const PART_III_EXPECTED_NUMBERS = [
   "3.1",
   "3.2",
@@ -73,6 +72,10 @@ const PART_III_EXPECTED_NUMBERS = [
   "3.5",
   "3.6",
   "3.7",
+  "3.8",
+  "3.9",
+  "3.10",
+  "3.11",
 ];
 
 describe("handbook structure guard — Prologue, Parts I and II", () => {
