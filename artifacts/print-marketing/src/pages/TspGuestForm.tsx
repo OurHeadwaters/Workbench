@@ -92,26 +92,30 @@ export default function TspGuestForm() {
                 Bio
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.73rem", color: "var(--ink)", lineHeight: 1.55 }}>
-                Bobbie Parr lives and works in northwestern Ontario, where she and her husband run a homestead on land
-                they didn't inherit — spring-fed well, manual pump, a garden built up year by year from clay. She started
-                Parr's Jars as a way to turn the surplus into something that paid, and the co-op grew out of a hunch that
-                the same discipline applied at the neighbourhood level. When she appeared on TSP in 2023, she called what
-                she was doing "irrational exuberance" and "decentralized initiatives" — the kind of language that sounds
-                almost like a joke until someone points out that you've been doing it for a decade and it's still standing.
+                Bobbie Parr lives and works in northwestern Ontario with her husband, who is the heart of their homestead —
+                spring-fed well, manual pump, a garden built up from clay year by year. She's his helping hands. Between
+                the two of them, the jars, the coop, and the seasons keep the drift away. She started Parr's Jars because
+                the surplus needed somewhere to go. The co-op grew from a hunch that the same discipline applied at the
+                neighbourhood level. Something she picked up from TSP — the practice of naming a word for the year — has
+                become the throughline of how she works: spread, peace, stability, and now ROI.
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.73rem", color: "var(--ink)", lineHeight: 1.55, marginTop: "0.08in" }}>
-                Since then, she got a call she didn't expect: a northern Band, reachable only by plane or winter
-                road, needed help building a community-owned store from the ground up. No roads. No existing supply chain
-                to borrow. A community that had been paying fly-in grocery prices for a generation. She went. The work that
-                came out of it — the cold-chain plan, the co-op structure, the band financing model — became the founding
-                work of Headwaters Development Services, the agency she runs today.
+                The northern Band store started as a thought experiment: a fly-in community, no road access, a generation
+                of fly-in grocery prices. She never went north — what she had was a warm lead and a problem worth solving.
+                What she discovered was that she finally had the tools to actually execute. Literate programming — writing
+                code the way you'd explain it to a human — has been around since the 1980s, but the tools had finally
+                caught up, and AI had opened the door for a whole new kind of person: the nerdy non-nerd, the creative.
+                She got in. What came out of that experiment became Headwaters Development Services and a discipline she
+                calls Codetry.
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.73rem", color: "var(--ink)", lineHeight: 1.55, marginTop: "0.08in" }}>
-                Along the way she developed a discipline she calls Codetry — a method for building community-owned
-                systems that stay legible to the people who have to run them, without importing someone else's assumptions
-                along with the software. It's about naming things correctly, refusing to translate your words into someone
-                else's framework, and handing back a system the community can own without a consultant in the room.
-                The homestead is still running. The jars are still on the shelf. The work got bigger; the discipline got quieter.
+                Codetry treats naming as architecture. It's the hempcrete of community software — legible, structural,
+                yours. The discipline grew partly from watching what happens when communities let their words drift: the
+                grant board calls and suddenly your neighbour is speaking in KPIs and deliverables and you feel the moment
+                the conversation stops belonging to you. She studied community development, minored in Aboriginal Studies —
+                a phrase that now makes a certain kind of person flinch, which is exactly the point. When you're in our
+                salt box, you use our words. 2026 is the year she stops explaining herself to people who won't understand
+                and starts building ships for the people who are ready to crew them.
               </p>
             </section>
 
@@ -124,12 +128,15 @@ export default function TspGuestForm() {
                 Choose one topic:
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.3, marginBottom: "0.06rem" }}>
-                "How to Build a Community-Owned Economy That Works Without the Grid, the Government, or a Consultant"
+                "How to Build Systems Your Community Actually Owns — Before Someone Changes the Words Out From Under You"
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.5, fontStyle: "italic" }}>
-                Note to Jack: This framing ties the northern Band store, the Dryden co-op, and the Codetry discipline into
-                one headline a TSP listener can grab on to immediately — it's the self-reliance conversation, scaled up
-                from the homestead to the community, with real numbers and real problems instead of theory.
+                Note to Jack: TSP has no shows on literate programming — which is surprising, because it's essentially
+                what TSP has been teaching people to do between their ears for years. Bobbie will make that case plainly
+                and connect it to the self-reliance conversation your audience already knows. The Codetry discipline, the
+                hempcrete naming framework, the co-op structure, the northern store thought experiment — it all threads
+                back to the same thing: systems that stay legible to the people who have to run them, without a consultant
+                in the room.
               </p>
             </section>
 
