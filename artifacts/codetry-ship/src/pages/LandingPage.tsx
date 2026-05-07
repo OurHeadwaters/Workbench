@@ -59,7 +59,7 @@ const TOOLS: ToolCard[] = [
   },
   {
     eyebrow: "Knowledge commons · Northern food systems",
-    title: "Northern Food Systems Research Library",
+    title: "Research Library",
     description:
       "Curated food systems research, producer contacts, and policy documents for northern communities — open and searchable.",
     href: "/library/",
