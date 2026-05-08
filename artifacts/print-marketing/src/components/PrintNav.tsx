@@ -24,6 +24,7 @@ export function PrintNav({
   const [copied, setCopied] = useState(false);
   const [copiedPlain, setCopiedPlain] = useState(false);
   const [previewText, setPreviewText] = useState<string | null>(null);
+  const [originalText, setOriginalText] = useState<string | null>(null);
   const [copiedInModal, setCopiedInModal] = useState(false);
   const { previewing, setPreviewing } = usePreview();
 
@@ -77,6 +78,12 @@ export function PrintNav({
     const text = onCopyPlainText();
     setCopiedInModal(false);
     setPreviewText(text);
+    setOriginalText(text);
+  }
+
+  function handleReset() {
+    if (originalText !== null) setPreviewText(originalText);
+    setCopiedInModal(false);
   }
 
   async function handleModalCopy() {
@@ -172,8 +179,8 @@ export function PrintNav({
             </button>
           </div>
           <textarea
-            readOnly
             value={previewText}
+            onChange={(e) => { setPreviewText(e.target.value); setCopiedInModal(false); }}
             style={{
               flex: 1,
               resize: "none",
@@ -211,6 +218,24 @@ export function PrintNav({
               }}
             >
               Dismiss
+            </button>
+            <button
+              onClick={handleReset}
+              disabled={previewText === originalText}
+              style={{
+                background: "transparent",
+                color: "var(--evergreen, #1f3d2e)",
+                border: "1px solid var(--evergreen, #1f3d2e)",
+                borderRadius: 4,
+                padding: "0.32rem 0.9rem",
+                fontSize: "0.8rem",
+                cursor: previewText === originalText ? "default" : "pointer",
+                fontFamily: "var(--font-sans, sans-serif)",
+                opacity: previewText === originalText ? 0.4 : 1,
+                transition: "opacity 0.15s",
+              }}
+            >
+              Reset
             </button>
             <button
               onClick={handleModalCopy}
