@@ -54,8 +54,8 @@ const questions = [
   },
 ];
 
-function buildPlainText(): string {
-  const bio = [
+function buildBioText(): string {
+  return [
     "BIO",
     "",
     "Bobbie Parr lives and works in northwestern Ontario, where she and her husband run a homestead on land they didn't inherit — spring-fed well, manual pump, a garden built up year by year from clay. She started Parr's Jars as a way to turn the surplus into something that paid, and the co-op grew out of a hunch that the same discipline applied at the neighbourhood level. When she appeared on TSP in 2023, she called what she was doing \"irrational exuberance\" and \"decentralized initiatives\" — the kind of language that sounds almost like a joke until someone points out that you've been doing it for a decade and it's still standing.",
@@ -64,20 +64,26 @@ function buildPlainText(): string {
     "",
     "Along the way she developed a discipline she calls Codetry — a method for building community-owned systems that stay legible to the people who have to run them, without importing someone else's assumptions along with the software. It's about naming things correctly, refusing to translate your words into someone else's framework, and handing back a system the community can own without a consultant in the room. The homestead is still running. The jars are still on the shelf. The work got bigger; the discipline got quieter.",
   ].join("\n");
+}
 
-  const topic = [
+function buildTopicText(): string {
+  return [
     "TOPIC",
     "",
     "\"How to Build a Community-Owned Economy That Works Without the Grid, the Government, or a Consultant\"",
     "",
     "Note to Jack: This framing ties the northern Band store, the Dryden co-op, and the Codetry discipline into one headline a TSP listener can grab on to immediately — it's the self-reliance conversation, scaled up from the homestead to the community, with real numbers and real problems instead of theory.",
   ].join("\n");
+}
 
+function buildQuestionsText(): string {
   const questionLines = questions.map(
     (q) => `${q.num}. ${q.label}\n${q.text}`
   );
-  const questionsBlock = ["8-10 QUESTIONS TO BE ASKED", "", ...questionLines].join("\n\n");
+  return ["8-10 QUESTIONS TO BE ASKED", "", ...questionLines].join("\n\n");
+}
 
+function buildPlainText(): string {
   return [
     "THE SURVIVAL PODCAST — GUEST APPLICATION · FALL 2026",
     "Bobbie Parr — Second Appearance",
@@ -85,15 +91,15 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    bio,
+    buildBioText(),
     "",
     "---",
     "",
-    topic,
+    buildTopicText(),
     "",
     "---",
     "",
-    questionsBlock,
+    buildQuestionsText(),
     "",
     "---",
     "",
@@ -103,6 +109,13 @@ function buildPlainText(): string {
   ].join("\n");
 }
 
+const sections = [
+  { label: "Bio", getText: buildBioText },
+  { label: "Topic", getText: buildTopicText },
+  { label: "Questions", getText: buildQuestionsText },
+  { label: "Full document", getText: buildPlainText },
+];
+
 export default function TspGuestForm() {
   return (
     <>
@@ -111,6 +124,7 @@ export default function TspGuestForm() {
         filename="bobbie-parr-tsp-guest-form-fall-2026.pdf"
         pdfApiPath="/api/pdf/tsp-guest-form.pdf"
         onCopyPlainText={buildPlainText}
+        sections={sections}
       />
       <div
         id="pdf-target"

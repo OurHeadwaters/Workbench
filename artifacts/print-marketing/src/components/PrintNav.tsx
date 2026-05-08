@@ -1,7 +1,12 @@
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { downloadAsPdf, type PaperFormat } from "@/lib/pdf";
 import { usePreview } from "@/context/PreviewContext";
+
+interface Section {
+  label: string;
+  getText: () => string;
+}
 
 interface PrintNavProps {
   targetId: string;
@@ -10,6 +15,7 @@ interface PrintNavProps {
   orientation?: "portrait" | "landscape";
   pdfApiPath?: string;
   onCopyPlainText?: () => string;
+  sections?: Section[];
 }
 
 export function PrintNav({
@@ -19,22 +25,39 @@ export function PrintNav({
   orientation = "portrait",
   pdfApiPath,
   onCopyPlainText,
+  sections,
 }: PrintNavProps) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedPlain, setCopiedPlain] = useState(false);
   const [previewText, setPreviewText] = useState<string | null>(null);
   const [originalText, setOriginalText] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
   const [copiedInModal, setCopiedInModal] = useState(false);
   const { previewing, setPreviewing } = usePreview();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function closeModal() {
+    setPreviewText(null);
+    setActiveSection(null);
+    setCopiedSection(null);
+    setCopiedInModal(false);
+  }
 
   useEffect(() => {
     if (previewText === null) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setPreviewText(null);
+      if (e.key === "Escape") closeModal();
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
+  }, [previewText]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.scrollTop = 0;
+    }
   }, [previewText]);
 
   const directUrl = pdfApiPath
@@ -77,6 +100,8 @@ export function PrintNav({
     if (!onCopyPlainText) return;
     const text = onCopyPlainText();
     setCopiedInModal(false);
+    setCopiedSection(null);
+    setActiveSection(sections && sections.length > 0 ? sections[sections.length - 1].label : null);
     setPreviewText(text);
     setOriginalText(text);
   }
@@ -86,18 +111,41 @@ export function PrintNav({
     setCopiedInModal(false);
   }
 
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function handleSectionClick(section: Section) {
+    const text = section.getText();
+    setActiveSection(section.label);
+    setPreviewText(text);
+    setOriginalText(text);
+    setCopiedInModal(false);
+    const ok = await copyText(text);
+    if (ok) {
+      setCopiedSection(section.label);
+      setTimeout(() => setCopiedSection(null), 1800);
+    } else {
+      prompt(`Copy this text to paste into the submission portal (${section.label}):`, text);
+    }
+  }
+
   async function handleModalCopy() {
     if (previewText === null) return;
-    try {
-      await navigator.clipboard.writeText(previewText);
+    const ok = await copyText(previewText);
+    if (ok) {
       setCopiedInModal(true);
       setCopiedPlain(true);
       setTimeout(() => {
         setCopiedPlain(false);
-        setPreviewText(null);
-        setCopiedInModal(false);
+        closeModal();
       }, 1800);
-    } catch {
+    } else {
       prompt("Copy this text to paste into the submission portal:", previewText);
     }
   }
@@ -113,6 +161,8 @@ export function PrintNav({
     }
   }
 
+  const hasSections = sections && sections.length > 0;
+
   return (
     <>
     {previewText !== null && (
@@ -120,7 +170,7 @@ export function PrintNav({
         role="dialog"
         aria-modal="true"
         aria-label="Plain text preview"
-        onClick={(e) => { if (e.target === e.currentTarget) setPreviewText(null); }}
+        onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
         style={{
           position: "fixed",
           inset: 0,
@@ -145,12 +195,13 @@ export function PrintNav({
             border: "1px solid rgba(31,61,46,0.18)",
           }}
         >
+          {/* Modal header */}
           <div style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             padding: "0.75rem 1rem 0.6rem",
-            borderBottom: "1px solid rgba(31,61,46,0.12)",
+            borderBottom: hasSections ? "none" : "1px solid rgba(31,61,46,0.12)",
             background: "var(--evergreen, #1f3d2e)",
           }}>
             <span style={{
@@ -160,10 +211,10 @@ export function PrintNav({
               letterSpacing: "0.06em",
               color: "var(--cream, #f4ede0)",
             }}>
-              Plain text preview — paste into the TSP portal
+              Plain text — paste into the TSP portal
             </span>
             <button
-              onClick={() => setPreviewText(null)}
+              onClick={() => closeModal()}
               aria-label="Close preview"
               style={{
                 background: "transparent",
@@ -178,7 +229,53 @@ export function PrintNav({
               ✕
             </button>
           </div>
+
+          {/* Section buttons */}
+          {hasSections && (
+            <div style={{
+              display: "flex",
+              gap: "0.35rem",
+              padding: "0.5rem 1rem",
+              background: "var(--evergreen, #1f3d2e)",
+              borderBottom: "1px solid rgba(31,61,46,0.22)",
+              flexWrap: "wrap",
+            }}>
+              {sections.map((s) => {
+                const isActive = activeSection === s.label;
+                const wasCopied = copiedSection === s.label;
+                return (
+                  <button
+                    key={s.label}
+                    onClick={() => handleSectionClick(s)}
+                    aria-pressed={isActive}
+                    style={{
+                      background: isActive
+                        ? "var(--rust, #b0391e)"
+                        : "rgba(244,237,224,0.12)",
+                      color: "var(--cream, #f4ede0)",
+                      border: isActive
+                        ? "1px solid var(--rust, #b0391e)"
+                        : "1px solid rgba(244,237,224,0.28)",
+                      borderRadius: 4,
+                      padding: "0.22rem 0.7rem",
+                      fontSize: "0.76rem",
+                      fontWeight: isActive ? 600 : 400,
+                      cursor: "pointer",
+                      fontFamily: "var(--font-sans, sans-serif)",
+                      transition: "background 0.15s, border-color 0.15s",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {wasCopied ? `✓ Copied` : s.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Textarea */}
           <textarea
+            ref={textareaRef}
             value={previewText}
             onChange={(e) => { setPreviewText(e.target.value); setCopiedInModal(false); }}
             style={{
@@ -196,6 +293,8 @@ export function PrintNav({
               minHeight: "200px",
             }}
           />
+
+          {/* Modal footer */}
           <div style={{
             display: "flex",
             justifyContent: "flex-end",
@@ -205,7 +304,7 @@ export function PrintNav({
             background: "rgba(31,61,46,0.04)",
           }}>
             <button
-              onClick={() => setPreviewText(null)}
+              onClick={() => closeModal()}
               style={{
                 background: "transparent",
                 color: "var(--muted, #666)",
