@@ -7,10 +7,33 @@ const MARKET_CONFIG = {
   season: "mid June–mid September",
 };
 
+function getMarketPlainText(): string {
+  return [
+    "DRYDEN FARMERS MARKET",
+    `Saturdays · ${MARKET_CONFIG.season} · ${MARKET_CONFIG.hours} · ${MARKET_CONFIG.venue}`,
+    "",
+    "PARR'S JARS — at the market",
+    "Hand-blended in Dryden, Ontario",
+    "Stop by the Parr's Jars table to browse artisan smoked salts, pure Canadian maple syrup, and seasonal small-batch specials — all made locally with northern ingredients.",
+    "",
+    "Products:",
+    "· Smoked Salts — 4 varieties · 100 g jars — $12",
+    "· Maple Syrup — Amber, Golden & Dark · 500 mL / 1 L — from $18",
+    "· Dog Treats — Beef Organs · single-ingredient — $12",
+    "",
+    "Presented by Headwaters Development Services",
+    "Building capacity in northern communities",
+    "Headwaters works with band councils, Indigenous businesses, and northern organizations on community stores, co-op platforms, and custom software. Ask Bobbie how we can help your community.",
+    "",
+    "ourheadwaters.ca | bobbie@ourheadwaters.ca",
+    "Dryden, Ontario · Treaty 3 Territory",
+  ].join("\n");
+}
+
 export default function PosterMarket() {
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="headwaters-poster-market.pdf" />
+      <PrintNav targetId="pdf-target" filename="headwaters-poster-market.pdf" onCopyPlainText={getMarketPlainText} />
       <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
 

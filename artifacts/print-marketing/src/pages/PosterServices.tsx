@@ -29,6 +29,31 @@ const services = [
   },
 ];
 
+function getServicesPlainText(): string {
+  const serviceLines = services.flatMap((s) => [
+    `${s.num}. ${s.title}`,
+    s.desc,
+    s.bullets.map((b) => `   · ${b}`).join("\n"),
+    "",
+  ]);
+  return [
+    "HEADWATERS DEVELOPMENT SERVICES",
+    "Building Capacity in Northern Communities",
+    "",
+    "We partner with band councils, Indigenous businesses, and northern contractors to design systems, software, and strategies that work — and keep working.",
+    "",
+    ...serviceLines,
+    "PILOT PROGRAM",
+    "$25,000 · 6-Week Engagement",
+    "Structured six-week engagement to scope, design, and deliver the first phase of your project. No long-term commitment required. Includes discovery, delivery, and a handoff document your team can act on immediately.",
+    "Ongoing rate: $175/hour thereafter.",
+    "",
+    "Headwaters Development Services",
+    "ourheadwaters.ca | bobbie@ourheadwaters.ca",
+    "Dryden, Ontario",
+  ].join("\n");
+}
+
 export default function PosterServices() {
   return (
     <>
@@ -36,6 +61,7 @@ export default function PosterServices() {
         targetId="pdf-target"
         filename="headwaters-poster-services.pdf"
         pdfApiPath="/api/pdf/services-poster.pdf"
+        onCopyPlainText={getServicesPlainText}
       />
       <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}>
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>

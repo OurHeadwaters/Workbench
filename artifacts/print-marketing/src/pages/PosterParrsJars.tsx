@@ -1,10 +1,39 @@
 import QRCodeStamp from "../components/QRCodeStamp";
 import { PrintNav } from "../components/PrintNav";
 
+function getParrsJarsPlainText(): string {
+  return [
+    "PARR'S JARS",
+    "Hand-blended in Dryden, Ontario",
+    "Headwaters Development Services",
+    "",
+    "Small-batch artisan salts, pure Canadian maple syrup, and northern dog treats — crafted from the boreal north.",
+    "",
+    "Products:",
+    "· Salty Onion — Sea salt, onion powder, chive powder — flavour-forward on sourdough, eggs, avocado",
+    "· Salty Garlic — Sea salt, garlic powder, chive powder — perfect on butter, bread, everything",
+    "· Salty Finish — Sea salt, paprika, garlic & onion mix — anywhere you'd use smoked paprika",
+    "· Cheezy Salt — Nutritional yeast, sea salt, garlic & onion mix — dairy-free cheesy flavour, the best seller",
+    "· Pure Maple Syrup — Amber, Golden & Dark · 500 mL · 1 L",
+    "· Dog Treats — Beef Organs — single-ingredient, air-dried",
+    "",
+    "Pricing:",
+    "· Salts (100 g jar) — $12",
+    "· Maple Syrup (500 mL) — $18",
+    "· Maple Syrup (1 L) — $27",
+    "· Dog Treats (per bag) — $12",
+    "",
+    "Find us at: Dryden Farmers Market — Dryden Arena",
+    "Saturdays 3–6 pm · mid June–mid September",
+    "",
+    "ourheadwaters.ca | bobbie@ourheadwaters.ca",
+  ].join("\n");
+}
+
 export default function PosterParrsJars() {
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="parrs-jars-poster.pdf" />
+      <PrintNav targetId="pdf-target" filename="parrs-jars-poster.pdf" onCopyPlainText={getParrsJarsPlainText} />
       <div id="pdf-target" className="print-page page-letter" style={{ padding: 0, overflow: "hidden", background: "var(--evergreen)", minHeight: "11in" }}>
 
         {/* Full-bleed background */}
