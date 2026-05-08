@@ -100,7 +100,7 @@ const partPrologue: Part = {
         {
           kind: "para",
           text:
-            "Begin with Grounding — the teachers, Thunder, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — seven zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.",
+            "Begin with Grounding — the teachers, Thunder, and the reading lineages the practitioner trained on. Then Part I names the discipline: what it is, where it lives, and the three or four moves it makes. Part II is the discipline applied to a real community economy — six zones and two primitives. Part III is the practitioner in the field, including Zone 0, the household as the first ground. The Open Questions section keeps unresolved problems in writing so the discipline cannot quietly resolve them by attrition. The Deep Dives section is optional: five chapters on how codetry differs from the disciplines it most closely resembles. If you know what codetry is and you are ready to use it, skip directly to the Field Ledger or set the book down and begin.",
         },
         {
           kind: "para",
@@ -1406,7 +1406,7 @@ const partIII: Part = {
   roman: "II",
   title: "The Constellation: 6 Zones and 2 Primitives",
   blurb:
-    "The discipline applied to a real community economy. Seven zones and two primitives, each name chosen by the rules Part I named. These are the worked examples that were in front of the practitioner when codetry got named. The list is open; your own constellation will look different.",
+    "The discipline applied to a real community economy. Six zones and two primitives, each name chosen by the rules Part I named. These are the worked examples that were in front of the practitioner when codetry got named. The list is open; your own constellation will look different.",
   chapters: [
     {
       id: "3-0",
