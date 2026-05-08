@@ -9,6 +9,7 @@ interface PrintNavProps {
   format?: PaperFormat;
   orientation?: "portrait" | "landscape";
   pdfApiPath?: string;
+  onCopyPlainText?: () => string;
 }
 
 export function PrintNav({
@@ -17,9 +18,11 @@ export function PrintNav({
   format = "letter",
   orientation = "portrait",
   pdfApiPath,
+  onCopyPlainText,
 }: PrintNavProps) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedPlain, setCopiedPlain] = useState(false);
   const { previewing, setPreviewing } = usePreview();
 
   const directUrl = pdfApiPath
@@ -58,6 +61,18 @@ export function PrintNav({
     }
   }
 
+  async function handleCopyPlain() {
+    if (!onCopyPlainText) return;
+    const text = onCopyPlainText();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedPlain(true);
+      setTimeout(() => setCopiedPlain(false), 2500);
+    } catch {
+      prompt("Copy this text to paste into the submission portal:", text);
+    }
+  }
+
   async function handleCopyLink() {
     if (!directUrl) return;
     try {
@@ -81,6 +96,26 @@ export function PrintNav({
           >
             {previewing ? "✕ Exit preview" : "🖨 Preview print layout"}
           </button>
+          {onCopyPlainText && (
+            <button
+              className="no-print"
+              onClick={handleCopyPlain}
+              style={{
+                background: copiedPlain ? "var(--evergreen, #1f3d2e)" : "transparent",
+                color: copiedPlain ? "white" : "var(--evergreen, #1f3d2e)",
+                border: "1px solid var(--evergreen, #1f3d2e)",
+                borderRadius: 4,
+                padding: "0.28rem 0.75rem",
+                fontSize: "0.8rem",
+                cursor: "pointer",
+                fontFamily: "var(--font-sans, sans-serif)",
+                transition: "background 0.15s, color 0.15s",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {copiedPlain ? "✓ Copied plain text" : "📋 Copy plain text"}
+            </button>
+          )}
           <button className="btn-print no-print" onClick={handlePdf} disabled={loading}>
             {loading ? "⏳ Generating PDF…" : "⬇ Download PDF"}
           </button>
