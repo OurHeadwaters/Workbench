@@ -73,6 +73,10 @@ export default function PosterParrsJars() {
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Maple Syrup · 1 L</p>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$27</p>
               </div>
+              <div style={{ background: "rgba(244,237,224,0.12)", borderRadius: 6, padding: "0.35rem 0.7rem", border: "1px solid rgba(244,237,224,0.2)" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Dog Treats · per bag</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>$12</p>
+              </div>
             </div>
 
             {/* Spacer pushes footer to bottom */}

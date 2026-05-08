@@ -101,7 +101,7 @@ export default function PriceList() {
         {/* Header */}
         <div style={{ borderBottom: "3px solid var(--evergreen)", paddingBottom: "0.6rem", marginBottom: "1.1rem", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
           <div>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.15rem" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.15rem", whiteSpace: "nowrap" }}>
               Headwaters Development Services
             </p>
             <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.1 }}>
