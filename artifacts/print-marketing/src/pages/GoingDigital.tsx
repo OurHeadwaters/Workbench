@@ -29,10 +29,58 @@ const offerings = [
   },
 ];
 
+function buildPlainText(): string {
+  const offeringLines = offerings.map(
+    (o) => `${o.name} — ${o.tagline}\n${o.desc}`
+  ).join("\n\n");
+
+  const included = [
+    "The five courses — self-paced, in your own time",
+    "The Codetry Handbook — the vocabulary and practice of community economics",
+    "Community connection — Dryden-based and expanding across the territory",
+    "Seasonal prompts — what to do now, each quarter of the year",
+    "The Jarista framework — household food systems, built to last",
+    "The Headwaters newsletter — when there's something worth saying",
+  ].map((item) => `· ${item}`).join("\n");
+
+  return [
+    "HEADWATERS · ONLINE LEARNING",
+    "The knowledge is online now.",
+    "A decade of homestead practice, community building, and seasonal living — organized into five courses you can take at your own pace, from wherever you are.",
+    "",
+    "---",
+    "",
+    "For years this content lived in farmers market conversations, community workshops, and a lot of personal messages. It is now housed at ourheadwaters.ca — five interlocking courses built around the same system the homestead runs on. You don't have to live in Dryden. The practice travels.",
+    "",
+    "---",
+    "",
+    "THE FIVE COURSES",
+    "",
+    offeringLines,
+    "",
+    "---",
+    "",
+    "\"Grassroots community and productive local economies are the only fighting chance. A depression may be around the corner but being depressed never has to be a reality we face — not when you build your life around the simple things that matter.\"",
+    "— Bobbie Parr, Headwaters",
+    "",
+    "---",
+    "",
+    "WHAT YOU GET AT OURHEADWATERS.CA",
+    "",
+    included,
+    "",
+    "---",
+    "",
+    "ourheadwaters.ca",
+    "bobbie@ourheadwaters.ca · 807 220 3654",
+    "Dryden, Ontario · Treaty 3 Territory",
+  ].join("\n");
+}
+
 export default function GoingDigital() {
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="headwaters-going-digital.pdf" />
+      <PrintNav targetId="pdf-target" filename="headwaters-going-digital.pdf" onCopyPlainText={buildPlainText} />
       <div
         id="pdf-target"
         className="print-page page-letter"

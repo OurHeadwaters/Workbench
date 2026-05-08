@@ -29,10 +29,52 @@ const howItWorks = [
   { step: "04", text: "Gift memberships available. One jar or a full season — your call." },
 ];
 
+function buildPlainText(): string {
+  const productLines = products.map(
+    (p) => `${p.name} — ${p.tagline} (${p.size})\n${p.desc}`
+  ).join("\n\n");
+
+  const stepLines = howItWorks.map((h) => `${h.step}. ${h.text}`).join("\n");
+
+  return [
+    "HEADWATERS · JARISTA LINE",
+    "Salt of the Earth Club",
+    "Seasonal salts from a Dryden kitchen — freeze-dried, blended, and jarred from local farms and the homestead garden.",
+    "",
+    "---",
+    "",
+    "The Jar Kitchen runs on a simple principle: if the season gives abundance, preserve it. These salts are what happens when that principle meets a freeze-dryer, a smoked salt supplier, and a community of farms that grow more than the grocery store will buy. Every jar carries the specific farm, field, or garden it came from. You can taste the sourcing.",
+    "",
+    "---",
+    "",
+    "THE SALTS",
+    "",
+    productLines,
+    "",
+    "---",
+    "",
+    "HOW IT WORKS",
+    "",
+    stepLines,
+    "",
+    "---",
+    "",
+    "\"Working with what you have and sticking things in jars — that's got 1930 written all over it. We wear that with pride.\"",
+    "— Bobbie Parr, Headwaters",
+    "",
+    "---",
+    "",
+    "Join the club",
+    "bobbie@ourheadwaters.ca",
+    "Text preferred: 807 220 3654",
+    "ourheadwaters.ca · Dryden, Ontario · Treaty 3 Territory",
+  ].join("\n");
+}
+
 export default function SaltOfTheEarthClub() {
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="salt-of-the-earth-club.pdf" />
+      <PrintNav targetId="pdf-target" filename="salt-of-the-earth-club.pdf" onCopyPlainText={buildPlainText} />
       <div
         id="pdf-target"
         className="print-page page-letter"

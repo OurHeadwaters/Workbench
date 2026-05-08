@@ -1,6 +1,60 @@
 import QRCodeStamp from "../components/QRCodeStamp";
 import { PrintNav } from "../components/PrintNav";
 
+function buildPlainText(): string {
+  return [
+    "HEADWATERS DEVELOPMENT SERVICES",
+    "Capability Statement",
+    "Practitioner-built tools for northern communities. Shipped, not proposed.",
+    "",
+    "---",
+    "",
+    "WHO WE ARE",
+    "",
+    "Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.",
+    "",
+    "---",
+    "",
+    "CORE SERVICES",
+    "",
+    "01 — Community Store Planning",
+    "Full feasibility to day-one operations — governance structures, supply chain, staffing and training, financing, and band-council handoff. Six phases, plain language, open numbers.",
+    "",
+    "02 — Co-op Membership Platforms",
+    "Custom web platforms for community-owned co-ops — member registration, producer onboarding, board admin, AGM tools. Governance-first. You own the platform outright.",
+    "",
+    "03 — Custom Internal Tools",
+    "Purpose-built software for band councils and community organizations — replacing paper and spreadsheet workflows with tools your team actually uses.",
+    "",
+    "---",
+    "",
+    "SELECTED WORK",
+    "",
+    "Parr's Jars — Rebrand (Brand identity)",
+    "Problem: Original brand couldn't carry both a preserves business and a development consulting practice.",
+    "Outcome: Dual-identity brand system — wordmarks, colour system, copy architecture, and parrsjars.ca — that works for a market table and a band council office.",
+    "",
+    "807 Food Co-op — Membership Platform (Platform delivery · Founding board)",
+    "Problem: Founding board needed a working platform — member registration, equity tracking, governance tooling — before the co-op could open to members.",
+    "Outcome: Full member portal, producer onboarding, board admin panel, and AGM tools. Platform ready for June launch. Board owns it outright — no licensing fees.",
+    "",
+    "---",
+    "",
+    "ENGAGEMENT TERMS",
+    "",
+    "Trial period, not a contract",
+    "The usual first step is a six-week bounded scope at $175/hr. Stop at any point. No retainer, no long commitment. If the fit is right, it continues. If not, you leave with something useful.",
+    "$175/hr CAD · excludes HST",
+    "",
+    "---",
+    "",
+    "Headwaters Development Services",
+    "Bobbie Parr · practitioner · Dryden, Ontario",
+    "bobbie@ourheadwaters.ca",
+    "ourheadwaters.ca",
+  ].join("\n");
+}
+
 export default function CapabilityStatement() {
   return (
     <>
@@ -8,6 +62,7 @@ export default function CapabilityStatement() {
         targetId="pdf-target"
         filename="headwaters-capability-statement.pdf"
         pdfApiPath="/api/pdf/capability-statement.pdf"
+        onCopyPlainText={buildPlainText}
       />
       <div
         id="pdf-target"

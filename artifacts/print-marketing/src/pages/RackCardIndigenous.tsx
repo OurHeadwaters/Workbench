@@ -25,6 +25,41 @@ const services = [
   },
 ];
 
+function buildPlainText(): string {
+  const serviceLines = services.map(
+    (s) => `${s.title}\n${s.desc}`
+  ).join("\n\n");
+
+  return [
+    "HEADWATERS DEVELOPMENT SERVICES",
+    "Development Services · Treaty 3 Territory",
+    "Building community economic infrastructure in northern Ontario.",
+    "",
+    "---",
+    "",
+    "WHO WE WORK WITH",
+    "",
+    "Band councils, Indigenous businesses, First Nations organizations, Métis communities, and northern co-ops — anyone building something real for their people.",
+    "",
+    "---",
+    "",
+    "WHAT WE BUILD",
+    "",
+    serviceLines,
+    "",
+    "---",
+    "",
+    "\"We don't parachute in. We sit at your table, learn your words, and build something that belongs to your community — not to the funder.\"",
+    "— Bobbie Parr, Dryden ON",
+    "",
+    "---",
+    "",
+    "ourheadwaters.ca",
+    "bobbie@ourheadwaters.ca",
+    "807 220 3654 · text preferred",
+  ].join("\n");
+}
+
 export default function RackCardIndigenous() {
   return (
     <>
@@ -33,6 +68,7 @@ export default function RackCardIndigenous() {
         filename="headwaters-community-rack-card.pdf"
         format={[4, 9]}
         orientation="portrait"
+        onCopyPlainText={buildPlainText}
       />
 
       <div

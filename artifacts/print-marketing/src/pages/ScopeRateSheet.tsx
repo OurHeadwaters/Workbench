@@ -34,6 +34,71 @@ const phases = [
   },
 ];
 
+function buildPlainText(): string {
+  const phaseLines = phases.map(
+    (ph) => `${ph.num} — ${ph.name}\n${ph.deliverable}`
+  ).join("\n\n");
+
+  const included = [
+    "All six phases completed in sequence",
+    "Weekly plain-language progress notes",
+    "Open financial model — every number visible and editable",
+    "807 supplier directory and grants index",
+    "Band council presentation ready to deliver",
+    "Operations manual the community owns outright",
+  ].map((item) => `✓ ${item}`).join("\n");
+
+  const notIncluded = [
+    "A report that sits on a shelf",
+    "A proposal that needs another proposal to proceed",
+    "A template from a southern consulting firm",
+    "Contingent on an ongoing retainer to keep working",
+    "Software that requires a login to access your own data",
+  ].map((item) => `× ${item}`).join("\n");
+
+  return [
+    "HEADWATERS DEVELOPMENT SERVICES",
+    "Northern Community Store Engagement",
+    "Scope of work and rate sheet. Six phases. Plain language. Open numbers.",
+    "",
+    "---",
+    "",
+    "RATES",
+    "",
+    "Fixed-scope engagement: $25,000",
+    "6-week engagement · all six phases · full handoff package. No long-term commitment required.",
+    "",
+    "Hourly rate: $175/hr",
+    "Scoped phases billed as incurred. Hours tracked openly and reported weekly with a plain-language summary.",
+    "",
+    "---",
+    "",
+    "THE SIX PHASES — IN ORDER",
+    "",
+    phaseLines,
+    "",
+    "---",
+    "",
+    "WHAT IS INCLUDED",
+    "",
+    included,
+    "",
+    "WHAT THIS IS NOT",
+    "",
+    notIncluded,
+    "",
+    "---",
+    "",
+    "\"We don't hide our numbers; we deliver on them.\" Every engagement starts with the real figures — margin per unit, volume required to reach viability, what the operator needs to live on while the store gets on its feet. Dollar-honest, before anything else is honest.",
+    "",
+    "---",
+    "",
+    "Headwaters Development Services",
+    "Northwestern Ontario · ourheadwaters.ca",
+    "bobbie@ourheadwaters.ca",
+  ].join("\n");
+}
+
 export default function ScopeRateSheet() {
   return (
     <>
@@ -41,6 +106,7 @@ export default function ScopeRateSheet() {
         targetId="pdf-target"
         filename="headwaters-scope-rate-sheet.pdf"
         pdfApiPath="/api/pdf/scope-rate-sheet.pdf"
+        onCopyPlainText={buildPlainText}
       />
       <div
         id="pdf-target"

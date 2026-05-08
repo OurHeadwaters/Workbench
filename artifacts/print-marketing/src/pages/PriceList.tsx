@@ -35,9 +35,76 @@ export default function PriceList() {
 
   const filledSpecials = specials.filter((s) => s.name.trim() !== "");
 
+  function buildPlainText(): string {
+    const saltLines = salts.map(
+      (s) => `${s.name} — ${s.desc}\n  Market: ${s.market}  Wholesale: ${s.wholesale}`
+    ).join("\n\n");
+
+    const syrupLines = syrups.map(
+      (s) => `${s.name} — ${s.desc}\n  Market: ${s.market}  Wholesale: ${s.wholesale}`
+    ).join("\n\n");
+
+    const dogLines = dogTreats.map(
+      (s) => `${s.name} — ${s.desc}\n  Market: ${s.market}  Wholesale: ${s.wholesale}`
+    ).join("\n\n");
+
+    const specialsBlock = filledSpecials.length > 0
+      ? [
+          "",
+          "---",
+          "",
+          "THIS WEEK'S SPECIALS",
+          "",
+          ...filledSpecials.map((s) => `${s.name}  ${s.price || "—"}`),
+        ].join("\n")
+      : "";
+
+    return [
+      "PARR'S JARS — PRICE LIST",
+      "Hand-blended in Dryden, Ontario · 2026 Season",
+      "",
+      "Bobbie Parr · bobbie@ourheadwaters.ca",
+      "Dryden Farmers Market — Dryden Arena, Sat 3–6 pm, mid June–mid September",
+      "ourheadwaters.ca",
+      "",
+      "---",
+      "",
+      "ARTISAN SMOKED SALTS — 100 g jar",
+      "",
+      saltLines,
+      "",
+      "---",
+      "",
+      "PURE CANADIAN MAPLE SYRUP",
+      "Sourced from Sidders & Sons, Cochenour, ON — three generations of maple farming. Dark grade is best for baking.",
+      "",
+      syrupLines,
+      "",
+      "---",
+      "",
+      "DOG TREATS",
+      "",
+      dogLines,
+      specialsBlock,
+      "",
+      "---",
+      "",
+      "WHOLESALE TERMS",
+      "Minimum order: 25 cases. Payment net-30 on approved accounts. Available for local shops, restaurants, and gift stores. Contact Bobbie to arrange.",
+      "",
+      "CUSTOM BLENDS & GIFT SETS",
+      "Custom salt blends and branded gift sets available for events, offices, and corporate gifting. Minimum quantities apply. Ask at the market table.",
+      "",
+      "---",
+      "",
+      "Parr's Jars — Handcrafted in Dryden, Ontario",
+      "Prices subject to change",
+    ].join("\n");
+  }
+
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="parrs-jars-price-list.pdf" />
+      <PrintNav targetId="pdf-target" filename="parrs-jars-price-list.pdf" onCopyPlainText={buildPlainText} />
 
       {/* Specials editor — screen only, never prints */}
       <div className="no-print" style={{ maxWidth: 680, margin: "0 auto 1.5rem", padding: "0 1rem" }}>

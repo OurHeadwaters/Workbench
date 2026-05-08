@@ -52,10 +52,34 @@ const terms: { term: string; sub?: string; def: string; note?: string }[] = [
   },
 ];
 
+function buildPlainText(): string {
+  const termLines = terms.map((t) => {
+    const heading = t.sub ? `${t.term} / ${t.sub}` : t.term;
+    const note = t.note ? `\n  Note: ${t.note}` : "";
+    return `${heading}\n  ${t.def}${note}`;
+  }).join("\n\n");
+
+  return [
+    "HEADWATERS · CODETRY HANDBOOK",
+    "Core Vocabulary",
+    "The words a community needs to run its own economy — precisely.",
+    "",
+    "---",
+    "",
+    termLines,
+    "",
+    "---",
+    "",
+    "ourheadwaters.ca",
+    "bobbie@ourheadwaters.ca · 807 220 3654",
+    "Dryden, Ontario · Treaty 3 Territory",
+  ].join("\n");
+}
+
 export default function VocabularySheet() {
   return (
     <>
-      <PrintNav targetId="pdf-target" filename="headwaters-vocabulary.pdf" />
+      <PrintNav targetId="pdf-target" filename="headwaters-vocabulary.pdf" onCopyPlainText={buildPlainText} />
       <div
         id="pdf-target"
         className="print-page page-letter"
