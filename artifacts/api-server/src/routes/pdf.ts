@@ -97,7 +97,7 @@ router.get("/scope-rate-sheet.pdf", async (_req, res) => {
     });
 
     const page = await browser.newPage();
-    const printMarketingBase = process.env.PRINT_MARKETING_URL ?? (process.env.NODE_ENV === "production" ? "http://localhost:8080/print-marketing" : "http://localhost:25703/print-marketing");
+    const printMarketingBase = process.env.PRINT_MARKETING_URL ?? "http://localhost:8080/print-marketing";
     await page.goto(`${printMarketingBase}/scope-rate-sheet`, { waitUntil: "networkidle0", timeout: 30000 });
     await page.evaluateHandle("document.fonts.ready");
 
@@ -140,7 +140,7 @@ router.get("/tsp-guest-form.pdf", async (_req, res) => {
     });
 
     const page = await browser.newPage();
-    const printMarketingBase = process.env.PRINT_MARKETING_URL ?? (process.env.NODE_ENV === "production" ? "http://localhost:8080/print-marketing" : "http://localhost:25703/print-marketing");
+    const printMarketingBase = process.env.PRINT_MARKETING_URL ?? "http://localhost:8080/print-marketing";
     await page.goto(`${printMarketingBase}/tsp-guest-form`, { waitUntil: "networkidle0", timeout: 30000 });
     await page.evaluateHandle("document.fonts.ready");
 
