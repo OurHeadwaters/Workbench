@@ -18,6 +18,7 @@ import CapabilityStatement from "@/pages/CapabilityStatement";
 import ScopeRateSheet from "@/pages/ScopeRateSheet";
 import TspGuestForm from "@/pages/TspGuestForm";
 import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
+import TylerSubmit from "@/pages/TylerSubmit";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/scope-rate-sheet" component={ScopeRateSheet} />
       <Route path="/tsp-guest-form" component={TspGuestForm} />
       <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
+      <Route path="/tyler-submit" component={TylerSubmit} />
       <Route component={NotFound} />
     </Switch>
   );

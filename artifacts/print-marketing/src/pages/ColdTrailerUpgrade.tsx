@@ -7,70 +7,57 @@ const scopeItems = [
     title: "Air Conditioners — Units",
     detail: "2× CoolBot-compatible window ACs sourced from Rona or Home Depot (same model both units). Only one runs at a time — the second is on-deck for any failure. Confirm model with CoolBot compatibility list before purchase.",
     type: "Materials",
-    budget: "$900 – $1,100",
   },
   {
     id: "02",
     title: "Air Conditioner Installation",
     detail: "Secure mounting of both units into trailer wall/roof openings. Seal and insulate penetrations. Wire or hardwire as required. Test CoolBot integration on both units before sign-off.",
     type: "Labour",
-    budget: "$600 – $800",
   },
   {
     id: "03",
     title: "Exterior AC Covers",
     detail: "Protective covers for both AC units — must withstand highway speeds in winter. Confirm fit before ordering. Covers protect coils and housing from road blast and debris.",
     type: "Materials",
-    budget: "$250 – $350",
   },
   {
     id: "04",
     title: "Heater — Unit & Install",
     detail: "Safe heater installation rated for confined/insulated space. Temperature gauge positioned for easy reading from door. Wiring must meet applicable code for the application. Test at operating temperature range before delivery.",
     type: "Materials + Labour",
-    budget: "$700 – $950",
   },
   {
     id: "05",
     title: "807 Branding Decals",
     detail: "Remove existing Parr's Jars decals and apply 807 Food Co-op branding. Proofs to be supplied by Bobbie — confirm artwork specs and substrate before ordering. Includes surface prep and application.",
     type: "Materials + Labour",
-    budget: "$600 – $900",
   },
   {
     id: "06",
     title: "Paint Touch-Ups",
     detail: "Wheel wells and any bare, rusted, or chipped areas. Match existing trailer colour or coat wheel wells in durable undercoat. Light surface prep and spot prime where needed.",
     type: "Materials + Labour",
-    budget: "$350 – $500",
   },
   {
     id: "07",
     title: "Hitch TLC + Lights Inspection",
     detail: "Lubricate hitch mechanism, ball, and coupler. Inspect and test all running lights, brake lights, and turn signals. Replace any blown bulbs or corroded connections. Confirm trailer is road-ready.",
     type: "Labour + Materials",
-    budget: "$150 – $250",
   },
   {
     id: "08",
     title: "Interior Flooring — Decision Pending",
-    detail: "See flooring note below. Budget held pending decision. Rubber drainage mats from the food hub (no cost) are the current lead option. Shelf installation included here if elected.",
+    detail: "Rubber drainage mats from the food hub (already on hand, no cost) are the lead option — holes drain liquid through, loose-lay so they can be pulled up and hosed off. Shelf installation optional if desired.",
     type: "Pending Decision",
-    budget: "$0 – $800",
   },
 ];
-
-const totalLow = 3550;
-const totalHigh = 5250;
-const budget = 9995;
-const contingency = budget - totalHigh;
 
 function buildPlainText() {
   const lines: string[] = [
     "807 FOOD CO-OP — COLD TRAILER UPGRADE",
     "Contracted through Headwaters Development Services",
     "Subcontractor: Tyler — Rockfront Family Farms",
-    `Total Budget: $${budget.toLocaleString()}`,
+    "Total Budget: $9,995 (all-in: materials + Tyler's time)",
     "",
     "OUTCOME",
     "Fully operational cold trailer for all seasons.",
@@ -82,43 +69,32 @@ function buildPlainText() {
   ];
 
   scopeItems.forEach((item) => {
-    lines.push(`${item.id}. ${item.title} [${item.type}] — Est. ${item.budget}`);
+    lines.push(`${item.id}. ${item.title} [${item.type}]`);
     lines.push(item.detail);
     lines.push("");
   });
 
   lines.push("---");
   lines.push("");
-  lines.push("FLOORING DECISION NOTE");
+  lines.push("FLOORING — DECISION REQUIRED");
   lines.push("");
-  lines.push("Option A — Food hub drainage mats (RECOMMENDED, $0): Rubber kitchen mats with holes,");
-  lines.push("already on hand at the food hub. Liquid drains through the holes rather than pooling.");
-  lines.push("Loose-lay, so they can be pulled up and hosed off after a spill. No cost, no moisture");
-  lines.push("trap, easy to clean. Confirm quantity and dimensions cover the trailer floor.");
+  lines.push("Option A — Food hub drainage mats (lead option, no cost):");
+  lines.push("Rubber kitchen mats with holes, already at the food hub. Liquid drains through.");
+  lines.push("Loose-lay — pull up and hose off after a spill.");
   lines.push("");
-  lines.push("Option B — Leave plywood: Assess condition, seal edges, confirm structure. Spills");
-  lines.push("can be mopped and dried. No trapped moisture. Harder to clean a full bottle break.");
+  lines.push("Option B — Leave plywood:");
+  lines.push("Assess condition, seal edges, confirm structure. Can be mopped and dried.");
   lines.push("");
-  lines.push("Option C — Vinyl sheet flooring: Easy to clean surface, but moisture that gets");
-  lines.push("underneath cannot escape — creates mold and must risk in seasonal/stored trailers.");
-  lines.push("Not recommended unless edges can be perfectly sealed.");
+  lines.push("Option C — Vinyl sheet (not recommended):");
+  lines.push("Moisture trapped underneath creates mold in seasonal/stored trailers.");
   lines.push("");
-  lines.push("Shelf installation: Optional add-on. Confirm dimensions and mounting method.");
-  lines.push("Include if desired within budget.");
+  lines.push("Shelf installation is an optional add-on.");
   lines.push("");
   lines.push("---");
   lines.push("");
-  lines.push("BUDGET NOTE");
-  lines.push("The $9,995 total covers everything: materials AND Tyler's labour (Rockfront Family Farms).");
-  lines.push("Tyler invoices Headwaters directly. All receipts to be submitted to Bobbie Parr.");
-  lines.push("");
-  lines.push(`BUDGET SUMMARY`);
-  lines.push(`Total Budget: $${budget.toLocaleString()} (materials + Tyler's labour, all-in)`);
-  lines.push(`Estimated Scope: $${totalLow.toLocaleString()} – $${totalHigh.toLocaleString()}`);
-  lines.push(`Contingency / Remaining: ~$${contingency.toLocaleString()} (covers flooring decision + overages)`);
-  lines.push("");
-  lines.push("All receipts to Bobbie Parr on completion. Decal artwork supplied by Bobbie — confirm specs before ordering.");
-  lines.push("CoolBot AC model to be confirmed against compatibility list before purchase.");
+  lines.push("TRACKING");
+  lines.push("Tyler tracks time and receipts via the Headwaters submission link.");
+  lines.push("Budget: $9,995 total. Tyler sets his own rate. Spend tracked as work proceeds.");
   lines.push("");
   lines.push("---");
   lines.push("Headwaters Development Services");
@@ -132,7 +108,7 @@ export default function ColdTrailerUpgrade() {
     <>
       <PrintNav targetId="pdf-target" filename="807-cold-trailer-upgrade.pdf" onCopyPlainText={buildPlainText} />
 
-      <div id="pdf-target" className="print-page page-letter" style={{ fontFamily: "var(--font-sans)", display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+      <div id="pdf-target" className="print-page page-letter" style={{ fontFamily: "var(--font-sans)", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
 
         {/* Header band */}
         <div style={{ background: "var(--evergreen)", margin: "-0.5in -0.6in 0", padding: "0.45rem 0.6in", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -150,40 +126,34 @@ export default function ColdTrailerUpgrade() {
         </div>
 
         {/* Title block */}
-        <div style={{ borderBottom: "2px solid var(--rust)", paddingBottom: "0.35rem", marginBottom: "0.1rem" }}>
+        <div style={{ borderBottom: "2px solid var(--rust)", paddingBottom: "0.35rem" }}>
           <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.9rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.1, marginBottom: "0.15rem" }}>
             Cold Trailer Upgrade
           </h1>
           <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.95rem", fontStyle: "italic", color: "var(--rust)" }}>
-            Fully operational cold trailer for all seasons. Scope, needs, and budget — $9,995 total.
+            Fully operational cold trailer for all seasons.
           </p>
         </div>
 
-        {/* Budget summary bar */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2rem", marginBottom: "0.1rem" }}>
-          <div style={{ background: "var(--evergreen)", borderRadius: 5, padding: "0.4rem 0.6rem" }}>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.15rem" }}>Total Budget</p>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$9,995</p>
+        {/* Budget bar — single box */}
+        <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "0.8rem", alignItems: "center", background: "var(--evergreen)", borderRadius: 5, padding: "0.5rem 0.75rem" }}>
+          <div>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)", marginBottom: "0.1rem" }}>Total Budget</p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$9,995</p>
           </div>
-          <div style={{ background: "var(--cream)", border: "1.5px solid var(--evergreen)", borderRadius: 5, padding: "0.4rem 0.6rem" }}>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.15rem" }}>Estimated Scope</p>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1 }}>${totalLow.toLocaleString()} – ${totalHigh.toLocaleString()}</p>
-          </div>
-          <div style={{ background: "var(--cream)", border: "1.5px solid rgba(31,61,46,0.2)", borderRadius: 5, padding: "0.4rem 0.6rem" }}>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.15rem" }}>Contingency / Remaining</p>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 900, color: "var(--muted)", lineHeight: 1 }}>~${contingency.toLocaleString()}</p>
-          </div>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.75)", lineHeight: 1.55 }}>
+            All-in budget covering materials and Tyler's time. Tyler sets his own hourly rate and tracks spend as work proceeds — time and receipts submitted via link. Budget stretches as far as it goes.
+          </p>
         </div>
 
         {/* Scope table */}
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.78rem" }}>
           <thead>
             <tr style={{ background: "var(--evergreen)", color: "white" }}>
-              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "left", width: "3%" }}>#</th>
-              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "left", width: "22%" }}>Item</th>
+              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "left", width: "4%" }}>#</th>
+              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "left", width: "24%" }}>Item</th>
               <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "left" }}>Detail</th>
-              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "center", width: "12%" }}>Type</th>
-              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "right", width: "14%" }}>Est. Budget</th>
+              <th style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.3rem 0.5rem", textAlign: "center", width: "14%" }}>Type</th>
             </tr>
           </thead>
           <tbody>
@@ -206,7 +176,6 @@ export default function ColdTrailerUpgrade() {
                     {item.type}
                   </span>
                 </td>
-                <td style={{ padding: "0.35rem 0.5rem", fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "0.78rem", textAlign: "right", color: item.type === "Pending Decision" ? "var(--rust)" : "var(--ink)" }}>{item.budget}</td>
               </tr>
             ))}
           </tbody>
@@ -222,7 +191,7 @@ export default function ColdTrailerUpgrade() {
               {
                 label: "A — Food Hub Drainage Mats",
                 body: "Rubber kitchen mats with holes, already on hand at the food hub. Liquid drains through rather than pooling. Loose-lay — pull up and hose off after a spill. No cost, no moisture trap.",
-                rec: "Recommended — $0",
+                rec: "Lead option — no cost",
                 highlight: true,
               },
               {
@@ -246,20 +215,14 @@ export default function ColdTrailerUpgrade() {
             ))}
           </div>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "0.3rem" }}>
-            Confirm quantity and dimensions of food hub mats cover the trailer floor before deciding. Shelf installation (existing unit) is an optional add-on — include if desired within remaining budget.
+            Confirm quantity and dimensions of food hub mats cover the trailer floor before deciding. Shelf installation (existing unit) is an optional add-on.
           </p>
         </div>
 
-        {/* Budget note + Terms strip */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.3rem" }}>
-          <div style={{ background: "rgba(31,61,46,0.07)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
-            <strong style={{ color: "var(--evergreen)" }}>Budget covers everything: </strong>
-            The $9,995 total includes both materials and Tyler's labour (Rockfront Family Farms). Tyler invoices Headwaters directly. No separate labour quote needed.
-          </div>
-          <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
-            <strong style={{ color: "var(--evergreen)" }}>Notes: </strong>
-            All receipts to Bobbie Parr on completion. Decal artwork supplied by Bobbie — confirm specs and substrate before ordering. CoolBot AC model to be confirmed against compatibility list before purchase.
-          </div>
+        {/* Tracking note */}
+        <div style={{ background: "rgba(31,61,46,0.06)", border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.4rem 0.6rem", fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.55 }}>
+          <strong style={{ color: "var(--evergreen)" }}>Tracking: </strong>
+          Tyler submits time and receipts as work proceeds via the Headwaters link. Rate set by Tyler. Decal artwork to be supplied by Bobbie before ordering. CoolBot AC model to be confirmed against compatibility list before purchase.
         </div>
 
         {/* Footer */}
