@@ -117,7 +117,8 @@ function buildPlainText() {
   lines.push(`Estimated Scope: $${totalLow.toLocaleString()} – $${totalHigh.toLocaleString()}`);
   lines.push(`Contingency / Remaining: ~$${contingency.toLocaleString()} (covers flooring decision + overages)`);
   lines.push("");
-  lines.push("No single purchase over $500 without prior sign-off. Final accounting on completion.");
+  lines.push("All receipts to Bobbie Parr on completion. Decal artwork supplied by Bobbie — confirm specs before ordering.");
+  lines.push("CoolBot AC model to be confirmed against compatibility list before purchase.");
   lines.push("");
   lines.push("---");
   lines.push("Headwaters Development Services");
@@ -256,8 +257,8 @@ export default function ColdTrailerUpgrade() {
             The $9,995 total includes both materials and Tyler's labour (Rockfront Family Farms). Tyler invoices Headwaters directly. No separate labour quote needed.
           </div>
           <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
-            <strong style={{ color: "var(--evergreen)" }}>Terms: </strong>
-            No single purchase over $500 without prior sign-off. All receipts to Bobbie Parr. Decal artwork supplied by Bobbie — confirm specs before ordering. CoolBot AC model to be confirmed before purchase.
+            <strong style={{ color: "var(--evergreen)" }}>Notes: </strong>
+            All receipts to Bobbie Parr on completion. Decal artwork supplied by Bobbie — confirm specs and substrate before ordering. CoolBot AC model to be confirmed against compatibility list before purchase.
           </div>
         </div>
 
