@@ -54,14 +54,14 @@ const scopeItems = [
   {
     id: "08",
     title: "Interior Flooring — Decision Pending",
-    detail: "See flooring note below. Budget held pending decision. If vinyl: materials + install. If no flooring: plywood assessment only — clean, seal edges, confirm structural condition. Shelf installation included here if elected.",
+    detail: "See flooring note below. Budget held pending decision. Rubber drainage mats from the food hub (no cost) are the current lead option. Shelf installation included here if elected.",
     type: "Pending Decision",
-    budget: "$500 – $1,200",
+    budget: "$0 – $800",
   },
 ];
 
-const totalLow = 4050;
-const totalHigh = 6050;
+const totalLow = 3550;
+const totalHigh = 5250;
 const budget = 9995;
 const contingency = budget - totalHigh;
 
@@ -91,29 +91,33 @@ function buildPlainText() {
   lines.push("");
   lines.push("FLOORING DECISION NOTE");
   lines.push("");
-  lines.push("Option A — No vinyl: Leave existing plywood. Assess condition, seal exposed edges,");
-  lines.push("confirm structural integrity. Easier to dry out if spills occur. No mold risk from");
-  lines.push("trapped moisture. Harder to clean milk bottle breakage but can be mopped and dried.");
+  lines.push("Option A — Food hub drainage mats (RECOMMENDED, $0): Rubber kitchen mats with holes,");
+  lines.push("already on hand at the food hub. Liquid drains through the holes rather than pooling.");
+  lines.push("Loose-lay, so they can be pulled up and hosed off after a spill. No cost, no moisture");
+  lines.push("trap, easy to clean. Confirm quantity and dimensions cover the trailer floor.");
   lines.push("");
-  lines.push("Option B — Vinyl sheet flooring: Easier to clean but moisture that gets under it");
-  lines.push("cannot escape — creates mold and must risk in a trailer used seasonally and stored");
-  lines.push("in variable conditions. Not recommended unless edges can be perfectly sealed.");
+  lines.push("Option B — Leave plywood: Assess condition, seal edges, confirm structure. Spills");
+  lines.push("can be mopped and dried. No trapped moisture. Harder to clean a full bottle break.");
   lines.push("");
-  lines.push("Option C — Rubber or commercial mat (loose-lay): Easier cleaning than bare plywood,");
-  lines.push("can be pulled up and dried. Middle ground worth pricing out.");
+  lines.push("Option C — Vinyl sheet flooring: Easy to clean surface, but moisture that gets");
+  lines.push("underneath cannot escape — creates mold and must risk in seasonal/stored trailers.");
+  lines.push("Not recommended unless edges can be perfectly sealed.");
   lines.push("");
   lines.push("Shelf installation: Optional add-on. Confirm dimensions and mounting method.");
   lines.push("Include if desired within budget.");
   lines.push("");
   lines.push("---");
   lines.push("");
+  lines.push("BUDGET NOTE");
+  lines.push("The $9,995 total covers everything: materials AND Tyler's labour (Rockfront Family Farms).");
+  lines.push("Tyler invoices Headwaters directly. All receipts to be submitted to Bobbie Parr.");
+  lines.push("");
   lines.push(`BUDGET SUMMARY`);
-  lines.push(`Total Budget: $${budget.toLocaleString()}`);
+  lines.push(`Total Budget: $${budget.toLocaleString()} (materials + Tyler's labour, all-in)`);
   lines.push(`Estimated Scope: $${totalLow.toLocaleString()} – $${totalHigh.toLocaleString()}`);
   lines.push(`Contingency / Remaining: ~$${contingency.toLocaleString()} (covers flooring decision + overages)`);
   lines.push("");
-  lines.push("All receipts to be submitted to Bobbie Parr / Headwaters Development Services.");
-  lines.push("No purchase over $500 without sign-off. Final accounting on completion.");
+  lines.push("No single purchase over $500 without prior sign-off. Final accounting on completion.");
   lines.push("");
   lines.push("---");
   lines.push("Headwaters Development Services");
@@ -215,37 +219,46 @@ export default function ColdTrailerUpgrade() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.4rem" }}>
             {[
               {
-                label: "A — Leave Plywood",
-                body: "Assess condition, seal edges, confirm structure. Spills can be mopped and dried. No trapped moisture. Harder to clean a full bottle break but manageable.",
+                label: "A — Food Hub Drainage Mats",
+                body: "Rubber kitchen mats with holes, already on hand at the food hub. Liquid drains through rather than pooling. Loose-lay — pull up and hose off after a spill. No cost, no moisture trap.",
+                rec: "Recommended — $0",
+                highlight: true,
+              },
+              {
+                label: "B — Leave Plywood",
+                body: "Assess condition, seal edges, confirm structure. No trapped moisture. Can be mopped and dried. Harder to clean a full bottle break but manageable.",
                 rec: "Lower risk",
+                highlight: false,
               },
               {
-                label: "B — Vinyl Sheet",
-                body: "Easy to clean surface, but moisture that gets underneath cannot escape — creates mold and must in seasonal/stored trailers. Not recommended unless edges are perfectly sealed.",
+                label: "C — Vinyl Sheet",
+                body: "Easy to clean surface but moisture underneath cannot escape — creates mold and must in seasonal/stored trailers. Not recommended unless edges are perfectly sealed.",
                 rec: "Not recommended",
-              },
-              {
-                label: "C — Rubber Mat (loose-lay)",
-                body: "Commercial-grade rubber mat, pulled up and dried after spills. Better than bare plywood for cleaning, no permanent moisture trap. Worth pricing before deciding.",
-                rec: "Worth pricing",
+                highlight: false,
               },
             ].map((opt) => (
-              <div key={opt.label} style={{ background: "white", borderRadius: 3, padding: "0.3rem 0.4rem" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.15rem" }}>{opt.label}</p>
+              <div key={opt.label} style={{ background: opt.highlight ? "rgba(31,61,46,0.06)" : "white", border: opt.highlight ? "1.5px solid var(--evergreen)" : "none", borderRadius: 3, padding: "0.3rem 0.4rem" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700, color: opt.highlight ? "var(--evergreen)" : "var(--ink)", marginBottom: "0.15rem" }}>{opt.label}</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.4, marginBottom: "0.2rem" }}>{opt.body}</p>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", fontWeight: 600, color: "var(--rust)" }}>{opt.rec}</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", fontWeight: 600, color: opt.highlight ? "var(--evergreen)" : "var(--rust)" }}>{opt.rec}</p>
               </div>
             ))}
           </div>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "0.3rem" }}>
-            Shelf installation (existing unit) is an optional add-on — confirm dimensions and mounting method. Include if desired within remaining budget.
+            Confirm quantity and dimensions of food hub mats cover the trailer floor before deciding. Shelf installation (existing unit) is an optional add-on — include if desired within remaining budget.
           </p>
         </div>
 
-        {/* Terms strip */}
-        <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
-          <strong style={{ color: "var(--evergreen)" }}>Terms: </strong>
-          All receipts submitted to Bobbie Parr / Headwaters Development Services. No single purchase over $500 without prior sign-off. Final accounting on project completion. Decal artwork to be provided by Bobbie — confirm specs and substrate before ordering. CoolBot AC model to be confirmed against CoolBot compatibility list before purchase.
+        {/* Budget note + Terms strip */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.3rem" }}>
+          <div style={{ background: "rgba(31,61,46,0.07)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
+            <strong style={{ color: "var(--evergreen)" }}>Budget covers everything: </strong>
+            The $9,995 total includes both materials and Tyler's labour (Rockfront Family Farms). Tyler invoices Headwaters directly. No separate labour quote needed.
+          </div>
+          <div style={{ background: "var(--cream)", borderRadius: 4, padding: "0.35rem 0.55rem", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.5, fontFamily: "var(--font-sans)" }}>
+            <strong style={{ color: "var(--evergreen)" }}>Terms: </strong>
+            No single purchase over $500 without prior sign-off. All receipts to Bobbie Parr. Decal artwork supplied by Bobbie — confirm specs before ordering. CoolBot AC model to be confirmed before purchase.
+          </div>
         </div>
 
         {/* Footer */}
