@@ -113,6 +113,13 @@ const pieces = [
     desc: "Updated Survival Podcast guest submission form for Bobbie's second appearance. Covers the arc from Parr's Jars and the co-op through the Deer Lake store build and the Codetry discipline — with ten suggested questions for Jack. Letter size (8.5×11).",
     icon: "🎙️",
   },
+  {
+    href: "/cold-trailer-upgrade",
+    title: "Cold Trailer Upgrade — 807 Food Co-op",
+    label: "807 / Subcontract",
+    desc: "Work order and budget document for the 807 Food Co-op cold trailer upgrade. Eight scope items including CoolBot-compatible ACs, heater install, exterior covers, 807 decals, paint touch-ups, and hitch/lights — plus a flooring decision note. $9,995 budget. Letter size (8.5×11).",
+    icon: "🚛",
+  },
 ];
 
 export default function Index() {

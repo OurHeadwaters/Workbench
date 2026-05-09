@@ -17,6 +17,7 @@ import RackCardIndigenous from "@/pages/RackCardIndigenous";
 import CapabilityStatement from "@/pages/CapabilityStatement";
 import ScopeRateSheet from "@/pages/ScopeRateSheet";
 import TspGuestForm from "@/pages/TspGuestForm";
+import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/capability-statement" component={CapabilityStatement} />
       <Route path="/scope-rate-sheet" component={ScopeRateSheet} />
       <Route path="/tsp-guest-form" component={TspGuestForm} />
+      <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
       <Route component={NotFound} />
     </Switch>
   );
