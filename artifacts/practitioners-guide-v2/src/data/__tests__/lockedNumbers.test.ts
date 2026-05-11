@@ -80,20 +80,23 @@ describe("Salts bucket — locked headline numbers (sourced from SHARED_SALTS)",
     expect(byName["Markets — farmers market"].jars).toBe(45);
   });
 
-  it("operating overhead: $1,050/yr markets + $1,800/yr subscriptions (30% allocation)", () => {
+  it("operating overhead: $975/yr markets ($25 stall confirmed) + $1,800/yr subscriptions (30% allocation)", () => {
     expect(salts.operating.marketsCraftAnnual).toBe(600);
-    expect(salts.operating.marketsFarmersAnnual).toBe(450);
-    expect(salts.operating.marketsOverheadTotal).toBe(1050);
+    expect(salts.operating.marketsFarmersAnnual).toBe(375); // $25/stall × 15 wks — confirmed May 2026
+    expect(salts.operating.marketsOverheadTotal).toBe(975);
     expect(salts.operating.subscriptionsAnnual).toBe(1800);
     expect(salts.operating.subscriptionsAllocationPct).toBe(30);
+    expect(salts.operating.marketsCraftAnnual + salts.operating.marketsFarmersAnnual).toBe(
+      salts.operating.marketsOverheadTotal,
+    );
   });
 
-  it("Salts P&L: net cash = $1,298/yr (revenue − COGS − markets − subs)", () => {
+  it("Salts P&L: net cash = $1,373/yr (revenue − COGS − markets − subs; updated for confirmed $25 stall rate)", () => {
     expect(salts.pAndL.revenue).toBe(10693);
     expect(salts.pAndL.cogs).toBe(6545);
-    expect(salts.pAndL.marketsOverhead).toBe(1050);
+    expect(salts.pAndL.marketsOverhead).toBe(975);
     expect(salts.pAndL.subscriptions).toBe(1800);
-    expect(salts.pAndL.netCash).toBe(1298);
+    expect(salts.pAndL.netCash).toBe(1373);
     expect(
       salts.pAndL.revenue -
         salts.pAndL.cogs -
@@ -102,22 +105,40 @@ describe("Salts bucket — locked headline numbers (sourced from SHARED_SALTS)",
     ).toBe(salts.pAndL.netCash);
   });
 
-  it("shadow labour: ~$858/yr unpaid, adjusted economic net ~$440/yr", () => {
-    expect(salts.shadowLabour.annualCost).toBe(858);
-    expect(salts.shadowLabour.adjustedNet).toBe(440);
+  it("shadow labour: ~$720/yr unpaid (24 hrs × $30; 200–300 jars / 4–6 hrs confirmed May 2026), adjusted net ~$653/yr", () => {
+    expect(salts.shadowLabour.annualCost).toBe(720);
+    expect(salts.shadowLabour.adjustedNet).toBe(653);
     expect(salts.shadowLabour.benchHourly).toBe(30);
+    expect(salts.shadowLabour.annualHours * salts.shadowLabour.benchHourly).toBe(
+      salts.shadowLabour.annualCost,
+    );
+    expect(salts.pAndL.netCash - salts.shadowLabour.annualCost).toBe(
+      salts.shadowLabour.adjustedNet,
+    );
   });
 
-  it("maple syrup context line: $576/yr margin (12 cases × 12 bottles × $4)", () => {
-    expect(salts.mapleSyrup.cases).toBe(12);
-    expect(salts.mapleSyrup.bottlesPerCase).toBe(12);
-    expect(salts.mapleSyrup.marginPerBottle).toBe(4);
-    expect(salts.mapleSyrup.annualMargin).toBe(576);
-    expect(
-      salts.mapleSyrup.cases *
-        salts.mapleSyrup.bottlesPerCase *
-        salts.mapleSyrup.marginPerBottle,
-    ).toBe(salts.mapleSyrup.annualMargin);
+  it("maple syrup context line: $1,056/yr margin — two confirmed sizes (96×1L $6 margin + 96×500ml $5 margin)", () => {
+    expect(salts.mapleSyrup.sizes).toHaveLength(2);
+    const liter = salts.mapleSyrup.sizes.find((s) => s.label === "1L")!;
+    const halfLiter = salts.mapleSyrup.sizes.find((s) => s.label === "500ml")!;
+    // 1L: 96 bottles @ $21 cost / $27 sell → $6 margin each
+    expect(liter.qty).toBe(96);
+    expect(liter.costEach).toBe(21);
+    expect(liter.sellEach).toBe(27);
+    expect(liter.marginEach).toBe(6);
+    expect(liter.totalMargin).toBe(576);
+    expect(liter.qty * liter.marginEach).toBe(liter.totalMargin);
+    // 500ml: 96 bottles @ $13 cost / $18 sell → $5 margin each
+    expect(halfLiter.qty).toBe(96);
+    expect(halfLiter.costEach).toBe(13);
+    expect(halfLiter.sellEach).toBe(18);
+    expect(halfLiter.marginEach).toBe(5);
+    expect(halfLiter.totalMargin).toBe(480);
+    expect(halfLiter.qty * halfLiter.marginEach).toBe(halfLiter.totalMargin);
+    // Total
+    expect(salts.mapleSyrup.annualMargin).toBe(1056);
+    const summedMargin = salts.mapleSyrup.sizes.reduce((s, sz) => s + sz.totalMargin, 0);
+    expect(summedMargin).toBe(salts.mapleSyrup.annualMargin);
   });
 });
 

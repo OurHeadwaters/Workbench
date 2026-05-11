@@ -128,8 +128,8 @@ export const SHARED_SALTS: SaltsScenario = {
     annualJars: 1190,
     annualHours: 24,
     benchHourly: 30,
-    annualCost: 714,
-    adjustedNet: 659,
+    annualCost: 720,
+    adjustedNet: 653,
     tag: provisional("200–300 jars / 4–6 hrs confirmed by founder May 2026 — using midpoints"),
   },
   mapleSyrup: {
