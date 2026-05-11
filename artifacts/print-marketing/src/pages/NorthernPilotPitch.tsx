@@ -3,6 +3,14 @@ import { PrintNav } from "../components/PrintNav";
 
 const base = import.meta.env.BASE_URL;
 
+// ─── Fee config ───────────────────────────────────────────────────────────────
+// Set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the fee is
+// agreed. Leave as null to keep the "Pricing TBC" placeholder.
+const FEES: { phase2Fee: string | null; phase3Fee: string | null } = {
+  phase2Fee: null,
+  phase3Fee: null,
+};
+
 function buildPlainText(): string {
   return [
     "HEADWATERS · DEER LAKE FIRST NATION",
@@ -71,7 +79,9 @@ function buildPlainText(): string {
     "",
     "What this phase ends with: A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.",
     "",
-    "Pricing TBC — Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.",
+    FEES.phase2Fee
+      ? `${FEES.phase2Fee} · flat fee — confirmed at the end of Phase 1 once scope and staffing needs are clear.`
+      : "Pricing TBC — Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.",
     "",
     "---",
     "",
@@ -83,7 +93,9 @@ function buildPlainText(): string {
     "",
     "What this phase does: Lock in the lower-cost supply chain, document what the store actually earns in its first winter, and produce a clean financial record the band can use with funders and for planning the next year.",
     "",
-    "Pricing TBC — Phase 3 fees are discussed separately; scope depends on what Phase 2 reveals about the store's operating rhythm.",
+    FEES.phase3Fee
+      ? `${FEES.phase3Fee} · flat fee — scope confirmed after Phase 2 reveals the store's operating rhythm.`
+      : "Pricing TBC — Phase 3 fees are discussed separately; scope depends on what Phase 2 reveals about the store's operating rhythm.",
     "",
     "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
   ].join("\n");
@@ -446,15 +458,35 @@ export default function NorthernPilotPitch() {
               </p>
             </div>
 
-            {/* Pricing note */}
-            <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
-                Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.
-              </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
-                Pricing TBC
-              </p>
-            </div>
+            {/* Pricing — Phase 2 */}
+            {FEES.phase2Fee ? (
+              <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.06rem" }}>
+                    What it costs
+                  </p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
+                    One flat fee. Four months. No hourly billing.
+                  </p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
+                    Confirmed at the end of Phase 1 once scope and staffing needs are clear.
+                  </p>
+                </div>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>{FEES.phase2Fee}</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
+                </div>
+              </div>
+            ) : (
+              <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
+                  Pricing TBC
+                </p>
+              </div>
+            )}
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in", marginTop: "auto" }}>
               <div>
@@ -515,15 +547,35 @@ export default function NorthernPilotPitch() {
               </div>
             </div>
 
-            {/* Pricing note */}
-            <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
-                Phase 3 fees are discussed separately — scope depends on what Phase 2 reveals about the store's operating rhythm.
-              </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
-                Pricing TBC
-              </p>
-            </div>
+            {/* Pricing — Phase 3 */}
+            {FEES.phase3Fee ? (
+              <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.06rem" }}>
+                    What it costs
+                  </p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
+                    One flat fee. Winter season. No hourly billing.
+                  </p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
+                    Scope confirmed after Phase 2 reveals the store's operating rhythm.
+                  </p>
+                </div>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>{FEES.phase3Fee}</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
+                </div>
+              </div>
+            ) : (
+              <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  Phase 3 fees are discussed separately — scope depends on what Phase 2 reveals about the store's operating rhythm.
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
+                  Pricing TBC
+                </p>
+              </div>
+            )}
 
             {/* The arc */}
             <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", marginTop: "auto" }}>
