@@ -19,6 +19,7 @@ import { WorkbenchArchivePage } from "@/pages/WorkbenchArchivePage";
 import { RefundInvocationLetter } from "@/pages/RefundInvocationLetter";
 import { WorkflowPage } from "@/pages/WorkflowPage";
 import { DebtAttackPage } from "@/pages/DebtAttackPage";
+import { StartupExpensesPage } from "@/pages/StartupExpensesPage";
 import { PilotTwoPage } from "@/pages/PilotTwoPage";
 import { PromotionalPlanPage } from "@/pages/PromotionalPlanPage";
 import { WhatNextPage } from "@/pages/WhatNextPage";
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/workbench" component={WorkbenchArchivePage} />
       <Route path="/workflow" component={WorkflowPage} />
       <Route path="/debt-attack" component={DebtAttackPage} />
+      <Route path="/startup-expenses" component={StartupExpensesPage} />
       <Route path="/pilot-two" component={PilotTwoPage} />
       <Route path="/promo-plan" component={PromotionalPlanPage} />
       <Route path="/what-next" component={WhatNextPage} />
