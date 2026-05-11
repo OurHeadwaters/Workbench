@@ -34,6 +34,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PageIntro } from "@/components/PageIntro";
+import { EditableSection } from "@/components/EditableSection";
 
 export function ReplicationPage() {
   const { scenario } = useScenario();
@@ -220,6 +221,7 @@ export function ReplicationPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-5 pt-0">
+            <EditableSection id="rep.positioning" label="Positioning — why the price is the price">
             <div
               className="text-base leading-relaxed"
               style={{ fontFamily: "var(--app-font-serif)", color: "hsl(var(--foreground))" }}
@@ -253,6 +255,7 @@ export function ReplicationPage() {
                 cost-plus-35% structure actually fits inside their world.
               </p>
             </div>
+            </EditableSection>
             <ConfirmedTag
               tag={confirmed("Locked positioning narrative — drafted with the founder, kept under five sentences so it fits in any conversation.")}
               className="mt-3"

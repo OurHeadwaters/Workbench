@@ -9,6 +9,7 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { PageIntro } from "@/components/PageIntro";
+import { EditableSection } from "@/components/EditableSection";
 import {
   Accordion,
   AccordionContent,
@@ -127,6 +128,7 @@ export function EngagementPricingPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.rate-billing-model" label="Rate & billing model">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
                 <strong>Why flat-fee phases, not hourly billing.</strong> The client's budget
@@ -163,6 +165,7 @@ export function EngagementPricingPage() {
                 accountable to a number.
               </p>
             </div>
+            </EditableSection>
           </AccordionContent>
         </AccordionItem>
 
@@ -181,6 +184,7 @@ export function EngagementPricingPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.phase-structure" label="Phase structure">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
                 <strong>Why fees aren't quoted upfront for every phase.</strong> In a multi-year
@@ -211,6 +215,7 @@ export function EngagementPricingPage() {
                 practitioner's job is to not override it.
               </p>
             </div>
+            </EditableSection>
           </AccordionContent>
         </AccordionItem>
 
@@ -229,6 +234,7 @@ export function EngagementPricingPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.site-visits" label="Site visits & travel">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
                 <strong>How visits are counted.</strong> Each site visit is counted as a block:
@@ -263,6 +269,7 @@ export function EngagementPricingPage() {
                 purposeful keeps travel costs in line and preserves the practitioner's capacity.
               </p>
             </div>
+            </EditableSection>
           </AccordionContent>
         </AccordionItem>
 
@@ -281,6 +288,7 @@ export function EngagementPricingPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.staffing-absorption" label="Staffing absorption">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
                 <strong>What the role covers.</strong> In the build phase of a community store
@@ -314,6 +322,7 @@ export function EngagementPricingPage() {
                 is honest — the fee is covering it, and the margin percentage reflects that.
               </p>
             </div>
+            </EditableSection>
           </AccordionContent>
         </AccordionItem>
 
@@ -332,6 +341,7 @@ export function EngagementPricingPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.margin-floor" label="Margin & the floor">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
                 <strong>How gross margin is calculated.</strong>
@@ -379,6 +389,7 @@ export function EngagementPricingPage() {
                 the client — they see one number.
               </p>
             </div>
+            </EditableSection>
           </AccordionContent>
         </AccordionItem>
 

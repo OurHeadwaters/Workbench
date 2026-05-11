@@ -1,0 +1,237 @@
+/**
+ * EditableSection — wraps any narrative text block with an AI rewrite button.
+ *
+ * Usage:
+ *   <EditableSection id="contracts.how-it-works" label="How the contract works">
+ *     <p>Original hardcoded text...</p>
+ *   </EditableSection>
+ *
+ * When an override exists it renders instead of children. The override is
+ * persisted to localStorage so it survives page reloads.
+ *
+ * The pencil button appears on hover. Clicking it opens a modal where the
+ * founder describes what changed; the AI rewrites the section in-place.
+ */
+
+import { useState, useRef, type ReactNode } from "react";
+import { Pencil, X, Loader2, RotateCcw } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useSectionOverride } from "@/hooks/useSectionOverride";
+
+interface EditableSectionProps {
+  id: string;
+  label: string;
+  children: ReactNode;
+}
+
+export function EditableSection({ id, label, children }: EditableSectionProps) {
+  const { override, setOverride, clearOverride } = useSectionOverride(id);
+  const [open, setOpen] = useState(false);
+  const [instruction, setInstruction] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function currentText(): string {
+    if (override) return override;
+    const el = document.getElementById(`editable-section-content-${id}`);
+    return el?.innerText ?? label;
+  }
+
+  async function handleRewrite() {
+    setLoading(true);
+    setError(null);
+    setPreview(null);
+    try {
+      const res = await fetch("/api/pgv2/rewrite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sectionId: id,
+          currentText: currentText(),
+          instruction,
+        }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = (await res.json()) as { rewritten: string };
+      setPreview(data.rewritten);
+    } catch {
+      setError("Rewrite failed — try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleApply() {
+    if (preview) {
+      setOverride(preview);
+      setOpen(false);
+      setInstruction("");
+      setPreview(null);
+    }
+  }
+
+  function handleClose() {
+    setOpen(false);
+    setInstruction("");
+    setPreview(null);
+    setError(null);
+  }
+
+  return (
+    <div className="group relative">
+      <div id={`editable-section-content-${id}`}>
+        {override
+          ? override
+              .split("\n\n")
+              .filter(Boolean)
+              .map((para, i) => (
+                <p key={i} className="text-sm text-muted-foreground mb-2 last:mb-0">
+                  {para}
+                </p>
+              ))
+          : children}
+      </div>
+
+      <div className="absolute top-0 right-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {override && (
+          <button
+            onClick={clearOverride}
+            title="Restore original"
+            className="p-1 rounded text-muted-foreground hover:text-rust hover:bg-cream transition-colors"
+            style={{ color: "#b85a3e" }}
+          >
+            <RotateCcw size={12} />
+          </button>
+        )}
+        <button
+          onClick={() => setOpen(true)}
+          title="Edit with AI"
+          className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-colors"
+          style={{
+            background: override ? "#b85a3e22" : "#1f3d2e22",
+            color: override ? "#b85a3e" : "#1f3d2e",
+          }}
+        >
+          <Pencil size={11} />
+          {override ? "Re-edit" : "Edit"}
+        </button>
+      </div>
+
+      {override && (
+        <div className="mt-1 flex items-center gap-1">
+          <span
+            className="text-xs px-1.5 py-0.5 rounded font-medium"
+            style={{ background: "#1f3d2e22", color: "#1f3d2e" }}
+          >
+            Edited
+          </span>
+        </div>
+      )}
+
+      <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold" style={{ color: "#1f3d2e" }}>
+              Edit: {label}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-1">
+            {!preview ? (
+              <>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Describe what changed — the AI will rewrite the section for you.
+                  </p>
+                  <Textarea
+                    ref={textareaRef}
+                    value={instruction}
+                    onChange={(e) => setInstruction(e.target.value)}
+                    placeholder={'e.g. "The Northern Band contract is now signed as of June 1 at $185/hr instead of $175."'}
+                    rows={3}
+                    className="text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && instruction.trim()) {
+                        void handleRewrite();
+                      }
+                    }}
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-xs text-red-600">{error}</p>
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    disabled={!instruction.trim() || loading}
+                    onClick={() => void handleRewrite()}
+                    style={{ background: "#1f3d2e", color: "#f4ede0" }}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin mr-1.5" />
+                        Rewriting…
+                      </>
+                    ) : (
+                      "Rewrite with AI"
+                    )}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5">Preview</p>
+                  <div
+                    className="rounded-md p-3 text-sm space-y-2 border"
+                    style={{ background: "#f4ede0", borderColor: "#1f3d2e33" }}
+                  >
+                    {preview.split("\n\n").filter(Boolean).map((para, i) => (
+                      <p key={i}>{para}</p>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-between gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPreview(null)}
+                  >
+                    <X size={13} className="mr-1" /> Try again
+                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={handleClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleApply}
+                      style={{ background: "#1f3d2e", color: "#f4ede0" }}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

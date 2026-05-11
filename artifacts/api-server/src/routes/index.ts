@@ -14,6 +14,7 @@ import wordWalkRouter from "./wordWalk";
 import sargeRouter from "./sarge";
 import pdfRouter from "./pdf";
 import subcontractRouter from "./subcontract";
+import pgv2Router from "./pgv2";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use("/sarge", sargeRouter);
 router.use("/", intakeRouter);
 router.use("/", deadheadRouter);
 router.use("/", subcontractRouter);
+router.use("/pgv2", pgv2Router);
 
 export default router;
