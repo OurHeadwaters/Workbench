@@ -1034,6 +1034,41 @@ export default function InternalScopePlan() {
         onCopyPlainText={buildPlainText}
       />
 
+      {(() => {
+        const belowCost: string[] = [];
+        if (p2MarginAtMin < 0) belowCost.push("Phase 2 — The Build");
+        if (p3.marginAtMin < 0) belowCost.push("Phase 3 — Winter Payoff");
+        if (p4.marginAtMin < 0) belowCost.push("Phase 4 — Handoff");
+        if (belowCost.length === 0) return null;
+        return (
+          <div
+            className="no-print"
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 200,
+              background: "#7c2d12",
+              color: "#fef2f2",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.82rem",
+              fontWeight: 600,
+              padding: "0.65rem 1.2rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.28)",
+            }}
+          >
+            <span style={{ fontSize: "1rem", flexShrink: 0 }}>⚠</span>
+            <span>
+              {belowCost.length === 1
+                ? `${belowCost[0]} is currently priced below cost — review before sharing.`
+                : `${belowCost.slice(0, -1).join(", ")} and ${belowCost[belowCost.length - 1]} are currently priced below cost — review before sharing.`}
+            </span>
+          </div>
+        );
+      })()}
+
       <div id="pdf-target" style={{ background: "#ccc9c0" }}>
 
         {/* ── COVER ── */}
