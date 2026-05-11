@@ -6,9 +6,10 @@
  *
  * ADHD-first design:
  *  1. Scannable sections, clear labels, no clutter.
- *  2. Actuals persisted to localStorage — enter once, available always.
+ *  2. Actuals + notes persisted to localStorage — enter once, available always.
  *  3. Summary bar stays pinned at the top so runway is always visible.
  *  4. Deer Lake items flagged as excluded so the budget stays honest.
+ *  5. Notes field hidden behind an expand toggle to keep the list scannable.
  */
 
 import { useState, useEffect, useCallback } from "react";
@@ -26,6 +27,9 @@ import {
   Calculator,
   Monitor,
   Package,
+  ChevronDown,
+  ChevronUp,
+  Download,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -198,12 +202,13 @@ const DEER_LAKE_NOTE =
 
 // ── localStorage helpers ──────────────────────────────────────────────────────
 
-const LS_KEY = "pgv2.startup-expenses.actuals";
+const LS_KEY_ACTUALS = "pgv2.startup-expenses.actuals";
+const LS_KEY_NOTES = "pgv2.startup-expenses.notes";
 
 function loadActuals(): Record<string, string> {
   if (typeof window === "undefined") return {};
   try {
-    const raw = window.localStorage.getItem(LS_KEY);
+    const raw = window.localStorage.getItem(LS_KEY_ACTUALS);
     return raw ? (JSON.parse(raw) as Record<string, string>) : {};
   } catch {
     return {};
@@ -212,7 +217,22 @@ function loadActuals(): Record<string, string> {
 
 function saveActuals(actuals: Record<string, string>) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(LS_KEY, JSON.stringify(actuals));
+  window.localStorage.setItem(LS_KEY_ACTUALS, JSON.stringify(actuals));
+}
+
+function loadNotes(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(LS_KEY_NOTES);
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveNotes(notes: Record<string, string>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LS_KEY_NOTES, JSON.stringify(notes));
 }
 
 // ── Math helpers ──────────────────────────────────────────────────────────────
@@ -255,9 +275,55 @@ function grandTotals(actuals: Record<string, string>) {
   return { low, high, actual };
 }
 
+// ── CSV export ────────────────────────────────────────────────────────────────
+
+function exportCsv(
+  actuals: Record<string, string>,
+  notes: Record<string, string>
+) {
+  const rows: string[][] = [
+    ["Section", "Item", "Est. Low", "Est. High", "Actual", "Notes"],
+  ];
+
+  for (const section of SECTIONS) {
+    for (const item of section.items) {
+      rows.push([
+        section.title,
+        item.label,
+        String(item.low),
+        String(item.high),
+        actuals[item.id] ?? "",
+        notes[item.id] ?? "",
+      ]);
+    }
+  }
+
+  const csv = rows
+    .map((row) =>
+      row
+        .map((cell) => (cell.includes(",") || cell.includes('"') || cell.includes("\n") ? `"${cell.replace(/"/g, '""')}"` : cell))
+        .join(",")
+    )
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "startup-expenses.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ── Summary bar ───────────────────────────────────────────────────────────────
 
-function SummaryBar({ actuals }: { actuals: Record<string, string> }) {
+function SummaryBar({
+  actuals,
+  notes,
+}: {
+  actuals: Record<string, string>;
+  notes: Record<string, string>;
+}) {
   const { low, high, actual } = grandTotals(actuals);
   const hasActuals = Object.values(actuals).some((v) => v.trim() !== "");
   const midpoint = Math.round((low + high) / 2);
@@ -282,7 +348,7 @@ function SummaryBar({ actuals }: { actuals: Record<string, string> }) {
           <p className="text-xs text-[#0F3460] opacity-70 mt-0.5">Phase 1 baseline</p>
         </div>
 
-        <div className="flex gap-6 flex-wrap">
+        <div className="flex gap-6 flex-wrap items-start">
           <div className="text-right">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#0F3460] opacity-70 mb-1">
               Estimated range
@@ -314,6 +380,21 @@ function SummaryBar({ actuals }: { actuals: Record<string, string> }) {
             <p className="text-xs text-[#0F3460] opacity-70">
               {hasActuals ? "vs actual" : "vs midpoint estimate"}
             </p>
+          </div>
+          <div className="flex-shrink-0 flex items-end pb-0.5">
+            <button
+              onClick={() => exportCsv(actuals, notes)}
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors"
+              style={{
+                borderColor: "#1A5FA8",
+                color: "#1A5FA8",
+                backgroundColor: "white",
+              }}
+              data-testid="export-csv-btn"
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export CSV
+            </button>
           </div>
         </div>
       </div>
@@ -350,96 +431,140 @@ function LineItemRow({
   colorSoft,
   colorInk,
   actual,
+  memo,
   onActualChange,
+  onMemoChange,
 }: {
   item: LineItem;
   color: string;
   colorSoft: string;
   colorInk: string;
   actual: string;
+  memo: string;
   onActualChange: (id: string, value: string) => void;
+  onMemoChange: (id: string, value: string) => void;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const Icon = item.icon;
   const actualNum = parseActual(actual);
   const hasActual = actual.trim() !== "";
   const withinRange = hasActual && actualNum >= item.low && actualNum <= item.high;
   const overHigh = hasActual && actualNum > item.high;
+  const hasMemo = memo.trim() !== "";
 
   return (
     <div
-      className={`flex items-start gap-3 py-3 border-b last:border-b-0 ${item.deerLake ? "opacity-50" : ""}`}
+      className={`py-3 border-b last:border-b-0 ${item.deerLake ? "opacity-50" : ""}`}
       style={{ borderColor: colorSoft }}
       data-testid={`line-item-${item.id}`}
     >
-      <div
-        className="h-7 w-7 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
-        style={{ backgroundColor: colorSoft, color: colorInk }}
-      >
-        <Icon className="h-3.5 w-3.5" />
-      </div>
+      <div className="flex items-start gap-3">
+        <div
+          className="h-7 w-7 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
+          style={{ backgroundColor: colorSoft, color: colorInk }}
+        >
+          <Icon className="h-3.5 w-3.5" />
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 flex-wrap">
-          <div>
-            <p className="text-sm font-medium leading-snug">
-              {item.label}
-              {item.deerLake && (
-                <span className="ml-2 text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
-                  Deer Lake — excluded
-                </span>
-              )}
-            </p>
-            {item.note && (
-              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.note}</p>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground">Estimate</p>
-              <p className="text-sm font-semibold tabular-nums" style={{ color }}>
-                {money(item.low)}–{money(item.high)}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium leading-snug">
+                {item.label}
+                {item.deerLake && (
+                  <span className="ml-2 text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
+                    Deer Lake — excluded
+                  </span>
+                )}
               </p>
+              {item.note && (
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.note}</p>
+              )}
             </div>
 
-            {!item.deerLake && (
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Actual</p>
-                <div className="relative">
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                    $
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="—"
-                    value={actual}
-                    onChange={(e) => onActualChange(item.id, e.target.value)}
-                    className="w-24 pl-5 pr-2 py-1 text-sm rounded-md border text-right tabular-nums focus:outline-none focus:ring-2"
-                    style={{
-                      borderColor: hasActual
-                        ? overHigh
-                          ? "#DC2626"
-                          : withinRange
-                          ? "#16A34A"
-                          : color + "99"
-                        : "hsl(var(--card-border))",
-                      backgroundColor: hasActual
-                        ? overHigh
-                          ? "#FEF2F2"
-                          : withinRange
-                          ? "#F0FDF4"
-                          : "white"
-                        : "white",
-                    }}
-                    data-testid={`actual-input-${item.id}`}
-                  />
-                </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="text-right">
+                <p className="text-xs text-muted-foreground">Estimate</p>
+                <p className="text-sm font-semibold tabular-nums" style={{ color }}>
+                  {money(item.low)}–{money(item.high)}
+                </p>
               </div>
-            )}
+
+              {!item.deerLake && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Actual</p>
+                  <div className="relative">
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="—"
+                      value={actual}
+                      onChange={(e) => onActualChange(item.id, e.target.value)}
+                      className="w-24 pl-5 pr-2 py-1 text-sm rounded-md border text-right tabular-nums focus:outline-none focus:ring-2"
+                      style={{
+                        borderColor: hasActual
+                          ? overHigh
+                            ? "#DC2626"
+                            : withinRange
+                            ? "#16A34A"
+                            : color + "99"
+                          : "hsl(var(--card-border))",
+                        backgroundColor: hasActual
+                          ? overHigh
+                            ? "#FEF2F2"
+                            : withinRange
+                            ? "#F0FDF4"
+                            : "white"
+                          : "white",
+                      }}
+                      data-testid={`actual-input-${item.id}`}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!item.deerLake && (
+                <button
+                  onClick={() => setExpanded((v) => !v)}
+                  title={expanded ? "Hide memo" : hasMemo ? "Show memo" : "Add memo"}
+                  className="mt-4 flex-shrink-0 h-7 w-7 rounded-md grid place-items-center border transition-colors hover:bg-slate-50"
+                  style={{
+                    borderColor: hasMemo ? color + "88" : "hsl(var(--card-border))",
+                    color: hasMemo ? color : "hsl(var(--muted-foreground))",
+                  }}
+                  data-testid={`memo-toggle-${item.id}`}
+                >
+                  {expanded ? (
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {!item.deerLake && expanded && (
+        <div className="mt-2 ml-10">
+          <textarea
+            rows={2}
+            placeholder="What was actually purchased? Which vendor, model, or provider?"
+            value={memo}
+            onChange={(e) => onMemoChange(item.id, e.target.value)}
+            className="w-full text-xs rounded-md border px-3 py-2 resize-none focus:outline-none focus:ring-2 leading-relaxed"
+            style={{
+              borderColor: hasMemo ? color + "88" : "hsl(var(--card-border))",
+              backgroundColor: hasMemo ? colorSoft + "88" : "white",
+            }}
+            data-testid={`memo-input-${item.id}`}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -449,11 +574,15 @@ function LineItemRow({
 function SectionCard({
   section,
   actuals,
+  notes,
   onActualChange,
+  onNoteChange,
 }: {
   section: Section;
   actuals: Record<string, string>;
+  notes: Record<string, string>;
   onActualChange: (id: string, value: string) => void;
+  onNoteChange: (id: string, value: string) => void;
 }) {
   const { low, high, actual, anyActual } = sectionTotals(section, actuals);
 
@@ -497,7 +626,9 @@ function SectionCard({
               colorSoft={section.colorSoft}
               colorInk={section.colorInk}
               actual={actuals[item.id] ?? ""}
+              memo={notes[item.id] ?? ""}
               onActualChange={onActualChange}
+              onMemoChange={onNoteChange}
             />
           ))}
         </div>
@@ -510,15 +641,25 @@ function SectionCard({
 
 export function StartupExpensesPage() {
   const [actuals, setActuals] = useState<Record<string, string>>({});
+  const [notes, setNotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setActuals(loadActuals());
+    setNotes(loadNotes());
   }, []);
 
   const handleActualChange = useCallback((id: string, value: string) => {
     setActuals((prev) => {
       const next = { ...prev, [id]: value };
       saveActuals(next);
+      return next;
+    });
+  }, []);
+
+  const handleNoteChange = useCallback((id: string, value: string) => {
+    setNotes((prev) => {
+      const next = { ...prev, [id]: value };
+      saveNotes(next);
       return next;
     });
   }, []);
@@ -544,11 +685,12 @@ export function StartupExpensesPage() {
         </h1>
         <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
           Phase 1 working budget — tracked against the $28,000 startup figure.
-          Enter actuals as you spend; they're saved automatically.
+          Enter actuals as you spend; they're saved automatically. Use the
+          chevron on each row to log what was actually purchased.
         </p>
       </div>
 
-      <SummaryBar actuals={actuals} />
+      <SummaryBar actuals={actuals} notes={notes} />
 
       <div className="space-y-5">
         {SECTIONS.map((section) => (
@@ -556,7 +698,9 @@ export function StartupExpensesPage() {
             key={section.id}
             section={section}
             actuals={actuals}
+            notes={notes}
             onActualChange={handleActualChange}
+            onNoteChange={handleNoteChange}
           />
         ))}
       </div>
