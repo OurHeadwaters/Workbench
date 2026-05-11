@@ -3,6 +3,13 @@ import { PrintNav } from "../components/PrintNav";
 
 const base = import.meta.env.BASE_URL;
 
+// ─── Client config ────────────────────────────────────────────────────────────
+// To reuse this pitch for a new community, update both constants below.
+//   CLIENT_NAME  — the full legal name used in headers and formal copy
+//   CLIENT_SHORT — the short form used in body sentences (typically everything before "First Nation")
+const CLIENT_NAME = "Deer Lake First Nation";
+const CLIENT_SHORT = "Deer Lake";
+
 // ─── Fee config ───────────────────────────────────────────────────────────────
 // Set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the fee is
 // agreed. Leave as null to keep the "Pricing TBC" placeholder.
@@ -13,7 +20,7 @@ const FEES: { phase2Fee: string | null; phase3Fee: string | null } = {
 
 function buildPlainText(): string {
   return [
-    "HEADWATERS · DEER LAKE FIRST NATION",
+    `HEADWATERS · ${CLIENT_NAME.toUpperCase()}`,
     "Community Store Pilot — Proposal",
     "May 2026",
     "",
@@ -32,7 +39,7 @@ function buildPlainText(): string {
     "Prices you can't control, budgets that won't work. Band-sourced food, transparent prices, more food security.",
     "If it closes, there is no backup.",
     "",
-    "Every dollar spent there leaves Deer Lake and doesn't come back.",
+    `Every dollar spent there leaves ${CLIENT_SHORT} and doesn't come back.`,
     "",
     "---",
     "",
@@ -40,7 +47,7 @@ function buildPlainText(): string {
     "",
     "A store your community owns.",
     "",
-    "A community store doesn't compete with what's already there. It fills the gaps — affordable food, local ownership, money that stays in Deer Lake.",
+    `A community store doesn't compete with what's already there. It fills the gaps — affordable food, local ownership, money that stays in ${CLIENT_SHORT}.`,
     "",
     "Affordable basics — Everyday staples at prices that make sense for your community.",
     "Locally owned — Community members decide what's stocked, what it costs, and who works there.",
@@ -52,7 +59,7 @@ function buildPlainText(): string {
     "",
     "We listen. We plan. Leadership sees the plan and decides what happens next.",
     "",
-    "What Deer Lake walks away with after 6 weeks:",
+    `What ${CLIENT_SHORT} walks away with after 6 weeks:`,
     "→ A clear plan for what to sell and where it comes from",
     "→ A clear picture of who does what and how decisions get made",
     "→ A day-to-day operations guide — orders, pricing, cash",
@@ -60,7 +67,7 @@ function buildPlainText(): string {
     "→ A financial plan for year one — what it costs to run and where the money comes from",
     "",
     "$28,000 · 6-week engagement · flat fee",
-    "You can stop at any point. Everything built stays with Deer Lake.",
+    `You can stop at any point. Everything built stays with ${CLIENT_SHORT}.`,
     "",
     "Headwaters Development Services",
     "bobbie@ourheadwaters.ca · ourheadwaters.ca",
@@ -75,7 +82,7 @@ function buildPlainText(): string {
     "",
     "The honest note on timing: Summer freight runs by air — costs are high and margins will be tight. That's expected and planned for. The numbers get better when winter roads open.",
     "",
-    "Staffing support: Headwaters helps find and vet the operator couple (the most critical hire), supports building the casual pod job descriptions for Deer Lake community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.",
+    `Staffing support: Headwaters helps find and vet the operator couple (the most critical hire), supports building the casual pod job descriptions for ${CLIENT_SHORT} community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.`,
     "",
     "What this phase ends with: A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.",
     "",
@@ -169,11 +176,11 @@ export default function NorthernPilotPitch() {
               <div style={{ width: "0.55in", height: 3, background: "var(--rust)", marginBottom: "0.22in" }} />
 
               <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.4rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: "0.22in", ...WONK0 }}>
-                Deer Lake<br />First Nation
+                {CLIENT_SHORT}<br />First Nation
               </h1>
 
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.88rem", color: "rgba(244,237,224,0.72)", lineHeight: 1.6, maxWidth: "4.8in" }}>
-                A plan for a community-owned store — affordable food, local jobs, and money that stays in Deer Lake.
+                {`A plan for a community-owned store — affordable food, local jobs, and money that stays in ${CLIENT_SHORT}.`}
               </p>
             </div>
 
@@ -204,7 +211,7 @@ export default function NorthernPilotPitch() {
           {/* Header */}
           <div style={{ background: "var(--evergreen)", padding: "0.48in 0.7in 0.44in", flexShrink: 0 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.22rem" }}>
-              Headwaters · Deer Lake First Nation
+              {`Headwaters · ${CLIENT_NAME}`}
             </p>
             <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.02em", ...WONK0 }}>
               One store.<br />One point<br />of failure.
@@ -240,7 +247,7 @@ export default function NorthernPilotPitch() {
                   },
                   {
                     head: "If it closes, there is no backup",
-                    body: "One store, one supply line. If it shuts down or pulls back, Deer Lake has nowhere else to turn.",
+                    body: `One store, one supply line. If it shuts down or pulls back, ${CLIENT_SHORT} has nowhere else to turn.`,
                   },
                 ].map((card) => (
                   <div key={card.head} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.15in" }}>
@@ -255,7 +262,7 @@ export default function NorthernPilotPitch() {
               </div>
 
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontStyle: "italic", color: "var(--muted)", lineHeight: 1.5 }}>
-                Every dollar spent there leaves Deer Lake and doesn't come back.
+                {`Every dollar spent there leaves ${CLIENT_SHORT} and doesn't come back.`}
               </p>
 
             </div>
@@ -299,7 +306,7 @@ export default function NorthernPilotPitch() {
                 </div>
 
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.68, maxWidth: "5in" }}>
-                  A community store doesn't compete with what's already there. It fills the gaps — affordable food, local ownership, money that stays in Deer Lake.
+                  {`A community store doesn't compete with what's already there. It fills the gaps — affordable food, local ownership, money that stays in ${CLIENT_SHORT}.`}
                 </p>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.22in" }}>
@@ -310,7 +317,7 @@ export default function NorthernPilotPitch() {
                     },
                     {
                       head: "Owned by your community",
-                      body: "Community members decide what's stocked, what it costs, and who works there. The store answers to Deer Lake.",
+                      body: `Community members decide what's stocked, what it costs, and who works there. The store answers to ${CLIENT_SHORT}.`,
                     },
                     {
                       head: "Less dependence on one operator",
@@ -355,7 +362,7 @@ export default function NorthernPilotPitch() {
 
             <div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.18in" }}>
-                What Deer Lake walks away with after 6 weeks
+                {`What ${CLIENT_SHORT} walks away with after 6 weeks`}
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.5in" }}>
                 {[
@@ -383,7 +390,7 @@ export default function NorthernPilotPitch() {
                   One flat fee. Six weeks. No hourly billing.
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
-                  You can stop at any point. Everything built stays with Deer Lake.
+                  {`You can stop at any point. Everything built stays with ${CLIENT_SHORT}.`}
                 </p>
               </div>
               <div style={{ textAlign: "right", flexShrink: 0 }}>
@@ -444,7 +451,7 @@ export default function NorthernPilotPitch() {
                 Staffing support
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
-                Headwaters helps find and vet the operator couple — the most critical hire — supports building the casual pod job descriptions for Deer Lake community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.
+                {`Headwaters helps find and vet the operator couple — the most critical hire — supports building the casual pod job descriptions for ${CLIENT_SHORT} community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.`}
               </p>
             </div>
 
