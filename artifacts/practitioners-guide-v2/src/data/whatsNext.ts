@@ -92,10 +92,10 @@ export const FOCUS_AREAS: FocusArea[] = [
     accentInk: "#1F4A1A",
     steps: [
       {
-        action: "Run the farmers market break-even math",
+        action: "Map out vegetable subscription logistics before market starts",
         detail:
-          "Stall rate confirmed: $25 × 15 weeks = $375/yr. The open question now is: what does a Thursday need to gross to justify the day — especially once an employee runs the table part-time? At $12/jar, break-even is ~2 jars to cover the stall. The real floor is your time.",
-        timeEstimate: "15 min",
+          "Work with Walls Rockfront and Zurbriggs to get the delivery picture clear before the season opens. Pull the list: who paid last year, who got early-bird online, how many spots remain, and which customers need delivery vs. can pick up at the market. The goal is to shift as many as possible to Thursday pickup (market starts at 3) — delivery is the exception, not the default. Flag the seniors you promised delivery to and build a route that front-loads those stops so Thursday isn't a scramble. Consider running the local-line and veggie deliveries earlier in the day so everything is done before you're at the table.",
+        timeEstimate: "1 hr",
       },
       {
         action: "Invoice Loving Suds and deliver the May 24–29 batch to Tilleys",
