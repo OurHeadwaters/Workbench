@@ -6,11 +6,21 @@ const base = import.meta.env.BASE_URL;
 // ─── Pitch config ─────────────────────────────────────────────────────────────
 // Edit any value here to update the full pitch (rendered pages + plain-text copy).
 //
-// CLIENT — to reuse this pitch for a new community, update both constants below.
-//   CLIENT_NAME  — the full legal name used in headers and formal copy
-//   CLIENT_SHORT — the short form used in body sentences (typically everything before "First Nation")
-const CLIENT_NAME = "Deer Lake First Nation";
-const CLIENT_SHORT = "Deer Lake";
+// PITCH — to reuse this pitch for a new community or month, update the values below.
+//   communityName  — the full legal name used in headers and formal copy
+//   communityShort — the short form used in body sentences (typically everything before "First Nation")
+//   proposalDate   — long-form date shown in document metadata / plain-text header  e.g. "May 2026"
+//   proposalMonth  — short date shown on the cover page  e.g. "May 2026"
+const PITCH = {
+  communityName:  "Deer Lake First Nation",
+  communityShort: "Deer Lake",
+  proposalDate:   "May 2026",
+  proposalMonth:  "May 2026",
+};
+
+// Convenience aliases so nothing below needs to change when reading config.
+const CLIENT_NAME  = PITCH.communityName;
+const CLIENT_SHORT = PITCH.communityShort;
 
 // FEES — set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the
 // fee is agreed. Leave as null to keep the "Pricing TBC" placeholder.
@@ -38,7 +48,7 @@ function buildPlainText(): string {
   return [
     `HEADWATERS · ${CLIENT_NAME.toUpperCase()}`,
     "Community Store Pilot — Proposal",
-    "May 2026",
+    PITCH.proposalDate,
     "",
     "Headwaters Development Services",
     "bobbie@ourheadwaters.ca · ourheadwaters.ca",
@@ -232,7 +242,7 @@ export default function NorthernPilotPitch() {
                 </p>
               </div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "rgba(244,237,224,0.45)", letterSpacing: "0.1em" }}>
-                May 2026
+                {PITCH.proposalMonth}
               </p>
             </div>
 
