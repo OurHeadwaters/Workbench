@@ -180,15 +180,17 @@ function DataRow({ label, value, accent }: { label: string; value: string; accen
 function FeeBlock({ min, max, marginMin, marginMax, marginNote }: {
   min: number; max: number; marginMin: number; marginMax: number; marginNote?: string;
 }) {
+  const belowCost = marginMin < 0;
   return (
     <div style={{
-      background: "var(--evergreen)",
+      background: belowCost ? "#7a1f1f" : "var(--evergreen)",
       borderRadius: 6,
       padding: "0.18in 0.24in",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
       gap: "0.3in",
+      outline: belowCost ? "2px solid #e05252" : "none",
     }}>
       <div>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
@@ -200,14 +202,19 @@ function FeeBlock({ min, max, marginMin, marginMax, marginNote }: {
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(244,237,224,0.55)", marginTop: "0.03rem" }}>CAD · excl. HST</p>
       </div>
       <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: belowCost ? "#f9a8a8" : "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
           Gross margin
         </p>
-        <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1 }}>
+        <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 700, color: belowCost ? "#ffd0d0" : "var(--cream)", lineHeight: 1 }}>
           {pct(marginMin)} – {pct(marginMax)}
         </p>
+        {belowCost && (
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", fontWeight: 700, color: "#fca5a5", marginTop: "0.04rem", letterSpacing: "0.04em" }}>
+            ⚠ Below cost at floor
+          </p>
+        )}
         {marginNote && (
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(244,237,224,0.55)", marginTop: "0.03rem" }}>{marginNote}</p>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: belowCost ? "rgba(252,165,165,0.7)" : "rgba(244,237,224,0.55)", marginTop: "0.03rem" }}>{marginNote}</p>
         )}
       </div>
     </div>
@@ -1352,7 +1359,12 @@ export default function InternalScopePlan() {
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{row.days} days</p>
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{fmt(row.cost)}</p>
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{fmt(row.feeMin)} – {fmt(row.feeMax)}</p>
-                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{pct(row.marginMin)}–{pct(row.marginMax)}</p>
+                  <div>
+                    <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: row.marginMin < 0 ? "#b91c1c" : "var(--ink)", fontWeight: row.marginMin < 0 ? 700 : 400 }}>{pct(row.marginMin)}–{pct(row.marginMax)}</p>
+                    {row.marginMin < 0 && (
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "#b91c1c", fontWeight: 700, letterSpacing: "0.04em", marginTop: 1 }}>⚠ Below cost at floor</p>
+                    )}
+                  </div>
                 </div>
               ))}
 
