@@ -31,6 +31,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowLeft, HelpCircle } from "lucide-react";
+import { PageIntro } from "@/components/PageIntro";
 
 export function SaltsPage() {
   const { scenario } = useScenario();
@@ -68,11 +69,11 @@ export function SaltsPage() {
             </h1>
             <StatusBadge status="modelling" label="Still building actuals" />
           </div>
-          <p className="mt-3 text-muted-foreground max-w-3xl">
+          <PageIntro>
             The structure is honest: one blended per-jar cost, four channels, $0 cash labour.
             The volumes and the farmers market math are planning assumptions, not observed throughput.
             Numbers here lock when batch records and market receipts are tracked against them.
-          </p>
+          </PageIntro>
         </div>
         <ExportLedgerButtons
           buildLedger={() => buildSaltLedger(scenario)}

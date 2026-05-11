@@ -33,6 +33,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PageIntro } from "@/components/PageIntro";
 
 export function ReplicationPage() {
   const { scenario } = useScenario();
@@ -70,13 +71,13 @@ export function ReplicationPage() {
           >
             The same engagement, in another community.
           </h1>
-          <p className="mt-2 text-muted-foreground max-w-3xl">
+          <PageIntro>
             The shape of the engagement travels. The community-specific levers
             swap. Two columns below name both — with the active scenario as the worked
             example so the model is read off real numbers, not abstractions.
             Expand the sections below for the full positioning narrative, operating rhythm,
             and how-to-use guide.
-          </p>
+          </PageIntro>
           <div
             className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: accentSoft, color: accentInk }}

@@ -18,6 +18,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useScenario } from "@/lib/scenario";
+import { PageIntro } from "@/components/PageIntro";
 import { SCENARIOS } from "@/data/scenarios";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { money, moneyDelta } from "@/lib/format";
@@ -128,13 +129,13 @@ export function ComparePage() {
           >
             V3 anchored. Alternative realities to the right.
           </h1>
-          <p className="mt-2 text-muted-foreground max-w-3xl">
-            <strong className="text-foreground">V7 is the guide's locked default</strong> — the
+          <PageIntro>
+            <strong>V7 is the guide's locked default</strong> — the
             rest of the guide (Index, Contracts, Salts, Brightside) reads V7 numbers.{" "}
-            <strong className="text-foreground">V3 is the workspace anchor</strong> — the
+            <strong>V3 is the workspace anchor</strong> — the
             left-column baseline every alternative reality is measured against. Both can be true
             at once. Edit any row, lock what you've decided, and read the Δ-vs-V3 cell live.
-          </p>
+          </PageIntro>
         </div>
       </header>
 

@@ -8,6 +8,7 @@
 
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { PageIntro } from "@/components/PageIntro";
 import {
   Accordion,
   AccordionContent,
@@ -44,11 +45,11 @@ export function EngagementPricingPage() {
         >
           Flat-fee phases. No hourly billing. Fees confirmed as scope becomes clear.
         </h1>
-        <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
+        <PageIntro>
           Every Codetry community engagement is priced as a sequence of flat-fee phases. The methodology
           below is the durable logic behind the number — not a calculator, but the thinking that produces
           one. Expand each section for the full rationale.
-        </p>
+        </PageIntro>
       </header>
 
       {/* ── Always-visible signals ── */}

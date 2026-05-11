@@ -9,6 +9,7 @@
 
 import type { ReactNode } from "react";
 import { Link } from "wouter";
+import { PageIntro } from "@/components/PageIntro";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { SectionCard } from "@/components/SectionCard";
@@ -216,13 +217,13 @@ export function ContractsPage() {
               Rates set · $175/hr lead · $70/hr support
             </span>
           </div>
-          <p className="mt-3 text-muted-foreground max-w-3xl">
+          <PageIntro>
             <Num tag={a.feeTag}>{money(a.fee)}</Num>/mo starting {a.startDate} against the{" "}
             {a.roster.length}-role Northern Band team (
             <Num tag={a.rosterTag}>{money(a.payrollTotal)}</Num>/mo payroll). Surplus waterfall:{" "}
             {waterfallDescription}. The Ship Manifest publishes a trial-first hourly engagement
             model; these rates and that structure are what the guide models.
-          </p>
+          </PageIntro>
         </div>
         <ExportLedgerButtons
           buildLedger={() => buildContractsLedger(scenario)}

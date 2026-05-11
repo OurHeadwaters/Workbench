@@ -8,6 +8,7 @@
 
 import { Link } from "wouter";
 import { ArrowLeft, Home } from "lucide-react";
+import { PageIntro } from "@/components/PageIntro";
 import { useScenario } from "@/lib/scenario";
 import { money } from "@/lib/format";
 import {
@@ -50,11 +51,11 @@ export function ArchetypesPage() {
         >
           Codetry vs Software / Sales — two archetypes, one operating discipline.
         </h1>
-        <p className="mt-3 text-muted-foreground max-w-3xl leading-relaxed">
+        <PageIntro>
           As of 2026-05-02 the model carries <strong>two project archetypes</strong>. The
           tithe-first surplus discipline and the no-owner-take-from-agency stance are held
           identical across both. Expand each card for the full narrative.
-        </p>
+        </PageIntro>
       </header>
 
       {/* ── Archetype cards — always visible decision signals ── */}

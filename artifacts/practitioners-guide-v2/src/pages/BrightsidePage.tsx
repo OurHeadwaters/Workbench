@@ -27,6 +27,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowLeft, HelpCircle } from "lucide-react";
+import { PageIntro } from "@/components/PageIntro";
 
 export function BrightsidePage() {
   const { scenario } = useScenario();
@@ -64,11 +65,11 @@ export function BrightsidePage() {
             </h1>
             <StatusBadge status="pre-revenue" label="Pre-revenue" />
           </div>
-          <p className="mt-3 text-muted-foreground max-w-3xl">
+          <PageIntro>
             Mobile-first SaaS. Founder builds, founder sells. No incremental headcount beyond
             the contract engineer. The pricing model and cost basis are confirmed — but no LTC
             site has committed to a pilot yet. Revenue is a modelling scenario, not a plan.
-          </p>
+          </PageIntro>
         </div>
         <ExportLedgerButtons
           buildLedger={() => buildBrightsideLedger(scenario)}
