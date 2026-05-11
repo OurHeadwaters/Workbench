@@ -271,8 +271,8 @@ export default function NorthernPilotPitch() {
               </div>
             </div>
 
-            {/* Contact line */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            {/* Contact + closing */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in" }}>
               <div>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
@@ -282,14 +282,8 @@ export default function NorthernPilotPitch() {
 
           </div>
 
-          {/* Eagle — full-width footer banner */}
-          <div style={{ width: "100%", height: "2.2in", flexShrink: 0, background: "var(--evergreen)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-            <img
-              src={`${base}eagle-circle.png`}
-              alt="Eagle in flight within a sun ring"
-              style={{ height: "100%", width: "auto", objectFit: "contain", display: "block" }}
-            />
-          </div>
+          {/* Closing bar */}
+          <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
 
         </div>
 
