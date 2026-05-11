@@ -15,8 +15,6 @@ import { SectionCard } from "@/components/SectionCard";
 import { MoneyKpi } from "@/components/MoneyKpi";
 import { ConfirmedTag } from "@/components/ConfirmedTag";
 import { Num } from "@/components/Num";
-import { FootnoteList } from "@/components/FootnoteList";
-import { AGENCY_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
 import { confirmed, tbd, type SourceTag } from "@/data/tags";
@@ -618,7 +616,6 @@ export function ContractsPage() {
         </Accordion>
       </div>
 
-      <FootnoteList notes={AGENCY_FOOTNOTES} />
     </div>
   );
 }

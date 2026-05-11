@@ -19,8 +19,6 @@ import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
 import { Num } from "@/components/Num";
-import { FootnoteList } from "@/components/FootnoteList";
-import { SALTS_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, num } from "@/lib/format";
 import { buildSaltLedger } from "@/data/saltLedger";
@@ -423,7 +421,6 @@ export function SaltsPage() {
 
       </Accordion>
 
-      <FootnoteList notes={SALTS_FOOTNOTES} />
     </div>
   );
 }

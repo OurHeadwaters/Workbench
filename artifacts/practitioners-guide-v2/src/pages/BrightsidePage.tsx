@@ -16,8 +16,6 @@ import { Link } from "wouter";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { MoneyKpi } from "@/components/MoneyKpi";
-import { FootnoteList } from "@/components/FootnoteList";
-import { BRIGHTSIDE_FOOTNOTES } from "@/data/footnotes";
 import { BUCKETS } from "@/data/buckets";
 import { money, pct } from "@/lib/format";
 import { buildBrightsideLedger } from "@/data/brightsideLedger";
@@ -451,7 +449,6 @@ export function BrightsidePage() {
 
       </Accordion>
 
-      <FootnoteList notes={BRIGHTSIDE_FOOTNOTES} />
     </div>
   );
 }
