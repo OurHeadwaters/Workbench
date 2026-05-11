@@ -48,7 +48,7 @@ app.use("/api", router);
 const printMarketingDist = path.resolve(process.cwd(), "artifacts/print-marketing/dist/public");
 if (fs.existsSync(printMarketingDist)) {
   app.use("/print-marketing", express.static(printMarketingDist));
-  app.get("/print-marketing/*", (_req, res) => {
+  app.get("/print-marketing/*path", (_req, res) => {
     res.sendFile(path.join(printMarketingDist, "index.html"));
   });
 }
