@@ -24,11 +24,12 @@ import {
   TrendingUp,
   Flame,
 } from "lucide-react";
-import { FOCUS_AREAS, type FocusArea, type EffortPayoff } from "@/data/whatsNext";
+import { FOCUS_AREAS, type FocusArea, type EffortPayoff, type TimeEstimate } from "@/data/whatsNext";
 import { useScenario } from "@/lib/scenario";
 import { money } from "@/lib/format";
 
 const STORAGE_KEY = "pgv2.whatsnext.focus";
+const REENTRY_KEY = "pgv2.reentry";
 
 function readStoredFocus(): FocusArea["id"] | null {
   if (typeof window === "undefined") return null;
@@ -44,6 +45,32 @@ function saveStoredFocus(id: FocusArea["id"] | null) {
   } else {
     window.localStorage.setItem(STORAGE_KEY, id);
   }
+}
+
+function saveReentry(focusId: FocusArea["id"], stepIndex: number) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(
+    REENTRY_KEY,
+    JSON.stringify({ focusId, stepIndex, ts: Date.now() }),
+  );
+}
+
+// ─── Time estimate badge ──────────────────────────────────────────────────────
+
+function TimeBadge({ estimate }: { estimate: TimeEstimate }) {
+  const styles: Record<TimeEstimate, string> = {
+    "15 min": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    "1 hr": "bg-blue-50 text-blue-700 border border-blue-200",
+    "half day": "bg-amber-50 text-amber-700 border border-amber-200",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[estimate]}`}
+    >
+      <Clock className="h-3 w-3" />
+      {estimate}
+    </span>
+  );
 }
 
 // ─── Effort / payoff badge ────────────────────────────────────────────────────
@@ -86,12 +113,14 @@ function FocusCard({
   expanded,
   onSelect,
   onToggleExpand,
+  onStepFocus,
 }: {
   area: FocusArea;
   selected: boolean;
   expanded: boolean;
   onSelect: (id: FocusArea["id"] | null) => void;
   onToggleExpand: (id: FocusArea["id"]) => void;
+  onStepFocus: (id: FocusArea["id"], stepIndex: number) => void;
 }) {
   const Icon = AREA_ICONS[area.id];
 
@@ -199,14 +228,20 @@ function FocusCard({
         >
           {area.steps.map((step, i) => (
             <div key={i} className="flex gap-3">
-              <div
-                className="flex-shrink-0 h-5 w-5 rounded-full grid place-items-center text-[10px] font-bold mt-0.5"
+              <button
+                type="button"
+                title={`Mark step ${i + 1} as where you left off`}
+                onClick={() => onStepFocus(area.id, i)}
+                className="flex-shrink-0 h-5 w-5 rounded-full grid place-items-center text-[10px] font-bold mt-0.5 transition-opacity hover:opacity-70 cursor-pointer"
                 style={{ backgroundColor: area.accentSoft, color: area.accentInk }}
               >
                 {i + 1}
-              </div>
+              </button>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">{step.action}</p>
+                <div className="flex items-start gap-2 flex-wrap">
+                  <p className="text-sm font-medium">{step.action}</p>
+                  <TimeBadge estimate={step.timeEstimate} />
+                </div>
                 <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                   {step.detail}
                 </p>
@@ -339,11 +374,16 @@ export function WhatNextPage() {
     setActiveFocus(id);
     if (id !== null) {
       setExpandedId(id); // selecting a card expands it and collapses others
+      saveReentry(id, 0);
     }
   }
 
   function handleToggleExpand(id: FocusArea["id"]) {
-    setExpandedId((prev) => (prev === id ? null : id));
+    setExpandedId((prev) => {
+      const next = prev === id ? null : id;
+      if (next !== null) saveReentry(next, 0);
+      return next;
+    });
   }
 
   const activeArea = activeFocus
@@ -413,6 +453,7 @@ export function WhatNextPage() {
               expanded={expandedId === area.id}
               onSelect={handleSelect}
               onToggleExpand={handleToggleExpand}
+              onStepFocus={(id, stepIndex) => saveReentry(id, stepIndex)}
             />
           ))}
         </div>

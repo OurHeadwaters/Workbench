@@ -1,52 +1,41 @@
 /**
- * IndexPage — Practitioner's Guide dashboard.
+ * IndexPage — Now cockpit.
  *
- * PROGRESSIVE DISCLOSURE DESIGN RULE (applied here and on every internal page):
- *   - Big, clear bucket headings are ALWAYS visible — never collapsed.
- *   - All operational detail lives inside accordions / dropdowns — collapsed by default.
- *   - Each bucket shows only 1–3 "decision signals" at a glance without expanding:
- *     a status badge, a key number, or a next action.
- *   - NEVER show walls of text or tables at the top level.
+ * ADHD-first design (five rules):
+ *  1. One decision at the door — single primary action visible immediately.
+ *  2. Re-entry in under 5 s — re-entry card shows where you left off.
+ *  3. Time estimates on every action — time blindness is real.
+ *  4. Visible momentum — "Done today" block persisted to localStorage.
+ *  5. Rate-to-life translation — $175/hr × 3 hr = real family outcomes.
  *
- * This rule applies to all internal tools (Practitioner's Guide, Operating Plan,
- * Ship Manifest, Library, Handbook internal views). It does NOT apply to
- * public-facing or client-facing content (Northern Band deck, handbook public pages).
- *
- * See docs/design/progressive-disclosure.md for the canonical rule reference.
+ * See docs/design/progressive-disclosure.md for the canonical pattern rule.
  */
 
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
-import { ConfirmedTag } from "@/components/ConfirmedTag";
-import { BUCKETS } from "@/data/buckets";
-import { money } from "@/lib/format";
-import { FOCUS_AREAS, type FocusArea } from "@/data/whatsNext";
+import { FOCUS_AREAS, type FocusArea, type TimeEstimate } from "@/data/whatsNext";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Salad,
   Handshake,
-  Cpu,
-  GitCompareArrows,
-  ArrowRight,
-  Repeat,
-  Target,
-  AlertCircle,
-  CheckCircle2,
-  Clock,
-  MapPin,
-  Gift,
   ChevronRight,
-  Compass,
+  Clock,
+  CheckCircle2,
+  RotateCcw,
+  HelpCircle,
+  Gift,
+  AlertCircle,
+  DollarSign,
+  CheckSquare,
+  Plus,
+  X,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
+const DONE_TODAY_KEY = "pgv2.done-today";
+const REENTRY_KEY = "pgv2.reentry";
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 function readActiveFocus(): FocusArea | null {
   if (typeof window === "undefined") return null;
@@ -54,105 +43,583 @@ function readActiveFocus(): FocusArea | null {
   return FOCUS_AREAS.find((a) => a.id === v) ?? null;
 }
 
-// ─── Pipeline status badges ──────────────────────────────────────────────────
+interface ReentryState {
+  focusId: FocusArea["id"] | null;
+  stepIndex: number;
+  ts: number;
+}
 
-function StatusBadge({
-  status,
-  label,
-}: {
-  status: "confirmed" | "active" | "next" | "open-action" | "plan-b";
-  label: string;
-}) {
-  const styles: Record<string, string> = {
-    confirmed:
-      "bg-emerald-50 text-emerald-800 border border-emerald-200",
-    active:
-      "bg-blue-50 text-blue-800 border border-blue-200",
-    next:
-      "bg-amber-50 text-amber-800 border border-amber-200",
-    "open-action":
-      "bg-orange-50 text-orange-800 border border-orange-200",
-    "plan-b":
-      "bg-slate-100 text-slate-700 border border-slate-300",
+function readReentry(): ReentryState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(REENTRY_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as ReentryState;
+  } catch {
+    return null;
+  }
+}
+
+interface DoneItem {
+  id: string;
+  text: string;
+}
+
+function readDoneToday(): DoneItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const todayKey = new Date().toDateString();
+    const raw = window.localStorage.getItem(`${DONE_TODAY_KEY}.${todayKey}`);
+    if (!raw) return [];
+    return JSON.parse(raw) as DoneItem[];
+  } catch {
+    return [];
+  }
+}
+
+function saveDoneToday(items: DoneItem[]) {
+  if (typeof window === "undefined") return;
+  const todayKey = new Date().toDateString();
+  window.localStorage.setItem(`${DONE_TODAY_KEY}.${todayKey}`, JSON.stringify(items));
+}
+
+// ─── Time estimate badge ──────────────────────────────────────────────────────
+
+function TimeBadge({ estimate }: { estimate: TimeEstimate }) {
+  const styles: Record<TimeEstimate, string> = {
+    "15 min": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    "1 hr": "bg-blue-50 text-blue-700 border border-blue-200",
+    "half day": "bg-amber-50 text-amber-700 border border-amber-200",
   };
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[status]}`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[estimate]}`}
     >
-      {label}
+      <Clock className="h-3 w-3" />
+      {estimate}
     </span>
   );
 }
 
-// ─── Pipeline card ────────────────────────────────────────────────────────────
+// ─── Re-entry card ────────────────────────────────────────────────────────────
 
-function PipelineCard({
-  icon: Icon,
-  title,
-  signal,
-  signalLabel,
-  badge,
-  summary,
-  detail,
-  accentColor,
-  testId,
-}: {
-  icon: typeof Target;
-  title: string;
-  signal: string;
-  signalLabel: string;
-  badge: React.ReactNode;
-  summary: string;
-  detail: React.ReactNode;
-  accentColor: string;
-  testId?: string;
-}) {
+function ReentryCard({ focus }: { focus: FocusArea }) {
+  const reentry = readReentry();
+  const stepIndex = reentry?.focusId === focus.id ? reentry.stepIndex : 0;
+  const step = focus.steps[stepIndex] ?? focus.steps[0];
+
   return (
     <div
-      className="rounded-xl border border-card-border bg-card overflow-hidden"
-      style={{ borderTopColor: accentColor, borderTopWidth: "4px" }}
-      data-testid={testId}
+      className="rounded-xl border-2 p-4"
+      style={{ borderColor: focus.accent, backgroundColor: focus.accentSoft }}
+      data-testid="reentry-card"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
+          style={{ backgroundColor: focus.accent, color: "#fff" }}
+        >
+          <RotateCcw className="h-4 w-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide mb-0.5"
+            style={{ color: focus.accentInk, opacity: 0.7 }}>
+            You were working on
+          </p>
+          <p className="text-sm font-semibold" style={{ color: focus.accentInk }}>
+            {focus.title}
+          </p>
+          <p className="text-xs mt-1" style={{ color: focus.accentInk, opacity: 0.85 }}>
+            Step {stepIndex + 1}: {step.action}
+          </p>
+          <div className="mt-2 flex items-center gap-2 flex-wrap">
+            <TimeBadge estimate={step.timeEstimate} />
+            <Link
+              href="/what-next"
+              className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-md"
+              style={{ backgroundColor: focus.accent, color: "#fff" }}
+              data-testid="reentry-pick-up"
+            >
+              Pick up here <ChevronRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Primary action block ─────────────────────────────────────────────────────
+
+function PrimaryAction({ focus }: { focus: FocusArea }) {
+  const step = focus.steps[0];
+  return (
+    <div
+      className="rounded-xl border-2 p-5"
+      style={{ borderColor: focus.accent + "88" }}
+      data-testid="primary-action-block"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="h-9 w-9 rounded-md grid place-items-center flex-shrink-0 text-white"
+          style={{ backgroundColor: focus.accent }}
+        >
+          <span className="text-base font-bold">1</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p
+            className="text-xs font-semibold uppercase tracking-wide mb-1"
+            style={{ color: focus.accent }}
+          >
+            {focus.title}
+          </p>
+          <p className="text-base font-semibold leading-snug">{step.action}</p>
+          <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{step.detail}</p>
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
+            <TimeBadge estimate={step.timeEstimate} />
+            <Link
+              href="/what-next"
+              className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border"
+              style={{ borderColor: focus.accent + "55", color: focus.accentInk, backgroundColor: focus.accentSoft }}
+              data-testid="primary-action-open"
+            >
+              Open all steps <ChevronRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Contracts pipeline status ────────────────────────────────────────────────
+
+const DEAL_PHASES = ["Idea", "Pitch", "Contract", "Fulfillment", "Impact"] as const;
+type DealPhase = (typeof DEAL_PHASES)[number];
+const CURRENT_PHASE: DealPhase = "Pitch";
+const CURRENT_PHASE_IDX = DEAL_PHASES.indexOf(CURRENT_PHASE);
+
+function DealFlowBar() {
+  return (
+    <div className="space-y-2" data-testid="deal-flow-bar">
+      <div className="flex items-center gap-1">
+        {DEAL_PHASES.map((phase, i) => {
+          const isPast = i < CURRENT_PHASE_IDX;
+          const isCurrent = i === CURRENT_PHASE_IDX;
+          const isFuture = i > CURRENT_PHASE_IDX;
+          return (
+            <div key={phase} className="flex items-center gap-1 flex-1">
+              <div className="flex-1">
+                <div
+                  className={`h-1.5 rounded-full ${isPast ? "opacity-100" : isCurrent ? "opacity-100" : "opacity-30"}`}
+                  style={{ backgroundColor: isFuture ? "#CBD5E1" : "#1A5FA8" }}
+                />
+                <p
+                  className={`text-[10px] mt-1 font-medium truncate ${isCurrent ? "text-[#1A5FA8]" : "text-muted-foreground"}`}
+                  style={{ fontWeight: isCurrent ? 700 : 400 }}
+                >
+                  {isCurrent && "● "}{phase}
+                </p>
+              </div>
+              {i < DEAL_PHASES.length - 1 && (
+                <div className="w-2 flex-shrink-0" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ContractsPipelineBlock() {
+  return (
+    <Link
+      href="/contracts"
+      className="block rounded-xl border bg-card overflow-hidden hover:shadow-sm transition-shadow"
+      style={{ borderTopColor: "#1A5FA8", borderTopWidth: "4px" }}
+      data-testid="contracts-pipeline-block"
     >
       <div className="p-4">
         <div className="flex items-start gap-3">
           <div
-            className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0 mt-0.5"
-            style={{ backgroundColor: accentColor + "22", color: accentColor }}
+            className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0"
+            style={{ backgroundColor: "#EBF3FB", color: "#1A5FA8" }}
           >
-            <Icon className="h-4 w-4" />
+            <Handshake className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-sm font-semibold">{title}</p>
-              {badge}
-            </div>
-            <p
-              className="text-xl font-semibold num mt-1"
-              style={{ fontFamily: "var(--app-font-serif)", color: accentColor }}
-            >
-              {signal}
-              <span className="text-xs font-normal text-muted-foreground ml-1.5">
-                {signalLabel}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <p className="text-sm font-semibold">Community Contracts</p>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
+                <AlertCircle className="h-3 w-3" />
+                Open action
               </span>
-            </p>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              {summary}
+            </div>
+
+            <div className="mt-3">
+              <DealFlowBar />
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <p className="text-muted-foreground">Current phase</p>
+                <p className="font-semibold text-[#1A5FA8]">Pitch → Trial</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground">Next gate</p>
+                <p className="font-semibold">Council date booked</p>
+              </div>
+            </div>
+
+            <div className="mt-3 rounded-md border border-orange-200 bg-orange-50 px-3 py-2">
+              <p className="text-xs text-orange-800 font-medium">
+                Open action: Facilitate 807 grants → benefits plan
+              </p>
+              <div className="flex items-center gap-1 mt-0.5">
+                <TimeBadge estimate="1 hr" />
+              </div>
+            </div>
+
+            <p
+              className="mt-3 text-xs text-[#1A5FA8] font-medium inline-flex items-center gap-1"
+            >
+              Open Contracts detail <ChevronRight className="h-3 w-3" />
             </p>
           </div>
         </div>
       </div>
-      {detail && (
-        <Accordion type="single" collapsible>
-          <AccordionItem value="detail" className="border-t border-card-border border-b-0">
-            <AccordionTrigger className="px-4 py-2 text-xs text-muted-foreground hover:text-foreground">
-              Show detail
-            </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4 pt-0">
-              {detail}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+    </Link>
+  );
+}
+
+// ─── Rate-to-life widget ──────────────────────────────────────────────────────
+
+const LEAD_RATE = 175;
+const FOCUS_HOURS = 3;
+const FOCUS_EARNINGS = LEAD_RATE * FOCUS_HOURS;
+
+const LIFE_MILESTONES = [
+  { threshold: 600, label: "a week of groceries for the family" },
+  { threshold: 400, label: "two weeks of household groceries" },
+  { threshold: 300, label: "a month of phone + internet bills" },
+  { threshold: 200, label: "a tank of gas and then some" },
+];
+
+function getRateToLife(earnings: number): string {
+  const match = LIFE_MILESTONES.find((m) => earnings >= m.threshold);
+  if (match) return match.label;
+  return "a meaningful contribution to household costs";
+}
+
+function RateToLifeWidget() {
+  const lifeLabel = getRateToLife(FOCUS_EARNINGS);
+  return (
+    <div
+      className="rounded-xl border p-4"
+      style={{ borderColor: "#1A5FA8" + "44", backgroundColor: "#EBF3FB" }}
+      data-testid="rate-to-life-widget"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0"
+          style={{ backgroundColor: "#1A5FA8", color: "#fff" }}
+        >
+          <DollarSign className="h-4 w-4" />
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#0F3460] opacity-70 mb-0.5">
+            Today's focus block
+          </p>
+          <p className="text-lg font-semibold text-[#0F3460]">
+            ${FOCUS_EARNINGS.toLocaleString()}
+          </p>
+          <p className="text-sm text-[#0F3460] mt-0.5">
+            At ${LEAD_RATE}/hr × {FOCUS_HOURS} hours ={" "}
+            <span className="font-semibold">{lifeLabel}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Decision tree ────────────────────────────────────────────────────────────
+
+type Q1 = "yes" | "no";
+type Q2 = "delivery" | "sales";
+type Q3 = "yes" | "no";
+
+function getDecisionAction(q1: Q1, q2: Q2, q3: Q3): { focusId: FocusArea["id"]; stepIdx: number } {
+  if (q3 === "yes") return { focusId: "contracts", stepIdx: 3 };
+  if (q1 === "yes" && q2 === "delivery") return { focusId: "contracts", stepIdx: 2 };
+  if (q1 === "yes" && q2 === "sales") return { focusId: "contracts", stepIdx: 1 };
+  if (q1 === "no" && q2 === "sales") return { focusId: "contracts", stepIdx: 0 };
+  return { focusId: "salts", stepIdx: 0 };
+}
+
+function DecisionTree() {
+  const [open, setOpen] = useState(false);
+  const [q1, setQ1] = useState<Q1 | null>(null);
+  const [q2, setQ2] = useState<Q2 | null>(null);
+  const [q3, setQ3] = useState<Q3 | null>(null);
+
+  function reset() {
+    setQ1(null);
+    setQ2(null);
+    setQ3(null);
+  }
+
+  const showResult = q1 !== null && q2 !== null && q3 !== null;
+  let resultFocus: FocusArea | undefined;
+  let resultStep: FocusArea["steps"][0] | undefined;
+  if (showResult) {
+    const { focusId, stepIdx } = getDecisionAction(q1!, q2!, q3!);
+    resultFocus = FOCUS_AREAS.find((a) => a.id === focusId);
+    resultStep = resultFocus?.steps[stepIdx];
+  }
+
+  return (
+    <div
+      className="rounded-xl border overflow-hidden"
+      style={{ borderColor: "hsl(var(--card-border))" }}
+      data-testid="decision-tree"
+    >
+      <button
+        type="button"
+        onClick={() => {
+          setOpen((v) => !v);
+          reset();
+        }}
+        className="w-full flex items-center justify-between px-4 py-3 text-sm bg-card hover:bg-muted/30 transition-colors"
+      >
+        <span className="flex items-center gap-2 font-medium">
+          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+          I don't know what to do right now
+        </span>
+        <ChevronRight
+          className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-90" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div
+          className="border-t px-4 py-4 space-y-5 bg-card"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        >
+          {!showResult ? (
+            <>
+              {/* Q1 */}
+              <div>
+                <p className="text-sm font-medium mb-2">
+                  1. Do I have an active contract right now?
+                </p>
+                <div className="flex gap-2">
+                  {(["yes", "no"] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setQ1(v)}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium border transition-colors ${
+                        q1 === v
+                          ? "bg-[#1A5FA8] text-white border-[#1A5FA8]"
+                          : "bg-card border-card-border text-foreground hover:bg-muted/40"
+                      }`}
+                    >
+                      {v === "yes" ? "Yes" : "Not yet"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Q2 */}
+              <div>
+                <p className="text-sm font-medium mb-2">
+                  2. Am I in delivery mode or sales mode?
+                </p>
+                <div className="flex gap-2">
+                  {(["delivery", "sales"] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setQ2(v)}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium border transition-colors ${
+                        q2 === v
+                          ? "bg-[#1A5FA8] text-white border-[#1A5FA8]"
+                          : "bg-card border-card-border text-foreground hover:bg-muted/40"
+                      }`}
+                    >
+                      {v === "delivery" ? "Delivery — doing the work" : "Sales — finding the work"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Q3 */}
+              <div>
+                <p className="text-sm font-medium mb-2">
+                  3. Is there an overdue open action I've been avoiding?
+                </p>
+                <div className="flex gap-2">
+                  {(["yes", "no"] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setQ3(v)}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium border transition-colors ${
+                        q3 === v
+                          ? "bg-[#1A5FA8] text-white border-[#1A5FA8]"
+                          : "bg-card border-card-border text-foreground hover:bg-muted/40"
+                      }`}
+                    >
+                      {v === "yes" ? "Yes, honestly" : "No, I'm clear"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            resultFocus && resultStep && (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                  Do this one thing
+                </p>
+                <div
+                  className="rounded-lg border p-4"
+                  style={{
+                    borderColor: resultFocus.accent + "66",
+                    backgroundColor: resultFocus.accentSoft,
+                  }}
+                  data-testid="decision-result"
+                >
+                  <p
+                    className="text-xs font-semibold uppercase tracking-wide mb-1"
+                    style={{ color: resultFocus.accentInk, opacity: 0.7 }}
+                  >
+                    {resultFocus.title}
+                  </p>
+                  <p className="text-sm font-semibold leading-snug" style={{ color: resultFocus.accentInk }}>
+                    {resultStep.action}
+                  </p>
+                  <p className="text-xs mt-1.5 leading-relaxed" style={{ color: resultFocus.accentInk, opacity: 0.85 }}>
+                    {resultStep.detail}
+                  </p>
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <TimeBadge estimate={resultStep.timeEstimate} />
+                    <Link
+                      href="/what-next"
+                      className="text-xs font-medium inline-flex items-center gap-1 underline"
+                      style={{ color: resultFocus.accentInk }}
+                    >
+                      See all steps <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  ← Try again
+                </button>
+              </div>
+            )
+          )}
+        </div>
       )}
+    </div>
+  );
+}
+
+// ─── Done today ───────────────────────────────────────────────────────────────
+
+function DoneToday() {
+  const [items, setItems] = useState<DoneItem[]>([]);
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    setItems(readDoneToday());
+  }, []);
+
+  function addItem() {
+    const text = input.trim();
+    if (!text) return;
+    const newItems = [
+      ...items,
+      { id: Date.now().toString(), text },
+    ];
+    setItems(newItems);
+    saveDoneToday(newItems);
+    setInput("");
+  }
+
+  function removeItem(id: string) {
+    const newItems = items.filter((i) => i.id !== id);
+    setItems(newItems);
+    saveDoneToday(newItems);
+  }
+
+  return (
+    <div
+      className="rounded-xl border p-4"
+      style={{ borderColor: "hsl(var(--card-border))" }}
+      data-testid="done-today"
+    >
+      <div className="flex items-center gap-2 mb-3">
+        <CheckSquare className="h-4 w-4 text-emerald-600" />
+        <p className="text-sm font-semibold">Done today</p>
+        {items.length > 0 && (
+          <span className="ml-auto text-xs text-emerald-700 font-medium">
+            {items.length} thing{items.length !== 1 ? "s" : ""} done
+          </span>
+        )}
+      </div>
+
+      {items.length > 0 && (
+        <ul className="space-y-1.5 mb-3">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className="flex items-center gap-2 text-sm text-muted-foreground"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
+              <span className="flex-1 truncate">{item.text}</span>
+              <button
+                type="button"
+                onClick={() => removeItem(item.id)}
+                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                aria-label="Remove"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") addItem();
+          }}
+          placeholder="What did you just finish?"
+          className="flex-1 text-sm px-3 py-1.5 rounded-md border bg-background outline-none focus:ring-1 focus:ring-emerald-400"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+          data-testid="done-today-input"
+        />
+        <button
+          type="button"
+          onClick={addItem}
+          className="p-1.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 transition-colors flex-shrink-0"
+          aria-label="Add"
+          data-testid="done-today-add"
+        >
+          <Plus className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -161,481 +628,94 @@ function PipelineCard({
 
 export function IndexPage() {
   const { scenario } = useScenario();
-  const a = scenario.contracts.agency;
   const [activeFocus, setActiveFocus] = useState<FocusArea | null>(null);
+
   useEffect(() => {
     setActiveFocus(readActiveFocus());
   }, []);
 
-  const buckets = [
-    {
-      ...BUCKETS.salts,
-      href: "/salts",
-      icon: Salad,
-      headline: money(scenario.salts.pAndL.netCash),
-      headlineLabel: "net cash / yr (model)",
-      blurb:
-        "Parr's Jars salt: 4 channels, $5.50 blended per-jar cost estimate. Volume and farmers market math are planning assumptions — not yet tracked against batch records.",
-      tag: scenario.salts.pAndL.tag,
-    },
-    {
-      ...BUCKETS.contracts,
-      href: "/contracts",
-      icon: Handshake,
-      headline: money(a.totals18mo.surplusDeployed),
-      headlineLabel: `${a.termMonths}-mo surplus (scenario)`,
-      blurb: `Hourly engagement · $175/hr lead · $70/hr support · trial-first. Two-person lean team. Rates confirmed; contract not yet signed.`,
-      tag: a.totals18mo.tag,
-    },
-    {
-      ...BUCKETS.brightside,
-      href: "/brightside",
-      icon: Cpu,
-      headline: money(scenario.brightside.surplusDeployment.surplus),
-      headlineLabel: "surplus scenario (pre-revenue)",
-      blurb:
-        "Recreation Therapy SaaS for LTC. Pre-revenue — no pilot site committed. The $120k revenue figure is a modelling scenario, not a plan.",
-      tag: scenario.brightside.surplusDeployment.tag,
-    },
-  ];
+  const contractsFocus = FOCUS_AREAS.find((a) => a.id === "contracts")!;
+  const primaryFocus = activeFocus ?? contractsFocus;
+  const hasReentry = activeFocus !== null;
 
   return (
-    <div className="space-y-8" data-testid="page-index">
+    <div className="space-y-6" data-testid="page-index">
       <ProvisionalBanner />
 
-      {/* ── Active focus nudge ── */}
-      {activeFocus ? (
-        <Link
-          href="/what-next"
-          className="flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm transition-colors hover:shadow-sm"
-          style={{
-            borderColor: activeFocus.accent + "66",
-            backgroundColor: activeFocus.accentSoft,
-            color: activeFocus.accentInk,
-          }}
-          data-testid="active-focus-nudge"
-        >
-          <span className="flex items-center gap-2">
-            <Compass className="h-4 w-4 flex-shrink-0" />
-            <span>
-              <strong>Your focus:</strong> {activeFocus.title}
-            </span>
-          </span>
-          <span className="flex items-center gap-1 text-xs opacity-70">
-            Open coaching view <ChevronRight className="h-3 w-3" />
-          </span>
-        </Link>
-      ) : (
-        <Link
-          href="/what-next"
-          className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-teal-300 bg-teal-50 px-4 py-3 text-sm text-teal-800 transition-colors hover:bg-teal-100"
-          data-testid="what-next-prompt"
-        >
-          <span className="flex items-center gap-2">
-            <Compass className="h-4 w-4 flex-shrink-0" />
-            <span>Not sure what to work on next?</span>
-          </span>
-          <span className="flex items-center gap-1 text-xs opacity-70">
-            Open the coaching view <ChevronRight className="h-3 w-3" />
-          </span>
-        </Link>
-      )}
+      {/* ── Re-entry card (if returning user has a focus set) ── */}
+      {hasReentry && <ReentryCard focus={activeFocus!} />}
 
-      <header id="index-after-prologue" className="scroll-mt-20">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Practitioner's Guide
+      {/* ── Contracts Pipeline — first visible content ── */}
+      <ContractsPipelineBlock />
+
+      {/* ── Primary action (one thing to do) ── */}
+      <section>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+          {hasReentry ? "Your current focus" : "Start here"}
         </p>
-        <h1
-          className="mt-2 text-3xl sm:text-4xl font-semibold leading-tight"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          Three coloured buckets. Frameworks and open questions — numbers lock when contracts do.
-        </h1>
-        <p className="mt-3 text-base text-muted-foreground max-w-3xl leading-relaxed">
-          A working thinking tool organized the way the founder thinks: Salts (Parr's Jars),
-          Community Contracts, and Software / Hardware / Training (Brightside). One confirmed
-          number in the pipeline: the $12,000 portal fee. Everything else is a scenario and
-          a question until a contract is signed.{" "}
+        <PrimaryAction focus={primaryFocus} />
+      </section>
+
+      {/* ── Rate-to-life ── */}
+      <RateToLifeWidget />
+
+      {/* ── Decision tree ── */}
+      <DecisionTree />
+
+      {/* ── Done today ── */}
+      <DoneToday />
+
+      {/* ── Nav shortcuts (Pipeline / Money / Reference only — not re-listing Now content) ── */}
+      <div
+        className="rounded-xl border p-4"
+        style={{ borderColor: "hsl(var(--card-border))" }}
+      >
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+          Navigate
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <Link
+            href="/contracts"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <Handshake className="h-3.5 w-3.5 text-[#1A5FA8]" />
+            Pipeline detail
+          </Link>
+          <Link
+            href="/debt-attack"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <span className="text-[#6d28d9] font-bold text-base leading-none">↓</span>
+            Money — Debt
+          </Link>
+          <Link
+            href="/engagement-pricing"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <span className="text-[#1F5B3F] font-bold text-base leading-none">$</span>
+            Engagement Pricing
+          </Link>
+          <Link
+            href="/what-next"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <span className="text-[#0F766E] font-bold text-base leading-none">→</span>
+            All focus areas
+          </Link>
           <Link
             href="/archetypes"
-            className="underline hover:text-foreground"
-            data-testid="link-archetypes-from-index"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
           >
-            Archetypes page
-          </Link>{" "}
-          for the V3 → V4 → V5 → V6 → V7 lineage.
-        </p>
-        <div
-          className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium"
-          style={{ backgroundColor: scenario.accentSoft, color: scenario.accentInk }}
-        >
-          Reading: <strong>{scenario.name}</strong> — {scenario.tagline}
+            <span className="text-muted-foreground font-bold text-base leading-none">≡</span>
+            Reference
+          </Link>
         </div>
-      </header>
-
-      {/* ============ PIPELINE ============ */}
-      <section>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          Active Pipeline
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          One confirmed item. Everything else is a framework and a question — expand each card for context.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-          {/* 807 Portal */}
-          <PipelineCard
-            icon={CheckCircle2}
-            title="807 Portal Development"
-            signal="$12,000"
-            signalLabel="portal fee (confirmed)"
-            badge={<StatusBadge status="confirmed" label="Confirmed" />}
-            summary="Majority allocated to development fees. This is confirmed revenue — the bridge that opens the trial window."
-            accentColor="#1F5B3F"
-            testId="pipeline-807-portal"
-            detail={
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">What it is:</strong> 807 Co-op portal
-                  development fee. Confirmed revenue item — not a projection.
-                </p>
-                <p>
-                  <strong className="text-foreground">Allocation:</strong> Majority to development
-                  fees. Exact split tracked in the contracts ledger.
-                </p>
-                <p>
-                  <strong className="text-foreground">Role in the waterfall:</strong> This is the
-                  bridge revenue that opens the 6-week trial window toward the $25k target.
-                </p>
-              </div>
-            }
-          />
-
-          {/* Trial window */}
-          <PipelineCard
-            icon={Target}
-            title="Trial Window"
-            signal="What does yes look like?"
-            signalLabel="for Northern Band"
-            badge={<StatusBadge status="active" label="Active pursuit" />}
-            summary="A bounded trial is the opening posture. Questions: What scope proves value? What does the council need to see to commit to a longer engagement?"
-            accentColor="#1A5FA8"
-            testId="pipeline-trial-target"
-            detail={
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">Opening posture:</strong> A bounded,
-                  intentionally below-cost trial — not a revenue target. The goal is to prove value
-                  in a contained window, then transition to an ongoing engagement.
-                </p>
-                <p>
-                  <strong className="text-foreground">Primary client:</strong> Northern Band. Store
-                  distribution is the next phase if the trial lands.
-                </p>
-                <p>
-                  <strong className="text-foreground">Key questions:</strong> What scope does the
-                  council need to see? What's the minimum that demonstrates the model? What does a
-                  yes from the council actually look like?
-                </p>
-                <p>
-                  <strong className="text-foreground">If this doesn't land:</strong> Plan B fires.
-                  See the Plan B card below — alternate pilot community search is active, not a
-                  fallback hope.
-                </p>
-              </div>
-            }
-          />
-
-          {/* Northern Band Store Distribution */}
-          <PipelineCard
-            icon={MapPin}
-            title="Northern Band — Store Distribution"
-            signal="Next phase"
-            signalLabel="if trial lands"
-            badge={<StatusBadge status="next" label="Gated on trial" />}
-            summary="Hourly structure: Bobbie lead + Tyler RFF sub. Rate, hours, and total billing TBD — what does the engagement need to cover, and what does the client budget support?"
-            accentColor="#7A4E2D"
-            testId="pipeline-northern-band"
-            detail={
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">Engagement shape:</strong> Two-person lean
-                  team — Bobbie as lead, Tyler as RFF sub for distribution. Hourly billing; client
-                  sees two line items. Specific rates and hours are scenario inputs, not confirmed
-                  figures.
-                </p>
-                <p>
-                  <strong className="text-foreground">Key questions:</strong> What rate does the
-                  client budget support? What hours per month does the work actually require? What
-                  monthly surplus does the engagement need to generate to attack the debt?
-                </p>
-                <p>
-                  <strong className="text-foreground">Gate condition:</strong> Trial closes and
-                  council commits to an ongoing engagement.
-                </p>
-                <p>
-                  <strong className="text-foreground">Buyer:</strong> {a.buyerStatus}. Affects
-                  political weight, not the math.
-                </p>
-                <Link
-                  href="/contracts"
-                  className="inline-flex items-center gap-1 text-xs font-medium underline hover:text-foreground mt-1"
-                >
-                  Full scenario detail <ChevronRight className="h-3 w-3" />
-                </Link>
-              </div>
-            }
-          />
-
-          {/* 807 Grants — Benefits Plan (Action Item) */}
-          <PipelineCard
-            icon={Gift}
-            title="807 Grants → Benefits Plan Build-out"
-            signal="Open action"
-            signalLabel="practitioner owns this"
-            badge={<StatusBadge status="open-action" label="Action item" />}
-            summary="Get 807 to apply for grants to fund a benefits plan build-out. Owner: practitioner. Status: open. Log the grant name here once identified."
-            accentColor="#7A2E12"
-            testId="pipeline-807-grants"
-            detail={
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">Action:</strong> Practitioner to facilitate
-                  807 Co-op applying for grants that would fund a benefits plan build-out for the
-                  team. This is not a future hope — it is a named, open action item the
-                  practitioner owns.
-                </p>
-                <p>
-                  <strong className="text-foreground">Owner:</strong> Practitioner (you).
-                </p>
-                <p>
-                  <strong className="text-foreground">Status:</strong> Open — not yet submitted.
-                </p>
-                <p>
-                  <strong className="text-foreground">Next step:</strong> Identify the grant
-                  program (LFIF, FedNor CEDP, or equivalent benefits-plan stream) and log it here.
-                  The 807 Co-op board must be the proponent.
-                </p>
-                <p>
-                  <strong className="text-foreground">Why here:</strong> A team benefits plan is a
-                  named bucket in the V5 operating plan (team incentives, visible-but-TBD line on
-                  the Contracts page). Getting 807 to fund it via grants removes the cost from the
-                  agency fee waterfall entirely.
-                </p>
-              </div>
-            }
-          />
-        </div>
-      </section>
-
-      {/* ============ PLAN B ============ */}
-      <section>
-        <div
-          className="rounded-xl border border-card-border bg-card overflow-hidden"
-          style={{ borderTopColor: "#64748B", borderTopWidth: "4px" }}
-          data-testid="bucket-plan-b"
-        >
-          <div className="p-5">
-            <div className="flex items-start gap-3">
-              <div className="h-9 w-9 rounded-md grid place-items-center flex-shrink-0 bg-slate-100 text-slate-600">
-                <AlertCircle className="h-5 w-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-semibold">Plan B — Alternate Pilot Clients</p>
-                  <StatusBadge status="plan-b" label="Contingency" />
-                </div>
-                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                  If Northern Band doesn't materialize, actively search for alternate pilot community
-                  clients. This is a named, visible bucket — not a footnote. The trigger is clear,
-                  the outreach list is built, and the reframed pitch is ready.
-                </p>
-              </div>
-            </div>
-          </div>
-          <Accordion type="single" collapsible>
-            <AccordionItem value="planb" className="border-t border-card-border border-b-0">
-              <AccordionTrigger className="px-5 py-2 text-xs text-muted-foreground hover:text-foreground">
-                Trigger conditions, outreach circles, and the reframed pitch
-              </AccordionTrigger>
-              <AccordionContent className="px-5 pb-5 pt-0">
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <p className="font-semibold text-foreground text-sm mb-1">When Plan B fires</p>
-                    <ul className="space-y-1 text-muted-foreground list-disc pl-4">
-                      <li>
-                        <strong className="text-foreground">Hard no:</strong> Council passes a BCR
-                        (or written notice) declining the hourly engagement or the trial. Act same
-                        day.
-                      </li>
-                      <li>
-                        <strong className="text-foreground">Stall past soft date:</strong> No BCR,
-                        no signed contract, no scheduled council date by 2026-06-15. Send a
-                        one-paragraph "pivoting capacity" note and begin IFNA-cluster outreach
-                        without waiting for a reply.
-                      </li>
-                      <li>
-                        <strong className="text-foreground">Hard deadline:</strong> 2026-07-31.
-                        Non-negotiable in the runway model. If no contract, move all team capacity
-                        to Plan B outreach.
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground text-sm mb-1">
-                      Outreach order (warmest first)
-                    </p>
-                    <ol className="space-y-1 text-muted-foreground list-decimal pl-4">
-                      <li>IFNA cluster — same corridor, same freight, closest operational delta</li>
-                      <li>Shibogama, Windigo, Keewaytinook Okimakanak — warm-mid tribal councils</li>
-                      <li>NAN economic development — corridor-wide pitch venue</li>
-                      <li>SLFNHA — health-authority lens on food access</li>
-                      <li>Treaty 3 / Dryden-area bands — geographically closest, coldest start</li>
-                    </ol>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground text-sm mb-1">The reframed pitch</p>
-                    <p className="text-muted-foreground leading-relaxed">
-                      "Store-in-a-box for any small northern community." Same freight corridor,
-                      same POS, same back-office. The community gets: a working store on a corridor
-                      that already moves food; a procurement dashboard the council can read;
-                      household-level pricing visible to members; a paid trial for the local hire.
-                      Full pricing is public — nothing the council can't see before signing.
-                    </p>
-                  </div>
-                  <Link
-                    href="/replication"
-                    className="inline-flex items-center gap-1 text-xs font-medium underline hover:text-foreground"
-                  >
-                    Replication page — the full model <ChevronRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </section>
-
-      {/* ============ THREE BUCKETS ============ */}
-      <section>
-        <h2
-          className="text-xl font-semibold mb-1"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
-          The Three Buckets
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          Each bucket opens with a one-line honest status. Numbers lock when contracts do.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {buckets.map((b) => {
-            const Icon = b.icon;
-            return (
-              <Link
-                key={b.id}
-                href={b.href}
-                className="group rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow flex flex-col"
-                style={{ borderTopColor: b.accent, borderTopWidth: "4px" }}
-                data-testid={`bucket-card-${b.id}`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <div
-                    className="h-9 w-9 rounded-md grid place-items-center"
-                    style={{ backgroundColor: b.accentSoft, color: b.accentInk }}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">{b.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{b.tagline}</p>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <p
-                    className="text-2xl font-semibold num"
-                    style={{ fontFamily: "var(--app-font-serif)", color: b.accentInk }}
-                  >
-                    {b.headline}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{b.headlineLabel}</p>
-                </div>
-                <ConfirmedTag tag={b.tag} className="mt-2" />
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed flex-1">
-                  {b.blurb}
-                </p>
-                <p
-                  className="mt-4 text-sm font-medium inline-flex items-center gap-1"
-                  style={{ color: b.accentInk }}
-                >
-                  Open bucket{" "}
-                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ============ UTILITIES ============ */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Link
-          href="/compare"
-          className="rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow"
-          data-testid="card-compare"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-md grid place-items-center bg-muted text-foreground">
-              <GitCompareArrows className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Operating framework workspace</p>
-              <p className="text-xs text-muted-foreground">
-                V3 anchored · alternative realities on tabs
-              </p>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            V3 is the workspace anchor. V4 (right-priced) is pre-loaded as the first alternative
-            reality — edit rows, lock decisions, read the Δ-vs-V3 cell live. V5 (Codetry archetype)
-            is the published default.
-          </p>
-        </Link>
-      </section>
-
-      <section>
-        <Link
-          href="/replication"
-          className="block rounded-xl border border-card-border bg-card p-5 hover:shadow-md transition-shadow"
-          style={{ borderTopColor: "#3B2A6E", borderTopWidth: "4px" }}
-          data-testid="card-replication"
-        >
-          <div className="flex items-center gap-2.5">
-            <div
-              className="h-9 w-9 rounded-md grid place-items-center"
-              style={{ backgroundColor: "#E6E1F2", color: "#1F1640" }}
-            >
-              <Repeat className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">
-                Replication — taking the engagement to the next community
-              </p>
-              <p className="text-xs text-muted-foreground">
-                What travels · what swaps · the positioning narrative
-              </p>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            The model written down: the role roster, the fee → margin formula, the pre-baked
-            renegotiation triggers, the year-end value-delivered audit, and the positioning
-            narrative — alongside the things that swap per community. V5 (Northern Band, Codetry
-            archetype) is the worked example.
-          </p>
-        </Link>
-      </section>
+      </div>
     </div>
   );
 }

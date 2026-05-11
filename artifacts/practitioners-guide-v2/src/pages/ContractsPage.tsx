@@ -29,7 +29,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Gift, AlertCircle, ArrowLeft } from "lucide-react";
+import { Gift, AlertCircle, ArrowLeft, ChevronRight as ChevronRightIcon } from "lucide-react";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
@@ -245,6 +245,9 @@ export function ContractsPage() {
           Treat the monthly-fee line as a scenario derived from projected hours, not a quoted retainer.
         </p>
       </div>
+
+      {/* ── Deal-flow progress bar ── */}
+      <DealFlowProgress />
 
       {/* ── KPI Grid — always visible ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -616,6 +619,64 @@ export function ContractsPage() {
       </div>
 
       <FootnoteList notes={AGENCY_FOOTNOTES} />
+    </div>
+  );
+}
+
+// ─── Deal-flow progress bar ───────────────────────────────────────────────────
+
+const DEAL_PHASES = ["Idea", "Pitch", "Contract", "Fulfillment", "Impact"] as const;
+const CURRENT_PHASE_IDX = 1; // "Pitch"
+
+function DealFlowProgress() {
+  return (
+    <div
+      className="rounded-xl border p-4"
+      style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+      data-testid="deal-flow-progress"
+    >
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+        Deal-flow phase
+      </p>
+      <div className="flex items-stretch gap-0">
+        {DEAL_PHASES.map((phase, i) => {
+          const isPast = i < CURRENT_PHASE_IDX;
+          const isCurrent = i === CURRENT_PHASE_IDX;
+          const isFuture = i > CURRENT_PHASE_IDX;
+          return (
+            <div key={phase} className="flex items-center flex-1 min-w-0">
+              <div className="flex-1 min-w-0">
+                <div
+                  className="h-2 w-full rounded-sm"
+                  style={{
+                    backgroundColor: isFuture ? "#CBD5E1" : "#1A5FA8",
+                    opacity: isCurrent ? 1 : isPast ? 0.6 : 0.3,
+                  }}
+                />
+                <p
+                  className="text-[10px] mt-1.5 font-medium truncate"
+                  style={{
+                    color: isCurrent ? "#1A5FA8" : "hsl(var(--muted-foreground))",
+                    fontWeight: isCurrent ? 700 : 400,
+                  }}
+                >
+                  {isCurrent && "● "}{phase}
+                </p>
+              </div>
+              {i < DEAL_PHASES.length - 1 && (
+                <ChevronRightIcon
+                  className="h-3 w-3 mx-1 flex-shrink-0"
+                  style={{ color: "hsl(var(--muted-foreground))", opacity: 0.4, marginBottom: "0.75rem" }}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-xs text-muted-foreground mt-2">
+        Current phase: <span className="font-semibold text-[#1A5FA8]">Pitch → Trial</span> ·
+        Next gate: <span className="font-medium text-foreground">council date booked</span>
+      </p>
     </div>
   );
 }

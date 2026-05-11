@@ -19,7 +19,26 @@ import {
   ArrowRight,
   ArrowLeft,
   Wrench,
+  Clock,
 } from "lucide-react";
+
+type TimeEstimate = "15 min" | "1 hr" | "half day";
+
+function TimeBadge({ estimate }: { estimate: TimeEstimate }) {
+  const styles: Record<TimeEstimate, string> = {
+    "15 min": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    "1 hr": "bg-blue-50 text-blue-700 border border-blue-200",
+    "half day": "bg-amber-50 text-amber-700 border border-amber-200",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${styles[estimate]}`}
+    >
+      <Clock className="h-3 w-3" />
+      {estimate}
+    </span>
+  );
+}
 
 const DEV = "https://77c2ef5e-9483-45bc-b920-da6fc3c7936e-00-j3d38osmvr3g.picard.replit.dev";
 
@@ -39,6 +58,8 @@ interface Stage {
   color: string;
   colorSoft: string;
   colorInk: string;
+  timeEstimate: TimeEstimate;
+  timeNote: string;
   links: StageLink[];
   supporting?: StageLink[];
 }
@@ -54,6 +75,8 @@ const STAGES: Stage[] = [
     color: "#92400e",
     colorSoft: "#fef3c7",
     colorInk: "#78350f",
+    timeEstimate: "15 min",
+    timeNote: "Quick check — verify domain is live, nothing broken",
     links: [
       { label: "parrsjars.ca", url: "https://parrsjars.ca", external: true, note: "Primary domain" },
       { label: "parrsjars.com", url: "https://parrsjars.com", external: true, note: "Mirror domain" },
@@ -72,6 +95,8 @@ const STAGES: Stage[] = [
     color: "#065f46",
     colorSoft: "#d1fae5",
     colorInk: "#064e3b",
+    timeEstimate: "15 min",
+    timeNote: "Daily close entry or quick records check",
     links: [
       { label: "Headwaters Books", url: `${DEV}/headwaters-books/`, note: "Open-records financial surface" },
       { label: "Open-records embed", url: `${DEV}/headwaters-books/embed/open-records`, note: "Standalone panel" },
@@ -87,6 +112,8 @@ const STAGES: Stage[] = [
     color: "#c2410c",
     colorSoft: "#ffedd5",
     colorInk: "#9a3412",
+    timeEstimate: "1 hr",
+    timeNote: "Outreach, follow-up email, or council date prep",
     links: [
       { label: "ourheadwaters.ca", url: "https://ourheadwaters.ca", external: true, note: "Community development hub" },
     ],
@@ -105,6 +132,8 @@ const STAGES: Stage[] = [
     color: "#1e40af",
     colorSoft: "#dbeafe",
     colorInk: "#1e3a8a",
+    timeEstimate: "half day",
+    timeNote: "Deep work block — contracts, scenario review, or planning",
     links: [
       { label: "Dashboard (Index)", url: `${DEV}/practitioners-guide-v2/`, note: "Main operating dashboard" },
       { label: "Operating framework", url: `${DEV}/practitioners-guide-v2/compare`, note: "V6 scenario (current)" },
@@ -127,6 +156,8 @@ const STAGES: Stage[] = [
     color: "#6d28d9",
     colorSoft: "#ede9fe",
     colorInk: "#5b21b6",
+    timeEstimate: "1 hr",
+    timeNote: "Walk a council or contractor through the pitch",
     links: [
       { label: "Community Store Playbook", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Full pitch walkthrough" },
       { label: "Build calendar", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Phase gate date planner (open planner from playbook)" },
@@ -143,6 +174,8 @@ const STAGES: Stage[] = [
     color: "#0e7490",
     colorSoft: "#cffafe",
     colorInk: "#164e63",
+    timeEstimate: "1 hr",
+    timeNote: "Evidence review for grant application or replication proposal",
     links: [
       { label: "Research Library", url: `${DEV}/library/`, note: "Northern food systems evidence base" },
     ],
@@ -226,10 +259,16 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
             {stage.description}
           </p>
 
+          {/* Time estimate */}
+          <div className="mt-3 flex items-center gap-2">
+            <TimeBadge estimate={stage.timeEstimate} />
+            <span className="text-xs text-muted-foreground">{stage.timeNote}</span>
+          </div>
+
           {/* Primary links */}
           <div className="mt-4 flex flex-wrap gap-2">
             {stage.links.map((link) => (
-              <LinkButton key={link.url} link={link} />
+              <LinkButton key={`${link.label}-${link.url}`} link={link} />
             ))}
           </div>
 
