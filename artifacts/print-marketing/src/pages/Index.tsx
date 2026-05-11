@@ -120,6 +120,13 @@ const pieces = [
     desc: "Work order and budget document for the 807 Food Co-op cold trailer upgrade. Eight scope items including CoolBot-compatible ACs, heater install, exterior covers, 807 decals, paint touch-ups, and hitch/lights — plus a flooring decision note. $9,995 budget. Letter size (8.5×11).",
     icon: "🚛",
   },
+  {
+    href: "/northern-pilot",
+    title: "Northern Pilot Pitch",
+    label: "Deer Lake Pilot",
+    desc: "One-page contractor pitch for the Deer Lake First Nation community store pilot. Three headline pillars (Economic Leakage, A Rising Tide, Grassroots Design), Chief's vision, plain-language food supply note, 7 bullet deliverables, and a flat $25,000 · 6-week engagement. Letter size (8.5×11).",
+    icon: "🏔️",
+  },
 ];
 
 export default function Index() {

@@ -19,6 +19,7 @@ import ScopeRateSheet from "@/pages/ScopeRateSheet";
 import TspGuestForm from "@/pages/TspGuestForm";
 import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
 import TylerSubmit from "@/pages/TylerSubmit";
+import NorthernPilotPitch from "@/pages/NorthernPilotPitch";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/tsp-guest-form" component={TspGuestForm} />
       <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
       <Route path="/tyler-submit" component={TylerSubmit} />
+      <Route path="/northern-pilot" component={NorthernPilotPitch} />
       <Route component={NotFound} />
     </Switch>
   );
