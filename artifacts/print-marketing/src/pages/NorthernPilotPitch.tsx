@@ -71,6 +71,8 @@ function buildPlainText(): string {
     "",
     "What this phase ends with: A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.",
     "",
+    "Pricing TBC — Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.",
+    "",
     "---",
     "",
     "PAGE 5 — THE PAYOFF (Phase 3 · Winter season onward)",
@@ -80,6 +82,8 @@ function buildPlainText(): string {
     "Bulk truck delivery replaces frequent air freight. Cost per item drops significantly. The same store, same team, same prices — but the margin picture improves substantially.",
     "",
     "What this phase does: Lock in the lower-cost supply chain, document what the store actually earns in its first winter, and produce a clean financial record the band can use with funders and for planning the next year.",
+    "",
+    "Pricing TBC — Phase 3 fees are discussed separately; scope depends on what Phase 2 reveals about the store's operating rhythm.",
     "",
     "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
   ].join("\n");
@@ -442,6 +446,16 @@ export default function NorthernPilotPitch() {
               </p>
             </div>
 
+            {/* Pricing note */}
+            <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                Phase 2 fees are confirmed at the end of Phase 1, once scope and staffing needs are clear.
+              </p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
+                Pricing TBC
+              </p>
+            </div>
+
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in", marginTop: "auto" }}>
               <div>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
@@ -499,6 +513,16 @@ export default function NorthernPilotPitch() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Pricing note */}
+            <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                Phase 3 fees are discussed separately — scope depends on what Phase 2 reveals about the store's operating rhythm.
+              </p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
+                Pricing TBC
+              </p>
             </div>
 
             {/* The arc */}
