@@ -35,22 +35,48 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    "PAGE 3 — HOW IT WORKS",
+    "PAGE 3 — HOW IT WORKS (Phase 1 · The Plan)",
     "",
-    "We build the plan. You decide what happens next.",
+    "We listen. We plan. Leadership sees the plan and decides what happens next.",
     "",
     "What Deer Lake walks away with after 6 weeks:",
     "→ A clear plan for what to sell and where it comes from",
-    "→ A structure for community ownership and governance",
+    "→ A clear picture of who does what and how decisions get made",
     "→ A day-to-day operations guide — orders, pricing, cash",
-    "→ A hiring plan: who to bring on first and how to train them",
-    "→ A funding package ready to submit to government programs",
+    "→ A hiring plan: Headwaters finds candidates, writes job descriptions, and maps training needs — the contractor and band decide who gets hired",
+    "→ A financial plan for year one — what it costs to run and where the money comes from",
     "",
-    "$25,000 · 6-week engagement · flat fee",
+    "$28,000 · 6-week engagement · flat fee",
     "You can stop at any point. Everything built stays with Deer Lake.",
     "",
     "Headwaters Development Services",
     "bobbie@ourheadwaters.ca · ourheadwaters.ca",
+    "",
+    "---",
+    "",
+    "PAGE 4 — THE BUILD (Phase 2 · 4 months · Aug–Dec)",
+    "",
+    "The store opens. We make sure it works.",
+    "",
+    "The operator couple is hired and in place. Food starts moving. Headwaters is on the ground once a month — 3 days each visit — checking that the supply chain is running clean, the software is bug-free, inventory is rotating, and delivery is reliable. Problems get caught early.",
+    "",
+    "The honest note on timing: Summer freight runs by air — costs are high and margins will be tight. That's expected and planned for. The numbers get better when winter roads open.",
+    "",
+    "Staffing support: Headwaters helps find and vet the operator couple (the most critical hire), supports building the casual pod job descriptions for Deer Lake community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.",
+    "",
+    "What this phase ends with: A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.",
+    "",
+    "---",
+    "",
+    "PAGE 5 — THE PAYOFF (Phase 3 · Winter season onward)",
+    "",
+    "Winter roads open. The economics flip.",
+    "",
+    "Bulk truck delivery replaces frequent air freight. Cost per item drops significantly. The same store, same team, same prices — but the margin picture improves substantially.",
+    "",
+    "What this phase does: Lock in the lower-cost supply chain, document what the store actually earns in its first winter, and produce a clean financial record the band can use with funders and for planning the next year.",
+    "",
+    "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
   ].join("\n");
 }
 
@@ -141,7 +167,7 @@ export default function NorthernPilotPitch() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>1 of 3</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>1 of 5</p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>The problem</p>
             </div>
           </div>
@@ -209,7 +235,7 @@ export default function NorthernPilotPitch() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>2 of 3</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>2 of 5</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>The opportunity</p>
               </div>
 
@@ -217,16 +243,16 @@ export default function NorthernPilotPitch() {
           </div>
         </div>
 
-        {/* ── PAGE 3 ── How it works */}
+        {/* ── PAGE 3 ── How it works (Phase 1) */}
         <div style={{ ...PAGE }}>
 
           {/* Rust header */}
           <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "0.15rem" }}>
-              How it works
+              Phase 1 · The Plan · 6 weeks
             </p>
             <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
-              We build the plan.<br />You decide what<br />happens next.
+              We listen. We plan.<br />Leadership sees the plan<br />and decides what's next.
             </h2>
           </div>
 
@@ -240,10 +266,10 @@ export default function NorthernPilotPitch() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.5in" }}>
                 {[
                   "A clear plan for what to sell and where it comes from",
-                  "A structure for community ownership and governance",
+                  "A clear picture of who does what and how decisions get made",
                   "A day-to-day operations guide — orders, pricing, cash",
-                  "A hiring plan: who to bring on first and how to train them",
-                  "A funding package ready to submit to government programs",
+                  "A hiring plan: Headwaters finds candidates, writes job descriptions, and maps training needs — the contractor and band decide who gets hired",
+                  "A financial plan for year one — what it costs to run and where the money comes from",
                 ].map((item) => (
                   <div key={item} style={{ display: "flex", gap: "0.14in", alignItems: "flex-start", borderBottom: "1px solid rgba(31,61,46,0.1)", paddingBottom: "0.12in", marginBottom: "0.12in" }}>
                     <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0, ...WONK0 }}>→</span>
@@ -267,7 +293,7 @@ export default function NorthernPilotPitch() {
                 </p>
               </div>
               <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$25k</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$28k</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
               </div>
             </div>
@@ -278,12 +304,154 @@ export default function NorthernPilotPitch() {
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
               </div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 3</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 5</p>
             </div>
 
           </div>
 
           {/* Closing bar */}
+          <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
+
+        </div>
+
+        {/* ── PAGE 4 ── The Build (Phase 2) */}
+        <div style={{ ...PAGE }}>
+
+          {/* Evergreen header */}
+          <div style={{ background: "var(--evergreen)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.15rem" }}>
+              Phase 2 · The Build · 4 months · Aug–Dec
+            </p>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
+              The store opens.<br />We make sure<br />it works.
+            </h2>
+          </div>
+
+          {/* Body */}
+          <div style={{ flex: 1, padding: "0.42in 0.7in 0.32in", display: "flex", flexDirection: "column", gap: "0.32in" }}>
+
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.68, maxWidth: "5.5in" }}>
+              The operator couple is hired and in place. Food starts moving. Headwaters is on the ground once a month — three days each visit — checking that the supply chain is running clean, the software is bug-free, inventory is rotating, and delivery is reliable. Problems get caught early.
+            </p>
+
+            {/* Honest note callout */}
+            <div style={{ borderLeft: "3px solid var(--rust)", paddingLeft: "0.22in", display: "flex", flexDirection: "column", gap: "0.06in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)" }}>
+                The honest note on timing
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
+                Summer freight runs by air — costs are high and margins will be tight. That's expected and planned for. The numbers get better when winter roads open.
+              </p>
+            </div>
+
+            {/* Staffing support */}
+            <div style={{ borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.24in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14in" }}>
+                Staffing support
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
+                Headwaters helps find and vet the operator couple — the most critical hire — supports building the casual pod job descriptions for Deer Lake community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.
+              </p>
+            </div>
+
+            {/* What this phase ends with */}
+            <div style={{ background: "rgba(31,61,46,0.06)", borderRadius: 6, padding: "0.22in 0.3in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--evergreen)", marginBottom: "0.1in" }}>
+                What this phase ends with
+              </p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.95rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.45 }}>
+                A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.
+              </p>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in", marginTop: "auto" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>4 of 5</p>
+            </div>
+
+          </div>
+
+          <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
+
+        </div>
+
+        {/* ── PAGE 5 ── The Payoff (Phase 3) */}
+        <div style={{ ...PAGE }}>
+
+          {/* Cream/rust header */}
+          <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "0.15rem" }}>
+              Phase 3 · The Payoff · Winter season onward
+            </p>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
+              Winter roads open.<br />The economics flip.
+            </h2>
+          </div>
+
+          {/* Body */}
+          <div style={{ flex: 1, padding: "0.42in 0.7in 0.32in", display: "flex", flexDirection: "column", gap: "0.36in" }}>
+
+            {/* What changes */}
+            <div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14in" }}>
+                What changes
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.68, maxWidth: "5.5in" }}>
+                Bulk truck delivery replaces frequent air freight. Cost per item drops significantly. The same store, same team, same prices — but the margin picture improves substantially.
+              </p>
+            </div>
+
+            {/* What this phase does */}
+            <div style={{ borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.28in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14in" }}>
+                What this phase does
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.18in" }}>
+                {[
+                  "Lock in the lower-cost supply chain.",
+                  "Document what the store actually earns in its first winter.",
+                  "Produce a clean financial record the band can use with funders and for planning the next year.",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: "0.14in", alignItems: "flex-start" }}>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0, ...WONK0 }}>→</span>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--ink)", lineHeight: 1.55 }}>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* The arc */}
+            <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", marginTop: "auto" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.12in" }}>
+                The arc
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2in" }}>
+                {[
+                  { phase: "Phase 1", label: "Built the plan." },
+                  { phase: "Phase 2", label: "Proved it could run." },
+                  { phase: "Phase 3", label: "Shows it can pay for itself." },
+                ].map((item) => (
+                  <div key={item.phase} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.1in" }}>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.06rem" }}>{item.phase}</p>
+                    <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.35 }}>{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>5 of 5</p>
+            </div>
+
+          </div>
+
           <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
 
         </div>
