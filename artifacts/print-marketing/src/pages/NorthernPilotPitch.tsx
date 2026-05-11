@@ -156,12 +156,13 @@ export default function NorthernPilotPitch() {
         targetId="pdf-target"
         filename="headwaters-northern-pilot-pitch.pdf"
         onCopyPlainText={buildPlainText}
+        paginate
       />
 
       <div id="pdf-target" style={{ background: "#d8d2c8" }}>
 
         {/* ── COVER ── */}
-        <div style={{ ...PAGE, background: "var(--evergreen)", position: "relative" }}>
+        <div className="page-letter" style={{ ...PAGE, background: "var(--evergreen)", position: "relative" }}>
 
           {/* Boreal hero — top 58% */}
           <div style={{ width: "100%", height: "6.38in", flexShrink: 0, overflow: "hidden", position: "relative" }}>
@@ -234,7 +235,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 1 ── The problem */}
-        <div style={PAGE}>
+        <div className="page-letter" style={PAGE}>
 
           {/* Header */}
           <div style={{ background: "var(--evergreen)", padding: "0.48in 0.7in 0.44in", flexShrink: 0 }}>
@@ -303,7 +304,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 2 ── The opportunity */}
-        <div style={{ ...PAGE }}>
+        <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Harvest photo — full width top */}
           <div style={{ width: "100%", height: "3.4in", flexShrink: 0, overflow: "hidden", position: "relative" }}>
@@ -373,7 +374,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 3 ── How it works (Phase 1) */}
-        <div style={{ ...PAGE }}>
+        <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Rust header */}
           <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
@@ -444,7 +445,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 4 ── The Build (Phase 2) */}
-        <div style={{ ...PAGE }}>
+        <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Evergreen header */}
           <div style={{ background: "var(--evergreen)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
@@ -509,7 +510,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 5 ── The Payoff (Phase 3) */}
-        <div style={{ ...PAGE }}>
+        <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Cream/rust header */}
           <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
@@ -589,7 +590,7 @@ export default function NorthernPilotPitch() {
         </div>
 
         {/* ── PAGE 6 ── The Handoff (Phase 4) */}
-        <div style={{ ...PAGE }}>
+        <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Evergreen header */}
           <div style={{ background: "var(--evergreen)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>

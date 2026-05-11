@@ -192,6 +192,6 @@ body.print-preview .page-letter-landscape::before {
   /* DEFAULT PRINT SIZE: 8.5 × 11 in (letter) — matches .page-letter */
   @page {
     size: letter portrait;
-    margin: 0.5in;
+    margin: 0;
   }
 }

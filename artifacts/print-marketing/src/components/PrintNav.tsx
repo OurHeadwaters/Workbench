@@ -13,6 +13,7 @@ interface PrintNavProps {
   filename: string;
   format?: PaperFormat;
   orientation?: "portrait" | "landscape";
+  paginate?: boolean;
   pdfApiPath?: string;
   onCopyPlainText?: () => string;
   sections?: Section[];
@@ -23,6 +24,7 @@ export function PrintNav({
   filename,
   format = "letter",
   orientation = "portrait",
+  paginate = false,
   pdfApiPath,
   onCopyPlainText,
   sections,
@@ -90,7 +92,7 @@ export function PrintNav({
 
     setLoading(true);
     try {
-      await downloadAsPdf(targetId, filename, { format, orientation });
+      await downloadAsPdf(targetId, filename, { format, orientation, paginate });
     } finally {
       setLoading(false);
     }
