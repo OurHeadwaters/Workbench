@@ -172,6 +172,14 @@ export default function Index() {
         <div style={{ marginTop: "2rem", padding: "1rem 1.25rem", background: "rgba(31,61,46,0.06)", borderRadius: 6, fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.6 }}>
           <strong style={{ color: "var(--evergreen)" }}>How to print:</strong> Open any piece and click <strong>Download PDF</strong>. The PDF is sized correctly for the piece — letter (8.5×11) for posters and price lists, 3.5×2 for business cards, 4×9 for the rack card. Send straight to your printer or a print shop.
         </div>
+
+        <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(31,61,46,0.12)", fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "var(--muted)" }}>
+          <a href="/print-marketing/privacy" style={{ color: "var(--muted)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
+            Privacy policy
+          </a>
+          {" · "}
+          Headwaters Development Services · {new Date().getFullYear()}
+        </div>
       </div>
     </div>
   );

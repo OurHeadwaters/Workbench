@@ -118,6 +118,12 @@ export default function Contributors() {
                 />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground px-1">
+              Name and email are stored to send share links to this contributor.{" "}
+              <a href="/library/privacy" className="underline underline-offset-2 hover:text-foreground transition-colors">
+                See our privacy policy.
+              </a>
+            </p>
             <DialogFooter>
               <Button
                 variant="outline"

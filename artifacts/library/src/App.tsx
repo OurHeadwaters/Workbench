@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import PrivacyPage from "@/pages/privacy";
 import Home from "@/pages/home";
 import Entries from "@/pages/entries/index";
 import NewEntry from "@/pages/entries/new";
@@ -38,6 +39,7 @@ function Router() {
     <Switch>
       <Route path="/share/:token/why-stores-fail" component={PublicWhyStoresFail} />
       <Route path="/share/:token" component={PublicShare} />
+      <Route path="/privacy" component={PrivacyPage} />
       <Route path="/login" component={Login} />
       <Route>
         <RequireOwner>

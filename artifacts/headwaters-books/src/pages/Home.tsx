@@ -57,7 +57,7 @@ export default function Home() {
         </SignedIn>
       </main>
 
-      <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2">
+      <footer className="p-6 text-center text-sm text-muted-foreground border-t border-border mt-auto space-y-2" id="home-footer">
         {/*
           AUDIT NOTE — Standby-leaks-into-Gate bug class (Task #473, #475, #478, #489).
           The footer links the constellation-wide-primitive surfaces
@@ -95,6 +95,11 @@ export default function Home() {
           </Link>
         </div>
         <div>&copy; {new Date().getFullYear()} Headwaters Food Systems Agency.</div>
+        <div>
+          <a href="/headwaters-books/privacy" className="underline underline-offset-2 hover:text-foreground transition-colors">
+            Privacy policy
+          </a>
+        </div>
       </footer>
     </div>
   );

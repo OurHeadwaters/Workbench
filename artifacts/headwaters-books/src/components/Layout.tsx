@@ -114,6 +114,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               Sign out
             </button>
           </SignOutButton>
+          <a
+            href="/headwaters-books/privacy"
+            className="mt-2 block px-3 py-1 text-xs text-muted-foreground underline underline-offset-2 hover:text-sidebar-foreground transition-colors"
+          >
+            Privacy policy
+          </a>
         </div>
       </aside>
 
@@ -135,6 +141,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {children}
           </div>
         </div>
+        <footer className="border-t border-border px-4 md:px-8 py-3 text-xs text-muted-foreground flex items-center gap-4 shrink-0">
+          <span>Headwaters Food Systems Agency</span>
+          <a
+            href="/headwaters-books/privacy"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Privacy policy
+          </a>
+        </footer>
       </main>
     </div>
   );

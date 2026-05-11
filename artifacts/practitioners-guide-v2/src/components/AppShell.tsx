@@ -333,10 +333,20 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
       </div>
 
-      <footer className="border-t mt-12 py-6 text-center text-xs text-muted-foreground">
-        Headwaters · Practitioner's Guide ·{" "}
-        <span className="font-mono">{scenario.name}</span> ·{" "}
-        Numbers tagged with the date the founder locked them.
+      <footer className="border-t mt-12 py-6 text-center text-xs text-muted-foreground space-y-1">
+        <div>
+          Headwaters · Practitioner's Guide ·{" "}
+          <span className="font-mono">{scenario.name}</span> ·{" "}
+          Numbers tagged with the date the founder locked them.
+        </div>
+        <div>
+          <a
+            href="/practitioners-guide-v2/privacy"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Privacy policy
+          </a>
+        </div>
       </footer>
     </div>
   );

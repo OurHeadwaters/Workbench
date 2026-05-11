@@ -598,6 +598,19 @@ export function HomePage() {
                 </p>
               ) : null}
 
+              <p
+                className="font-sans text-xs"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                Your name and email are stored to follow up on your submission.{" "}
+                <a
+                  href="/privacy"
+                  className="underline underline-offset-4 hover:opacity-80"
+                >
+                  See our privacy policy.
+                </a>
+              </p>
+
               <div className="flex flex-wrap items-center gap-5 pt-1">
                 <button
                   type="submit"
@@ -701,12 +714,21 @@ export function HomePage() {
           data-testid="home-footer"
         >
           <p className="signoff">— bobbie parr · headwaters · dryden, ontario</p>
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.18em]"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            {new Date().getFullYear()}
-          </p>
+          <div className="flex items-center gap-6">
+            <a
+              href="/privacy"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              Privacy
+            </a>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.18em]"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              {new Date().getFullYear()}
+            </p>
+          </div>
         </footer>
 
       </div>

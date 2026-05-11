@@ -277,6 +277,19 @@ export function SignOnPage() {
                 </p>
               ) : null}
 
+              <p
+                className="font-sans text-xs"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                Your name and email are stored so we can write back to you.{" "}
+                <a
+                  href="/privacy"
+                  className="underline underline-offset-4 hover:opacity-80"
+                >
+                  See our privacy policy.
+                </a>
+              </p>
+
               <div className="flex flex-wrap items-center gap-6 pt-2">
                 <button
                   type="submit"
@@ -299,6 +312,13 @@ export function SignOnPage() {
           data-testid="footer"
         >
           <p className="signoff">headwaters · {new Date().getFullYear()}</p>
+          <a
+            href="/privacy"
+            className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            Privacy
+          </a>
         </footer>
       </div>
     </main>

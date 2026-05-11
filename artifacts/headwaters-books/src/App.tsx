@@ -8,6 +8,7 @@ import { ClerkProvider, SignIn, SignUp, useAuth } from "@clerk/react";
 import { RedirectToSignIn } from "@/lib/clerkGates";
 import { useGetBookkeeperMe } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
+import Privacy from "@/pages/Privacy";
 import Home from "@/pages/Home";
 import Read from "@/pages/Read";
 import Demo from "@/pages/Demo";
@@ -132,6 +133,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/privacy" component={Privacy} />
       <Route path="/read" component={Read} />
       <Route path="/demo" component={Demo} />
       <Route path="/standby" component={Standby} />

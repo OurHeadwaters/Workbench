@@ -98,12 +98,27 @@ export default function Layout({ children }: { children: ReactNode }) {
           <p className="mt-3 px-1 text-[11px] italic leading-snug text-muted-foreground">
             A Headwaters project — We've always known how to fix it, now we can.
           </p>
+          <a
+            href="/library/privacy"
+            className="mt-2 px-1 block text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Privacy policy
+          </a>
         </div>
       </aside>
       <main className="flex-1 overflow-y-auto flex flex-col relative">
         <div className="max-w-6xl mx-auto w-full p-4 md:p-8 lg:p-12 flex-1">
           {children}
         </div>
+        <footer className="border-t border-border px-4 md:px-8 lg:px-12 py-4 text-xs text-muted-foreground flex items-center gap-4">
+          <span>Headwaters · Northern Food Systems Research Library</span>
+          <a
+            href="/library/privacy"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Privacy policy
+          </a>
+        </footer>
       </main>
     </div>
   );

@@ -26,6 +26,7 @@ import { WhatNextPage } from "@/pages/WhatNextPage";
 import { PortfolioPage } from "@/pages/PortfolioPage";
 import CommunityStorePage from "@/pages/CommunityStorePage";
 import { SargeHQPage } from "@/pages/SargeHQPage";
+import { PrivacyPage } from "@/pages/PrivacyPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ function Router() {
       />
       <Route path="/community-store/:rest*" component={CommunityStorePage} />
       <Route path="/sarge" component={SargeHQPage} />
+      <Route path="/privacy" component={PrivacyPage} />
       <Route component={NotFound} />
     </Switch>
   );
