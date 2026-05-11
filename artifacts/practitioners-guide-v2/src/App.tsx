@@ -14,6 +14,7 @@ import { ReplicationPage } from "@/pages/ReplicationPage";
 import { CodetryDisciplinePage } from "@/pages/CodetryDisciplinePage";
 import { CodetryPhilosophyPage } from "@/pages/CodetryPhilosophyPage";
 import { ArchetypesPage } from "@/pages/ArchetypesPage";
+import { EngagementPricingPage } from "@/pages/EngagementPricingPage";
 import { WorkbenchArchivePage } from "@/pages/WorkbenchArchivePage";
 import { RefundInvocationLetter } from "@/pages/RefundInvocationLetter";
 import { WorkflowPage } from "@/pages/WorkflowPage";
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/codetry-philosophy" component={CodetryPhilosophyPage} />
       <Route path="/codetry" component={CodetryDisciplinePage} />
       <Route path="/archetypes" component={ArchetypesPage} />
+      <Route path="/engagement-pricing" component={EngagementPricingPage} />
       <Route path="/workbench" component={WorkbenchArchivePage} />
       <Route path="/workflow" component={WorkflowPage} />
       <Route path="/debt-attack" component={DebtAttackPage} />

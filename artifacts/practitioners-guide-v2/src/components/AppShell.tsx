@@ -21,6 +21,7 @@ import {
   Store,
   Smartphone,
   Flame,
+  DollarSign,
 } from "lucide-react";
 
 interface NavItem {
@@ -52,6 +53,7 @@ export const NAV: NavItem[] = [
     accent: BUCKETS.brightside.accent,
   },
   { href: "/archetypes", label: "Archetypes", icon: Layers, accent: "#1F5B3F" },
+  { href: "/engagement-pricing", label: "Engagement Pricing", icon: DollarSign, accent: "#1F5B3F" },
   { href: "/compare", label: "Operating framework", icon: GitCompareArrows },
   { href: "/replication", label: "Replication", icon: Repeat },
   { href: "/pilot-two", label: "Pilot #2", icon: Target, accent: "#B45309" },
