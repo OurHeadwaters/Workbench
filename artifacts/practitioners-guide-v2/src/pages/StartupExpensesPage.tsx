@@ -16,6 +16,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import {
   ArrowLeft,
+  Download,
   Laptop,
   Printer,
   Briefcase,
@@ -29,7 +30,6 @@ import {
   Package,
   ChevronDown,
   ChevronUp,
-  Download,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -282,21 +282,35 @@ function exportCsv(
   notes: Record<string, string>
 ) {
   const rows: string[][] = [
-    ["Section", "Item", "Est. Low", "Est. High", "Actual", "Notes"],
+    ["Section", "Item", "Description", "Est. Low", "Est. High", "Actual", "Notes"],
   ];
 
   for (const section of SECTIONS) {
     for (const item of section.items) {
+      const actual = item.deerLake ? "" : (parseActual(actuals[item.id] ?? "") || "").toString();
       rows.push([
         section.title,
-        item.label,
-        String(item.low),
-        String(item.high),
-        actuals[item.id] ?? "",
-        notes[item.id] ?? "",
+        item.label + (item.deerLake ? " (Deer Lake — excluded)" : ""),
+        item.note ?? "",
+        item.deerLake ? "" : String(item.low),
+        item.deerLake ? "" : String(item.high),
+        actual === "0" && !actuals[item.id] ? "" : actual,
+        item.deerLake ? "" : (notes[item.id] ?? ""),
       ]);
     }
   }
+
+  const totals = grandTotals(actuals);
+  const hasAnyActual = Object.values(actuals).some((v) => v.trim() !== "");
+  rows.push([]);
+  rows.push([
+    "TOTALS", "", "",
+    totals.low.toString(),
+    totals.high.toString(),
+    hasAnyActual ? totals.actual.toString() : "",
+    "",
+  ]);
+  rows.push(["Budget", "", "", "", "", BUDGET_TOTAL.toString(), ""]);
 
   const csv = rows
     .map((row) =>
@@ -304,7 +318,7 @@ function exportCsv(
         .map((cell) => (cell.includes(",") || cell.includes('"') || cell.includes("\n") ? `"${cell.replace(/"/g, '""')}"` : cell))
         .join(",")
     )
-    .join("\n");
+    .join("\r\n");
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -676,18 +690,28 @@ export function StartupExpensesPage() {
         </Link>
       </div>
 
-      <div>
-        <h1
-          className="text-2xl font-bold leading-tight"
-          style={{ fontFamily: "var(--app-font-serif)" }}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1
+            className="text-2xl font-bold leading-tight"
+            style={{ fontFamily: "var(--app-font-serif)" }}
+          >
+            Startup Expenses
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+            Phase 1 working budget — tracked against the $28,000 startup figure.
+            Enter actuals as you spend; they're saved automatically.
+          </p>
+        </div>
+        <button
+          onClick={() => exportCsv(actuals, notes)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex-shrink-0"
+          style={{ backgroundColor: "#1A5FA8", color: "white" }}
+          data-testid="export-csv-button"
         >
-          Startup Expenses
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-          Phase 1 working budget — tracked against the $28,000 startup figure.
-          Enter actuals as you spend; they're saved automatically. Use the
-          chevron on each row to log what was actually purchased.
-        </p>
+          <Download className="h-4 w-4" />
+          Download CSV
+        </button>
       </div>
 
       <SummaryBar actuals={actuals} notes={notes} />

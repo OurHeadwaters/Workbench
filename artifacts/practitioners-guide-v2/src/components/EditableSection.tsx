@@ -156,7 +156,7 @@ export function EditableSection({ id, label, children }: EditableSectionProps) {
                     ref={textareaRef}
                     value={instruction}
                     onChange={(e) => setInstruction(e.target.value)}
-                    placeholder={'e.g. "The Northern Band contract is now signed as of June 1 at $185/hr instead of $175."'}
+                    placeholder={'e.g. \u201cThe Northern Band contract is now signed as of June 1 at $185/hr instead of $175.\u201d'}
                     rows={3}
                     className="text-sm"
                     onKeyDown={(e) => {
