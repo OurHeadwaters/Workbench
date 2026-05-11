@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import puppeteer from "puppeteer-core";
 import { execSync } from "child_process";
 import { generatePosterServicesHtml } from "../lib/posterServicesHtml";
 import { generateCapabilityStatementHtml } from "../lib/capabilityStatementHtml";
@@ -7,6 +6,11 @@ import { generateCapabilityStatementHtml } from "../lib/capabilityStatementHtml"
 const router: IRouter = Router();
 
 let capabilityStatementCache: Buffer | null = null;
+
+async function getPuppeteer() {
+  const mod = await import("puppeteer-core");
+  return mod.default;
+}
 
 function getChromiumPath(): string {
   try {
@@ -38,6 +42,7 @@ function getChromiumPath(): string {
 router.get("/services-poster.pdf", async (_req, res) => {
   let browser;
   try {
+    const puppeteer = await getPuppeteer();
     const chromiumPath = getChromiumPath();
     browser = await puppeteer.launch({
       executablePath: chromiumPath,
@@ -83,6 +88,7 @@ router.get("/services-poster.pdf", async (_req, res) => {
 router.get("/scope-rate-sheet.pdf", async (_req, res) => {
   let browser;
   try {
+    const puppeteer = await getPuppeteer();
     const chromiumPath = getChromiumPath();
     browser = await puppeteer.launch({
       executablePath: chromiumPath,
@@ -126,6 +132,7 @@ router.get("/scope-rate-sheet.pdf", async (_req, res) => {
 router.get("/tsp-guest-form.pdf", async (_req, res) => {
   let browser;
   try {
+    const puppeteer = await getPuppeteer();
     const chromiumPath = getChromiumPath();
     browser = await puppeteer.launch({
       executablePath: chromiumPath,
@@ -180,6 +187,7 @@ router.get("/capability-statement.pdf", async (_req, res) => {
 
   let browser;
   try {
+    const puppeteer = await getPuppeteer();
     const chromiumPath = getChromiumPath();
     browser = await puppeteer.launch({
       executablePath: chromiumPath,
