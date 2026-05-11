@@ -312,7 +312,7 @@ function PhaseSection({
 // ─── Assumptions sidebar ──────────────────────────────────────────────────────
 
 function NumInput({
-  label, value, onChange, min, step, prefix,
+  label, value, onChange, min, step, prefix, belowCost,
 }: {
   label: string;
   value: number;
@@ -320,15 +320,24 @@ function NumInput({
   min?: number;
   step?: number;
   prefix?: string;
+  belowCost?: boolean;
 }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(31,61,46,0.5)", fontFamily: "var(--font-sans)" }}>
+      <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: belowCost ? "#b91c1c" : "rgba(31,61,46,0.5)", fontFamily: "var(--font-sans)", fontWeight: belowCost ? 700 : undefined }}>
         {label}
       </span>
-      <div style={{ display: "flex", alignItems: "center", background: "#fff", border: "1px solid rgba(31,61,46,0.18)", borderRadius: 4, overflow: "hidden" }}>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        background: belowCost ? "#fff5f5" : "#fff",
+        border: belowCost ? "1.5px solid #e05252" : "1px solid rgba(31,61,46,0.18)",
+        borderRadius: 4,
+        overflow: "hidden",
+        boxShadow: belowCost ? "0 0 0 2px rgba(224,82,82,0.15)" : "none",
+      }}>
         {prefix && (
-          <span style={{ padding: "4px 6px", fontSize: 12, color: "rgba(31,61,46,0.45)", fontFamily: "var(--font-sans)", borderRight: "1px solid rgba(31,61,46,0.12)" }}>
+          <span style={{ padding: "4px 6px", fontSize: 12, color: belowCost ? "#b91c1c" : "rgba(31,61,46,0.45)", fontFamily: "var(--font-sans)", borderRight: belowCost ? "1px solid rgba(224,82,82,0.25)" : "1px solid rgba(31,61,46,0.12)" }}>
             {prefix}
           </span>
         )}
@@ -348,12 +357,24 @@ function NumInput({
             padding: "5px 8px",
             fontSize: 13,
             fontFamily: "var(--font-sans)",
-            color: "var(--ink)",
+            color: belowCost ? "#7f1d1d" : "var(--ink)",
             background: "transparent",
             width: "100%",
           }}
         />
       </div>
+      {belowCost && (
+        <span style={{
+          fontSize: 10,
+          fontFamily: "var(--font-sans)",
+          color: "#b91c1c",
+          fontWeight: 600,
+          letterSpacing: "0.04em",
+          marginTop: 1,
+        }}>
+          ↑ Raise this above cost
+        </span>
+      )}
     </label>
   );
 }
@@ -559,6 +580,7 @@ function SnapshotPanel({
 function AssumptionsSidebar({
   cfg, onChange, onReset, open, onToggle,
   snapshots, onSaveSnapshot, onLoadSnapshot, onDeleteSnapshot,
+  derived,
 }: {
   cfg: Config;
   onChange: (patch: Partial<Config> | ((prev: Config) => Config)) => void;
@@ -569,7 +591,11 @@ function AssumptionsSidebar({
   onSaveSnapshot: (name: string) => void;
   onLoadSnapshot: (name: string) => void;
   onDeleteSnapshot: (name: string) => void;
+  derived: ReturnType<typeof deriveAll>;
 }) {
+  const p2BelowCost = derived.p2MarginAtMin < 0;
+  const p3BelowCost = derived.p3.marginAtMin < 0;
+  const p4BelowCost = derived.p4.marginAtMin < 0;
   const setPhase = (
     phase: "phase2" | "phase3" | "phase4",
     key: string,
@@ -696,9 +722,9 @@ function AssumptionsSidebar({
           <NumInput label="Travel cost / visit (CAD)" value={cfg.phase2.travelCostPerVisit} prefix="$"
             onChange={(v) => setPhase("phase2", "travelCostPerVisit", v)} min={0} />
           <NumInput label="Proposed fee — min (CAD)" value={cfg.phase2.proposedFeeMin} prefix="$"
-            onChange={(v) => setPhase("phase2", "proposedFeeMin", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase2", "proposedFeeMin", v)} min={0} step={500} belowCost={p2BelowCost} />
           <NumInput label="Proposed fee — max (CAD)" value={cfg.phase2.proposedFeeMax} prefix="$"
-            onChange={(v) => setPhase("phase2", "proposedFeeMax", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase2", "proposedFeeMax", v)} min={0} step={500} belowCost={p2BelowCost} />
         </SidebarSection>
 
         <SidebarSection title="Phase 3 — Winter Payoff">
@@ -713,9 +739,9 @@ function AssumptionsSidebar({
           <NumInput label="Travel cost / visit (CAD)" value={cfg.phase3.travelCostPerVisit} prefix="$"
             onChange={(v) => setPhase("phase3", "travelCostPerVisit", v)} min={0} />
           <NumInput label="Proposed fee — min (CAD)" value={cfg.phase3.proposedFeeMin} prefix="$"
-            onChange={(v) => setPhase("phase3", "proposedFeeMin", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase3", "proposedFeeMin", v)} min={0} step={500} belowCost={p3BelowCost} />
           <NumInput label="Proposed fee — max (CAD)" value={cfg.phase3.proposedFeeMax} prefix="$"
-            onChange={(v) => setPhase("phase3", "proposedFeeMax", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase3", "proposedFeeMax", v)} min={0} step={500} belowCost={p3BelowCost} />
         </SidebarSection>
 
         <SidebarSection title="Phase 4 — Handoff & Pilot #2 Bridge">
@@ -730,9 +756,9 @@ function AssumptionsSidebar({
           <NumInput label="Travel cost / visit (CAD)" value={cfg.phase4.travelCostPerVisit} prefix="$"
             onChange={(v) => setPhase("phase4", "travelCostPerVisit", v)} min={0} />
           <NumInput label="Proposed fee — min (CAD)" value={cfg.phase4.proposedFeeMin} prefix="$"
-            onChange={(v) => setPhase("phase4", "proposedFeeMin", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase4", "proposedFeeMin", v)} min={0} step={500} belowCost={p4BelowCost} />
           <NumInput label="Proposed fee — max (CAD)" value={cfg.phase4.proposedFeeMax} prefix="$"
-            onChange={(v) => setPhase("phase4", "proposedFeeMax", v)} min={0} step={500} />
+            onChange={(v) => setPhase("phase4", "proposedFeeMax", v)} min={0} step={500} belowCost={p4BelowCost} />
         </SidebarSection>
 
         <SidebarSection title="Staffing — IT / Bookkeeping">
@@ -1026,6 +1052,7 @@ export default function InternalScopePlan() {
         onSaveSnapshot={handleSaveSnapshot}
         onLoadSnapshot={handleLoadSnapshot}
         onDeleteSnapshot={handleDeleteSnapshot}
+        derived={deriveAll(cfg)}
       />
 
       <PrintNav
