@@ -85,12 +85,6 @@ type = "image"
 title = "Owner Reconciliation — updated with GM loan + all invoices"
 
 [[outputs]]
-id = "SUA9BQ9iPitD_DAV3t8qA"
-uri = "file://attached_assets/generated_images/calberry-market-post.png"
-type = "image"
-title = "Calberry Market — Facebook Post Image"
-
-[[outputs]]
 id = "J_aYo-XWhTNGRJcvNBgw8"
 uri = "file://attached_assets/generated_images/calberry-market-post-v2.png"
 type = "image"
