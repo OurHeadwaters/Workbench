@@ -15,7 +15,8 @@ function buildPlainText(): string {
     "",
     "Right now, one outside business decides what your community eats — and what it costs. Your community has no say.",
     "",
-    "Prices set by someone who doesn't live here.",
+    "Can we build something better here?",
+    "Prices you can't control, budgets that won't work. Band-sourced food, transparent prices, more food security.",
     "If it closes, there is no backup.",
     "",
     "Every dollar spent there leaves Deer Lake and doesn't come back.",
@@ -114,8 +115,8 @@ export default function NorthernPilotPitch() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.28in" }}>
                 {[
                   {
-                    head: "Prices set by someone who doesn't live here",
-                    body: "What's on the shelf, what it costs, and when the store is open — none of that is up to your community.",
+                    head: "Can we build something better here?",
+                    body: "Prices you can't control, budgets that won't work. Band-sourced food, transparent prices, more food security.",
                   },
                   {
                     head: "If it closes, there is no backup",
