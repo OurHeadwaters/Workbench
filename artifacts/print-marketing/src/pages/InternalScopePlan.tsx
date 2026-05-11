@@ -1,4 +1,4 @@
-import { useState, useCallback, type CSSProperties, type ReactNode } from "react";
+import { useState, useCallback, useRef, type CSSProperties, type ReactNode } from "react";
 import { PrintNav } from "../components/PrintNav";
 
 // ─── Default assumptions ──────────────────────────────────────────────────────
@@ -45,6 +45,24 @@ type Config = typeof DEFAULT_CONFIG;
 // ─── Passphrase — change this to update the PIN ───────────────────────────────
 const PASSPHRASE = "headwaters2026";
 const SESSION_KEY = "internal-scope-plan-unlocked";
+
+// ─── Snapshot persistence (sessionStorage only) ───────────────────────────────
+
+type Snapshot = { name: string; cfg: Config };
+const SNAPSHOTS_KEY = "hw-scope-snapshots";
+
+function readSnapshots(): Snapshot[] {
+  try {
+    const raw = sessionStorage.getItem(SNAPSHOTS_KEY);
+    return raw ? (JSON.parse(raw) as Snapshot[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSnapshots(snaps: Snapshot[]): void {
+  sessionStorage.setItem(SNAPSHOTS_KEY, JSON.stringify(snaps));
+}
 
 // ─── Derived calculations ─────────────────────────────────────────────────────
 
@@ -356,14 +374,194 @@ function SidebarSection({ title, children }: { title: string; children: ReactNod
   );
 }
 
+function SnapshotPanel({
+  cfg,
+  snapshots,
+  onSave,
+  onLoad,
+  onDelete,
+}: {
+  cfg: Config;
+  snapshots: Snapshot[];
+  onSave: (name: string) => void;
+  onLoad: (name: string) => void;
+  onDelete: (name: string) => void;
+}) {
+  const [naming, setNaming] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [selected, setSelected] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const btnBase: CSSProperties = {
+    border: "none",
+    borderRadius: 4,
+    padding: "5px 10px",
+    fontSize: 10,
+    fontFamily: "var(--font-sans)",
+    cursor: "pointer",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    fontWeight: 700,
+  };
+
+  const handleSave = () => {
+    const name = nameValue.trim();
+    if (!name) return;
+    onSave(name);
+    setNaming(false);
+    setNameValue("");
+    setSelected(name);
+  };
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <p style={{
+        fontSize: 9,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        color: "var(--evergreen)",
+        fontFamily: "var(--font-sans)",
+        fontWeight: 700,
+        marginBottom: 10,
+        paddingBottom: 5,
+        borderBottom: "1px solid rgba(31,61,46,0.12)",
+      }}>
+        Scenarios
+      </p>
+
+      {/* Load / delete row */}
+      {snapshots.length > 0 && (
+        <div style={{ display: "flex", gap: 6, marginBottom: 8, alignItems: "center" }}>
+          <select
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+            style={{
+              flex: 1,
+              border: "1px solid rgba(31,61,46,0.18)",
+              borderRadius: 4,
+              padding: "5px 7px",
+              fontSize: 12,
+              fontFamily: "var(--font-sans)",
+              color: selected ? "var(--ink)" : "rgba(31,61,46,0.4)",
+              background: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            <option value="">Load a scenario…</option>
+            {snapshots.map((s) => (
+              <option key={s.name} value={s.name}>{s.name}</option>
+            ))}
+          </select>
+          <button
+            disabled={!selected}
+            onClick={() => { if (selected) onLoad(selected); }}
+            title="Load selected scenario"
+            style={{
+              ...btnBase,
+              background: selected ? "var(--evergreen)" : "rgba(31,61,46,0.08)",
+              color: selected ? "var(--cream)" : "rgba(31,61,46,0.3)",
+              cursor: selected ? "pointer" : "default",
+            }}
+          >
+            Load
+          </button>
+          <button
+            disabled={!selected}
+            onClick={() => {
+              if (!selected) return;
+              onDelete(selected);
+              setSelected("");
+            }}
+            title="Delete selected scenario"
+            style={{
+              ...btnBase,
+              background: selected ? "rgba(184,90,62,0.1)" : "rgba(31,61,46,0.05)",
+              color: selected ? "var(--rust)" : "rgba(31,61,46,0.25)",
+              border: `1px solid ${selected ? "rgba(184,90,62,0.25)" : "transparent"}`,
+              cursor: selected ? "pointer" : "default",
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Save row */}
+      {naming ? (
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            placeholder="e.g. conservative"
+            value={nameValue}
+            onChange={(e) => setNameValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSave();
+              if (e.key === "Escape") { setNaming(false); setNameValue(""); }
+            }}
+            style={{
+              flex: 1,
+              border: "1px solid rgba(31,61,46,0.3)",
+              borderRadius: 4,
+              padding: "5px 8px",
+              fontSize: 12,
+              fontFamily: "var(--font-sans)",
+              color: "var(--ink)",
+              outline: "none",
+            }}
+          />
+          <button
+            onClick={handleSave}
+            style={{ ...btnBase, background: "var(--evergreen)", color: "var(--cream)" }}
+          >
+            Save
+          </button>
+          <button
+            onClick={() => { setNaming(false); setNameValue(""); }}
+            style={{ ...btnBase, background: "rgba(31,61,46,0.07)", color: "rgba(31,61,46,0.5)" }}
+          >
+            ✕
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => { setNaming(true); setTimeout(() => inputRef.current?.focus(), 0); }}
+          style={{
+            ...btnBase,
+            width: "100%",
+            background: "rgba(31,61,46,0.07)",
+            color: "var(--evergreen)",
+            padding: "7px 10px",
+            textAlign: "center",
+          }}
+        >
+          + Save current as snapshot
+        </button>
+      )}
+
+      {snapshots.length === 0 && !naming && (
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "rgba(31,61,46,0.4)", marginTop: 6, lineHeight: 1.5 }}>
+          No snapshots yet. Save one to compare scenarios.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function AssumptionsSidebar({
   cfg, onChange, onReset, open, onToggle,
+  snapshots, onSaveSnapshot, onLoadSnapshot, onDeleteSnapshot,
 }: {
   cfg: Config;
   onChange: (patch: Partial<Config> | ((prev: Config) => Config)) => void;
   onReset: () => void;
   open: boolean;
   onToggle: () => void;
+  snapshots: Snapshot[];
+  onSaveSnapshot: (name: string) => void;
+  onLoadSnapshot: (name: string) => void;
+  onDeleteSnapshot: (name: string) => void;
 }) {
   const setPhase = (
     phase: "phase2" | "phase3" | "phase4",
@@ -463,6 +661,14 @@ function AssumptionsSidebar({
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(31,61,46,0.5)", lineHeight: 1.5, marginBottom: 20 }}>
           Changes apply instantly. Not saved between sessions.
         </p>
+
+        <SnapshotPanel
+          cfg={cfg}
+          snapshots={snapshots}
+          onSave={onSaveSnapshot}
+          onLoad={onLoadSnapshot}
+          onDelete={onDeleteSnapshot}
+        />
 
         <SidebarSection title="Global">
           <NumInput label="Hourly rate (CAD/hr)" value={cfg.hourlyRate} prefix="$"
@@ -645,12 +851,40 @@ export default function InternalScopePlan() {
   );
   const [cfg, setCfg] = useState<Config>(DEFAULT_CONFIG);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [snapshots, setSnapshots] = useState<Snapshot[]>(() => readSnapshots());
+  const cfgRef = useRef(cfg);
+  cfgRef.current = cfg;
 
   const handleChange = useCallback((patch: Partial<Config> | ((prev: Config) => Config)) => {
     setCfg((prev) => typeof patch === "function" ? patch(prev) : { ...prev, ...patch });
   }, []);
 
   const handleReset = useCallback(() => setCfg(DEFAULT_CONFIG), []);
+
+  const handleSaveSnapshot = useCallback((name: string) => {
+    const currentCfg = cfgRef.current;
+    setSnapshots((prev) => {
+      const updated = [...prev.filter((s) => s.name !== name), { name, cfg: currentCfg }];
+      writeSnapshots(updated);
+      return updated;
+    });
+  }, []);
+
+  const handleLoadSnapshot = useCallback((name: string) => {
+    setSnapshots((prev) => {
+      const snap = prev.find((s) => s.name === name);
+      if (snap) setCfg(snap.cfg);
+      return prev;
+    });
+  }, []);
+
+  const handleDeleteSnapshot = useCallback((name: string) => {
+    setSnapshots((prev) => {
+      const updated = prev.filter((s) => s.name !== name);
+      writeSnapshots(updated);
+      return updated;
+    });
+  }, []);
 
   if (!unlocked) {
     return <PassphraseGate onUnlock={() => setUnlocked(true)} />;
@@ -781,6 +1015,10 @@ export default function InternalScopePlan() {
         onReset={handleReset}
         open={sidebarOpen}
         onToggle={() => setSidebarOpen((o) => !o)}
+        snapshots={snapshots}
+        onSaveSnapshot={handleSaveSnapshot}
+        onLoadSnapshot={handleLoadSnapshot}
+        onDeleteSnapshot={handleDeleteSnapshot}
       />
 
       <PrintNav
