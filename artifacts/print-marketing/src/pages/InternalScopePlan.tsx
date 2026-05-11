@@ -81,7 +81,20 @@ function deriveAll(cfg: Config) {
   const p2FullCost = p2.totalCost + staffPhase2Total;
   const p2MarginAtMin = ((cfg.phase2.proposedFeeMin - p2FullCost) / cfg.phase2.proposedFeeMin) * 100;
   const p2MarginAtMax = ((cfg.phase2.proposedFeeMax - p2FullCost) / cfg.phase2.proposedFeeMax) * 100;
-  return { p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax };
+  // ─── Phase 2–4 rollup ────────────────────────────────────────────────────
+  const rollupTotalDays = p2.totalDays + p3.totalDays + p4.totalDays;
+  const rollupLaborCost = p2.laborCost + p3.laborCost + p4.laborCost;
+  const rollupTravelCost = p2.travelCost + p3.travelCost + p4.travelCost;
+  const rollupTotalCost = p2FullCost + p3.totalCost + p4.totalCost;
+  const rollupFeeMin = cfg.phase2.proposedFeeMin + cfg.phase3.proposedFeeMin + cfg.phase4.proposedFeeMin;
+  const rollupFeeMax = cfg.phase2.proposedFeeMax + cfg.phase3.proposedFeeMax + cfg.phase4.proposedFeeMax;
+  const rollupMarginAtMin = ((rollupFeeMin - rollupTotalCost) / rollupFeeMin) * 100;
+  const rollupMarginAtMax = ((rollupFeeMax - rollupTotalCost) / rollupFeeMax) * 100;
+  return {
+    p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax,
+    rollupTotalDays, rollupLaborCost, rollupTravelCost, rollupTotalCost,
+    rollupFeeMin, rollupFeeMax, rollupMarginAtMin, rollupMarginAtMax,
+  };
 }
 
 function fmt(n: number): string {
@@ -643,7 +656,11 @@ export default function InternalScopePlan() {
     return <PassphraseGate onUnlock={() => setUnlocked(true)} />;
   }
 
-  const { p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax } = deriveAll(cfg);
+  const {
+    p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax,
+    rollupTotalDays, rollupLaborCost, rollupTravelCost, rollupTotalCost,
+    rollupFeeMin, rollupFeeMax, rollupMarginAtMin, rollupMarginAtMax,
+  } = deriveAll(cfg);
 
   function buildPlainText(): string {
     return [
@@ -728,6 +745,25 @@ export default function InternalScopePlan() {
       "  · HST & government reporting — remittances filed correctly and on time from day one",
       "",
       "How it's priced: absorbed into Phase 2 fee. Not a separate line item on the invoice.",
+      "",
+      "═══════════════════════════════════",
+      "PHASES 2–4 ROLLUP SUMMARY",
+      "═══════════════════════════════════",
+      "",
+      "Phase-by-phase:",
+      `  Phase 2 — The Build:     ${p2.totalDays} days · cost ${fmt(p2FullCost)} (incl. IT hire) · fee ${fmt(cfg.phase2.proposedFeeMin)}–${fmt(cfg.phase2.proposedFeeMax)} · margin ${pct(p2MarginAtMin)}–${pct(p2MarginAtMax)}`,
+      `  Phase 3 — Winter Payoff: ${p3.totalDays} days · cost ${fmt(p3.totalCost)} · fee ${fmt(cfg.phase3.proposedFeeMin)}–${fmt(cfg.phase3.proposedFeeMax)} · margin ${pct(p3.marginAtMin)}–${pct(p3.marginAtMax)}`,
+      `  Phase 4 — Handoff:       ${p4.totalDays} days · cost ${fmt(p4.totalCost)} · fee ${fmt(cfg.phase4.proposedFeeMin)}–${fmt(cfg.phase4.proposedFeeMax)} · margin ${pct(p4.marginAtMin)}–${pct(p4.marginAtMax)}`,
+      "",
+      "Totals:",
+      `  Total Headwaters days committed: ${rollupTotalDays} days`,
+      `  Total labour cost: ${fmt(rollupLaborCost)}`,
+      `  Total travel cost: ${fmt(rollupTravelCost)}`,
+      `  IT/Bookkeeping hire (${cfg.staffing.monthsCoveredInPhase2} months, absorbed into Phase 2): ${fmt(staffPhase2Total)}`,
+      `  TOTAL COST TO DELIVER: ${fmt(rollupTotalCost)}`,
+      "",
+      `  Total proposed fee: ${fmt(rollupFeeMin)} – ${fmt(rollupFeeMax)} CAD excl. HST`,
+      `  BLENDED GROSS MARGIN: ${pct(rollupMarginAtMin)} – ${pct(rollupMarginAtMax)} (incl. hire absorption)`,
     ].join("\n");
   }
 
@@ -852,7 +888,7 @@ export default function InternalScopePlan() {
             "IT/bookkeeping hire is not a separate line on the client invoice. It's baked into the Phase 2 fee. This protects Bobbie's time and keeps the client from nickel-and-diming the admin function.",
             "Phase 2 fee is confirmed at the end of Phase 1 once actual scope and staffing needs are clear. The range above is the negotiating window.",
           ]}
-          pageNum="2 of 5"
+          pageNum="2 of 6"
         />
 
         {/* ── PHASE 3 ── */}
@@ -882,7 +918,7 @@ export default function InternalScopePlan() {
             "Deliverable: a clean financial record showing what the store earns in its first winter. This is the document that makes future grant applications credible.",
             "IT/bookkeeping hire is already in place from Phase 2 — no additional absorption needed here. The contractor continues independently.",
           ]}
-          pageNum="3 of 5"
+          pageNum="3 of 6"
         />
 
         {/* ── PHASE 4 ── */}
@@ -912,7 +948,7 @@ export default function InternalScopePlan() {
             "Codetry handoff includes everything in a format the community owns outright. No ongoing login, no subscription, no dependency on Headwaters to keep it running.",
             "By end of Phase 4, Pilot #2 should have a named candidate community, not just a waitlist. The scoring sheet from the reserve list drives this.",
           ]}
-          pageNum="4 of 5"
+          pageNum="4 of 6"
         />
 
         {/* ── STAFFING ── */}
@@ -983,7 +1019,178 @@ export default function InternalScopePlan() {
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                 Internal — not for distribution
               </p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>5 of 5</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>5 of 6</p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── ROLLUP SUMMARY ── */}
+        <div style={PAGE}>
+          <div style={{ background: "#2c1810", padding: "0.1in 0.7in", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.54rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(244,180,130,0.75)" }}>
+              Internal · Confidential · Not for distribution
+            </p>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.54rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,180,130,0.5)" }}>
+              Headwaters Development Services
+            </p>
+          </div>
+
+          <div style={{ background: "var(--evergreen)", padding: "0.38in 0.7in 0.32in", flexShrink: 0 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.1rem" }}>
+              Phases 2–4 · Full Engagement Summary
+            </p>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.1rem" }}>
+              The whole picture,<br />in one place.
+            </h2>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "rgba(244,237,224,0.7)", lineHeight: 1.55, maxWidth: "5.6in" }}>
+              Total days committed, total cost to deliver, and the blended margin across the full multi-year engagement. This is the number Bobbie walks into a multi-year negotiation with.
+            </p>
+          </div>
+
+          <div style={{ flex: 1, padding: "0.36in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
+
+            {/* Phase-by-phase table */}
+            <div>
+              <p style={{ ...LABEL, marginBottom: "0.14in" }}>Phase-by-phase breakdown</p>
+
+              {/* Table header */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "1.6in 0.9in 1fr 1fr 0.9in",
+                gap: "0 0.12in",
+                paddingBottom: "0.07in",
+                borderBottom: "2px solid rgba(31,61,46,0.15)",
+                marginBottom: "0.04in",
+              }}>
+                {["Phase", "Days", "Cost to deliver", "Proposed fee", "Margin"].map((h) => (
+                  <p key={h} style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(31,61,46,0.4)" }}>{h}</p>
+                ))}
+              </div>
+
+              {/* Phase rows */}
+              {[
+                {
+                  label: "Phase 2 — The Build",
+                  days: p2.totalDays,
+                  cost: p2FullCost,
+                  feeMin: cfg.phase2.proposedFeeMin,
+                  feeMax: cfg.phase2.proposedFeeMax,
+                  marginMin: p2MarginAtMin,
+                  marginMax: p2MarginAtMax,
+                  note: "incl. IT/bookkeeping hire",
+                },
+                {
+                  label: "Phase 3 — Winter Payoff",
+                  days: p3.totalDays,
+                  cost: p3.totalCost,
+                  feeMin: cfg.phase3.proposedFeeMin,
+                  feeMax: cfg.phase3.proposedFeeMax,
+                  marginMin: p3.marginAtMin,
+                  marginMax: p3.marginAtMax,
+                },
+                {
+                  label: "Phase 4 — Handoff",
+                  days: p4.totalDays,
+                  cost: p4.totalCost,
+                  feeMin: cfg.phase4.proposedFeeMin,
+                  feeMax: cfg.phase4.proposedFeeMax,
+                  marginMin: p4.marginAtMin,
+                  marginMax: p4.marginAtMax,
+                },
+              ].map((row) => (
+                <div key={row.label} style={{
+                  display: "grid",
+                  gridTemplateColumns: "1.6in 0.9in 1fr 1fr 0.9in",
+                  gap: "0 0.12in",
+                  alignItems: "baseline",
+                  borderBottom: "1px solid rgba(31,61,46,0.07)",
+                  padding: "0.065in 0",
+                }}>
+                  <div>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.73rem", color: "var(--ink)", fontWeight: 600 }}>{row.label}</p>
+                    {row.note && <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "var(--muted)" }}>{row.note}</p>}
+                  </div>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{row.days} days</p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{fmt(row.cost)}</p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{fmt(row.feeMin)} – {fmt(row.feeMax)}</p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.78rem", color: "var(--ink)" }}>{pct(row.marginMin)}–{pct(row.marginMax)}</p>
+                </div>
+              ))}
+
+              {/* Totals row */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "1.6in 0.9in 1fr 1fr 0.9in",
+                gap: "0 0.12in",
+                alignItems: "baseline",
+                borderTop: "2px solid var(--evergreen)",
+                paddingTop: "0.1in",
+                marginTop: "0.04in",
+              }}>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)" }}>Total (Phases 2–4)</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)" }}>{rollupTotalDays} days</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)" }}>{fmt(rollupTotalCost)}</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)" }}>{fmt(rollupFeeMin)} – {fmt(rollupFeeMax)}</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)" }}>{pct(rollupMarginAtMin)}–{pct(rollupMarginAtMax)}</p>
+              </div>
+            </div>
+
+            {/* Cost structure callout */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2in" }}>
+              {[
+                { label: "Total labour cost", value: fmt(rollupLaborCost), note: `${rollupTotalDays} days × ${cfg.hoursPerDay} hrs × ${fmt(cfg.hourlyRate)}/hr` },
+                { label: "Total travel cost", value: fmt(rollupTravelCost), note: `${cfg.phase2.siteVisits + cfg.phase3.siteVisits + cfg.phase4.siteVisits} site visits across all phases` },
+                { label: "IT/bookkeeping hire", value: fmt(staffPhase2Total), note: `${cfg.staffing.monthsCoveredInPhase2} months · absorbed into Phase 2` },
+              ].map((item) => (
+                <div key={item.label} style={{ borderTop: "2px solid rgba(31,61,46,0.15)", paddingTop: "0.12in" }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(31,61,46,0.4)", marginBottom: "0.04rem" }}>
+                    {item.label}
+                  </p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.1, marginBottom: "0.04rem" }}>
+                    {item.value}
+                  </p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "var(--muted)" }}>{item.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Blended margin block */}
+            <div style={{
+              background: "var(--evergreen)",
+              borderRadius: 6,
+              padding: "0.18in 0.24in",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "0.3in",
+            }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
+                  Total engagement fee (Phases 2–4)
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>
+                  {fmt(rollupFeeMin)} – {fmt(rollupFeeMax)}
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(244,237,224,0.55)", marginTop: "0.03rem" }}>CAD · excl. HST · sum of all three phases</p>
+              </div>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
+                  Blended gross margin
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1 }}>
+                  {pct(rollupMarginAtMin)} – {pct(rollupMarginAtMax)}
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(244,237,224,0.55)", marginTop: "0.03rem" }}>across all phases incl. hire absorption</p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.1)", paddingTop: "0.15in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Internal — not for distribution
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>6 of 6</p>
             </div>
           </div>
         </div>
