@@ -222,17 +222,8 @@ export default function NorthernPilotPitch() {
             </h2>
           </div>
 
-          {/* Eagle — full-width photo strip */}
-          <div style={{ width: "100%", height: "2.6in", flexShrink: 0, overflow: "hidden", background: "var(--evergreen)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <img
-              src={`${base}eagle-circle.png`}
-              alt="Eagle in flight within a sun ring"
-              style={{ height: "100%", width: "auto", objectFit: "contain", display: "block" }}
-            />
-          </div>
-
           {/* Body — deliverables full width */}
-          <div style={{ flex: 1, padding: "0.36in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
+          <div style={{ flex: 1, padding: "0.42in 0.7in 0.32in", display: "flex", flexDirection: "column", gap: "0.32in" }}>
 
             <div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.16in" }}>
@@ -255,36 +246,44 @@ export default function NorthernPilotPitch() {
             </div>
 
             {/* Fee block */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.22in" }}>
-              <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.06rem" }}>
-                    Engagement
-                  </p>
-                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
-                    Flat fee. 6 weeks. No hourly rate.
-                  </p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.04rem" }}>
-                    Stop at any point. You keep everything built.
-                  </p>
-                </div>
-                <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$25k</p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
-                </div>
+            <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.06rem" }}>
+                  Engagement
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
+                  Flat fee. 6 weeks. No hourly rate.
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.04rem" }}>
+                  Stop at any point. You keep everything built.
+                </p>
               </div>
-
-              {/* Footer */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                <div>
-                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
-                </div>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 3</p>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$25k</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
               </div>
             </div>
 
+            {/* Contact line */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 3</p>
+            </div>
+
           </div>
+
+          {/* Eagle — full-width footer banner */}
+          <div style={{ width: "100%", height: "2.2in", flexShrink: 0, background: "var(--evergreen)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+            <img
+              src={`${base}eagle-circle.png`}
+              alt="Eagle in flight within a sun ring"
+              style={{ height: "100%", width: "auto", objectFit: "contain", display: "block" }}
+            />
+          </div>
+
         </div>
 
       </div>
