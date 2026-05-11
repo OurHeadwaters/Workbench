@@ -83,7 +83,7 @@ export default function NorthernPilotPitch() {
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.22rem" }}>
               Headwaters · Deer Lake First Nation
             </p>
-            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.02em" }}>
+            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.02em", fontVariationSettings: '"WONK" 0' }}>
               One store.<br />One point<br />of failure.
             </h1>
           </div>
@@ -174,7 +174,7 @@ export default function NorthernPilotPitch() {
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.16in" }}>
                     The vision
                   </p>
-                  <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
+                  <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1.05, letterSpacing: "-0.02em", fontVariationSettings: '"WONK" 0' }}>
                     Not a<br />competitor.<br />A complement.
                   </h2>
                 </div>
@@ -217,46 +217,41 @@ export default function NorthernPilotPitch() {
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "0.15rem" }}>
               The easy button
             </p>
-            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", fontVariationSettings: '"WONK" 0' }}>
               We handle the plan.<br />You handle the community.
             </h2>
           </div>
 
-          {/* Body — two columns: deliverables left, eagle right */}
-          <div style={{ flex: 1, padding: "0.42in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.34in" }}>
+          {/* Eagle — full-width photo strip */}
+          <div style={{ width: "100%", height: "2.6in", flexShrink: 0, overflow: "hidden", background: "var(--evergreen)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <img
+              src={`${base}eagle-circle.png`}
+              alt="Eagle in flight within a sun ring"
+              style={{ height: "100%", width: "auto", objectFit: "contain", display: "block" }}
+            />
+          </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 2.8in", gap: "0.5in", alignItems: "center" }}>
+          {/* Body — deliverables full width */}
+          <div style={{ flex: 1, padding: "0.36in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
 
-              {/* Deliverables */}
-              <div>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.18in" }}>
-                  What you walk away with in 6 weeks
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.14in" }}>
-                  {[
-                    "Store concept and supply chain map",
-                    "Governance and ownership structure",
-                    "Operations plan — ordering, pricing, cash handling",
-                    "Staffing framework and hiring sequence",
-                    "Funder-ready financial package",
-                  ].map((item) => (
-                    <div key={item} style={{ display: "flex", gap: "0.16in", alignItems: "flex-start", borderBottom: "1px solid rgba(31,61,46,0.1)", paddingBottom: "0.12in" }}>
-                      <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0 }}>→</span>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.45 }}>{item}</p>
-                    </div>
-                  ))}
-                </div>
+            <div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.16in" }}>
+                What you walk away with in 6 weeks
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.5in" }}>
+                {[
+                  "Store concept and supply chain map",
+                  "Governance and ownership structure",
+                  "Operations plan — ordering, pricing, cash handling",
+                  "Staffing framework and hiring sequence",
+                  "Funder-ready financial package",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: "0.14in", alignItems: "flex-start", borderBottom: "1px solid rgba(31,61,46,0.1)", paddingBottom: "0.11in", marginBottom: "0.11in" }}>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0, fontVariationSettings: '"WONK" 0' }}>→</span>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.45 }}>{item}</p>
+                  </div>
+                ))}
               </div>
-
-              {/* Eagle image — centered in column alongside deliverables */}
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <img
-                  src={`${base}eagle-circle.png`}
-                  alt="Eagle in flight within a sun ring"
-                  style={{ width: "2.6in", height: "2.6in", objectFit: "cover", borderRadius: "50%", display: "block", boxShadow: "0 4px 24px rgba(31,61,46,0.18)" }}
-                />
-              </div>
-
             </div>
 
             {/* Fee block */}
