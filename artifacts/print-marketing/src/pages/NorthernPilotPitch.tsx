@@ -3,19 +3,34 @@ import { PrintNav } from "../components/PrintNav";
 
 const base = import.meta.env.BASE_URL;
 
-// ─── Client config ────────────────────────────────────────────────────────────
-// To reuse this pitch for a new community, update both constants below.
+// ─── Pitch config ─────────────────────────────────────────────────────────────
+// Edit any value here to update the full pitch (rendered pages + plain-text copy).
+//
+// CLIENT — to reuse this pitch for a new community, update both constants below.
 //   CLIENT_NAME  — the full legal name used in headers and formal copy
 //   CLIENT_SHORT — the short form used in body sentences (typically everything before "First Nation")
 const CLIENT_NAME = "Deer Lake First Nation";
 const CLIENT_SHORT = "Deer Lake";
 
-// ─── Fee config ───────────────────────────────────────────────────────────────
-// Set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the fee is
-// agreed. Leave as null to keep the "Pricing TBC" placeholder.
+// FEES — set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the
+// fee is agreed. Leave as null to keep the "Pricing TBC" placeholder.
 const FEES: { phase2Fee: string | null; phase3Fee: string | null } = {
   phase2Fee: null,
   phase3Fee: null,
+};
+
+// PHASES — dates and durations shown in headers, subheads, and plain-text copy.
+//   phase1Duration  e.g. "6 weeks"
+//   phase2Duration  e.g. "4 months"
+//   phase2Dates     e.g. "Aug–Dec"
+//   phase3Label     shown in the page header  e.g. "Winter season onward"
+//   phase3Season    shown in the pricing box  e.g. "Winter season"
+const PHASES = {
+  phase1Duration: "6 weeks",
+  phase2Duration: "4 months",
+  phase2Dates: "Aug–Dec",
+  phase3Label: "Winter season onward",
+  phase3Season: "Winter season",
 };
 
 function buildPlainText(): string {
@@ -59,14 +74,14 @@ function buildPlainText(): string {
     "",
     "We listen. We plan. Leadership sees the plan and decides what happens next.",
     "",
-    `What ${CLIENT_SHORT} walks away with after 6 weeks:`,
+    `What ${CLIENT_SHORT} walks away with after ${PHASES.phase1Duration}:`,
     "→ A clear plan for what to sell and where it comes from",
     "→ A clear picture of who does what and how decisions get made",
     "→ A day-to-day operations guide — orders, pricing, cash",
     "→ A hiring plan: Headwaters finds candidates, writes job descriptions, and maps training needs — the contractor and band decide who gets hired",
     "→ A financial plan for year one — what it costs to run and where the money comes from",
     "",
-    "$28,000 · 6-week engagement · flat fee",
+    `$28,000 · ${PHASES.phase1Duration} engagement · flat fee`,
     `You can stop at any point. Everything built stays with ${CLIENT_SHORT}.`,
     "",
     "Headwaters Development Services",
@@ -74,7 +89,7 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    "PAGE 4 — THE BUILD (Phase 2 · 4 months · Aug–Dec)",
+    `PAGE 4 — THE BUILD (Phase 2 · ${PHASES.phase2Duration} · ${PHASES.phase2Dates})`,
     "",
     "The store opens. We make sure it works.",
     "",
@@ -92,7 +107,7 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    "PAGE 5 — THE PAYOFF (Phase 3 · Winter season onward)",
+    `PAGE 5 — THE PAYOFF (Phase 3 · ${PHASES.phase3Label})`,
     "",
     "Winter roads open. The economics flip.",
     "",
@@ -350,7 +365,7 @@ export default function NorthernPilotPitch() {
           {/* Rust header */}
           <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "0.15rem" }}>
-              Phase 1 · The Plan · 6 weeks
+              {`Phase 1 · The Plan · ${PHASES.phase1Duration}`}
             </p>
             <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
               We listen. We plan.<br />Leadership sees the plan<br />and decides what's next.
@@ -362,7 +377,7 @@ export default function NorthernPilotPitch() {
 
             <div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.18in" }}>
-                {`What ${CLIENT_SHORT} walks away with after 6 weeks`}
+                {`What ${CLIENT_SHORT} walks away with after ${PHASES.phase1Duration}`}
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.5in" }}>
                 {[
@@ -387,7 +402,7 @@ export default function NorthernPilotPitch() {
                   What it costs
                 </p>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
-                  One flat fee. Six weeks. No hourly billing.
+                  {`One flat fee. ${PHASES.phase1Duration}. No hourly billing.`}
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
                   {`You can stop at any point. Everything built stays with ${CLIENT_SHORT}.`}
@@ -421,7 +436,7 @@ export default function NorthernPilotPitch() {
           {/* Evergreen header */}
           <div style={{ background: "var(--evergreen)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.15rem" }}>
-              Phase 2 · The Build · 4 months · Aug–Dec
+              {`Phase 2 · The Build · ${PHASES.phase2Duration} · ${PHASES.phase2Dates}`}
             </p>
             <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
               The store opens.<br />We make sure<br />it works.
@@ -473,7 +488,7 @@ export default function NorthernPilotPitch() {
                     What it costs
                   </p>
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
-                    One flat fee. Four months. No hourly billing.
+                    {`One flat fee. ${PHASES.phase2Duration}. No hourly billing.`}
                   </p>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
                     Confirmed at the end of Phase 1 once scope and staffing needs are clear.
@@ -515,7 +530,7 @@ export default function NorthernPilotPitch() {
           {/* Cream/rust header */}
           <div style={{ background: "var(--rust)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "0.15rem" }}>
-              Phase 3 · The Payoff · Winter season onward
+              {`Phase 3 · The Payoff · ${PHASES.phase3Label}`}
             </p>
             <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
               Winter roads open.<br />The economics flip.
@@ -562,7 +577,7 @@ export default function NorthernPilotPitch() {
                     What it costs
                   </p>
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
-                    One flat fee. Winter season. No hourly billing.
+                    {`One flat fee. ${PHASES.phase3Season}. No hourly billing.`}
                   </p>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
                     Scope confirmed after Phase 2 reveals the store's operating rhythm.
