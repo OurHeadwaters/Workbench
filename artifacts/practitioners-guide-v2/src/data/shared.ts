@@ -23,21 +23,26 @@ import type {
  * Northern Band roster — the 807 grant is no longer carried as a planning
  * line in the guide.
  *
- * ── Reality-check status (as of 2026-05-03) ──────────────────────────────
+ * ── Reality-check status (as of 2026-05-11) ──────────────────────────────
  * CONFIRMED ACTUALS (locked against real records):
  *   - perJarCogs: $5.50 blended — structure confirmed; actual ingredient costs
  *     tracked against purchase records.
  *   - Brightside pricing tiers, setup fee, training fee — set by founder decision.
  *   - Brightside buildModel (founder time = $0 cash, engineer cap $20k) — set.
+ *   - mapleSyrup: two sizes confirmed by founder (May 2026). 96 × 1L @ $21 cost/$27
+ *     sell; 96 × 500ml @ $13 cost/$18 sell. Supplier has no more — this is the ceiling.
+ *     Sold at Calberry (4×/yr), Farmers Market (15 wks), and 807 local line.
+ *   - operating.marketsFarmersAnnual: $25/stall confirmed (Dryden Farmers' Market,
+ *     community volunteer rate). 15 weeks. $375/yr.
+ *   - operating.batchCadence: 200–300 jars per run in ~4–6 hrs (founder confirmed May 2026).
  *
  * PLANNING ASSUMPTIONS (not yet observed / not yet contracted):
  *   - SHARED_SALTS.channelTotals (1,190 jars/yr) — planning target; no season
  *     of batch records confirms this throughput. Farmers market volume (45 jars)
  *     is the founder's conservative estimate, not a measured average.
- *   - SHARED_SALTS.operating (stall costs, craft fair schedule) — assumed rates
- *     that need to be confirmed with market coordinators.
- *   - SHARED_SALTS.pAndL.netCash ($1,298) — follows from channel totals above;
- *     not an observed cash figure.
+ *   - SHARED_SALTS.operating (craft fair schedule) — craft fair count assumed.
+ *   - SHARED_SALTS.pAndL.netCash ($1,373) — follows from channel totals above;
+ *     not an observed cash figure (updated May 2026 for confirmed $25 stall rate).
  *   - SHARED_BRIGHTSIDE.revenueTarget (cumulative18mo: $120,000, ~22 facilities)
  *     — modelling scenario; no pilot site has committed. Revenue window is
  *     late Q4 2026 / early Q1 2027 at earliest.
@@ -99,40 +104,55 @@ export const SHARED_SALTS: SaltsScenario = {
     tag: provisional("planning target — annual volume not yet tracked against batch records"),
   },
   operating: {
-    batchCadence: "every ~6 weeks (~8–9 batches/yr)",
+    batchCadence: "200–300 jars per run · ~4–6 hrs · cadence TBD by batch tracking",
     batchLabour: "founder + family, $0 cash",
     freight: "$0 — local buyers",
     marketsCraftAnnual: 600,
-    marketsFarmersAnnual: 450,
-    marketsOverheadTotal: 1050,
+    marketsFarmersAnnual: 375,
+    marketsOverheadTotal: 975,
     subscriptionsAnnual: 1800,
     subscriptionsAllocationPct: 30,
-    tag: provisional("stall costs and market schedule are estimates — confirm with market coordinators"),
+    tag: provisional("craft fair count assumed; stall rate confirmed at $25 × 15 wks"),
   },
   pAndL: {
     revenue: 10693,
     cogs: 6545,
-    marketsOverhead: 1050,
+    marketsOverhead: 975,
     subscriptions: 1800,
-    netCash: 1298,
+    netCash: 1373,
     tag: provisional("derived from channel volume estimates — not an observed cash figure"),
   },
   shadowLabour: {
-    sessionJars: 500,
-    sessionHours: 12,
+    sessionJars: 250,
+    sessionHours: 5,
     annualJars: 1190,
-    annualHours: 29,
+    annualHours: 24,
     benchHourly: 30,
-    annualCost: 858,
-    adjustedNet: 440,
-    tag: provisional("hours/session estimated, not timed against actual batch records"),
+    annualCost: 714,
+    adjustedNet: 659,
+    tag: provisional("200–300 jars / 4–6 hrs confirmed by founder May 2026 — using midpoints"),
   },
   mapleSyrup: {
-    cases: 12,
-    bottlesPerCase: 12,
-    marginPerBottle: 4,
-    annualMargin: 576,
-    tag: confirmed("separate line, not counted in salt revenue"),
+    sizes: [
+      {
+        label: "1L",
+        qty: 96,
+        costEach: 21,
+        sellEach: 27,
+        marginEach: 6,
+        totalMargin: 576,
+      },
+      {
+        label: "500ml",
+        qty: 96,
+        costEach: 13,
+        sellEach: 18,
+        marginEach: 5,
+        totalMargin: 480,
+      },
+    ],
+    annualMargin: 1056,
+    tag: confirmed("96 × 1L + 96 × 500ml — supplier at ceiling; sold Calberry, Farmers Market, 807 local line. Confirmed May 2026."),
   },
 };
 

@@ -106,7 +106,9 @@ export function buildSaltLedger(scenario: Scenario): LedgerExport {
   const mapleSyrupRow = isLocked(s.mapleSyrup.tag)
     ? [
         "Maple syrup at markets (separate line)",
-        `${s.mapleSyrup.cases} cases × ${s.mapleSyrup.bottlesPerCase} bottles × $${s.mapleSyrup.marginPerBottle} margin = $${s.mapleSyrup.annualMargin}/yr`,
+        s.mapleSyrup.sizes
+          .map((sz) => `${sz.qty} × ${sz.label} @ $${sz.marginEach} margin = $${sz.totalMargin}`)
+          .join(" + ") + ` = $${s.mapleSyrup.annualMargin}/yr`,
       ]
     : null;
 

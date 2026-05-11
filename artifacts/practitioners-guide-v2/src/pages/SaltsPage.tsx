@@ -131,15 +131,15 @@ export function SaltsPage() {
             <div className="space-y-2 text-amber-800">
               <FramingQuestion
                 q="How many jars actually come out of a single batch?"
-                context="The 1,190/yr steady-state assumes ~8–9 batches/yr × a batch size that hasn't been measured against actual production records. Track the next three batches."
+                context="Founder confirmed: 200–300 jars per run in ~4–6 hrs. Track the next three batches against this to lock the number and confirm the 1,190/yr planning target is achievable."
               />
               <FramingQuestion
                 q="What does a jar actually cost to produce, per blend?"
                 context="$5.50 is a blended average. Real per-jar cost varies by blend (salt type, additives, label design). When you have batch-level supply receipts, break this per-blend."
               />
               <FramingQuestion
-                q="What does a farmers market slot actually cost — and what does a day need to gross to be worth it?"
-                context="$450/yr market cost assumes 15 weeks × $30/stall. Is that the actual Dryden Farmers' Market rate? What are setup, travel, and time costs? What revenue covers break-even?"
+                q="What does a farmers market day need to gross to be worth your Saturday?"
+                context="Stall rate confirmed: $25/stall × 15 weeks = $375/yr. Thursdays, kids covered, community engagement time. Open question: what does a day need to sell to justify the day — especially if an employee runs the table?"
               />
               <FramingQuestion
                 q="What is the realistic jars-per-market-day range?"
@@ -319,8 +319,8 @@ export function SaltsPage() {
                 tag={s.operating.tag}
               />
               <Row
-                label="Markets — farmers (15 wks × $30 est.)"
-                value={`${money(s.operating.marketsFarmersAnnual)} — confirm stall rate`}
+                label="Markets — farmers (15 wks × $25 confirmed)"
+                value={`${money(s.operating.marketsFarmersAnnual)} — community volunteer rate`}
                 tag={s.operating.tag}
               />
               <Row
@@ -405,17 +405,53 @@ export function SaltsPage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-muted-foreground mb-3">
               NOT counted in salt revenue. Listed for markets context only.
+              Sold at Calberry (4×/yr), Dryden Farmers Market (15 wks), and 807 local line.
+              Supplier is at ceiling — 96 of each size is the annual maximum.
             </p>
-            <p className="text-sm text-muted-foreground">
-              <Num tag={s.mapleSyrup.tag}>{s.mapleSyrup.cases}</Num> cases/yr ×{" "}
-              <Num tag={s.mapleSyrup.tag}>{s.mapleSyrup.bottlesPerCase}</Num> bottles ×{" "}
-              <Num tag={s.mapleSyrup.tag}>${s.mapleSyrup.marginPerBottle}</Num> margin ={" "}
-              <strong className="text-foreground">
-                <Num tag={s.mapleSyrup.tag}>{money(s.mapleSyrup.annualMargin)}/yr</Num>
-              </strong>
-              . Sells out early; volume pivot from 8 → 12 cases is doable with staff.
+            <table className="w-full text-sm mb-3">
+              <thead className="text-left text-muted-foreground">
+                <tr className="border-b border-card-border">
+                  <th className="py-2 pr-4 font-medium">Size</th>
+                  <th className="py-2 pr-4 font-medium text-right num">Qty</th>
+                  <th className="py-2 pr-4 font-medium text-right num">Cost</th>
+                  <th className="py-2 pr-4 font-medium text-right num">Sell</th>
+                  <th className="py-2 pr-4 font-medium text-right num">Margin ea.</th>
+                  <th className="py-2 pr-4 font-medium text-right num">Total margin</th>
+                </tr>
+              </thead>
+              <tbody>
+                {s.mapleSyrup.sizes.map((sz) => (
+                  <tr key={sz.label} className="border-b border-card-border">
+                    <td className="py-2 pr-4 font-medium">{sz.label}</td>
+                    <td className="py-2 pr-4 text-right num">
+                      <Num tag={s.mapleSyrup.tag}>{sz.qty}</Num>
+                    </td>
+                    <td className="py-2 pr-4 text-right num">
+                      <Num tag={s.mapleSyrup.tag}>{money(sz.costEach, 0)}</Num>
+                    </td>
+                    <td className="py-2 pr-4 text-right num">
+                      <Num tag={s.mapleSyrup.tag}>{money(sz.sellEach, 0)}</Num>
+                    </td>
+                    <td className="py-2 pr-4 text-right num">
+                      <Num tag={s.mapleSyrup.tag}>{money(sz.marginEach, 0)}</Num>
+                    </td>
+                    <td className="py-2 pr-4 text-right num font-medium">
+                      <Num tag={s.mapleSyrup.tag}>{money(sz.totalMargin)}</Num>
+                    </td>
+                  </tr>
+                ))}
+                <tr className="font-semibold">
+                  <td className="py-2 pr-4" colSpan={5}>TOTAL maple syrup margin</td>
+                  <td className="py-2 pr-4 text-right num">
+                    <Num tag={s.mapleSyrup.tag}>{money(s.mapleSyrup.annualMargin)}/yr</Num>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="text-xs text-muted-foreground">
+              Always sells out. Supplier at ceiling — no additional volume available.
             </p>
           </AccordionContent>
         </AccordionItem>

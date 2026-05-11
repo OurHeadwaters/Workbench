@@ -46,9 +46,14 @@ export interface SaltsScenario {
     tag: SourceTag;
   };
   mapleSyrup: {
-    cases: number;
-    bottlesPerCase: number;
-    marginPerBottle: number;
+    sizes: {
+      label: string;
+      qty: number;
+      costEach: number;
+      sellEach: number;
+      marginEach: number;
+      totalMargin: number;
+    }[];
     annualMargin: number;
     tag: SourceTag;
   };

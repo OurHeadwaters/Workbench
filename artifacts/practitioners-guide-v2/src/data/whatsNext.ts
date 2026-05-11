@@ -92,21 +92,15 @@ export const FOCUS_AREAS: FocusArea[] = [
     accentInk: "#1F4A1A",
     steps: [
       {
-        action: "Track the next three batches against real yield",
+        action: "Run the farmers market break-even math",
         detail:
-          "The 1,190 jars/yr planning target assumes a batch size that hasn't been measured. After the next three batches, you'll know actual yield per batch — this single number changes the whole model.",
+          "Stall rate confirmed: $25 × 15 weeks = $375/yr. The open question now is: what does a Thursday need to gross to justify the day — especially once an employee runs the table part-time? At $12/jar, break-even is ~2 jars to cover the stall. The real floor is your time.",
         timeEstimate: "15 min",
       },
       {
-        action: "Confirm the Dryden Farmers' Market stall rate",
+        action: "Invoice Loving Suds and deliver the May 24–29 batch to Tilleys",
         detail:
-          "The model uses $30/stall. Verify the actual rate, setup cost, and travel time. Run the break-even math: what does a market day need to gross to be worth the Saturday?",
-        timeEstimate: "15 min",
-      },
-      {
-        action: "Follow up on the 9-case wholesale backlog",
-        detail:
-          "This is the closest thing to a real number in the Salts model — existing accounts with a backlog of orders. Following up on these converts a planning assumption into confirmed revenue.",
+          "One case filled Saturday — invoice it. Four cases ready May 24–29 en route to Tilleys in Kenora, then Superior Seasons in Thunder Bay. The 9-case backlog is being worked. Each case invoiced converts a planning assumption into real revenue.",
         timeEstimate: "15 min",
       },
       {
@@ -116,9 +110,9 @@ export const FOCUS_AREAS: FocusArea[] = [
         timeEstimate: "15 min",
       },
       {
-        action: "Decide on the maple syrup case pivot (8 → 12 cases)",
+        action: "Track the next three batches against real yield",
         detail:
-          "The model notes it sells out early and a 12-case run is doable with staff. This is a low-effort, fast-payoff decision — decide yes or no and log it so the model reflects what's actually happening.",
+          "Founder confirmed 200–300 jars per run in ~4–6 hrs. Track the next three batches to pin this down and confirm whether the 1,190/yr planning target is achievable. The new lids (one-part) should help — note if yield per hour improves.",
         timeEstimate: "15 min",
       },
     ],
