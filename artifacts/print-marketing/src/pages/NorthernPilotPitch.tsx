@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import QRCodeStamp from "../components/QRCodeStamp";
 import { PrintNav } from "../components/PrintNav";
 
 const base = import.meta.env.BASE_URL;
@@ -224,9 +223,9 @@ export default function NorthernPilotPitch() {
           </div>
 
           {/* Body — two columns: deliverables left, eagle right */}
-          <div style={{ flex: 1, padding: "0.42in 0.7in 0.3in", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div style={{ flex: 1, padding: "0.42in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.34in" }}>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 2.8in", gap: "0.5in", alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 2.8in", gap: "0.5in", alignItems: "center" }}>
 
               {/* Deliverables */}
               <div>
@@ -249,8 +248,8 @@ export default function NorthernPilotPitch() {
                 </div>
               </div>
 
-              {/* Eagle image */}
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+              {/* Eagle image — centered in column alongside deliverables */}
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <img
                   src={`${base}eagle-circle.png`}
                   alt="Eagle in flight within a sun ring"
@@ -286,10 +285,7 @@ export default function NorthernPilotPitch() {
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 3</p>
-                  <QRCodeStamp />
-                </div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 3</p>
               </div>
             </div>
 
