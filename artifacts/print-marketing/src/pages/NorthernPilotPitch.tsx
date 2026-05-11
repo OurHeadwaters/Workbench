@@ -6,6 +6,11 @@ const base = import.meta.env.BASE_URL;
 function buildPlainText(): string {
   return [
     "HEADWATERS · DEER LAKE FIRST NATION",
+    "Community Store Pilot — Proposal",
+    "May 2026",
+    "",
+    "Headwaters Development Services",
+    "bobbie@ourheadwaters.ca · ourheadwaters.ca",
     "",
     "---",
     "",
@@ -103,6 +108,79 @@ export default function NorthernPilotPitch() {
       />
 
       <div id="pdf-target" style={{ background: "#d8d2c8" }}>
+
+        {/* ── COVER ── */}
+        <div style={{ ...PAGE, background: "var(--evergreen)", position: "relative" }}>
+
+          {/* Boreal hero — top 58% */}
+          <div style={{ width: "100%", height: "6.38in", flexShrink: 0, overflow: "hidden", position: "relative" }}>
+            <img
+              src={`${base}hero-boreal.png`}
+              alt="Northern boreal lake at golden hour"
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", display: "block" }}
+            />
+            {/* Gradient fades photo into the evergreen band below */}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(31,61,46,0.18) 0%, transparent 35%, rgba(31,61,46,0.72) 100%)" }} />
+
+            {/* Logo + wordmark in top-left corner over photo */}
+            <div style={{ position: "absolute", top: "0.52in", left: "0.62in", display: "flex", alignItems: "center", gap: "0.2in" }}>
+              <img
+                src={`${base}eagle-circle.png`}
+                alt="Headwaters logo"
+                style={{ width: "0.72in", height: "0.72in", objectFit: "contain", opacity: 0.92 }}
+              />
+              <div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 700, color: "var(--cream)", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1.2 }}>
+                  Headwaters
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.52rem", color: "rgba(244,237,224,0.65)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                  Development Services
+                </p>
+              </div>
+            </div>
+
+            {/* Document label bottom-left over photo */}
+            <p style={{ position: "absolute", bottom: "0.28in", left: "0.62in", fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.65)" }}>
+              Community Store Pilot · Proposal
+            </p>
+          </div>
+
+          {/* Evergreen band — bottom 42% */}
+          <div style={{ flex: 1, background: "var(--evergreen)", padding: "0.46in 0.62in 0.54in", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+            <div>
+              {/* Rust accent rule */}
+              <div style={{ width: "0.55in", height: 3, background: "var(--rust)", marginBottom: "0.22in" }} />
+
+              <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.4rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: "0.22in", ...WONK0 }}>
+                Deer Lake<br />First Nation
+              </h1>
+
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.88rem", color: "rgba(244,237,224,0.72)", lineHeight: 1.6, maxWidth: "4.8in" }}>
+                A plan for a community-owned store — affordable food, local jobs, and money that stays in Deer Lake.
+              </p>
+            </div>
+
+            {/* Bottom row: contact left, date right */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(244,237,224,0.15)", paddingTop: "0.2in" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "rgba(244,237,224,0.55)", marginBottom: "0.04rem" }}>
+                  bobbie@ourheadwaters.ca
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "rgba(244,237,224,0.55)" }}>
+                  ourheadwaters.ca
+                </p>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "rgba(244,237,224,0.45)", letterSpacing: "0.1em" }}>
+                May 2026
+              </p>
+            </div>
+
+          </div>
+
+          {/* Rust bar at very bottom */}
+          <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
+        </div>
 
         {/* ── PAGE 1 ── The problem */}
         <div style={PAGE}>
