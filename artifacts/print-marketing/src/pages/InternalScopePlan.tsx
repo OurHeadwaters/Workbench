@@ -42,6 +42,10 @@ const DEFAULT_CONFIG = {
 
 type Config = typeof DEFAULT_CONFIG;
 
+// ─── Passphrase — change this to update the PIN ───────────────────────────────
+const PASSPHRASE = "headwaters2026";
+const SESSION_KEY = "internal-scope-plan-unlocked";
+
 // ─── Derived calculations ─────────────────────────────────────────────────────
 
 function phaseCalc(
@@ -518,9 +522,114 @@ function AssumptionsSidebar({
   );
 }
 
+// ─── Passphrase gate ──────────────────────────────────────────────────────────
+
+function PassphraseGate({ onUnlock }: { onUnlock: () => void }) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (value === PASSPHRASE) {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      setError(false);
+      onUnlock();
+    } else {
+      setError(true);
+      setValue("");
+    }
+  }
+
+  const GATE_WRAP: CSSProperties = {
+    minHeight: "100vh",
+    background: "var(--evergreen)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  const GATE_CARD: CSSProperties = {
+    background: "#faf8f4",
+    borderRadius: 10,
+    padding: "2.5rem 3rem",
+    width: "min(22rem, 90vw)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.2rem",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.22)",
+  };
+
+  return (
+    <div style={GATE_WRAP}>
+      <div style={GATE_CARD}>
+        <div>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(31,61,46,0.45)", marginBottom: "0.3rem" }}>
+            Headwaters Development Services
+          </p>
+          <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 900, color: "var(--evergreen)", lineHeight: 1.1, marginBottom: "0.4rem" }}>
+            Internal — Confidential
+          </h1>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "var(--muted)", lineHeight: 1.55 }}>
+            Enter the passphrase to view this document.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <input
+            type="password"
+            autoFocus
+            autoComplete="off"
+            value={value}
+            onChange={(e) => { setValue(e.target.value); setError(false); }}
+            placeholder="Passphrase"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.9rem",
+              padding: "0.55rem 0.75rem",
+              borderRadius: 5,
+              border: error ? "1.5px solid #b85a3e" : "1.5px solid rgba(31,61,46,0.2)",
+              outline: "none",
+              color: "var(--ink)",
+              background: "#fff",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          />
+          {error && (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "#b85a3e" }}>
+              Incorrect passphrase. Try again.
+            </p>
+          )}
+          <button
+            type="submit"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.78rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              background: "var(--evergreen)",
+              color: "var(--cream)",
+              border: "none",
+              borderRadius: 5,
+              padding: "0.6rem 1rem",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
+            Unlock
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function InternalScopePlan() {
+  const [unlocked, setUnlocked] = useState(
+    () => sessionStorage.getItem(SESSION_KEY) === "1"
+  );
   const [cfg, setCfg] = useState<Config>(DEFAULT_CONFIG);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -529,6 +638,10 @@ export default function InternalScopePlan() {
   }, []);
 
   const handleReset = useCallback(() => setCfg(DEFAULT_CONFIG), []);
+
+  if (!unlocked) {
+    return <PassphraseGate onUnlock={() => setUnlocked(true)} />;
+  }
 
   const { p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax } = deriveAll(cfg);
 
@@ -859,21 +972,11 @@ export default function InternalScopePlan() {
               </div>
             </div>
 
-            <div style={{ background: "rgba(31,61,46,0.05)", border: "1px solid rgba(31,61,46,0.12)", borderRadius: 6, padding: "0.18in 0.24in" }}>
-              <p style={{ ...LABEL, marginBottom: "0.12in" }}>What this protects Bobbie from</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.4in" }}>
-                {[
-                  "Being the de-facto IT person for a remote store while also running the engagement",
-                  "Credentials and passwords living in her personal accounts when the engagement ends",
-                  "A late HST filing that creates legal exposure for the band in year one",
-                  "Year-end scramble when the bookkeeper has never seen a remote community store before",
-                ].map((item, i) => (
-                  <div key={i} style={{ display: "flex", gap: "0.12in", alignItems: "flex-start", marginBottom: "0.1in" }}>
-                    <span style={{ color: "var(--evergreen)", fontWeight: 700, fontSize: "0.8rem", flexShrink: 0, lineHeight: 1.5 }}>→</span>
-                    <p style={MUTED}>{item}</p>
-                  </div>
-                ))}
-              </div>
+            <div style={{ background: "rgba(31,61,46,0.04)", borderRadius: 6, padding: "0.2in 0.26in" }}>
+              <p style={{ ...LABEL, marginBottom: "0.12in" }}>Why this protects Bobbie</p>
+              <p style={MUTED}>
+                Without this hire, Bobbie becomes the de facto IT person and bookkeeper — fielding password resets, chasing receipts, and explaining HST to a band administrator at 11pm. That's not what the engagement is for. The hire creates a clean boundary: Headwaters handles strategy and operations, the contractor handles compliance and infrastructure. Both are accountable. Neither is doing the other's job.
+              </p>
             </div>
 
             <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.1)", paddingTop: "0.15in" }}>
