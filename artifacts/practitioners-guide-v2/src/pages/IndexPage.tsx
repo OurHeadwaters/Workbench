@@ -29,6 +29,7 @@ import {
   CheckSquare,
   Plus,
   X,
+  Wallet,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
@@ -287,6 +288,130 @@ function ContractsPipelineBlock() {
               Open Contracts detail <ChevronRight className="h-3 w-3" />
             </p>
           </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ─── Startup budget card ──────────────────────────────────────────────────────
+
+const STARTUP_LS_KEY = "pgv2.startup-expenses.actuals";
+const STARTUP_BUDGET_TOTAL = 28_000;
+// Aggregate low / high across all non-Deer-Lake line items (mirrors StartupExpensesPage)
+const STARTUP_ESTIMATE_LOW = 8_030;
+const STARTUP_ESTIMATE_HIGH = 16_290;
+
+function readStartupActuals(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(STARTUP_LS_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function sumActuals(actuals: Record<string, string>): number {
+  return Object.values(actuals).reduce((sum, v) => {
+    const n = parseFloat(v.replace(/[$,]/g, ""));
+    return sum + (isNaN(n) ? 0 : n);
+  }, 0);
+}
+
+function fmtMoney(n: number) {
+  return "$" + Math.abs(n).toLocaleString("en-CA");
+}
+
+function StartupBudgetCard() {
+  const [actuals, setActuals] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    setActuals(readStartupActuals());
+
+    function onStorage(e: StorageEvent) {
+      if (e.key === STARTUP_LS_KEY) {
+        setActuals(readStartupActuals());
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const hasActuals = Object.values(actuals).some((v) => v.trim() !== "");
+  const actualSpend = sumActuals(actuals);
+  const midpoint = Math.round((STARTUP_ESTIMATE_LOW + STARTUP_ESTIMATE_HIGH) / 2);
+  const spendForRunway = hasActuals ? actualSpend : midpoint;
+  const runway = STARTUP_BUDGET_TOTAL - spendForRunway;
+  const overBudget = runway < 0;
+  const runwayPct = Math.max(0, Math.min(100, (runway / STARTUP_BUDGET_TOTAL) * 100));
+
+  return (
+    <Link
+      href="/startup-expenses"
+      className="block rounded-xl border p-4 hover:shadow-sm transition-shadow"
+      style={{ borderColor: "#1A5FA8" + "44", backgroundColor: "#EBF3FB" }}
+      data-testid="startup-budget-card"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0"
+          style={{ backgroundColor: "#1A5FA8", color: "#fff" }}
+        >
+          <Wallet className="h-4 w-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#0F3460] opacity-70">
+              Startup budget
+            </p>
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-[#1A5FA8]">
+              Details <ChevronRight className="h-3 w-3" />
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 mb-3">
+            <div>
+              <p className="text-[10px] text-[#0F3460] opacity-60 mb-0.5">Budget</p>
+              <p className="text-sm font-bold text-[#0F3460] tabular-nums">
+                {fmtMoney(STARTUP_BUDGET_TOTAL)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#0F3460] opacity-60 mb-0.5">
+                {hasActuals ? "Actual spend" : "Est. spend"}
+              </p>
+              <p className="text-sm font-bold text-[#0F3460] tabular-nums">
+                {hasActuals
+                  ? fmtMoney(actualSpend)
+                  : `${fmtMoney(STARTUP_ESTIMATE_LOW)}–${fmtMoney(STARTUP_ESTIMATE_HIGH)}`}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#0F3460] opacity-60 mb-0.5">Runway left</p>
+              <p
+                className="text-sm font-bold tabular-nums"
+                style={{ color: overBudget ? "#DC2626" : "#065F46" }}
+              >
+                {overBudget ? "–" : ""}{fmtMoney(runway)}
+              </p>
+            </div>
+          </div>
+
+          <div className="h-1.5 rounded-full bg-white/60 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${100 - runwayPct}%`,
+                backgroundColor: overBudget ? "#DC2626" : "#1A5FA8",
+              }}
+            />
+          </div>
+          <p className="text-[10px] text-[#0F3460] opacity-50 mt-1">
+            {hasActuals
+              ? `${Math.round(runwayPct)}% of budget remaining (actual)`
+              : `~${Math.round(runwayPct)}% remaining (est. midpoint)`}
+          </p>
         </div>
       </div>
     </Link>
@@ -659,6 +784,9 @@ export function IndexPage() {
       {/* ── Rate-to-life ── */}
       <RateToLifeWidget />
 
+      {/* ── Startup budget runway ── */}
+      <StartupBudgetCard />
+
       {/* ── Decision tree ── */}
       <DecisionTree />
 
@@ -681,6 +809,14 @@ export function IndexPage() {
           >
             <Handshake className="h-3.5 w-3.5 text-[#1A5FA8]" />
             Pipeline detail
+          </Link>
+          <Link
+            href="/startup-expenses"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium border bg-card hover:bg-muted/30 transition-colors"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <Wallet className="h-3.5 w-3.5 text-[#1A5FA8]" />
+            Startup Budget
           </Link>
           <Link
             href="/debt-attack"
