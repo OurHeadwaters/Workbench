@@ -14,9 +14,10 @@ const CLIENT_SHORT = "Deer Lake";
 
 // FEES — set phase2Fee / phase3Fee to a display string (e.g. "$42k") once the
 // fee is agreed. Leave as null to keep the "Pricing TBC" placeholder.
-const FEES: { phase2Fee: string | null; phase3Fee: string | null } = {
+const FEES: { phase2Fee: string | null; phase3Fee: string | null; phase4Fee: string | null } = {
   phase2Fee: null,
   phase3Fee: null,
+  phase4Fee: null,
 };
 
 // PHASES — dates and durations shown in headers, subheads, and plain-text copy.
@@ -120,6 +121,27 @@ function buildPlainText(): string {
       : "Pricing TBC — Phase 3 fees are discussed separately; scope depends on what Phase 2 reveals about the store's operating rhythm.",
     "",
     "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
+    "",
+    "---",
+    "",
+    "PAGE 6 — THE HANDOFF (Phase 4 · The Handoff Year)",
+    "",
+    "Headwaters steps back. The community steps forward.",
+    "",
+    `By Phase 4, Headwaters is operating at roughly 50% capacity — intentionally. The store team is running the day-to-day. The operator couple knows the supply chain. ${CLIENT_SHORT} community members are filling the casual pod roles. What's left is the knowledge transfer that makes independence real.`,
+    "",
+    "What this phase does:",
+    `→ A local person from the community is trained in the Codetry tools — the software that runs ordering, pricing, and inventory — so ${CLIENT_SHORT} owns that knowledge, not just the store`,
+    "→ Community engagement deepens: feedback sessions, local sourcing conversations, and the band's longer-term food vision starts to take shape",
+    "→ A formal handoff moment — a feast or celebration — marks the transition from Headwaters-supported to community-run",
+    "→ Headwaters documents everything: what worked, what the store costs to run, what it earns, and what comes next",
+    "→ A clean record for funders and a clear path to Pilot #2 — the second community that can learn from what Deer Lake built",
+    "",
+    FEES.phase4Fee
+      ? `${FEES.phase4Fee} · flat fee — scope confirmed after Phase 3.`
+      : "Pricing TBC — Phase 4 fees are discussed at the end of Phase 3, once the store's operating rhythm and training needs are clear.",
+    "",
+    "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 showed it pays for itself. Phase 4 makes it theirs.",
   ].join("\n");
 }
 
@@ -283,7 +305,7 @@ export default function NorthernPilotPitch() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>1 of 5</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>1 of 6</p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>The problem</p>
             </div>
           </div>
@@ -351,7 +373,7 @@ export default function NorthernPilotPitch() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>2 of 5</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>2 of 6</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>The opportunity</p>
               </div>
 
@@ -420,7 +442,7 @@ export default function NorthernPilotPitch() {
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
               </div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 5</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>3 of 6</p>
             </div>
 
           </div>
@@ -515,7 +537,7 @@ export default function NorthernPilotPitch() {
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
               </div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>4 of 5</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>4 of 6</p>
             </div>
 
           </div>
@@ -604,11 +626,12 @@ export default function NorthernPilotPitch() {
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.12in" }}>
                 The arc
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2in" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "0.2in" }}>
                 {[
                   { phase: "Phase 1", label: "Built the plan." },
                   { phase: "Phase 2", label: "Proved it could run." },
                   { phase: "Phase 3", label: "Shows it can pay for itself." },
+                  { phase: "Phase 4", label: "Makes it theirs." },
                 ].map((item) => (
                   <div key={item.phase} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.1in" }}>
                     <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.06rem" }}>{item.phase}</p>
@@ -623,7 +646,106 @@ export default function NorthernPilotPitch() {
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
               </div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>5 of 5</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>5 of 6</p>
+            </div>
+
+          </div>
+
+          <div style={{ width: "100%", height: "0.12in", flexShrink: 0, background: "var(--rust)" }} />
+
+        </div>
+
+        {/* ── PAGE 6 ── The Handoff (Phase 4) */}
+        <div style={{ ...PAGE }}>
+
+          {/* Evergreen header */}
+          <div style={{ background: "var(--evergreen)", padding: "0.44in 0.7in 0.4in", flexShrink: 0 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.15rem" }}>
+              Phase 4 · The Handoff Year
+            </p>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
+              Headwaters steps back.<br />The community<br />steps forward.
+            </h2>
+          </div>
+
+          {/* Body */}
+          <div style={{ flex: 1, padding: "0.42in 0.7in 0.32in", display: "flex", flexDirection: "column", gap: "0.32in" }}>
+
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.68, maxWidth: "5.5in" }}>
+              {`By Phase 4, Headwaters is operating at roughly 50% capacity — intentionally. The store team is running the day-to-day. The operator couple knows the supply chain. ${CLIENT_SHORT} community members are filling the casual pod roles. What's left is the knowledge transfer that makes independence real.`}
+            </p>
+
+            {/* What this phase does */}
+            <div style={{ borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.24in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.18in" }}>
+                What this phase does
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.16in" }}>
+                {[
+                  {
+                    head: "Codetry knowledge transfer",
+                    body: `A local person from ${CLIENT_SHORT} is trained in the Codetry tools — the software that runs ordering, pricing, and inventory — so the community owns that knowledge, not just the store.`,
+                  },
+                  {
+                    head: "Community engagement",
+                    body: "Feedback sessions, local sourcing conversations, and the band's longer-term food vision starts to take shape. The store becomes a community institution, not just a project.",
+                  },
+                  {
+                    head: "The feast and handoff moment",
+                    body: "A formal celebration marks the transition from Headwaters-supported to community-run. The store is yours.",
+                  },
+                  {
+                    head: "A record for funders and a path to Pilot #2",
+                    body: "Headwaters documents everything: what worked, what the store costs to run, what it earns. A clean record for grant applications and a clear path for the next community.",
+                  },
+                ].map((item) => (
+                  <div key={item.head} style={{ display: "flex", gap: "0.14in", alignItems: "flex-start" }}>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0, ...WONK0 }}>→</span>
+                    <div>
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.84rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.03rem" }}>{item.head}</p>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.76rem", color: "var(--muted)", lineHeight: 1.55 }}>{item.body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pricing — Phase 4 */}
+            {FEES.phase4Fee ? (
+              <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.06rem" }}>
+                    What it costs
+                  </p>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "var(--cream)", lineHeight: 1.3 }}>
+                    One flat fee. No hourly billing.
+                  </p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(244,237,224,0.65)", marginTop: "0.05rem" }}>
+                    Scope confirmed at the end of Phase 3.
+                  </p>
+                </div>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1 }}>{FEES.phase4Fee}</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.55rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase" }}>CAD · excl. HST</p>
+                </div>
+              </div>
+            ) : (
+              <div style={{ border: "1px solid rgba(31,61,46,0.15)", borderRadius: 4, padding: "0.16in 0.22in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                  Phase 4 fees are discussed at the end of Phase 3, once the store's operating rhythm and training needs are clear.
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.8rem", fontWeight: 700, color: "var(--evergreen)", whiteSpace: "nowrap", marginLeft: "0.3in", flexShrink: 0 }}>
+                  Pricing TBC
+                </p>
+              </div>
+            )}
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.2in", marginTop: "auto" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)" }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(31,61,46,0.3)" }}>6 of 6</p>
             </div>
 
           </div>
