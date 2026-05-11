@@ -40,7 +40,12 @@ function TimeBadge({ estimate }: { estimate: TimeEstimate }) {
   );
 }
 
-const DEV = "https://77c2ef5e-9483-45bc-b920-da6fc3c7936e-00-j3d38osmvr3g.picard.replit.dev";
+// Cross-artifact links use root-relative paths (no hardcoded host).
+// All artifacts share the same origin under Replit's path-based proxy, so
+// "/artifact-slug/..." resolves correctly in both development and production.
+// parrsjars.ca and ourheadwaters.ca links below are absolute because those
+// are separate Replit projects on their own custom domains.
+const WORKSPACE_ROOT = "";
 
 interface StageLink {
   label: string;
@@ -82,7 +87,7 @@ const STAGES: Stage[] = [
       { label: "parrsjars.com", url: "https://parrsjars.com", external: true, note: "Mirror domain" },
     ],
     supporting: [
-      { label: "Codetry Ship — SOW", url: `${DEV}/codetry-ship/`, note: "Rate card & statement of work" },
+      { label: "Codetry Ship — SOW", url: `${WORKSPACE_ROOT}/codetry-ship/`, note: "Rate card & statement of work" },
     ],
   },
   {
@@ -98,8 +103,8 @@ const STAGES: Stage[] = [
     timeEstimate: "15 min",
     timeNote: "Daily close entry or quick records check",
     links: [
-      { label: "Headwaters Books", url: `${DEV}/headwaters-books/`, note: "Open-records financial surface" },
-      { label: "Open-records embed", url: `${DEV}/headwaters-books/embed/open-records`, note: "Standalone panel" },
+      { label: "Headwaters Books", url: `${WORKSPACE_ROOT}/headwaters-books/`, note: "Open-records financial surface" },
+      { label: "Open-records embed", url: `${WORKSPACE_ROOT}/headwaters-books/embed/open-records`, note: "Standalone panel" },
     ],
   },
   {
@@ -118,8 +123,8 @@ const STAGES: Stage[] = [
       { label: "ourheadwaters.ca", url: "https://ourheadwaters.ca", external: true, note: "Community development hub" },
     ],
     supporting: [
-      { label: "Codetry Ship — Bio", url: `${DEV}/codetry-ship/bio`, note: "Public practitioner profile" },
-      { label: "Codetry Ship — Services", url: `${DEV}/codetry-ship/services`, note: "Service offerings" },
+      { label: "Codetry Ship — Bio", url: `${WORKSPACE_ROOT}/codetry-ship/bio`, note: "Public practitioner profile" },
+      { label: "Codetry Ship — Services", url: `${WORKSPACE_ROOT}/codetry-ship/services`, note: "Service offerings" },
     ],
   },
   {
@@ -135,15 +140,15 @@ const STAGES: Stage[] = [
     timeEstimate: "half day",
     timeNote: "Deep work block — contracts, scenario review, or planning",
     links: [
-      { label: "Dashboard (Index)", url: `${DEV}/practitioners-guide-v2/`, note: "Main operating dashboard" },
-      { label: "Operating framework", url: `${DEV}/practitioners-guide-v2/compare`, note: "V6 scenario (current)" },
-      { label: "Archetypes", url: `${DEV}/practitioners-guide-v2/archetypes`, note: "V6 lineage & locked numbers" },
-      { label: "Replication", url: `${DEV}/practitioners-guide-v2/replication`, note: "Next-community model" },
-      { label: "Workbench", url: `${DEV}/practitioners-guide-v2/workbench`, note: "Archive & proof artifacts" },
-      { label: "Contracts", url: `${DEV}/practitioners-guide-v2/contracts`, note: "Agency & distribution terms" },
+      { label: "Dashboard (Index)", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/`, note: "Main operating dashboard" },
+      { label: "Operating framework", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/compare`, note: "V7 scenario (guide locked default)" },
+      { label: "Archetypes", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/archetypes`, note: "V6 lineage & locked numbers" },
+      { label: "Replication", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/replication`, note: "Next-community model" },
+      { label: "Workbench", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/workbench`, note: "Archive & proof artifacts" },
+      { label: "Contracts", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/contracts`, note: "Agency & distribution terms" },
     ],
     supporting: [
-      { label: "Codetry Handbook (mobile)", url: `${DEV}/codetry-handbook/`, note: "How a community runs its own economy" },
+      { label: "Codetry Handbook (mobile)", url: `${WORKSPACE_ROOT}/codetry-handbook/`, note: "How a community runs its own economy" },
     ],
   },
   {
@@ -159,9 +164,9 @@ const STAGES: Stage[] = [
     timeEstimate: "1 hr",
     timeNote: "Walk a council or contractor through the pitch",
     links: [
-      { label: "Community Store Playbook", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Full pitch walkthrough" },
-      { label: "Build calendar", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Phase gate date planner (open planner from playbook)" },
-      { label: "Operator cockpit", url: `${DEV}/practitioners-guide-v2/community-store`, note: "Operator tablet surface (open cockpit from playbook)" },
+      { label: "Community Store Playbook", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/community-store`, note: "Full pitch walkthrough" },
+      { label: "Build calendar", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/community-store`, note: "Phase gate date planner (open planner from playbook)" },
+      { label: "Operator cockpit", url: `${WORKSPACE_ROOT}/practitioners-guide-v2/community-store`, note: "Operator tablet surface (open cockpit from playbook)" },
     ],
   },
   {
@@ -177,10 +182,10 @@ const STAGES: Stage[] = [
     timeEstimate: "1 hr",
     timeNote: "Evidence review for grant application or replication proposal",
     links: [
-      { label: "Research Library", url: `${DEV}/library/`, note: "Northern food systems evidence base" },
+      { label: "Research Library", url: `${WORKSPACE_ROOT}/library/`, note: "Northern food systems evidence base" },
     ],
     supporting: [
-      { label: "Codetry Ship — Brightside", url: `${DEV}/codetry-ship/brightside`, note: "Brightside context" },
+      { label: "Codetry Ship — Brightside", url: `${WORKSPACE_ROOT}/codetry-ship/brightside`, note: "Brightside context" },
     ],
   },
 ];

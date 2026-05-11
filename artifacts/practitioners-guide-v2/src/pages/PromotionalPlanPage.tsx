@@ -281,6 +281,7 @@ export function PromotionalPlanPage() {
               <p className="text-xs text-muted-foreground mb-3">
                 A simple working log. Copy this into a notes file or spreadsheet and fill in as
                 outreach happens. The table here is a prompt, not a live database.
+                {" "}<span className="font-medium text-foreground">Reviewed May 2026</span> — statuses reflect the V7 scenario: rates confirmed ($175/hr lead · $70/hr support), contract not yet signed, trial window open.
               </p>
               <div className="overflow-x-auto -mx-2 px-2">
                 <table className="w-full text-sm min-w-[640px]">
@@ -294,8 +295,8 @@ export function PromotionalPlanPage() {
                   </thead>
                   <tbody>
                     {[
-                      { org: "807 Co-op", contact: "Known", status: "Active — portal dev confirmed", followUp: "Ongoing" },
-                      { org: "Northern Band", contact: "Band council", status: "Active pursuit — trial window open", followUp: "2026-06-15 soft date" },
+                      { org: "807 Co-op", contact: "Known", status: "Active — portal dev confirmed · $12k fee confirmed", followUp: "Ongoing" },
+                      { org: "Northern Band", contact: "Band council", status: "Trial window open · rates confirmed · contract not yet signed", followUp: "2026-06-15 soft date" },
                       { org: "IFNA cluster communities", contact: "TBD", status: "Plan B — warm outreach if Northern Band stalls", followUp: "2026-07-31 hard deadline" },
                       { org: "Shibogama First Nations Council", contact: "TBD", status: "Plan B — queued", followUp: "After IFNA" },
                       { org: "SLFNHA", contact: "TBD", status: "Not started", followUp: "—" },

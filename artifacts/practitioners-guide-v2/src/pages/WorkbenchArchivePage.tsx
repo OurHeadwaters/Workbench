@@ -131,11 +131,16 @@ export function WorkbenchArchivePage() {
 
       {/* ---------------------------- studio wind-down ---------------------------- */}
       <section data-testid="archive-winddown">
-        <h2 className={sectionHeader}>Studio wind-down · checklist</h2>
+        <div className="flex items-baseline gap-3 flex-wrap mb-2">
+          <h2 className={sectionHeader} style={{ margin: 0 }}>Studio wind-down · checklist</h2>
+          <span className="text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-amber-200 bg-amber-50 text-amber-700">
+            Archived · May 2026
+          </span>
+        </div>
         <p className={sectionLead}>
           Closing the bobbieparr.studio funnel without taking the
           portfolio site down. Each item names what gets touched and the
-          window for it.
+          window for it. "Today" and "This week" references below are historical — this checklist records the state of the studio wind-down as of May 2026, not current action items.
         </p>
         <ol className="space-y-2 text-sm">
           {windDownActions.map((a) => (
@@ -173,11 +178,16 @@ export function WorkbenchArchivePage() {
 
       {/* ---------------------------- naming ---------------------------- */}
       <section data-testid="archive-naming">
-        <h2 className={sectionHeader}>Naming · domains & trademark</h2>
+        <div className="flex items-baseline gap-3 flex-wrap mb-2">
+          <h2 className={sectionHeader} style={{ margin: 0 }}>Naming · domains & trademark</h2>
+          <span className="text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-amber-200 bg-amber-50 text-amber-700">
+            Archived · May 2026
+          </span>
+        </div>
         <p className={sectionLead}>
           Defensive registrations and CIPO trademark steps for
           <span className="font-medium"> Headwaters</span> and
-          <span className="font-medium"> Watershed</span>.
+          <span className="font-medium"> Watershed</span>. "Today" and "This week" references below are historical — this checklist records the state of naming and domain actions as of May 2026, not current action items.
         </p>
         <ol className="space-y-2 text-sm">
           {namingActions.map((a) => (

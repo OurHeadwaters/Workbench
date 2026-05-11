@@ -63,7 +63,6 @@ interface SargeWeek {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const SEED_PRIORITIES: Omit<Priority, "order">[] = [
-  { id: "domains", label: "Get domains live (headwaters.ca + codetry domains — blocking for a week)", isActive: true },
   { id: "807-contract", label: "Deliver 807's contract (active engagement — progress this every day)", isActive: true },
   { id: "marketing", label: "Weekly marketing move (one visible thing: post, email, outreach, or pitch)", isActive: true },
   { id: "brightside", label: "Brightside product progress (even one small thing keeps momentum)", isActive: true },
