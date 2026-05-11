@@ -20,6 +20,7 @@ import TspGuestForm from "@/pages/TspGuestForm";
 import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
 import TylerSubmit from "@/pages/TylerSubmit";
 import NorthernPilotPitch from "@/pages/NorthernPilotPitch";
+import InternalScopePlan from "@/pages/InternalScopePlan";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
       <Route path="/tyler-submit" component={TylerSubmit} />
       <Route path="/northern-pilot" component={NorthernPilotPitch} />
+      <Route path="/internal-scope-plan" component={InternalScopePlan} />
       <Route component={NotFound} />
     </Switch>
   );
