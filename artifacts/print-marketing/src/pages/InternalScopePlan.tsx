@@ -1,97 +1,84 @@
-import type { CSSProperties } from "react";
+import { useState, useCallback, type CSSProperties, type ReactNode } from "react";
 import { PrintNav } from "../components/PrintNav";
 
-// ─── ASSUMPTIONS — edit these to update all calculations ─────────────────────
-//
-// All dollar figures are CAD. Change any number here and the tables below
-// recalculate automatically. Nothing else needs to be touched.
+// ─── Default assumptions ──────────────────────────────────────────────────────
 
-const CONFIG = {
-  // Bobbie's billable rate (internal cost basis, not what's on the invoice)
+const DEFAULT_CONFIG = {
   hourlyRate: 175,
-
-  // Working hours per day used for cost-to-deliver estimates
   hoursPerDay: 7,
-
-  // Phase 2 — Full build / store launch
   phase2: {
     remoteMonths: 4,
-    remoteDaysPerMonth: 18,        // ~4.5 days/week, allowing for community rhythm
+    remoteDaysPerMonth: 18,
     siteVisits: 4,
     daysPerVisit: 3,
-    travelCostPerVisit: 900,       // flights + accommodation + meals (CAD)
+    travelCostPerVisit: 900,
     proposedFeeMin: 52_000,
     proposedFeeMax: 60_000,
   },
-
-  // Phase 3 — Winter payoff / lighter presence
   phase3: {
     remoteMonths: 3,
-    remoteDaysPerMonth: 10,        // roughly 2–2.5 days/week
+    remoteDaysPerMonth: 10,
     siteVisits: 2,
     daysPerVisit: 3,
     travelCostPerVisit: 900,
     proposedFeeMin: 24_000,
     proposedFeeMax: 30_000,
   },
-
-  // Phase 4 — 50% capacity, handoff, Pilot #2 bridge
   phase4: {
     remoteMonths: 6,
-    remoteDaysPerMonth: 9,         // ~50% of a standard working month
+    remoteDaysPerMonth: 9,
     siteVisits: 2,
-    daysPerVisit: 2,               // shorter visits — celebration + handoff focused
+    daysPerVisit: 2,
     travelCostPerVisit: 900,
     proposedFeeMin: 18_000,
     proposedFeeMax: 22_000,
   },
-
-  // IT / Bookkeeping hire
   staffing: {
-    estimatedHoursPerMonth: 12,    // part-time / fractional contractor
-    contractorHourlyRate: 65,      // CAD, bookkeeper/IT generalist market rate
-    monthsCoveredInPhase2: 4,      // absorbed into Phase 2 pricing
+    estimatedHoursPerMonth: 12,
+    contractorHourlyRate: 65,
+    monthsCoveredInPhase2: 4,
   },
-
 };
 
-// ─── Derived calculations ────────────────────────────────────────────────────
+type Config = typeof DEFAULT_CONFIG;
 
-function phaseCalc(phase: {
-  remoteMonths: number;
-  remoteDaysPerMonth: number;
-  siteVisits: number;
-  daysPerVisit: number;
-  travelCostPerVisit: number;
-  proposedFeeMin: number;
-  proposedFeeMax: number;
-}) {
+// ─── Derived calculations ─────────────────────────────────────────────────────
+
+function phaseCalc(
+  phase: {
+    remoteMonths: number;
+    remoteDaysPerMonth: number;
+    siteVisits: number;
+    daysPerVisit: number;
+    travelCostPerVisit: number;
+    proposedFeeMin: number;
+    proposedFeeMax: number;
+  },
+  hoursPerDay: number,
+  hourlyRate: number,
+) {
   const remoteDays = phase.remoteMonths * phase.remoteDaysPerMonth;
   const onsiteDays = phase.siteVisits * phase.daysPerVisit;
   const totalDays = remoteDays + onsiteDays;
-  const laborCost = totalDays * CONFIG.hoursPerDay * CONFIG.hourlyRate;
+  const laborCost = totalDays * hoursPerDay * hourlyRate;
   const travelCost = phase.siteVisits * phase.travelCostPerVisit;
   const totalCost = laborCost + travelCost;
-  const midFee = (phase.proposedFeeMin + phase.proposedFeeMax) / 2;
   const marginAtMin = ((phase.proposedFeeMin - totalCost) / phase.proposedFeeMin) * 100;
   const marginAtMax = ((phase.proposedFeeMax - totalCost) / phase.proposedFeeMax) * 100;
-  return { remoteDays, onsiteDays, totalDays, laborCost, travelCost, totalCost, midFee, marginAtMin, marginAtMax };
+  return { remoteDays, onsiteDays, totalDays, laborCost, travelCost, totalCost, marginAtMin, marginAtMax };
 }
 
-const p2 = phaseCalc(CONFIG.phase2);
-const p3 = phaseCalc(CONFIG.phase3);
-const p4 = phaseCalc(CONFIG.phase4);
-
-const staffMonthlyCost =
-  CONFIG.staffing.estimatedHoursPerMonth * CONFIG.staffing.contractorHourlyRate;
-const staffPhase2Total =
-  staffMonthlyCost * CONFIG.staffing.monthsCoveredInPhase2;
-
-// Phase 2 margins computed after staffing absorption — this is the real margin
-// Bobbie should negotiate from, since staffing is a true delivery cost.
-const p2FullCost = p2.totalCost + staffPhase2Total;
-const p2MarginAtMin = ((CONFIG.phase2.proposedFeeMin - p2FullCost) / CONFIG.phase2.proposedFeeMin) * 100;
-const p2MarginAtMax = ((CONFIG.phase2.proposedFeeMax - p2FullCost) / CONFIG.phase2.proposedFeeMax) * 100;
+function deriveAll(cfg: Config) {
+  const p2 = phaseCalc(cfg.phase2, cfg.hoursPerDay, cfg.hourlyRate);
+  const p3 = phaseCalc(cfg.phase3, cfg.hoursPerDay, cfg.hourlyRate);
+  const p4 = phaseCalc(cfg.phase4, cfg.hoursPerDay, cfg.hourlyRate);
+  const staffMonthlyCost = cfg.staffing.estimatedHoursPerMonth * cfg.staffing.contractorHourlyRate;
+  const staffPhase2Total = staffMonthlyCost * cfg.staffing.monthsCoveredInPhase2;
+  const p2FullCost = p2.totalCost + staffPhase2Total;
+  const p2MarginAtMin = ((cfg.phase2.proposedFeeMin - p2FullCost) / cfg.phase2.proposedFeeMin) * 100;
+  const p2MarginAtMax = ((cfg.phase2.proposedFeeMax - p2FullCost) / cfg.phase2.proposedFeeMax) * 100;
+  return { p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax };
+}
 
 function fmt(n: number): string {
   return "$" + Math.round(n).toLocaleString("en-CA");
@@ -101,93 +88,7 @@ function pct(n: number): string {
   return n.toFixed(0) + "%";
 }
 
-function buildPlainText(): string {
-  return [
-    "HEADWATERS DEVELOPMENT SERVICES",
-    "INTERNAL — CONFIDENTIAL",
-    "Scope & Staffing Plan: Phases 2, 3, and 4",
-    "Deer Lake First Nation · May 2026",
-    "",
-    "This document is for Bobbie's internal use only. It shows the real cost of delivery,",
-    "staffing needs, and the pricing rationale that justifies what goes on the invoice.",
-    "Not for distribution.",
-    "",
-    "═══════════════════════════════════",
-    "PHASE 2 — THE BUILD",
-    "═══════════════════════════════════",
-    `Duration: ${CONFIG.phase2.remoteMonths} months remote + ${CONFIG.phase2.siteVisits} site visits × ${CONFIG.phase2.daysPerVisit} days`,
-    "",
-    "Time commitment:",
-    `  Remote: ${p2.remoteDays} days (${CONFIG.phase2.remoteDaysPerMonth} days/month × ${CONFIG.phase2.remoteMonths} months)`,
-    `  On-site: ${p2.onsiteDays} days (${CONFIG.phase2.siteVisits} visits × ${CONFIG.phase2.daysPerVisit} days)`,
-    `  Total: ${p2.totalDays} days`,
-    "",
-    "Cost to deliver:",
-    `  Labour: ${fmt(p2.laborCost)} (${p2.totalDays} days × ${CONFIG.hoursPerDay} hrs × ${fmt(CONFIG.hourlyRate)}/hr)`,
-    `  Travel: ${fmt(p2.travelCost)} (${CONFIG.phase2.siteVisits} visits × ${fmt(CONFIG.phase2.travelCostPerVisit)})`,
-    `  IT/Bookkeeping hire (${CONFIG.staffing.monthsCoveredInPhase2} months): ${fmt(staffPhase2Total)}`,
-    `  TOTAL COST: ${fmt(p2.totalCost + staffPhase2Total)}`,
-    "",
-    `Proposed fee: ${fmt(CONFIG.phase2.proposedFeeMin)} – ${fmt(CONFIG.phase2.proposedFeeMax)}`,
-    `Margin range: ${pct(p2MarginAtMin)} – ${pct(p2MarginAtMax)} (incl. hire absorption)`,
-    "",
-    "Note: IT/bookkeeping hire cost is absorbed into Phase 2 pricing.",
-    "",
-    "═══════════════════════════════════",
-    "PHASE 3 — WINTER PAYOFF",
-    "═══════════════════════════════════",
-    `Duration: ${CONFIG.phase3.remoteMonths} months remote + ${CONFIG.phase3.siteVisits} site visits × ${CONFIG.phase3.daysPerVisit} days`,
-    "",
-    "Time commitment:",
-    `  Remote: ${p3.remoteDays} days`,
-    `  On-site: ${p3.onsiteDays} days`,
-    `  Total: ${p3.totalDays} days`,
-    "",
-    "Cost to deliver:",
-    `  Labour: ${fmt(p3.laborCost)}`,
-    `  Travel: ${fmt(p3.travelCost)}`,
-    `  TOTAL COST: ${fmt(p3.totalCost)}`,
-    "",
-    `Proposed fee: ${fmt(CONFIG.phase3.proposedFeeMin)} – ${fmt(CONFIG.phase3.proposedFeeMax)}`,
-    `Margin range: ${pct(p3.marginAtMin)} – ${pct(p3.marginAtMax)}`,
-    "",
-    "═══════════════════════════════════",
-    "PHASE 4 — HANDOFF & PILOT #2 BRIDGE",
-    "═══════════════════════════════════",
-    `Duration: ${CONFIG.phase4.remoteMonths} months at ~50% capacity + ${CONFIG.phase4.siteVisits} site visits × ${CONFIG.phase4.daysPerVisit} days`,
-    "",
-    "Time commitment:",
-    `  Remote: ${p4.remoteDays} days`,
-    `  On-site: ${p4.onsiteDays} days`,
-    `  Total: ${p4.totalDays} days`,
-    "",
-    "Cost to deliver:",
-    `  Labour: ${fmt(p4.laborCost)}`,
-    `  Travel: ${fmt(p4.travelCost)}`,
-    `  TOTAL COST: ${fmt(p4.totalCost)}`,
-    "",
-    `Proposed fee: ${fmt(CONFIG.phase4.proposedFeeMin)} – ${fmt(CONFIG.phase4.proposedFeeMax)}`,
-    `Margin range: ${pct(p4.marginAtMin)} – ${pct(p4.marginAtMax)}`,
-    "",
-    "═══════════════════════════════════",
-    "STAFFING — IT / BOOKKEEPING HIRE",
-    "═══════════════════════════════════",
-    "Role: Part-time IT/bookkeeping contractor",
-    `Estimated hours/month: ${CONFIG.staffing.estimatedHoursPerMonth} hrs`,
-    `Rate: ${fmt(CONFIG.staffing.contractorHourlyRate)}/hr`,
-    `Monthly cost: ${fmt(staffMonthlyCost)}`,
-    `Phase 2 total (${CONFIG.staffing.monthsCoveredInPhase2} months): ${fmt(staffPhase2Total)}`,
-    "",
-    "What this protects against:",
-    "  · Domains & passwords — credentials owned by the community, not a departing consultant",
-    "  · Comms — email accounts, distribution lists, and shared inboxes stay operational",
-    "  · HST & government reporting — remittances filed correctly and on time from day one",
-    "",
-    "How it's priced: absorbed into Phase 2 fee. Not a separate line item on the invoice.",
-  ].join("\n");
-}
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const PAGE: CSSProperties = {
   width: "8.5in",
@@ -209,29 +110,14 @@ const LABEL: CSSProperties = {
   marginBottom: "0.1rem",
 };
 
-const SECTION_HEAD: CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "1.5rem",
-  fontWeight: 900,
-  color: "var(--evergreen)",
-  lineHeight: 1.05,
-  letterSpacing: "-0.01em",
-  marginBottom: "0.04in",
-};
-
-const BODY: CSSProperties = {
-  fontFamily: "var(--font-sans)",
-  fontSize: "0.78rem",
-  color: "var(--ink)",
-  lineHeight: 1.6,
-};
-
 const MUTED: CSSProperties = {
   fontFamily: "var(--font-sans)",
   fontSize: "0.72rem",
   color: "var(--muted)",
   lineHeight: 1.55,
 };
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function DataRow({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
@@ -256,7 +142,9 @@ function DataRow({ label, value, accent }: { label: string; value: string; accen
   );
 }
 
-function FeeBlock({ min, max, marginMin, marginMax, marginNote }: { min: number; max: number; marginMin: number; marginMax: number; marginNote?: string }) {
+function FeeBlock({ min, max, marginMin, marginMax, marginNote }: {
+  min: number; max: number; marginMin: number; marginMax: number; marginNote?: string;
+}) {
   return (
     <div style={{
       background: "var(--evergreen)",
@@ -292,57 +180,27 @@ function FeeBlock({ min, max, marginMin, marginMax, marginNote }: { min: number;
 }
 
 function PhaseSection({
-  phaseLabel,
-  subtitle,
-  description,
-  remoteDays,
-  remoteMonths,
-  remoteDaysPerMonth,
-  onsiteDays,
-  siteVisits,
-  daysPerVisit,
-  travelCostPerVisit,
-  totalDays,
-  laborCost,
-  travelCost,
-  extraCostLabel,
-  extraCostValue,
-  totalCost,
-  feeMin,
-  feeMax,
-  marginMin,
-  marginMax,
-  marginNote,
-  notes,
-  pageNum,
+  phaseLabel, subtitle, description,
+  remoteDays, remoteMonths, remoteDaysPerMonth,
+  onsiteDays, siteVisits, daysPerVisit, travelCostPerVisit,
+  totalDays, laborCost, travelCost,
+  extraCostLabel, extraCostValue,
+  totalCost, feeMin, feeMax, marginMin, marginMax, marginNote,
+  notes, pageNum,
+  hoursPerDay, hourlyRate,
 }: {
-  phaseLabel: string;
-  subtitle: string;
-  description: string;
-  remoteDays: number;
-  remoteMonths: number;
-  remoteDaysPerMonth: number;
-  onsiteDays: number;
-  siteVisits: number;
-  daysPerVisit: number;
-  travelCostPerVisit: number;
-  totalDays: number;
-  laborCost: number;
-  travelCost: number;
-  extraCostLabel?: string;
-  extraCostValue?: number;
-  totalCost: number;
-  feeMin: number;
-  feeMax: number;
-  marginMin: number;
-  marginMax: number;
-  marginNote?: string;
-  notes?: string[];
-  pageNum: string;
+  phaseLabel: string; subtitle: string; description: string;
+  remoteDays: number; remoteMonths: number; remoteDaysPerMonth: number;
+  onsiteDays: number; siteVisits: number; daysPerVisit: number; travelCostPerVisit: number;
+  totalDays: number; laborCost: number; travelCost: number;
+  extraCostLabel?: string; extraCostValue?: number;
+  totalCost: number; feeMin: number; feeMax: number;
+  marginMin: number; marginMax: number; marginNote?: string;
+  notes?: string[]; pageNum: string;
+  hoursPerDay: number; hourlyRate: number;
 }) {
   return (
     <div style={PAGE}>
-      {/* Confidential header band */}
       <div style={{ background: "#2c1810", padding: "0.1in 0.7in", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.54rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(244,180,130,0.75)" }}>
           Internal · Confidential · Not for distribution
@@ -352,7 +210,6 @@ function PhaseSection({
         </p>
       </div>
 
-      {/* Phase header */}
       <div style={{ background: "var(--evergreen)", padding: "0.38in 0.7in 0.32in", flexShrink: 0 }}>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "0.1rem" }}>
           {phaseLabel}
@@ -365,44 +222,22 @@ function PhaseSection({
         </p>
       </div>
 
-      {/* Body */}
       <div style={{ flex: 1, padding: "0.36in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
-
-        {/* Time commitment + Cost to deliver side by side */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.3in" }}>
-
-          {/* Time commitment */}
           <div>
             <p style={{ ...LABEL, marginBottom: "0.12in" }}>Time commitment</p>
-            <DataRow
-              label={`Remote (${remoteMonths} mo × ${remoteDaysPerMonth} days/mo)`}
-              value={`${remoteDays} days`}
-            />
-            <DataRow
-              label={`On-site (${siteVisits} visits × ${daysPerVisit} days)`}
-              value={`${onsiteDays} days`}
-            />
-            <DataRow
-              label="Total Headwaters days"
-              value={`${totalDays} days`}
-              accent
-            />
+            <DataRow label={`Remote (${remoteMonths} mo × ${remoteDaysPerMonth} days/mo)`} value={`${remoteDays} days`} />
+            <DataRow label={`On-site (${siteVisits} visits × ${daysPerVisit} days)`} value={`${onsiteDays} days`} />
+            <DataRow label="Total Headwaters days" value={`${totalDays} days`} accent />
             <p style={{ ...MUTED, marginTop: "0.1in" }}>
-              {`${totalDays} days × ${CONFIG.hoursPerDay} hrs = ${(totalDays * CONFIG.hoursPerDay).toLocaleString()} billable hours`}
+              {`${totalDays} days × ${hoursPerDay} hrs = ${(totalDays * hoursPerDay).toLocaleString()} billable hours`}
             </p>
           </div>
 
-          {/* Cost to deliver */}
           <div>
             <p style={{ ...LABEL, marginBottom: "0.12in" }}>Cost to deliver</p>
-            <DataRow
-              label={`Labour (${totalDays} days × ${CONFIG.hoursPerDay} hrs × ${fmt(CONFIG.hourlyRate)}/hr)`}
-              value={fmt(laborCost)}
-            />
-            <DataRow
-              label={`Travel (${siteVisits} visits × ${fmt(travelCostPerVisit)})`}
-              value={fmt(travelCost)}
-            />
+            <DataRow label={`Labour (${totalDays} days × ${hoursPerDay} hrs × ${fmt(hourlyRate)}/hr)`} value={fmt(laborCost)} />
+            <DataRow label={`Travel (${siteVisits} visits × ${fmt(travelCostPerVisit)})`} value={fmt(travelCost)} />
             {extraCostLabel && extraCostValue !== undefined && (
               <DataRow label={extraCostLabel} value={fmt(extraCostValue)} />
             )}
@@ -410,39 +245,395 @@ function PhaseSection({
           </div>
         </div>
 
-        {/* Fee block */}
         <FeeBlock min={feeMin} max={feeMax} marginMin={marginMin} marginMax={marginMax} marginNote={marginNote} />
 
-        {/* Notes */}
         {notes && notes.length > 0 && (
           <div style={{ background: "rgba(184,90,62,0.06)", borderLeft: "3px solid rgba(184,90,62,0.35)", padding: "0.14in 0.2in", borderRadius: "0 4px 4px 0" }}>
             <p style={{ ...LABEL, marginBottom: "0.08in" }}>Notes</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.07in" }}>
-              {notes.map((note, i) => (
-                <p key={i} style={MUTED}>{note}</p>
-              ))}
+              {notes.map((note, i) => <p key={i} style={MUTED}>{note}</p>)}
             </div>
           </div>
         )}
 
-        {/* Footer */}
         <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.1)", paddingTop: "0.15in" }}>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
             Internal — not for distribution
           </p>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{pageNum}</p>
         </div>
-
       </div>
     </div>
   );
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── Assumptions sidebar ──────────────────────────────────────────────────────
 
-export default function InternalScopePlan() {
+function NumInput({
+  label, value, onChange, min, step, prefix,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  min?: number;
+  step?: number;
+  prefix?: string;
+}) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(31,61,46,0.5)", fontFamily: "var(--font-sans)" }}>
+        {label}
+      </span>
+      <div style={{ display: "flex", alignItems: "center", background: "#fff", border: "1px solid rgba(31,61,46,0.18)", borderRadius: 4, overflow: "hidden" }}>
+        {prefix && (
+          <span style={{ padding: "4px 6px", fontSize: 12, color: "rgba(31,61,46,0.45)", fontFamily: "var(--font-sans)", borderRight: "1px solid rgba(31,61,46,0.12)" }}>
+            {prefix}
+          </span>
+        )}
+        <input
+          type="number"
+          value={value}
+          min={min ?? 0}
+          step={step ?? 1}
+          onChange={(e) => {
+            const v = parseFloat(e.target.value);
+            if (!isNaN(v)) onChange(v);
+          }}
+          style={{
+            flex: 1,
+            border: "none",
+            outline: "none",
+            padding: "5px 8px",
+            fontSize: 13,
+            fontFamily: "var(--font-sans)",
+            color: "var(--ink)",
+            background: "transparent",
+            width: "100%",
+          }}
+        />
+      </div>
+    </label>
+  );
+}
+
+function SidebarSection({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <p style={{
+        fontSize: 9,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        color: "var(--evergreen)",
+        fontFamily: "var(--font-sans)",
+        fontWeight: 700,
+        marginBottom: 10,
+        paddingBottom: 5,
+        borderBottom: "1px solid rgba(31,61,46,0.12)",
+      }}>
+        {title}
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function AssumptionsSidebar({
+  cfg, onChange, onReset, open, onToggle,
+}: {
+  cfg: Config;
+  onChange: (patch: Partial<Config> | ((prev: Config) => Config)) => void;
+  onReset: () => void;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const setPhase = (
+    phase: "phase2" | "phase3" | "phase4",
+    key: string,
+    value: number,
+  ) => {
+    onChange((prev) => ({
+      ...prev,
+      [phase]: { ...prev[phase], [key]: value },
+    }));
+  };
+
+  const setStaffing = (key: string, value: number) => {
+    onChange((prev) => ({
+      ...prev,
+      staffing: { ...prev.staffing, [key]: value },
+    }));
+  };
+
   return (
     <>
+      {/* Toggle button — always visible, no-print */}
+      <button
+        onClick={onToggle}
+        style={{
+          position: "fixed",
+          top: 80,
+          right: open ? 304 : 0,
+          zIndex: 200,
+          background: "var(--evergreen)",
+          color: "var(--cream)",
+          border: "none",
+          borderRadius: open ? "6px 0 0 6px" : "6px 0 0 6px",
+          padding: "10px 12px",
+          cursor: "pointer",
+          fontFamily: "var(--font-sans)",
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          writingMode: "vertical-rl",
+          textOrientation: "mixed",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          boxShadow: "-2px 2px 8px rgba(0,0,0,0.15)",
+          transition: "right 0.25s ease",
+        }}
+        className="no-print"
+        aria-label="Toggle assumption editor"
+      >
+        {open ? "✕ Close" : "⚙ Assumptions"}
+      </button>
+
+      {/* Sidebar panel */}
+      <div
+        className="no-print"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: open ? 0 : -304,
+          width: 304,
+          height: "100vh",
+          background: "#faf8f4",
+          borderLeft: "1px solid rgba(31,61,46,0.14)",
+          boxShadow: open ? "-4px 0 20px rgba(0,0,0,0.10)" : "none",
+          zIndex: 100,
+          overflowY: "auto",
+          transition: "right 0.25s ease",
+          padding: "20px 18px 40px",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+          <p style={{ fontFamily: "var(--font-serif)", fontSize: 16, fontWeight: 700, color: "var(--evergreen)" }}>
+            Edit Assumptions
+          </p>
+          <button
+            onClick={onReset}
+            style={{
+              background: "rgba(184,90,62,0.1)",
+              border: "1px solid rgba(184,90,62,0.25)",
+              borderRadius: 4,
+              padding: "4px 10px",
+              fontSize: 10,
+              fontFamily: "var(--font-sans)",
+              color: "var(--rust)",
+              cursor: "pointer",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            Reset
+          </button>
+        </div>
+
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(31,61,46,0.5)", lineHeight: 1.5, marginBottom: 20 }}>
+          Changes apply instantly. Not saved between sessions.
+        </p>
+
+        <SidebarSection title="Global">
+          <NumInput label="Hourly rate (CAD/hr)" value={cfg.hourlyRate} prefix="$"
+            onChange={(v) => onChange((p) => ({ ...p, hourlyRate: v }))} min={1} />
+          <NumInput label="Working hours / day" value={cfg.hoursPerDay}
+            onChange={(v) => onChange((p) => ({ ...p, hoursPerDay: v }))} min={1} step={0.5} />
+        </SidebarSection>
+
+        <SidebarSection title="Phase 2 — The Build">
+          <NumInput label="Remote months" value={cfg.phase2.remoteMonths}
+            onChange={(v) => setPhase("phase2", "remoteMonths", v)} min={1} />
+          <NumInput label="Days / month (remote)" value={cfg.phase2.remoteDaysPerMonth}
+            onChange={(v) => setPhase("phase2", "remoteDaysPerMonth", v)} min={1} />
+          <NumInput label="Site visits" value={cfg.phase2.siteVisits}
+            onChange={(v) => setPhase("phase2", "siteVisits", v)} min={0} />
+          <NumInput label="Days / visit" value={cfg.phase2.daysPerVisit}
+            onChange={(v) => setPhase("phase2", "daysPerVisit", v)} min={1} />
+          <NumInput label="Travel cost / visit (CAD)" value={cfg.phase2.travelCostPerVisit} prefix="$"
+            onChange={(v) => setPhase("phase2", "travelCostPerVisit", v)} min={0} />
+          <NumInput label="Proposed fee — min (CAD)" value={cfg.phase2.proposedFeeMin} prefix="$"
+            onChange={(v) => setPhase("phase2", "proposedFeeMin", v)} min={0} step={500} />
+          <NumInput label="Proposed fee — max (CAD)" value={cfg.phase2.proposedFeeMax} prefix="$"
+            onChange={(v) => setPhase("phase2", "proposedFeeMax", v)} min={0} step={500} />
+        </SidebarSection>
+
+        <SidebarSection title="Phase 3 — Winter Payoff">
+          <NumInput label="Remote months" value={cfg.phase3.remoteMonths}
+            onChange={(v) => setPhase("phase3", "remoteMonths", v)} min={1} />
+          <NumInput label="Days / month (remote)" value={cfg.phase3.remoteDaysPerMonth}
+            onChange={(v) => setPhase("phase3", "remoteDaysPerMonth", v)} min={1} />
+          <NumInput label="Site visits" value={cfg.phase3.siteVisits}
+            onChange={(v) => setPhase("phase3", "siteVisits", v)} min={0} />
+          <NumInput label="Days / visit" value={cfg.phase3.daysPerVisit}
+            onChange={(v) => setPhase("phase3", "daysPerVisit", v)} min={1} />
+          <NumInput label="Travel cost / visit (CAD)" value={cfg.phase3.travelCostPerVisit} prefix="$"
+            onChange={(v) => setPhase("phase3", "travelCostPerVisit", v)} min={0} />
+          <NumInput label="Proposed fee — min (CAD)" value={cfg.phase3.proposedFeeMin} prefix="$"
+            onChange={(v) => setPhase("phase3", "proposedFeeMin", v)} min={0} step={500} />
+          <NumInput label="Proposed fee — max (CAD)" value={cfg.phase3.proposedFeeMax} prefix="$"
+            onChange={(v) => setPhase("phase3", "proposedFeeMax", v)} min={0} step={500} />
+        </SidebarSection>
+
+        <SidebarSection title="Phase 4 — Handoff & Pilot #2 Bridge">
+          <NumInput label="Remote months" value={cfg.phase4.remoteMonths}
+            onChange={(v) => setPhase("phase4", "remoteMonths", v)} min={1} />
+          <NumInput label="Days / month (remote)" value={cfg.phase4.remoteDaysPerMonth}
+            onChange={(v) => setPhase("phase4", "remoteDaysPerMonth", v)} min={1} />
+          <NumInput label="Site visits" value={cfg.phase4.siteVisits}
+            onChange={(v) => setPhase("phase4", "siteVisits", v)} min={0} />
+          <NumInput label="Days / visit" value={cfg.phase4.daysPerVisit}
+            onChange={(v) => setPhase("phase4", "daysPerVisit", v)} min={1} />
+          <NumInput label="Travel cost / visit (CAD)" value={cfg.phase4.travelCostPerVisit} prefix="$"
+            onChange={(v) => setPhase("phase4", "travelCostPerVisit", v)} min={0} />
+          <NumInput label="Proposed fee — min (CAD)" value={cfg.phase4.proposedFeeMin} prefix="$"
+            onChange={(v) => setPhase("phase4", "proposedFeeMin", v)} min={0} step={500} />
+          <NumInput label="Proposed fee — max (CAD)" value={cfg.phase4.proposedFeeMax} prefix="$"
+            onChange={(v) => setPhase("phase4", "proposedFeeMax", v)} min={0} step={500} />
+        </SidebarSection>
+
+        <SidebarSection title="Staffing — IT / Bookkeeping">
+          <NumInput label="Hours / month" value={cfg.staffing.estimatedHoursPerMonth}
+            onChange={(v) => setStaffing("estimatedHoursPerMonth", v)} min={1} />
+          <NumInput label="Contractor rate (CAD/hr)" value={cfg.staffing.contractorHourlyRate} prefix="$"
+            onChange={(v) => setStaffing("contractorHourlyRate", v)} min={1} />
+          <NumInput label="Months covered in Phase 2" value={cfg.staffing.monthsCoveredInPhase2}
+            onChange={(v) => setStaffing("monthsCoveredInPhase2", v)} min={1} />
+        </SidebarSection>
+      </div>
+    </>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export default function InternalScopePlan() {
+  const [cfg, setCfg] = useState<Config>(DEFAULT_CONFIG);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleChange = useCallback((patch: Partial<Config> | ((prev: Config) => Config)) => {
+    setCfg((prev) => typeof patch === "function" ? patch(prev) : { ...prev, ...patch });
+  }, []);
+
+  const handleReset = useCallback(() => setCfg(DEFAULT_CONFIG), []);
+
+  const { p2, p3, p4, staffMonthlyCost, staffPhase2Total, p2FullCost, p2MarginAtMin, p2MarginAtMax } = deriveAll(cfg);
+
+  function buildPlainText(): string {
+    return [
+      "HEADWATERS DEVELOPMENT SERVICES",
+      "INTERNAL — CONFIDENTIAL",
+      "Scope & Staffing Plan: Phases 2, 3, and 4",
+      "Deer Lake First Nation · May 2026",
+      "",
+      "This document is for Bobbie's internal use only. It shows the real cost of delivery,",
+      "staffing needs, and the pricing rationale that justifies what goes on the invoice.",
+      "Not for distribution.",
+      "",
+      "═══════════════════════════════════",
+      "PHASE 2 — THE BUILD",
+      "═══════════════════════════════════",
+      `Duration: ${cfg.phase2.remoteMonths} months remote + ${cfg.phase2.siteVisits} site visits × ${cfg.phase2.daysPerVisit} days`,
+      "",
+      "Time commitment:",
+      `  Remote: ${p2.remoteDays} days (${cfg.phase2.remoteDaysPerMonth} days/month × ${cfg.phase2.remoteMonths} months)`,
+      `  On-site: ${p2.onsiteDays} days (${cfg.phase2.siteVisits} visits × ${cfg.phase2.daysPerVisit} days)`,
+      `  Total: ${p2.totalDays} days`,
+      "",
+      "Cost to deliver:",
+      `  Labour: ${fmt(p2.laborCost)} (${p2.totalDays} days × ${cfg.hoursPerDay} hrs × ${fmt(cfg.hourlyRate)}/hr)`,
+      `  Travel: ${fmt(p2.travelCost)} (${cfg.phase2.siteVisits} visits × ${fmt(cfg.phase2.travelCostPerVisit)})`,
+      `  IT/Bookkeeping hire (${cfg.staffing.monthsCoveredInPhase2} months): ${fmt(staffPhase2Total)}`,
+      `  TOTAL COST: ${fmt(p2FullCost)}`,
+      "",
+      `Proposed fee: ${fmt(cfg.phase2.proposedFeeMin)} – ${fmt(cfg.phase2.proposedFeeMax)}`,
+      `Margin range: ${pct(p2MarginAtMin)} – ${pct(p2MarginAtMax)} (incl. hire absorption)`,
+      "",
+      "Note: IT/bookkeeping hire cost is absorbed into Phase 2 pricing.",
+      "",
+      "═══════════════════════════════════",
+      "PHASE 3 — WINTER PAYOFF",
+      "═══════════════════════════════════",
+      `Duration: ${cfg.phase3.remoteMonths} months remote + ${cfg.phase3.siteVisits} site visits × ${cfg.phase3.daysPerVisit} days`,
+      "",
+      "Time commitment:",
+      `  Remote: ${p3.remoteDays} days`,
+      `  On-site: ${p3.onsiteDays} days`,
+      `  Total: ${p3.totalDays} days`,
+      "",
+      "Cost to deliver:",
+      `  Labour: ${fmt(p3.laborCost)}`,
+      `  Travel: ${fmt(p3.travelCost)}`,
+      `  TOTAL COST: ${fmt(p3.totalCost)}`,
+      "",
+      `Proposed fee: ${fmt(cfg.phase3.proposedFeeMin)} – ${fmt(cfg.phase3.proposedFeeMax)}`,
+      `Margin range: ${pct(p3.marginAtMin)} – ${pct(p3.marginAtMax)}`,
+      "",
+      "═══════════════════════════════════",
+      "PHASE 4 — HANDOFF & PILOT #2 BRIDGE",
+      "═══════════════════════════════════",
+      `Duration: ${cfg.phase4.remoteMonths} months at ~50% capacity + ${cfg.phase4.siteVisits} site visits × ${cfg.phase4.daysPerVisit} days`,
+      "",
+      "Time commitment:",
+      `  Remote: ${p4.remoteDays} days`,
+      `  On-site: ${p4.onsiteDays} days`,
+      `  Total: ${p4.totalDays} days`,
+      "",
+      "Cost to deliver:",
+      `  Labour: ${fmt(p4.laborCost)}`,
+      `  Travel: ${fmt(p4.travelCost)}`,
+      `  TOTAL COST: ${fmt(p4.totalCost)}`,
+      "",
+      `Proposed fee: ${fmt(cfg.phase4.proposedFeeMin)} – ${fmt(cfg.phase4.proposedFeeMax)}`,
+      `Margin range: ${pct(p4.marginAtMin)} – ${pct(p4.marginAtMax)}`,
+      "",
+      "═══════════════════════════════════",
+      "STAFFING — IT / BOOKKEEPING HIRE",
+      "═══════════════════════════════════",
+      "Role: Part-time IT/bookkeeping contractor",
+      `Estimated hours/month: ${cfg.staffing.estimatedHoursPerMonth} hrs`,
+      `Rate: ${fmt(cfg.staffing.contractorHourlyRate)}/hr`,
+      `Monthly cost: ${fmt(staffMonthlyCost)}`,
+      `Phase 2 total (${cfg.staffing.monthsCoveredInPhase2} months): ${fmt(staffPhase2Total)}`,
+      "",
+      "What this protects against:",
+      "  · Domains & passwords — credentials owned by the community, not a departing consultant",
+      "  · Comms — email accounts, distribution lists, and shared inboxes stay operational",
+      "  · HST & government reporting — remittances filed correctly and on time from day one",
+      "",
+      "How it's priced: absorbed into Phase 2 fee. Not a separate line item on the invoice.",
+    ].join("\n");
+  }
+
+  return (
+    <>
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+        }
+      `}</style>
+
+      <AssumptionsSidebar
+        cfg={cfg}
+        onChange={handleChange}
+        onReset={handleReset}
+        open={sidebarOpen}
+        onToggle={() => setSidebarOpen((o) => !o)}
+      />
+
       <PrintNav
         targetId="pdf-target"
         filename="headwaters-internal-scope-plan.pdf"
@@ -471,7 +662,7 @@ export default function InternalScopePlan() {
                 </p>
               </div>
 
-              <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.8rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.025em", marginBottom: "0.28in", fontVariationSettings: '"WONK" 0' }}>
+              <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "3.8rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.0, letterSpacing: "-0.025em", marginBottom: "0.28in" }}>
                 Internal Scope<br />&amp; Staffing Plan
               </h1>
 
@@ -481,9 +672,9 @@ export default function InternalScopePlan() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in", maxWidth: "5.5in", marginTop: "0.5in" }}>
                 {[
-                  { label: "Phase 2 fee range", value: `${fmt(CONFIG.phase2.proposedFeeMin)}–${fmt(CONFIG.phase2.proposedFeeMax)}` },
-                  { label: "Phase 3 fee range", value: `${fmt(CONFIG.phase3.proposedFeeMin)}–${fmt(CONFIG.phase3.proposedFeeMax)}` },
-                  { label: "Phase 4 fee range", value: `${fmt(CONFIG.phase4.proposedFeeMin)}–${fmt(CONFIG.phase4.proposedFeeMax)}` },
+                  { label: "Phase 2 fee range", value: `${fmt(cfg.phase2.proposedFeeMin)}–${fmt(cfg.phase2.proposedFeeMax)}` },
+                  { label: "Phase 3 fee range", value: `${fmt(cfg.phase3.proposedFeeMin)}–${fmt(cfg.phase3.proposedFeeMax)}` },
+                  { label: "Phase 4 fee range", value: `${fmt(cfg.phase4.proposedFeeMin)}–${fmt(cfg.phase4.proposedFeeMax)}` },
                 ].map((item) => (
                   <div key={item.label} style={{ borderTop: "2px solid var(--rust)", paddingTop: "0.14in" }}>
                     <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.45)", marginBottom: "0.06rem" }}>
@@ -508,7 +699,7 @@ export default function InternalScopePlan() {
                     Hourly rate used
                   </p>
                   <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.92rem", fontWeight: 700, color: "rgba(244,237,224,0.7)" }}>
-                    {fmt(CONFIG.hourlyRate)}/hr
+                    {fmt(cfg.hourlyRate)}/hr
                   </p>
                 </div>
               </div>
@@ -522,25 +713,27 @@ export default function InternalScopePlan() {
         <PhaseSection
           phaseLabel="Phase 2 · The Build · 4 months"
           subtitle="The store opens. We make sure it works."
-          description={`Full-time remote presence (${CONFIG.phase2.remoteMonths} months) plus ${CONFIG.phase2.siteVisits} site visits of ${CONFIG.phase2.daysPerVisit} days each. Operator couple is hired and in place. Supply chain is live. Headwaters is on the ground once a month catching problems early. IT/bookkeeping hire is stood up and absorbed into this phase's fee.`}
+          description={`Full-time remote presence (${cfg.phase2.remoteMonths} months) plus ${cfg.phase2.siteVisits} site visits of ${cfg.phase2.daysPerVisit} days each. Operator couple is hired and in place. Supply chain is live. Headwaters is on the ground once a month catching problems early. IT/bookkeeping hire is stood up and absorbed into this phase's fee.`}
           remoteDays={p2.remoteDays}
-          remoteMonths={CONFIG.phase2.remoteMonths}
-          remoteDaysPerMonth={CONFIG.phase2.remoteDaysPerMonth}
+          remoteMonths={cfg.phase2.remoteMonths}
+          remoteDaysPerMonth={cfg.phase2.remoteDaysPerMonth}
           onsiteDays={p2.onsiteDays}
-          siteVisits={CONFIG.phase2.siteVisits}
-          daysPerVisit={CONFIG.phase2.daysPerVisit}
-          travelCostPerVisit={CONFIG.phase2.travelCostPerVisit}
+          siteVisits={cfg.phase2.siteVisits}
+          daysPerVisit={cfg.phase2.daysPerVisit}
+          travelCostPerVisit={cfg.phase2.travelCostPerVisit}
           totalDays={p2.totalDays}
           laborCost={p2.laborCost}
           travelCost={p2.travelCost}
-          extraCostLabel={`IT/bookkeeping hire (${CONFIG.staffing.monthsCoveredInPhase2} months × ${fmt(staffMonthlyCost)}/mo)`}
+          extraCostLabel={`IT/bookkeeping hire (${cfg.staffing.monthsCoveredInPhase2} months × ${fmt(staffMonthlyCost)}/mo)`}
           extraCostValue={staffPhase2Total}
           totalCost={p2FullCost}
-          feeMin={CONFIG.phase2.proposedFeeMin}
-          feeMax={CONFIG.phase2.proposedFeeMax}
+          feeMin={cfg.phase2.proposedFeeMin}
+          feeMax={cfg.phase2.proposedFeeMax}
           marginMin={p2MarginAtMin}
           marginMax={p2MarginAtMax}
           marginNote="incl. hire absorption"
+          hoursPerDay={cfg.hoursPerDay}
+          hourlyRate={cfg.hourlyRate}
           notes={[
             "Summer freight runs by air — margins will be tight and that's planned for. The store is proving it can operate, not proving it can profit. Numbers improve when winter roads open.",
             "IT/bookkeeping hire is not a separate line on the client invoice. It's baked into the Phase 2 fee. This protects Bobbie's time and keeps the client from nickel-and-diming the admin function.",
@@ -553,22 +746,24 @@ export default function InternalScopePlan() {
         <PhaseSection
           phaseLabel="Phase 3 · Winter Payoff · 3 months"
           subtitle="Winter roads open. The economics flip."
-          description={`Lighter presence — ${CONFIG.phase3.remoteMonths} months remote at roughly ${CONFIG.phase3.remoteDaysPerMonth} days/month, plus ${CONFIG.phase3.siteVisits} site visits of ${CONFIG.phase3.daysPerVisit} days each. Bulk truck delivery replaces air freight. Cost per item drops. The goal is to lock in the lower-cost supply chain and produce a clean financial record the band can use with funders.`}
+          description={`Lighter presence — ${cfg.phase3.remoteMonths} months remote at roughly ${cfg.phase3.remoteDaysPerMonth} days/month, plus ${cfg.phase3.siteVisits} site visits of ${cfg.phase3.daysPerVisit} days each. Bulk truck delivery replaces air freight. Cost per item drops. The goal is to lock in the lower-cost supply chain and produce a clean financial record the band can use with funders.`}
           remoteDays={p3.remoteDays}
-          remoteMonths={CONFIG.phase3.remoteMonths}
-          remoteDaysPerMonth={CONFIG.phase3.remoteDaysPerMonth}
+          remoteMonths={cfg.phase3.remoteMonths}
+          remoteDaysPerMonth={cfg.phase3.remoteDaysPerMonth}
           onsiteDays={p3.onsiteDays}
-          siteVisits={CONFIG.phase3.siteVisits}
-          daysPerVisit={CONFIG.phase3.daysPerVisit}
-          travelCostPerVisit={CONFIG.phase3.travelCostPerVisit}
+          siteVisits={cfg.phase3.siteVisits}
+          daysPerVisit={cfg.phase3.daysPerVisit}
+          travelCostPerVisit={cfg.phase3.travelCostPerVisit}
           totalDays={p3.totalDays}
           laborCost={p3.laborCost}
           travelCost={p3.travelCost}
           totalCost={p3.totalCost}
-          feeMin={CONFIG.phase3.proposedFeeMin}
-          feeMax={CONFIG.phase3.proposedFeeMax}
+          feeMin={cfg.phase3.proposedFeeMin}
+          feeMax={cfg.phase3.proposedFeeMax}
           marginMin={p3.marginAtMin}
           marginMax={p3.marginAtMax}
+          hoursPerDay={cfg.hoursPerDay}
+          hourlyRate={cfg.hourlyRate}
           notes={[
             "Phase 3 scope is discussed after Phase 2 — the operating rhythm of the store determines what level of support is actually needed.",
             "Deliverable: a clean financial record showing what the store earns in its first winter. This is the document that makes future grant applications credible.",
@@ -581,22 +776,24 @@ export default function InternalScopePlan() {
         <PhaseSection
           phaseLabel="Phase 4 · Handoff & Pilot #2 Bridge · 6 months"
           subtitle="50% capacity. Community owns it. Pilot #2 is named."
-          description={`${CONFIG.phase4.remoteMonths} months at roughly ${CONFIG.phase4.remoteDaysPerMonth} days/month — 50% of a standard working month. Community engagement, Codetry handoff, feast/celebration, and documentation of everything needed to run Pilot #2 without starting from scratch. ${CONFIG.phase4.siteVisits} site visits of ${CONFIG.phase4.daysPerVisit} days (shorter, handoff-focused).`}
+          description={`${cfg.phase4.remoteMonths} months at roughly ${cfg.phase4.remoteDaysPerMonth} days/month — 50% of a standard working month. Community engagement, Codetry handoff, feast/celebration, and documentation of everything needed to run Pilot #2 without starting from scratch. ${cfg.phase4.siteVisits} site visits of ${cfg.phase4.daysPerVisit} days (shorter, handoff-focused).`}
           remoteDays={p4.remoteDays}
-          remoteMonths={CONFIG.phase4.remoteMonths}
-          remoteDaysPerMonth={CONFIG.phase4.remoteDaysPerMonth}
+          remoteMonths={cfg.phase4.remoteMonths}
+          remoteDaysPerMonth={cfg.phase4.remoteDaysPerMonth}
           onsiteDays={p4.onsiteDays}
-          siteVisits={CONFIG.phase4.siteVisits}
-          daysPerVisit={CONFIG.phase4.daysPerVisit}
-          travelCostPerVisit={CONFIG.phase4.travelCostPerVisit}
+          siteVisits={cfg.phase4.siteVisits}
+          daysPerVisit={cfg.phase4.daysPerVisit}
+          travelCostPerVisit={cfg.phase4.travelCostPerVisit}
           totalDays={p4.totalDays}
           laborCost={p4.laborCost}
           travelCost={p4.travelCost}
           totalCost={p4.totalCost}
-          feeMin={CONFIG.phase4.proposedFeeMin}
-          feeMax={CONFIG.phase4.proposedFeeMax}
+          feeMin={cfg.phase4.proposedFeeMin}
+          feeMax={cfg.phase4.proposedFeeMax}
           marginMin={p4.marginAtMin}
           marginMax={p4.marginAtMax}
+          hoursPerDay={cfg.hoursPerDay}
+          hourlyRate={cfg.hourlyRate}
           notes={[
             "The feast/celebration visit is one of the two on-site trips. It's not fluff — it's the community recognition moment that closes the loop and makes the next pilot possible.",
             "Codetry handoff includes everything in a format the community owns outright. No ongoing login, no subscription, no dependency on Headwaters to keep it running.",
@@ -620,7 +817,7 @@ export default function InternalScopePlan() {
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", marginBottom: "0.1rem" }}>
               Staffing — IT / Bookkeeping Hire
             </p>
-            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.2rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.1rem", fontVariationSettings: '"WONK" 0' }}>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.2rem", fontWeight: 900, color: "white", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.1rem" }}>
               The hire that protects<br />everything else.
             </h2>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, maxWidth: "5.6in" }}>
@@ -629,26 +826,13 @@ export default function InternalScopePlan() {
           </div>
 
           <div style={{ flex: 1, padding: "0.36in 0.7in 0.3in", display: "flex", flexDirection: "column", gap: "0.28in" }}>
-
-            {/* Role + Cost side by side */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.3in" }}>
-
-              {/* Role description */}
               <div>
                 <p style={{ ...LABEL, marginBottom: "0.14in" }}>What the role covers</p>
                 {[
-                  {
-                    head: "Domains & passwords",
-                    body: "Digital credentials are owned by the community from day one — not Bobbie's personal accounts. If someone leaves, nothing breaks.",
-                  },
-                  {
-                    head: "Comms infrastructure",
-                    body: "Email accounts, distribution lists, shared inboxes. The store's communication stack stays operational and community-controlled.",
-                  },
-                  {
-                    head: "HST & government reporting",
-                    body: "Remittances filed correctly and on time from the moment the store opens. No scrambling at year-end. No penalties for a late filing.",
-                  },
+                  { head: "Domains & passwords", body: "Digital credentials are owned by the community from day one — not Bobbie's personal accounts. If someone leaves, nothing breaks." },
+                  { head: "Comms infrastructure", body: "Email accounts, distribution lists, shared inboxes. The store's communication stack stays operational and community-controlled." },
+                  { head: "HST & government reporting", body: "Remittances filed correctly and on time from the moment the store opens. No scrambling at year-end. No penalties for a late filing." },
                 ].map((item) => (
                   <div key={item.head} style={{ borderTop: "1px solid rgba(31,61,46,0.1)", paddingTop: "0.12in", marginBottom: "0.14in" }}>
                     <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>{item.head}</p>
@@ -657,13 +841,12 @@ export default function InternalScopePlan() {
                 ))}
               </div>
 
-              {/* Cost breakdown */}
               <div>
                 <p style={{ ...LABEL, marginBottom: "0.14in" }}>Cost breakdown</p>
-                <DataRow label="Hours per month" value={`${CONFIG.staffing.estimatedHoursPerMonth} hrs`} />
-                <DataRow label="Contractor rate" value={`${fmt(CONFIG.staffing.contractorHourlyRate)}/hr`} />
+                <DataRow label="Hours per month" value={`${cfg.staffing.estimatedHoursPerMonth} hrs`} />
+                <DataRow label="Contractor rate" value={`${fmt(cfg.staffing.contractorHourlyRate)}/hr`} />
                 <DataRow label="Monthly cost" value={fmt(staffMonthlyCost)} />
-                <DataRow label={`Phase 2 total (${CONFIG.staffing.monthsCoveredInPhase2} months)`} value={fmt(staffPhase2Total)} accent />
+                <DataRow label={`Phase 2 total (${cfg.staffing.monthsCoveredInPhase2} months)`} value={fmt(staffPhase2Total)} accent />
 
                 <div style={{ background: "rgba(184,90,62,0.08)", borderLeft: "3px solid var(--rust)", padding: "0.13in 0.16in", borderRadius: "0 4px 4px 0", marginTop: "0.18in" }}>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.08rem" }}>
@@ -676,7 +859,6 @@ export default function InternalScopePlan() {
               </div>
             </div>
 
-            {/* What this protects Bobbie from */}
             <div style={{ background: "rgba(31,61,46,0.05)", border: "1px solid rgba(31,61,46,0.12)", borderRadius: 6, padding: "0.18in 0.24in" }}>
               <p style={{ ...LABEL, marginBottom: "0.12in" }}>What this protects Bobbie from</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.4in" }}>
@@ -694,14 +876,12 @@ export default function InternalScopePlan() {
               </div>
             </div>
 
-            {/* Footer */}
             <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1px solid rgba(31,61,46,0.1)", paddingTop: "0.15in" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                 Internal — not for distribution
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: "rgba(31,61,46,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>5 of 5</p>
             </div>
-
           </div>
         </div>
 
