@@ -183,8 +183,6 @@ export function ContractsPage() {
 
   return (
     <div className="space-y-8" data-testid="page-contracts">
-      <ProvisionalBanner />
-
       {/* ── Back to dashboard ── */}
       <Link
         href="/"

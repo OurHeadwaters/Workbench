@@ -765,8 +765,6 @@ export function IndexPage() {
 
   return (
     <div className="space-y-6" data-testid="page-index">
-      <ProvisionalBanner />
-
       {/* ── Re-entry card (if returning user has a focus set) ── */}
       {hasReentry && <ReentryCard focus={activeFocus!} />}
 

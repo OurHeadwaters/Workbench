@@ -36,8 +36,6 @@ export function BrightsidePage() {
 
   return (
     <div className="space-y-6" data-testid="page-brightside">
-      <ProvisionalBanner />
-
       {/* ── Back to dashboard ── */}
       <Link
         href="/"

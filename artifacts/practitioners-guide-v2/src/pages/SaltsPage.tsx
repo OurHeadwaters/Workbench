@@ -40,8 +40,6 @@ export function SaltsPage() {
 
   return (
     <div className="space-y-6" data-testid="page-salts">
-      <ProvisionalBanner />
-
       {/* ── Back to dashboard ── */}
       <Link
         href="/"
