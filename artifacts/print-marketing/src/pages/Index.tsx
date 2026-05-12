@@ -2,6 +2,13 @@ import { Link } from "wouter";
 
 const pieces = [
   {
+    href: "/brand",
+    title: "Brand Kit",
+    label: "Reference",
+    desc: "The single source of truth for Headwaters marks, colours, type, and section labels. Marks in three colourways, full palette including Lake Blue, Fraunces + Inter specimens, the filled-bar label system, and voice guidelines. Use this before producing any materials.",
+    icon: "🎨",
+  },
+  {
     href: "/business-card",
     title: "Business Card",
     label: "Headwaters",

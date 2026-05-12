@@ -23,6 +23,7 @@ import NorthernPilotPitch from "@/pages/NorthernPilotPitch";
 import DeerLakePartnership from "@/pages/DeerLakePartnership";
 import GillesPitch from "@/pages/GillesPitch";
 import InternalScopePlan from "@/pages/InternalScopePlan";
+import BrandingKit from "@/pages/BrandingKit";
 import Privacy from "@/pages/Privacy";
 import NotFound from "@/pages/not-found";
 
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/deer-lake-partnership" component={DeerLakePartnership} />
       <Route path="/gilles-pitch" component={GillesPitch} />
       <Route path="/internal-scope-plan" component={InternalScopePlan} />
+      <Route path="/brand" component={BrandingKit} />
       <Route path="/privacy" component={Privacy} />
       <Route component={NotFound} />
     </Switch>
