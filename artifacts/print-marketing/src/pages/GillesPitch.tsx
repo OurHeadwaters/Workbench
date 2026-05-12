@@ -144,13 +144,13 @@ export default function GillesPitch() {
             <div style={{ display: "flex", gap: "0.4in", alignItems: "flex-start", borderTop: `1px solid rgba(31,61,46,0.12)`, paddingTop: "0.22in" }}>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: MUTED, marginBottom: "0.06in" }}>
-                  What it costs
+                  How this gets paid for
                 </p>
-                <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.5rem", fontWeight: 700, color: EVERGREEN, lineHeight: 1.1, marginBottom: "0.06in" }}>
-                  $175/hr · two weeks
+                <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.1rem", fontWeight: 700, color: EVERGREEN, lineHeight: 1.2, marginBottom: "0.08in" }}>
+                  No new cheque. This draws on the services agreement already in place.
                 </p>
-                <p style={{ fontSize: "0.72rem", color: MUTED, lineHeight: 1.5 }}>
-                  Flat cap agreed upfront. No surprise invoices. Everything built stays yours — no login required, no ongoing relationship required to keep it working.
+                <p style={{ fontSize: "0.72rem", color: MUTED, lineHeight: 1.55 }}>
+                  The spring tooling is the first activation — applied against the pre-paid balance. Any hourly work toward objectives you define beyond this scope clears the remainder at $175/hr. Everything built stays yours. No ongoing relationship required to keep it working.
                 </p>
               </div>
               <div style={{ flex: 1 }}>
@@ -158,10 +158,10 @@ export default function GillesPitch() {
                   To start
                 </p>
                 <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.95rem", fontWeight: 600, color: EVERGREEN, lineHeight: 1.4, marginBottom: "0.06in" }}>
-                  One phone call. Tell me what's been sitting in your head.
+                  One conversation. Tell me what you want out of the next two years — and where you want to be able to hand this off.
                 </p>
                 <p style={{ fontSize: "0.72rem", color: MUTED, lineHeight: 1.5 }}>
-                  A reply to this document is enough to get started. No contract ceremony. You can stop at any point.
+                  A reply to this document is enough to reactivate. No contract ceremony required.
                 </p>
                 <p style={{ fontSize: "0.72rem", color: EVERGREEN, fontWeight: 600, marginTop: "0.1in" }}>
                   bobbie@ourheadwaters.ca · ourheadwaters.ca

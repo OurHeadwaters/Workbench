@@ -211,6 +211,12 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
     blocksWhat: "The January 2027 pilot. If no coordinator is in place, the pilot doesn't happen.",
   },
   {
+    id: "gilles-prepaid",
+    question: "Gilles pre-paid services agreement — $72k sitting, ready to reactivate",
+    why: "His company paid Headwaters $72,000 as a sole proprietor, held as business debt toward future business development services. Paused when illnesses hit. This spring is the right moment to resurface it. Proposed structure: spring tooling (voice tool, knowledge capture, legacy architecture — 2 weeks) is the first draw against that credit. Hourly work toward specific objectives they define beyond that scope clears the remainder at $175/hr. No new cheque from Gilles required — the money is already paid. The value case is concrete: a multi-million dollar operation that currently isn't sellable becomes genuinely sellable within 2 years, or he keeps running it from Dryden indefinitely with a system that doesn't depend on him being there. Either outcome returns multiples on the $72k. The conversation to reactivate this is one call — not a new contract.",
+    blocksWhat: "Your own cashflow clarity. The $72k is a real asset sitting idle. Frame the reactivation to Gilles as exactly what it is: the work you both agreed on, finally at the right moment.",
+  },
+  {
     id: "lfif-backdating",
     question: "Document the LFIF risk framing in writing with the contractor and Deer Lake before any purchases are made.",
     why: "The LFIF cashflow mechanism is now confirmed: eligibility opens at the deemed-complete date (when AAFC acknowledges receipt of a complete application), and purchases after that date fall within the eligible reimbursement window. The contractor and Deer Lake carry the cash from purchase until the contribution agreement is signed — there is no reimbursement without a signed agreement. AAFC explicitly warns that pre-approval spending 'may not be reimbursed.' Prior success with LFIF and the clear fit of this project make approval likely, but 'likely' is not 'guaranteed.' That distinction needs to be understood and accepted by both parties — in writing — before a single purchase is made.",
