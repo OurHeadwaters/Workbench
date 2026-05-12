@@ -203,6 +203,17 @@ const MILESTONES: Milestone[] = [
     detail:
       "Kevin handles supply coordination and producer aggregation from Thunder Bay. At least the anchor producers need signed commitments before January 2027 so the pilot launches with real, confirmed product — not letters of intent. The pilot only proves what it claims to prove if the supply side is solid from day one.",
   },
+  // ── Phase 4: Bridge funding decision (Q3 2027) ────────────
+  {
+    id: "bridge-funding-decision",
+    group: "Phase 4 · Bridge funding decision (Q3 2027)",
+    title: "Confirm bridge funding source and file application",
+    owner: "Headwaters + 807 Food Co-op + Deer Lake First Nation",
+    deadline: "Q3 2027",
+    deadlineFlag: "critical",
+    detail:
+      "NOHFC and FedNor grants end December 2027. The bridge from grant-funded (Dec 2027) to independent (Mid 2028) must be decided and filed no later than Q3 2027 — application windows for OTF Seed or Grow and ROD close well before the grants expire. Options on the table: Gilles (anchor customer / infrastructure partner), OTF Seed or Grow, ROD, FCDF, or Deer Lake band reserves. Waiting until December 2027 puts the coordinator role, the store's continuity, and the entire 2027 pilot investment at risk. Decide the lead funding source, confirm who applies, and file by end of Q3 2027. If Gilles is the answer, structure that agreement before year-end 2027.",
+  },
 ];
 
 /* ─── Project timeline stages ───────────────────────────── */
