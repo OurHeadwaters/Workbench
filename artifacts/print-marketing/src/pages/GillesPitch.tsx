@@ -46,7 +46,7 @@ export default function GillesPitch() {
                 Private · Headwaters Development Services
               </p>
               <h1 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.65rem", color: CREAM, lineHeight: 1.2, fontWeight: 600, margin: 0 }}>
-                Two weeks.<br />You keep running the show.
+                Six weeks.<br />A plan you can both step back from.
               </h1>
             </div>
             <div style={{ textAlign: "right" }}>
@@ -72,7 +72,7 @@ export default function GillesPitch() {
 
             {/* Direct opener */}
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.05rem", lineHeight: 1.55, color: EVERGREEN, maxWidth: "6.8in", margin: 0 }}>
-              You built something real in Deer Lake. The band wants it. The hotel runs. The food moves. The problem isn't the couple burning out or the tools that walk off — it's that everything that keeps it working is still inside your head and inside the guys who've been doing it long enough to know. When they slow down, it goes with them. You didn't build a generation. You built something that could be a legacy. Those are different things.
+              You built something real in Deer Lake. The band wants it. The hotel runs. The food moves. The problem isn't the couple burning out or the tools that walk off — it's that everything that keeps it working is still inside your head. When you slow down, it goes with you. There's a version of this where you and your wife get to design what the next chapter looks like — together, on your terms. That version needs a system under it first.
             </p>
 
             {/* Three honest problems */}
@@ -84,7 +84,7 @@ export default function GillesPitch() {
                 {[
                   "The couple running the kitchen is burning out. 4am to 8pm, six months and they're gone. You've been through this cycle before.",
                   "The band likes what you've built — but they're starting to think you're expensive. That gap gets bigger if there's no plan.",
-                  "You know roughly what you want on the other side of this, but it's still half a thought. Nothing written down. Nothing ready to hand off.",
+                  "You and your wife haven't sat down with the same picture yet. What does stepping back actually look like — for both of you? That conversation is easier when there's something real to hand it to.",
                 ].map((line, i) => (
                   <div key={i} style={{ display: "flex", gap: "0.12in", alignItems: "flex-start" }}>
                     <span style={{ color: RUST, fontWeight: 700, flexShrink: 0, marginTop: "0.01in" }}>—</span>
@@ -97,7 +97,7 @@ export default function GillesPitch() {
             {/* What two weeks does */}
             <div>
               <p style={{ fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: EVERGREEN, marginBottom: "0.14in", fontWeight: 600 }}>
-                What two weeks buys you
+                What six weeks builds
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in 0.4in" }}>
                 {[
@@ -107,15 +107,15 @@ export default function GillesPitch() {
                   },
                   {
                     head: "A voice tool built around how you think",
-                    body: "You send a voice note — in French, in English, mid-drive, mid-shift. It hears your accent. I turn what you said into the next move for whoever's on shift. No typing, no system to manage. You talk, it listens, things get done.",
+                    body: "You send a voice note — in French, in English, mid-drive, mid-shift. It hears your accent. I turn what you said into the next move for whoever's on shift. No typing, no system to manage. You talk, it listens, things get done. The difference between a voice note on your time and a phone call on her time is everything.",
                   },
                   {
                     head: "The hidden cost, made visible",
                     body: "A tool walks off — acceptable loss. But the real cost is the hour spent searching, the job done wrong because nobody knew the right way, the new person who quit because nobody showed them anything. That cost compounds. A simple asset and resource layer stops it.",
                   },
                   {
-                    head: "Long-term planning — off your plate",
-                    body: "The 807 partnership, the store, the 2027 plans — I've got it. You focus on the daily work. I handle the architecture and bring you one decision at a time.",
+                    head: "A Deer Lake connection",
+                    body: "If the community store contract comes through in 2027, the same operational layer runs both. The hotel's supply rhythm feeds the store's inventory. Volume purchasing improves. Two operations, one system — better prices, less overhead for both.",
                   },
                 ].map((card) => (
                   <div key={card.head} style={{ borderTop: `2px solid ${RUST}`, paddingTop: "0.12in" }}>
@@ -150,10 +150,10 @@ export default function GillesPitch() {
                   How this gets paid for
                 </p>
                 <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.1rem", fontWeight: 700, color: EVERGREEN, lineHeight: 1.2, marginBottom: "0.08in" }}>
-                  No new cheque. This draws on the services agreement already in place.
+                  No new cheque. The $72,000 is already there.
                 </p>
                 <p style={{ fontSize: "0.72rem", color: MUTED, lineHeight: 1.55 }}>
-                  The spring tooling is the first activation — applied against the pre-paid balance. Any hourly work toward objectives you define beyond this scope clears the remainder at $175/hr. Everything built stays yours. No ongoing relationship required to keep it working.
+                  Your company pre-paid $72,000 in business development services — held as agreed, set aside when the timing wasn't right. Six weeks at $175/hr draws $28,000 against that balance. The remaining credit is available for objectives you and your wife define together. Everything built stays yours.
                 </p>
               </div>
               <div style={{ flex: 1 }}>
@@ -161,10 +161,10 @@ export default function GillesPitch() {
                   To start
                 </p>
                 <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.95rem", fontWeight: 600, color: EVERGREEN, lineHeight: 1.4, marginBottom: "0.06in" }}>
-                  One conversation. Tell me what you want out of the next two years — and where you want to be able to hand this off.
+                  One conversation — with both of you if you'd like. What does the next chapter look like, and what needs to be true before you can live it?
                 </p>
                 <p style={{ fontSize: "0.72rem", color: MUTED, lineHeight: 1.5 }}>
-                  A reply to this document is enough to reactivate. No contract ceremony required.
+                  A reply is enough to reactivate. No contract ceremony. Your wife is welcome on the call — she'll have the context and she should be part of the vision.
                 </p>
                 <p style={{ fontSize: "0.72rem", color: EVERGREEN, fontWeight: 600, marginTop: "0.1in" }}>
                   bobbie@ourheadwaters.ca · ourheadwaters.ca
