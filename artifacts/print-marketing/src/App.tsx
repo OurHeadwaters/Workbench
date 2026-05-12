@@ -20,6 +20,7 @@ import TspGuestForm from "@/pages/TspGuestForm";
 import ColdTrailerUpgrade from "@/pages/ColdTrailerUpgrade";
 import TylerSubmit from "@/pages/TylerSubmit";
 import NorthernPilotPitch from "@/pages/NorthernPilotPitch";
+import DeerLakePartnership from "@/pages/DeerLakePartnership";
 import InternalScopePlan from "@/pages/InternalScopePlan";
 import Privacy from "@/pages/Privacy";
 import NotFound from "@/pages/not-found";
@@ -47,6 +48,7 @@ function Router() {
       <Route path="/cold-trailer-upgrade" component={ColdTrailerUpgrade} />
       <Route path="/tyler-submit" component={TylerSubmit} />
       <Route path="/northern-pilot" component={NorthernPilotPitch} />
+      <Route path="/deer-lake-partnership" component={DeerLakePartnership} />
       <Route path="/internal-scope-plan" component={InternalScopePlan} />
       <Route path="/privacy" component={Privacy} />
       <Route component={NotFound} />

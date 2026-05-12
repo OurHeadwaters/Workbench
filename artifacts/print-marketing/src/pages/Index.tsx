@@ -121,6 +121,13 @@ const pieces = [
     icon: "🚛",
   },
   {
+    href: "/deer-lake-partnership",
+    title: "Deer Lake — 2027 Partnership Pitch",
+    label: "807 × Deer Lake",
+    desc: "One-page leave-behind for the Deer Lake First Nation pitch. Covers the 807 Food Co-op partnership, what grants cover (4 positions + truck), the Thunder Bay → Deer Lake route, what 2027 looks like for the community, and the one ask: a letter of support before May 31. Letter size (8.5×11).",
+    icon: "🤝",
+  },
+  {
     href: "/northern-pilot",
     title: "Northern Pilot Pitch",
     label: "Deer Lake Pilot",
