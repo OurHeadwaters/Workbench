@@ -440,6 +440,12 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
     why: "The LFIF cashflow mechanism is now confirmed: eligibility opens at the deemed-complete date (when AAFC acknowledges receipt of a complete application), and purchases after that date fall within the eligible reimbursement window. The contractor and Deer Lake carry the cash from purchase until the contribution agreement is signed — there is no reimbursement without a signed agreement. AAFC explicitly warns that pre-approval spending 'may not be reimbursed.' Prior success with LFIF and the clear fit of this project make approval likely, but 'likely' is not 'guaranteed.' That distinction needs to be understood and accepted by both parties — in writing — before a single purchase is made.",
     blocksWhat: "Any infrastructure purchase ahead of the signed contribution agreement. The policy question is resolved; what remains is ensuring the contractor and Deer Lake have a documented, mutual understanding of who carries the risk and what 'may not be reimbursed' actually means in practice.",
   },
+  {
+    id: "bridge-funding-2028",
+    question: "How does the project bridge from grant-funded (Dec 2027) to independent (Mid 2028) — and who decides by Q3 2027?",
+    why: "NOHFC and FedNor grants end December 2027. Stage 3 (Early 2028) is marked 'Bridge needed' on the timeline, but that label doesn't force a decision. The options are already on the table — Gilles (as anchor customer and infrastructure partner), OTF Seed or Grow, ROD, FCDF, or Deer Lake band reserves — but none of them activate themselves. The window to apply for OTF Seed or Grow or ROD closes well before December 2027, which means the bridge decision needs to be made and the application filed no later than Q3 2027. Waiting until the grants expire to figure this out puts the coordinator job, the store's continuity, and the entire 2027 pilot investment at risk.",
+    blocksWhat: "Stage 3 launch (Early 2028) and the coordinator role continuing past December 2027. Decide by Q3 2027 — identify the lead funding source, confirm who applies, and file. If Gilles is the answer, structure that agreement before year-end 2027.",
+  },
 ];
 
 /* ─── Status config ──────────────────────────────────────── */
