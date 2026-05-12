@@ -8,7 +8,7 @@
  * Lead applicant: 807 Food Co-operative & Hub (Dryden, ON)
  * Funding: NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = 100% human capacity
  * Truck: LFIF (arriving summer/fall 2026)
- * Applications due: May 31, 2026 | Decisions: Sep–Nov 2026
+ * Applications due: June 15, 2026 | Decisions: ~90 days from submission (Sep–Oct 2026)
  */
 
 import { useState, useEffect } from "react";
@@ -61,36 +61,36 @@ interface OpenQuestion {
 /* ─── Milestone data ─────────────────────────────────────── */
 
 const MILESTONES: Milestone[] = [
-  // ── Phase 1: Grant applications (due May 31) ──────────────
+  // ── Phase 1: Grant applications (due June 15) ─────────────
   {
     id: "letter-of-support",
-    group: "Phase 1 · Grant applications (due May 31)",
+    group: "Phase 1 · Grant applications (due June 15)",
     title: "Letter of support from Deer Lake First Nation",
     owner: "Headwaters → Deer Lake Chief & Council",
-    deadline: "Before May 31, 2026",
+    deadline: "Before June 15, 2026",
     deadlineFlag: "critical",
     detail:
       "The single most important document for the grant applications. Without it, neither NOHFC nor FedNor will score the application favourably. Headwaters' role: draft the language, walk council through what they're signing, and confirm the letter is in 807's hands before submission.",
   },
   {
     id: "scope-defined",
-    group: "Phase 1 · Grant applications (due May 31)",
+    group: "Phase 1 · Grant applications (due June 15)",
     title: "Headwaters' northern coordination scope documented",
     owner: "Headwaters",
-    deadline: "Before May 31, 2026",
+    deadline: "Before June 15, 2026",
     deadlineFlag: "critical",
     detail:
       "Clear, grant-defensible deliverables for Headwaters' coordination contract: Deer Lake relationship management, community store development support, pilot governance, progress reporting. Must be framed as project-based (not operational) so the NOHFC/FedNor budget line holds up under review. This scope also defines Headwaters' 2026 billing basis to Deer Lake First Nation.",
   },
   {
     id: "grant-submission",
-    group: "Phase 1 · Grant applications (due May 31)",
-    title: "NOHFC + FedNor CEDD applications submitted by 807",
-    owner: "807 Food Co-op (lead applicant)",
-    deadline: "May 31, 2026",
+    group: "Phase 1 · Grant applications (due June 15)",
+    title: "NOHFC EYC + FedNor CEDD application submitted",
+    owner: "Headwaters (writing) + 807 Food Co-op (lead applicant)",
+    deadline: "June 15, 2026",
     deadlineFlag: "critical",
     detail:
-      "807 Food Co-operative & Hub is the lead applicant. NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = 100% of human capacity costs for the contracted team. Headwaters is a budget line inside this application. Decisions expected September–November 2026.",
+      "Headwaters writes the application. 807 Food Co-operative & Hub is the named lead applicant. NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = human bodies and logistics planning. All contractor costs — Headwaters, Kevin, Tyler, and the community coordinator — are written into the grant budget so the numbers work for every party. LFIF is a separate application covering the truck and food infrastructure equipment. Decisions come back within 90 days of submission — faster if letters of support and a few well-placed calls are in early.",
   },
   // ── Phase 2: Community discovery (June–September) ─────────
   {
@@ -114,11 +114,11 @@ const MILESTONES: Milestone[] = [
   {
     id: "truck-received",
     group: "Phase 2 · Community discovery (June–September)",
-    title: "LFIF distribution truck received and confirmed operational",
+    title: "LFIF truck and food infrastructure equipment received",
     owner: "807 Food Co-op / LFIF",
     deadline: "Summer/Fall 2026",
     detail:
-      "Funded separately through LFIF. Arriving summer/fall 2026. Headwaters' job: confirm the truck is in Tyler's hands and operational before November — if it arrives late or has issues, that blows the January timeline. Flag it early.",
+      "Separate LFIF application covers the distribution truck and food infrastructure equipment (cold storage, handling gear, anything needed at the community end). Headwaters' job: confirm the truck is in Tyler's hands and the infrastructure is operational before November — if either arrives late or has issues, that blows the January timeline. Flag it early.",
   },
   // ── Phase 3: Build readiness (October–December) ───────────
   {
@@ -126,9 +126,9 @@ const MILESTONES: Milestone[] = [
     group: "Phase 3 · Build readiness (October–December)",
     title: "Grant decisions received — contracts activated",
     owner: "807 Food Co-op (lead) + all partners",
-    deadline: "September–November 2026",
+    deadline: "September–October 2026 (~90 days from submission)",
     detail:
-      "NOHFC and FedNor decisions land here. If approved: 807 activates the contracted team, Headwaters' coordination contract starts, and the January 2027 clock is running. If rejected: fallback options need to be ready — do we self-fund a smaller pilot, defer to 2028, or find an alternative funder? Have a contingency answer before the decision arrives.",
+      "NOHFC and FedNor decisions land roughly 90 days after submission. That's September–October if we're in by June 15. Can be pushed faster with proactive calls to program officers and strong letters of support landing early. If approved: 807 activates the contracted team, all contractor costs flow as written in the budget, and the January 2027 clock is running. If rejected: fallback options need to be ready before the decision arrives.",
   },
   {
     id: "coordinator-recruited",
@@ -170,8 +170,8 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
   },
   {
     id: "contingency",
-    question: "What's the plan if NOHFC and FedNor both say no in fall 2026?",
-    why: "Grant decisions land September–November. You will have spent the better part of a year on discovery and relationship-building by then. If both funders decline, do you self-fund a smaller proof-of-concept run? Defer to 2028? Find an alternative funder (e.g. FCDF, OTF Seed or Grow, ROD)? The answer needs to exist before the decision arrives so you're not making it under pressure.",
+    question: "What's the plan if NOHFC and FedNor both say no?",
+    why: "Decisions land roughly 90 days from June 15 — call it September–October. You will have spent most of the year on discovery and relationship-building by then. If both funders decline, do you self-fund a smaller proof-of-concept run? Defer to 2028? Find an alternative funder (e.g. FCDF, OTF Seed or Grow, ROD)? The answer needs to exist before the decision arrives so you're not making it under pressure. Worth noting: a strong phone call campaign to program officers before submission can move the timeline and signal intent.",
     blocksWhat: "Your fallback position. 807's AGM strategic plan already has ROD and OTF as backstops — know where you fit in that contingency.",
   },
   {
@@ -184,7 +184,7 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
     id: "scope-boundary",
     question: "Where does Headwaters' coordination end and 807's operations begin?",
     why: "The grant application needs a clean line between what 807 does (lead applicant, truck, supply chain management, financials) and what Headwaters does (northern relationship, community development, governance). If this line is blurry, NOHFC reviewers will question whether Headwaters is a coordinator or a subcontractor, which affects how the budget is scored.",
-    blocksWhat: "The grant scope document (due May 31) and your long-term positioning in the project.",
+    blocksWhat: "The grant scope document (due June 15) and your long-term positioning in the project.",
   },
   {
     id: "coordinator-backup",
@@ -485,7 +485,7 @@ export function DeerLakePage() {
         </h1>
         <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
           Headwaters' 2026 mandate runs the full year: discovery and planning work that makes
-          January 2027 possible. The grant applications land May 31, decisions come in fall,
+          January 2027 possible. Headwaters writes the grant — in by June 15, decisions back within 90 days —
           and the rest of the year is building the on-the-ground readiness — community relationship,
           store receiving plan, coordinator recruitment, and route confirmation — so that when
           807's first truck rolls in January, everything is ready to receive it.
@@ -495,7 +495,7 @@ export function DeerLakePage() {
       {/* KPI strip */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: "Grant applications due", value: "May 31, 2026", sub: "NOHFC + FedNor CEDD", urgent: true },
+          { label: "Grant applications due", value: "June 15, 2026", sub: "NOHFC EYC + FedNor CEDD", urgent: true },
           { label: "Headwaters planning scope", value: "Full year", sub: "May → December 2026" },
           { label: "First winter road run", value: "Jan 2027", sub: "Target launch with 807" },
           { label: "Pilot wrap-up", value: "Dec 2027", sub: "Replication blueprint" },
@@ -537,8 +537,8 @@ export function DeerLakePage() {
               <p className="font-semibold text-foreground mb-1">807's role</p>
               <ul className="space-y-1">
                 {[
-                  "Lead grant applicant — NOHFC + FedNor CEDD",
-                  "LFIF truck (capital asset, separate funding)",
+                  "Lead grant applicant — NOHFC EYC + FedNor CEDD",
+                  "LFIF truck + food infrastructure equipment (separate application)",
                   "Supply chain management via Kevin Belluz / Superior Seasons",
                   "Distribution route via Tyler Bernier / Rockfront",
                   "Financial management and reporting to funders",
@@ -575,8 +575,9 @@ export function DeerLakePage() {
             in their pipeline covers co-op development support — tooling adaptation, community development
             engagement, and the white-label playbook. That's adjacent to what Headwaters does but
             not the same budget line. Headwaters is the relationship and coordination layer;
-            807 is the logistics and capital layer. The two roles need a clean written boundary
-            before May 31 so the grant budget reflects it accurately.
+            807 is the logistics and capital layer. Headwaters writes the grant — all contractor
+            costs are built in so the numbers work for every party. The two roles need a clean
+            written boundary before June 15 so the grant budget reflects it accurately.
           </p>
         </div>
       </section>
@@ -602,9 +603,9 @@ export function DeerLakePage() {
             },
             {
               icon: Truck,
-              label: "LFIF — Distribution Truck",
+              label: "LFIF — Truck + Food Infrastructure",
               value: "Separate",
-              detail: "Capital asset only. Arriving summer/fall 2026. Operated by Tyler / Rockfront.",
+              detail: "Separate LFIF application. Covers the distribution truck and food infrastructure equipment. Arriving summer/fall 2026. Operated by Tyler / Rockfront.",
             },
           ].map((f) => {
             const Icon = f.icon;
@@ -628,8 +629,9 @@ export function DeerLakePage() {
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
           Headwaters' 2026 discovery and planning work is billed directly to Deer Lake First Nation —
-          separate from the grant-funded team contracts that activate on approval (September–November 2026).
-          Grant decisions expected September–November 2026.
+          separate from the grant-funded team contracts that activate on approval.
+          Grant decisions expected within 90 days of submission — September–October 2026 if in by June 15.
+          Can be pushed faster with early letters of support and proactive calls to program officers.
         </p>
       </section>
 

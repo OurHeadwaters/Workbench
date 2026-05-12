@@ -109,7 +109,7 @@ export default function DeerLakePartnership() {
               </p>
               {[
                 { item: "4 contracted positions", note: "NOHFC + FedNor CEDD" },
-                { item: "Distribution truck", note: "LFIF capital grant" },
+                { item: "Truck + food infrastructure", note: "LFIF capital grant" },
                 { item: "Planning year (2026)", note: "Deer Lake First Nation" },
                 { item: "Co-op development tools", note: "CDP grant via 807" },
               ].map((g) => (
@@ -205,7 +205,7 @@ export default function DeerLakePartnership() {
                   A letter of support from Chief & Council
                 </p>
                 <p style={{ fontSize: "0.65rem", color: "rgba(244,237,224,0.7)", margin: 0, lineHeight: 1.55, maxWidth: "5.2in" }}>
-                  The grant applications go in May 31, 2026. A letter of support from Deer Lake First Nation is the single most important document — without it, the application doesn't score. Headwaters will draft the language. Council reviews and signs. Everything else on this page follows from that letter.
+                  The grant application goes in June 15, 2026. Headwaters is writing it — NOHFC Enhance Your Community + FedNor CEDD, 50/50, covering people and logistics. A letter of support from Deer Lake First Nation is what makes it score. Headwaters drafts the language; Council reviews and signs. Decisions come back within 90 days — faster if we put the right calls in early.
                 </p>
               </div>
             </div>
