@@ -71,17 +71,22 @@ export const REVENUE_LINES: RevenueLine[] = [
     whyThisTier:
       "Active relationships, clear scope, money in motion. This is the bridge that funds time to build everything else. Do not let Tier 2 or Tier 3 thinking crowd out the next billable hour.",
     nextAction:
-      "Book the next 807 or GMPH call. Write the scope in one paragraph before you walk in.",
+      "Send the Gilles pitch. Activate the pre-paid services agreement. The $72k is already there — this is delivery, not a new sale.",
     steps: [
+      {
+        action: "Send the Gilles pitch document and book one call",
+        detail:
+          "The one-pager is ready. One message: 'I've been building toward this — I think it's the right moment.' The call isn't to sell. It's to confirm what the first two weeks focus on.",
+      },
+      {
+        action: "Agree on the drawdown structure",
+        detail:
+          "Two weeks of tooling (voice ops, knowledge capture, legacy architecture) draws against the $72k pre-paid balance. Remaining balance clears through hourly work on objectives they define at $175/hr. Write it down. No invoice ceremony.",
+      },
       {
         action: "Confirm the Northern Band trial scope and get a council date",
         detail:
-          "The $12k portal fee is confirmed. The trial window is open. A specific council date with a written agenda converts this from a warm lead to a contract.",
-      },
-      {
-        action: "Name the next 807 / GMPH engagement",
-        detail:
-          "What is the scope of the next hourly project? Name it, quote it, and send it. Do not leave active relationships idle.",
+          "The $12k portal fee is confirmed. The trial window is open. A specific council date with a written agenda converts this from a warm lead to a contract. Run Gilles and Deer Lake in parallel — June/July is the target pickup for Deer Lake.",
       },
       {
         action: "Keep the rate sheet current",

@@ -19,7 +19,7 @@ export interface FocusStep {
 }
 
 export interface FocusArea {
-  id: "contracts" | "salts" | "brightside";
+  id: "contracts" | "gmph" | "brightside";
   title: string;
   subtitle: string;
   whyNow: string;
@@ -79,40 +79,40 @@ export const FOCUS_AREAS: FocusArea[] = [
     ],
   },
   {
-    id: "salts",
-    title: "Grow Salts revenue",
-    subtitle: "Parr's Jars — build the actuals",
+    id: "gmph",
+    title: "Activate the Gilles pitch",
+    subtitle: "$72k pre-paid — services rendered to clear the balance",
     whyNow:
-      "Salts is the only cash-positive stream running right now with zero debt load. Solidifying real batch records and market numbers takes the model off assumptions and onto a foundation you can stand on.",
-    effortPayoff: "fast-low-risk",
-    effortLabel: "Fast / Low risk",
-    payoffLabel: "Locks real numbers into the model — stops the guessing",
-    accent: "#3A6B35",
-    accentSoft: "#EAF3E9",
-    accentInk: "#1F4A1A",
+      "The services agreement has been sitting for 18 months while his family went through a difficult period. Things have settled on his end. The tooling you spent two years building is exactly what was always owed — and what couldn't have been delivered then. This is the right moment. Send the pitch, book the call, activate the engagement.",
+    effortPayoff: "medium-high-payoff",
+    effortLabel: "Medium effort",
+    payoffLabel: "$72k in pre-paid credit — delivery, not a new sale",
+    accent: "#1f3d2e",
+    accentSoft: "#edf2ee",
+    accentInk: "#0f1e17",
     steps: [
       {
-        action: "Map out vegetable subscription logistics before market starts",
+        action: "Send the pitch document to Gilles",
         detail:
-          "Work with Walls Rockfront and Zurbriggs to get the delivery picture clear before the season opens. Pull the list: who paid last year, who got early-bird online, how many spots remain, and which customers need delivery vs. can pick up at the market. The goal is to shift as many as possible to Thursday pickup (market starts at 3) — delivery is the exception, not the default. Flag the seniors you promised delivery to and build a route that front-loads those stops so Thursday isn't a scramble. Consider running the local-line and veggie deliveries earlier in the day so everything is done before you're at the table.",
+          "The one-pager is ready. One message to go with it: 'I've been building toward this and I think it's finally the right moment.' That's the whole pitch. He'll know what it means.",
+        timeEstimate: "15 min",
+      },
+      {
+        action: "Book one call — not to sell, to confirm scope",
+        detail:
+          "The question isn't whether he wants this. It's what the first two weeks focus on. Voice tool first? Knowledge capture? Asset tracking? Let him direct it — that's how he operates best.",
+        timeEstimate: "15 min",
+      },
+      {
+        action: "Draft the two-week scope in one paragraph",
+        detail:
+          "Before the call: write one paragraph describing what two weeks produces and what the first draw against the balance covers. Concrete deliverables, not service descriptions. What does he hold in his hand at the end of it?",
         timeEstimate: "1 hr",
       },
       {
-        action: "Invoice Loving Suds and deliver the May 24–29 batch to Tilleys",
+        action: "Confirm the drawdown structure in writing",
         detail:
-          "One case filled Saturday — invoice it. Four cases ready May 24–29 en route to Tilleys in Kenora, then Superior Seasons in Thunder Bay. The 9-case backlog is being worked. Each case invoiced converts a planning assumption into real revenue.",
-        timeEstimate: "15 min",
-      },
-      {
-        action: "Log actual vs. model at month-end",
-        detail:
-          "One simple habit: after each month, write down what the model predicted vs. what came in (jars sold, market revenue, COGS). Three months of this gives you a real per-jar cost and channel mix.",
-        timeEstimate: "15 min",
-      },
-      {
-        action: "Track the next three batches against real yield",
-        detail:
-          "Founder confirmed 200–300 jars per run in ~4–6 hrs. Track the next three batches to pin this down and confirm whether the 1,190/yr planning target is achievable. The new lids (one-part) should help — note if yield per hour improves.",
+          "Two weeks of tooling draws against the pre-paid balance. Remaining balance clears through hourly work on objectives they define at $175/hr. Write it down and confirm on the call. No invoice ceremony — just delivery of what was always agreed.",
         timeEstimate: "15 min",
       },
     ],
