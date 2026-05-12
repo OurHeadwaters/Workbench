@@ -73,10 +73,10 @@ export default function DeerLakePartnership() {
           {/* ── LEAD STATEMENT ──────────────────────────────── */}
           <div style={{ padding: "0.42in 0.65in 0.3in" }}>
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.15rem", lineHeight: 1.5, color: EVERGREEN, maxWidth: "6.8in", margin: 0 }}>
-              A funded partnership is being built to run regular food deliveries from Northern Ontario producers
-              directly to Deer Lake — starting January 2027 on the winter road.
-              The people, the truck, and the coordination are covered by grants.
-              Deer Lake's job is to receive it.
+              This is the plan: regular food deliveries from Northern Ontario producers
+              to Deer Lake — starting January 2027 on the winter road.
+              The grants aren't in yet. The application goes in June 15, 2026.
+              This is what it looks like if we do the work to get there.
             </p>
           </div>
 
@@ -105,7 +105,7 @@ export default function DeerLakePartnership() {
             {/* What grants cover */}
             <div style={{ background: BLUE_SOFT, borderRadius: "6px", padding: "0.28in 0.28in 0.3in", border: `1.5px solid ${BLUE}` }}>
               <p style={{ fontSize: "0.52rem", letterSpacing: "0.18em", textTransform: "uppercase", color: BLUE, marginBottom: "0.14in", fontWeight: 700 }}>
-                What grants cover
+                What we're applying to fund
               </p>
               {[
                 { item: "4 contracted positions", note: "NOHFC + FedNor CEDD" },

@@ -115,7 +115,7 @@ function buildPlainText(): string {
     "",
     "WHERE THE TRUCK COMES FROM",
     "",
-    "The bulk truck delivery in Phase 3 isn't hypothetical — it's the 807 Food Co-operative distribution network, funded by NOHFC Enhance Your Community + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure equipment). Headwaters is writing the grant application. Target submission: June 15, 2026. Decision: within 90 days. First run: January 2027 on the winter road.",
+    "The bulk truck delivery in Phase 3 is the goal — the 807 Food Co-operative distribution network, with applications going in to NOHFC Enhance Your Community + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure). The grants are not in yet. Headwaters is writing the application. Submission: June 15, 2026. Decision: within 90 days. This year is the work that makes January 2027 real.",
     "",
     "See companion document: 807 Food Co-operative × Deer Lake First Nation — 2027 Distribution Partnership",
     "",
@@ -567,11 +567,11 @@ export default function NorthernPilotPitch() {
                 Where the truck comes from
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
-                The bulk truck delivery in Phase 3 isn't hypothetical — it's the{" "}
-                <strong>807 Food Co-operative distribution network</strong>, funded by NOHFC Enhance Your Community
-                + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure equipment).
-                Headwaters is writing the grant application. Target submission: June 15, 2026.
-                Decision: within 90 days. First run: January 2027 on the winter road.
+                The bulk truck delivery in Phase 3 is the goal — the{" "}
+                <strong>807 Food Co-operative distribution network</strong>, with applications going in to
+                NOHFC Enhance Your Community + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure).
+                The grants are not in yet. Headwaters is writing the application. Submission: June 15, 2026.
+                Decision: within 90 days. This year is the work that makes January 2027 real.
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.5, marginTop: "0.04in" }}>
                 See companion document: <em>807 Food Co-operative × Deer Lake First Nation — 2027 Distribution Partnership</em>
