@@ -73,8 +73,10 @@ export default function DeerLakePartnership() {
           {/* ── LEAD STATEMENT ──────────────────────────────── */}
           <div style={{ padding: "0.42in 0.65in 0.3in" }}>
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.15rem", lineHeight: 1.5, color: EVERGREEN, maxWidth: "6.8in", margin: 0 }}>
-              This is the plan: regular food deliveries from Northern Ontario producers
-              to Deer Lake — starting January 2027 on the winter road.
+              This is the plan: regular food deliveries to Deer Lake — starting January 2027
+              on the winter road. 807 can anchor the supply with real pantry staples through
+              wholesale purchasing relationships, and fold in Northern Ontario producers
+              where the product is seasonal, valuable, and cost-effective.
               The grants aren't in yet. The application goes in June 15, 2026.
               This is what it looks like if we do the work to get there.
             </p>
