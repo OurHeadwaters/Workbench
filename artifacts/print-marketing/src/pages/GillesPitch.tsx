@@ -230,7 +230,7 @@ export default function GillesPitch() {
                 <p style={{ margin: 0, fontSize: "0.72rem", lineHeight: 1.6, color: INK }}>
                   No planning room. No new systems to learn.
                   I handle the thinking that keeps getting pushed off.
-                  Six weeks — then you have something real to hand to.
+                  Six weeks — then you have something real to hand over.
                 </p>
               </div>
             </div>
@@ -246,7 +246,7 @@ export default function GillesPitch() {
                 No new cheque.<br />The $72,000 is already there.
               </p>
               <p style={{ fontSize: "0.68rem", color: "rgba(244,237,224,0.65)", margin: 0, lineHeight: 1.55 }}>
-                Phase 1 draws $28,000 at $175/hr.<br />
+                Phase 1 · Discovery · $28,000<br />
                 The remaining balance funds what you both decide comes next.
               </p>
             </div>
