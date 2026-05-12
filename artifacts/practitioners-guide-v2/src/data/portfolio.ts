@@ -269,75 +269,87 @@ export const REVENUE_LINES: RevenueLine[] = [
   },
 
   {
-    id: "personal-tools",
-    name: "Personal Tools",
-    tagline: "Internal tools packaged and sold to your local business network.",
-    category: "Product",
-    tier: "next",
-    status: "not-started",
-    who: "Dryden and 807-area small businesses — bookkeeping, operations tracking, scheduling, receipts. The Headwaters Books app is the obvious candidate. Local businesses who know you personally are the easiest first sale.",
+    id: "sme-contracts",
+    name: "SME Contracts",
+    tagline: "Voice ops, legacy architecture, knowledge capture. Gilles is Pilot #1.",
+    category: "Consulting",
+    tier: "now",
+    status: "warm-lead",
+    who: "Small and medium operators who are currently the whole system — hotel operators, contractors, family businesses, owner-operators in the 807. High trust, high value. They don't need a platform; they need a person who builds around how they think and makes the operation run without them being everywhere at once.",
     whyThisTier:
-      "You have built tools that solve real problems you faced. The packaging step is small — a price, a demo, and an onboarding flow. But this requires clarity on which tools and who the first buyer is.",
+      "The Gilles engagement activates a $72k pre-paid balance with no new invoice — that makes this Tier 1. Cash already exists, just needs delivery. The pattern (voice ops + knowledge capture + passive exit documentation) repeats for every SME operator who has built something real but never documented it. Gilles is Pilot #1. The second engagement pays full rate from the start.",
     nextAction:
-      "Name the one tool you would sell first and the three people in your local network who would pay for it today.",
+      "Send the Gilles pitch. Activate the pre-paid agreement. While that's in motion, name one other operator in your network with the same problem — someone who is the whole system, who hasn't slowed down yet but will.",
     steps: [
       {
-        action: "Define which tools are sellable right now",
+        action: "Send the Gilles pitch and book the reactivation call",
         detail:
-          "Not everything you've built is a product. Pick the one that solves a problem someone else has, is already running, and requires the least customization to hand over.",
+          "The pitch is ready at /gilles-pitch. One message: 'I've been building toward this — I think it's the right moment.' The call confirms what the first two weeks focus on and agrees the drawdown structure.",
       },
       {
-        action: "Set a price and a demo flow",
+        action: "Document what you build as a reusable methodology",
         detail:
-          "Even a rough price is better than no price. A 20-minute screen share demo is the entire sales process for a local business. Prepare it once and reuse it.",
+          "Every decision made, every pattern that works, every tool configured — write it in plain language as you go. Not for Gilles. For Pilot #2. The methodology document is the thing you sell the second time.",
       },
       {
-        action: "Sell to the three warmest people first",
+        action: "Name the next operator",
         detail:
-          "Your first local tool sales are relationship sales. The price matters less than getting the first paying user — they become the reference story for everyone else.",
+          "Who else in your network is the whole system for their business? A contractor, a farm operator, a trades person with three crews and no documentation? Name one. You don't need to pitch them yet — just name them.",
+      },
+      {
+        action: "Quote the pattern, not the hours",
+        detail:
+          "The second SME engagement shouldn't be quoted hourly from scratch. Define a package: 2-week discovery + voice tool setup + knowledge capture framework + exit layer. One price. Quote it once and refine from there.",
       },
     ],
     existingPage: null,
-    accent: "#4338CA",
-    accentSoft: "#EEF2FF",
-    accentInk: "#1E1B4B",
+    alert: {
+      kind: "insight",
+      text: "Every SME operator who built something real is a potential client. The common thread: the business runs because they're there. The pitch writes itself.",
+    },
+    accent: "#1f3d2e",
+    accentSoft: "#edf2ee",
+    accentInk: "#0f1e17",
   },
-
-  // ── TIER 3 — LONG RUNWAY REQUIRED ─────────────────────────────────────────
 
   {
     id: "brightside",
-    name: "Brightside — Recreation Therapy",
-    tagline: "RT SaaS for long-term care. Warm LTC lead to convert.",
-    category: "SaaS",
-    tier: "later",
+    name: "Institutional Contracts",
+    tagline: "LTC and regulated orgs. Implementation partner, not SaaS vendor.",
+    category: "Consulting",
+    tier: "next",
     status: "warm-lead",
-    who: "Long-term care facility administrators. One specific warm lead already identified. Pricing and cost basis are fully modelled — the only missing piece is a pilot conversation.",
+    who: "Long-term care facilities, regulated orgs, institutional buyers. One warm LTC lead already identified. The revenue is the engagement — scoping, deployment, training, annual support — not a software license.",
     whyThisTier:
-      "Real upside and a warm lead — but LTC procurement moves slowly and PHIPA compliance adds runway. Do not let this distract from Tier 1 cash. The best time to book the first LTC conversation is when the Northern Band contract is signed and you have 20% of your week free.",
+      "LTC facilities don't buy SaaS. They sign contracts with implementation partners. Reframing Brightside this way removes the compliance overhead of running a platform and replaces it with something you already know how to do: scope the problem, build the tool, hold the relationship. The engagement fee + annual support contract is a better revenue model than a monthly subscription for one practitioner.",
     nextAction:
-      "Name the warm LTC contact and book a 20-minute call. Do not sell on the first call — ask about their therapy documentation workflow.",
+      "Name the warm LTC contact and book a 20-minute scoping conversation — not a sales call. What does their therapy documentation burden actually look like? What would a 90-day implementation engagement need to produce for them to renew?",
     steps: [
       {
-        action: "Book the first conversation with the warm LTC lead",
+        action: "Reframe the pitch: implementation partner, not software vendor",
         detail:
-          "Not a sales call — a discovery call. What documentation burden does their therapy team carry? What does a 90-day pilot need to look like for them to say yes?",
+          "Before the call, rewrite the one-paragraph pitch: you come in, you scope their workflow, you configure and deploy a documentation tool, you train the team. Annual support contract, not a monthly login. That's a familiar procurement model for institutions.",
       },
       {
-        action: "Draft the one-paragraph pilot pitch",
+        action: "Book the discovery call with the warm LTC lead",
         detail:
-          "Tier 1 facility, $195/mo + $500 setup, 90 days, letter of intent not a full contract. Write it before the call so you're not improvising.",
+          "Ask about the documentation burden, not the software. What does a therapist's day look like? Where does time go? What's the compliance requirement they're trying to satisfy? The tool emerges from the answers — you're not demoing a product.",
       },
       {
-        action: "Map the PHIPA compliance path",
+        action: "Define what a 90-day pilot engagement looks like",
         detail:
-          "LTC administrators will ask. The $5k audit is in the cost basis. Know who does it, how long it takes, and what the output looks like before the question comes up.",
+          "Scope, deliverables, what they get at the end of it. Not a trial — a paid engagement with a defined output. Letter of intent, not a full contract. The pilot is Pilot #1 of an institutional practice.",
+      },
+      {
+        action: "Map PHIPA as a delivery item, not a compliance burden",
+        detail:
+          "The $5k audit is in the cost basis. Position it as something you manage for them — they don't have to figure out what PHIPA means for their workflow, you handle it as part of the engagement. That's the value of an implementation partner over a SaaS login.",
       },
     ],
     existingPage: "/brightside",
     alert: {
-      kind: "risk",
-      text: "LTC procurement is slow. Do not count on Brightside revenue in 2026 unless a pilot letter of intent is signed by August.",
+      kind: "insight",
+      text: "The tool is the delivery mechanism. The contract is the revenue. Run this the same way you run Northern Band — scoped, boundaried, relationship-first.",
     },
     accent: "#4A2080",
     accentSoft: "#F0EAFA",

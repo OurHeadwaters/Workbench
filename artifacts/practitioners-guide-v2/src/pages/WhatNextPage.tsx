@@ -18,7 +18,7 @@ import {
   ChevronDown,
   ChevronUp,
   Handshake,
-  Salad,
+  Wrench,
   Cpu,
   Zap,
   TrendingUp,
@@ -34,7 +34,7 @@ const REENTRY_KEY = "pgv2.reentry";
 function readStoredFocus(): FocusArea["id"] | null {
   if (typeof window === "undefined") return null;
   const v = window.localStorage.getItem(STORAGE_KEY);
-  if (v === "contracts" || v === "salts" || v === "brightside") return v;
+  if (v === "contracts" || v === "gmph" || v === "brightside") return v;
   return null;
 }
 
@@ -101,7 +101,7 @@ function EffortBadge({ ep, label }: { ep: EffortPayoff; label: string }) {
 
 const AREA_ICONS: Record<FocusArea["id"], typeof Handshake> = {
   contracts: Handshake,
-  salts: Salad,
+  gmph: Wrench,
   brightside: Cpu,
 };
 
