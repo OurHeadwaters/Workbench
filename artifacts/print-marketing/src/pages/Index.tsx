@@ -134,6 +134,13 @@ const pieces = [
     desc: "One-page contractor pitch for the Deer Lake First Nation community store pilot. Three headline pillars (Economic Leakage, A Rising Tide, Grassroots Design), Chief's vision, plain-language food supply note, 7 bullet deliverables, and a flat $25,000 · 6-week engagement. Letter size (8.5×11).",
     icon: "🏔️",
   },
+  {
+    href: "/gilles-pitch",
+    title: "Gilles Pitch — Two Weeks",
+    label: "Private",
+    desc: "Private one-pager crafted for Gilles: two-week engagement to capture institutional knowledge, document systems, and build a legacy at Deer Lake. May 2026. Letter size (8.5×11).",
+    icon: "🤝",
+  },
 ];
 
 export default function Index() {
