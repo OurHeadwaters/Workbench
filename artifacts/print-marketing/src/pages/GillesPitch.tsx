@@ -260,7 +260,6 @@ export default function GillesPitch() {
               </p>
               <p style={{ fontSize: "0.72rem", color: INK, margin: "0 0 0.12in", lineHeight: 1.55 }}>
                 What does stepping back actually look like — for both of you?
-                Your wife is welcome on the call.
               </p>
               <p style={{ fontSize: "0.75rem", fontWeight: 700, color: EVERGREEN, margin: 0 }}>
                 A reply is enough to reactivate.
