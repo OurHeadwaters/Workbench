@@ -480,7 +480,7 @@ function getDecisionAction(q1: Q1, q2: Q2, q3: Q3): { focusId: FocusArea["id"]; 
   if (q1 === "yes" && q2 === "delivery") return { focusId: "contracts", stepIdx: 2 };
   if (q1 === "yes" && q2 === "sales") return { focusId: "contracts", stepIdx: 1 };
   if (q1 === "no" && q2 === "sales") return { focusId: "contracts", stepIdx: 0 };
-  return { focusId: "salts", stepIdx: 0 };
+  return { focusId: "contracts", stepIdx: 0 };
 }
 
 function DecisionTree() {

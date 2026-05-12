@@ -177,6 +177,224 @@ const MILESTONES: Milestone[] = [
   },
 ];
 
+/* ─── Project timeline stages ───────────────────────────── */
+
+type StageStatus = "past" | "active" | "upcoming";
+
+type FundingType = "band" | "grant" | "bridge";
+
+interface Stage {
+  id: string;
+  label: string;
+  period: string;
+  description: string;
+  status: StageStatus;
+  fundingType: FundingType;
+  funding: string;
+  fundingNote: string;
+}
+
+const FUNDING_CONFIG: Record<FundingType, { color: string; bg: string; border: string }> = {
+  grant:  { color: "#065f46", bg: "#d1fae5", border: "#6ee7b7" },
+  band:   { color: "#92400e", bg: "#fef3c7", border: "#fcd34d" },
+  bridge: { color: "#7c3aed", bg: "#ede9fe", border: "#c4b5fd" },
+};
+
+const STAGES: Stage[] = [
+  {
+    id: "stage-1",
+    label: "Stage 1",
+    period: "2026",
+    description: "Planning & Development",
+    status: "active",
+    fundingType: "band",
+    funding: "Band-funded",
+    fundingNote: "Headwaters billed directly to Deer Lake First Nation. LFIF truck application pending — approval not guaranteed until contribution agreement is signed.",
+  },
+  {
+    id: "stage-2",
+    label: "Stage 2",
+    period: "Jan – Dec 2027",
+    description: "Partnership Pilot with 807 Food Co-op (winter road runs + summer route)",
+    status: "upcoming",
+    fundingType: "grant",
+    funding: "Grant-funded",
+    fundingNote: "NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) cover all human capacity costs. Decision expected Sep–Oct 2026 (~90 days from June 15 submission).",
+  },
+  {
+    id: "stage-3",
+    label: "Stage 3",
+    period: "Early 2028",
+    description: "Transition to independence",
+    status: "upcoming",
+    fundingType: "bridge",
+    funding: "Bridge needed",
+    fundingNote: "NOHFC/FedNor grants end Dec 2027. Early 2028 transition likely requires bridge funding — Gilles, OTF Seed or Grow, ROD, FCDF, or band reserves. Plan before year-end 2027.",
+  },
+  {
+    id: "stage-4",
+    label: "Stage 4",
+    period: "Mid 2028",
+    description: "Project Handoff",
+    status: "upcoming",
+    fundingType: "band",
+    funding: "Band / self-sustaining",
+    fundingNote: "Community store and coordinator operating independently. Gilles' supply and any remaining community grants are the backstop. No external grant funding assumed at this stage.",
+  },
+];
+
+/* ─── FundingPill sub-component ──────────────────────────── */
+
+function FundingPill({
+  type,
+  label,
+  note,
+}: {
+  type: FundingType;
+  label: string;
+  note: string;
+}) {
+  const cfg = FUNDING_CONFIG[type];
+  return (
+    <span
+      className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded border"
+      style={{ color: cfg.color, backgroundColor: cfg.bg, borderColor: cfg.border }}
+      title={note}
+    >
+      {label}
+    </span>
+  );
+}
+
+/* ─── ProjectTimeline component ──────────────────────────── */
+
+function ProjectTimeline() {
+  return (
+    <section>
+      <p
+        className="text-[10px] font-mono uppercase tracking-[0.2em] font-semibold mb-3"
+        style={{ color: ACCENT }}
+      >
+        Project timeline — 2026 → 2028
+      </p>
+
+      {/* Desktop: horizontal */}
+      <div
+        className="hidden sm:block rounded-xl border p-5"
+        style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+      >
+        <div className="relative flex items-start">
+          {STAGES.map((stage, idx) => {
+            const isActive = stage.status === "active";
+            const isPast = stage.status === "past";
+            const isLast = idx === STAGES.length - 1;
+
+            const dotBg = isActive ? ACCENT : isPast ? ACCENT : "hsl(var(--muted))";
+            const dotBorder = isActive ? ACCENT : isPast ? ACCENT : "hsl(var(--border))";
+            const labelColor = isActive ? ACCENT : isPast ? ACCENT : "hsl(var(--muted-foreground))";
+            const textOpacity = stage.status === "upcoming" ? "opacity-60" : "";
+
+            return (
+              <div key={stage.id} className="flex-1 flex flex-col items-center relative">
+                {/* Connector line (skip for last item) */}
+                {!isLast && (
+                  <div
+                    className="absolute top-[10px] left-1/2 w-full h-px"
+                    style={{
+                      backgroundColor:
+                        isPast || isActive ? ACCENT : "hsl(var(--border))",
+                      opacity: stage.status === "upcoming" ? 0.35 : 0.6,
+                    }}
+                  />
+                )}
+
+                {/* Dot */}
+                <div
+                  className="relative z-10 h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: dotBg, borderColor: dotBorder }}
+                >
+                  {isActive && (
+                    <span className="block h-2 w-2 rounded-full bg-white" />
+                  )}
+                </div>
+
+                {/* Content below dot */}
+                <div className={`mt-3 px-2 text-center ${textOpacity}`}>
+                  <div
+                    className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded mb-1"
+                    style={{
+                      backgroundColor: isActive ? ACCENT_SOFT : "transparent",
+                      color: labelColor,
+                      border: isActive ? `1px solid ${ACCENT}` : "1px solid transparent",
+                    }}
+                  >
+                    {stage.label}
+                  </div>
+                  <p
+                    className="text-[11px] font-semibold leading-tight mb-1"
+                    style={{ color: isActive ? ACCENT_INK : "hsl(var(--foreground))" }}
+                  >
+                    {stage.period}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground leading-snug mb-2">
+                    {stage.description}
+                  </p>
+                  <FundingPill type={stage.fundingType} label={stage.funding} note={stage.fundingNote} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mobile: vertical */}
+      <div
+        className="sm:hidden rounded-xl border divide-y"
+        style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+      >
+        {STAGES.map((stage) => {
+          const isActive = stage.status === "active";
+          const isPast = stage.status === "past";
+          return (
+            <div
+              key={stage.id}
+              className="flex items-start gap-3 p-4"
+              style={{
+                background: isActive ? ACCENT_SOFT : "transparent",
+              }}
+            >
+              <div
+                className="mt-0.5 h-4 w-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                style={{
+                  backgroundColor: isActive || isPast ? ACCENT : "hsl(var(--muted))",
+                  borderColor: isActive || isPast ? ACCENT : "hsl(var(--border))",
+                }}
+              >
+                {isActive && <span className="block h-1.5 w-1.5 rounded-full bg-white" />}
+              </div>
+              <div className={stage.status === "upcoming" ? "opacity-60" : ""}>
+                <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                  <span
+                    className="text-[10px] font-semibold"
+                    style={{ color: isActive ? ACCENT : "hsl(var(--muted-foreground))" }}
+                  >
+                    {stage.label}
+                  </span>
+                  <span className="text-[11px] font-semibold" style={{ color: isActive ? ACCENT_INK : "hsl(var(--foreground))" }}>
+                    {stage.period}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-snug mb-1.5">{stage.description}</p>
+                <FundingPill type={stage.fundingType} label={stage.funding} note={stage.fundingNote} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 /* ─── Open questions ─────────────────────────────────────── */
 
 const OPEN_QUESTIONS: OpenQuestion[] = [
@@ -550,6 +768,9 @@ export function DeerLakePage() {
           </div>
         ))}
       </div>
+
+      {/* Project timeline */}
+      <ProjectTimeline />
 
       {/* Alignment with 807 */}
       <section>
