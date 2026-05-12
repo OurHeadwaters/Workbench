@@ -95,15 +95,13 @@ function buildPlainText(): string {
     "",
     `PAGE 4 — THE BUILD (Phase 2 · ${PHASES.phase2Duration} · ${PHASES.phase2Dates})`,
     "",
-    "The store opens. We make sure it works.",
+    "Infrastructure goes in. The hotel anchors the supply. The data we need gets collected.",
     "",
-    "The operator couple is hired and in place. Food starts moving. Headwaters is on the ground once a month — 3 days each visit — checking that the supply chain is running clean, the software is bug-free, inventory is rotating, and delivery is reliable. Problems get caught early.",
+    "The store doesn't open to the public in summer 2026 — and that's the right call. The existing hotel operation in Deer Lake is the anchor: the kitchen restocks weekly, the band sees what Gilles has built and wants it to keep working, and the hotel's weekly food needs are what will define the initial product list. The store space becomes a staging area and receiving depot for that operation.",
     "",
-    "The honest note on timing: Summer freight runs by air — costs are high and margins will be tight. That's expected and planned for. The numbers get better when winter roads open.",
+    "What happens during this phase: Gilles' team gets the physical infrastructure in place — freezers, shelving, electrical, receiving setup. Air supply continues through Gilles (his plane is usually full; a second flight is available if the band wants more food and arranges it). Headwaters documents the weekly demand — what the hotel needs, what the community buys, what's missing — so the 2027 winter road supply runs have real numbers behind them, not guesses.",
     "",
-    `Staffing support: Headwaters helps find and vet the operator couple (the most critical hire), supports building the casual pod job descriptions for ${CLIENT_SHORT} community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.`,
-    "",
-    "What this phase ends with: A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.",
+    "What this phase ends with: Infrastructure ready. A full season of demand data from a real anchor customer. A product list that reflects what actually gets used — not what a plan assumed.",
     "",
     "---",
     "",
@@ -459,7 +457,7 @@ export default function NorthernPilotPitch() {
               {`Phase 2 · The Build · ${PHASES.phase2Duration} · ${PHASES.phase2Dates}`}
             </p>
             <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, letterSpacing: "-0.02em", ...WONK0 }}>
-              The store opens.<br />We make sure<br />it works.
+              Infrastructure in.<br />Hotel anchors<br />the supply.
             </h2>
           </div>
 
@@ -467,26 +465,16 @@ export default function NorthernPilotPitch() {
           <div style={{ flex: 1, padding: "0.42in 0.7in 0.32in", display: "flex", flexDirection: "column", gap: "0.32in" }}>
 
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.68, maxWidth: "5.5in" }}>
-              The operator couple is hired and in place. Food starts moving. Headwaters is on the ground once a month — three days each visit — checking that the supply chain is running clean, the software is bug-free, inventory is rotating, and delivery is reliable. Problems get caught early.
+              The store doesn't open to the public in summer 2026 — and that's the right call. The existing hotel operation is the anchor: the kitchen restocks weekly and the hotel's food needs define the initial product list. The store space becomes a staging area and receiving depot for that operation while the planning work happens.
             </p>
 
-            {/* Honest note callout */}
+            {/* What happens callout */}
             <div style={{ borderLeft: "3px solid var(--rust)", paddingLeft: "0.22in", display: "flex", flexDirection: "column", gap: "0.06in" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)" }}>
-                The honest note on timing
+                What happens this phase
               </p>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
-                Summer freight runs by air — costs are high and margins will be tight. That's expected and planned for. The numbers get better when winter roads open.
-              </p>
-            </div>
-
-            {/* Staffing support */}
-            <div style={{ borderTop: "1px solid rgba(31,61,46,0.12)", paddingTop: "0.24in" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.14in" }}>
-                Staffing support
-              </p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
-                {`Headwaters helps find and vet the operator couple — the most critical hire — supports building the casual pod job descriptions for ${CLIENT_SHORT} community members, and helps develop training for both. Final hiring decisions stay with the contractor and band.`}
+                Gilles' team installs the physical infrastructure — freezers, shelving, electrical, receiving setup. Air supply continues through Gilles (his plane is usually full; a second flight is available if the band wants more food and arranges it). Headwaters documents weekly demand so the 2027 winter road runs have real numbers, not guesses.
               </p>
             </div>
 
@@ -496,7 +484,7 @@ export default function NorthernPilotPitch() {
                 What this phase ends with
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.95rem", fontWeight: 700, color: "var(--evergreen)", lineHeight: 1.45 }}>
-                A store that has been running for a full season, a team that knows what they're doing, and a financial picture showing what summer costs and what winter should deliver.
+                Infrastructure ready. A full season of demand data from a real anchor customer. A product list built from what actually gets used — not what a plan assumed. Grand opening: end of January 2027.
               </p>
             </div>
 

@@ -103,13 +103,22 @@ const MILESTONES: Milestone[] = [
       "Headwaters needs at least one in-person visit to Deer Lake before the pilot launches. Goals: understand how the community currently accesses food, who the trusted people are, what the store setup looks like, and what intake coordination will actually require. This visit is what makes the coordinator recruitment real — you can't write a job description for a role you haven't seen operate in context.",
   },
   {
+    id: "hotel-anchor",
+    group: "Phase 2 · Community discovery (June–September)",
+    title: "Hotel anchor agreement in place — Gilles' operation anchors initial supply",
+    owner: "Headwaters + Gilles",
+    deadline: "By July 2026",
+    detail:
+      "The existing hotel Gilles built at Deer Lake's request is the anchor customer — the kitchen restocks weekly, the band likes what he's built, and his weekly food needs will define the initial product list. The store doesn't open to the public in summer 2026. It's a staging area and receiving depot for the hotel operation. Gilles' guys get the physical infrastructure in place (freezers, shelving, electrical) during the summer. Air supply continues through Gilles — his plane is usually full, but a second flight is available if the band wants more food and arranges it. Headwaters' job: document the weekly demand from the hotel so the 2027 winter road supply runs have real numbers behind them. Note: the couple running the hotel is showing burnout signs (4am–8pm days, 6-month turnover cycle). This is a separate but important problem — better scheduling and economic models could stabilize that operation. Flag for future engagement scope with Gilles, not part of the current grant work.",
+  },
+  {
     id: "store-plan",
     group: "Phase 2 · Community discovery (June–September)",
-    title: "Community store receiving plan confirmed",
-    owner: "Headwaters + Deer Lake community store",
-    deadline: "By September 2026",
+    title: "Store infrastructure in place — staging area ready for January grand opening",
+    owner: "Headwaters + Gilles' team + Deer Lake community store",
+    deadline: "By November 2026",
     detail:
-      "Cold room donated by 807 is already on site — confirm it's operational, sized correctly, and that the receiving process is mapped end-to-end. Who opens the truck, where does product go, how does distribution work within the community? This is the physical and procedural foundation for the January 2027 pilot. Document it so the coordinator hire knows exactly what they're walking into.",
+      "Gilles' team installs the physical infrastructure during summer 2026: freezers, shelving, electrical, receiving setup. The 807 cold room already on site gets confirmed operational and correctly sized. The store isn't open to the public yet — it's a hotel staging area through the end of 2026. The goal is a grand opening at the end of January 2027, timed to coincide with the first 807 winter road delivery. Headwaters documents the receiving process end-to-end so the coordinator hire knows exactly what they're walking into on day one.",
   },
   {
     id: "lfif-cashflow",
@@ -760,11 +769,11 @@ export function DeerLakePage() {
             title="Summer route — Gilles + 807 combined supply"
             items={[
               "Transition from winter road to summer access route",
-              "Gilles' existing supply network + 807 distribution running together",
-              "807 takes the edge off as grant funding flows — shared load, lower pressure on both",
-              "Bi-weekly or monthly delivery cadence confirmed by Tyler",
+              "Gilles continues air supply; 807 layering in as grant funding flows",
+              "2026 hotel demand data drives the product list and delivery frequency",
+              "807 takes the edge off — shared load, lower pressure on both suppliers",
+              "Store fully open to the public; coordinator autonomous by end of summer",
               "Producer contracts expand if pilot volume warrants",
-              "Coordinator fully autonomous by end of summer",
             ]}
           />
           <PhaseCard
