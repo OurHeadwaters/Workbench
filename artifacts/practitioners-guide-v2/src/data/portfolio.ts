@@ -358,37 +358,37 @@ export const REVENUE_LINES: RevenueLine[] = [
 
   {
     id: "xrpl",
-    name: "XRPL Personal Finance App",
-    tagline: "Stablecoin rails for three distinct market segments.",
+    name: "XRPL / Blockchain Finance",
+    tagline: "A timing play. Build the relationship first. Swoop when the moment arrives.",
     category: "Fintech",
     tier: "later",
     status: "speculative",
-    who: "Three segments: (1) Crypto enthusiasts on XRPL rails with Xaman wallet. (2) Credit union members using debit rails. (3) Investors Group clients who want self-custody crypto. Each is a different product, buyer, and compliance path.",
+    who: "Alterna Credit Union as the institutional partner — relationship built through community grants and contracts over time. Crypto enthusiasts as the personal pet project / proof-of-concept layer. Investors Group clients as the long-tail premium segment. The credit union is the real prize; the enthusiasm work is the test bed that makes the eventual pitch credible.",
     whyThisTier:
-      "Highest potential upside but most complex to execute. Credit union integration requires financial services compliance work. Investors Group is enterprise sales with a multi-month cycle. Crypto enthusiasts in the 807 are a small market. This should not receive meaningful attention until Tier 1 cash is stable and Tier 2 has at least one paying client.",
+      "Blockchain innovation in credit unions is a timing play, not a build play. Alterna needs to hear 'blockchain' buzzing from their board before they'll move. The path there: build trust through community grants and contracts → test ideas with enthusiasts as a personal project → when the moment arrives, walk in with tested ideas and an established relationship rather than a cold pitch. That sequence takes years, not quarters. Do not force it.",
     nextAction:
-      "Do nothing on this until the Northern Band contract is signed. Then decide: which of the three segments pulls first? That decision determines the entire build path.",
+      "Nothing active. Let the community contract work build the Alterna relationship organically. Note any blockchain conversations that come up naturally — they're signals about timing. When two Tier 1 clients are under contract and enthusiast testing has produced something real, revisit.",
     steps: [
       {
-        action: "Decide which of the three segments leads",
+        action: "Build the Alterna relationship through community grants first",
         detail:
-          "Crypto enthusiast (B2C, small market, fast to ship) vs. credit union (B2B2C, compliance required, larger market) vs. Investors Group (enterprise, longest cycle, highest ticket). Pick one. They are not the same product.",
+          "Every community grant facilitated, every 807 co-op or band council contract, every project that Alterna touches peripherally builds credibility. The blockchain pitch lands better from a known partner than a cold approach.",
       },
       {
-        action: "Map the compliance path for the chosen segment",
+        action: "Run enthusiast testing as a personal project — not a business",
         detail:
-          "Credit union integration touches financial services regulation. Investors Group requires advisor compliance sign-off. Enthusiast-only avoids most of this. Know what you're taking on before you build.",
+          "Xaman wallet integration, XRPL rails, stablecoin experiments — do this because it's interesting, not because it's a revenue line. The personal pet project becomes the proof-of-concept that makes the eventual institutional pitch concrete and tested.",
       },
       {
-        action: "Define the Xaman integration scope",
+        action: "Watch for the signal: when is blockchain buzzing in Alterna's ears?",
         detail:
-          "Xaman (formerly XUMM) has a developer API. What specifically does your app do that Xaman alone does not? The differentiation needs to be clear before a line of code is written.",
+          "Credit union innovation cycles follow external pressure — competitor moves, board conversations, regulatory shifts. When you start hearing blockchain come up in credit union circles, that's the window. Walk in then with a tested idea and a warm relationship.",
       },
     ],
     existingPage: null,
     alert: {
-      kind: "risk",
-      text: "Do not start this until Tier 1 is stable. The compliance and partnership work alone could consume a full quarter — that quarter needs to be funded by something else first.",
+      kind: "insight",
+      text: "This is a years-long positioning play, not a pipeline item. The community contract work is the groundwork. Don't rush the swoop.",
     },
     accent: "#B45309",
     accentSoft: "#FEF3C7",
