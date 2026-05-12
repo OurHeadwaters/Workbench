@@ -226,6 +226,206 @@ export default function DeerLakePartnership() {
           </div>
 
         </div>
+
+        {/* ═══════════════════════════════════════════════════
+            PAGE 2 — THE 807 SUPPLY NETWORK
+        ════════════════════════════════════════════════════ */}
+        <div className="page-letter" style={{ ...PAGE, marginTop: "0.25in" }}>
+
+          {/* ── TOP BAND ── */}
+          <div style={{
+            background: EVERGREEN,
+            padding: "0.38in 0.65in 0.32in",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+          }}>
+            <div>
+              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.65rem", color: "rgba(244,237,224,0.6)", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "0.08in" }}>
+                Supplier Reference · May 2026
+              </p>
+              <h2 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.5rem", color: CREAM, lineHeight: 1.15, fontWeight: 600, margin: 0 }}>
+                The 807 Supply Network
+              </h2>
+            </div>
+            <p style={{ fontSize: "0.62rem", color: "rgba(244,237,224,0.6)", margin: 0, textAlign: "right", maxWidth: "3in", lineHeight: 1.5 }}>
+              Established wholesale relationships — real product, regional producers, consistent delivery. This is what's already in the network.
+            </p>
+          </div>
+
+          {/* ── SUPPLIER GRID ── */}
+          <div style={{ padding: "0.38in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.28in" }}>
+
+            {/* PANTRY STAPLES */}
+            <div>
+              <p style={{ fontSize: "0.5rem", letterSpacing: "0.18em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.12in" }}>
+                Pantry Staples
+              </p>
+              {[
+                {
+                  name: "Emily's Bread",
+                  loc: "Thunder Bay",
+                  note: "Sandwich bread, buns, tortillas, rye — wholesale from $2.75/unit. Ships via Manitoulin Transport.",
+                },
+                {
+                  name: "Brûlée Creek Farms",
+                  loc: "Kakabeka Falls",
+                  note: "Stone-ground flour (whole wheat, rye), cold-pressed canola oil, baking mixes. $6/unit wholesale.",
+                },
+                {
+                  name: "Big Lake Pasta",
+                  loc: "Northwestern Ontario",
+                  note: "Fusilli, radiatore, creste di gallo — 350g retail bags or 5 lb food-service. $3.75/unit wholesale.",
+                },
+              ].map((s) => (
+                <div key={s.name} style={{ marginBottom: "0.13in", paddingBottom: "0.13in", borderBottom: "1px solid #e0d9d0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.03in" }}>
+                    <p style={{ fontWeight: 700, fontSize: "0.68rem", color: INK, margin: 0 }}>{s.name}</p>
+                    <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0 }}>{s.loc}</p>
+                  </div>
+                  <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.45 }}>{s.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* COFFEE & BEVERAGES */}
+            <div>
+              <p style={{ fontSize: "0.5rem", letterSpacing: "0.18em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.12in" }}>
+                Coffee & Beverages
+              </p>
+              {[
+                {
+                  name: "The Hub Roastery",
+                  loc: "Sioux Lookout",
+                  note: "Small-batch, single-origin coffee. 8 roasts. Wholesale from $13.50/12oz bag, $27/2lb. jesse@thehubroastery.ca",
+                },
+                {
+                  name: "Nautical Coffee",
+                  loc: "Keewatin (Lake of the Woods)",
+                  note: "Off-grid specialty roaster. 5 blends including decaf. $13.25/340g wholesale (min. 12 bags). jeremy@nauticalcoffee.ca",
+                },
+                {
+                  name: "Sap Sucker",
+                  loc: "Northwestern Ontario",
+                  note: "Sparkling maple water. Original, Lemon, Lime, Peach, Grapefruit. $1.90/355ml can wholesale (case of 12).",
+                },
+              ].map((s) => (
+                <div key={s.name} style={{ marginBottom: "0.13in", paddingBottom: "0.13in", borderBottom: "1px solid #e0d9d0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.03in" }}>
+                    <p style={{ fontWeight: 700, fontSize: "0.68rem", color: INK, margin: 0 }}>{s.name}</p>
+                    <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0 }}>{s.loc}</p>
+                  </div>
+                  <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.45 }}>{s.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* NORTHERN SPECIALTY */}
+            <div>
+              <p style={{ fontSize: "0.5rem", letterSpacing: "0.18em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.12in" }}>
+                Northern Specialty
+              </p>
+              {[
+                {
+                  name: "Canada West Maple",
+                  loc: "Thunder Bay",
+                  note: "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml wholesale.",
+                },
+                {
+                  name: "Thunder Oak Cheese",
+                  loc: "Northwestern Ontario",
+                  note: "Gouda (mild, jalapeño, smoked, dill) and cheese curds. From $5.69/wedge wholesale (case of 12).",
+                },
+                {
+                  name: "June & Jo Spice Co",
+                  loc: "Thunder Bay",
+                  note: "Original, Sweet & Smokey, Hot & Spicy seasonings. Gluten-free crispy coating mix. $8.00/unit wholesale.",
+                },
+                {
+                  name: "Heartbeat Hot Sauce",
+                  loc: "Thunder Bay",
+                  note: "12 varieties including Poirier's Louisiana Style and Lion's Mane Piri Piri. $8.25/bottle wholesale.",
+                },
+              ].map((s) => (
+                <div key={s.name} style={{ marginBottom: "0.13in", paddingBottom: "0.13in", borderBottom: "1px solid #e0d9d0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.03in" }}>
+                    <p style={{ fontWeight: 700, fontSize: "0.68rem", color: INK, margin: 0 }}>{s.name}</p>
+                    <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0 }}>{s.loc}</p>
+                  </div>
+                  <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.45 }}>{s.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* FRESH, LOCAL & SEASONAL */}
+            <div>
+              <p style={{ fontSize: "0.5rem", letterSpacing: "0.18em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.12in" }}>
+                Fresh, Local & Seasonal
+              </p>
+              {[
+                {
+                  name: "Rockfront Family Farms",
+                  loc: "Sioux Lookout",
+                  note: "Microgreens, sunflower/pea/fava shoots, broccoli, radish blends. Grown to order, harvested fresh weekly.",
+                },
+                {
+                  name: "DeBruin's Greenhouse",
+                  loc: "Slate River (Hwy 61)",
+                  note: "Living lettuce & basil, cherry tomatoes, grape tomatoes. No pesticides. Delivery Tuesdays and Fridays. Delivery included.",
+                },
+                {
+                  name: "Eat the Fish",
+                  loc: "Lake Superior / Lake Nipigon",
+                  note: "Lake trout (boneless, skin-on fillet) $14/lb wholesale. Whitefish (boneless, skin-off) $15/lb wholesale.",
+                },
+                {
+                  name: "Superior Bakes",
+                  loc: "Thunder Bay",
+                  note: "Protein balls, keto baked goods, cake mixes, pancake mix. Gluten-free options. From $2.25/unit wholesale.",
+                },
+              ].map((s) => (
+                <div key={s.name} style={{ marginBottom: "0.13in", paddingBottom: "0.13in", borderBottom: "1px solid #e0d9d0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.03in" }}>
+                    <p style={{ fontWeight: 700, fontSize: "0.68rem", color: INK, margin: 0 }}>{s.name}</p>
+                    <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0 }}>{s.loc}</p>
+                  </div>
+                  <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.45 }}>{s.note}</p>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* ── HOW ORDERING WORKS ── */}
+          <div style={{ padding: "0.3in 0.65in 0" }}>
+            <div style={{ background: BLUE_SOFT, border: `1.5px solid ${BLUE}`, borderRadius: "6px", padding: "0.22in 0.3in", display: "flex", gap: "0.3in", alignItems: "flex-start" }}>
+              <div style={{ flexShrink: 0 }}>
+                <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.4rem", color: BLUE, margin: 0, lineHeight: 1 }}>↗</p>
+              </div>
+              <div>
+                <p style={{ fontWeight: 700, fontSize: "0.7rem", color: EVERGREEN, margin: "0 0 0.05in" }}>
+                  How the ordering system works today
+                </p>
+                <p style={{ fontSize: "0.62rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  807 / Emily's Bread runs a consolidated NWO wholesale order form — a single order covers Canada West Maple, Thunder Oak Cheese, Big Lake Pasta, Heartbeat Hot Sauce, June & Jo, Superior Bakes, Sap Sucker, and Carol's Cakes. The Tuesday pickup (Thunder Bay → Dryden) and Wednesday delivery run is already operational. Folding Deer Lake in extends a route that already moves.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── FOOTER PAGE 2 ── */}
+          <div style={{ marginTop: "auto", padding: "0.28in 0.65in 0.38in", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #d6cfc3" }}>
+            <div>
+              <p style={{ fontSize: "0.62rem", color: EVERGREEN, fontWeight: 600, margin: 0 }}>Headwaters Development Services</p>
+              <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0 }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+            </div>
+            <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, textAlign: "right" }}>
+              Supplier reference — internal working document · May 2026<br />
+              Prices reflect wholesale rates as of supplier lists on file
+            </p>
+          </div>
+
+        </div>
       </div>
     </>
   );
