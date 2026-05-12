@@ -118,7 +118,7 @@ const MILESTONES: Milestone[] = [
     owner: "Headwaters + 807 Food Co-op",
     deadline: "By August 2026",
     detail:
-      "LFIF has historically backdated eligible equipment purchases to the grant application date. If that holds, the contractor could purchase the truck and food infrastructure equipment in 2026 — carrying the cost temporarily — and be reimbursed when the LFIF grant is approved and paid. This is the mechanism for getting infrastructure in place before January 2027 without waiting for the cheque. Two things to confirm before any purchases: (1) LFIF's current backdating policy — call the program officer and get it in writing, (2) who carries the purchase risk (807? Headwaters?) and whether their cashflow can actually support it. Do not purchase anything before this is confirmed in writing.",
+      "The LFIF cashflow mechanism is confirmed. Eligibility opens at the deemed-complete date — the date AAFC acknowledges receipt of a complete application — not the approval date. Equipment and infrastructure purchases made after that date fall within the eligible reimbursement window. The sequence is: Apply → AAFC deems application complete → contractor purchases infrastructure → AAFC approves → contribution agreement is signed → receipts from the deemed-complete date onward are submitted → reimbursement flows. The contractor and Deer Lake carry the cash risk from the point of purchase until the contribution agreement is signed. AAFC explicitly warns that pre-approval spending 'may not be reimbursed' — this is real risk, not a technicality. The plan is for the equipment cost to be reimbursed: the program is exactly what LFIF funds, and prior success with LFIF makes approval likely. But 'likely' is not 'guaranteed' until the contribution agreement is executed. Anyone purchasing equipment ahead of that sign-off needs to understand this clearly and have it documented in writing before any purchases are made.",
   },
   {
     id: "truck-received",
@@ -203,9 +203,9 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
   },
   {
     id: "lfif-backdating",
-    question: "Confirm LFIF backdating policy — can purchases be made before the grant pays out?",
-    why: "LFIF has previously allowed eligible equipment purchases to be backdated to the grant application date, meaning a contractor could purchase the truck and infrastructure in 2026, carry the cost, and be reimbursed on approval. If this still applies, it's the cleanest path to having everything ready for January 2027. Call the LFIF program officer directly and get the answer in writing before anyone spends anything. Also nail down who carries the purchase risk — 807, Headwaters, or someone else — and whether their cashflow actually supports a temporary outlay of that size.",
-    blocksWhat: "The cashflow plan for 2026 infrastructure. Without this confirmed, either the January pilot starts without full equipment or someone takes on unconfirmed financial risk.",
+    question: "Document the LFIF risk framing in writing with the contractor and Deer Lake before any purchases are made.",
+    why: "The LFIF cashflow mechanism is now confirmed: eligibility opens at the deemed-complete date (when AAFC acknowledges receipt of a complete application), and purchases after that date fall within the eligible reimbursement window. The contractor and Deer Lake carry the cash from purchase until the contribution agreement is signed — there is no reimbursement without a signed agreement. AAFC explicitly warns that pre-approval spending 'may not be reimbursed.' Prior success with LFIF and the clear fit of this project make approval likely, but 'likely' is not 'guaranteed.' That distinction needs to be understood and accepted by both parties — in writing — before a single purchase is made.",
+    blocksWhat: "Any infrastructure purchase ahead of the signed contribution agreement. The policy question is resolved; what remains is ensuring the contractor and Deer Lake have a documented, mutual understanding of who carries the risk and what 'may not be reimbursed' actually means in practice.",
   },
 ];
 
