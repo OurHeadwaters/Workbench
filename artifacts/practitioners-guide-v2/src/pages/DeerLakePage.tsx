@@ -56,6 +56,34 @@ interface OpenQuestion {
   question: string;
   why: string;
   blocksWhat: string;
+  decideBy?: string;
+}
+
+function decideByLabel(isoDate: string): string {
+  const d = new Date(isoDate);
+  const q = Math.ceil((d.getUTCMonth() + 1) / 3);
+  return `Q${q} ${d.getUTCFullYear()}`;
+}
+
+function isOverdue(isoDate: string): boolean {
+  return new Date(isoDate) < new Date();
+}
+
+function DecideByBadge({ decideBy }: { decideBy: string }) {
+  const overdue = isOverdue(decideBy);
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded border flex-shrink-0"
+      style={
+        overdue
+          ? { backgroundColor: "#fee2e2", color: "#991b1b", borderColor: "#fca5a5" }
+          : { backgroundColor: "#fefce8", color: "#854d0e", borderColor: "#fde047" }
+      }
+      title={`Decide by ${decideBy}`}
+    >
+      {overdue ? "Overdue" : `Due ${decideByLabel(decideBy)}`}
+    </span>
+  );
 }
 
 /* ─── Milestone data ─────────────────────────────────────── */
@@ -443,6 +471,7 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
   {
     id: "bridge-funding-2028",
     question: "How does the project bridge from grant-funded (Dec 2027) to independent (Mid 2028) — and who decides by Q3 2027?",
+    decideBy: "2027-09-30",
     why: "NOHFC and FedNor grants end December 2027. Stage 3 (Early 2028) is marked 'Bridge needed' on the timeline, but that label doesn't force a decision. The options are already on the table — Gilles (as anchor customer and infrastructure partner), OTF Seed or Grow, ROD, FCDF, or Deer Lake band reserves — but none of them activate themselves. The window to apply for OTF Seed or Grow or ROD closes well before December 2027, which means the bridge decision needs to be made and the application filed no later than Q3 2027. Waiting until the grants expire to figure this out puts the coordinator job, the store's continuity, and the entire 2027 pilot investment at risk.",
     blocksWhat: "Stage 3 launch (Early 2028) and the coordinator role continuing past December 2027. Decide by Q3 2027 — identify the lead funding source, confirm who applies, and file. If Gilles is the answer, structure that agreement before year-end 2027.",
   },
@@ -924,7 +953,10 @@ export function DeerLakePage() {
               <div className="flex items-start gap-3">
                 <HelpCircle className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: ACCENT }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold leading-snug mb-2">{q.question}</p>
+                  <div className="flex items-start gap-2 flex-wrap mb-2">
+                    <p className="text-sm font-semibold leading-snug">{q.question}</p>
+                    {q.decideBy && <DecideByBadge decideBy={q.decideBy} />}
+                  </div>
                   <p className="text-xs text-muted-foreground leading-relaxed mb-2">{q.why}</p>
                   <p className="text-[11px] font-semibold" style={{ color: ACCENT }}>
                     Blocks: <span className="font-normal text-muted-foreground">{q.blocksWhat}</span>
