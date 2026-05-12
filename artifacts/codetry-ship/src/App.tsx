@@ -32,7 +32,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={LandingPage} />
+      <Route path="/" component={HomePage} />
       <Route path="/home" component={HomePage} />
       <Route path="/bio" component={BioPage} />
       <Route path="/services" component={ServicesPage} />
