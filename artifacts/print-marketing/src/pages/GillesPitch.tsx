@@ -106,8 +106,8 @@ export default function GillesPitch() {
                     body: "You tell me what you want. I turn it into a document the next operator — or a buyer — can actually use. What's in your head right now becomes the thing someone pays for.",
                   },
                   {
-                    head: "A daily tool built around how you think",
-                    body: "You direct, I build. A simple app that takes your half-formed thoughts and turns them into the next move for whoever's on shift. No system you have to manage — just a place to put what's in your head.",
+                    head: "A voice tool built around how you think",
+                    body: "You send a voice note — in French, in English, mid-drive, mid-shift. It hears your accent. I turn what you said into the next move for whoever's on shift. No typing, no system to manage. You talk, it listens, things get done.",
                   },
                   {
                     head: "The staffing cycle, solved on paper",
@@ -136,7 +136,7 @@ export default function GillesPitch() {
                 How it works
               </p>
               <p style={{ fontSize: "0.78rem", color: INK, lineHeight: 1.6, margin: 0 }}>
-                You don't sit in a planning room. You answer questions — by text, on a call, on a drive. I take what you say and build it into something usable. Two weeks, focused. You keep running the hotel. I handle the thinking that keeps getting pushed off.
+                You don't sit in a planning room. You send a voice note — in the truck, between calls, whenever something comes up. French, English, whatever comes out. I take what you said and build it into something usable. You keep running the hotel. I handle the thinking that keeps getting pushed off.
               </p>
             </div>
 
