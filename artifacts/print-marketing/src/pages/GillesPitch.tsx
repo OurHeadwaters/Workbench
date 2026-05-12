@@ -72,7 +72,7 @@ export default function GillesPitch() {
 
             {/* Direct opener */}
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.05rem", lineHeight: 1.55, color: EVERGREEN, maxWidth: "6.8in", margin: 0 }}>
-              You built something real in Deer Lake. The band wants it. The hotel runs. The food moves. You've been doing this on willpower, a good couple, and a phone that never stops ringing — and you know that isn't a long-term plan.
+              You built something real in Deer Lake. The band wants it. The hotel runs. The food moves. The problem isn't the couple burning out or the tools that walk off — it's that everything that keeps it working is still inside your head and inside the guys who've been doing it long enough to know. When they slow down, it goes with them. You didn't build a generation. You built something that could be a legacy. Those are different things.
             </p>
 
             {/* Three honest problems */}
@@ -102,16 +102,16 @@ export default function GillesPitch() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in 0.4in" }}>
                 {[
                   {
-                    head: "Your exit, written down",
-                    body: "You tell me what you want. I turn it into a document the next operator — or a buyer — can actually use. What's in your head right now becomes the thing someone pays for.",
+                    head: "A generation becomes a legacy",
+                    body: "The common sense in your guys' heads — where things are, how things work, what to do when things go sideways — gets captured in the work they're already doing. Not a manual nobody reads. A system that carries it forward. When the old guys slow down, the business doesn't.",
                   },
                   {
                     head: "A voice tool built around how you think",
                     body: "You send a voice note — in French, in English, mid-drive, mid-shift. It hears your accent. I turn what you said into the next move for whoever's on shift. No typing, no system to manage. You talk, it listens, things get done.",
                   },
                   {
-                    head: "The staffing cycle, solved on paper",
-                    body: "Better scheduling model, clearer role split, an economics structure that doesn't depend on one couple doing everything. The kitchen keeps running when people can't.",
+                    head: "The hidden cost, made visible",
+                    body: "A tool walks off — acceptable loss. But the real cost is the hour spent searching, the job done wrong because nobody knew the right way, the new person who quit because nobody showed them anything. That cost compounds. A simple asset and resource layer stops it.",
                   },
                   {
                     head: "Long-term planning — off your plate",
