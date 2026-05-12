@@ -344,7 +344,7 @@ export default function DeerLakePartnership() {
                   <div style={{ marginTop: "0.13in" }}>
                     {DEPT("Snacks & Packaged Goods")}
                     {S("Superior Bakes", "Thunder Bay", "Keto snacks & package mixes — protein balls, keto cups, pancake and cake mixes. GF options. From $2.25/unit.")}
-                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends. 4 products on the 807 Local Line.")}
+                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends — a circular economy conversion partner since 2020. Near-expiry botanicals and specialty ingredients transformed into shelf-stable, value-added products. On the 807 Local Line.")}
                   </div>
                 </div>
               </>);
@@ -398,10 +398,10 @@ export default function DeerLakePartnership() {
           {/* ── HEADER ── */}
           <div style={{ background: EVERGREEN, padding: "0.32in 0.65in 0.28in", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
-              <p style={{ fontSize: "0.55rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#a8c4a0", margin: "0 0 0.08in" }}>Practical Application · Deer Lake</p>
+              <p style={{ fontSize: "0.55rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#a8c4a0", margin: "0 0 0.08in" }}>Five Years of Proof · Now Scaling North</p>
               <h1 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2.1rem", color: CREAM, margin: 0, lineHeight: 1.1, fontWeight: 400 }}>
-                The Hotel Kitchen<br />
-                <em style={{ fontStyle: "italic" }}>Problem</em>
+                The Circular<br />
+                <em style={{ fontStyle: "italic" }}>Kitchen</em>
               </h1>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0, marginLeft: "0.3in" }}>
@@ -410,11 +410,28 @@ export default function DeerLakePartnership() {
             </div>
           </div>
 
-          {/* ── FRAMING ── */}
-          <div style={{ padding: "0.32in 0.65in 0" }}>
-            <p style={{ fontSize: "0.72rem", color: INK, lineHeight: 1.65, margin: 0, maxWidth: "6.5in" }}>
-              A community store and a hotel kitchen share the same supply chain — and the same problem. Fresh goods arrive. Some move fast. Some don't. The hotel kitchen can absorb what the store can't sell, but only if someone tells the kitchen what to grab and when. That coordination problem is exactly what the software solves — automatically, every morning.
-            </p>
+          {/* ── FRAMING — 2 col ── */}
+          <div style={{ padding: "0.3in 0.65in 0", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "0.3in" }}>
+            <div>
+              <p style={{ fontSize: "0.48rem", letterSpacing: "0.16em", textTransform: "uppercase", color: RUST, fontWeight: 700, margin: "0 0 0.1in" }}>Not a new idea</p>
+              <p style={{ fontSize: "0.68rem", color: INK, lineHeight: 1.65, margin: 0 }}>
+                Since 2020, Headwaters has been running a live circular economy with <strong>Parr's Jars</strong> and <strong>807 Food Co-op</strong> — actively converting near-expiry and surplus goods into value-added products and keeping that money inside the NWO food network. Five years of real data. A model that works. The hotel kitchen is the next application of the same logic.
+              </p>
+            </div>
+            <div style={{ background: EVERGREEN, borderRadius: "6px", padding: "0.2in 0.22in" }}>
+              <p style={{ fontSize: "0.48rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "#a8c4a0", fontWeight: 700, margin: "0 0 0.12in" }}>The economic math</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.1in" }}>
+                <div style={{ borderLeft: "2px solid #a8c4a0", paddingLeft: "0.1in" }}>
+                  <p style={{ fontSize: "0.58rem", color: CREAM, margin: 0, lineHeight: 1.5 }}><strong>Saving waste covers the cost</strong> of bringing better quality goods at better prices.</p>
+                </div>
+                <div style={{ borderLeft: "2px solid #a8c4a0", paddingLeft: "0.1in" }}>
+                  <p style={{ fontSize: "0.58rem", color: CREAM, margin: 0, lineHeight: 1.5 }}><strong>Better purchasing power</strong> means more variety, less markup, more reliable supply.</p>
+                </div>
+                <div style={{ borderLeft: "2px solid #a8c4a0", paddingLeft: "0.1in" }}>
+                  <p style={{ fontSize: "0.58rem", color: CREAM, margin: 0, lineHeight: 1.5 }}><strong>The surplus stays right there</strong> — in Deer Lake, not heading south with the freight bill.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ── THE LOOP — three steps across full width ── */}
@@ -491,19 +508,19 @@ export default function DeerLakePartnership() {
           {/* ── WHY HEADWATERS CAN DO THIS ── */}
           <div style={{ padding: "0.28in 0.65in 0" }}>
             <div style={{ background: BLUE_SOFT, border: `1.5px solid ${BLUE}`, borderRadius: "6px", padding: "0.2in 0.28in" }}>
-              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.1in" }}>Why Headwaters can deliver this — not just describe it</p>
+              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.1in" }}>What makes this different from a grant proposal — it's already running</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in" }}>
                 <div>
-                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Years of NWO recipe knowledge</p>
-                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>We know these producers. We know what these ingredients do in a commercial kitchen. The recipe library is built specifically around this supply chain.</p>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Five years of live data</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>The Parr's Jars + 807 circular model has been running since 2020. What converts, what doesn't, what the community buys, what needs a second life — all of that is documented and informing the Deer Lake build.</p>
                 </div>
                 <div>
-                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Software already being built</p>
-                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>The inventory and ordering tools are part of the co-op platform under development. The kitchen brief is one additional output from data that already exists in the system.</p>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>NWO recipe knowledge, producer by producer</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>We know what Rockfront microgreens do on a plate. We know how Emily's day-3 bread performs in a French toast. The recipe library is built from real experience with this exact supply chain — not food-service theory.</p>
                 </div>
                 <div>
-                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Active coordination, not a pamphlet</p>
-                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>Headwaters stays involved. When something new comes into the network, we add it to the recipe library. The kitchen brief gets smarter over time — more producers, more seasonal depth.</p>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Software turns the model into a daily habit</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>The inventory and kitchen brief tools are being built on top of the same co-op platform. The data already flows — the kitchen brief is one more output from what the system already tracks. No extra effort required.</p>
                 </div>
               </div>
             </div>
@@ -513,10 +530,10 @@ export default function DeerLakePartnership() {
           <div style={{ padding: "0.28in 0.65in 0" }}>
             <div style={{ borderTop: `2px solid ${EVERGREEN}`, paddingTop: "0.2in" }}>
               <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.15rem", color: EVERGREEN, margin: "0 0 0.1in", lineHeight: 1.3, fontWeight: 400 }}>
-                "The store and hotel are one system. The software makes that obvious every morning."
+                "Saving the food waste is what covers getting more quality goods at better prices — with money to spare that stays right there."
               </p>
               <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.65, maxWidth: "5.8in" }}>
-                This is one example of how the Headwaters model works — not just supplying food, but building the tools that keep money circulating inside the community. The hotel kitchen problem is the easy button: a daily, practical win that every guest sees on a plate, and every community member sees on the store's shelf. The same logic applies to the school, to catering, to seasonal events. Every use case adds depth to the system that already exists.
+                This is the core of what Headwaters has learned since 2020: waste recovery is not a cleanup problem, it's a purchasing strategy. Every dollar recovered from a near-expiry item is a dollar that funds the next delivery of something better. The hotel kitchen is the easy button for Deer Lake — a daily, practical mechanism that every guest sees on a plate and every community member sees in the store's prices. The same logic extends to the school, to catering, to seasonal events. The system gets smarter every time it runs.
               </p>
             </div>
           </div>
