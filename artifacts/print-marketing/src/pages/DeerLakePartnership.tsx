@@ -235,7 +235,7 @@ export default function DeerLakePartnership() {
           {/* ── TOP BAND ── */}
           <div style={{
             background: EVERGREEN,
-            padding: "0.38in 0.65in 0.32in",
+            padding: "0.26in 0.65in 0.2in",
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
@@ -254,16 +254,16 @@ export default function DeerLakePartnership() {
           </div>
 
           {/* ── SUPPLIER GRID — store-department layout ── */}
-          <div style={{ padding: "0.28in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.22in" }}>
+          <div style={{ padding: "0.18in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in" }}>
 
             {(() => {
               const DEPT = (label: string) => (
-                <div style={{ background: EVERGREEN, borderRadius: "3px", padding: "0.045in 0.12in", marginBottom: "0.09in", marginTop: 0 }}>
-                  <p style={{ fontSize: "0.72rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.1, fontFamily: "Inter, system-ui, sans-serif" }}>{label}</p>
+                <div style={{ background: EVERGREEN, borderRadius: "3px", padding: "0.032in 0.1in", marginBottom: "0.07in", marginTop: 0 }}>
+                  <p style={{ fontSize: "0.66rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.1, fontFamily: "Inter, system-ui, sans-serif" }}>{label}</p>
                 </div>
               );
               const S = (name: string, loc: string, note: string) => (
-                <div key={name} style={{ marginBottom: "0.065in", paddingBottom: "0.065in", borderBottom: "1px solid #ede8e1" }}>
+                <div key={name} style={{ marginBottom: "0.048in", paddingBottom: "0.048in", borderBottom: "1px solid #ede8e1" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                     <p style={{ fontWeight: 700, fontSize: "0.57rem", color: INK, margin: 0, lineHeight: 1.2 }}>{name}</p>
                     <p style={{ fontSize: "0.46rem", color: MUTED, margin: 0, flexShrink: 0, marginLeft: "0.05in" }}>{loc}</p>
@@ -284,13 +284,13 @@ export default function DeerLakePartnership() {
                   {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps). Sustainable, seasonal.")}
                   {S("Lennox Farms", "Superior Seasons", "Forced pink rhubarb. Seasonal.")}
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Baking")}
                     {S("Emily's Bread", "Thunder Bay", "Sandwich bread, buns, tortillas, rye, Kaiser rolls. From $2.75/unit. Manitoulin Transport.")}
                     {S("Brûlée Creek Farms", "Kakabeka Falls", "Stone-ground flour (whole wheat, rye, sifted), cold-pressed canola oil, baking mixes. $6/unit.")}
                   </div>
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Beverages")}
                     {S("The Hub Roastery", "Sioux Lookout", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
                     {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
@@ -308,17 +308,17 @@ export default function DeerLakePartnership() {
                   {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. No chemicals or preservatives.")}
                   {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Beef, lamb, and seasonal. zurbriggfamilyfarm.com")}
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Fish")}
                     {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb. Whitefish (boneless, skin-off) $15/lb.")}
                   </div>
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Dairy")}
                     {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk (homo, 2%, 1%, skim), chocolate milk, butter, half & half. Sat. delivery near Dryden, $200/skid. School nutrition program participant.")}
                   </div>
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Pantry")}
                     {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo. 350g retail or 5 lb food-service. $3.75/unit.")}
                     {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens dressing, Busters Championship Seasoning. 10 products.")}
@@ -332,7 +332,7 @@ export default function DeerLakePartnership() {
                   {S("Roy Sidders Maple Syrup", "NWO", "Local maple. Dryden / Oxdrift area markets.")}
                   {S("Eady's Honey", "NWO", "Local beekeeper. Area farmers' markets.")}
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Spices")}
                     {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
                     {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
@@ -341,7 +341,7 @@ export default function DeerLakePartnership() {
                     {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
                   </div>
 
-                  <div style={{ marginTop: "0.12in" }}>
+                  <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Boxes & Snacks")}
                     {S("Superior Bakes", "Thunder Bay", "Keto snacks & package mixes — protein balls, keto cups, pancake and cake mixes. GF options. From $2.25/unit.")}
                     {S("Parr's Jars", "NWO via 807", "Gourmet salt blends. Circular economy partner since 2020 — near-expiry botanicals transformed into shelf-stable value-added product. On the 807 Local Line.")}
@@ -353,8 +353,8 @@ export default function DeerLakePartnership() {
           </div>
 
           {/* ── HOW ORDERING WORKS ── */}
-          <div style={{ padding: "0.2in 0.65in 0" }}>
-            <div style={{ background: BLUE_SOFT, border: `1.5px solid ${BLUE}`, borderRadius: "6px", padding: "0.18in 0.26in", display: "flex", gap: "0.22in", alignItems: "flex-start" }}>
+          <div style={{ padding: "0.14in 0.65in 0" }}>
+            <div style={{ background: BLUE_SOFT, border: `1.5px solid ${BLUE}`, borderRadius: "6px", padding: "0.13in 0.22in", display: "flex", gap: "0.18in", alignItems: "flex-start" }}>
               <div style={{ flexShrink: 0 }}>
                 <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.2rem", color: BLUE, margin: 0, lineHeight: 1 }}>↗</p>
               </div>
@@ -374,7 +374,7 @@ export default function DeerLakePartnership() {
           </div>
 
           {/* ── FOOTER PAGE 2 ── */}
-          <div style={{ marginTop: "auto", padding: "0.28in 0.65in 0.38in", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #d6cfc3" }}>
+          <div style={{ marginTop: "auto", padding: "0.16in 0.65in 0.22in", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #d6cfc3" }}>
             <div>
               <p style={{ fontSize: "0.62rem", color: EVERGREEN, fontWeight: 600, margin: 0 }}>Headwaters Development Services</p>
               <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0 }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
