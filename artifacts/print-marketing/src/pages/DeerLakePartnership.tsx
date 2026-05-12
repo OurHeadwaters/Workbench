@@ -258,81 +258,81 @@ export default function DeerLakePartnership() {
 
             {(() => {
               const DEPT = (label: string) => (
-                <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.1in", marginBottom: "0.1in", marginTop: 0 }}>
-                  <p style={{ fontSize: "0.58rem", fontFamily: "Fraunces, Georgia, serif", fontWeight: 600, color: EVERGREEN, margin: 0, lineHeight: 1.2 }}>{label}</p>
+                <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.09in", marginBottom: "0.08in", marginTop: 0 }}>
+                  <p style={{ fontSize: "0.55rem", fontFamily: "Fraunces, Georgia, serif", fontWeight: 600, color: EVERGREEN, margin: 0, lineHeight: 1.2 }}>{label}</p>
                 </div>
               );
               const S = (name: string, loc: string, note: string) => (
-                <div key={name} style={{ marginBottom: "0.08in", paddingBottom: "0.08in", borderBottom: "1px solid #ede8e1" }}>
+                <div key={name} style={{ marginBottom: "0.065in", paddingBottom: "0.065in", borderBottom: "1px solid #ede8e1" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <p style={{ fontWeight: 700, fontSize: "0.59rem", color: INK, margin: 0, lineHeight: 1.2 }}>{name}</p>
-                    <p style={{ fontSize: "0.48rem", color: MUTED, margin: 0, flexShrink: 0, marginLeft: "0.05in" }}>{loc}</p>
+                    <p style={{ fontWeight: 700, fontSize: "0.57rem", color: INK, margin: 0, lineHeight: 1.2 }}>{name}</p>
+                    <p style={{ fontSize: "0.46rem", color: MUTED, margin: 0, flexShrink: 0, marginLeft: "0.05in" }}>{loc}</p>
                   </div>
-                  <p style={{ fontSize: "0.53rem", color: MUTED, margin: 0, lineHeight: 1.4 }}>{note}</p>
+                  <p style={{ fontSize: "0.51rem", color: MUTED, margin: 0, lineHeight: 1.38 }}>{note}</p>
                 </div>
               );
 
               return (<>
-                {/* COL 1 — The Fresh Perimeter */}
+                {/* COL 1 — Fresh Perimeter + Coffee */}
                 <div>
                   {DEPT("Produce")}
-                  {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, sunflower/pea/fava shoots, radish blends. Grown to order, harvested weekly.")}
-                  {S("DeBruin's Greenhouse", "Slate River", "Living lettuce, basil, cherry + grape tomatoes. No pesticides. Tue/Fri delivery, cost included.")}
+                  {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, sunflower/pea/fava shoots, radish blends. Grown to order weekly.")}
+                  {S("DeBruin's Greenhouse", "Slate River", "Living lettuce, basil, cherry + grape tomatoes. No pesticides. Tue/Fri delivery included.")}
                   {S("Belluz Farms", "Thunder Bay", "Arugula, butterblend lettuce, scallions. Via Superior Seasons.")}
                   {S("Warner's Farm", "NWO", "Apples — Cortland, 2nds mixed, half-bushel. Via Superior Seasons.")}
                   {S("Matt Corbett Garlic Farm", "NWO", "Garlic. Local market channel.")}
                   {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps). Sustainable, seasonal.")}
                   {S("Lennox Farms", "Superior Seasons", "Forced pink rhubarb. Seasonal.")}
 
-                  <div style={{ marginTop: "0.14in" }}>
+                  <div style={{ marginTop: "0.11in" }}>
                     {DEPT("Bakery & Bread")}
-                    {S("Emily's Bread", "Thunder Bay", "Sandwich bread, buns, tortillas, rye, Kaiser rolls. From $2.75/unit. Ships via Manitoulin Transport.")}
+                    {S("Emily's Bread", "Thunder Bay", "Sandwich bread, buns, tortillas, rye, Kaiser rolls. From $2.75/unit. Manitoulin Transport.")}
                     {S("Brûlée Creek Farms", "Kakabeka Falls", "Stone-ground flour (whole wheat, rye, sifted), cold-pressed canola oil, baking mixes. $6/unit.")}
+                  </div>
+
+                  <div style={{ marginTop: "0.11in" }}>
+                    {DEPT("Coffee & Beverages")}
+                    {S("The Hub Roastery", "Sioux Lookout", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
+                    {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
+                    {S("Boreal Coffee", "NWO via 807", "6 products on the 807 Local Line weekly shop.")}
+                    {S("Sap Sucker", "NWO", "Sparkling maple water. 5 flavours. $1.90/355ml can (case of 12).")}
                   </div>
                 </div>
 
-                {/* COL 2 — Meat, Fish & Dairy */}
+                {/* COL 2 — Meat, Fish, Dairy + Pantry */}
                 <div>
                   {DEPT("Meat & Butcher")}
-                  {S("Black Barn Farms", "NWO via 807", "19 products on the 807 Local Line. Beef and proteins, weekly availability.")}
-                  {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli meats, sausage, Bavarian specialties. Weekly on 807 Local Line.")}
+                  {S("Black Barn Farms", "NWO via 807", "19 products on the 807 Local Line. Beef and proteins, weekly.")}
+                  {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli meats, sausage, Bavarian specialties. Weekly on 807.")}
                   {S("Cloverbelt Country Meats", "Oxdrift (Hwy 17)", "Abattoir + butcher shop between Sioux Lookout & Dryden. Beef, pork, poultry.")}
                   {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. No chemicals or preservatives.")}
                   {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Beef, lamb, and seasonal. zurbriggfamilyfarm.com")}
 
-                  <div style={{ marginTop: "0.13in" }}>
+                  <div style={{ marginTop: "0.11in" }}>
                     {DEPT("Fish")}
-                    {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb wholesale. Whitefish (boneless, skin-off) $15/lb.")}
+                    {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb. Whitefish (boneless, skin-off) $15/lb.")}
                   </div>
 
-                  <div style={{ marginTop: "0.13in" }}>
+                  <div style={{ marginTop: "0.11in" }}>
                     {DEPT("Dairy")}
                     {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk (homo, 2%, 1%, skim), chocolate milk, butter, half & half. Sat. delivery near Dryden, $200/skid. School nutrition program participant.")}
+                  </div>
+
+                  <div style={{ marginTop: "0.11in" }}>
+                    {DEPT("Pantry & Grains")}
+                    {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo. 350g retail or 5 lb food-service. $3.75/unit.")}
+                    {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens dressing, Busters Championship Seasoning. 10 products.")}
                   </div>
                 </div>
 
                 {/* COL 3 — The Shelves */}
                 <div>
-                  {DEPT("Coffee & Beverages")}
-                  {S("The Hub Roastery", "Sioux Lookout", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
-                  {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
-                  {S("Boreal Coffee", "NWO via 807", "6 products on the 807 Local Line weekly shop.")}
-                  {S("Sap Sucker", "NWO", "Sparkling maple water. 5 flavours. $1.90/355ml can (case of 12).")}
+                  {DEPT("Honey, Maple & Sweeteners")}
+                  {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
+                  {S("Roy Sidders Maple Syrup", "NWO", "Local maple. Dryden / Oxdrift area markets.")}
+                  {S("Eady's Honey", "NWO", "Local beekeeper. Area farmers' markets.")}
 
-                  <div style={{ marginTop: "0.13in" }}>
-                    {DEPT("Pantry & Grains")}
-                    {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo. 350g retail or 5 lb food-service. $3.75/unit.")}
-                    {S("Foraged North", "NWO via 807", "Wild rice salad kit. Hagens dressing. Busters Championship Seasoning. 10 products.")}
-                  </div>
-
-                  <div style={{ marginTop: "0.13in" }}>
-                    {DEPT("Honey, Maple & Sweeteners")}
-                    {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
-                    {S("Roy Sidders Maple Syrup", "NWO", "Local maple. Dryden / Oxdrift area markets.")}
-                    {S("Eady's Honey", "NWO", "Local beekeeper. Area farmers' markets.")}
-                  </div>
-
-                  <div style={{ marginTop: "0.13in" }}>
+                  <div style={{ marginTop: "0.11in" }}>
                     {DEPT("Cheese, Sauces & Spices")}
                     {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
                     {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
@@ -341,10 +341,10 @@ export default function DeerLakePartnership() {
                     {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
                   </div>
 
-                  <div style={{ marginTop: "0.13in" }}>
+                  <div style={{ marginTop: "0.11in" }}>
                     {DEPT("Snacks & Packaged Goods")}
                     {S("Superior Bakes", "Thunder Bay", "Keto snacks & package mixes — protein balls, keto cups, pancake and cake mixes. GF options. From $2.25/unit.")}
-                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends — a circular economy conversion partner since 2020. Near-expiry botanicals and specialty ingredients transformed into shelf-stable, value-added products. On the 807 Local Line.")}
+                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends. Circular economy partner since 2020 — near-expiry botanicals transformed into shelf-stable value-added product. On the 807 Local Line.")}
                   </div>
                 </div>
               </>);
