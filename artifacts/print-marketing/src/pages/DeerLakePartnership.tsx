@@ -253,80 +253,98 @@ export default function DeerLakePartnership() {
             </p>
           </div>
 
-          {/* ── SUPPLIER GRID — 3 columns ── */}
-          <div style={{ padding: "0.3in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2in" }}>
+          {/* ── SUPPLIER GRID — store-department layout ── */}
+          <div style={{ padding: "0.28in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.22in" }}>
 
             {(() => {
-              const CAT = (label: string) => (
-                <p style={{ fontSize: "0.46rem", letterSpacing: "0.16em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.1in", marginTop: 0 }}>{label}</p>
+              const DEPT = (label: string) => (
+                <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.1in", marginBottom: "0.1in", marginTop: 0 }}>
+                  <p style={{ fontSize: "0.58rem", fontFamily: "Fraunces, Georgia, serif", fontWeight: 600, color: EVERGREEN, margin: 0, lineHeight: 1.2 }}>{label}</p>
+                </div>
               );
               const S = (name: string, loc: string, note: string) => (
-                <div key={name} style={{ marginBottom: "0.09in", paddingBottom: "0.09in", borderBottom: "1px solid #e8e2d8" }}>
+                <div key={name} style={{ marginBottom: "0.08in", paddingBottom: "0.08in", borderBottom: "1px solid #ede8e1" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <p style={{ fontWeight: 700, fontSize: "0.6rem", color: INK, margin: 0, lineHeight: 1.2 }}>{name}</p>
-                    <p style={{ fontSize: "0.5rem", color: MUTED, margin: 0, flexShrink: 0, marginLeft: "0.06in" }}>{loc}</p>
+                    <p style={{ fontWeight: 700, fontSize: "0.59rem", color: INK, margin: 0, lineHeight: 1.2 }}>{name}</p>
+                    <p style={{ fontSize: "0.48rem", color: MUTED, margin: 0, flexShrink: 0, marginLeft: "0.05in" }}>{loc}</p>
                   </div>
-                  <p style={{ fontSize: "0.55rem", color: MUTED, margin: 0, lineHeight: 1.4 }}>{note}</p>
+                  <p style={{ fontSize: "0.53rem", color: MUTED, margin: 0, lineHeight: 1.4 }}>{note}</p>
                 </div>
               );
 
               return (<>
-                {/* COL 1 */}
+                {/* COL 1 — The Fresh Perimeter */}
                 <div>
-                  {CAT("Pantry & Dry Goods")}
-                  {S("Emily's Bread", "Thunder Bay", "Bread, buns, tortillas, rye. From $2.75/unit. Ships via Manitoulin Transport.")}
-                  {S("Brûlée Creek Farms", "Kakabeka Falls", "Stone-ground flour (whole wheat, rye, sifted), cold-pressed canola oil, baking mixes. $6/unit.")}
-                  {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo — 350g bags or 5 lb food-service. $3.75/unit.")}
+                  {DEPT("Produce")}
+                  {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, sunflower/pea/fava shoots, radish blends. Grown to order, harvested weekly.")}
+                  {S("DeBruin's Greenhouse", "Slate River", "Living lettuce, basil, cherry + grape tomatoes. No pesticides. Tue/Fri delivery, cost included.")}
+                  {S("Belluz Farms", "Thunder Bay", "Arugula, butterblend lettuce, scallions. Via Superior Seasons.")}
+                  {S("Warner's Farm", "NWO", "Apples — Cortland, 2nds mixed, half-bushel. Via Superior Seasons.")}
+                  {S("Matt Corbett Garlic Farm", "NWO", "Garlic. Local market channel.")}
+                  {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps). Sustainable, seasonal.")}
+                  {S("Lennox Farms", "Superior Seasons", "Forced pink rhubarb. Seasonal.")}
 
                   <div style={{ marginTop: "0.14in" }}>
-                    {CAT("Coffee & Beverages")}
-                    {S("The Hub Roastery", "Sioux Lookout", "8 single-origin roasts, small-batch. Wholesale $13.50/12oz, $27/2lb.")}
-                    {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
-                    {S("Boreal Coffee", "NWO via 807", "On the 807 Local Line weekly shop. 6 products available.")}
-                    {S("Sap Sucker", "NWO", "Sparkling maple water — 5 flavours. $1.90/355ml can (case of 12).")}
+                    {DEPT("Bakery & Bread")}
+                    {S("Emily's Bread", "Thunder Bay", "Sandwich bread, buns, tortillas, rye, Kaiser rolls. From $2.75/unit. Ships via Manitoulin Transport.")}
+                    {S("Brûlée Creek Farms", "Kakabeka Falls", "Stone-ground flour (whole wheat, rye, sifted), cold-pressed canola oil, baking mixes. $6/unit.")}
                   </div>
                 </div>
 
-                {/* COL 2 */}
+                {/* COL 2 — Meat, Fish & Dairy */}
                 <div>
-                  {CAT("Meat & Protein")}
+                  {DEPT("Meat & Butcher")}
                   {S("Black Barn Farms", "NWO via 807", "19 products on the 807 Local Line. Beef and proteins, weekly availability.")}
-                  {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli, sausage, Bavarian specialties. Weekly on the 807 Local Line.")}
-                  {S("Cloverbelt Country Meats", "Oxdrift (Hwy 17)", "Abattoir + butcher shop, between Sioux Lookout & Dryden. Beef, pork, poultry.")}
-                  {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. Chemical and preservative-free.")}
-                  {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Includes lamb. zurbriggfamilyfarm.com")}
-                  {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb. Whitefish (boneless, skin-off) $15/lb.")}
+                  {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli meats, sausage, Bavarian specialties. Weekly on 807 Local Line.")}
+                  {S("Cloverbelt Country Meats", "Oxdrift (Hwy 17)", "Abattoir + butcher shop between Sioux Lookout & Dryden. Beef, pork, poultry.")}
+                  {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. No chemicals or preservatives.")}
+                  {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Beef, lamb, and seasonal. zurbriggfamilyfarm.com")}
 
-                  <div style={{ marginTop: "0.12in" }}>
-                    {CAT("Dairy")}
-                    {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk, chocolate milk, butter, half & half. Saturday delivery to a meeting point near Dryden ($200/skid). School nutrition program participant.")}
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Fish")}
+                    {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb wholesale. Whitefish (boneless, skin-off) $15/lb.")}
+                  </div>
+
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Dairy")}
+                    {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk (homo, 2%, 1%, skim), chocolate milk, butter, half & half. Sat. delivery near Dryden, $200/skid. School nutrition program participant.")}
                   </div>
                 </div>
 
-                {/* COL 3 */}
+                {/* COL 3 — The Shelves */}
                 <div>
-                  {CAT("Specialty, Honey & Condiments")}
-                  {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
-                  {S("Roy Sidders Maple Syrup", "NWO", "Local maple producer. Dryden / Oxdrift area markets.")}
-                  {S("Eady's Honey", "NWO", "Local beekeeper. Available at area farmers' markets.")}
-                  {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
-                  {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
-                  {S("Shumka Dust Spices", "NWO", "Artisan spice blends. Local market channel.")}
-                  {S("Heartbeat Hot Sauce", "Thunder Bay", "12 varieties incl. Poirier's Louisiana Style. $8.25/bottle.")}
-                  {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
-                  {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens dressing, Busters Seasoning. 10 products on 807 Local Line.")}
+                  {DEPT("Coffee & Beverages")}
+                  {S("The Hub Roastery", "Sioux Lookout", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
+                  {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
+                  {S("Boreal Coffee", "NWO via 807", "6 products on the 807 Local Line weekly shop.")}
+                  {S("Sap Sucker", "NWO", "Sparkling maple water. 5 flavours. $1.90/355ml can (case of 12).")}
 
-                  <div style={{ marginTop: "0.12in" }}>
-                    {CAT("Fresh & Seasonal")}
-                    {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, shoots (sunflower, pea, fava), radish blends. Grown to order weekly.")}
-                    {S("DeBruin's Greenhouse", "Slate River", "Living lettuce & basil, cherry tomatoes. No pesticides. Tue/Fri delivery included.")}
-                    {S("Belluz Farms", "Thunder Bay", "Arugula, scallions, butterblend lettuce. Via Superior Seasons.")}
-                    {S("Warner's Farm", "NWO via SS", "Apples — Cortland, 2nds mixed, half-bushel. Via Superior Seasons.")}
-                    {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps), sustainable. Seasonal.")}
-                    {S("Lennox Farms", "Superior Seasons", "Forced rhubarb, seasonal. Via Superior Seasons.")}
-                    {S("Matt Corbett Garlic Farm", "NWO", "Garlic specialist. Local market channel.")}
-                    {S("Superior Bakes", "Thunder Bay", "Protein balls, keto baked goods, cake mixes. GF options. From $2.25/unit.")}
-                    {S("Parr's Jars", "NWO via 807", "Preserved goods. 4 products on 807 Local Line.")}
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Pantry & Grains")}
+                    {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo. 350g retail or 5 lb food-service. $3.75/unit.")}
+                    {S("Foraged North", "NWO via 807", "Wild rice salad kit. Hagens dressing. Busters Championship Seasoning. 10 products.")}
+                  </div>
+
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Honey, Maple & Sweeteners")}
+                    {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
+                    {S("Roy Sidders Maple Syrup", "NWO", "Local maple. Dryden / Oxdrift area markets.")}
+                    {S("Eady's Honey", "NWO", "Local beekeeper. Area farmers' markets.")}
+                  </div>
+
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Cheese, Sauces & Spices")}
+                    {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
+                    {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
+                    {S("Shumka Dust Spices", "NWO", "Artisan spice blends. Local market channel.")}
+                    {S("Heartbeat Hot Sauce", "Thunder Bay", "12 varieties incl. Poirier's Louisiana Style + Lion's Mane Piri Piri. $8.25/bottle.")}
+                    {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
+                  </div>
+
+                  <div style={{ marginTop: "0.13in" }}>
+                    {DEPT("Snacks & Packaged Goods")}
+                    {S("Superior Bakes", "Thunder Bay", "Keto snacks & package mixes — protein balls, keto cups, pancake and cake mixes. GF options. From $2.25/unit.")}
+                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends. 4 products on the 807 Local Line.")}
                   </div>
                 </div>
               </>);
