@@ -352,7 +352,8 @@ export default function DeerLakePartnership() {
             </div>
             <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, textAlign: "right" }}>
               Supplier reference — internal working document · May 2026<br />
-              Prices reflect wholesale rates as of supplier lists on file
+              Based on 2024 research. Prices and availability subject to change.<br />
+              Full verification requires a paid engagement.
             </p>
           </div>
 
