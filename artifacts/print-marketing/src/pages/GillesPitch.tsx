@@ -138,6 +138,9 @@ export default function GillesPitch() {
               <p style={{ fontSize: "0.78rem", color: INK, lineHeight: 1.6, margin: 0 }}>
                 You don't sit in a planning room. You send a voice note — in the truck, between calls, whenever something comes up. French, English, whatever comes out. I take what you said and build it into something usable. You keep running the hotel. I handle the thinking that keeps getting pushed off.
               </p>
+              <p style={{ fontSize: "0.73rem", color: MUTED, lineHeight: 1.55, marginTop: "0.12in", marginBottom: 0, fontStyle: "italic" }}>
+                Two years ago I couldn't have built this. The voice tools, the knowledge architecture, the data — I've been building toward this the whole time. What I'm offering now is something I genuinely couldn't have delivered then. The timing is right.
+              </p>
             </div>
 
             {/* Fee + next step */}
