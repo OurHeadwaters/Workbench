@@ -75,7 +75,7 @@ export default function GillesPitch() {
           className="page-letter"
           style={{
             width: "8.5in",
-            minHeight: "11in",
+            height: "11in",
             position: "relative",
             overflow: "hidden",
             fontFamily: "Inter, system-ui, sans-serif",
@@ -146,7 +146,8 @@ export default function GillesPitch() {
           className="page-letter"
           style={{
             width: "8.5in",
-            minHeight: "11in",
+            height: "11in",
+            overflow: "hidden",
             background: CREAM,
             fontFamily: "Inter, system-ui, sans-serif",
             color: INK,
