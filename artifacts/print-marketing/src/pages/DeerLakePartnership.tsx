@@ -87,9 +87,9 @@ export default function DeerLakePartnership() {
 
             {/* Who's at the table */}
             <div style={{ background: EVERGREEN, borderRadius: "6px", padding: "0.28in 0.28in 0.3in" }}>
-              <p style={{ fontSize: "0.52rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", marginBottom: "0.14in", fontWeight: 700 }}>
-                Who's at the table
-              </p>
+              <div style={{ background: RUST, borderRadius: "3px", padding: "0.03in 0.1in", marginBottom: "0.14in", display: "inline-block" }}>
+                <p style={{ fontSize: "0.62rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>Who's at the table</p>
+              </div>
               {[
                 { org: "807 Food Co-op", role: "Lead — Dryden" },
                 { org: "Superior Seasons", role: "Supply — Thunder Bay" },
@@ -106,9 +106,9 @@ export default function DeerLakePartnership() {
 
             {/* What grants cover */}
             <div style={{ background: BLUE_SOFT, borderRadius: "6px", padding: "0.28in 0.28in 0.3in", border: `1.5px solid ${BLUE}` }}>
-              <p style={{ fontSize: "0.52rem", letterSpacing: "0.18em", textTransform: "uppercase", color: BLUE, marginBottom: "0.14in", fontWeight: 700 }}>
-                What we're applying to fund
-              </p>
+              <div style={{ background: BLUE, borderRadius: "3px", padding: "0.03in 0.1in", marginBottom: "0.14in", display: "inline-block" }}>
+                <p style={{ fontSize: "0.62rem", fontWeight: 800, color: "#fff", letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>What we're applying to fund</p>
+              </div>
               {[
                 { item: "4 contracted positions", note: "NOHFC + FedNor CEDD" },
                 { item: "Truck + food infrastructure", note: "LFIF capital grant" },
@@ -129,9 +129,9 @@ export default function DeerLakePartnership() {
 
             {/* The route */}
             <div style={{ background: CREAM, borderRadius: "6px", padding: "0.28in 0.28in 0.3in", border: `1.5px solid #d6cfc3` }}>
-              <p style={{ fontSize: "0.52rem", letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, marginBottom: "0.14in", fontWeight: 700 }}>
-                The route
-              </p>
+              <div style={{ background: EVERGREEN, borderRadius: "3px", padding: "0.03in 0.1in", marginBottom: "0.14in", display: "inline-block" }}>
+                <p style={{ fontSize: "0.62rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>The Route</p>
+              </div>
               {[
                 { stop: "Thunder Bay", role: "Producers & supply" },
                 { stop: "Sioux Lookout", role: "Distribution hub" },
@@ -162,9 +162,9 @@ export default function DeerLakePartnership() {
 
           {/* ── WHAT 2027 LOOKS LIKE ─────────────────────────── */}
           <div style={{ padding: "0.32in 0.65in 0" }}>
-            <p style={{ fontSize: "0.52rem", letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, fontWeight: 700, marginBottom: "0.16in" }}>
-              What 2027 looks like for Deer Lake
-            </p>
+            <div style={{ background: EVERGREEN, borderRadius: "3px", padding: "0.045in 0.14in", marginBottom: "0.16in", display: "inline-block" }}>
+              <p style={{ fontSize: "0.72rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>What 2027 looks like for Deer Lake</p>
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in" }}>
               {[
                 {
@@ -413,7 +413,9 @@ export default function DeerLakePartnership() {
           {/* ── FRAMING — 2 col ── */}
           <div style={{ padding: "0.3in 0.65in 0", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "0.3in" }}>
             <div>
-              <p style={{ fontSize: "0.48rem", letterSpacing: "0.16em", textTransform: "uppercase", color: RUST, fontWeight: 700, margin: "0 0 0.1in" }}>Not a new idea</p>
+              <div style={{ background: RUST, borderRadius: "3px", padding: "0.04in 0.12in", marginBottom: "0.12in", display: "inline-block" }}>
+                <p style={{ fontSize: "0.72rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>Not a new idea</p>
+              </div>
               <p style={{ fontSize: "0.68rem", color: INK, lineHeight: 1.65, margin: 0 }}>
                 Since 2020, Headwaters has been running a live circular economy with <strong>Parr's Jars</strong> and <strong>807 Food Co-op</strong> — actively converting near-expiry and surplus goods into value-added products and keeping that money inside the NWO food network. Five years of real data. A model that works. The hotel kitchen is the next application of the same logic.
               </p>
@@ -467,7 +469,9 @@ export default function DeerLakePartnership() {
 
           {/* ── WHAT THIS LOOKS LIKE IN PRACTICE ── */}
           <div style={{ padding: "0.28in 0.65in 0" }}>
-            <p style={{ fontSize: "0.48rem", letterSpacing: "0.16em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.16in", marginTop: 0 }}>What this looks like in practice</p>
+            <div style={{ background: RUST, borderRadius: "3px", padding: "0.045in 0.14in", marginBottom: "0.16in", display: "inline-block" }}>
+              <p style={{ fontSize: "0.72rem", fontWeight: 800, color: CREAM, letterSpacing: "0.13em", textTransform: "uppercase", margin: 0, lineHeight: 1.1 }}>What this looks like in practice</p>
+            </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.16in" }}>
 
