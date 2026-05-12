@@ -388,6 +388,153 @@ export default function DeerLakePartnership() {
 
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════
+          PAGE 3 — The Hotel Kitchen Problem
+          ═══════════════════════════════════════════════════════ */}
+      <div style={{ marginTop: "0.25in" }}>
+        <div id="pdf-page3" style={{ ...PAGE }}>
+
+          {/* ── HEADER ── */}
+          <div style={{ background: EVERGREEN, padding: "0.32in 0.65in 0.28in", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <p style={{ fontSize: "0.55rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#a8c4a0", margin: "0 0 0.08in" }}>Practical Application · Deer Lake</p>
+              <h1 style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2.1rem", color: CREAM, margin: 0, lineHeight: 1.1, fontWeight: 400 }}>
+                The Hotel Kitchen<br />
+                <em style={{ fontStyle: "italic" }}>Problem</em>
+              </h1>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0, marginLeft: "0.3in" }}>
+              <img src={`${base}eagle-circle.png`} alt="Headwaters" style={{ height: "0.55in", display: "block", marginLeft: "auto", marginBottom: "0.06in", opacity: 0.9 }} />
+              <p style={{ fontSize: "0.48rem", color: "#a8c4a0", margin: 0, letterSpacing: "0.05em", textTransform: "uppercase" }}>Headwaters<br />Development Services</p>
+            </div>
+          </div>
+
+          {/* ── FRAMING ── */}
+          <div style={{ padding: "0.32in 0.65in 0" }}>
+            <p style={{ fontSize: "0.72rem", color: INK, lineHeight: 1.65, margin: 0, maxWidth: "6.5in" }}>
+              A community store and a hotel kitchen share the same supply chain — and the same problem. Fresh goods arrive. Some move fast. Some don't. The hotel kitchen can absorb what the store can't sell, but only if someone tells the kitchen what to grab and when. That coordination problem is exactly what the software solves — automatically, every morning.
+            </p>
+          </div>
+
+          {/* ── THE LOOP — three steps across full width ── */}
+          <div style={{ padding: "0.3in 0.65in 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.2in" }}>
+
+            {/* Step 1 */}
+            <div style={{ background: "#fff", border: `1.5px solid #ddd8cf`, borderRadius: "6px", padding: "0.22in 0.24in" }}>
+              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2rem", color: EVERGREEN, margin: "0 0 0.1in", lineHeight: 1 }}>1</p>
+              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.08in" }}>Store flags what's moving slow</p>
+              <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.6 }}>
+                Inventory software tracks sell-through by day. When greens, fish, or bread are approaching their rotation window, the system flags them — not as waste, but as an opportunity to redirect.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div style={{ background: "#fff", border: `1.5px solid #ddd8cf`, borderRadius: "6px", padding: "0.22in 0.24in" }}>
+              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2rem", color: EVERGREEN, margin: "0 0 0.1in", lineHeight: 1 }}>2</p>
+              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.08in" }}>Kitchen gets a "what to cook today" brief</p>
+              <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.6 }}>
+                The hotel kitchen receives a practical suggestion — drawn from Headwaters' years of NWO recipe knowledge — that turns today's flagged inventory into breakfast, lunch specials, or a feature dish. No guesswork. No waste.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div style={{ background: "#fff", border: `1.5px solid #ddd8cf`, borderRadius: "6px", padding: "0.22in 0.24in" }}>
+              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "2rem", color: EVERGREEN, margin: "0 0 0.1in", lineHeight: 1 }}>3</p>
+              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.08in" }}>Revenue stays in Deer Lake</p>
+              <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.6 }}>
+                Guests eat local food, prepared well. The store moves inventory it would have marked down. The hotel kitchen has a daily menu built for them. The money circles — store, hotel, community — instead of leaking south.
+              </p>
+            </div>
+          </div>
+
+          {/* ── WHAT THIS LOOKS LIKE IN PRACTICE ── */}
+          <div style={{ padding: "0.28in 0.65in 0" }}>
+            <p style={{ fontSize: "0.48rem", letterSpacing: "0.16em", textTransform: "uppercase", color: RUST, fontWeight: 700, marginBottom: "0.16in", marginTop: 0 }}>What this looks like in practice</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.16in" }}>
+
+              {/* Example 1 */}
+              <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Microgreens & lake trout — Wednesday</p>
+                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  Rockfront microgreens harvested Monday. By Wednesday sell-through is partial. System flags → kitchen gets: <em>"Lake trout fillet on a bed of pea shoots + radish blend, lemon butter."</em> It's on the lunch board by 11am.
+                </p>
+              </div>
+
+              {/* Example 2 */}
+              <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Emily's bread — day 3 loaves</p>
+                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  Sandwich loaves at day 3. System flags → kitchen gets: <em>"Thick-cut French toast with Warner's apple compote and Roy Sidders maple."</em> Saturday breakfast special — guests love it, store clears the shelf.
+                </p>
+              </div>
+
+              {/* Example 3 */}
+              <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Rhubarb in season — Superior Seasons order</p>
+                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  Lennox Farms forced rhubarb arrives in quantity. System flags surplus → kitchen gets: <em>"Rhubarb compote for oatmeal station. Rhubarb crumble for dinner dessert."</em> Two uses, one delivery, zero waste.
+                </p>
+              </div>
+
+              {/* Example 4 */}
+              <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Walls' pork — mixed cuts</p>
+                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  A whole-animal order includes cuts that move slower at retail. System flags → kitchen gets: <em>"Pork shoulder hash for Saturday breakfast. House-made sausage patties for the week."</em> Butcher shop math works out.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── WHY HEADWATERS CAN DO THIS ── */}
+          <div style={{ padding: "0.28in 0.65in 0" }}>
+            <div style={{ background: BLUE_SOFT, border: `1.5px solid ${BLUE}`, borderRadius: "6px", padding: "0.2in 0.28in" }}>
+              <p style={{ fontWeight: 700, fontSize: "0.68rem", color: EVERGREEN, margin: "0 0 0.1in" }}>Why Headwaters can deliver this — not just describe it</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.18in" }}>
+                <div>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Years of NWO recipe knowledge</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>We know these producers. We know what these ingredients do in a commercial kitchen. The recipe library is built specifically around this supply chain.</p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Software already being built</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>The inventory and ordering tools are part of the co-op platform under development. The kitchen brief is one additional output from data that already exists in the system.</p>
+                </div>
+                <div>
+                  <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Active coordination, not a pamphlet</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>Headwaters stays involved. When something new comes into the network, we add it to the recipe library. The kitchen brief gets smarter over time — more producers, more seasonal depth.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── THE BIGGER POINT ── */}
+          <div style={{ padding: "0.28in 0.65in 0" }}>
+            <div style={{ borderTop: `2px solid ${EVERGREEN}`, paddingTop: "0.2in" }}>
+              <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "1.15rem", color: EVERGREEN, margin: "0 0 0.1in", lineHeight: 1.3, fontWeight: 400 }}>
+                "The store and hotel are one system. The software makes that obvious every morning."
+              </p>
+              <p style={{ fontSize: "0.6rem", color: MUTED, margin: 0, lineHeight: 1.65, maxWidth: "5.8in" }}>
+                This is one example of how the Headwaters model works — not just supplying food, but building the tools that keep money circulating inside the community. The hotel kitchen problem is the easy button: a daily, practical win that every guest sees on a plate, and every community member sees on the store's shelf. The same logic applies to the school, to catering, to seasonal events. Every use case adds depth to the system that already exists.
+              </p>
+            </div>
+          </div>
+
+          {/* ── FOOTER PAGE 3 ── */}
+          <div style={{ marginTop: "auto", padding: "0.28in 0.65in 0.38in", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #d6cfc3" }}>
+            <div>
+              <p style={{ fontSize: "0.62rem", color: EVERGREEN, fontWeight: 600, margin: 0 }}>Headwaters Development Services</p>
+              <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0 }}>bobbie@ourheadwaters.ca · ourheadwaters.ca</p>
+            </div>
+            <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, textAlign: "right" }}>
+              Prepared for Deer Lake First Nation · May 2026<br />
+              Headwaters is coordinating on behalf of the 807 partnership
+            </p>
+          </div>
+
+        </div>
+      </div>
     </>
   );
 }
