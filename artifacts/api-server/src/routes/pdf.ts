@@ -173,6 +173,54 @@ router.get("/tsp-guest-form.pdf", async (_req, res) => {
   }
 });
 
+router.get("/gilles-pitch.pdf", async (_req, res) => {
+  let browser;
+  try {
+    const puppeteer = await getPuppeteer();
+    const chromiumPath = getChromiumPath();
+    browser = await puppeteer.launch({
+      executablePath: chromiumPath,
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--font-render-hinting=none",
+      ],
+    });
+
+    const page = await browser.newPage();
+    const printMarketingBase = process.env.PRINT_MARKETING_URL ?? "http://localhost:8080/print-marketing";
+    await page.goto(`${printMarketingBase}/gilles-pitch`, { waitUntil: "networkidle0", timeout: 30000 });
+    await page.evaluateHandle("document.fonts.ready");
+
+    const pdfBuffer = await page.pdf({
+      format: "Letter",
+      printBackground: true,
+      margin: { top: 0, right: 0, bottom: 0, left: 0 },
+    });
+
+    const buf = Buffer.from(pdfBuffer);
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": 'attachment; filename="headwaters-gilles-proposal.pdf"',
+      "Content-Length": buf.length,
+      "Cache-Control": "no-cache",
+    });
+    res.send(buf);
+  } catch (err) {
+    console.error("PDF generation failed:", err);
+    res.status(500).json({ error: "PDF generation failed" });
+  } finally {
+    if (browser) await browser.close();
+  }
+});
+
+router.get("/gilles-pitch", (_req, res) => {
+  res.redirect(308, "/api/pdf/gilles-pitch.pdf");
+});
+
 router.get("/capability-statement.pdf", async (_req, res) => {
   if (capabilityStatementCache) {
     res.set({

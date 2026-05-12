@@ -66,6 +66,7 @@ export default function GillesPitch() {
         targetId="pdf-target"
         filename="headwaters-gilles-proposal.pdf"
         paginate={true}
+        pdfApiPath="/api/pdf/gilles-pitch.pdf"
       />
 
       <div id="pdf-target" style={{ background: "#d8d2c8" }}>
