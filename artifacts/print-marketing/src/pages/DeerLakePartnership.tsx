@@ -387,12 +387,11 @@ export default function DeerLakePartnership() {
           </div>
 
         </div>
-      </div>
 
-      {/* ═══════════════════════════════════════════════════════
-          PAGE 3 — The Hotel Kitchen Problem
-          ═══════════════════════════════════════════════════════ */}
-      <div className="page-letter" id="pdf-page3" style={{ ...PAGE, marginTop: "0.25in" }}>
+        {/* ═══════════════════════════════════════════════════════
+            PAGE 3 — The Hotel Kitchen Problem
+            ═══════════════════════════════════════════════════════ */}
+        <div className="page-letter" id="pdf-page3" style={{ ...PAGE, marginTop: "0.25in" }}>
 
           {/* ── HEADER ── */}
           <div style={{ background: EVERGREEN, padding: "0.32in 0.65in 0.28in", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -554,6 +553,7 @@ export default function DeerLakePartnership() {
           </div>
 
         </div>
+      </div>
     </>
   );
 }
