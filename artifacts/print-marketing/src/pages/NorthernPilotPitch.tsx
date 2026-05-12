@@ -113,6 +113,12 @@ function buildPlainText(): string {
     "",
     "Bulk truck delivery replaces frequent air freight. Cost per item drops significantly. The same store, same team, same prices — but the margin picture improves substantially.",
     "",
+    "WHERE THE TRUCK COMES FROM",
+    "",
+    "The bulk truck delivery in Phase 3 isn't hypothetical — it's the 807 Food Co-operative distribution network, funded by NOHFC Enhance Your Community + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure equipment). Headwaters is writing the grant application. Target submission: June 15, 2026. Decision: within 90 days. First run: January 2027 on the winter road.",
+    "",
+    "See companion document: 807 Food Co-operative × Deer Lake First Nation — 2027 Distribution Partnership",
+    "",
     "What this phase does: Lock in the lower-cost supply chain, document what the store actually earns in its first winter, and produce a clean financial record the band can use with funders and for planning the next year.",
     "",
     "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
@@ -554,6 +560,23 @@ export default function NorthernPilotPitch() {
               </div>
             </div>
 
+
+            {/* 807 partnership callout */}
+            <div style={{ borderLeft: "3px solid #1B5E8A", paddingLeft: "0.22in", display: "flex", flexDirection: "column", gap: "0.06in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#1B5E8A" }}>
+                Where the truck comes from
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--ink)", lineHeight: 1.62 }}>
+                The bulk truck delivery in Phase 3 isn't hypothetical — it's the{" "}
+                <strong>807 Food Co-operative distribution network</strong>, funded by NOHFC Enhance Your Community
+                + FedNor CEDD (human capacity) and LFIF (truck + food infrastructure equipment).
+                Headwaters is writing the grant application. Target submission: June 15, 2026.
+                Decision: within 90 days. First run: January 2027 on the winter road.
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.5, marginTop: "0.04in" }}>
+                See companion document: <em>807 Food Co-operative × Deer Lake First Nation — 2027 Distribution Partnership</em>
+              </p>
+            </div>
 
             {/* The arc */}
             <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.28in 0.38in", marginTop: "auto" }}>
