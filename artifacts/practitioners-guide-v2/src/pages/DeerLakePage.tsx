@@ -2,8 +2,8 @@
  * DeerLakePage — Deer Lake Food Security Distribution Network
  *
  * Headwaters role: Northern Coordinator
- * Planning year: 2026 (funded by Deer Lake First Nation)
- * Project launch: January 2027
+ * Discovery & planning: May–December 2026 (funded by Deer Lake First Nation)
+ * Project launch: January 2027 (first winter road run)
  *
  * Lead applicant: 807 Food Co-operative & Hub (Dryden, ON)
  * Funding: NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = 100% human capacity
@@ -28,6 +28,7 @@ import {
   Snowflake,
   Sun,
   Flag,
+  HelpCircle,
 } from "lucide-react";
 
 const ACCENT = "#1B5E8A";
@@ -50,113 +51,159 @@ interface Milestone {
   detail: string;
 }
 
-/* ─── Data ──────────────────────────────────────────────── */
+interface OpenQuestion {
+  id: string;
+  question: string;
+  why: string;
+  blocksWhat: string;
+}
+
+/* ─── Milestone data ─────────────────────────────────────── */
 
 const MILESTONES: Milestone[] = [
+  // ── Phase 1: Grant applications (due May 31) ──────────────
   {
     id: "letter-of-support",
-    group: "Grant applications",
+    group: "Phase 1 · Grant applications (due May 31)",
     title: "Letter of support from Deer Lake First Nation",
     owner: "Headwaters → Deer Lake Chief & Council",
     deadline: "Before May 31, 2026",
     deadlineFlag: "critical",
     detail:
-      "The single most important document for the grant applications. Without it, neither NOHFC nor FedNor will score the application favourably. Must be in hand before submission. Headwaters' role: provide the draft language and walk council through what they're signing.",
+      "The single most important document for the grant applications. Without it, neither NOHFC nor FedNor will score the application favourably. Headwaters' role: draft the language, walk council through what they're signing, and confirm the letter is in 807's hands before submission.",
+  },
+  {
+    id: "scope-defined",
+    group: "Phase 1 · Grant applications (due May 31)",
+    title: "Headwaters' northern coordination scope documented",
+    owner: "Headwaters",
+    deadline: "Before May 31, 2026",
+    deadlineFlag: "critical",
+    detail:
+      "Clear, grant-defensible deliverables for Headwaters' coordination contract: Deer Lake relationship management, community store development support, pilot governance, progress reporting. Must be framed as project-based (not operational) so the NOHFC/FedNor budget line holds up under review. This scope also defines Headwaters' 2026 billing basis to Deer Lake First Nation.",
   },
   {
     id: "grant-submission",
-    group: "Grant applications",
-    title: "NOHFC + FedNor CEDD applications submitted",
+    group: "Phase 1 · Grant applications (due May 31)",
+    title: "NOHFC + FedNor CEDD applications submitted by 807",
     owner: "807 Food Co-op (lead applicant)",
     deadline: "May 31, 2026",
     deadlineFlag: "critical",
     detail:
-      "807 Food Co-operative & Hub is the lead applicant. NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = 100% of human capacity costs. Decisions expected September–November 2026.",
+      "807 Food Co-operative & Hub is the lead applicant. NOHFC Enhance Your Community (50%) + FedNor CEDD (50%) = 100% of human capacity costs for the contracted team. Headwaters is a budget line inside this application. Decisions expected September–November 2026.",
   },
+  // ── Phase 2: Community discovery (June–September) ─────────
   {
-    id: "scope-defined",
-    group: "Grant applications",
-    title: "Headwaters' northern coordination scope documented",
+    id: "community-visits",
+    group: "Phase 2 · Community discovery (June–September)",
+    title: "On-the-ground visits to Deer Lake — needs assessment",
     owner: "Headwaters",
-    deadline: "Before May 31, 2026",
+    deadline: "By September 2026",
     detail:
-      "Clear deliverables for the northern coordination contract that are project-based (not operational), so the grant budget line is defensible to NOHFC and FedNor reviewers. Scope must name: Deer Lake relationship management, community store development, pilot governance, reporting. NOT day-to-day operations.",
+      "Headwaters needs at least one in-person visit to Deer Lake before the pilot launches. Goals: understand how the community currently accesses food, who the trusted people are, what the store setup looks like, and what intake coordination will actually require. This visit is what makes the coordinator recruitment real — you can't write a job description for a role you haven't seen operate in context.",
   },
   {
     id: "store-plan",
-    group: "Community infrastructure",
-    title: "Community store plan confirmed",
+    group: "Phase 2 · Community discovery (June–September)",
+    title: "Community store receiving plan confirmed",
     owner: "Headwaters + Deer Lake community store",
-    deadline: "By December 2026",
+    deadline: "By September 2026",
     detail:
-      "Receiving infrastructure, storage arrangements, and community distribution process documented. The donated 807 cold room is already on site — confirm it's operational, sized correctly, and that the receiving process is mapped. This is the physical foundation for the January 2027 pilot.",
-  },
-  {
-    id: "coordinator-recruited",
-    group: "Staffing",
-    title: "Deer Lake community intake coordinator identified",
-    owner: "Headwaters (recruitment lead)",
-    deadline: "Ready to contract by December 2026",
-    detail:
-      "This person handles store-side receiving, local distribution, and reporting. A Deer Lake First Nation community member is strongly preferred — it strengthens the grant narrative and long-term sustainability. Backup model: working holiday arrangement (outside couple, room and board). Must be identified with enough runway to onboard before January 2027.",
-  },
-  {
-    id: "winter-roads",
-    group: "Logistics",
-    title: "Winter road logistics confirmed",
-    owner: "Tyler Bernier / Rockfront (routes) + Headwaters (community access)",
-    deadline: "By November 2026",
-    detail:
-      "Winter roads to Deer Lake are typically open January through April. Confirm: access dates, weight limits, scheduling constraints, carrier requirements. Tyler needs this to plan the January 2027 pilot routes. Headwaters confirms the community side; Tyler confirms the route side.",
+      "Cold room donated by 807 is already on site — confirm it's operational, sized correctly, and that the receiving process is mapped end-to-end. Who opens the truck, where does product go, how does distribution work within the community? This is the physical and procedural foundation for the January 2027 pilot. Document it so the coordinator hire knows exactly what they're walking into.",
   },
   {
     id: "truck-received",
-    group: "Logistics",
-    title: "LFIF distribution truck received and operational",
+    group: "Phase 2 · Community discovery (June–September)",
+    title: "LFIF distribution truck received and confirmed operational",
     owner: "807 Food Co-op / LFIF",
     deadline: "Summer/Fall 2026",
     detail:
-      "Funded separately through LFIF. Arriving summer/fall 2026. Confirm delivery timeline, insurance, and operational readiness before November so Tyler can plan the January pilot runs.",
+      "Funded separately through LFIF. Arriving summer/fall 2026. Headwaters' job: confirm the truck is in Tyler's hands and operational before November — if it arrives late or has issues, that blows the January timeline. Flag it early.",
+  },
+  // ── Phase 3: Build readiness (October–December) ───────────
+  {
+    id: "grant-decisions",
+    group: "Phase 3 · Build readiness (October–December)",
+    title: "Grant decisions received — contracts activated",
+    owner: "807 Food Co-op (lead) + all partners",
+    deadline: "September–November 2026",
+    detail:
+      "NOHFC and FedNor decisions land here. If approved: 807 activates the contracted team, Headwaters' coordination contract starts, and the January 2027 clock is running. If rejected: fallback options need to be ready — do we self-fund a smaller pilot, defer to 2028, or find an alternative funder? Have a contingency answer before the decision arrives.",
+  },
+  {
+    id: "coordinator-recruited",
+    group: "Phase 3 · Build readiness (October–December)",
+    title: "Deer Lake community intake coordinator recruited",
+    owner: "Headwaters (recruitment lead)",
+    deadline: "Ready to contract by November 2026",
+    detail:
+      "This hire needs two months of runway before January to onboard properly. A Deer Lake First Nation community member is strongly preferred — it strengthens the grant narrative and long-term sustainability. Backup: working holiday arrangement (outside couple, room and board). Recruitment should start before grant decisions arrive — don't wait for the cheque to find the person.",
+  },
+  {
+    id: "winter-roads",
+    group: "Phase 3 · Build readiness (October–December)",
+    title: "Winter road route confirmed and scheduled",
+    owner: "Tyler Bernier / Rockfront (routes) + Headwaters (community access)",
+    deadline: "By November 2026",
+    detail:
+      "Winter roads to Deer Lake are typically open January through April. Tyler locks: road access dates, weight limits, scheduling window, carrier requirements, and the first run date. Headwaters confirms the community side — someone is there to receive the first delivery and the coordinator is ready. The January start date is only real when both sides are confirmed.",
   },
   {
     id: "producer-contracts",
-    group: "Supply chain",
-    title: "Initial producer contracts in place",
+    group: "Phase 3 · Build readiness (October–December)",
+    title: "Anchor producer contracts in place",
     owner: "Kevin Belluz / Superior Seasons (Thunder Bay)",
     deadline: "By December 2026",
     detail:
-      "Kevin handles supply coordination and producer aggregation from Thunder Bay. At least the anchor producers need signed commitments before January 2027 so the pilot launches with real product, not letters of intent.",
+      "Kevin handles supply coordination and producer aggregation from Thunder Bay. At least the anchor producers need signed commitments before January 2027 so the pilot launches with real, confirmed product — not letters of intent. The pilot only proves what it claims to prove if the supply side is solid from day one.",
   },
 ];
+
+/* ─── Open questions ─────────────────────────────────────── */
+
+const OPEN_QUESTIONS: OpenQuestion[] = [
+  {
+    id: "billing-model",
+    question: "What does Headwaters bill Deer Lake First Nation for in 2026, and how?",
+    why: "You're doing real work this year — community visits, scope documentation, relationship management, grant support. That needs a billing structure. Is it hourly at $175/hr, a fixed monthly retainer, or a project-based contract? The scope document you write for the grant application should also define your 2026 billing basis.",
+    blocksWhat: "Your own cash flow clarity for 2026, and the grant budget line needs to match what you actually charge.",
+  },
+  {
+    id: "contingency",
+    question: "What's the plan if NOHFC and FedNor both say no in fall 2026?",
+    why: "Grant decisions land September–November. You will have spent the better part of a year on discovery and relationship-building by then. If both funders decline, do you self-fund a smaller proof-of-concept run? Defer to 2028? Find an alternative funder (e.g. FCDF, OTF Seed or Grow, ROD)? The answer needs to exist before the decision arrives so you're not making it under pressure.",
+    blocksWhat: "Your fallback position. 807's AGM strategic plan already has ROD and OTF as backstops — know where you fit in that contingency.",
+  },
+  {
+    id: "community-contact",
+    question: "Who is the named Deer Lake contact Headwaters works through?",
+    why: "The northern coordination role only works if there's a trusted named person in the community — chief, economic development officer, health director, store manager, or someone else with credibility and continuity. Without a named contact, the relationship exists on paper but not in practice.",
+    blocksWhat: "Community visits, the needs assessment, coordinator recruitment, and the receiving process documentation all require this person.",
+  },
+  {
+    id: "scope-boundary",
+    question: "Where does Headwaters' coordination end and 807's operations begin?",
+    why: "The grant application needs a clean line between what 807 does (lead applicant, truck, supply chain management, financials) and what Headwaters does (northern relationship, community development, governance). If this line is blurry, NOHFC reviewers will question whether Headwaters is a coordinator or a subcontractor, which affects how the budget is scored.",
+    blocksWhat: "The grant scope document (due May 31) and your long-term positioning in the project.",
+  },
+  {
+    id: "coordinator-backup",
+    question: "If no local coordinator is available by November, what's the backup?",
+    why: "The working holiday model (outside couple, room and board) is a real backup, but it needs to be scoped now — what's the offer, what's the cost, who recruits, how does it work logistically in Deer Lake? Waiting until November to answer this is too late for a January start.",
+    blocksWhat: "The January 2027 pilot. If no coordinator is in place, the pilot doesn't happen.",
+  },
+];
+
+/* ─── Status config ──────────────────────────────────────── */
 
 const STATUS_CONFIG: Record<
   MilestoneStatus,
   { label: string; icon: typeof CheckCircle2; color: string; bg: string }
 > = {
-  done: {
-    label: "Done",
-    icon: CheckCircle2,
-    color: "#065f46",
-    bg: "#d1fae5",
-  },
-  "in-progress": {
-    label: "In Progress",
-    icon: Clock,
-    color: "#92400e",
-    bg: "#fef3c7",
-  },
-  "at-risk": {
-    label: "At Risk",
-    icon: AlertTriangle,
-    color: "#991b1b",
-    bg: "#fee2e2",
-  },
-  tbd: {
-    label: "TBD",
-    icon: Circle,
-    color: "hsl(var(--muted-foreground))",
-    bg: "hsl(var(--muted))",
-  },
+  done: { label: "Done", icon: CheckCircle2, color: "#065f46", bg: "#d1fae5" },
+  "in-progress": { label: "In Progress", icon: Clock, color: "#92400e", bg: "#fef3c7" },
+  "at-risk": { label: "At Risk", icon: AlertTriangle, color: "#991b1b", bg: "#fee2e2" },
+  tbd: { label: "TBD", icon: Circle, color: "hsl(var(--muted-foreground))", bg: "hsl(var(--muted))" },
 };
 
 const STATUS_CYCLE: MilestoneStatus[] = ["tbd", "in-progress", "at-risk", "done"];
@@ -217,7 +264,7 @@ function MilestoneTracker() {
   const tbdCount = MILESTONES.length - doneCount - atRiskCount - inProgCount;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Progress bar */}
       <div
         className="rounded-xl border p-4"
@@ -225,7 +272,7 @@ function MilestoneTracker() {
       >
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            2026 planning progress
+            2026 readiness progress
           </p>
           <span className="text-xs text-muted-foreground">
             {doneCount}/{MILESTONES.length} done
@@ -237,18 +284,13 @@ function MilestoneTracker() {
         <div className="h-2 rounded-full bg-muted overflow-hidden">
           <div
             className="h-2 rounded-full transition-all"
-            style={{
-              width: `${(doneCount / MILESTONES.length) * 100}%`,
-              backgroundColor: "#065f46",
-            }}
+            style={{ width: `${(doneCount / MILESTONES.length) * 100}%`, backgroundColor: "#065f46" }}
           />
         </div>
         <div className="flex gap-4 mt-2 text-[11px] text-muted-foreground">
           <span className="text-emerald-700 font-medium">{doneCount} done</span>
           <span className="text-amber-700 font-medium">{inProgCount} in progress</span>
-          {atRiskCount > 0 && (
-            <span className="text-red-700 font-semibold">{atRiskCount} at risk</span>
-          )}
+          {atRiskCount > 0 && <span className="text-red-700 font-semibold">{atRiskCount} at risk</span>}
           <span>{tbdCount} TBD</span>
         </div>
       </div>
@@ -284,9 +326,7 @@ function MilestoneTracker() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <p
-                              className={`text-sm font-semibold leading-snug ${isDone ? "line-through text-muted-foreground" : ""}`}
-                            >
+                            <p className={`text-sm font-semibold leading-snug ${isDone ? "line-through text-muted-foreground" : ""}`}>
                               {m.title}
                             </p>
                             {m.deadlineFlag === "critical" && (
@@ -313,9 +353,7 @@ function MilestoneTracker() {
                           testId={`status-${m.id}`}
                         />
                       </div>
-                      <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
-                        {m.detail}
-                      </p>
+                      <p className="mt-3 text-xs text-muted-foreground leading-relaxed">{m.detail}</p>
                     </div>
                   </div>
                 );
@@ -361,13 +399,14 @@ function TeamCard({
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm leading-tight">{org}</p>
-          {person && (
-            <p className="text-xs text-muted-foreground">{person}</p>
-          )}
+          {person && <p className="text-xs text-muted-foreground">{person}</p>}
           <div className="flex items-center gap-1.5 mt-0.5">
             <span
               className="inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: isHeadwaters ? ACCENT : "hsl(var(--muted))", color: isHeadwaters ? "#fff" : "hsl(var(--foreground))" }}
+              style={{
+                backgroundColor: isHeadwaters ? ACCENT : "hsl(var(--muted))",
+                color: isHeadwaters ? "#fff" : "hsl(var(--foreground))",
+              }}
             >
               {role}
             </span>
@@ -402,9 +441,7 @@ function PhaseCard({
       <div className="flex items-center gap-2 mb-3">
         <Icon className="h-4 w-4 flex-shrink-0" style={{ color: ACCENT }} />
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground">
-            {period}
-          </p>
+          <p className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground">{period}</p>
           <p className="text-sm font-semibold leading-tight">{title}</p>
         </div>
       </div>
@@ -437,23 +474,21 @@ export function DeerLakePage() {
 
       {/* Header */}
       <header>
-        <p
-          className="text-xs font-medium uppercase tracking-[0.2em] mb-2"
-          style={{ color: ACCENT }}
-        >
+        <p className="text-xs font-medium uppercase tracking-[0.2em] mb-2" style={{ color: ACCENT }}>
           Deer Lake First Nation · Food Security Distribution Network
         </p>
         <h1
           className="text-3xl font-semibold leading-tight mb-3"
           style={{ fontFamily: "var(--app-font-serif)" }}
         >
-          Northern Coordination — 2026 Planning Year
+          Discovery & Planning — 2026
         </h1>
         <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-          Headwaters' 2026 mandate is the planning year that makes January 2027 possible.
-          By the time grant funds arrive and contracts are signed, the community coordinator
-          must be recruited, the store plan confirmed, and the winter road route locked.
-          807 Food Co-op leads the grant application. Headwaters holds the northern relationship.
+          Headwaters' 2026 mandate runs the full year: discovery and planning work that makes
+          January 2027 possible. The grant applications land May 31, decisions come in fall,
+          and the rest of the year is building the on-the-ground readiness — community relationship,
+          store receiving plan, coordinator recruitment, and route confirmation — so that when
+          807's first truck rolls in January, everything is ready to receive it.
         </p>
       </header>
 
@@ -461,8 +496,8 @@ export function DeerLakePage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           { label: "Grant applications due", value: "May 31, 2026", sub: "NOHFC + FedNor CEDD", urgent: true },
-          { label: "Funding structure", value: "100% covered", sub: "Human capacity costs only" },
-          { label: "Project launch", value: "Jan 2027", sub: "Winter road pilot" },
+          { label: "Headwaters planning scope", value: "Full year", sub: "May → December 2026" },
+          { label: "First winter road run", value: "Jan 2027", sub: "Target launch with 807" },
           { label: "Pilot wrap-up", value: "Dec 2027", sub: "Replication blueprint" },
         ].map((kpi) => (
           <div
@@ -473,9 +508,7 @@ export function DeerLakePage() {
               background: kpi.urgent ? "#fff5f5" : "hsl(var(--card))",
             }}
           >
-            <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
-              {kpi.label}
-            </p>
+            <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">{kpi.label}</p>
             <p
               className="text-xl font-semibold"
               style={{ fontFamily: "var(--app-font-serif)", color: kpi.urgent ? "#991b1b" : ACCENT_INK }}
@@ -487,12 +520,70 @@ export function DeerLakePage() {
         ))}
       </div>
 
+      {/* Alignment with 807 */}
+      <section>
+        <div
+          className="rounded-xl border p-5"
+          style={{ borderColor: ACCENT, borderWidth: "1.5px", background: ACCENT_SOFT }}
+        >
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] font-semibold mb-2" style={{ color: ACCENT }}>
+            How this aligns with 807's strategic plan
+          </p>
+          <h2 className="text-base font-semibold mb-3" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}>
+            Same destination, two roles
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-muted-foreground">
+            <div>
+              <p className="font-semibold text-foreground mb-1">807's role</p>
+              <ul className="space-y-1">
+                {[
+                  "Lead grant applicant — NOHFC + FedNor CEDD",
+                  "LFIF truck (capital asset, separate funding)",
+                  "Supply chain management via Kevin Belluz / Superior Seasons",
+                  "Distribution route via Tyler Bernier / Rockfront",
+                  "Financial management and reporting to funders",
+                  "CDP grant backstop for co-op development support",
+                ].map((i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="mt-1 h-1 w-1 rounded-full flex-shrink-0 bg-muted-foreground" />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="font-semibold text-foreground mb-1" style={{ color: ACCENT_INK }}>Headwaters' role</p>
+              <ul className="space-y-1">
+                {[
+                  "Northern relationship — Deer Lake First Nation",
+                  "Community needs assessment and on-the-ground discovery",
+                  "Community store receiving plan development",
+                  "Coordinator recruitment and onboarding support",
+                  "Pilot governance — bridge between 807 and the community",
+                  "Progress reporting and replication documentation",
+                ].map((i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="mt-1 h-1 w-1 rounded-full flex-shrink-0" style={{ backgroundColor: ACCENT }} />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground border-t pt-3" style={{ borderColor: "#c5dcee" }}>
+            807's AGM strategic plan names this as Pillar 02 (Deer Lake partnership). The CDP grant
+            in their pipeline covers co-op development support — tooling adaptation, community development
+            engagement, and the white-label playbook. That's adjacent to what Headwaters does but
+            not the same budget line. Headwaters is the relationship and coordination layer;
+            807 is the logistics and capital layer. The two roles need a clean written boundary
+            before May 31 so the grant budget reflects it accurately.
+          </p>
+        </div>
+      </section>
+
       {/* Funding structure */}
       <section>
-        <h2
-          className="text-lg font-semibold mb-3"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
+        <h2 className="text-lg font-semibold mb-3" style={{ fontFamily: "var(--app-font-serif)" }}>
           Funding structure
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -501,7 +592,7 @@ export function DeerLakePage() {
               icon: FileText,
               label: "NOHFC Enhance Your Community",
               value: "50%",
-              detail: "Human capacity costs — practitioners, coordinators, staff",
+              detail: "Human capacity costs — practitioners, coordinators, contracted staff",
             },
             {
               icon: FileText,
@@ -513,7 +604,7 @@ export function DeerLakePage() {
               icon: Truck,
               label: "LFIF — Distribution Truck",
               value: "Separate",
-              detail: "Capital asset only. Arriving summer/fall 2026. Operated by Rockfront.",
+              detail: "Capital asset only. Arriving summer/fall 2026. Operated by Tyler / Rockfront.",
             },
           ].map((f) => {
             const Icon = f.icon;
@@ -527,10 +618,7 @@ export function DeerLakePage() {
                   <Icon className="h-4 w-4 flex-shrink-0" style={{ color: ACCENT }} />
                   <p className="text-xs font-semibold">{f.label}</p>
                 </div>
-                <p
-                  className="text-2xl font-semibold mb-1"
-                  style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}
-                >
+                <p className="text-2xl font-semibold mb-1" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}>
                   {f.value}
                 </p>
                 <p className="text-xs text-muted-foreground">{f.detail}</p>
@@ -539,41 +627,70 @@ export function DeerLakePage() {
           })}
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Headwaters' 2026 planning year engagement is funded directly by Deer Lake First Nation —
-          this is separate from the grant-funded team contracts that start January 2027.
+          Headwaters' 2026 discovery and planning work is billed directly to Deer Lake First Nation —
+          separate from the grant-funded team contracts that activate on approval (September–November 2026).
           Grant decisions expected September–November 2026.
         </p>
       </section>
 
-      {/* 2026 Milestones — the main tracker */}
+      {/* 2026 Milestones */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2
-            className="text-lg font-semibold"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
-            2026 planning milestones
+          <h2 className="text-lg font-semibold" style={{ fontFamily: "var(--app-font-serif)" }}>
+            2026 readiness milestones
           </h2>
-          <p className="text-xs text-muted-foreground">Click a status badge to update it · saved locally</p>
+          <p className="text-xs text-muted-foreground">Click a badge to update · saved locally</p>
         </div>
         <MilestoneTracker />
       </section>
 
+      {/* Open questions — what Headwaters needs to work out */}
+      <section>
+        <h2 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--app-font-serif)" }}>
+          What Headwaters needs to work out
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          These are open questions on your side — things 807 can't answer for you, and that need
+          answers before the plan is fully solid.
+        </p>
+        <div className="space-y-3">
+          {OPEN_QUESTIONS.map((q) => (
+            <div
+              key={q.id}
+              className="rounded-xl border p-4"
+              style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+              data-testid={`open-question-${q.id}`}
+            >
+              <div className="flex items-start gap-3">
+                <HelpCircle className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: ACCENT }} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold leading-snug mb-2">{q.question}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-2">{q.why}</p>
+                  <p className="text-[11px] font-semibold" style={{ color: ACCENT }}>
+                    Blocks: <span className="font-normal text-muted-foreground">{q.blocksWhat}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Team */}
       <section>
-        <h2
-          className="text-lg font-semibold mb-3"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
+        <h2 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--app-font-serif)" }}>
           Contracted team at launch (January 2027)
         </h2>
+        <p className="text-sm text-muted-foreground mb-3">
+          These are the four roles the grant application funds. Headwaters is one budget line in this team.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <TeamCard
             org="Headwaters"
             person="you"
             role="Northern Coordinator"
             location="Dryden / Deer Lake corridor"
-            scope="Deer Lake relationship management, community store development, pilot governance. Project-based deliverables — not day-to-day operations. This is the grant budget line Headwaters holds."
+            scope="Deer Lake relationship management, community store development, pilot governance, progress reporting. Project-based deliverables — not day-to-day operations. Discovery and planning work starts now; formal contract activates on grant approval."
             isHeadwaters
           />
           <TeamCard
@@ -581,31 +698,28 @@ export function DeerLakePage() {
             person="Kevin Belluz"
             role="Supply Coordinator"
             location="Thunder Bay"
-            scope="Producer aggregation from Thunder Bay and NWO suppliers. Secures the product that goes in the truck. Kevin's existing supplier relationships are what makes the supply side of this viable."
+            scope="Producer aggregation from Thunder Bay and NWO suppliers. Secures and manages the product that goes in the truck. Kevin's existing supplier relationships are what makes the supply side viable from day one."
           />
           <TeamCard
             org="Rockfront Family Farm"
             person="Tyler Bernier"
             role="Distribution Coordinator"
             location="Sioux Lookout"
-            scope="Routes and logistics — planning the winter road runs, scheduling deliveries, operating the LFIF truck. Tyler confirms road access, weight limits, and the January 2027 pilot schedule."
+            scope="Routes and logistics — planning the winter road runs, scheduling deliveries, operating the LFIF truck. Tyler confirms road access, weight limits, and the January 2027 first-run schedule."
           />
           <TeamCard
             org="Deer Lake First Nation"
-            person="TBD — recruit by Dec 2026"
+            person="TBD — recruit by November 2026"
             role="Community Intake Coordinator"
             location="Deer Lake"
-            scope="Store-side receiving, local distribution, and reporting. Strongly preferred: a Deer Lake First Nation community member. Backup: working holiday arrangement (outside couple, room and board). This person makes or breaks the January pilot."
+            scope="Store-side receiving, local distribution, and reporting. Strongly preferred: a Deer Lake First Nation community member. Backup: working holiday arrangement. Recruitment starts before grant decisions arrive — don't wait for the cheque."
           />
         </div>
       </section>
 
       {/* 2027 Phases */}
       <section>
-        <h2
-          className="text-lg font-semibold mb-3"
-          style={{ fontFamily: "var(--app-font-serif)" }}
-        >
+        <h2 className="text-lg font-semibold mb-3" style={{ fontFamily: "var(--app-font-serif)" }}>
           Project phases — 2027
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -615,21 +729,23 @@ export function DeerLakePage() {
             title="Winter road distribution pilot"
             items={[
               "First deliveries on winter roads",
-              "Tyler plans and runs the routes",
+              "Tyler plans and runs the routes from Dryden",
               "Kevin's producers supply the load",
               "Deer Lake coordinator handles receiving",
-              "Headwaters governs the pilot and manages the community relationship",
+              "Headwaters governs the pilot and holds the community relationship",
+              "Weekly check-ins across the four-person team",
             ]}
           />
           <PhaseCard
             icon={Sun}
             period="May – November 2027"
-            title="Summer distribution — continuous route"
+            title="Summer route — continuous distribution"
             items={[
               "Transition from winter road to summer access",
-              "Continuous weekly or bi-weekly route",
+              "Bi-weekly or monthly delivery cadence",
               "Producer contracts expand if pilot volume warrants",
               "Community distribution process validated and documented",
+              "Coordinator fully autonomous by end of summer",
             ]}
           />
           <PhaseCard
@@ -638,34 +754,31 @@ export function DeerLakePage() {
             title="Wrap-up and replication blueprint"
             items={[
               "Final reporting to NOHFC and FedNor",
-              "Replication guide finalized for other remote First Nations",
+              "Replication guide for other remote First Nations",
               "Producer contracts reviewed for year 2",
-              "Community coordinator retained and trained",
-              "Winter road 2028 routes pre-planned",
+              "Coordinator retained and trained to run independently",
+              "Winter road 2028 routes pre-planned before freeze-up",
             ]}
           />
         </div>
       </section>
 
-      {/* What success looks like */}
+      {/* Success definition */}
       <section>
         <div
           className="rounded-xl border p-5"
           style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
         >
-          <h2
-            className="text-base font-semibold mb-4"
-            style={{ fontFamily: "var(--app-font-serif)" }}
-          >
+          <h2 className="text-base font-semibold mb-4" style={{ fontFamily: "var(--app-font-serif)" }}>
             What success looks like at end of 2027
           </h2>
           <ul className="space-y-3">
             {[
-              "A functioning, documented supply chain from NWO producers to Deer Lake First Nation.",
-              "A trained, local community coordinator in place — ideally a Deer Lake community member, contracted and retained.",
-              "Signed producer contracts with at least the anchor NWO suppliers.",
-              "Proven winter road routes (January–April) and summer routes (May–November).",
-              "A replication guide that can be adapted for other remote First Nations communities without rebuilding from scratch.",
+              "A functioning, documented supply chain from NWO producers to Deer Lake First Nation — proven across two seasons.",
+              "A trained, local community coordinator in place, contracted and retained for year two.",
+              "Signed producer contracts with at least the anchor NWO suppliers, reviewed and renewed.",
+              "Proven winter road routes (Jan–Apr) and summer routes (May–Nov) with Tyler's schedule as the operating baseline.",
+              "A replication guide that can be adapted for other remote First Nations without rebuilding from scratch — this is the asset 807 can take to the next community.",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3">
                 <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: ACCENT }} />
