@@ -64,7 +64,7 @@ export default function GillesPitch() {
     <>
       <PrintNav
         targetId="pdf-target"
-        filename="gilles-pepin-proposal.pdf"
+        filename="headwaters-gilles-proposal.pdf"
         paginate={true}
       />
 
