@@ -42,18 +42,6 @@ uri = "file://artifacts/print-marketing/public/service-tools.png"
 type = "image"
 title = "internal tools document desk illustration"
 
-[[generated]]
-id = "iEtE198jyWOf4dtUaBNXp"
-uri = "file://attached_assets/generated_images/calberry-market-post.png"
-type = "image"
-title = "calberry market maple syrup post"
-
-[[generated]]
-id = "yE34f6JY8o20kDk9wjBIm"
-uri = "file://attached_assets/generated_images/calberry-market-post-v2.png"
-type = "image"
-title = "calberry market v2 real products"
-
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"
@@ -77,12 +65,6 @@ id = "G4rBFOF4M8N-rPX4zhueg"
 uri = "file://exports/v3-slide6-closing.jpg"
 type = "image"
 title = "V3 · Slide 6 — Closing (mission anchor + tagline)"
-
-[[outputs]]
-id = "f3iDIa2M9nh8O1WuFsVu6"
-uri = "file://screenshots/owner-reconciliation.jpg"
-type = "image"
-title = "Owner Reconciliation — updated with GM loan + all invoices"
 
 [[outputs]]
 id = "iJxfz2zrFkScPw_4HKY2E"
