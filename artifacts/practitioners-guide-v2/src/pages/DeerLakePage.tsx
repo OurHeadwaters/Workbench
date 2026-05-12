@@ -112,13 +112,22 @@ const MILESTONES: Milestone[] = [
       "Cold room donated by 807 is already on site — confirm it's operational, sized correctly, and that the receiving process is mapped end-to-end. Who opens the truck, where does product go, how does distribution work within the community? This is the physical and procedural foundation for the January 2027 pilot. Document it so the coordinator hire knows exactly what they're walking into.",
   },
   {
+    id: "lfif-cashflow",
+    group: "Phase 2 · Community discovery (June–September)",
+    title: "LFIF cashflow strategy confirmed — can we purchase before the grant pays out?",
+    owner: "Headwaters + 807 Food Co-op",
+    deadline: "By August 2026",
+    detail:
+      "LFIF has historically backdated eligible equipment purchases to the grant application date. If that holds, the contractor could purchase the truck and food infrastructure equipment in 2026 — carrying the cost temporarily — and be reimbursed when the LFIF grant is approved and paid. This is the mechanism for getting infrastructure in place before January 2027 without waiting for the cheque. Two things to confirm before any purchases: (1) LFIF's current backdating policy — call the program officer and get it in writing, (2) who carries the purchase risk (807? Headwaters?) and whether their cashflow can actually support it. Do not purchase anything before this is confirmed in writing.",
+  },
+  {
     id: "truck-received",
     group: "Phase 2 · Community discovery (June–September)",
-    title: "LFIF truck and food infrastructure equipment received",
+    title: "LFIF truck and food infrastructure equipment in place",
     owner: "807 Food Co-op / LFIF",
-    deadline: "Summer/Fall 2026",
+    deadline: "By November 2026",
     detail:
-      "Separate LFIF application covers the distribution truck and food infrastructure equipment (cold storage, handling gear, anything needed at the community end). Headwaters' job: confirm the truck is in Tyler's hands and the infrastructure is operational before November — if either arrives late or has issues, that blows the January timeline. Flag it early.",
+      "If the cashflow strategy above is confirmed, infrastructure — truck, cold storage, handling gear — should be purchased and in place by November so the January pilot isn't waiting on equipment. If backdating isn't confirmed, this milestone shifts to post-grant-approval and the January start is at risk. Either way, Tyler needs the truck operational before he can plan the first run.",
   },
   // ── Phase 3: Build readiness (October–December) ───────────
   {
@@ -191,6 +200,12 @@ const OPEN_QUESTIONS: OpenQuestion[] = [
     question: "If no local coordinator is available by November, what's the backup?",
     why: "The working holiday model (outside couple, room and board) is a real backup, but it needs to be scoped now — what's the offer, what's the cost, who recruits, how does it work logistically in Deer Lake? Waiting until November to answer this is too late for a January start.",
     blocksWhat: "The January 2027 pilot. If no coordinator is in place, the pilot doesn't happen.",
+  },
+  {
+    id: "lfif-backdating",
+    question: "Confirm LFIF backdating policy — can purchases be made before the grant pays out?",
+    why: "LFIF has previously allowed eligible equipment purchases to be backdated to the grant application date, meaning a contractor could purchase the truck and infrastructure in 2026, carry the cost, and be reimbursed on approval. If this still applies, it's the cleanest path to having everything ready for January 2027. Call the LFIF program officer directly and get the answer in writing before anyone spends anything. Also nail down who carries the purchase risk — 807, Headwaters, or someone else — and whether their cashflow actually supports a temporary outlay of that size.",
+    blocksWhat: "The cashflow plan for 2026 infrastructure. Without this confirmed, either the January pilot starts without full equipment or someone takes on unconfirmed financial risk.",
   },
 ];
 
@@ -484,11 +499,12 @@ export function DeerLakePage() {
           Discovery & Planning — 2026
         </h1>
         <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-          Headwaters' 2026 mandate runs the full year: discovery and planning work that makes
-          January 2027 possible. Headwaters writes the grant — in by June 15, decisions back within 90 days —
-          and the rest of the year is building the on-the-ground readiness — community relationship,
-          store receiving plan, coordinator recruitment, and route confirmation — so that when
-          807's first truck rolls in January, everything is ready to receive it.
+          Headwaters' 2026 mandate is discovery and planning — no paid food team, no air freight,
+          just the work that makes January 2027 real. Existing supply to the community continues
+          through Gilles while the partnership is being built. The grant goes in June 15. Decisions
+          back within 90 days. 807 joins when the funding lands and takes the edge off everyone.
+          The goal: infrastructure in place, coordinator recruited, and route confirmed before
+          the first winter road opens.
         </p>
       </header>
 
@@ -741,12 +757,13 @@ export function DeerLakePage() {
           <PhaseCard
             icon={Sun}
             period="May – November 2027"
-            title="Summer route — continuous distribution"
+            title="Summer route — Gilles + 807 combined supply"
             items={[
-              "Transition from winter road to summer access",
-              "Bi-weekly or monthly delivery cadence",
+              "Transition from winter road to summer access route",
+              "Gilles' existing supply network + 807 distribution running together",
+              "807 takes the edge off as grant funding flows — shared load, lower pressure on both",
+              "Bi-weekly or monthly delivery cadence confirmed by Tyler",
               "Producer contracts expand if pilot volume warrants",
-              "Community distribution process validated and documented",
               "Coordinator fully autonomous by end of summer",
             ]}
           />
