@@ -28,6 +28,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Library,
+  Truck,
 } from "lucide-react";
 
 interface NavItem {
@@ -138,8 +139,10 @@ const NAV_GROUPS: NavGroup[] = [
       "/sarge",
       "/community-store",
       "/workflow",
+      "/deer-lake",
     ],
     items: [
+      { href: "/deer-lake", label: "Deer Lake Network", icon: Truck, accent: "#1B5E8A" },
       { href: "/archetypes", label: "Archetypes", icon: Layers, accent: "#1F5B3F" },
       { href: "/compare", label: "Operating Framework", icon: GitCompareArrows },
       { href: "/replication", label: "Replication", icon: Repeat },
