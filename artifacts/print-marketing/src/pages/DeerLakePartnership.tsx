@@ -293,31 +293,40 @@ export default function DeerLakePartnership() {
                   {S("Black Barn Farms", "NWO via 807", "19 products on the 807 Local Line. Beef and proteins, weekly availability.")}
                   {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli, sausage, Bavarian specialties. Weekly on the 807 Local Line.")}
                   {S("Cloverbelt Country Meats", "Oxdrift (Hwy 17)", "Abattoir + butcher shop, between Sioux Lookout & Dryden. Beef, pork, poultry.")}
+                  {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. Chemical and preservative-free.")}
+                  {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Includes lamb. zurbriggfamilyfarm.com")}
                   {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb. Whitefish (boneless, skin-off) $15/lb.")}
 
-                  <div style={{ marginTop: "0.14in" }}>
+                  <div style={{ marginTop: "0.12in" }}>
                     {CAT("Dairy")}
-                    {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk, chocolate milk, butter, half & half. Delivers to Thunder Bay and Northwestern Ontario. School nutrition program participant.")}
+                    {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk, chocolate milk, butter, half & half. Saturday delivery to a meeting point near Dryden ($200/skid). School nutrition program participant.")}
                   </div>
                 </div>
 
                 {/* COL 3 */}
                 <div>
-                  {CAT("Specialty & Condiments")}
+                  {CAT("Specialty, Honey & Condiments")}
                   {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
-                  {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge (case of 12).")}
+                  {S("Roy Sidders Maple Syrup", "NWO", "Local maple producer. Dryden / Oxdrift area markets.")}
+                  {S("Eady's Honey", "NWO", "Local beekeeper. Available at area farmers' markets.")}
+                  {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
                   {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
-                  {S("Heartbeat Hot Sauce", "Thunder Bay", "12 varieties incl. Poirier's Louisiana Style + Lion's Mane Piri Piri. $8.25/bottle.")}
-                  {S("Bucky's BBQ Blend", "NWO", "Spice blends: What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm and more. buckysbbqblend.com")}
-                  {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens salad dressing, Busters Championship Seasoning. 10 products on 807 Local Line.")}
+                  {S("Shumka Dust Spices", "NWO", "Artisan spice blends. Local market channel.")}
+                  {S("Heartbeat Hot Sauce", "Thunder Bay", "12 varieties incl. Poirier's Louisiana Style. $8.25/bottle.")}
+                  {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
+                  {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens dressing, Busters Seasoning. 10 products on 807 Local Line.")}
 
-                  <div style={{ marginTop: "0.14in" }}>
+                  <div style={{ marginTop: "0.12in" }}>
                     {CAT("Fresh & Seasonal")}
                     {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, shoots (sunflower, pea, fava), radish blends. Grown to order weekly.")}
-                    {S("DeBruin's Greenhouse", "Slate River", "Living lettuce & basil, cherry tomatoes. No pesticides. Tue/Fri delivery, cost included.")}
-                    {S("Belluz Farms / Superior Seasons", "Thunder Bay", "Arugula, scallions, butterblend lettuce, seasonal greens. Via Superior Seasons online market.")}
+                    {S("DeBruin's Greenhouse", "Slate River", "Living lettuce & basil, cherry tomatoes. No pesticides. Tue/Fri delivery included.")}
+                    {S("Belluz Farms", "Thunder Bay", "Arugula, scallions, butterblend lettuce. Via Superior Seasons.")}
+                    {S("Warner's Farm", "NWO via SS", "Apples — Cortland, 2nds mixed, half-bushel. Via Superior Seasons.")}
+                    {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps), sustainable. Seasonal.")}
+                    {S("Lennox Farms", "Superior Seasons", "Forced rhubarb, seasonal. Via Superior Seasons.")}
+                    {S("Matt Corbett Garlic Farm", "NWO", "Garlic specialist. Local market channel.")}
                     {S("Superior Bakes", "Thunder Bay", "Protein balls, keto baked goods, cake mixes. GF options. From $2.25/unit.")}
-                    {S("Parr's Jars", "NWO via 807", "Preserved goods on the 807 Local Line. 4 products.")}
+                    {S("Parr's Jars", "NWO via 807", "Preserved goods. 4 products on 807 Local Line.")}
                   </div>
                 </div>
               </>);
@@ -333,12 +342,14 @@ export default function DeerLakePartnership() {
               </div>
               <div>
                 <p style={{ fontWeight: 700, fontSize: "0.66rem", color: EVERGREEN, margin: "0 0 0.04in" }}>
-                  Three ordering systems — all already running
+                  Four supply channels — all already running
                 </p>
-                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.5 }}>
-                  <strong style={{ color: INK }}>807 Local Line</strong> — weekly shop (Thu–Mon), Dryden + Sioux Lookout deliveries, out-of-town pickup Thursdays. &nbsp;
-                  <strong style={{ color: INK }}>Emily's Bread NWO order form</strong> — one order covers 8+ NWO producers, Tuesday Thunder Bay pickup → Wednesday Dryden delivery. &nbsp;
-                  <strong style={{ color: INK }}>Superior Seasons</strong> — Thunder Bay online farmers' market, producer-direct, Wed/Thu distribution. &nbsp;Folding Deer Lake in extends routes that are already moving.
+                <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
+                  <strong style={{ color: INK }}>807 Local Line</strong> — weekly shop Thu–Mon, Dryden + Sioux Lookout deliveries, out-of-town pickup Thursdays 3–4pm. &nbsp;
+                  <strong style={{ color: INK }}>Emily's Bread NWO order form</strong> — single order covers 8+ NWO producers, Tuesday Thunder Bay pickup → Wednesday Dryden delivery. &nbsp;
+                  <strong style={{ color: INK }}>Superior Seasons</strong> — Thunder Bay online farmers' market, ordering opens Wed 5:30pm, closes Fri 4:30pm, Wed/Thu distribution. &nbsp;
+                  <strong style={{ color: INK }}>Lock City Dairies</strong> — Saturday 4–6pm delivery to a meeting point near Dryden, 48ft trailer, $200/skid. &nbsp;
+                  Folding Deer Lake in extends routes that are already moving.
                 </p>
               </div>
             </div>
