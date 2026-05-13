@@ -1,5 +1,55 @@
 import { Link } from "wouter";
 
+// ── SVG download helpers ───────────────────────────────────────────────────────
+function downloadSvg(filename: string, svgContent: string) {
+  const blob = new Blob([svgContent], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function buildEagleSvg(bg: "light" | "dark" | "rust"): string {
+  const bgColor   = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "#ffffff";
+  const fill      = bg === "light" ? "#1f3d2e" : "#f4ede0";
+  const arc       = bg === "rust"  ? "rgba(255,255,255,0.65)" : "#C47A3A";
+  const beak      = bg === "rust"  ? "rgba(255,255,255,0.8)"  : "#C47A3A";
+  const plumage   = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
+  return `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="${bgColor}"/>
+  <path d="M 49,67 A 72,72 0 1 1 151,67" stroke="${arc}" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z" fill="${fill}"/>
+  <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z" fill="${fill}"/>
+  <ellipse cx="100" cy="69" rx="9" ry="8" fill="${fill}"/>
+  <ellipse cx="100" cy="54" rx="7" ry="8" fill="${fill}"/>
+  <ellipse cx="101" cy="52" rx="5" ry="5.5" fill="${plumage}"/>
+  <path d="M 105,53 L 114,56 L 105,59 Z" fill="${beak}"/>
+  <path d="M 94,76 L 91,89 M 100,77 L 100,90 M 106,76 L 109,89" stroke="${fill}" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M 10,37 L 3,28 M 18,34 L 12,25 M 27,31 L 22,22" stroke="${fill}" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M 190,37 L 197,28 M 182,34 L 188,25 M 173,31 L 178,22" stroke="${fill}" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M 30,178 L 34,165 L 39,174 L 44,159 L 50,168 L 57,154 L 64,166 L 71,151 L 78,163 L 86,148 L 93,160 L 100,145 L 107,160 L 114,148 L 121,163 L 129,151 L 136,166 L 143,154 L 150,168 L 156,159 L 161,174 L 166,165 L 170,178 Z" fill="${fill}" opacity="0.20"/>
+</svg>`;
+}
+
+
+const DL_LINK_STYLE: React.CSSProperties = {
+  display: "inline-block",
+  marginTop: "0.4rem",
+  fontFamily: "'Inter', system-ui, sans-serif",
+  fontSize: "0.62rem",
+  fontWeight: 600,
+  letterSpacing: "0.04em",
+  color: "#1f3d2e",
+  background: "rgba(31,61,46,0.07)",
+  borderRadius: 4,
+  padding: "0.22em 0.55em",
+  cursor: "pointer",
+  border: "none",
+  textDecoration: "none",
+};
+
 // ── Eagle mark SVG (revised) ──────────────────────────────────────────────────
 // Open bowl arc (270°, gap at top) + eagle rising from the gap.
 function EagleMark({ size = 100, bg = "light" }: { size?: number; bg?: "light" | "dark" | "rust" }) {
@@ -195,9 +245,13 @@ export default function BrandingKit() {
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
           {(["light", "dark", "rust"] as const).map(bg => (
-            <div key={bg}>
+            <div key={bg} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: MUTED, marginBottom: "0.35rem", textTransform: "capitalize" }}>{bg === "light" ? "Light" : bg === "dark" ? "Evergreen" : "Rust"}</p>
               <EagleMark size={100} bg={bg} />
+              <button
+                onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
+                style={DL_LINK_STYLE}
+              >↓ SVG</button>
             </div>
           ))}
           {/* Small sizes */}
@@ -216,7 +270,14 @@ export default function BrandingKit() {
           <strong style={{ color: EVERGREEN }}>What changed:</strong> The ring is now an open arc (270°, 90° gap at top). The eagle breaks above the arc line rather than floating inside a closed bullseye. The shape reads as gathering and rising — not targeting.
         </div>
 
-        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED, marginBottom: "0.75rem" }}>Full wordmark</p>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "0.75rem" }}>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>Full wordmark</p>
+          <a
+            href={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
+            download="headwaters-logo.svg"
+            style={DL_LINK_STYLE}
+          >↓ SVG</a>
+        </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1.75rem" }}>
           {(["light", "dark", "rust"] as const).map(bg => (
             <div key={bg}>
