@@ -155,6 +155,13 @@ const pieces = [
     desc: "One-pager designed for PACE to forward to their NWO clients. Frames Headwaters as a practitioner referral — who it's for, the Phase 1 offer ($28,000 · 6–8 weeks · fixed fee), four deliverables, Bobbie's credibility, and a clear CTA. Letter size (8.5×11).",
     icon: "🤝",
   },
+  {
+    href: "/northern-economic-tools",
+    title: "Tools & Training for Northern Economic Systems",
+    label: "Working document",
+    desc: "A thinking tool — not a final deliverable. Explores how the Codetry workflow discipline (trial-first, bounded scope, transparent pricing, handover as exit) maps onto reserve labour pools, helping hands arrangements, and community work-share. Includes a worked example, five tools it points toward, and open questions.",
+    icon: "🛠️",
+  },
 ];
 
 export default function Index() {
