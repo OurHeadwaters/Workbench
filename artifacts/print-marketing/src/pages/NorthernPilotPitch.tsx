@@ -181,7 +181,7 @@ export default function NorthernPilotPitch() {
             {/* Logo + wordmark in top-left corner over photo */}
             <div style={{ position: "absolute", top: "0.52in", left: "0.62in", display: "flex", alignItems: "center", gap: "0.2in" }}>
               <img
-                src={`${base}eagle-circle-transparent.png`}
+                src={`${base}eagle-circle.png`}
                 alt="Headwaters logo"
                 style={{ width: "0.72in", height: "0.72in", objectFit: "contain", opacity: 0.92 }}
               />

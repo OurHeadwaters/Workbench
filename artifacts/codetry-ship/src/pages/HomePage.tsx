@@ -70,10 +70,10 @@ export function HomePage() {
           {/* Eagle mark — no background, sits directly in the dark hero */}
           <div className="mb-7" data-testid="home-eyebrow">
             <img
-              src={`${import.meta.env.BASE_URL}eagle-circle-transparent.png`}
+              src={`${import.meta.env.BASE_URL}eagle-circle.png`}
               alt="Headwaters — Northwestern Ontario"
               className="block"
-              style={{ width: 72, height: 72, objectFit: "contain" }}
+              style={{ width: 80, height: 80, objectFit: "cover", borderRadius: "50%" }}
             />
           </div>
 

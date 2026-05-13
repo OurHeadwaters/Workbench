@@ -55,7 +55,7 @@ export default function DeerLakePartnership() {
             <div style={{ textAlign: "right" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.12in", marginBottom: "0.08in" }}>
                 <img
-                  src={`${base}eagle-circle-transparent.png`}
+                  src={`${base}eagle-circle.png`}
                   alt="Headwaters"
                   style={{ width: "0.38in", height: "0.38in", objectFit: "contain", opacity: 0.88 }}
                 />
@@ -403,7 +403,7 @@ export default function DeerLakePartnership() {
               </h1>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0, marginLeft: "0.3in" }}>
-              <img src={`${base}eagle-circle-transparent.png`} alt="Headwaters" style={{ height: "0.55in", display: "block", marginLeft: "auto", marginBottom: "0.06in", opacity: 0.9 }} />
+              <img src={`${base}eagle-circle.png`} alt="Headwaters" style={{ height: "0.55in", display: "block", marginLeft: "auto", marginBottom: "0.06in", opacity: 0.9 }} />
               <p style={{ fontSize: "0.48rem", color: "#a8c4a0", margin: 0, letterSpacing: "0.05em", textTransform: "uppercase" }}>Headwaters<br />Development Services</p>
             </div>
           </div>
