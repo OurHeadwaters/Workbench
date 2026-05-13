@@ -186,20 +186,16 @@ const arrow: React.CSSProperties = {
 };
 
 export default function NorthernEconomicTools() {
-  const handleCopy = () => {
-    navigator.clipboard.writeText(buildPlainText());
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)", fontFamily: "var(--font-sans)" }}>
-      <PrintNav onPrint={handlePrint} onCopy={handleCopy} />
+      <PrintNav
+        targetId="pdf-target"
+        filename="headwaters-northern-economic-tools.pdf"
+        onCopyPlainText={buildPlainText}
+      />
 
       {/* Page */}
-      <div style={{ maxWidth: "8.5in", margin: "2rem auto", background: "white", boxShadow: "0 2px 24px rgba(0,0,0,0.10)", minHeight: "11in", display: "flex", flexDirection: "column" }}>
+      <div id="pdf-target" style={{ maxWidth: "8.5in", margin: "2rem auto", background: "white", boxShadow: "0 2px 24px rgba(0,0,0,0.10)", minHeight: "11in", display: "flex", flexDirection: "column" }}>
 
         {/* Header */}
         <div style={{ background: "var(--evergreen)", padding: "0.55in 0.65in 0.45in", display: "flex", flexDirection: "column", gap: "0.14in" }}>
