@@ -67,15 +67,13 @@ export function HomePage() {
         />
         <div className="relative mx-auto max-w-[52rem]">
 
-          {/* Eagle mark — transparent eagle inside a CSS gold halo ring */}
+          {/* Eagle mark — open-arc SVG mark */}
           <div className="mb-7" data-testid="home-eyebrow">
-            <div style={{ width: 88, height: 88, borderRadius: "50%", border: "2px solid rgba(210,175,90,0.75)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img
-                src={`${import.meta.env.BASE_URL}eagle-halo.png`}
-                alt="Headwaters — Northwestern Ontario"
-                style={{ width: 62, height: 62, objectFit: "contain" }}
-              />
-            </div>
+            <img
+              src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
+              alt="Headwaters — Northwestern Ontario"
+              style={{ width: 88, height: 72, objectFit: "contain" }}
+            />
           </div>
 
           <p

@@ -96,17 +96,13 @@ export function SiteNav() {
             aria-label="Headwaters home"
             data-testid="nav-home-link"
           >
-            <div
+            <img
               aria-hidden="true"
-              className="opacity-90 group-hover:opacity-100 transition-opacity"
-              style={{ width: 28, height: 28, borderRadius: "50%", border: `1.5px solid ${dark ? "rgba(210,175,90,0.8)" : "rgba(180,148,60,0.65)"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
-            >
-              <img
-                src={`${import.meta.env.BASE_URL}eagle-halo.png`}
-                alt=""
-                style={{ width: 19, height: 19, objectFit: "contain" }}
-              />
-            </div>
+              src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
+              alt=""
+              className="opacity-90 group-hover:opacity-100 transition-opacity shrink-0"
+              style={{ width: 36, height: 30, objectFit: "contain" }}
+            />
             <span
               className="font-mono text-[10px] uppercase tracking-[0.22em] hidden sm:inline"
               style={{ color: dark ? "hsl(38 36% 86%)" : "hsl(var(--foreground))", opacity: 0.8 }}

@@ -1,0 +1,30 @@
+<svg width="192" height="156" viewBox="0 18 192 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Community circle arc: open bowl, 270°, gap at top -->
+  <path d="M 46,56 A 68,68 0 1 1 144,56"
+        stroke="#C47A3A" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Eagle silhouette — light/cream fill so it reads on dark backgrounds -->
+  <path d="M 95,62 C 80,56 60,48 38,40 C 24,35 10,32 4,34 C 14,41 34,47 58,57 C 73,63 87,67 95,69 Z"
+        fill="#EDE9E0"/>
+  <path d="M 95,62 C 110,56 130,48 152,40 C 166,35 180,32 186,34 C 176,41 156,47 132,57 C 117,63 103,67 95,69 Z"
+        fill="#EDE9E0"/>
+  <ellipse cx="95" cy="68" rx="9" ry="8" fill="#EDE9E0"/>
+  <ellipse cx="95" cy="53" rx="7" ry="8" fill="#EDE9E0"/>
+  <!-- Head plumage (slightly darker cream for definition) -->
+  <ellipse cx="96" cy="51" rx="5" ry="5.5" fill="#F5F2EC"/>
+  <!-- Beak: rust accent -->
+  <path d="M 101,52 L 110,55 L 101,58 Z" fill="#C47A3A"/>
+  <!-- Tail feathers -->
+  <path d="M 89,75 L 86,88 M 95,76 L 95,89 M 101,75 L 104,88"
+        stroke="#EDE9E0" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Left wingtip primary feathers -->
+  <path d="M 7,35 L 1,27 M 15,32 L 10,23 M 24,30 L 20,21"
+        stroke="#EDE9E0" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Right wingtip primary feathers -->
+  <path d="M 183,35 L 189,27 M 175,32 L 180,23 M 166,30 L 170,21"
+        stroke="#EDE9E0" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- Subtle treeline -->
+  <path d="M 28,176 L 32,163 L 37,173 L 43,158 L 49,167 L 55,153 L 62,165 L 69,150 L 76,162 L 84,147 L 91,159 L 95,144 L 99,159 L 106,147 L 114,162 L 121,150 L 128,165 L 134,153 L 140,167 L 146,158 L 152,173 L 157,163 L 162,176 Z"
+        fill="#EDE9E0" opacity="0.18"/>
+</svg>

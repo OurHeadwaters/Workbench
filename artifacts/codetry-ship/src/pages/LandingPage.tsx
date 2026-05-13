@@ -6,11 +6,11 @@ export function LandingPage() {
       data-testid="landing-page"
     >
       <div className="text-center max-w-sm">
-        <div className="mx-auto mb-10 flex items-center justify-center" style={{ width: 100, height: 100, borderRadius: "50%", border: "2px solid rgba(210,175,90,0.75)" }}>
+        <div className="mx-auto mb-10">
           <img
-            src={`${import.meta.env.BASE_URL}eagle-halo.png`}
+            src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
             alt="Headwaters — Northwestern Ontario"
-            style={{ width: 70, height: 70, objectFit: "contain" }}
+            style={{ width: 110, height: 90, objectFit: "contain" }}
           />
         </div>
         <h1
