@@ -118,7 +118,9 @@ export default function GillesPitch() {
               Private · Headwaters Development Services
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: "0.1in" }}>
-              <img src={`${base}eagle-circle.png`} alt="Headwaters" style={{ width: "0.3in", height: "0.3in", objectFit: "contain", opacity: 0.75 }} />
+              <div style={{ width: "0.3in", height: "0.3in", borderRadius: "50%", border: "1pt solid rgba(210,175,90,0.72)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: 0.75 }}>
+                <img src={`${base}eagle-halo.png`} alt="Headwaters" style={{ width: "0.2in", height: "0.2in", objectFit: "contain" }} />
+              </div>
               <div>
                 <p style={{ fontSize: "0.56rem", fontWeight: 700, color: CREAM, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>Headwaters</p>
                 <p style={{ fontSize: "0.42rem", color: "rgba(244,237,224,0.45)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Development Services</p>

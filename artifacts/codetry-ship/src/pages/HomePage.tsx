@@ -67,14 +67,15 @@ export function HomePage() {
         />
         <div className="relative mx-auto max-w-[52rem]">
 
-          {/* Eagle mark — no background, sits directly in the dark hero */}
+          {/* Eagle mark — transparent eagle inside a CSS gold halo ring */}
           <div className="mb-7" data-testid="home-eyebrow">
-            <img
-              src={`${import.meta.env.BASE_URL}eagle-circle.png`}
-              alt="Headwaters — Northwestern Ontario"
-              className="block"
-              style={{ width: 80, height: 80, objectFit: "cover", borderRadius: "50%" }}
-            />
+            <div style={{ width: 88, height: 88, borderRadius: "50%", border: "2px solid rgba(210,175,90,0.75)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img
+                src={`${import.meta.env.BASE_URL}eagle-halo.png`}
+                alt="Headwaters — Northwestern Ontario"
+                style={{ width: 62, height: 62, objectFit: "contain" }}
+              />
+            </div>
           </div>
 
           <p
