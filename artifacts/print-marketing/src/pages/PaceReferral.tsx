@@ -14,7 +14,9 @@ function buildPlainText(): string {
     "",
     "You're trying to get a food business off the ground — a community store, a buying club, a co-op, a processing operation — and you need someone who understands the north, knows the supply chain realities, and can help you build something that actually runs.",
     "",
-    "You don't need another report. You need a plan you can hand to a band council or a board, and someone who will stay until it works.",
+    "Or maybe you just need one thing done: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.",
+    "",
+    "You don't need another report. You need work you can actually use.",
     "",
     "---",
     "",
@@ -31,6 +33,12 @@ function buildPlainText(): string {
     "→ A financing structure — year-one budget, grant matches, co-op or band-council options, every number open and editable",
     "",
     "You can stop at the end of Phase 1. Everything built stays with you.",
+    "",
+    "Short engagements — 1–2 weeks · fixed fee · for small businesses and non-profits",
+    "",
+    "Grant applications, business plans, funding arguments, operational documents. Priced to the scope. Payment is due on delivery — not contingent on grant approval.",
+    "",
+    "If upfront cost is a barrier, ask PACE about bridge financing for small engagements.",
     "",
     "---",
     "",
@@ -97,11 +105,14 @@ export default function PaceReferral() {
 
             {/* Is this you */}
             <section>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.12in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1in" }}>
                 Is this you?
               </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", color: "var(--ink)", lineHeight: 1.65, maxWidth: "6in" }}>
-                You're trying to get a food business off the ground — a community store, a buying club, a co-op, a processing operation — and you need someone who understands the north, knows the supply chain realities, and can help you build something that actually runs. You don't need another report. You need a plan you can hand to a board or a band council, and someone who will stay until it works.
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in", marginBottom: "0.1in" }}>
+                You're trying to get a food business off the ground — a community store, a buying club, a co-op, a processing operation — and you need someone who understands the north, knows the supply chain realities, and can help you build something that actually runs.
+              </p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in" }}>
+                Or maybe you just need <em>one thing done</em>: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.
               </p>
             </section>
 
@@ -161,6 +172,32 @@ export default function PaceReferral() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </section>
+
+            {/* Short engagement */}
+            <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.22in", alignItems: "start" }}>
+              <div style={{ background: "rgba(184,90,62,0.07)", borderRadius: 5, padding: "0.15in 0.2in", borderTop: "2px solid var(--rust)" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.06rem" }}>
+                  Short engagement · 1–2 weeks
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.84rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.06rem" }}>
+                  For small businesses &amp; non-profits
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.55 }}>
+                  Grant applications, business plans, funding arguments, operational documents. Fixed fee, priced to scope. A fraction of the cost of a full engagement.
+                </p>
+              </div>
+              <div style={{ background: "rgba(31,61,46,0.05)", borderRadius: 5, padding: "0.15in 0.2in", borderTop: "2px solid rgba(31,61,46,0.2)" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.06rem" }}>
+                  Grant writing &amp; funding support
+                </p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.84rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.06rem" }}>
+                  Paid on delivery
+                </p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.55 }}>
+                  Payment is due on delivery — not contingent on grant approval. If upfront cost is a barrier, ask PACE about bridge financing for small engagements.
+                </p>
               </div>
             </section>
 
