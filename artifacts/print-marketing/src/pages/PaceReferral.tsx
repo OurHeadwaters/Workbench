@@ -6,13 +6,13 @@ const base = import.meta.env.BASE_URL;
 function buildPlainText(): string {
   return [
     "HEADWATERS DEVELOPMENT SERVICES",
-    "For northern food businesses, co-ops, and community stores in NWO",
+    "For small businesses, non-profits, and community enterprises in NWO",
     "",
     "---",
     "",
     "IS THIS YOU?",
     "",
-    "You're trying to get a food business off the ground — a community store, a buying club, a co-op, a processing operation — and you need someone who understands the north, knows the supply chain realities, and can help you build something that actually runs.",
+    "You're trying to build something — a business, a community enterprise, a co-op, a non-profit — and you need someone who understands the north, knows how to make things work here, and can help you build something that actually runs. Food systems are a particular strength, but the work is business-building.",
     "",
     "Or maybe you just need one thing done: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.",
     "",
@@ -93,10 +93,10 @@ export default function PaceReferral() {
             <div style={{ width: "0.5in", height: 3, background: "var(--rust)", marginBottom: "0.18in" }} />
 
             <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.08, letterSpacing: "-0.02em", marginBottom: "0.16in" }}>
-              Building a food business<br />in Northwestern Ontario?
+              Building a business<br />in Northwestern Ontario?
             </h1>
             <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.92rem", fontStyle: "italic", color: "rgba(244,237,224,0.78)", lineHeight: 1.55, maxWidth: "5.2in" }}>
-              For community stores, co-ops, buying clubs, and food enterprises across NWO — a practitioner who knows the north, knows the supply chain, and stays until it works.
+              For small businesses, non-profits, co-ops, and community enterprises across NWO — a practitioner who knows the north and stays until it works. Food systems are a particular strength.
             </p>
           </div>
 
@@ -109,7 +109,7 @@ export default function PaceReferral() {
                 Is this you?
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in", marginBottom: "0.1in" }}>
-                You're trying to get a food business off the ground — a community store, a buying club, a co-op, a processing operation — and you need someone who understands the north, knows the supply chain realities, and can help you build something that actually runs.
+                You're trying to build something — a business, a community enterprise, a co-op, a non-profit — and you need someone who understands the north, knows how to make things work here, and can help you build something that actually runs. Food systems are a particular strength, but the work is business-building.
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in" }}>
                 Or maybe you just need <em>one thing done</em>: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.
