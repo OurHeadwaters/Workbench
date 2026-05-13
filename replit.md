@@ -16,6 +16,8 @@ The constellation map is the connective layer: it tells you why the work matters
 
 Cross-project context from SALT BOX can be pulled into the map using the prompt at `.local/docs/saltbox-sync-prompt.md`. Sync is manual (copy-paste); automated sync is out of scope.
 
+**Standing update rule — keep the map current:** Whenever a new task is added to the backlog, the planning agent must (1) add the task title to the relevant constellation's "Active / recent tasks" list in `.local/constellation-map.md`, and (2) bump the `_Last updated_` date at the top of that file. This is a one-line diff — low friction by design. Do not rewrite the whole map; only touch the entry that changed.
+
 New side-thoughts and half-formed ideas from the founder land in `CAPTURE.md` at the project root. The planning agent reads entries there and scopes them into properly-formed tasks before they touch the backlog.
 
 # Business Strategy (standing reminder)
