@@ -148,6 +148,13 @@ const pieces = [
     desc: "Private one-pager crafted for Gilles: two-week engagement to capture institutional knowledge, document systems, and build a legacy at Deer Lake. May 2026. Letter size (8.5×11).",
     icon: "🤝",
   },
+  {
+    href: "/pace-referral",
+    title: "PACE Referral — NWO Food Businesses",
+    label: "Business Development",
+    desc: "One-pager designed for PACE to forward to their NWO clients. Frames Headwaters as a practitioner referral — who it's for, the Phase 1 offer ($28,000 · 6–8 weeks · fixed fee), four deliverables, Bobbie's credibility, and a clear CTA. Letter size (8.5×11).",
+    icon: "🤝",
+  },
 ];
 
 export default function Index() {
