@@ -12,9 +12,13 @@ function buildPlainText(): string {
     "",
     "IS THIS YOU?",
     "",
-    "You're trying to build something — a business, a community enterprise, a co-op, a non-profit — and you need someone who understands the north, knows how to make things work here, and can help you build something that actually runs. Food systems are a particular strength, but the work is business-building.",
+    "Are you managing an entire operation where everything goes through you — and you're burning out?",
+    "Are you in love with your work, but your blind spots are eating you alive?",
+    "Are you in desperate need of automation but can't find the time to set up a system?",
     "",
-    "Or maybe you just need one thing done: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.",
+    "Headwaters works with small businesses, non-profits, co-ops, and community enterprises across Northwestern Ontario. Food systems are a particular strength, but the work is business-building — operations, systems, planning, and the things that keep falling through the cracks.",
+    "",
+    "Or maybe you just need one thing done: a grant application written, a business plan roughed out, a funding argument put on paper. Short 1–2 week engagements are available for small businesses and non-profits at a fraction of the cost of a full engagement.",
     "",
     "You don't need another report. You need work you can actually use.",
     "",
@@ -108,11 +112,20 @@ export default function PaceReferral() {
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1in" }}>
                 Is this you?
               </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in", marginBottom: "0.1in" }}>
-                You're trying to build something — a business, a community enterprise, a co-op, a non-profit — and you need someone who understands the north, knows how to make things work here, and can help you build something that actually runs. Food systems are a particular strength, but the work is business-building.
-              </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in" }}>
-                Or maybe you just need <em>one thing done</em>: a grant application written, a business plan roughed out, a funding argument put on paper. Headwaters takes short 1–2 week projects for small local businesses and non-profits at a fraction of the cost of a full engagement.
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.07in", marginBottom: "0.14in" }}>
+                {[
+                  "Are you managing an entire operation where everything goes through you — and you're burning out?",
+                  "Are you in love with your work, but your blind spots are eating you alive?",
+                  "Are you in desperate need of automation but can't find the time to set up a system?",
+                ].map((q) => (
+                  <div key={q} style={{ display: "flex", gap: "0.12in", alignItems: "flex-start" }}>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--rust)", flexShrink: 0, lineHeight: 1.5 }}>→</span>
+                    <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.85rem", color: "var(--evergreen)", fontWeight: 600, lineHeight: 1.5 }}>{q}</p>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in" }}>
+                Headwaters works with small businesses, non-profits, co-ops, and community enterprises across NWO. Food systems are a particular strength, but the work is business-building — operations, systems, planning, and the things that keep falling through the cracks. Short 1–2 week engagements available for when you just need <em>one thing done</em>.
               </p>
             </section>
 
