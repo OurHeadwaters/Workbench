@@ -80,23 +80,17 @@ export const FOCUS_AREAS: FocusArea[] = [
   },
   {
     id: "gmph",
-    title: "Activate the Gilles pitch",
-    subtitle: "$72k pre-paid — services rendered to clear the balance",
+    title: "Activate the Gilles engagement",
+    subtitle: "Pitch sent · $28k of $72k used · Phase 2 starts on his reply",
     whyNow:
-      "The services agreement has been sitting for 18 months while his family went through a difficult period. Things have settled on his end. The tooling you spent two years building is exactly what was always owed — and what couldn't have been delivered then. This is the right moment. Send the pitch, book the call, activate the engagement.",
+      "Phase 1 is complete — six weeks, $28,000, the one-pager is built and sent. The message went with it. $44,000 remains. The ball is in his court. When he replies, the next two weeks draw against that balance and the engagement is live.",
     effortPayoff: "medium-high-payoff",
     effortLabel: "Medium effort",
-    payoffLabel: "$72k in pre-paid credit — delivery, not a new sale",
+    payoffLabel: "$44k remaining pre-paid credit — delivery, not a new sale",
     accent: "#1f3d2e",
     accentSoft: "#edf2ee",
     accentInk: "#0f1e17",
     steps: [
-      {
-        action: "Send the pitch document to Gilles",
-        detail:
-          "The one-pager is ready. One message to go with it: 'I've been building toward this and I think it's finally the right moment.' That's the whole pitch. He'll know what it means.",
-        timeEstimate: "15 min",
-      },
       {
         action: "Book one call — not to sell, to confirm scope",
         detail:
@@ -112,7 +106,7 @@ export const FOCUS_AREAS: FocusArea[] = [
       {
         action: "Confirm the drawdown structure in writing",
         detail:
-          "Two weeks of tooling draws against the pre-paid balance. Remaining balance clears through hourly work on objectives they define at $175/hr. Write it down and confirm on the call. No invoice ceremony — just delivery of what was always agreed.",
+          "Two weeks of tooling draws against the remaining $44,000 pre-paid balance. Any remaining balance after that clears through hourly work on objectives they define at $175/hr. Write it down and confirm on the call. No invoice ceremony — just delivery of what was always agreed.",
         timeEstimate: "15 min",
       },
     ],
