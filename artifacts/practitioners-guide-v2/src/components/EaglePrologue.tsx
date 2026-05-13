@@ -23,16 +23,16 @@ export function EaglePrologue({ continueId }: EaglePrologueProps) {
       style={{ backgroundColor: "hsl(167 48% 14%)" }}
     >
       <img
-        src={`${base}eagle-prologue.png`}
-        alt="A bald eagle soaring against a pale boreal sky, a quiet circular flight arc traced behind it"
+        src={`${base}eagle-sky-1-1920x1080.jpg`}
+        alt="A bald eagle soaring high against a brilliant blue sky"
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 30%" }}
+        style={{ objectPosition: "center 40%" }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(20,46,38,0.22) 0%, rgba(20,46,38,0.10) 38%, rgba(20,46,38,0.55) 64%, rgba(20,46,38,0.96) 100%)",
+            "linear-gradient(180deg, rgba(0,20,50,0.35) 0%, rgba(0,20,50,0.18) 38%, rgba(0,20,50,0.62) 64%, rgba(0,20,50,0.96) 100%)",
         }}
       />
 
