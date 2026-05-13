@@ -12,7 +12,7 @@
  *  5. Notes field hidden behind an expand toggle to keep the list scannable.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "wouter";
 import {
   ArrowLeft,
@@ -30,6 +30,7 @@ import {
   Package,
   ChevronDown,
   ChevronUp,
+  PencilLine,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -711,12 +712,19 @@ function LineItemRow({
   onMemoChange: (id: string, value: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const Icon = item.icon;
   const actualNum = parseActual(actual);
   const hasActual = actual.trim() !== "";
   const withinRange = hasActual && actualNum >= item.low && actualNum <= item.high;
   const overHigh = hasActual && actualNum > item.high;
   const hasMemo = memo.trim() !== "";
+  const needsMemo = hasActual && !hasMemo;
+
+  function openMemo() {
+    setExpanded(true);
+    setTimeout(() => textareaRef.current?.focus(), 0);
+  }
 
   return (
     <div
@@ -812,12 +820,30 @@ function LineItemRow({
               )}
             </div>
           </div>
+
+          {needsMemo && (
+            <button
+              onClick={openMemo}
+              className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border transition-colors hover:opacity-80"
+              style={{
+                borderColor: "#D97706",
+                color: "#92400E",
+                backgroundColor: "#FFFBEB",
+              }}
+              data-testid={`memo-nudge-${item.id}`}
+            >
+              <PencilLine className="h-3 w-3" />
+              add memo
+            </button>
+          )}
+
         </div>
       </div>
 
       {!item.deerLake && expanded && (
         <div className="mt-2 ml-10">
           <textarea
+            ref={textareaRef}
             rows={2}
             placeholder="What was actually purchased? Which vendor, model, or provider?"
             value={memo}
