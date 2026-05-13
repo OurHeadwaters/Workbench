@@ -27,7 +27,7 @@ function buildPlainText(): string {
     "What you walk away with:",
     "→ A supply chain map — where the food comes from, what it costs, what the freight realities actually are",
     "→ An operations manual — day-one procedures, ordering cycles, pricing, cash handling",
-    "→ A hiring plan — role definitions, local candidate sourcing, 30-day training outline",
+    "→ A handoff package — band council presentation, operator walkthrough, everything in a format the community owns outright",
     "→ A financing structure — year-one budget, grant matches, co-op or band-council options, every number open and editable",
     "",
     "You can stop at the end of Phase 1. Everything built stays with you.",
@@ -145,8 +145,8 @@ export default function PaceReferral() {
                     body: "Day-one procedures, ordering cycles, pricing, cash handling. Written for the person doing the job, not for a consultant.",
                   },
                   {
-                    title: "Hiring plan",
-                    body: "Role definitions, local candidate sourcing, and a 30-day training outline — the band or board decides who gets hired.",
+                    title: "Handoff package",
+                    body: "Band council presentation, operator walkthrough, and everything documented in a format the community owns outright — no ongoing relationship required to use it.",
                   },
                   {
                     title: "Financing structure",
