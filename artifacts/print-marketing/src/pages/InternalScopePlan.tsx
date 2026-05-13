@@ -1508,6 +1508,128 @@ export default function InternalScopePlan() {
         </div>
 
       </div>
+
+      {/* ── LIVE SUMMARY BAR ── sticky bottom, screen-only ── */}
+      <div
+        className="no-print"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 300,
+          background: "#1a2e22",
+          borderTop: "2px solid var(--rust)",
+          display: "flex",
+          alignItems: "stretch",
+          boxShadow: "0 -4px 24px rgba(0,0,0,0.35)",
+          fontFamily: "var(--font-sans)",
+        }}
+      >
+        {/* Label */}
+        <div style={{
+          padding: "0.55rem 1.1rem",
+          display: "flex",
+          alignItems: "center",
+          borderRight: "1px solid rgba(244,237,224,0.1)",
+          flexShrink: 0,
+        }}>
+          <span style={{
+            fontSize: "0.58rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(244,237,224,0.4)",
+            whiteSpace: "nowrap",
+          }}>
+            Phases 2–4 Live Total
+          </span>
+        </div>
+
+        {/* Fee range */}
+        <div style={{
+          padding: "0.42rem 1.1rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          borderRight: "1px solid rgba(244,237,224,0.1)",
+          flexShrink: 0,
+        }}>
+          <span style={{ fontSize: "0.55rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.4)", marginBottom: "0.1rem" }}>
+            Combined fee range
+          </span>
+          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1 }}>
+            {fmt(rollupFeeMin)} – {fmt(rollupFeeMax)}
+          </span>
+          <span style={{ fontSize: "0.55rem", color: "rgba(244,237,224,0.3)", marginTop: "0.1rem" }}>CAD · excl. HST</span>
+        </div>
+
+        {/* Total cost */}
+        <div style={{
+          padding: "0.42rem 1.1rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          borderRight: "1px solid rgba(244,237,224,0.1)",
+          flexShrink: 0,
+        }}>
+          <span style={{ fontSize: "0.55rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.4)", marginBottom: "0.1rem" }}>
+            Total cost to deliver
+          </span>
+          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "rgba(244,237,224,0.8)", lineHeight: 1 }}>
+            {fmt(rollupTotalCost)}
+          </span>
+          <span style={{ fontSize: "0.55rem", color: "rgba(244,237,224,0.3)", marginTop: "0.1rem" }}>incl. IT/bookkeeping hire</span>
+        </div>
+
+        {/* Blended margin */}
+        <div style={{
+          padding: "0.42rem 1.1rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}>
+          <span style={{ fontSize: "0.55rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.4)", marginBottom: "0.1rem" }}>
+            Blended gross margin
+          </span>
+          <span style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "1.1rem",
+            fontWeight: 700,
+            color: rollupMarginAtMin < 0 ? "#fca5a5" : "var(--rust)",
+            lineHeight: 1,
+          }}>
+            {pct(rollupMarginAtMin)} – {pct(rollupMarginAtMax)}
+          </span>
+          {rollupMarginAtMin < 0 && (
+            <span style={{ fontSize: "0.55rem", color: "#fca5a5", fontWeight: 700, marginTop: "0.1rem", letterSpacing: "0.04em" }}>
+              ⚠ Floor is below cost
+            </span>
+          )}
+          {rollupMarginAtMin >= 0 && (
+            <span style={{ fontSize: "0.55rem", color: "rgba(244,237,224,0.3)", marginTop: "0.1rem" }}>across all phases</span>
+          )}
+        </div>
+
+        {/* Spacer */}
+        <div style={{ flex: 1 }} />
+
+        {/* Hint */}
+        <div style={{
+          padding: "0.55rem 1.1rem",
+          display: "flex",
+          alignItems: "center",
+          borderLeft: "1px solid rgba(244,237,224,0.1)",
+          flexShrink: 0,
+        }}>
+          <span style={{ fontSize: "0.58rem", color: "rgba(244,237,224,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            Updates live with sidebar changes
+          </span>
+        </div>
+      </div>
+
+      {/* Spacer so content isn't hidden behind the fixed bar */}
+      <div className="no-print" style={{ height: "3.5rem" }} />
     </>
   );
 }
