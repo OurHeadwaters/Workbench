@@ -125,7 +125,7 @@ export function BioPage() {
                   className="font-serif text-xl tracking-tight"
                   data-testid="rate-card-title"
                 >
-                  Rate card
+                  Engagement fees
                 </h2>
                 <p
                   className="font-mono text-[10px] uppercase tracking-[0.22em]"
@@ -140,28 +140,22 @@ export function BioPage() {
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
                 <RateRow
-                  label="Trial period"
-                  amount="$175.00 / hour"
-                  note="Project-based invoicing"
+                  label="Phase 1"
+                  amount="$28,000"
+                  note="6–8 weeks · fixed fee · defined scope · shorter engagement = reduced invoice"
                   testId="rate-trial"
                 />
                 <RateRow
-                  label="Full engagement"
-                  amount="$175.00 / hour"
-                  note="Ongoing engagement, hourly"
+                  label="Phase 2+"
+                  amount="Scoped per phase"
+                  note="Each phase is priced to its scope before work begins"
                   testId="rate-fulltime"
                 />
                 <RateRow
-                  label="Travel premium"
-                  amount="$175.00 / day"
-                  note="On days worked on-site"
+                  label="Travel & expenses"
+                  amount="At cost"
+                  note="Travel to site and expenses reimbursed at cost with receipts"
                   testId="rate-travel"
-                />
-                <RateRow
-                  label="Expenses"
-                  amount="Reimbursed at cost"
-                  note="Reasonable travel to/from site, lodging, meals"
-                  testId="rate-expenses"
                 />
               </ul>
 
@@ -170,7 +164,7 @@ export function BioPage() {
                 style={{ color: "hsl(var(--muted-foreground))" }}
                 data-testid="rate-footnote"
               >
-                All hourly rates CAD · excludes HST
+                All fees CAD · excludes HST
               </p>
             </section>
           </div>

@@ -296,15 +296,15 @@ export function ServicesPage() {
             A trial period, not a contract
           </h2>
           <p className="font-serif text-[15px] italic mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
-            The usual first step is a bounded six-week scope at an hourly rate.
+            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
             {[
               { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
-              { step: "2", label: "Trial period", body: "Six weeks, hourly rate, bounded scope. No retainer, no long commitment." },
-              { step: "3", label: "Decision point", body: "If the fit is right, it continues. If not, you leave with something useful and no obligation." },
-              { step: "4", label: "Continue", body: "A clear scope, clear deliverables, clear end point. Renewed only if the work calls for it." },
+              { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
+              { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
+              { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
             ].map(({ step, label, body }) => (
               <div
                 key={step}
@@ -330,13 +330,13 @@ export function ServicesPage() {
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
-              the rate structure
+              phase fees
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { label: "Trial period", value: "$175 / hour", note: "Six-week bounded scope. Stop at any point." },
-                { label: "Active engagement", value: "$175 / hour", note: "Billed against a defined scope, not open-ended." },
-                { label: "Ongoing iteration", value: "As needed", note: "Small changes, fast turnaround. No retainer required." },
+                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
+                { label: "Phase 2+", value: "Scoped per phase", note: "Each subsequent phase is priced to its scope before work begins." },
+                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
@@ -349,10 +349,10 @@ export function ServicesPage() {
               className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
             >
-              All rates CAD · excludes HST
+              All fees CAD · excludes HST
             </p>
             <p className="font-serif text-[12px] italic leading-[1.6] mt-3" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
-              Headwaters brings in specialist subcontractors by project need. The rate funds that full delivery system — you get the right person for each phase without carrying the overhead of assembling a team yourself.
+              Headwaters brings in specialist subcontractors by project need. The phase fee funds that full delivery system — you get the right person for each phase without carrying the overhead of assembling a team yourself.
             </p>
           </div>
 

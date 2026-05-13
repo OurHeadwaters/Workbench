@@ -389,15 +389,15 @@ export function HomePage() {
             className="font-serif text-[15px] italic mb-8"
             style={{ color: "hsl(var(--muted-foreground))" }}
           >
-            The usual first step is a bounded scope at an hourly rate. No retainer, no long commitment.
+            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
             {[
               { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
-              { step: "2", label: "Trial period", body: "Six weeks, hourly rate, bounded scope. Stop at any point." },
-              { step: "3", label: "Decision point", body: "If the fit is right, it continues. If not, you leave with something useful and no obligation." },
-              { step: "4", label: "Continue", body: "A clear scope, clear deliverables, clear end point. Renewed only if the work calls for it." },
+              { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
+              { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
+              { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
             ].map(({ step, label, body }) => (
               <div
                 key={step}
@@ -423,13 +423,13 @@ export function HomePage() {
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
-              the rate structure
+              phase fees
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
-                { label: "Trial period", value: "$175 / hour", note: "Six-week bounded scope. Stop at any point." },
-                { label: "Active engagement", value: "$175 / hour", note: "Billed against a defined scope, not open-ended." },
-                { label: "Travel premium", value: "$175 / day", note: "On days worked on-site. Expenses at cost." },
+                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
+                { label: "Phase 2+", value: "Scoped per phase", note: "Each subsequent phase is priced to its scope before work begins." },
+                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
@@ -442,7 +442,7 @@ export function HomePage() {
               className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
             >
-              All rates CAD · excludes HST
+              All fees CAD · excludes HST
             </p>
           </div>
         </section>
