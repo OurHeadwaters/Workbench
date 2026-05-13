@@ -169,7 +169,16 @@ export function ListenPage() {
               <strong>Innovative Hero of the Year</strong>. In 2023 she sat down
               with Jack Spirko on{" "}
               <em>The Survival Podcast</em> for the episode{" "}
-              <strong>&ldquo;Community vs. Collapse&rdquo;</strong> — the same
+              <a
+                href="https://www.thesurvivalpodcast.com/local-food-parr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:opacity-80"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                <strong>&ldquo;Community vs. Collapse&rdquo;</strong>
+              </a>{" "}
+              — the same
               show you&rsquo;re listening to now.
             </p>
             <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80 print:hidden">
