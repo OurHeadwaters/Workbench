@@ -181,7 +181,7 @@ export default function NorthernPilotPitch() {
             {/* Logo + wordmark in top-left corner over photo */}
             <div style={{ position: "absolute", top: "0.52in", left: "0.62in", display: "flex", alignItems: "center", gap: "0.2in" }}>
               <img
-                src={`${base}eagle-circle.png`}
+                src={`${base}eagle-circle-transparent.png`}
                 alt="Headwaters logo"
                 style={{ width: "0.72in", height: "0.72in", objectFit: "contain", opacity: 0.92 }}
               />
@@ -311,7 +311,7 @@ export default function NorthernPilotPitch() {
         <div className="page-letter" style={{ ...PAGE }}>
 
           {/* Harvest photo — full width top */}
-          <div style={{ width: "100%", height: "3.4in", flexShrink: 0, overflow: "hidden", position: "relative" }}>
+          <div style={{ width: "100%", height: "2.2in", flexShrink: 0, overflow: "hidden", position: "relative" }}>
             <img
               src={`${base}hero-harvest.jpeg`}
               alt="Community members working together during harvest in northern Ontario"

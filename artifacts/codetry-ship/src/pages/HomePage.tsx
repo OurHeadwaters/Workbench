@@ -67,16 +67,13 @@ export function HomePage() {
         />
         <div className="relative mx-auto max-w-[52rem]">
 
-          {/* Logo on a cream badge so the dark SVG text reads on the dark hero */}
-          <div
-            className="mb-7 inline-block rounded-sm px-3 py-2"
-            style={{ background: "hsla(38, 36%, 94%, 0.92)" }}
-            data-testid="home-eyebrow"
-          >
+          {/* Eagle mark — no background, sits directly in the dark hero */}
+          <div className="mb-7" data-testid="home-eyebrow">
             <img
-              src={`${import.meta.env.BASE_URL}headwaters-logo.svg`}
+              src={`${import.meta.env.BASE_URL}eagle-circle-transparent.png`}
               alt="Headwaters — Northwestern Ontario"
-              className="block w-full max-w-[300px]"
+              className="block"
+              style={{ width: 72, height: 72, objectFit: "contain" }}
             />
           </div>
 

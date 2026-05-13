@@ -97,10 +97,10 @@ export function SiteNav() {
             data-testid="nav-home-link"
           >
             <img
-              src={`${import.meta.env.BASE_URL}favicon.svg`}
+              src={`${import.meta.env.BASE_URL}eagle-circle-transparent.png`}
               alt=""
               aria-hidden="true"
-              className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity"
+              className="w-7 h-7 opacity-85 group-hover:opacity-100 transition-opacity"
             />
             <span
               className="font-mono text-[10px] uppercase tracking-[0.22em] hidden sm:inline"
