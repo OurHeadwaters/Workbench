@@ -57,8 +57,8 @@ export function ListenPage() {
   };
 
   return (
-    <main className="min-h-screen w-full bg-background text-foreground">
-      <div className="mx-auto max-w-[42rem] px-6 sm:px-8 py-16 sm:py-24">
+    <main className="listen-page min-h-screen w-full bg-background text-foreground">
+      <div className="mx-auto max-w-[42rem] px-6 sm:px-8 py-16 sm:py-24 print:py-0 print:max-w-full">
 
         {/* ---- eyebrow ---- */}
         <p
@@ -73,16 +73,21 @@ export function ListenPage() {
           A community store that belongs to the people who shop in it.
         </h1>
 
-        <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70">
+        {/* ---- print-only one-liner ---- */}
+        <p className="hidden print:block mt-3 font-serif text-base leading-snug">
+          Codetry is the operating system for a community economy — store, books, freight, and training — built in the open, owned by the band.
+        </p>
+
+        <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70 print:hidden">
           Not a co-op pitch. Not a grant application. A working system — being
           built right now, in Northwestern Ontario, by a household that lives
           the same logistical reality you do.
         </p>
 
-        <hr className="rule mt-10 sm:mt-12" />
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
         {/* ---- what is codetry ---- */}
-        <section className="mt-10 sm:mt-12 space-y-5 font-serif text-base sm:text-lg leading-relaxed">
+        <section className="mt-10 sm:mt-12 space-y-5 font-serif text-base sm:text-lg leading-relaxed print:hidden">
           <p>
             <strong>Codetry</strong> is the operating system for a community
             economy. Store, books, freight, training — everything a small
@@ -103,11 +108,11 @@ export function ListenPage() {
           </p>
         </section>
 
-        <hr className="rule mt-10 sm:mt-12" />
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
         {/* ---- who is bobbie ---- */}
         <section
-          className="mt-10 sm:mt-12"
+          className="mt-10 sm:mt-12 print:mt-4"
           data-testid="section-bobbie"
         >
           <p
@@ -118,13 +123,13 @@ export function ListenPage() {
           </p>
 
           <div
-            className="rounded-sm border p-6 sm:p-8 space-y-4"
+            className="rounded-sm border p-6 sm:p-8 space-y-4 print:border-black print:bg-transparent print:p-0 print:border-0 print:space-y-1"
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
           >
             <p className="font-serif font-semibold text-lg sm:text-xl">
               Bobbie Parr — Wabigoon, Ontario
             </p>
-            <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80">
+            <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80 print:hidden">
               Bobbie homesteads in Wabigoon with her kids. She holds a degree in
               Recreation Management and Community Development with a minor in
               Native Studies. She founded{" "}
@@ -167,7 +172,7 @@ export function ListenPage() {
               <strong>&ldquo;Community vs. Collapse&rdquo;</strong> — the same
               show you&rsquo;re listening to now.
             </p>
-            <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80">
+            <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80 print:hidden">
               She is the practitioner — the person delivering the software,
               training the team, and making the monthly site visits. This is not
               a proposal from an organization. It is a project being built by
@@ -176,11 +181,11 @@ export function ListenPage() {
           </div>
         </section>
 
-        <hr className="rule mt-10 sm:mt-12" />
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
         {/* ---- why now / trust ---- */}
         <section
-          className="mt-10 sm:mt-12"
+          className="mt-10 sm:mt-12 print:hidden"
           data-testid="section-trust"
         >
           <p
@@ -211,10 +216,10 @@ export function ListenPage() {
           </div>
         </section>
 
-        <hr className="rule mt-10 sm:mt-12" />
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
         {/* ---- form / confirmation ---- */}
-        <section className="mt-10 sm:mt-12" data-testid="section-form">
+        <section className="mt-10 sm:mt-12 print:hidden" data-testid="section-form">
           <p
             className="font-mono text-[11px] uppercase tracking-[0.22em] mb-3"
             style={{ color: "hsl(var(--accent))" }}
@@ -423,7 +428,7 @@ export function ListenPage() {
 
         {/* ---- footer ---- */}
         <footer
-          className="mt-12 pt-8 border-t flex flex-wrap items-center justify-between gap-4"
+          className="mt-12 pt-8 border-t flex flex-wrap items-center justify-between gap-4 print:hidden"
           style={{ borderColor: "hsl(var(--card-border))" }}
           data-testid="footer"
         >

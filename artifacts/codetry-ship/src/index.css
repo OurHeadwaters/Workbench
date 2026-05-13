@@ -270,10 +270,10 @@
 .hw-label--cream { background: #f4ede0; color: #1f3d2e; }
 
 /* ----------------------------- print styles -----------------------------
- * The bio page (BioPage.tsx) is the only page wired to print today.
- * When the operator hits Cmd/Ctrl-P from /bio, we strip page chrome,
- * force a paper-white background, and shrink the type so the portrait,
- * bio copy, and rate card all land on a single letter-size page.
+ * Two pages are wired to print:
+ *   BioPage  (/bio)    — single letter-size sheet, portrait + bio + rate card
+ *   ListenPage (/listen) — half-page leave-behind card: headline, Bobbie
+ *                          name + award, QR code, URL
  */
 @media print {
   @page {
@@ -358,5 +358,71 @@
     font-size: 9pt !important;
     color: #444444 !important;
     white-space: nowrap;
+  }
+
+  /* ── /listen leave-behind card ──────────────────────────────────────
+   * Target: half letter-size (5.5 × 8.5 in) or postcard. The page
+   * @page rule above sets letter + 0.5 in margins; we override just
+   * for the listen page so the content fills a half-sheet naturally.
+   * Elements not needed on the card use Tailwind's print:hidden; what
+   * remains is: eyebrow · headline · one-liner · Bobbie name + award ·
+   * QR code + URL.
+   */
+  .listen-page {
+    background: #ffffff !important;
+    min-height: 0 !important;
+  }
+
+  .listen-page h1 {
+    font-size: 22pt !important;
+    line-height: 1.08 !important;
+    margin-top: 6pt !important;
+    color: #111111 !important;
+  }
+
+  .listen-page p,
+  .listen-page strong,
+  .listen-page em {
+    color: #111111 !important;
+  }
+
+  .listen-page .font-mono,
+  .listen-page .signoff {
+    color: #444444 !important;
+    font-size: 7.5pt !important;
+  }
+
+  /* Bobbie card: remove the muted background box so it reads clean. */
+  .listen-page [data-testid="section-bobbie"] > div {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .listen-page [data-testid="section-bobbie"] p {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Share / QR block: keep a thin rule above it, tighten spacing. */
+  .listen-page [data-testid="section-share"] {
+    margin-top: 12pt !important;
+    padding: 10pt 0 0 0 !important;
+    border: none !important;
+    border-top: 0.75pt solid #999999 !important;
+  }
+
+  .listen-page [data-testid="section-share"] p {
+    font-size: 9.5pt !important;
+    line-height: 1.35 !important;
+    color: #111111 !important;
+  }
+
+  /* URL in the share block — bold and readable. */
+  .listen-page [data-testid="section-share"] .font-mono {
+    font-size: 12pt !important;
+    font-weight: 700 !important;
+    color: #111111 !important;
+    letter-spacing: 0 !important;
   }
 }
