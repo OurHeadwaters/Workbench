@@ -29,6 +29,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Gift, AlertCircle, ArrowLeft, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { EditableSection } from "@/components/EditableSection";
 
 export function ContractsPage() {
   const { scenario } = useScenario();
@@ -85,18 +86,20 @@ export function ContractsPage() {
         tag={a.capitalRecoveryTag}
         accent={b.accent}
       >
-        <p className="text-sm text-muted-foreground">
-          {hasFamilyInfusionRecovery
-            ? `Business surplus from August onward retires the ${money(a.capitalRecoveryAmount)} bank-loan leg. `
-            : `All business surplus retires the ${money(a.capitalRecoveryAmount)} debt stack. `}
-          {a.capitalRecoveryDescription}{" "}
-          <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this
-          scenario's monthly business surplus.
-        </p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Booked as <strong>"Capital Recovery"</strong> — distinct line, separate from
-          compensation, separate from owner draw. NOT new income to the founder.
-        </p>
+        <EditableSection id="contracts.capital-recovery" label="Capital Recovery description">
+          <p className="text-sm text-muted-foreground">
+            {hasFamilyInfusionRecovery
+              ? `Business surplus from August onward retires the ${money(a.capitalRecoveryAmount)} bank-loan leg. `
+              : `All business surplus retires the ${money(a.capitalRecoveryAmount)} debt stack. `}
+            {a.capitalRecoveryDescription}{" "}
+            <strong className="text-foreground">~{a.capitalRecoveryMonths} months</strong> at this
+            scenario's monthly business surplus.
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Booked as <strong>"Capital Recovery"</strong> — distinct line, separate from
+            compensation, separate from owner draw. NOT new income to the founder.
+          </p>
+        </EditableSection>
       </PhaseBlock>
     ),
   });
@@ -234,13 +237,15 @@ export function ContractsPage() {
         <p className="text-sm font-semibold text-blue-900 mb-1">
           How this engagement works — trial-first, hourly
         </p>
-        <p className="text-xs text-blue-800 leading-relaxed">
-          The Ship Manifest offer is trial-first and hourly: six weeks, bounded scope, no retainer.
-          The figures below model a <em>full engagement</em> at confirmed rates
-          ($175/hr lead · $70/hr support) against the Northern Band roster — they show what the math
-          looks like if a contract lands and runs. None of this is locked until a contract is signed.
-          Treat the monthly-fee line as a scenario derived from projected hours, not a quoted retainer.
-        </p>
+        <EditableSection id="contracts.how-engagement-works" label="How this engagement works">
+          <p className="text-xs text-blue-800 leading-relaxed">
+            The Ship Manifest offer is trial-first and hourly: six weeks, bounded scope, no retainer.
+            The figures below model a <em>full engagement</em> at confirmed rates
+            ($175/hr lead · $70/hr support) against the Northern Band roster — they show what the math
+            looks like if a contract lands and runs. None of this is locked until a contract is signed.
+            Treat the monthly-fee line as a scenario derived from projected hours, not a quoted retainer.
+          </p>
+        </EditableSection>
       </div>
 
       {/* ── Deal-flow progress bar ── */}
@@ -555,9 +560,11 @@ export function ContractsPage() {
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
-              <p className="text-xs text-muted-foreground mb-3">
-                Business surplus waterfall (strict order): {waterfallDescription}. Practitioner tithe ({a.tithePct}% of draw = {money(a.titheMonthly)}/mo) is a personal first claim on Bobbie's draw — settled before the surplus waterfall runs.
-              </p>
+              <EditableSection id="contracts.surplus-waterfall" label="Surplus waterfall description">
+                <p className="text-xs text-muted-foreground mb-3">
+                  Business surplus waterfall (strict order): {waterfallDescription}. Practitioner tithe ({a.tithePct}% of draw = {money(a.titheMonthly)}/mo) is a personal first claim on Bobbie's draw — settled before the surplus waterfall runs.
+                </p>
+              </EditableSection>
               <div className="space-y-4">{phaseBlocks.map((p) => p.node)}</div>
             </AccordionContent>
           </AccordionItem>

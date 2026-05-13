@@ -27,6 +27,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowLeft, HelpCircle } from "lucide-react";
+import { EditableSection } from "@/components/EditableSection";
 import { PageIntro } from "@/components/PageIntro";
 
 export function BrightsidePage() {
@@ -91,24 +92,26 @@ export function BrightsidePage() {
               input — what the math needs to be true to produce the surplus shown below.
               None of these conditions are met yet.
             </p>
-            <div className="space-y-2 text-blue-800">
-              <FramingQuestion
-                q="What would a pilot LTC site actually commit to?"
-                context={`A signed pilot at Tier 1 ($${bs.pricing.tier1.monthly}/mo) + setup ($${bs.pricing.setupFee}) is the first real revenue event. What does a yes from an LTC administrator look like, and what do they need to see before signing?`}
-              />
-              <FramingQuestion
-                q="What is the real cost to get to first revenue?"
-                context={`The pre-launch one-time spend is ${money(bs.costBasis.prelaunchTotal)} (engineer cap ${money(bs.buildModel.prelaunchEngineerCap)} + PHIPA/PIPEDA audit $5k + legal $3k). First revenue window: ${bs.revenueTarget.revenueStartWindow}. What milestones gate payment of each cost line?`}
-              />
-              <FramingQuestion
-                q="What is the minimum customer count to break even on recurring costs?"
-                context={`Recurring monthly cost is ${money(bs.costBasis.recurringMonthlyTotal)}/mo. At ${money(bs.pricing.tier1.monthly)}/mo per Tier 1 facility, that's ${Math.ceil(bs.costBasis.recurringMonthlyTotal / bs.pricing.tier1.monthly)} facilities to cover recurring costs. How long does the first sales cycle take?`}
-              />
-              <FramingQuestion
-                q="What does the 22-facility ramp actually require?"
-                context={`The model assumes 0 → ~22 LTC facilities over 18 months. What are the real barriers — PHIPA compliance, facility IT procurement cycles, staff training capacity? Build the honest ramp before counting on the revenue.`}
-              />
-            </div>
+            <EditableSection id="brightside.framing-questions" label="Framing questions — pre-revenue stage">
+              <div className="space-y-2 text-blue-800">
+                <FramingQuestion
+                  q="What would a pilot LTC site actually commit to?"
+                  context={`A signed pilot at Tier 1 ($${bs.pricing.tier1.monthly}/mo) + setup ($${bs.pricing.setupFee}) is the first real revenue event. What does a yes from an LTC administrator look like, and what do they need to see before signing?`}
+                />
+                <FramingQuestion
+                  q="What is the real cost to get to first revenue?"
+                  context={`The pre-launch one-time spend is ${money(bs.costBasis.prelaunchTotal)} (engineer cap ${money(bs.buildModel.prelaunchEngineerCap)} + PHIPA/PIPEDA audit $5k + legal $3k). First revenue window: ${bs.revenueTarget.revenueStartWindow}. What milestones gate payment of each cost line?`}
+                />
+                <FramingQuestion
+                  q="What is the minimum customer count to break even on recurring costs?"
+                  context={`Recurring monthly cost is ${money(bs.costBasis.recurringMonthlyTotal)}/mo. At ${money(bs.pricing.tier1.monthly)}/mo per Tier 1 facility, that's ${Math.ceil(bs.costBasis.recurringMonthlyTotal / bs.pricing.tier1.monthly)} facilities to cover recurring costs. How long does the first sales cycle take?`}
+                />
+                <FramingQuestion
+                  q="What does the 22-facility ramp actually require?"
+                  context={`The model assumes 0 → ~22 LTC facilities over 18 months. What are the real barriers — PHIPA compliance, facility IT procurement cycles, staff training capacity? Build the honest ramp before counting on the revenue.`}
+                />
+              </div>
+            </EditableSection>
           </div>
         </div>
       </div>
@@ -171,7 +174,9 @@ export function BrightsidePage() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
-            <p className="text-sm">{bs.product.description}</p>
+            <EditableSection id="brightside.product-rationale" label="Product rationale">
+              <p className="text-sm">{bs.product.description}</p>
+            </EditableSection>
             <dl className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <Row label="Customer scope" value={bs.product.customerScope} />
               <Row label="Home-care services" value={bs.product.homecareStatus} />
