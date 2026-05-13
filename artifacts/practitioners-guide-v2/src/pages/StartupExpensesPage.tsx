@@ -275,6 +275,258 @@ function grandTotals(actuals: Record<string, string>) {
   return { low, high, actual };
 }
 
+// ── HTML escape helper ────────────────────────────────────────────────────────
+
+function escHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// ── Print / Save PDF ──────────────────────────────────────────────────────────
+
+function printExpenses(
+  actuals: Record<string, string>,
+  notes: Record<string, string>
+) {
+  const { low, high, actual } = grandTotals(actuals);
+  const hasActuals = Object.values(actuals).some((v) => v.trim() !== "");
+  const midpoint = Math.round((low + high) / 2);
+  const runway = BUDGET_TOTAL - (hasActuals ? actual : midpoint);
+  const today = new Date().toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const sectionRows = SECTIONS.map((section) => {
+    const itemRows = section.items
+      .map((item) => {
+        const actualVal = item.deerLake
+          ? ""
+          : actuals[item.id]
+          ? money(parseActual(actuals[item.id]))
+          : "";
+        const memoVal = item.deerLake ? "" : escHtml(notes[item.id] ?? "");
+        return `
+          <tr class="item-row">
+            <td class="item-label">
+              ${item.label}${item.deerLake ? ' <span class="tag">Deer Lake — excluded</span>' : ""}
+              ${item.note ? `<div class="item-desc">${item.note}</div>` : ""}
+            </td>
+            <td class="num">${item.deerLake ? "—" : money(item.low)}</td>
+            <td class="num">${item.deerLake ? "—" : money(item.high)}</td>
+            <td class="num actual">${actualVal || "—"}</td>
+            <td class="memo" style="white-space:pre-wrap">${memoVal}</td>
+          </tr>`;
+      })
+      .join("");
+
+    const st = sectionTotals(section, actuals);
+    return `
+      <tr class="section-header">
+        <td colspan="5" style="background:${section.colorSoft};color:${section.colorInk};border-left:3px solid ${section.color}">
+          ${section.title}
+          <span class="section-sub">${section.subtitle}</span>
+        </td>
+      </tr>
+      ${itemRows}
+      <tr class="section-total">
+        <td>Section total</td>
+        <td class="num">${money(st.low)}</td>
+        <td class="num">${money(st.high)}</td>
+        <td class="num actual">${st.anyActual ? money(st.actual) : "—"}</td>
+        <td></td>
+      </tr>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Startup Expenses — Headwaters Practitioner</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 11pt;
+      color: #111;
+      padding: 32pt 40pt;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 20pt; margin-bottom: 4pt; }
+    .meta { font-size: 9pt; color: #555; font-family: Arial, sans-serif; margin-bottom: 20pt; }
+    .summary-box {
+      border: 1.5pt solid #1A5FA8;
+      border-radius: 6pt;
+      padding: 12pt 16pt;
+      background: #EBF3FB;
+      margin-bottom: 20pt;
+      display: flex;
+      gap: 24pt;
+      flex-wrap: wrap;
+    }
+    .summary-item { }
+    .summary-label { font-size: 8pt; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; color: #0F3460; opacity: 0.7; margin-bottom: 2pt; }
+    .summary-value { font-size: 15pt; font-weight: bold; color: #0F3460; font-family: Georgia, serif; }
+    .summary-sub { font-size: 8pt; color: #0F3460; opacity: 0.6; font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+    th {
+      background: #1A5FA8;
+      color: white;
+      text-align: left;
+      padding: 6pt 8pt;
+      font-family: Arial, sans-serif;
+      font-size: 9pt;
+      font-weight: 600;
+    }
+    th.num, td.num { text-align: right; white-space: nowrap; }
+    td { padding: 5pt 8pt; vertical-align: top; border-bottom: 0.5pt solid #e5e7eb; }
+    .section-header td {
+      font-family: Arial, sans-serif;
+      font-size: 9.5pt;
+      font-weight: 700;
+      padding: 7pt 8pt 5pt;
+      border-bottom: none;
+    }
+    .section-sub {
+      font-weight: 400;
+      font-size: 8.5pt;
+      opacity: 0.7;
+      margin-left: 8pt;
+    }
+    .section-total td {
+      font-family: Arial, sans-serif;
+      font-size: 9pt;
+      font-weight: 600;
+      background: #f8fafc;
+      border-top: 0.5pt solid #cbd5e1;
+      color: #334155;
+    }
+    .grand-total td {
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      font-weight: 700;
+      background: #0F3460;
+      color: white;
+      border: none;
+      padding: 7pt 8pt;
+    }
+    .budget-row td {
+      font-family: Arial, sans-serif;
+      font-size: 9pt;
+      font-weight: 600;
+      background: #EBF3FB;
+      color: #0F3460;
+      border-bottom: none;
+    }
+    .item-label { font-size: 10pt; }
+    .item-desc { font-size: 8.5pt; color: #555; font-family: Arial, sans-serif; margin-top: 1pt; }
+    .actual { color: #065F46; font-weight: 600; }
+    .memo { font-size: 8.5pt; font-family: Arial, sans-serif; color: #374151; max-width: 180pt; }
+    .tag {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-family: Arial, sans-serif;
+      background: #e2e8f0;
+      color: #64748b;
+      border-radius: 3pt;
+      padding: 1pt 4pt;
+      margin-left: 4pt;
+      font-weight: 400;
+    }
+    .deer-lake-note {
+      margin-top: 16pt;
+      border: 0.5pt solid #cbd5e1;
+      border-radius: 4pt;
+      padding: 9pt 12pt;
+      font-size: 9pt;
+      color: #374151;
+      font-family: Arial, sans-serif;
+    }
+    .deer-lake-note strong { color: #111; }
+    @media print {
+      body { padding: 16pt 20pt; }
+      @page { margin: 12mm 14mm; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Startup Expenses</h1>
+  <p class="meta">Headwaters Practitioner · Phase 1 working budget · Printed ${today}</p>
+
+  <div class="summary-box">
+    <div class="summary-item">
+      <div class="summary-label">Startup Budget</div>
+      <div class="summary-value">${money(BUDGET_TOTAL)}</div>
+      <div class="summary-sub">Phase 1 baseline</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-label">Estimated range</div>
+      <div class="summary-value">${money(low)} – ${money(high)}</div>
+      <div class="summary-sub">low / high</div>
+    </div>
+    ${hasActuals ? `
+    <div class="summary-item">
+      <div class="summary-label">Actual spent</div>
+      <div class="summary-value">${money(actual)}</div>
+      <div class="summary-sub">entered so far</div>
+    </div>` : ""}
+    <div class="summary-item">
+      <div class="summary-label">Runway remaining</div>
+      <div class="summary-value" style="color:${runway < 0 ? "#DC2626" : "#1A5FA8"}">${runway < 0 ? "–" : ""}${money(Math.abs(runway))}</div>
+      <div class="summary-sub">${hasActuals ? "vs actual" : "vs midpoint estimate"}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th class="num">Est. Low</th>
+        <th class="num">Est. High</th>
+        <th class="num">Actual</th>
+        <th>Memo / Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${sectionRows}
+      <tr class="grand-total">
+        <td>Grand Total</td>
+        <td class="num">${money(low)}</td>
+        <td class="num">${money(high)}</td>
+        <td class="num">${hasActuals ? money(actual) : "—"}</td>
+        <td></td>
+      </tr>
+      <tr class="budget-row">
+        <td>Budget (Phase 1)</td>
+        <td></td>
+        <td></td>
+        <td class="num">${money(BUDGET_TOTAL)}</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deer-lake-note">
+    <strong>Deer Lake — excluded from this budget</strong><br/>
+    ${DEER_LAKE_NOTE}
+  </div>
+
+  <script>window.onload = function(){ window.print(); };<\/script>
+</body>
+</html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+}
+
 // ── CSV export ────────────────────────────────────────────────────────────────
 
 function exportCsv(
@@ -703,15 +955,26 @@ export function StartupExpensesPage() {
             Enter actuals as you spend; they're saved automatically.
           </p>
         </div>
-        <button
-          onClick={() => exportCsv(actuals, notes)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex-shrink-0"
-          style={{ backgroundColor: "#1A5FA8", color: "white" }}
-          data-testid="export-csv-button"
-        >
-          <Download className="h-4 w-4" />
-          Download CSV
-        </button>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => printExpenses(actuals, notes)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors border"
+            style={{ borderColor: "#1A5FA8", color: "#1A5FA8", backgroundColor: "white" }}
+            data-testid="print-pdf-button"
+          >
+            <Printer className="h-4 w-4" />
+            Print / Save PDF
+          </button>
+          <button
+            onClick={() => exportCsv(actuals, notes)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            style={{ backgroundColor: "#1A5FA8", color: "white" }}
+            data-testid="export-csv-button"
+          >
+            <Download className="h-4 w-4" />
+            Download CSV
+          </button>
+        </div>
       </div>
 
       <SummaryBar actuals={actuals} notes={notes} />
