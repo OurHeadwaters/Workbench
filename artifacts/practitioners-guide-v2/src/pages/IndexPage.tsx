@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { useScenario } from "@/lib/scenario";
 import { ProvisionalBanner } from "@/components/ProvisionalBanner";
 import { FOCUS_AREAS, type FocusArea, type TimeEstimate } from "@/data/whatsNext";
+import { readAllFlags, FLAG_PREFIX } from "@/hooks/useSectionFlag";
 import {
   Handshake,
   ChevronRight,
@@ -30,6 +31,7 @@ import {
   Plus,
   X,
   Wallet,
+  Flag,
 } from "lucide-react";
 
 const FOCUS_STORAGE_KEY = "pgv2.whatsnext.focus";
@@ -751,6 +753,50 @@ function DoneToday() {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
+function FlaggedSectionsCallout() {
+  const [count, setCount] = useState(0);
+
+  function refresh() {
+    setCount(readAllFlags().length);
+  }
+
+  useEffect(() => {
+    refresh();
+    function onStorage(e: StorageEvent) {
+      if (e.key?.startsWith(FLAG_PREFIX)) refresh();
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  if (count === 0) return null;
+
+  return (
+    <Link
+      href="/flagged"
+      className="flex items-center gap-3 rounded-xl border px-4 py-3 hover:shadow-sm transition-shadow"
+      style={{ borderColor: "#fde68a", backgroundColor: "#fffbeb" }}
+      data-testid="flagged-callout"
+    >
+      <div
+        className="h-8 w-8 rounded-md grid place-items-center flex-shrink-0"
+        style={{ backgroundColor: "#fef3c7", color: "#d97706" }}
+      >
+        <Flag className="h-4 w-4" fill="#d97706" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-amber-900">
+          {count} section{count !== 1 ? "s" : ""} flagged as outdated
+        </p>
+        <p className="text-xs text-amber-700/80 mt-0.5">
+          Review and update stale content
+        </p>
+      </div>
+      <ChevronRight className="h-4 w-4 text-amber-500 flex-shrink-0" />
+    </Link>
+  );
+}
+
 export function IndexPage() {
   const { scenario } = useScenario();
   const [activeFocus, setActiveFocus] = useState<FocusArea | null>(null);
@@ -765,6 +811,9 @@ export function IndexPage() {
 
   return (
     <div className="space-y-6" data-testid="page-index">
+      {/* ── Flagged sections callout (amber, only shown when flags exist) ── */}
+      <FlaggedSectionsCallout />
+
       {/* ── Re-entry card (if returning user has a focus set) ── */}
       {hasReentry && <ReentryCard focus={activeFocus!} />}
 

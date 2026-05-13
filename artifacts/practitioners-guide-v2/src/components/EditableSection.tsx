@@ -11,10 +11,13 @@
  *
  * The pencil button appears on hover. Clicking it opens a modal where the
  * founder describes what changed; the AI rewrites the section in-place.
+ *
+ * A flag button also appears on hover. Flagged sections show an amber badge
+ * so stale content can be tracked from the dashboard.
  */
 
 import { useState, useRef, type ReactNode } from "react";
-import { Pencil, X, Loader2, RotateCcw } from "lucide-react";
+import { Pencil, X, Loader2, RotateCcw, Flag } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useSectionOverride } from "@/hooks/useSectionOverride";
+import { useSectionFlag } from "@/hooks/useSectionFlag";
 
 interface EditableSectionProps {
   id: string;
@@ -33,6 +37,7 @@ interface EditableSectionProps {
 
 export function EditableSection({ id, label, children }: EditableSectionProps) {
   const { override, setOverride, clearOverride } = useSectionOverride(id);
+  const { flagged, toggleFlag } = useSectionFlag(id, label);
   const [open, setOpen] = useState(false);
   const [instruction, setInstruction] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
@@ -113,6 +118,17 @@ export function EditableSection({ id, label, children }: EditableSectionProps) {
           </button>
         )}
         <button
+          onClick={toggleFlag}
+          title={flagged ? "Remove outdated flag" : "Flag as outdated"}
+          className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-colors"
+          style={{
+            background: flagged ? "#d9770622" : "#78350f11",
+            color: flagged ? "#d97706" : "#78350f",
+          }}
+        >
+          <Flag size={11} fill={flagged ? "#d97706" : "none"} />
+        </button>
+        <button
           onClick={() => setOpen(true)}
           title="Edit with AI"
           className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-colors"
@@ -126,14 +142,25 @@ export function EditableSection({ id, label, children }: EditableSectionProps) {
         </button>
       </div>
 
-      {override && (
-        <div className="mt-1 flex items-center gap-1">
-          <span
-            className="text-xs px-1.5 py-0.5 rounded font-medium"
-            style={{ background: "#1f3d2e22", color: "#1f3d2e" }}
-          >
-            Edited
-          </span>
+      {(override || flagged) && (
+        <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+          {override && (
+            <span
+              className="text-xs px-1.5 py-0.5 rounded font-medium"
+              style={{ background: "#1f3d2e22", color: "#1f3d2e" }}
+            >
+              Edited
+            </span>
+          )}
+          {flagged && (
+            <span
+              className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded font-medium"
+              style={{ background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a" }}
+            >
+              <Flag size={10} fill="#d97706" className="text-amber-600" />
+              Outdated
+            </span>
+          )}
         </div>
       )}
 
