@@ -273,7 +273,9 @@ export default function GillesPitch() {
           {/* Footer */}
           <div style={{ marginTop: "auto", borderTop: "1px solid rgba(45,27,14,0.1)", padding: "0.18in 0.65in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.1in" }}>
-              <img src={`${base}eagle-circle.png`} alt="Headwaters" style={{ width: "0.2in", height: "0.2in", objectFit: "contain", opacity: 0.5 }} />
+              <div style={{ width: "0.2in", height: "0.2in", borderRadius: "50%", border: "0.75pt solid rgba(160,120,50,0.55)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: 0.5 }}>
+                <img src={`${base}eagle-halo.png`} alt="Headwaters" style={{ width: "0.13in", height: "0.13in", objectFit: "contain" }} />
+              </div>
               <span style={{ fontSize: "0.55rem", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 Headwaters Development Services · Private
               </span>
