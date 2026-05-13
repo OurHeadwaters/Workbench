@@ -6,8 +6,61 @@ const RUST = "#b85a3e";
 const MUTED = "#6b7665";
 const INK = "#2b2116";
 
-// ── The canonical Headwaters mark ─────────────────────────────────────────────
-// A wordmark with a vertical evergreen rule on the left and a rust rule accent.
+// ── Eagle & ring mark ─────────────────────────────────────────────────────────
+
+function EagleMark({
+  bg = "light",
+  size = 120,
+}: {
+  bg?: "light" | "dark" | "rust";
+  size?: number;
+}) {
+  const bgColor = bg === "dark" ? EVERGREEN : bg === "rust" ? RUST : "white";
+  const borderColor =
+    bg === "light" ? "rgba(31,61,46,0.12)" : "transparent";
+
+  return (
+    <div
+      style={{
+        width: size + 32,
+        height: size + 32,
+        background: bgColor,
+        borderRadius: 10,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: `1px solid ${borderColor}`,
+        flexShrink: 0,
+      }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 200 200"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="100" cy="100" r="85" stroke="#C47A3A" strokeWidth="4.5" fill="none" opacity="0.82"/>
+        <g transform="translate(100,95)">
+          <g transform="scale(1.1)" fill="#2A3D2E">
+            <ellipse cx="0" cy="4" rx="11" ry="8"/>
+            <ellipse cx="11" cy="-4" rx="7" ry="6" fill="#EDE9E0"/>
+            <path d="M16,-3 L23,0 L16,2 Z" fill="#C47A3A"/>
+            <path d="M-10,5 L-26,12 L-26,5 L-16,0 Z" fill="#EDE9E0"/>
+            <path d="M-2,0 C-20,-24 -56,-32 -70,-20 C-56,-15 -32,-7 -10,4 Z"/>
+            <path d="M2,0 C20,-24 56,-32 70,-20 C56,-15 32,-7 10,4 Z"/>
+            <path d="M-68,-21 L-73,-27 M-62,-24 L-66,-31 M-56,-26 L-59,-33 M-50,-27 L-52,-34" stroke="#2A3D2E" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M68,-21 L73,-27 M62,-24 L66,-31 M56,-26 L59,-33 M50,-27 L52,-34" stroke="#2A3D2E" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M3,11 L1,20 M6,12 L7,21 M9,11 L12,19" stroke="#2A3D2E" strokeWidth="1.5" strokeLinecap="round"/>
+          </g>
+        </g>
+        <path d="M52,172 L57,159 L62,169 L67,154 L72,162 L78,148 L83,161 L89,145 L95,158 L100,141 L106,158 L111,145 L117,161 L122,148 L128,162 L134,154 L139,169 L143,159 L148,172 Z" fill="#2A3D2E" opacity="0.22"/>
+      </svg>
+    </div>
+  );
+}
+
+// ── The canonical Headwaters wordmark ──────────────────────────────────────────
 
 function HwMark({
   size = "full",
@@ -280,6 +333,27 @@ export default function LogoFormats() {
             Use the full wordmark wherever space allows; compact for
             tight contexts; icon for avatars and favicons.
           </p>
+
+          {/* Eagle & ring mark */}
+          <Section title="Eagle & ring mark — on light, dark, and rust">
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "1.25rem",
+                alignItems: "flex-start",
+              }}
+            >
+              {(["light", "dark", "rust"] as const).map((bg) => (
+                <div key={bg}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: MUTED, marginBottom: "0.4rem" }}>
+                    {bg === "light" ? "Light background" : bg === "dark" ? "Dark / Evergreen" : "Rust accent"}
+                  </p>
+                  <EagleMark bg={bg} size={120} />
+                </div>
+              ))}
+            </div>
+          </Section>
 
           {/* Full wordmark */}
           <Section title="Full wordmark — on light, dark, and rust">
