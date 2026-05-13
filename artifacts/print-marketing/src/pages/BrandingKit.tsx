@@ -1,5 +1,33 @@
 import { Link } from "wouter";
 
+// ── Eagle mark SVG (revised) ──────────────────────────────────────────────────
+// Open bowl arc (270°, gap at top) + eagle rising from the gap.
+function EagleMark({ size = 100, bg = "light" }: { size?: number; bg?: "light" | "dark" | "rust" }) {
+  const bgColor   = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "white";
+  const border    = bg === "light" ? "1px solid rgba(31,61,46,0.12)" : "none";
+  const fill      = bg === "light" ? "#1f3d2e" : "#f4ede0";
+  const arc       = bg === "rust"  ? "rgba(255,255,255,0.65)" : "#C47A3A";
+  const beak      = bg === "rust"  ? "rgba(255,255,255,0.8)"  : "#C47A3A";
+  const plumage   = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
+  return (
+    <div style={{ width: size + 24, height: size + 24, background: bgColor, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", border, flexShrink: 0 }}>
+      <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 49,67 A 72,72 0 1 1 151,67" stroke={arc} strokeWidth="3" fill="none" strokeLinecap="round"/>
+        <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z" fill={fill}/>
+        <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z" fill={fill}/>
+        <ellipse cx="100" cy="69" rx="9" ry="8" fill={fill}/>
+        <ellipse cx="100" cy="54" rx="7" ry="8" fill={fill}/>
+        <ellipse cx="101" cy="52" rx="5" ry="5.5" fill={plumage}/>
+        <path d="M 105,53 L 114,56 L 105,59 Z" fill={beak}/>
+        <path d="M 94,76 L 91,89 M 100,77 L 100,90 M 106,76 L 109,89" stroke={fill} strokeWidth="2" strokeLinecap="round"/>
+        <path d="M 10,37 L 3,28 M 18,34 L 12,25 M 27,31 L 22,22" stroke={fill} strokeWidth="2" strokeLinecap="round"/>
+        <path d="M 190,37 L 197,28 M 182,34 L 188,25 M 173,31 L 178,22" stroke={fill} strokeWidth="2" strokeLinecap="round"/>
+        <path d="M 30,178 L 34,165 L 39,174 L 44,159 L 50,168 L 57,154 L 64,166 L 71,151 L 78,163 L 86,148 L 93,160 L 100,145 L 107,160 L 114,148 L 121,163 L 129,151 L 136,166 L 143,154 L 150,168 L 156,159 L 161,174 L 166,165 L 170,178 Z" fill={fill} opacity="0.20"/>
+      </svg>
+    </div>
+  );
+}
+
 // ── Canonical brand tokens ────────────────────────────────────────────────────
 const EVERGREEN       = "#1f3d2e";
 const EVERGREEN_MID   = "#2e5c44";
@@ -154,11 +182,39 @@ export default function BrandingKit() {
       {/* Body */}
       <div style={{ maxWidth: 860, margin: "0 auto", padding: "3rem 1.5rem 5rem" }}>
 
-        {/* ── Wordmarks ───────────────────────────────────────────────────────── */}
+        {/* ── Marks ───────────────────────────────────────────────────────────── */}
         <SectionHead label="Marks" />
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: MUTED, marginBottom: "1.75rem", lineHeight: 1.6 }}>
           Three formats, three colourways. Use the full wordmark wherever space allows. Compact for headers, footers, and email signatures. Icon only for avatars and favicons.
         </p>
+
+        {/* Eagle mark — revised */}
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED, marginBottom: "0.5rem" }}>Eagle mark</p>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: MUTED, marginBottom: "0.9rem", lineHeight: 1.6 }}>
+          The community circle is an open bowl arc — a horizon, a nest, a gathering. The eagle sits at and rises from the gap. Rust arc for warmth; Evergreen eagle for land and strength.
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
+          {(["light", "dark", "rust"] as const).map(bg => (
+            <div key={bg}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: MUTED, marginBottom: "0.35rem", textTransform: "capitalize" }}>{bg === "light" ? "Light" : bg === "dark" ? "Evergreen" : "Rust"}</p>
+              <EagleMark size={100} bg={bg} />
+            </div>
+          ))}
+          {/* Small sizes */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", justifyContent: "flex-end" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: MUTED }}>Scale</p>
+            {[64, 48, 32].map(px => (
+              <div key={px} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.3rem" }}>
+                <EagleMark size={px - 8} bg="light" />
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.52rem", color: MUTED }}>{px}px</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ background: "rgba(31,61,46,0.06)", borderRadius: 6, padding: "0.75rem 1rem", marginBottom: "2rem", fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: MUTED, lineHeight: 1.65 }}>
+          <strong style={{ color: EVERGREEN }}>What changed:</strong> The ring is now an open arc (270°, 90° gap at top). The eagle breaks above the arc line rather than floating inside a closed bullseye. The shape reads as gathering and rising — not targeting.
+        </div>
 
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED, marginBottom: "0.75rem" }}>Full wordmark</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1.75rem" }}>
@@ -286,6 +342,68 @@ export default function BrandingKit() {
 
         <div style={{ background: "rgba(31,61,46,0.06)", borderRadius: 6, padding: "0.85rem 1.1rem", fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: MUTED, lineHeight: 1.65 }}>
           <strong style={{ color: EVERGREEN }}>CSS:</strong> Use <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label</code> (evergreen), <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--rust</code>, <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--blue</code>, <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--cream</code>. Available in all web artifacts.
+        </div>
+
+        <Rule />
+
+        {/* ── Photography ─────────────────────────────────────────────────────── */}
+        <SectionHead label="Photography" />
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: MUTED, marginBottom: "1.75rem", lineHeight: 1.6 }}>
+          Field photography from Northwestern Ontario. Use for hero banners, slide decks, and print covers. Source files at 1920×1080 and 2400×900 are in <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3, fontSize: "0.78rem" }}>shared/hero-images/</code> in the project root.
+        </p>
+
+        {[
+          {
+            file: `${import.meta.env.BASE_URL}hero-images/eagle-sky-1-1920x1080.jpg`,
+            label: "Eagle silhouette — blue sky, 1920×1080",
+            note: "Primary hero. Deep blue sky, clean silhouette. Best for slide covers and website hero banners.",
+            size: "1920×1080",
+          },
+          {
+            file: `${import.meta.env.BASE_URL}hero-images/eagle-sky-2-2400x900.jpg`,
+            label: "Eagle sky pair — banner crop, 2400×900",
+            note: "Banner ratio. Works across the full width of a printed page or wide web header.",
+            size: "2400×900",
+          },
+          {
+            file: `${import.meta.env.BASE_URL}hero-images/eagle-flight-1920x1080.jpg`,
+            label: "Eagle in flight — landscape, 1920×1080",
+            note: "Full-wingspan shot. Strong for print covers; pair with a dark overlay for text legibility.",
+            size: "1920×1080",
+          },
+          {
+            file: `${import.meta.env.BASE_URL}hero-images/eagle-pair-2400x900.jpg`,
+            label: "Eagle pair — wide crop, 2400×900",
+            note: "Second banner crop. Good for secondary hero positions and email headers.",
+            size: "2400×900",
+          },
+        ].map(({ file, label, note, size }) => (
+          <div key={file} style={{ marginBottom: "1.75rem" }}>
+            <div style={{ width: "100%", aspectRatio: "16/5", background: CREAM_DARK, borderRadius: 6, overflow: "hidden", marginBottom: "0.6rem", border: `1px solid rgba(31,61,46,0.1)` }}>
+              <img
+                src={file}
+                alt={label}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }}>
+              <div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", fontWeight: 600, color: INK, marginBottom: "0.15rem" }}>{label}</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: MUTED, lineHeight: 1.5 }}>{note}</p>
+              </div>
+              <a
+                href={file}
+                download
+                style={{ flexShrink: 0, fontFamily: "var(--font-sans)", fontSize: "0.68rem", fontWeight: 600, color: EVERGREEN, background: "rgba(31,61,46,0.08)", borderRadius: 4, padding: "0.3em 0.65em", textDecoration: "none", letterSpacing: "0.03em", whiteSpace: "nowrap" }}
+              >
+                ↓ {size}
+              </a>
+            </div>
+          </div>
+        ))}
+
+        <div style={{ background: "rgba(31,61,46,0.06)", borderRadius: 6, padding: "0.85rem 1.1rem", fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: MUTED, lineHeight: 1.65, marginBottom: "0.5rem" }}>
+          <strong style={{ color: EVERGREEN }}>Usage rules:</strong> Always credit the photographer when known. Overlay text needs a semi-transparent dark band or blur — never place white text directly on a sky photo without a contrast layer. Do not crop in a way that removes the horizon line; it anchors the sense of place.
         </div>
 
         <Rule />

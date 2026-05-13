@@ -6,7 +6,9 @@ const RUST = "#b85a3e";
 const MUTED = "#6b7665";
 const INK = "#2b2116";
 
-// ── Eagle & ring mark ─────────────────────────────────────────────────────────
+// ── Eagle mark (revised) ──────────────────────────────────────────────────────
+// The community circle is now an open bowl/horizon arc (270°, gap at top).
+// The eagle sits at and rises from that gap — gathering rather than targeting.
 
 function EagleMark({
   bg = "light",
@@ -18,6 +20,11 @@ function EagleMark({
   const bgColor = bg === "dark" ? EVERGREEN : bg === "rust" ? RUST : "white";
   const borderColor =
     bg === "light" ? "rgba(31,61,46,0.12)" : "transparent";
+  const eagleFill    = bg === "light" ? "#1f3d2e" : bg === "dark" ? CREAM : CREAM;
+  const arcStroke    = bg === "rust" ? "rgba(255,255,255,0.65)" : "#C47A3A";
+  const beakFill     = bg === "rust" ? "rgba(255,255,255,0.8)" : "#C47A3A";
+  const plumage      = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
+  const treeFill     = bg === "light" ? "#1f3d2e" : bg === "dark" ? CREAM : CREAM;
 
   return (
     <div
@@ -40,21 +47,39 @@ function EagleMark({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <circle cx="100" cy="100" r="85" stroke="#C47A3A" strokeWidth="4.5" fill="none" opacity="0.82"/>
-        <g transform="translate(100,95)">
-          <g transform="scale(1.1)" fill="#2A3D2E">
-            <ellipse cx="0" cy="4" rx="11" ry="8"/>
-            <ellipse cx="11" cy="-4" rx="7" ry="6" fill="#EDE9E0"/>
-            <path d="M16,-3 L23,0 L16,2 Z" fill="#C47A3A"/>
-            <path d="M-10,5 L-26,12 L-26,5 L-16,0 Z" fill="#EDE9E0"/>
-            <path d="M-2,0 C-20,-24 -56,-32 -70,-20 C-56,-15 -32,-7 -10,4 Z"/>
-            <path d="M2,0 C20,-24 56,-32 70,-20 C56,-15 32,-7 10,4 Z"/>
-            <path d="M-68,-21 L-73,-27 M-62,-24 L-66,-31 M-56,-26 L-59,-33 M-50,-27 L-52,-34" stroke="#2A3D2E" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M68,-21 L73,-27 M62,-24 L66,-31 M56,-26 L59,-33 M50,-27 L52,-34" stroke="#2A3D2E" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M3,11 L1,20 M6,12 L7,21 M9,11 L12,19" stroke="#2A3D2E" strokeWidth="1.5" strokeLinecap="round"/>
-          </g>
-        </g>
-        <path d="M52,172 L57,159 L62,169 L67,154 L72,162 L78,148 L83,161 L89,145 L95,158 L100,141 L106,158 L111,145 L117,161 L122,148 L128,162 L134,154 L139,169 L143,159 L148,172 Z" fill="#2A3D2E" opacity="0.22"/>
+        {/* Community circle arc — open bowl, 270°, gap at top where eagle rises */}
+        {/* Center (100,118), radius 72. Endpoints: NW(49,67) and NE(151,67) */}
+        <path d="M 49,67 A 72,72 0 1 1 151,67"
+              stroke={arcStroke} strokeWidth="3" fill="none" strokeLinecap="round"/>
+
+        {/* Eagle silhouette — rising from the community circle */}
+        {/* Left wing */}
+        <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z"
+              fill={eagleFill}/>
+        {/* Right wing */}
+        <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z"
+              fill={eagleFill}/>
+        {/* Body */}
+        <ellipse cx="100" cy="69" rx="9" ry="8" fill={eagleFill}/>
+        {/* Head/neck */}
+        <ellipse cx="100" cy="54" rx="7" ry="8" fill={eagleFill}/>
+        {/* White head plumage */}
+        <ellipse cx="101" cy="52" rx="5" ry="5.5" fill={plumage}/>
+        {/* Beak */}
+        <path d="M 105,53 L 114,56 L 105,59 Z" fill={beakFill}/>
+        {/* Tail feathers */}
+        <path d="M 94,76 L 91,89 M 100,77 L 100,90 M 106,76 L 109,89"
+              stroke={eagleFill} strokeWidth="2" strokeLinecap="round"/>
+        {/* Left wingtip primaries */}
+        <path d="M 10,37 L 3,28 M 18,34 L 12,25 M 27,31 L 22,22"
+              stroke={eagleFill} strokeWidth="2" strokeLinecap="round"/>
+        {/* Right wingtip primaries */}
+        <path d="M 190,37 L 197,28 M 182,34 L 188,25 M 173,31 L 178,22"
+              stroke={eagleFill} strokeWidth="2" strokeLinecap="round"/>
+
+        {/* Treeline — subtle landscape at base of arc */}
+        <path d="M 30,178 L 34,165 L 39,174 L 44,159 L 50,168 L 57,154 L 64,166 L 71,151 L 78,163 L 86,148 L 93,160 L 100,145 L 107,160 L 114,148 L 121,163 L 129,151 L 136,166 L 143,154 L 150,168 L 156,159 L 161,174 L 166,165 L 170,178 Z"
+              fill={treeFill} opacity="0.20"/>
       </svg>
     </div>
   );
@@ -334,8 +359,8 @@ export default function LogoFormats() {
             tight contexts; icon for avatars and favicons.
           </p>
 
-          {/* Eagle & ring mark */}
-          <Section title="Eagle & ring mark — on light, dark, and rust">
+          {/* Eagle mark */}
+          <Section title="Eagle mark — rising from the community circle (light, dark, rust)">
             <div
               style={{
                 display: "flex",
