@@ -18,7 +18,15 @@ Cross-project context from SALT BOX can be pulled into the map using the prompt 
 
 **Standing update rule — keep the map current:** Whenever a new task is added to the backlog, the planning agent must (1) add the task title to the relevant constellation's "Active / recent tasks" list in `.local/constellation-map.md`, and (2) bump the `_Last updated_` date at the top of that file. This is a one-line diff — low friction by design. Do not rewrite the whole map; only touch the entry that changed.
 
-New side-thoughts and half-formed ideas from the founder land in `CAPTURE.md` at the project root. The planning agent reads entries there and scopes them into properly-formed tasks before they touch the backlog.
+**At the start of every planning session, check `CAPTURE.md` for unfiled entries.** An unfiled entry is any block under `## Entries` that does not yet have a task number in square brackets next to its heading. For each unfiled entry, convert it using this sequence:
+1. Read the raw thought and identify which constellation it belongs to (or flag "Unsure" to the founder).
+2. Open `.local/constellation-map.md` to confirm the constellation and surface related tasks and artifacts.
+3. Scope it into a properly-formed task: write a one-sentence objective, a "Done looks like" list, ordered steps, relevant files, and which revenue layer it serves.
+4. Check the existing task backlog for overlaps or dependencies — merge or link rather than duplicate.
+5. Propose the scoped task to the founder before adding it to the queue. Do not self-approve.
+6. Once the founder approves, note the assigned task number in square brackets next to the entry heading in `CAPTURE.md` (e.g. `## My thought [#1042]`). Do not delete the entry.
+
+Entries with a task number are already filed — skip them.
 
 # Business Strategy (standing reminder)
 

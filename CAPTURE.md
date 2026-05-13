@@ -24,18 +24,25 @@ One entry per block. Copy the template, fill it in, leave the rest blank if you'
 ---
 ```
 
+Once the planning agent files this entry as a task, it will add the task number in square brackets next to the heading, like:
+`## My thought [#1042]`
+A bracketed number means it's filed — no action needed from you.
+
 ---
 
 ## How the planning agent uses this
 
-When a new entry appears here, the planning agent:
-1. Reads the raw thought and the constellation it's tagged to
-2. Opens `.local/constellation-map.md` to confirm the constellation and find related tasks
-3. Scopes the entry into a properly-formed task: objective, done-looks-like, steps, relevant files, revenue layer
-4. Checks against the existing task backlog for overlaps
-5. Proposes the task to the founder before adding it to the queue
+At the start of every planning session, the planning agent checks this file for unfiled entries — any entry under `## Entries` that does not yet have a task number in square brackets next to its heading.
 
-Entries are not deleted from this file — they accumulate as a log. Once an entry becomes a task, note the task number in square brackets next to the heading.
+For each unfiled entry, the agent:
+1. Reads the raw thought and identifies which constellation it belongs to (or flags "Unsure" to the founder)
+2. Opens `.local/constellation-map.md` to confirm the constellation and surface related tasks and artifacts
+3. Scopes it into a properly-formed task: one-sentence objective, done-looks-like checklist, ordered steps, relevant files, and which revenue layer it serves
+4. Checks the existing task backlog for overlaps or dependencies — merges or links rather than duplicates
+5. Proposes the scoped task to the founder before adding it to the queue — does not self-approve
+6. Once the founder approves, notes the task number in square brackets next to the entry heading here (e.g. `## My thought [#1042]`)
+
+Entries are never deleted — they accumulate as a log. Entries with a task number are already filed and are skipped in future sessions.
 
 ---
 
