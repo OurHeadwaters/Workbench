@@ -27,6 +27,7 @@ import NorthernEconomicTools from "@/pages/NorthernEconomicTools";
 import InternalScopePlan from "@/pages/InternalScopePlan";
 import BrandingKit from "@/pages/BrandingKit";
 import Privacy from "@/pages/Privacy";
+import CoopComplianceNotice from "@/pages/CoopComplianceNotice";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -59,6 +60,7 @@ function Router() {
       <Route path="/internal-scope-plan" component={InternalScopePlan} />
       <Route path="/brand" component={BrandingKit} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/coop-compliance-notice" component={CoopComplianceNotice} />
       <Route component={NotFound} />
     </Switch>
   );

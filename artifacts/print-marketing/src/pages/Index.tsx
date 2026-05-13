@@ -162,6 +162,13 @@ const pieces = [
     desc: "A thinking tool — not a final deliverable. Explores how the Codetry workflow discipline (trial-first, bounded scope, transparent pricing, handover as exit) maps onto reserve labour pools, helping hands arrangements, and community work-share. Includes a worked example, five tools it points toward, and open questions.",
     icon: "🛠️",
   },
+  {
+    href: "/coop-compliance-notice",
+    title: "807 Co-op — Financial Statement Compliance Notice (2025)",
+    label: "807 Co-op · Compliance",
+    desc: "Formal compliance notice addressed to the 807 Food Co-operative Inc. board, dated May 23, 2026. Covers two required actions before the AGM: CPA engagement letter for the 2025 compilation, and confirming the members' waiver extraordinary resolution. Print-ready letter (8.5×11).",
+    icon: "📑",
+  },
 ];
 
 export default function Index() {
