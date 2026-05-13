@@ -8,6 +8,16 @@ Key capabilities include:
 - A hybrid app and slide deck for practitioner operating plans, structured around a deal-flow approach (Idea → Pitch → Contract → Fulfillment → Impact) with detailed weekly steps and cost review mechanisms.
 - An Expo (React Native + web) reader for the "Codetry Practitioner's Handbook," installable as a PWA, Expo Go app, or native binary, ensuring offline access.
 
+# Constellation Context (standing instruction)
+
+**Every agent reads `.local/constellation-map.md` before scoping or starting any task.** Before writing a plan, name which constellation(s) the task belongs to. If the task crosses two constellations, name both and note the seam. If a task doesn't belong to any named constellation, flag it to the founder before proceeding.
+
+The constellation map is the connective layer: it tells you why the work matters, which revenue layer it serves, what other work it connects to, and which standing instructions protect it. Executing without reading it produces isolated tasks instead of compounding ones.
+
+Cross-project context from SALT BOX can be pulled into the map using the prompt at `.local/docs/saltbox-sync-prompt.md`. Sync is manual (copy-paste); automated sync is out of scope.
+
+New side-thoughts and half-formed ideas from the founder land in `CAPTURE.md` at the project root. The planning agent reads entries there and scopes them into properly-formed tasks before they touch the backlog.
+
 # Business Strategy (standing reminder)
 
 **Target markets:** Aboriginal organizations (band councils, First Nations EDCs, health authorities, friendship centres, Métis orgs) and co-ops. Both segments are underserved, access government funding streams, and make collective decisions — the bounded-scope trial model fits both perfectly. The niche is specific enough to raise rates as the track record builds.
