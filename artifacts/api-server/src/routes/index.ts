@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
 import storageRouter from "./storage";
+import mediaRouter from "./media";
 import libraryRouter from "./library";
 import checkinRouter from "./checkin";
 import bookkeeperRouter from "./bookkeeper";
@@ -20,6 +21,7 @@ const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(storageRouter);
+router.use(mediaRouter);
 router.use("/pdf", pdfRouter);
 router.use("/library", libraryRouter);
 router.use("/check-in", checkinRouter);

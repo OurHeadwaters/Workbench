@@ -53,4 +53,9 @@ if (fs.existsSync(printMarketingDist)) {
   });
 }
 
+// Serve the media manager UI at /media/ (internal workspace tool)
+// Use import.meta.url so the path works regardless of CWD in dev or prod.
+const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).pathname;
+app.get(["/media", "/media/"], (_req, res) => res.sendFile(mediaManagerHtml));
+
 export default app;

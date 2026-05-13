@@ -8,3 +8,4 @@ export * from "./deadhead";
 export * from "./communityIntake";
 export * from "./sarge";
 export * from "./subcontractSubmission";
+export * from "./media";

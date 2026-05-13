@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Headwaters Media Library</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3350;
+      --accent: #6366f1;
+      --accent-dim: rgba(99,102,241,0.15);
+      --accent-hover: #818cf8;
+      --text: #e2e8f0;
+      --text-muted: #8892b0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --radius: 10px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header svg { flex-shrink: 0; }
+
+    header h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    header .badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface);
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .drop-zone.dragover .drop-icon { transform: scale(1.1); }
+
+    .drop-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--accent-dim);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      transition: transform 0.2s;
+    }
+
+    .drop-zone h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .drop-zone p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .upload-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      font-family: var(--font);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    input[type="file"] { display: none; }
+
+    /* Upload progress */
+    .upload-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .upload-panel.active { display: block; }
+
+    .upload-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .upload-header h3 { font-size: 14px; font-weight: 600; }
+
+    .upload-counter {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .upload-counter span { color: var(--accent); font-weight: 600; }
+
+    .overall-bar {
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .overall-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .file-list {
+      max-height: 220px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface2);
+      border-radius: 6px;
+    }
+
+    .file-item-name {
+      flex: 1;
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-item-bar {
+      width: 80px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .file-item-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.2s;
+      width: 0%;
+    }
+
+    .file-item-bar-fill.uploading { background: var(--accent); }
+    .file-item-bar-fill.done { background: var(--success); }
+    .file-item-bar-fill.error { background: var(--danger); }
+
+    .file-status {
+      font-size: 10px;
+      font-weight: 500;
+      width: 44px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .file-status.uploading { color: var(--accent); }
+    .file-status.done { color: var(--success); }
+    .file-status.error { color: var(--danger); }
+    .file-status.pending { color: var(--text-muted); }
+
+    /* Gallery toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+      padding: 9px 12px 9px 38px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .gallery-count {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Gallery grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .photo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+      position: relative;
+    }
+
+    .photo-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .photo-thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+      background: var(--surface2);
+    }
+
+    .photo-thumb.broken {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .photo-info {
+      padding: 10px;
+    }
+
+    .photo-name {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 8px;
+    }
+
+    .photo-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-copy {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 11px;
+      border-radius: 6px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: var(--accent-hover);
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .btn-copy:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-copy.copied { background: var(--success); border-color: var(--success); color: #fff; }
+
+    .btn-delete {
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-delete:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.1); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg { margin-bottom: 16px; opacity: 0.4; }
+    .empty-state h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .empty-state p { font-size: 13px; }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 999;
+    }
+
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      min-width: 200px;
+      animation: slideIn 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    @keyframes slideIn {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <rect width="28" height="28" rx="8" fill="#6366f1" fill-opacity="0.15"/>
+    <path d="M6 20l5-6 4 4 3-4 4 6H6z" fill="#818cf8" fill-opacity="0.6"/>
+    <circle cx="18" cy="10" r="2.5" fill="#818cf8"/>
+  </svg>
+  <h1>Headwaters Media Library</h1>
+  <span class="badge" id="totalBadge">Loading…</span>
+</header>
+
+<main>
+  <!-- Drop Zone -->
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon">
+      <svg width="24" height="24" fill="none" stroke="#818cf8" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+      </svg>
+    </div>
+    <h2>Drop photos here to upload</h2>
+    <p>Drag a folder or individual files — there's no batch limit</p>
+    <div class="upload-btns">
+      <button class="btn btn-primary" id="btnFolder" onclick="document.getElementById('inputFolder').click()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg>
+        Select Folder
+      </button>
+      <button class="btn btn-secondary" onclick="document.getElementById('inputFiles').click()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+        Select Files
+      </button>
+    </div>
+    <input type="file" id="inputFolder" multiple accept="image/*" webkitdirectory />
+    <input type="file" id="inputFiles" multiple accept="image/*" />
+  </div>
+
+  <!-- Upload Progress Panel -->
+  <div class="upload-panel" id="uploadPanel">
+    <div class="upload-header">
+      <h3>Uploading</h3>
+      <span class="upload-counter"><span id="doneCount">0</span> / <span id="totalCount">0</span> uploaded</span>
+    </div>
+    <div class="overall-bar"><div class="overall-bar-fill" id="overallBar"></div></div>
+    <div class="file-list" id="fileList"></div>
+  </div>
+
+  <!-- Gallery Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" stroke="#8892b0" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803a7.5 7.5 0 0010.607 0z"/>
+      </svg>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search by filename…" />
+    </div>
+    <span class="gallery-count" id="galleryCount"></span>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" id="gallery"></div>
+</main>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  const BASE = '';
+  const API = BASE + '/api';
+
+  // --- State ---
+  let allAssets = [];
+  let searchQuery = '';
+
+  // --- Utilities ---
+  function toast(msg, type = 'success') {
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = type === 'success'
+      ? `<svg width="14" height="14" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>${msg}`
+      : `<svg width="14" height="14" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>${msg}`;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+
+  function assetUrl(objectPath) {
+    // objectPath looks like /objects/uploads/some-uuid
+    // Serve via /api/media/objects/<rest>
+    const rest = objectPath.replace(/^\/objects\//, '');
+    return `${API}/media/objects/${rest}`;
+  }
+
+  function copyableUrl(objectPath) {
+    // Absolute URL so it's usable in other artifacts
+    return `${location.origin}${API}/media/objects/${objectPath.replace(/^\/objects\//, '')}`;
+  }
+
+  // --- Gallery rendering ---
+  function renderGallery() {
+    const q = searchQuery.toLowerCase();
+    const filtered = q
+      ? allAssets.filter(a => a.filename.toLowerCase().includes(q))
+      : allAssets;
+
+    const gallery = document.getElementById('gallery');
+    const count = document.getElementById('galleryCount');
+    const badge = document.getElementById('totalBadge');
+
+    badge.textContent = `${allAssets.length} photo${allAssets.length !== 1 ? 's' : ''}`;
+    count.textContent = filtered.length === allAssets.length
+      ? `${allAssets.length} photos`
+      : `${filtered.length} of ${allAssets.length} photos`;
+
+    if (filtered.length === 0) {
+      gallery.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+          </svg>
+          <h3>${q ? 'No matches' : 'No photos yet'}</h3>
+          <p>${q ? `Nothing matches "${searchQuery}"` : 'Drop a folder or select files above to get started'}</p>
+        </div>`;
+      return;
+    }
+
+    gallery.innerHTML = filtered.map(a => `
+      <div class="photo-card" data-id="${a.id}">
+        <img
+          class="photo-thumb"
+          src="${assetUrl(a.objectPath)}"
+          alt="${a.filename}"
+          loading="lazy"
+          onerror="this.outerHTML='<div class=\\'photo-thumb broken\\'>No preview</div>'"
+        />
+        <div class="photo-info">
+          <div class="photo-name" title="${a.filename}">${a.filename}</div>
+          <div class="photo-actions">
+            <button class="btn-copy" onclick="copyUrl('${a.id}', '${a.objectPath}', this)">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/></svg>
+              Copy URL
+            </button>
+            <button class="btn-delete" onclick="deleteAsset('${a.id}', this)" title="Delete">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function copyUrl(id, objectPath, btn) {
+    const url = copyableUrl(objectPath);
+    navigator.clipboard.writeText(url).then(() => {
+      btn.classList.add('copied');
+      btn.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/></svg> Copy URL`;
+      }, 2000);
+    });
+  }
+
+  async function deleteAsset(id, btn) {
+    const card = btn.closest('.photo-card');
+    if (!confirm('Delete this photo?')) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${API}/media/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed');
+      allAssets = allAssets.filter(a => a.id !== id);
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      card.style.transition = 'all 0.2s';
+      setTimeout(() => renderGallery(), 200);
+      toast('Photo deleted');
+    } catch {
+      toast('Delete failed', 'error');
+      btn.disabled = false;
+    }
+  }
+
+  // --- Load gallery ---
+  async function loadAssets() {
+    try {
+      const res = await fetch(`${API}/media/list`);
+      const data = await res.json();
+      allAssets = data.assets || [];
+      renderGallery();
+    } catch (err) {
+      console.error('Failed to load assets', err);
+    }
+  }
+
+  // --- Upload logic ---
+  const BATCH_SIZE = 10;
+
+  async function uploadFiles(files) {
+    const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) { toast('No image files found', 'error'); return; }
+
+    const panel = document.getElementById('uploadPanel');
+    const fileList = document.getElementById('fileList');
+    const doneCountEl = document.getElementById('doneCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const overallBar = document.getElementById('overallBar');
+
+    panel.classList.add('active');
+    fileList.innerHTML = '';
+    totalCountEl.textContent = imageFiles.length;
+    doneCountEl.textContent = 0;
+
+    // Build item elements
+    const items = imageFiles.map((file, i) => {
+      const el = document.createElement('div');
+      el.className = 'file-item';
+      el.innerHTML = `
+        <span class="file-item-name">${file.name}</span>
+        <div class="file-item-bar"><div class="file-item-bar-fill" id="bar-${i}"></div></div>
+        <span class="file-status pending" id="status-${i}">queued</span>
+      `;
+      fileList.appendChild(el);
+      return { file, i };
+    });
+
+    let done = 0;
+
+    async function uploadOne({ file, i }) {
+      const barFill = document.getElementById(`bar-${i}`);
+      const status = document.getElementById(`status-${i}`);
+      barFill.className = 'file-item-bar-fill uploading';
+      status.className = 'file-status uploading';
+      status.textContent = '...';
+
+      try {
+        // Step 1: Get presigned URL
+        const urlRes = await fetch(`${API}/media/upload-url`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+        });
+        if (!urlRes.ok) throw new Error('URL request failed');
+        const { uploadURL, objectPath } = await urlRes.json();
+
+        // Step 2: Upload directly to GCS with XHR for progress
+        await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', uploadURL);
+          xhr.setRequestHeader('Content-Type', file.type);
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              const pct = Math.round((e.loaded / e.total) * 100);
+              barFill.style.width = `${pct}%`;
+              status.textContent = `${pct}%`;
+            }
+          };
+          xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`GCS ${xhr.status}`));
+          xhr.onerror = () => reject(new Error('Network error'));
+          xhr.send(file);
+        });
+
+        // Step 3: Register in DB
+        const regRes = await fetch(`${API}/media/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            filename: file.name,
+            objectPath,
+            contentType: file.type,
+            sizeBytes: file.size,
+          }),
+        });
+        if (!regRes.ok) throw new Error('Register failed');
+        const { asset } = await regRes.json();
+        allAssets.unshift(asset);
+
+        barFill.className = 'file-item-bar-fill done';
+        barFill.style.width = '100%';
+        status.className = 'file-status done';
+        status.textContent = 'done';
+      } catch (err) {
+        barFill.className = 'file-item-bar-fill error';
+        barFill.style.width = '100%';
+        status.className = 'file-status error';
+        status.textContent = 'error';
+        console.error(`Upload failed: ${file.name}`, err);
+      }
+
+      done++;
+      doneCountEl.textContent = done;
+      overallBar.style.width = `${Math.round((done / imageFiles.length) * 100)}%`;
+      renderGallery();
+    }
+
+    // Process in batches of BATCH_SIZE
+    for (let b = 0; b < items.length; b += BATCH_SIZE) {
+      const batch = items.slice(b, b + BATCH_SIZE);
+      await Promise.all(batch.map(uploadOne));
+    }
+
+    toast(`${done} photo${done !== 1 ? 's' : ''} uploaded`);
+  }
+
+  // --- Event wiring ---
+  document.getElementById('inputFolder').addEventListener('change', e => uploadFiles(e.target.files));
+  document.getElementById('inputFiles').addEventListener('change', e => uploadFiles(e.target.files));
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderGallery();
+  });
+
+  const dropZone = document.getElementById('dropZone');
+
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', e => {
+    if (!dropZone.contains(e.relatedTarget)) dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) uploadFiles(files);
+  });
+
+  // Prevent clicks on buttons from triggering drop zone
+  dropZone.addEventListener('click', e => {
+    if (e.target.closest('.btn')) return;
+    document.getElementById('inputFiles').click();
+  });
+
+  // --- Init ---
+  loadAssets();
+</script>
+</body>
+</html>
