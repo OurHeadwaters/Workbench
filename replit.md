@@ -23,6 +23,8 @@ Key capabilities include:
 
 # User Preferences
 
+**Photography — standing rule:** All photos used across every artifact must come from the founder's own library. No stock photos, no AI-generated images used as photos. Nature and outdoor activity photos are fair game to use freely. Any photo that includes a recognizable face must be checked with the user before use. The founder will add photos to the project as they go; use what's available and ask when something specific is needed.
+
 **Design — section headings:** Always use bold filled bars for section headings, never subtle small-caps or muted text labels. The pattern: solid background color (EVERGREEN, RUST, or BLUE depending on context), rounded corners (3px), padding ~0.045in vertical / 0.12–0.14in horizontal, `display: inline-block`, uppercase text at 0.62–0.72rem, fontWeight 800, cream/white color, letterSpacing 0.13em. Think store aisle signs — readable at a glance, not a footnote.
 
 I prefer iterative development with clear validation steps. If a typecheck fails on a critical package, it should block task completion. I need to be able to regenerate API hooks and Zod schemas on demand. Database schema changes should be easy to push in development. I want to ensure that specific hardcoded values for corridor keys are not accidentally reintroduced into the Deer Lake store plan. I also require a mechanism to automatically update a bundled snapshot of the constellation manifest in the Codetry Handbook whenever the canonical source changes, and for typecheck/build processes to fail if these diverge, showing an actionable diff.
