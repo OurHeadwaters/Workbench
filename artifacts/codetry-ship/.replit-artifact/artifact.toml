@@ -28,6 +28,11 @@ to = "/"
 status = 301
 
 [[services.production.redirects]]
+from = "/codetry-ship/"
+to = "/"
+status = 301
+
+[[services.production.redirects]]
 from = "/codetry-ship/*"
 to = "/:splat"
 status = 301
