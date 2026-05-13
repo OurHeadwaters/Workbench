@@ -2,6 +2,14 @@ import { Link } from "wouter";
 
 const pieces = [
   {
+    href: "/overview",
+    title: "Project Overview — All 7 Headwaters Tools",
+    label: "Start here",
+    desc: "A plain-language visual guide showing what every Headwaters tool does and how they all connect. Open on your phone or print as a one-pager.",
+    icon: "🗺️",
+    highlight: true,
+  },
+  {
     href: "/brand",
     title: "Brand Kit",
     label: "Reference",
@@ -194,18 +202,28 @@ export default function Index() {
             <Link
               key={p.href}
               href={p.href}
-              style={{ display: "block", background: "white", border: "1px solid rgba(31,61,46,0.12)", borderRadius: 8, padding: "1.25rem 1.5rem", textDecoration: "none", color: "inherit", transition: "box-shadow 0.15s, border-color 0.15s", cursor: "pointer" }}
+              style={{
+                display: "block",
+                background: (p as any).highlight ? "var(--evergreen)" : "white",
+                border: (p as any).highlight ? "none" : "1px solid rgba(31,61,46,0.12)",
+                borderRadius: 8,
+                padding: "1.25rem 1.5rem",
+                textDecoration: "none",
+                color: "inherit",
+                transition: "box-shadow 0.15s, border-color 0.15s",
+                cursor: "pointer",
+              }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
                 <span style={{ fontSize: "1.8rem", lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{p.icon}</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem" }}>
-                    <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 600, color: "var(--ink)" }}>{p.title}</h2>
-                    <span style={{ background: "var(--cream)", color: "var(--muted)", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.15rem 0.5rem", borderRadius: 3 }}>{p.label}</span>
+                    <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 600, color: (p as any).highlight ? "white" : "var(--ink)" }}>{p.title}</h2>
+                    <span style={{ background: (p as any).highlight ? "rgba(255,255,255,0.15)" : "var(--cream)", color: (p as any).highlight ? "rgba(255,255,255,0.85)" : "var(--muted)", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.15rem 0.5rem", borderRadius: 3 }}>{p.label}</span>
                   </div>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.55 }}>{p.desc}</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.875rem", color: (p as any).highlight ? "rgba(255,255,255,0.78)" : "var(--muted)", lineHeight: 1.55 }}>{p.desc}</p>
                 </div>
-                <span style={{ color: "var(--evergreen-light)", fontSize: "1.2rem", flexShrink: 0, marginTop: 2 }}>→</span>
+                <span style={{ color: (p as any).highlight ? "rgba(255,255,255,0.7)" : "var(--evergreen-light)", fontSize: "1.2rem", flexShrink: 0, marginTop: 2 }}>→</span>
               </div>
             </Link>
           ))}

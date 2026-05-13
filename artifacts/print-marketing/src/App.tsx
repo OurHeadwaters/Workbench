@@ -28,6 +28,7 @@ import InternalScopePlan from "@/pages/InternalScopePlan";
 import BrandingKit from "@/pages/BrandingKit";
 import Privacy from "@/pages/Privacy";
 import CoopComplianceNotice from "@/pages/CoopComplianceNotice";
+import ProjectOverview from "@/pages/ProjectOverview";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/brand" component={BrandingKit} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/coop-compliance-notice" component={CoopComplianceNotice} />
+      <Route path="/overview" component={ProjectOverview} />
       <Route component={NotFound} />
     </Switch>
   );
