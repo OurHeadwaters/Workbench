@@ -6,7 +6,7 @@
  *
  * ADHD-first design:
  *  1. Scannable sections, clear labels, no clutter.
- *  2. Actuals + notes persisted to localStorage — enter once, available always.
+ *  2. Actuals + notes persisted server-side via the API — durable, any device.
  *  3. Summary bar stays pinned at the top so runway is always visible.
  *  4. Deer Lake items flagged as excluded so the budget stays honest.
  *  5. Notes field hidden behind an expand toggle to keep the list scannable.
@@ -201,39 +201,36 @@ const SECTIONS: Section[] = [
 const DEER_LAKE_NOTE =
   "Deer Lake hardware, travel, and site costs are excluded from this budget — those are covered by Deer Lake directly as part of the Northern Band engagement.";
 
-// ── localStorage helpers ──────────────────────────────────────────────────────
+// ── API helpers ───────────────────────────────────────────────────────────────
 
-const LS_KEY_ACTUALS = "pgv2.startup-expenses.actuals";
-const LS_KEY_NOTES = "pgv2.startup-expenses.notes";
+const API_BASE = "/api/pgv2/startup-expenses";
 
-function loadActuals(): Record<string, string> {
-  if (typeof window === "undefined") return {};
+async function fetchExpenses(): Promise<{
+  actuals: Record<string, string>;
+  notes: Record<string, string>;
+}> {
   try {
-    const raw = window.localStorage.getItem(LS_KEY_ACTUALS);
-    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+    const res = await fetch(API_BASE);
+    if (!res.ok) return { actuals: {}, notes: {} };
+    return res.json();
   } catch {
-    return {};
+    return { actuals: {}, notes: {} };
   }
 }
 
-function saveActuals(actuals: Record<string, string>) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(LS_KEY_ACTUALS, JSON.stringify(actuals));
-}
-
-function loadNotes(): Record<string, string> {
-  if (typeof window === "undefined") return {};
+async function persistExpenses(
+  actuals: Record<string, string>,
+  notes: Record<string, string>
+): Promise<void> {
   try {
-    const raw = window.localStorage.getItem(LS_KEY_NOTES);
-    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+    await fetch(API_BASE, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ actuals, notes }),
+    });
   } catch {
-    return {};
+    // silent — data is still in React state; next change will retry
   }
-}
-
-function saveNotes(notes: Record<string, string>) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(LS_KEY_NOTES, JSON.stringify(notes));
 }
 
 // ── Math helpers ──────────────────────────────────────────────────────────────
@@ -931,30 +928,55 @@ function SectionCard({
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
+const SAVE_DEBOUNCE_MS = 800;
+
 export function StartupExpensesPage() {
   const [actuals, setActuals] = useState<Record<string, string>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
 
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scheduleSave = useCallback(
+    (nextActuals: Record<string, string>, nextNotes: Record<string, string>) => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(() => {
+        persistExpenses(nextActuals, nextNotes);
+      }, SAVE_DEBOUNCE_MS);
+    },
+    []
+  );
+
   useEffect(() => {
-    setActuals(loadActuals());
-    setNotes(loadNotes());
+    fetchExpenses().then(({ actuals: a, notes: n }) => {
+      setActuals(a);
+      setNotes(n);
+    });
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, []);
 
-  const handleActualChange = useCallback((id: string, value: string) => {
-    setActuals((prev) => {
-      const next = { ...prev, [id]: value };
-      saveActuals(next);
-      return next;
-    });
-  }, []);
+  const handleActualChange = useCallback(
+    (id: string, value: string) => {
+      setActuals((prev) => {
+        const next = { ...prev, [id]: value };
+        scheduleSave(next, notes);
+        return next;
+      });
+    },
+    [notes, scheduleSave]
+  );
 
-  const handleNoteChange = useCallback((id: string, value: string) => {
-    setNotes((prev) => {
-      const next = { ...prev, [id]: value };
-      saveNotes(next);
-      return next;
-    });
-  }, []);
+  const handleNoteChange = useCallback(
+    (id: string, value: string) => {
+      setNotes((prev) => {
+        const next = { ...prev, [id]: value };
+        scheduleSave(actuals, next);
+        return next;
+      });
+    },
+    [actuals, scheduleSave]
+  );
 
   return (
     <div className="space-y-6 pb-12" data-testid="startup-expenses-page">

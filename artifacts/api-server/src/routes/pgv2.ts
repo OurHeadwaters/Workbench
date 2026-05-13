@@ -1,14 +1,70 @@
 /**
- * pgv2 routes — Practitioner's Guide V2 AI helpers.
+ * pgv2 routes — Practitioner's Guide V2 helpers.
  *
- * POST /pgv2/rewrite — AI rewrites a guide section based on a plain-English instruction.
+ * POST /pgv2/rewrite             — AI rewrites a guide section.
+ * GET  /pgv2/startup-expenses    — Load persisted actuals + notes.
+ * PUT  /pgv2/startup-expenses    — Save actuals + notes (full replace).
  */
 
 import { Router, type IRouter } from "express";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { logger } from "../lib/logger";
+import fs from "fs";
+import path from "path";
 
 const router: IRouter = Router();
+
+// ── Startup-expenses persistence ──────────────────────────────────────────────
+
+const DATA_DIR = path.resolve(process.cwd(), "data");
+const EXPENSES_FILE = path.join(DATA_DIR, "pgv2-startup-expenses.json");
+
+interface ExpensesPayload {
+  actuals: Record<string, string>;
+  notes: Record<string, string>;
+}
+
+function readExpenses(): ExpensesPayload {
+  try {
+    if (!fs.existsSync(EXPENSES_FILE)) return { actuals: {}, notes: {} };
+    const raw = fs.readFileSync(EXPENSES_FILE, "utf-8");
+    return JSON.parse(raw) as ExpensesPayload;
+  } catch {
+    return { actuals: {}, notes: {} };
+  }
+}
+
+function writeExpenses(data: ExpensesPayload): void {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(EXPENSES_FILE, JSON.stringify(data, null, 2), "utf-8");
+}
+
+router.get("/startup-expenses", (_req, res) => {
+  res.json(readExpenses());
+});
+
+router.put("/startup-expenses", (req, res) => {
+  const body = req.body as Partial<ExpensesPayload>;
+  if (
+    !body ||
+    typeof body.actuals !== "object" ||
+    typeof body.notes !== "object"
+  ) {
+    res.status(400).json({ error: "actuals and notes objects are required" });
+    return;
+  }
+
+  const payload: ExpensesPayload = {
+    actuals: body.actuals as Record<string, string>,
+    notes: body.notes as Record<string, string>,
+  };
+
+  writeExpenses(payload);
+  logger.info("pgv2 startup-expenses saved");
+  res.json({ ok: true });
+});
+
+// ── AI section rewrite ────────────────────────────────────────────────────────
 
 router.post("/rewrite", async (req, res) => {
   const { sectionId, currentText, instruction } = req.body as {
