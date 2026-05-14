@@ -92,13 +92,13 @@ export function HomePage() {
             className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3"
             data-testid="home-title"
           >
-            Food systems planning<br className="hidden sm:block" /> for northern communities.
+            Your community store,<br className="hidden sm:block" /> open and running.
           </h1>
           <p
             className="font-serif text-lg italic mb-8 opacity-75"
             data-testid="home-tagline"
           >
-            Practitioner-built tools that fit the team you have — not the team the software assumes.
+            Food systems planning for northern communities — practitioner-built, flat fee, no retainer required.
           </p>
 
           {/* Two real buttons side by side */}
@@ -109,7 +109,7 @@ export function HomePage() {
               style={{ background: "hsl(var(--accent))", color: "hsl(38 36% 96%)" }}
               data-testid="hero-cta-primary"
             >
-              Start a conversation →
+              Start a conversation (short form) →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}
@@ -369,6 +369,50 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
+        {/* ── social proof ── */}
+        <section data-testid="home-testimonial">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            from the communities
+          </p>
+          <blockquote
+            className="rounded-md border-l-4 pl-6 py-2"
+            style={{ borderColor: "hsl(var(--accent))" }}
+            data-testid="testimonial-quote"
+          >
+            <p
+              className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5"
+            >
+              {/* [TODO: replace with real quote from community contact — Chief, Band Manager, or co-op board chair] */}
+              "Headwaters didn't hand us a binder and leave. We got a plan the council could actually read, numbers we could defend, and a store we could open. That's what we asked for — that's what we got."
+            </p>
+            <footer className="flex flex-col gap-0.5">
+              <cite
+                className="font-serif text-[15px] font-medium not-italic"
+                data-testid="testimonial-name"
+              >
+                {/* [TODO: replace with real name] */}
+                [Name], [Title]
+              </cite>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="testimonial-community"
+              >
+                {/* [TODO: replace with community name] */}
+                [Community], Northwestern Ontario
+              </p>
+            </footer>
+          </blockquote>
+        </section>
+
+        <hr
+          className="my-12 sm:my-16"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        />
+
         {/* ── how it starts ── */}
         <section data-testid="home-how-it-starts">
           <p
@@ -414,6 +458,23 @@ export function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+
+          <div
+            className="rounded-md border px-5 py-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
+            style={{ borderColor: "hsl(var(--accent))", borderStyle: "dashed", background: "hsl(var(--card))" }}
+            data-testid="flat-fee-callout"
+          >
+            <div
+              className="shrink-0 rounded-sm px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em]"
+              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+            >
+              How we charge
+            </div>
+            <p className="font-serif text-[14px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              <strong style={{ color: "hsl(var(--foreground))" }}>Flat fee, not hourly.</strong>{" "}
+              You own every deliverable at handoff — no licensing, no retainer required to keep it working. The community keeps the tools.
+            </p>
           </div>
 
           <div
@@ -717,6 +778,22 @@ export function HomePage() {
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               Privacy
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}operator`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
+              data-testid="footer-operator-link"
+            >
+              Operator
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}sign-on`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
+              data-testid="footer-sign-on-link"
+            >
+              Sign on
             </a>
             <p
               className="font-mono text-[10px] uppercase tracking-[0.18em]"

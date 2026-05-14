@@ -145,9 +145,27 @@ export function WorkPage() {
           </div>
 
           {/* summary blurb */}
-          <p className="font-serif text-[15px] leading-[1.65] mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-serif text-[15px] leading-[1.65] mb-5" style={{ color: "hsl(var(--muted-foreground))" }}>
             A Northwestern Ontario food co-op needed a complete member portal, producer onboarding system, and board governance tooling — all ready before launch, and built alongside the bylaws rather than after them. The platform builder also sat on the founding board.
           </p>
+          <div
+            className="flex flex-wrap gap-3 mb-8"
+          >
+            {[
+              { label: "Timeline", value: "8 weeks, Phase 1 to working platform" },
+              { label: "Members ready", value: "40+ household registrations at launch" },
+              { label: "Licensing fees", value: "$0 ongoing — board owns it outright" },
+            ].map(({ label, value }) => (
+              <div
+                key={label}
+                className="rounded-md border px-4 py-3 flex-1 min-w-[180px]"
+                style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+              >
+                <p className="font-mono text-[9px] uppercase tracking-[0.22em] mb-1" style={{ color: "hsl(145 36% 30%)" }}>{label}</p>
+                <p className="font-serif text-[15px] font-medium leading-tight">{value}</p>
+              </div>
+            ))}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-8">
             <section>
@@ -226,6 +244,22 @@ export function WorkPage() {
             <span className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}>live · internal use · pre-launch</span>
           </div>
         </article>
+
+        <hr style={{ borderColor: "hsl(var(--card-border))" }} />
+
+        {/* ── Placeholder for additional case studies ── */}
+        <div
+          className="rounded-md border px-6 py-5"
+          style={{ borderColor: "hsl(var(--card-border))", borderStyle: "dashed", background: "hsl(var(--card))", opacity: 0.65 }}
+          data-testid="case-study-placeholder"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
+            More case studies in progress
+          </p>
+          <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Additional community engagements will be documented here as they complete — community store plans, co-op builds, and custom tools.
+          </p>
+        </div>
 
         <hr style={{ borderColor: "hsl(var(--card-border))" }} />
 
