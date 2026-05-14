@@ -51,8 +51,8 @@ export function BioPage() {
               <img
                 src={portrait}
                 alt="Bobbie Parr, holding a Parr's Jars crate of preserves and produce"
-                className="block w-full object-cover object-bottom"
-                style={{ aspectRatio: "3 / 4" }}
+                className="block w-full object-cover"
+                style={{ aspectRatio: "3 / 4", objectPosition: "center 82%" }}
                 data-testid="bio-portrait"
               />
             </div>
