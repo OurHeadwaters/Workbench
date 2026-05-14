@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
@@ -161,6 +161,9 @@ function Router() {
         </div>
       </Route>
       <ProtectedRoute path="/dashboard" component={Dashboard} />
+      <Route path="/transactions">
+        {() => <Redirect to="/submissions" />}
+      </Route>
       <ProtectedRoute path="/transactions/new" component={TransactionNew} />
       <ProtectedRoute path="/transactions/:id" component={TransactionDetail} />
       <ProtectedRoute path="/accounts" component={Accounts} />

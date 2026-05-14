@@ -259,7 +259,7 @@ export function BioPage() {
                 testId="work-codetry-handbook"
               />
               <WorkLink
-                href="/community-store-walkthrough/"
+                href="/practitioners-guide-v2/community-store/walkthrough"
                 label="Community store walkthrough"
                 testId="work-community-store-walkthrough"
               />

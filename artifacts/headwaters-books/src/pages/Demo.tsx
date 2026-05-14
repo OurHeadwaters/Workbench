@@ -20,7 +20,7 @@ export default function Demo() {
       <header className="border-b border-border bg-card sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="Headwaters" className="w-6 h-6" />
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Headwaters" className="w-6 h-6" />
             <span className="font-serif font-semibold text-foreground">
               Headwaters Books
             </span>

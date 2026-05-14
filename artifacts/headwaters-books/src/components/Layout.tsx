@@ -3,14 +3,12 @@ import { Link, useLocation } from "wouter";
 import { useClerk, SignOutButton } from "@clerk/react";
 import { 
   LayoutDashboard, 
-  Receipt, 
   BookOpen, 
   Building2, 
-  LineChart, 
   Inbox, 
   PenSquare, 
   Users, 
-  ShieldCheck, 
+  ShieldCheck,
   Bell,
   LogOut,
   Loader2,
@@ -53,14 +51,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/dashboard", label: "The books today", icon: LayoutDashboard, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/submit", label: "Submit Receipt", icon: PenSquare, roles: ["food_handler"] },
-    { href: "/transactions", label: "Transactions", icon: Receipt, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/submissions", label: "Receipts", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/accounts", label: "Accounts", icon: BookOpen, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/cost-centres", label: "Cost Centres", icon: Building2, roles: ["owner", "ops_manager", "bookkeeper"] },
-    { href: "/pnl", label: "P&L Report", icon: LineChart, roles: ["owner", "bookkeeper"] },
     { href: "/handlers", label: "Food Handlers", icon: Bell, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/users", label: "Users", icon: Users, roles: ["owner"] },
-    { href: "/audit", label: "Audit Log", icon: ShieldCheck, roles: ["owner"] },
     { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
     { href: "/accountant-handoff", label: "Accountant Handoff", icon: FileText, roles: ["owner", "bookkeeper"] },
   ];
@@ -72,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-sidebar flex flex-col hidden md:flex">
         <div className="p-6 border-b border-border flex items-center gap-3">
-          <img src="/logo.svg" alt="Headwaters Books" className="w-8 h-8 text-primary" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Headwaters Books" className="w-8 h-8 text-primary" />
           <span className="font-serif font-bold text-lg text-sidebar-foreground">Headwaters</span>
         </div>
         
@@ -128,7 +123,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Mobile Header */}
         <header className="md:hidden flex items-center justify-between p-4 border-b border-border bg-sidebar">
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Headwaters Books" className="w-6 h-6" />
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Headwaters Books" className="w-6 h-6" />
             <span className="font-serif font-bold text-sidebar-foreground">Headwaters</span>
           </div>
           <SignOutButton signOutOptions={{ redirectUrl: "/" }}>

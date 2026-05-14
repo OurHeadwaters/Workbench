@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import { FileText, Image as ImageIcon, Globe, File, Paperclip, MoreVertical, CheckCircle2 } from "lucide-react";
@@ -11,6 +12,7 @@ interface EntryCardProps {
 }
 
 export function EntryCard({ entry }: EntryCardProps) {
+  const [imgFailed, setImgFailed] = useState(false);
   const assetUrl = entryAssetUrl(entry);
   
   let Icon = FileText;
@@ -19,21 +21,28 @@ export function EntryCard({ entry }: EntryCardProps) {
   else if (entry.fileType === "pdf") Icon = FileText;
   else if (entry.fileType) Icon = File;
 
+  const showImage = assetUrl && (entry.fileType === "image" || entry.kind === "web_source") && !imgFailed;
+
   return (
     <Link href={`/entries/${entry.id}`}>
       <Card className="h-full flex flex-col hover-elevate cursor-pointer transition-all border-border bg-card hover:border-secondary/50 group overflow-hidden">
-        {assetUrl && (entry.fileType === "image" || entry.kind === "web_source") ? (
+        {showImage ? (
           <div className="h-40 w-full overflow-hidden bg-muted relative">
             <img 
               src={assetUrl} 
               alt={entry.title} 
               className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImgFailed(true)}
             />
             {entry.status === "needs_review" && (
               <Badge variant="secondary" className="absolute top-2 right-2 bg-accent text-accent-foreground border-none">
                 Needs Review
               </Badge>
             )}
+          </div>
+        ) : imgFailed ? (
+          <div className="h-40 w-full bg-muted flex items-center justify-center">
+            <Icon className="h-10 w-10 text-muted-foreground opacity-30" />
           </div>
         ) : (
           <div className="h-2 w-full bg-muted" />

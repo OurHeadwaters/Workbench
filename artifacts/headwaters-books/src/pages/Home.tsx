@@ -9,7 +9,7 @@ export default function Home() {
       <EaglePrologue continueId="home-after-prologue" />
       <header id="home-after-prologue" className="w-full p-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Headwaters" className="w-8 h-8 text-primary" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Headwaters" className="w-8 h-8 text-primary" />
           <span className="font-serif font-bold text-xl text-foreground">Headwaters</span>
         </div>
         <div className="flex items-center gap-4">

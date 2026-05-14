@@ -18,6 +18,7 @@ export default function NeedsReview() {
   const queryClient = useQueryClient();
 
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   const handleApprove = async (id: string) => {
     setProcessingId(id);
@@ -76,11 +77,12 @@ export default function NeedsReview() {
                 <div className="flex flex-col md:flex-row">
                   {/* Left: Preview/Info */}
                   <div className="w-full md:w-48 h-48 bg-muted border-r border-border shrink-0 flex items-center justify-center relative overflow-hidden">
-                    {assetUrl && (entry.fileType === "image" || entry.kind === "web_source") ? (
+                    {assetUrl && (entry.fileType === "image" || entry.kind === "web_source") && !failedImages.has(entry.id) ? (
                       <img 
                         src={assetUrl} 
                         alt={entry.title} 
                         className="object-cover w-full h-full"
+                        onError={() => setFailedImages(prev => new Set([...prev, entry.id]))}
                       />
                     ) : (
                       <TypeIcon className="h-12 w-12 text-muted-foreground opacity-20" />

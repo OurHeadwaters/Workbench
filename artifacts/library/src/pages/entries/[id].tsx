@@ -52,6 +52,11 @@ export default function EntryDetail() {
   const deleteEntry = useDeleteLibraryEntry();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setImgFailed(false);
+  }, [id]);
   const [editData, setEditData] = useState<{
     title: string;
     summary: string;
@@ -249,11 +254,19 @@ export default function EntryDetail() {
           <div className="bg-muted border border-border rounded-xl overflow-hidden min-h-[400px] flex items-center justify-center relative">
             {assetUrl ? (
               entry.fileType === "image" || entry.kind === "web_source" ? (
-                <img 
-                  src={assetUrl} 
-                  alt={entry.title} 
-                  className="max-w-full max-h-[800px] object-contain"
-                />
+                imgFailed ? (
+                  <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground py-12">
+                    <TypeIcon className="h-16 w-16 opacity-30" />
+                    <p className="text-sm">Image unavailable</p>
+                  </div>
+                ) : (
+                  <img 
+                    src={assetUrl} 
+                    alt={entry.title} 
+                    className="max-w-full max-h-[800px] object-contain"
+                    onError={() => setImgFailed(true)}
+                  />
+                )
               ) : entry.fileType === "pdf" ? (
                 <iframe 
                   src={`${assetUrl}#toolbar=0`} 
