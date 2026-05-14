@@ -1,4 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
+import { promises as dnsPromises } from "dns";
 import {
   ListLibraryEntriesQueryParams,
   CreateLibraryEntryBody,
@@ -1288,6 +1289,269 @@ router.get("/needs-review", async (_req, res) => {
     .where(eq(libraryEntriesTable.status, "needs_review"))
     .orderBy(desc(libraryEntriesTable.createdAt));
   res.json(await loadEntries(rows));
+});
+
+// ----------------------- link checker -----------------------
+//
+// POST /api/library/link-check
+// Fetches every published web_source entry that has a sourceUrl and issues a
+// HEAD request against each one.  Entries that come back with a 4xx/5xx
+// status code, or whose request times out, are moved to needs_review so they
+// surface in the review queue.  Returns a summary so the caller knows exactly
+// how many links passed, failed, or timed out.
+
+const LINK_CHECK_TIMEOUT_MS = 10_000;
+
+// ---------------------------------------------------------------------------
+// SSRF guard
+// ---------------------------------------------------------------------------
+// sourceUrl values can originate from contributors (via share-link uploads).
+// Before issuing any server-side network request we validate the target URL
+// to prevent contributors from using the link checker as an SSRF probe.
+//
+// Rules enforced:
+//   1. Only http: and https: schemes are allowed.
+//   2. The hostname must not be a known-internal name (localhost, .local, …).
+//   3. We resolve the hostname via DNS and reject any address that falls in
+//      a private / loopback / link-local / reserved range.
+
+/** Returns true when the dotted-decimal IPv4 address is in a private/reserved range. */
+function isPrivateIpv4(ip: string): boolean {
+  const parts = ip.split(".").map(Number);
+  if (parts.length !== 4 || parts.some((p) => isNaN(p) || p < 0 || p > 255)) return true;
+  const [a, b] = parts as [number, number, number, number];
+  // 127.0.0.0/8 — loopback
+  if (a === 127) return true;
+  // 10.0.0.0/8 — private
+  if (a === 10) return true;
+  // 172.16.0.0/12 — private
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  // 192.168.0.0/16 — private
+  if (a === 192 && b === 168) return true;
+  // 169.254.0.0/16 — link-local / AWS metadata
+  if (a === 169 && b === 254) return true;
+  // 0.0.0.0/8 — "this" network
+  if (a === 0) return true;
+  // 100.64.0.0/10 — carrier-grade NAT
+  if (a === 100 && b >= 64 && b <= 127) return true;
+  // 192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24 — TEST-NET
+  if (a === 192 && b === 0 && parts[2] === 2) return true;
+  if (a === 198 && b === 51 && parts[2] === 100) return true;
+  if (a === 203 && b === 0 && parts[2] === 113) return true;
+  // 240.0.0.0/4 — reserved
+  if (a >= 240) return true;
+  return false;
+}
+
+/** Returns true when the full-length IPv6 address is in a private/reserved range. */
+function isPrivateIpv6(ip: string): boolean {
+  const lower = ip.toLowerCase().replace(/^\[|\]$/g, "");
+  // ::1 — loopback
+  if (lower === "::1") return true;
+  // :: — unspecified
+  if (lower === "::") return true;
+  // fc00::/7 — unique local
+  const firstWord = parseInt(lower.split(":")[0] || "0", 16);
+  if ((firstWord & 0xfe00) === 0xfc00) return true;
+  // fe80::/10 — link-local
+  if ((firstWord & 0xffc0) === 0xfe80) return true;
+  // IPv4-mapped ::ffff:x.x.x.x
+  if (lower.startsWith("::ffff:")) {
+    const v4part = lower.slice(7);
+    // could be dotted-decimal or hex-colon; only handle dotted-decimal here
+    if (v4part.includes(".")) return isPrivateIpv4(v4part);
+  }
+  return false;
+}
+
+const BLOCKED_HOSTNAME_PATTERNS = [
+  /^localhost$/i,
+  /\.local$/i,
+  /\.internal$/i,
+  /\.corp$/i,
+  /\.home$/i,
+  /^metadata\.google\.internal$/i,
+  /^169\.254\./,            // link-local by hostname string (belt-and-suspenders)
+];
+
+async function isSafeUrl(rawUrl: string): Promise<{ safe: boolean; reason?: string }> {
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return { safe: false, reason: "invalid URL" };
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return { safe: false, reason: "non-http scheme" };
+  }
+
+  const hostname = parsed.hostname;
+
+  for (const pattern of BLOCKED_HOSTNAME_PATTERNS) {
+    if (pattern.test(hostname)) return { safe: false, reason: "blocked hostname" };
+  }
+
+  // Resolve DNS and check the resulting addresses.
+  let addresses: string[] = [];
+  try {
+    // lookup returns the first result; resolve4/resolve6 give all.
+    // We use both to cover dual-stack hosts.
+    const [v4, v6] = await Promise.allSettled([
+      dnsPromises.resolve4(hostname),
+      dnsPromises.resolve6(hostname),
+    ]);
+    if (v4.status === "fulfilled") addresses = addresses.concat(v4.value);
+    if (v6.status === "fulfilled") addresses = addresses.concat(v6.value);
+    if (!addresses.length) {
+      // Fallback to lookup (handles /etc/hosts, numeric IPs, etc.)
+      const entry = await dnsPromises.lookup(hostname, { all: true });
+      addresses = entry.map((e) => e.address);
+    }
+  } catch {
+    // DNS failure — treat as unreachable (fetch will fail naturally);
+    // don't block here to avoid false positives for valid but slow DNS.
+    return { safe: true };
+  }
+
+  for (const addr of addresses) {
+    if (addr.includes(":")) {
+      if (isPrivateIpv6(addr)) return { safe: false, reason: "private IP" };
+    } else {
+      if (isPrivateIpv4(addr)) return { safe: false, reason: "private IP" };
+    }
+  }
+
+  return { safe: true };
+}
+
+type CheckReason = "ok" | "error_status" | "timeout" | "fetch_error" | "blocked";
+
+async function checkUrl(url: string): Promise<{ ok: boolean; status: number | null; reason: CheckReason }> {
+  // SSRF guard — must pass before any network I/O.
+  const safety = await isSafeUrl(url);
+  if (!safety.safe) {
+    return { ok: false, status: null, reason: "blocked" };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), LINK_CHECK_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      method: "HEAD",
+      signal: controller.signal,
+      redirect: "follow",
+      headers: { "User-Agent": "Headwaters-LinkChecker/1.0" },
+    });
+    clearTimeout(timer);
+    if (res.ok) return { ok: true, status: res.status, reason: "ok" };
+    return { ok: false, status: res.status, reason: "error_status" };
+  } catch (err: unknown) {
+    clearTimeout(timer);
+    if (err instanceof Error && err.name === "AbortError") {
+      return { ok: false, status: null, reason: "timeout" };
+    }
+    return { ok: false, status: null, reason: "fetch_error" };
+  }
+}
+
+router.post("/link-check", async (_req, res) => {
+  // Collect all published web_source entries that have a sourceUrl.
+  // We also include entries already in needs_review so the checker is
+  // idempotent — running it again won't miss a URL that was previously flagged
+  // and then re-published, and won't double-flag entries already in review.
+  const rows = await db
+    .select({
+      id: libraryEntriesTable.id,
+      title: libraryEntriesTable.title,
+      sourceUrl: libraryEntriesTable.sourceUrl,
+      status: libraryEntriesTable.status,
+    })
+    .from(libraryEntriesTable)
+    .where(
+      and(
+        eq(libraryEntriesTable.kind, "web_source"),
+        sql`${libraryEntriesTable.sourceUrl} IS NOT NULL`,
+        ne(libraryEntriesTable.status, "confidential_queue"),
+      ),
+    );
+
+  if (!rows.length) {
+    res.json({ total: 0, passed: 0, failed: 0, timedOut: 0, fetchErrors: 0, flagged: [] });
+    return;
+  }
+
+  // Check all URLs concurrently (capped at 10 in-flight at once to be polite).
+  const CONCURRENCY = 10;
+  const flagged: { id: string; title: string; url: string; reason: string; httpStatus: number | null }[] = [];
+  let passed = 0;
+  let failed = 0;
+  let timedOut = 0;
+  let fetchErrors = 0;
+  let blocked = 0;
+
+  for (let i = 0; i < rows.length; i += CONCURRENCY) {
+    const batch = rows.slice(i, i + CONCURRENCY);
+    await Promise.all(
+      batch.map(async (row) => {
+        const url = row.sourceUrl!;
+        const result = await checkUrl(url);
+        if (result.ok) {
+          passed++;
+          return;
+        }
+
+        if (result.reason === "blocked") {
+          // Blocked URLs (private/reserved targets) are counted but are NOT
+          // moved to needs_review and are NOT included in the flagged list —
+          // they represent data-quality issues, not dead public links.
+          blocked++;
+          return;
+        }
+
+        if (result.reason === "timeout") timedOut++;
+        else if (result.reason === "error_status") failed++;
+        else fetchErrors++;
+
+        flagged.push({
+          id: row.id,
+          title: row.title,
+          url,
+          reason: result.reason,
+          httpStatus: result.status,
+        });
+
+        // Only move published entries to needs_review — entries already
+        // sitting in needs_review stay where they are.
+        if (row.status === "published") {
+          const note =
+            result.reason === "timeout"
+              ? "Link check: URL timed out."
+              : result.reason === "error_status"
+              ? `Link check: HTTP ${result.status}.`
+              : "Link check: URL could not be reached.";
+          await db
+            .update(libraryEntriesTable)
+            .set({
+              status: "needs_review",
+              notes: sql`COALESCE(${libraryEntriesTable.notes} || E'\n', '') || ${note}`,
+              updatedAt: new Date(),
+            })
+            .where(eq(libraryEntriesTable.id, row.id));
+        }
+      }),
+    );
+  }
+
+  res.json({
+    total: rows.length,
+    passed,
+    failed,
+    timedOut,
+    fetchErrors,
+    blocked,
+    flagged,
+  });
 });
 
 // ----------------------- confidential queue -----------------------
