@@ -369,45 +369,6 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
-        {/* ── social proof ── */}
-        <section data-testid="home-testimonial">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            from the communities
-          </p>
-          <blockquote
-            className="rounded-md border-l-4 pl-6 py-2"
-            style={{ borderColor: "hsl(var(--accent))" }}
-            data-testid="testimonial-quote"
-          >
-            <p
-              className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5"
-            >
-              {/* [TODO: replace with real quote from community contact — Chief, Band Manager, or co-op board chair] */}
-              "Headwaters didn't hand us a binder and leave. We got a plan the council could actually read, numbers we could defend, and a store we could open. That's what we asked for — that's what we got."
-            </p>
-            <footer className="flex flex-col gap-0.5">
-              <cite
-                className="font-serif text-[15px] font-medium not-italic"
-                data-testid="testimonial-name"
-              >
-                {/* [TODO: replace with real name] */}
-                [Name], [Title]
-              </cite>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{ color: "hsl(var(--muted-foreground))" }}
-                data-testid="testimonial-community"
-              >
-                {/* [TODO: replace with community name] */}
-                [Community], Northwestern Ontario
-              </p>
-            </footer>
-          </blockquote>
-        </section>
-
         <hr
           className="my-12 sm:my-16"
           style={{ borderColor: "hsl(var(--card-border))" }}
