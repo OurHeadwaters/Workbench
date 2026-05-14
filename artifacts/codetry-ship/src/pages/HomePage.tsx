@@ -711,7 +711,7 @@ export function HomePage() {
             <img
               src={`${import.meta.env.BASE_URL}bobbie-bio.jpeg`}
               alt="Bobbie Parr with a Parr's Jars crate of fresh local produce, outdoors in Northwestern Ontario"
-              className="w-full h-full object-cover object-top group-hover:opacity-90 transition-opacity"
+              className="w-full h-full object-cover object-bottom group-hover:opacity-90 transition-opacity"
             />
           </a>
 
