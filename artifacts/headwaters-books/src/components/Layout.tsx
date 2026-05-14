@@ -13,7 +13,8 @@ import {
   LogOut,
   Loader2,
   GitMerge,
-  FileText
+  FileText,
+  TrendingUp
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -56,6 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/cost-centres", label: "Cost Centres", icon: Building2, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/handlers", label: "Food Handlers", icon: Bell, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/users", label: "Users", icon: Users, roles: ["owner"] },
+    { href: "/pnl", label: "P&L Report", icon: TrendingUp, roles: ["owner", "bookkeeper"] },
     { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
     { href: "/accountant-handoff", label: "Accountant Handoff", icon: FileText, roles: ["owner", "bookkeeper"] },
   ];

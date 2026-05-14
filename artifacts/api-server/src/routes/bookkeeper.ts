@@ -1694,7 +1694,7 @@ router.get(
 
 router.get(
   "/dashboard/pnl",
-  requireRole("owner", "ops_manager", "bookkeeper"),
+  requireRole("owner", "bookkeeper"),
   async (req, res) => {
     const from = typeof req.query.from === "string" ? req.query.from : null;
     const to = typeof req.query.to === "string" ? req.query.to : null;

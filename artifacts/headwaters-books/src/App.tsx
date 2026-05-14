@@ -25,6 +25,7 @@ import Handlers from "@/pages/Handlers";
 import Users from "@/pages/Users";
 import Reconciliation from "@/pages/Reconciliation";
 import AccountantHandoff from "@/pages/AccountantHandoff";
+import Pnl from "@/pages/Pnl";
 import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
@@ -174,6 +175,7 @@ function Router() {
       <ProtectedRoute path="/users" component={Users} />
       <ProtectedRoute path="/reconciliation" component={Reconciliation} />
       <ProtectedRoute path="/accountant-handoff" component={AccountantHandoff} />
+      <ProtectedRoute path="/pnl" component={Pnl} />
       <Route component={NotFound} />
     </Switch>
   );
