@@ -1,2 +1,3 @@
-# Generated manuscript — assembled by assemble-manuscript.sh
+# Generated manuscript — do not edit by hand.
+# Regenerated automatically from chapters.json by scripts/generate-manuscript.mjs
 manuscript.md
