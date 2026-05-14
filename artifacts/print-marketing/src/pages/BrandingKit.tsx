@@ -11,6 +11,31 @@ function downloadSvg(filename: string, svgContent: string) {
   setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
+// ── PNG download helper (Canvas API, client-side) ──────────────────────────────
+function downloadPng(filename: string, svgContent: string, size: number) {
+  const svgBlob = new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0, size, size);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 0);
+    }, "image/png");
+  };
+  img.onerror = () => URL.revokeObjectURL(url);
+  img.src = url;
+}
+
 function buildEagleSvg(bg: "light" | "dark" | "rust"): string {
   const bgColor   = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "#ffffff";
   const fill      = bg === "light" ? "#1f3d2e" : "#f4ede0";
@@ -245,10 +270,24 @@ export default function BrandingKit() {
             <div key={bg} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", color: MUTED, marginBottom: "0.35rem", textTransform: "capitalize" }}>{bg === "light" ? "Light" : bg === "dark" ? "Evergreen" : "Rust"}</p>
               <EagleMark size={100} bg={bg} />
-              <button
-                onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
-                style={DL_LINK_STYLE}
-              >↓ SVG</button>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginTop: "0.4rem" }}>
+                <button
+                  onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
+                  style={DL_LINK_STYLE}
+                >↓ SVG</button>
+                {([
+                  { size: 200, label: "1×" },
+                  { size: 400, label: "2×" },
+                  { size: 800, label: "4×" },
+                ] as const).map(({ size, label }) => (
+                  <button
+                    key={size}
+                    onClick={() => downloadPng(`headwaters-eagle-mark-${bg}-${size}x${size}.png`, buildEagleSvg(bg), size)}
+                    style={DL_LINK_STYLE}
+                    title={`Download PNG at ${size}×${size}px`}
+                  >↓ PNG {label}</button>
+                ))}
+              </div>
             </div>
           ))}
           {/* Small sizes */}
