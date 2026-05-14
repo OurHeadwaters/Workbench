@@ -364,10 +364,31 @@ export function HomePage() {
           </div>
         </section>
 
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-        />
+        {/* ── social proof ── */}
+        <section>
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            from the communities
+          </p>
+          <blockquote
+            className="rounded-md border-l-4 pl-6 py-2"
+            style={{ borderColor: "hsl(var(--accent))" }}
+          >
+            <p className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5">
+              "Our team used to keep everything afloat with an overflowing Google Drive, but now we can clearly see the strategic progress every day with some really cool operating tools!"
+            </p>
+            <footer className="flex flex-col gap-0.5">
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+              >
+                807 Food Co-operative
+              </p>
+            </footer>
+          </blockquote>
+        </section>
 
         <hr
           className="my-12 sm:my-16"
