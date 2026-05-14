@@ -14,12 +14,10 @@ function downloadSvg(filename: string, svgContent: string) {
 function buildEagleSvg(bg: "light" | "dark" | "rust"): string {
   const bgColor   = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "#ffffff";
   const fill      = bg === "light" ? "#1f3d2e" : "#f4ede0";
-  const arc       = bg === "rust"  ? "rgba(255,255,255,0.65)" : "#C47A3A";
   const beak      = bg === "rust"  ? "rgba(255,255,255,0.8)"  : "#C47A3A";
   const plumage   = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
   return `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="200" height="200" fill="${bgColor}"/>
-  <path d="M 49,67 A 72,72 0 1 1 151,67" stroke="${arc}" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="100" cy="65" r="52" fill="#C47A3A"/>
   <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z" fill="${fill}"/>
   <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z" fill="${fill}"/>
   <ellipse cx="100" cy="69" rx="9" ry="8" fill="${fill}"/>
@@ -50,19 +48,18 @@ const DL_LINK_STYLE: React.CSSProperties = {
   textDecoration: "none",
 };
 
-// ── Eagle mark SVG (revised) ──────────────────────────────────────────────────
-// Open bowl arc (270°, gap at top) + eagle rising from the gap.
+// ── Eagle mark SVG (sunset disc) ──────────────────────────────────────────────
+// Filled warm amber disc behind eagle — no outer ring, transparent SVG background.
 function EagleMark({ size = 100, bg = "light" }: { size?: number; bg?: "light" | "dark" | "rust" }) {
   const bgColor   = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "white";
   const border    = bg === "light" ? "1px solid rgba(31,61,46,0.12)" : "none";
   const fill      = bg === "light" ? "#1f3d2e" : "#f4ede0";
-  const arc       = bg === "rust"  ? "rgba(255,255,255,0.65)" : "#C47A3A";
   const beak      = bg === "rust"  ? "rgba(255,255,255,0.8)"  : "#C47A3A";
   const plumage   = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
   return (
     <div style={{ width: size + 24, height: size + 24, background: bgColor, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", border, flexShrink: 0 }}>
       <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 49,67 A 72,72 0 1 1 151,67" stroke={arc} strokeWidth="3" fill="none" strokeLinecap="round"/>
+        <circle cx="100" cy="65" r="52" fill="#C47A3A"/>
         <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z" fill={fill}/>
         <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z" fill={fill}/>
         <ellipse cx="100" cy="69" rx="9" ry="8" fill={fill}/>

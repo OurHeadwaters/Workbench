@@ -1,19 +1,14 @@
 <svg width="640" height="200" viewBox="0 0 640 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="640" height="200" fill="none"/>
 
-  <!-- Community arc: center (95,102) r=68, open bowl 270deg, gap at top -->
-  <path d="M 46,56 A 68,68 0 1 1 144,56"
-        stroke="#C47A3A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Sunset disc behind eagle — warm amber, no outer ring -->
+  <circle cx="95" cy="63" r="52" fill="#C47A3A"/>
 
   <!-- Eagle traced from founder's 2011 photo (eagle_13.JPG, NWO frozen lake).
-       Ring safe zone (12-unit inset): x 39..151, y 46..158.
        Eagle group uses a local coordinate system centered at origin,
-       then translated to (95,68) — the center of the ring gap. -->
+       then translated to (95,68) — the eagle's body center. -->
   <g transform="translate(95,68)">
 
-    <!-- LEFT WING: broad flat soaring shape from photo.
-         In local coords: body at 0,0; left tip at (-53,0); feather leading edge.
-         All points: local x in -56..0, y in -22..10 → absolute x 39..95, y 46..78. -->
+    <!-- LEFT WING -->
     <path d="M 0,0
              C -8,-3 -20,-8 -34,-12
              C -42,-15 -50,-17 -53,-16
@@ -24,8 +19,7 @@
              Z"
           fill="#1f3d2e"/>
 
-    <!-- RIGHT WING: mirror with slight upward rotation (banking from photo).
-         Local x in 0..56, y in -23..10 → absolute x 95..151, y 45..78. -->
+    <!-- RIGHT WING -->
     <path d="M 0,0
              C 8,-4 20,-9 34,-13
              C 42,-16 50,-18 53,-17
@@ -45,13 +39,13 @@
     <!-- Beak -->
     <path d="M 5,-13 L 13,-10 L 5,-7 Z" fill="#C47A3A"/>
 
-    <!-- White fan tail: local y 8..26 → absolute y 76..94 (well within safe zone) -->
+    <!-- White fan tail -->
     <path d="M -6,9 C -10,14 -13,21 -15,26 L -6,23 C -4,19 -2,16 0,14 C 2,16 4,19 6,23 L 15,26 C 13,21 10,14 6,9 Z"
           fill="#EDE9E0"/>
     <path d="M 0,10 L 0,24 M -5,10 L -10,24 M 5,10 L 10,24"
           stroke="#1f3d2e" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.35"/>
 
-    <!-- Talons: local y 10..20 → absolute y 78..88 -->
+    <!-- Talons -->
     <path d="M -4,11 L -7,18 M -7,18 L -10,21 M -7,18 L -8,22 M -7,18 L -5,22"
           stroke="#1f3d2e" stroke-width="1.2" stroke-linecap="round" fill="none"/>
     <path d="M 4,11 L 7,18 M 7,18 L 10,21 M 7,18 L 8,22 M 7,18 L 5,22"

@@ -67,7 +67,7 @@ export function HomePage() {
         />
         <div className="relative mx-auto max-w-[52rem]">
 
-          {/* Eagle mark — open-arc SVG mark */}
+          {/* Eagle mark — sunset disc */}
           <div className="mb-7" data-testid="home-eyebrow">
             <img
               src={`${import.meta.env.BASE_URL}eagle-mark.svg`}

@@ -180,9 +180,7 @@ export default function NorthernPilotPitch() {
 
             {/* Logo + wordmark in top-left corner over photo */}
             <div style={{ position: "absolute", top: "0.52in", left: "0.62in", display: "flex", alignItems: "center", gap: "0.2in" }}>
-              <div style={{ width: "0.72in", height: "0.72in", borderRadius: "50%", border: "1.5pt solid rgba(210,175,90,0.78)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: 0.92 }}>
-                <img src={`${base}eagle-halo.png`} alt="Headwaters logo" style={{ width: "0.52in", height: "0.52in", objectFit: "contain" }} />
-              </div>
+              <img src={`${base}eagle-mark.svg`} alt="Headwaters logo" style={{ width: "0.72in", height: "0.6in", objectFit: "contain", flexShrink: 0, opacity: 0.92 }} />
               <div>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 700, color: "var(--cream)", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1.2 }}>
                   Headwaters

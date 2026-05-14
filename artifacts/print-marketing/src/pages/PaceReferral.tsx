@@ -84,9 +84,7 @@ export default function PaceReferral() {
           {/* Header */}
           <div style={{ background: "var(--evergreen)", padding: "0.48in 0.65in 0.38in", flexShrink: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.22in", marginBottom: "0.22in" }}>
-              <div style={{ width: "0.6in", height: "0.6in", borderRadius: "50%", border: "1.5pt solid rgba(210,175,90,0.78)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <img src={`${base}eagle-halo.png`} alt="Headwaters logo" style={{ width: "0.42in", height: "0.42in", objectFit: "contain" }} />
-              </div>
+              <img src={`${base}eagle-mark.svg`} alt="Headwaters logo" style={{ width: "0.6in", height: "0.5in", objectFit: "contain", flexShrink: 0 }} />
               <div>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", lineHeight: 1.3 }}>
                   Headwaters Development Services

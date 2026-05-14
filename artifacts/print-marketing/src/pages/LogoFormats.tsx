@@ -20,12 +20,10 @@ function downloadSvg(filename: string, svgContent: string) {
 function buildEagleSvg(bg: "light" | "dark" | "rust"): string {
   const bgColor = bg === "dark" ? "#1f3d2e" : bg === "rust" ? "#b85a3e" : "#ffffff";
   const fill    = bg === "light" ? "#1f3d2e" : "#f4ede0";
-  const arc     = bg === "rust"  ? "rgba(255,255,255,0.65)" : "#C47A3A";
   const beak    = bg === "rust"  ? "rgba(255,255,255,0.8)"  : "#C47A3A";
   const plumage = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
   return `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="200" height="200" fill="${bgColor}"/>
-  <path d="M 49,67 A 72,72 0 1 1 151,67" stroke="${arc}" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="100" cy="65" r="52" fill="#C47A3A"/>
   <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z" fill="${fill}"/>
   <path d="M 100,64 C 115,58 135,50 157,42 C 171,37 186,34 193,36 C 183,43 163,49 139,59 C 124,65 110,68 100,70 Z" fill="${fill}"/>
   <ellipse cx="100" cy="69" rx="9" ry="8" fill="${fill}"/>
@@ -54,9 +52,8 @@ const DL_BTN: React.CSSProperties = {
   border: "none",
 };
 
-// ── Eagle mark (revised) ──────────────────────────────────────────────────────
-// The community circle is now an open bowl/horizon arc (270°, gap at top).
-// The eagle sits at and rises from that gap — gathering rather than targeting.
+// ── Eagle mark (sunset disc) ──────────────────────────────────────────────────
+// Filled warm amber disc behind eagle — no outer ring, transparent SVG background.
 
 function EagleMark({
   bg = "light",
@@ -68,11 +65,10 @@ function EagleMark({
   const bgColor = bg === "dark" ? EVERGREEN : bg === "rust" ? RUST : "white";
   const borderColor =
     bg === "light" ? "rgba(31,61,46,0.12)" : "transparent";
-  const eagleFill    = bg === "light" ? "#1f3d2e" : bg === "dark" ? CREAM : CREAM;
-  const arcStroke    = bg === "rust" ? "rgba(255,255,255,0.65)" : "#C47A3A";
-  const beakFill     = bg === "rust" ? "rgba(255,255,255,0.8)" : "#C47A3A";
-  const plumage      = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
-  const treeFill     = bg === "light" ? "#1f3d2e" : bg === "dark" ? CREAM : CREAM;
+  const eagleFill = bg === "light" ? "#1f3d2e" : CREAM;
+  const beakFill  = bg === "rust"  ? "rgba(255,255,255,0.8)" : "#C47A3A";
+  const plumage   = bg === "light" ? "#EDE9E0" : "rgba(244,237,224,0.85)";
+  const treeFill  = bg === "light" ? "#1f3d2e" : CREAM;
 
   return (
     <div
@@ -95,12 +91,10 @@ function EagleMark({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Community circle arc — open bowl, 270°, gap at top where eagle rises */}
-        {/* Center (100,118), radius 72. Endpoints: NW(49,67) and NE(151,67) */}
-        <path d="M 49,67 A 72,72 0 1 1 151,67"
-              stroke={arcStroke} strokeWidth="3" fill="none" strokeLinecap="round"/>
+        {/* Sunset disc — warm amber, behind the eagle */}
+        <circle cx="100" cy="65" r="52" fill="#C47A3A"/>
 
-        {/* Eagle silhouette — rising from the community circle */}
+        {/* Eagle silhouette */}
         {/* Left wing */}
         <path d="M 100,64 C 85,58 65,50 43,42 C 29,37 14,34 7,36 C 17,43 37,49 61,59 C 76,65 90,68 100,70 Z"
               fill={eagleFill}/>
@@ -125,7 +119,7 @@ function EagleMark({
         <path d="M 190,37 L 197,28 M 182,34 L 188,25 M 173,31 L 178,22"
               stroke={eagleFill} strokeWidth="2" strokeLinecap="round"/>
 
-        {/* Treeline — subtle landscape at base of arc */}
+        {/* Treeline */}
         <path d="M 30,178 L 34,165 L 39,174 L 44,159 L 50,168 L 57,154 L 64,166 L 71,151 L 78,163 L 86,148 L 93,160 L 100,145 L 107,160 L 114,148 L 121,163 L 129,151 L 136,166 L 143,154 L 150,168 L 156,159 L 161,174 L 166,165 L 170,178 Z"
               fill={treeFill} opacity="0.20"/>
       </svg>
@@ -408,7 +402,7 @@ export default function LogoFormats() {
           </p>
 
           {/* Eagle mark */}
-          <Section title="Eagle mark — rising from the community circle (light, dark, rust)">
+          <Section title="Eagle mark — sunset disc (light, dark, rust)">
             <div
               style={{
                 display: "flex",

@@ -54,9 +54,7 @@ export default function DeerLakePartnership() {
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.12in", marginBottom: "0.08in" }}>
-                <div style={{ width: "0.38in", height: "0.38in", borderRadius: "50%", border: "1pt solid rgba(210,175,90,0.78)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: 0.88 }}>
-                  <img src={`${base}eagle-halo.png`} alt="Headwaters" style={{ width: "0.26in", height: "0.26in", objectFit: "contain" }} />
-                </div>
+                <img src={`${base}eagle-mark.svg`} alt="Headwaters" style={{ width: "0.38in", height: "0.31in", objectFit: "contain", flexShrink: 0, opacity: 0.88 }} />
                 <div style={{ textAlign: "left" }}>
                   <p style={{ fontSize: "0.62rem", fontWeight: 700, color: CREAM, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, lineHeight: 1.2 }}>Headwaters</p>
                   <p style={{ fontSize: "0.48rem", color: "rgba(244,237,224,0.55)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Development Services</p>
@@ -401,9 +399,7 @@ export default function DeerLakePartnership() {
               </h1>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0, marginLeft: "0.3in" }}>
-              <div style={{ width: "0.55in", height: "0.55in", borderRadius: "50%", border: "1.5pt solid rgba(210,175,90,0.72)", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "auto", marginBottom: "0.06in", opacity: 0.9 }}>
-                <img src={`${base}eagle-halo.png`} alt="Headwaters" style={{ width: "0.38in", height: "0.38in", objectFit: "contain" }} />
-              </div>
+              <img src={`${base}eagle-mark.svg`} alt="Headwaters" style={{ width: "0.55in", height: "0.46in", objectFit: "contain", marginLeft: "auto", marginBottom: "0.06in", opacity: 0.9, display: "block" }} />
               <p style={{ fontSize: "0.48rem", color: "#a8c4a0", margin: 0, letterSpacing: "0.05em", textTransform: "uppercase" }}>Headwaters<br />Development Services</p>
             </div>
           </div>

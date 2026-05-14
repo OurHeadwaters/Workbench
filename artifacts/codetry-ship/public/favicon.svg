@@ -1,15 +1,15 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- evergreen background -->
   <rect width="180" height="180" rx="36" fill="#2A3D2E"/>
-  <!-- halo circle -->
-  <circle cx="90" cy="84" r="54" stroke="#C47A3A" stroke-width="5" fill="none" opacity="0.9"/>
+  <!-- sunset disc — filled amber, no stroke ring -->
+  <circle cx="90" cy="78" r="46" fill="#C47A3A"/>
   <!-- eagle silhouette -->
   <g transform="translate(90,80)" fill="#EDE9E0">
     <!-- body -->
     <ellipse cx="0" cy="4" rx="8" ry="6"/>
     <!-- head -->
     <ellipse cx="9" cy="-3" rx="5.5" ry="4.5"/>
-    <!-- beak -->
+    <!-- beak: rust accent -->
     <path d="M13,-2 L18,1 L13,2.5 Z" fill="#C47A3A"/>
     <!-- tail -->
     <path d="M-8,5 L-19,10 L-19,4 L-12,0 Z"/>
