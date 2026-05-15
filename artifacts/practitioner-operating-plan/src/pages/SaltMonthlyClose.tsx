@@ -24,7 +24,7 @@
  *   resulting numbers, not the diff trail.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import {
   saveMonthClose,
@@ -32,6 +32,10 @@ import {
   resetAllCloses,
   getStatus,
   SALT_BASELINE_NET,
+  buildCSV,
+  parseImportedJSON,
+  mergeCloses,
+  replaceCloses,
   type SaltCloseRecord,
 } from "@/lib/saltClose";
 import {
@@ -128,6 +132,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 // ─── PastePanel component ─────────────────────────────────────────────────────
 
 const SOURCES: ImportSource[] = ["square", "shopify", "cash"];
+
+type ImportMode = "merge" | "replace";
 
 interface PastePanelProps {
   month: string;
@@ -448,6 +454,70 @@ export default function SaltMonthlyClose() {
     setHistory(getMonthHistory());
   }, []);
 
+  // ── Export / Import state ──────────────────────────────────────────────────
+  const [pendingImport, setPendingImport] = useState<SaltCloseRecord[] | null>(null);
+  const [importError,   setImportError]   = useState<string | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
+
+  // ── Export / Import handlers ───────────────────────────────────────────────
+  function handleDownloadCSV() {
+    if (history.length === 0) return;
+    const csv = buildCSV(history);
+    triggerDownload(csv, "text/csv", `salt-closes-${currentMonthStr()}.csv`);
+  }
+
+  function handleDownloadJSON() {
+    if (history.length === 0) return;
+    const json = JSON.stringify(history, null, 2);
+    triggerDownload(json, "application/json", `salt-closes-${currentMonthStr()}.json`);
+  }
+
+  function triggerDownload(content: string, mime: string, filename: string) {
+    const blob = new Blob([content], { type: mime });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImportClick() {
+    setImportError(null);
+    importInputRef.current?.click();
+  }
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string);
+        const records = parseImportedJSON(parsed);
+        setPendingImport(records);
+        setImportError(null);
+      } catch (err) {
+        setImportError(err instanceof Error ? err.message : "Could not read the file.");
+        setPendingImport(null);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }
+
+  function handleConfirmImport(mode: ImportMode) {
+    if (!pendingImport) return;
+    if (mode === "merge") {
+      mergeCloses(pendingImport);
+    } else {
+      replaceCloses(pendingImport);
+    }
+    setHistory(getMonthHistory());
+    setPendingImport(null);
+  }
+
+  // ── Filing form ────────────────────────────────────────────────────────────
   const net = (parseFloat(revenue) || 0) - (parseFloat(expenses) || 0);
 
   const curQId          = currentQuarterId();
@@ -459,7 +529,25 @@ export default function SaltMonthlyClose() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!month || !revenue) return;
-    saveMonthClose(month, parseFloat(revenue) || 0, parseFloat(expenses) || 0, note);
+    // Capture applied channel snapshots at filing time for the per-channel CSV export
+    const channelData: SaltCloseRecord["channels"] = {};
+    for (const src of SOURCES) {
+      const applied = channels[src].applied;
+      if (applied && applied.net !== 0) {
+        channelData[src] = {
+          grossSales: applied.grossSales,
+          refunds: applied.refunds,
+          net: applied.net,
+        };
+      }
+    }
+    saveMonthClose(
+      month,
+      parseFloat(revenue) || 0,
+      parseFloat(expenses) || 0,
+      note,
+      Object.keys(channelData).length > 0 ? channelData : undefined,
+    );
     setHistory(getMonthHistory());
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -658,33 +746,175 @@ export default function SaltMonthlyClose() {
 
           {/* ── Filed months history ──────────────────────────────────────── */}
           <div style={{ marginBottom: "18pt" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8pt" }}>
+            {/* Hidden file input for JSON import */}
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".json,application/json"
+              style={{ display: "none" }}
+              onChange={handleImportFile}
+            />
+
+            {/* Section header + action buttons */}
+            <div className="print:hidden" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8pt", flexWrap: "wrap", gap: "6pt" }}>
               <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
                 Filed months ({history.length})
               </div>
-              {history.length > 0 && (
+              <div style={{ display: "flex", gap: "6pt", flexWrap: "wrap" }}>
                 <button
                   type="button"
-                  className="print:hidden"
-                  onClick={() => navigate(`${BASE}/tools/salt-yearly`)}
+                  onClick={handleDownloadCSV}
+                  disabled={history.length === 0}
+                  title="Download history as a spreadsheet-ready CSV"
                   style={{
-                    background: "transparent",
-                    border: `1pt solid ${AMBER}`,
-                    color: AMBER,
+                    padding: "3pt 10pt",
+                    background: history.length > 0 ? DARK : RULE,
+                    color: CREAM,
+                    border: "none",
                     borderRadius: "3pt",
-                    padding: "2pt 9pt",
-                    fontSize: "7pt",
-                    fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                    fontSize: "7.5pt",
                     fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
                   }}
                 >
-                  Yearly summary →
+                  Download CSV
                 </button>
-              )}
+                <button
+                  type="button"
+                  onClick={handleDownloadJSON}
+                  disabled={history.length === 0}
+                  title="Download history as a JSON backup"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: history.length > 0 ? DARK : MUTED,
+                    border: `1pt solid ${history.length > 0 ? RULE : RULE}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Download JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={handleImportClick}
+                  title="Restore history from a previously exported JSON file"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: AMBER,
+                    border: `1pt solid ${AMBER}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Import JSON
+                </button>
+                {history.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`${BASE}/tools/salt-yearly`)}
+                    style={{
+                      background: "transparent",
+                      border: `1pt solid ${AMBER}`,
+                      color: AMBER,
+                      borderRadius: "3pt",
+                      padding: "3pt 10pt",
+                      fontSize: "7.5pt",
+                      fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                      fontWeight: 700,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Yearly summary →
+                  </button>
+                )}
+              </div>
             </div>
+
+            {/* Print-only heading (no buttons) */}
+            <div className="hidden print:block" style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
+              Filed months ({history.length})
+            </div>
+            </div>
+
+            {/* Import error */}
+            {importError && (
+              <div style={{ marginBottom: "8pt", padding: "6pt 10pt", background: "rgba(122,26,26,0.08)", border: `1pt solid ${RED}`, borderRadius: "3pt", fontSize: "8pt", color: RED }}>
+                Import failed: {importError}
+              </div>
+            )}
+
+            {/* Merge / Replace prompt */}
+            {pendingImport && (
+              <div style={{ marginBottom: "10pt", padding: "10pt 14pt", background: "rgba(184,90,62,0.08)", border: `1pt solid ${AMBER}`, borderRadius: "4pt" }}>
+                <div style={{ fontSize: "8pt", fontWeight: 700, color: DARK, marginBottom: "6pt" }}>
+                  Import {pendingImport.length} record{pendingImport.length !== 1 ? "s" : ""} — how would you like to proceed?
+                </div>
+                <div style={{ fontSize: "7.5pt", color: MUTED, marginBottom: "10pt", lineHeight: 1.5 }}>
+                  <strong>Merge</strong> adds only months not already present, leaving existing records untouched.{" "}
+                  <strong>Replace</strong> overwrites all history with the imported file.
+                </div>
+                <div style={{ display: "flex", gap: "8pt" }}>
+                  <button
+                    type="button"
+                    onClick={() => handleConfirmImport("merge")}
+                    style={{
+                      padding: "4pt 14pt",
+                      background: DARK,
+                      color: CREAM,
+                      border: "none",
+                      borderRadius: "3pt",
+                      fontSize: "7.5pt",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Merge
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleConfirmImport("replace")}
+                    style={{
+                      padding: "4pt 14pt",
+                      background: AMBER,
+                      color: CREAM,
+                      border: "none",
+                      borderRadius: "3pt",
+                      fontSize: "7.5pt",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Replace all
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPendingImport(null)}
+                    style={{
+                      padding: "4pt 10pt",
+                      background: "transparent",
+                      color: MUTED,
+                      border: `1pt solid ${RULE}`,
+                      borderRadius: "3pt",
+                      fontSize: "7.5pt",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
 
             {history.length === 0 ? (
               <div style={{ padding: "14pt 0", color: MUTED, fontSize: "9pt" }}>
@@ -790,7 +1020,7 @@ export default function SaltMonthlyClose() {
               Headwaters Development Services · SALT-01 Monthly Close
             </div>
             <div style={{ fontSize: "7pt", color: MUTED }}>
-              History stored locally — export via one-pager print
+              History stored locally — use Download CSV / JSON to back up or audit
             </div>
           </div>
 

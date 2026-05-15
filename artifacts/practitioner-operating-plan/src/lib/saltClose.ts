@@ -18,6 +18,13 @@ export const SALT_BASELINE_NET = 1_800; // planning-assumption net $/month
 
 const STORAGE_KEY = "salt-monthly-close-v1";
 
+/** Per-channel revenue snapshot captured at filing time. */
+export interface ChannelSnapshot {
+  grossSales: number;
+  refunds: number;  // negative or zero
+  net: number;
+}
+
 export interface SaltCloseRecord {
   month: string;    // "YYYY-MM"
   revenue: number;  // gross salt revenue for the month
@@ -25,6 +32,12 @@ export interface SaltCloseRecord {
   net: number;      // revenue − expenses  (computed on save, stored for quick reads)
   note?: string;    // optional bookkeeper note
   filedAt: string;  // ISO timestamp of last save
+  /** Per-channel breakdown captured from the import tool at filing time. */
+  channels?: {
+    square?: ChannelSnapshot;
+    shopify?: ChannelSnapshot;
+    cash?: ChannelSnapshot;
+  };
 }
 
 type HistoryStore = Record<string, SaltCloseRecord>;
@@ -49,6 +62,7 @@ export function saveMonthClose(
   revenue: number,
   expenses: number,
   note?: string,
+  channels?: SaltCloseRecord["channels"],
 ): SaltCloseRecord {
   const store = load();
   const record: SaltCloseRecord = {
@@ -58,6 +72,7 @@ export function saveMonthClose(
     net: revenue - expenses,
     note: note?.trim() || undefined,
     filedAt: new Date().toISOString(),
+    ...(channels && Object.keys(channels).length > 0 ? { channels } : {}),
   };
   store[month] = record;
   persist(store);
@@ -85,6 +100,141 @@ export function getRecentHistory(n = 6): SaltCloseRecord[] {
 /** Clears ALL filed closes. Used by the reset action. */
 export function resetAllCloses(): void {
   localStorage.removeItem(STORAGE_KEY);
+}
+
+/**
+ * Merge imported records into existing history.
+ * Existing months are left untouched; only months not already present are added.
+ */
+export function mergeCloses(incoming: SaltCloseRecord[]): void {
+  const store = load();
+  for (const rec of incoming) {
+    if (!store[rec.month]) {
+      store[rec.month] = rec;
+    }
+  }
+  persist(store);
+}
+
+/**
+ * Replace all history with the imported records.
+ * Equivalent to resetAllCloses() + saving each record.
+ */
+export function replaceCloses(incoming: SaltCloseRecord[]): void {
+  const store: HistoryStore = {};
+  for (const rec of incoming) {
+    store[rec.month] = rec;
+  }
+  persist(store);
+}
+
+/**
+ * Validate that a parsed value looks like a SaltCloseRecord array.
+ * Returns the array on success, throws a descriptive Error on failure.
+ */
+export function parseImportedJSON(raw: unknown): SaltCloseRecord[] {
+  if (!Array.isArray(raw)) throw new Error("Expected a JSON array of close records.");
+  const records: SaltCloseRecord[] = [];
+  for (const item of raw) {
+    if (
+      typeof item !== "object" || item === null ||
+      typeof (item as Record<string, unknown>).month !== "string" ||
+      typeof (item as Record<string, unknown>).revenue !== "number" ||
+      typeof (item as Record<string, unknown>).expenses !== "number" ||
+      typeof (item as Record<string, unknown>).net !== "number" ||
+      typeof (item as Record<string, unknown>).filedAt !== "string"
+    ) {
+      throw new Error(`Record is missing required fields: ${JSON.stringify(item)}`);
+    }
+    records.push(item as SaltCloseRecord);
+  }
+  return records;
+}
+
+const CHANNEL_LABELS: Record<string, string> = {
+  square:  "Square",
+  shopify: "Shopify",
+  cash:    "Cash / Other",
+};
+
+/**
+ * Build a CSV string from the full history.
+ *
+ * Column schema: Month, MQ, Channel, Revenue, COGS, Freight, Packaging, CM$, CM%
+ *
+ * When a filed close has per-channel snapshots (captured from the import tool),
+ * it emits one data row per channel. When no channel data is present (legacy
+ * records filed before this feature), it emits a single summary row labelled
+ * "Total" using the aggregate revenue and a blank COGS/freight/packaging.
+ *
+ * COGS, freight, and packaging are not tracked at the channel level — the
+ * filed `expenses` total covers all three. These columns are therefore blank on
+ * individual channel rows; the "Total" summary row carries the full expenses
+ * figure in the COGS column so the audit spreadsheet can compute the overall
+ * contribution margin.
+ */
+export function buildCSV(records: SaltCloseRecord[]): string {
+  const header = ["Month", "MQ", "Channel", "Revenue", "COGS", "Freight", "Packaging", "CM$", "CM%"];
+
+  const esc = (v: string | number | undefined | null): string => {
+    const s = String(v ?? "");
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
+  };
+
+  const pct = (cm: number, rev: number): string =>
+    rev > 0 ? (cm / rev * 100).toFixed(1) + "%" : "";
+
+  const dataRows: string[] = [];
+
+  for (const r of records) {
+    const mq = SALT_BASELINE_NET;
+
+    if (r.channels && Object.keys(r.channels).length > 0) {
+      // One row per channel
+      for (const [src, snap] of Object.entries(r.channels) as [string, ChannelSnapshot][]) {
+        dataRows.push([
+          esc(r.month),
+          esc(mq),
+          esc(CHANNEL_LABELS[src] ?? src),
+          esc(snap.grossSales),
+          esc(""),           // COGS not tracked per channel
+          esc(""),           // Freight not tracked
+          esc(""),           // Packaging not tracked
+          esc(snap.net),
+          esc(pct(snap.net, snap.grossSales)),
+        ].join(","));
+      }
+      // Summary row with expenses in COGS column
+      dataRows.push([
+        esc(r.month),
+        esc(mq),
+        esc("Total"),
+        esc(r.revenue),
+        esc(r.expenses),    // all direct costs in COGS for the total row
+        esc(""),
+        esc(""),
+        esc(r.net),
+        esc(pct(r.net, r.revenue)),
+      ].join(","));
+    } else {
+      // Legacy record — no channel breakdown; emit one summary row
+      dataRows.push([
+        esc(r.month),
+        esc(mq),
+        esc("Total"),
+        esc(r.revenue),
+        esc(r.expenses),
+        esc(""),
+        esc(""),
+        esc(r.net),
+        esc(pct(r.net, r.revenue)),
+      ].join(","));
+    }
+  }
+
+  return [header.join(","), ...dataRows].join("\r\n");
 }
 
 /** Health status based on net vs baseline. */
