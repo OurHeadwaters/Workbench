@@ -726,8 +726,6 @@ export default function SaltMonthlyClose() {
   const prevQtrUnder  = autoPrevQuarterUnder(history, curQId, SALT_BASELINE_NET);
   const priorComplete = priorChain.length === 3;
 
-  const net = (parseFloat(revenue) || 0) - (parseFloat(expenses) || 0);
-
   return (
     <>
       {/* Blocking column-rename confirmation modal */}
