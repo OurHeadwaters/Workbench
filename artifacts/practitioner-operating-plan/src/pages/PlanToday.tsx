@@ -8,7 +8,6 @@ import {
   type ActionType,
   type Step,
 } from "@/data/plan2026";
-import ThreeThings from "@/components/ThreeThings";
 import NowView from "@/components/NowView";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -236,28 +235,12 @@ export default function PlanToday() {
         </div>
       </div>
 
-      {/* Three Things — responsive */}
-      <style>{`
-        .tt-desktop { display: block; }
-        .tt-mobile  { display: none;  }
-        @media (max-width: 600px) {
-          .tt-desktop { display: none;  }
-          .tt-mobile  { display: block; }
-        }
-      `}</style>
-
-      {/* Desktop card */}
-      <div className="tt-desktop" style={{ maxWidth: 700, margin: "0 auto", padding: "24px 20px 0" }}>
-        <ThreeThings />
-      </div>
-
-      {/* Mobile panel (slim, inside the cream body) */}
-      <div className="tt-mobile" style={{ maxWidth: 700, margin: "0 auto", padding: "16px 16px 0" }}>
-        <NowView />
-      </div>
-
       {/* Steps */}
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "24px 20px 60px" }}>
+        <div style={{ marginBottom: 28 }}>
+          <NowView />
+        </div>
+
         <div style={{ fontFamily: "IBM Plex Mono, monospace", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a7a6e", marginBottom: 14 }}>
           Today's Steps · {day.steps.length} item{day.steps.length !== 1 ? "s" : ""}
         </div>

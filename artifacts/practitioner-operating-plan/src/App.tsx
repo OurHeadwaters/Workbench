@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import { Suspense, lazy } from "react";
 import OnePager from "./pages/OnePager";
@@ -19,6 +20,8 @@ import CostReviewModal from "./components/CostReviewModal";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
+const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function App() {
@@ -33,7 +36,7 @@ export default function App() {
       <Route path={`${BASE}/tools/reference-call-handyman`} component={ReferenceCallHandyman} />
       <Route path={`${BASE}/tools/candidate-tracker`} component={CandidateTracker} />
       <Route path={`${BASE}/tools/salt-close`}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<div>Loading…</div>}>
           <SaltMonthlyClose />
         </Suspense>
       </Route>

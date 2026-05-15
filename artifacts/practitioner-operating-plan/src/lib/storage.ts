@@ -75,7 +75,6 @@ export function saveSnapshots(snapshots: QuarterSnapshot[]): void {
 
 export function appendSnapshot(snapshot: QuarterSnapshot): void {
   const existing = loadSnapshots();
-  // Replace if same id (re-lock edge case), otherwise append
   const idx = existing.findIndex((s) => s.id === snapshot.id);
   if (idx >= 0) {
     existing[idx] = snapshot;
@@ -170,7 +169,7 @@ export function currentQuarterId(): string {
   return `${now.getFullYear()}-Q${q}`;
 }
 
-// ── Bench overrides ───────────────────────────────────────────────────────────
+// ── Bench override storage ────────────────────────────────────────────────────
 
 /**
  * An OM-authored swap on a scheduled bench role for one week.
@@ -217,7 +216,7 @@ export function loadBenchOverrides(): BenchOverride[] {
   );
 }
 
-/** Return the override for a specific week, or null if none. */
+/** Return the override for a specific week (by "YYYY-Wnn" string), or null if none. */
 export function loadBenchOverride(weekId: string): BenchOverride | null {
   return loadOverrideStore()[weekId] ?? null;
 }
@@ -232,9 +231,30 @@ export function saveBenchOverride(override: BenchOverride): void {
   persistOverrideStore(store);
 }
 
-/** Remove the override record for a week entirely. */
+/** Remove the override record for a week entirely (accepts "YYYY-Wnn" string). */
 export function deleteBenchOverride(weekId: string): void {
   const store = loadOverrideStore();
   delete store[weekId];
   persistOverrideStore(store);
+}
+
+/**
+ * Convenience alias: restore the bench rotation for a given ISO week number.
+ * Converts the number to a weekId string, e.g. 20 → "2026-W20" using the
+ * current year.
+ */
+export function clearBenchOverride(isoWeekOrId: number | string): void {
+  if (typeof isoWeekOrId === "string") {
+    deleteBenchOverride(isoWeekOrId);
+    return;
+  }
+  const store = loadOverrideStore();
+  const matchKey = Object.keys(store).find((k) => {
+    const m = k.match(/-W(\d+)$/);
+    return m ? parseInt(m[1], 10) === isoWeekOrId : false;
+  });
+  if (matchKey) {
+    delete store[matchKey];
+    persistOverrideStore(store);
+  }
 }

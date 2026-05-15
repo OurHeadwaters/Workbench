@@ -8,7 +8,8 @@ import {
   getTodayWeek,
   type Phase,
 } from "@/data/plan2026";
-import { loadBenchOverrides, deleteBenchOverride, type BenchOverride } from "@/lib/storage";
+import { Q2_BATCHES } from "@/lib/saltBench";
+import { loadBenchOverrides, clearBenchOverride, type BenchOverride } from "@/lib/storage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -20,11 +21,17 @@ const PHASE_WEEK_RANGES: Record<Phase, string> = {
 
 // ── Bench Swap Audit Panel ─────────────────────────────────────────────────────
 
+/** Extracts the numeric ISO week from a "YYYY-Wnn" key, e.g. "2026-W20" → 20. */
+function weekIdToNumber(weekId: string): number | null {
+  const m = weekId.match(/-W(\d+)$/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
 function BenchSwapAudit() {
-  const [swapped, setSwapped] = useState<BenchOverride[]>([]);
+  const [overrides, setOverrides] = useState<BenchOverride[]>([]);
 
   const refresh = useCallback(() => {
-    setSwapped(loadBenchOverrides());
+    setOverrides(loadBenchOverrides());
   }, []);
 
   useEffect(() => {
@@ -32,11 +39,15 @@ function BenchSwapAudit() {
   }, [refresh]);
 
   function handleRestore(weekId: string) {
-    deleteBenchOverride(weekId);
+    clearBenchOverride(weekId);
     refresh();
   }
 
-  if (swapped.length === 0) return null;
+  const activeSwaps = overrides.filter(
+    (ov) => ov.primaryName !== undefined || ov.standbyName !== undefined,
+  );
+
+  if (activeSwaps.length === 0) return null;
 
   return (
     <div
@@ -86,14 +97,18 @@ function BenchSwapAudit() {
             letterSpacing: "0.08em",
           }}
         >
-          {swapped.length} swap{swapped.length !== 1 ? "s" : ""} this year
+          {activeSwaps.length} swap{activeSwaps.length !== 1 ? "s" : ""} this year
         </span>
       </div>
 
       {/* Swap rows */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {swapped.map((ov) => {
-          const savedDate = ov.overriddenAt
+        {overrides.map((ov) => {
+          const wkNum = weekIdToNumber(ov.weekId);
+          const batch = wkNum !== null
+            ? Q2_BATCHES.find((b) => b.isoWeek === wkNum)
+            : undefined;
+          const swappedDate = ov.overriddenAt
             ? new Date(ov.overriddenAt).toLocaleDateString("en-CA", {
                 month: "short",
                 day: "numeric",
@@ -129,23 +144,35 @@ function BenchSwapAudit() {
                       marginBottom: 2,
                     }}
                   >
-                    {ov.weekId}
+                    {ov.weekId}{batch ? ` · ${batch.batchLabel}` : ""}
                   </div>
+                  {batch && (
+                    <div
+                      style={{
+                        fontFamily: "IBM Plex Mono, monospace",
+                        fontSize: 9,
+                        color: "#9a9a8e",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {batch.dateRange}
+                    </div>
+                  )}
                 </div>
 
                 {/* Swap details */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
-                  {ov.primaryName && (
+                  {ov.primaryName && batch && (
                     <SwapLine
                       role="Primary"
-                      from="—"
+                      from={batch.defaultPrimary}
                       to={ov.primaryName}
                     />
                   )}
-                  {ov.standbyName && (
+                  {ov.standbyName && batch && (
                     <SwapLine
                       role="Standby"
-                      from="—"
+                      from={batch.defaultStandby}
                       to={ov.standbyName}
                     />
                   )}
@@ -158,7 +185,7 @@ function BenchSwapAudit() {
                         marginTop: 1,
                       }}
                     >
-                      "{ov.primaryReason || ov.standbyReason}"
+                      "{ov.primaryReason ?? ov.standbyReason}"
                     </div>
                   )}
                   {savedDate && (
