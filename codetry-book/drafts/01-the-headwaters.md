@@ -92,7 +92,7 @@ The constellation that emerged from this practice is not a theory. It is a set o
 
 ---
 
-**Headwaters · Zone 1** — An envelope-budgeting app built on the XRPL. The household balance is the source of the whole watershed; every other zone sits downstream. You can only pour from one bucket to another — the software won't let you summon money from nothing.
+**the Eave** — An envelope-budgeting app built on the XRPL. The household balance is the source of the whole watershed; every other zone sits downstream. You can only pour from one bucket to another — the software won't let you summon money from nothing.
 
 ---
 

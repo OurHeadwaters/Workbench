@@ -371,7 +371,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Buckets",
-          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket — the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked Zone 1 word map."
+          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket — the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked the Eave word map."
         },
         {
           "name": "XRP Spring",
@@ -451,7 +451,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "name": "Fill (verb)",
-          "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 — the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any Zone 1 surface (decision logged in Test 002, Task #851)."
+          "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 — the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any the Eave surface (decision logged in Test 002, Task #851)."
         },
         {
           "name": "Drainage",

@@ -43,7 +43,7 @@
 
 **The Standby** (Ch4) — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name. The constellation's first non-zone primitive. Full six-word vocabulary: see Appendix I.
 
-**Zone** (Ch4, foreshadowed in Ch1; enumeration added 2026-05-06) — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. *(Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Headwaters Zone 1, Dam Days Zone 5 — and are consistent with this enumeration.)*
+**Zone** (Ch4, foreshadowed in Ch1; enumeration added 2026-05-06) — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; the Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. *(Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, the Eave, Dam Days Zone 5 — and are consistent with this enumeration.)*
 
 ---
 
@@ -113,14 +113,14 @@ Literate programming is a prior-art concept from software practice, not a codetr
 **Practitioner / Practitioner's workbench** — *Decision A: Practitioner added to Ch4 vocabulary.*
 Practitioner is too central to leave without an entry — it is the operative identity from Ch1 through Ch5. The entry defines it as a posture, not a role specification, and absorbs practitioner's workbench as a sub-entry (the rename from "founder's dashboard" is itself a worked example of the discipline).
 
-**The Siphon** *(Ch4)* — *Decision C: confirmed as Zone 1 internal vocabulary.*
-"The Siphon is the bill that leaves before you see the money." This is envelope-budget vocabulary belonging to the Headwaters Zone 1 app. It is a named concept within Zone 1's internal vocabulary, not a cross-constellation primitive requiring a formal entry in the shared glossary.
+**The Siphon** *(Ch4)* — *Decision C: confirmed as the Eave internal vocabulary.*
+"The Siphon is the bill that leaves before you see the money." This is envelope-budget vocabulary belonging to the the Eave app. It is a named concept within the Eave's internal vocabulary, not a cross-constellation primitive requiring a formal entry in the shared glossary.
 
 **The Stuck Board** *(Ch4)* — *Decision C: confirmed as illustrative example.*
 The Stuck Board demonstrates the codetry principle that the name is the spec — it is a worked example in Ch4 §The name changes the tool. It is not itself a named primitive of the constellation. No vocabulary entry.
 
-**Zone 0 / Zone 1 / Zone 5** — *Decision A: zone enumeration added to the Zone entry.*
-The Zone entry in the Formal Vocabulary section above now enumerates all six zones by number: Zone 0 — household; Zone 1 — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. The numbered zone names used throughout Ch1–Ch5 (Saltbox Zone Zero, Headwaters Zone 1, Dam Days Zone 5) are consistent with this enumeration.
+**Zone 0 / the Eave / Zone 5** — *Decision A: zone enumeration added to the Zone entry.*
+The Zone entry in the Formal Vocabulary section above now enumerates all six zones by number: Zone 0 — household; the Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. The numbered zone names used throughout Ch1–Ch5 (Saltbox Zone Zero, the Eave, Dam Days Zone 5) are consistent with this enumeration.
 
 ---
 

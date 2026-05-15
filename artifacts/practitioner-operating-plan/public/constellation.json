@@ -343,7 +343,7 @@
         "active": "advisor",
         "switch": "VITE_TENANT_MODE"
       },
-      "role": "parent metaphor for Zone 1; household primitive available for Zone 0",
+      "role": "parent metaphor for the Eave; household primitive available for Zone 0",
       "revenueModel": {
         "primary": "Premium subs via Stripe (web) + RevenueCat (native) \u2014 $12/mo or $99/yr (annual anchored to YNAB / Monarch / Copilot category price)",
         "launchTier": "$179 lifetime, time-boxed launch event only, capped at first 100 buyers \u2014 never offered as a default purchase option",
@@ -394,7 +394,7 @@
         },
         {
           "name": "Buckets",
-          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket \u2014 the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked Zone 1 word map."
+          "rule": "envelope categories. You can only pour from one bucket into another; never summon water from nothing. Every transfer is a literal redistribution. Rename to 'Categories' and the UI starts quietly suggesting balances can grow by clicking. Per Test 005, 'cistern' was retired in favour of Bucket \u2014 the Earn surface had been calling savings envelopes 'cisterns' in violation of the locked the Eave word map."
         },
         {
           "name": "XRP Spring",
@@ -474,7 +474,7 @@
         },
         {
           "name": "Fill (verb)",
-          "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 \u2014 the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any Zone 1 surface (decision logged in Test 002, Task #851)."
+          "rule": "the act of putting idle RLUSD into a Lake. Renamed from 'park' by Task #849 \u2014 the Earn surface used 'park' as the verb for moving RLUSD into an LP; 'fill' brings the verb inside the water register and removes the last instance of 'park' from any the Eave surface (decision logged in Test 002, Task #851)."
         },
         {
           "name": "Drainage",
@@ -833,7 +833,7 @@
       ],
       "crossZoneSeams": [
         {
-          "to": "Zone 1 (Headwaters)",
+          "to": "the Eave (Headwaters)",
           "seam": "Black Barn's Local Line export (pending) is real cash-flow from a Z4 pilot producer. If they're a Headwaters household, the same numbers feed both apps \u2014 don't double-instrument; one captures, the other reads."
         },
         {
@@ -1111,7 +1111,7 @@
   ],
   "openQuestions": [
     "Saltbox vs SaltBox vs Salt box \u2014 three writings have appeared. Z0 agent uses 'Saltbox' (one word, capital S). Pending practitioner decision.",
-    "Headwaters in /codetry doc title \u2014 Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'Headwaters Zone 1 (parent)' with '(was xBuckets / Watershed)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
+    "Headwaters in /codetry doc title \u2014 Z1 agent confirmed xBuckets is FORMER name. Doc now reads 'the Eave (parent)' with '(was xBuckets / Watershed)' inline. Easy to flip if practitioner wants xBuckets visible in title.",
     "Watershed namespace \u2014 Z5 owns watershed.replit.app + watershed:* storage + 'headwaters' as a chapter ID enum value. Z1 lists 'Watershed' as a former name and now uses 'Headwaters'. Practitioner: was Watershed historically Z1's, then renamed in deference to Z5? Or some other history? Worth disambiguating before the registry calcifies.",
     "/business \u2014 real route to create on this Z2 site, or shorthand for 'this site as a whole'?",
     "Bilingual surface area \u2014 Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?",

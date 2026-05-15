@@ -206,7 +206,7 @@ export const STACK_CARDS: StackCard[] = [
     category: "The Constellation",
     question: "What are the constellation zones, and what does each represent?",
     context:
-      "The zones organize scale and relationship: Zone 0 is the household (the smallest unit of practice); Zone 1 is the immediate network; Zone 2 is the community; Zone 3 is the broader ecosystem. Work done in Zone 0 generates the capacity that makes Zone 3 possible. The zones are not a hierarchy — they are a map of how the practice propagates.",
+      "The zones organize scale and relationship: Zone 0 is the household (the smallest unit of practice); the Eave is the immediate network; Zone 2 is the community; Zone 3 is the broader ecosystem. Work done in Zone 0 generates the capacity that makes Zone 3 possible. The zones are not a hierarchy — they are a map of how the practice propagates.",
     steps: [
       {
         id: "zones-1",
