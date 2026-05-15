@@ -8,6 +8,9 @@ import ReferenceCallHandyman from "./pages/ReferenceCallHandyman";
 import CandidateTracker from "./pages/CandidateTracker";
 import ToolsIndex from "./pages/ToolsIndex";
 import SaltMonthlyClose from "./pages/SaltMonthlyClose";
+import PlanYear from "./pages/PlanYear";
+import PlanWeek from "./pages/PlanWeek";
+import PlanToday from "./pages/PlanToday";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -22,6 +25,9 @@ export default function App() {
       <Route path={`${BASE}/tools/reference-call-handyman`} component={ReferenceCallHandyman} />
       <Route path={`${BASE}/tools/candidate-tracker`} component={CandidateTracker} />
       <Route path={`${BASE}/tools/salt-close`} component={SaltMonthlyClose} />
+      <Route path={`${BASE}/plan`} component={PlanYear} />
+      <Route path={`${BASE}/plan/today`} component={PlanToday} />
+      <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
       <Route component={DeckPlayer} />
     </Switch>
   );
