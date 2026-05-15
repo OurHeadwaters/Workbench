@@ -225,3 +225,92 @@ export function dismissRollover(weekKey: string): WeeklyThree {
   return next;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Daily "Three Things" API
+// Used by the ThreeThings desktop card component.
+// Storage key: hwop_daily_three_v1 → Record<dateKey, (DailyItem|null)[]>
+// dateKey format: "YYYY-MM-DD"
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface DailyItem {
+  text: string;
+  done: boolean;
+}
+
+export type DayThings = [DailyItem | null, DailyItem | null, DailyItem | null];
+
+const DAILY_KEY = "hwop_daily_three_v1";
+
+function dateToKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+export function todayKey(): string {
+  return dateToKey(new Date());
+}
+
+export function yesterdayKey(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return dateToKey(d);
+}
+
+function loadDailyStore(): Record<string, (DailyItem | null)[]> {
+  try {
+    const raw = localStorage.getItem(DAILY_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as Record<string, (DailyItem | null)[]>;
+  } catch {
+    return {};
+  }
+}
+
+function saveDailyStore(store: Record<string, (DailyItem | null)[]>): void {
+  try {
+    localStorage.setItem(DAILY_KEY, JSON.stringify(store));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+export function loadDayThings(dayKey: string): DayThings {
+  const store = loadDailyStore();
+  const raw = store[dayKey] ?? [null, null, null];
+  return [raw[0] ?? null, raw[1] ?? null, raw[2] ?? null];
+}
+
+export function setDailyThing(dayKey: string, slot: number, item: DailyItem | null): void {
+  const store = loadDailyStore();
+  const current: (DailyItem | null)[] = store[dayKey] ?? [null, null, null];
+  current[slot] = item;
+  store[dayKey] = current;
+  saveDailyStore(store);
+}
+
+export function getUncheckedFromDay(dayKey: string): DailyItem[] {
+  const things = loadDayThings(dayKey);
+  return things.filter((it): it is DailyItem => it !== null && !it.done && it.text.trim().length > 0);
+}
+
+/**
+ * Carries unchecked items from yesterday into today's empty slots.
+ * Returns the slot indices (0–2) that were filled.
+ */
+export function carryOverFromYesterday(): number[] {
+  const yKey = yesterdayKey();
+  const tKey = todayKey();
+  const unchecked = getUncheckedFromDay(yKey);
+  if (unchecked.length === 0) return [];
+  const today = loadDayThings(tKey);
+  const filled: number[] = [];
+  let uIdx = 0;
+  for (let slot = 0; slot < 3 && uIdx < unchecked.length; slot++) {
+    if (today[slot] === null) {
+      setDailyThing(tKey, slot, { ...unchecked[uIdx], done: false });
+      filled.push(slot);
+      uIdx++;
+    }
+  }
+  return filled;
+}
+

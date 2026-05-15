@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
-import { Suspense, lazy } from "react";
 import OnePager from "./pages/OnePager";
 import HiringTemplates from "./pages/HiringTemplates";
 import HoursByPillar from "./pages/HoursByPillar";
