@@ -15,6 +15,7 @@ import PlanWeek from "./pages/PlanWeek";
 import PlanToday from "./pages/PlanToday";
 import Week from "./pages/Week";
 import WeekCloseOut from "./pages/WeekCloseOut";
+import CostReviewModal from "./components/CostReviewModal";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -33,6 +34,7 @@ export default function App() {
       <Route path={`${BASE}/tools/salt-yearly`} component={SaltYearlySummary} />
       <Route path={`${BASE}/tools/bench/week`} component={Week} />
       <Route path={`${BASE}/tools/bench/close`} component={WeekCloseOut} />
+      <Route path={`${BASE}/tools/cost-review`} component={CostReviewModal} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />

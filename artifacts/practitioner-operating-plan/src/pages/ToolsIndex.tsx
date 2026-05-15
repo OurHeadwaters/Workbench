@@ -17,6 +17,16 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const TOOLS = [
   {
+    number: "00",
+    title: "Cost Review",
+    subtitle: "Founder · override any planning default · exportable audit trail",
+    description:
+      "Review every cost line from the Scenario B planning baseline. Override any value, attach a private note, or mark items as deferred. The Edits tab shows a clean diff — default vs your number, Δ per month, and notes — ready to print for board conversations in one click.",
+    path: `${BASE}/tools/cost-review`,
+    label: "Open cost review →",
+    warn: false,
+  },
+  {
     number: "01",
     title: "SALT-01 Monthly Close",
     subtitle: "Bookkeeper · file each month's salt revenue and expenses",
