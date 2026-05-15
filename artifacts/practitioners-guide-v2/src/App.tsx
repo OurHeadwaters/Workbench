@@ -29,6 +29,7 @@ import { SargeHQPage } from "@/pages/SargeHQPage";
 import { PrivacyPage } from "@/pages/PrivacyPage";
 import { DeerLakePage } from "@/pages/DeerLakePage";
 import { FlaggedPage } from "@/pages/FlaggedPage";
+import { AnnualCheckInPage } from "@/pages/AnnualCheckInPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ function Router() {
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/deer-lake" component={DeerLakePage} />
       <Route path="/flagged" component={FlaggedPage} />
+      <Route path="/year/check-in" component={AnnualCheckInPage} />
       <Route component={NotFound} />
     </Switch>
   );
