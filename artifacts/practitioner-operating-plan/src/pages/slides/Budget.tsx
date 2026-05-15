@@ -175,7 +175,7 @@ export default function Budget() {
         </h1>
         <div className="font-display italic text-[1.4vw] text-muted mb-[3vh] max-w-[65vw]">
           Same work as V2, but no double-payment. Food Handler and Ops Manager fold into the
-          Hub Operator headline on the closing slide — broken out here so the CFO can audit every line.
+          Hub Operator headline (V · Net-positive accountability) — broken out here so the CFO can audit every line.
           {selected === "C" && (
             <span className="ml-[0.5vw] not-italic text-accent text-[1.1vw]">
               ↳ Scenario C adds Sr Engineer #2, Regional Outreach, Council Trainer, and expanded life supports (+{fmt(COST_BASIS.c - COST_BASIS.b)}/mo).

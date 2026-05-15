@@ -1,156 +1,212 @@
 /**
  * check-slide-refs.ts
  *
- * Scans every .tsx / .ts file under src/ for parenthesised cross-references
- * in the form  (Roman · descriptor)
+ * Build-time checker for slide cross-references.
  *
- * e.g.  (VI · 05)                        — eyebrow / step-number ref
- *       (VIII · 06)                       — eyebrow / step-number ref
- *       (V · Net-positive accountability) — position + title-fragment ref
+ * Catches text-based cross-references of the form (ROMAN · text) — e.g.
+ * "(V · Net-positive accountability)" — and verifies that a slide in the
+ * slides directory has a matching eyebrow that starts with that prefix.
  *
- * For EVERY match the script looks for a manifest entry whose title contains
- * the literal string  "Roman · descriptor"  (case-insensitive).  If no slide
- * title matches, the reference is stale.
+ * Part of the `check` pipeline alongside validate-slides.ts:
+ *   pnpm run check   →  validate-slides && check-slide-refs
  *
- * A failing check reports:
- *   file path · line number · the stale pattern · a list of what the manifest
- *   currently has that starts with the same Roman prefix (so the author knows
- *   what to update it to).
+ * Usage standalone:
+ *   pnpm --filter @workspace/practitioner-operating-plan run check-slide-refs
  *
- * Exit 0 → all references resolve to a current slide title.
- * Exit 1 → one or more stale / unresolvable references.
+ * Exit 0 → all refs valid.
+ * Exit 1 → at least one stale ref (renamed or moved slide).
  */
 
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
-const MANIFEST_PATH = path.join(ROOT, "src/data/slides-manifest.json");
-const SRC_DIR = path.join(ROOT, "src");
+import { readFileSync, readdirSync, statSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-interface SlideEntry {
-  id: string;
-  position: number;
-  filepath: string;
-  title: string;
+
+export interface SourceFile {
+  path: string;
+  content: string;
 }
 
-// ── Normalise a string for case-insensitive containment check ─────────────────
-function normalise(s: string): string {
-  return s.toLowerCase();
+export interface CrossRef {
+  /** Full normalised ref text, e.g. "V · Net-positive accountability" */
+  text: string;
+  file: string;
+  line: number;
 }
 
-// ── Collect all .ts / .tsx source files recursively ──────────────────────────
-function collectSourceFiles(dir: string, acc: string[] = []): string[] {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      collectSourceFiles(full, acc);
-    } else if (
-      entry.isFile() &&
-      (entry.name.endsWith(".tsx") || entry.name.endsWith(".ts"))
-    ) {
-      acc.push(full);
+export interface CheckError {
+  ref: CrossRef;
+  message: string;
+}
+
+// ── Regex constants ───────────────────────────────────────────────────────────
+
+const ROMAN_CHARS = "IVXLCDM";
+
+/**
+ * Matches text-based cross-references in parentheses:
+ *   (ROMAN · text-starting-with-letter)
+ * Excludes numeric refs like (VIII · 06) where text starts with a digit.
+ */
+const TEXT_CROSS_REF_RE = new RegExp(
+  `\\(([${ROMAN_CHARS}]+)\\s*·\\s*([A-Za-z][^)]+)\\)`,
+  "g"
+);
+
+/**
+ * Matches eyebrow declarations in slide source files:
+ *   ROMAN · text-starting-with-letter
+ *
+ * Lookbehind excludes:
+ *   - matches inside longer words (e.g. the "L" in "SALT")
+ *   - matches that start immediately after "(" — that would be a cross-
+ *     reference being mistaken for an eyebrow declaration (e.g. the body
+ *     text "(V · Net-positive accountability)" must NOT be treated as an
+ *     eyebrow, only the actual eyebrow label in the slide header qualifies).
+ */
+const EYEBROW_RE = new RegExp(
+  `(?<![A-Za-z(])([${ROMAN_CHARS}]+)\\s*·\\s*([A-Za-z][^<>\\n"'\`{};,]*)`,
+  "g"
+);
+
+// ── File helpers ──────────────────────────────────────────────────────────────
+
+function walkTs(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    const st = statSync(full);
+    if (st.isDirectory()) {
+      results.push(...walkTs(full));
+    } else if (entry.endsWith(".tsx") || entry.endsWith(".ts")) {
+      results.push(full);
     }
   }
-  return acc;
+  return results;
 }
 
-// ── Pattern: ( RomanNumeral · some text )  ────────────────────────────────────
-// Captures: group 1 = Roman numeral token, group 2 = descriptor text
-// Matches both eyebrow refs (VI · 05), (VIII · 06) and title refs
-// (V · Net-positive accountability).
-const REF_PATTERN = /\(([IVXLCDM]+)\s·\s([^)]+)\)/g;
-
-function fail(msg: string): void {
-  process.stderr.write(`[check-slide-refs] ERROR  ${msg}\n`);
+function readFiles(paths: string[]): SourceFile[] {
+  return paths.map((p) => ({ path: p, content: readFileSync(p, "utf8") }));
 }
 
-function info(msg: string): void {
-  process.stdout.write(`[check-slide-refs] ${msg}\n`);
-}
+// ── Core functions (exported for testing) ────────────────────────────────────
 
-// ── Load manifest ─────────────────────────────────────────────────────────────
-if (!fs.existsSync(MANIFEST_PATH)) {
-  fail(`Manifest not found: ${MANIFEST_PATH}`);
-  process.exit(1);
-}
-
-const manifest: SlideEntry[] = JSON.parse(
-  fs.readFileSync(MANIFEST_PATH, "utf8"),
-);
-
-// Pre-normalise titles for fast lookup
-const normalisedTitles: { entry: SlideEntry; norm: string }[] = manifest.map(
-  (e) => ({ entry: e, norm: normalise(e.title) }),
-);
-
-// ── Scan source files ─────────────────────────────────────────────────────────
-const files = collectSourceFiles(SRC_DIR);
-let errors = 0;
-let refsChecked = 0;
-
-for (const file of files) {
-  const rel = path.relative(ROOT, file);
-  const source = fs.readFileSync(file, "utf8");
-  const lines = source.split("\n");
-
-  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
-    const line = lines[lineIdx];
-    REF_PATTERN.lastIndex = 0;
-    let match: RegExpExecArray | null;
-
-    while ((match = REF_PATTERN.exec(line)) !== null) {
-      const [fullMatch, romanRaw, descriptorRaw] = match;
-      const descriptor = descriptorRaw.trim();
-
-      // The canonical eyebrow string we expect to find in a slide title:
-      // e.g.  "VI · 05"  or  "V · Net-positive accountability"
-      const eyebrow = `${romanRaw} · ${descriptor}`;
-      const eyebrowNorm = normalise(eyebrow);
-
-      refsChecked++;
-
-      // Does any manifest title contain this eyebrow string?
-      const matched = normalisedTitles.filter((t) =>
-        t.norm.includes(eyebrowNorm),
-      );
-
-      if (matched.length === 0) {
-        // Collect hints: manifest titles that share the same Roman prefix
-        const prefix = normalise(`${romanRaw} ·`);
-        const hints = normalisedTitles
-          .filter((t) => t.norm.includes(prefix))
-          .map((t) => `  pos ${t.entry.position}: "${t.entry.title}"`);
-
-        const hintBlock =
-          hints.length > 0
-            ? `\n  Slides in the manifest that share the same "${romanRaw} ·" prefix:\n${hints.join("\n")}`
-            : `\n  No slides in the manifest have a "${romanRaw} ·" prefix at all.`;
-
-        fail(
-          `${rel}:${lineIdx + 1}  ${fullMatch}\n` +
-            `  No slide found whose title contains "${eyebrow}".` +
-            hintBlock +
-            `\n  Update the reference or rename the slide eyebrow in the manifest.`,
-        );
-        errors++;
+/**
+ * Collect eyebrow labels from slide source files.
+ *
+ * Returns a Set of normalised "ROMAN · text" strings found in the files.
+ * Normalisation: trim + collapse internal whitespace.
+ */
+export function collectEyebrows(files: SourceFile[]): Set<string> {
+  const eyebrows = new Set<string>();
+  for (const { content } of files) {
+    EYEBROW_RE.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = EYEBROW_RE.exec(content)) !== null) {
+      const roman = m[1];
+      const text = m[2].trim().replace(/\s+/g, " ");
+      if (text.length >= 3) {
+        eyebrows.add(`${roman} · ${text}`);
       }
     }
   }
+  return eyebrows;
 }
 
-// ── Summary ───────────────────────────────────────────────────────────────────
-if (errors === 0) {
-  info(
-    `Checked ${refsChecked} cross-reference${refsChecked !== 1 ? "s" : ""} across ${files.length} files — OK`,
-  );
-} else {
-  fail(
-    `${errors} stale cross-reference${errors !== 1 ? "s" : ""} found — fix the issues above.`,
+/**
+ * Collect text-based cross-references from source files.
+ *
+ * Only returns refs of the form (ROMAN · text) where the text after `· `
+ * starts with a letter — numeric refs like (VIII · 06) are excluded.
+ */
+export function collectTextCrossRefs(files: SourceFile[]): CrossRef[] {
+  const refs: CrossRef[] = [];
+  for (const { path: filePath, content } of files) {
+    const lines = content.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      TEXT_CROSS_REF_RE.lastIndex = 0;
+      let m: RegExpExecArray | null;
+      while ((m = TEXT_CROSS_REF_RE.exec(lines[i])) !== null) {
+        const roman = m[1];
+        const text = m[2].trim().replace(/\s+/g, " ");
+        refs.push({ text: `${roman} · ${text}`, file: filePath, line: i + 1 });
+      }
+    }
+  }
+  return refs;
+}
+
+/**
+ * Validate each text cross-reference against collected eyebrows.
+ *
+ * A ref "ROMAN · text" is valid when at least one eyebrow either equals the
+ * ref text or starts with it followed by a non-alphanumeric character
+ * (allowing suffix text like " — subtitle" after the key phrase).
+ *
+ * Comparison is case-insensitive with normalised whitespace.
+ */
+export function checkTextRefs(
+  eyebrows: Set<string>,
+  refs: CrossRef[]
+): CheckError[] {
+  const errors: CheckError[] = [];
+  for (const ref of refs) {
+    const normalizedRef = ref.text.replace(/\s+/g, " ").trim().toLowerCase();
+    const matched = [...eyebrows].some((eyebrow) => {
+      const norm = eyebrow.replace(/\s+/g, " ").trim().toLowerCase();
+      if (!norm.startsWith(normalizedRef)) return false;
+      if (norm.length === normalizedRef.length) return true;
+      return !/[a-z0-9]/.test(norm[normalizedRef.length]);
+    });
+    if (!matched) {
+      errors.push({
+        ref,
+        message:
+          `Stale text cross-reference "(${ref.text})" at ${ref.file}:${ref.line}` +
+          ` — no slide eyebrow starts with "${ref.text}"`,
+      });
+    }
+  }
+  return errors;
+}
+
+// ── Main runner ───────────────────────────────────────────────────────────────
+
+export function run(rootDir?: string): void {
+  const root =
+    rootDir ??
+    join(dirname(fileURLToPath(import.meta.url)), "..");
+
+  const slidesDir = join(root, "src", "pages", "slides");
+  const srcDir = join(root, "src");
+
+  const slideFiles = readFiles(walkTs(slidesDir));
+  const allSrcFiles = readFiles(walkTs(srcDir));
+
+  const eyebrows = collectEyebrows(slideFiles);
+  const refs = collectTextCrossRefs(allSrcFiles);
+  const errors = checkTextRefs(eyebrows, refs);
+
+  if (errors.length === 0) {
+    console.log(
+      `✓ check-slide-refs: ${refs.length} text cross-reference(s) verified` +
+        ` against ${eyebrows.size} eyebrow(s) — all valid.`
+    );
+    return;
+  }
+
+  for (const err of errors) {
+    console.error(err.message);
+  }
+  console.error(
+    `\n✗ check-slide-refs: ${errors.length} stale text cross-reference(s) found.`
   );
   process.exit(1);
+}
+
+// Run when executed directly (tsx scripts/check-slide-refs.ts)
+const __filename = fileURLToPath(import.meta.url);
+if (process.argv[1] === __filename) {
+  run();
 }

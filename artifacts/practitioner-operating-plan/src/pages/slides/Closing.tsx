@@ -18,7 +18,7 @@ export default function Closing() {
           <div className="flex items-center gap-[1.2vw]">
             <div className="w-[1.4vw] h-[1.4vw] rounded-full" style={{ background: "var(--slide-accent)" }} />
             <div className="font-mono uppercase tracking-[0.25em] text-[1.1vw] opacity-90">
-              Practitioner Operating Plan — Closing
+              V · Net-positive accountability
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] opacity-60">
