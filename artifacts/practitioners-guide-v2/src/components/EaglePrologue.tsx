@@ -1,5 +1,6 @@
-import { useCallback } from "react";
-import { ChevronDown } from "lucide-react";
+import { useCallback, useState } from "react";
+import { ChevronDown, Camera } from "lucide-react";
+import { EAGLE_PHOTOS, useEaglePhoto, type EaglePhotoId } from "@/hooks/useEaglePhoto";
 
 interface EaglePrologueProps {
   continueId: string;
@@ -8,6 +9,9 @@ interface EaglePrologueProps {
 const base = import.meta.env.BASE_URL;
 
 export function EaglePrologue({ continueId }: EaglePrologueProps) {
+  const { photoId, setPhotoId, photo } = useEaglePhoto();
+  const [pickerOpen, setPickerOpen] = useState(false);
+
   const handleContinue = useCallback(() => {
     const target = document.getElementById(continueId);
     if (target) {
@@ -23,10 +27,11 @@ export function EaglePrologue({ continueId }: EaglePrologueProps) {
       style={{ backgroundColor: "hsl(167 48% 14%)" }}
     >
       <img
-        src={`${base}eagle-sky-1-1920x1080.jpg`}
-        alt="A bald eagle soaring high against a brilliant blue sky"
+        key={photo.filename}
+        src={`${base}${photo.filename}`}
+        alt={photo.alt}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 40%" }}
+        style={{ objectPosition: photo.objectPosition }}
       />
       <div
         className="absolute inset-0"
@@ -45,7 +50,64 @@ export function EaglePrologue({ continueId }: EaglePrologueProps) {
             />
             <span>Prologue · The eagle answered</span>
           </div>
-          <span className="hidden sm:inline opacity-75">Is this the right direction?</span>
+          <div className="flex items-center gap-4">
+            <span className="hidden sm:inline opacity-75">Is this the right direction?</span>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setPickerOpen((o) => !o)}
+                className="flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] opacity-70 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white/40 rounded px-2 py-1"
+                aria-label="Change cover photo"
+                data-testid="eagle-photo-picker-toggle"
+              >
+                <Camera className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Cover photo</span>
+              </button>
+
+              {pickerOpen && (
+                <div
+                  className="absolute right-0 top-full mt-2 flex gap-2 p-2 rounded-xl shadow-2xl"
+                  style={{ backgroundColor: "rgba(0,10,30,0.88)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)" }}
+                  data-testid="eagle-photo-picker"
+                >
+                  {EAGLE_PHOTOS.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        setPhotoId(p.id as EaglePhotoId);
+                        setPickerOpen(false);
+                      }}
+                      className="flex flex-col items-center gap-1 group focus:outline-none"
+                      aria-label={`Use ${p.label} photo`}
+                      data-testid={`eagle-photo-option-${p.id}`}
+                    >
+                      <div
+                        className="w-20 h-12 rounded-lg overflow-hidden transition-all"
+                        style={{
+                          outline: photoId === p.id ? "2px solid #e9c8a8" : "2px solid transparent",
+                          outlineOffset: "2px",
+                        }}
+                      >
+                        <img
+                          src={`${base}${p.filename}`}
+                          alt={p.label}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          style={{ objectPosition: p.objectPosition }}
+                        />
+                      </div>
+                      <span
+                        className="text-[10px] uppercase tracking-wider"
+                        style={{ color: photoId === p.id ? "#e9c8a8" : "rgba(255,255,255,0.6)" }}
+                      >
+                        {p.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="text-center mt-12 sm:mt-0">
