@@ -1,5 +1,5 @@
 import { useEffect, useCallback, ComponentType } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { ErrorBoundary } from "./ErrorBoundary";
 import manifest from "../data/slides-manifest.json";
 
@@ -204,11 +204,20 @@ export default function DeckPlayer() {
           ))}
         </div>
 
-        {/* Slide counter */}
-        <div className="flex items-center gap-[0.6vw] font-mono text-paper/60" style={{ fontSize: "0.9vw" }}>
-          <span style={{ color: "var(--slide-accent)" }}>{idx + 1}</span>
-          <span className="opacity-30">/</span>
-          <span>{TOTAL}</span>
+        {/* Right side: slide counter + tools link */}
+        <div className="flex items-center gap-[1.4vw]">
+          <Link
+            href={`${BASE}/tools`}
+            className="font-mono uppercase tracking-[0.18em] text-paper/45 hover:text-paper/80 transition-colors duration-150"
+            style={{ fontSize: "0.72vw", textDecoration: "none" }}
+          >
+            Tools ↗
+          </Link>
+          <div className="flex items-center gap-[0.6vw] font-mono text-paper/60" style={{ fontSize: "0.9vw" }}>
+            <span style={{ color: "var(--slide-accent)" }}>{idx + 1}</span>
+            <span className="opacity-30">/</span>
+            <span>{TOTAL}</span>
+          </div>
         </div>
       </div>
     </div>
