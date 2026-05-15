@@ -222,6 +222,13 @@ const outreachPieces = [
     icon: "📋",
   },
   {
+    href: "/codetry-packet-sandy-lake",
+    title: "Codetry Print Packet — Sandy Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Complete outreach packet for Sandy Lake: cover sheet, intro letter, economic development one-pager, funding brief, and pilot proposal — all stacked in one PDF. Letter size (8.5×11).",
+    icon: "📦",
+  },
+  {
     href: "/codetry-intro-letter-sandy-lake",
     title: "Codetry Intro Letter — Sandy Lake First Nation",
     label: "Aboriginal Outreach",
