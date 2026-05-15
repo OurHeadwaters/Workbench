@@ -6,11 +6,15 @@
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "build": "node scripts/generate-cashflow-xlsx.mjs && vite build --config vite.config.ts",
+    "postbuild": "pnpm run check",
     "build:cashflow-xlsx": "node scripts/generate-cashflow-xlsx.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --config vitest.config.ts",
-    "test:watch": "vitest --config vitest.config.ts"
+    "test:watch": "vitest --config vitest.config.ts",
+    "validate-slides": "tsx scripts/validate-slides.ts",
+    "check-slide-refs": "tsx scripts/check-slide-refs.ts",
+    "check": "pnpm run validate-slides && pnpm run check-slide-refs"
   },
   "dependencies": {
     "clsx": "catalog:",
@@ -30,6 +34,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",
+    "tsx": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
     "xlsx": "^0.18.5"

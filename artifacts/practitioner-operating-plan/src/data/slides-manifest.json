@@ -156,9 +156,9 @@
     "id": "v3-0017-salt-bench-aaaa-aaaa-aaaa17",
     "position": 18,
     "filepath": "src/pages/slides/SaltBench.tsx",
-    "title": "Salt P&L — Depot Bench Roster",
-    "description": "4-person depot bench: seed roster (Marie T., Devin A., Jess W., Roger S.), A→B→C→D rotation pay structure, compliance checklist (SIN, banking, WSIB), and download link for depot-bench-roster.xlsx (3-sheet template: Roster, Batch History, Rotation).",
-    "speakerNotes": "Download the xlsx before the first batch. Fill in phone, email, and SIN/banking status for all four people. Sheet 3 projects the next 12 batch dates automatically — update the start date if the schedule shifts.",
+    "title": "VI · 02b — Salt Bench Roster",
+    "description": "Bench roster with Last batch and Next slot columns derived from the BATCHES rotation array in saltBench.ts. Auto-updates on every view — no hand-coded dates. 4-person depot bench: seed roster (Marie T., Devin A., Jess W., Roger S.), A→B→C→D rotation pay structure, compliance checklist (SIN, banking, WSIB).",
+    "speakerNotes": "Last batch and Next slot are computed from today's date against the Q2–Q4 rotation in saltBench.ts. Edit that file when the rotation changes.",
     "phase": "ops"
   },
   {
@@ -177,15 +177,6 @@
     "title": "VI · 06 — Slip-Flow Rehearsal: Dry-Run Script + Email Renders",
     "description": "10-minute dry-run checklist with timed steps, inline slip and shipped email mockups at desktop and mobile widths, and a rollback procedure if any seed preview renders wrong.",
     "speakerNotes": "Click each step to expand the pass/fail check. Toggle between Slip Issued and Shipped emails, and between desktop and mobile views. If any check fails, follow the rollback steps at the bottom left.",
-    "phase": "ops"
-  },
-  {
-    "id": "v3-0010-salt-bench-aaaa-aaaa-aaaa20",
-    "position": 20,
-    "filepath": "src/pages/slides/SaltBench.tsx",
-    "title": "VI · 02b — Salt Bench Roster",
-    "description": "Bench roster with Last batch and Next slot columns derived from the BATCHES rotation array in saltBench.ts. Auto-updates on every view — no hand-coded dates.",
-    "speakerNotes": "Last batch and Next slot are computed from today's date against the Q2–Q4 rotation in saltBench.ts. Edit that file when the rotation changes.",
     "phase": "ops"
   }
 ]
