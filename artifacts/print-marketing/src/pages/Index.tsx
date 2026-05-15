@@ -117,14 +117,14 @@ const mainPieces = [
     href: "/capability-statement",
     title: "Capability Statement",
     label: "Headwaters",
-    desc: "Print-ready one-pager for procurement packages and first introductions. Covers who Headwaters is, the three service types, the $175/hr trial model, two case studies in brief, and contact details. Letter size (8.5×11).",
+    desc: "Print-ready one-pager for procurement packages and first introductions. Covers who Headwaters is, the three service types, the $28,000 capacity-building engagement model, two case studies in brief, and contact details. Letter size (8.5×11).",
     icon: "📋",
   },
   {
     href: "/scope-rate-sheet",
     title: "Scope & Rate Sheet — Community Store Engagement",
     label: "Headwaters",
-    desc: "One-page scope document and rate sheet for the northern community store engagement. Six phases, $25,000 fixed or $175/hr, plain-language deliverables. Hand this to a band council to make it easy to say yes. Letter size (8.5×11).",
+    desc: "One-page scope document and rate sheet for the northern community store engagement. Six phases, $28,000 flat capacity-building engagement, plain-language deliverables. Hand this to a band council to make it easy to say yes. Letter size (8.5×11).",
     icon: "📐",
   },
   {

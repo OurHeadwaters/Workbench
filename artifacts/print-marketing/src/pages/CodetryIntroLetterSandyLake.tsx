@@ -21,7 +21,7 @@ function buildPlainText(): string {
     "",
     `To the Chief and Council of ${COMMUNITY},`,
     "",
-    "My name is Bobbie Parr. I'm a community development practitioner based in Dryden, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.",
+    "My name is Bobbie Parr. I'm a community development practitioner based in Wabigoon, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.",
     "",
     `For the past several years I've been building community economic infrastructure in northern Ontario: co-op platforms, community store feasibility plans, and the operational systems that make those stores actually run after the consultant leaves. I'm the founder of Parr's Jars — a circular-economy food business — and a founding board member of the 807 Food Co-operative, which is working to move locally sourced food from producers in the northwest into First Nations communities that have historically had no access to it. ${COMMUNITY_SHORT} is exactly the kind of community the 807 network was built to serve.`,
     "",
@@ -29,7 +29,7 @@ function buildPlainText(): string {
     "",
     `The reason I'm writing to ${COMMUNITY_SHORT} specifically is Codetry.`,
     "",
-    "Codetry is a discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.",
+    "Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.",
     "",
     `I've enclosed three documents with this letter: a Partnership and Funding Brief that explains what Codetry is and what I'm asking for; a one-pager on economic development for your reference; and a Pilot Proposal Outline showing how a first engagement with ${COMMUNITY_SHORT} would run.`,
     "",
@@ -39,7 +39,7 @@ function buildPlainText(): string {
     "",
     "Bobbie Parr",
     "Headwaters Development Services",
-    "Dryden, Ontario — Treaty 3 Territory",
+    "Wabigoon, Ontario — Treaty 3 Territory",
     "",
     "ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654",
   ].join("\n");
@@ -124,7 +124,7 @@ export default function CodetryIntroLetterSandyLake() {
             {/* Body paragraphs */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.2in", flex: 1 }}>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
-                My name is Bobbie Parr. I'm a community development practitioner based in Dryden, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.
+                My name is Bobbie Parr. I'm a community development practitioner based in Wabigoon, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
@@ -140,7 +140,7 @@ export default function CodetryIntroLetterSandyLake() {
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
-                Codetry is a discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.
+                Codetry is a capacity-building discipline I've developed for building community-owned economic tools — community stores, co-op platforms, and the software that runs them — using a trial-first model that keeps costs honest and gives communities a way out at every stage. Nothing is locked in. Everything built stays with the community. The engagement is bounded: clear scope, flat fee, defined deliverables, and a handoff built into the design from day one.
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
@@ -166,7 +166,7 @@ export default function CodetryIntroLetterSandyLake() {
               </p>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.72rem", color: MUTED, margin: "0.06in 0 0", lineHeight: 1.5 }}>
                 Headwaters Development Services<br />
-                Dryden, Ontario — Treaty 3 Territory
+                Wabigoon, Ontario — Treaty 3 Territory
               </p>
             </div>
 

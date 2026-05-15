@@ -11,7 +11,7 @@ function buildPlainText(): string {
     "",
     "WHO WE ARE",
     "",
-    "Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.",
+    "Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds community capacity through operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.",
     "",
     "---",
     "",
@@ -42,14 +42,14 @@ function buildPlainText(): string {
     "",
     "ENGAGEMENT TERMS",
     "",
-    "Trial period, not a contract",
-    "The usual first step is a six-week bounded scope at $175/hr. Stop at any point. No retainer, no long commitment. If the fit is right, it continues. If not, you leave with something useful.",
-    "$175/hr CAD · excludes HST",
+    "Capacity-building engagement, not a contract",
+    "The first step is a six-week capacity-building engagement at $28,000 flat. Stop at any point. No retainer, no long commitment. If the fit is right, it continues. For smaller asks, 1–2 week engagements are available at a fixed fee.",
+    "$28,000 flat · 6–8 weeks · excl. HST",
     "",
     "---",
     "",
     "Headwaters Development Services",
-    "Bobbie Parr · practitioner · Dryden, Ontario",
+    "Bobbie Parr · practitioner · Wabigoon, Ontario",
     "bobbie@ourheadwaters.ca",
     "ourheadwaters.ca",
   ].join("\n");
@@ -94,7 +94,7 @@ export default function CapabilityStatement() {
                 Who we are
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.6 }}>
-                Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.
+                Headwaters is a Northwestern Ontario practice led by Bobbie Parr — a community development practitioner, founder of Parr's Jars, and founding board member of the 807 Food Co-op. Headwaters builds community capacity through operational plans, digital platforms, and custom internal tools for band councils and community organizations in northern Ontario. The work is plain-language, dollar-honest, and designed to run without a consultant in the room.
               </p>
             </section>
 
@@ -174,18 +174,18 @@ export default function CapabilityStatement() {
                   Engagement terms
                 </p>
                 <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "white", marginBottom: "0.1rem" }}>
-                  Trial period, not a contract
+                  Capacity-building engagement, not a contract
                 </h3>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.74rem", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                  The usual first step is a six-week bounded scope at $175/hr. Stop at any point. No retainer, no long commitment. If the fit is right, it continues. If not, you leave with something useful.
+                  The first step is a six-week capacity-building engagement at $28,000 flat. Stop at any point. No retainer, no long commitment. For smaller asks, 1–2 week engagements are available at a fixed fee.
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "rgba(255,255,255,0.6)", marginTop: "0.06rem", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                  All rates CAD · excludes HST
+                  All fees CAD · excludes HST
                 </p>
               </div>
               <div style={{ textAlign: "center", flexShrink: 0 }}>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.9rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$175</p>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>per hour</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.9rem", fontWeight: 900, color: "white", lineHeight: 1 }}>$28,000</p>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>flat · 6–8 weeks</p>
               </div>
             </div>
 
@@ -195,7 +195,7 @@ export default function CapabilityStatement() {
           <div style={{ padding: "0.25in 0.65in 0.35in", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(31,61,46,0.12)" }}>
             <div>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.92rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.04rem" }}>Headwaters Development Services</p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>Bobbie Parr · practitioner · Dryden, Ontario</p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)" }}>Bobbie Parr · practitioner · Wabigoon, Ontario</p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
               <div style={{ textAlign: "right" }}>

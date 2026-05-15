@@ -21,7 +21,7 @@ function buildPlainText(): string {
     "",
     `To the Chief and Council of ${COMMUNITY},`,
     "",
-    "My name is Bobbie Parr. I'm a community development practitioner based in Dryden, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.",
+    "My name is Bobbie Parr. I'm a community development practitioner based in Wabigoon, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.",
     "",
     `For the past several years I've been building community economic infrastructure in northern Ontario: co-op platforms, community store feasibility plans, and the operational systems that make those stores actually run after the consultant leaves. I'm the founder of Parr's Jars — a circular-economy food business — and a founding board member of the 807 Food Co-operative, which is working to build a permanent supply line moving locally sourced food from producers in the northwest into First Nations communities that have historically had no access to it. That supply line is being built right now. ${COMMUNITY_SHORT} is the kind of community it was designed to reach.`,
     "",
@@ -41,7 +41,7 @@ function buildPlainText(): string {
     "",
     "Bobbie Parr",
     "Headwaters Development Services",
-    "Dryden, Ontario — Treaty 3 Territory",
+    "Wabigoon, Ontario — Treaty 3 Territory",
     "",
     "ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654",
   ].join("\n");
@@ -117,7 +117,7 @@ export default function CodetryIntroLetterDeerLake() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.18in", flex: 1 }}>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
-                My name is Bobbie Parr. I'm a community development practitioner based in Dryden, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.
+                My name is Bobbie Parr. I'm a community development practitioner based in Wabigoon, Ontario — Treaty 3 Territory — and I'm writing to introduce Headwaters Development Services and a piece of work I think is worth your attention.
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
@@ -160,7 +160,7 @@ export default function CodetryIntroLetterDeerLake() {
               </p>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.72rem", color: MUTED, margin: "0.06in 0 0", lineHeight: 1.5 }}>
                 Headwaters Development Services<br />
-                Dryden, Ontario — Treaty 3 Territory
+                Wabigoon, Ontario — Treaty 3 Territory
               </p>
             </div>
 

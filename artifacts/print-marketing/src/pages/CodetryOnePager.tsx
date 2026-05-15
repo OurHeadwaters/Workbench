@@ -49,7 +49,7 @@ function buildPlainText(): string {
     "",
     "Trial-first. Bounded scope. Transparent pricing.",
     "",
-    "The usual first step is a six-week planning phase at $28,000 flat — or a shorter trial engagement at $175/hr. Stop at any point. No retainer. No long commitment. If the fit is right, it continues. If not, you leave with something useful.",
+    "The first step is a six-week capacity-building engagement at $28,000 flat. Stop at any point. No retainer. No long commitment. For smaller asks, 1–2 week engagements are available at a fixed fee.",
     "",
     "Every deliverable is named before the engagement starts. Every dollar is accounted for. Nothing is built that the community can't run independently.",
     "",
@@ -64,7 +64,7 @@ function buildPlainText(): string {
     "---",
     "",
     "Bobbie Parr · Headwaters Development Services",
-    "Dryden, Ontario — Treaty 3 Territory",
+    "Wabigoon, Ontario — Treaty 3 Territory",
     "ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654",
   ].join("\n");
 }
@@ -190,7 +190,7 @@ export function CodetryOnePagerPage() {
                   Trial-first. Bounded scope. Transparent pricing.
                 </p>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.74rem", lineHeight: 1.65, color: INK, marginBottom: "0.1in" }}>
-                  The usual first step is a six-week planning phase at $28,000 flat — or a shorter trial engagement at $175/hr. Stop at any point. No retainer. No long commitment.
+                  The first step is a six-week capacity-building engagement at $28,000 flat. Stop at any point. No retainer. No long commitment. For smaller asks, 1–2 week engagements are available at a fixed fee.
                 </p>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.74rem", lineHeight: 1.65, color: INK }}>
                   Every deliverable is named before the engagement starts. Every dollar is accounted for. Nothing is built that the community can't run independently.
@@ -217,7 +217,7 @@ export function CodetryOnePagerPage() {
                 Bobbie Parr — Lead Practitioner
               </p>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.7rem", lineHeight: 1.6, color: MUTED, margin: 0 }}>
-                Community Development degree from the University of Manitoba, minor in Indigenous Studies. Founder of Parr's Jars. Founding board member, 807 Food Co-operative. Based in Dryden, Ontario — Treaty 3 Territory. Not a parachute consultant.
+                Community Development degree from the University of Manitoba, minor in Indigenous Studies. Founder of Parr's Jars. Founding board member, 807 Food Co-operative. Based in Wabigoon, Ontario — Treaty 3 Territory. Not a parachute consultant.
               </p>
             </div>
 
@@ -233,7 +233,7 @@ export function CodetryOnePagerPage() {
             flexShrink: 0,
           }}>
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.7rem", fontWeight: 600, color: CREAM, margin: 0 }}>
-              Headwaters Development Services · Dryden, Ontario
+              Headwaters Development Services · Wabigoon, Ontario
             </p>
             <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.6rem", color: "rgba(244,237,224,0.65)", margin: 0, letterSpacing: "0.04em" }}>
               ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654

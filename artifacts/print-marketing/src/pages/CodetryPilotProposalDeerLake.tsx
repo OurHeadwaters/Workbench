@@ -102,7 +102,7 @@ function buildPlainText(): string {
     `If ${COMMUNITY_SHORT} wants to explore this pilot, the next step is a conversation — no commitment, no cost. Bobbie Parr can come to the community or meet by video call. From there, if there is a fit, we define the Phase 1 scope together.`,
     "",
     "Bobbie Parr · Headwaters Development Services",
-    "Dryden, Ontario — Treaty 3 Territory",
+    "Wabigoon, Ontario — Treaty 3 Territory",
     "ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654",
   ].join("\n");
 }
@@ -328,7 +328,7 @@ export default function CodetryPilotProposalDeerLake() {
             flexShrink: 0,
           }}>
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.7rem", fontWeight: 600, color: CREAM, margin: 0 }}>
-              Headwaters Development Services · Dryden, Ontario — Treaty 3 Territory
+              Headwaters Development Services · Wabigoon, Ontario — Treaty 3 Territory
             </p>
             <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.6rem", color: "rgba(244,237,224,0.65)", margin: 0, letterSpacing: "0.04em" }}>
               ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654

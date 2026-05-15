@@ -65,11 +65,11 @@ function buildPlainText(): string {
     "",
     "RATES",
     "",
-    "Fixed-scope engagement: $25,000",
-    "6-week engagement · all six phases · full handoff package. No long-term commitment required.",
+    "Capacity-building engagement: $28,000 flat",
+    "6–8 week engagement · all six phases · full handoff package. No long-term commitment required.",
     "",
-    "Hourly rate: $175/hr",
-    "Scoped phases billed as incurred. Hours tracked openly and reported weekly with a plain-language summary.",
+    "Shorter engagement — 1–2 weeks · fixed fee",
+    "For smaller asks with a big impact. Priced to scope. Payment due on delivery.",
     "",
     "---",
     "",
@@ -136,24 +136,24 @@ export default function ScopeRateSheet() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.2in" }}>
               <div style={{ background: "var(--evergreen)", borderRadius: 6, padding: "0.22in 0.28in" }}>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.1rem" }}>
-                  Fixed-scope engagement
+                  Capacity-building engagement
                 </p>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1, marginBottom: "0.05rem" }}>
-                  $25,000
+                  $28,000
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(244,237,224,0.75)", lineHeight: 1.5 }}>
-                  6-week engagement · all six phases · full handoff package. No long-term commitment required.
+                  6–8 week engagement · all six phases · full handoff package. No long-term commitment required.
                 </p>
               </div>
               <div style={{ background: "white", border: "1.5px solid rgba(31,61,46,0.15)", borderRadius: 6, padding: "0.22in 0.28in" }}>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1rem" }}>
-                  Hourly rate
+                  Shorter engagement · 1–2 weeks
                 </p>
                 <p style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 900, color: "var(--ink)", lineHeight: 1, marginBottom: "0.05rem" }}>
-                  $175 / hr
+                  Fixed fee
                 </p>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.5 }}>
-                  Scoped phases billed as incurred. Hours tracked openly and reported weekly with a plain-language summary.
+                  For smaller asks with a big impact — underserved communities prioritized. Priced to scope. Payment due on delivery.
                 </p>
               </div>
             </div>

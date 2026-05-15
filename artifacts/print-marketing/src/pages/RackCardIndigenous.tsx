@@ -33,7 +33,7 @@ function buildPlainText(): string {
   return [
     "HEADWATERS DEVELOPMENT SERVICES",
     "Development Services · Treaty 3 Territory",
-    "Building community economic infrastructure in northern Ontario.",
+    "Building community capacity and economic infrastructure in northern Ontario.",
     "",
     "---",
     "",
@@ -50,7 +50,7 @@ function buildPlainText(): string {
     "---",
     "",
     "\"We don't parachute in. We sit at your table, learn your words, and build something that belongs to your community — not to the funder.\"",
-    "— Bobbie Parr, Dryden ON",
+    "— Bobbie Parr, Wabigoon ON",
     "",
     "---",
     "",
@@ -307,7 +307,7 @@ export default function RackCardIndigenous() {
                     letterSpacing: "0.05em",
                   }}
                 >
-                  — Bobbie Parr, Dryden ON
+                  — Bobbie Parr, Wabigoon ON
                 </p>
               </div>
 

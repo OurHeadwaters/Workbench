@@ -16,7 +16,7 @@ function buildPlainText(): string {
     "Are you in love with your work, but your blind spots are eating you alive?",
     "Are you in desperate need of automation but can't find the time to set up a system?",
     "",
-    "Headwaters works with small businesses, non-profits, co-ops, and community enterprises across Northwestern Ontario. The work is business-building — operations, systems, planning, and the things that keep falling through the cracks.",
+    "Headwaters works with small businesses, non-profits, co-ops, and community enterprises across Northwestern Ontario. The work is capacity-building — operations, systems, planning, and the things that keep falling through the cracks.",
     "",
     "Or maybe you just need one thing done: a grant application written, a business plan roughed out, a funding argument put on paper. Short 1–2 week engagements are available for small businesses and non-profits at a fraction of the cost of a full engagement.",
     "",
@@ -48,9 +48,9 @@ function buildPlainText(): string {
     "",
     "WHO DOES THIS WORK",
     "",
-    "Bobbie Parr is a Northwestern Ontario practitioner, founder of Parr's Jars, and a founding board member of the 807 Food Co-op. Headwaters Development Services builds operational plans, digital platforms, and custom tools for northern communities and food businesses. The work is dollar-honest and designed to run without a consultant in the room.",
+    "Bobbie Parr is a Northwestern Ontario practitioner, founder of Parr's Jars, and a founding board member of the 807 Food Co-op. Headwaters Development Services builds community capacity through operational plans, digital platforms, and custom tools for northern communities. The work is dollar-honest and designed to run without a consultant in the room.",
     "",
-    "Based in Dryden, Ontario. Working across Northwestern Ontario.",
+    "Based in Wabigoon, Ontario. Working across Northwestern Ontario.",
     "",
     "---",
     "",
@@ -123,7 +123,7 @@ export default function PaceReferral() {
                 ))}
               </div>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.62, maxWidth: "6in" }}>
-                Headwaters works with small businesses, non-profits, co-ops, and community enterprises across NWO. Food systems are a particular strength, but the work is business-building — operations, systems, planning, and the things that keep falling through the cracks. Short 1–2 week engagements available for when you just need <em>one thing done</em>.
+                Headwaters works with small businesses, non-profits, co-ops, and community enterprises across NWO. The work is capacity-building — operations, systems, planning, and the things that keep falling through the cracks. Short 1–2 week engagements available for when you just need <em>one thing done</em>.
               </p>
             </section>
 
@@ -218,7 +218,7 @@ export default function PaceReferral() {
                 Who does this work
               </p>
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.6 }}>
-                <strong>Bobbie Parr</strong> is a Northwestern Ontario practitioner, founder of Parr's Jars, and a founding board member of the 807 Food Co-op. Headwaters Development Services builds operational plans, digital platforms, and custom tools for northern communities and food businesses. Based in Dryden — working across Northwestern Ontario. The work is dollar-honest and designed to run without a consultant in the room.
+                <strong>Bobbie Parr</strong> is a Northwestern Ontario practitioner, founder of Parr's Jars, and a founding board member of the 807 Food Co-op. Headwaters Development Services builds community capacity through operational plans, digital platforms, and custom tools for northern communities. Based in Wabigoon — working across Northwestern Ontario. The work is dollar-honest and designed to run without a consultant in the room.
               </p>
             </section>
 

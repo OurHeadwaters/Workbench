@@ -21,7 +21,7 @@ function buildPlainText(): string {
     "",
     "WHAT CODETRY IS",
     "",
-    "Codetry is a trial-first discipline for building community-owned economic infrastructure. It was developed out of real engagements in northern Ontario — community stores, co-op platforms, and the software that keeps them running after the consultant leaves.",
+    "Codetry is a capacity-building, trial-first discipline for building community-owned economic infrastructure. It was developed out of real engagements in northern Ontario — community stores, co-op platforms, and the software that keeps them running after the consultant leaves.",
     "",
     "The core principle: nothing gets built unless the community can own it outright. Every engagement is bounded — clear scope, flat fee, defined deliverables — and a handoff is built in from day one. Communities can stop at any point. Everything built stays with them.",
     "",
@@ -29,7 +29,7 @@ function buildPlainText(): string {
     "",
     "Each Codetry engagement assembles a small, defined team — a Working Constellation — with clear roles and no hidden capacity:",
     "",
-    "→ Lead Practitioner — Bobbie Parr, Dryden, ON. Scope design, governance, handoff.",
+    "→ Lead Practitioner — Bobbie Parr, Wabigoon, ON. Scope design, governance, handoff.",
     "→ Codetry Developer — builds the tools the community will own. Platform work, software, integrations.",
     "→ Community Coordinator — a person hired from or near the community who handles receiving, reporting, and local knowledge transfer.",
     "→ Supply Chain Partner — the 807 Food Co-operative and its network of northern Ontario producers, where food system infrastructure is part of the engagement.",
@@ -49,7 +49,7 @@ function buildPlainText(): string {
     "",
     "---",
     "",
-    "Headwaters Development Services · Dryden, Ontario — Treaty 3 Territory",
+    "Headwaters Development Services · Wabigoon, Ontario — Treaty 3 Territory",
     "ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654",
   ].join("\n");
 }
@@ -68,7 +68,7 @@ const PAGE: CSSProperties = {
 const constellationRoles = [
   {
     role: "Lead Practitioner",
-    name: "Bobbie Parr, Dryden ON",
+    name: "Bobbie Parr, Wabigoon ON",
     desc: "Scope design, governance architecture, and handoff. Responsible for the overall engagement and the plan the community owns.",
   },
   {
@@ -226,7 +226,7 @@ export function CodetryFundingBriefPage() {
             flexShrink: 0,
           }}>
             <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.7rem", fontWeight: 600, color: CREAM, margin: 0 }}>
-              Headwaters Development Services · Dryden, Ontario — Treaty 3 Territory
+              Headwaters Development Services · Wabigoon, Ontario — Treaty 3 Territory
             </p>
             <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.6rem", color: "rgba(244,237,224,0.65)", margin: 0, letterSpacing: "0.04em" }}>
               ourheadwaters.ca · bobbie@ourheadwaters.ca · 807 220 3654
