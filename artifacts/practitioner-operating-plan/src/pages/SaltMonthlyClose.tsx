@@ -35,6 +35,12 @@ import {
   type SaltCloseRecord,
 } from "@/lib/saltClose";
 import {
+  computePriorChain,
+  channelMonthMetrics,
+  autoPrevQuarterUnder,
+} from "@/lib/saltRollup";
+import { currentQuarterId } from "@/lib/storage";
+import {
   parsePaste,
   loadSnapshot,
   saveSnapshot,
@@ -444,6 +450,12 @@ export default function SaltMonthlyClose() {
 
   const net = (parseFloat(revenue) || 0) - (parseFloat(expenses) || 0);
 
+  const curQId          = currentQuarterId();
+  const priorChain      = computePriorChain(history, curQId);
+  const priorMetrics    = channelMonthMetrics(priorChain);
+  const prevQtrUnder    = autoPrevQuarterUnder(history, curQId, SALT_BASELINE_NET);
+  const priorComplete   = priorChain.length === 3;
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!month || !revenue) return;
@@ -718,6 +730,38 @@ export default function SaltMonthlyClose() {
                 </tbody>
               </table>
             )}
+          </div>
+
+          {/* ── Rule 02 prior-quarter status ────────────────────────────────── */}
+          <div style={{ marginBottom: "14pt", border: `1pt solid ${prevQtrUnder ? "#7a1a1a" : priorComplete ? "#2a6b3e" : RULE}`, borderRadius: "3pt", padding: "10pt 14pt", background: prevQtrUnder ? "rgba(122,26,26,0.05)" : priorComplete ? "rgba(42,107,62,0.05)" : "rgba(31,61,46,0.03)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8pt" }}>
+              <div>
+                <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "4pt" }}>
+                  Rule 02 — Prior-quarter revenue signal
+                </div>
+                <div style={{ fontSize: "9pt", color: TEXT, lineHeight: 1.5 }}>
+                  {!priorComplete
+                    ? `Prior quarter incomplete — ${priorChain.length} of 3 months filed. Cannot determine trigger.`
+                    : prevQtrUnder
+                    ? `Prior quarter net ${fmtExact(priorMetrics.totalNet)} is below the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Wholesale reprice / drop trigger is active.`
+                    : `Prior quarter net ${fmtExact(priorMetrics.totalNet)} meets the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Trigger clear.`
+                  }
+                </div>
+              </div>
+              <span style={{
+                display: "inline-block",
+                padding: "2pt 10pt",
+                borderRadius: "3pt",
+                fontSize: "7pt",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                background: !priorComplete ? "rgba(31,61,46,0.06)" : prevQtrUnder ? "rgba(122,26,26,0.10)" : "rgba(42,107,62,0.10)",
+                color: !priorComplete ? MUTED : prevQtrUnder ? RED : GREEN,
+              }}>
+                {!priorComplete ? "incomplete" : prevQtrUnder ? "triggered" : "clear"}
+              </span>
+            </div>
           </div>
 
           {/* ── Planning reference ─────────────────────────────────────────── */}
