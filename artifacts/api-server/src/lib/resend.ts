@@ -201,6 +201,61 @@ export interface CommunityIntakeEmailPayload {
   whatTheyNeed: string;
 }
 
+export interface MagicLinkEmailPayload {
+  email: string;
+  magicLinkUrl: string;
+}
+
+export async function sendMagicLinkEmail(
+  payload: MagicLinkEmailPayload,
+): Promise<SendResult> {
+  const subject = "Your sign-in link for the Research Library";
+
+  const text = [
+    "Here is your one-time sign-in link for the Northern Food Systems Research Library:",
+    "",
+    payload.magicLinkUrl,
+    "",
+    "This link expires in 15 minutes and can only be used once.",
+    "",
+    "If you did not request this link, you can safely ignore this email.",
+    "",
+    "— Library",
+  ].join("\n");
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;">
+      <tr><td style="background:#1c3a2b;padding:16px 32px;border-radius:6px 6px 0 0;">
+        <p style="margin:0;color:#a3c9b4;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;">Northern Food Systems Research Library</p>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <h1 style="margin:0 0 12px;font-size:20px;color:#18181b;">Your sign-in link</h1>
+        <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#52525b;">Click the button below to sign in. This link expires in <strong>15&nbsp;minutes</strong> and can only be used once.</p>
+        <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+          <tr><td style="background:#1c3a2b;border-radius:4px;padding:12px 28px;">
+            <a href="${payload.magicLinkUrl}" style="color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;">Sign in to the library</a>
+          </td></tr>
+        </table>
+        <p style="margin:0 0 8px;font-size:12px;color:#a1a1aa;">If the button doesn't work, copy and paste this URL into your browser:</p>
+        <p style="margin:0;font-size:12px;color:#52525b;word-break:break-all;">${payload.magicLinkUrl}</p>
+      </td></tr>
+      <tr><td style="padding:16px 32px;border-top:1px solid #f4f4f5;">
+        <p style="margin:0;font-size:12px;color:#a1a1aa;">If you did not request this link, you can safely ignore this email.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  return sendEmail({ to: payload.email, subject, text, html });
+}
+
 export async function sendCommunityIntakeNotification(
   payload: CommunityIntakeEmailPayload,
 ): Promise<SendResult> {

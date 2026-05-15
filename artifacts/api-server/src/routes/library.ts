@@ -29,8 +29,14 @@ import {
   OWNER_TOKEN,
   isValidOwnerToken,
   isOwnerRequest,
+  isAllowedCuratorEmail,
+  createMagicLinkToken,
+  consumeMagicLinkToken,
 } from "../lib/ownerAuth";
-import { sendConfidentialIntakeNotification } from "../lib/resend";
+import {
+  sendConfidentialIntakeNotification,
+  sendMagicLinkEmail,
+} from "../lib/resend";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -46,6 +52,8 @@ const objectStorageService = new ObjectStorageService();
 const PUBLIC_LIBRARY_PREFIXES = [
   "/share-links/by-token/",
   "/owner/login",
+  "/owner/request-link",
+  "/owner/verify-link",
 ];
 
 router.use((req, res, next) => {
@@ -94,6 +102,73 @@ router.post("/owner/login", (req, res) => {
     return;
   }
   res.json({ ok: true, token: passphrase });
+});
+
+// Magic-link step 1: accept an email address, check it's in LIBRARY_OWNER_EMAILS,
+// create a short-lived one-time token, and send the link by email.
+// Always returns 200 with { ok: true } even if the email isn't on the allow-list —
+// this prevents enumerating valid curator addresses.
+router.post("/owner/request-link", async (req, res) => {
+  if (!OWNER_TOKEN) {
+    res.status(503).json({
+      error:
+        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
+    });
+    return;
+  }
+  const body = (req.body ?? {}) as { email?: unknown };
+  const email = typeof body.email === "string" ? body.email.trim() : "";
+  if (!email) {
+    res.status(400).json({ error: "email is required" });
+    return;
+  }
+
+  if (isAllowedCuratorEmail(email)) {
+    try {
+      const token = await createMagicLinkToken(email);
+      const baseUrl =
+        process.env.LIBRARY_BASE_URL ??
+        `https://${process.env.REPLIT_DEV_DOMAIN ?? "localhost"}/library`;
+      const magicLinkUrl = `${baseUrl.replace(/\/$/, "")}/login?token=${token}`;
+      const sendResult = await sendMagicLinkEmail({ email, magicLinkUrl });
+      if (sendResult.status !== "sent") {
+        console.warn(
+          "[magic-link] email delivery issue — status=%s error=%s",
+          sendResult.status,
+          sendResult.error ?? "(none)",
+        );
+      }
+    } catch (err) {
+      console.error("[magic-link] failed to issue token or send email:", err);
+    }
+  }
+
+  res.json({ ok: true });
+});
+
+// Magic-link step 2: verify the one-time token from the email link.
+// On success, returns { ok: true, token } where token is the LIBRARY_OWNER_TOKEN
+// the client can store and replay, same as the passphrase flow.
+router.get("/owner/verify-link", async (req, res) => {
+  if (!OWNER_TOKEN) {
+    res.status(503).json({
+      error:
+        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
+    });
+    return;
+  }
+  const raw = req.query["token"];
+  const token = typeof raw === "string" ? raw.trim() : "";
+  if (!token) {
+    res.status(400).json({ error: "token is required" });
+    return;
+  }
+  const email = await consumeMagicLinkToken(token);
+  if (!email) {
+    res.status(401).json({ error: "This sign-in link is invalid or has expired." });
+    return;
+  }
+  res.json({ ok: true, token: OWNER_TOKEN });
 });
 
 // ----------------------- helpers -----------------------

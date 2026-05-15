@@ -164,9 +164,27 @@ export const shareLinksTable = pgTable("share_links", {
     .defaultNow(),
 });
 
+export const libraryMagicLinksTable = pgTable(
+  "library_magic_links",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    token: text("token").notNull().unique(),
+    email: text("email").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+  },
+  (t) => ({
+    tokenIdx: uniqueIndex("library_magic_links_token_idx").on(t.token),
+  }),
+);
+
 export type LibraryEntryRow = typeof libraryEntriesTable.$inferSelect;
 export type ProducerRow = typeof producersTable.$inferSelect;
 export type SubjectRow = typeof subjectsTable.$inferSelect;
 export type ProjectBucketRow = typeof projectBucketsTable.$inferSelect;
 export type ContributorRow = typeof contributorsTable.$inferSelect;
 export type ShareLinkRow = typeof shareLinksTable.$inferSelect;
+export type LibraryMagicLinkRow = typeof libraryMagicLinksTable.$inferSelect;
