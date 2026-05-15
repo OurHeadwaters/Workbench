@@ -2087,7 +2087,7 @@ const partQuietExamples: Part = {
         },
         {
           kind: "para",
-          text: "Zone 0 in the permaculture sense is the human body and the home. In the Headwaters constellation it is both: the household as the economic and relational unit that every other zone is downstream of. *The household balance is the source of the whole watershed.* Eave (Headwaters) is downstream. Zone 3 (the co-op) is downstream. Even Zone 4 (the land) is downstream from the household that is tending it. Get Zone 0 right and every other zone has a stable source to draw from.",
+          text: "Zone 0 in the permaculture sense is the human body and the home. In the Headwaters constellation it is both: the household as the economic and relational unit that every other zone is downstream of. *The household balance is the source of the whole watershed.* Eave is downstream. Zone 3 (the co-op) is downstream. Even Zone 4 (the land) is downstream from the household that is tending it. Get Zone 0 right and every other zone has a stable source to draw from.",
         },
         {
           kind: "subhead",
@@ -2502,7 +2502,7 @@ const partQuietExamples: Part = {
       blocks: [
         {
           kind: "small",
-          text: "Eave · Headwaters · the most-frequented ring of the constellation.",
+          text: "Eave · the most-frequented ring of the constellation.",
         },
         {
           kind: "para",

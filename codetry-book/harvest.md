@@ -1256,7 +1256,7 @@ The Gate manifest principle:
 >
 > The Siphon is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word "expense" implies.
 
-`artifacts/codetry-handbook/data/constellation.ts` — Eave (Headwaters), `opening` field
+`artifacts/codetry-handbook/data/constellation.ts` — Eave, `opening` field
 
 ---
 
@@ -1804,11 +1804,11 @@ The earliest published vocabulary list enacting the Gate primitive, recovered fr
 
 ---
 
-### External project 1 — X Buckets Vision (Eave · Headwaters)
+### External project 1 — X Buckets Vision (Eave)
 
 **URL:** `https://x-buckets-vision.replit.app/`
 **Former names:** xBuckets, Watershed
-**Constellation zone:** Eave — household finance, XRPL stablecoin envelope-budgeting PWA
+**Constellation zone:** Eave — the household trust boundary, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
 

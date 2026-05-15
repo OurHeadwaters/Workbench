@@ -125,7 +125,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Zone",
     chapter: "Ch4",
     definition:
-      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)",
+      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market; Zone 5 — open public. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)",
     section: "formal",
   },
 

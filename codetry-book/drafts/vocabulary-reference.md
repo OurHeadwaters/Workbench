@@ -43,7 +43,7 @@
 
 **The Standby** (Ch4) — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name. The constellation's first non-zone primitive. Full six-word vocabulary: see Appendix I.
 
-**Zone** (Ch4, foreshadowed in Ch1; enumeration added 2026-05-06) — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones. *(Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)*
+**Zone** (Ch4, foreshadowed in Ch1; enumeration added 2026-05-06) — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market; Zone 5 — open public. Primitives are hosted in zones but read by all zones. *(Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)*
 
 ---
 
@@ -120,7 +120,7 @@ Practitioner is too central to leave without an entry — it is the operative id
 The Stuck Board demonstrates the codetry principle that the name is the spec — it is a worked example in Ch4 §The name changes the tool. It is not itself a named primitive of the constellation. No vocabulary entry.
 
 **Zone 0 / Eave / Zone 5** — *Decision A: zone enumeration added to the Zone entry.*
-The Zone entry in the Formal Vocabulary section above now enumerates all six zones by number: Zone 0 — household; Zone 1 - Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. The numbered zone names used throughout Ch1–Ch5 (Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5) are consistent with this enumeration.
+The Zone entry in the Formal Vocabulary section above now enumerates all six zones by number: Zone 0 — household; Zone 1 - Eave — your circle (invite); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market; Zone 5 — open public. The numbered zone names used throughout Ch1–Ch5 (Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5) are consistent with this enumeration.
 
 ---
 
