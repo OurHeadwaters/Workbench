@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useSectionOverride } from "@/hooks/useSectionOverride";
 import { useSectionFlag } from "@/hooks/useSectionFlag";
+import { Label } from "@/components/ui/label";
 
 interface EditableSectionProps {
   id: string;
@@ -37,13 +38,15 @@ interface EditableSectionProps {
 
 export function EditableSection({ id, label, children }: EditableSectionProps) {
   const { override, setOverride, clearOverride } = useSectionOverride(id);
-  const { flagged, toggleFlag } = useSectionFlag(id, label);
+  const { flagged, setFlagged, clearFlag } = useSectionFlag(id, label);
   const [open, setOpen] = useState(false);
   const [instruction, setInstruction] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [flagDialogOpen, setFlagDialogOpen] = useState(false);
+  const [flagNote, setFlagNote] = useState("");
 
   function currentText(): string {
     if (override) return override;
@@ -118,7 +121,14 @@ export function EditableSection({ id, label, children }: EditableSectionProps) {
           </button>
         )}
         <button
-          onClick={toggleFlag}
+          onClick={() => {
+            if (flagged) {
+              clearFlag();
+            } else {
+              setFlagNote("");
+              setFlagDialogOpen(true);
+            }
+          }}
           title={flagged ? "Remove outdated flag" : "Flag as outdated"}
           className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-colors"
           style={{
@@ -163,6 +173,59 @@ export function EditableSection({ id, label, children }: EditableSectionProps) {
           )}
         </div>
       )}
+
+      <Dialog open={flagDialogOpen} onOpenChange={(v) => { if (!v) { setFlagDialogOpen(false); setFlagNote(""); } }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold" style={{ color: "#92400e" }}>
+              Flag as outdated
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-1">
+            <div className="space-y-1.5">
+              <Label htmlFor={`flag-note-${id}`} className="text-xs text-muted-foreground">
+                Why is this stale? <span className="text-muted-foreground/60">(optional)</span>
+              </Label>
+              <Textarea
+                id={`flag-note-${id}`}
+                value={flagNote}
+                onChange={(e) => setFlagNote(e.target.value)}
+                placeholder='e.g. "Rate changed to $185/hr"'
+                rows={2}
+                className="text-sm resize-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                    setFlagged(flagNote);
+                    setFlagDialogOpen(false);
+                    setFlagNote("");
+                  }
+                }}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { setFlagDialogOpen(false); setFlagNote(""); }}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setFlagged(flagNote);
+                  setFlagDialogOpen(false);
+                  setFlagNote("");
+                }}
+                style={{ background: "#d97706", color: "#fff" }}
+              >
+                <Flag size={12} className="mr-1.5" />
+                Flag
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
         <DialogContent className="max-w-2xl">

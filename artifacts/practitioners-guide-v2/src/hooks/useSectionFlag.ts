@@ -6,6 +6,7 @@ export interface FlagEntry {
   sectionId: string;
   label: string;
   flaggedAt: string;
+  note?: string;
 }
 
 export function readAllFlags(): FlagEntry[] {
@@ -40,20 +41,24 @@ export function useSectionFlag(sectionId: string, label: string) {
     }
   });
 
-  const setFlagged = useCallback(() => {
-    const entry: FlagEntry = {
-      sectionId,
-      label,
-      flaggedAt: new Date().toISOString(),
-    };
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(entry));
-      window.dispatchEvent(new StorageEvent("storage", { key: storageKey }));
-    } catch {
-      // ignore
-    }
-    setFlaggedState(true);
-  }, [storageKey, sectionId, label]);
+  const setFlagged = useCallback(
+    (note?: string) => {
+      const entry: FlagEntry = {
+        sectionId,
+        label,
+        flaggedAt: new Date().toISOString(),
+        ...(note?.trim() ? { note: note.trim() } : {}),
+      };
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(entry));
+        window.dispatchEvent(new StorageEvent("storage", { key: storageKey }));
+      } catch {
+        // ignore
+      }
+      setFlaggedState(true);
+    },
+    [storageKey, sectionId, label],
+  );
 
   const clearFlag = useCallback(() => {
     try {
@@ -83,5 +88,5 @@ export function useSectionFlag(sectionId: string, label: string) {
     return () => window.removeEventListener("storage", onStorage);
   }, [storageKey]);
 
-  return { flagged, toggleFlag, clearFlag };
+  return { flagged, setFlagged, clearFlag, toggleFlag };
 }

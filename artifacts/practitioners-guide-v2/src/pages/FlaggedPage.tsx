@@ -123,6 +123,9 @@ export function FlaggedPage() {
                     {" · "}
                     flagged {timeSince(entry.flaggedAt)}
                   </p>
+                  {entry.note && (
+                    <p className="text-xs text-amber-800 mt-1 italic">"{entry.note}"</p>
+                  )}
                 </div>
               </div>
               <button
