@@ -59,7 +59,7 @@ function buildPlainText(): string {
     "",
     "Band councils, First Nations businesses, Indigenous economic development offices, Métis communities, and northern co-ops — anyone building something real for their people.",
     "",
-    "Current and recent work includes the Deer Lake First Nation community store pilot, the 807 Food Co-operative membership platform, and community store feasibility planning in Dryden and surrounding areas.",
+    "Current and recent work includes founding the 807 Food Co-operative, pilot development projects including an in-person food hub and circular economy product manufacturing, grant writing and project development, and authoring the Codetry practitioner guide and discipline.",
     "",
     "---",
     "",
@@ -204,7 +204,7 @@ export function CodetryOnePagerPage() {
                   Band councils, First Nations businesses, Indigenous economic development offices, Métis communities, and northern co-ops — anyone building something real for their people.
                 </p>
                 <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.74rem", lineHeight: 1.65, color: MUTED }}>
-                  Current and recent work includes the Deer Lake First Nation community store pilot, the 807 Food Co-operative membership platform, and community store feasibility planning in Dryden and surrounding areas.
+                  Current and recent work includes founding the 807 Food Co-operative, pilot development projects including an in-person food hub and circular economy product manufacturing, grant writing and project development, and authoring the Codetry practitioner guide and discipline.
                 </p>
               </section>
             </div>
