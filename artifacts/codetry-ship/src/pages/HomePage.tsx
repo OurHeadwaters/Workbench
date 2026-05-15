@@ -259,7 +259,7 @@ export function HomePage() {
                 },
                 {
                   icon: "📚",
-                  name: "The Books",
+                  name: "The Accounts",
                   sub: "Headwaters Books",
                   desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.",
                   color: "hsl(145 22% 42%)",
@@ -382,7 +382,7 @@ export function HomePage() {
               <p className="font-serif text-[14px] leading-[1.6]">
                 <strong>The Handbook</strong> teaches you how Headwaters works.{" "}
                 <strong>The Practitioner's Guide</strong> captures each job you do.{" "}
-                <strong>The Books</strong> keep the money honest. Behind them: the{" "}
+                <strong>The Accounts</strong> keep the money honest. Behind them: the{" "}
                 <strong>Research Library</strong> grounds decisions in real evidence, the{" "}
                 <strong>Print Suite</strong> puts everything on paper, the{" "}
                 <strong>Crew Manifest</strong> shows who's doing what, and the{" "}

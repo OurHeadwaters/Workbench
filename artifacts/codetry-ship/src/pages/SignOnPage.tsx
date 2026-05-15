@@ -130,7 +130,7 @@ export function SignOnPage() {
             So this is the part where we tell you what we&rsquo;re building,
             in plain enough language that you can decide for yourself. We are
             building a small economy you can fit inside a single northern
-            community — store, books, freight, training — and the operating
+            community — store, accounts, freight, training — and the operating
             tools that let a council run it without an outside consultant on
             retainer. We are doing it dollar-honest, slowly, and with the
             people who actually have to live with the result.

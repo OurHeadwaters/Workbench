@@ -75,7 +75,7 @@ export function ListenPage() {
 
         {/* ---- print-only one-liner ---- */}
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">
-          Codetry is the operating system for a community economy — store, books, freight, and training — built in the open, owned by the band.
+          Codetry is the operating system for a community economy — store, accounts, freight, and training — built in the open, owned by the band.
         </p>
 
         <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70 print:hidden">
@@ -90,13 +90,13 @@ export function ListenPage() {
         <section className="mt-10 sm:mt-12 space-y-5 font-serif text-base sm:text-lg leading-relaxed print:hidden">
           <p>
             <strong>Codetry</strong> is the operating system for a community
-            economy. Store, books, freight, training — everything a small
+            economy. Store, accounts, freight, training — everything a small
             northern community needs to run its own supply without importing
             outside management or handing control to a southern vendor.
           </p>
           <p>
             The short version: your community gets a real store, real
-            transparent books, and a trained local team. Headwaters builds the
+            transparent accounts, and a trained local team. Headwaters builds the
             software and teaches the people. The band owns the result.
           </p>
           <p>
@@ -216,7 +216,7 @@ export function ListenPage() {
             />
             <TrustRow
               label="Deer Lake First Nation — active delivery"
-              detail="Headwaters is currently delivering the store operating system to Deer Lake First Nation: software, books, freight coordination, and on-site training. Not planned. In progress."
+              detail="Headwaters is currently delivering the store operating system to Deer Lake First Nation: software, accounts, freight coordination, and on-site training. Not planned. In progress."
             />
             <TrustRow
               label="The Codetry Handbook"

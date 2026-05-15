@@ -30,7 +30,7 @@ export function ServicesPage() {
             className="rounded-md p-5 max-w-2xl font-serif text-[15px] leading-[1.6]"
             style={{ background: "rgba(255,255,255,0.10)" }}
           >
-            Headwaters is a set of seven connected tools — the Handbook, the Practitioner's Guide, the Books, and four supporting layers. Every engagement deploys some part of that stack. A community store plan, a co-op membership platform, and a custom internal tool are the three ways a community reaches into that system. Here is what each looks like, phase by phase, and what you leave with at the end.
+            Headwaters is a set of seven connected tools — the Handbook, the Practitioner's Guide, the Accounts, and four supporting layers. Every engagement deploys some part of that stack. A community store plan, a co-op membership platform, and a custom internal tool are the three ways a community reaches into that system. Here is what each looks like, phase by phase, and what you leave with at the end.
           </div>
         </div>
       </section>

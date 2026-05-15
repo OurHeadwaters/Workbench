@@ -18,7 +18,7 @@ export default function ProjectOverview() {
     },
     {
       icon: "📚",
-      name: "The Books",
+      name: "The Accounts",
       subtitle: "Headwaters Books",
       color: "var(--evergreen-light)",
       desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.",
@@ -349,7 +349,7 @@ export default function ProjectOverview() {
           <p style={{ fontSize: "0.9rem", color: "var(--ink)", lineHeight: 1.7 }}>
             <strong>The Handbook</strong> teaches you how Headwaters works.{" "}
             <strong>The Practitioner's Guide</strong> captures each job you do.{" "}
-            <strong>The Books</strong> keep the money honest. Behind them:{" "}
+            <strong>The Accounts</strong> keep the money honest. Behind them:{" "}
             the <strong>Research Library</strong> grounds decisions in real evidence,
             the <strong>Print Suite</strong> puts everything on paper,
             the <strong>Crew Manifest</strong> shows who's doing what,
