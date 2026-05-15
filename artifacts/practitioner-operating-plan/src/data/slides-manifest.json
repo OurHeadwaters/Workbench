@@ -1,0 +1,83 @@
+[
+  {
+    "id": "v3-0000-prologue-aaaa-aaaa-aaaaaaaaaa0",
+    "position": 1,
+    "filepath": "src/pages/slides/Prologue.tsx",
+    "title": "Prologue — The eagle answered",
+    "description": "Opens the deck with the eagle story. Full-bleed eagle image, story in the deck's serif, closing line set apart.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0001-cover-aaaa-aaaa-aaaaaaaaaaa1",
+    "position": 2,
+    "filepath": "src/pages/slides/Cover.tsx",
+    "title": "Cover",
+    "description": "V3 cover — Headwaters as a product company for Northern Indigenous food systems. Scenario count and tagline previewed.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0002-slab-aaaa-aaaa-aaaaaaaaaaa2",
+    "position": 3,
+    "filepath": "src/pages/slides/SlabVsGrassland.tsx",
+    "title": "Slab vs grassland",
+    "description": "Foundation thesis — V2 was a slab (one client, one contract, brittle). V3 is a grassland (three product layers, many bands, rooted).",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0003-six-aaaa-aaaa-aaaaaaaaaaaa3",
+    "position": 4,
+    "filepath": "src/pages/slides/Budget.tsx",
+    "title": "The six people",
+    "description": "V3 lean roster — all cost-basis and scenario numbers are sourced from budgetScenarios.ts.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0004-rev-aaaa-aaaa-aaaaaaaaaaaa4",
+    "position": 5,
+    "filepath": "src/pages/slides/CaseForRate.tsx",
+    "title": "Three revenue layers",
+    "description": "Case for the rate — Layer 1 (signed today), Layer 2 (upgrade ask), Layer 3 (cross-reserve). Ask and cost-basis numbers from budgetScenarios.ts.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0005-y1-aaaa-aaaa-aaaaaaaaaaaaa5",
+    "position": 6,
+    "filepath": "src/pages/slides/CashFlow.tsx",
+    "title": "Year one — surfaced honestly",
+    "description": "Year-1 cash picture: revenue vs cost gap, Capital Recovery from V2, day-one bridge. All figures from budgetScenarios.ts.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0006-anchor-aaaa-aaaa-aaaaaaaaaa7",
+    "position": 7,
+    "filepath": "src/pages/slides/SecondAnchorScenarios.tsx",
+    "title": "Closing the Y1 gap",
+    "description": "Second anchor scenarios — cross-reserve install and retainer options that close the Y1 gap.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0006-path-aaaa-aaaa-aaaaaaaaaaa7",
+    "position": 8,
+    "filepath": "src/pages/slides/PathToScale.tsx",
+    "title": "Path to scale",
+    "description": "Year 1 → Year 3 revenue composition as cross-reserve installs compound.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0007-close-aaaa-aaaa-aaaaaaaaaaa8",
+    "position": 9,
+    "filepath": "src/pages/slides/Closing.tsx",
+    "title": "Closing",
+    "description": "Six locked numbers, one honest gap — all figures from budgetScenarios.ts. Ends with the closing line.",
+    "speakerNotes": "",
+    "phase": "idea"
+  }
+]
