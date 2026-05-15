@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useState } from "react";
 
 // ── SVG download helpers ───────────────────────────────────────────────────────
 function downloadSvg(filename: string, svgContent: string) {
@@ -9,6 +10,15 @@ function downloadSvg(filename: string, svgContent: string) {
   a.download = filename;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+async function copySvgToClipboard(svgContent: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(svgContent);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // ── PNG download helper (Canvas API, client-side) ──────────────────────────────
@@ -227,6 +237,17 @@ function LabelDemo({ bg, label, name, usage }: { bg: string; label: string; name
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function BrandingKit() {
+  const [copiedBg, setCopiedBg] = useState<"light" | "dark" | "rust" | null>(null);
+
+  function handleCopySvg(bg: "light" | "dark" | "rust") {
+    copySvgToClipboard(buildEagleSvg(bg)).then(ok => {
+      if (ok) {
+        setCopiedBg(bg);
+        setTimeout(() => setCopiedBg(prev => prev === bg ? null : prev), 2000);
+      }
+    });
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: CREAM }}>
 
@@ -275,6 +296,14 @@ export default function BrandingKit() {
                   onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
                   style={DL_LINK_STYLE}
                 >↓ SVG</button>
+                <button
+                  onClick={() => handleCopySvg(bg)}
+                  style={{
+                    ...DL_LINK_STYLE,
+                    color: copiedBg === bg ? "#2e5c44" : "#1f3d2e",
+                    background: copiedBg === bg ? "rgba(46,92,68,0.15)" : "rgba(31,61,46,0.07)",
+                  }}
+                >{copiedBg === bg ? "✓ Copied!" : "⧉ Copy SVG"}</button>
                 {([
                   { size: 200, label: "1×" },
                   { size: 400, label: "2×" },

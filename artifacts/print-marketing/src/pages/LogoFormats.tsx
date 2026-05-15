@@ -1,4 +1,5 @@
 import { PrintNav } from "../components/PrintNav";
+import { useState } from "react";
 
 const EVERGREEN = "#1f3d2e";
 const CREAM = "#f4ede0";
@@ -15,6 +16,15 @@ function downloadSvg(filename: string, svgContent: string) {
   a.download = filename;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+async function copySvgToClipboard(svgContent: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(svgContent);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function buildEagleSvg(bg: "light" | "dark" | "rust"): string {
@@ -352,6 +362,17 @@ function Swatch({ hex, name }: { hex: string; name: string }) {
 }
 
 export default function LogoFormats() {
+  const [copiedBg, setCopiedBg] = useState<"light" | "dark" | "rust" | null>(null);
+
+  function handleCopySvg(bg: "light" | "dark" | "rust") {
+    copySvgToClipboard(buildEagleSvg(bg)).then(ok => {
+      if (ok) {
+        setCopiedBg(bg);
+        setTimeout(() => setCopiedBg(prev => prev === bg ? null : prev), 2000);
+      }
+    });
+  }
+
   return (
     <>
       <PrintNav targetId="pdf-target" filename="headwaters-logo-formats.pdf" />
@@ -417,10 +438,20 @@ export default function LogoFormats() {
                     {bg === "light" ? "Light background" : bg === "dark" ? "Dark / Evergreen" : "Rust accent"}
                   </p>
                   <EagleMark bg={bg} size={120} />
-                  <button
-                    onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
-                    style={DL_BTN}
-                  >↓ SVG</button>
+                  <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap" }}>
+                    <button
+                      onClick={() => downloadSvg(`headwaters-eagle-mark-${bg}.svg`, buildEagleSvg(bg))}
+                      style={DL_BTN}
+                    >↓ SVG</button>
+                    <button
+                      onClick={() => handleCopySvg(bg)}
+                      style={{
+                        ...DL_BTN,
+                        color: copiedBg === bg ? "#2e5c44" : "#1f3d2e",
+                        background: copiedBg === bg ? "rgba(46,92,68,0.15)" : "rgba(31,61,46,0.07)",
+                      }}
+                    >{copiedBg === bg ? "✓ Copied!" : "⧉ Copy SVG"}</button>
+                  </div>
                 </div>
               ))}
             </div>
