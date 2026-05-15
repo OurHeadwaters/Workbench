@@ -110,7 +110,7 @@ export default function ProjectOverview() {
               marginBottom: "0.75rem",
             }}
           >
-            Seven tools.<br />One community economy.
+            Seven simple tools.<br />One community economy.
           </h1>
           <p
             style={{
@@ -354,7 +354,7 @@ export default function ProjectOverview() {
             the <strong>Print Suite</strong> puts everything on paper,
             the <strong>Crew Manifest</strong> shows who's doing what,
             and the <strong>Media Library</strong> keeps the files in one place.
-            Seven tools. One system. Yours.
+            Seven simple tools. One system. Yours.
           </p>
         </div>
 

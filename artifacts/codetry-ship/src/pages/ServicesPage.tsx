@@ -20,21 +20,17 @@ export function ServicesPage() {
             headwaters · what the work looks like
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3">
-            A community store plan.<br />
-            A membership platform.<br />
-            A tool your team actually uses.
+            Seven simple tools.<br />
+            Three ways to engage.
           </h1>
           <p className="font-serif text-lg italic mb-6 opacity-75">
-            Three types of work. Clear scope. No retainer required.
+            One community economy system — delivered as a store plan, a membership platform, or a custom tool.
           </p>
           <div
             className="rounded-md p-5 max-w-2xl font-serif text-[15px] leading-[1.6]"
             style={{ background: "rgba(255,255,255,0.10)" }}
           >
-            Headwaters takes a community from first conversation to a delivered,
-            working artifact — store plans, digital platforms, internal tools.
-            Here is what each engagement looks like, phase by phase, and what
-            you leave with at the end.
+            Headwaters is a set of seven connected tools — the Handbook, the Practitioner's Guide, the Books, and four supporting layers. Every engagement deploys some part of that stack. A community store plan, a co-op membership platform, and a custom internal tool are the three ways a community reaches into that system. Here is what each looks like, phase by phase, and what you leave with at the end.
           </div>
         </div>
       </section>

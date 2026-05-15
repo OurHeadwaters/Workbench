@@ -20,7 +20,7 @@ export function WorkPage() {
             Case studies
           </h1>
           <p className="font-serif text-lg italic mb-0 opacity-75">
-            Two real engagements — what the problem was, what was built, what the client left with.
+            One community client. One origin story. What the problem was, what was built, what they left with.
           </p>
         </div>
       </section>
@@ -41,10 +41,10 @@ export function WorkPage() {
             <div className="relative flex items-start justify-between gap-6">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-                  Case study 01 · Brand identity
+                  Origin story · How the practice found its shape
                 </p>
                 <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-                  Parr's Jars — rebrand
+                  Parr's Jars — the rebrand that separated two identities
                 </h2>
               </div>
               <img
@@ -129,7 +129,7 @@ export function WorkPage() {
             <div className="relative flex items-start justify-between gap-6">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-                  Case study 02 · Platform delivery · Founding board
+                  Community client · Platform delivery · Founding board
                 </p>
                 <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
                   807 Food Co-op — membership platform

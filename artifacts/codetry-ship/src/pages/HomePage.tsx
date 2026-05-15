@@ -170,8 +170,7 @@ export function HomePage() {
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="work-explainer"
           >
-            Headwaters builds software and operational tools for northern communities.
-            These are live and in use — not demos, not proposals.
+            Seven simple tools. One community economy. Each tool connects to the next — learn the work, track the work, account for the work, and everything behind them that makes it run.
           </p>
 
           {/* ── three entry cards replacing the blunt full-width services button ── */}
@@ -229,127 +228,168 @@ export function HomePage() {
             ))}
           </div>
 
-          <div className="space-y-3" data-testid="work-cards">
-            <ComingSoonCard
-              eyebrow="Community store · Launching soon"
-              title="Building the store — a community economic guide"
-              hook="A community-owned store, built from the ground up."
-              detail="The 807 supply chain, local hire and training, band council financing, co-op structure, and day-one operations — plain language, open numbers."
-              accent="rust"
-              testId="work-card-store"
-              thumb="thumb-store.png"
-              thumbAlt="Eagle over the headwaters — the story that sealed the direction"
-            />
-            <ComingSoonCard
-              eyebrow="Co-op membership · Coming soon"
-              title="Co-op Membership Platform"
-              hook="Membership and governance for community-owned co-ops."
-              detail="Pending a vote from the pilot community before public launch."
-              accent="amber"
-              testId="work-card-coop"
-              thumb="thumb-coop.png"
-              thumbAlt="Co-op membership platform — two ways to join, mission and vision"
-            />
-            <WorkCard
-              eyebrow="Northern food systems · Knowledge commons"
-              title="Northern Food Systems Research Library"
-              hook="Searchable food systems research for northern communities."
-              detail="Curated producer contacts, policy documents, and community case studies — open for contributors."
-              accent="evergreen"
-              href="/library/"
-              testId="work-card-library"
-            />
-            <DemoCard
-              eyebrow="Community ledger · Headwaters Books"
-              title="Open books — what a community store's finances look like"
-              hook="What a community store's finances actually look like."
-              detail="Open records the band can read, the daily close operators run each night, and the month-end pack for council. Sample data, no login."
-              accent="rust"
-              href="/headwaters-books/demo"
-              testId="work-card-books-demo"
-              thumb="thumb-books.jpg"
-              thumbAlt="Headwaters Books open-records ledger showing revenue, costs, and recent postings"
-            />
-            <WorkCard
-              eyebrow="Grants · Northern communities"
-              title="Grants Finder"
-              hook="Every funding source for northern and Indigenous communities."
-              detail="Grants, programs, and deadlines in one searchable index."
-              accent="evergreen"
-              href="https://community-knowledge-hub.replit.app/infographics/grants-finder.html"
-              external
-              testId="work-card-grants"
-              thumb="thumb-grants.png"
-              thumbAlt="Grants Finder — AI-powered grant matching for regional food and small business"
-            />
-            <WorkCard
-              eyebrow="Personal finance · Headwaters"
-              title="Headwaters Finance"
-              hook="A personal finance tool built for fast-moving people."
-              detail="Maps where money goes for people who move faster than any folder system."
-              accent="amber"
-              href="https://x-buckets-vision.replit.app/"
-              external
-              testId="work-card-finance"
-              thumb="thumb-finance.png"
-              thumbAlt="Headwaters Finance onboarding screen"
-            />
-            <WorkCard
-              eyebrow="Operations · For entrepreneurs"
-              title="Rootwork"
-              hook="A calm command center for builders who can't sit still."
-              detail="Private and self-hosted — drop in the chaos, find what you need in seconds."
-              accent="sage"
-              href="https://community-knowledge-hub.replit.app/studio/"
-              external
-              testId="work-card-rootwork"
-              thumb="thumb-rootwork.png"
-              thumbAlt="Rootwork landing page"
-            />
-            <WorkCard
-              eyebrow="Market intelligence · Northern food systems"
-              title="Market Mosaic"
-              hook="Market analysis built for northern communities."
-              detail="An interactive snapshot of northern food markets — who's buying, what they need, and where the gaps are."
-              accent="evergreen"
-              href="https://community-knowledge-hub.replit.app/infographics/market-mosaic.html"
-              external
-              testId="work-card-market-mosaic"
-            />
-            <WorkCard
-              eyebrow="Supply chain · Northern communities"
-              title="Standby Supplies"
-              hook="Northern supply chain reference and emergency sourcing."
-              detail="A ready reference for sourcing food and supplies when the usual options fall through."
-              accent="amber"
-              href="https://community-knowledge-hub.replit.app/infographics/standby-supplies.html"
-              external
-              testId="work-card-standby-supplies"
-            />
-            <WorkCard
-              eyebrow="Health · Long-term care"
-              title="Bright Side"
-              hook="Recreation therapy companion for long-term care homes."
-              detail="Activity planning, resident engagement, and documentation built for the people on the floor."
-              accent="sage"
-              href="https://health-support-hub.replit.app/"
-              external
-              testId="work-card-brightside"
-              thumb="thumb-brightside.png"
-              thumbAlt="Bright Side sign-in screen"
-            />
-            <WorkCard
-              eyebrow="Journalling · Public and private"
-              title="Dam Days"
-              hook="A journal that knows what to keep — and what to share."
-              detail="Public entries, private pages, one place."
-              accent="amber"
-              href="https://conversation-log.replit.app/"
-              external
-              testId="work-card-damdays"
-              thumb="thumb-damdays.png"
-              thumbAlt="Dam Days journal landing page with beaver illustration"
-            />
+          {/* ── Seven simple tools section ── */}
+          <div data-testid="work-cards">
+
+            {/* Core flow label */}
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.24em] mb-4"
+              style={{ color: "hsl(var(--accent))" }}
+            >
+              The core flow — learn → track → account
+            </p>
+
+            <div className="space-y-2 mb-4">
+              {[
+                {
+                  icon: "📖",
+                  name: "The Handbook",
+                  sub: "Codetry Handbook",
+                  desc: "Where you start. A plain-language guide that teaches the Headwaters way of working — how to scope a job, how to hand it over, and how a community can run its own economy.",
+                  color: "hsl(145 36% 22%)",
+                  testId: "work-card-handbook",
+                },
+                {
+                  icon: "📋",
+                  name: "Practitioner's Guide",
+                  sub: "Practitioners Guide V2",
+                  desc: "Where your work lives. A structured reference that tracks each engagement — the scope, the phases, the decisions, and the handover. Keeps every project honest.",
+                  color: "hsl(145 28% 32%)",
+                  testId: "work-card-guide",
+                },
+                {
+                  icon: "📚",
+                  name: "The Books",
+                  sub: "Headwaters Books",
+                  desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.",
+                  color: "hsl(145 22% 42%)",
+                  testId: "work-card-books",
+                },
+              ].map(({ icon, name, sub, desc, color, testId }, i) => (
+                <div key={name}>
+                  <div
+                    className="rounded-md border bg-card p-4 flex gap-3.5 items-start"
+                    style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
+                    data-testid={testId}
+                  >
+                    <span className="text-2xl leading-none mt-0.5 shrink-0">{icon}</span>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-baseline gap-2 mb-1">
+                        <p className="font-serif text-[15px] font-medium tracking-tight">{name}</p>
+                        <span
+                          className="font-mono text-[9px] uppercase tracking-[0.1em]"
+                          style={{ color }}
+                        >{sub}</span>
+                      </div>
+                      <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                        {desc}
+                      </p>
+                    </div>
+                  </div>
+                  {i < 2 && (
+                    <div className="flex flex-col items-start pl-[2.6rem] py-1">
+                      <div className="w-px h-3" style={{ background: color, opacity: 0.35 }} />
+                      <span className="font-mono text-[9px] uppercase tracking-[0.12em]" style={{ color, opacity: 0.7 }}>
+                        {i === 0 ? "then track in" : "money flows to"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Supporting layers divider */}
+            <div className="flex items-center gap-3 my-5">
+              <div className="flex-1 h-px" style={{ background: "hsl(var(--card-border))" }} />
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                Supporting layers
+              </p>
+              <div className="flex-1 h-px" style={{ background: "hsl(var(--card-border))" }} />
+            </div>
+
+            <p
+              className="font-serif text-[13.5px] leading-[1.55] mb-4"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              Four tools back up the core flow — they hold the evidence, the materials, the team, and the files that everything else draws from.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+              {[
+                {
+                  icon: "🔬",
+                  name: "Research Library",
+                  sub: "Northern Food Systems Library",
+                  desc: "Curated research, reports, and links about northern food systems — so every decision is grounded in real data, not guesswork.",
+                  color: "hsl(14 64% 36%)",
+                  testId: "work-card-library",
+                },
+                {
+                  icon: "🖨️",
+                  name: "Print Marketing Suite",
+                  sub: "Headwaters Print Marketing",
+                  desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment — from a farmers market table to a band council pitch.",
+                  color: "hsl(14 50% 44%)",
+                  testId: "work-card-print",
+                },
+                {
+                  icon: "🚢",
+                  name: "Crew Manifest",
+                  sub: "Codetry Ship",
+                  desc: "Shows who is on which project, what role they fill, and how the crew fits together — so nothing falls through the cracks.",
+                  color: "hsl(220 20% 32%)",
+                  testId: "work-card-ship",
+                },
+                {
+                  icon: "🗄️",
+                  name: "Media Library",
+                  sub: "Headwaters API",
+                  desc: "Stores photos, documents, and media assets so every other tool can pull from one reliable source — no more hunting for the right logo version.",
+                  color: "hsl(200 25% 35%)",
+                  testId: "work-card-media",
+                },
+              ].map(({ icon, name, sub, desc, color, testId }) => (
+                <div
+                  key={name}
+                  className="rounded-md border bg-card p-4 flex gap-3 items-start"
+                  style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
+                  data-testid={testId}
+                >
+                  <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-2 mb-0.5">
+                      <p className="font-serif text-[14px] font-medium tracking-tight">{name}</p>
+                      <span
+                        className="font-mono text-[9px] uppercase tracking-[0.08em]"
+                        style={{ color }}
+                      >{sub}</span>
+                    </div>
+                    <p className="font-serif text-[13px] leading-[1.45]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* How it fits callout */}
+            <div
+              className="mt-4 rounded-md px-5 py-4"
+              style={{ background: "hsl(145 36% 22%)", color: "hsl(38 36% 96%)" }}
+              data-testid="work-seven-tools-callout"
+            >
+              <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] mb-2 opacity-70">How it all connects</p>
+              <p className="font-serif text-[14px] leading-[1.6]">
+                <strong>The Handbook</strong> teaches you how Headwaters works.{" "}
+                <strong>The Practitioner's Guide</strong> captures each job you do.{" "}
+                <strong>The Books</strong> keep the money honest. Behind them: the{" "}
+                <strong>Research Library</strong> grounds decisions in real evidence, the{" "}
+                <strong>Print Suite</strong> puts everything on paper, the{" "}
+                <strong>Crew Manifest</strong> shows who's doing what, and the{" "}
+                <strong>Media Library</strong> keeps the files in one place.
+                {" "}Seven simple tools. One system. Yours.
+              </p>
+            </div>
           </div>
 
           <div className="mt-8 text-center">
