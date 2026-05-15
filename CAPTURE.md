@@ -24,6 +24,21 @@ One entry per block. Copy the template, fill it in, leave the rest blank if you'
 ---
 ```
 
+> **Required for new task files:** Every `.local/tasks/*.md` file created on or after 2026-05-15 must include a `constellation:` field in its YAML front-matter block. The `pnpm run check-constellations` linter enforces this and exits non-zero if the field is missing.
+>
+> When the planning agent files a CAPTURE entry as a task, it must add `constellation:` to the new task file's front-matter:
+>
+> ```yaml
+> ---
+> title: My task title
+> constellation: Codetry
+> ---
+> ```
+>
+> Valid values: `Codetry` / `Pioneer Path` / `Word Walk` / `The Gate & The Standby` / `Headwaters Platform` / `807 Benefits` / `Bright Side` / `Library` / `Print Marketing` / `Deer Lake` / `Agency Operations` / `Saltbox` / `Practitioner's Guide V2`
+>
+> If the constellation is not yet clear, use `Unsure` — that is still a valid value and will pass the check.
+
 Once the planning agent files this entry as a task, it will add the task number in square brackets next to the heading, like:
 `## My thought [#1042]`
 A bracketed number means it's filed — no action needed from you.
