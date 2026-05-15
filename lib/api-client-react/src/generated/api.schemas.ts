@@ -1071,6 +1071,33 @@ export interface UnclearedReceiptsResponse {
   total: number;
 }
 
+export type GetUnclearedReceiptsParams = {
+  from?: string;
+  to?: string;
+};
+
+export interface ReconciliationAccountRow {
+  accountCode: string;
+  accountName: string;
+  accountType: string | null;
+  clearedDebit: number;
+  clearedCredit: number;
+  unclearedDebit: number;
+  unclearedCredit: number;
+}
+
+export interface ReconciliationSummary {
+  from: string | null;
+  to: string | null;
+  accounts: ReconciliationAccountRow[];
+  totals: {
+    clearedDebit: number;
+    clearedCredit: number;
+    unclearedDebit: number;
+    unclearedCredit: number;
+  };
+}
+
 export interface CategoryReportRow {
   accountCode: string;
   accountName: string;

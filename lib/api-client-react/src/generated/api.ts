@@ -68,6 +68,8 @@ import type {
   SubjectWithCount,
   Submission,
   SyncWordpileRequest,
+  GetUnclearedReceiptsParams,
+  ReconciliationSummary,
   ToggleClearedRequest,
   Transaction,
   TransactionPage,
@@ -4954,38 +4956,47 @@ export const useToggleTransactionCleared = <
 
 // ── GET /bookkeeper/receipts/uncleared ──────────────────────────────────────
 
-export const getGetUnclearedReceiptsUrl = () =>
-  `/api/bookkeeper/receipts/uncleared`;
+export const getGetUnclearedReceiptsUrl = (params?: GetUnclearedReceiptsParams) => {
+  const searchParams = new URLSearchParams();
+  if (params?.from !== undefined) searchParams.set("from", params.from);
+  if (params?.to !== undefined) searchParams.set("to", params.to);
+  const qs = searchParams.toString();
+  return `/api/bookkeeper/receipts/uncleared${qs ? `?${qs}` : ""}`;
+};
 
 export const getUnclearedReceipts = async (
+  params?: GetUnclearedReceiptsParams,
   options?: RequestInit,
 ): Promise<UnclearedReceiptsResponse> => {
   return customFetch<UnclearedReceiptsResponse>(
-    getGetUnclearedReceiptsUrl(),
+    getGetUnclearedReceiptsUrl(params),
     options,
   );
 };
 
-export const getGetUnclearedReceiptsQueryKey = () =>
-  [`/api/bookkeeper/receipts/uncleared`] as const;
+export const getGetUnclearedReceiptsQueryKey = (params?: GetUnclearedReceiptsParams) =>
+  [`/api/bookkeeper/receipts/uncleared`, ...(params ? [params] : [])] as const;
 
 export const getGetUnclearedReceiptsQueryOptions = <
   TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
   TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getUnclearedReceipts>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
+>(
+  params?: GetUnclearedReceiptsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUnclearedReceipts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
   const queryKey =
-    queryOptions?.queryKey ?? getGetUnclearedReceiptsQueryKey();
+    queryOptions?.queryKey ?? getGetUnclearedReceiptsQueryKey(params);
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getUnclearedReceipts>>
-  > = ({ signal }) => getUnclearedReceipts({ signal, ...requestOptions });
+  > = ({ signal }) => getUnclearedReceipts(params, { signal, ...requestOptions });
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getUnclearedReceipts>>,
     TError,
@@ -5001,15 +5012,99 @@ export type GetUnclearedReceiptsQueryError = ErrorType<unknown>;
 export function useGetUnclearedReceipts<
   TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
   TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getUnclearedReceipts>>,
+>(
+  params?: GetUnclearedReceiptsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUnclearedReceipts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetUnclearedReceiptsQueryOptions(params, options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+// ── GET /bookkeeper/receipts/reconciliation ──────────────────────────────────
+
+export type GetReconciliationSummaryParams = {
+  from?: string;
+  to?: string;
+};
+
+export const getGetReconciliationSummaryUrl = (params?: GetReconciliationSummaryParams) => {
+  const searchParams = new URLSearchParams();
+  if (params?.from !== undefined) searchParams.set("from", params.from);
+  if (params?.to !== undefined) searchParams.set("to", params.to);
+  const qs = searchParams.toString();
+  return `/api/bookkeeper/receipts/reconciliation${qs ? `?${qs}` : ""}`;
+};
+
+export const getReconciliationSummary = async (
+  params?: GetReconciliationSummaryParams,
+  options?: RequestInit,
+): Promise<ReconciliationSummary> => {
+  return customFetch<ReconciliationSummary>(
+    getGetReconciliationSummaryUrl(params),
+    options,
+  );
+};
+
+export const getGetReconciliationSummaryQueryKey = (params?: GetReconciliationSummaryParams) =>
+  [`/api/bookkeeper/receipts/reconciliation`, ...(params ? [params] : [])] as const;
+
+export const getGetReconciliationSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReconciliationSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReconciliationSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getGetReconciliationSummaryQueryKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getReconciliationSummary>>
+  > = ({ signal }) => getReconciliationSummary(params, { signal, ...requestOptions });
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getReconciliationSummary>>,
     TError,
     TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetUnclearedReceiptsQueryOptions(options);
+  > & { queryKey: QueryKey };
+};
+
+export type GetReconciliationSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getReconciliationSummary>>
+>;
+export type GetReconciliationSummaryQueryError = ErrorType<unknown>;
+
+export function useGetReconciliationSummary<
+  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReconciliationSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReconciliationSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetReconciliationSummaryQueryOptions(params, options);
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
   };

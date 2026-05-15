@@ -1045,19 +1045,226 @@ router.patch(
 
 // ----------------------- /receipts/uncleared -----------------------
 
+// ── GET /receipts/reconciliation ─────────────────────────────────────────────
+// Returns cleared and uncleared debit totals broken down by account code, for
+// the optional date range [from, to].
+
 router.get(
-  "/receipts/uncleared",
+  "/receipts/reconciliation",
   requireRole("owner", "ops_manager", "bookkeeper"),
-  async (_req, res) => {
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const txnFilters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+    ];
+    if (from) txnFilters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) txnFilters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
+    const rows = await db
+      .select({
+        accountCode: bookkeeperTransactionLinesTable.accountCode,
+        cleared: bookkeeperTransactionsTable.cleared,
+        debit: bookkeeperTransactionLinesTable.debit,
+        credit: bookkeeperTransactionLinesTable.credit,
+      })
+      .from(bookkeeperTransactionLinesTable)
+      .innerJoin(
+        bookkeeperTransactionsTable,
+        eq(bookkeeperTransactionLinesTable.transactionId, bookkeeperTransactionsTable.id),
+      )
+      .where(and(...txnFilters));
+
+    const accountCodes = Array.from(new Set(rows.map((r) => r.accountCode)));
+    const accounts =
+      accountCodes.length > 0
+        ? await db
+            .select()
+            .from(bookkeeperAccountsTable)
+            .where(inArray(bookkeeperAccountsTable.code, accountCodes))
+        : [];
+    const accountsByCode = new Map(accounts.map((a) => [a.code, a]));
+
+    type AccBucket = { clearedDebit: number; unclearedDebit: number; clearedCredit: number; unclearedCredit: number };
+    const byAccount = new Map<string, AccBucket>();
+    for (const r of rows) {
+      const bucket = byAccount.get(r.accountCode) ?? {
+        clearedDebit: 0, unclearedDebit: 0, clearedCredit: 0, unclearedCredit: 0,
+      };
+      const debit = num(r.debit);
+      const credit = num(r.credit);
+      if (r.cleared) {
+        bucket.clearedDebit += debit;
+        bucket.clearedCredit += credit;
+      } else {
+        bucket.unclearedDebit += debit;
+        bucket.unclearedCredit += credit;
+      }
+      byAccount.set(r.accountCode, bucket);
+    }
+
+    const accountRows = Array.from(byAccount.entries())
+      .map(([code, b]) => {
+        const acct = accountsByCode.get(code);
+        return {
+          accountCode: code,
+          accountName: acct?.name ?? code,
+          accountType: acct?.type ?? null,
+          clearedDebit: Math.round(b.clearedDebit * 100) / 100,
+          clearedCredit: Math.round(b.clearedCredit * 100) / 100,
+          unclearedDebit: Math.round(b.unclearedDebit * 100) / 100,
+          unclearedCredit: Math.round(b.unclearedCredit * 100) / 100,
+        };
+      })
+      .sort((a, b) => a.accountCode.localeCompare(b.accountCode));
+
+    const totals = accountRows.reduce(
+      (acc, r) => ({
+        clearedDebit: acc.clearedDebit + r.clearedDebit,
+        clearedCredit: acc.clearedCredit + r.clearedCredit,
+        unclearedDebit: acc.unclearedDebit + r.unclearedDebit,
+        unclearedCredit: acc.unclearedCredit + r.unclearedCredit,
+      }),
+      { clearedDebit: 0, clearedCredit: 0, unclearedDebit: 0, unclearedCredit: 0 },
+    );
+
+    res.json({
+      from,
+      to,
+      accounts: accountRows,
+      totals: {
+        clearedDebit: Math.round(totals.clearedDebit * 100) / 100,
+        clearedCredit: Math.round(totals.clearedCredit * 100) / 100,
+        unclearedDebit: Math.round(totals.unclearedDebit * 100) / 100,
+        unclearedCredit: Math.round(totals.unclearedCredit * 100) / 100,
+      },
+    });
+  },
+);
+
+// ── GET /receipts/uncleared/csv ───────────────────────────────────────────────
+// Returns a CSV file of uncleared posted transactions (one row per journal line)
+// scoped to the optional [from, to] date range.
+
+router.get(
+  "/receipts/uncleared/csv",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const txnFilters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+      eq(bookkeeperTransactionsTable.cleared, false),
+    ];
+    if (from) txnFilters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) txnFilters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
     const txns = await db
       .select()
       .from(bookkeeperTransactionsTable)
-      .where(
-        and(
-          eq(bookkeeperTransactionsTable.status, "posted"),
-          eq(bookkeeperTransactionsTable.cleared, false),
-        ),
+      .where(and(...txnFilters))
+      .orderBy(
+        desc(bookkeeperTransactionsTable.postedDate),
+        desc(bookkeeperTransactionsTable.createdAt),
       )
+      .limit(2000);
+
+    const txnIds = txns.map((t) => t.id);
+    const lines =
+      txnIds.length > 0
+        ? await db
+            .select()
+            .from(bookkeeperTransactionLinesTable)
+            .where(inArray(bookkeeperTransactionLinesTable.transactionId, txnIds))
+        : [];
+
+    const accountCodes = Array.from(new Set(lines.map((l) => l.accountCode)));
+    const accounts =
+      accountCodes.length > 0
+        ? await db
+            .select()
+            .from(bookkeeperAccountsTable)
+            .where(inArray(bookkeeperAccountsTable.code, accountCodes))
+        : [];
+    const accountsByCode = new Map(accounts.map((a) => [a.code, a]));
+    const linesByTxn = new Map<string, TransactionLineRow[]>();
+    for (const l of lines) {
+      const arr = linesByTxn.get(l.transactionId) ?? [];
+      arr.push(l);
+      linesByTxn.set(l.transactionId, arr);
+    }
+
+    const csvEscape = (v: string | null | undefined) => {
+      let s = v ?? "";
+      // Prevent formula injection: prefix cells that start with =, +, -, @, tab, CR
+      if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+      if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+        return `"${s.replace(/"/g, '""')}"`;
+      }
+      return s;
+    };
+
+    const headers = [
+      "transaction_id",
+      "posted_date",
+      "description",
+      "reference",
+      "account_code",
+      "account_name",
+      "cost_centre",
+      "tax_code",
+      "debit",
+      "credit",
+    ];
+
+    const csvRows: string[] = [headers.join(",")];
+    for (const t of txns) {
+      const txnLines = (linesByTxn.get(t.id) ?? []).sort((a, b) => a.lineOrder - b.lineOrder);
+      for (const l of txnLines) {
+        const acctName = accountsByCode.get(l.accountCode)?.name ?? "";
+        csvRows.push([
+          csvEscape(t.id),
+          csvEscape(dateStr(t.postedDate)),
+          csvEscape(t.description),
+          csvEscape(t.reference ?? ""),
+          csvEscape(l.accountCode),
+          csvEscape(acctName),
+          csvEscape(l.costCentreCode ?? ""),
+          csvEscape(l.taxCode ?? ""),
+          num(l.debit).toFixed(2),
+          num(l.credit).toFixed(2),
+        ].join(","));
+      }
+    }
+
+    const dateTag = from && to ? `_${from}_to_${to}` : from ? `_from_${from}` : to ? `_to_${to}` : "";
+    const filename = `uncleared-receipts${dateTag}.csv`;
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.send(csvRows.join("\n"));
+  },
+);
+
+router.get(
+  "/receipts/uncleared",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const txnFilters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+      eq(bookkeeperTransactionsTable.cleared, false),
+    ];
+    if (from) txnFilters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) txnFilters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
+    const txns = await db
+      .select()
+      .from(bookkeeperTransactionsTable)
+      .where(and(...txnFilters))
       .orderBy(
         desc(bookkeeperTransactionsTable.postedDate),
         desc(bookkeeperTransactionsTable.createdAt),
