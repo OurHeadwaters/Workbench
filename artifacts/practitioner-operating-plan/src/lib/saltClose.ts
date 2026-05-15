@@ -245,3 +245,82 @@ export function getStatus(net: number): SaltStatus {
   if (net >= SALT_BASELINE_NET * 0.7) return "watch";
   return "below";
 }
+
+// ---------------------------------------------------------------------------
+// Channel aggregation — merges per-source parsed rows into close totals
+// ---------------------------------------------------------------------------
+
+/**
+ * A single row as emitted by one of the four source parsers.
+ *
+ * DTC freight deduplication rule:
+ *   - Shopify DTC rows set `shippingCollected` (what the customer paid for
+ *     shipping). This is revenue, not a freight expense.
+ *   - Shippo rows set `freight` (the carrier label cost).
+ *   - A single DTC order appears in both: shippingCollected → revenue,
+ *     freight → freight expense. Neither field crosses into the other bucket.
+ */
+export interface ParsedRow {
+  source: "square" | "shopify" | "shippo" | "timesheet";
+  channel: "dtc" | "wholesale" | "markets" | "corporate";
+  revenue: number;
+  shippingCollected?: number; // Shopify DTC only — goes into revenue, not freight
+  cogs: number;
+  freight: number;   // Shippo label cost only
+  packaging: number;
+  labor: number;
+}
+
+export interface ChannelClose {
+  channel: string;
+  revenue: number;
+  cogs: number;
+  freight: number;
+  packaging: number;
+  labor: number;
+  expenses: number; // cogs + freight + packaging + labor
+  net: number;      // revenue − expenses
+}
+
+export interface MonthlyAggregation {
+  channels: ChannelClose[];
+  totalRevenue: number;
+  totalExpenses: number;
+  totalNet: number;
+}
+
+/**
+ * Merge per-source rows into per-channel close totals.
+ * shippingCollected adds to revenue; freight adds to freight expense.
+ * The two fields are source-exclusive (Shopify vs Shippo) so they
+ * never double-count the same shipping cost.
+ */
+export function aggregateMonth(rows: ParsedRow[]): MonthlyAggregation {
+  const acc = new Map<
+    string,
+    { revenue: number; cogs: number; freight: number; packaging: number; labor: number }
+  >();
+
+  for (const row of rows) {
+    const entry = acc.get(row.channel) ?? {
+      revenue: 0, cogs: 0, freight: 0, packaging: 0, labor: 0,
+    };
+    entry.revenue   += row.revenue + (row.shippingCollected ?? 0);
+    entry.cogs      += row.cogs;
+    entry.freight   += row.freight;
+    entry.packaging += row.packaging;
+    entry.labor     += row.labor;
+    acc.set(row.channel, entry);
+  }
+
+  const channels: ChannelClose[] = Array.from(acc.entries())
+    .map(([channel, t]) => {
+      const expenses = t.cogs + t.freight + t.packaging + t.labor;
+      return { channel, ...t, expenses, net: t.revenue - expenses };
+    })
+    .sort((a, b) => a.channel.localeCompare(b.channel));
+
+  const totalRevenue  = channels.reduce((s, c) => s + c.revenue,  0);
+  const totalExpenses = channels.reduce((s, c) => s + c.expenses, 0);
+  return { channels, totalRevenue, totalExpenses, totalNet: totalRevenue - totalExpenses };
+}

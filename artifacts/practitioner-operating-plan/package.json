@@ -9,7 +9,8 @@
     "build:cashflow-xlsx": "node scripts/generate-cashflow-xlsx.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --config vitest.config.ts"
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "dependencies": {
     "clsx": "catalog:",
@@ -25,6 +26,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "jsdom": "^29.1.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",
