@@ -93,13 +93,13 @@ export function HomePage() {
             className="font-serif text-[1.6rem] sm:text-5xl leading-[1.1] tracking-tight mb-3"
             data-testid="home-title"
           >
-            Your community store,<br className="hidden sm:block" /> open and running.
+            Build it. Hand it off.<br className="hidden sm:block" /> Let the community run it.
           </h1>
           <p
             className="font-serif text-base sm:text-lg italic mb-8 opacity-75"
             data-testid="home-tagline"
           >
-            Food systems planning for northern communities — practitioner-built, flat fee, no retainer required.
+            Food systems planning and sovereign tools for northern communities — practitioner-built, flat fee, no retainer required.
           </p>
 
           {/* Two real buttons side by side */}
