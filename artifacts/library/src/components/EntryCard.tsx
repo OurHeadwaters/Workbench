@@ -5,7 +5,7 @@ import { FileText, Image as ImageIcon, Globe, File, Paperclip, MoreVertical, Che
 import { type LibraryEntry } from "@workspace/api-client-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { entryAssetUrl } from "@/lib/utils";
+import { useSignedAssetUrl } from "@/hooks/useSignedAssetUrl";
 
 interface EntryCardProps {
   entry: LibraryEntry;
@@ -13,7 +13,7 @@ interface EntryCardProps {
 
 export function EntryCard({ entry }: EntryCardProps) {
   const [imgFailed, setImgFailed] = useState(false);
-  const assetUrl = entryAssetUrl(entry);
+  const assetUrl = useSignedAssetUrl(entry);
   
   let Icon = FileText;
   if (entry.kind === "web_source") Icon = Globe;

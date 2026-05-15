@@ -12,7 +12,8 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { entryAssetUrl, errMessage } from "@/lib/utils";
+import { errMessage } from "@/lib/utils";
+import { useSignedAssetUrl } from "@/hooks/useSignedAssetUrl";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -164,7 +165,7 @@ export default function EntryDetail() {
     );
   }
 
-  const assetUrl = entryAssetUrl(entry);
+  const assetUrl = useSignedAssetUrl(entry);
   
   let TypeIcon = FileText;
   if (entry.kind === "web_source") TypeIcon = Globe;

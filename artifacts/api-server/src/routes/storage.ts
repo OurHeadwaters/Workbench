@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { Readable } from "stream";
+import { createHmac, timingSafeEqual } from "crypto";
 import {
   RequestUploadUrlBody,
   RequestUploadUrlResponse,
@@ -8,7 +9,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage"
 import { ObjectPermission } from "../lib/objectAcl";
 import { db, libraryEntriesTable, shareLinksTable } from "@workspace/db";
 import { or, eq } from "drizzle-orm";
-import { isOwnerRequest } from "../lib/ownerAuth";
+import { isOwnerRequest, OWNER_TOKEN } from "../lib/ownerAuth";
 
 // ----------------------- upload authorization -----------------------
 //
@@ -52,6 +53,51 @@ async function requireUploadAuth(
     return;
   }
   res.status(401).json({ error: "Unauthorized" });
+}
+
+// ----------------------- signed download tokens -----------------------
+//
+// Short-lived HMAC-signed tokens allow the curator's browser to load
+// private objects via plain <img src> / <iframe src> without leaking the
+// long-lived LIBRARY_OWNER_TOKEN into src URLs.
+//
+// Token format (base64url-encoded JSON):
+//   { p: objectPath, e: unix-seconds expiry, s: hex HMAC-SHA256 }
+//
+// LIBRARY_OWNER_TOKEN is used as the HMAC secret so tokens can't be
+// forged without the server secret.
+
+const SIGNED_URL_TTL_SECONDS = 300; // 5 minutes
+
+function signDownloadToken(objectPath: string, expiresAt: number): string {
+  const secret = OWNER_TOKEN ?? "no-secret-configured";
+  const payload = `${objectPath}\n${expiresAt}`;
+  const sig = createHmac("sha256", secret).update(payload).digest("hex");
+  return Buffer.from(
+    JSON.stringify({ p: objectPath, e: expiresAt, s: sig }),
+  ).toString("base64url");
+}
+
+function verifyDownloadToken(token: string): string | null {
+  try {
+    const decoded = JSON.parse(
+      Buffer.from(token, "base64url").toString("utf8"),
+    );
+    const { p, e, s } = decoded;
+    if (typeof p !== "string" || typeof e !== "number" || typeof s !== "string")
+      return null;
+    if (Math.floor(Date.now() / 1000) > e) return null;
+    const secret = OWNER_TOKEN ?? "no-secret-configured";
+    const payload = `${p}\n${e}`;
+    const expected = createHmac("sha256", secret).update(payload).digest("hex");
+    const aBuf = Buffer.from(expected, "hex");
+    const bBuf = Buffer.from(s, "hex");
+    if (aBuf.length !== bBuf.length) return null;
+    if (!timingSafeEqual(aBuf, bBuf)) return null;
+    return p;
+  } catch {
+    return null;
+  }
 }
 
 const router: IRouter = Router();
@@ -126,17 +172,81 @@ router.get("/storage/public-objects/*filePath", async (req: Request, res: Respon
 });
 
 /**
+ * GET /storage/signed-url?path=/objects/xxx
+ *
+ * Mint a short-lived signed download URL for a private object.
+ * Requires owner auth (Authorization: Bearer / x-library-owner-token)
+ * OR a valid share-link token (x-share-token) so that contributors
+ * can also view files they uploaded.
+ *
+ * Returns: { signedUrl: string, expiresAt: number (unix seconds) }
+ */
+router.get("/storage/signed-url", async (req: Request, res: Response) => {
+  let authorized = isOwnerRequest(req);
+  if (!authorized) {
+    const shareToken = req.header("x-share-token")?.trim();
+    if (shareToken) {
+      authorized = await shareTokenIsValid(shareToken);
+    }
+  }
+  if (!authorized) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const { path } = req.query;
+  if (typeof path !== "string" || !path.startsWith("/objects/")) {
+    res.status(400).json({ error: "Invalid path — must start with /objects/" });
+    return;
+  }
+
+  const expiresAt = Math.floor(Date.now() / 1000) + SIGNED_URL_TTL_SECONDS;
+  const dt = signDownloadToken(path, expiresAt);
+  const wildcardPart = path.slice("/objects/".length);
+  const signedUrl = `/api/storage/objects/${wildcardPart}?dt=${dt}`;
+  res.json({ signedUrl, expiresAt });
+});
+
+/**
  * GET /storage/objects/*
  *
  * Serve object entities from PRIVATE_OBJECT_DIR.
- * These are served from a separate path from /public-objects and can optionally
- * be protected with authentication or ACL checks based on the use case.
+ *
+ * Access requires one of:
+ *   1. Owner token in Authorization: Bearer / x-library-owner-token header.
+ *   2. Valid (non-revoked, non-expired) share-link token in x-share-token header.
+ *   3. A short-lived signed download token in the ?dt= query parameter,
+ *      minted by GET /storage/signed-url.  This lets the curator's browser
+ *      load files via plain <img src> / <iframe src>.
  */
 router.get("/storage/objects/*path", async (req: Request, res: Response) => {
   try {
     const raw = req.params.path;
     const wildcardPath = Array.isArray(raw) ? raw.join("/") : raw;
     const objectPath = `/objects/${wildcardPath}`;
+
+    // ---- Auth check ----
+    let authorized = isOwnerRequest(req);
+
+    if (!authorized) {
+      const shareToken = req.header("x-share-token")?.trim();
+      if (shareToken) {
+        authorized = await shareTokenIsValid(shareToken);
+      }
+    }
+
+    if (!authorized) {
+      const dt = req.query.dt;
+      if (typeof dt === "string") {
+        const tokenPath = verifyDownloadToken(dt);
+        authorized = tokenPath === objectPath;
+      }
+    }
+
+    if (!authorized) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
 
     // Gate: only serve files actually referenced by a library entry
     // (either as the file storageRef or as a web-source screenshot).

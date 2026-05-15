@@ -9,8 +9,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, FileText, Globe, File as FileIcon, ExternalLink, Link2, AlertTriangle, Clock, Wifi } from "lucide-react";
 import { format } from "date-fns";
-import { entryAssetUrl, errMessage } from "@/lib/utils";
+import { errMessage } from "@/lib/utils";
 import { getOwnerToken } from "@/lib/ownerAuth";
+import { useSignedAssetUrl } from "@/hooks/useSignedAssetUrl";
+import { type LibraryEntry } from "@workspace/api-client-react";
 
 interface LinkCheckResult {
   total: number;
@@ -20,6 +22,104 @@ interface LinkCheckResult {
   fetchErrors: number;
   blocked: number;
   flagged: { id: string; title: string; url: string; reason: string; httpStatus: number | null }[];
+}
+
+interface NeedsReviewRowProps {
+  entry: LibraryEntry;
+  processingId: string | null;
+  failedImages: Set<string>;
+  onApprove: (id: string) => void;
+  onImageError: (id: string) => void;
+}
+
+function NeedsReviewRow({ entry, processingId, failedImages, onApprove, onImageError }: NeedsReviewRowProps) {
+  const assetUrl = useSignedAssetUrl(entry);
+
+  let TypeIcon = FileText;
+  if (entry.kind === "web_source") TypeIcon = Globe;
+  else if (entry.fileType) TypeIcon = FileIcon;
+
+  return (
+    <Card className="border-border bg-card shadow-sm overflow-hidden">
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full md:w-48 h-48 bg-muted border-r border-border shrink-0 flex items-center justify-center relative overflow-hidden">
+          {assetUrl && (entry.fileType === "image" || entry.kind === "web_source") && !failedImages.has(entry.id) ? (
+            <img
+              src={assetUrl}
+              alt={entry.title}
+              className="object-cover w-full h-full"
+              onError={() => onImageError(entry.id)}
+            />
+          ) : (
+            <TypeIcon className="h-12 w-12 text-muted-foreground opacity-20" />
+          )}
+        </div>
+
+        <div className="p-4 md:p-6 flex-1 flex flex-col">
+          <div className="flex justify-between items-start gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                <TypeIcon className="h-3.5 w-3.5" />
+                <span>{entry.kind === "web_source" ? "Web Source" : entry.fileType?.toUpperCase() || "File"}</span>
+                <span>•</span>
+                <span>{format(new Date(entry.createdAt), "MMM d, yyyy")}</span>
+                {entry.contributor && (
+                  <>
+                    <span>•</span>
+                    <span className="font-medium text-foreground">Added by {entry.contributor.name}</span>
+                  </>
+                )}
+              </div>
+              <h3 className="text-xl font-serif font-bold text-primary mb-1">
+                {entry.title}
+              </h3>
+              {entry.producer && (
+                <p className="text-sm font-medium text-secondary mb-3">{entry.producer.name}</p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onApprove(entry.id)}
+                disabled={processingId === entry.id}
+                className="gap-2 bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:text-green-800"
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                Approve
+              </Button>
+              <Link href={`/entries/${entry.id}`}>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <ExternalLink className="h-4 w-4" />
+                  Review
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {entry.summary && (
+            <p className="text-sm text-muted-foreground line-clamp-2 mt-2 mb-4">
+              {entry.summary}
+            </p>
+          )}
+
+          <div className="flex flex-wrap gap-2 mt-auto pt-4">
+            {entry.subjects.map(subject => (
+              <Badge key={subject.slug} variant="outline" className="bg-background/50 font-normal">
+                {subject.name}
+              </Badge>
+            ))}
+            {entry.buckets.map(bucket => (
+              <Badge key={bucket.slug} variant="outline" className="bg-background/50 font-normal">
+                {bucket.name}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 }
 
 export default function NeedsReview() {
@@ -213,97 +313,16 @@ export default function NeedsReview() {
         </div>
       ) : (
         <div className="space-y-4">
-          {entries?.map((entry) => {
-            const assetUrl = entryAssetUrl(entry);
-            
-            let TypeIcon = FileText;
-            if (entry.kind === "web_source") TypeIcon = Globe;
-            else if (entry.fileType) TypeIcon = FileIcon;
-
-            return (
-              <Card key={entry.id} className="border-border bg-card shadow-sm overflow-hidden">
-                <div className="flex flex-col md:flex-row">
-                  {/* Left: Preview/Info */}
-                  <div className="w-full md:w-48 h-48 bg-muted border-r border-border shrink-0 flex items-center justify-center relative overflow-hidden">
-                    {assetUrl && (entry.fileType === "image" || entry.kind === "web_source") && !failedImages.has(entry.id) ? (
-                      <img 
-                        src={assetUrl} 
-                        alt={entry.title} 
-                        className="object-cover w-full h-full"
-                        onError={() => setFailedImages(prev => new Set([...prev, entry.id]))}
-                      />
-                    ) : (
-                      <TypeIcon className="h-12 w-12 text-muted-foreground opacity-20" />
-                    )}
-                  </div>
-                  
-                  {/* Right: Details & Actions */}
-                  <div className="p-4 md:p-6 flex-1 flex flex-col">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                          <TypeIcon className="h-3.5 w-3.5" />
-                          <span>{entry.kind === "web_source" ? "Web Source" : entry.fileType?.toUpperCase() || "File"}</span>
-                          <span>•</span>
-                          <span>{format(new Date(entry.createdAt), "MMM d, yyyy")}</span>
-                          {entry.contributor && (
-                            <>
-                              <span>•</span>
-                              <span className="font-medium text-foreground">Added by {entry.contributor.name}</span>
-                            </>
-                          )}
-                        </div>
-                        <h3 className="text-xl font-serif font-bold text-primary mb-1">
-                          {entry.title}
-                        </h3>
-                        {entry.producer && (
-                          <p className="text-sm font-medium text-secondary mb-3">{entry.producer.name}</p>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => handleApprove(entry.id)}
-                          disabled={processingId === entry.id}
-                          className="gap-2 bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:text-green-800"
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          Approve
-                        </Button>
-                        <Link href={`/entries/${entry.id}`}>
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <ExternalLink className="h-4 w-4" />
-                            Review
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                    
-                    {entry.summary && (
-                      <p className="text-sm text-muted-foreground line-clamp-2 mt-2 mb-4">
-                        {entry.summary}
-                      </p>
-                    )}
-                    
-                    <div className="flex flex-wrap gap-2 mt-auto pt-4">
-                      {entry.subjects.map(subject => (
-                        <Badge key={subject.slug} variant="outline" className="bg-background/50 font-normal">
-                          {subject.name}
-                        </Badge>
-                      ))}
-                      {entry.buckets.map(bucket => (
-                        <Badge key={bucket.slug} variant="outline" className="bg-background/50 font-normal">
-                          {bucket.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
+          {entries?.map((entry) => (
+            <NeedsReviewRow
+              key={entry.id}
+              entry={entry}
+              processingId={processingId}
+              failedImages={failedImages}
+              onApprove={handleApprove}
+              onImageError={(id) => setFailedImages(prev => new Set([...prev, id]))}
+            />
+          ))}
         </div>
       )}
     </div>
