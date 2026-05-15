@@ -13,6 +13,13 @@ import BridgeFunding from "../pages/slides/BridgeFunding";
 import SecondAnchorScenarios from "../pages/slides/SecondAnchorScenarios";
 import PathToScale from "../pages/slides/PathToScale";
 import Closing from "../pages/slides/Closing";
+import HiringHandyman from "../pages/slides/HiringHandyman";
+import HiringBookkeeper from "../pages/slides/HiringBookkeeper";
+import HiringOpsManager from "../pages/slides/HiringOpsManager";
+import PaperworkVSC from "../pages/slides/PaperworkVSC";
+import PaperworkNDA from "../pages/slides/PaperworkNDA";
+import PaperworkContractor from "../pages/slides/PaperworkContractor";
+import PaperworkPaidTrial from "../pages/slides/PaperworkPaidTrial";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -27,6 +34,13 @@ const COMPONENTS: ComponentType[] = [
   SecondAnchorScenarios,
   PathToScale,
   Closing,
+  HiringHandyman,
+  HiringBookkeeper,
+  HiringOpsManager,
+  PaperworkVSC,
+  PaperworkNDA,
+  PaperworkContractor,
+  PaperworkPaidTrial,
 ];
 
 const SORTED = [...manifest].sort((a, b) => a.position - b.position);

@@ -88,5 +88,68 @@
     "description": "Six locked numbers, one honest gap — all figures from budgetScenarios.ts. Ends with the closing line.",
     "speakerNotes": "",
     "phase": "idea"
+  },
+  {
+    "id": "v3-0010-hiring-handyman-aaaa-aaaaaa10",
+    "position": 10,
+    "filepath": "src/pages/slides/HiringHandyman.tsx",
+    "title": "Hiring — Handyman",
+    "description": "VSC requirement (3 gates), supervision rules while VSC is pending, standing 'tell me anything weird' conversation script with the kids, and annual re-check reminder.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0011-hiring-bookkeeper-aaa-aaaaaa11",
+    "position": 11,
+    "filepath": "src/pages/slides/HiringBookkeeper.tsx",
+    "title": "Hiring — Bookkeeper",
+    "description": "NDA sign-before-access requirement, access scope cap (in vs out of scope), and first-day checklist for the bookkeeper role.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0012-hiring-opsmanager-aa-aaaaaa12",
+    "position": 12,
+    "filepath": "src/pages/slides/HiringOpsManager.tsx",
+    "title": "Hiring — Ops Manager",
+    "description": "Paid-trial pattern (length, rate, decision date, what 'no' means), contractor agreement key terms summary, and first-day checklist for the ops manager role.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0013-paperwork-vsc-aaaa-aaaaaa13",
+    "position": 13,
+    "filepath": "src/pages/slides/PaperworkVSC.tsx",
+    "title": "Paperwork — VSC Request Letter",
+    "description": "Printable Vulnerable Sector Check request letter template. Candidate takes this to Dryden Police Service (25 Van Horne Ave, (807) 223-2201) or OPP. Includes applicant info block and annual re-check reminder.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0014-paperwork-nda-aaaa-aaaaaa14",
+    "position": 14,
+    "filepath": "src/pages/slides/PaperworkNDA.tsx",
+    "title": "Paperwork — Mutual NDA",
+    "description": "One-page mutual NDA. Covers client community names, contract amounts, and operating methodology. 2-year term. Ontario governing law. Plain language.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0015-paperwork-contractor-a-aaaaaa15",
+    "position": 15,
+    "filepath": "src/pages/slides/PaperworkContractor.tsx",
+    "title": "Paperwork — Contractor Agreement",
+    "description": "One-page Ontario independent contractor agreement. Covers rate, scope, 30-day termination notice, IP assignment, independent-contractor status, and confidentiality reference to NDA.",
+    "speakerNotes": "",
+    "phase": "idea"
+  },
+  {
+    "id": "v3-0016-paperwork-paidtrial-aaaaaa16",
+    "position": 16,
+    "filepath": "src/pages/slides/PaperworkPaidTrial.tsx",
+    "title": "Paperwork — Paid-Trial Offer Letter",
+    "description": "Paid-trial offer letter. Covers 2-week trial length, rate, named decision date, what yes means, and what no means (final invoice within 5 days, no obligation). Makes parting clean.",
+    "speakerNotes": "",
+    "phase": "idea"
   }
 ]
