@@ -111,6 +111,41 @@ export function ListenPage() {
 
         <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
+        {/* ---- show notes / episode list ---- */}
+        <section
+          className="mt-10 sm:mt-12 print:hidden"
+          data-testid="section-show-notes"
+        >
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            episode
+          </p>
+
+          <div
+            className="rounded-sm border px-5 py-4 space-y-2"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <p className="font-serif font-semibold text-base">
+              <a
+                href="https://www.thesurvivalpodcast.com/local-food-parr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:opacity-80"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                &ldquo;Community vs. Collapse&rdquo; — The Survival Podcast
+              </a>
+            </p>
+            <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/70">
+              Bobbie Parr sits down with Jack Spirko to talk local food, northern logistics, and what it actually takes to build a community economy from scratch. Recorded in 2023.
+            </p>
+          </div>
+        </section>
+
+        <hr className="rule mt-10 sm:mt-12 print:hidden" />
+
         {/* ---- who is bobbie ---- */}
         <section
           className="mt-10 sm:mt-12 print:mt-4"
@@ -167,7 +202,15 @@ export function ListenPage() {
             </p>
             <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80">
               In 2024 the Northwest Ontario Innovation Centre named her{" "}
-              <strong>Innovative Hero of the Year</strong>. In 2023 she sat down
+              <a
+                href="https://www.tbnewswatch.com/success/hard-working-innovattors-honoured-9846445"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:opacity-80"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                <strong>Innovative Hero of the Year</strong>
+              </a>. In 2023 she sat down
               with Jack Spirko on{" "}
               <em>The Survival Podcast</em> for the episode{" "}
               <a
