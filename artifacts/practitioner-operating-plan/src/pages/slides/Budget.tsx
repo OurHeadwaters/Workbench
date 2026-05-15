@@ -218,7 +218,21 @@ export default function Budget() {
         </div>
 
         {/* Cost-basis summary + scenario comparison — click to select */}
-        <div className="mt-[2vh] pt-[2vh] border-t border-rule grid grid-cols-3 gap-[2vw]">
+        <div className="mt-[2vh] pt-[2vh] border-t border-rule flex items-center justify-between gap-[2vw] mb-[1vh]">
+          <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted opacity-60">
+            Scenario comparison
+          </div>
+          <a
+            href={`${import.meta.env.BASE_URL}hiring-templates`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-accent opacity-70 hover:opacity-100 transition-opacity duration-150 underline-offset-2 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Hiring templates →
+          </a>
+        </div>
+        <div className="grid grid-cols-3 gap-[2vw]">
           {SCENARIO_ROWS.map((s) => {
             const isSelected = s.id.toUpperCase() === selected;
             return (
