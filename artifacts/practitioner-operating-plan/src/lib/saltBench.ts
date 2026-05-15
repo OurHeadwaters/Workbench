@@ -169,3 +169,36 @@ export function getAllEffectiveBatches(
     .sort((a, b) => a.isoWeek - b.isoWeek)
     .map((slot) => getEffectiveBatch(slot, overrides));
 }
+
+// ── Batch-override localStorage helpers ───────────────────────────────────────
+
+const KEY_BATCH_OVERRIDES = "hwop_bench_overrides_v1";
+
+/** Load all batch-model overrides keyed by isoWeek. */
+export function loadBenchOverrides(): Record<number, BenchOverride> {
+  try {
+    const raw = localStorage.getItem(KEY_BATCH_OVERRIDES);
+    if (!raw) return {};
+    return JSON.parse(raw) as Record<number, BenchOverride>;
+  } catch {
+    return {};
+  }
+}
+
+function persistBatchOverrides(data: Record<number, BenchOverride>): void {
+  localStorage.setItem(KEY_BATCH_OVERRIDES, JSON.stringify(data));
+}
+
+/** Save (or overwrite) the batch-model override for a specific ISO week. */
+export function saveBatchOverride(override: BenchOverride): void {
+  const data = loadBenchOverrides();
+  data[override.isoWeek] = override;
+  persistBatchOverrides(data);
+}
+
+/** Remove the batch-model override for a specific ISO week. */
+export function clearBenchOverride(isoWeek: number): void {
+  const data = loadBenchOverrides();
+  delete data[isoWeek];
+  persistBatchOverrides(data);
+}
