@@ -1,4 +1,4 @@
-import { useGetBookkeeperMe, useGetBookkeeperDashboard } from "@workspace/api-client-react";
+import { useGetBookkeeperMe, useGetBookkeeperDashboard, getGetBookkeeperDashboardQueryKey } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
 import { useClerk, SignOutButton } from "@clerk/react";
 import { 
@@ -50,7 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const role = user.role;
   const { data: dashboard } = useGetBookkeeperDashboard({
-    query: { enabled: role !== "food_handler" },
+    query: { queryKey: getGetBookkeeperDashboardQueryKey(), enabled: role !== "food_handler" },
   });
   const receiptsToReview = dashboard?.totals?.receiptsToReview ?? 0;
 

@@ -331,8 +331,19 @@ export function BioPage() {
               engagement. Terms are on the rate card above.
             </p>
 
+            <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <a
+                href="#conversation"
+                className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+                style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+                data-testid="bio-cta-conversation"
+              >
+                Start a conversation (short form) →
+              </a>
+            </div>
+
             <p
-              className="mt-2 font-mono text-[13px] tracking-tight"
+              className="mt-4 font-mono text-[13px] tracking-tight"
               data-testid="contact-email"
             >
               <span
