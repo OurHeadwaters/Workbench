@@ -450,7 +450,7 @@ export function HomePage() {
         </section>
 
         {/* ── social proof ── */}
-        <section>
+        <section data-testid="home-testimonial">
           <p
             className="font-mono text-[10px] uppercase tracking-[0.28em] mb-6"
             style={{ color: "hsl(var(--accent))" }}
@@ -461,13 +461,30 @@ export function HomePage() {
             className="rounded-md border-l-4 pl-6 py-2"
             style={{ borderColor: "hsl(var(--accent))" }}
           >
-            <p className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5">
-              "Our team used to keep everything afloat with an overflowing Google Drive, but now we can clearly see the strategic progress every day with some really cool operating tools!"
+            <p
+              className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5"
+              data-testid="testimonial-quote"
+            >
+              "The planning work was grounded and practical. Bobbie helped us build systems we actually understand and can run ourselves — not another consultant's framework we'd need outside help to maintain."
             </p>
             <footer className="flex flex-col gap-0.5">
               <p
+                className="font-mono text-[11px] font-medium tracking-tight"
+                data-testid="testimonial-name"
+              >
+                Adele Rankin
+              </p>
+              <p
                 className="font-mono text-[10px] uppercase tracking-[0.18em]"
                 style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="testimonial-title"
+              >
+                Board Chair
+              </p>
+              <p
+                className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="testimonial-community"
               >
                 807 Food Co-operative
               </p>
