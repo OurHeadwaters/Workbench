@@ -1,4 +1,4 @@
-import { useGetBookkeeperMe } from "@workspace/api-client-react";
+import { useGetBookkeeperMe, useGetBookkeeperDashboard } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
 import { useClerk, SignOutButton } from "@clerk/react";
 import { 
@@ -14,7 +14,8 @@ import {
   Loader2,
   GitMerge,
   FileText,
-  TrendingUp
+  TrendingUp,
+  ClipboardCheck
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -48,16 +49,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   const role = user.role;
-  
+  const { data: dashboard } = useGetBookkeeperDashboard({
+    query: { enabled: role !== "food_handler" },
+  });
+  const receiptsToReview = dashboard?.totals?.receiptsToReview ?? 0;
+
   const navItems = [
     { href: "/dashboard", label: "The books today", icon: LayoutDashboard, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/submit", label: "Submit Receipt", icon: PenSquare, roles: ["food_handler"] },
-    { href: "/submissions", label: "Receipts", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
+    { href: "/submissions", label: "Submissions", icon: Inbox, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/accounts", label: "Accounts", icon: BookOpen, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/cost-centres", label: "Cost Centres", icon: Building2, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/handlers", label: "Food Handlers", icon: Bell, roles: ["owner", "ops_manager", "bookkeeper"] },
     { href: "/users", label: "Users", icon: Users, roles: ["owner"] },
-    { href: "/pnl", label: "P&L Report", icon: TrendingUp, roles: ["owner", "bookkeeper"] },
+    { href: "/receipts", label: "Receipts Queue", icon: ClipboardCheck, roles: ["owner", "ops_manager", "bookkeeper"], badge: receiptsToReview },
+    { href: "/pnl", label: "Reports", icon: TrendingUp, roles: ["owner", "bookkeeper"] },
     { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
     { href: "/accountant-handoff", label: "Accountant Handoff", icon: FileText, roles: ["owner", "bookkeeper"] },
   ];
@@ -76,6 +82,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {visibleNav.map((item) => {
             const isActive = location === item.href || location.startsWith(`${item.href}/`);
+            const badge = (item as { badge?: number }).badge;
             return (
               <Link 
                 key={item.href} 
@@ -86,8 +93,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                 }`}
               >
-                <item.icon className="w-4 h-4" />
-                {item.label}
+                <item.icon className="w-4 h-4 shrink-0" />
+                <span className="flex-1">{item.label}</span>
+                {badge != null && badge > 0 && (
+                  <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center">
+                    {badge > 99 ? "99+" : badge}
+                  </Badge>
+                )}
               </Link>
             );
           })}

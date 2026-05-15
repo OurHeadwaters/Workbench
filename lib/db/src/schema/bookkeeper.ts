@@ -77,6 +77,8 @@ export const bookkeeperAccountsTable = pgTable(
     costCentreCode: text("cost_centre_code"),
     mirrorAccountCode: text("mirror_account_code"),
     notes: text("notes"),
+    // GST/HST tax code: gst-collected | gst-paid | exempt | zero-rated | personal | none
+    taxCode: text("tax_code").notNull().default("none"),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -111,6 +113,10 @@ export const bookkeeperTransactionsTable = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    // Reconciliation / cleared flag — toggled by bookkeeper/ops/owner
+    cleared: boolean("cleared").notNull().default(false),
+    clearedAt: timestamp("cleared_at", { withTimezone: true }),
+    clearedByUserId: uuid("cleared_by_user_id"),
   },
   (t) => ({
     postedDateIdx: index("bk_transactions_posted_date_idx").on(t.postedDate),
@@ -133,6 +139,8 @@ export const bookkeeperTransactionLinesTable = pgTable(
     accountCode: text("account_code").notNull(),
     costCentreCode: text("cost_centre_code"),
     memo: text("memo"),
+    // Per-line GST/HST override — null means "inherit from account"
+    taxCode: text("tax_code"),
     debit: numeric("debit", { precision: 14, scale: 2 })
       .notNull()
       .default(sql`0`),

@@ -439,6 +439,17 @@ export const AccountNormalSide = {
   credit: "credit",
 } as const;
 
+export type TaxCode = (typeof TaxCode)[keyof typeof TaxCode];
+
+export const TaxCode = {
+  "gst-collected": "gst-collected",
+  "gst-paid": "gst-paid",
+  exempt: "exempt",
+  "zero-rated": "zero-rated",
+  personal: "personal",
+  none: "none",
+} as const;
+
 export interface Account {
   id: string;
   /** Account number, e.g. 4400.10, 5400, 6020. */
@@ -451,6 +462,8 @@ export interface Account {
   /** Counter-account for allocation entries (e.g. 5400 mirrors to 6020). */
   mirrorAccountCode?: string | null;
   notes?: string | null;
+  /** GST/HST tax code for this account. */
+  taxCode: TaxCode;
   isActive: boolean;
   createdAt: string;
 }
@@ -486,6 +499,7 @@ export interface CreateAccountRequest {
   costCentreCode?: string;
   mirrorAccountCode?: string;
   notes?: string;
+  taxCode?: TaxCode;
 }
 
 export type UpdateAccountRequestType =
@@ -516,6 +530,7 @@ export interface UpdateAccountRequest {
   costCentreCode?: string | null;
   mirrorAccountCode?: string | null;
   notes?: string | null;
+  taxCode?: TaxCode | null;
   isActive?: boolean;
 }
 
@@ -525,6 +540,8 @@ export interface TransactionLine {
   accountName: string;
   costCentreCode?: string | null;
   memo?: string | null;
+  /** Per-line GST/HST tax code override. null = inherit from account. */
+  taxCode?: string | null;
   /** Amount in dollars (2dp). */
   debit: number;
   /** Amount in dollars (2dp). */
@@ -550,6 +567,10 @@ export interface Transaction {
   voidedAt?: string | null;
   reversesTransactionId?: string | null;
   sourceSubmissionId?: string | null;
+  /** Whether this transaction has been reconciled/cleared. */
+  cleared: boolean;
+  /** ISO timestamp of when the transaction was cleared, or null. */
+  clearedAt?: string | null;
   totalDebit: number;
   totalCredit: number;
   lines: TransactionLine[];
@@ -567,6 +588,8 @@ export interface CreateTransactionLine {
   accountCode: string;
   costCentreCode?: string;
   memo?: string;
+  /** Per-line GST/HST override. Omit to inherit from account default. */
+  taxCode?: TaxCode;
   /** @minimum 0 */
   debit: number;
   /** @minimum 0 */
@@ -720,6 +743,8 @@ export type BookkeeperDashboardTotals = {
   pendingSubmissionsCount: number;
   costCentres: number;
   accounts: number;
+  /** Count of posted transactions not yet cleared/reconciled. */
+  receiptsToReview: number;
 };
 
 export interface BookkeeperDashboard {
@@ -983,6 +1008,8 @@ export type ListTransactionsParams = {
   from?: string;
   to?: string;
   search?: string;
+  /** Filter by reconciliation/cleared flag. */
+  cleared?: boolean;
   /**
    * @minimum 1
    * @maximum 200
@@ -1027,4 +1054,61 @@ export type ListAuditLogParams = {
    * @maximum 200
    */
   limit?: number;
+};
+
+// ── New types: cleared toggle, receipts queue, reports ──────────────────────
+
+export interface ToggleClearedRequest {
+  cleared: boolean;
+}
+
+export interface UnclearedReceiptItem extends Transaction {
+  attachmentCount: number;
+}
+
+export interface UnclearedReceiptsResponse {
+  items: UnclearedReceiptItem[];
+  total: number;
+}
+
+export interface CategoryReportRow {
+  accountCode: string;
+  accountName: string;
+  type: string;
+  taxCode: string;
+  total: number;
+  transactionCount: number;
+}
+
+export interface CategoryReport {
+  from: string | null;
+  to: string | null;
+  rows: CategoryReportRow[];
+  totalRevenue: number;
+  totalCosts: number;
+  net: number;
+}
+
+export type GetReportsByCategoryParams = {
+  from?: string;
+  to?: string;
+};
+
+export interface PnlByMonthRow {
+  /** YYYY-MM */
+  month: string;
+  revenue: number;
+  costs: number;
+  net: number;
+}
+
+export interface PnlByMonthReport {
+  from: string | null;
+  to: string | null;
+  months: PnlByMonthRow[];
+}
+
+export type GetPnlByMonthParams = {
+  from?: string;
+  to?: string;
 };

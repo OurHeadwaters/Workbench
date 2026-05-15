@@ -139,6 +139,14 @@ function getColValue(row: Row, col: Col, joined: boolean): unknown {
   return row[col.__c];
 }
 
+function resolveVal(val: unknown, row: Row, joined: boolean): unknown {
+  // When the right-hand side of a predicate is itself a Col reference
+  // (as in join conditions: eq(t1.col, t2.col)), resolve it against the
+  // current row rather than comparing against the Col object literal.
+  if (isCol(val)) return getColValue(row, val, joined);
+  return val;
+}
+
 function rowMatches(
   row: Row,
   pred: Pred | null | undefined,
@@ -147,12 +155,13 @@ function rowMatches(
   if (!pred) return true;
   switch (pred.kind) {
     case "eq": {
-      const lhs = getColValue(row, pred.col, joined);
-      const rhs = isCol(pred.val) ? getColValue(row, pred.val as Col, joined) : pred.val;
-      return lhs === rhs;
+      const right = resolveVal(pred.val, row, joined);
+      return getColValue(row, pred.col, joined) === right;
     }
-    case "ne":
-      return getColValue(row, pred.col, joined) !== pred.val;
+    case "ne": {
+      const right = resolveVal(pred.val, row, joined);
+      return getColValue(row, pred.col, joined) !== right;
+    }
     case "and":
       return pred.args.every((p) => rowMatches(row, p, joined));
     case "or":
@@ -164,11 +173,11 @@ function rowMatches(
       return v === null || v === undefined;
     }
     case "gte":
-      return cmp(getColValue(row, pred.col, joined), pred.val) >= 0;
+      return cmp(getColValue(row, pred.col, joined), resolveVal(pred.val, row, joined)) >= 0;
     case "gt":
-      return cmp(getColValue(row, pred.col, joined), pred.val) > 0;
+      return cmp(getColValue(row, pred.col, joined), resolveVal(pred.val, row, joined)) > 0;
     case "lte":
-      return cmp(getColValue(row, pred.col, joined), pred.val) <= 0;
+      return cmp(getColValue(row, pred.col, joined), resolveVal(pred.val, row, joined)) <= 0;
     case "ilike": {
       const haystack = String(
         getColValue(row, pred.col, joined) ?? "",

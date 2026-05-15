@@ -6,6 +6,7 @@ import {
   useCreateTransaction,
   getListTransactionsQueryKey
 } from "@workspace/api-client-react";
+import type { TaxCode } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,10 +24,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
+const TAX_CODES = [
+  { value: "inherit", label: "Inherit from account" },
+  { value: "gst-collected", label: "GST Collected" },
+  { value: "gst-paid", label: "GST Paid (ITC)" },
+  { value: "exempt", label: "Exempt" },
+  { value: "zero-rated", label: "Zero-Rated" },
+  { value: "personal", label: "Personal" },
+  { value: "none", label: "None" },
+];
+
 const lineSchema = z.object({
   accountCode: z.string().min(1, "Account required"),
   costCentreCode: z.string().optional(),
   memo: z.string().optional(),
+  taxCode: z.string().optional(),
   debit: z.coerce.number().min(0).default(0),
   credit: z.coerce.number().min(0).default(0)
 }).refine(data => (data.debit > 0 && data.credit === 0) || (data.credit > 0 && data.debit === 0) || (data.debit === 0 && data.credit === 0), {
@@ -57,8 +69,8 @@ export default function TransactionNew() {
       description: "",
       reference: "",
       lines: [
-        { accountCode: "", debit: 0, credit: 0 },
-        { accountCode: "", debit: 0, credit: 0 }
+        { accountCode: "", debit: 0, credit: 0, taxCode: "inherit" },
+        { accountCode: "", debit: 0, credit: 0, taxCode: "inherit" }
       ]
     }
   });
@@ -94,6 +106,13 @@ export default function TransactionNew() {
   const formatCurrency = (val: number) => 
     new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(val);
 
+  const handleAccountChange = (index: number, accountCode: string) => {
+    const account = accountsData?.find(a => a.code === accountCode);
+    if (account?.taxCode && account.taxCode !== "none") {
+      form.setValue(`lines.${index}.taxCode`, account.taxCode);
+    }
+  };
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!isBalanced) {
       toast.error("Transaction is not balanced.");
@@ -113,6 +132,7 @@ export default function TransactionNew() {
           accountCode: l.accountCode,
           costCentreCode: l.costCentreCode || undefined,
           memo: l.memo || undefined,
+          taxCode: (l.taxCode && l.taxCode !== "inherit") ? l.taxCode as TaxCode : undefined,
           debit: Number(l.debit) || 0,
           credit: Number(l.credit) || 0
         }))
@@ -209,9 +229,10 @@ export default function TransactionNew() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="hidden md:grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground px-1">
-                <div className="col-span-4">Account</div>
+                <div className="col-span-3">Account</div>
                 <div className="col-span-2">Cost Centre</div>
-                <div className="col-span-3">Memo</div>
+                <div className="col-span-2">Tax Code</div>
+                <div className="col-span-2">Memo</div>
                 <div className="col-span-1 text-right">Debit</div>
                 <div className="col-span-1 text-right">Credit</div>
                 <div className="col-span-1"></div>
@@ -220,14 +241,21 @@ export default function TransactionNew() {
               <div className="space-y-3">
                 {fields.map((field, index) => (
                   <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 items-start bg-muted/20 p-2 md:p-1 md:bg-transparent rounded-md border border-border md:border-none">
-                    <div className="col-span-1 md:col-span-4">
+                    {/* Account */}
+                    <div className="col-span-1 md:col-span-3">
                       <FormField
                         control={form.control}
                         name={`lines.${index}.accountCode`}
                         render={({ field }) => (
                           <FormItem>
                             <div className="md:hidden text-xs text-muted-foreground mb-1">Account</div>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={(v) => {
+                                field.onChange(v);
+                                handleAccountChange(index, v);
+                              }}
+                              defaultValue={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger data-testid={`select-account-${index}`}>
                                   <SelectValue placeholder="Select account" />
@@ -246,6 +274,8 @@ export default function TransactionNew() {
                         )}
                       />
                     </div>
+
+                    {/* Cost Centre */}
                     <div className="col-span-1 md:col-span-2">
                       <FormField
                         control={form.control}
@@ -272,7 +302,36 @@ export default function TransactionNew() {
                         )}
                       />
                     </div>
-                    <div className="col-span-1 md:col-span-3">
+
+                    {/* Tax Code */}
+                    <div className="col-span-1 md:col-span-2">
+                      <FormField
+                        control={form.control}
+                        name={`lines.${index}.taxCode`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="md:hidden text-xs text-muted-foreground mb-1">Tax Code</div>
+                            <Select onValueChange={field.onChange} value={field.value || "inherit"}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Inherit" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {TAX_CODES.map(tc => (
+                                  <SelectItem key={tc.value} value={tc.value}>
+                                    {tc.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Memo */}
+                    <div className="col-span-1 md:col-span-2">
                       <FormField
                         control={form.control}
                         name={`lines.${index}.memo`}
@@ -286,6 +345,8 @@ export default function TransactionNew() {
                         )}
                       />
                     </div>
+
+                    {/* Debit / Credit */}
                     <div className="col-span-1 grid grid-cols-2 md:grid-cols-2 md:col-span-2 gap-2">
                       <FormField
                         control={form.control}
@@ -338,6 +399,8 @@ export default function TransactionNew() {
                         )}
                       />
                     </div>
+
+                    {/* Remove */}
                     <div className="col-span-1 flex items-end justify-end md:justify-center md:pt-1">
                       <Button 
                         type="button" 
@@ -359,7 +422,7 @@ export default function TransactionNew() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => append({ accountCode: "", debit: 0, credit: 0 })}
+                  onClick={() => append({ accountCode: "", debit: 0, credit: 0, taxCode: "inherit" })}
                   data-testid="action-add-line"
                 >
                   <Plus className="w-4 h-4 mr-2" />

@@ -95,6 +95,7 @@ function serializeTransaction(
         accountName: accountsByCode.get(l.accountCode)?.name ?? l.accountCode,
         costCentreCode: l.costCentreCode,
         memo: l.memo,
+        taxCode: l.taxCode ?? null,
         debit,
         credit,
       };
@@ -109,6 +110,8 @@ function serializeTransaction(
     voidedAt: asOptionalDate(txn.voidedAt),
     reversesTransactionId: txn.reversesTransactionId,
     sourceSubmissionId: txn.sourceSubmissionId,
+    cleared: txn.cleared ?? false,
+    clearedAt: asOptionalDate(txn.clearedAt ?? null),
     totalDebit: Math.round(totalDebit * 100) / 100,
     totalCredit: Math.round(totalCredit * 100) / 100,
     lines: out,
@@ -398,6 +401,14 @@ const accountTypeEnum = z.enum([
   "contra",
 ]);
 const normalSideEnum = z.enum(["debit", "credit"]);
+const taxCodeEnum = z.enum([
+  "gst-collected",
+  "gst-paid",
+  "exempt",
+  "zero-rated",
+  "personal",
+  "none",
+]);
 
 router.get("/accounts", requireAuth(), async (req, res) => {
   const costCentreCode =
@@ -422,6 +433,7 @@ router.get("/accounts", requireAuth(), async (req, res) => {
       costCentreCode: r.costCentreCode,
       mirrorAccountCode: r.mirrorAccountCode,
       notes: r.notes,
+      taxCode: r.taxCode ?? "none",
       isActive: r.isActive,
       createdAt: isoTimestamp(r.createdAt),
     })),
@@ -436,6 +448,7 @@ const createAccountSchema = z.object({
   costCentreCode: z.string().optional(),
   mirrorAccountCode: z.string().optional(),
   notes: z.string().optional(),
+  taxCode: taxCodeEnum.optional(),
 });
 
 router.post("/accounts", requireRole("owner"), async (req, res) => {
@@ -465,6 +478,7 @@ router.post("/accounts", requireRole("owner"), async (req, res) => {
       costCentreCode: parsed.data.costCentreCode ?? null,
       mirrorAccountCode: parsed.data.mirrorAccountCode ?? null,
       notes: parsed.data.notes ?? null,
+      taxCode: parsed.data.taxCode ?? "none",
       isActive: true,
     })
     .returning();
@@ -485,6 +499,7 @@ router.post("/accounts", requireRole("owner"), async (req, res) => {
     costCentreCode: row.costCentreCode,
     mirrorAccountCode: row.mirrorAccountCode,
     notes: row.notes,
+    taxCode: row.taxCode ?? "none",
     isActive: row.isActive,
     createdAt: isoTimestamp(row.createdAt),
   });
@@ -497,6 +512,7 @@ const updateAccountSchema = z.object({
   costCentreCode: z.string().nullable().optional(),
   mirrorAccountCode: z.string().nullable().optional(),
   notes: z.string().nullable().optional(),
+  taxCode: taxCodeEnum.nullable().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -516,6 +532,8 @@ router.patch("/accounts/:id", requireRole("owner"), async (req, res) => {
   if (parsed.data.mirrorAccountCode !== undefined)
     updates.mirrorAccountCode = parsed.data.mirrorAccountCode;
   if (parsed.data.notes !== undefined) updates.notes = parsed.data.notes;
+  if (parsed.data.taxCode !== undefined)
+    updates.taxCode = parsed.data.taxCode ?? "none";
   if (parsed.data.isActive !== undefined) updates.isActive = parsed.data.isActive;
   if (Object.keys(updates).length === 0) {
     res.status(400).json({ error: "No fields to update" });
@@ -547,6 +565,7 @@ router.patch("/accounts/:id", requireRole("owner"), async (req, res) => {
     costCentreCode: row.costCentreCode,
     mirrorAccountCode: row.mirrorAccountCode,
     notes: row.notes,
+    taxCode: row.taxCode ?? "none",
     isActive: row.isActive,
     createdAt: isoTimestamp(row.createdAt),
   });
@@ -576,10 +595,19 @@ router.get(
       : undefined;
   const accountCode =
     typeof req.query.accountCode === "string" ? req.query.accountCode : undefined;
+  const clearedFilter =
+    req.query.cleared === "true"
+      ? true
+      : req.query.cleared === "false"
+        ? false
+        : undefined;
 
   const filters: ReturnType<typeof eq>[] = [];
   if (status === "posted" || status === "voided") {
     filters.push(eq(bookkeeperTransactionsTable.status, status));
+  }
+  if (clearedFilter !== undefined) {
+    filters.push(eq(bookkeeperTransactionsTable.cleared, clearedFilter));
   }
   if (from) filters.push(gte(bookkeeperTransactionsTable.postedDate, from));
   if (to) filters.push(lte(bookkeeperTransactionsTable.postedDate, to));
@@ -717,6 +745,7 @@ const createTransactionSchema = z.object({
         accountCode: z.string().min(1),
         costCentreCode: z.string().optional(),
         memo: z.string().optional(),
+        taxCode: taxCodeEnum.optional(),
         debit: z.number().min(0),
         credit: z.number().min(0),
       }),
@@ -802,6 +831,7 @@ async function postTransaction(opts: {
       accountCode: l.accountCode,
       costCentreCode: l.costCentreCode ?? null,
       memo: l.memo ?? null,
+      taxCode: (l as { taxCode?: string }).taxCode ?? null,
       debit: l.debit.toFixed(2),
       credit: l.credit.toFixed(2),
       lineOrder: idx,
@@ -954,6 +984,327 @@ router.post(
         new Map(accounts.map((a) => [a.code, a])),
       ),
     );
+  },
+);
+
+// ----------------------- PATCH /transactions/:id/cleared -----------------------
+
+const toggleClearedSchema = z.object({
+  cleared: z.boolean(),
+});
+
+router.patch(
+  "/transactions/:id/cleared",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const parsed = toggleClearedSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "cleared must be a boolean" });
+      return;
+    }
+    const txn = await db
+      .select()
+      .from(bookkeeperTransactionsTable)
+      .where(eq(bookkeeperTransactionsTable.id, String(req.params.id)))
+      .limit(1);
+    if (txn.length === 0) {
+      res.status(404).json({ error: "Transaction not found" });
+      return;
+    }
+    const me = req.bookkeeperUser!;
+    const updated = await db
+      .update(bookkeeperTransactionsTable)
+      .set({
+        cleared: parsed.data.cleared,
+        clearedAt: parsed.data.cleared ? new Date() : null,
+        clearedByUserId: parsed.data.cleared ? me.id : null,
+      })
+      .where(eq(bookkeeperTransactionsTable.id, txn[0].id))
+      .returning();
+    const lines = await db
+      .select()
+      .from(bookkeeperTransactionLinesTable)
+      .where(eq(bookkeeperTransactionLinesTable.transactionId, txn[0].id));
+    const accountCodes = Array.from(new Set(lines.map((l) => l.accountCode)));
+    const accounts =
+      accountCodes.length > 0
+        ? await db
+            .select()
+            .from(bookkeeperAccountsTable)
+            .where(inArray(bookkeeperAccountsTable.code, accountCodes))
+        : [];
+    res.json(
+      serializeTransaction(
+        updated[0],
+        lines,
+        new Map(accounts.map((a) => [a.code, a])),
+      ),
+    );
+  },
+);
+
+// ----------------------- /receipts/uncleared -----------------------
+
+router.get(
+  "/receipts/uncleared",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (_req, res) => {
+    const txns = await db
+      .select()
+      .from(bookkeeperTransactionsTable)
+      .where(
+        and(
+          eq(bookkeeperTransactionsTable.status, "posted"),
+          eq(bookkeeperTransactionsTable.cleared, false),
+        ),
+      )
+      .orderBy(
+        desc(bookkeeperTransactionsTable.postedDate),
+        desc(bookkeeperTransactionsTable.createdAt),
+      )
+      .limit(200);
+
+    if (txns.length === 0) {
+      res.json({ items: [], total: 0 });
+      return;
+    }
+
+    const txnIds = txns.map((t) => t.id);
+    const lines = await db
+      .select()
+      .from(bookkeeperTransactionLinesTable)
+      .where(inArray(bookkeeperTransactionLinesTable.transactionId, txnIds));
+    const accountCodes = Array.from(new Set(lines.map((l) => l.accountCode)));
+    const accounts =
+      accountCodes.length > 0
+        ? await db
+            .select()
+            .from(bookkeeperAccountsTable)
+            .where(inArray(bookkeeperAccountsTable.code, accountCodes))
+        : [];
+    const accountsByCode = new Map(accounts.map((a) => [a.code, a]));
+    const linesByTxn = new Map<string, TransactionLineRow[]>();
+    for (const l of lines) {
+      const arr = linesByTxn.get(l.transactionId) ?? [];
+      arr.push(l);
+      linesByTxn.set(l.transactionId, arr);
+    }
+
+    // Attach attachment count via sourceSubmissionId
+    const submissionIds = txns
+      .map((t) => t.sourceSubmissionId)
+      .filter((id): id is string => !!id);
+    const attachmentCounts = new Map<string, number>();
+    if (submissionIds.length > 0) {
+      const subs = await db
+        .select()
+        .from(bookkeeperSubmissionsTable)
+        .where(inArray(bookkeeperSubmissionsTable.id, submissionIds));
+      const subIds = subs.map((s) => s.id);
+      if (subIds.length > 0) {
+        const atts = await db
+          .select()
+          .from(bookkeeperReceiptAttachmentsTable)
+          .where(
+            inArray(bookkeeperReceiptAttachmentsTable.submissionId, subIds),
+          );
+        for (const a of atts) {
+          attachmentCounts.set(
+            a.submissionId,
+            (attachmentCounts.get(a.submissionId) ?? 0) + 1,
+          );
+        }
+        // Map submission attachments to transaction sourceSubmissionId
+        for (const t of txns) {
+          if (t.sourceSubmissionId) {
+            attachmentCounts.set(
+              t.id,
+              attachmentCounts.get(t.sourceSubmissionId) ?? 0,
+            );
+          }
+        }
+      }
+    }
+
+    res.json({
+      items: txns.map((t) => ({
+        ...serializeTransaction(
+          t,
+          linesByTxn.get(t.id) ?? [],
+          accountsByCode,
+        ),
+        attachmentCount: attachmentCounts.get(t.id) ?? 0,
+      })),
+      total: txns.length,
+    });
+  },
+);
+
+// ----------------------- /reports/by-category -----------------------
+
+router.get(
+  "/reports/by-category",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const filters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+    ];
+    if (from) filters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) filters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
+    const lines = await db
+      .select({
+        accountCode: bookkeeperTransactionLinesTable.accountCode,
+        debit: bookkeeperTransactionLinesTable.debit,
+        credit: bookkeeperTransactionLinesTable.credit,
+      })
+      .from(bookkeeperTransactionLinesTable)
+      .innerJoin(
+        bookkeeperTransactionsTable,
+        eq(
+          bookkeeperTransactionLinesTable.transactionId,
+          bookkeeperTransactionsTable.id,
+        ),
+      )
+      .where(and(...filters));
+
+    const accounts = await db.select().from(bookkeeperAccountsTable);
+    const acctMap = new Map(accounts.map((a) => [a.code, a]));
+
+    type CategoryAgg = {
+      accountCode: string;
+      accountName: string;
+      type: string;
+      taxCode: string;
+      total: number;
+      transactionCount: number;
+    };
+    const byAccount = new Map<string, CategoryAgg>();
+
+    for (const l of lines) {
+      const acct = acctMap.get(l.accountCode);
+      if (!acct) continue;
+      const debit = num(l.debit);
+      const credit = num(l.credit);
+      let value = 0;
+      if (acct.type === "revenue") {
+        value = credit - debit;
+      } else if (
+        acct.type === "cost_of_sales" ||
+        acct.type === "expense" ||
+        acct.type === "contra"
+      ) {
+        value = debit - credit;
+      } else {
+        continue;
+      }
+      const cur = byAccount.get(acct.code) ?? {
+        accountCode: acct.code,
+        accountName: acct.name,
+        type: acct.type,
+        taxCode: acct.taxCode ?? "none",
+        total: 0,
+        transactionCount: 0,
+      };
+      cur.total += value;
+      cur.transactionCount += 1;
+      byAccount.set(acct.code, cur);
+    }
+
+    const rows = Array.from(byAccount.values())
+      .map((r) => ({ ...r, total: Math.round(r.total * 100) / 100 }))
+      .sort((a, b) => b.total - a.total);
+
+    const totalRevenue = rows
+      .filter((r) => r.type === "revenue")
+      .reduce((s, r) => s + r.total, 0);
+    const totalCosts = rows
+      .filter((r) => r.type !== "revenue")
+      .reduce((s, r) => s + r.total, 0);
+
+    res.json({
+      from,
+      to,
+      rows,
+      totalRevenue: Math.round(totalRevenue * 100) / 100,
+      totalCosts: Math.round(totalCosts * 100) / 100,
+      net: Math.round((totalRevenue - totalCosts) * 100) / 100,
+    });
+  },
+);
+
+// ----------------------- /reports/pnl-by-month -----------------------
+
+router.get(
+  "/reports/pnl-by-month",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const filters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+    ];
+    if (from) filters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) filters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
+    const lines = await db
+      .select({
+        accountCode: bookkeeperTransactionLinesTable.accountCode,
+        debit: bookkeeperTransactionLinesTable.debit,
+        credit: bookkeeperTransactionLinesTable.credit,
+        postedDate: bookkeeperTransactionsTable.postedDate,
+      })
+      .from(bookkeeperTransactionLinesTable)
+      .innerJoin(
+        bookkeeperTransactionsTable,
+        eq(
+          bookkeeperTransactionLinesTable.transactionId,
+          bookkeeperTransactionsTable.id,
+        ),
+      )
+      .where(and(...filters));
+
+    const accounts = await db.select().from(bookkeeperAccountsTable);
+    const acctMap = new Map(accounts.map((a) => [a.code, a]));
+
+    const byMonth = new Map<string, { revenue: number; costs: number }>();
+
+    for (const l of lines) {
+      const acct = acctMap.get(l.accountCode);
+      if (!acct) continue;
+      const debit = num(l.debit);
+      const credit = num(l.credit);
+      const monthKey = dateStr(l.postedDate).slice(0, 7);
+      let bucket = byMonth.get(monthKey);
+      if (!bucket) {
+        bucket = { revenue: 0, costs: 0 };
+        byMonth.set(monthKey, bucket);
+      }
+      if (acct.type === "revenue") {
+        bucket.revenue += credit - debit;
+      } else if (
+        acct.type === "cost_of_sales" ||
+        acct.type === "expense" ||
+        acct.type === "contra"
+      ) {
+        bucket.costs += debit - credit;
+      }
+    }
+
+    const months = Array.from(byMonth.entries())
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([month, v]) => ({
+        month,
+        revenue: Math.round(v.revenue * 100) / 100,
+        costs: Math.round(v.costs * 100) / 100,
+        net: Math.round((v.revenue - v.costs) * 100) / 100,
+      }));
+
+    res.json({ from, to, months });
   },
 );
 
@@ -1670,6 +2021,16 @@ router.get(
     for (const r of ccTxnCounts)
       txnCountByCc.set(r.costCentreCode, r.n ?? 0);
 
+    const [unclearedCount] = await db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(bookkeeperTransactionsTable)
+      .where(
+        and(
+          eq(bookkeeperTransactionsTable.status, "posted"),
+          eq(bookkeeperTransactionsTable.cleared, false),
+        ),
+      );
+
     res.json({
       totals: {
         transactions: transactionsCount?.n ?? 0,
@@ -1677,6 +2038,7 @@ router.get(
         pendingSubmissionsCount: pendingCount?.n ?? 0,
         costCentres: costCentresCount?.n ?? 0,
         accounts: accountsCount?.n ?? 0,
+        receiptsToReview: unclearedCount?.n ?? 0,
       },
       byCostCentre: costCentres.map((cc) => {
         const b = byCC.get(cc.code) ?? { revenue: 0, costs: 0 };

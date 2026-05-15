@@ -23,6 +23,7 @@ interface AccountSeed {
   costCentreCode?: string;
   mirrorAccountCode?: string;
   notes?: string;
+  taxCode?: string;
 }
 
 const COST_CENTRES: CostCentreSeed[] = [
@@ -59,6 +60,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "revenue",
     normalSide: "credit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-collected",
   },
   {
     code: "4400.20",
@@ -66,6 +68,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "revenue",
     normalSide: "credit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-collected",
   },
   {
     code: "4400.30",
@@ -73,6 +76,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "revenue",
     normalSide: "credit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-collected",
   },
   {
     code: "4400.40",
@@ -80,6 +84,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "revenue",
     normalSide: "credit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-collected",
   },
   // SALT-01 COGS / direct costs
   {
@@ -88,6 +93,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "cost_of_sales",
     normalSide: "debit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-paid",
   },
   {
     code: "5200",
@@ -95,6 +101,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "cost_of_sales",
     normalSide: "debit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-paid",
   },
   {
     code: "5300",
@@ -102,6 +109,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "cost_of_sales",
     normalSide: "debit",
     costCentreCode: "SALT-01",
+    taxCode: "gst-paid",
   },
   // SALT-01 allocated → mirror to agency
   {
@@ -113,6 +121,7 @@ const ACCOUNTS: AccountSeed[] = [
     mirrorAccountCode: "6020",
     notes:
       "Mirror to Headwaters 6020 (Wages) when posted — allocated labour from agency staff time.",
+    taxCode: "exempt",
   },
   {
     code: "5500",
@@ -123,6 +132,7 @@ const ACCOUNTS: AccountSeed[] = [
     mirrorAccountCode: "6010",
     notes:
       "Mirror to Headwaters 6010 (Facilities) when posted — share of depot rent.",
+    taxCode: "gst-paid",
   },
   // Agency mirrors
   {
@@ -131,6 +141,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "expense",
     normalSide: "debit",
     costCentreCode: "AGENCY-MIRRORS",
+    taxCode: "gst-paid",
   },
   {
     code: "6020",
@@ -138,6 +149,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "expense",
     normalSide: "debit",
     costCentreCode: "AGENCY-MIRRORS",
+    taxCode: "exempt",
   },
   // Cash
   {
@@ -146,6 +158,7 @@ const ACCOUNTS: AccountSeed[] = [
     type: "asset",
     normalSide: "debit",
     costCentreCode: "HEADWATERS",
+    taxCode: "none",
   },
 ];
 
@@ -186,8 +199,17 @@ export async function seedBookkeeper(): Promise<void> {
         costCentreCode: acct.costCentreCode ?? null,
         mirrorAccountCode: acct.mirrorAccountCode ?? null,
         notes: acct.notes ?? null,
+        taxCode: acct.taxCode ?? "none",
       });
       acctInserted += 1;
+    } else {
+      // Idempotent update of taxCode on existing rows so re-seeds pick it up.
+      if (acct.taxCode) {
+        await db
+          .update(bookkeeperAccountsTable)
+          .set({ taxCode: acct.taxCode })
+          .where(eq(bookkeeperAccountsTable.code, acct.code));
+      }
     }
   }
 

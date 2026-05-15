@@ -1,7 +1,8 @@
 import { useGetBookkeeperDashboard } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Receipt, Inbox, Building2, BookOpen } from "lucide-react";
+import { Loader2, Receipt, Inbox, Building2, BookOpen, ClipboardCheck } from "lucide-react";
 import { format } from "date-fns";
+import { Link } from "wouter";
 
 export default function Dashboard() {
   const { data: dashboard, isLoading } = useGetBookkeeperDashboard();
@@ -17,6 +18,8 @@ export default function Dashboard() {
   const formatCurrency = (val: number) => 
     new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(val);
 
+  const receiptsToReview = dashboard.totals.receiptsToReview ?? 0;
+
   return (
     <div className="space-y-8">
       <div>
@@ -25,7 +28,7 @@ export default function Dashboard() {
       </div>
 
       {/* Totals */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Transactions</CardTitle>
@@ -47,6 +50,21 @@ export default function Dashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{dashboard.totals.pendingSubmissionsCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Requiring review</p>
+          </CardContent>
+        </Card>
+
+        <Card className={receiptsToReview > 0 ? "border-amber-300 bg-amber-50/50" : ""}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Receipts to Clear</CardTitle>
+            <ClipboardCheck className={`w-4 h-4 ${receiptsToReview > 0 ? "text-amber-600" : "text-muted-foreground"}`} />
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold ${receiptsToReview > 0 ? "text-amber-700" : ""}`}>
+              {receiptsToReview}
+            </div>
+            <Link href="/receipts" className="text-xs text-primary hover:underline mt-1 block">
+              {receiptsToReview > 0 ? "Review queue →" : "All cleared"}
+            </Link>
           </CardContent>
         </Card>
 

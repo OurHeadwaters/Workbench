@@ -25,9 +25,18 @@ import {
 import { 
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from "@/components/ui/select";
-import { Loader2, Plus, Edit2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { AccountType, AccountNormalSide } from "@workspace/api-client-react";
+import { AccountType, AccountNormalSide, TaxCode } from "@workspace/api-client-react";
+
+const TAX_CODE_LABELS: Record<string, string> = {
+  "gst-collected": "GST Collected",
+  "gst-paid": "GST Paid (ITC)",
+  "exempt": "Exempt",
+  "zero-rated": "Zero-Rated",
+  "personal": "Personal",
+  "none": "None",
+};
 
 const accountSchema = z.object({
   code: z.string().min(1, "Code required"),
@@ -36,7 +45,8 @@ const accountSchema = z.object({
   normalSide: z.nativeEnum(AccountNormalSide),
   costCentreCode: z.string().optional(),
   mirrorAccountCode: z.string().optional(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  taxCode: z.nativeEnum(TaxCode).optional(),
 });
 
 export default function Accounts() {
@@ -53,7 +63,8 @@ export default function Accounts() {
       code: "",
       name: "",
       type: "expense",
-      normalSide: "debit"
+      normalSide: "debit",
+      taxCode: "none",
     }
   });
 
@@ -63,7 +74,8 @@ export default function Accounts() {
         ...values,
         costCentreCode: values.costCentreCode || undefined,
         mirrorAccountCode: values.mirrorAccountCode || undefined,
-        notes: values.notes || undefined
+        notes: values.notes || undefined,
+        taxCode: values.taxCode || undefined,
       }
     }, {
       onSuccess: () => {
@@ -80,7 +92,6 @@ export default function Accounts() {
 
   const isOwner = me?.role === "owner";
 
-  // Group accounts by type. Endpoint returns a flat array, not a paginated page.
   const accountsList = page ?? [];
   const groupedAccounts = accountsList.reduce((acc, account) => {
     if (!acc[account.type]) acc[account.type] = [];
@@ -181,10 +192,34 @@ export default function Accounts() {
                     />
                     <FormField
                       control={form.control}
+                      name="taxCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>GST/HST Tax Code</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value ?? "none"}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select tax code" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.values(TaxCode).map(tc => (
+                                <SelectItem key={tc} value={tc}>
+                                  {TAX_CODE_LABELS[tc] ?? tc}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
                       name="costCentreCode"
                       render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>Cost Centre Filter (Optional)</FormLabel>
+                        <FormItem>
+                          <FormLabel>Cost Centre (Optional)</FormLabel>
                           <FormControl>
                             <Input placeholder="e.g. SALT-01" {...field} />
                           </FormControl>
@@ -230,6 +265,7 @@ export default function Accounts() {
                       <TableHead className="w-[100px]">Code</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Side</TableHead>
+                      <TableHead>Tax Code</TableHead>
                       <TableHead>Cost Centre</TableHead>
                       <TableHead>Status</TableHead>
                     </TableRow>
@@ -240,6 +276,11 @@ export default function Accounts() {
                         <TableCell className="font-mono font-medium">{acc.code}</TableCell>
                         <TableCell>{acc.name}</TableCell>
                         <TableCell className="capitalize text-muted-foreground text-sm">{acc.normalSide}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs font-mono">
+                            {TAX_CODE_LABELS[acc.taxCode] ?? acc.taxCode}
+                          </Badge>
+                        </TableCell>
                         <TableCell>
                           {acc.costCentreCode ? (
                             <Badge variant="outline">{acc.costCentreCode}</Badge>

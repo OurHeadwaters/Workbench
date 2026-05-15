@@ -67,9 +67,11 @@ vi.mock("@workspace/db", async () => {
       "costCentreCode",
       "mirrorAccountCode",
       "notes",
+      "taxCode",
       "isActive",
       "createdAt",
     ],
+    defaults: { taxCode: "none" },
   });
   const bookkeeperTransactionsTable = makeTable({
     name: "bk_transactions",
@@ -84,10 +86,14 @@ vi.mock("@workspace/db", async () => {
       "voidedAt",
       "reversesTransactionId",
       "sourceSubmissionId",
+      "cleared",
+      "clearedAt",
+      "clearedByUserId",
       "createdById",
       "createdByEmail",
       "createdAt",
     ],
+    defaults: { cleared: false, clearedAt: null, clearedByUserId: null },
   });
   const bookkeeperTransactionLinesTable = makeTable({
     name: "bk_transaction_lines",
@@ -98,10 +104,12 @@ vi.mock("@workspace/db", async () => {
       "accountCode",
       "costCentreCode",
       "memo",
+      "taxCode",
       "debit",
       "credit",
       "lineOrder",
     ],
+    defaults: { taxCode: null },
   });
   const bookkeeperSubmissionsTable = makeTable({
     name: "bk_submissions",
@@ -926,6 +934,7 @@ function seedAccount(
   code: string,
   name: string,
   normalSide: "debit" | "credit",
+  taxCode?: string,
 ): void {
   tables.bookkeeperAccountsTable.__store.push({
     id: `acct-${code}`,
@@ -936,6 +945,7 @@ function seedAccount(
     costCentreCode: null,
     mirrorAccountCode: null,
     notes: null,
+    taxCode: taxCode ?? "none",
     isActive: true,
     createdAt: new Date(),
   });
@@ -2014,6 +2024,347 @@ describe("bookkeeper route — POST /transactions/:id/void", () => {
           (r) => r.action === "transaction.void",
         ),
       ).toHaveLength(1);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── T006-A: GST/HST tax codes ─────────────────────────────────────────────────
+//
+// Tax codes are stored on accounts (a default) and optionally overridden
+// on individual transaction lines.  These tests verify both surfaces: that
+// POST /accounts persists the taxCode field, GET /accounts returns it,
+// and that a per-line override round-trips through POST /transactions.
+
+describe("bookkeeper route — GST/HST tax codes", () => {
+  it("POST /accounts persists taxCode and GET /accounts returns it", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_owner", email: "owner@example.com", role: "owner" });
+
+      const res = await fetch(`${h.base}/api/bookkeeper/accounts`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          code: "4100",
+          name: "Sales Revenue",
+          type: "revenue",
+          normalSide: "credit",
+          taxCode: "gst-collected",
+        }),
+      });
+      expect(res.status).toBe(200);
+      const created = (await res.json()) as { taxCode: string };
+      expect(created.taxCode).toBe("gst-collected");
+
+      // Verify persistence in the fake store
+      const stored = tables.bookkeeperAccountsTable.__store.find(
+        (r) => r.code === "4100",
+      );
+      expect(stored?.taxCode).toBe("gst-collected");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("GET /accounts list includes taxCode for every account", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+      seedAccount("5200", "Travel", "debit", "gst-paid");
+
+      const res = await fetch(`${h.base}/api/bookkeeper/accounts`);
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { taxCode: string }[];
+      expect(body).toHaveLength(1);
+      expect(body[0]!.taxCode).toBe("gst-paid");
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("per-line taxCode override is stored on the transaction line", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const res = await fetch(`${h.base}/api/bookkeeper/transactions`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          postedDate: "2026-04-15",
+          description: "Supplies with GST",
+          lines: [
+            { accountCode: "5100", debit: 25, credit: 0, taxCode: "gst-paid" },
+            { accountCode: "1000", debit: 0, credit: 25, taxCode: "none" },
+          ],
+        }),
+      });
+      expect(res.status).toBe(200);
+      const txn = (await res.json()) as {
+        lines: { accountCode: string; taxCode?: string | null }[];
+      };
+      const supplyLine = txn.lines.find((l) => l.accountCode === "5100");
+      expect(supplyLine?.taxCode).toBe("gst-paid");
+
+      // Verify raw row in fake store
+      const rawLine = tables.bookkeeperTransactionLinesTable.__store.find(
+        (r) => r.accountCode === "5100",
+      );
+      expect(rawLine?.taxCode).toBe("gst-paid");
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── T006-B: Cleared / reconciliation flag ────────────────────────────────────
+//
+// PATCH /transactions/:id/cleared is a one-click toggle visible to
+// owner / ops_manager / bookkeeper.  food_handler must receive a 403.
+// After a successful toggle, the raw DB row should reflect the new state
+// and a clearedAt timestamp must be set when marking cleared.
+
+describe("bookkeeper route — PATCH /transactions/:id/cleared", () => {
+  async function postTxn(base: string): Promise<{ id: string }> {
+    signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+    seedAccount("5100", "Office Supplies", "debit");
+    seedAccount("1000", "Cash", "credit");
+    const res = await fetch(`${base}/api/bookkeeper/transactions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        postedDate: "2026-04-15",
+        description: "Clearing test txn",
+        lines: [
+          { accountCode: "5100", debit: 50, credit: 0 },
+          { accountCode: "1000", debit: 0, credit: 50 },
+        ],
+      }),
+    });
+    if (res.status !== 200) throw new Error(`postTxn failed: ${res.status}`);
+    return (await res.json()) as { id: string };
+  }
+
+  it("bookkeeper can mark a posted transaction as cleared", async () => {
+    const h = await startHarness();
+    try {
+      const txn = await postTxn(h.base);
+
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${txn.id}/cleared`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ cleared: true }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { cleared: boolean; clearedAt?: string };
+      expect(body.cleared).toBe(true);
+      expect(body.clearedAt).toBeTruthy();
+
+      const row = tables.bookkeeperTransactionsTable.__store.find(
+        (r) => r.id === txn.id,
+      );
+      expect(row?.cleared).toBe(true);
+      expect(row?.clearedAt).toBeInstanceOf(Date);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("can toggle cleared back to false (uncleared) and clearedAt is nulled", async () => {
+    const h = await startHarness();
+    try {
+      const txn = await postTxn(h.base);
+
+      // Mark cleared first
+      await fetch(`${h.base}/api/bookkeeper/transactions/${txn.id}/cleared`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ cleared: true }),
+      });
+
+      // Now unmark
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${txn.id}/cleared`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ cleared: false }),
+        },
+      );
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { cleared: boolean; clearedAt?: string | null };
+      expect(body.cleared).toBe(false);
+      expect(body.clearedAt).toBeFalsy();
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("food_handler receives 403 when trying to toggle cleared", async () => {
+    const h = await startHarness();
+    try {
+      const txn = await postTxn(h.base);
+
+      // Re-sign-in as food_handler
+      signIn({ clerkUserId: "user_fh", email: "fh@example.com", role: "food_handler" });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/${txn.id}/cleared`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ cleared: true }),
+        },
+      );
+      expect(res.status).toBe(403);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns 404 for a non-existent transaction id", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+      const res = await fetch(
+        `${h.base}/api/bookkeeper/transactions/00000000-dead-beef-0000-000000000000/cleared`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ cleared: true }),
+        },
+      );
+      expect(res.status).toBe(404);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── T006-C: GET /receipts/uncleared ──────────────────────────────────────────
+//
+// The receipts queue returns posted transactions that are not yet
+// cleared.  Voided and already-cleared transactions must be excluded.
+
+describe("bookkeeper route — GET /receipts/uncleared", () => {
+  async function postTxn(base: string, description: string): Promise<{ id: string }> {
+    signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+    const res = await fetch(`${base}/api/bookkeeper/transactions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        postedDate: "2026-04-15",
+        description,
+        lines: [
+          { accountCode: "5100", debit: 10, credit: 0 },
+          { accountCode: "1000", debit: 0, credit: 10 },
+        ],
+      }),
+    });
+    if (res.status !== 200) throw new Error(`postTxn failed: ${res.status}`);
+    return (await res.json()) as { id: string };
+  }
+
+  it("returns only uncleared posted transactions", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+      seedAccount("5100", "Office Supplies", "debit");
+      seedAccount("1000", "Cash", "credit");
+
+      const txn1 = await postTxn(h.base, "Uncleared A");
+      const txn2 = await postTxn(h.base, "Uncleared B");
+      const txn3 = await postTxn(h.base, "Will be cleared");
+
+      // Clear txn3
+      await fetch(`${h.base}/api/bookkeeper/transactions/${txn3.id}/cleared`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ cleared: true }),
+      });
+
+      const res = await fetch(`${h.base}/api/bookkeeper/receipts/uncleared`);
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as { items: { id: string }[]; total: number };
+      expect(body.total).toBe(2);
+      const ids = body.items.map((i) => i.id);
+      expect(ids).toContain(txn1.id);
+      expect(ids).toContain(txn2.id);
+      expect(ids).not.toContain(txn3.id);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("food_handler receives 403", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_fh", email: "fh@example.com", role: "food_handler" });
+      const res = await fetch(`${h.base}/api/bookkeeper/receipts/uncleared`);
+      expect(res.status).toBe(403);
+    } finally {
+      await h.close();
+    }
+  });
+});
+
+// ── T006-D: GET /reports/by-category ─────────────────────────────────────────
+//
+// The by-category report aggregates transaction lines per account, carrying
+// the account's taxCode into the row.
+
+describe("bookkeeper route — GET /reports/by-category", () => {
+  it("returns rows grouped by account with correct totals", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_bk", email: "bk@example.com", role: "bookkeeper" });
+      seedAccount("5100", "Office Supplies", "debit", "gst-paid");
+      seedAccount("1000", "Cash", "credit", "none");
+
+      // Post two transactions so account 5100 accumulates $50 total
+      for (const amount of [20, 30]) {
+        const res = await fetch(`${h.base}/api/bookkeeper/transactions`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            postedDate: "2026-04-15",
+            description: `Supplies ${amount}`,
+            lines: [
+              { accountCode: "5100", debit: amount, credit: 0 },
+              { accountCode: "1000", debit: 0, credit: amount },
+            ],
+          }),
+        });
+        expect(res.status).toBe(200);
+      }
+
+      const res = await fetch(`${h.base}/api/bookkeeper/reports/by-category`);
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        rows: { accountCode: string; taxCode: string; total: number; transactionCount: number }[];
+      };
+      const suppliesRow = body.rows.find((r) => r.accountCode === "5100");
+      expect(suppliesRow).toBeDefined();
+      expect(suppliesRow?.taxCode).toBe("gst-paid");
+      expect(suppliesRow?.total).toBe(50);
+      expect(suppliesRow?.transactionCount).toBe(2);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("food_handler receives 403", async () => {
+    const h = await startHarness();
+    try {
+      signIn({ clerkUserId: "user_fh", email: "fh@example.com", role: "food_handler" });
+      const res = await fetch(`${h.base}/api/bookkeeper/reports/by-category`);
+      expect(res.status).toBe(403);
     } finally {
       await h.close();
     }
