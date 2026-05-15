@@ -47,7 +47,6 @@ const COMPONENTS: ComponentType[] = [
   SaltBench,
   SaltKlaviyo,
   SaltOpsNote,
-  SaltBench,
 ];
 
 const SORTED = [...manifest].sort((a, b) => a.position - b.position);

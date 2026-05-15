@@ -101,6 +101,12 @@ export const constellation: ConstellationSnapshot = {
   },
   "principles": [
     {
+      "id": "saltbox",
+      "name": "one bounded thing you can point at",
+      "statement": "A primitive names one bounded system with one specific job. The name holds across every zone, every season, every personnel rotation. It works from day one — empty and full, built and forming. The name is not a category label; it is the system itself.",
+      "workedExample": "Saltbox — named for the cold-climate vernacular house whose asymmetric roof and thick north wall were the only way a house survived a boreal winter. The form is the function. Every beam carries weight. A codetry app is named the same way: the name is the design spec, and changing it changes the structure underneath."
+    },
+    {
       "id": "both-states",
       "name": "the name has to hold both states",
       "statement": "When a system has both a slow side (always-on practice) and a fast side (active event), the name has to do both jobs in one word, or the system will fork into two systems with two cultures.",
