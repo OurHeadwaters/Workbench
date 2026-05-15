@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert } from "lucide-react";
+import { AlertTriangle, BookOpen, Users, FolderOpen, Tag, Link as LinkIcon, CheckCircle2, Home, LogOut, Network, Repeat, ShieldAlert, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOwnerAuth } from "@/hooks/useOwnerAuth";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ const NAV_ITEMS = [
   { href: "/reverse-test", label: "Reverse Test", icon: Repeat },
   { href: "/contributors", label: "Contributors", icon: Users },
   { href: "/share-links", label: "Share Links", icon: LinkIcon },
+  { href: "/team", label: "Team", icon: UserCog },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {

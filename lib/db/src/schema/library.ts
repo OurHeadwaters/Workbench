@@ -8,8 +8,41 @@ import {
   primaryKey,
   index,
   uniqueIndex,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+
+export const curatorsTable = pgTable("curators", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  passwordHash: text("password_hash"),
+  isOwner: boolean("is_owner").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  lastSignInAt: timestamp("last_sign_in_at", { withTimezone: true }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
+});
+
+export const curatorSessionsTable = pgTable(
+  "curator_sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    curatorId: uuid("curator_id")
+      .notNull()
+      .references(() => curatorsTable.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (t) => ({
+    tokenIdx: uniqueIndex("curator_sessions_token_idx").on(t.token),
+    curatorIdx: index("curator_sessions_curator_idx").on(t.curatorId),
+  }),
+);
 
 export const subjectsTable = pgTable("subjects", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -47,6 +80,10 @@ export const producersTable = pgTable("producers", {
   statusFlag: text("status_flag"),
   statusNotes: text("status_notes"),
   substituteForProducerSlug: text("substitute_for_producer_slug"),
+  createdByCuratorId: uuid("created_by_curator_id").references(
+    () => curatorsTable.id,
+    { onDelete: "set null" },
+  ),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -91,6 +128,14 @@ export const libraryEntriesTable = pgTable(
     }),
     contributorId: uuid("contributor_id").references(
       () => contributorsTable.id,
+      { onDelete: "set null" },
+    ),
+    createdByCuratorId: uuid("created_by_curator_id").references(
+      () => curatorsTable.id,
+      { onDelete: "set null" },
+    ),
+    updatedByCuratorId: uuid("updated_by_curator_id").references(
+      () => curatorsTable.id,
       { onDelete: "set null" },
     ),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -159,27 +204,14 @@ export const shareLinksTable = pgTable("share_links", {
     .default(sql`'[]'::jsonb`),
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  createdByCuratorId: uuid("created_by_curator_id").references(
+    () => curatorsTable.id,
+    { onDelete: "set null" },
+  ),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
 });
-
-export const libraryMagicLinksTable = pgTable(
-  "library_magic_links",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    token: text("token").notNull().unique(),
-    email: text("email").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-    usedAt: timestamp("used_at", { withTimezone: true }),
-  },
-  (t) => ({
-    tokenIdx: uniqueIndex("library_magic_links_token_idx").on(t.token),
-  }),
-);
 
 export type LibraryEntryRow = typeof libraryEntriesTable.$inferSelect;
 export type ProducerRow = typeof producersTable.$inferSelect;
@@ -187,4 +219,5 @@ export type SubjectRow = typeof subjectsTable.$inferSelect;
 export type ProjectBucketRow = typeof projectBucketsTable.$inferSelect;
 export type ContributorRow = typeof contributorsTable.$inferSelect;
 export type ShareLinkRow = typeof shareLinksTable.$inferSelect;
-export type LibraryMagicLinkRow = typeof libraryMagicLinksTable.$inferSelect;
+export type CuratorRow = typeof curatorsTable.$inferSelect;
+export type CuratorSessionRow = typeof curatorSessionsTable.$inferSelect;

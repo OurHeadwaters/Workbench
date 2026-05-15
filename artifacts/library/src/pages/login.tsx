@@ -1,79 +1,58 @@
-import { useState, useEffect, type FormEvent } from "react";
-import { useLocation, useSearch } from "wouter";
+import { useState, type FormEvent } from "react";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Mail, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Lock, Loader2 } from "lucide-react";
 import { setOwnerToken } from "@/lib/ownerAuth";
 
-type Stage =
-  | { kind: "email" }
-  | { kind: "sent"; email: string }
-  | { kind: "verifying" }
-  | { kind: "error"; message: string };
+type LoginResponse = { token: string };
 
 export default function Login() {
   const [, navigate] = useLocation();
-  const search = useSearch();
+
+  const [passphrase, setPassphrase] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [stage, setStage] = useState<Stage>({ kind: "email" });
 
-  useEffect(() => {
-    const params = new URLSearchParams(search);
-    const token = params.get("token");
-    if (!token) return;
-
-    setStage({ kind: "verifying" });
-
-    fetch(`/api/library/owner/verify-link?token=${encodeURIComponent(token)}`)
-      .then(async (res) => {
-        const body = (await res.json().catch(() => ({}))) as {
-          ok?: boolean;
-          token?: string;
-          error?: string;
-        };
-        if (!res.ok || !body.token) {
-          setStage({
-            kind: "error",
-            message: body.error ?? "This sign-in link is invalid or has expired.",
-          });
-          return;
-        }
-        setOwnerToken(body.token);
-        navigate("/");
-      })
-      .catch(() => {
-        setStage({ kind: "error", message: "Could not reach the server." });
-      });
-  }, [search]);
-
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed) return;
+  async function doLogin(body: Record<string, string>) {
     setSubmitting(true);
+    setError(null);
     try {
-      const res = await fetch("/api/library/owner/request-link", {
+      const res = await fetch("/api/library/owner/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmed }),
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: string };
-        setStage({
-          kind: "error",
-          message: body.error ?? "The server could not send the link right now. Please try again.",
-        });
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(data.error || "Sign-in failed");
+        setSubmitting(false);
         return;
       }
-      setStage({ kind: "sent", email: trimmed });
+      const data = (await res.json()) as LoginResponse;
+      setOwnerToken(data.token);
+      navigate("/");
     } catch {
-      setStage({ kind: "error", message: "Could not reach the server." });
-    } finally {
+      setError("Could not reach the server");
       setSubmitting(false);
     }
+  }
+
+  function onPassphraseSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!passphrase.trim()) return;
+    doLogin({ passphrase });
+  }
+
+  function onEmailSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) return;
+    doLogin({ email, password });
   }
 
   return (
@@ -81,110 +60,101 @@ export default function Login() {
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            {stage.kind === "error" ? (
-              <AlertCircle className="h-6 w-6 text-destructive" />
-            ) : stage.kind === "sent" ? (
-              <CheckCircle className="h-6 w-6 text-primary" />
-            ) : (
-              <Mail className="h-6 w-6 text-primary" />
-            )}
+            <Lock className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-serif">
-            {stage.kind === "sent"
-              ? "Check your inbox"
-              : stage.kind === "verifying"
-                ? "Signing you in…"
-                : stage.kind === "error"
-                  ? "Sign-in failed"
-                  : "Curator sign-in"}
-          </CardTitle>
+          <CardTitle className="text-2xl font-serif">Curator sign-in</CardTitle>
           <CardDescription>Northern Food Systems Research Library</CardDescription>
         </CardHeader>
-
         <CardContent>
-          {stage.kind === "email" && (
-            <form onSubmit={onSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  autoFocus
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={submitting}
-                  data-testid="input-owner-email"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={submitting || !email.trim()}
-                data-testid="button-owner-request-link"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Sending…
-                  </>
-                ) : (
-                  "Send sign-in link"
+          <Tabs defaultValue="email" className="space-y-4">
+            <TabsList className="grid grid-cols-2 w-full">
+              <TabsTrigger value="email">Email &amp; password</TabsTrigger>
+              <TabsTrigger value="passphrase">Owner passphrase</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="email">
+              <form onSubmit={onEmailSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={submitting}
+                    data-testid="input-curator-email"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="curator-password">Password</Label>
+                  <Input
+                    id="curator-password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={submitting}
+                    data-testid="input-curator-password"
+                  />
+                </div>
+                {error && (
+                  <p className="text-sm text-destructive" data-testid="text-owner-login-error">
+                    {error}
+                  </p>
                 )}
-              </Button>
-              <p className="text-xs text-muted-foreground text-center pt-2">
-                We'll email you a one-time link. No password needed.
-              </p>
-            </form>
-          )}
-
-          {stage.kind === "sent" && (
-            <div className="space-y-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                A sign-in link was sent to{" "}
-                <span className="font-medium text-foreground">{stage.email}</span>.
-                Open the email and click the link to continue.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                The link expires in 15 minutes. Didn't get it?{" "}
-                <button
-                  type="button"
-                  className="underline underline-offset-2"
-                  onClick={() => setStage({ kind: "email" })}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={submitting || !email.trim() || !password.trim()}
+                  data-testid="button-owner-login"
                 >
-                  Try again
-                </button>
-                .
-              </p>
-            </div>
-          )}
+                  {submitting ? (
+                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Signing in…</>
+                  ) : "Sign in"}
+                </Button>
+              </form>
+            </TabsContent>
 
-          {stage.kind === "verifying" && (
-            <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Verifying your link…
-            </div>
-          )}
+            <TabsContent value="passphrase">
+              <form onSubmit={onPassphraseSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="passphrase">Passphrase</Label>
+                  <Input
+                    id="passphrase"
+                    type="password"
+                    autoComplete="current-password"
+                    value={passphrase}
+                    onChange={(e) => setPassphrase(e.target.value)}
+                    disabled={submitting}
+                    data-testid="input-owner-passphrase"
+                  />
+                </div>
+                {error && (
+                  <p className="text-sm text-destructive" data-testid="text-owner-login-error">
+                    {error}
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={submitting || !passphrase.trim()}
+                >
+                  {submitting ? (
+                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Signing in…</>
+                  ) : "Sign in with passphrase"}
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  Use the owner passphrase for initial setup or recovery.
+                </p>
+              </form>
+            </TabsContent>
+          </Tabs>
 
-          {stage.kind === "error" && (
-            <div className="space-y-4">
-              <p
-                className="text-sm text-destructive text-center"
-                data-testid="text-owner-login-error"
-              >
-                {stage.message}
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => setStage({ kind: "email" })}
-              >
-                Try again
-              </Button>
-            </div>
-          )}
+          <p className="text-xs text-muted-foreground text-center pt-4">
+            Contributor share links do not require a sign-in.
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -15,6 +15,7 @@ import Buckets from "@/pages/buckets/index";
 import Contributors from "@/pages/contributors/index";
 import ShareLinks from "@/pages/share-links/index";
 import NeedsReview from "@/pages/needs-review";
+import TeamPage from "@/pages/team/index";
 import ConfidentialQueue from "@/pages/confidential/queue";
 import PublicShare from "@/pages/share/[token]";
 import PublicWhyStoresFail from "@/pages/share/why-stores-fail";
@@ -67,6 +68,7 @@ function Router() {
               </Route>
               <Route path="/contributors" component={Contributors} />
               <Route path="/share-links" component={ShareLinks} />
+              <Route path="/team" component={TeamPage} />
               <Route path="/needs-review" component={NeedsReview} />
               <Route path="/confidential/queue" component={ConfidentialQueue} />
               <Route component={NotFound} />

@@ -14,6 +14,10 @@ import type { AddressInfo } from "node:net";
 
 const OWNER_TOKEN = "test-library-owner-token-abcdef";
 
+// A stable session token used in tests that need an authenticated request.
+const TEST_SESSION_TOKEN = "test-session-token-xyz123456789ab";
+const TEST_CURATOR_ID = "00000000-0000-0000-0000-000000000001";
+
 vi.hoisted(() => {
   process.env.LIBRARY_OWNER_TOKEN = "test-library-owner-token-abcdef";
 });
@@ -23,6 +27,25 @@ vi.mock("@workspace/db", async () => {
   // Only the tables actually touched by the gate-related endpoints under
   // test.  The other library tables (libraryEntriesTable etc.) are
   // declared so route imports don't crash, but their __store stays empty.
+  const curatorsTable = makeTable({
+    name: "curators",
+    pk: ["id"],
+    columns: [
+      "id",
+      "email",
+      "name",
+      "passwordHash",
+      "isOwner",
+      "createdAt",
+      "lastSignInAt",
+      "revokedAt",
+    ],
+  });
+  const curatorSessionsTable = makeTable({
+    name: "curator_sessions",
+    pk: ["id"],
+    columns: ["id", "curatorId", "token", "createdAt", "expiresAt"],
+  });
   const shareLinksTable = makeTable({
     name: "share_links",
     pk: ["id"],
@@ -116,6 +139,8 @@ vi.mock("@workspace/db", async () => {
   });
   return {
     db: makeFakeDb(),
+    curatorsTable,
+    curatorSessionsTable,
     shareLinksTable,
     contributorsTable,
     subjectsTable,
@@ -144,6 +169,8 @@ import * as dbModule from "@workspace/db";
 import type { FakeTable } from "../test/fakeDb";
 
 const tables = dbModule as unknown as {
+  curatorsTable: FakeTable;
+  curatorSessionsTable: FakeTable;
   shareLinksTable: FakeTable;
   contributorsTable: FakeTable;
   subjectsTable: FakeTable;
@@ -177,11 +204,14 @@ async function startHarness(): Promise<Harness> {
   };
 }
 
+// authHeaders uses a pre-seeded session token (set up in beforeEach).
 function authHeaders(): Record<string, string> {
-  return { "x-library-owner-token": OWNER_TOKEN };
+  return { "x-library-owner-token": TEST_SESSION_TOKEN };
 }
 
 beforeEach(() => {
+  tables.curatorsTable.__store.length = 0;
+  tables.curatorSessionsTable.__store.length = 0;
   tables.shareLinksTable.__store.length = 0;
   tables.contributorsTable.__store.length = 0;
   tables.subjectsTable.__store.length = 0;
@@ -190,6 +220,26 @@ beforeEach(() => {
   tables.producersTable.__store.length = 0;
   tables.entrySubjectsTable.__store.length = 0;
   tables.entryBucketsTable.__store.length = 0;
+
+  // Seed a default active curator + session so auth-gated tests pass.
+  const farFuture = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+  tables.curatorsTable.__store.push({
+    id: TEST_CURATOR_ID,
+    email: "owner@library.local",
+    name: "Owner",
+    passwordHash: null,
+    isOwner: true,
+    createdAt: new Date(),
+    lastSignInAt: null,
+    revokedAt: null,
+  });
+  tables.curatorSessionsTable.__store.push({
+    id: "00000000-0000-0000-0000-000000000002",
+    curatorId: TEST_CURATOR_ID,
+    token: TEST_SESSION_TOKEN,
+    createdAt: new Date(),
+    expiresAt: farFuture,
+  });
 });
 
 // ----------------------- tests -----------------------
@@ -237,7 +287,7 @@ describe("library route — owner token gate", () => {
     const h = await startHarness();
     try {
       const res = await fetch(`${h.base}/api/library/owner/me`, {
-        headers: { authorization: `Bearer ${OWNER_TOKEN}` },
+        headers: { authorization: `Bearer ${TEST_SESSION_TOKEN}` },
       });
       expect(res.status).toBe(200);
     } finally {
@@ -276,7 +326,7 @@ describe("library route — owner login bypasses the gate", () => {
     }
   });
 
-  it("returns the token verbatim on POST /owner/login with the right passphrase", async () => {
+  it("returns a session token on POST /owner/login with the right passphrase", async () => {
     const h = await startHarness();
     try {
       const res = await fetch(`${h.base}/api/library/owner/login`, {
@@ -285,9 +335,12 @@ describe("library route — owner login bypasses the gate", () => {
         body: JSON.stringify({ passphrase: OWNER_TOKEN }),
       });
       expect(res.status).toBe(200);
-      const body = (await res.json()) as { ok?: boolean; token?: string };
+      const body = (await res.json()) as { ok?: boolean; token?: string; curator?: unknown };
       expect(body.ok).toBe(true);
-      expect(body.token).toBe(OWNER_TOKEN);
+      // The login endpoint now issues a DB-backed session token (not the passphrase itself).
+      expect(typeof body.token).toBe("string");
+      expect(body.token!.length).toBeGreaterThan(0);
+      expect(body.curator).toBeDefined();
     } finally {
       await h.close();
     }

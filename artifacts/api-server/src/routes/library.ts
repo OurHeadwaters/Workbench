@@ -27,16 +27,20 @@ import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage"
 import { randomBytes } from "crypto";
 import {
   OWNER_TOKEN,
-  isValidOwnerToken,
-  isOwnerRequest,
-  isAllowedCuratorEmail,
-  createMagicLinkToken,
-  consumeMagicLinkToken,
+  getCuratorFromToken,
+  extractOwnerToken,
+  createSessionForCurator,
+  findOrCreateOwnerCurator,
+  hashPassword,
+  verifyPassword,
+  getRequestCurator,
+  requireIsOwner,
 } from "../lib/ownerAuth";
 import {
-  sendConfidentialIntakeNotification,
-  sendMagicLinkEmail,
-} from "../lib/resend";
+  curatorsTable,
+  curatorSessionsTable,
+} from "@workspace/db";
+import { sendConfidentialIntakeNotification } from "../lib/resend";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -52,123 +56,230 @@ const objectStorageService = new ObjectStorageService();
 const PUBLIC_LIBRARY_PREFIXES = [
   "/share-links/by-token/",
   "/owner/login",
-  "/owner/request-link",
-  "/owner/verify-link",
 ];
 
-router.use((req, res, next) => {
+router.use(async (req, res, next) => {
   if (PUBLIC_LIBRARY_PREFIXES.some((p) => req.path.startsWith(p))) {
     next();
     return;
   }
-  if (!OWNER_TOKEN) {
-    res.status(503).json({
-      error:
-        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
-    });
+  const token = extractOwnerToken(req);
+  const curator = await getCuratorFromToken(token);
+  if (!curator) {
+    res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  if (isOwnerRequest(req)) {
-    next();
-    return;
-  }
-  res.status(401).json({ error: "Unauthorized" });
+  res.locals.curator = curator;
+  next();
 });
 
-// Lightweight endpoint the frontend calls on every load to verify the token
-// stored in localStorage is still valid.  Returns 200 if the request reached
-// us through the auth gate above, otherwise the gate already 401'd.
-router.get("/owner/me", (_req, res) => {
-  res.json({ ok: true });
+// Returns the current curator's profile — the auth gate already verified the
+// session token so all we need to do here is serialize res.locals.curator.
+router.get("/owner/me", (req, res) => {
+  const curator = getRequestCurator(res);
+  if (!curator) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  res.json({
+    ok: true,
+    curator: serializeCurator(curator),
+  });
 });
 
-// Owner login: verifies a passphrase against LIBRARY_OWNER_TOKEN.  We do not
-// mint a separate session token — the passphrase itself becomes the bearer
-// token the client stores and replays.  Bypasses the gate above so an
-// unauthenticated browser can attempt to log in.
-router.post("/owner/login", (req, res) => {
-  if (!OWNER_TOKEN) {
-    res.status(503).json({
-      error:
-        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
-    });
-    return;
-  }
-  const body = (req.body ?? {}) as { passphrase?: unknown };
-  const passphrase =
-    typeof body.passphrase === "string" ? body.passphrase : "";
-  if (!isValidOwnerToken(passphrase)) {
-    res.status(401).json({ error: "Wrong passphrase" });
-    return;
-  }
-  res.json({ ok: true, token: passphrase });
-});
+// Login supports two flows:
+//   1. Owner bootstrap: { passphrase } — validates against LIBRARY_OWNER_TOKEN,
+//      finds or creates the owner curator row, issues a DB-backed session token.
+//   2. Curator login: { email, password } — validates against the stored hash.
+// In both cases a fresh session token is returned and the raw passphrase/password
+// is never stored in the client.
+router.post("/owner/login", async (req, res) => {
+  const body = (req.body ?? {}) as {
+    passphrase?: unknown;
+    email?: unknown;
+    password?: unknown;
+  };
 
-// Magic-link step 1: accept an email address, check it's in LIBRARY_OWNER_EMAILS,
-// create a short-lived one-time token, and send the link by email.
-// Always returns 200 with { ok: true } even if the email isn't on the allow-list —
-// this prevents enumerating valid curator addresses.
-router.post("/owner/request-link", async (req, res) => {
-  if (!OWNER_TOKEN) {
-    res.status(503).json({
-      error:
-        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
-    });
-    return;
-  }
-  const body = (req.body ?? {}) as { email?: unknown };
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  if (!email) {
-    res.status(400).json({ error: "email is required" });
-    return;
-  }
-
-  if (isAllowedCuratorEmail(email)) {
-    try {
-      const token = await createMagicLinkToken(email);
-      const baseUrl =
-        process.env.LIBRARY_BASE_URL ??
-        `https://${process.env.REPLIT_DEV_DOMAIN ?? "localhost"}/library`;
-      const magicLinkUrl = `${baseUrl.replace(/\/$/, "")}/login?token=${token}`;
-      const sendResult = await sendMagicLinkEmail({ email, magicLinkUrl });
-      if (sendResult.status !== "sent") {
-        console.warn(
-          "[magic-link] email delivery issue — status=%s error=%s",
-          sendResult.status,
-          sendResult.error ?? "(none)",
-        );
-      }
-    } catch (err) {
-      console.error("[magic-link] failed to issue token or send email:", err);
+  // --- path 1: owner passphrase bootstrap ---
+  if (typeof body.passphrase === "string" && body.passphrase.trim()) {
+    if (!OWNER_TOKEN) {
+      res.status(503).json({
+        error: "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
+      });
+      return;
     }
+    const passphrase = body.passphrase.trim();
+    const ownerTokenBuf = Buffer.from(OWNER_TOKEN, "utf8");
+    const inputBuf = Buffer.from(passphrase, "utf8");
+    const match =
+      ownerTokenBuf.length === inputBuf.length &&
+      (() => {
+        let diff = 0;
+        for (let i = 0; i < ownerTokenBuf.length; i++) diff |= ownerTokenBuf[i]! ^ inputBuf[i]!;
+        return diff === 0;
+      })();
+    if (!match) {
+      res.status(401).json({ error: "Wrong passphrase" });
+      return;
+    }
+    const ownerEmail = process.env.LIBRARY_OWNER_EMAIL ?? "owner@library.local";
+    const ownerName = process.env.LIBRARY_OWNER_NAME ?? "Owner";
+    const curator = await findOrCreateOwnerCurator(ownerName, ownerEmail);
+    const token = await createSessionForCurator(curator.id);
+    res.json({ ok: true, token, curator: serializeCurator(curator) });
+    return;
   }
 
-  res.json({ ok: true });
+  // --- path 2: email + password ---
+  if (typeof body.email === "string" && typeof body.password === "string") {
+    const email = body.email.trim().toLowerCase();
+    const password = body.password;
+    const rows = await db
+      .select()
+      .from(curatorsTable)
+      .where(eq(curatorsTable.email, email))
+      .limit(1);
+    const curator = rows[0];
+    if (!curator || curator.revokedAt) {
+      res.status(401).json({ error: "Invalid email or password" });
+      return;
+    }
+    if (!curator.passwordHash || !verifyPassword(password, curator.passwordHash)) {
+      res.status(401).json({ error: "Invalid email or password" });
+      return;
+    }
+    const token = await createSessionForCurator(curator.id);
+    res.json({ ok: true, token, curator: serializeCurator(curator) });
+    return;
+  }
+
+  res.status(400).json({ error: "Provide passphrase or email+password" });
 });
 
-// Magic-link step 2: verify the one-time token from the email link.
-// On success, returns { ok: true, token } where token is the LIBRARY_OWNER_TOKEN
-// the client can store and replay, same as the passphrase flow.
-router.get("/owner/verify-link", async (req, res) => {
-  if (!OWNER_TOKEN) {
-    res.status(503).json({
-      error:
-        "Library owner authentication is not configured (LIBRARY_OWNER_TOKEN missing).",
-    });
+// ----------------------- curator helpers -----------------------
+
+function serializeCurator(c: typeof curatorsTable.$inferSelect) {
+  return {
+    id: c.id,
+    email: c.email,
+    name: c.name,
+    isOwner: c.isOwner,
+    createdAt: c.createdAt.toISOString(),
+    lastSignInAt: c.lastSignInAt ? c.lastSignInAt.toISOString() : null,
+    revokedAt: c.revokedAt ? c.revokedAt.toISOString() : null,
+  };
+}
+
+// ----------------------- team management -----------------------
+
+router.get("/curators", async (_req, res) => {
+  const rows = await db
+    .select()
+    .from(curatorsTable)
+    .orderBy(asc(curatorsTable.createdAt));
+  res.json(rows.map(serializeCurator));
+});
+
+router.post("/curators", async (req, res) => {
+  if (!requireIsOwner(res)) {
+    res.status(403).json({ error: "Only the owner can invite curators" });
     return;
   }
-  const raw = req.query["token"];
-  const token = typeof raw === "string" ? raw.trim() : "";
-  if (!token) {
-    res.status(400).json({ error: "token is required" });
+  const body = (req.body ?? {}) as {
+    name?: unknown;
+    email?: unknown;
+    password?: unknown;
+  };
+  if (
+    typeof body.name !== "string" ||
+    typeof body.email !== "string" ||
+    typeof body.password !== "string" ||
+    !body.name.trim() ||
+    !body.email.trim() ||
+    !body.password.trim()
+  ) {
+    res.status(400).json({ error: "name, email, and password are required" });
     return;
   }
-  const email = await consumeMagicLinkToken(token);
-  if (!email) {
-    res.status(401).json({ error: "This sign-in link is invalid or has expired." });
+  const email = body.email.trim().toLowerCase();
+  const existing = await db
+    .select()
+    .from(curatorsTable)
+    .where(eq(curatorsTable.email, email))
+    .limit(1);
+  if (existing.length) {
+    res.status(409).json({ error: "A curator with that email already exists" });
     return;
   }
-  res.json({ ok: true, token: OWNER_TOKEN });
+  const [created] = await db
+    .insert(curatorsTable)
+    .values({
+      name: body.name.trim(),
+      email,
+      passwordHash: hashPassword(body.password.trim()),
+      isOwner: false,
+    })
+    .returning();
+  res.status(201).json(serializeCurator(created!));
+});
+
+router.patch("/curators/:id/revoke", async (req, res) => {
+  if (!requireIsOwner(res)) {
+    res.status(403).json({ error: "Only the owner can revoke curators" });
+    return;
+  }
+  const { id } = req.params;
+  const curator = getRequestCurator(res);
+  if (curator?.id === id) {
+    res.status(400).json({ error: "You cannot revoke yourself" });
+    return;
+  }
+  const rows = await db
+    .select()
+    .from(curatorsTable)
+    .where(eq(curatorsTable.id, id))
+    .limit(1);
+  if (!rows.length) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (rows[0]!.isOwner) {
+    res.status(400).json({ error: "Cannot revoke the owner account" });
+    return;
+  }
+  const [updated] = await db
+    .update(curatorsTable)
+    .set({ revokedAt: new Date() })
+    .where(eq(curatorsTable.id, id))
+    .returning();
+  // Invalidate all active sessions for this curator
+  await db
+    .delete(curatorSessionsTable)
+    .where(eq(curatorSessionsTable.curatorId, id));
+  res.json(serializeCurator(updated!));
+});
+
+router.patch("/curators/:id/restore", async (req, res) => {
+  if (!requireIsOwner(res)) {
+    res.status(403).json({ error: "Only the owner can restore curators" });
+    return;
+  }
+  const { id } = req.params;
+  const rows = await db
+    .select()
+    .from(curatorsTable)
+    .where(eq(curatorsTable.id, id))
+    .limit(1);
+  if (!rows.length) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const [updated] = await db
+    .update(curatorsTable)
+    .set({ revokedAt: null })
+    .where(eq(curatorsTable.id, id))
+    .returning();
+  res.json(serializeCurator(updated!));
 });
 
 // ----------------------- helpers -----------------------
@@ -665,7 +776,7 @@ router.get("/entries", async (req, res) => {
   res.json({ entries, total: totalRow[0]?.count ?? 0 });
 });
 
-async function createEntryFromBody(body: unknown, opts?: { contributorId?: string; defaultStatus?: "published" | "needs_review"; fixedSubjectSlugs?: string[]; fixedBucketSlugs?: string[] }) {
+async function createEntryFromBody(body: unknown, opts?: { contributorId?: string; curatorId?: string | null; defaultStatus?: "published" | "needs_review"; fixedSubjectSlugs?: string[]; fixedBucketSlugs?: string[] }) {
   const parsed = CreateLibraryEntryBody.safeParse(body);
   if (!parsed.success) return { error: "Invalid input" as const };
   const data = parsed.data;
@@ -766,6 +877,8 @@ async function createEntryFromBody(body: unknown, opts?: { contributorId?: strin
       statusFlag: data.statusFlag ?? null,
       producerId,
       contributorId: opts?.contributorId ?? data.contributorId ?? null,
+      createdByCuratorId: opts?.curatorId ?? null,
+      updatedByCuratorId: opts?.curatorId ?? null,
     })
     .returning();
 
@@ -784,7 +897,8 @@ async function createEntryFromBody(body: unknown, opts?: { contributorId?: strin
 }
 
 router.post("/entries", async (req, res) => {
-  const result = await createEntryFromBody(req.body);
+  const curator = getRequestCurator(res);
+  const result = await createEntryFromBody(req.body, { curatorId: curator?.id ?? null });
   if ("error" in result) {
     res.status(400).json({ error: result.error });
     return;
@@ -828,7 +942,11 @@ router.patch("/entries/:id", async (req, res) => {
       producerId = await getOrCreateProducerId({ producerSlug: data.producerSlug });
   }
 
-  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  const patchCurator = getRequestCurator(res);
+  const updates: Record<string, unknown> = {
+    updatedAt: new Date(),
+    updatedByCuratorId: patchCurator?.id ?? null,
+  };
   if (data.title !== undefined) updates.title = data.title;
   if (data.summary !== undefined) updates.summary = data.summary;
   if (data.notes !== undefined) updates.notes = data.notes;
@@ -1003,6 +1121,7 @@ router.post("/entries/from-url", async (req, res) => {
     ? await getOrCreateProducerId({ producerSlug })
     : null;
 
+  const fromUrlCurator = getRequestCurator(res);
   const [created] = await db
     .insert(libraryEntriesTable)
     .values({
@@ -1015,6 +1134,8 @@ router.post("/entries/from-url", async (req, res) => {
       screenshotUrl: screenshotUrl ?? null,
       screenshotObjectPath: screenshotObjectPath ?? null,
       producerId,
+      createdByCuratorId: fromUrlCurator?.id ?? null,
+      updatedByCuratorId: fromUrlCurator?.id ?? null,
     })
     .returning();
 
@@ -1128,6 +1249,7 @@ router.post("/producers", async (req, res) => {
   }
   const data = parsed.data;
   const slug = data.slug && data.slug.length ? slugify(data.slug) : slugify(data.name);
+  const producerCurator = getRequestCurator(res);
   const [created] = await db
     .insert(producersTable)
     .values({
@@ -1142,6 +1264,7 @@ router.post("/producers", async (req, res) => {
       statusFlag: data.statusFlag ?? null,
       statusNotes: data.statusNotes ?? null,
       substituteForProducerSlug: data.substituteForProducerSlug ?? null,
+      createdByCuratorId: producerCurator?.id ?? null,
     })
     .returning();
   res.json({
@@ -1382,6 +1505,7 @@ router.post("/share-links", async (req, res) => {
   }
   const data = parsed.data;
   const token = randomBytes(18).toString("base64url");
+  const shareLinkCurator = getRequestCurator(res);
   const [created] = await db
     .insert(shareLinksTable)
     .values({
@@ -1391,6 +1515,7 @@ router.post("/share-links", async (req, res) => {
       presetSubjectSlugs: data.presetSubjectSlugs ?? [],
       presetBucketSlugs: data.presetBucketSlugs ?? [],
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
+      createdByCuratorId: shareLinkCurator?.id ?? null,
     })
     .returning();
   res.json(await loadShareLinkSummary(created!, publicHost(req)));

@@ -68,6 +68,7 @@ type Pred =
   | { kind: "inArray"; col: Col; vals: unknown[] }
   | { kind: "isNull"; col: Col }
   | { kind: "gte"; col: Col; val: unknown }
+  | { kind: "gt"; col: Col; val: unknown }
   | { kind: "lte"; col: Col; val: unknown }
   | { kind: "ilike"; col: Col; pattern: string }
   | { kind: "raw" };
@@ -91,6 +92,7 @@ const inArray = (col: Col, vals: unknown[]): Pred => ({
 });
 const isNull = (col: Col): Pred => ({ kind: "isNull", col });
 const gte = (col: Col, val: unknown): Pred => ({ kind: "gte", col, val });
+const gt = (col: Col, val: unknown): Pred => ({ kind: "gt", col, val });
 const lte = (col: Col, val: unknown): Pred => ({ kind: "lte", col, val });
 const ilike = (col: Col, pattern: string): Pred => ({
   kind: "ilike",
@@ -117,6 +119,7 @@ export const fakeDrizzle = {
   asc,
   desc,
   gte,
+  gt,
   lte,
   ilike,
   sql: sqlTpl,
@@ -143,8 +146,11 @@ function rowMatches(
 ): boolean {
   if (!pred) return true;
   switch (pred.kind) {
-    case "eq":
-      return getColValue(row, pred.col, joined) === pred.val;
+    case "eq": {
+      const lhs = getColValue(row, pred.col, joined);
+      const rhs = isCol(pred.val) ? getColValue(row, pred.val as Col, joined) : pred.val;
+      return lhs === rhs;
+    }
     case "ne":
       return getColValue(row, pred.col, joined) !== pred.val;
     case "and":
@@ -159,6 +165,8 @@ function rowMatches(
     }
     case "gte":
       return cmp(getColValue(row, pred.col, joined), pred.val) >= 0;
+    case "gt":
+      return cmp(getColValue(row, pred.col, joined), pred.val) > 0;
     case "lte":
       return cmp(getColValue(row, pred.col, joined), pred.val) <= 0;
     case "ilike": {
