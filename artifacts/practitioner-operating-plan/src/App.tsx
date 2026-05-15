@@ -1,4 +1,5 @@
 import { Route, Switch } from "wouter";
+import { Suspense, lazy } from "react";
 import OnePager from "./pages/OnePager";
 import HiringTemplates from "./pages/HiringTemplates";
 import HoursByPillar from "./pages/HoursByPillar";
@@ -8,7 +9,6 @@ import ReferenceCallScript from "./pages/ReferenceCallScript";
 import ReferenceCallHandyman from "./pages/ReferenceCallHandyman";
 import CandidateTracker from "./pages/CandidateTracker";
 import ToolsIndex from "./pages/ToolsIndex";
-import SaltMonthlyClose from "./pages/SaltMonthlyClose";
 import SaltYearlySummary from "./pages/SaltYearlySummary";
 import PlanYear from "./pages/PlanYear";
 import PlanWeek from "./pages/PlanWeek";
@@ -16,6 +16,8 @@ import PlanToday from "./pages/PlanToday";
 import Week from "./pages/Week";
 import WeekCloseOut from "./pages/WeekCloseOut";
 import CostReviewModal from "./components/CostReviewModal";
+
+const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -30,7 +32,11 @@ export default function App() {
       <Route path={`${BASE}/tools/reference-call`} component={ReferenceCallScript} />
       <Route path={`${BASE}/tools/reference-call-handyman`} component={ReferenceCallHandyman} />
       <Route path={`${BASE}/tools/candidate-tracker`} component={CandidateTracker} />
-      <Route path={`${BASE}/tools/salt-close`} component={SaltMonthlyClose} />
+      <Route path={`${BASE}/tools/salt-close`}>
+        <Suspense fallback={null}>
+          <SaltMonthlyClose />
+        </Suspense>
+      </Route>
       <Route path={`${BASE}/tools/salt-yearly`} component={SaltYearlySummary} />
       <Route path={`${BASE}/tools/bench/week`} component={Week} />
       <Route path={`${BASE}/tools/bench/close`} component={WeekCloseOut} />

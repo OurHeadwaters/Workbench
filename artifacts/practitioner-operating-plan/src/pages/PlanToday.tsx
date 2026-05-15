@@ -8,6 +8,8 @@ import {
   type ActionType,
   type Step,
 } from "@/data/plan2026";
+import ThreeThings from "@/components/ThreeThings";
+import NowView from "@/components/NowView";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -232,6 +234,26 @@ export default function PlanToday() {
             {week.theme}
           </div>
         </div>
+      </div>
+
+      {/* Three Things — responsive */}
+      <style>{`
+        .tt-desktop { display: block; }
+        .tt-mobile  { display: none;  }
+        @media (max-width: 600px) {
+          .tt-desktop { display: none;  }
+          .tt-mobile  { display: block; }
+        }
+      `}</style>
+
+      {/* Desktop card */}
+      <div className="tt-desktop" style={{ maxWidth: 700, margin: "0 auto", padding: "24px 20px 0" }}>
+        <ThreeThings />
+      </div>
+
+      {/* Mobile panel (slim, inside the cream body) */}
+      <div className="tt-mobile" style={{ maxWidth: 700, margin: "0 auto", padding: "16px 16px 0" }}>
+        <NowView />
       </div>
 
       {/* Steps */}
