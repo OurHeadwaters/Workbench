@@ -277,7 +277,7 @@ Server-side share URLs for Wordpile piles.
 
 ## 14. Financial Snapshots (`financial_snapshots`)
 
-Internal operator check-in tool (`check-in` artifact). Stores periodic financial health snapshots entered by the operator.
+Internal operator check-in tool (lives inside the operating plan under `/year/check-in`). Stores periodic financial health snapshots entered by the operator.
 
 | Field | Type | Notes |
 |-------|------|-------|
