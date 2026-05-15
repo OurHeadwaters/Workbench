@@ -6,6 +6,7 @@ import ReferenceCallScript from "./pages/ReferenceCallScript";
 import ReferenceCallHandyman from "./pages/ReferenceCallHandyman";
 import CandidateTracker from "./pages/CandidateTracker";
 import ToolsIndex from "./pages/ToolsIndex";
+import SaltMonthlyClose from "./pages/SaltMonthlyClose";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -18,6 +19,7 @@ export default function App() {
       <Route path={`${BASE}/tools/reference-call`} component={ReferenceCallScript} />
       <Route path={`${BASE}/tools/reference-call-handyman`} component={ReferenceCallHandyman} />
       <Route path={`${BASE}/tools/candidate-tracker`} component={CandidateTracker} />
+      <Route path={`${BASE}/tools/salt-close`} component={SaltMonthlyClose} />
       <Route component={DeckPlayer} />
     </Switch>
   );

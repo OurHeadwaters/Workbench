@@ -6,6 +6,7 @@
  * numbers in this file.
  */
 
+import { useState, useEffect } from "react";
 import {
   A_LINES as A_LINE_VALS,
   B_LINES,
@@ -20,6 +21,12 @@ import {
   fmt,
   fmtK,
 } from "@/data/budgetScenarios";
+import {
+  getRecentHistory,
+  getStatus,
+  SALT_BASELINE_NET,
+  type SaltCloseRecord,
+} from "@/lib/saltClose";
 
 // Drift-guard phrase: must match every surface that carries the operator-couple framing.
 // prettier-ignore
@@ -32,6 +39,79 @@ const MUTED     = "#6b7665";
 const RULE      = "#c8bfa7";
 const TEXT      = "#2a2520";
 const INK       = "#2a2520";
+const GREEN     = "#2a6b3e";
+const YELLOW_DK = "#7a5c00";
+const RED_DK    = "#7a1a1a";
+
+const STATUS_PILL: Record<string, { bg: string; color: string; label: string }> = {
+  healthy: { bg: "rgba(42,107,62,0.10)",  color: GREEN,     label: "Healthy" },
+  watch:   { bg: "rgba(122,92,0,0.10)",   color: YELLOW_DK, label: "Watch"   },
+  below:   { bg: "rgba(122,26,26,0.10)",  color: RED_DK,    label: "Below"   },
+};
+
+function labelMonth(m: string): string {
+  const [y, mo] = m.split("-");
+  return new Date(Number(y), Number(mo) - 1, 1).toLocaleDateString("en-US", { month: "short" });
+}
+
+/** Inline SVG sparkline for the last N salt close nets vs. baseline */
+function SaltSparkline({ history }: { history: SaltCloseRecord[] }) {
+  if (history.length === 0) return null;
+
+  const W = 200, H = 40, PAD = 6;
+  const nets = history.map(r => r.net);
+  const minV = Math.min(...nets, 0);
+  const maxV = Math.max(...nets, SALT_BASELINE_NET * 1.3);
+  const scaleY = (v: number) => PAD + (H - 2 * PAD) * (1 - (v - minV) / (maxV - minV));
+  const scaleX = (i: number) =>
+    history.length === 1 ? W / 2 : PAD + (i / (history.length - 1)) * (W - 2 * PAD);
+
+  const baseY = scaleY(SALT_BASELINE_NET);
+
+  const points = history.map((_, i) => `${scaleX(i)},${scaleY(nets[i])}`).join(" ");
+
+  const areaPath =
+    `M ${scaleX(0)},${H} ` +
+    history.map((_, i) => `L ${scaleX(i)},${scaleY(nets[i])}`).join(" ") +
+    ` L ${scaleX(history.length - 1)},${H} Z`;
+
+  return (
+    <svg width={W} height={H} style={{ display: "block", overflow: "visible" }}>
+      {/* Baseline reference */}
+      <line x1={PAD} y1={baseY} x2={W - PAD} y2={baseY} stroke={RULE} strokeWidth={1} strokeDasharray="3,3" />
+
+      {/* Area fill */}
+      <path d={areaPath} fill="rgba(31,61,46,0.06)" />
+
+      {/* Line */}
+      <polyline points={points} fill="none" stroke={DARK} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+
+      {/* Dots */}
+      {history.map((rec, i) => {
+        const status = getStatus(rec.net);
+        const dotColor = status === "healthy" ? GREEN : status === "watch" ? YELLOW_DK : RED_DK;
+        return (
+          <circle key={rec.month} cx={scaleX(i)} cy={scaleY(rec.net)} r={3} fill={dotColor} />
+        );
+      })}
+
+      {/* Month labels */}
+      {history.map((rec, i) => (
+        <text
+          key={rec.month}
+          x={scaleX(i)}
+          y={H + 9}
+          textAnchor="middle"
+          fontSize={6}
+          fontFamily="'IBM Plex Mono', ui-monospace, monospace"
+          fill={MUTED}
+        >
+          {labelMonth(rec.month)}
+        </text>
+      ))}
+    </svg>
+  );
+}
 
 // ── Cost-basis line items (A / B / C columns) ─────────────────────────
 // aVal comes from A_LINE_VALS (budgetScenarios.ts) — no hardcoded dollar values here.
@@ -90,6 +170,13 @@ function cell(content: string | number | null, right = false, bold = false, smal
 }
 
 export default function OnePager() {
+  const [saltHistory, setSaltHistory] = useState<SaltCloseRecord[]>([]);
+  const latest = saltHistory.length > 0 ? saltHistory[saltHistory.length - 1] : null;
+
+  useEffect(() => {
+    setSaltHistory(getRecentHistory(6));
+  }, []);
+
   return (
     <div style={{ background: "#d8d2c8", minHeight: "100vh" }}>
       <div
@@ -271,13 +358,94 @@ export default function OnePager() {
             </div>
           </div>
 
+          {/* ── SALT-01: net trend ─────────────────────────────────── */}
+          <div style={{ marginTop: "14pt", borderTop: `1pt solid ${RULE}`, paddingTop: "10pt" }}>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16pt" }}>
+
+              {/* Left: label + status */}
+              <div style={{ minWidth: "1.6in" }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7.5pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "4pt" }}>
+                  SALT-01 · Net trend
+                </div>
+                {latest ? (
+                  <>
+                    <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "15pt", fontWeight: 700, color: DARK, lineHeight: 1.1 }}>
+                      {latest.net >= 0 ? fmt(latest.net) : `(${fmt(Math.abs(latest.net))})`}
+                    </div>
+                    <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "2pt" }}>
+                      {labelMonth(latest.month)} · most recent close
+                    </div>
+                    <div style={{ marginTop: "5pt" }}>
+                      {(() => {
+                        const st = STATUS_PILL[getStatus(latest.net)];
+                        return (
+                          <span style={{ display: "inline-block", padding: "1.5pt 7pt", borderRadius: "2pt", background: st.bg, color: st.color, fontSize: "7pt", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                            {st.label}
+                          </span>
+                        );
+                      })()}
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ fontSize: "8.5pt", color: MUTED, lineHeight: 1.45 }}>
+                    No closes filed yet.{" "}
+                    <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
+                      File the first month →
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Centre: sparkline */}
+              <div style={{ flex: 1, paddingTop: "4pt" }}>
+                {saltHistory.length > 0 ? (
+                  <>
+                    <SaltSparkline history={saltHistory} />
+                    <div style={{ fontSize: "7pt", color: MUTED, marginTop: "12pt", lineHeight: 1.35 }}>
+                      Last {saltHistory.length} month{saltHistory.length !== 1 ? "s" : ""} · dashed line = {fmt(SALT_BASELINE_NET)} planning baseline
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ height: "40pt", border: `1pt dashed ${RULE}`, borderRadius: "2pt", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: "7.5pt", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
+                      sparkline appears after first filed close
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Right: baseline reference */}
+              <div style={{ minWidth: "1.1in", textAlign: "right" }}>
+                <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>
+                  Plan baseline
+                </div>
+                <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "13pt", fontWeight: 700, color: DARK }}>
+                  {fmt(SALT_BASELINE_NET)}
+                </div>
+                <div style={{ fontSize: "7pt", color: MUTED, marginTop: "2pt", lineHeight: 1.35 }}>
+                  /month net
+                </div>
+                {latest && (
+                  <div style={{ marginTop: "6pt", fontSize: "7.5pt", color: latest.net >= SALT_BASELINE_NET ? GREEN : RED_DK, fontWeight: 600 }}>
+                    {latest.net >= SALT_BASELINE_NET ? "+" : "−"}{fmt(Math.abs(latest.net - SALT_BASELINE_NET))} vs. plan
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+
           {/* Footer */}
-          <div style={{ marginTop: "20pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ marginTop: "14pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               Headwaters Development Services · Confidential
             </div>
             <div style={{ fontSize: "7pt", color: MUTED }}>
               Numbers sourced from <code style={{ fontFamily: "monospace", fontSize: "7pt" }}>src/data/budgetScenarios.ts</code>
+              {" · "}
+              <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
+                SALT-01 filing →
+              </a>
             </div>
           </div>
         </div>

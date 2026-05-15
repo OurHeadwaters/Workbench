@@ -18,6 +18,16 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const TOOLS = [
   {
     number: "01",
+    title: "SALT-01 Monthly Close",
+    subtitle: "Bookkeeper · file each month's salt revenue and expenses",
+    description:
+      "File the salt cost-centre's monthly revenue and direct expenses. Each submission stamps an immutable per-month record — prior months are never overwritten. The one-pager SALT-01 block reads this history automatically and renders a sparkline of the last 3–6 months' net against the planning baseline.",
+    path: `${BASE}/tools/salt-close`,
+    label: "Open filing tool →",
+    warn: false,
+  },
+  {
+    number: "02",
     title: "Reference-Call Script — Standard",
     subtitle: "Any hired role · 8 questions · 3 calls minimum",
     description:
@@ -27,7 +37,7 @@ const TOOLS = [
     warn: false,
   },
   {
-    number: "02",
+    number: "03",
     title: "Reference-Call Script — Handyman-Housekeeper",
     subtitle: "Extended · 6 standard + 5 child-safety questions · 3 calls minimum",
     description:
@@ -37,7 +47,7 @@ const TOOLS = [
     warn: true,
   },
   {
-    number: "03",
+    number: "04",
     title: "Candidate Tracker",
     subtitle: "Live-fill · up to 4 candidates side-by-side · printable",
     description:
@@ -76,8 +86,8 @@ export default function ToolsIndex() {
                 Tools Index
               </div>
               <div style={{ fontSize: "9pt", color: MUTED, lineHeight: 1.5, maxWidth: "4.5in" }}>
-                Three printable companions that turn the hiring runbook from doctrine into a working tool.
-                Open the script for the role you're calling references on, then log results in the tracker.
+                Four tools that turn the operating runbook from doctrine into working instruments.
+                File salt closes in Tool 01, open the reference script for the role you're calling, then log results in the tracker.
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
@@ -152,13 +162,14 @@ export default function ToolsIndex() {
           {/* Quick reference */}
           <div style={{ marginTop: "22pt", background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", padding: "10pt 14pt" }}>
             <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "7pt" }}>
-              Quick reference — how the three tools connect
+              Quick reference — how the four tools connect
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10pt" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "10pt" }}>
               {[
-                { step: "Step 1", action: "Screen candidates", detail: "Record name, source channel, and screening date in the Candidate Tracker (Tool 03)." },
-                { step: "Step 2", action: "Run reference calls", detail: "Open Tool 01 (standard) or Tool 02 (handyman-housekeeper). Complete three calls per candidate. Log results in Tool 03." },
-                { step: "Step 3", action: "Compare and decide", detail: "Side-by-side view in Tool 03 shows all reference results, paid-trial outcome, and decision for up to 4 candidates at once." },
+                { step: "Tool 01", action: "File salt closes", detail: "File each month's salt revenue and expenses. History flows to the one-pager sparkline automatically." },
+                { step: "Tool 02", action: "Screen candidates", detail: "Record name, source channel, and screening date in the Candidate Tracker (Tool 04)." },
+                { step: "Tool 03", action: "Run reference calls", detail: "Open Tool 02 (standard) or Tool 03 (handyman-housekeeper). Complete three calls per candidate. Log results in Tool 04." },
+                { step: "Tool 04", action: "Compare and decide", detail: "Side-by-side view shows all reference results, paid-trial outcome, and decision for up to 4 candidates at once." },
               ].map(s => (
                 <div key={s.step}>
                   <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: AMBER, marginBottom: "2pt" }}>{s.step}</div>
