@@ -8,8 +8,7 @@ import {
   getTodayWeek,
   type Phase,
 } from "@/data/plan2026";
-import { getAllEffectiveBatches, type EffectiveBatch } from "@/lib/saltBench";
-import { loadBenchOverrides, clearBenchOverride } from "@/lib/storage";
+import { loadBenchOverrides, deleteBenchOverride, type BenchOverride } from "@/lib/storage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -22,26 +21,18 @@ const PHASE_WEEK_RANGES: Record<Phase, string> = {
 // ── Bench Swap Audit Panel ─────────────────────────────────────────────────────
 
 function BenchSwapAudit() {
-  const [swapped, setSwapped] = useState<EffectiveBatch[]>([]);
+  const [swapped, setSwapped] = useState<BenchOverride[]>([]);
 
   const refresh = useCallback(() => {
-    const overrides = loadBenchOverrides();
-    const all = getAllEffectiveBatches(overrides);
-    setSwapped(
-      all.filter(
-        (b) =>
-          b.override !== undefined &&
-          (b.primary !== b.defaultPrimary || b.standby !== b.defaultStandby),
-      ),
-    );
+    setSwapped(loadBenchOverrides());
   }, []);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  function handleRestore(isoWeek: number) {
-    clearBenchOverride(isoWeek);
+  function handleRestore(weekId: string) {
+    deleteBenchOverride(weekId);
     refresh();
   }
 
@@ -101,16 +92,9 @@ function BenchSwapAudit() {
 
       {/* Swap rows */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {swapped.map((batch) => {
-          const ov = batch.override!;
-          const primaryChanged =
-            ov.primary !== undefined &&
-            ov.primary !== batch.defaultPrimary;
-          const standbyChanged =
-            ov.standby !== undefined &&
-            ov.standby !== batch.defaultStandby;
-          const swappedDate = ov.swappedAt
-            ? new Date(ov.swappedAt).toLocaleDateString("en-CA", {
+        {swapped.map((ov) => {
+          const savedDate = ov.overriddenAt
+            ? new Date(ov.overriddenAt).toLocaleDateString("en-CA", {
                 month: "short",
                 day: "numeric",
               })
@@ -118,7 +102,7 @@ function BenchSwapAudit() {
 
           return (
             <div
-              key={batch.isoWeek}
+              key={ov.weekId}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -131,7 +115,7 @@ function BenchSwapAudit() {
                 flexWrap: "wrap",
               }}
             >
-              {/* Batch identity */}
+              {/* Week identity */}
               <div style={{ display: "flex", alignItems: "flex-start", gap: 14, flex: 1, minWidth: 0 }}>
                 <div style={{ flexShrink: 0 }}>
                   <div
@@ -145,37 +129,27 @@ function BenchSwapAudit() {
                       marginBottom: 2,
                     }}
                   >
-                    W{batch.isoWeek} · {batch.batchLabel}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "IBM Plex Mono, monospace",
-                      fontSize: 9,
-                      color: "#9a9a8e",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    {batch.dateRange}
+                    {ov.weekId}
                   </div>
                 </div>
 
                 {/* Swap details */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
-                  {primaryChanged && (
+                  {ov.primaryName && (
                     <SwapLine
                       role="Primary"
-                      from={batch.defaultPrimary}
-                      to={batch.primary}
+                      from="—"
+                      to={ov.primaryName}
                     />
                   )}
-                  {standbyChanged && (
+                  {ov.standbyName && (
                     <SwapLine
                       role="Standby"
-                      from={batch.defaultStandby}
-                      to={batch.standby}
+                      from="—"
+                      to={ov.standbyName}
                     />
                   )}
-                  {ov.reason && (
+                  {(ov.primaryReason || ov.standbyReason) && (
                     <div
                       style={{
                         fontSize: 11,
@@ -184,10 +158,10 @@ function BenchSwapAudit() {
                         marginTop: 1,
                       }}
                     >
-                      "{ov.reason}"
+                      "{ov.primaryReason || ov.standbyReason}"
                     </div>
                   )}
-                  {swappedDate && (
+                  {savedDate && (
                     <div
                       style={{
                         fontFamily: "IBM Plex Mono, monospace",
@@ -197,7 +171,7 @@ function BenchSwapAudit() {
                         marginTop: 1,
                       }}
                     >
-                      Swapped {swappedDate}
+                      Swapped {savedDate}
                     </div>
                   )}
                 </div>
@@ -205,7 +179,7 @@ function BenchSwapAudit() {
 
               {/* Restore button */}
               <button
-                onClick={() => handleRestore(batch.isoWeek)}
+                onClick={() => handleRestore(ov.weekId)}
                 style={{
                   flexShrink: 0,
                   alignSelf: "center",

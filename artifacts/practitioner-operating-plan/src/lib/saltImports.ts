@@ -15,7 +15,17 @@
  *   Each source has a dedicated summary parser (parseSquare, parseShopify,
  *   parseCash) that extracts gross-sales, refunds, and net from a pasted
  *   export. parsePaste is a generic row-level fallback.
+ *
+ * CSV column-rename detection: when the bookkeeper pastes a full CSV export
+ * (Square/Shopify/Shippo/Timesheet), parseImport() resolves columns using a
+ * synonym fallback list and fires a ColumnAlert if the critical column header
+ * changed from last month's persisted baseline, blocking the apply until the
+ * bookkeeper confirms the swap is intentional.
+ *
+ * Column baseline storage key: "salt-import-header-baseline-v1"
  */
+
+// ─── Text-paste types (summary parsers) ──────────────────────────────────────
 
 export type ImportSource = "square" | "shopify" | "cash";
 
@@ -257,7 +267,6 @@ function parseSummaryLines(
 export function parseSquare(text: string): ParsedTotals | null {
   return parseSummaryLines("square", text);
 }
-
 /**
  * Parse a Shopify Finances Summary or Orders CSV paste.
  */
@@ -265,6 +274,7 @@ export function parseShopify(text: string): ParsedTotals | null {
   return parseSummaryLines("shopify", text);
 }
 
+// ─── Cash / manual ────────────────────────────────────────────────────────────
 /**
  * "Parse" a manual cash entry — just a single number.
  */
@@ -280,3 +290,411 @@ export function parseCash(text: string): ParsedTotals | null {
     parsedAt: new Date().toISOString(),
   };
 }
+
+// ─── CSV column-rename detection ──────────────────────────────────────────────
+
+export type SourceKey = "square" | "shopify" | "shippo" | "timesheet";
+
+export interface ColumnDef {
+  field: string;
+  label: string;
+  defaultHeader: string;
+  synonyms: string[];
+}
+
+export interface MatchedColumn {
+  field: string;
+  resolvedHeader: string;
+  isDefault: boolean;
+}
+
+export interface ColumnAlert {
+  source: SourceKey;
+  sourceLabel: string;
+  field: string;
+  fieldLabel: string;
+  previousHeader: string;
+  resolvedHeader: string;
+}
+
+export interface ParseResult {
+  source: SourceKey;
+  sourceLabel: string;
+  criticalValue: number | null;
+  matchedColumns: MatchedColumn[];
+  alerts: ColumnAlert[];
+  rowCount: number;
+  warnings: string[];
+}
+
+// ─── Source definitions ───────────────────────────────────────────────────────
+
+interface SourceDef {
+  key: SourceKey;
+  label: string;
+  critical: ColumnDef;
+  allColumns: ColumnDef[];
+}
+
+const CSV_SOURCES: SourceDef[] = [
+  {
+    key: "square",
+    label: "Square",
+    critical: {
+      field: "revenue",
+      label: "Revenue",
+      defaultHeader: "Net Sales",
+      synonyms: ["Gross Sales", "Total Sales", "Total Collected", "Amount", "Revenue", "Subtotal"],
+    },
+    allColumns: [
+      {
+        field: "revenue",
+        label: "Revenue",
+        defaultHeader: "Net Sales",
+        synonyms: ["Gross Sales", "Total Sales", "Total Collected", "Amount", "Revenue", "Subtotal"],
+      },
+      {
+        field: "transactions",
+        label: "Transactions",
+        defaultHeader: "Transactions",
+        synonyms: ["Transaction Count", "# Transactions", "Count"],
+      },
+    ],
+  },
+  {
+    key: "shopify",
+    label: "Shopify",
+    critical: {
+      field: "lineitem_price",
+      label: "Lineitem price",
+      defaultHeader: "Lineitem price",
+      synonyms: ["Line Item Price", "Item Price", "lineitem_price", "Price", "Line Price", "Unit Price"],
+    },
+    allColumns: [
+      {
+        field: "lineitem_price",
+        label: "Lineitem price",
+        defaultHeader: "Lineitem price",
+        synonyms: ["Line Item Price", "Item Price", "lineitem_price", "Price", "Line Price", "Unit Price"],
+      },
+      {
+        field: "lineitem_quantity",
+        label: "Lineitem quantity",
+        defaultHeader: "Lineitem quantity",
+        synonyms: ["Line Item Quantity", "Quantity", "lineitem_quantity", "Qty"],
+      },
+      {
+        field: "subtotal",
+        label: "Subtotal",
+        defaultHeader: "Subtotal",
+        synonyms: ["Order Subtotal", "Sub Total", "Net Revenue"],
+      },
+    ],
+  },
+  {
+    key: "shippo",
+    label: "Shippo",
+    critical: {
+      field: "cost",
+      label: "Cost",
+      defaultHeader: "Cost",
+      synonyms: ["Rate", "Total Cost", "Shipment Cost", "Label Cost", "Price", "Amount"],
+    },
+    allColumns: [
+      {
+        field: "cost",
+        label: "Cost",
+        defaultHeader: "Cost",
+        synonyms: ["Rate", "Total Cost", "Shipment Cost", "Label Cost", "Price", "Amount"],
+      },
+      {
+        field: "status",
+        label: "Status",
+        defaultHeader: "Status",
+        synonyms: ["Shipment Status", "Tracking Status"],
+      },
+    ],
+  },
+  {
+    key: "timesheet",
+    label: "Timesheet",
+    critical: {
+      field: "hours",
+      label: "Hours",
+      defaultHeader: "Hours",
+      synonyms: ["Duration", "Total Hours", "Time", "Hours Worked", "Hrs", "Billable Hours"],
+    },
+    allColumns: [
+      {
+        field: "hours",
+        label: "Hours",
+        defaultHeader: "Hours",
+        synonyms: ["Duration", "Total Hours", "Time", "Hours Worked", "Hrs", "Billable Hours"],
+      },
+      {
+        field: "employee",
+        label: "Employee",
+        defaultHeader: "Employee",
+        synonyms: ["Name", "Worker", "Staff", "Person", "Team Member"],
+      },
+    ],
+  },
+];
+
+// ─── CSV parser ───────────────────────────────────────────────────────────────
+
+function parseCSV(raw: string): string[][] {
+  const lines = raw.trim().split(/\r?\n/);
+  return lines.map((line) => {
+    const cells: string[] = [];
+    let inQuote = false;
+    let cell = "";
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuote && line[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else {
+          inQuote = !inQuote;
+        }
+      } else if (ch === "," && !inQuote) {
+        cells.push(cell.trim());
+        cell = "";
+      } else {
+        cell += ch;
+      }
+    }
+    cells.push(cell.trim());
+    return cells;
+  });
+}
+
+function rowsToObjects(rows: string[][]): Record<string, string>[] {
+  if (rows.length < 2) return [];
+  const headers = rows[0];
+  return rows.slice(1).map((row) => {
+    const obj: Record<string, string> = {};
+    headers.forEach((h, i) => {
+      obj[h] = row[i] ?? "";
+    });
+    return obj;
+  });
+}
+
+// ─── Column resolution ────────────────────────────────────────────────────────
+
+function normalise(s: string): string {
+  return s.toLowerCase().replace(/[\s_-]+/g, " ").trim();
+}
+
+function resolveColumn(
+  headers: string[],
+  def: ColumnDef,
+): { header: string; isDefault: boolean } | null {
+  const normHeaders = headers.map(normalise);
+
+  const defIdx = normHeaders.indexOf(normalise(def.defaultHeader));
+  if (defIdx !== -1) return { header: headers[defIdx], isDefault: true };
+
+  for (const syn of def.synonyms) {
+    const idx = normHeaders.indexOf(normalise(syn));
+    if (idx !== -1) return { header: headers[idx], isDefault: false };
+  }
+
+  return null;
+}
+
+/**
+ * Returns true when text looks like a CSV export (first non-empty line has
+ * at least 2 commas — enough to have a header row with multiple columns).
+ */
+export function looksLikeCSV(text: string): boolean {
+  const firstLine = text.trim().split(/\r?\n/)[0] ?? "";
+  return (firstLine.match(/,/g) ?? []).length >= 2;
+}
+
+// ─── Header baseline (localStorage) ──────────────────────────────────────────
+
+const BASELINE_KEY = "salt-import-header-baseline-v1";
+
+export interface HeaderBaseline {
+  [sourceKey: string]: {
+    [field: string]: string;
+  };
+}
+
+export function loadHeaderBaseline(): HeaderBaseline {
+  try {
+    const raw = localStorage.getItem(BASELINE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as HeaderBaseline;
+  } catch {
+    return {};
+  }
+}
+
+export function saveHeaderBaseline(baseline: HeaderBaseline): void {
+  localStorage.setItem(BASELINE_KEY, JSON.stringify(baseline));
+}
+
+/**
+ * Update the baseline for a specific source + field.
+ * Call this when the bookkeeper clicks "remember this header for next month".
+ */
+export function rememberHeader(
+  sourceKey: SourceKey,
+  field: string,
+  header: string,
+): void {
+  const baseline = loadHeaderBaseline();
+  if (!baseline[sourceKey]) baseline[sourceKey] = {};
+  baseline[sourceKey][field] = header;
+  saveHeaderBaseline(baseline);
+}
+
+/**
+ * Persist the resolved critical-column header for a completed apply,
+ * whether or not the bookkeeper clicked "remember". This ensures that
+ * "previously-used header" is accurate from the very first paste rather
+ * than only after an explicit remember action.
+ *
+ * Only writes when the header differs from what is already stored, so
+ * repeated calls for the same header are cheap no-ops.
+ */
+export function autoSeedBaseline(result: ParseResult): void {
+  const def = CSV_SOURCES.find((s) => s.key === result.source)!;
+  if (!def) return;
+  const criticalMatch = result.matchedColumns.find(
+    (m) => m.field === def.critical.field,
+  );
+  if (!criticalMatch) return;
+  const baseline = loadHeaderBaseline();
+  const existing = baseline[result.source]?.[def.critical.field];
+  if (existing === criticalMatch.resolvedHeader) return; // already up-to-date
+  if (!baseline[result.source]) baseline[result.source] = {};
+  baseline[result.source][def.critical.field] = criticalMatch.resolvedHeader;
+  saveHeaderBaseline(baseline);
+}
+
+/**
+ * Clear all stored baselines. Useful for testing or resetting.
+ */
+export function resetHeaderBaseline(): void {
+  localStorage.removeItem(BASELINE_KEY);
+}
+
+// ─── Main CSV parse function ──────────────────────────────────────────────────
+
+/**
+ * Parse a raw CSV string for a given source.
+ *
+ * Returns a ParseResult containing:
+ *   - criticalValue: the summed value of the critical column (revenue, cost, etc.)
+ *   - matchedColumns: which header was resolved for each column def
+ *   - alerts: blocking alerts for any critical column whose resolved header
+ *             differs from the persisted baseline for that source
+ *   - warnings: non-blocking notes (e.g. column not found at all)
+ */
+export function parseImport(source: SourceKey, raw: string): ParseResult {
+  const def = CSV_SOURCES.find((s) => s.key === source)!;
+  const baseline = loadHeaderBaseline();
+  const sourceBaseline = baseline[source] ?? {};
+
+  const rows2d = parseCSV(raw);
+  if (rows2d.length < 2) {
+    return {
+      source,
+      sourceLabel: def.label,
+      criticalValue: null,
+      matchedColumns: [],
+      alerts: [],
+      rowCount: 0,
+      warnings: ["Paste appears empty or has no data rows."],
+    };
+  }
+
+  const headers = rows2d[0];
+  const dataRows = rowsToObjects(rows2d);
+  const matchedColumns: MatchedColumn[] = [];
+  const alerts: ColumnAlert[] = [];
+  const warnings: string[] = [];
+
+  for (const colDef of def.allColumns) {
+    const resolved = resolveColumn(headers, colDef);
+    if (!resolved) {
+      if (colDef.field === def.critical.field) {
+        warnings.push(
+          `Critical column "${colDef.label}" not found in this CSV. ` +
+            `Expected "${colDef.defaultHeader}" or a known synonym.`,
+        );
+      }
+      continue;
+    }
+
+    matchedColumns.push({
+      field: colDef.field,
+      resolvedHeader: resolved.header,
+      isDefault: resolved.isDefault,
+    });
+
+    if (colDef.field === def.critical.field) {
+      const persistedHeader = sourceBaseline[colDef.field];
+      if (persistedHeader && persistedHeader !== resolved.header) {
+        alerts.push({
+          source,
+          sourceLabel: def.label,
+          field: colDef.field,
+          fieldLabel: colDef.label,
+          previousHeader: persistedHeader,
+          resolvedHeader: resolved.header,
+        });
+      } else if (!persistedHeader && !resolved.isDefault) {
+        alerts.push({
+          source,
+          sourceLabel: def.label,
+          field: colDef.field,
+          fieldLabel: colDef.label,
+          previousHeader: colDef.defaultHeader,
+          resolvedHeader: resolved.header,
+        });
+      }
+    }
+  }
+
+  let criticalValue: number | null = null;
+  const criticalMatch = matchedColumns.find((m) => m.field === def.critical.field);
+  if (criticalMatch) {
+    let sum = 0;
+    let parsed = 0;
+    for (const row of dataRows) {
+      const rawCell = (row[criticalMatch.resolvedHeader] ?? "").replace(/[$,\s]/g, "");
+      const n = parseFloat(rawCell);
+      if (!isNaN(n)) {
+        sum += n;
+        parsed++;
+      }
+    }
+    if (parsed > 0) criticalValue = sum;
+  }
+
+  return {
+    source,
+    sourceLabel: def.label,
+    criticalValue,
+    matchedColumns,
+    alerts,
+    rowCount: dataRows.length,
+    warnings,
+  };
+}
+
+/** Return the CSV source definition (label, critical column) for UI rendering. */
+export function getSourceDef(source: SourceKey) {
+  return CSV_SOURCES.find((s) => s.key === source)!;
+}
+
+/** All available CSV source keys + labels for the source picker. */
+export const SOURCE_OPTIONS: { key: SourceKey; label: string }[] = CSV_SOURCES.map(
+  ({ key, label }) => ({ key, label }),
+);
