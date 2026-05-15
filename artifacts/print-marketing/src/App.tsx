@@ -29,6 +29,10 @@ import BrandingKit from "@/pages/BrandingKit";
 import Privacy from "@/pages/Privacy";
 import CoopComplianceNotice from "@/pages/CoopComplianceNotice";
 import ProjectOverview from "@/pages/ProjectOverview";
+import CodetryIntroLetter from "@/pages/CodetryIntroLetter";
+import CodetryFundingBrief from "@/pages/CodetryFundingBrief";
+import CodetryOnePager from "@/pages/CodetryOnePager";
+import CodetryPilotProposal from "@/pages/CodetryPilotProposal";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -63,6 +67,10 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/coop-compliance-notice" component={CoopComplianceNotice} />
       <Route path="/overview" component={ProjectOverview} />
+      <Route path="/codetry-intro-letter" component={CodetryIntroLetter} />
+      <Route path="/codetry-funding-brief" component={CodetryFundingBrief} />
+      <Route path="/codetry-one-pager" component={CodetryOnePager} />
+      <Route path="/codetry-pilot-proposal" component={CodetryPilotProposal} />
       <Route component={NotFound} />
     </Switch>
   );
