@@ -20,8 +20,6 @@ import CostReviewModal from "./components/CostReviewModal";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
-const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
-
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function App() {
