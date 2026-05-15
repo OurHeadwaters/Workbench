@@ -11,6 +11,17 @@ const CREAM = "#f4ede0";
 const RUST = "#b85a3e";
 const MUTED = "#6b7665";
 
+const base = import.meta.env.BASE_URL;
+
+function buildPersonalizedUrl(slug: string, community: string): string {
+  return `${window.location.origin}${base}${slug}?community=${encodeURIComponent(community)}`;
+}
+
+const personalizedDocs = [
+  { label: "Intro Letter", slug: "codetry-intro-letter" },
+  { label: "Pilot Proposal", slug: "codetry-pilot-proposal" },
+];
+
 const docs = [
   { label: "Intro Letter", href: "/codetry-intro-letter" },
   { label: "Partnership & Funding Brief", href: "/codetry-funding-brief" },
@@ -20,6 +31,8 @@ const docs = [
 
 export default function NANOutreachPacket() {
   const [loading, setLoading] = useState(false);
+  const [community, setCommunity] = useState("");
+  const [copied, setCopied] = useState<string | null>(null);
 
   async function handleDownload() {
     setLoading(true);
@@ -33,6 +46,19 @@ export default function NANOutreachPacket() {
       setLoading(false);
     }
   }
+
+  function handleCopy(slug: string) {
+    const url = buildPersonalizedUrl(slug, community.trim());
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(slug);
+      setTimeout(() => setCopied(null), 2000);
+    }).catch(() => {
+      setCopied(`error:${slug}`);
+      setTimeout(() => setCopied(null), 2500);
+    });
+  }
+
+  const trimmed = community.trim();
 
   return (
     <div style={{ minHeight: "100vh", background: "#d8d2c8" }}>
@@ -157,6 +183,132 @@ export default function NANOutreachPacket() {
               )}
             </span>
           ))}
+        </div>
+
+        {/* Personalized link generator */}
+        <div style={{
+          marginTop: "0.75rem",
+          padding: "1rem 1.25rem",
+          background: "white",
+          borderRadius: 8,
+          border: "1px solid rgba(31,61,46,0.14)",
+        }}>
+          <p style={{
+            fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: EVERGREEN,
+            margin: "0 0 0.6rem",
+          }}>
+            Generate a personalized link
+          </p>
+          <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", marginBottom: "0.75rem", flexWrap: "wrap" }}>
+            <input
+              type="text"
+              value={community}
+              onChange={(e) => setCommunity(e.target.value)}
+              placeholder="e.g. Sandy Lake First Nation"
+              style={{
+                flex: "1 1 220px",
+                padding: "0.45rem 0.75rem",
+                fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+                fontSize: "0.88rem",
+                border: "1px solid rgba(31,61,46,0.25)",
+                borderRadius: 5,
+                outline: "none",
+                color: "#1a1a1a",
+                background: "#fafaf8",
+              }}
+            />
+            <span style={{
+              fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+              fontSize: "0.76rem",
+              color: MUTED,
+              flexShrink: 0,
+            }}>
+              {trimmed ? `Personalizing for: ${trimmed}` : "Type a community name above"}
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {personalizedDocs.map((d) => {
+              const url = trimmed ? buildPersonalizedUrl(d.slug, trimmed) : null;
+              const isCopied = copied === d.slug;
+              return (
+                <div key={d.slug} style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                  padding: "0.45rem 0.65rem",
+                  background: "rgba(31,61,46,0.04)",
+                  borderRadius: 5,
+                  flexWrap: "wrap",
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+                    fontSize: "0.78rem",
+                    fontWeight: 600,
+                    color: EVERGREEN,
+                    flexShrink: 0,
+                    minWidth: "5.5rem",
+                  }}>
+                    {d.label}
+                  </span>
+                  <span style={{
+                    flex: 1,
+                    fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+                    fontSize: "0.74rem",
+                    color: url ? "#1a6b3c" : MUTED,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    fontStyle: url ? "normal" : "italic",
+                  }}>
+                    {url ?? "—"}
+                  </span>
+                  <button
+                    onClick={() => trimmed && handleCopy(d.slug)}
+                    disabled={!trimmed}
+                    style={{
+                      flexShrink: 0,
+                      background: isCopied ? EVERGREEN : (trimmed ? RUST : "rgba(31,61,46,0.15)"),
+                      color: trimmed ? CREAM : MUTED,
+                      border: "none",
+                      borderRadius: 4,
+                      padding: "0.3rem 0.7rem",
+                      fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+                      fontSize: "0.74rem",
+                      fontWeight: 600,
+                      cursor: trimmed ? "pointer" : "default",
+                      transition: "background 0.15s",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {isCopied ? "✓ Copied" : copied === `error:${d.slug}` ? "Copy failed" : "Copy link"}
+                  </button>
+                  {url && (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        flexShrink: 0,
+                        fontFamily: "var(--font-sans, Inter, system-ui, sans-serif)",
+                        fontSize: "0.74rem",
+                        color: EVERGREEN,
+                        textDecoration: "underline",
+                        textUnderlineOffset: "2px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Preview →
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

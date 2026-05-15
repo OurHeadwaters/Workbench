@@ -6,6 +6,17 @@ import { CodetryFundingBriefPage } from "./CodetryFundingBrief";
 import { CodetryOnePagerPage } from "./CodetryOnePager";
 import { CodetryPilotProposalPage } from "./CodetryPilotProposal";
 
+const base = import.meta.env.BASE_URL;
+
+function buildPersonalizedUrl(slug: string, community: string): string {
+  return `${window.location.origin}${base}${slug}?community=${encodeURIComponent(community)}`;
+}
+
+const personalizedDocs = [
+  { label: "Intro Letter", slug: "codetry-intro-letter" },
+  { label: "Pilot Proposal", slug: "codetry-pilot-proposal" },
+];
+
 const mainPieces = [
   {
     href: "/overview",
@@ -260,6 +271,8 @@ const outreachPieces = [
 
 export default function Index() {
   const [packetLoading, setPacketLoading] = useState(false);
+  const [community, setCommunity] = useState("");
+  const [copied, setCopied] = useState<string | null>(null);
 
   async function handlePacketDownload() {
     setPacketLoading(true);
@@ -269,6 +282,19 @@ export default function Index() {
       setPacketLoading(false);
     }
   }
+
+  function handleCopy(slug: string) {
+    const url = buildPersonalizedUrl(slug, community.trim());
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(slug);
+      setTimeout(() => setCopied(null), 2000);
+    }).catch(() => {
+      setCopied(`error:${slug}`);
+      setTimeout(() => setCopied(null), 2500);
+    });
+  }
+
+  const trimmed = community.trim();
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
@@ -327,7 +353,7 @@ export default function Index() {
             </span>
             <div style={{ flex: 1, height: 1, background: "rgba(31,61,46,0.18)" }} />
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem", flexWrap: "wrap", gap: "0.5rem" }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.55, margin: 0 }}>
               Four-piece packet for NAN leadership — share as a set or hand each one out individually.
             </p>
@@ -352,6 +378,133 @@ export default function Index() {
               {packetLoading ? "⏳ Generating PDF…" : "⬇ Download packet (4 pages)"}
             </button>
           </div>
+
+          {/* Personalized link generator */}
+          <div style={{
+            marginBottom: "1rem",
+            padding: "0.9rem 1rem",
+            background: "white",
+            borderRadius: 7,
+            border: "1px solid rgba(31,61,46,0.14)",
+          }}>
+            <p style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--evergreen)",
+              margin: "0 0 0.55rem",
+            }}>
+              Generate a personalized link
+            </p>
+            <div style={{ display: "flex", gap: "0.55rem", alignItems: "center", marginBottom: "0.65rem", flexWrap: "wrap" }}>
+              <input
+                type="text"
+                value={community}
+                onChange={(e) => setCommunity(e.target.value)}
+                placeholder="e.g. Sandy Lake First Nation"
+                style={{
+                  flex: "1 1 200px",
+                  padding: "0.4rem 0.65rem",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.86rem",
+                  border: "1px solid rgba(31,61,46,0.25)",
+                  borderRadius: 5,
+                  outline: "none",
+                  color: "#1a1a1a",
+                  background: "#fafaf8",
+                }}
+              />
+              <span style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.74rem",
+                color: "var(--muted)",
+                flexShrink: 0,
+              }}>
+                {trimmed ? `Personalizing for: ${trimmed}` : "Type a community name above"}
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              {personalizedDocs.map((d) => {
+                const url = trimmed ? buildPersonalizedUrl(d.slug, trimmed) : null;
+                const isCopied = copied === d.slug;
+                return (
+                  <div key={d.slug} style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.4rem 0.6rem",
+                    background: "rgba(31,61,46,0.04)",
+                    borderRadius: 5,
+                    flexWrap: "wrap",
+                  }}>
+                    <span style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "0.76rem",
+                      fontWeight: 600,
+                      color: "var(--evergreen)",
+                      flexShrink: 0,
+                      minWidth: "5.5rem",
+                    }}>
+                      {d.label}
+                    </span>
+                    <span style={{
+                      flex: 1,
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "0.72rem",
+                      color: url ? "#1a6b3c" : "var(--muted)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontStyle: url ? "normal" : "italic",
+                    }}>
+                      {url ?? "—"}
+                    </span>
+                    <button
+                      onClick={() => trimmed && handleCopy(d.slug)}
+                      disabled={!trimmed}
+                      style={{
+                        flexShrink: 0,
+                        background: isCopied ? "var(--evergreen)" : (trimmed ? "#b85a3e" : "rgba(31,61,46,0.15)"),
+                        color: trimmed ? "var(--cream)" : "var(--muted)",
+                        border: "none",
+                        borderRadius: 4,
+                        padding: "0.28rem 0.65rem",
+                        fontFamily: "var(--font-sans)",
+                        fontSize: "0.72rem",
+                        fontWeight: 600,
+                        cursor: trimmed ? "pointer" : "default",
+                        transition: "background 0.15s",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {isCopied ? "✓ Copied" : copied === `error:${d.slug}` ? "Copy failed" : "Copy link"}
+                    </button>
+                    {url && (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          flexShrink: 0,
+                          fontFamily: "var(--font-sans)",
+                          fontSize: "0.72rem",
+                          color: "var(--evergreen)",
+                          textDecoration: "underline",
+                          textUnderlineOffset: "2px",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Preview →
+                      </a>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem", borderLeft: "3px solid var(--evergreen)", paddingLeft: "1.25rem" }}>
             {outreachPieces.map((p) => (
               <Link
