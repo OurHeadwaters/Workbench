@@ -12,7 +12,7 @@
  * audit trail is meaningful weeks later.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import {
   getEffectiveBench,
@@ -28,7 +28,11 @@ import {
   loadBenchOverride,
   saveBenchOverride,
   deleteBenchOverride,
+  exportBenchOverrides,
+  previewBenchImport,
+  commitBenchImport,
   type BenchOverride,
+  type ImportResult,
 } from "@/lib/storage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -323,6 +327,13 @@ export default function Week() {
   );
   const [saved, setSaved]           = useState(false);
 
+  type ImportPhase = "idle" | "preview" | "done";
+  const [importPhase, setImportPhase]       = useState<ImportPhase>("idle");
+  const [importResult, setImportResult]     = useState<ImportResult | null>(null);
+  const [pendingOverrides, setPendingOverrides] = useState<BenchOverride[]>([]);
+  const [importError, setImportError]       = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const ov = loadBenchOverride(weekId);
     setOverride(ov);
@@ -398,6 +409,46 @@ export default function Week() {
       saveBenchOverride(next);
       refreshEffective(next);
     }
+  }
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        if (!Array.isArray(data)) throw new Error("Expected a JSON array");
+        const overrides = data as BenchOverride[];
+        const result = previewBenchImport(overrides);
+        setPendingOverrides(overrides);
+        setImportResult(result);
+        setImportPhase("preview");
+        setImportError(null);
+      } catch {
+        setImportError("Could not read file — make sure it is a hwop_bench_overrides.json backup.");
+        setImportPhase("idle");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function handleConfirmImport() {
+    const result = commitBenchImport(pendingOverrides);
+    setImportResult(result);
+    setImportPhase("done");
+    setPendingOverrides([]);
+    const ov = loadBenchOverride(weekId);
+    setOverride(ov);
+    setEffective(getEffectiveBench(weekId, ov));
+  }
+
+  function handleCancelImport() {
+    setImportPhase("idle");
+    setImportResult(null);
+    setPendingOverrides([]);
+    setImportError(null);
   }
 
   const scheduled = getScheduledBench(weekId);
@@ -639,6 +690,161 @@ export default function Week() {
                 <div style={{ fontSize: "10pt", color: DARK, fontWeight: 600 }}>{scheduled.standby}</div>
               </div>
             </div>
+          </div>
+
+          {/* Export / Import panel */}
+          <div style={{
+            background: "rgba(31,61,46,0.04)",
+            border: `1pt solid ${RULE}`,
+            borderRadius: "4pt",
+            padding: "10pt 14pt",
+            marginBottom: "22pt",
+          }}>
+            <div style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "7pt",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: MUTED,
+              marginBottom: "8pt",
+            }}>
+              Backup — bench override history
+            </div>
+
+            {importPhase === "idle" && (
+              <div style={{ display: "flex", gap: "8pt", alignItems: "center", flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={exportBenchOverrides}
+                  style={{
+                    padding: "4pt 12pt",
+                    background: DARK,
+                    color: CREAM,
+                    border: "none",
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Export overrides ↓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    padding: "4pt 12pt",
+                    background: "transparent",
+                    color: DARK,
+                    border: `1pt solid ${RULE}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Import overrides ↑
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json,application/json"
+                  onChange={handleFileSelect}
+                  style={{ display: "none" }}
+                />
+                {importError && (
+                  <span style={{ fontSize: "7.5pt", color: "#7a1a1a" }}>{importError}</span>
+                )}
+                <span style={{ fontSize: "7.5pt", color: MUTED, marginLeft: "4pt" }}>
+                  Saves a JSON snapshot you can restore on any device.
+                </span>
+              </div>
+            )}
+
+            {importPhase === "preview" && importResult && (
+              <div>
+                <div style={{ fontSize: "8.5pt", color: TEXT, marginBottom: "10pt" }}>
+                  <strong>Ready to import:</strong>{" "}
+                  {importResult.imported === 0
+                    ? "No new overrides to add"
+                    : `${importResult.imported} override${importResult.imported !== 1 ? "s" : ""} will be added`}
+                  {importResult.alreadyExists > 0
+                    ? `, ${importResult.alreadyExists} already exist`
+                    : null}
+                  {importResult.skippedInvalid > 0
+                    ? `, ${importResult.skippedInvalid} skipped (invalid format)`
+                    : null}
+                  .
+                </div>
+                <div style={{ display: "flex", gap: "6pt" }}>
+                  <button
+                    type="button"
+                    onClick={handleConfirmImport}
+                    disabled={importResult.imported === 0}
+                    style={{
+                      padding: "4pt 12pt",
+                      background: importResult.imported > 0 ? DARK : RULE,
+                      color: CREAM,
+                      border: "none",
+                      borderRadius: "3pt",
+                      fontSize: "7.5pt",
+                      fontWeight: 700,
+                      cursor: importResult.imported > 0 ? "pointer" : "default",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    Confirm import
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelImport}
+                    style={{
+                      padding: "4pt 10pt",
+                      background: "transparent",
+                      color: MUTED,
+                      border: `1pt solid ${RULE}`,
+                      borderRadius: "3pt",
+                      fontSize: "7.5pt",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {importPhase === "done" && importResult && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10pt" }}>
+                <span style={{
+                  fontSize: "8.5pt",
+                  fontWeight: 700,
+                  color: GREEN,
+                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                  letterSpacing: "0.04em",
+                }}>
+                  ✓ Imported {importResult.imported} override{importResult.imported !== 1 ? "s" : ""}{importResult.alreadyExists > 0 ? `, ${importResult.alreadyExists} already existed` : ""}{importResult.skippedInvalid > 0 ? `, ${importResult.skippedInvalid} skipped` : ""}.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCancelImport}
+                  style={{
+                    padding: "3pt 8pt",
+                    background: "transparent",
+                    color: MUTED,
+                    border: `1pt solid ${RULE}`,
+                    borderRadius: "3pt",
+                    fontSize: "7pt",
+                    cursor: "pointer",
+                  }}
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Navigation links */}

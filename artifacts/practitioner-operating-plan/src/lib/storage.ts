@@ -265,6 +265,92 @@ export function saveBenchOverride(override: BenchOverride): void {
   persistOverrideStore(store);
 }
 
+// ── Bench override export / import ───────────────────────────────────────────
+
+/**
+ * Download all bench overrides as a JSON file named hwop_bench_overrides.json.
+ * Call this from a button click handler.
+ */
+export function exportBenchOverrides(): void {
+  const overrides = Object.values(loadOverrideStore()).sort((a, b) =>
+    a.weekId.localeCompare(b.weekId),
+  );
+  const blob = new Blob([JSON.stringify(overrides, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "hwop_bench_overrides.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export interface ImportResult {
+  imported: number;
+  alreadyExists: number;
+  skippedInvalid: number;
+}
+
+/**
+ * Returns true if the value looks like a valid BenchOverride record.
+ * Guards against importing arbitrary JSON into the store.
+ */
+function isValidBenchOverride(v: unknown): v is BenchOverride {
+  if (!v || typeof v !== "object") return false;
+  const r = v as Record<string, unknown>;
+  if (typeof r.weekId !== "string" || !/^\d{4}-W\d{1,2}$/.test(r.weekId)) return false;
+  if (typeof r.overriddenAt !== "string") return false;
+  for (const field of ["primaryName", "standbyName", "primaryReason", "standbyReason"] as const) {
+    if (field in r && typeof r[field] !== "string") return false;
+  }
+  return true;
+}
+
+/**
+ * Merge an array of BenchOverride records into the existing store.
+ * Records whose weekId already exists in the store are left unchanged (they
+ * count toward alreadyExists). New weekIds are added (they count toward
+ * imported). Malformed records are counted in skippedInvalid.
+ * The store is NOT written; call commitBenchImport to persist.
+ */
+export function previewBenchImport(incoming: unknown[]): ImportResult {
+  const store = loadOverrideStore();
+  let imported = 0;
+  let alreadyExists = 0;
+  let skippedInvalid = 0;
+  for (const ov of incoming) {
+    if (!isValidBenchOverride(ov)) { skippedInvalid++; continue; }
+    if (store[ov.weekId]) {
+      alreadyExists++;
+    } else {
+      imported++;
+    }
+  }
+  return { imported, alreadyExists, skippedInvalid };
+}
+
+/**
+ * Merge and persist. Same validation + merge logic as previewBenchImport but writes the store.
+ */
+export function commitBenchImport(incoming: unknown[]): ImportResult {
+  const store = loadOverrideStore();
+  let imported = 0;
+  let alreadyExists = 0;
+  let skippedInvalid = 0;
+  for (const ov of incoming) {
+    if (!isValidBenchOverride(ov)) { skippedInvalid++; continue; }
+    if (store[ov.weekId]) {
+      alreadyExists++;
+    } else {
+      store[ov.weekId] = ov;
+      imported++;
+    }
+  }
+  persistOverrideStore(store);
+  return { imported, alreadyExists, skippedInvalid };
+}
+
 /** Remove the override record for a week entirely (accepts "YYYY-Wnn" string). */
 export function deleteBenchOverride(weekId: string): void {
   const store = loadOverrideStore();
