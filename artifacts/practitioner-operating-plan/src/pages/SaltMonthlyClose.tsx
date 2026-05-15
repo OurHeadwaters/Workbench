@@ -65,11 +65,14 @@ import {
   parseSquare,
   parseShopify,
   parseCash,
+  loadSnapshot,
   type ImportSource,
   type ParsedTotals,
   type SourceKey,
   type ParseResult,
   type ColumnAlert,
+  type AppliedSnapshot,
+  type SnapshotRow,
 } from "@/lib/saltImports";
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
@@ -687,8 +690,8 @@ export default function SaltMonthlyClose() {
     for (const src of SOURCES) {
       const applied = loadSnapshot(src, month);
       if (applied && applied.total !== 0) {
-        const grossSales = applied.rows.filter(r => r.amount > 0).reduce((s, r) => s + r.amount, 0);
-        const refunds    = applied.rows.filter(r => r.amount < 0).reduce((s, r) => s + r.amount, 0);
+        const grossSales = applied.rows.filter((r: SnapshotRow) => r.amount > 0).reduce((s: number, r: SnapshotRow) => s + r.amount, 0);
+        const refunds    = applied.rows.filter((r: SnapshotRow) => r.amount < 0).reduce((s: number, r: SnapshotRow) => s + r.amount, 0);
         channelData[src] = {
           grossSales,
           refunds,

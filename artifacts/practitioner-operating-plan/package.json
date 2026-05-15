@@ -10,12 +10,11 @@
     "build:cashflow-xlsx": "node scripts/generate-cashflow-xlsx.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "check": "pnpm run typecheck",
+    "check": "pnpm run typecheck && pnpm run validate-slides && pnpm run check-slide-refs",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "validate-slides": "tsx scripts/validate-slides.ts",
-    "check-slide-refs": "tsx scripts/check-slide-refs.ts",
-    "check": "pnpm run validate-slides && pnpm run check-slide-refs"
+    "check-slide-refs": "tsx scripts/check-slide-refs.ts"
   },
   "dependencies": {
     "clsx": "catalog:",
