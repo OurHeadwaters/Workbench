@@ -197,7 +197,7 @@ const outreachPieces = [
     href: "/codetry-intro-letter",
     title: "Codetry Intro Letter — NAN",
     label: "Aboriginal Outreach",
-    desc: "Warm introduction letter from Bobbie Parr to NAN leadership. Covers Headwaters' background, the Recreation Management / Indigenous Studies foundation, and a direct ask for a meeting. Encloses the three companion documents. Letter size (8.5×11).",
+    desc: "Warm introduction letter from Bobbie Parr to NAN leadership. Covers Headwaters' background, the Community Development / Indigenous Studies foundation, and a direct ask for a meeting. Encloses the three companion documents. Letter size (8.5×11).",
     icon: "✉️",
   },
   {

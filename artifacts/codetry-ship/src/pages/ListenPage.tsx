@@ -131,7 +131,7 @@ export function ListenPage() {
             </p>
             <p className="font-serif text-base sm:text-[17px] leading-relaxed text-foreground/80 print:hidden">
               Bobbie homesteads in Wabigoon with her kids. She holds a degree in
-              Recreation Management and Community Development with a minor in
+              Community Development with a minor in
               Native Studies. She founded{" "}
               <a
                 href="https://parrsjars.ca"

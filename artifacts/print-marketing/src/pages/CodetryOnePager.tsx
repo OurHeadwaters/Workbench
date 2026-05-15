@@ -217,7 +217,7 @@ export function CodetryOnePagerPage() {
                 Bobbie Parr — Lead Practitioner
               </p>
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.7rem", lineHeight: 1.6, color: MUTED, margin: 0 }}>
-                Recreation Management degree from the University of Manitoba, minor in Indigenous Studies. Founder of Parr's Jars. Founding board member, 807 Food Co-operative. Based in Dryden, Ontario — Treaty 3 Territory. Not a parachute consultant.
+                Community Development degree from the University of Manitoba, minor in Indigenous Studies. Founder of Parr's Jars. Founding board member, 807 Food Co-operative. Based in Dryden, Ontario — Treaty 3 Territory. Not a parachute consultant.
               </p>
             </div>
 
