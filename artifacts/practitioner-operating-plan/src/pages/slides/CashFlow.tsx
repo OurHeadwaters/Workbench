@@ -8,6 +8,9 @@
 
 import { ASK, COST_BASIS, BRIDGE, REINVEST, Y1, CAPEX, CLEARANCE_MONTH, fmt, fmtK } from "@/data/budgetScenarios";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const CASHFLOW_XLSX = `${BASE}/headwaters-cashflow-model.xlsx`;
+
 // Monthly cash-flow projection for the recommended scenario (B)
 // Revenue lands at M3 (net-60 from contract start)
 function buildMonthlyProjection() {
@@ -45,8 +48,21 @@ export default function CashFlow() {
               Year one — surfaced honestly
             </div>
           </div>
-          <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
-            Scenario B · {fmt(ASK.recommended)}/mo · net-60 cycle
+          <div className="flex items-center gap-[1.5vw]">
+            <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
+              Scenario B · {fmt(ASK.recommended)}/mo · net-60 cycle
+            </div>
+            <a
+              href={CASHFLOW_XLSX}
+              download="headwaters-cashflow-model.xlsx"
+              className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vh] rounded-[4px] border border-accent text-accent font-mono uppercase tracking-[0.18em] text-[0.75vw] hover:bg-accent hover:text-paper transition-colors"
+              title="Download editable XLSX for CFO"
+            >
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <path d="M6 1v7M3 6l3 3 3-3M1 10h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              CFO model (.xlsx)
+            </a>
           </div>
         </div>
 

@@ -28,6 +28,8 @@ import {
   type SaltCloseRecord,
 } from "@/lib/saltClose";
 
+const CASHFLOW_XLSX = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/headwaters-cashflow-model.xlsx`;
+
 // Drift-guard phrase: must match every surface that carries the operator-couple framing.
 // prettier-ignore
 const STORE_STACK_PHRASE = "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together";
@@ -440,11 +442,34 @@ export default function OnePager() {
             <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               Headwaters Development Services · Confidential
             </div>
-            <div style={{ fontSize: "7pt", color: MUTED }}>
-              Numbers sourced from <code style={{ fontFamily: "monospace", fontSize: "7pt" }}>src/data/budgetScenarios.ts</code>
-              {" · "}
-              <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
-                SALT-01 filing →
+            <div style={{ display: "flex", alignItems: "center", gap: "12pt" }}>
+              <div style={{ fontSize: "7pt", color: MUTED }}>
+                Numbers sourced from <code style={{ fontFamily: "monospace", fontSize: "7pt" }}>src/data/budgetScenarios.ts</code>
+                {" · "}
+                <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
+                  SALT-01 filing →
+                </a>
+              </div>
+              <a
+                href={CASHFLOW_XLSX}
+                download="headwaters-cashflow-model.xlsx"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4pt",
+                  padding: "3pt 7pt",
+                  borderRadius: "3pt",
+                  border: `1pt solid ${AMBER}`,
+                  color: AMBER,
+                  fontSize: "7pt",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                }}
+              >
+                ↓ CFO model (.xlsx)
               </a>
             </div>
           </div>
