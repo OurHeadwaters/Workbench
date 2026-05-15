@@ -4,6 +4,9 @@
  * POST /pgv2/rewrite             — AI rewrites a guide section.
  * GET  /pgv2/startup-expenses    — Load persisted actuals + notes.
  * PUT  /pgv2/startup-expenses    — Save actuals + notes (full replace).
+ * GET  /pgv2/overrides           — Load all persisted section overrides.
+ * PUT  /pgv2/overrides/:id       — Save (upsert) a single section override.
+ * DELETE /pgv2/overrides/:id     — Clear a single section override.
  */
 
 import { Router, type IRouter } from "express";
@@ -11,6 +14,8 @@ import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { logger } from "../lib/logger";
 import fs from "fs";
 import path from "path";
+import { db, pgv2SectionOverridesTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -62,6 +67,59 @@ router.put("/startup-expenses", (req, res) => {
   writeExpenses(payload);
   logger.info("pgv2 startup-expenses saved");
   res.json({ ok: true });
+});
+
+// ── Section overrides persistence ─────────────────────────────────────────────
+
+router.get("/overrides", async (_req, res) => {
+  try {
+    const rows = await db.select().from(pgv2SectionOverridesTable);
+    const overrides: Record<string, string> = {};
+    for (const row of rows) {
+      overrides[row.sectionId] = row.content;
+    }
+    res.json(overrides);
+  } catch (err) {
+    logger.error({ err }, "pgv2/overrides GET failed");
+    res.status(500).json({ error: "Failed to load overrides" });
+  }
+});
+
+router.put("/overrides/:id", async (req, res) => {
+  const sectionId = req.params.id;
+  const { content } = req.body as { content?: string };
+  if (typeof content !== "string" || !content.trim()) {
+    res.status(400).json({ error: "content is required" });
+    return;
+  }
+  try {
+    await db
+      .insert(pgv2SectionOverridesTable)
+      .values({ sectionId, content })
+      .onConflictDoUpdate({
+        target: pgv2SectionOverridesTable.sectionId,
+        set: { content, updatedAt: new Date() },
+      });
+    logger.info({ sectionId }, "pgv2 section override saved");
+    res.json({ ok: true });
+  } catch (err) {
+    logger.error({ err, sectionId }, "pgv2/overrides PUT failed");
+    res.status(500).json({ error: "Failed to save override" });
+  }
+});
+
+router.delete("/overrides/:id", async (req, res) => {
+  const sectionId = req.params.id;
+  try {
+    await db
+      .delete(pgv2SectionOverridesTable)
+      .where(eq(pgv2SectionOverridesTable.sectionId, sectionId));
+    logger.info({ sectionId }, "pgv2 section override cleared");
+    res.json({ ok: true });
+  } catch (err) {
+    logger.error({ err, sectionId }, "pgv2/overrides DELETE failed");
+    res.status(500).json({ error: "Failed to clear override" });
+  }
 });
 
 // ── AI section rewrite ────────────────────────────────────────────────────────

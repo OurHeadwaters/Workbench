@@ -7,7 +7,8 @@
  *   </EditableSection>
  *
  * When an override exists it renders instead of children. The override is
- * persisted to localStorage so it survives page reloads.
+ * persisted to the server (via /api/pgv2/overrides) so it survives across
+ * devices and hard refreshes. localStorage is kept as an immediate cache.
  *
  * The pencil button appears on hover. Clicking it opens a modal where the
  * founder describes what changed; the AI rewrites the section in-place.
