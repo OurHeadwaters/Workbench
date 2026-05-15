@@ -1139,3 +1139,25 @@ export type GetPnlByMonthParams = {
   from?: string;
   to?: string;
 };
+
+export interface TaxSummaryLineItem {
+  accountCode: string;
+  accountName: string;
+  taxCode: "gst-collected" | "gst-paid";
+  total: number;
+  transactionCount: number;
+}
+
+export interface TaxSummaryReport {
+  from: string | null;
+  to: string | null;
+  collected: number;
+  paid: number;
+  netOwing: number;
+  lines: TaxSummaryLineItem[];
+}
+
+export type GetTaxSummaryParams = {
+  from?: string;
+  to?: string;
+};

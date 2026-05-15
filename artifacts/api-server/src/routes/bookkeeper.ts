@@ -1443,6 +1443,113 @@ router.get(
   },
 );
 
+// ----------------------- /reports/tax-summary -----------------------
+
+router.get(
+  "/reports/tax-summary",
+  requireRole("owner", "ops_manager", "bookkeeper"),
+  async (req, res) => {
+    const from = typeof req.query.from === "string" ? req.query.from : null;
+    const to = typeof req.query.to === "string" ? req.query.to : null;
+
+    const filters: ReturnType<typeof eq>[] = [
+      eq(bookkeeperTransactionsTable.status, "posted"),
+    ];
+    if (from) filters.push(gte(bookkeeperTransactionsTable.postedDate, from));
+    if (to) filters.push(lte(bookkeeperTransactionsTable.postedDate, to));
+
+    const lines = await db
+      .select({
+        accountCode: bookkeeperTransactionLinesTable.accountCode,
+        lineTaxCode: bookkeeperTransactionLinesTable.taxCode,
+        debit: bookkeeperTransactionLinesTable.debit,
+        credit: bookkeeperTransactionLinesTable.credit,
+      })
+      .from(bookkeeperTransactionLinesTable)
+      .innerJoin(
+        bookkeeperTransactionsTable,
+        eq(
+          bookkeeperTransactionLinesTable.transactionId,
+          bookkeeperTransactionsTable.id,
+        ),
+      )
+      .where(and(...filters));
+
+    const accounts = await db.select().from(bookkeeperAccountsTable);
+    const acctMap = new Map(accounts.map((a) => [a.code, a]));
+
+    type TaxAgg = {
+      accountCode: string;
+      accountName: string;
+      taxCode: "gst-collected" | "gst-paid";
+      total: number;
+      transactionCount: number;
+    };
+    const byAccount = new Map<string, TaxAgg>();
+
+    for (const l of lines) {
+      const acct = acctMap.get(l.accountCode);
+      if (!acct) continue;
+      // Line-level taxCode takes precedence over account default
+      const tc = l.lineTaxCode ?? acct.taxCode ?? "none";
+      if (tc !== "gst-collected" && tc !== "gst-paid") continue;
+
+      const debit = num(l.debit);
+      const credit = num(l.credit);
+      let value = 0;
+      if (acct.type === "revenue") {
+        value = credit - debit;
+      } else if (
+        acct.type === "cost_of_sales" ||
+        acct.type === "expense" ||
+        acct.type === "contra"
+      ) {
+        value = debit - credit;
+      } else {
+        // For balance-sheet accounts (liability, asset, equity), use the
+        // account's normal side to determine sign so reversals reduce totals
+        value = acct.normalSide === "credit" ? credit - debit : debit - credit;
+      }
+
+      // Key includes both account and effective taxCode so that an account
+      // whose lines carry mixed tax codes (via line-level override) gets a
+      // separate bucket per code — preventing cross-contamination of totals.
+      const bucketKey = `${acct.code}::${tc}`;
+      const cur = byAccount.get(bucketKey) ?? {
+        accountCode: acct.code,
+        accountName: acct.name,
+        taxCode: tc as "gst-collected" | "gst-paid",
+        total: 0,
+        transactionCount: 0,
+      };
+      cur.total += value;
+      cur.transactionCount += 1;
+      byAccount.set(bucketKey, cur);
+    }
+
+    const lineItems = Array.from(byAccount.values()).map((r) => ({
+      ...r,
+      total: Math.round(r.total * 100) / 100,
+    }));
+
+    const collected = lineItems
+      .filter((r) => r.taxCode === "gst-collected")
+      .reduce((s, r) => s + r.total, 0);
+    const paid = lineItems
+      .filter((r) => r.taxCode === "gst-paid")
+      .reduce((s, r) => s + r.total, 0);
+
+    res.json({
+      from,
+      to,
+      collected: Math.round(collected * 100) / 100,
+      paid: Math.round(paid * 100) / 100,
+      netOwing: Math.round((collected - paid) * 100) / 100,
+      lines: lineItems.sort((a, b) => b.total - a.total),
+    });
+  },
+);
+
 // ----------------------- /reports/pnl-by-month -----------------------
 
 router.get(

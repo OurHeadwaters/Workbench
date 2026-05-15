@@ -43,6 +43,8 @@ import type {
   GetPnlByMonthParams,
   GetRecentActivityParams,
   GetReportsByCategoryParams,
+  GetTaxSummaryParams,
+  TaxSummaryReport,
   HandlerActivity,
   HealthStatus,
   LibraryEntry,
@@ -5258,6 +5260,79 @@ export function useGetPnlByMonth<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPnlByMonthQueryOptions(params, options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+// ── GET /bookkeeper/reports/tax-summary ──────────────────────────────────────
+
+export const getGetTaxSummaryUrl = (params?: GetTaxSummaryParams) => {
+  const searchParams = new URLSearchParams();
+  if (params?.from !== undefined) searchParams.set("from", params.from);
+  if (params?.to !== undefined) searchParams.set("to", params.to);
+  const qs = searchParams.toString();
+  return `/api/bookkeeper/reports/tax-summary${qs ? `?${qs}` : ""}`;
+};
+
+export const getTaxSummary = async (
+  params?: GetTaxSummaryParams,
+  options?: RequestInit,
+): Promise<TaxSummaryReport> => {
+  return customFetch<TaxSummaryReport>(getGetTaxSummaryUrl(params), options);
+};
+
+export const getGetTaxSummaryQueryKey = (params?: GetTaxSummaryParams) =>
+  [`/api/bookkeeper/reports/tax-summary`, ...(params ? [params] : [])] as const;
+
+export const getGetTaxSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getTaxSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetTaxSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTaxSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getGetTaxSummaryQueryKey(params);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getTaxSummary>>
+  > = ({ signal }) => getTaxSummary(params, { signal, ...requestOptions });
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getTaxSummary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetTaxSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getTaxSummary>>
+>;
+export type GetTaxSummaryQueryError = ErrorType<unknown>;
+
+export function useGetTaxSummary<
+  TData = Awaited<ReturnType<typeof getTaxSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetTaxSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTaxSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetTaxSummaryQueryOptions(params, options);
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
   };

@@ -4,11 +4,13 @@ import {
   useGetBookkeeperMe,
   useGetReportsByCategory,
   useGetPnlByMonth,
+  useGetTaxSummary,
   getGetBookkeeperPnlQueryKey,
   getGetReportsByCategoryQueryKey,
   getGetPnlByMonthQueryKey,
+  getGetTaxSummaryQueryKey,
 } from "@workspace/api-client-react";
-import type { CategoryReportRow } from "@workspace/api-client-react";
+import type { CategoryReportRow, TaxSummaryLineItem } from "@workspace/api-client-react";
 import {
   Loader2,
   Printer,
@@ -80,12 +82,13 @@ const PRESETS = [
 
 // ── Tab definitions ─────────────────────────────────────────────────────────────
 
-type TabId = "by-cc" | "by-month" | "by-category";
+type TabId = "by-cc" | "by-month" | "by-category" | "tax-summary";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "by-cc", label: "By Cost Centre" },
   { id: "by-month", label: "P&L by Month" },
   { id: "by-category", label: "By Category" },
+  { id: "tax-summary", label: "Tax Summary" },
 ];
 
 // ── Date range controls (shared) ───────────────────────────────────────────────
@@ -392,6 +395,147 @@ function TabByMonth({ from, to }: { from: string; to: string }) {
   );
 }
 
+// ── Tax Summary tab ─────────────────────────────────────────────────────────────
+
+function TabTaxSummary({ from, to }: { from: string; to: string }) {
+  const { data, isLoading, isError } = useGetTaxSummary(
+    { from, to },
+    { query: { queryKey: getGetTaxSummaryQueryKey({ from, to }) } },
+  );
+
+  if (isLoading) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>;
+  if (isError) return <Alert variant="destructive"><AlertDescription>Failed to load tax summary data.</AlertDescription></Alert>;
+  if (!data) return null;
+
+  const hasData = data.collected !== 0 || data.paid !== 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Summary cards */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="w-4 h-4 text-emerald-600" />
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-emerald-700">GST/HST Collected</p>
+          </div>
+          <p className="text-2xl font-bold font-mono tabular-nums text-emerald-800">{fmt(data.collected)}</p>
+          <p className="text-[10px] text-emerald-600 mt-1">From revenue-side transactions</p>
+        </div>
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingDown className="w-4 h-4 text-blue-600" />
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-blue-700">GST/HST Paid (ITCs)</p>
+          </div>
+          <p className="text-2xl font-bold font-mono tabular-nums text-blue-800">{fmt(data.paid)}</p>
+          <p className="text-[10px] text-blue-600 mt-1">Input tax credits on purchases</p>
+        </div>
+        <div className={`rounded-xl border p-4 ${
+          data.netOwing > 0
+            ? "border-amber-200 bg-amber-50"
+            : data.netOwing < 0
+              ? "border-emerald-200 bg-emerald-50"
+              : "border-border bg-muted/20"
+        }`}>
+          <div className="flex items-center gap-2 mb-2">
+            {data.netOwing > 0
+              ? <TrendingUp className="w-4 h-4 text-amber-600" />
+              : data.netOwing < 0
+                ? <TrendingDown className="w-4 h-4 text-emerald-600" />
+                : <Minus className="w-4 h-4 text-muted-foreground" />}
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">Net Owing / Refund</p>
+          </div>
+          <p className={`text-2xl font-bold font-mono tabular-nums ${
+            data.netOwing > 0 ? "text-amber-800" : data.netOwing < 0 ? "text-emerald-800" : "text-muted-foreground"
+          }`}>
+            {fmt(Math.abs(data.netOwing))}
+          </p>
+          <Badge
+            variant="outline"
+            className={`mt-2 text-[10px] ${
+              data.netOwing > 0
+                ? "border-amber-300 text-amber-700 bg-amber-50"
+                : data.netOwing < 0
+                  ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+                  : "border-border text-muted-foreground"
+            }`}
+          >
+            {data.netOwing > 0 ? "Amount to remit" : data.netOwing < 0 ? "Refund owing" : "Nil"}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Explanation */}
+      <div className="rounded-xl border border-border bg-muted/20 px-5 py-3 text-xs text-muted-foreground">
+        Net owing = GST/HST collected − input tax credits (ITCs). A positive amount means tax to remit to CRA; a negative amount means a refund is owing.
+      </div>
+
+      {/* Detail table */}
+      {!hasData ? (
+        <div className="rounded-xl border border-border bg-muted/20 p-10 text-center">
+          <Minus className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No GST/HST-coded transactions in this period.</p>
+        </div>
+      ) : (
+        <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
+          <p className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground border-b border-border">
+            Account detail · {data.lines.length} account{data.lines.length !== 1 ? "s" : ""}
+          </p>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/60">
+                <th className="text-left px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Account</th>
+                <th className="text-left px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Tax Code</th>
+                <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Txns</th>
+                <th className="text-right px-4 py-2 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground font-normal">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.lines.map((row: TaxSummaryLineItem, i) => (
+                <tr key={row.accountCode} className={`border-b border-border/50 ${i % 2 === 1 ? "bg-muted/20" : ""}`}>
+                  <td className="px-4 py-2">
+                    <span className="font-mono text-xs text-muted-foreground mr-2">{row.accountCode}</span>
+                    <span className="text-sm">{row.accountName}</span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] font-mono ${
+                        row.taxCode === "gst-collected"
+                          ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+                          : "border-blue-300 text-blue-700 bg-blue-50"
+                      }`}
+                    >
+                      {row.taxCode === "gst-collected" ? "GST Collected" : "GST Paid"}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-2 text-right font-mono tabular-nums text-xs text-muted-foreground">
+                    {row.transactionCount}
+                  </td>
+                  <td className={`px-4 py-2 text-right font-mono tabular-nums font-semibold text-xs ${
+                    row.taxCode === "gst-collected" ? "text-emerald-700" : "text-blue-700"
+                  }`}>
+                    {fmt(row.total)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="border-t-2 border-border bg-muted/50">
+                <td colSpan={3} className="px-4 py-2 font-semibold text-xs">Net owing to CRA</td>
+                <td className={`px-4 py-2 text-right font-mono tabular-nums font-bold text-sm ${
+                  data.netOwing > 0 ? "text-amber-700" : data.netOwing < 0 ? "text-emerald-700" : "text-muted-foreground"
+                }`}>
+                  {fmt(data.netOwing)}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── By Category sortable table ──────────────────────────────────────────────────
 
 type SortCol = "accountCode" | "type" | "taxCode" | "total" | "transactionCount";
@@ -648,6 +792,7 @@ export default function Pnl() {
       {tab === "by-cc" && <TabByCc from={from} to={to} />}
       {tab === "by-month" && <TabByMonth from={from} to={to} />}
       {tab === "by-category" && <TabByCategory from={from} to={to} />}
+      {tab === "tax-summary" && <TabTaxSummary from={from} to={to} />}
     </div>
   );
 }

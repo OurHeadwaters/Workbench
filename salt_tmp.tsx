@@ -973,7 +973,7 @@ export default function SaltMonthlyClose() {
                   padding: "3pt 10pt",
                   background: "transparent",
                   color: history.length > 0 ? DARK : MUTED,
-                  border: `1pt solid ${RULE}`,
+                  border: `1pt solid ${history.length > 0 ? RULE : RULE}`,
                   borderRadius: "3pt",
                   fontSize: "7.5pt",
                   fontWeight: 600,
@@ -1025,7 +1025,7 @@ export default function SaltMonthlyClose() {
             </div>
           </div>
 
-          {/* Print-only heading */}
+          {/* Print-only heading (no buttons) */}
           <div className="hidden print:block" style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
             Filed months ({history.length})
           </div>
@@ -1034,42 +1034,6 @@ export default function SaltMonthlyClose() {
           {importError && (
             <div style={{ marginBottom: "8pt", padding: "6pt 10pt", background: "rgba(122,26,26,0.08)", border: `1pt solid ${RED}`, borderRadius: "3pt", fontSize: "8pt", color: RED }}>
               Import failed: {importError}
-            </div>
-          )}
-
-          {/* Merge / Replace prompt */}
-          {pendingImport && (
-            <div style={{ marginBottom: "10pt", padding: "10pt 14pt", background: "rgba(184,90,62,0.08)", border: `1pt solid ${AMBER}`, borderRadius: "4pt" }}>
-              <div style={{ fontSize: "8pt", fontWeight: 700, color: DARK, marginBottom: "6pt" }}>
-                Import {pendingImport.length} record{pendingImport.length !== 1 ? "s" : ""} — how would you like to proceed?
-              </div>
-              <div style={{ fontSize: "7.5pt", color: MUTED, marginBottom: "10pt", lineHeight: 1.5 }}>
-                <strong>Merge</strong> adds only months not already present, leaving existing records untouched.{" "}
-                <strong>Replace</strong> overwrites all history with the imported file.
-              </div>
-              <div style={{ display: "flex", gap: "8pt" }}>
-                <button
-                  type="button"
-                  onClick={() => handleConfirmImport("merge")}
-                  style={{ padding: "4pt 14pt", background: DARK, color: CREAM, border: "none", borderRadius: "3pt", fontSize: "7.5pt", fontWeight: 700, cursor: "pointer" }}
-                >
-                  Merge
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleConfirmImport("replace")}
-                  style={{ padding: "4pt 14pt", background: AMBER, color: CREAM, border: "none", borderRadius: "3pt", fontSize: "7.5pt", fontWeight: 700, cursor: "pointer" }}
-                >
-                  Replace all
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPendingImport(null)}
-                  style={{ padding: "4pt 10pt", background: "transparent", color: MUTED, border: `1pt solid ${RULE}`, borderRadius: "3pt", fontSize: "7.5pt", cursor: "pointer" }}
-                >
-                  Cancel
-                </button>
-              </div>
             </div>
           )}
 
@@ -1186,70 +1150,71 @@ export default function SaltMonthlyClose() {
             </form>
           </div>
 
-          {/* ── Rule 02 prior-quarter status ────────────────────────────────── */}
-          <div style={{ marginBottom: "14pt", border: `1pt solid ${prevQtrUnder ? "#7a1a1a" : priorComplete ? "#2a6b3e" : RULE}`, borderRadius: "3pt", padding: "10pt 14pt", background: prevQtrUnder ? "rgba(122,26,26,0.05)" : priorComplete ? "rgba(42,107,62,0.05)" : "rgba(31,61,46,0.03)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8pt" }}>
-              <div>
-                <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "4pt" }}>
-                  Rule 02 — Prior-quarter revenue signal
+            {/* ── Rule 02 prior-quarter status ────────────────────────────────── */}
+            <div style={{ marginBottom: "14pt", border: `1pt solid ${prevQtrUnder ? "#7a1a1a" : priorComplete ? "#2a6b3e" : RULE}`, borderRadius: "3pt", padding: "10pt 14pt", background: prevQtrUnder ? "rgba(122,26,26,0.05)" : priorComplete ? "rgba(42,107,62,0.05)" : "rgba(31,61,46,0.03)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8pt" }}>
+                <div>
+                  <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "4pt" }}>
+                    Rule 02 — Prior-quarter revenue signal
+                  </div>
+                  <div style={{ fontSize: "9pt", color: TEXT, lineHeight: 1.5 }}>
+                    {!priorComplete
+                      ? `Prior quarter incomplete — ${priorChain.length} of 3 months filed. Cannot determine trigger.`
+                      : prevQtrUnder
+                      ? `Prior quarter net ${fmtExact(priorMetrics.totalNet)} is below the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Wholesale reprice / drop trigger is active.`
+                      : `Prior quarter net ${fmtExact(priorMetrics.totalNet)} meets the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Trigger clear.`
+                    }
+                  </div>
                 </div>
-                <div style={{ fontSize: "9pt", color: TEXT, lineHeight: 1.5 }}>
-                  {!priorComplete
-                    ? `Prior quarter incomplete — ${priorChain.length} of 3 months filed. Cannot determine trigger.`
-                    : prevQtrUnder
-                    ? `Prior quarter net ${fmtExact(priorMetrics.totalNet)} is below the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Wholesale reprice / drop trigger is active.`
-                    : `Prior quarter net ${fmtExact(priorMetrics.totalNet)} meets the quarterly floor ${fmtExact(SALT_BASELINE_NET * 3)}. Trigger clear.`
-                  }
-                </div>
+                <span style={{
+                  display: "inline-block",
+                  padding: "2pt 10pt",
+                  borderRadius: "3pt",
+                  fontSize: "7pt",
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  background: !priorComplete ? "rgba(31,61,46,0.06)" : prevQtrUnder ? "rgba(122,26,26,0.10)" : "rgba(42,107,62,0.10)",
+                  color: !priorComplete ? MUTED : prevQtrUnder ? RED : GREEN,
+                }}>
+                  {!priorComplete ? "incomplete" : prevQtrUnder ? "triggered" : "clear"}
+                </span>
               </div>
-              <span style={{
-                display: "inline-block",
-                padding: "2pt 10pt",
-                borderRadius: "3pt",
-                fontSize: "7pt",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                background: !priorComplete ? "rgba(31,61,46,0.06)" : prevQtrUnder ? "rgba(122,26,26,0.10)" : "rgba(42,107,62,0.10)",
-                color: !priorComplete ? MUTED : prevQtrUnder ? RED : GREEN,
-              }}>
-                {!priorComplete ? "incomplete" : prevQtrUnder ? "triggered" : "clear"}
-              </span>
             </div>
-          </div>
 
-          {/* ── Planning reference ─────────────────────────────────────────── */}
-          <div style={{ background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", padding: "10pt 14pt" }}>
-            <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "6pt" }}>
-              Planning reference — SALT-01
+            {/* ── Planning reference ─────────────────────────────────────────── */}
+            <div style={{ background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", padding: "10pt 14pt" }}>
+              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "6pt" }}>
+                Planning reference — SALT-01
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10pt" }}>
+                {[
+                  { label: "Baseline net / month", value: fmt(SALT_BASELINE_NET), detail: "Planning assumption net after direct costs" },
+                  { label: "Watch threshold",       value: fmt(Math.round(SALT_BASELINE_NET * 0.7)), detail: "70 % of baseline — trigger a note" },
+                  { label: "Below threshold",       value: `< ${fmt(Math.round(SALT_BASELINE_NET * 0.7))}`, detail: "Below 70 % — flag on the one-pager" },
+                ].map(s => (
+                  <div key={s.label}>
+                    <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "2pt" }}>{s.label}</div>
+                    <div style={{ fontSize: "12pt", fontWeight: 700, color: DARK, fontFamily: "Fraunces, Georgia, serif", marginBottom: "2pt" }}>{s.value}</div>
+                    <div style={{ fontSize: "8pt", color: MUTED, lineHeight: 1.4 }}>{s.detail}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10pt" }}>
-              {[
-                { label: "Baseline net / month", value: fmt(SALT_BASELINE_NET), detail: "Planning assumption net after direct costs" },
-                { label: "Watch threshold",       value: fmt(Math.round(SALT_BASELINE_NET * 0.7)), detail: "70 % of baseline — trigger a note" },
-                { label: "Below threshold",       value: `< ${fmt(Math.round(SALT_BASELINE_NET * 0.7))}`, detail: "Below 70 % — flag on the one-pager" },
-              ].map(s => (
-                <div key={s.label}>
-                  <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "2pt" }}>{s.label}</div>
-                  <div style={{ fontSize: "12pt", fontWeight: 700, color: DARK, fontFamily: "Fraunces, Georgia, serif", marginBottom: "2pt" }}>{s.value}</div>
-                  <div style={{ fontSize: "8pt", color: MUTED, lineHeight: 1.4 }}>{s.detail}</div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Footer */}
-          <div style={{ marginTop: "18pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between" }}>
-            <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Headwaters Development Services · SALT-01 Monthly Close
+            {/* Footer */}
+            <div style={{ marginTop: "18pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between" }}>
+              <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                Headwaters Development Services · SALT-01 Monthly Close
+              </div>
+              <div style={{ fontSize: "7pt", color: MUTED }}>
+                History stored locally — use Download CSV / JSON to back up or audit
+              </div>
             </div>
-            <div style={{ fontSize: "7pt", color: MUTED }}>
-              History stored locally — use Download CSV / JSON to back up or audit
-            </div>
+
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

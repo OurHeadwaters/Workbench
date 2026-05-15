@@ -226,6 +226,9 @@ export function dismissRollover(weekKey: string): WeeklyThree {
 }
 
 // ── Daily layer (per-calendar-day) ────────────────────────────────────────────
+//
+// Separate from the weekly tracking above; the daily layer stores a fixed
+// three-slot list per calendar day (YYYY-MM-DD keys).
 
 /** A single daily to-do item. */
 export interface DailyItem {
@@ -233,11 +236,12 @@ export interface DailyItem {
   done: boolean;
 }
 
+/** Three nullable slots for a single day. */
 export type DayThings = [DailyItem | null, DailyItem | null, DailyItem | null];
 
 const DAY_STORAGE_KEY = "hwop_daily_three_v1";
 
-type DayStore = Record<string, (DailyItem | null)[]>;
+type DayStore = Record<string, DayThings>;
 
 function dateToKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -287,7 +291,7 @@ export function setDailyThing(
   item: DailyItem | null,
 ): void {
   const store = loadDayStore();
-  const current: (DailyItem | null)[] = store[key] ?? [null, null, null];
+  const current: DayThings = store[key] ?? [null, null, null];
   current[slot] = item;
   store[key] = current;
   saveDayStore(store);
@@ -310,6 +314,7 @@ export function carryOverFromYesterday(): number[] {
   const yKey = yesterdayKey();
   const unchecked = getUncheckedFromDay(yKey);
   if (unchecked.length === 0) return [];
+
   const today = loadDayThings(tKey);
   const filled: number[] = [];
   let ui = 0;
