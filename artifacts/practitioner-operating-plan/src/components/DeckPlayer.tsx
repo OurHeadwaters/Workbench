@@ -20,6 +20,8 @@ import PaperworkVSC from "../pages/slides/PaperworkVSC";
 import PaperworkNDA from "../pages/slides/PaperworkNDA";
 import PaperworkContractor from "../pages/slides/PaperworkContractor";
 import PaperworkPaidTrial from "../pages/slides/PaperworkPaidTrial";
+import SaltKlaviyo from "../pages/slides/SaltKlaviyo";
+import SaltOpsNote from "../pages/slides/SaltOpsNote";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -41,6 +43,8 @@ const COMPONENTS: ComponentType[] = [
   PaperworkNDA,
   PaperworkContractor,
   PaperworkPaidTrial,
+  SaltKlaviyo,
+  SaltOpsNote,
 ];
 
 const SORTED = [...manifest].sort((a, b) => a.position - b.position);
