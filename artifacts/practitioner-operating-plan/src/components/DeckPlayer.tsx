@@ -20,6 +20,7 @@ import PaperworkVSC from "../pages/slides/PaperworkVSC";
 import PaperworkNDA from "../pages/slides/PaperworkNDA";
 import PaperworkContractor from "../pages/slides/PaperworkContractor";
 import PaperworkPaidTrial from "../pages/slides/PaperworkPaidTrial";
+import SaltBench from "../pages/slides/SaltBench";
 import SaltKlaviyo from "../pages/slides/SaltKlaviyo";
 import SaltOpsNote from "../pages/slides/SaltOpsNote";
 
@@ -43,6 +44,7 @@ const COMPONENTS: ComponentType[] = [
   PaperworkNDA,
   PaperworkContractor,
   PaperworkPaidTrial,
+  SaltBench,
   SaltKlaviyo,
   SaltOpsNote,
 ];
