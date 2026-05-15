@@ -9,6 +9,7 @@ import SlabVsGrassland from "../pages/slides/SlabVsGrassland";
 import Budget from "../pages/slides/Budget";
 import CaseForRate from "../pages/slides/CaseForRate";
 import CashFlow from "../pages/slides/CashFlow";
+import BridgeFunding from "../pages/slides/BridgeFunding";
 import SecondAnchorScenarios from "../pages/slides/SecondAnchorScenarios";
 import PathToScale from "../pages/slides/PathToScale";
 import Closing from "../pages/slides/Closing";
@@ -22,6 +23,7 @@ const COMPONENTS: ComponentType[] = [
   Budget,
   CaseForRate,
   CashFlow,
+  BridgeFunding,
   SecondAnchorScenarios,
   PathToScale,
   Closing,

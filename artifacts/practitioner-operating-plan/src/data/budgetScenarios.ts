@@ -140,6 +140,24 @@ export const CLEARANCE_MONTH = {
   c: 4,
 } as const;
 
+// ── Half-load ramp operating cost (month-one bridge analysis) ────────
+//
+// When the team ramps at half-load in month 1 (practitioner + Tyler
+// subcontract only, minimal IT and overhead), the day-one bridge
+// requirement is ~$41k — one month of this smaller footprint.
+// This is the correct basis for the bridge-funding conversation.
+//
+export const HALF_LOAD_LINES = {
+  practitioner:      26_000,  // $150/hr × ~173 hrs/mo (40 hrs/wk)
+  tylerSubcontract:   9_100,  // $70/hr through Tyler's business (~130 hrs/mo)
+  itSupport:            900,  // Partial IT/Support allocation, month 1
+  overhead:           5_000,  // Operating overhead
+} as const satisfies Record<string, number>;
+
+export const HALF_LOAD_TOTAL = (
+  Object.values(HALF_LOAD_LINES) as number[]
+).reduce((sum, v) => sum + v, 0);  // 41,000
+
 // ── Y1 revenue and gap (Scenario B, Deer Lake only) ──────────────────
 export const Y1 = {
   revenue:         446_598,  // Signed Layer-1 + tech-stack fee + 807 CDP grant + Salts
