@@ -208,6 +208,20 @@ const outreachPieces = [
     desc: "Formal four-phase proposal outline for a community store pilot — The Plan, The Build, The Payoff, and The Handoff. Addressed generically to 'your community' for first-contact use. Letter size (8.5×11).",
     icon: "📋",
   },
+  {
+    href: "/codetry-intro-letter-sandy-lake",
+    title: "Codetry Intro Letter — Sandy Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Personalized introduction letter from Bobbie Parr addressed directly to the Chief and Council of Sandy Lake First Nation. Community-specific language throughout. Letter size (8.5×11).",
+    icon: "✉️",
+  },
+  {
+    href: "/codetry-pilot-proposal-sandy-lake",
+    title: "Codetry Pilot Proposal — Sandy Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Personalized four-phase pilot proposal for Sandy Lake First Nation. All 'your community' references replaced with Sandy Lake-specific language across every phase. Letter size (8.5×11).",
+    icon: "📋",
+  },
 ];
 
 export default function Index() {

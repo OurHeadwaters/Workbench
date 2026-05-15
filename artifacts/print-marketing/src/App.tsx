@@ -33,6 +33,8 @@ import CodetryIntroLetter from "@/pages/CodetryIntroLetter";
 import CodetryFundingBrief from "@/pages/CodetryFundingBrief";
 import CodetryOnePager from "@/pages/CodetryOnePager";
 import CodetryPilotProposal from "@/pages/CodetryPilotProposal";
+import CodetryIntroLetterSandyLake from "@/pages/CodetryIntroLetterSandyLake";
+import CodetryPilotProposalSandyLake from "@/pages/CodetryPilotProposalSandyLake";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -71,6 +73,8 @@ function Router() {
       <Route path="/codetry-funding-brief" component={CodetryFundingBrief} />
       <Route path="/codetry-one-pager" component={CodetryOnePager} />
       <Route path="/codetry-pilot-proposal" component={CodetryPilotProposal} />
+      <Route path="/codetry-intro-letter-sandy-lake" component={CodetryIntroLetterSandyLake} />
+      <Route path="/codetry-pilot-proposal-sandy-lake" component={CodetryPilotProposalSandyLake} />
       <Route component={NotFound} />
     </Switch>
   );
