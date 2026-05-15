@@ -23,6 +23,7 @@ import PaperworkPaidTrial from "../pages/slides/PaperworkPaidTrial";
 import SaltBench from "../pages/slides/SaltBench";
 import SaltKlaviyo from "../pages/slides/SaltKlaviyo";
 import SaltOpsNote from "../pages/slides/SaltOpsNote";
+import SaltBench from "../pages/slides/SaltBench";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -47,6 +48,7 @@ const COMPONENTS: ComponentType[] = [
   SaltBench,
   SaltKlaviyo,
   SaltOpsNote,
+  SaltBench,
 ];
 
 const SORTED = [...manifest].sort((a, b) => a.position - b.position);
