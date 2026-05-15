@@ -1,3 +1,5 @@
+import type { BenchOverride as BatchBenchOverride } from "@/lib/saltBench";
+
 /**
  * storage.ts — localStorage helpers for the Practitioner Operating Plan
  *
@@ -11,6 +13,8 @@
  *   Hard Rule 02 (two-quarter pause trigger) is derived purely from the saved
  *   snapshot series — no manual checkbox, no memory required.
  */
+
+
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -169,7 +173,37 @@ export function currentQuarterId(): string {
   return `${now.getFullYear()}-Q${q}`;
 }
 
-// ── Bench override storage ────────────────────────────────────────────────────
+// ── Batch bench overrides (PlanYear / lib/saltBench batch model) ──────────────
+
+const KEY_BATCH_BENCH_OVERRIDES = "hwop_bench_overrides_v1";
+
+function loadBatchOverrideStore(): Record<number, BatchBenchOverride> {
+  try {
+    const raw = localStorage.getItem(KEY_BATCH_BENCH_OVERRIDES);
+    if (!raw) return {};
+    return JSON.parse(raw) as Record<number, BatchBenchOverride>;
+  } catch {
+    return {};
+  }
+}
+
+function persistBatchOverrideStore(data: Record<number, BatchBenchOverride>): void {
+  localStorage.setItem(KEY_BATCH_BENCH_OVERRIDES, JSON.stringify(data));
+}
+
+/** Load all batch bench overrides keyed by isoWeek. Used by PlanYear. */
+export function loadBenchOverrides(): Record<number, BatchBenchOverride> {
+  return loadBatchOverrideStore();
+}
+
+/** Remove the batch bench override for a specific isoWeek. Used by PlanYear. */
+export function clearBenchOverride(isoWeek: number): void {
+  const data = loadBatchOverrideStore();
+  delete data[isoWeek];
+  persistBatchOverrideStore(data);
+}
+
+// ── Week bench overrides (Week / WeekCloseOut / data/saltBench week model) ─────
 
 /**
  * An OM-authored swap on a scheduled bench role for one week.
@@ -191,7 +225,7 @@ export interface BenchOverride {
   overriddenAt: string;     // ISO timestamp of last save
 }
 
-const KEY_BENCH_OVERRIDES = "hwop_bench_overrides_v1";
+const KEY_BENCH_OVERRIDES = "hwop_bench_week_overrides_v1";
 
 type BenchOverrideStore = Record<string, BenchOverride>;
 
@@ -210,13 +244,13 @@ function persistOverrideStore(store: BenchOverrideStore): void {
 }
 
 /** Return all bench overrides as an array, sorted by weekId. */
-export function loadBenchOverrides(): BenchOverride[] {
+export function loadAllWeekBenchOverrides(): BenchOverride[] {
   return Object.values(loadOverrideStore()).sort((a, b) =>
     a.weekId.localeCompare(b.weekId),
   );
 }
 
-/** Return the override for a specific week (by "YYYY-Wnn" string), or null if none. */
+/** Return the override for a specific week, or null if none. */
 export function loadBenchOverride(weekId: string): BenchOverride | null {
   return loadOverrideStore()[weekId] ?? null;
 }
@@ -243,7 +277,7 @@ export function deleteBenchOverride(weekId: string): void {
  * Converts the number to a weekId string, e.g. 20 → "2026-W20" using the
  * current year.
  */
-export function clearBenchOverride(isoWeekOrId: number | string): void {
+export function clearWeekBenchOverride(isoWeekOrId: number | string): void {
   if (typeof isoWeekOrId === "string") {
     deleteBenchOverride(isoWeekOrId);
     return;
@@ -257,4 +291,75 @@ export function clearBenchOverride(isoWeekOrId: number | string): void {
     delete store[matchKey];
     persistOverrideStore(store);
   }
+}
+
+// ── Weekly Three helpers ───────────────────────────────────────────────────────
+
+export interface WeeklyThreeItem {
+  text: string;
+  done: boolean;
+}
+
+export interface WeeklyThreeEntry {
+  weekId: string;
+  items: [WeeklyThreeItem, WeeklyThreeItem, WeeklyThreeItem];
+}
+
+const KEY_WEEKLY_THREE = "hwop_weekly_three_v1";
+
+const EMPTY_ITEMS: [WeeklyThreeItem, WeeklyThreeItem, WeeklyThreeItem] = [
+  { text: "", done: false },
+  { text: "", done: false },
+  { text: "", done: false },
+];
+
+type WeeklyThreeStore = Record<string, WeeklyThreeEntry>;
+
+function loadWeeklyThreeStore(): WeeklyThreeStore {
+  try {
+    const raw = localStorage.getItem(KEY_WEEKLY_THREE);
+    if (!raw) return {};
+    return JSON.parse(raw) as WeeklyThreeStore;
+  } catch {
+    return {};
+  }
+}
+
+function persistWeeklyThreeStore(store: WeeklyThreeStore): void {
+  localStorage.setItem(KEY_WEEKLY_THREE, JSON.stringify(store));
+}
+
+/** Load the weekly three for a given weekId, returning empty items if none saved. */
+export function loadWeeklyThree(weekId: string): WeeklyThreeEntry {
+  const store = loadWeeklyThreeStore();
+  return (
+    store[weekId] ?? {
+      weekId,
+      items: EMPTY_ITEMS.map((i) => ({ ...i })) as [WeeklyThreeItem, WeeklyThreeItem, WeeklyThreeItem],
+    }
+  );
+}
+
+/** Set the text for one slot (0–2) of the week's three things. */
+export function setWeeklyThing(weekId: string, index: 0 | 1 | 2, text: string): void {
+  const store = loadWeeklyThreeStore();
+  const entry = store[weekId] ?? {
+    weekId,
+    items: EMPTY_ITEMS.map((i) => ({ ...i })) as [WeeklyThreeItem, WeeklyThreeItem, WeeklyThreeItem],
+  };
+  entry.items[index] = { ...entry.items[index], text };
+  store[weekId] = entry;
+  persistWeeklyThreeStore(store);
+}
+
+/** Toggle the done state for one slot (0–2) of the week's three things. */
+export function toggleWeeklyThing(weekId: string, index: 0 | 1 | 2): void {
+  const store = loadWeeklyThreeStore();
+  const entry = store[weekId] ?? {
+    weekId,
+    items: EMPTY_ITEMS.map((i) => ({ ...i })) as [WeeklyThreeItem, WeeklyThreeItem, WeeklyThreeItem],
+  };
+  entry.items[index] = { ...entry.items[index], done: !entry.items[index].done };
+  store[weekId] = entry;
+  persistWeeklyThreeStore(store);
 }

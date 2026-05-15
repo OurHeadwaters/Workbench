@@ -688,14 +688,12 @@ export default function SaltMonthlyClose() {
     if (!month || !revenue) return;
     const channelData: SaltCloseRecord["channels"] = {};
     for (const src of SOURCES) {
-      const applied = loadSnapshot(src, month);
-      if (applied && applied.total !== 0) {
-        const grossSales = applied.rows.filter((r: SnapshotRow) => r.amount > 0).reduce((s: number, r: SnapshotRow) => s + r.amount, 0);
-        const refunds    = applied.rows.filter((r: SnapshotRow) => r.amount < 0).reduce((s: number, r: SnapshotRow) => s + r.amount, 0);
+      const applied = channels[src].applied;
+      if (applied && applied.net !== 0) {
         channelData[src] = {
-          grossSales,
-          refunds,
-          net: applied.total,
+          grossSales: applied.grossSales,
+          refunds:    applied.refunds,
+          net:        applied.net,
         };
       }
     }
