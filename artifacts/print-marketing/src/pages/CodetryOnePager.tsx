@@ -101,7 +101,7 @@ const services = [
 
 export function CodetryOnePagerPage() {
   return (
-        <div className="page-letter" style={PAGE}>
+    <div className="page-letter" style={PAGE}>
 
           {/* Header band */}
           <div style={{
@@ -240,7 +240,7 @@ export function CodetryOnePagerPage() {
             </p>
           </div>
 
-        </div>
+    </div>
   );
 }
 

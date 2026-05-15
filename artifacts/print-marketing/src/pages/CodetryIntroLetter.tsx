@@ -55,7 +55,7 @@ const PAGE: CSSProperties = {
 
 export function CodetryIntroLetterPage() {
   return (
-        <div className="page-letter" style={PAGE}>
+    <div className="page-letter" style={PAGE}>
 
           {/* Letterhead band */}
           <div style={{
@@ -184,7 +184,7 @@ export function CodetryIntroLetterPage() {
             </p>
           </div>
 
-        </div>
+    </div>
   );
 }
 

@@ -95,7 +95,7 @@ const constellationRoles = [
 
 export function CodetryFundingBriefPage() {
   return (
-        <div className="page-letter" style={PAGE}>
+    <div className="page-letter" style={PAGE}>
 
           {/* Header band */}
           <div style={{
@@ -233,7 +233,7 @@ export function CodetryFundingBriefPage() {
             </p>
           </div>
 
-        </div>
+    </div>
   );
 }
 

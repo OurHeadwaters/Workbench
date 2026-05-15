@@ -1,4 +1,10 @@
 import { Link } from "wouter";
+import { useState } from "react";
+import { downloadAsPdf } from "@/lib/pdf";
+import { CodetryIntroLetterPage } from "./CodetryIntroLetter";
+import { CodetryFundingBriefPage } from "./CodetryFundingBrief";
+import { CodetryOnePagerPage } from "./CodetryOnePager";
+import { CodetryPilotProposalPage } from "./CodetryPilotProposal";
 
 const mainPieces = [
   {
@@ -232,6 +238,17 @@ const outreachPieces = [
 ];
 
 export default function Index() {
+  const [packetLoading, setPacketLoading] = useState(false);
+
+  async function handlePacketDownload() {
+    setPacketLoading(true);
+    try {
+      await downloadAsPdf("nan-packet", "headwaters-nan-outreach-packet.pdf", { paginate: true });
+    } finally {
+      setPacketLoading(false);
+    }
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
       <div style={{ background: "var(--evergreen)", color: "white", padding: "3rem 2rem 2.5rem" }}>
@@ -289,9 +306,31 @@ export default function Index() {
             </span>
             <div style={{ flex: 1, height: 1, background: "rgba(31,61,46,0.18)" }} />
           </div>
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.55, marginBottom: "1rem" }}>
-            Four-piece packet for NAN leadership — share as a set or hand each one out individually.
-          </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.55, margin: 0 }}>
+              Four-piece packet for NAN leadership — share as a set or hand each one out individually.
+            </p>
+            <button
+              onClick={handlePacketDownload}
+              disabled={packetLoading}
+              style={{
+                background: packetLoading ? "rgba(31,61,46,0.5)" : "var(--evergreen)",
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                padding: "0.45rem 1rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.82rem",
+                fontWeight: 600,
+                cursor: packetLoading ? "default" : "pointer",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                transition: "background 0.15s",
+              }}
+            >
+              {packetLoading ? "⏳ Generating PDF…" : "⬇ Download packet (4 pages)"}
+            </button>
+          </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem", borderLeft: "3px solid var(--evergreen)", paddingLeft: "1.25rem" }}>
             {outreachPieces.map((p) => (
               <Link
@@ -336,6 +375,24 @@ export default function Index() {
           {" · "}
           Headwaters Development Services · {new Date().getFullYear()}
         </div>
+      </div>
+
+      <div
+        id="nan-packet"
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: "-9999px",
+          top: 0,
+          width: "8.5in",
+          pointerEvents: "none",
+          zIndex: -1,
+        }}
+      >
+        <CodetryIntroLetterPage />
+        <CodetryFundingBriefPage />
+        <CodetryOnePagerPage />
+        <CodetryPilotProposalPage />
       </div>
     </div>
   );
