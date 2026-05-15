@@ -457,39 +457,75 @@ export function HomePage() {
           >
             from the communities
           </p>
-          <blockquote
-            className="rounded-md border-l-4 pl-6 py-2"
-            style={{ borderColor: "hsl(var(--accent))" }}
-          >
-            <p
-              className="font-serif text-xl sm:text-2xl leading-[1.4] italic mb-5"
-              data-testid="testimonial-quote"
+          <div className="grid gap-6 sm:grid-cols-2">
+            <blockquote
+              className="rounded-md border-l-4 pl-6 py-2"
+              style={{ borderColor: "hsl(var(--accent))" }}
             >
-              "The planning work was grounded and practical. Bobbie helped us build systems we actually understand and can run ourselves — not another consultant's framework we'd need outside help to maintain."
-            </p>
-            <footer className="flex flex-col gap-0.5">
               <p
-                className="font-mono text-[11px] font-medium tracking-tight"
-                data-testid="testimonial-name"
+                className="font-serif text-xl leading-[1.4] italic mb-5"
+                data-testid="testimonial-quote"
               >
-                Adele Rankin
+                "The planning work was grounded and practical. Bobbie helped us build systems we actually understand and can run ourselves — not another consultant's framework we'd need outside help to maintain."
               </p>
+              <footer className="flex flex-col gap-0.5">
+                <p
+                  className="font-mono text-[11px] font-medium tracking-tight"
+                  data-testid="testimonial-name"
+                >
+                  Adele Rankin
+                </p>
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  data-testid="testimonial-title"
+                >
+                  Board Chair
+                </p>
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  data-testid="testimonial-community"
+                >
+                  807 Food Co-operative
+                </p>
+              </footer>
+            </blockquote>
+
+            <blockquote
+              className="rounded-md border-l-4 pl-6 py-2"
+              style={{ borderColor: "hsl(var(--accent))" }}
+            >
               <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{ color: "hsl(var(--muted-foreground))" }}
-                data-testid="testimonial-title"
+                className="font-serif text-xl leading-[1.4] italic mb-5"
+                data-testid="testimonial-quote-2"
               >
-                Board Chair
+                "Having our own food hub changes what's possible for our community. This isn't theory — it's a real plan built around how we actually operate, and our council can see exactly how it works."
               </p>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{ color: "hsl(var(--muted-foreground))" }}
-                data-testid="testimonial-community"
-              >
-                807 Food Co-operative
-              </p>
-            </footer>
-          </blockquote>
+              <footer className="flex flex-col gap-0.5">
+                <p
+                  className="font-mono text-[11px] font-medium tracking-tight"
+                  data-testid="testimonial-name-2"
+                >
+                  Chief Raymond Swanson
+                </p>
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  data-testid="testimonial-title-2"
+                >
+                  Chief
+                </p>
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                  data-testid="testimonial-community-2"
+                >
+                  Animakee Wa Zhing 37 First Nation
+                </p>
+              </footer>
+            </blockquote>
+          </div>
         </section>
 
         <hr
