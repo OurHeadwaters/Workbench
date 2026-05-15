@@ -52,7 +52,7 @@ export const ZONE_AUTHOR_ENTRIES: ZoneAuthorEntry[] = [
   {
     id: "z1",
     name: "Headwaters",
-    subtitle: "the Eave \u00b7 envelope budgeting \u00b7 the household source",
+    subtitle: "Eave \u00b7 envelope budgeting \u00b7 the household source",
     prompts: [
       {
         id: "z1-01",

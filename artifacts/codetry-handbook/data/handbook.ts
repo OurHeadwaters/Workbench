@@ -1497,7 +1497,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §FL.2 (Codetry Test 002) is this rule made permanent: the the Eave word map locks in the watershed nouns the community had already been using and refuses to swap them for generic equivalents. §FL.5 (Codetry Test 005) records the same rule pulling the Earn destination back to the community-native *Lake* after several generic candidates were tried.",
+            "From the ledger — §FL.2 (Codetry Test 002) is this rule made permanent: the Eave word map locks in the watershed nouns the community had already been using and refuses to swap them for generic equivalents. §FL.5 (Codetry Test 005) records the same rule pulling the Earn destination back to the community-native *Lake* after several generic candidates were tried.",
         },
         {
           kind: "tool",
@@ -1527,7 +1527,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — Tests 001, 002, 009, and 010 (the two 010 entries — shortfall CTA and swap-sheet header) all turn on the rename test of this chapter. §FL.1 catches *bank* trying to displace the watershed verbs on the Payday CTA. §FL.2 locks the the Eave word map and rejects three specific generic-noun renames at once. §FL.9 graduates *Top up reservoir from XRP* on the demoted swap chip by running this test against the production wording *Convert XRP → RLUSD*. The two §FL.10 entries — *Top up reservoir from XRP · cover the shortfall* on the loud amber CTA, and *Top up your reservoir* on the swap-sheet header — extend the same test to a loud surface and to a transactional sheet's title-level register. See the Field Ledger for the full ledger.",
+            "From the ledger — Tests 001, 002, 009, and 010 (the two 010 entries — shortfall CTA and swap-sheet header) all turn on the rename test of this chapter. §FL.1 catches *bank* trying to displace the watershed verbs on the Payday CTA. §FL.2 locks the Eave word map and rejects three specific generic-noun renames at once. §FL.9 graduates *Top up reservoir from XRP* on the demoted swap chip by running this test against the production wording *Convert XRP → RLUSD*. The two §FL.10 entries — *Top up reservoir from XRP · cover the shortfall* on the loud amber CTA, and *Top up your reservoir* on the swap-sheet header — extend the same test to a loud surface and to a transactional sheet's title-level register. See the Field Ledger for the full ledger.",
         },
         {
           kind: "callout",
@@ -1693,7 +1693,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §FL.2 (Codetry Test 002) is the locked the Eave word map: a one-page table of nouns and verbs the practitioner committed to as the spec for the watershed dialect, born of exactly the kind of session this chapter describes.",
+            "From the ledger — §FL.2 (Codetry Test 002) is the locked Eave word map: a one-page table of nouns and verbs the practitioner committed to as the spec for the watershed dialect, born of exactly the kind of session this chapter describes.",
         },
       ],
     },
@@ -1722,7 +1722,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §FL.3 (Codetry Test 003) and §FL.5 (Codetry Test 005) both run this distinction at the surface level. §FL.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the the Eave water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §FL.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, recorded in this entry) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the the Eave watershed dialect.",
+            "From the ledger — §FL.3 (Codetry Test 003) and §FL.5 (Codetry Test 005) both run this distinction at the surface level. §FL.3 rules out the bamboo-field metaphor on the wallet/XRP-swap chip not because bamboo is a bad metaphor, but because the chip's *medium* — a wallet/swap surface inside the Eave water register — already belongs to a different metaphor, and the rule *one register per screen* protects the medium from carrying two competing metaphors at once. §FL.5 graduates the *Park / Public Park / Private Park* renames for the Earn surface (later renamed to *Lake* by Task #849, recorded in this entry) — the rename was specifically about choosing the medium-correct noun for the destination of an Earn flow inside the Eave watershed dialect.",
         },
         { kind: "rule" },
         {
@@ -1733,7 +1733,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §FL.3 enforces *one register per screen* on the the Eave wallet/swap chip; §FL.5 lands the medium-correct noun (*Lake*) on the Earn destination after the discipline rejects the off-register candidates.",
+            "From the ledger — §FL.3 enforces *one register per screen* on the Eave wallet/swap chip; §FL.5 lands the medium-correct noun (*Lake*) on the Earn destination after the discipline rejects the off-register candidates.",
         },
       ],
     },
@@ -1767,7 +1767,7 @@ const partIV: Part = {
         {
           kind: "small",
           text:
-            "From the ledger — §FL.2 (Test 002), §FL.4 (Test 004), and the §FL.6/§FL.8 pair (Test 006 and the second-numbered Test 008) read as a working family of verification instruments. §FL.2 is the locked the Eave word map itself — the table the rename test of §3.2 runs against. §FL.4 names the temperature rule (calm states earn their loudness) — the verification that a name's typographic volume matches the work the name is doing. §FL.6 and §FL.8 install the Drip Harvester sense-distinction across Earn surfaces — verification by pinning down two senses of one noun rather than letting the bare word drift between them.",
+            "From the ledger — §FL.2 (Test 002), §FL.4 (Test 004), and the §FL.6/§FL.8 pair (Test 006 and the second-numbered Test 008) read as a working family of verification instruments. §FL.2 is the locked Eave word map itself — the table the rename test of §3.2 runs against. §FL.4 names the temperature rule (calm states earn their loudness) — the verification that a name's typographic volume matches the work the name is doing. §FL.6 and §FL.8 install the Drip Harvester sense-distinction across Earn surfaces — verification by pinning down two senses of one noun rather than letting the bare word drift between them.",
         },
         { kind: "rule" },
         {
@@ -2087,7 +2087,7 @@ const partQuietExamples: Part = {
         },
         {
           kind: "para",
-          text: "Zone 0 in the permaculture sense is the human body and the home. In the Headwaters constellation it is both: the household as the economic and relational unit that every other zone is downstream of. *The household balance is the source of the whole watershed.* the Eave (Headwaters) is downstream. Zone 3 (the co-op) is downstream. Even Zone 4 (the land) is downstream from the household that is tending it. Get Zone 0 right and every other zone has a stable source to draw from.",
+          text: "Zone 0 in the permaculture sense is the human body and the home. In the Headwaters constellation it is both: the household as the economic and relational unit that every other zone is downstream of. *The household balance is the source of the whole watershed.* Eave (Headwaters) is downstream. Zone 3 (the co-op) is downstream. Even Zone 4 (the land) is downstream from the household that is tending it. Get Zone 0 right and every other zone has a stable source to draw from.",
         },
         {
           kind: "subhead",
@@ -2498,15 +2498,15 @@ const partQuietExamples: Part = {
       number: "4.9",
       partRoman: "IV",
       partLabel: "IV · The Quiet Examples",
-      title: "the Eave — The Operational Centre",
+      title: "Eave — The Operational Centre",
       blocks: [
         {
           kind: "small",
-          text: "the Eave · Headwaters · the most-frequented ring of the constellation.",
+          text: "Eave · Headwaters · the most-frequented ring of the constellation.",
         },
         {
           kind: "para",
-          text: "the Eave in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame the Eave is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. the Eave is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door.",
+          text: "Eave in the constellation is Headwaters itself — the immediate operational layer the practitioner organizes outward from. In the permaculture frame Eave is the territory visited every day; in the constellation it holds the practitioner's own ledger, the household budget system, the daily coordination tools, and the codetry practice itself. Eave is not a category. It is the practitioner's working territory — everything that lives within daily reach of the household door.",
         },
         {
           kind: "subhead",
@@ -2514,11 +2514,11 @@ const partQuietExamples: Part = {
         },
         {
           kind: "para",
-          text: "Rename *the Eave* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that the Eave holds; the name narrows the zone to its financial role and hides the operational reality that the Eave also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially.",
+          text: "Rename *Eave* to *the budget system* or *the household finance layer*. What changes? The budget system is one function that Eave holds; the name narrows the zone to its financial role and hides the operational reality that Eave also holds the practitioner's time discipline, their codetry practice, and the daily decisions that translate Zone 0's household abundance into outward-facing activity. The zone name is not a category label. It names the practitioner's own immediate working territory — the full scope of what is tended daily, not only what is tracked financially.",
         },
         {
           kind: "callout",
-          text: "The practitioner who names the Eave *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what the Eave allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff.",
+          text: "The practitioner who names Eave *the budget system* and Zone 0 *the homestead* has left the relationship between them unnamed — and the relationship is where the practice lives. Zone 0 supplies what Eave allocates. If the allocation vocabulary is borrowed from fintech and the supply vocabulary is borrowed from homesteading, the practitioner is running two systems in two languages with no shared word for the handoff. Name the handoff.",
         },
       ],
     },
@@ -2535,7 +2535,7 @@ const partQuietExamples: Part = {
         },
         {
           kind: "para",
-          text: "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates the Eave's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than the Eave but consulted whenever a new commitment is being made or an existing one is being reviewed.",
+          text: "Zone 2 is the practitioner's coordination layer — the formal record of intent, schedule, capacity, and commitment that translates Eave's daily action into structured accountability. In Headwaters this is the Operating Plan: a living document, not a pitch deck. It holds the practitioner's role, the constellation's rules of engagement, the current pilot's scope, and the standing commitments that Zones 3 and 4 are built on top of. Zone 2 is visited less frequently than Eave but consulted whenever a new commitment is being made or an existing one is being reviewed.",
         },
         {
           kind: "subhead",
@@ -3861,7 +3861,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 001 — Payday: words bearing weight",
       blocks: [
-        { kind: "small", text: "Date 2026-04-26 · the Eave / xBuckets Payday tab · status: graduated." },
+        { kind: "small", text: "Date 2026-04-26 · Eave / xBuckets Payday tab · status: graduated." },
         { kind: "subhead", text: "The finding." },
         {
           kind: "para",
@@ -3896,7 +3896,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly displacing the locked the Eave verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces restored *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately, and the locked map of §FL.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently un-did the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)* — Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently restored the older banking word. Nothing in the merge process flagged it. The fix here was to restore the locked word and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
+            "Graduated. Variant A shipped in `PaydayTab.tsx` / `PaydayPlanner.tsx`. Two later sightings on the same surface complicated the verdict. *Sighting 1 (the catch in the wild).* A fresh screenshot of the live Payday tab caught a banking word — *Stays in bank (bills)* — quietly displacing the locked Eave verb *Siphon* on the catchment-plan card. A one-line rename in the two parallel surfaces restored *Siphoned out for bills*. The diagnostic move named in this chapter (*when a word feels off, look for one doing two jobs or one belonging to a different register*) found the defect immediately, and the locked map of §FL.2 supplied the exact replacement word with no design discussion needed. *Sighting 2 (the rebase that silently un-did the fix).* Two days later, a search of the codebase showed `PaydayPlanner.tsx` had reverted to *Stays in bank (bills)* — Task #806 (the calm rest view) had branched from a pre-rebase tree, and a tangled merge resolved by pulling the planner card forward from the pre-rebase branch silently restored the older banking word. Nothing in the merge process flagged it. The fix here was to restore the locked word and add the smallest possible mechanical witness — a single unit test asserting the catchment card reads *Siphoned out for bills* and not anything containing *Stays in bank*.",
         },
         {
           kind: "callout",
@@ -3910,9 +3910,9 @@ const partVII: Part = {
       number: "FL.2",
       partRoman: "FL",
       partLabel: "Field Ledger",
-      title: "Test 002 — the Eave: the word map locked",
+      title: "Test 002 — Eave: the word map locked",
       blocks: [
-        { kind: "small", text: "Date 2026-04-26 · the Eave / xBuckets, every surface · status: graduated." },
+        { kind: "small", text: "Date 2026-04-26 · Eave / xBuckets, every surface · status: graduated." },
         { kind: "subhead", text: "The finding." },
         {
           kind: "para",
@@ -3923,13 +3923,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Across every the Eave surface (Payday tab, Earn tab, Buckets tab, lessons, hero card, settings), the same loose vocabulary leaked into different jobs on different surfaces. The Bridge sheet used *channel*; the debt lesson used *channel*; the Earn routing used *channel*; the bucket distribution used *channel*. Same word, four meanings. Same problem for *reservoir*. The locked map did not yet exist, and the absence was where the drift lived.",
+            "Across every Eave surface (Payday tab, Earn tab, Buckets tab, lessons, hero card, settings), the same loose vocabulary leaked into different jobs on different surfaces. The Bridge sheet used *channel*; the debt lesson used *channel*; the Earn routing used *channel*; the bucket distribution used *channel*. Same word, four meanings. Same problem for *reservoir*. The locked map did not yet exist, and the absence was where the drift lived.",
         },
         { kind: "subhead", text: "The intervention." },
         {
           kind: "para",
           text:
-            "Lock the word map for the whole zone — one word, one referent, in EN and FR, in every surface, in every lesson, and in the code field-names. Where one word was doing two jobs, a second word was coined or recovered so each job has a name of its own. The Bridge sheet was rewritten to use *Bridge* (not *Channel*); the debt-channeling lesson became *debt-drainage*; the *compound-rainfall* lesson became *cloud-cover* and introduced *Glacier* explicitly as the tax-sheltered vehicle; the *Reservoir* field was renamed in `TenantConfig` from `masterBucketLabel` to `reservoirLabel`. A separate decision recorded in the test (Task #851) rephrased three remaining surface uses of the bare verb *park* to *set aside* / *keep* so the retired metaphor word never appears on a the Eave surface at all.",
+            "Lock the word map for the whole zone — one word, one referent, in EN and FR, in every surface, in every lesson, and in the code field-names. Where one word was doing two jobs, a second word was coined or recovered so each job has a name of its own. The Bridge sheet was rewritten to use *Bridge* (not *Channel*); the debt-channeling lesson became *debt-drainage*; the *compound-rainfall* lesson became *cloud-cover* and introduced *Glacier* explicitly as the tax-sheltered vehicle; the *Reservoir* field was renamed in `TenantConfig` from `masterBucketLabel` to `reservoirLabel`. A separate decision recorded in the test (Task #851) rephrased three remaining surface uses of the bare verb *park* to *set aside* / *keep* so the retired metaphor word never appears on an Eave surface at all.",
         },
         { kind: "subhead", text: "The locked map." },
         {
@@ -3968,13 +3968,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If the locked map holds, a new user reading any the Eave surface should be able to describe the architecture using the same nouns the lessons teach — without translation. Falsified if a user encounters a word and asks *which one do you mean?* The map is small enough to teach in a single breath, and that is the measure: if the map cannot be taught in a breath, it is not locked.",
+            "If the locked map holds, a new user reading any Eave surface should be able to describe the architecture using the same nouns the lessons teach — without translation. Falsified if a user encounters a word and asks *which one do you mean?* The map is small enough to teach in a single breath, and that is the measure: if the map cannot be taught in a breath, it is not locked.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. The 16 locked nouns above have been honoured across `copy.en.ts` / `copy.fr.ts`, the lesson modules, and the field-names in `TenantConfig`. All 16 also appear as worked-example entries on the the Eave page of the constellation map (the companion artifact), each with the rule that holds it in place.",
+            "Graduated. The 16 locked nouns above have been honoured across `copy.en.ts` / `copy.fr.ts`, the lesson modules, and the field-names in `TenantConfig`. All 16 also appear as worked-example entries on the Eave page of the constellation map (the companion artifact), each with the rule that holds it in place.",
         },
       ],
     },
@@ -3985,7 +3985,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 003 — Bamboo field on the wallet chip",
       blocks: [
-        { kind: "small", text: "Date 2026-04-26 · the Eave / xBuckets Payday tab · status: rejected." },
+        { kind: "small", text: "Date 2026-04-26 · Eave / xBuckets Payday tab · status: rejected." },
         { kind: "subhead", text: "The question." },
         {
           kind: "para",
@@ -4033,7 +4033,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 004 — Calm states earn their loudness back",
       blocks: [
-        { kind: "small", text: "Date 2026-04-26 · the Eave / xBuckets Payday tab · status: graduated on arrival." },
+        { kind: "small", text: "Date 2026-04-26 · Eave / xBuckets Payday tab · status: graduated on arrival." },
         { kind: "subhead", text: "The finding." },
         {
           kind: "para",
@@ -4067,7 +4067,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Falsified if a the Eave surface in a calm architectural state still presents loud active controls by default (failure mode A: pre-loud), or if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default (failure mode B: hidden, not retreated). The rule sits between those two failure modes — *retreat, not removal*.",
+            "Falsified if an Eave surface in a calm architectural state still presents loud active controls by default (failure mode A: pre-loud), or if a surface hides a loud control so successfully that a power user who knows the control exists cannot find it within one tap from the calm default (failure mode B: hidden, not retreated). The rule sits between those two failure modes — *retreat, not removal*.",
         },
         { kind: "subhead", text: "Status." },
         {
@@ -4086,18 +4086,18 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 005 — Drip Harvester reads as DeFi noise",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets Earn surface · status: graduated." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets Earn surface · status: graduated." },
         { kind: "subhead", text: "The finding." },
         {
           kind: "para",
           text:
-            "The Earn surface speaks two languages at once. The locked the Eave water vocabulary (§FL.2) covers four of the words on screen. The other seventeen are imported from DevOps, naval, finance, and crypto-Twitter registers — and the cold reader has to translate every one of them to understand what the screen does.",
+            "The Earn surface speaks two languages at once. The locked Eave water vocabulary (§FL.2) covers four of the words on screen. The other seventeen are imported from DevOps, naval, finance, and crypto-Twitter registers — and the cold reader has to translate every one of them to understand what the screen does.",
         },
         { kind: "subhead", text: "What was on screen." },
         {
           kind: "para",
           text:
-            "A cold read of the Earn tab as it shipped surfaced seventeen distinct vocabulary defects on a single screen, clustered into four foreign registers. *DevOps / robot register* — *agent*, *fleet*, *deploy*, *Drip Harvester Fleet*, *2 harvesters deployed*, *Deploy another agent*. *DeFi / protocol register* — *AMM pools*, *LP Position*, *LP tokens*, *pool shares*, *Est. APR*, *trading fees*, *swap*. *Broom register* — *sweep*, *auto-sweeps*, *sweep threshold*, *Routing drip to cistern*. *Crypto-Twitter register* — *no rug pulls*, *no moonshots*, *24/7*. And one direct violation of the the Eave lock: the surface used *cistern* where Test 002 locked the word to *Bucket*.",
+            "A cold read of the Earn tab as it shipped surfaced seventeen distinct vocabulary defects on a single screen, clustered into four foreign registers. *DevOps / robot register* — *agent*, *fleet*, *deploy*, *Drip Harvester Fleet*, *2 harvesters deployed*, *Deploy another agent*. *DeFi / protocol register* — *AMM pools*, *LP Position*, *LP tokens*, *pool shares*, *Est. APR*, *trading fees*, *swap*. *Broom register* — *sweep*, *auto-sweeps*, *sweep threshold*, *Routing drip to cistern*. *Crypto-Twitter register* — *no rug pulls*, *no moonshots*, *24/7*. And one direct violation of the Eave lock: the surface used *cistern* where Test 002 locked the word to *Bucket*.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -4120,13 +4120,13 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "If the Variant A graduation holds, a cold-read of the Earn tab should describe what the screen does using only the locked the Eave words plus *Drip Harvester* and *Park toll* (the two new sanctioned nouns). Falsified if a cold reader still reaches for *deploy* or *LP* or *sweep* to describe what they see.",
+            "If the Variant A graduation holds, a cold-read of the Earn tab should describe what the screen does using only the locked Eave words plus *Drip Harvester* and *Park toll* (the two new sanctioned nouns). Falsified if a cold reader still reaches for *deploy* or *LP* or *sweep* to describe what they see.",
         },
         { kind: "subhead", text: "Status." },
         {
           kind: "para",
           text:
-            "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`; critical strings mirrored to `copy.fr.ts`. *Park toll* added to the locked the Eave map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage (APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked the first time). A third leak — *Not funded yet* on the Drip Harvester card, where *funded* read as *broken/halted* to a household reader — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
+            "Graduated. Variant A shipped to `copy.en.ts` (Earn block) and the affected JSX strings in `EarnTab.tsx`; critical strings mirrored to `copy.fr.ts`. *Park toll* added to the locked Eave map. *Side note on the practice.* This was the first codetry test to graduate twice in one session — once as a draft, then again after code-review caught defect leakage (APR/pool/trading-fee phrasing and the *Channelled to savings* locked-word violation still leaked the first time). A third leak — *Not funded yet* on the Drip Harvester card, where *funded* read as *broken/halted* to a household reader — was caught from the live phone surface, not from review, and replaced with *No RLUSD parked yet*. The pattern: *the locked map is the test*, and *graduated* is only true when a strict surface scan finds no leaks — including the user's pocket, not just the diff.",
         },
         { kind: "subhead", text: "See also." },
         { kind: "small", text: "§FL.2 (Test 002) — the locked map this test was held to. §FL.6 (Test 006) — the flow-ribbon follow-up scoped out of this test. §FL.7 (Test 007) — the structural test that found the LP-position card had survived this vocabulary sweep." },
@@ -4139,7 +4139,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 006 — Earn flow ribbon graduates (three stations)",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets Earn surface · status: graduated, later superseded by §FL.8." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets Earn surface · status: graduated, later superseded by §FL.8." },
         { kind: "subhead", text: "The claim." },
         {
           kind: "para",
@@ -4150,7 +4150,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "After the §FL.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked the Eave water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implicit. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
+            "After the §FL.5 vocabulary sweep, the Earn surface speaks one language consistently — the locked Eave water map plus *Drip Harvester* and *Park toll*. But the *topology* is still implicit. A cold reader who lands on the Earn tab sees, in order: an XRP Spring card, a Drip Harvester intro card, an LP-position card (when one exists), a list of Private Parks, and a Learn accordion. Nothing on the surface tells them, in one read, where their money currently sits and how it moves between stations.",
         },
         { kind: "subhead", text: "The intervention." },
         {
@@ -4187,7 +4187,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 007 — The LP-position card survived the vocabulary sweep",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets Earn surface, LP-position card · status: graduated." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets Earn surface, LP-position card · status: graduated." },
         { kind: "subhead", text: "The finding." },
         {
           kind: "para",
@@ -4235,7 +4235,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 008 — The Earn flow ribbon becomes four stations",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets Earn surface · status: graduated, supersedes §FL.6." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets Earn surface · status: graduated, supersedes §FL.6." },
         { kind: "subhead", text: "The claim." },
         {
           kind: "para",
@@ -4293,7 +4293,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 009 — Water-register wordings on the wallet chip",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets Payday tab · status: graduated." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets Payday tab · status: graduated." },
         { kind: "subhead", text: "The question." },
         {
           kind: "para",
@@ -4328,7 +4328,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "Graduated. Variant A — *Top up reservoir from XRP* — ships as the new wording, same typography, same demoted text-link, same surface position. The chip remains plumbing; it now also speaks the locked the Eave dialect. Variant B is rejected for unnecessary visual weight (the arrow + numbers buy nothing the locked dialect doesn't already give). Variant C is rejected for losing mechanical precision (poetic but uninformative — a cold reader can't tell the chip swaps).",
+            "Graduated. Variant A — *Top up reservoir from XRP* — ships as the new wording, same typography, same demoted text-link, same surface position. The chip remains plumbing; it now also speaks the locked Eave dialect. Variant B is rejected for unnecessary visual weight (the arrow + numbers buy nothing the locked dialect doesn't already give). Variant C is rejected for losing mechanical precision (poetic but uninformative — a cold reader can't tell the chip swaps).",
         },
         { kind: "subhead", text: "See also." },
         { kind: "small", text: "§FL.3 (Test 003) — rejected the bamboo-field metaphor on the same chip on the grounds of *one register per screen*. §FL.10 / §FL.11 (Test 010) — the loud-twin and the deeper-room moves of the same closing-out arc on this surface stack." },
@@ -4341,12 +4341,12 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 010 — Water-register wordings on the shortfall CTA",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets wallet-confirm sheet · status: graduated." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets wallet-confirm sheet · status: graduated." },
         { kind: "subhead", text: "The question." },
         {
           kind: "para",
           text:
-            "§FL.9 graduated the *demoted* XRP-swap chip from *Convert XRP → RLUSD* to *Top up reservoir from XRP*, finally bringing it into the locked the Eave water dialect. That chip has a *loud* twin — the prominent amber CTA in the wallet-confirm sheet that appears when the wallet is short of plan total. It still said *Convert XRP → RLUSD to cover shortfall*. Same action, same destination, same protocol-noun register-break. This test asks: can the loud chip speak the same dialect as its quiet sibling without losing the urgency the amber card is built to express?",
+            "§FL.9 graduated the *demoted* XRP-swap chip from *Convert XRP → RLUSD* to *Top up reservoir from XRP*, finally bringing it into the locked Eave water dialect. That chip has a *loud* twin — the prominent amber CTA in the wallet-confirm sheet that appears when the wallet is short of plan total. It still said *Convert XRP → RLUSD to cover shortfall*. Same action, same destination, same protocol-noun register-break. This test asks: can the loud chip speak the same dialect as its quiet sibling without losing the urgency the amber card is built to express?",
         },
         { kind: "subhead", text: "What was on screen." },
         {
@@ -4389,7 +4389,7 @@ const partVII: Part = {
       partLabel: "Field Ledger",
       title: "Test 010 (second entry) — Water-register wording on the swap-sheet header",
       blocks: [
-        { kind: "small", text: "Date 2026-04-27 · the Eave / xBuckets ConvertXrpSheet · status: graduated." },
+        { kind: "small", text: "Date 2026-04-27 · Eave / xBuckets ConvertXrpSheet · status: graduated." },
         {
           kind: "callout",
           text:
@@ -4399,7 +4399,7 @@ const partVII: Part = {
         {
           kind: "para",
           text:
-            "§FL.9 graduated the wallet/XRP-swap chip into the locked the Eave dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §FL.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right — but it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
+            "§FL.9 graduated the wallet/XRP-swap chip into the locked Eave dialect (*Top up reservoir from XRP*), and explicitly *deferred* the same question one surface deeper — the sheet that opens when the user taps the chip. This test asks whether `convertXrp.title` should follow the chip into the locked dialect, or earn its protocol nouns because the user has crossed into a transactional room. The defence in §FL.9 was specific (*the swap interface is allowed its own register because by then the user has crossed into a different room*), defensible, and possibly right — but it was an agent decision made in passing, with no falsifier and no cold read. It deserves its own test.",
         },
         { kind: "subhead", text: "What was on screen." },
         {

@@ -160,11 +160,11 @@ Footer signoff:
 
 ---
 
-### 1-L · Constellation role prose — the Eave (deleted working doc)
+### 1-L · Constellation role prose — Eave (deleted working doc)
 
 > Non-custodial XRPL envelope-budgeting PWA (was xBuckets / Watershed). The household balance is the source of the whole watershed; every other zone sits downstream. The cleanest demonstrations of metaphor-as-architecture: Buckets (envelopes — you can only pour from one to another, never summon water from nothing; rename to 'Categories' and the UI starts suggesting balances can grow by clicking), XRP Spring (savings above the 10-XRP network reserve, with a six-stage bamboo growth scene that extends the metaphor from data model into artwork), Community Well (monthly pooled tips round-distributed to community proposals — the well refilling).
 
-`commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` (constellation array, the Eave entry)
+`commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx` (constellation array, Eave entry)
 
 ---
 
@@ -230,7 +230,7 @@ The founding confession, immediately below the hero section:
 
 ---
 
-### 1-S · Your money has been free-ranging — the the Eave founding premise
+### 1-S · Your money has been free-ranging — the Eave founding premise
 
 > Your money has been free-ranging.
 >
@@ -250,7 +250,7 @@ The founding confession, immediately below the hero section:
 >
 > Every dollar of stablecoin income is rainfall caught in your Reservoir — automatically channeled into named buckets so nothing escapes and every drop has a purpose.
 
-**Source:** `x-buckets/src/copy/tagline` + `x-buckets/src/copy/coreMechanic` — the tagline and coreMechanic constants; the two sentences that describe what the Eave is for
+**Source:** `x-buckets/src/copy/tagline` + `x-buckets/src/copy/coreMechanic` — the tagline and coreMechanic constants; the two sentences that describe what Eave is for
 
 ---
 
@@ -947,7 +947,7 @@ Cautions embedded in the tour (also verbatim):
 
 > "The pause between receiving money and spending it is where financial discipline lives. Headwaters makes that pause automatic."
 
-**Source:** `x-buckets/src/copy/howItWorks.bigIdeaQuote` — rendered as a pull-quote in the "How it works" explainer; the one-sentence rationale for why the Eave was built
+**Source:** `x-buckets/src/copy/howItWorks.bigIdeaQuote` — rendered as a pull-quote in the "How it works" explainer; the one-sentence rationale for why Eave was built
 
 ---
 
@@ -1256,7 +1256,7 @@ The Gate manifest principle:
 >
 > The Siphon is the bill that leaves before you see the money. But the siphon isn't permanent. You choose the size of it. You can reduce those bills, downgrade the lifestyle, make pivots. You ultimately control it — which is the opposite of what the word "expense" implies.
 
-`artifacts/codetry-handbook/data/constellation.ts` — the Eave (Headwaters), `opening` field
+`artifacts/codetry-handbook/data/constellation.ts` — Eave (Headwaters), `opening` field
 
 ---
 
@@ -1766,7 +1766,7 @@ The earliest published vocabulary list enacting the Gate primitive, recovered fr
 
 ---
 
-### UG-M · Captain's Log — fishing as the Eave metaphor
+### UG-M · Captain's Log — fishing as Eave metaphor
 
 > Boat's on the trailer. Launch it to start fishing.
 >
@@ -1804,11 +1804,11 @@ The earliest published vocabulary list enacting the Gate primitive, recovered fr
 
 ---
 
-### External project 1 — X Buckets Vision (the Eave · Headwaters)
+### External project 1 — X Buckets Vision (Eave · Headwaters)
 
 **URL:** `https://x-buckets-vision.replit.app/`
 **Former names:** xBuckets, Watershed
-**Constellation zone:** the Eave — household finance, XRPL stablecoin envelope-budgeting PWA
+**Constellation zone:** Eave — household finance, XRPL stablecoin envelope-budgeting PWA
 **What to look for:** The full water-metaphor vocabulary (Buckets, Reservoir, Siphon, Rain Barrel, Aquifer, Glacier, Drip Harvester, Community Well, Payday Planner, Rainfall, Watershed, etc.); the XRP Spring bamboo growth scene prose; any narrative about envelope budgeting as constraint-by-metaphor; the naming tests that produced the locked word map; deleted predecessors of the vocabulary (xBuckets era content).
 **Sweep status:** ✅ Complete — 2026-05-06 (Task #796). Swept via JS bundle extraction from the live app at `https://x-buckets-vision.replit.app/` (codebase not directly accessible from this environment; prose extracted from the minified production bundle `/assets/index-CGcLuc1T.js`). Passages recovered: 1-R, 1-S, 3-O, 3-P, 3-Q, 4-U, 4-V, 4-W, 4-X, UG-J, UG-K. The water-metaphor vocabulary (Rainfall, Siphon, Reservoir, Rain Barrel, Water Tower, Stream, Spring, Water Wheel, Private Lake, Drought Mode, Giving Well, Community Well, Abundance Bridge), the XRP Spring bamboo six-stage growth scene, the Payday Ripple architecture, and the founding discipline prose all recovered. Git history and conversation logs not accessible from this environment.
 
