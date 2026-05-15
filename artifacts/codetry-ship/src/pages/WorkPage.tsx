@@ -277,7 +277,7 @@ export function WorkPage() {
               className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
             >
-              Start a conversation →
+              Start a conversation (short form) →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}

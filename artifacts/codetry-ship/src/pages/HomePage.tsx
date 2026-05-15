@@ -782,7 +782,7 @@ export function HomePage() {
               style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
               data-testid="about-cta-conversation"
             >
-              Start a conversation →
+              Start a conversation (short form) →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}bio`}
