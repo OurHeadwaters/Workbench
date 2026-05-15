@@ -387,7 +387,7 @@ export function ServicesPage() {
 function SectionBand({ color, label, children }: { color: string; label: string; children: React.ReactNode }) {
   return (
     <div
-      className="rounded-md px-5 py-4 relative overflow-hidden"
+      className="rounded-md px-4 py-3.5 relative overflow-hidden"
       style={{ background: color, color: "hsl(38 36% 96%)" }}
     >
       <div
@@ -395,8 +395,8 @@ function SectionBand({ color, label, children }: { color: string; label: string;
         className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
         style={{ background: "hsl(38 36% 94%)" }}
       />
-      <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">{label}</p>
-      <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">{children}</h2>
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-1.5 opacity-70">{label}</p>
+      <h2 className="font-serif text-2xl sm:text-3xl tracking-tight break-words">{children}</h2>
     </div>
   );
 }
@@ -434,10 +434,10 @@ function Timeline({ items, accentColor }: {
               {i + 1}
             </span>
           </div>
-          <div className="flex items-baseline gap-3 mb-1.5">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 mb-1.5">
             <p className="font-serif text-[16px] font-medium tracking-tight">{title}</p>
             <span
-              className="font-mono text-[9px] uppercase tracking-[0.18em] shrink-0"
+              className="font-mono text-[9px] uppercase tracking-[0.14em]"
               style={{ color: accentColor }}
             >
               {duration}
@@ -468,8 +468,8 @@ function DeliverableGrid({ items }: {
         >
           <span className="text-[20px] leading-none mt-0.5 shrink-0">{icon}</span>
           <div>
-            <p className="font-serif text-[14.5px] font-medium tracking-tight mb-0.5">{title}</p>
-            <p className="font-serif text-[13px] leading-[1.45]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+            <p className="font-serif text-[14.5px] font-medium tracking-tight mb-0.5 break-words">{title}</p>
+            <p className="font-serif text-[13px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
           </div>
         </div>
       ))}
@@ -493,7 +493,7 @@ function WhatItIsNot({ items }: { items: string[] }) {
         {items.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
             <span className="font-mono text-[11px] mt-[2px] shrink-0" style={{ color: "hsl(var(--muted-foreground))" }}>✕</span>
-            <span className="font-serif text-[13.5px]" style={{ color: "hsl(var(--muted-foreground))" }}>{item}</span>
+            <span className="font-serif text-[13.5px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{item}</span>
           </li>
         ))}
       </ul>
