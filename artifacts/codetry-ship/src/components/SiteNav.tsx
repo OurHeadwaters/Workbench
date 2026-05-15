@@ -15,6 +15,16 @@ const NAV_LINKS: NavLink[] = [
   { href: "/bio",      label: "About" },
 ];
 
+const TOOLS: { icon: string; name: string; href: string }[] = [
+  { icon: "📖", name: "The Handbook",          href: "/codetry-handbook/" },
+  { icon: "📋", name: "Practitioner's Guide",  href: "/practitioners-guide-v2/" },
+  { icon: "📚", name: "The Accounts",          href: "/headwaters-books/" },
+  { icon: "🔬", name: "Research Library",      href: "/library/" },
+  { icon: "🖨️", name: "Print Marketing Suite", href: "/print-marketing/" },
+  { icon: "🚢", name: "Crew Manifest",         href: "/" },
+  { icon: "🗄️", name: "Media Library",         href: "/media/" },
+];
+
 function isActive(path: string, location: string): boolean {
   if (path === "/") return location === "/";
   return location.startsWith(path);
@@ -23,9 +33,13 @@ function isActive(path: string, location: string): boolean {
 export function SiteNav() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const [authed, setAuthed] = useState(() => Boolean(getStoredOwnerToken()));
   const drawerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const toolsDropdownRef = useRef<HTMLDivElement>(null);
+  const toolsBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function syncAuth() {
@@ -43,6 +57,8 @@ export function SiteNav() {
 
   useEffect(() => {
     setOpen(false);
+    setToolsOpen(false);
+    setMobileToolsOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -67,6 +83,29 @@ export function SiteNav() {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!toolsOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setToolsOpen(false);
+    }
+    function handleClick(e: MouseEvent) {
+      if (
+        toolsDropdownRef.current &&
+        !toolsDropdownRef.current.contains(e.target as Node) &&
+        toolsBtnRef.current &&
+        !toolsBtnRef.current.contains(e.target as Node)
+      ) {
+        setToolsOpen(false);
+      }
+    }
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [toolsOpen]);
 
   const base = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
 
@@ -135,6 +174,72 @@ export function SiteNav() {
                 </a>
               );
             })}
+
+            {/* ── Tools dropdown ── */}
+            <div className="relative">
+              <button
+                ref={toolsBtnRef}
+                type="button"
+                onClick={() => setToolsOpen((o) => !o)}
+                className="flex items-center gap-1 px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-[0.2em] transition-colors"
+                style={{
+                  color: dark
+                    ? toolsOpen ? "hsl(38 36% 94%)" : "rgba(235,225,210,0.60)"
+                    : toolsOpen ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",
+                  background: toolsOpen
+                    ? dark ? "rgba(255,255,255,0.08)" : "hsl(var(--muted))"
+                    : "transparent",
+                }}
+                aria-haspopup="true"
+                aria-expanded={toolsOpen}
+                data-testid="nav-tools-toggle"
+              >
+                Tools
+                <svg
+                  width="9"
+                  height="9"
+                  viewBox="0 0 9 9"
+                  fill="none"
+                  aria-hidden="true"
+                  style={{
+                    transform: toolsOpen ? "rotate(180deg)" : "none",
+                    transition: "transform 0.15s",
+                    opacity: 0.7,
+                  }}
+                >
+                  <path d="M1 3l3.5 3L8 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {toolsOpen && (
+                <div
+                  ref={toolsDropdownRef}
+                  className="absolute right-0 top-full mt-1 rounded-md border shadow-lg py-1 z-50"
+                  style={{
+                    background: "hsl(var(--background))",
+                    borderColor: "hsl(var(--card-border))",
+                    minWidth: "220px",
+                  }}
+                  role="menu"
+                  data-testid="nav-tools-dropdown"
+                >
+                  {TOOLS.map(({ icon, name, href }) => (
+                    <a
+                      key={name}
+                      href={href}
+                      className="flex items-center gap-2.5 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-muted"
+                      style={{ color: "hsl(var(--foreground))" }}
+                      role="menuitem"
+                      data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                    >
+                      <span className="text-base leading-none shrink-0">{icon}</span>
+                      {name}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {authed && (
               <a
                 href={`${base}/workbench`}
@@ -240,6 +345,57 @@ export function SiteNav() {
               </a>
             );
           })}
+
+          {/* ── Tools section in mobile drawer ── */}
+          <div
+            className="mt-1 rounded-sm border overflow-hidden"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <button
+              type="button"
+              onClick={() => setMobileToolsOpen((o) => !o)}
+              className="w-full flex items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+              aria-expanded={mobileToolsOpen}
+              data-testid="mobile-nav-tools-toggle"
+            >
+              Tools
+              <svg
+                width="9"
+                height="9"
+                viewBox="0 0 9 9"
+                fill="none"
+                aria-hidden="true"
+                style={{
+                  transform: mobileToolsOpen ? "rotate(180deg)" : "none",
+                  transition: "transform 0.15s",
+                  opacity: 0.6,
+                }}
+              >
+                <path d="M1 3l3.5 3L8 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {mobileToolsOpen && (
+              <div
+                className="border-t"
+                style={{ borderColor: "hsl(var(--card-border))" }}
+              >
+                {TOOLS.map(({ icon, name, href }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    className="flex items-center gap-2.5 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-muted"
+                    style={{ color: "hsl(var(--foreground))" }}
+                    data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  >
+                    <span className="text-base leading-none shrink-0">{icon}</span>
+                    {name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
           {authed && (
             <a
               href={`${base}/workbench`}
