@@ -71,18 +71,30 @@ export default function CapabilityStatement() {
       >
         <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
 
-          {/* Header */}
-          <div style={{ background: "var(--evergreen)", padding: "0.5in 0.65in 0.4in", flexShrink: 0 }}>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.15rem" }}>
-              Headwaters Development Services
-            </p>
-            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2.8rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, marginBottom: "0.15rem", letterSpacing: "-0.02em" }}>
-              Capability Statement
-            </h1>
-            <div style={{ width: "1.5in", height: 2, background: "var(--rust)", margin: "0.2rem 0 0.3rem" }} />
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.9rem", fontStyle: "italic", color: "rgba(244,237,224,0.8)", lineHeight: 1.5, maxWidth: "5in" }}>
-              Practitioner-built tools for northern communities. Shipped, not proposed.
-            </p>
+          {/* Header — eagle sky hero */}
+          <div style={{ position: "relative", background: "var(--evergreen)", flexShrink: 0, overflow: "hidden" }}>
+            {/* Eagle sky photo strip */}
+            <div style={{ width: "100%", height: "1.9in", overflow: "hidden", position: "relative" }}>
+              <img
+                src={`${import.meta.env.BASE_URL}hero-images/eagle-sky-1-1920x1080.jpg`}
+                alt="Eagle soaring over northern sky"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 38%", display: "block" }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(20,44,30,0.30) 0%, rgba(31,61,46,0.78) 100%)" }} />
+            </div>
+            {/* Text content below photo */}
+            <div style={{ padding: "0.3in 0.65in 0.4in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.15rem" }}>
+                Headwaters Development Services
+              </p>
+              <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2.8rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.05, marginBottom: "0.15rem", letterSpacing: "-0.02em" }}>
+                Capability Statement
+              </h1>
+              <div style={{ width: "1.5in", height: 2, background: "var(--rust)", margin: "0.2rem 0 0.3rem" }} />
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.9rem", fontStyle: "italic", color: "rgba(244,237,224,0.8)", lineHeight: 1.5, maxWidth: "5in" }}>
+                Practitioner-built tools for northern communities. Shipped, not proposed.
+              </p>
+            </div>
           </div>
 
           {/* Body */}

@@ -305,8 +305,17 @@ export default function Index() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
-      <div style={{ background: "var(--evergreen)", color: "white", padding: "3rem 2rem 2.5rem" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+      <div style={{ position: "relative", color: "white", overflow: "hidden" }}>
+        {/* Eagle sky hero image */}
+        <img
+          src={`${base}hero-images/eagle-sky-2-2400x900.jpg`}
+          alt="Eagle soaring over northern sky"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", display: "block" }}
+        />
+        {/* Semi-transparent dark overlay for legibility */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(20,44,30,0.72) 0%, rgba(31,61,46,0.88) 100%)" }} />
+        {/* Content */}
+        <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "3rem 2rem 2.5rem" }}>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", letterSpacing: "0.12em", textTransform: "uppercase", opacity: 0.7, marginBottom: "0.6rem" }}>
             Headwaters Development Services
           </p>
