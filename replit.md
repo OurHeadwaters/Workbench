@@ -96,3 +96,12 @@ The project is structured as a pnpm workspace monorepo using Node.js 24 and Type
 - **Zod**: For schema declaration and validation.
 - **Orval**: For API client code generation.
 - **Clerk**: For user authentication.
+
+# Public Folder Audit Log
+
+**Task #1137 — May 2026:** All `public/` folders across artifacts were audited for orphaned image assets. Files were cross-referenced against source code (`src/`) and `index.html` references. The following stale files were removed:
+
+- `artifacts/codetry-ship/public/`: `eagle-circle.png`, `eagle-circle-transparent.png`, `eagle-halo.png`, `headwaters-logo-preview.png`, `headwaters-logo.svg`, `og-image.jpeg`, `opengraph.jpg`, `bobbie-store.jpeg`, `thumb-books.jpg`, `thumb-brightside.png`, `thumb-damdays.png`, `thumb-finance.png`, `thumb-grants.png`, `thumb-store.png` (14 files)
+- `artifacts/print-marketing/public/`: `gilles-brand.jpeg` (1 file)
+
+Artifacts with clean public folders (nothing removed): `practitioners-guide-v2`, `headwaters-books`, `library`, `codetry-handbook`, `print-marketing` (minus the one above).
