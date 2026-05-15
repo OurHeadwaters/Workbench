@@ -89,13 +89,13 @@ export function HomePage() {
             </a>
           </p>
           <h1
-            className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3"
+            className="font-serif text-[1.6rem] sm:text-5xl leading-[1.1] tracking-tight mb-3"
             data-testid="home-title"
           >
             Your community store,<br className="hidden sm:block" /> open and running.
           </h1>
           <p
-            className="font-serif text-lg italic mb-8 opacity-75"
+            className="font-serif text-base sm:text-lg italic mb-8 opacity-75"
             data-testid="home-tagline"
           >
             Food systems planning for northern communities — practitioner-built, flat fee, no retainer required.
@@ -105,7 +105,7 @@ export function HomePage() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <a
               href="#conversation"
-              className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "hsl(var(--accent))", color: "hsl(38 36% 96%)" }}
               data-testid="hero-cta-primary"
             >
@@ -113,7 +113,7 @@ export function HomePage() {
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}
-              className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] border transition-opacity hover:opacity-90"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] border transition-opacity hover:opacity-90"
               style={{ borderColor: "hsla(38, 36%, 96%, 0.55)", color: "hsl(38 36% 96%)" }}
               data-testid="hero-cta-services"
             >
