@@ -15,6 +15,7 @@ export interface CoverSheetDocument {
 export interface CodetryPacketCoverSheetProps {
   community: string;
   date: string;
+  subtitle?: string;
   documents?: CoverSheetDocument[];
 }
 
@@ -33,6 +34,7 @@ const COVER_PAGE: CSSProperties = {
 export function CodetryPacketCoverSheet({
   community,
   date,
+  subtitle = "Codetry Community Store — Outreach Packet",
   documents = [],
 }: CodetryPacketCoverSheetProps) {
   return (
@@ -110,7 +112,7 @@ export function CodetryPacketCoverSheet({
           margin: "0 0 0.55in",
           lineHeight: 1.4,
         }}>
-          Codetry Community Store — Outreach Packet
+          {subtitle}
         </p>
 
         {/* Rust rule */}

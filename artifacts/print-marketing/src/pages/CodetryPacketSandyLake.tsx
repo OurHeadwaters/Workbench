@@ -42,6 +42,7 @@ export default function CodetryPacketSandyLake() {
         <CodetryPacketCoverSheet
           community={COMMUNITY}
           date={DATE}
+          subtitle="Codetry Community Store — Outreach Packet"
           documents={DOCUMENTS}
         />
         <CodetryIntroLetterSandyLakePage />
