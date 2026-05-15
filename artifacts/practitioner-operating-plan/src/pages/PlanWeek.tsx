@@ -94,8 +94,33 @@ function StepCard({ step, isToday }: { step: Step; isToday: boolean }) {
         {step.title}
       </div>
       {step.detail && (
-        <div style={{ fontSize: 11.5, color: "#5a5a50", lineHeight: 1.5, marginBottom: step.actions?.length ? 7 : 0 }}>
+        <div style={{ fontSize: 11.5, color: "#5a5a50", lineHeight: 1.5, marginBottom: step.link || step.actions?.length ? 7 : 0 }}>
           {step.detail}
+        </div>
+      )}
+      {step.link && (
+        <div style={{ marginBottom: step.actions?.length ? 7 : 0 }}>
+          <a
+            href={`${BASE}${step.link.path}`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 10,
+              fontFamily: "IBM Plex Mono, monospace",
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: "#b85a3e",
+              textDecoration: "none",
+              background: "rgba(184,90,62,0.07)",
+              border: "1px solid rgba(184,90,62,0.22)",
+              borderRadius: 4,
+              padding: "3px 8px",
+            }}
+          >
+            ↗ {step.link.label}
+          </a>
         </div>
       )}
       {step.actions && step.actions.length > 0 && (

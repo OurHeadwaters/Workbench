@@ -14,6 +14,7 @@ export interface Step {
   title: string;
   detail?: string;
   actions?: StepAction[];
+  link?: { label: string; path: string };
 }
 
 export interface Day {
@@ -2937,6 +2938,7 @@ export const PLAN_2026: Week[] = [
           {
             title: "Final bank reconciliation — all 12 months confirmed",
             detail: "Every month from Jan to Nov locked. December pending. Year-end balance confirmed.",
+            link: { label: "Salt filed-close yearly summary", path: "/tools/salt-yearly" },
           },
         ],
       },

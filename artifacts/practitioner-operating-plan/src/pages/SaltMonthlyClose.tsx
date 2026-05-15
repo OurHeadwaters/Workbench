@@ -25,6 +25,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import {
   saveMonthClose,
   getMonthHistory,
@@ -115,6 +116,8 @@ const labelStyle: React.CSSProperties = {
   color: MUTED,
   marginBottom: "3pt",
 };
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 // ─── PastePanel component ─────────────────────────────────────────────────────
 
@@ -424,6 +427,8 @@ function PastePanel({ month, onApply }: PastePanelProps) {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function SaltMonthlyClose() {
+  const [, navigate] = useLocation();
+
   const [month,        setMonth]        = useState(currentMonthStr());
   const [revenue,      setRevenue]      = useState("");
   const [expenses,     setExpenses]     = useState("");
@@ -641,8 +646,32 @@ export default function SaltMonthlyClose() {
 
           {/* ── Filed months history ──────────────────────────────────────── */}
           <div style={{ marginBottom: "18pt" }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
-              Filed months ({history.length})
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8pt" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
+                Filed months ({history.length})
+              </div>
+              {history.length > 0 && (
+                <button
+                  type="button"
+                  className="print:hidden"
+                  onClick={() => navigate(`${BASE}/tools/salt-yearly`)}
+                  style={{
+                    background: "transparent",
+                    border: `1pt solid ${AMBER}`,
+                    color: AMBER,
+                    borderRadius: "3pt",
+                    padding: "2pt 9pt",
+                    fontSize: "7pt",
+                    fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                  }}
+                >
+                  Yearly summary →
+                </button>
+              )}
             </div>
 
             {history.length === 0 ? (
