@@ -36,34 +36,32 @@ const INK       = "#2a2520";
 // ── Cost-basis line items (A / B / C columns) ─────────────────────────
 // aVal comes from A_LINE_VALS (budgetScenarios.ts) — no hardcoded dollar values here.
 // bVal comes from B_LINES (budgetScenarios.ts).
-// C additional bVal is computed from C_ADDITIONAL_LINES (budgetScenarios.ts).
+// cVal comes from C_ADDITIONAL_LINES (budgetScenarios.ts); null = not C-specific (same as B).
 type CostTableRow = {
   label: string;
   description: string;
   aVal: number | null;
-  bVal: number;
+  bVal: number | null;
+  cVal: number | null;
   scenario: "A" | "B" | "C";
 };
 
-const C_ADDITIONAL_NAMED =
-  C_ADDITIONAL_LINES.srEngineer2 +
-  C_ADDITIONAL_LINES.regionalOutreach +
-  C_ADDITIONAL_LINES.trainer;
-
 const COST_TABLE_ROWS: CostTableRow[] = [
-  { label: "Practitioner / Lead",             description: "Engagement owner — loaded monthly take",                                                                     aVal: A_LINE_VALS.practitioner,   bVal: B_LINES.practitioner,  scenario: "A" },
-  { label: "Operations Manager",              description: "Dryden, on-site · ~40 hrs/wk @ $40/hr loaded",                                                               aVal: A_LINE_VALS.opsManager,     bVal: B_LINES.opsManager,    scenario: "A" },
-  { label: "IT / Tech",                       description: "Servers, privacy phones, transparency stack, store IT",                                                       aVal: A_LINE_VALS.itTech,         bVal: B_LINES.itTech,        scenario: "A" },
-  { label: "Bookkeeper / Admin",              description: "Remote ~10 hrs/wk · CRA, invoicing, monthly close",                                                          aVal: A_LINE_VALS.bookkeeper,     bVal: B_LINES.bookkeeper,    scenario: "A" },
-  { label: "Food Handler (embedded at DL)",   description: "Headwaters-owned, on the store floor Day 1",                                                                 aVal: A_LINE_VALS.foodHandler,    bVal: B_LINES.foodHandler,   scenario: "A" },
-  { label: "Community Dev. Associate",        description: "Pilot #2 readiness; community-facing engagement",                                                            aVal: null,                       bVal: B_LINES.cdAssociate,   scenario: "B" },
-  { label: "Junior Analyst / Field",          description: "Data, household price lookups, fieldwork",                                                                   aVal: null,                       bVal: B_LINES.juniorAnalyst, scenario: "B" },
-  { label: "Sr Engineer #2 + Outreach + Trainer", description: "Server resilience, Pilot #2 sourcing, council training",                                               aVal: null,                       bVal: C_ADDITIONAL_NAMED,    scenario: "C" },
-  { label: "Life supports + overhead",        description: "Cleaner $500/mo + tutor $900/mo + handyman $700/mo",                                                         aVal: A_LINE_VALS.lifeSupports,   bVal: B_LINES.lifeSupports,  scenario: "A" },
-  { label: "Aggregation hub (Dad-warehouse)", description: `${STORE_STACK_PHRASE} — $2,200 rent + utilities all-in; see /lease-tooling`,                               aVal: A_LINE_VALS.aggregationHub, bVal: B_LINES.aggregationHub,scenario: "A" },
-  { label: "Tooling, SaaS, insurance",        description: "Operating overhead — agency licenses and software stack",                                                    aVal: A_LINE_VALS.tooling,        bVal: B_LINES.tooling,       scenario: "A" },
-  { label: "Recurring tech ops",              description: "Cloud, phone plans, monitoring — 9-server fleet monthly",                                                   aVal: A_LINE_VALS.recurringTech,  bVal: B_LINES.recurringTech, scenario: "A" },
-  { label: "Buffer (statutory + variance)",   description: "Holds cost basis when payroll taxes or insurance jump",                                                      aVal: null,                       bVal: B_LINES.buffer,        scenario: "B" },
+  { label: "Practitioner / Lead",             description: "Engagement owner — loaded monthly take",                                                                     aVal: A_LINE_VALS.practitioner,   bVal: B_LINES.practitioner,  cVal: null,                                   scenario: "A" },
+  { label: "Operations Manager",              description: "Dryden, on-site · ~40 hrs/wk @ $40/hr loaded",                                                               aVal: A_LINE_VALS.opsManager,     bVal: B_LINES.opsManager,    cVal: null,                                   scenario: "A" },
+  { label: "IT / Tech",                       description: "Servers, privacy phones, transparency stack, store IT",                                                       aVal: A_LINE_VALS.itTech,         bVal: B_LINES.itTech,        cVal: null,                                   scenario: "A" },
+  { label: "Bookkeeper / Admin",              description: "Remote ~10 hrs/wk · CRA, invoicing, monthly close",                                                          aVal: A_LINE_VALS.bookkeeper,     bVal: B_LINES.bookkeeper,    cVal: null,                                   scenario: "A" },
+  { label: "Food Handler (embedded at DL)",   description: "Headwaters-owned, on the store floor Day 1",                                                                 aVal: A_LINE_VALS.foodHandler,    bVal: B_LINES.foodHandler,   cVal: null,                                   scenario: "A" },
+  { label: "Community Dev. Associate",        description: "Pilot #2 readiness; community-facing engagement",                                                            aVal: null,                       bVal: B_LINES.cdAssociate,   cVal: null,                                   scenario: "B" },
+  { label: "Junior Analyst / Field",          description: "Data, household price lookups, fieldwork",                                                                   aVal: null,                       bVal: B_LINES.juniorAnalyst, cVal: null,                                   scenario: "B" },
+  { label: "Sr Engineer #2",                  description: "Server resilience at scale — second senior engineer for the 9-server fleet",                                 aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.srEngineer2,         scenario: "C" },
+  { label: "Regional Outreach",               description: "Pilot #2 community sourcing — the seat that makes the second engagement ready",                              aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.regionalOutreach,    scenario: "C" },
+  { label: "Council Trainer",                 description: "Training cohorts at receiving bands — knowledge transfer at scale",                                          aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.trainer,             scenario: "C" },
+  { label: "Life supports + overhead",        description: "Cleaner $500/mo + tutor $900/mo + handyman $700/mo (C adds $2,900 scale delta)",                            aVal: A_LINE_VALS.lifeSupports,   bVal: B_LINES.lifeSupports,  cVal: C_ADDITIONAL_LINES.lifeSupportsDelta,   scenario: "A" },
+  { label: "Aggregation hub (Dad-warehouse)", description: `${STORE_STACK_PHRASE} — $2,200 rent + utilities all-in; see /lease-tooling`,                               aVal: A_LINE_VALS.aggregationHub, bVal: B_LINES.aggregationHub,cVal: null,                                   scenario: "A" },
+  { label: "Tooling, SaaS, insurance",        description: "Operating overhead — agency licenses and software stack",                                                    aVal: A_LINE_VALS.tooling,        bVal: B_LINES.tooling,       cVal: null,                                   scenario: "A" },
+  { label: "Recurring tech ops",              description: "Cloud, phone plans, monitoring — 9-server fleet monthly",                                                   aVal: A_LINE_VALS.recurringTech,  bVal: B_LINES.recurringTech, cVal: null,                                   scenario: "A" },
+  { label: "Buffer (statutory + variance)",   description: "Holds cost basis when payroll taxes or insurance jump",                                                      aVal: null,                       bVal: B_LINES.buffer,        cVal: null,                                   scenario: "B" },
 ];
 
 // ── Reinvestment destination rows ─────────────────────────────────────
@@ -150,20 +148,22 @@ export default function OnePager() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "9pt", tableLayout: "fixed" }}>
               <thead>
                 <tr style={{ borderBottom: `1.5pt solid ${RULE}`, color: MUTED, fontWeight: 600 }}>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "24%" }}>Role / Line</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "38%" }}>What it covers</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>A floor</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>B rec.</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "10%" }}>Scen.</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "22%" }}>Role / Line</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "34%" }}>What it covers</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>A floor</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>B rec.</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>C scale</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "8%" }}>Scen.</th>
                 </tr>
               </thead>
               <tbody>
-                {COST_TABLE_ROWS.map((row, i) => (
+                {COST_TABLE_ROWS.map((row) => (
                   <tr key={row.label} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
                     <td style={{ padding: "3pt 4pt", fontWeight: 600, fontSize: "9pt", verticalAlign: "top" }}>{row.label}</td>
                     <td style={{ padding: "3pt 4pt", fontSize: "8.5pt", color: MUTED, lineHeight: 1.4, verticalAlign: "top" }}>{row.description}</td>
                     <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "9pt", color: row.aVal === null ? MUTED : TEXT }}>{row.aVal === null ? "—" : fmt(row.aVal)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: 600, fontSize: "9pt" }}>{fmt(row.bVal)}</td>
+                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario !== "C" ? 600 : 400, fontSize: "9pt", color: row.bVal === null ? MUTED : TEXT }}>{row.bVal === null ? "—" : fmt(row.bVal)}</td>
+                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario === "C" ? 600 : 400, fontSize: "9pt", color: row.cVal === null ? MUTED : TEXT }}>{row.cVal === null ? "—" : fmt(row.cVal)}</td>
                     <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "8pt", color: MUTED }}>{row.scenario}</td>
                   </tr>
                 ))}
@@ -171,13 +171,14 @@ export default function OnePager() {
                   <td style={{ padding: "5pt 4pt", fontWeight: 700, fontSize: "9.5pt", color: DARK }} colSpan={2}>Cost basis total</td>
                   <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.a)}</td>
                   <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.b)}</td>
+                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.c)}</td>
                   <td></td>
                 </tr>
               </tbody>
             </table>
             <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "3pt", lineHeight: 1.35 }}>
               Cost basis includes the Dad-warehouse aggregation hub ({fmt(B_LINES.aggregationHub)}/mo all-in; see /lease-tooling for the related-party documentation).
-              Scenario C adds Sr Engineer #2 + Regional Outreach + Trainer to reach {fmt(COST_BASIS.c)}/mo.
+              Scenario C column shows the C-specific delta lines; all other lines carry forward from B. C total = {fmt(COST_BASIS.c)}/mo.
             </div>
           </div>
 

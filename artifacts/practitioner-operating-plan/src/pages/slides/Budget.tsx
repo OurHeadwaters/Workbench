@@ -4,8 +4,14 @@
  * All dollar figures are imported from @/data/budgetScenarios.
  * Do NOT hardcode any cost-basis, reinvestment, ask, or bridge
  * numbers in this file.
+ *
+ * Interaction: clicking a scenario card in the footer highlights only the
+ * rows active under that scenario (A rows always show; B rows show for B+C;
+ * C rows show only for C). Non-active rows are dimmed but remain visible so
+ * the CFO can audit the full structure at a glance.
  */
 
+import { useState } from "react";
 import {
   B_LINES, C_ADDITIONAL_LINES,
   COST_BASIS, ASK, REINVEST, BRIDGE,
@@ -17,11 +23,14 @@ import {
 // prettier-ignore
 const STORE_STACK_PHRASE = "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together";
 
+type ScenarioId = "A" | "B" | "C";
+
 interface RoleRow {
   label: string;
   description: string;
   monthly: number;
-  scenario: "A" | "B" | "C";
+  /** Minimum scenario required for this row to be active */
+  scenario: ScenarioId;
 }
 
 const ROLE_ROWS: RoleRow[] = [
@@ -56,24 +65,6 @@ const ROLE_ROWS: RoleRow[] = [
     scenario: "A",
   },
   {
-    label: "Community Dev. Associate",
-    description: "Engagement #2 readiness — the seat that makes Pilot #2 real.",
-    monthly: B_LINES.cdAssociate,
-    scenario: "B",
-  },
-  {
-    label: "Junior Analyst / Field",
-    description: "Data, household lookups, fieldwork — keeps senior roles out of spreadsheet weeds.",
-    monthly: B_LINES.juniorAnalyst,
-    scenario: "B",
-  },
-  {
-    label: "Sr Engineer #2 + Outreach + Trainer",
-    description: "Server resilience, Pilot #2 sourcing, council training.",
-    monthly: C_ADDITIONAL_LINES.srEngineer2 + C_ADDITIONAL_LINES.regionalOutreach + C_ADDITIONAL_LINES.trainer,
-    scenario: "C",
-  },
-  {
     label: "Life supports + overhead",
     description: "Cleaner, tutor, handyman — loaded household supports that make the non-negotiables hold.",
     monthly: B_LINES.lifeSupports,
@@ -98,14 +89,70 @@ const ROLE_ROWS: RoleRow[] = [
     scenario: "A",
   },
   {
+    label: "Community Dev. Associate",
+    description: "Engagement #2 readiness — the seat that makes Pilot #2 real.",
+    monthly: B_LINES.cdAssociate,
+    scenario: "B",
+  },
+  {
+    label: "Junior Analyst / Field",
+    description: "Data, household lookups, fieldwork — keeps senior roles out of spreadsheet weeds.",
+    monthly: B_LINES.juniorAnalyst,
+    scenario: "B",
+  },
+  {
     label: "Buffer (statutory + variance)",
     description: "The variance line that lets the cost basis hold even when payroll taxes or insurance jump.",
     monthly: B_LINES.buffer,
     scenario: "B",
   },
+  {
+    label: "Sr Engineer #2",
+    description: "Server resilience at scale — second senior engineer for the 9-server fleet.",
+    monthly: C_ADDITIONAL_LINES.srEngineer2,
+    scenario: "C",
+  },
+  {
+    label: "Regional Outreach",
+    description: "Pilot #2 community sourcing — the seat that makes the second engagement ready.",
+    monthly: C_ADDITIONAL_LINES.regionalOutreach,
+    scenario: "C",
+  },
+  {
+    label: "Council Trainer",
+    description: "Training cohorts at receiving bands — knowledge transfer at scale.",
+    monthly: C_ADDITIONAL_LINES.trainer,
+    scenario: "C",
+  },
+  {
+    label: "Life supports (scale delta)",
+    description: "Expanded household supports at scale — C uses $5,000/mo vs B's $2,100/mo (+$2,900).",
+    monthly: C_ADDITIONAL_LINES.lifeSupportsDelta,
+    scenario: "C",
+  },
 ];
 
+const SCENARIO_ORDER: ScenarioId[] = ["A", "B", "C"];
+
+/** Returns true if a row is active (included) under the given selected scenario */
+function isActive(rowScenario: ScenarioId, selected: ScenarioId): boolean {
+  return SCENARIO_ORDER.indexOf(rowScenario) <= SCENARIO_ORDER.indexOf(selected);
+}
+
+const SCENARIO_COST: Record<ScenarioId, number> = {
+  A: COST_BASIS.a,
+  B: COST_BASIS.b,
+  C: COST_BASIS.c,
+};
+const SCENARIO_ASK: Record<ScenarioId, number> = {
+  A: ASK.floor,
+  B: ASK.recommended,
+  C: ASK.scale,
+};
+
 export default function Budget() {
+  const [selected, setSelected] = useState<ScenarioId>("B");
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
       <div className="relative z-10 w-full h-full px-[6vw] py-[5vh] flex flex-col">
@@ -119,7 +166,7 @@ export default function Budget() {
             </div>
           </div>
           <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
-            Scenario B · {fmt(COST_BASIS.b)}/mo · {fmt(ASK.recommended)}/mo ask
+            Scenario {selected} · {fmt(SCENARIO_COST[selected])}/mo · {fmt(SCENARIO_ASK[selected])}/mo ask
           </div>
         </div>
 
@@ -129,6 +176,11 @@ export default function Budget() {
         <div className="font-display italic text-[1.4vw] text-muted mb-[3vh] max-w-[65vw]">
           Same work as V2, but no double-payment. Food Handler and Ops Manager fold into the
           Hub Operator headline on the closing slide — broken out here so the CFO can audit every line.
+          {selected === "C" && (
+            <span className="ml-[0.5vw] not-italic text-accent text-[1.1vw]">
+              ↳ Scenario C adds Sr Engineer #2, Regional Outreach, Council Trainer, and expanded life supports (+{fmt(COST_BASIS.c - COST_BASIS.b)}/mo).
+            </span>
+          )}
         </div>
 
         {/* Role table */}
@@ -143,29 +195,53 @@ export default function Budget() {
               </tr>
             </thead>
             <tbody className="text-paper">
-              {ROLE_ROWS.map((row, i) => (
-                <tr key={row.label} className={i < ROLE_ROWS.length - 1 ? "border-b border-rule" : ""}>
-                  <td className="py-[0.55vh] pr-[1vw] font-semibold font-body text-[0.9vw]">{row.label}</td>
-                  <td className="py-[0.55vh] pr-[1vw] font-body text-[0.85vw] text-muted leading-[1.35]">{row.description}</td>
-                  <td className="py-[0.55vh] pr-[1vw] text-right font-mono tabular-nums font-semibold">{fmt(row.monthly)}</td>
-                  <td className="py-[0.55vh] text-right font-mono text-muted text-[0.8vw]">{row.scenario}</td>
-                </tr>
-              ))}
+              {ROLE_ROWS.map((row, i) => {
+                const active = isActive(row.scenario, selected);
+                return (
+                  <tr
+                    key={row.label}
+                    className={[
+                      i < ROLE_ROWS.length - 1 ? "border-b border-rule" : "",
+                      "transition-opacity duration-200",
+                      active ? "opacity-100" : "opacity-30",
+                    ].join(" ")}
+                  >
+                    <td className="py-[0.55vh] pr-[1vw] font-semibold font-body text-[0.9vw]">{row.label}</td>
+                    <td className="py-[0.55vh] pr-[1vw] font-body text-[0.85vw] text-muted leading-[1.35]">{row.description}</td>
+                    <td className="py-[0.55vh] pr-[1vw] text-right font-mono tabular-nums font-semibold">{fmt(row.monthly)}</td>
+                    <td className="py-[0.55vh] text-right font-mono text-muted text-[0.8vw]">{row.scenario}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* Cost-basis summary + scenario comparison */}
+        {/* Cost-basis summary + scenario comparison — click to select */}
         <div className="mt-[2vh] pt-[2vh] border-t border-rule grid grid-cols-3 gap-[2vw]">
-          {SCENARIO_ROWS.map((s) => (
-            <div key={s.id} className={`rounded-[4px] px-[1.5vw] py-[1.5vh] ${s.id === "b" ? "border border-accent" : "border border-rule"}`}>
-              <div className="font-mono uppercase tracking-[0.18em] text-[0.75vw] text-muted mb-[0.5vh]">{s.label}</div>
-              <div className="font-display text-[2.2vw] font-semibold text-paper tabular-nums">{fmt(s.costBasis)}<span className="text-[0.8vw] text-muted font-normal font-body">/mo</span></div>
-              <div className="font-body text-[0.8vw] text-muted mt-[0.4vh]">
-                {fmt(s.reinvest)} reinvestment ({s.reinvestPct}%) · ask {fmt(s.ask)}/mo · bridge {fmtK(s.bridge)}
-              </div>
-            </div>
-          ))}
+          {SCENARIO_ROWS.map((s) => {
+            const isSelected = s.id.toUpperCase() === selected;
+            return (
+              <button
+                key={s.id}
+                onClick={() => setSelected(s.id.toUpperCase() as ScenarioId)}
+                className={[
+                  "rounded-[4px] px-[1.5vw] py-[1.5vh] text-left w-full transition-all duration-150",
+                  isSelected
+                    ? "border border-accent ring-1 ring-accent/40"
+                    : "border border-rule hover:border-accent/50",
+                ].join(" ")}
+              >
+                <div className="font-mono uppercase tracking-[0.18em] text-[0.75vw] text-muted mb-[0.5vh]">{s.label}</div>
+                <div className="font-display text-[2.2vw] font-semibold text-paper tabular-nums">
+                  {fmt(s.costBasis)}<span className="text-[0.8vw] text-muted font-normal font-body">/mo</span>
+                </div>
+                <div className="font-body text-[0.8vw] text-muted mt-[0.4vh]">
+                  {fmt(s.reinvest)} reinvestment ({s.reinvestPct}%) · ask {fmt(s.ask)}/mo · bridge {fmtK(s.bridge)}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
       </div>
