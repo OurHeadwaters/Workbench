@@ -27,6 +27,7 @@ import {
   SALT_BASELINE_NET,
   type SaltCloseRecord,
 } from "@/lib/saltClose";
+import { loadEdits } from "@/lib/costReview";
 
 const CASHFLOW_XLSX = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/headwaters-cashflow-model.xlsx`;
 
@@ -119,7 +120,10 @@ function SaltSparkline({ history }: { history: SaltCloseRecord[] }) {
 // aVal comes from A_LINE_VALS (budgetScenarios.ts) — no hardcoded dollar values here.
 // bVal comes from B_LINES (budgetScenarios.ts).
 // cVal comes from C_ADDITIONAL_LINES (budgetScenarios.ts); null = not C-specific (same as B).
+// key matches costRegistry.ts — used to apply cost-review overrides.
 type CostTableRow = {
+  /** Registry key for cost-review overrides; null = no override possible */
+  key: string | null;
   label: string;
   description: string;
   aVal: number | null;
@@ -129,21 +133,22 @@ type CostTableRow = {
 };
 
 const COST_TABLE_ROWS: CostTableRow[] = [
-  { label: "Practitioner / Lead",             description: "Engagement owner — loaded monthly take",                                                                     aVal: A_LINE_VALS.practitioner,   bVal: B_LINES.practitioner,  cVal: null,                                   scenario: "A" },
-  { label: "Operations Manager",              description: "Dryden, on-site · ~40 hrs/wk @ $40/hr loaded",                                                               aVal: A_LINE_VALS.opsManager,     bVal: B_LINES.opsManager,    cVal: null,                                   scenario: "A" },
-  { label: "IT / Tech",                       description: "Servers, privacy phones, transparency stack, store IT",                                                       aVal: A_LINE_VALS.itTech,         bVal: B_LINES.itTech,        cVal: null,                                   scenario: "A" },
-  { label: "Bookkeeper / Admin",              description: "Remote ~10 hrs/wk · CRA, invoicing, monthly close",                                                          aVal: A_LINE_VALS.bookkeeper,     bVal: B_LINES.bookkeeper,    cVal: null,                                   scenario: "A" },
-  { label: "Food Handler (embedded at DL)",   description: "Headwaters-owned, on the store floor Day 1",                                                                 aVal: A_LINE_VALS.foodHandler,    bVal: B_LINES.foodHandler,   cVal: null,                                   scenario: "A" },
-  { label: "Community Dev. Associate",        description: "Pilot #2 readiness; community-facing engagement",                                                            aVal: null,                       bVal: B_LINES.cdAssociate,   cVal: null,                                   scenario: "B" },
-  { label: "Junior Analyst / Field",          description: "Data, household price lookups, fieldwork",                                                                   aVal: null,                       bVal: B_LINES.juniorAnalyst, cVal: null,                                   scenario: "B" },
-  { label: "Sr Engineer #2",                  description: "Server resilience at scale — second senior engineer for the 9-server fleet",                                 aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.srEngineer2,         scenario: "C" },
-  { label: "Regional Outreach",               description: "Pilot #2 community sourcing — the seat that makes the second engagement ready",                              aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.regionalOutreach,    scenario: "C" },
-  { label: "Council Trainer",                 description: "Training cohorts at receiving bands — knowledge transfer at scale",                                          aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.trainer,             scenario: "C" },
-  { label: "Life supports + overhead",        description: "Cleaner $500/mo + tutor $900/mo + handyman $700/mo (C adds $2,900 scale delta)",                            aVal: A_LINE_VALS.lifeSupports,   bVal: B_LINES.lifeSupports,  cVal: C_ADDITIONAL_LINES.lifeSupportsDelta,   scenario: "A" },
-  { label: "Aggregation hub (Dad-warehouse)", description: `${STORE_STACK_PHRASE} — $2,200 rent + utilities all-in; see /lease-tooling`,                               aVal: A_LINE_VALS.aggregationHub, bVal: B_LINES.aggregationHub,cVal: null,                                   scenario: "A" },
-  { label: "Tooling, SaaS, insurance",        description: "Operating overhead — agency licenses and software stack",                                                    aVal: A_LINE_VALS.tooling,        bVal: B_LINES.tooling,       cVal: null,                                   scenario: "A" },
-  { label: "Recurring tech ops",              description: "Cloud, phone plans, monitoring — 9-server fleet monthly",                                                   aVal: A_LINE_VALS.recurringTech,  bVal: B_LINES.recurringTech, cVal: null,                                   scenario: "A" },
-  { label: "Buffer (statutory + variance)",   description: "Holds cost basis when payroll taxes or insurance jump",                                                      aVal: null,                       bVal: B_LINES.buffer,        cVal: null,                                   scenario: "B" },
+  { key: "practitioner",    label: "Practitioner / Lead",             description: "Engagement owner — loaded monthly take",                                                                     aVal: A_LINE_VALS.practitioner,   bVal: B_LINES.practitioner,  cVal: null,                                   scenario: "A" },
+  { key: "opsManager",      label: "Operations Manager",              description: "Dryden, on-site · ~40 hrs/wk @ $40/hr loaded",                                                               aVal: A_LINE_VALS.opsManager,     bVal: B_LINES.opsManager,    cVal: null,                                   scenario: "A" },
+  { key: "itTech",          label: "IT / Tech",                       description: "Servers, privacy phones, transparency stack, store IT",                                                       aVal: A_LINE_VALS.itTech,         bVal: B_LINES.itTech,        cVal: null,                                   scenario: "A" },
+  { key: "bookkeeper",      label: "Bookkeeper / Admin",              description: "Remote ~10 hrs/wk · CRA, invoicing, monthly close",                                                          aVal: A_LINE_VALS.bookkeeper,     bVal: B_LINES.bookkeeper,    cVal: null,                                   scenario: "A" },
+  { key: "foodHandler",     label: "Food Handler (embedded at DL)",   description: "Headwaters-owned, on the store floor Day 1",                                                                 aVal: A_LINE_VALS.foodHandler,    bVal: B_LINES.foodHandler,   cVal: null,                                   scenario: "A" },
+  { key: "cdAssociate",     label: "Community Dev. Associate",        description: "Pilot #2 readiness; community-facing engagement",                                                            aVal: null,                       bVal: B_LINES.cdAssociate,   cVal: null,                                   scenario: "B" },
+  { key: "juniorAnalyst",   label: "Junior Analyst / Field",          description: "Data, household price lookups, fieldwork",                                                                   aVal: null,                       bVal: B_LINES.juniorAnalyst, cVal: null,                                   scenario: "B" },
+  { key: "srEngineer2",     label: "Sr Engineer #2",                  description: "Server resilience at scale — second senior engineer for the 9-server fleet",                                 aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.srEngineer2,         scenario: "C" },
+  { key: "regionalOutreach",label: "Regional Outreach",               description: "Pilot #2 community sourcing — the seat that makes the second engagement ready",                              aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.regionalOutreach,    scenario: "C" },
+  { key: "trainer",         label: "Council Trainer",                 description: "Training cohorts at receiving bands — knowledge transfer at scale",                                          aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.trainer,             scenario: "C" },
+  { key: "lifeSupports",    label: "Life supports + overhead",        description: "Cleaner $500/mo + tutor $900/mo + handyman $700/mo",                                                         aVal: A_LINE_VALS.lifeSupports,   bVal: B_LINES.lifeSupports,  cVal: null,                                   scenario: "A" },
+  { key: null,              label: "Life supports (scale delta)",     description: "C adds $2,900/mo scale delta on life supports",                                                                aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.lifeSupportsDelta,   scenario: "C" },
+  { key: "aggregationHub",  label: "Aggregation hub (Dad-warehouse)", description: `${STORE_STACK_PHRASE} — $2,200 rent + utilities all-in; see /lease-tooling`,                               aVal: A_LINE_VALS.aggregationHub, bVal: B_LINES.aggregationHub,cVal: null,                                   scenario: "A" },
+  { key: "tooling",         label: "Tooling, SaaS, insurance",        description: "Operating overhead — agency licenses and software stack",                                                    aVal: A_LINE_VALS.tooling,        bVal: B_LINES.tooling,       cVal: null,                                   scenario: "A" },
+  { key: "recurringTech",   label: "Recurring tech ops",              description: "Cloud, phone plans, monitoring — 9-server fleet monthly",                                                   aVal: A_LINE_VALS.recurringTech,  bVal: B_LINES.recurringTech, cVal: null,                                   scenario: "A" },
+  { key: "buffer",          label: "Buffer (statutory + variance)",   description: "Holds cost basis when payroll taxes or insurance jump",                                                      aVal: null,                       bVal: B_LINES.buffer,        cVal: null,                                   scenario: "B" },
 ];
 
 // ── Reinvestment destination rows ─────────────────────────────────────
@@ -174,10 +179,70 @@ function cell(content: string | number | null, right = false, bold = false, smal
 export default function OnePager() {
   const [saltHistory, setSaltHistory] = useState<SaltCloseRecord[]>([]);
   const latest = saltHistory.length > 0 ? saltHistory[saltHistory.length - 1] : null;
+  const [overrides, setOverrides] = useState<Record<string, number>>({});
 
   useEffect(() => {
     setSaltHistory(getRecentHistory(6));
+    const edits = loadEdits();
+    const map: Record<string, number> = {};
+    for (const edit of edits) {
+      if (!edit.skipped && edit.delta !== 0) {
+        map[edit.key] = edit.newValue;
+      }
+    }
+    setOverrides(map);
   }, []);
+
+  // Returns the effective B value for a row, applying any cost-review override.
+  function effectiveBVal(row: CostTableRow): number | null {
+    if (row.bVal === null) return null;
+    if (row.key && overrides[row.key] !== undefined) return overrides[row.key];
+    return row.bVal;
+  }
+
+  // Returns the effective C value for a row, applying any cost-review override.
+  function effectiveCVal(row: CostTableRow): number | null {
+    if (row.cVal === null) return null;
+    if (row.key && overrides[row.key] !== undefined) return overrides[row.key];
+    return row.cVal;
+  }
+
+  function isBEdited(row: CostTableRow): boolean {
+    return row.bVal !== null && row.key !== null && overrides[row.key] !== undefined;
+  }
+
+  function isCEdited(row: CostTableRow): boolean {
+    return row.cVal !== null && row.key !== null && overrides[row.key] !== undefined;
+  }
+
+  const hasOverrides = Object.keys(overrides).length > 0;
+
+  // Effective cost basis totals — B and C use overrides; A uses planning defaults (not editable via cost review).
+  const effectiveBTotal = COST_TABLE_ROWS.reduce((sum, row) => {
+    const v = effectiveBVal(row);
+    return sum + (v ?? 0);
+  }, 0);
+
+  // C total = B total (with overrides) + all rows that carry a C-delta value.
+  // This includes the three scenario:"C" rows AND the lifeSupports row (scenario:"A"
+  // but cVal = C_ADDITIONAL_LINES.lifeSupportsDelta = $2,900) so we filter by
+  // row.cVal !== null rather than row.scenario === "C".
+  const effectiveCAdditional = COST_TABLE_ROWS.reduce((sum, row) => {
+    if (row.cVal === null) return sum;
+    const v = effectiveCVal(row);
+    return sum + (v ?? 0);
+  }, 0);
+  const effectiveCTotal = effectiveBTotal + effectiveCAdditional;
+
+  // Effective scenario rows for the bill scenarios table.
+  const effectiveScenarioRows = SCENARIO_ROWS.map((s) => {
+    if (s.id === "a") return s;
+    const costBasis = s.id === "b" ? effectiveBTotal : effectiveCTotal;
+    const reinvest = s.ask - costBasis;
+    const reinvestPct = Math.round((reinvest / costBasis) * 100);
+    const bridge = costBasis * 2 + (s.id === "b" ? CAPEX.b : CAPEX.c);
+    return { ...s, costBasis, reinvest, reinvestPct, bridge };
+  });
 
   return (
     <div style={{ background: "#d8d2c8", minHeight: "100vh" }}>
@@ -231,8 +296,15 @@ export default function OnePager() {
 
           {/* ── Section 1: Cost basis table ───────────────────────── */}
           <div style={{ marginBottom: "12pt" }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "5pt" }}>
-              The Cost Basis (A / B / C floor · the A floor cost basis is auditable line-by-line)
+            <div style={{ display: "flex", alignItems: "baseline", gap: "8pt", marginBottom: "5pt" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
+                The Cost Basis (A / B / C floor · the A floor cost basis is auditable line-by-line)
+              </div>
+              {hasOverrides && (
+                <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7pt", color: AMBER, opacity: 0.75, whiteSpace: "nowrap" }}>
+                  ★ cost-review overrides applied
+                </div>
+              )}
             </div>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "9pt", tableLayout: "fixed" }}>
               <thead>
@@ -246,28 +318,59 @@ export default function OnePager() {
                 </tr>
               </thead>
               <tbody>
-                {COST_TABLE_ROWS.map((row) => (
-                  <tr key={row.label} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
-                    <td style={{ padding: "3pt 4pt", fontWeight: 600, fontSize: "9pt", verticalAlign: "top" }}>{row.label}</td>
-                    <td style={{ padding: "3pt 4pt", fontSize: "8.5pt", color: MUTED, lineHeight: 1.4, verticalAlign: "top" }}>{row.description}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "9pt", color: row.aVal === null ? MUTED : TEXT }}>{row.aVal === null ? "—" : fmt(row.aVal)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario !== "C" ? 600 : 400, fontSize: "9pt", color: row.bVal === null ? MUTED : TEXT }}>{row.bVal === null ? "—" : fmt(row.bVal)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario === "C" ? 600 : 400, fontSize: "9pt", color: row.cVal === null ? MUTED : TEXT }}>{row.cVal === null ? "—" : fmt(row.cVal)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "8pt", color: MUTED }}>{row.scenario}</td>
-                  </tr>
-                ))}
+                {COST_TABLE_ROWS.map((row) => {
+                  const effB = effectiveBVal(row);
+                  const effC = effectiveCVal(row);
+                  const bEdited = isBEdited(row);
+                  const cEdited = isCEdited(row);
+                  return (
+                    <tr key={row.label} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
+                      <td style={{ padding: "3pt 4pt", fontWeight: 600, fontSize: "9pt", verticalAlign: "top" }}>
+                        {row.label}
+                        {(bEdited || cEdited) && (
+                          <span style={{ marginLeft: "4pt", fontSize: "7pt", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontWeight: 400, color: AMBER }}>★ edited</span>
+                        )}
+                      </td>
+                      <td style={{ padding: "3pt 4pt", fontSize: "8.5pt", color: MUTED, lineHeight: 1.4, verticalAlign: "top" }}>{row.description}</td>
+                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "9pt", color: row.aVal === null ? MUTED : TEXT }}>{row.aVal === null ? "—" : fmt(row.aVal)}</td>
+                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario !== "C" ? 600 : 400, fontSize: "9pt", color: effB === null ? MUTED : TEXT }}>
+                        {effB === null ? "—" : fmt(effB)}
+                        {bEdited && row.bVal !== null && (
+                          <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(row.bVal)}</span>
+                        )}
+                      </td>
+                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario === "C" ? 600 : 400, fontSize: "9pt", color: effC === null ? MUTED : TEXT }}>
+                        {effC === null ? "—" : fmt(effC)}
+                        {cEdited && row.cVal !== null && (
+                          <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(row.cVal)}</span>
+                        )}
+                      </td>
+                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "8pt", color: MUTED }}>{row.scenario}</td>
+                    </tr>
+                  );
+                })}
                 <tr style={{ borderTop: `1.5pt solid ${RULE}`, background: "rgba(31,61,46,0.04)" }}>
                   <td style={{ padding: "5pt 4pt", fontWeight: 700, fontSize: "9.5pt", color: DARK }} colSpan={2}>Cost basis total</td>
                   <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.a)}</td>
-                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.b)}</td>
-                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.c)}</td>
+                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>
+                    {fmt(effectiveBTotal)}
+                    {hasOverrides && effectiveBTotal !== COST_BASIS.b && (
+                      <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(COST_BASIS.b)}</span>
+                    )}
+                  </td>
+                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>
+                    {fmt(effectiveCTotal)}
+                    {hasOverrides && effectiveCTotal !== COST_BASIS.c && (
+                      <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(COST_BASIS.c)}</span>
+                    )}
+                  </td>
                   <td></td>
                 </tr>
               </tbody>
             </table>
             <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "3pt", lineHeight: 1.35 }}>
               Cost basis includes the Dad-warehouse aggregation hub ({fmt(B_LINES.aggregationHub)}/mo all-in; see /lease-tooling for the related-party documentation).
-              Scenario C column shows the C-specific delta lines; all other lines carry forward from B. C total = {fmt(COST_BASIS.c)}/mo.
+              Scenario C column shows the C-specific delta lines; all other lines carry forward from B. C total = {fmt(effectiveCTotal)}/mo.
             </div>
           </div>
 
@@ -287,7 +390,7 @@ export default function OnePager() {
                 </tr>
               </thead>
               <tbody>
-                {SCENARIO_ROWS.map((s) => (
+                {effectiveScenarioRows.map((s) => (
                   <tr key={s.id} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
                     <td style={{ padding: "3pt 4pt", fontWeight: 600 }}>{s.label}</td>
                     <td style={{ padding: "3pt 4pt", textAlign: "right" }}>{fmt(s.costBasis)}</td>

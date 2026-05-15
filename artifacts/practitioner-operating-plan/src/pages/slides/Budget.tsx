@@ -9,14 +9,19 @@
  * rows active under that scenario (A rows always show; B rows show for B+C;
  * C rows show only for C). Non-active rows are dimmed but remain visible so
  * the CFO can audit the full structure at a glance.
+ *
+ * Override layer: the founder's cost-review edits (stored in localStorage
+ * via costReview.ts) are read here and applied live. Overridden rows show
+ * a "★ edited" badge so the board can see what has been customised.
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  B_LINES, C_ADDITIONAL_LINES,
-  COST_BASIS, ASK, REINVEST, BRIDGE,
+  A_LINES, B_LINES, C_ADDITIONAL_LINES,
+  COST_BASIS, ASK, BRIDGE, CAPEX,
   fmt, fmtK, SCENARIO_ROWS,
 } from "@/data/budgetScenarios";
+import { loadEdits } from "@/lib/costReview";
 
 // The store runs on a shared software stack — used on every surface that
 // carries the operator-couple framing (drift-guard phrase):
@@ -26,6 +31,8 @@ const STORE_STACK_PHRASE = "Square at the till, QuickBooks on the books, Local L
 type ScenarioId = "A" | "B" | "C";
 
 interface RoleRow {
+  /** Registry key — used to look up cost-review overrides */
+  key: string | null;
   label: string;
   description: string;
   monthly: number;
@@ -35,96 +42,112 @@ interface RoleRow {
 
 const ROLE_ROWS: RoleRow[] = [
   {
+    key: "practitioner",
     label: "Practitioner / Lead",
     description: "Engagement owner — your loaded monthly take in the recommended scenario.",
     monthly: B_LINES.practitioner,
     scenario: "A",
   },
   {
+    key: "opsManager",
     label: "Operations Manager",
     description: "Dryden, on-site. ~40 hrs/wk @ $40/hr loaded. The phone-holder.",
     monthly: B_LINES.opsManager,
     scenario: "A",
   },
   {
+    key: "itTech",
     label: "IT / Tech",
     description: "Servers, privacy phones, transparency stack, store IT.",
     monthly: B_LINES.itTech,
     scenario: "A",
   },
   {
+    key: "bookkeeper",
     label: "Bookkeeper / Admin",
     description: "Remote, ~10 hrs/wk @ $40/hr loaded. CRA, invoicing, monthly close.",
     monthly: B_LINES.bookkeeper,
     scenario: "A",
   },
   {
+    key: "foodHandler",
     label: "Food Handler (embedded at Deer Lake)",
     description: "Headwaters-owned, on the store floor Day 1. Salt batches, 807 piecework, kitchen + shop tidy.",
     monthly: B_LINES.foodHandler,
     scenario: "A",
   },
   {
+    key: "lifeSupports",
     label: "Life supports + overhead",
     description: "Cleaner, tutor, handyman — loaded household supports that make the non-negotiables hold.",
     monthly: B_LINES.lifeSupports,
     scenario: "A",
   },
   {
+    key: "aggregationHub",
     label: "Aggregation hub (Dad-warehouse)",
     description: "$2,200 rent + utilities, all-in. Related-party lease documented at /lease-tooling.",
     monthly: B_LINES.aggregationHub,
     scenario: "A",
   },
   {
+    key: "tooling",
     label: "Tooling, SaaS, insurance",
     description: `${STORE_STACK_PHRASE} — plus agency licenses, drone, and insurance.`,
     monthly: B_LINES.tooling,
     scenario: "A",
   },
   {
+    key: "recurringTech",
     label: "Recurring tech ops",
     description: "Cloud, phone plans, monitoring — what the 9-server fleet costs to run monthly.",
     monthly: B_LINES.recurringTech,
     scenario: "A",
   },
   {
+    key: "cdAssociate",
     label: "Community Dev. Associate",
     description: "Engagement #2 readiness — the seat that makes Pilot #2 real.",
     monthly: B_LINES.cdAssociate,
     scenario: "B",
   },
   {
+    key: "juniorAnalyst",
     label: "Junior Analyst / Field",
     description: "Data, household lookups, fieldwork — keeps senior roles out of spreadsheet weeds.",
     monthly: B_LINES.juniorAnalyst,
     scenario: "B",
   },
   {
+    key: "buffer",
     label: "Buffer (statutory + variance)",
     description: "The variance line that lets the cost basis hold even when payroll taxes or insurance jump.",
     monthly: B_LINES.buffer,
     scenario: "B",
   },
   {
+    key: "srEngineer2",
     label: "Sr Engineer #2",
     description: "Server resilience at scale — second senior engineer for the 9-server fleet.",
     monthly: C_ADDITIONAL_LINES.srEngineer2,
     scenario: "C",
   },
   {
+    key: "regionalOutreach",
     label: "Regional Outreach",
     description: "Pilot #2 community sourcing — the seat that makes the second engagement ready.",
     monthly: C_ADDITIONAL_LINES.regionalOutreach,
     scenario: "C",
   },
   {
+    key: "trainer",
     label: "Council Trainer",
     description: "Training cohorts at receiving bands — knowledge transfer at scale.",
     monthly: C_ADDITIONAL_LINES.trainer,
     scenario: "C",
   },
   {
+    key: null,
     label: "Life supports (scale delta)",
     description: "Expanded household supports at scale — C uses $5,000/mo vs B's $2,100/mo (+$2,900).",
     monthly: C_ADDITIONAL_LINES.lifeSupportsDelta,
@@ -139,19 +162,70 @@ function isActive(rowScenario: ScenarioId, selected: ScenarioId): boolean {
   return SCENARIO_ORDER.indexOf(rowScenario) <= SCENARIO_ORDER.indexOf(selected);
 }
 
-const SCENARIO_COST: Record<ScenarioId, number> = {
-  A: COST_BASIS.a,
-  B: COST_BASIS.b,
-  C: COST_BASIS.c,
-};
-const SCENARIO_ASK: Record<ScenarioId, number> = {
-  A: ASK.floor,
-  B: ASK.recommended,
-  C: ASK.scale,
-};
-
 export default function Budget() {
   const [selected, setSelected] = useState<ScenarioId>("B");
+  const [overrides, setOverrides] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const edits = loadEdits();
+    const map: Record<string, number> = {};
+    for (const edit of edits) {
+      if (!edit.skipped && edit.delta !== 0) {
+        map[edit.key] = edit.newValue;
+      }
+    }
+    setOverrides(map);
+  }, []);
+
+  function effectiveMonthly(row: RoleRow): number {
+    if (row.key && overrides[row.key] !== undefined) return overrides[row.key];
+    return row.monthly;
+  }
+
+  function isEdited(row: RoleRow): boolean {
+    return row.key !== null && overrides[row.key] !== undefined;
+  }
+
+  // Compute effective scenario cost totals from override-applied row values.
+  // Scenario A uses A_LINES values (the floor is not editable via cost review).
+  // Scenario B = sum of A+B rows with overrides.
+  // Scenario C = sum of A+B rows with overrides + C additional rows with overrides.
+  const aRows = ROLE_ROWS.filter((r) => r.scenario === "A");
+  const bRows = ROLE_ROWS.filter((r) => r.scenario === "B");
+  const cRows = ROLE_ROWS.filter((r) => r.scenario === "C");
+
+  // A-scenario: uses A_LINES (not editable via cost-review), so keep planning default
+  const effectiveACost = COST_BASIS.a;
+
+  const effectiveBCost =
+    aRows.reduce((sum, r) => sum + effectiveMonthly(r), 0) +
+    bRows.reduce((sum, r) => sum + effectiveMonthly(r), 0);
+
+  const effectiveCCost =
+    effectiveBCost +
+    cRows.reduce((sum, r) => sum + effectiveMonthly(r), 0);
+
+  const hasOverrides = Object.keys(overrides).length > 0;
+
+  const EFFECTIVE_SCENARIO_COST: Record<ScenarioId, number> = {
+    A: effectiveACost,
+    B: effectiveBCost,
+    C: effectiveCCost,
+  };
+
+  // Build effective scenario rows for the footer cards (override cost basis only)
+  const effectiveScenarioRows = SCENARIO_ROWS.map((s) => {
+    const id = s.id.toUpperCase() as ScenarioId;
+    const costBasis = EFFECTIVE_SCENARIO_COST[id];
+    const reinvest = s.ask - costBasis;
+    const reinvestPct = Math.round((reinvest / costBasis) * 100);
+    const bridge = costBasis * 2 + (id === "A" ? CAPEX.a : id === "B" ? CAPEX.b : CAPEX.c);
+    return { ...s, costBasis, reinvest, reinvestPct, bridge };
+  });
+
+  const bDelta = effectiveBCost - COST_BASIS.b;
+  const cDelta = effectiveCCost - COST_BASIS.c;
+  const selectedDelta = selected === "A" ? 0 : selected === "B" ? bDelta : cDelta;
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
@@ -165,8 +239,15 @@ export default function Budget() {
               Budget — the six people
             </div>
           </div>
-          <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
-            Scenario {selected} · {fmt(SCENARIO_COST[selected])}/mo · {fmt(SCENARIO_ASK[selected])}/mo ask
+          <div className="flex items-center gap-[1.5vw]">
+            {hasOverrides && selectedDelta !== 0 && (
+              <div className="font-mono text-[0.8vw] text-accent opacity-80">
+                {selectedDelta > 0 ? "+" : ""}{fmt(selectedDelta)} vs plan
+              </div>
+            )}
+            <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">
+              Scenario {selected} · {fmt(EFFECTIVE_SCENARIO_COST[selected])}/mo · {fmt(effectiveScenarioRows.find(s => s.id.toUpperCase() === selected)!.ask)}/mo ask
+            </div>
           </div>
         </div>
 
@@ -178,7 +259,7 @@ export default function Budget() {
           Hub Operator headline (V · Net-positive accountability) — broken out here so the CFO can audit every line.
           {selected === "C" && (
             <span className="ml-[0.5vw] not-italic text-accent text-[1.1vw]">
-              ↳ Scenario C adds Sr Engineer #2, Regional Outreach, Council Trainer, and expanded life supports (+{fmt(COST_BASIS.c - COST_BASIS.b)}/mo).
+              ↳ Scenario C adds Sr Engineer #2, Regional Outreach, Council Trainer, and expanded life supports (+{fmt(effectiveCCost - effectiveBCost)}/mo).
             </span>
           )}
         </div>
@@ -197,6 +278,8 @@ export default function Budget() {
             <tbody className="text-paper">
               {ROLE_ROWS.map((row, i) => {
                 const active = isActive(row.scenario, selected);
+                const edited = isEdited(row);
+                const effective = effectiveMonthly(row);
                 return (
                   <tr
                     key={row.label}
@@ -206,9 +289,19 @@ export default function Budget() {
                       active ? "opacity-100" : "opacity-30",
                     ].join(" ")}
                   >
-                    <td className="py-[0.55vh] pr-[1vw] font-semibold font-body text-[0.9vw]">{row.label}</td>
+                    <td className="py-[0.55vh] pr-[1vw] font-semibold font-body text-[0.9vw]">
+                      {row.label}
+                      {edited && (
+                        <span className="ml-[0.4vw] text-[0.7vw] font-mono font-normal text-accent opacity-80">★ edited</span>
+                      )}
+                    </td>
                     <td className="py-[0.55vh] pr-[1vw] font-body text-[0.85vw] text-muted leading-[1.35]">{row.description}</td>
-                    <td className="py-[0.55vh] pr-[1vw] text-right font-mono tabular-nums font-semibold">{fmt(row.monthly)}</td>
+                    <td className="py-[0.55vh] pr-[1vw] text-right font-mono tabular-nums font-semibold">
+                      {fmt(effective)}
+                      {edited && (
+                        <span className="ml-[0.3vw] text-[0.7vw] font-normal text-muted line-through">{fmt(row.monthly)}</span>
+                      )}
+                    </td>
                     <td className="py-[0.55vh] text-right font-mono text-muted text-[0.8vw]">{row.scenario}</td>
                   </tr>
                 );
@@ -224,7 +317,7 @@ export default function Budget() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-[0.8vh]">
               <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted opacity-60">
-                Scenario comparison
+                Scenario comparison{hasOverrides && <span className="ml-[0.5vw] text-accent opacity-80">· cost-review overrides applied</span>}
               </div>
               <a
                 href={`${import.meta.env.BASE_URL}hiring-templates`}
@@ -237,12 +330,15 @@ export default function Budget() {
               </a>
             </div>
             <div className="grid grid-cols-3 gap-[1.5vw]">
-              {SCENARIO_ROWS.map((s) => {
+              {effectiveScenarioRows.map((s) => {
                 const isSelected = s.id.toUpperCase() === selected;
+                const id = s.id.toUpperCase() as ScenarioId;
+                const planDefault = id === "A" ? COST_BASIS.a : id === "B" ? COST_BASIS.b : COST_BASIS.c;
+                const delta = s.costBasis - planDefault;
                 return (
                   <button
                     key={s.id}
-                    onClick={() => setSelected(s.id.toUpperCase() as ScenarioId)}
+                    onClick={() => setSelected(id)}
                     className={[
                       "rounded-[4px] px-[1.2vw] py-[1.2vh] text-left w-full transition-all duration-150",
                       isSelected
@@ -254,6 +350,11 @@ export default function Budget() {
                     <div className="font-display text-[2vw] font-semibold text-paper tabular-nums">
                       {fmt(s.costBasis)}<span className="text-[0.75vw] text-muted font-normal font-body">/mo</span>
                     </div>
+                    {hasOverrides && delta !== 0 && (
+                      <div className="font-mono text-[0.65vw] text-accent opacity-75 mt-[0.2vh]">
+                        {delta > 0 ? "+" : ""}{fmt(delta)} vs plan
+                      </div>
+                    )}
                     <div className="font-body text-[0.75vw] text-muted mt-[0.3vh]">
                       {fmt(s.reinvest)} reinvestment ({s.reinvestPct}%) · ask {fmt(s.ask)}/mo · bridge {fmtK(s.bridge)}
                     </div>

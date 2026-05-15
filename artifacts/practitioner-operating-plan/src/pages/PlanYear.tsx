@@ -108,12 +108,6 @@ function BenchSwapAudit() {
           const batch = wkNum !== null
             ? Q2_BATCHES.find((b) => b.isoWeek === wkNum)
             : undefined;
-          const swappedDate = ov.overriddenAt
-            ? new Date(ov.overriddenAt).toLocaleDateString("en-CA", {
-                month: "short",
-                day: "numeric",
-              })
-            : null;
 
           return (
             <div
@@ -188,7 +182,7 @@ function BenchSwapAudit() {
                       "{ov.primaryReason ?? ov.standbyReason}"
                     </div>
                   )}
-                  {swappedDate && (
+                  {ov.overriddenAt && (
                     <div
                       style={{
                         fontFamily: "IBM Plex Mono, monospace",
@@ -198,7 +192,7 @@ function BenchSwapAudit() {
                         marginTop: 1,
                       }}
                     >
-                      Swapped {swappedDate}
+                      Swapped {new Date(ov.overriddenAt).toLocaleDateString()}
                     </div>
                   )}
                 </div>
