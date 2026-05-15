@@ -9,7 +9,7 @@ import {
   type Phase,
 } from "@/data/plan2026";
 import { Q2_BATCHES } from "@/lib/saltBench";
-import { loadAllWeekBenchOverrides, deleteBenchOverride, type BenchOverride } from "@/lib/storage";
+import { loadAllWeekBenchOverrides, clearWeekBenchOverride, type BenchOverride } from "@/lib/storage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -39,7 +39,7 @@ function BenchSwapAudit() {
   }, [refresh]);
 
   function handleRestore(weekId: string) {
-    deleteBenchOverride(weekId);
+    clearWeekBenchOverride(weekId);
     refresh();
   }
 
@@ -108,6 +108,8 @@ function BenchSwapAudit() {
           const batch = wkNum !== null
             ? Q2_BATCHES.find((b) => b.isoWeek === wkNum)
             : undefined;
+
+          const swappedDate = ov.overriddenAt ? new Date(ov.overriddenAt).toLocaleDateString() : null;
 
           return (
             <div
@@ -182,7 +184,7 @@ function BenchSwapAudit() {
                       "{ov.primaryReason ?? ov.standbyReason}"
                     </div>
                   )}
-                  {ov.overriddenAt && (
+                  {swappedDate && (
                     <div
                       style={{
                         fontFamily: "IBM Plex Mono, monospace",
@@ -192,7 +194,7 @@ function BenchSwapAudit() {
                         marginTop: 1,
                       }}
                     >
-                      Swapped {new Date(ov.overriddenAt).toLocaleDateString()}
+                      Swapped {swappedDate}
                     </div>
                   )}
                 </div>

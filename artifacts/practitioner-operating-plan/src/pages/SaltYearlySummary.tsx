@@ -12,6 +12,16 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { getMonthHistory, SALT_BASELINE_NET, type SaltCloseRecord } from "@/lib/saltClose";
 
+const PRINT_STYLES = `
+@media print {
+  @page { margin: 0.55in 0.65in; size: letter portrait; }
+  body { background: #f4ede0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .yearly-summary-shell { background: transparent !important; min-height: unset !important; }
+  .yearly-summary-page  { width: 100% !important; margin: 0 !important; box-shadow: none !important; }
+  .yearly-summary-body  { padding: 0 !important; }
+}
+`;
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 // ─── Design tokens ─────────────────────────────────────────────────────────
@@ -187,9 +197,12 @@ export default function SaltYearlySummary() {
   const annualCmPct = pct(annualTotals.net, annualTotals.revenue);
   const annualVsPlan = annualTotals.net - SALT_BASELINE_NET * yearRecords.length;
 
+  const filingDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
   return (
-    <div style={{ background: "#d8d2c8", minHeight: "100vh" }}>
-      <div style={{
+    <div className="yearly-summary-shell" style={{ background: "#d8d2c8", minHeight: "100vh" }}>
+      <style>{PRINT_STYLES}</style>
+      <div className="yearly-summary-page" style={{
         width: "8.5in",
         margin: "0 auto",
         background: CREAM,
@@ -197,7 +210,7 @@ export default function SaltYearlySummary() {
         fontSize: "9pt",
         color: TEXT,
       }}>
-        <div style={{ width: "8.5in", minHeight: "11in", padding: "0.55in 0.65in" }}>
+        <div className="yearly-summary-body" style={{ width: "8.5in", minHeight: "11in", padding: "0.55in 0.65in" }}>
 
           {/* Amber rule */}
           <div style={{ height: "3pt", background: AMBER, margin: "0 0 14pt" }} />
@@ -216,7 +229,7 @@ export default function SaltYearlySummary() {
                 Use this page for year-end audit review — no re-entry required.
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6pt" }}>
+            <div className="print:hidden" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6pt" }}>
               <button
                 onClick={() => navigate(`${BASE}/tools/salt-close`)}
                 style={{
@@ -235,7 +248,32 @@ export default function SaltYearlySummary() {
               >
                 ← Monthly Close
               </button>
+              <button
+                onClick={() => window.print()}
+                style={{
+                  padding: "4pt 12pt",
+                  background: DARK,
+                  color: CREAM,
+                  border: `1pt solid ${DARK}`,
+                  borderRadius: "3pt",
+                  fontSize: "7.5pt",
+                  fontWeight: 700,
+                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                }}
+              >
+                Print / Save as PDF
+              </button>
               <div style={{ fontSize: "7pt", color: MUTED }}>Headwaters Development Services</div>
+            </div>
+          </div>
+
+          {/* Print-only document meta */}
+          <div className="hidden print:block" style={{ marginBottom: "10pt" }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7.5pt", color: MUTED, letterSpacing: "0.1em" }}>
+              Year: {selectedYear} &nbsp;·&nbsp; Filed: {filingDate} &nbsp;·&nbsp; Headwaters Development Services
             </div>
           </div>
 
@@ -260,7 +298,7 @@ export default function SaltYearlySummary() {
             <>
               {/* Year selector */}
               {years.length > 1 && (
-                <div style={{ display: "flex", gap: "6pt", marginBottom: "18pt" }}>
+                <div className="print:hidden" style={{ display: "flex", gap: "6pt", marginBottom: "18pt" }}>
                   {years.map(y => (
                     <button
                       key={y}

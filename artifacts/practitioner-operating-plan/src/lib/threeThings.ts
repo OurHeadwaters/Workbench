@@ -227,6 +227,7 @@ export function dismissRollover(weekKey: string): WeeklyThree {
 
 // ── Daily layer (per-calendar-day) ────────────────────────────────────────────
 
+/** A single daily to-do item. */
 export interface DailyItem {
   text: string;
   done: boolean;
