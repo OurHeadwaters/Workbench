@@ -27,6 +27,26 @@ const TOOLS = [
     warn: false,
   },
   {
+    number: "05",
+    title: "Bench Swap",
+    subtitle: "Operations Manager · swap primary or standby for any week",
+    description:
+      "Review the scheduled food-handler bench and override either role when coverage changes. Add a one-line reason (e.g. Marie sick) so the audit trail is legible weeks later. Overrides persist in the browser and survive page reloads. Open the Week Close-Out view to get a printable record with swap notes for the bookkeeper.",
+    path: `${BASE}/tools/bench/week`,
+    label: "Open bench swap →",
+    warn: false,
+  },
+  {
+    number: "05b",
+    title: "Bench Week Close-Out",
+    subtitle: "Bookkeeper / OM · printable record with swap reasons",
+    description:
+      "A printable audit record for any ISO week showing effective primary and standby roles. Swapped roles display swapped from <name> -- <reason> so the bookkeeper can reconcile coverage without hunting for Slack messages. Navigate by week and use Cmd/Ctrl + P to save as PDF.",
+    path: `${BASE}/tools/bench/close`,
+    label: "Open close-out →",
+    warn: false,
+  },
+  {
     number: "02",
     title: "Reference-Call Script — Standard",
     subtitle: "Any hired role · 8 questions · 3 calls minimum",

@@ -209,3 +209,72 @@ export function currentQuarterId(): string {
   const q = Math.ceil((now.getMonth() + 1) / 3);
   return `${now.getFullYear()}-Q${q}`;
 }
+
+// ── Bench overrides ───────────────────────────────────────────────────────────
+
+/**
+ * An OM-authored swap on a scheduled bench role for one week.
+ *
+ * Both primary and standby swaps are stored together in a single record per
+ * week so reads are a single localStorage fetch.  Either field may be absent
+ * when only one role was swapped.
+ *
+ * `primaryReason` / `standbyReason` are optional one-line notes the OM can
+ * jot at swap time (e.g. "Marie sick", "on vacation").  They render alongside
+ * the "swapped from <name>" annotation on the Week and WeekCloseOut pages.
+ */
+export interface BenchOverride {
+  weekId: string;           // e.g. "2026-W20"
+  primaryName?: string;     // replacement name for primary role
+  standbyName?: string;     // replacement name for standby role
+  primaryReason?: string;   // one-line reason for primary swap
+  standbyReason?: string;   // one-line reason for standby swap
+  overriddenAt: string;     // ISO timestamp of last save
+}
+
+const KEY_BENCH_OVERRIDES = "hwop_bench_overrides_v1";
+
+type BenchOverrideStore = Record<string, BenchOverride>;
+
+function loadOverrideStore(): BenchOverrideStore {
+  try {
+    const raw = localStorage.getItem(KEY_BENCH_OVERRIDES);
+    if (!raw) return {};
+    return JSON.parse(raw) as BenchOverrideStore;
+  } catch {
+    return {};
+  }
+}
+
+function persistOverrideStore(store: BenchOverrideStore): void {
+  localStorage.setItem(KEY_BENCH_OVERRIDES, JSON.stringify(store));
+}
+
+/** Return all bench overrides as an array, sorted by weekId. */
+export function loadBenchOverrides(): BenchOverride[] {
+  return Object.values(loadOverrideStore()).sort((a, b) =>
+    a.weekId.localeCompare(b.weekId),
+  );
+}
+
+/** Return the override for a specific week, or null if none. */
+export function loadBenchOverride(weekId: string): BenchOverride | null {
+  return loadOverrideStore()[weekId] ?? null;
+}
+
+/**
+ * Upsert the override for a week.  Pass `undefined` for either name/reason to
+ * clear just that field; omit the key entirely to leave it unchanged.
+ */
+export function saveBenchOverride(override: BenchOverride): void {
+  const store = loadOverrideStore();
+  store[override.weekId] = { ...override, overriddenAt: new Date().toISOString() };
+  persistOverrideStore(store);
+}
+
+/** Remove the override record for a week entirely. */
+export function deleteBenchOverride(weekId: string): void {
+  const store = loadOverrideStore();
+  delete store[weekId];
+  persistOverrideStore(store);
+}
