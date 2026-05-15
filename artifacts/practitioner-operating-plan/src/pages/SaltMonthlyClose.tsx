@@ -508,6 +508,10 @@ export default function SaltMonthlyClose() {
     }
   }, [channels]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Derived state for overwrite guard ──────────────────────────────────────
+  const existingClose = history.find(h => h.month === month);
+  const net = (Number(revenue) || 0) - (Number(expenses) || 0);
+
   // ── Channel handlers ───────────────────────────────────────────────────────
 
   function handlePasteChange(source: ImportSource, text: string) {
@@ -675,15 +679,7 @@ export default function SaltMonthlyClose() {
     setPendingImport(null);
   }
 
-  // ── Filing form ────────────────────────────────────────────────────────────
-  const net = (parseFloat(revenue) || 0) - (parseFloat(expenses) || 0);
-  const existingClose = history.find(r => r.month === month) ?? null;
-
-  const curQId        = currentQuarterId();
-  const priorChain    = computePriorChain(history, curQId);
-  const priorMetrics  = channelMonthMetrics(priorChain);
-  const prevQtrUnder  = autoPrevQuarterUnder(history, curQId, SALT_BASELINE_NET);
-  const priorComplete = priorChain.length === 3;
+  // ── Filing form handlers ───────────────────────────────────────────────────
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -723,6 +719,14 @@ export default function SaltMonthlyClose() {
     setRevenue("");
     setFromImport(false);
   }
+
+  const curQId        = currentQuarterId();
+  const priorChain    = computePriorChain(history, curQId);
+  const priorMetrics  = channelMonthMetrics(priorChain);
+  const prevQtrUnder  = autoPrevQuarterUnder(history, curQId, SALT_BASELINE_NET);
+  const priorComplete = priorChain.length === 3;
+
+  const net = (parseFloat(revenue) || 0) - (parseFloat(expenses) || 0);
 
   return (
     <>
@@ -797,7 +801,6 @@ export default function SaltMonthlyClose() {
               </div>
             </div>
 
-            {/* ── Channel Summary Table ─────────────────────────────────────── */}
             {hasAnyApplied && (
               <div style={{ marginBottom: "18pt" }}>
                 <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
@@ -843,43 +846,8 @@ export default function SaltMonthlyClose() {
                         </tr>
                       );
                     })}
-                    {/* Total row */}
-                    <tr style={{ borderTop: `1.5pt solid ${RULE}`, background: "rgba(31,61,46,0.04)" }}>
-                      <td style={{ padding: "5pt 4pt", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", letterSpacing: "0.06em", textTransform: "uppercase", color: DARK }}>Total</td>
-                      <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
-                        {fmt(channelTotals.reduce((s, r) => s + r.grossSales, 0))}
-                      </td>
-                      <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", color: RED }}>
-                        {channelTotals.some(r => r.refunds !== 0)
-                          ? `(${fmt(channelTotals.reduce((s, r) => s + Math.abs(r.refunds), 0))})`
-                          : "—"}
-                      </td>
-                      <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", color: totalNet >= 0 ? GREEN : RED }}>
-                        {totalNet < 0 ? `(${fmt(totalNet)})` : fmt(totalNet)}
-                      </td>
-                      <td className="print:hidden" style={{ padding: "5pt 4pt" }} />
-                    </tr>
                   </tbody>
                 </table>
-                <div className="print:hidden" style={{ marginTop: "6pt", fontSize: "7pt", color: MUTED, fontStyle: "italic" }}>
-                  Δ column shows net change from the prior snapshot for each channel.
-                  Hidden in print — the filed record shows only the resulting numbers.
-                </div>
-
-                {/* Net preview */}
-                {revenue && (
-                  <div style={{ padding: "5pt 8pt", background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", marginTop: "12pt" }}>
-                    <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, marginBottom: "2pt" }}>
-                      Net preview
-                    </div>
-                    <div style={{ fontSize: "13pt", fontWeight: 700, color: net >= 0 ? DARK : RED, fontFamily: "Fraunces, Georgia, serif" }}>
-                      {net >= 0 ? fmt(net) : `(${fmt(Math.abs(net))})`}
-                    </div>
-                    <div style={{ fontSize: "7.5pt", color: MUTED }}>
-                      vs. {fmt(SALT_BASELINE_NET)} baseline
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 
@@ -887,6 +855,10 @@ export default function SaltMonthlyClose() {
             <div style={{ marginBottom: "20pt" }}>
               <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "12pt" }}>
                 File a month
+              </div>
+              <div style={{ fontSize: "8.5pt", color: MUTED, marginBottom: "12pt", lineHeight: 1.5 }}>
+                Recording a close month stamps the revenue/expenses and prevents accidental modification.
+                If you need to update a month, re-filing it will overwrite the previous record.
               </div>
 
               <form onSubmit={handleSubmit}>
@@ -1150,6 +1122,194 @@ export default function SaltMonthlyClose() {
 
           </div>
 
+          {/* ── Filed months history ────────────────────────────────────────── */}
+          <div style={{ marginBottom: "18pt" }}>
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".json,application/json"
+              style={{ display: "none" }}
+              onChange={handleImportFile}
+            />
+
+            <div className="print:hidden" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8pt", flexWrap: "wrap", gap: "6pt" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
+                Filed months ({history.length})
+              </div>
+              <div style={{ display: "flex", gap: "6pt", flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={handleDownloadCSV}
+                  disabled={history.length === 0}
+                  title="Download history as a spreadsheet-ready CSV"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: history.length > 0 ? DARK : RULE,
+                    color: CREAM,
+                    border: "none",
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 700,
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Download CSV
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadJSON}
+                  disabled={history.length === 0}
+                  title="Download history as a JSON backup"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: history.length > 0 ? DARK : MUTED,
+                    border: `1pt solid ${RULE}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Download JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={handleImportClick}
+                  title="Restore history from a previously exported JSON file"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: AMBER,
+                    border: `1pt solid ${AMBER}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Import JSON
+                </button>
+                {history.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`${BASE}/tools/salt-yearly`)}
+                    style={{
+                      background: "transparent",
+                      border: `1pt solid ${AMBER}`,
+                      color: AMBER,
+                      borderRadius: "3pt",
+                      padding: "3pt 10pt",
+                      fontSize: "7.5pt",
+                      fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                      fontWeight: 700,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Yearly summary →
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="hidden print:block" style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
+              Filed months ({history.length})
+            </div>
+
+            {importError && (
+              <div style={{ marginBottom: "8pt", padding: "6pt 10pt", background: "rgba(122,26,26,0.08)", border: `1pt solid ${RED}`, borderRadius: "3pt", fontSize: "8pt", color: RED }}>
+                Import failed: {importError}
+              </div>
+            )}
+
+            {pendingImport && (
+              <div style={{ marginBottom: "10pt", padding: "10pt 14pt", background: "rgba(184,90,62,0.08)", border: `1pt solid ${AMBER}`, borderRadius: "4pt" }}>
+                <div style={{ fontSize: "8pt", fontWeight: 700, color: DARK, marginBottom: "6pt" }}>
+                  Import {pendingImport.length} record{pendingImport.length !== 1 ? "s" : ""} — how would you like to proceed?
+                </div>
+                <div style={{ fontSize: "7.5pt", color: MUTED, marginBottom: "10pt", lineHeight: 1.5 }}>
+                  <strong>Merge</strong> adds only months not already present, leaving existing records untouched.{" "}
+                  <strong>Replace</strong> overwrites all history with the imported file.
+                </div>
+                <div style={{ display: "flex", gap: "8pt" }}>
+                  <button
+                    type="button"
+                    onClick={() => handleConfirmImport("merge")}
+                    style={{ padding: "4pt 14pt", background: DARK, color: CREAM, border: "none", borderRadius: "3pt", fontSize: "7.5pt", fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Merge
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleConfirmImport("replace")}
+                    style={{ padding: "4pt 14pt", background: AMBER, color: CREAM, border: "none", borderRadius: "3pt", fontSize: "7.5pt", fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Replace all
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPendingImport(null)}
+                    style={{ padding: "4pt 10pt", background: "transparent", color: MUTED, border: `1pt solid ${RULE}`, borderRadius: "3pt", fontSize: "7.5pt", cursor: "pointer" }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {history.length === 0 ? (
+              <div style={{ padding: '14pt 0', color: MUTED, fontSize: '9pt' }}>
+                No months filed yet. Use the form above to record the first close.
+              </div>
+            ) : (
+              <>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '9pt' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1.5pt solid ' + RULE, color: MUTED, fontWeight: 600, fontSize: '7.5pt', fontFamily: "'IBM Plex Mono', ui-monospace, monospace", letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'left',   width: '13%' }}>Month</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'right',  width: '15%' }}>Revenue</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'right',  width: '15%' }}>Expenses</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'right',  width: '14%' }}>Net</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'right',  width: '12%' }}>vs. Plan</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'center', width: '11%' }}>Status</th>
+                      <th style={{ padding: '3pt 4pt', textAlign: 'left',   width: '20%' }}>Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...history].reverse().map((rec) => {
+                      const st = STATUS_STYLES[getStatus(rec.net)];
+                      const delta = rec.net - SALT_BASELINE_NET;
+                      return (
+                        <tr key={rec.month} style={{ borderBottom: '0.5pt solid ' + RULE }}>
+                          <td style={{ padding: '4pt 4pt', fontWeight: 600 }}>{labelMonth(rec.month)}</td>
+                          <td style={{ padding: '4pt 4pt', textAlign: 'right', fontFamily: "'IBM Plex Mono', ui-monospace, monospace" } as React.CSSProperties}>{fmt(rec.revenue)}</td>
+                          <td style={{ padding: '4pt 4pt', textAlign: 'right', fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>{fmt(rec.expenses)}</td>
+                          <td style={{ padding: '4pt 4pt', textAlign: 'right', fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", color: rec.net >= 0 ? DARK : RED }}>
+                            {rec.net >= 0 ? fmt(rec.net) : `(${fmt(Math.abs(rec.net))})`}
+                          </td>
+                          <td style={{ padding: '4pt 4pt', textAlign: 'right', color: delta >= 0 ? GREEN : RED, fontWeight: 600, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
+                            {fmtDelta(delta)}
+                          </td>
+                          <td style={{ padding: '4pt 4pt', textAlign: 'center' }}>
+                            <span style={{ display: 'inline-block', padding: '1pt 5pt', borderRadius: '2pt', background: st.bg, color: st.color, fontSize: '7pt', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                              {st.label}
+                            </span>
+                          </td>
+                          <td style={{ padding: '4pt 4pt', fontSize: '8pt', color: MUTED, lineHeight: 1.3 }}>{rec.note || '—'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </>
+            )}
+          </div>
+
           {/* ── Rule 02 prior-quarter status ────────────────────────────────── */}
           <div style={{ marginBottom: "14pt", border: `1pt solid ${prevQtrUnder ? "#7a1a1a" : priorComplete ? "#2a6b3e" : RULE}`, borderRadius: "3pt", padding: "10pt 14pt", background: prevQtrUnder ? "rgba(122,26,26,0.05)" : priorComplete ? "rgba(42,107,62,0.05)" : "rgba(31,61,46,0.03)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8pt" }}>
@@ -1166,53 +1326,29 @@ export default function SaltMonthlyClose() {
                   }
                 </div>
               </div>
-              <span style={{
-                display: "inline-block",
-                padding: "2pt 10pt",
-                borderRadius: "3pt",
-                fontSize: "7pt",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                background: !priorComplete ? "rgba(31,61,46,0.06)" : prevQtrUnder ? "rgba(122,26,26,0.10)" : "rgba(42,107,62,0.10)",
-                color: !priorComplete ? MUTED : prevQtrUnder ? RED : GREEN,
-              }}>
-                {!priorComplete ? "incomplete" : prevQtrUnder ? "triggered" : "clear"}
-              </span>
             </div>
           </div>
-
-          {/* ── Planning reference ─────────────────────────────────────────── */}
-          <div style={{ background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", padding: "10pt 14pt" }}>
-            <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "6pt" }}>
-              Planning reference — SALT-01
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10pt" }}>
-              {[
-                { label: "Baseline net / month", value: fmt(SALT_BASELINE_NET), detail: "Planning assumption net after direct costs" },
-                { label: "Watch threshold",       value: fmt(Math.round(SALT_BASELINE_NET * 0.7)), detail: "70 % of baseline — trigger a note" },
-                { label: "Below threshold",       value: `< ${fmt(Math.round(SALT_BASELINE_NET * 0.7))}`, detail: "Below 70 % — flag on the one-pager" },
-              ].map(s => (
-                <div key={s.label}>
-                  <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "2pt" }}>{s.label}</div>
-                  <div style={{ fontSize: "12pt", fontWeight: 700, color: DARK, fontFamily: "Fraunces, Georgia, serif", marginBottom: "2pt" }}>{s.value}</div>
-                  <div style={{ fontSize: "8pt", color: MUTED, lineHeight: 1.4 }}>{s.detail}</div>
+            {/* ── Planning reference ──────────────────────────────────────────── */}
+            <div>
+              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "6pt" }}>
+                Planning reference
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14pt" }}>
+                <div style={{ fontSize: "8pt", color: MUTED, lineHeight: 1.5 }}>
+                  <strong>Monthly baseline:</strong> ${SALT_BASELINE_NET.toLocaleString()} net.
+                  This represents the minimum viable surplus required to maintain
+                  current operations and debt service.
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div style={{ marginTop: "18pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between" }}>
-            <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Headwaters Development Services · SALT-01 Monthly Close
-            </div>
-            <div style={{ fontSize: "7pt", color: MUTED }}>
-              History stored locally — use Download CSV / JSON to back up or audit
+                <div style={{ fontSize: "8pt", color: MUTED, lineHeight: 1.5 }}>
+                  <strong>Rule 02:</strong> If the trailing quarter (3 months)
+                  falls below $24,000 total net, the practitioner must trigger
+                  wholesale repricing or product drops.
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
