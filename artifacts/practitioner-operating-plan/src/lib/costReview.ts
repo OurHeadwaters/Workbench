@@ -9,14 +9,27 @@
  * change — they appear in the Edits audit view so the board can see what
  * was deliberately deferred.
  *
- * One record per key (last edit wins — no changelog).  The Edits tab
- * shows the current override vs the planning default, not a history of
- * every intermediate value.
+ * Every save appends the previous state to a `history` array (oldest first)
+ * so the full revision timeline is preserved and traceable.
  */
 
 import { getCostItem } from "@/data/costRegistry";
 
 // ── Types ─────────────────────────────────────────────────────────────
+
+/** One entry in the per-key revision history (a snapshot before it was changed). */
+export interface HistoryEntry {
+  /** The value that was stored before this revision replaced it */
+  newValue: number;
+  /** delta at that point: newValue − defaultValue */
+  delta: number;
+  /** Note attached at that revision (if any) */
+  note?: string;
+  /** Whether the item was skipped at that revision */
+  skipped?: boolean;
+  /** ISO timestamp of that revision */
+  editedAt: string;
+}
 
 export interface CostEdit {
   /** Stable key matching COST_REGISTRY / B_LINES */
@@ -35,6 +48,12 @@ export interface CostEdit {
   skipped?: boolean;
   /** True when this line was added by the founder and doesn't exist in the planning defaults */
   custom?: boolean;
+  /**
+   * Full revision history for this key, oldest first.
+   * Each entry is a snapshot of the record *before* it was overwritten.
+   * The current state is in the top-level fields above; prior states live here.
+   */
+  history?: HistoryEntry[];
 }
 
 /**
@@ -96,6 +115,10 @@ export function loadEdit(key: string): CostEdit | null {
  * Save (or overwrite) an override for a given cost key.
  * The defaultValue is looked up from the registry at call time so it's
  * always accurate even if the planning numbers change later.
+ *
+ * If there is an existing record for this key, its current state is
+ * appended to the `history` array before being overwritten, so every
+ * revision is preserved.
  */
 export function saveEdit(
   key: string,
@@ -107,6 +130,18 @@ export function saveEdit(
   const store = load();
   const existing = store[key];
 
+  // Snapshot the previous state into history before overwriting
+  const prevHistory: HistoryEntry[] = existing?.history ?? [];
+  if (existing) {
+    prevHistory.push({
+      newValue: existing.newValue,
+      delta: existing.delta,
+      note: existing.note,
+      skipped: existing.skipped,
+      editedAt: existing.editedAt,
+    });
+  }
+
   const edit: CostEdit = {
     key,
     defaultValue,
@@ -114,7 +149,8 @@ export function saveEdit(
     delta: newValue - defaultValue,
     note: note?.trim() || undefined,
     editedAt: new Date().toISOString(),
-    skipped: existing?.skipped ?? false,
+    skipped: false,
+    history: prevHistory.length > 0 ? prevHistory : undefined,
   };
 
   store[key] = edit;
@@ -125,12 +161,24 @@ export function saveEdit(
 /**
  * Mark a cost item as skipped (deliberately deferred).
  * If no edit exists yet, creates one with newValue = defaultValue.
+ * Appends the previous state to history so the timeline is preserved.
  */
 export function markSkipped(key: string, note?: string): void {
   const item = getCostItem(key);
   const defaultValue = item?.defaultValue ?? 0;
   const store = load();
   const existing = store[key];
+
+  const prevHistory: HistoryEntry[] = existing?.history ?? [];
+  if (existing) {
+    prevHistory.push({
+      newValue: existing.newValue,
+      delta: existing.delta,
+      note: existing.note,
+      skipped: existing.skipped,
+      editedAt: existing.editedAt,
+    });
+  }
 
   store[key] = {
     key,
@@ -140,6 +188,7 @@ export function markSkipped(key: string, note?: string): void {
     note: note?.trim() || existing?.note,
     editedAt: new Date().toISOString(),
     skipped: true,
+    history: prevHistory.length > 0 ? prevHistory : undefined,
   };
   persist(store);
 }

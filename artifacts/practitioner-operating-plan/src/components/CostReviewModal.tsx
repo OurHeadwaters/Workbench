@@ -14,7 +14,7 @@
  * Storage: costReview.ts (localStorage, key: hwop_cost_edits_v1)
  */
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   COST_REGISTRY,
   type CostItem,
@@ -32,6 +32,7 @@ import {
   customLinesToEdits,
   type CostEdit,
   type CustomLine,
+  type HistoryEntry,
 } from "@/lib/costReview";
 import { fmt } from "@/data/budgetScenarios";
 
@@ -549,6 +550,81 @@ function CustomLineRow({ line, onDelete, onEdit }: CustomLineRowProps) {
   );
 }
 
+// ── History panel — expandable prior revisions for one edit row ───────
+
+function HistoryPanel({ history }: { history: HistoryEntry[] }) {
+  const rows = [...history].reverse(); // newest prior revision first
+  return (
+    <div
+      style={{
+        margin: "4pt 0 6pt 12pt",
+        borderLeft: `2pt solid ${RULE}`,
+        paddingLeft: "8pt",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "6.5pt",
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: MUTED,
+          marginBottom: "4pt",
+        }}
+      >
+        Prior revisions ({history.length})
+      </div>
+      {rows.map((h, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              gap: "8pt",
+              alignItems: "baseline",
+              padding: "2pt 0",
+              borderBottom: i < rows.length - 1 ? `0.5pt solid ${RULE}` : undefined,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                fontSize: "7.5pt",
+                fontWeight: 700,
+                color: TEXT,
+                minWidth: "52pt",
+              }}
+            >
+              {fmt(h.newValue)}
+            </span>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                fontSize: "7pt",
+                color: h.delta > 0 ? RED_DK : h.delta < 0 ? GREEN : MUTED,
+                minWidth: "40pt",
+              }}
+            >
+              {fmtDelta(h.delta)}
+            </span>
+            {h.skipped && (
+              <span style={{ fontSize: "6.5pt", fontWeight: 700, color: RED_DK, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                skipped
+              </span>
+            )}
+            {h.note && (
+              <span style={{ fontSize: "7pt", color: MUTED, fontStyle: "italic", flex: 1 }}>
+                {h.note}
+              </span>
+            )}
+            <span style={{ fontSize: "6.5pt", color: MUTED, marginLeft: "auto", whiteSpace: "nowrap" }}>
+              {fmtDate(h.editedAt)}
+            </span>
+          </div>
+        ))}
+    </div>
+  );
+}
 // ── Edits tab — audit / diff view ─────────────────────────────────────
 
 interface EditsViewProps {
@@ -566,6 +642,17 @@ function EditsView({
   onToggleSkipped,
   onClearAll,
 }: EditsViewProps) {
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
+
+  const toggleHistory = (key: string) => {
+    setExpandedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
   const valueEdits   = edits.filter((e) => !e.skipped && e.delta !== 0);
   const skippedEdits = edits.filter((e) => e.skipped);
   const customEdits  = customLinesToEdits(customLines);
@@ -701,44 +788,85 @@ function EditsView({
             <tbody>
               {valueEdits.map((edit) => {
                 const item = COST_REGISTRY.find((r) => r.key === edit.key);
+                const hasHistory = (edit.history?.length ?? 0) > 0;
+                const isExpanded = expandedKeys.has(edit.key);
                 return (
-                  <tr
-                    key={edit.key}
-                    style={{ borderBottom: `0.5pt solid ${RULE}` }}
-                  >
-                    <td style={{ padding: "4pt 4pt", fontWeight: 600, verticalAlign: "top" }}>
-                      {item?.label ?? edit.key}
-                      {item && (
-                        <div style={{ fontSize: "7pt", color: MUTED, fontWeight: 400, marginTop: "1pt" }}>
-                          {item.description}
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ padding: "4pt 4pt", textAlign: "right", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
-                      {fmt(edit.defaultValue)}
-                    </td>
-                    <td style={{ padding: "4pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
-                      {fmt(edit.newValue)}
-                    </td>
-                    <td
-                      style={{
-                        padding: "4pt 4pt",
-                        textAlign: "right",
-                        fontWeight: 700,
-                        fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
-                        color: edit.delta > 0 ? RED_DK : GREEN,
-                        verticalAlign: "top",
-                      }}
+                  <React.Fragment key={edit.key}>
+                    <tr
+                      style={{ borderBottom: hasHistory && isExpanded ? "none" : `0.5pt solid ${RULE}` }}
                     >
-                      {fmtDelta(edit.delta)}
-                    </td>
-                    <td style={{ padding: "4pt 4pt", fontSize: "7.5pt", color: edit.note ? TEXT : MUTED, fontStyle: edit.note ? "normal" : "italic", verticalAlign: "top" }}>
-                      {edit.note ?? "—"}
-                    </td>
-                    <td style={{ padding: "4pt 4pt", textAlign: "right", fontSize: "7pt", color: MUTED, verticalAlign: "top" }}>
-                      {fmtDate(edit.editedAt)}
-                    </td>
-                  </tr>
+                      <td style={{ padding: "4pt 4pt", fontWeight: 600, verticalAlign: "top" }}>
+                        {item?.label ?? edit.key}
+                        {item && (
+                          <div style={{ fontSize: "7pt", color: MUTED, fontWeight: 400, marginTop: "1pt" }}>
+                            {item.description}
+                          </div>
+                        )}
+                        {hasHistory && (
+                          <button
+                            className="no-print"
+                            onClick={() => toggleHistory(edit.key)}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "3pt",
+                              marginTop: "3pt",
+                              padding: "1pt 6pt",
+                              fontSize: "6.5pt",
+                              fontWeight: 700,
+                              letterSpacing: "0.08em",
+                              textTransform: "uppercase",
+                              background: isExpanded ? "rgba(31,61,46,0.08)" : "transparent",
+                              color: isExpanded ? DARK : MUTED,
+                              border: `0.5pt solid ${RULE}`,
+                              borderRadius: "2pt",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {isExpanded ? "▲" : "▼"}&ensp;{edit.history!.length} prior revision{edit.history!.length !== 1 ? "s" : ""}
+                          </button>
+                        )}
+                      </td>
+                      <td style={{ padding: "4pt 4pt", textAlign: "right", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                        {fmt(edit.defaultValue)}
+                      </td>
+                      <td style={{ padding: "4pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                        {fmt(edit.newValue)}
+                      </td>
+                      <td
+                        style={{
+                          padding: "4pt 4pt",
+                          textAlign: "right",
+                          fontWeight: 700,
+                          fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                          color: edit.delta > 0 ? RED_DK : GREEN,
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {fmtDelta(edit.delta)}
+                      </td>
+                      <td style={{ padding: "4pt 4pt", fontSize: "7.5pt", color: edit.note ? TEXT : MUTED, fontStyle: edit.note ? "normal" : "italic", verticalAlign: "top" }}>
+                        {edit.note ?? "—"}
+                      </td>
+                      <td style={{ padding: "4pt 4pt", textAlign: "right", fontSize: "7pt", color: MUTED, verticalAlign: "top" }}>
+                        {fmtDate(edit.editedAt)}
+                      </td>
+                    </tr>
+                    {hasHistory && isExpanded && (
+                      <tr key={`${edit.key}__history`} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
+                        <td colSpan={6} style={{ padding: "0 4pt 4pt" }}>
+                          <HistoryPanel history={edit.history!} />
+                        </td>
+                      </tr>
+                    )}
+                    {hasHistory && !isExpanded && (
+                      <tr className="print-only" style={{ borderBottom: `0.5pt solid ${RULE}`, display: "none" }}>
+                        <td colSpan={6} style={{ padding: "0 4pt 4pt" }}>
+                          <HistoryPanel history={edit.history!} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 );
               })}
             </tbody>
