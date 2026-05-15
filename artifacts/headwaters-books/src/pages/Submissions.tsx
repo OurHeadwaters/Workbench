@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import { 
   useListSubmissions, 
@@ -6,7 +6,8 @@ import {
   useRejectSubmission,
   useListAccounts,
   useListCostCentres,
-  getListSubmissionsQueryKey
+  getListSubmissionsQueryKey,
+  customFetch
 } from "@workspace/api-client-react";
 import { Submission, SubmissionStatus, CreateTransactionLine } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -33,8 +34,94 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Loader2, Filter, Check, X, FileText, Plus, Trash2 } from "lucide-react";
+import { Loader2, Filter, Check, X, FileText, Plus, Trash2, Paperclip, Image as ImageIcon, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+
+interface ReceiptAttachment {
+  id: string;
+  originalFilename: string;
+  contentType: string;
+  fileSize: number | null;
+  storageRef: string;
+  uploadedAt: string;
+}
+
+function AttachmentThumbnail({ submissionId, attachment }: { submissionId: string; attachment: ReceiptAttachment }) {
+  const [signedUrl, setSignedUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(false);
+    customFetch<{ signedUrl: string }>(
+      `/api/bookkeeper/submissions/${submissionId}/attachments/${attachment.id}/signed-url`
+    )
+      .then((data) => {
+        if (!cancelled) {
+          setSignedUrl(data.signedUrl);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError(true);
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [submissionId, attachment.id]);
+
+  const isImage = attachment.contentType.startsWith("image/");
+
+  if (loading) {
+    return (
+      <div className="w-full aspect-[4/3] bg-muted/40 rounded-md border border-border flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error || !signedUrl) {
+    return (
+      <div className="w-full aspect-[4/3] bg-muted/40 rounded-md border border-border flex flex-col items-center justify-center gap-1 text-muted-foreground text-xs p-2 text-center">
+        <ImageIcon className="w-6 h-6" />
+        <span className="truncate w-full text-center">{attachment.originalFilename}</span>
+        <span>Preview unavailable</span>
+      </div>
+    );
+  }
+
+  if (isImage) {
+    return (
+      <a href={signedUrl} target="_blank" rel="noopener noreferrer" className="block group relative rounded-md overflow-hidden border border-border hover:border-primary/40 transition-colors">
+        <img
+          src={signedUrl}
+          alt={attachment.originalFilename}
+          className="w-full object-cover aspect-[4/3] bg-muted/20"
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <ExternalLink className="w-5 h-5 text-white drop-shadow" />
+        </div>
+        <div className="px-2 py-1 bg-background/80 text-xs text-muted-foreground truncate">{attachment.originalFilename}</div>
+      </a>
+    );
+  }
+
+  return (
+    <a
+      href={signedUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 px-3 py-2 rounded-md border border-border hover:border-primary/40 hover:bg-muted/30 transition-colors text-sm"
+    >
+      <Paperclip className="w-4 h-4 text-muted-foreground shrink-0" />
+      <span className="truncate text-foreground">{attachment.originalFilename}</span>
+      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0 ml-auto" />
+    </a>
+  );
+}
 
 const lineSchema = z.object({
   accountCode: z.string().min(1, "Account required"),
@@ -339,6 +426,24 @@ export default function Submissions() {
                   <Badge variant="outline">{selectedSub.costCentreCode}</Badge>
                 </div>
               </div>
+
+              {selectedSub.attachments && selectedSub.attachments.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <Paperclip className="w-4 h-4 text-muted-foreground" />
+                    Receipt Photos ({selectedSub.attachments.length})
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {selectedSub.attachments.map((a) => (
+                      <AttachmentThumbnail
+                        key={a.id}
+                        submissionId={selectedSub.id}
+                        attachment={a as ReceiptAttachment}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {selectedSub.status === 'rejected' && selectedSub.rejectedReason && (
                 <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-md">

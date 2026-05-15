@@ -832,6 +832,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/Transaction'
 
+  /bookkeeper/uploads/request-url:
+    post:
+      tags: [bookkeeper]
+      operationId: requestReceiptUploadUrl
+      summary: Request a presigned upload URL for a receipt photo (any authenticated bookkeeper user)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadUrlRequest'
+      responses:
+        '200':
+          description: Presigned upload URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadUrlResponse'
+        '400':
+          description: Missing fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /bookkeeper/submissions/{id}/attachments/{attachmentId}/signed-url:
+    get:
+      tags: [bookkeeper]
+      operationId: getAttachmentSignedUrl
+      summary: Get a short-lived signed download URL for a receipt attachment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: attachmentId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Signed URL for the attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttachmentSignedUrlResponse'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
   /bookkeeper/submissions:
     get:
       tags: [bookkeeper]
@@ -1273,6 +1332,18 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/UploadUrlRequest'
+
+    AttachmentSignedUrlResponse:
+      type: object
+      required: [signedUrl, expiresIn]
+      properties:
+        signedUrl:
+          type: string
+          format: uri
+          description: Short-lived GCS signed download URL (valid for ~5 minutes).
+        expiresIn:
+          type: integer
+          description: Seconds until the URL expires.
 
     Subject:
       type: object

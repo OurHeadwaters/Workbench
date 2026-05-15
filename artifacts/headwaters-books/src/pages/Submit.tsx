@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { 
   useListSubmissions, 
   useCreateSubmission,
@@ -6,6 +6,7 @@ import {
   useListAccounts,
   getListSubmissionsQueryKey
 } from "@workspace/api-client-react";
+import { customFetch } from "@workspace/api-client-react";
 import { SubmissionKind } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -26,7 +27,7 @@ import {
 import { 
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from "@/components/ui/select";
-import { Loader2, Plus, Receipt, Info } from "lucide-react";
+import { Loader2, Plus, Receipt, Info, Paperclip, X as XIcon, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const submitSchema = z.object({
@@ -38,18 +39,58 @@ const submitSchema = z.object({
   description: z.string().min(1, "Description required"),
   notes: z.string().optional(),
   suggestedAccountCode: z.string().optional(),
-  // Inventory specific
   itemSku: z.string().optional(),
   itemName: z.string().optional(),
   quantity: z.coerce.number().optional(),
   unit: z.string().optional(),
-  // Attachments stub
-  attachmentPath: z.string().optional()
 });
+
+interface PendingFile {
+  file: File;
+  previewUrl: string;
+}
+
+interface UploadedAttachment {
+  storageRef: string;
+  originalFilename: string;
+  contentType: string;
+  fileSize: number;
+}
+
+async function uploadReceiptFile(file: File): Promise<UploadedAttachment> {
+  const urlResp = await customFetch<{ uploadURL: string; objectPath: string }>(
+    "/api/bookkeeper/uploads/request-url",
+    {
+      method: "POST",
+      body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
+    }
+  );
+
+  const putResponse = await fetch(urlResp.uploadURL, {
+    method: "PUT",
+    headers: { "Content-Type": file.type },
+    body: file,
+  });
+
+  if (!putResponse.ok) {
+    throw new Error(
+      `Failed to upload "${file.name}" to storage (HTTP ${putResponse.status} ${putResponse.statusText}). Please try again.`
+    );
+  }
+
+  return {
+    storageRef: urlResp.objectPath,
+    originalFilename: file.name,
+    contentType: file.type,
+    fileSize: file.size,
+  };
+}
 
 export default function Submit() {
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { data: page, isLoading: isLoadingList } = useListSubmissions({ mine: true });
   const { data: costCentresData } = useListCostCentres();
@@ -76,46 +117,82 @@ export default function Submit() {
   const formatCurrency = (val: number) => 
     new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(val);
 
-  const onSubmit = (values: z.infer<typeof submitSchema>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+    const newEntries = files.map((file) => ({
+      file,
+      previewUrl: file.type.startsWith("image/") ? URL.createObjectURL(file) : "",
+    }));
+    setPendingFiles((prev) => [...prev, ...newEntries]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeFile = (index: number) => {
+    setPendingFiles((prev) => {
+      const entry = prev[index];
+      if (entry?.previewUrl) URL.revokeObjectURL(entry.previewUrl);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const onSubmit = async (values: z.infer<typeof submitSchema>) => {
     setIsSubmitting(true);
-    createSub.mutate({
-      data: {
-        kind: values.kind,
-        costCentreCode: values.costCentreCode,
-        occurredOn: values.occurredOn,
-        vendor: values.vendor,
-        amount: values.amount,
-        description: values.description,
-        notes: values.notes || undefined,
-        suggestedAccountCode: values.suggestedAccountCode || undefined,
-        itemSku: values.itemSku || undefined,
-        itemName: values.itemName || undefined,
-        quantity: values.quantity || undefined,
-        unit: values.unit || undefined,
-        // Attachments omitted since we're just stubbing it per requirements
+    try {
+      let attachments: UploadedAttachment[] = [];
+      if (pendingFiles.length > 0) {
+        try {
+          attachments = await Promise.all(pendingFiles.map((pf) => uploadReceiptFile(pf.file)));
+        } catch {
+          toast.error("Failed to upload one or more receipt photos. Please try again.");
+          setIsSubmitting(false);
+          return;
+        }
       }
-    }, {
-      onSuccess: () => {
-        toast.success("Receipt submitted successfully");
-        form.reset({
+
+      createSub.mutate({
+        data: {
           kind: values.kind,
           costCentreCode: values.costCentreCode,
-          occurredOn: format(new Date(), "yyyy-MM-dd"),
-          vendor: "",
-          amount: 0,
-          description: "",
-          notes: "",
-          suggestedAccountCode: ""
-        });
-        queryClient.invalidateQueries({ queryKey: getListSubmissionsQueryKey() });
-      },
-      onError: (err: Error) => {
-        toast.error(err.message || "Failed to submit receipt");
-      },
-      onSettled: () => {
-        setIsSubmitting(false);
-      }
-    });
+          occurredOn: values.occurredOn,
+          vendor: values.vendor,
+          amount: values.amount,
+          description: values.description,
+          notes: values.notes || undefined,
+          suggestedAccountCode: values.suggestedAccountCode || undefined,
+          itemSku: values.itemSku || undefined,
+          itemName: values.itemName || undefined,
+          quantity: values.quantity || undefined,
+          unit: values.unit || undefined,
+          attachments: attachments.length > 0 ? attachments : undefined,
+        }
+      }, {
+        onSuccess: () => {
+          toast.success("Receipt submitted successfully");
+          pendingFiles.forEach((pf) => { if (pf.previewUrl) URL.revokeObjectURL(pf.previewUrl); });
+          setPendingFiles([]);
+          form.reset({
+            kind: values.kind,
+            costCentreCode: values.costCentreCode,
+            occurredOn: format(new Date(), "yyyy-MM-dd"),
+            vendor: "",
+            amount: 0,
+            description: "",
+            notes: "",
+            suggestedAccountCode: ""
+          });
+          queryClient.invalidateQueries({ queryKey: getListSubmissionsQueryKey() });
+        },
+        onError: (err: Error) => {
+          toast.error(err.message || "Failed to submit receipt");
+        },
+        onSettled: () => {
+          setIsSubmitting(false);
+        }
+      });
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -330,20 +407,47 @@ export default function Submit() {
                     </FormItem>
                   )}
                 />
-                
-                <FormField
-                  control={form.control}
-                  name="attachmentPath"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Receipt Image</FormLabel>
-                      <FormControl>
-                        <Input type="file" accept="image/*,.pdf" className="cursor-pointer file:text-primary file:font-medium file:bg-primary/10 file:border-0 file:mr-4 file:px-4 file:py-1 file:rounded-full file:text-xs" {...field} />
-                      </FormControl>
-                      <FormDescription>Upload a clear photo of the receipt.</FormDescription>
-                    </FormItem>
-                  )}
-                />
+
+                <div>
+                  <FormLabel>Receipt Photos</FormLabel>
+                  <div className="mt-1.5 space-y-3">
+                    {pendingFiles.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {pendingFiles.map((pf, i) => (
+                          <div key={i} className="relative group flex items-center gap-1.5 bg-muted/40 border border-border rounded-md px-2 py-1.5 text-xs max-w-[160px]">
+                            {pf.previewUrl ? (
+                              <img src={pf.previewUrl} alt={pf.file.name} className="w-8 h-8 object-cover rounded shrink-0" />
+                            ) : (
+                              <ImageIcon className="w-5 h-5 text-muted-foreground shrink-0" />
+                            )}
+                            <span className="truncate text-foreground">{pf.file.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeFile(i)}
+                              className="ml-auto shrink-0 text-muted-foreground hover:text-destructive"
+                            >
+                              <XIcon className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <label className="flex items-center gap-2 cursor-pointer bg-background border border-dashed border-border rounded-md px-4 py-2.5 text-sm text-muted-foreground hover:bg-muted/30 hover:border-primary/40 transition-colors">
+                      <Paperclip className="w-4 h-4 shrink-0" />
+                      <span>{pendingFiles.length === 0 ? "Attach receipt photos" : "Add more photos"}</span>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*,.pdf"
+                        multiple
+                        capture="environment"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <p className="text-xs text-muted-foreground">Take a photo with your camera or choose from your gallery. JPG, PNG, PDF accepted.</p>
+                  </div>
+                </div>
               </div>
 
               <FormField
@@ -362,7 +466,7 @@ export default function Submit() {
               <div className="flex justify-end pt-4">
                 <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto px-8">
                   {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-                  Submit Receipt
+                  {isSubmitting && pendingFiles.length > 0 ? "Uploading photos…" : "Submit Receipt"}
                 </Button>
               </div>
             </form>
@@ -405,6 +509,12 @@ export default function Submit() {
                     <TableCell>
                       <div className="font-medium">{sub.vendor}</div>
                       <div className="text-xs text-muted-foreground truncate max-w-[250px]">{sub.description}</div>
+                      {sub.attachments && sub.attachments.length > 0 && (
+                        <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                          <Paperclip className="w-3 h-3" />
+                          {sub.attachments.length} photo{sub.attachments.length !== 1 ? "s" : ""}
+                        </div>
+                      )}
                       {sub.status === 'rejected' && sub.rejectedReason && (
                         <div className="text-xs text-destructive mt-1 flex items-start gap-1 bg-destructive/10 p-1.5 rounded">
                           <Info className="w-3 h-3 shrink-0 mt-0.5" />

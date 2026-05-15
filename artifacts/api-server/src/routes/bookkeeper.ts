@@ -1,6 +1,7 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { z } from "zod";
 import { db } from "@workspace/db";
+import { ObjectStorageService } from "../lib/objectStorage";
 import {
   bookkeeperUsersTable,
   bookkeeperCostCentresTable,
@@ -1044,6 +1045,22 @@ router.post("/submissions", requireAuth(), async (req, res) => {
     });
     return;
   }
+  // Reject submissions that include attachments with arbitrary storageRef values.
+  // Only paths minted by POST /bookkeeper/uploads/request-url are accepted;
+  // those always normalise to /objects/uploads/<uuid>.
+  const RECEIPT_UPLOAD_PREFIX = "/objects/uploads/";
+  if (parsed.data.attachments && parsed.data.attachments.length > 0) {
+    const bad = parsed.data.attachments.find(
+      (a) => !a.storageRef.startsWith(RECEIPT_UPLOAD_PREFIX),
+    );
+    if (bad) {
+      res.status(400).json({
+        error: "Invalid attachment: storageRef was not issued by this server.",
+      });
+      return;
+    }
+  }
+
   const inserted = await db
     .insert(bookkeeperSubmissionsTable)
     .values({
@@ -1850,6 +1867,94 @@ router.get("/audit", requireRole("owner"), async (req, res) => {
     })),
   );
 });
+
+// ----------------------- /uploads/request-url -----------------------
+//
+// Food handlers (and any authenticated bookkeeper user) call this to get a
+// presigned GCS PUT URL before uploading a receipt photo.  The actual bytes
+// go straight to GCS; only the resulting storageRef is sent back with the
+// submission payload.
+
+const objectStorageService = new ObjectStorageService();
+
+router.post("/uploads/request-url", requireAuth(), async (req: Request, res: Response) => {
+  const bodySchema = z.object({
+    name: z.string().min(1),
+    size: z.number().int().positive(),
+    contentType: z.string().min(1),
+  });
+  const parsed = bodySchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "name, size, and contentType are required" });
+    return;
+  }
+  try {
+    const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+    const objectPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
+    res.json({ uploadURL, objectPath, metadata: parsed.data });
+  } catch (err) {
+    req.log.error({ err }, "Error generating receipt upload URL");
+    res.status(500).json({ error: "Failed to generate upload URL" });
+  }
+});
+
+// ----------------------- /submissions/:id/attachments/:attachmentId/signed-url -----------------------
+//
+// Returns a short-lived GCS signed download URL for a receipt attachment.
+// food_handler may only fetch URLs for their own submissions; all staff roles
+// may fetch any submission's attachments.
+
+router.get(
+  "/submissions/:id/attachments/:attachmentId/signed-url",
+  requireAuth(),
+  async (req: Request, res: Response) => {
+    const me = req.bookkeeperUser!;
+    const submission = await db
+      .select({ id: bookkeeperSubmissionsTable.id, submittedById: bookkeeperSubmissionsTable.submittedById })
+      .from(bookkeeperSubmissionsTable)
+      .where(eq(bookkeeperSubmissionsTable.id, String(req.params.id)))
+      .limit(1);
+    if (submission.length === 0) {
+      res.status(404).json({ error: "Submission not found" });
+      return;
+    }
+    if (me.role === "food_handler" && submission[0].submittedById !== me.id) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    const attachment = await db
+      .select()
+      .from(bookkeeperReceiptAttachmentsTable)
+      .where(
+        and(
+          eq(bookkeeperReceiptAttachmentsTable.id, String(req.params.attachmentId)),
+          eq(bookkeeperReceiptAttachmentsTable.submissionId, String(req.params.id)),
+        ),
+      )
+      .limit(1);
+    if (attachment.length === 0) {
+      res.status(404).json({ error: "Attachment not found" });
+      return;
+    }
+    // Only sign download URLs for objects that were uploaded through our own
+    // upload endpoint.  Paths minted by POST /bookkeeper/uploads/request-url
+    // always start with /objects/uploads/.  Reject anything else so that a
+    // crafted storageRef can never be used to obtain a signed URL for an
+    // unrelated private object.
+    const RECEIPT_UPLOAD_PREFIX = "/objects/uploads/";
+    if (!attachment[0].storageRef.startsWith(RECEIPT_UPLOAD_PREFIX)) {
+      res.status(403).json({ error: "Forbidden: attachment storageRef is not in a signable namespace." });
+      return;
+    }
+    try {
+      const signedUrl = await objectStorageService.getSignedDownloadUrl(attachment[0].storageRef, 300);
+      res.json({ signedUrl, expiresIn: 300 });
+    } catch (err) {
+      req.log.error({ err }, "Error generating attachment signed URL");
+      res.status(500).json({ error: "Failed to generate signed URL" });
+    }
+  },
+);
 
 // Suppress unused-import warnings from helpers we keep available for future
 // route additions.
