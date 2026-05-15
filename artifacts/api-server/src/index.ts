@@ -30,6 +30,12 @@ app.listen(port, "0.0.0.0", (err) => {
     );
   }
 
+  if (!process.env.HEADWATERS_OWNER_EMAIL) {
+    logger.warn(
+      "HEADWATERS_OWNER_EMAIL is not set — no user will be auto-promoted to the owner role on first sign-in",
+    );
+  }
+
   seedBookkeeper().catch((seedErr) => {
     logger.error({ err: seedErr }, "bookkeeper seed failed");
   });
