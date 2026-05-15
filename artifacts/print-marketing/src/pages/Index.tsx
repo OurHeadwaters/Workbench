@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 
-const pieces = [
+const mainPieces = [
   {
     href: "/overview",
     title: "Project Overview — All 7 Headwaters Tools",
@@ -171,6 +171,16 @@ const pieces = [
     icon: "🛠️",
   },
   {
+    href: "/coop-compliance-notice",
+    title: "807 Co-op — Financial Statement Compliance Notice (2025)",
+    label: "807 Co-op · Compliance",
+    desc: "Formal compliance notice addressed to the 807 Food Co-operative Inc. board, dated May 23, 2026. Covers two required actions before the AGM: CPA engagement letter for the 2025 compilation, and confirming the members' waiver extraordinary resolution. Print-ready letter (8.5×11).",
+    icon: "📑",
+  },
+];
+
+const outreachPieces = [
+  {
     href: "/codetry-intro-letter",
     title: "Codetry Intro Letter — NAN",
     label: "Aboriginal Outreach",
@@ -198,13 +208,6 @@ const pieces = [
     desc: "Formal four-phase proposal outline for a community store pilot — The Plan, The Build, The Payoff, and The Handoff. Addressed generically to 'your community' for first-contact use. Letter size (8.5×11).",
     icon: "📋",
   },
-  {
-    href: "/coop-compliance-notice",
-    title: "807 Co-op — Financial Statement Compliance Notice (2025)",
-    label: "807 Co-op · Compliance",
-    desc: "Formal compliance notice addressed to the 807 Food Co-operative Inc. board, dated May 23, 2026. Covers two required actions before the AGM: CPA engagement letter for the 2025 compilation, and confirming the members' waiver extraordinary resolution. Print-ready letter (8.5×11).",
-    icon: "📑",
-  },
 ];
 
 export default function Index() {
@@ -226,7 +229,7 @@ export default function Index() {
 
       <div style={{ maxWidth: 760, margin: "2.5rem auto", padding: "0 1.5rem 3rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {pieces.map((p) => (
+          {mainPieces.map((p) => (
             <Link
               key={p.href}
               href={p.href}
@@ -255,6 +258,50 @@ export default function Index() {
               </div>
             </Link>
           ))}
+        </div>
+
+        <div style={{ marginTop: "2.5rem", marginBottom: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+            <div style={{ flex: 1, height: 1, background: "rgba(31,61,46,0.18)" }} />
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.13em", textTransform: "uppercase", color: "var(--evergreen)", whiteSpace: "nowrap" }}>
+              Aboriginal Outreach — NAN
+            </span>
+            <div style={{ flex: 1, height: 1, background: "rgba(31,61,46,0.18)" }} />
+          </div>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.55, marginBottom: "1rem" }}>
+            Four-piece packet for NAN leadership — share as a set or hand each one out individually.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem", borderLeft: "3px solid var(--evergreen)", paddingLeft: "1.25rem" }}>
+            {outreachPieces.map((p) => (
+              <Link
+                key={p.href}
+                href={p.href}
+                style={{
+                  display: "block",
+                  background: "white",
+                  border: "1px solid rgba(31,61,46,0.12)",
+                  borderRadius: 8,
+                  padding: "1.25rem 1.5rem",
+                  textDecoration: "none",
+                  color: "inherit",
+                  transition: "box-shadow 0.15s, border-color 0.15s",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+                  <span style={{ fontSize: "1.8rem", lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{p.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem" }}>
+                      <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 600, color: "var(--ink)" }}>{p.title}</h2>
+                      <span style={{ background: "var(--evergreen)", color: "white", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", padding: "0.15rem 0.5rem", borderRadius: 3 }}>{p.label}</span>
+                    </div>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.55 }}>{p.desc}</p>
+                  </div>
+                  <span style={{ color: "var(--evergreen-light)", fontSize: "1.2rem", flexShrink: 0, marginTop: 2 }}>→</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div style={{ marginTop: "2rem", padding: "1rem 1.25rem", background: "rgba(31,61,46,0.06)", borderRadius: 6, fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.6 }}>
