@@ -333,7 +333,7 @@ export function BioPage() {
 
             <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <a
-                href="#conversation"
+                href={`${import.meta.env.BASE_URL}#conversation`}
                 className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
                 style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
                 data-testid="bio-cta-conversation"
