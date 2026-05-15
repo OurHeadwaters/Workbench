@@ -291,9 +291,9 @@ export function HomePage() {
                     </div>
                   </a>
                   {i < 2 && (
-                    <div className="flex flex-col items-start pl-[2.6rem] py-1">
+                    <div className="flex flex-col items-start pl-[2rem] py-1">
                       <div className="w-px h-3" style={{ background: color, opacity: 0.35 }} />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.12em]" style={{ color, opacity: 0.7 }}>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.12em] whitespace-nowrap" style={{ color, opacity: 0.7 }}>
                         {i === 0 ? "then track in" : "money flows to"}
                       </span>
                     </div>
@@ -367,9 +367,9 @@ export function HomePage() {
                   <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-2 mb-0.5">
-                      <p className="font-serif text-[14px] font-medium tracking-tight">{name}</p>
+                      <p className="font-serif text-[14px] font-medium tracking-tight shrink-0">{name}</p>
                       <span
-                        className="font-mono text-[9px] uppercase tracking-[0.08em]"
+                        className="font-mono text-[9px] uppercase tracking-[0.08em] block truncate min-w-0 max-w-full"
                         style={{ color }}
                       >{sub}</span>
                     </div>
