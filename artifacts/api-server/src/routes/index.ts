@@ -24,7 +24,10 @@ router.use(storageRouter);
 router.use(mediaRouter);
 router.use("/pdf", pdfRouter);
 router.use("/library", libraryRouter);
-router.use("/check-in", checkinRouter);
+// Renamed from /check-in → /annual-check-in (task #1120) to make the
+// route's ownership explicit: it serves only the operating plan's
+// year/check-in page, not the retired standalone check-in artifact.
+router.use("/annual-check-in", checkinRouter);
 router.use("/bookkeeper", bookkeeperRouter);
 router.use("/wordpile", wordpileRouter);
 router.use("/ship-manifest", shipManifestRouter);

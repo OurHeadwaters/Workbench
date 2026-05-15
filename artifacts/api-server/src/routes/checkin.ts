@@ -9,8 +9,8 @@ import {
 
 const router: IRouter = Router();
 
-// Endpoints that bypass the owner-token gate.  Login is the only one because
-// the contributor share-link flow does not exist for this artifact.
+// Endpoints that bypass the owner-token gate.  Login is the only one —
+// this route exists solely for the operating plan's annual check-in page.
 const PUBLIC_PREFIXES = ["/owner/login"];
 
 router.use((req, res, next) => {

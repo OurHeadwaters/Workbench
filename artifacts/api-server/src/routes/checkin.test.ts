@@ -66,7 +66,7 @@ interface Harness {
 async function startHarness(): Promise<Harness> {
   const app = express();
   app.use(express.json());
-  app.use("/api/check-in", checkinRouter);
+  app.use("/api/annual-check-in", checkinRouter);
   const srv: Server = createServer(app);
   await new Promise<void>((resolve) => srv.listen(0, "127.0.0.1", resolve));
   const addr = srv.address() as AddressInfo;
@@ -93,7 +93,7 @@ describe("check-in route — owner token gate", () => {
   it("rejects unauthenticated GET /snapshots with 401", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`);
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`);
       expect(res.status).toBe(401);
       const body = (await res.json()) as { error?: string };
       expect(body.error).toBe("Unauthorized");
@@ -105,7 +105,7 @@ describe("check-in route — owner token gate", () => {
   it("rejects requests with the wrong owner token", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         headers: { "x-library-owner-token": "not-the-real-token" },
       });
       expect(res.status).toBe(401);
@@ -117,7 +117,7 @@ describe("check-in route — owner token gate", () => {
   it("accepts requests with the right owner token via Bearer auth", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/owner/me`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/owner/me`, {
         headers: { authorization: `Bearer ${OWNER_TOKEN}` },
       });
       expect(res.status).toBe(200);
@@ -131,7 +131,7 @@ describe("check-in route — owner token gate", () => {
   it("rejects POST /snapshots without the owner token (gate runs before validation)", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ year: 2026 }),
@@ -150,7 +150,7 @@ describe("check-in route — owner login bypasses the gate", () => {
   it("rejects POST /owner/login with the wrong passphrase", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/owner/login`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/owner/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ passphrase: "wrong" }),
@@ -164,7 +164,7 @@ describe("check-in route — owner login bypasses the gate", () => {
   it("returns the bearer token on POST /owner/login with the right passphrase", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/owner/login`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/owner/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ passphrase: OWNER_TOKEN }),
@@ -184,7 +184,7 @@ describe("check-in route — owner login bypasses the gate", () => {
   it("does not require a token to attempt POST /owner/login", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/owner/login`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/owner/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({}),
@@ -204,7 +204,7 @@ describe("check-in route — POST /snapshots validation", () => {
   it("rejects bodies missing required numeric fields", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { ...authHeaders(), "content-type": "application/json" },
         body: JSON.stringify({ year: 2026 }),
@@ -222,7 +222,7 @@ describe("check-in route — POST /snapshots validation", () => {
     const h = await startHarness();
     try {
       const valid = validBody();
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { ...authHeaders(), "content-type": "application/json" },
         // 215499.50 is the example from the route's own comment — would be
@@ -239,7 +239,7 @@ describe("check-in route — POST /snapshots validation", () => {
   it("rejects negative numbers", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { ...authHeaders(), "content-type": "application/json" },
         body: JSON.stringify({ ...validBody(), portfolioValue: -1 }),
@@ -253,7 +253,7 @@ describe("check-in route — POST /snapshots validation", () => {
   it("rejects years before 2026 (the schema-enforced minimum)", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { ...authHeaders(), "content-type": "application/json" },
         body: JSON.stringify({ ...validBody(), year: 2025 }),
@@ -267,7 +267,7 @@ describe("check-in route — POST /snapshots validation", () => {
   it("accepts a valid snapshot and returns the serialized row", async () => {
     const h = await startHarness();
     try {
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         method: "POST",
         headers: { ...authHeaders(), "content-type": "application/json" },
         body: JSON.stringify(validBody()),
@@ -300,7 +300,7 @@ describe("check-in route — GET /snapshots ordering", () => {
       // Same-year follow-up — must come before "b" because takenAt is later.
       await postSnapshot(h.base, { ...validBody(), year: 2027, notes: "c" });
 
-      const res = await fetch(`${h.base}/api/check-in/snapshots`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
         headers: authHeaders(),
       });
       expect(res.status).toBe(200);
@@ -320,7 +320,7 @@ describe("check-in route — GET /snapshots ordering", () => {
   it("/snapshots/latest returns the top of that ordering or null", async () => {
     const h = await startHarness();
     try {
-      const empty = await fetch(`${h.base}/api/check-in/snapshots/latest`, {
+      const empty = await fetch(`${h.base}/api/annual-check-in/snapshots/latest`, {
         headers: authHeaders(),
       });
       expect(empty.status).toBe(200);
@@ -329,7 +329,7 @@ describe("check-in route — GET /snapshots ordering", () => {
       await postSnapshot(h.base, { ...validBody(), year: 2026, notes: "old" });
       await postSnapshot(h.base, { ...validBody(), year: 2027, notes: "new" });
 
-      const res = await fetch(`${h.base}/api/check-in/snapshots/latest`, {
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots/latest`, {
         headers: authHeaders(),
       });
       const body = (await res.json()) as { snapshot: { notes: string } };
@@ -361,7 +361,7 @@ async function postSnapshot(
   // The fake's `takenAt` defaults are static, so we stage each insert
   // with a distinguishing takenAt so the ORDER BY can break ties.
   const before = financialSnapshotsTable.__store.length;
-  const res = await fetch(`${base}/api/check-in/snapshots`, {
+  const res = await fetch(`${base}/api/annual-check-in/snapshots`, {
     method: "POST",
     headers: { ...authHeaders(), "content-type": "application/json" },
     body: JSON.stringify(body),
