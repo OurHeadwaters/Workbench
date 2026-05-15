@@ -185,6 +185,7 @@ body.print-preview .page-letter-landscape::before {
     box-shadow: none !important;
     width: 100% !important;
     min-height: unset !important;
+    break-after: page;
   }
   /* Never print margin guides */
   .page-letter::before,
