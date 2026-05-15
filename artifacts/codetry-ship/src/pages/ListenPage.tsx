@@ -42,6 +42,7 @@ export function ListenPage() {
         email: form.email.trim(),
         org: form.community.trim() || undefined,
         wouldWant: form.wouldWant.trim() || undefined,
+        source: "listen-tsp",
       });
       setConfirmedName(res.name);
       setForm(EMPTY);

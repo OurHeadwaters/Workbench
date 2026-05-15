@@ -42,6 +42,7 @@ export const shipManifestTable = pgTable(
     replyError: text("reply_error"),
     sourceIp: text("source_ip"),
     userAgent: text("user_agent"),
+    source: text("source"),
   },
   (table) => ({
     createdAtIdx: index("ship_manifest_created_at_idx").on(table.createdAt),

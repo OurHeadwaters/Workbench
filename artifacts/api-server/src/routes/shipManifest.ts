@@ -52,6 +52,7 @@ function rowToCsv(row: typeof shipManifestTable.$inferSelect): string {
     row.role ?? "",
     row.wouldBring ?? "",
     row.wouldWant ?? "",
+    row.source ?? "",
     row.notificationStatus ?? "",
     row.replyStatus ?? "",
   ]
@@ -96,6 +97,7 @@ router.post("/", async (req, res) => {
   const role = readStr(body, "role", 300);
   const wouldBring = readStr(body, "wouldBring", 4000);
   const wouldWant = readStr(body, "wouldWant", 4000);
+  const source = readStr(body, "source", 100);
 
   if (!name) {
     res.status(400).json({ error: "Name is required." });
@@ -145,6 +147,7 @@ router.post("/", async (req, res) => {
       role,
       wouldBring,
       wouldWant,
+      source,
       sourceIp: ip,
       userAgent,
     })
@@ -156,6 +159,7 @@ router.post("/", async (req, res) => {
         role,
         wouldBring,
         wouldWant,
+        source,
         sourceIp: ip,
         userAgent,
         updatedAt: sql`now()`,
@@ -225,6 +229,7 @@ router.get("/", async (req, res) => {
       role: r.role,
       wouldBring: r.wouldBring,
       wouldWant: r.wouldWant,
+      source: r.source,
       createdAt: r.createdAt.toISOString(),
       updatedAt: r.updatedAt.toISOString(),
       notificationStatus: r.notificationStatus,
@@ -255,6 +260,7 @@ router.get("/export.csv", async (req, res) => {
     "role",
     "wouldBring",
     "wouldWant",
+    "source",
     "notificationStatus",
     "replyStatus",
   ].join(",");

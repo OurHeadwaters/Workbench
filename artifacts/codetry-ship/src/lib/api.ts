@@ -12,6 +12,7 @@ export interface SignOnPayload {
   role?: string;
   wouldBring?: string;
   wouldWant?: string;
+  source?: string;
 }
 
 export interface SignOnResult {
@@ -60,6 +61,7 @@ export interface ManifestEntry {
   role: string | null;
   wouldBring: string | null;
   wouldWant: string | null;
+  source: string | null;
   createdAt: string;
   updatedAt: string;
   notificationStatus: string | null;

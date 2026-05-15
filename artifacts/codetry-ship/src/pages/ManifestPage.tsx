@@ -196,6 +196,20 @@ function ManifestRow({ entry }: { entry: ManifestEntry }) {
                 {entry.role}
               </>
             ) : null}
+            {entry.source ? (
+              <>
+                <span className="mx-1.5 opacity-40">·</span>
+                <span
+                  className="rounded-sm px-1 py-0.5 text-[10px] uppercase tracking-[0.15em]"
+                  style={{
+                    backgroundColor: "hsl(var(--accent) / 0.12)",
+                    color: "hsl(var(--accent))",
+                  }}
+                >
+                  {entry.source}
+                </span>
+              </>
+            ) : null}
           </p>
         </div>
         <div className="text-right shrink-0">
