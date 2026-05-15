@@ -39,6 +39,7 @@ import CodetryIntroLetterDeerLake from "@/pages/CodetryIntroLetterDeerLake";
 import CodetryPilotProposalDeerLake from "@/pages/CodetryPilotProposalDeerLake";
 import NANOutreachPacket from "@/pages/NANOutreachPacket";
 import CodetryPacketSandyLake from "@/pages/CodetryPacketSandyLake";
+import CodetryPacketDeerLake from "@/pages/CodetryPacketDeerLake";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -83,6 +84,7 @@ function Router() {
       <Route path="/codetry-pilot-proposal-deer-lake" component={CodetryPilotProposalDeerLake} />
       <Route path="/nan-outreach-packet" component={NANOutreachPacket} />
       <Route path="/codetry-packet-sandy-lake" component={CodetryPacketSandyLake} />
+      <Route path="/codetry-packet-deer-lake" component={CodetryPacketDeerLake} />
       <Route component={NotFound} />
     </Switch>
   );

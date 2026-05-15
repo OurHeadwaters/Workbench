@@ -267,6 +267,13 @@ const outreachPieces = [
     desc: "Deer Lake-specific four-phase proposal. Phase 1 audits the hotel and existing supply points. Phase 2 runs real operations while writing the 807 grants. Phase 3 activates the 807 supply line in 2027. Letter size (8.5×11).",
     icon: "📋",
   },
+  {
+    href: "/codetry-packet-deer-lake",
+    title: "Codetry Print Packet — Deer Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Complete outreach packet for Deer Lake: cover sheet, intro letter, economic development one-pager, funding brief, and pilot proposal — all stacked in one PDF. Letter size (8.5×11).",
+    icon: "📦",
+  },
 ];
 
 export default function Index() {

@@ -58,16 +58,8 @@ const PAGE: CSSProperties = {
   color: INK,
 };
 
-export default function CodetryIntroLetterDeerLake() {
+export function CodetryIntroLetterDeerLakePage() {
   return (
-    <>
-      <PrintNav
-        targetId="pdf-target"
-        filename="headwaters-codetry-intro-letter-deer-lake.pdf"
-        onCopyPlainText={buildPlainText}
-      />
-
-      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
         <div className="page-letter" style={PAGE}>
 
           {/* Letterhead band */}
@@ -184,6 +176,19 @@ export default function CodetryIntroLetterDeerLake() {
           </div>
 
         </div>
+  );
+}
+
+export default function CodetryIntroLetterDeerLake() {
+  return (
+    <>
+      <PrintNav
+        targetId="pdf-target"
+        filename="headwaters-codetry-intro-letter-deer-lake.pdf"
+        onCopyPlainText={buildPlainText}
+      />
+      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
+        <CodetryIntroLetterDeerLakePage />
       </div>
     </>
   );
