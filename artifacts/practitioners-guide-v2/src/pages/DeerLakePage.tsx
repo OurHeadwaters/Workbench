@@ -1020,6 +1020,7 @@ export function DeerLakePage() {
         </div>
       </section>
 
+
       {/* 2027 Phases */}
       <section>
         <h2 className="text-lg font-semibold mb-3" style={{ fontFamily: "var(--app-font-serif)" }}>

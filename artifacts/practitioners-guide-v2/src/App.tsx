@@ -79,16 +79,24 @@ function PrologueGate() {
   return <EaglePrologue continueId="index-after-prologue" />;
 }
 
+function AppContent() {
+  return (
+    <>
+      <PrologueGate />
+      <AppShell>
+        <Router />
+      </AppShell>
+    </>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ScenarioProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <PrologueGate />
-            <AppShell>
-              <Router />
-            </AppShell>
+            <AppContent />
           </WouterRouter>
         </ScenarioProvider>
         <Toaster />
