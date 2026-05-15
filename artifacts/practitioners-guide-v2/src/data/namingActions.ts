@@ -52,9 +52,9 @@ export const namingActions: NamingAction[] = [
   {
     num: "04",
     when: "This week",
-    title: "Set up you@headwaters.ca",
+    title: "Set up bobbie@ourheadwaters.ca",
     detail:
-      "Google Workspace. Real email beats a Gmail address for a real agency — especially when Dad reads the contract.",
+      "Google Workspace on ourheadwaters.ca. Real email beats a Gmail address for a real agency — especially when Dad reads the contract. bobbie@ourheadwaters.ca · 807 220 3654.",
     cost: "~$8 CAD/month",
     oneTimeMin: 0,
     oneTimeMax: 0,

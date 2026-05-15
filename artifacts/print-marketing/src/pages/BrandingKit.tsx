@@ -526,7 +526,8 @@ export default function BrandingKit() {
         {/* ── Contact block ────────────────────────────────────────────────────── */}
         <div style={{ background: EVERGREEN, borderRadius: 8, padding: "1.5rem 1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: CREAM, marginBottom: "0.3rem" }}>Headwaters Development Services</p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: CREAM, marginBottom: "0.15rem" }}>Headwaters Development Services</p>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", fontWeight: 600, color: "rgba(244,237,224,0.9)", marginBottom: "0.3rem" }}>Bobbie Parr, Founder</p>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "rgba(244,237,224,0.7)", lineHeight: 1.6 }}>
               bobbie@ourheadwaters.ca · 807 220 3654<br />
               ourheadwaters.ca · Dryden, Ontario · Treaty 3 Territory
