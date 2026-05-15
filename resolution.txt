@@ -1,0 +1,123 @@
+            )}
+          </div>
+
+          {/* ── Filed months history ──────────────────────────────────────── */}
+          <div style={{ marginBottom: "18pt" }}>
+            {/* Hidden file input for JSON import */}
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".json,application/json"
+              style={{ display: "none" }}
+              onChange={handleImportFile}
+            />
+
+            {/* Section header + action buttons */}
+            <div className="print:hidden" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8pt", flexWrap: "wrap", gap: "6pt" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
+                Filed months ({history.length})
+              </div>
+              <div style={{ display: "flex", gap: "6pt", flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={handleDownloadCSV}
+                  disabled={history.length === 0}
+                  title="Download history as a spreadsheet-ready CSV"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: history.length > 0 ? DARK : RULE,
+                    color: CREAM,
+                    border: "none",
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 700,
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Download CSV
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadJSON}
+                  disabled={history.length === 0}
+                  title="Download history as a JSON backup"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: history.length > 0 ? DARK : MUTED,
+                    border: `1pt solid ${history.length > 0 ? RULE : RULE}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: history.length > 0 ? "pointer" : "default",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Download JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={handleImportClick}
+                  title="Restore history from a previously exported JSON file"
+                  style={{
+                    padding: "3pt 10pt",
+                    background: "transparent",
+                    color: AMBER,
+                    border: `1pt solid ${AMBER}`,
+                    borderRadius: "3pt",
+                    fontSize: "7.5pt",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  Import JSON
+                </button>
+                {history.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`${BASE}/tools/salt-yearly`)}
+                    style={{
+                      background: "transparent",
+                      border: `1pt solid ${AMBER}`,
+                      color: AMBER,
+                      borderRadius: "3pt",
+                      padding: "3pt 10pt",
+                      fontSize: "7.5pt",
+                      fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                      fontWeight: 700,
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Yearly summary →
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Print-only heading (no buttons) */}
+            <div className="hidden print:block" style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "8pt" }}>
+              Filed months ({history.length})
+            </div>
+
+            {/* Import error */}
+            {importError && (
+              <div style={{ marginBottom: "8pt", padding: "6pt 10pt", background: "rgba(122,26,26,0.08)", border: `1pt solid ${RED}`, borderRadius: "3pt", fontSize: "8pt", color: RED }}>
+                Import failed: {importError}
+              </div>
+            )}
+
+            {/* ── Filing form ───────────────────────────────────────────────── */}
+            <div style={{ marginBottom: "20pt" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "12pt" }}>
+                File a month
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12pt", marginBottom: "12pt" }}>
+                  <div>
+                    <label style={labelStyle}>Month</label>
+                    <input
