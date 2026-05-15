@@ -1,0 +1,98 @@
+I need you to measure the Zone 3 Financial Model (pasted at the bottom) against my existing Zone 2 work and operating plan. Do this in order:
+Step 1 — Find the Zone 2 materials in this project. Search for any operating plan, budget, income model, strategic documents, or planning notes related to Zone 2 / Home Range. Check docs, attached assets, markdown files, and any data or config files that contain planning content. List what you find and confirm you've read them before proceeding. If you find nothing, say so plainly — don't proceed with assumptions.
+Step 2 — Map the relationship. Using the Codetry zone model (Zone 0 Household → 1 Circle → 2 Home Range → 3 Community → 4 Trade → 5 Wild), describe how Zone 2 and Zone 3 interact. Where does Zone 2 end and Zone 3 begin in terms of the founder's actual work and relationships?
+Step 3 — Check for alignment. For each of the following, tell me whether the Zone 3 model supports, ignores, or conflicts with what's already planned at Zone 2:
+Revenue sources and timing
+The communities or relationships already in play at Zone 2
+Infrastructure or tools that Zone 2 depends on
+The founder's time and capacity
+Step 4 — Identify gaps and sequencing risks. What does Zone 2 need to be stable before the Zone 3 practitioner model can generate income? Are there Zone 2 commitments that would compete for time with a Foundation Build engagement?
+Step 5 — Plain recommendation. One paragraph: is the Zone 3 model ready to run alongside Zone 2 as-is, or does Zone 2 need to reach a certain state first? Be direct. Don't hedge.
+
+Zone 3 Financial Model:
+Zone 3 Financial Model — Stonemason Practitioner
+What & Why
+A working financial model for the Zone 3 / Constellation platform — grounding the practitioner-guild revenue structure in real numbers from the existing 807 deployment. This document exists to give the founder a clear path from current state to sustainable income, using the stonemason model: open infrastructure, paid craft, guild founding stake.
+
+The Three Layers
+Layer 1 — The Commons (open, maintained)
+Zone 3 infrastructure and all constellation tools stay public and free. 807's deployment demonstrates the full capability: membership management, marketplace, grants, producers, garden, AGM tools, Deadhead vetting. This is the portfolio and the proof of the method.
+
+No revenue extracted at this layer. This is the reputation asset and network-growth engine.
+
+Layer 2 — The Practitioner (primary income)
+The founder is the master stonemason. Communities that want to actually build on Zone 3 hire the practitioner to do it — onboarding, configuration, local customization, launch.
+
+Rate card (CAD):
+
+Engagement	Scope	Price
+Discovery & Scoping	1 session, documented community portrait	$500
+Foundation Build	Full constellation deployment for one community	$4,500
+Training & Handoff	3 sessions, admin team trained to operate	$1,500
+Complete Launch Package	Discovery + Foundation + Training	$6,000
+Ongoing Stewardship	Monthly, one community	$400/mo
+Emergency / Ad hoc	Per diem	$350/day
+These are launch prices — intentionally accessible for early adopters, with room to raise as demand grows and practitioners are trained.
+
+Year 1 survival target (conservative):
+
+Family floor: ~$4,000/month CAD = $48,000/year
+2 complete launch packages = $12,000
+6 stewardship retainers (avg 3 active) = $14,400/year
+3 training-only engagements = $4,500
+Grants (NOHFC, capacity-building) = $15,000–$25,000 (one grant)
+Year 1 realistic total: $46,000–$56,000
+This is achievable with 807 as the live reference case.
+
+Layer 3 — The Guild (legacy and leverage)
+As practitioners are trained, the founder holds a founding position in the guild.
+
+Guild structure:
+
+Practitioners complete a training cohort ($1,200–$1,800 per person, group of 4–6)
+Certified practitioners earn the right to deploy Zone 3 on behalf of communities
+Each certified practitioner contributes a guild tithe: 8% of their Zone 3 engagement fees flow back to the founding practitioner, for life of the certification
+Guild grows through reputation, not gatekeeping — anyone can learn the method, certification makes it legible to communities
+Year 2 projection (with 4 trained practitioners):
+
+4 practitioners × avg 3 builds/year × $6,000 = $72,000 flowing through guild
+8% tithe = $5,760/year in passive guild income
+Direct builds continue (2/year) = $12,000
+Cohort training (1 cohort of 5) = $7,500
+Stewardship retainers (6 active) = $28,800
+Year 2 realistic total: ~$54,000–$60,000 (growing)
+Year 3+ (network effect):
+
+10+ practitioners active
+Guild tithe income: $15,000–$25,000/year
+Founder shifts from builder to trainer/certifier
+Direct builds become selective — communities that need the founder specifically
+The 807 Proof Points
+The existing deployment demonstrates real capability:
+
+Membership tiers: Community ($5/mo), Sustaining ($10/mo), Harvest ($20/mo)
+Marketplace seller plans: Casual (free), Basic ($15/mo), Pro ($40/mo)
+Deadhead tool: $9/mo or $90/year — shows SaaS pricing is proven if ever needed
+Full financial stack: Square payments, EMT dues, HST tracking, payout reconciliation, ledger, cashflow budget, bank reconciliation
+Community tools: Events, calendar, grants finder, producer portal, AGM guide
+Trust architecture: Multi-tenancy seam, Clerk auth, content encryption at rest
+Any community evaluating Zone 3 can be shown 807 as the live reference. This is the most powerful sales tool available — better than any pitch deck.
+
+Grant Positioning
+The founder profile is strong for infrastructure and capacity-building grants:
+
+6 years of sustained, no-income community infrastructure work
+Deployed, operational platform with a real co-op tenant
+Explicit public-good design (tools stay open)
+Indigenous and rural community applicability (Zone 3 trust-boundary design)
+NOHFC Grow, Ontario Trillium Foundation, New Horizons, Canada Digital Adoption Program all have relevant streams
+Immediate action: Apply to one grant as the infrastructure builder, not as 807's operator. The Grants Finder tool in this constellation is available to use.
+
+24-Month Runway Map
+Quarter	Focus	Revenue Target
+Q1 2026	Finalize 807, document the method, identify 2 pilot communities	$6,000 (1 launch)
+Q2 2026	Launch 2nd community, submit first grant application	$9,500
+Q3 2026	First training cohort (4–5 practitioners)	$13,000
+Q4 2026	3 stewardship retainers active, 2 practitioner builds in market	$11,000
+Q1 2027	Second cohort, 6 stewardship retainers, guild tithe begins flowing	$14,000
+Q2 2027	8+ pr... 
