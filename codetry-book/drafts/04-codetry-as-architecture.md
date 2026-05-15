@@ -190,7 +190,7 @@ It is a quiet discipline. Most of it is naming. These are the terms the discipli
 
 **Primitive** — A named system inside the constellation that does a specific, irreducible job. Each primitive has a name chosen to hold across every context in which it appears — zones, seasons, personnel, tempo.
 
-**Zone** — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones.
+**Zone** — A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — finance; Zone 2 — knowledge; Zone 3 — emergency preparedness; Zone 4 — land; Zone 5 — public. Primitives are hosted in zones but read by all zones.
 
 **The Standby** — The primitive that holds emergency preparedness and emergency response as one system. In its resting state: always-on practice, stocked shelves, current contact trees, regular test-starts. In its activated state: open call, deployed stock, live rosters. One infrastructure, two states, one name.
 
