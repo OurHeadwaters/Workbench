@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/practitioner-operating-plan/"
-title = "Practitioner Operating Plan"
+title = "Practitioner's Operating Plan"
 version = "1.0.0"
 id = "artifacts/practitioner-operating-plan"
 router = "path"
