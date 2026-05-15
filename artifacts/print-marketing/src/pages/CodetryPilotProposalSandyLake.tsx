@@ -82,7 +82,7 @@ function buildPlainText(): string {
     "→ Headwaters documents everything: what worked, what the store costs to run, what it earns, and what comes next",
     `→ A clean record for funders and a clear path to Pilot #2 — the second community that can learn from what ${COMMUNITY_SHORT} built`,
     "",
-    `Phase 1 built the plan. Phase 2 proved it could run. Phase 3 showed it pays for itself. Phase 4 makes it ${COMMUNITY_SHORT}'s.`,
+    `Phase 1 planned it. Phase 2 proved it. Phase 3 made it pay. Phase 4 hands it to ${COMMUNITY_SHORT}.`,
     "",
     "---",
     "",
@@ -169,7 +169,7 @@ const phases = [
       "Headwaters documents everything: what worked, what it costs, what it earns, and what comes next",
       `A clean record for funders and a clear path to Pilot #2 — the second community that learns from what ${COMMUNITY_SHORT} built`,
     ],
-    note: `Phase 1 built the plan. Phase 2 proved it could run. Phase 3 showed it pays for itself. Phase 4 makes it ${COMMUNITY_SHORT}'s.`,
+    note: `Phase 1 planned it. Phase 2 proved it. Phase 3 made it pay. Phase 4 hands it to ${COMMUNITY_SHORT}.`,
   },
 ];
 

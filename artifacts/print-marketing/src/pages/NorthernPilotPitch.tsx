@@ -119,7 +119,7 @@ function buildPlainText(): string {
     "",
     "What this phase does: Lock in the lower-cost supply chain, document what the store actually earns in its first winter, and produce a clean financial record the band can use with funders and for planning the next year.",
     "",
-    "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 shows it can pay for itself.",
+    "Phase 1 planned it. Phase 2 proved it. Phase 3 makes it pay.",
     "",
     "---",
     "",
@@ -136,7 +136,7 @@ function buildPlainText(): string {
     "→ Headwaters documents everything: what worked, what the store costs to run, what it earns, and what comes next",
     "→ A clean record for funders and a clear path to Pilot #2 — the second community that can learn from what Deer Lake built",
     "",
-    "Phase 1 built the plan. Phase 2 proved it could run. Phase 3 showed it pays for itself. Phase 4 makes it theirs.",
+    "Phase 1 planned it. Phase 2 proved it. Phase 3 made it pay. Phase 4 hands it over.",
   ].join("\n");
 }
 
