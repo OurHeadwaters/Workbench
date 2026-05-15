@@ -12,6 +12,8 @@
  *   snapshot series — no manual checkbox, no memory required.
  */
 
+import type { BenchOverride } from "@/lib/saltBench";
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface RoleEntry {
@@ -139,6 +141,44 @@ export function isUnderBaseline(snapshot: QuarterSnapshot): boolean {
   const totalActual   = snapshot.roles.reduce((sum, r) => sum + r.actualHrs,   0);
   const totalBaseline = snapshot.roles.reduce((sum, r) => sum + r.baselineHrs, 0);
   return totalActual < totalBaseline;
+}
+
+// ── Bench override helpers ────────────────────────────────────────────────────
+
+const KEY_BENCH_OVERRIDES = "hwop_bench_overrides_v1";
+
+/** Load all bench overrides keyed by isoWeek. */
+export function loadBenchOverrides(): Record<number, BenchOverride> {
+  try {
+    const raw = localStorage.getItem(KEY_BENCH_OVERRIDES);
+    if (!raw) return {};
+    return JSON.parse(raw) as Record<number, BenchOverride>;
+  } catch {
+    return {};
+  }
+}
+
+function persistBenchOverrides(data: Record<number, BenchOverride>): void {
+  localStorage.setItem(KEY_BENCH_OVERRIDES, JSON.stringify(data));
+}
+
+/** Save (or overwrite) the bench override for a specific batch week. */
+export function saveBenchOverride(override: BenchOverride): void {
+  const data = loadBenchOverrides();
+  data[override.isoWeek] = override;
+  persistBenchOverrides(data);
+}
+
+/** Remove the bench override for a specific batch week (restore to rotation). */
+export function clearBenchOverride(isoWeek: number): void {
+  const data = loadBenchOverrides();
+  delete data[isoWeek];
+  persistBenchOverrides(data);
+}
+
+/** Remove all bench overrides for the year. */
+export function clearAllBenchOverrides(): void {
+  localStorage.removeItem(KEY_BENCH_OVERRIDES);
 }
 
 // ── Quarter-label utilities ───────────────────────────────────────────────────
