@@ -1,18 +1,24 @@
 /**
- * HoursByPillar.tsx — Quarterly hours tracking with automatic Hard Rule 02 enforcement
+ * HoursByPillar.tsx — Quarterly hours-by-pillar tracking with Hard Rule 02 enforcement
+ *
+ * Merged from:
+ *   Task #68 — Quarter history + automatic Hard Rule 02 (two-quarter pause trigger)
+ *   Task #69 — Per-role per-pillar inputs locked to contractBaselines.ts
  *
  * Flow:
- *   1. Bookkeeper fills in actual hours per role for the current draft quarter.
- *   2. "Lock this quarter" saves an immutable snapshot and clears the draft.
- *   3. "Start new quarter" seeds a fresh draft from the locked snapshot's baselines,
- *      and auto-derives whether the previous quarter was under — no manual checkbox.
- *   4. Hard Rule 02 fires automatically when the last two snapshots are both under
- *      baseline; a persistent banner appears and cannot be dismissed.
+ *   1. Bookkeeper fills in actual hours per role per pillar for the draft quarter.
+ *   2. Pillar allocations are locked to contractBaselines.ts — read-only here.
+ *   3. Drift from the contracted baseline % is flagged per cell automatically.
+ *   4. "Lock this quarter" saves an immutable snapshot (pillar hours + totals) and clears the draft.
+ *   5. Hard Rule 02 fires when the last two snapshots are both under the aggregate baseline.
+ *   6. Roles not in the contract baseline are flagged and block locking.
  *
- * Colour palette and type scale follow the existing HiringTemplates / OnePager pages.
+ * Baselines live in: src/data/contractBaselines.ts
+ * To amend baselines: /contract-terms
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Link } from "wouter";
 import {
   loadSnapshots,
   loadDraft,
@@ -29,46 +35,65 @@ import {
   type QuarterDraft,
   type RoleEntry,
 } from "@/lib/storage";
+import {
+  BASELINES,
+  PILLARS,
+  CONTRACT_LABEL,
+  CONTRACT_VERSION,
+  getBaseline,
+  type PillarId,
+} from "@/data/contractBaselines";
 
-// ── Design tokens (matches the rest of the app) ──────────────────────────────
-const CREAM  = "#f4ede0";
-const DARK   = "#1f3d2e";
-const AMBER  = "#b85a3e";
-const GREEN  = "#2d6a4f";
-const MUTED  = "#6b7665";
-const RULE   = "#c8bfa7";
-const TEXT   = "#2a2520";
-const BG     = "#d8d2c8";
-const MONO   = "'IBM Plex Mono', ui-monospace, monospace";
-const SERIF  = "Fraunces, Georgia, serif";
-const SANS   = "Inter, system-ui, sans-serif";
+// ── Design tokens ─────────────────────────────────────────────────────────────
+const CREAM = "#f4ede0";
+const DARK  = "#1f3d2e";
+const AMBER = "#b85a3e";
+const GREEN = "#2d6a4f";
+const MUTED = "#6b7665";
+const RULE  = "#c8bfa7";
+const TEXT  = "#2a2520";
+const BG    = "#d8d2c8";
+const MONO  = "'IBM Plex Mono', ui-monospace, monospace";
+const SERIF = "Fraunces, Georgia, serif";
+const SANS  = "Inter, system-ui, sans-serif";
 
-// ── Contracted baseline roles ─────────────────────────────────────────────────
+// ── Shared table styles ────────────────────────────────────────────────────────
+const TH: React.CSSProperties = {
+  fontFamily: MONO,
+  fontSize: 11,
+  color: MUTED,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.06em",
+  padding: "6px 12px",
+  textAlign: "left",
+  borderBottom: `1px solid ${RULE}`,
+};
+const TD: React.CSSProperties = {
+  padding: "8px 12px",
+  fontFamily: SANS,
+  fontSize: 13,
+  color: TEXT,
+};
+
+// ── Default role list seeded from the contract baselines ──────────────────────
 //
-// Hours are per quarter (≈ 13 weeks).  These match the contracted engagement
-// structure from the budget deck.  The bookkeeper can adjust baselines per
-// quarter if the contract changes — but the default seeds from these values.
+// baselineHrs = contractedHrsPerMonth × 3 (one quarter ≈ 3 months)
 //
-const DEFAULT_ROLES: Omit<RoleEntry, "actualHrs">[] = [
-  { roleId: "practitioner",  label: "Practitioner / Lead",            baselineHrs: 520 },
-  { roleId: "ops-manager",   label: "Operations Manager",             baselineHrs: 520 },
-  { roleId: "it-tech",       label: "IT / Tech",                      baselineHrs: 390 },
-  { roleId: "bookkeeper",    label: "Bookkeeper / Admin",              baselineHrs: 130 },
-  { roleId: "food-handler",  label: "Food Handler (Deer Lake)",        baselineHrs: 520 },
-  { roleId: "cd-associate",  label: "CD Associate",                    baselineHrs: 390 },
-  { roleId: "jr-analyst",    label: "Junior Analyst",                  baselineHrs: 260 },
-];
-
 function makeDefaultRoles(): RoleEntry[] {
-  return DEFAULT_ROLES.map((r) => ({ ...r, actualHrs: 0 }));
+  return BASELINES.map((r) => ({
+    roleId:      r.roleId,
+    label:       r.label,
+    baselineHrs: r.contractedHrsPerMonth * 3,
+    actualHrs:   0,
+  }));
 }
 
 function makeDraftFromPrev(prevId: string, prevRoles: RoleEntry[]): QuarterDraft {
   const newId = nextQuarterId(prevId);
   return {
-    id: newId,
+    id:    newId,
     label: formatQuarterLabel(newId),
-    roles: prevRoles.map((r) => ({ ...r, actualHrs: 0 })),
+    roles: prevRoles.map((r) => ({ ...r, actualHrs: 0, pillars: undefined })),
   };
 }
 
@@ -77,28 +102,103 @@ function makeInitialDraft(): QuarterDraft {
   return { id, label: formatQuarterLabel(id), roles: makeDefaultRoles() };
 }
 
+// ── Pillar-input helpers ───────────────────────────────────────────────────────
+
+type PillarInputs = Record<string, Record<PillarId, string>>;
+
+function blankPillarInputs(): PillarInputs {
+  return Object.fromEntries(
+    BASELINES.map((r) => [r.roleId, { cfs: "", ops: "", gov: "", eng: "" }])
+  );
+}
+
+function pillarInputsFromRoles(roles: RoleEntry[]): PillarInputs {
+  const result: PillarInputs = {};
+  for (const role of roles) {
+    if (role.pillars) {
+      result[role.roleId] = {
+        cfs: role.pillars["cfs"] > 0 ? String(role.pillars["cfs"]) : "",
+        ops: role.pillars["ops"] > 0 ? String(role.pillars["ops"]) : "",
+        gov: role.pillars["gov"] > 0 ? String(role.pillars["gov"]) : "",
+        eng: role.pillars["eng"] > 0 ? String(role.pillars["eng"]) : "",
+      };
+    } else {
+      result[role.roleId] = { cfs: "", ops: "", gov: "", eng: "" };
+    }
+  }
+  return result;
+}
+
+function totalFromInputs(inputs: Record<PillarId, string>): number {
+  return PILLARS.reduce((sum, p) => {
+    const v = parseFloat(inputs[p.id] ?? "");
+    return sum + (isNaN(v) ? 0 : v);
+  }, 0);
+}
+
+function pillarPct(inputs: Record<PillarId, string>, pillarId: PillarId): number | null {
+  const total = totalFromInputs(inputs);
+  if (total === 0) return null;
+  const v = parseFloat(inputs[pillarId] ?? "");
+  if (isNaN(v)) return null;
+  return Math.round((v / total) * 100);
+}
+
+function driftPp(
+  inputs: Record<PillarId, string>,
+  baselinePct: number,
+  pillarId: PillarId
+): number | null {
+  const actual = pillarPct(inputs, pillarId);
+  if (actual === null) return null;
+  return actual - baselinePct;
+}
+
+function fmtDrift(d: number | null): string {
+  if (d === null) return "—";
+  if (d === 0) return "on target";
+  return (d > 0 ? "+" : "") + d + "pp";
+}
+
+function driftColor(d: number | null): string {
+  if (d === null) return MUTED;
+  const abs = Math.abs(d);
+  if (abs <= 5)  return GREEN;
+  if (abs <= 15) return "#b07d2e";
+  return AMBER;
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function VariancePill({ actual, baseline }: { actual: number; baseline: number }) {
-  const delta = actual - baseline;
-  const pct   = baseline > 0 ? Math.round((delta / baseline) * 100) : 0;
-  const under = delta < 0;
+function ContractBanner() {
   return (
-    <span
+    <div
       style={{
+        background: DARK,
+        color: CREAM,
+        borderRadius: 8,
+        padding: "12px 18px",
         fontFamily: MONO,
         fontSize: 11,
-        padding: "2px 7px",
-        borderRadius: 4,
-        background: under ? "#fde8e0" : "#e0f2e8",
-        color: under ? AMBER : GREEN,
-        whiteSpace: "nowrap",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        flexWrap: "wrap",
+        marginBottom: 20,
       }}
     >
-      {under ? "−" : "+"}
-      {Math.abs(pct)}%&nbsp;({delta >= 0 ? "+" : ""}
-      {delta} hrs)
-    </span>
+      <span style={{ opacity: 0.6 }}>Contracted baselines locked to</span>
+      <span style={{ fontWeight: 700, letterSpacing: "0.08em" }}>{CONTRACT_LABEL}</span>
+      <span style={{ opacity: 0.6, flex: 1 }}>
+        · Read-only here ·{" "}
+        <Link
+          href="/contract-terms"
+          style={{ color: "#a8d5b5", textDecoration: "underline", cursor: "pointer" }}
+        >
+          Amend contract terms
+        </Link>
+      </span>
+    </div>
   );
 }
 
@@ -127,71 +227,41 @@ function TriggerBanner() {
   );
 }
 
-// ── Role row in the draft editor ──────────────────────────────────────────────
-
-interface RoleRowEditorProps {
-  entry: RoleEntry;
-  onChange: (roleId: string, field: "actualHrs" | "baselineHrs", value: number) => void;
+function PillarLegend() {
+  return (
+    <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
+      {PILLARS.map((p) => (
+        <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 10, height: 10, borderRadius: 2, background: p.color }} />
+          <span style={{ fontFamily: MONO, fontSize: 10, color: MUTED, letterSpacing: "0.1em" }}>
+            {p.id.toUpperCase()} — {p.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-function RoleRowEditor({ entry, onChange }: RoleRowEditorProps) {
-  const under = entry.actualHrs < entry.baselineHrs;
+function VariancePill({ actual, baseline }: { actual: number; baseline: number }) {
+  const delta = actual - baseline;
+  const pct   = baseline > 0 ? Math.round((delta / baseline) * 100) : 0;
+  const under = delta < 0;
   return (
-    <tr style={{ borderBottom: `1px solid ${RULE}` }}>
-      <td style={{ padding: "10px 12px", fontFamily: SANS, fontSize: 13, color: TEXT }}>
-        {entry.label}
-      </td>
-      <td style={{ padding: "10px 12px", textAlign: "right" }}>
-        <input
-          type="number"
-          min={0}
-          value={entry.baselineHrs}
-          onChange={(e) =>
-            onChange(entry.roleId, "baselineHrs", Math.max(0, Number(e.target.value)))
-          }
-          style={{
-            width: 72,
-            fontFamily: MONO,
-            fontSize: 13,
-            textAlign: "right",
-            background: "transparent",
-            border: `1px solid ${RULE}`,
-            borderRadius: 4,
-            padding: "3px 6px",
-            color: TEXT,
-          }}
-        />
-      </td>
-      <td style={{ padding: "10px 12px", textAlign: "right" }}>
-        <input
-          type="number"
-          min={0}
-          value={entry.actualHrs === 0 ? "" : entry.actualHrs}
-          placeholder="0"
-          onChange={(e) =>
-            onChange(entry.roleId, "actualHrs", Math.max(0, Number(e.target.value)))
-          }
-          style={{
-            width: 72,
-            fontFamily: MONO,
-            fontSize: 13,
-            textAlign: "right",
-            background: under ? "#fff7f5" : "#f8fdf9",
-            border: `1px solid ${under ? "#e8b8a8" : "#a8d8b8"}`,
-            borderRadius: 4,
-            padding: "3px 6px",
-            color: TEXT,
-          }}
-        />
-      </td>
-      <td style={{ padding: "10px 12px", textAlign: "right" }}>
-        {entry.actualHrs > 0 ? (
-          <VariancePill actual={entry.actualHrs} baseline={entry.baselineHrs} />
-        ) : (
-          <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>—</span>
-        )}
-      </td>
-    </tr>
+    <span
+      style={{
+        fontFamily: MONO,
+        fontSize: 11,
+        padding: "2px 7px",
+        borderRadius: 4,
+        background: under ? "#fde8e0" : "#e0f2e8",
+        color: under ? AMBER : GREEN,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {under ? "−" : "+"}
+      {Math.abs(pct)}%&nbsp;({delta >= 0 ? "+" : ""}
+      {delta.toFixed(1)} hrs)
+    </span>
   );
 }
 
@@ -205,11 +275,11 @@ interface SnapshotRowProps {
 
 function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
   const [expanded, setExpanded] = useState(false);
-  const under     = isUnderBaseline(snapshot);
-  const totalActual   = snapshot.roles.reduce((s, r) => s + r.actualHrs,   0);
+  const under        = isUnderBaseline(snapshot);
+  const totalActual  = snapshot.roles.reduce((s, r) => s + r.actualHrs,   0);
   const totalBaseline = snapshot.roles.reduce((s, r) => s + r.baselineHrs, 0);
-  const delta     = totalActual - totalBaseline;
-  const pct       = totalBaseline > 0 ? Math.round((delta / totalBaseline) * 100) : 0;
+  const delta        = totalActual - totalBaseline;
+  const pct          = totalBaseline > 0 ? Math.round((delta / totalBaseline) * 100) : 0;
 
   return (
     <div
@@ -232,18 +302,9 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
         }}
         onClick={() => setExpanded((x) => !x)}
       >
-        <span
-          style={{
-            fontFamily: SERIF,
-            fontSize: 15,
-            fontWeight: 600,
-            color: DARK,
-            minWidth: 80,
-          }}
-        >
+        <span style={{ fontFamily: SERIF, fontSize: 15, fontWeight: 600, color: DARK, minWidth: 80 }}>
           {snapshot.label}
         </span>
-
         <span
           style={{
             fontFamily: MONO,
@@ -256,13 +317,11 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
         >
           {under ? "UNDER" : "MET"}
         </span>
-
         <span style={{ fontFamily: MONO, fontSize: 12, color: MUTED, flex: 1 }}>
           {totalActual.toLocaleString()} / {totalBaseline.toLocaleString()} hrs total
           &nbsp;({delta >= 0 ? "+" : ""}
           {pct}%)
         </span>
-
         {isLatest && (
           <span
             style={{
@@ -277,11 +336,9 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
             latest
           </span>
         )}
-
         <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
           Locked {new Date(snapshot.lockedAt).toLocaleDateString("en-CA")}
         </span>
-
         <span style={{ color: MUTED, fontSize: 14 }}>{expanded ? "▲" : "▼"}</span>
       </div>
 
@@ -293,6 +350,14 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
                 <th style={TH}>Role</th>
                 <th style={{ ...TH, textAlign: "right" }}>Baseline hrs</th>
                 <th style={{ ...TH, textAlign: "right" }}>Actual hrs</th>
+                {PILLARS.map((p) => (
+                  <th
+                    key={p.id}
+                    style={{ ...TH, textAlign: "right", color: p.color }}
+                  >
+                    {p.id.toUpperCase()}
+                  </th>
+                ))}
                 <th style={{ ...TH, textAlign: "right" }}>Variance</th>
               </tr>
             </thead>
@@ -313,6 +378,17 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
                   >
                     {r.actualHrs.toLocaleString()}
                   </td>
+                  {PILLARS.map((p) => {
+                    const hrs = r.pillars?.[p.id];
+                    return (
+                      <td
+                        key={p.id}
+                        style={{ ...TD, textAlign: "right", fontFamily: MONO, fontSize: 11 }}
+                      >
+                        {hrs !== undefined && hrs > 0 ? hrs.toFixed(1) : "—"}
+                      </td>
+                    );
+                  })}
                   <td style={{ ...TD, textAlign: "right" }}>
                     <VariancePill actual={r.actualHrs} baseline={r.baselineHrs} />
                   </td>
@@ -320,7 +396,6 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
               ))}
             </tbody>
           </table>
-
           <div style={{ marginTop: 10, display: "flex", justifyContent: "flex-end" }}>
             <button
               onClick={(e) => {
@@ -349,35 +424,87 @@ function SnapshotRow({ snapshot, onDelete, isLatest }: SnapshotRowProps) {
   );
 }
 
-// ── Shared table styles ────────────────────────────────────────────────────────
-const TH: React.CSSProperties = {
-  fontFamily: MONO,
-  fontSize: 11,
-  color: MUTED,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.06em",
-  padding: "6px 12px",
-  textAlign: "left",
-  borderBottom: `1px solid ${RULE}`,
-};
-const TD: React.CSSProperties = {
-  padding: "8px 12px",
-  fontFamily: SANS,
-  fontSize: 13,
-  color: TEXT,
-};
+// ── Trend strip ────────────────────────────────────────────────────────────────
+
+function TrendStrip({ snapshots }: { snapshots: QuarterSnapshot[] }) {
+  if (snapshots.length === 0) return null;
+  const maxActual = Math.max(
+    ...snapshots.map((s) => s.roles.reduce((sum, r) => sum + r.actualHrs, 0))
+  );
+  return (
+    <div
+      style={{
+        background: CREAM,
+        border: `1px solid ${RULE}`,
+        borderRadius: 6,
+        padding: "14px 16px",
+        marginBottom: 10,
+      }}
+    >
+      <p
+        style={{
+          fontFamily: MONO,
+          fontSize: 10,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          color: MUTED,
+          margin: "0 0 10px",
+        }}
+      >
+        Total hours vs baseline — last {snapshots.length} quarter
+        {snapshots.length !== 1 ? "s" : ""}
+      </p>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 12, height: 60 }}>
+        {snapshots.map((s) => {
+          const total    = s.roles.reduce((sum, r) => sum + r.actualHrs,   0);
+          const baseline = s.roles.reduce((sum, r) => sum + r.baselineHrs, 0);
+          const under    = total < baseline;
+          const heightPct = maxActual > 0 ? Math.max(4, (total / maxActual) * 100) : 4;
+          return (
+            <div
+              key={s.id}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flex: 1 }}
+            >
+              <span style={{ fontFamily: MONO, fontSize: 10, color: under ? AMBER : GREEN }}>
+                {total.toLocaleString()}
+              </span>
+              <div
+                style={{
+                  width: "100%",
+                  height: `${heightPct}%`,
+                  background: under ? "#e8b8a8" : "#a8d8b8",
+                  borderRadius: "3px 3px 0 0",
+                  minHeight: 4,
+                }}
+              />
+              <span style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>{s.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function HoursByPillar() {
   const [snapshots, setSnapshots] = useState<QuarterSnapshot[]>([]);
   const [draft, setDraft]         = useState<QuarterDraft | null>(null);
+  const [pillarInputs, setPillarInputs] = useState<PillarInputs>(blankPillarInputs);
 
   // Load from storage on mount
   useEffect(() => {
     setSnapshots(loadSnapshots());
     const saved = loadDraft();
-    setDraft(saved ?? makeInitialDraft());
+    if (saved) {
+      setDraft(saved);
+      setPillarInputs(pillarInputsFromRoles(saved.roles));
+    } else {
+      const initial = makeInitialDraft();
+      setDraft(initial);
+      setPillarInputs(blankPillarInputs());
+    }
   }, []);
 
   // Persist draft whenever it changes
@@ -387,18 +514,40 @@ export default function HoursByPillar() {
 
   const triggerFired = isTwoQuarterTriggerFired(snapshots);
 
-  // ── Draft editing ────────────────────────────────────────────────────────────
+  // ── Prev-Q status (informational) ────────────────────────────────────────────
+  const prevSnapshot = useMemo(() => {
+    if (snapshots.length === 0) return null;
+    return [...snapshots].sort(
+      (a, b) => new Date(b.lockedAt).getTime() - new Date(a.lockedAt).getTime()
+    )[0];
+  }, [snapshots]);
+  const prevUnder = prevSnapshot ? isUnderBaseline(prevSnapshot) : false;
 
-  const handleRoleChange = useCallback(
-    (roleId: string, field: "actualHrs" | "baselineHrs", value: number) => {
-      setDraft((prev) => {
-        if (!prev) return prev;
-        return {
+  // ── Pillar input change ───────────────────────────────────────────────────────
+  const handlePillarChange = useCallback(
+    (roleId: string, pillarId: PillarId, value: string) => {
+      setPillarInputs((prev) => {
+        const updated = {
           ...prev,
-          roles: prev.roles.map((r) =>
-            r.roleId === roleId ? { ...r, [field]: value } : r
-          ),
+          [roleId]: { ...(prev[roleId] ?? {}), [pillarId]: value },
         };
+        // Sync actual hours on the draft
+        setDraft((d) => {
+          if (!d) return d;
+          const total = totalFromInputs(updated[roleId] ?? {});
+          const pillarNums: Record<string, number> = {};
+          for (const p of PILLARS) {
+            const v = parseFloat(updated[roleId]?.[p.id] ?? "");
+            pillarNums[p.id] = isNaN(v) ? 0 : v;
+          }
+          return {
+            ...d,
+            roles: d.roles.map((r) =>
+              r.roleId === roleId ? { ...r, actualHrs: total, pillars: pillarNums } : r
+            ),
+          };
+        });
+        return updated;
       });
     },
     []
@@ -408,102 +557,115 @@ export default function HoursByPillar() {
     setDraft((prev) => (prev ? { ...prev, label: value } : prev));
   }, []);
 
-  // ── Lock draft → snapshot ────────────────────────────────────────────────────
+  // ── Draft aggregate totals ────────────────────────────────────────────────────
+  const draftTotalActual   = draft?.roles.reduce((s, r) => s + r.actualHrs,   0) ?? 0;
+  const draftTotalBaseline = draft?.roles.reduce((s, r) => s + r.baselineHrs, 0) ?? 0;
+  const draftUnder         = draftTotalActual > 0 && draftTotalActual < draftTotalBaseline;
 
+  // Unknown roles: roles in the draft that are NOT in contractBaselines
+  const unknownRoles = useMemo(
+    () => (draft?.roles ?? []).filter((r) => !getBaseline(r.roleId)),
+    [draft]
+  );
+
+  // ── Lock draft → snapshot ────────────────────────────────────────────────────
   const handleLock = useCallback(() => {
     if (!draft) return;
-    const totalActual = draft.roles.reduce((s, r) => s + r.actualHrs, 0);
-    if (totalActual === 0) {
+    if (draftTotalActual === 0) {
+      alert("All actual hours are zero. Enter the actual hours before locking this quarter.");
+      return;
+    }
+    if (unknownRoles.length > 0) {
       alert(
-        "All actual hours are zero. Enter the actual hours before locking this quarter."
+        `${unknownRoles.length} role(s) are not in the contract baseline. ` +
+        "Resolve them on the Contract Terms page before locking."
       );
       return;
     }
+    // Build snapshot — each role carries its pillar breakdown
     const snapshot: QuarterSnapshot = {
       id:       draft.id,
       label:    draft.label,
       lockedAt: new Date().toISOString(),
-      roles:    draft.roles,
+      roles:    draft.roles.map((r) => {
+        const pIn = pillarInputs[r.roleId] ?? {};
+        const pillarNums: Record<string, number> = {};
+        for (const p of PILLARS) {
+          const v = parseFloat(pIn[p.id] ?? "");
+          pillarNums[p.id] = isNaN(v) ? 0 : v;
+        }
+        return { ...r, pillars: pillarNums };
+      }),
     };
     appendSnapshot(snapshot);
-    const updated = loadSnapshots();
-    setSnapshots(updated);
+    setSnapshots(loadSnapshots());
     clearDraft();
     setDraft(null);
-  }, [draft]);
+    setPillarInputs(blankPillarInputs());
+  }, [draft, draftTotalActual, unknownRoles, pillarInputs]);
 
   // ── Start new quarter ─────────────────────────────────────────────────────────
-
   const handleNewQuarter = useCallback(() => {
     const sorted = [...snapshots].sort(
       (a, b) => new Date(a.lockedAt).getTime() - new Date(b.lockedAt).getTime()
     );
-    const last = sorted[sorted.length - 1];
+    const last    = sorted[sorted.length - 1];
     const newDraft = last
       ? makeDraftFromPrev(last.id, last.roles)
       : makeInitialDraft();
     setDraft(newDraft);
+    setPillarInputs(blankPillarInputs());
   }, [snapshots]);
 
   // ── Delete snapshot ───────────────────────────────────────────────────────────
-
   const handleDelete = useCallback((id: string) => {
     deleteSnapshot(id);
     setSnapshots(loadSnapshots());
   }, []);
 
-  // ── Sort snapshots for display (newest first) ────────────────────────────────
-  const sortedSnapshots = [...snapshots].sort(
-    (a, b) => new Date(b.lockedAt).getTime() - new Date(a.lockedAt).getTime()
+  // ── Sort snapshots newest first ───────────────────────────────────────────────
+  const sortedSnapshots = useMemo(
+    () => [...snapshots].sort((a, b) => new Date(b.lockedAt).getTime() - new Date(a.lockedAt).getTime()),
+    [snapshots]
   );
   const latestId = sortedSnapshots[0]?.id;
-
-  // ── Derive prev-Q status for the draft (for informational display only) ──────
-  const prevSnapshot =
-    snapshots.length > 0
-      ? [...snapshots].sort(
-          (a, b) =>
-            new Date(b.lockedAt).getTime() - new Date(a.lockedAt).getTime()
-        )[0]
-      : null;
-  const prevUnder = prevSnapshot ? isUnderBaseline(prevSnapshot) : false;
-
-  // ── Draft totals ──────────────────────────────────────────────────────────────
-  const draftTotalActual   = draft?.roles.reduce((s, r) => s + r.actualHrs,   0) ?? 0;
-  const draftTotalBaseline = draft?.roles.reduce((s, r) => s + r.baselineHrs, 0) ?? 0;
-  const draftUnder         = draftTotalActual > 0 && draftTotalActual < draftTotalBaseline;
 
   // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: BG,
-        fontFamily: SANS,
-        color: TEXT,
-        padding: "40px 24px",
-      }}
-    >
-      <div style={{ maxWidth: 780, margin: "0 auto" }}>
+    <div style={{ minHeight: "100vh", background: BG, fontFamily: SANS, color: TEXT }}>
+      <div style={{ maxWidth: 1050, margin: "0 auto", padding: "40px 24px" }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 32 }}>
-          <h1
-            style={{
-              fontFamily: SERIF,
-              fontSize: 28,
-              fontWeight: 700,
-              color: DARK,
-              margin: 0,
-            }}
+        <div style={{ marginBottom: 8 }}>
+          <Link
+            href="/"
+            style={{ fontFamily: MONO, fontSize: 11, color: MUTED, textDecoration: "none", letterSpacing: "0.12em" }}
           >
-            Hours by Pillar
-          </h1>
-          <p style={{ margin: "6px 0 0", color: MUTED, fontSize: 13 }}>
-            Quarterly hours tracking · Hard Rule 02 enforced automatically from saved history
-          </p>
+            ← DECK
+          </Link>
         </div>
+        <div
+          style={{
+            fontFamily: MONO,
+            fontSize: 10,
+            letterSpacing: "0.22em",
+            color: MUTED,
+            textTransform: "uppercase",
+            marginBottom: 6,
+          }}
+        >
+          Quarterly report
+        </div>
+        <h1 style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 600, color: DARK, marginBottom: 4, lineHeight: 1.2 }}>
+          Hours by Pillar
+        </h1>
+        <p style={{ fontSize: 13, color: MUTED, marginBottom: 24, maxWidth: 640 }}>
+          Enter actual hours per role per pillar. Baseline allocations are locked to the contract
+          and shown read-only. Hard Rule 02 fires automatically from saved history — no manual checkbox required.
+        </p>
+
+        <ContractBanner />
 
         {/* Hard Rule 02 banner */}
         {triggerFired && <TriggerBanner />}
@@ -544,7 +706,6 @@ export default function HoursByPillar() {
               >
                 Draft
               </span>
-
               <input
                 value={draft.label}
                 onChange={(e) => handleDraftLabelChange(e.target.value)}
@@ -561,16 +722,8 @@ export default function HoursByPillar() {
                   minWidth: 100,
                 }}
               />
-
               {prevSnapshot && (
-                <span
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 11,
-                    color: prevUnder ? AMBER : GREEN,
-                    marginLeft: "auto",
-                  }}
-                >
+                <span style={{ fontFamily: MONO, fontSize: 11, color: prevUnder ? AMBER : GREEN, marginLeft: "auto" }}>
                   Prev Q ({prevSnapshot.label}):&nbsp;
                   <strong>{prevUnder ? "UNDER baseline" : "met baseline"}</strong>
                   &nbsp;— auto-derived
@@ -578,29 +731,250 @@ export default function HoursByPillar() {
               )}
             </div>
 
-            {/* Role table */}
-            <div style={{ padding: "0 0 8px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            {/* Pillar legend */}
+            <div style={{ padding: "14px 20px 0" }}>
+              <PillarLegend />
+            </div>
+
+            {/* Unknown-role warning */}
+            {unknownRoles.length > 0 && (
+              <div
+                style={{
+                  margin: "0 20px 14px",
+                  padding: "10px 14px",
+                  background: "#fff3cd",
+                  border: "1px solid #ffc107",
+                  borderRadius: 6,
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  color: "#7c5700",
+                }}
+              >
+                <strong>⚠ {unknownRoles.length} role(s) not in the contract baseline:</strong>{" "}
+                {unknownRoles.map((r) => r.roleId).join(", ")}.{" "}
+                <Link href="/contract-terms" style={{ color: AMBER, fontWeight: 700 }}>
+                  Add them on the Contract Terms page
+                </Link>{" "}
+                before locking.
+              </div>
+            )}
+
+            {/* Role × Pillar table */}
+            <div style={{ overflowX: "auto", padding: "0 0 8px" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 760 }}>
                 <thead>
-                  <tr>
-                    <th style={TH}>Role</th>
-                    <th style={{ ...TH, textAlign: "right" }}>Baseline hrs</th>
-                    <th style={{ ...TH, textAlign: "right" }}>Actual hrs</th>
-                    <th style={{ ...TH, textAlign: "right" }}>Variance</th>
+                  <tr style={{ background: DARK, color: CREAM }}>
+                    <th
+                      style={{
+                        textAlign: "left",
+                        padding: "10px 14px",
+                        fontFamily: MONO,
+                        fontSize: 10,
+                        letterSpacing: "0.15em",
+                        fontWeight: 600,
+                        minWidth: 190,
+                      }}
+                    >
+                      ROLE
+                    </th>
+                    {PILLARS.map((p) => (
+                      <th
+                        key={p.id}
+                        style={{
+                          textAlign: "center",
+                          padding: "10px 8px",
+                          fontFamily: MONO,
+                          fontSize: 9,
+                          letterSpacing: "0.15em",
+                          borderLeft: "1px solid rgba(255,255,255,0.12)",
+                          minWidth: 100,
+                        }}
+                      >
+                        <span style={{ color: p.color, filter: "brightness(1.6)" }}>
+                          {p.id.toUpperCase()}
+                        </span>
+                        <br />
+                        <span style={{ opacity: 0.7, fontSize: 8 }}>hrs · drift</span>
+                      </th>
+                    ))}
+                    <th
+                      style={{
+                        textAlign: "right",
+                        padding: "10px 14px",
+                        fontFamily: MONO,
+                        fontSize: 9,
+                        letterSpacing: "0.15em",
+                        borderLeft: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      TOTAL HRS
+                    </th>
+                    <th
+                      style={{
+                        textAlign: "right",
+                        padding: "10px 14px",
+                        fontFamily: MONO,
+                        fontSize: 9,
+                        letterSpacing: "0.15em",
+                        borderLeft: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      VARIANCE
+                    </th>
+                  </tr>
+                  {/* Contracted baseline % row */}
+                  <tr style={{ background: "#e8e2d4", borderBottom: `1px solid ${RULE}` }}>
+                    <td
+                      style={{
+                        padding: "4px 14px",
+                        fontFamily: MONO,
+                        fontSize: 9,
+                        color: MUTED,
+                        letterSpacing: "0.12em",
+                      }}
+                    >
+                      ↳ contracted baseline %
+                    </td>
+                    {PILLARS.map((p) => (
+                      <td
+                        key={p.id}
+                        style={{
+                          textAlign: "center",
+                          padding: "4px 8px",
+                          fontFamily: MONO,
+                          fontSize: 9,
+                          color: MUTED,
+                          borderLeft: `1px solid ${RULE}`,
+                        }}
+                      >
+                        (per role)
+                      </td>
+                    ))}
+                    <td colSpan={2} />
                   </tr>
                 </thead>
                 <tbody>
-                  {draft.roles.map((r) => (
-                    <RoleRowEditor key={r.roleId} entry={r} onChange={handleRoleChange} />
-                  ))}
+                  {draft.roles.map((role, i) => {
+                    const baseline = getBaseline(role.roleId);
+                    const pIn      = pillarInputs[role.roleId] ?? { cfs: "", ops: "", gov: "", eng: "" };
+                    const total    = totalFromInputs(pIn);
+                    const rowBg    = i % 2 === 0 ? CREAM : "#ede8dc";
+                    const under    = total > 0 && total < role.baselineHrs;
+
+                    return (
+                      <tr key={role.roleId} style={{ background: rowBg }}>
+                        {/* Role label */}
+                        <td style={{ padding: "10px 14px", verticalAlign: "middle" }}>
+                          <div style={{ fontWeight: 600, fontSize: 13, color: DARK }}>{role.label}</div>
+                          {baseline?.note && (
+                            <div style={{ fontSize: 10, color: MUTED, marginTop: 2 }}>{baseline.note}</div>
+                          )}
+                          <div style={{ fontFamily: MONO, fontSize: 9, color: MUTED, marginTop: 3, letterSpacing: "0.08em" }}>
+                            contracted: {baseline ? `${baseline.contractedHrsPerMonth} hrs/mo · ~${role.baselineHrs} hrs/qtr` : `~${role.baselineHrs} hrs/qtr`}
+                          </div>
+                        </td>
+
+                        {/* Per-pillar input + drift */}
+                        {PILLARS.map((p) => {
+                          const bPct   = baseline?.pillars[p.id as PillarId] ?? null;
+                          const d      = baseline
+                            ? driftPp(pIn, baseline.pillars[p.id as PillarId], p.id as PillarId)
+                            : null;
+                          return (
+                            <td
+                              key={p.id}
+                              style={{
+                                borderLeft: `1px solid ${RULE}`,
+                                padding: "8px",
+                                verticalAlign: "middle",
+                                minWidth: 100,
+                              }}
+                            >
+                              {bPct !== null && (
+                                <div
+                                  style={{
+                                    fontFamily: MONO,
+                                    fontSize: 9,
+                                    color: p.color,
+                                    marginBottom: 4,
+                                    letterSpacing: "0.06em",
+                                  }}
+                                  title="Contracted baseline — read-only"
+                                >
+                                  baseline {bPct}%
+                                </div>
+                              )}
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.5"
+                                value={pIn[p.id as PillarId]}
+                                onChange={(e) =>
+                                  handlePillarChange(role.roleId, p.id as PillarId, e.target.value)
+                                }
+                                placeholder="hrs"
+                                style={{
+                                  width: 60,
+                                  fontFamily: MONO,
+                                  fontSize: 12,
+                                  padding: "4px 6px",
+                                  border: `1px solid ${RULE}`,
+                                  borderRadius: 3,
+                                  background: "#fff",
+                                  color: DARK,
+                                }}
+                              />
+                              <div style={{ fontFamily: MONO, fontSize: 9, marginTop: 3, color: driftColor(d) }}>
+                                {pillarPct(pIn, p.id as PillarId) !== null
+                                  ? `actual ${pillarPct(pIn, p.id as PillarId)}%`
+                                  : "—"}
+                                {" · "}
+                                {fmtDrift(d)}
+                              </div>
+                            </td>
+                          );
+                        })}
+
+                        {/* Total */}
+                        <td
+                          style={{
+                            textAlign: "right",
+                            padding: "10px 14px",
+                            fontFamily: MONO,
+                            fontSize: 12,
+                            borderLeft: `1px solid ${RULE}`,
+                            color: total > 0 ? (under ? AMBER : DARK) : MUTED,
+                            fontWeight: total > 0 ? 700 : 400,
+                            verticalAlign: "middle",
+                          }}
+                        >
+                          {total > 0 ? total.toFixed(1) : "—"}
+                          {total > 0 && (
+                            <div style={{ fontSize: 9, fontWeight: 400, color: MUTED, marginTop: 2 }}>
+                              ctrd ~{role.baselineHrs}
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Variance */}
+                        <td style={{ ...TD, textAlign: "right", borderLeft: `1px solid ${RULE}`, verticalAlign: "middle" }}>
+                          {total > 0 ? (
+                            <VariancePill actual={total} baseline={role.baselineHrs} />
+                          ) : (
+                            <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>—</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
                 <tfoot>
-                  <tr style={{ borderTop: `2px solid ${RULE}` }}>
+                  <tr style={{ borderTop: `2px solid ${RULE}`, background: "#e8e2d4" }}>
                     <td
                       style={{
-                        padding: "10px 12px",
+                        padding: "10px 14px",
                         fontFamily: MONO,
-                        fontSize: 12,
+                        fontSize: 11,
                         color: MUTED,
                         textTransform: "uppercase",
                         letterSpacing: "0.06em",
@@ -608,35 +982,30 @@ export default function HoursByPillar() {
                     >
                       Total
                     </td>
+                    {PILLARS.map((p) => (
+                      <td key={p.id} style={{ borderLeft: `1px solid ${RULE}` }} />
+                    ))}
                     <td
                       style={{
-                        padding: "10px 12px",
-                        textAlign: "right",
-                        fontFamily: MONO,
-                        fontSize: 13,
-                        color: TEXT,
-                      }}
-                    >
-                      {draftTotalBaseline.toLocaleString()}
-                    </td>
-                    <td
-                      style={{
-                        padding: "10px 12px",
+                        padding: "10px 14px",
                         textAlign: "right",
                         fontFamily: MONO,
                         fontSize: 13,
                         color: draftUnder ? AMBER : TEXT,
                         fontWeight: 600,
+                        borderLeft: `1px solid ${RULE}`,
                       }}
                     >
-                      {draftTotalActual.toLocaleString()}
+                      {draftTotalActual > 0 ? draftTotalActual.toFixed(1) : "—"}
+                      {draftTotalBaseline > 0 && (
+                        <div style={{ fontSize: 9, fontWeight: 400, color: MUTED, marginTop: 2 }}>
+                          ctrd ~{draftTotalBaseline}
+                        </div>
+                      )}
                     </td>
-                    <td style={{ padding: "10px 12px", textAlign: "right" }}>
+                    <td style={{ padding: "10px 14px", textAlign: "right", borderLeft: `1px solid ${RULE}` }}>
                       {draftTotalActual > 0 ? (
-                        <VariancePill
-                          actual={draftTotalActual}
-                          baseline={draftTotalBaseline}
-                        />
+                        <VariancePill actual={draftTotalActual} baseline={draftTotalBaseline} />
                       ) : (
                         <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>—</span>
                       )}
@@ -654,6 +1023,7 @@ export default function HoursByPillar() {
                 display: "flex",
                 gap: 10,
                 justifyContent: "flex-end",
+                alignItems: "center",
                 flexWrap: "wrap",
               }}
             >
@@ -663,7 +1033,6 @@ export default function HoursByPillar() {
                     fontFamily: MONO,
                     fontSize: 11,
                     color: AMBER,
-                    alignSelf: "center",
                     marginRight: "auto",
                   }}
                 >
@@ -673,16 +1042,18 @@ export default function HoursByPillar() {
               )}
               <button
                 onClick={handleLock}
+                disabled={draftTotalActual === 0 || unknownRoles.length > 0}
                 style={{
-                  background: DARK,
+                  background: draftTotalActual > 0 && unknownRoles.length === 0 ? DARK : "#c8bfa7",
                   color: CREAM,
                   border: "none",
                   fontFamily: MONO,
                   fontSize: 12,
                   padding: "8px 18px",
                   borderRadius: 5,
-                  cursor: "pointer",
+                  cursor: draftTotalActual > 0 && unknownRoles.length === 0 ? "pointer" : "not-allowed",
                   letterSpacing: "0.04em",
+                  fontWeight: 700,
                 }}
               >
                 Lock this quarter
@@ -723,6 +1094,83 @@ export default function HoursByPillar() {
           </section>
         )}
 
+        {/* ── Contracted baseline reference (collapsible) ────────────────────── */}
+        <details style={{ marginBottom: 32 }}>
+          <summary
+            style={{
+              fontFamily: MONO,
+              fontSize: 11,
+              color: MUTED,
+              letterSpacing: "0.12em",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+          >
+            CONTRACTED BASELINE SUMMARY (read-only)
+          </summary>
+          <div style={{ marginTop: 12, overflowX: "auto" }}>
+            <table
+              style={{
+                borderCollapse: "collapse",
+                fontSize: 12,
+                fontFamily: MONO,
+                background: CREAM,
+                borderRadius: 6,
+                overflow: "hidden",
+                width: "100%",
+              }}
+            >
+              <thead>
+                <tr style={{ background: "#2a2520", color: CREAM }}>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: 9, letterSpacing: "0.14em" }}>
+                    ROLE
+                  </th>
+                  {PILLARS.map((p) => (
+                    <th
+                      key={p.id}
+                      style={{
+                        padding: "8px 12px",
+                        textAlign: "right",
+                        fontSize: 9,
+                        letterSpacing: "0.14em",
+                        color: p.color,
+                        filter: "brightness(1.6)",
+                      }}
+                    >
+                      {p.id.toUpperCase()} %
+                    </th>
+                  ))}
+                  <th style={{ padding: "8px 12px", textAlign: "right", fontSize: 9, letterSpacing: "0.14em" }}>
+                    CONTRACT
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {BASELINES.map((role, i) => (
+                  <tr key={role.roleId} style={{ background: i % 2 === 0 ? CREAM : "#ede8dc" }}>
+                    <td style={{ padding: "8px 12px", color: DARK, fontWeight: 600 }}>{role.label}</td>
+                    {PILLARS.map((p) => (
+                      <td
+                        key={p.id}
+                        style={{
+                          padding: "8px 12px",
+                          textAlign: "right",
+                          color: role.pillars[p.id as PillarId] > 0 ? DARK : MUTED,
+                        }}
+                      >
+                        {role.pillars[p.id as PillarId]}%
+                      </td>
+                    ))}
+                    <td style={{ padding: "8px 12px", textAlign: "right", color: MUTED, fontSize: 10 }}>
+                      {CONTRACT_LABEL}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+
         {/* ── History ──────────────────────────────────────────────────────── */}
         <section>
           <div
@@ -736,20 +1184,13 @@ export default function HoursByPillar() {
             }}
           >
             <h2
-              style={{
-                fontFamily: SERIF,
-                fontSize: 18,
-                fontWeight: 600,
-                color: DARK,
-                margin: 0,
-              }}
+              style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 600, color: DARK, margin: 0 }}
             >
               Quarter history
             </h2>
             <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
               {snapshots.length} snapshot{snapshots.length !== 1 ? "s" : ""}
             </span>
-
             {snapshots.length >= 2 && (
               <span
                 style={{
@@ -771,12 +1212,11 @@ export default function HoursByPillar() {
             </p>
           ) : (
             <>
-              {/* Trend mini-chart */}
-              <TrendStrip snapshots={[...snapshots].sort(
-                (a, b) =>
-                  new Date(a.lockedAt).getTime() - new Date(b.lockedAt).getTime()
-              )} />
-
+              <TrendStrip
+                snapshots={[...snapshots].sort(
+                  (a, b) => new Date(a.lockedAt).getTime() - new Date(b.lockedAt).getTime()
+                )}
+              />
               <div style={{ marginTop: 14 }}>
                 {sortedSnapshots.map((s) => (
                   <SnapshotRow
@@ -790,92 +1230,6 @@ export default function HoursByPillar() {
             </>
           )}
         </section>
-      </div>
-    </div>
-  );
-}
-
-// ── Trend strip (small bar chart showing total-hours trend) ────────────────────
-
-function TrendStrip({ snapshots }: { snapshots: QuarterSnapshot[] }) {
-  if (snapshots.length === 0) return null;
-
-  const maxActual = Math.max(
-    ...snapshots.map((s) => s.roles.reduce((sum, r) => sum + r.actualHrs, 0))
-  );
-
-  return (
-    <div
-      style={{
-        background: CREAM,
-        border: `1px solid ${RULE}`,
-        borderRadius: 6,
-        padding: "14px 16px",
-        marginBottom: 10,
-      }}
-    >
-      <p
-        style={{
-          fontFamily: MONO,
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          color: MUTED,
-          margin: "0 0 10px",
-        }}
-      >
-        Total hours vs baseline — last {snapshots.length} quarter
-        {snapshots.length !== 1 ? "s" : ""}
-      </p>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          gap: 12,
-          height: 60,
-        }}
-      >
-        {snapshots.map((s) => {
-          const total    = s.roles.reduce((sum, r) => sum + r.actualHrs,   0);
-          const baseline = s.roles.reduce((sum, r) => sum + r.baselineHrs, 0);
-          const under    = total < baseline;
-          const heightPct = maxActual > 0 ? Math.max(4, (total / maxActual) * 100) : 4;
-          return (
-            <div
-              key={s.id}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                flex: 1,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 10,
-                  color: under ? AMBER : GREEN,
-                }}
-              >
-                {total.toLocaleString()}
-              </span>
-              <div
-                style={{
-                  width: "100%",
-                  height: `${heightPct}%`,
-                  background: under ? "#e8b8a8" : "#a8d8b8",
-                  borderRadius: "3px 3px 0 0",
-                  minHeight: 4,
-                  position: "relative",
-                }}
-              />
-              <span style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>
-                {s.label}
-              </span>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

@@ -21,6 +21,11 @@ export interface RoleEntry {
   baselineHrs: number;
   /** Actual hours delivered this quarter (bookkeeper fills in) */
   actualHrs: number;
+  /**
+   * Actual hours broken down by pillar (CFS / OPS / GOV / ENG).
+   * Present on snapshots created after Task #69; absent on older entries.
+   */
+  pillars?: Record<string, number>;
 }
 
 /**
