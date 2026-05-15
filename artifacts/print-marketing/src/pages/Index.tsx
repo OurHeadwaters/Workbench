@@ -235,6 +235,20 @@ const outreachPieces = [
     desc: "Personalized four-phase pilot proposal for Sandy Lake First Nation. All 'your community' references replaced with Sandy Lake-specific language across every phase. Letter size (8.5×11).",
     icon: "📋",
   },
+  {
+    href: "/codetry-intro-letter-deer-lake",
+    title: "Codetry Intro Letter — Deer Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Personalized introduction letter for Deer Lake First Nation. Highlights the hotel as an existing data-gathering asset, rotating supply while grants are written, and the 807 Food Co-op supply line targeting 2027. Letter size (8.5×11).",
+    icon: "✉️",
+  },
+  {
+    href: "/codetry-pilot-proposal-deer-lake",
+    title: "Codetry Pilot Proposal — Deer Lake First Nation",
+    label: "Aboriginal Outreach",
+    desc: "Deer Lake-specific four-phase proposal. Phase 1 audits the hotel and existing supply points. Phase 2 runs real operations while writing the 807 grants. Phase 3 activates the 807 supply line in 2027. Letter size (8.5×11).",
+    icon: "📋",
+  },
 ];
 
 export default function Index() {
