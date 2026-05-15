@@ -1,0 +1,60 @@
+The Eave — plain language brief for other agents
+First: what to call it
+The correct name is the Eave. Not "finance," not "headwaters." Those names do not exist in this project. If another agent uses either of those words, it is operating on a misunderstanding.
+
+"Eave" has two related meanings in this system, and both are correct:
+
+The Eave (the rule) — an architectural boundary in the Codetry zone model, explained below.
+the Eave (the constellation) — the household finance tool that lives at that boundary and enforces it by example.
+The zone model (brief)
+This project uses a permaculture zone model. Zones are numbered 0–5, and each zone represents a different level of closeness and trust.
+
+Zone	What it is
+0	Your household — the most private, innermost layer
+1	Your circle — people let in by someone who knows them (invite)
+2	Extended community — co-ops, schools, recurring gatherings
+3	Trade — people you may not know personally; identity by wallet
+4	Wider market and regional exchange
+5	The open public web — no identity assumed
+Two different identity models
+Zone 0–2 uses trust. You get in because someone inside handed you a token. Your credential is a name, a passphrase, and that invite token — no email, no external account. You were vouched for.
+
+Zone 3–4 uses verification. You are who your wallet says you are. You sign a message with a private key; your public address is your identity. No name required, no invite.
+
+What the Eave is
+The Eave is the gap between those two worlds. Specifically: a Zone 3 actor — someone identified only by a wallet address — has no path to Zone 1 data.
+
+This is not a permission check that could be bypassed. It is a structural absence. There is no database link between the wallet table and the household table. There is no route that accepts a wallet address and returns a household's records. The two data stores simply do not connect.
+
+The practical meaning: even if a Zone 3 actor is malicious or compromised, the maximum damage they can do is structural — not behavioral. They cannot reach Zone 1 data because no path to it exists.
+
+The rule that holds everywhere: no route may accept a wallet address as the thing that authenticates a request to household data. Ever. Not through a lookup, not through an intermediate step.
+
+The wallet bridge (the voluntary exception)
+A household can choose to bind their XRPL wallet to their Zone 1 identity. This does not break the Eave.
+
+When they bind their wallet:
+
+They become recognizable in Zone 3 trade spaces — as a wallet address, not by name
+Their passphrase session still works exactly as before
+Their household data is still protected
+The binding is stored as a field on the household record
+There is also a zone_credentials table. This records: wallet address, zone level, constellation, and a scrambled one-way reference to the household. The scrambled reference proves "this wallet was bound somewhere" without telling anyone reading that table who the household is. That is the Eave applied to data storage itself.
+
+The Eave constellation (the finance app)
+The Eave constellation is the household finance tool. It lives at the Zone 1/3 boundary, which is why it carries the name.
+
+It has:
+
+Households — identified by name + passphrase + invite (Zone 1 trust model)
+Envelopes — named spending categories with optional budget caps
+Transactions — individual money movements attached to an envelope
+Goals — savings targets with a running total
+The optional wallet binding on households is there, but the rule written directly into the schema is: no route may accept a wallet address as authentication, and no route may return finance data to an XRPL-only credential.
+
+The one test to apply to any new feature
+When any feature is proposed for a Zone 1 constellation, the question is: would this connect a Zone 3 actor to Zone 1 data — even through an intermediate step?
+
+If yes: the feature must be redesigned or placed behind the trust boundary. The Eave holds.
+
+That is the complete picture. The key correction for other agents: the name is the Eave, it is an architectural rule (not a configuration toggle), and "finance" and "headwaters" are not names that exist in this system.
