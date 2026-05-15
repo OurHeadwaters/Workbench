@@ -248,6 +248,7 @@ export function HomePage() {
                   desc: "Where you start. A plain-language guide that teaches the Headwaters way of working — how to scope a job, how to hand it over, and how a community can run its own economy.",
                   color: "hsl(145 36% 22%)",
                   testId: "work-card-handbook",
+                  href: "/codetry-handbook/",
                 },
                 {
                   icon: "📋",
@@ -256,6 +257,7 @@ export function HomePage() {
                   desc: "Where your work lives. A structured reference that tracks each engagement — the scope, the phases, the decisions, and the handover. Keeps every project honest.",
                   color: "hsl(145 28% 32%)",
                   testId: "work-card-guide",
+                  href: "/practitioners-guide-v2/",
                 },
                 {
                   icon: "📚",
@@ -264,11 +266,13 @@ export function HomePage() {
                   desc: "Where the money is recorded. Tracks what came in, what went out, and what the work delivered — so the community always knows where it stands financially.",
                   color: "hsl(145 22% 42%)",
                   testId: "work-card-books",
+                  href: "/headwaters-books/",
                 },
-              ].map(({ icon, name, sub, desc, color, testId }, i) => (
+              ].map(({ icon, name, sub, desc, color, testId, href }, i) => (
                 <div key={name}>
-                  <div
-                    className="rounded-md border bg-card p-4 flex gap-3.5 items-start"
+                  <a
+                    href={href}
+                    className="block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
                     style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                     data-testid={testId}
                   >
@@ -285,7 +289,7 @@ export function HomePage() {
                         {desc}
                       </p>
                     </div>
-                  </div>
+                  </a>
                   {i < 2 && (
                     <div className="flex flex-col items-start pl-[2.6rem] py-1">
                       <div className="w-px h-3" style={{ background: color, opacity: 0.35 }} />
@@ -323,6 +327,7 @@ export function HomePage() {
                   desc: "Curated research, reports, and links about northern food systems — so every decision is grounded in real data, not guesswork.",
                   color: "hsl(14 64% 36%)",
                   testId: "work-card-library",
+                  href: "/library/",
                 },
                 {
                   icon: "🖨️",
@@ -331,6 +336,7 @@ export function HomePage() {
                   desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment — from a farmers market table to a band council pitch.",
                   color: "hsl(14 50% 44%)",
                   testId: "work-card-print",
+                  href: "/print-marketing/",
                 },
                 {
                   icon: "🚢",
@@ -339,6 +345,7 @@ export function HomePage() {
                   desc: "Shows who is on which project, what role they fill, and how the crew fits together — so nothing falls through the cracks.",
                   color: "hsl(220 20% 32%)",
                   testId: "work-card-ship",
+                  href: "/",
                 },
                 {
                   icon: "🗄️",
@@ -347,11 +354,13 @@ export function HomePage() {
                   desc: "Stores photos, documents, and media assets so every other tool can pull from one reliable source — no more hunting for the right logo version.",
                   color: "hsl(200 25% 35%)",
                   testId: "work-card-media",
+                  href: "/media/",
                 },
-              ].map(({ icon, name, sub, desc, color, testId }) => (
-                <div
+              ].map(({ icon, name, sub, desc, color, testId, href }) => (
+                <a
                   key={name}
-                  className="rounded-md border bg-card p-4 flex gap-3 items-start"
+                  href={href}
+                  className="block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
                   style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                   data-testid={testId}
                 >
@@ -368,7 +377,7 @@ export function HomePage() {
                       {desc}
                     </p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 
