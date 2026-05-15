@@ -1,6 +1,7 @@
 import { Route, Switch } from "wouter";
 import OnePager from "./pages/OnePager";
 import HiringTemplates from "./pages/HiringTemplates";
+import HoursByPillar from "./pages/HoursByPillar";
 import DeckPlayer from "./components/DeckPlayer";
 import ReferenceCallScript from "./pages/ReferenceCallScript";
 import ReferenceCallHandyman from "./pages/ReferenceCallHandyman";
@@ -15,6 +16,7 @@ export default function App() {
     <Switch>
       <Route path={`${BASE}/one-pager`} component={OnePager} />
       <Route path={`${BASE}/hiring-templates`} component={HiringTemplates} />
+      <Route path={`${BASE}/hours`} component={HoursByPillar} />
       <Route path={`${BASE}/tools`} component={ToolsIndex} />
       <Route path={`${BASE}/tools/reference-call`} component={ReferenceCallScript} />
       <Route path={`${BASE}/tools/reference-call-handyman`} component={ReferenceCallHandyman} />
