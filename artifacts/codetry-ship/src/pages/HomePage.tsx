@@ -207,18 +207,18 @@ export function HomePage() {
                 className="block rounded-md border overflow-hidden transition-opacity hover:opacity-90"
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
-                <div className="px-4 py-3" style={{ background: color, color: fg }}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em]">{label}</p>
+                <div className="px-4 py-3.5" style={{ background: color, color: fg }}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em]">{label}</p>
                 </div>
                 <div className="px-4 py-3" style={{ background: "hsl(var(--card))" }}>
                   <p
-                    className="font-serif text-[13px] leading-[1.5] mb-2"
+                    className="font-serif text-[13px] leading-[1.5] mb-2 break-words"
                     style={{ color: "hsl(var(--muted-foreground))" }}
                   >
                     {blurb}
                   </p>
                   <p
-                    className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                    className="font-mono text-[10px] uppercase tracking-[0.14em] whitespace-nowrap"
                     style={{ color }}
                   >
                     See examples →
