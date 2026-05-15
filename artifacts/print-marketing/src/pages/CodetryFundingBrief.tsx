@@ -93,16 +93,8 @@ const constellationRoles = [
   },
 ];
 
-export default function CodetryFundingBrief() {
+export function CodetryFundingBriefPage() {
   return (
-    <>
-      <PrintNav
-        targetId="pdf-target"
-        filename="headwaters-codetry-funding-brief.pdf"
-        onCopyPlainText={buildPlainText}
-      />
-
-      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
         <div className="page-letter" style={PAGE}>
 
           {/* Header band */}
@@ -242,6 +234,19 @@ export default function CodetryFundingBrief() {
           </div>
 
         </div>
+  );
+}
+
+export default function CodetryFundingBrief() {
+  return (
+    <>
+      <PrintNav
+        targetId="pdf-target"
+        filename="headwaters-codetry-funding-brief.pdf"
+        onCopyPlainText={buildPlainText}
+      />
+      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
+        <CodetryFundingBriefPage />
       </div>
     </>
   );

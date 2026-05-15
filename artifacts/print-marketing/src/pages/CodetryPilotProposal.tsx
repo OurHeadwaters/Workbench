@@ -170,16 +170,8 @@ const phases = [
   },
 ];
 
-export default function CodetryPilotProposal() {
+export function CodetryPilotProposalPage() {
   return (
-    <>
-      <PrintNav
-        targetId="pdf-target"
-        filename="headwaters-codetry-pilot-proposal.pdf"
-        onCopyPlainText={buildPlainText}
-      />
-
-      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
         <div className="page-letter" style={PAGE}>
 
           {/* Letterhead band */}
@@ -330,6 +322,19 @@ export default function CodetryPilotProposal() {
           </div>
 
         </div>
+  );
+}
+
+export default function CodetryPilotProposal() {
+  return (
+    <>
+      <PrintNav
+        targetId="pdf-target"
+        filename="headwaters-codetry-pilot-proposal.pdf"
+        onCopyPlainText={buildPlainText}
+      />
+      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
+        <CodetryPilotProposalPage />
       </div>
     </>
   );

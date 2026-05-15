@@ -181,6 +181,13 @@ const mainPieces = [
 
 const outreachPieces = [
   {
+    href: "/nan-outreach-packet",
+    title: "NAN Outreach Packet — Download all four documents",
+    label: "Aboriginal Outreach",
+    desc: "One click produces a single four-page PDF: intro letter → partnership & funding brief → economic development one-pager → pilot proposal outline. Ready to attach to an email. Letter size (8.5×11).",
+    icon: "📦",
+  },
+  {
     href: "/codetry-intro-letter",
     title: "Codetry Intro Letter — NAN",
     label: "Aboriginal Outreach",
