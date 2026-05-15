@@ -272,7 +272,9 @@ export function HomePage() {
                 <div key={name}>
                   <a
                     href={href}
-                    className="block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative group block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
                     style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                     data-testid={testId}
                   >
@@ -289,6 +291,22 @@ export function HomePage() {
                         {desc}
                       </p>
                     </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 10 10"
+                      className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
+                      style={{ color }}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" />
+                      <path d="M6.5 1.5h2v2" />
+                      <path d="M9 1 5.5 4.5" />
+                    </svg>
                   </a>
                   {i < 2 && (
                     <div className="flex flex-col items-start pl-[2rem] py-1">
@@ -360,7 +378,9 @@ export function HomePage() {
                 <a
                   key={name}
                   href={href}
-                  className="block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative group block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
                   style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
                   data-testid={testId}
                 >
@@ -377,6 +397,22 @@ export function HomePage() {
                       {desc}
                     </p>
                   </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 10 10"
+                    className="absolute top-2.5 right-2.5 w-3 h-3 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
+                    style={{ color }}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 2H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V6" />
+                    <path d="M6.5 1.5h2v2" />
+                    <path d="M9 1 5.5 4.5" />
+                  </svg>
                 </a>
               ))}
             </div>
