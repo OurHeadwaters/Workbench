@@ -33,11 +33,30 @@ export interface CostEdit {
   editedAt: string;
   /** True if the founder explicitly marked this item as "skip for now" */
   skipped?: boolean;
+  /** True when this line was added by the founder and doesn't exist in the planning defaults */
+  custom?: boolean;
 }
 
-// ── Storage key ────────────────────────────────────────────────────────
+/**
+ * A cost line invented by the founder — not in any planning scenario.
+ * Stored separately under hwop_cost_custom_v1.
+ */
+export interface CustomLine {
+  /** Unique key, e.g. "custom_1716000000000" */
+  key: string;
+  label: string;
+  description: string;
+  /** Monthly amount */
+  amount: number;
+  note?: string;
+  /** ISO timestamp of creation / last edit */
+  editedAt: string;
+}
 
-const STORAGE_KEY = "hwop_cost_edits_v1";
+// ── Storage keys ───────────────────────────────────────────────────────
+
+const STORAGE_KEY        = "hwop_cost_edits_v1";
+const CUSTOM_STORAGE_KEY = "hwop_cost_custom_v1";
 
 // ── Persistence helpers ────────────────────────────────────────────────
 
@@ -135,6 +154,82 @@ export function clearEdit(key: string): void {
 /** Remove all stored overrides. */
 export function clearAllEdits(): void {
   localStorage.removeItem(STORAGE_KEY);
+}
+
+// ── Custom lines ────────────────────────────────────────────────────────
+
+type CustomStore = Record<string, CustomLine>;
+
+function loadCustomStore(): CustomStore {
+  try {
+    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as CustomStore;
+  } catch {
+    return {};
+  }
+}
+
+function persistCustomStore(store: CustomStore): void {
+  localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(store));
+}
+
+/** Return all custom lines, oldest first. */
+export function loadCustomLines(): CustomLine[] {
+  const store = loadCustomStore();
+  return Object.values(store).sort(
+    (a, b) => new Date(a.editedAt).getTime() - new Date(b.editedAt).getTime()
+  );
+}
+
+/**
+ * Save a new custom line or update an existing one.
+ * Pass key=undefined to create a new line (key is auto-generated).
+ */
+export function saveCustomLine(
+  line: Omit<CustomLine, "key" | "editedAt"> & { key?: string }
+): CustomLine {
+  const store = loadCustomStore();
+  const key = line.key ?? `custom_${Date.now()}`;
+  const saved: CustomLine = {
+    key,
+    label: line.label.trim(),
+    description: line.description.trim(),
+    amount: line.amount,
+    note: line.note?.trim() || undefined,
+    editedAt: new Date().toISOString(),
+  };
+  store[key] = saved;
+  persistCustomStore(store);
+  return saved;
+}
+
+/** Remove a single custom line by key. */
+export function deleteCustomLine(key: string): void {
+  const store = loadCustomStore();
+  delete store[key];
+  persistCustomStore(store);
+}
+
+/** Remove all custom lines. */
+export function clearAllCustomLines(): void {
+  localStorage.removeItem(CUSTOM_STORAGE_KEY);
+}
+
+/**
+ * Convert custom lines into CostEdit shape for the Edits audit view.
+ * defaultValue is always 0 (these lines don't exist in the plan).
+ */
+export function customLinesToEdits(lines: CustomLine[]): CostEdit[] {
+  return lines.map((l) => ({
+    key: l.key,
+    defaultValue: 0,
+    newValue: l.amount,
+    delta: l.amount,
+    note: l.note,
+    editedAt: l.editedAt,
+    custom: true,
+  }));
 }
 
 /** Returns only edits where newValue !== defaultValue (excluding skipped-only). */

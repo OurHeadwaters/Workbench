@@ -21,12 +21,17 @@ import {
 } from "@/data/costRegistry";
 import {
   loadEdits,
-  loadEdit,
   saveEdit,
   markSkipped,
   clearEdit,
   clearAllEdits,
+  loadCustomLines,
+  saveCustomLine,
+  deleteCustomLine,
+  clearAllCustomLines,
+  customLinesToEdits,
   type CostEdit,
+  type CustomLine,
 } from "@/lib/costReview";
 import { fmt } from "@/data/budgetScenarios";
 
@@ -265,10 +270,290 @@ function ReviewRow({ item, edit, onSave, onSkip, onClear }: ReviewRowProps) {
   );
 }
 
+// ── Add-custom-line form ──────────────────────────────────────────────
+
+interface AddCustomLineFormProps {
+  onSave: (line: Omit<CustomLine, "key" | "editedAt">) => void;
+  onCancel: () => void;
+}
+
+function AddCustomLineForm({ onSave, onCancel }: AddCustomLineFormProps) {
+  const [label,       setLabel]       = useState("");
+  const [description, setDescription] = useState("");
+  const [amount,      setAmount]      = useState("");
+  const [note,        setNote]        = useState("");
+
+  const canSave = label.trim().length > 0 && parseInt(amount, 10) >= 0 && !isNaN(parseInt(amount, 10));
+
+  const handleSave = () => {
+    if (!canSave) return;
+    onSave({
+      label:       label.trim(),
+      description: description.trim(),
+      amount:      parseInt(amount, 10),
+      note:        note.trim() || undefined,
+    });
+  };
+
+  return (
+    <div
+      style={{
+        marginTop: "10pt",
+        background: "rgba(184,90,62,0.06)",
+        border: `1pt solid ${AMBER}`,
+        borderRadius: "4pt",
+        padding: "10pt 12pt",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+          fontSize: "7.5pt",
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: AMBER,
+          marginBottom: "8pt",
+        }}
+      >
+        New custom cost line
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7pt", marginBottom: "7pt" }}>
+        <div>
+          <label style={{ display: "block", fontSize: "7.5pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>
+            Label <span style={{ color: AMBER }}>*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Site allowance — Pickle Lake"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            autoFocus
+            style={{
+              width: "100%",
+              padding: "3pt 6pt",
+              fontSize: "8.5pt",
+              border: `1pt solid ${label.trim() ? AMBER : RULE}`,
+              borderRadius: "3pt",
+              background: CREAM,
+              color: TEXT,
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: "7.5pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>
+            Monthly amount ($) <span style={{ color: AMBER }}>*</span>
+          </label>
+          <input
+            type="number"
+            placeholder="0"
+            min="0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "3pt 6pt",
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "8.5pt",
+              border: `1pt solid ${amount ? AMBER : RULE}`,
+              borderRadius: "3pt",
+              background: CREAM,
+              color: TEXT,
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+      </div>
+      <div style={{ marginBottom: "7pt" }}>
+        <label style={{ display: "block", fontSize: "7.5pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>
+          Description (optional)
+        </label>
+        <input
+          type="text"
+          placeholder="Brief explanation of what this covers"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "3pt 6pt",
+            fontSize: "8pt",
+            border: `1pt solid ${RULE}`,
+            borderRadius: "3pt",
+            background: CREAM,
+            color: TEXT,
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
+      <div style={{ marginBottom: "9pt" }}>
+        <label style={{ display: "block", fontSize: "7.5pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>
+          Private note (optional)
+        </label>
+        <input
+          type="text"
+          placeholder="Context for the board, rationale, etc."
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "3pt 6pt",
+            fontSize: "8pt",
+            border: `1pt solid ${RULE}`,
+            borderRadius: "3pt",
+            background: CREAM,
+            color: TEXT,
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
+      <div style={{ display: "flex", gap: "6pt", justifyContent: "flex-end" }}>
+        <button
+          onClick={onCancel}
+          style={{
+            padding: "3pt 12pt",
+            fontSize: "7.5pt",
+            fontWeight: 600,
+            background: "transparent",
+            color: MUTED,
+            border: `1pt solid ${RULE}`,
+            borderRadius: "3pt",
+            cursor: "pointer",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSave}
+          disabled={!canSave}
+          style={{
+            padding: "3pt 14pt",
+            fontSize: "7.5pt",
+            fontWeight: 700,
+            background: canSave ? AMBER : RULE,
+            color: canSave ? CREAM : MUTED,
+            border: "none",
+            borderRadius: "3pt",
+            cursor: canSave ? "pointer" : "default",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          Add line
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Custom line row in Review tab ─────────────────────────────────────
+
+interface CustomLineRowProps {
+  line: CustomLine;
+  onDelete: (key: string) => void;
+  onEdit: (line: CustomLine) => void;
+}
+
+function CustomLineRow({ line, onDelete, onEdit }: CustomLineRowProps) {
+  const [editing, setEditing] = useState(false);
+  const [label,       setLabel]       = useState(line.label);
+  const [description, setDescription] = useState(line.description);
+  const [amount,      setAmount]      = useState(String(line.amount));
+  const [note,        setNote]        = useState(line.note ?? "");
+  const [dirty,       setDirty]       = useState(false);
+
+  const handleSave = () => {
+    const parsed = parseInt(amount, 10);
+    if (isNaN(parsed) || !label.trim()) return;
+    onEdit({ ...line, label: label.trim(), description: description.trim(), amount: parsed, note: note.trim() || undefined });
+    setDirty(false);
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <tr style={{ borderBottom: `0.5pt solid ${RULE}`, background: "rgba(184,90,62,0.04)" }}>
+        <td colSpan={5} style={{ padding: "6pt 4pt" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6pt", marginBottom: "6pt" }}>
+            <div>
+              <label style={{ display: "block", fontSize: "7pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>Label</label>
+              <input type="text" value={label} onChange={(e) => { setLabel(e.target.value); setDirty(true); }}
+                style={{ width: "100%", padding: "2pt 5pt", fontSize: "8.5pt", border: `1pt solid ${AMBER}`, borderRadius: "3pt", background: CREAM, color: TEXT, boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "7pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>Monthly ($)</label>
+              <input type="number" value={amount} onChange={(e) => { setAmount(e.target.value); setDirty(true); }}
+                style={{ width: "100%", padding: "2pt 5pt", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8.5pt", border: `1pt solid ${AMBER}`, borderRadius: "3pt", background: CREAM, color: TEXT, boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "7pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>Description</label>
+              <input type="text" value={description} onChange={(e) => { setDescription(e.target.value); setDirty(true); }}
+                style={{ width: "100%", padding: "2pt 5pt", fontSize: "8pt", border: `1pt solid ${RULE}`, borderRadius: "3pt", background: CREAM, color: TEXT, boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "7pt", fontWeight: 600, color: MUTED, marginBottom: "2pt" }}>Private note</label>
+              <input type="text" value={note} onChange={(e) => { setNote(e.target.value); setDirty(true); }}
+                style={{ width: "100%", padding: "2pt 5pt", fontSize: "8pt", border: `1pt solid ${RULE}`, borderRadius: "3pt", background: CREAM, color: TEXT, boxSizing: "border-box" }} />
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "6pt", justifyContent: "flex-end" }}>
+            <button onClick={() => setEditing(false)} style={{ padding: "2pt 10pt", fontSize: "7.5pt", fontWeight: 600, background: "transparent", color: MUTED, border: `1pt solid ${RULE}`, borderRadius: "3pt", cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" }}>Cancel</button>
+            <button onClick={handleSave} disabled={!dirty || !label.trim()} style={{ padding: "2pt 10pt", fontSize: "7.5pt", fontWeight: 700, background: dirty && label.trim() ? AMBER : RULE, color: dirty && label.trim() ? CREAM : MUTED, border: "none", borderRadius: "3pt", cursor: dirty && label.trim() ? "pointer" : "default", letterSpacing: "0.04em", textTransform: "uppercase" }}>Save</button>
+          </div>
+        </td>
+      </tr>
+    );
+  }
+
+  return (
+    <tr style={{ borderBottom: `0.5pt solid ${RULE}`, background: "rgba(184,90,62,0.03)" }}>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "22%" }}>
+        <div style={{ fontWeight: 600, fontSize: "8.5pt", color: TEXT }}>{line.label}</div>
+        {line.description && (
+          <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "2pt", lineHeight: 1.35 }}>{line.description}</div>
+        )}
+        <div style={{ display: "inline-flex", alignItems: "center", marginTop: "3pt", padding: "1pt 5pt", background: AMBER, borderRadius: "2pt" }}>
+          <span style={{ fontSize: "6.5pt", fontWeight: 700, color: CREAM, letterSpacing: "0.1em", textTransform: "uppercase" }}>Custom</span>
+        </div>
+      </td>
+      <td style={{ padding: "5pt 4pt", textAlign: "right", verticalAlign: "top", width: "13%", fontSize: "9pt", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
+        —
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "14%", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "9pt", fontWeight: 700, color: TEXT }}>
+        {fmt(line.amount)}
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "30%", fontSize: "7.5pt", color: line.note ? TEXT : MUTED, fontStyle: line.note ? "normal" : "italic" }}>
+        {line.note ?? "No note"}
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "21%", textAlign: "right" }}>
+        <div style={{ display: "flex", gap: "5pt", justifyContent: "flex-end", flexWrap: "wrap" }}>
+          <button
+            onClick={() => setEditing(true)}
+            style={{ padding: "3pt 9pt", fontSize: "7.5pt", fontWeight: 700, background: "transparent", color: MUTED, border: `1pt solid ${RULE}`, borderRadius: "3pt", cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" }}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              if (window.confirm(`Remove custom line "${line.label}"?`)) onDelete(line.key);
+            }}
+            style={{ padding: "3pt 9pt", fontSize: "7.5pt", fontWeight: 600, background: "transparent", color: RED_DK, border: `1pt solid rgba(122,26,26,0.3)`, borderRadius: "3pt", cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" }}
+          >
+            Remove
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
 // ── Edits tab — audit / diff view ─────────────────────────────────────
 
 interface EditsViewProps {
   edits: CostEdit[];
+  customLines: CustomLine[];
   showSkipped: boolean;
   onToggleSkipped: () => void;
   onClearAll: () => void;
@@ -276,14 +561,17 @@ interface EditsViewProps {
 
 function EditsView({
   edits,
+  customLines,
   showSkipped,
   onToggleSkipped,
   onClearAll,
 }: EditsViewProps) {
-  const valueEdits  = edits.filter((e) => !e.skipped && e.delta !== 0);
+  const valueEdits   = edits.filter((e) => !e.skipped && e.delta !== 0);
   const skippedEdits = edits.filter((e) => e.skipped);
-  const totalDelta   = valueEdits.reduce((sum, e) => sum + e.delta, 0);
-  const hasContent   = valueEdits.length > 0 || skippedEdits.length > 0;
+  const customEdits  = customLinesToEdits(customLines);
+  const totalDelta   = valueEdits.reduce((sum, e) => sum + e.delta, 0) +
+                       customEdits.reduce((sum, e) => sum + e.delta, 0);
+  const hasContent   = valueEdits.length > 0 || skippedEdits.length > 0 || customEdits.length > 0;
 
   if (!hasContent) {
     return (
@@ -322,6 +610,7 @@ function EditsView({
         <div>
           <span style={{ fontSize: "8pt", color: MUTED }}>
             {valueEdits.length} override{valueEdits.length !== 1 ? "s" : ""}&ensp;·&ensp;
+            {customEdits.length} custom&ensp;·&ensp;
             {skippedEdits.length} skipped&ensp;·&ensp;
             net change{" "}
             <strong style={{ color: totalDelta > 0 ? RED_DK : GREEN }}>
@@ -485,6 +774,85 @@ function EditsView({
         </div>
       )}
 
+      {/* Custom lines table */}
+      {customEdits.length > 0 && (
+        <div style={{ marginBottom: "16pt" }}>
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "7.5pt",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: AMBER,
+              marginBottom: "5pt",
+            }}
+          >
+            Custom lines — {customEdits.length} line{customEdits.length !== 1 ? "s" : ""} added by founder (not in planning defaults)
+          </div>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "8.5pt",
+              tableLayout: "fixed",
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  borderBottom: `1.5pt solid ${RULE}`,
+                  color: MUTED,
+                  fontWeight: 600,
+                  fontSize: "8pt",
+                }}
+              >
+                <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "26%" }}>Line</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>Plan default</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>Monthly amount</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>Δ / mo</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "20%" }}>Note</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>Added</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customLines.map((line) => (
+                <tr key={line.key} style={{ borderBottom: `0.5pt solid ${RULE}`, background: "rgba(184,90,62,0.03)" }}>
+                  <td style={{ padding: "4pt 4pt", fontWeight: 600, verticalAlign: "top" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "5pt", flexWrap: "wrap" }}>
+                      <span>{line.label}</span>
+                      <span style={{ display: "inline-flex", alignItems: "center", padding: "1pt 5pt", background: AMBER, borderRadius: "2pt", flexShrink: 0 }}>
+                        <span style={{ fontSize: "6.5pt", fontWeight: 700, color: CREAM, letterSpacing: "0.1em", textTransform: "uppercase" }}>Custom</span>
+                      </span>
+                    </div>
+                    {line.description && (
+                      <div style={{ fontSize: "7pt", color: MUTED, fontWeight: 400, marginTop: "1pt" }}>
+                        {line.description}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: "4pt 4pt", textAlign: "right", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                    —
+                  </td>
+                  <td style={{ padding: "4pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                    {fmt(line.amount)}
+                  </td>
+                  <td style={{ padding: "4pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", color: RED_DK, verticalAlign: "top" }}>
+                    +{fmt(line.amount)}
+                  </td>
+                  <td style={{ padding: "4pt 4pt", fontSize: "7.5pt", color: line.note ? TEXT : MUTED, fontStyle: line.note ? "normal" : "italic", verticalAlign: "top" }}>
+                    {line.note ?? "—"}
+                  </td>
+                  <td style={{ padding: "4pt 4pt", textAlign: "right", fontSize: "7pt", color: MUTED, verticalAlign: "top" }}>
+                    {fmtDate(line.editedAt)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {/* Skipped items table (toggleable) */}
       {showSkipped && skippedEdits.length > 0 && (
         <div>
@@ -591,13 +959,16 @@ function EditsView({
 export default function CostReviewModal() {
   const [tab, setTab] = useState<Tab>("review");
   const [editMap, setEditMap] = useState<Record<string, CostEdit>>({});
+  const [customLines, setCustomLines] = useState<CustomLine[]>([]);
   const [showSkipped, setShowSkipped] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const refresh = useCallback(() => {
     const list = loadEdits();
     const map: Record<string, CostEdit> = {};
     for (const e of list) map[e.key] = e;
     setEditMap(map);
+    setCustomLines(loadCustomLines());
   }, []);
 
   useEffect(() => {
@@ -621,12 +992,30 @@ export default function CostReviewModal() {
 
   const handleClearAll = () => {
     clearAllEdits();
+    clearAllCustomLines();
+    refresh();
+  };
+
+  const handleAddCustomLine = (line: Omit<CustomLine, "key" | "editedAt">) => {
+    saveCustomLine(line);
+    setShowAddForm(false);
+    refresh();
+  };
+
+  const handleEditCustomLine = (line: CustomLine) => {
+    saveCustomLine(line);
+    refresh();
+  };
+
+  const handleDeleteCustomLine = (key: string) => {
+    deleteCustomLine(key);
     refresh();
   };
 
   const editList  = Object.values(editMap);
   const editCount = editList.filter((e) => !e.skipped && e.delta !== 0).length;
   const skipCount = editList.filter((e) => e.skipped).length;
+  const customCount = customLines.length;
 
   // Group registry items by scenario for the review tab
   const groupA = COST_REGISTRY.filter((i) => i.scenario === "A");
@@ -722,7 +1111,7 @@ export default function CostReviewModal() {
               const label =
                 t === "review"
                   ? "Review"
-                  : `Edits${editCount + skipCount > 0 ? ` (${editCount + skipCount})` : ""}`;
+                  : `Edits${editCount + skipCount + customCount > 0 ? ` (${editCount + skipCount + customCount})` : ""}`;
               return (
                 <button
                   key={t}
@@ -798,6 +1187,85 @@ export default function CostReviewModal() {
                 onSkip={handleSkip}
                 onClear={handleClear}
               />
+
+              {/* Custom lines */}
+              <div style={{ marginTop: "16pt" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "5pt" }}>
+                  <SectionHeader label={`Custom lines${customLines.length > 0 ? ` (${customLines.length})` : ""}`} />
+                  {!showAddForm && (
+                    <button
+                      className="no-print"
+                      onClick={() => setShowAddForm(true)}
+                      style={{
+                        padding: "3pt 12pt",
+                        fontSize: "7.5pt",
+                        fontWeight: 700,
+                        background: AMBER,
+                        color: CREAM,
+                        border: "none",
+                        borderRadius: "3pt",
+                        cursor: "pointer",
+                        letterSpacing: "0.04em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      + Add custom line
+                    </button>
+                  )}
+                </div>
+
+                {customLines.length > 0 && (
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      fontSize: "8.5pt",
+                      tableLayout: "fixed",
+                      marginBottom: "6pt",
+                    }}
+                  >
+                    <thead>
+                      <tr
+                        style={{
+                          borderBottom: `1.5pt solid ${RULE}`,
+                          color: MUTED,
+                          fontWeight: 600,
+                          fontSize: "8pt",
+                        }}
+                      >
+                        <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "22%" }}>Line</th>
+                        <th style={{ padding: "3pt 4pt", textAlign: "right", width: "13%" }}>Plan default</th>
+                        <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "14%" }}>Monthly amount</th>
+                        <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "30%" }}>Private note</th>
+                        <th style={{ padding: "3pt 4pt", textAlign: "right", width: "21%" }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {customLines.map((line) => (
+                        <CustomLineRow
+                          key={line.key}
+                          line={line}
+                          onDelete={handleDeleteCustomLine}
+                          onEdit={handleEditCustomLine}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                {customLines.length === 0 && !showAddForm && (
+                  <div style={{ fontSize: "8pt", color: MUTED, fontStyle: "italic", padding: "6pt 0" }}>
+                    No custom lines yet. Use "+ Add custom line" to capture costs not in the planning defaults.
+                  </div>
+                )}
+
+                {showAddForm && (
+                  <AddCustomLineForm
+                    onSave={handleAddCustomLine}
+                    onCancel={() => setShowAddForm(false)}
+                  />
+                )}
+              </div>
             </div>
           )}
 
@@ -823,6 +1291,7 @@ export default function CostReviewModal() {
               </div>
               <EditsView
                 edits={editList}
+                customLines={customLines}
                 showSkipped={showSkipped}
                 onToggleSkipped={() => setShowSkipped((v) => !v)}
                 onClearAll={handleClearAll}
