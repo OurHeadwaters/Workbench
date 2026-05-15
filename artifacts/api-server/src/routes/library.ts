@@ -868,6 +868,59 @@ router.delete("/entries/:id", async (req, res) => {
 
 // ----------------------- entry from URL -----------------------
 
+// ---------------------------------------------------------------------------
+// Screenshot capture helpers
+// ---------------------------------------------------------------------------
+
+const SCREENSHOT_MAX_BYTES = 8 * 1024 * 1024; // 8 MB cap
+
+/**
+ * Download a screenshot/og:image URL and store it in object storage.
+ * Returns the /objects/… path on success, null on any failure.
+ * Silently swallows errors so callers never break on a bad image URL.
+ */
+async function captureScreenshotToStorage(
+  screenshotUrl: string,
+  logger?: { warn: (obj: unknown, msg: string) => void },
+): Promise<string | null> {
+  const safety = await isSafeUrl(screenshotUrl);
+  if (!safety.safe) return null;
+
+  try {
+    const resp = await fetch(screenshotUrl, {
+      signal: AbortSignal.timeout(20_000),
+      headers: { "User-Agent": "NorthernFoodSystemsLibrary/1.0" },
+    });
+    if (!resp.ok) return null;
+
+    const contentType = (resp.headers.get("content-type") || "image/jpeg").split(";")[0]!.trim();
+    if (!contentType.startsWith("image/")) return null;
+
+    // Stream-to-buffer with size cap to avoid OOM on huge images.
+    const reader = resp.body?.getReader();
+    if (!reader) return null;
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        total += value.byteLength;
+        if (total > SCREENSHOT_MAX_BYTES) {
+          reader.cancel();
+          return null;
+        }
+        chunks.push(value);
+      }
+    }
+    const buffer = Buffer.concat(chunks);
+    return await objectStorageService.uploadBuffer(buffer, contentType, "screenshots");
+  } catch (err) {
+    logger?.warn({ err }, "Screenshot capture to storage failed");
+    return null;
+  }
+}
+
 router.post("/entries/from-url", async (req, res) => {
   const parsed = CreateEntryFromUrlBody.safeParse(req.body);
   if (!parsed.success) {
@@ -934,6 +987,18 @@ router.post("/entries/from-url", async (req, res) => {
     }
   }
 
+  // Download the screenshot into our own object storage so the card image
+  // never goes dead when Microlink rotates its URLs or source sites remove images.
+  // On success, point screenshotUrl at our own serving path so every consumer
+  // sees our URL even without knowing about screenshotObjectPath.
+  let screenshotObjectPath: string | null = null;
+  if (screenshotUrl) {
+    screenshotObjectPath = await captureScreenshotToStorage(screenshotUrl, req.log);
+    if (screenshotObjectPath) {
+      screenshotUrl = `/api/storage${screenshotObjectPath}`;
+    }
+  }
+
   const producerId = producerSlug
     ? await getOrCreateProducerId({ producerSlug })
     : null;
@@ -948,6 +1013,7 @@ router.post("/entries/from-url", async (req, res) => {
       status: "published",
       sourceUrl: url,
       screenshotUrl: screenshotUrl ?? null,
+      screenshotObjectPath: screenshotObjectPath ?? null,
       producerId,
     })
     .returning();
@@ -955,6 +1021,65 @@ router.post("/entries/from-url", async (req, res) => {
   await attachTags(created!.id, subjectSlugs, bucketSlugs);
   const full = await loadOneEntry(created!.id);
   res.json(full);
+});
+
+// ----------------------- screenshot backfill -----------------------
+//
+// POST /api/library/screenshots/backfill
+//
+// Re-captures screenshots for all published web_source entries that have an
+// external screenshotUrl but no screenshotObjectPath yet.  Idempotent: entries
+// that already have a local path are skipped.  Returns counts so the caller
+// can see progress.
+
+router.post("/screenshots/backfill", async (req, res) => {
+  const rows = await db
+    .select({
+      id: libraryEntriesTable.id,
+      screenshotUrl: libraryEntriesTable.screenshotUrl,
+    })
+    .from(libraryEntriesTable)
+    .where(
+      and(
+        eq(libraryEntriesTable.kind, "web_source"),
+        sql`${libraryEntriesTable.screenshotUrl} IS NOT NULL`,
+        sql`${libraryEntriesTable.screenshotObjectPath} IS NULL`,
+        ne(libraryEntriesTable.status, "confidential_queue"),
+      ),
+    );
+
+  if (!rows.length) {
+    res.json({ total: 0, captured: 0, failed: 0 });
+    return;
+  }
+
+  const CONCURRENCY = 4;
+  let captured = 0;
+  let failed = 0;
+
+  for (let i = 0; i < rows.length; i += CONCURRENCY) {
+    const batch = rows.slice(i, i + CONCURRENCY);
+    await Promise.all(
+      batch.map(async (row) => {
+        const objectPath = await captureScreenshotToStorage(row.screenshotUrl!, req.log);
+        if (objectPath) {
+          await db
+            .update(libraryEntriesTable)
+            .set({
+              screenshotObjectPath: objectPath,
+              screenshotUrl: `/api/storage${objectPath}`,
+              updatedAt: new Date(),
+            })
+            .where(eq(libraryEntriesTable.id, row.id));
+          captured++;
+        } else {
+          failed++;
+        }
+      }),
+    );
+  }
+
+  res.json({ total: rows.length, captured, failed });
 });
 
 // ----------------------- producers -----------------------

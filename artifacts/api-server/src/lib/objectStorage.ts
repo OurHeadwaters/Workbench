@@ -205,6 +205,27 @@ export class ObjectStorageService {
     });
   }
 
+  /**
+   * Upload a Buffer directly to object storage.
+   * Returns the normalized /objects/… path that can be stored in the DB and
+   * served by GET /storage/objects/*.
+   */
+  async uploadBuffer(
+    buffer: Buffer,
+    contentType: string,
+    subdir: string = "screenshots",
+  ): Promise<string> {
+    const privateObjectDir = this.getPrivateObjectDir();
+    const objectId = randomUUID();
+    let dir = privateObjectDir.endsWith("/") ? privateObjectDir : `${privateObjectDir}/`;
+    const fullPath = `${dir}${subdir}/${objectId}`;
+    const { bucketName, objectName } = parseObjectPath(fullPath);
+    const bucket = objectStorageClient.bucket(bucketName);
+    const file = bucket.file(objectName);
+    await file.save(buffer, { metadata: { contentType } });
+    return `/objects/${subdir}/${objectId}`;
+  }
+
   async getSignedDownloadUrl(objectPath: string, ttlSec: number = 300): Promise<string> {
     if (!objectPath.startsWith("/objects/")) {
       throw new ObjectNotFoundError();
