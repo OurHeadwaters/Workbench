@@ -218,44 +218,76 @@ export default function Budget() {
         </div>
 
         {/* Cost-basis summary + scenario comparison — click to select */}
-        <div className="mt-[2vh] pt-[2vh] border-t border-rule flex items-center justify-between gap-[2vw] mb-[1vh]">
-          <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted opacity-60">
-            Scenario comparison
-          </div>
-          <a
-            href={`${import.meta.env.BASE_URL}hiring-templates`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-accent opacity-70 hover:opacity-100 transition-opacity duration-150 underline-offset-2 hover:underline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Hiring templates →
-          </a>
-        </div>
-        <div className="grid grid-cols-3 gap-[2vw]">
-          {SCENARIO_ROWS.map((s) => {
-            const isSelected = s.id.toUpperCase() === selected;
-            return (
-              <button
-                key={s.id}
-                onClick={() => setSelected(s.id.toUpperCase() as ScenarioId)}
-                className={[
-                  "rounded-[4px] px-[1.5vw] py-[1.5vh] text-left w-full transition-all duration-150",
-                  isSelected
-                    ? "border border-accent ring-1 ring-accent/40"
-                    : "border border-rule hover:border-accent/50",
-                ].join(" ")}
+        <div className="mt-[1.5vh] pt-[1.5vh] border-t border-rule flex gap-[2vw]">
+
+          {/* Scenario cards column */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-[0.8vh]">
+              <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted opacity-60">
+                Scenario comparison
+              </div>
+              <a
+                href={`${import.meta.env.BASE_URL}hiring-templates`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-accent opacity-70 hover:opacity-100 transition-opacity duration-150 underline-offset-2 hover:underline"
+                onClick={(e) => e.stopPropagation()}
               >
-                <div className="font-mono uppercase tracking-[0.18em] text-[0.75vw] text-muted mb-[0.5vh]">{s.label}</div>
-                <div className="font-display text-[2.2vw] font-semibold text-paper tabular-nums">
-                  {fmt(s.costBasis)}<span className="text-[0.8vw] text-muted font-normal font-body">/mo</span>
+                Hiring templates →
+              </a>
+            </div>
+            <div className="grid grid-cols-3 gap-[1.5vw]">
+              {SCENARIO_ROWS.map((s) => {
+                const isSelected = s.id.toUpperCase() === selected;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => setSelected(s.id.toUpperCase() as ScenarioId)}
+                    className={[
+                      "rounded-[4px] px-[1.2vw] py-[1.2vh] text-left w-full transition-all duration-150",
+                      isSelected
+                        ? "border border-accent ring-1 ring-accent/40"
+                        : "border border-rule hover:border-accent/50",
+                    ].join(" ")}
+                  >
+                    <div className="font-mono uppercase tracking-[0.18em] text-[0.72vw] text-muted mb-[0.4vh]">{s.label}</div>
+                    <div className="font-display text-[2vw] font-semibold text-paper tabular-nums">
+                      {fmt(s.costBasis)}<span className="text-[0.75vw] text-muted font-normal font-body">/mo</span>
+                    </div>
+                    <div className="font-body text-[0.75vw] text-muted mt-[0.3vh]">
+                      {fmt(s.reinvest)} reinvestment ({s.reinvestPct}%) · ask {fmt(s.ask)}/mo · bridge {fmtK(s.bridge)}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Salt-line + depot-bench reconciliation callout */}
+          <div className="w-[24vw] shrink-0 rounded-[4px] border border-rule px-[1.2vw] py-[1.1vh] flex flex-col justify-between">
+            <div className="font-mono uppercase tracking-[0.18em] text-[0.68vw] text-accent mb-[0.6vh]">
+              SALT-01-LBR · Depot-bench reconciliation
+            </div>
+            <div className="flex flex-col gap-[0.35vh] flex-1">
+              {[
+                ["Workers",    "4 casual / contracted T4A"],
+                ["Volume",     "~600 hrs/yr"],
+                ["Rate",       "$30/hr loaded"],
+                ["Annual",     "$15k/yr total cost"],
+                ["Channel",    "$10.5k channel-allocated"],
+                ["Overhead",   "$4.5k overhead"],
+              ].map(([key, val]) => (
+                <div key={key} className="flex items-baseline justify-between gap-[0.5vw]">
+                  <span className="font-mono text-[0.68vw] text-muted uppercase tracking-[0.12em] shrink-0">{key}</span>
+                  <span className="font-body text-[0.78vw] text-paper text-right">{val}</span>
                 </div>
-                <div className="font-body text-[0.8vw] text-muted mt-[0.4vh]">
-                  {fmt(s.reinvest)} reinvestment ({s.reinvestPct}%) · ask {fmt(s.ask)}/mo · bridge {fmtK(s.bridge)}
-                </div>
-              </button>
-            );
-          })}
+              ))}
+            </div>
+            <div className="mt-[0.6vh] pt-[0.6vh] border-t border-rule font-body text-[0.68vw] text-muted leading-[1.4]">
+              Bench labour sits outside the Scenario B headcount table above — allocated 70% to channel, 30% to overhead. The Food Handler line covers store-floor work; salt batches and depot-bench hours are a separate T4A pool reconciled here.
+            </div>
+          </div>
+
         </div>
 
       </div>
