@@ -80,8 +80,9 @@ function serialize(row: typeof financialSnapshotsTable.$inferSelect) {
 
 // Order by snapshot year (descending) first so backfilled rows for older
 // years don't show up "ahead" of the newest year just because they were
-// entered later.  Within a year (rare — Bobbie would have to re-record),
-// the most-recent entry wins.
+// entered later.  Within a year, the most-recent entry wins.  We
+// de-duplicate here so the history list never shows two rows for the
+// same year regardless of how many times a year was submitted.
 router.get("/snapshots", async (_req, res) => {
   const rows = await db
     .select()
@@ -90,7 +91,15 @@ router.get("/snapshots", async (_req, res) => {
       desc(financialSnapshotsTable.year),
       desc(financialSnapshotsTable.takenAt),
     );
-  res.json({ snapshots: rows.map(serialize) });
+
+  const seen = new Set<number>();
+  const deduped = rows.filter((r) => {
+    if (seen.has(r.year)) return false;
+    seen.add(r.year);
+    return true;
+  });
+
+  res.json({ snapshots: deduped.map(serialize) });
 });
 
 // Convenience endpoint for the dashboard's "latest snapshot" panel — saves

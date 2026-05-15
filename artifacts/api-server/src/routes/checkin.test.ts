@@ -287,17 +287,15 @@ describe("check-in route — POST /snapshots validation", () => {
   });
 });
 
-describe("check-in route — GET /snapshots ordering", () => {
-  it("returns snapshots newest-year first, then by takenAt within a year", async () => {
+describe("check-in route — GET /snapshots ordering and deduplication", () => {
+  it("returns one entry per year, newest year first, keeping the most-recent takenAt", async () => {
     const h = await startHarness();
     try {
-      // Seed three rows out-of-order so the ordering matters.  We seed
-      // through the public POST endpoint so the test exercises the same
-      // insert path the production code uses.
+      // Seed three rows: two for 2027 (duplicate) and one for 2026.
       await postSnapshot(h.base, { ...validBody(), year: 2026, notes: "a" });
-      // Backfilled older year — must NOT show up first.
       await postSnapshot(h.base, { ...validBody(), year: 2027, notes: "b" });
-      // Same-year follow-up — must come before "b" because takenAt is later.
+      // Second entry for 2027 — must win (most-recent takenAt) and the
+      // first entry for 2027 must NOT appear in the response.
       await postSnapshot(h.base, { ...validBody(), year: 2027, notes: "c" });
 
       const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
@@ -307,10 +305,33 @@ describe("check-in route — GET /snapshots ordering", () => {
       const body = (await res.json()) as {
         snapshots: { year: number; notes: string }[];
       };
+      // De-duplicated: one row per year, newest year first.
       expect(body.snapshots.map((s) => `${s.year}:${s.notes}`)).toEqual([
         "2027:c",
-        "2027:b",
         "2026:a",
+      ]);
+    } finally {
+      await h.close();
+    }
+  });
+
+  it("returns all years when each year appears only once", async () => {
+    const h = await startHarness();
+    try {
+      await postSnapshot(h.base, { ...validBody(), year: 2026, notes: "x" });
+      await postSnapshot(h.base, { ...validBody(), year: 2027, notes: "y" });
+      await postSnapshot(h.base, { ...validBody(), year: 2028, notes: "z" });
+
+      const res = await fetch(`${h.base}/api/annual-check-in/snapshots`, {
+        headers: authHeaders(),
+      });
+      const body = (await res.json()) as {
+        snapshots: { year: number; notes: string }[];
+      };
+      expect(body.snapshots.map((s) => `${s.year}:${s.notes}`)).toEqual([
+        "2028:z",
+        "2027:y",
+        "2026:x",
       ]);
     } finally {
       await h.close();

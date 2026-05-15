@@ -546,8 +546,9 @@ export function AnnualCheckInPage() {
 
   function handleNewSnapshot(snap: Snapshot) {
     setSnapshots((prev) => {
-      const updated = [snap, ...prev];
-      updated.sort((a, b) => b.year - a.year || b.id - a.id);
+      const without = prev.filter((s) => s.year !== snap.year);
+      const updated = [snap, ...without];
+      updated.sort((a, b) => b.year - a.year || new Date(b.takenAt).getTime() - new Date(a.takenAt).getTime());
       return updated;
     });
   }
