@@ -13,6 +13,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/home",     label: "Home" },
   { href: "/services", label: "The Work" },
   { href: "/work",     label: "Case Studies" },
+  { href: "/window",   label: "The Window" },
   { href: "/bio",      label: "About" },
   { href: "/listen",   label: "Listen" },
 ];

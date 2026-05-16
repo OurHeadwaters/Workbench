@@ -1,17 +1,32 @@
 /**
  * StrategicLedgerPage — the true north document.
  *
- * This is the page you open at the start of any new project.
- * It answers three questions:
- *   1. Where is Codetry actually going? (the destination)
- *   2. Does this piece of work belong on the trajectory? (the 5-question filter)
- *   3. What has been proven so far, and what still needs proof? (the ledger)
+ * Imports from @workspace/codetry-public — the single source of truth
+ * shared with the Ship site's public window. When the shared data changes,
+ * both this page and The Window update automatically.
  *
- * Nothing on this page is decorative. Every element is load-bearing.
+ * This page renders the FULL internal view:
+ *   - Full destination (with blockchain framing)
+ *   - Internal filter question text
+ *   - All engagements (public + private)
+ *   - Status badges, type tags, honest status notes
+ *   - Proven vs. needs-proof accounting
+ *
+ * The Ship site's TheWindowPage renders only the public fields.
  */
 
 import { Link } from "wouter";
-import { ArrowLeft, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+import { CheckCircle2, Circle, AlertCircle, ArrowLeft } from "lucide-react";
+import {
+  CODETRY_DESTINATION,
+  CODETRY_FILTER_QUESTIONS,
+  CODETRY_ENGAGEMENTS,
+  PROVEN_ITEMS,
+  NEEDS_PROOF_ITEMS,
+  OBJECTIVE_LABELS,
+  type ProofStatus,
+  type EngagementType,
+} from "@workspace/codetry-public";
 
 const ACCENT = "#1f3d2e";
 const ACCENT_SOFT = "#e8f0ec";
@@ -21,15 +36,7 @@ const RUST_SOFT = "#fdf0ec";
 
 // ─── Filter question card ─────────────────────────────────────────────────────
 
-function FilterQuestion({
-  n,
-  question,
-  note,
-}: {
-  n: string;
-  question: string;
-  note: string;
-}) {
+function FilterQuestion({ n, question, note }: { n: string; question: string; note: string }) {
   return (
     <div
       className="flex items-start gap-4 rounded-xl border p-4"
@@ -42,32 +49,16 @@ function FilterQuestion({
         {n}
       </span>
       <div className="flex-1 min-w-0">
-        <p
-          className="text-sm font-semibold leading-snug"
-          style={{ color: ACCENT_INK }}
-        >
+        <p className="text-sm font-semibold leading-snug" style={{ color: ACCENT_INK }}>
           {question}
         </p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {note}
-        </p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{note}</p>
       </div>
     </div>
   );
 }
 
-// ─── Engagement log row ───────────────────────────────────────────────────────
-
-type ProofStatus = "proven" | "in-progress" | "needs-proof";
-
-interface EngagementRow {
-  name: string;
-  type: "paid" | "unpaid" | "in-development";
-  objectives: string[];
-  status: ProofStatus;
-  statusNote: string;
-  codetryValue: string;
-}
+// ─── Engagement log ───────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: ProofStatus }) {
   if (status === "proven") {
@@ -94,7 +85,7 @@ function StatusBadge({ status }: { status: ProofStatus }) {
   );
 }
 
-function TypeTag({ type }: { type: EngagementRow["type"] }) {
+function TypeTag({ type }: { type: EngagementType }) {
   if (type === "paid") {
     return (
       <span className="text-[10px] uppercase tracking-[0.15em] font-medium px-1.5 py-0.5 rounded" style={{ backgroundColor: ACCENT_SOFT, color: ACCENT }}>
@@ -116,15 +107,15 @@ function TypeTag({ type }: { type: EngagementRow["type"] }) {
   );
 }
 
-function EngagementCard({ row }: { row: EngagementRow }) {
-  const objLabels: Record<string, string> = {
-    "1": "Proves model",
-    "2": "Builds practitioner",
-    "3": "Improves tools",
-    "4": "Builds record",
-    "5": "Trust layer",
-  };
-
+function EngagementCard({ name, type, objectives, codetryValue, status, statusNote, isPublic }: {
+  name: string;
+  type: EngagementType;
+  objectives: string[];
+  codetryValue: string;
+  status: ProofStatus;
+  statusNote: string;
+  isPublic: boolean;
+}) {
   return (
     <div
       className="rounded-xl border bg-card p-4 space-y-3"
@@ -133,119 +124,45 @@ function EngagementCard({ row }: { row: EngagementRow }) {
       <div className="flex items-start gap-3 flex-wrap">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-semibold text-foreground">{row.name}</p>
-            <TypeTag type={row.type} />
+            <p className="text-sm font-semibold text-foreground">{name}</p>
+            <TypeTag type={type} />
+            {isPublic && (
+              <span className="text-[10px] uppercase tracking-[0.12em] font-medium px-1.5 py-0.5 rounded border" style={{ borderColor: ACCENT + "40", color: ACCENT }}>
+                Public
+              </span>
+            )}
           </div>
-          <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            {row.codetryValue}
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{codetryValue}</p>
         </div>
-        <StatusBadge status={row.status} />
+        <StatusBadge status={status} />
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
-        {row.objectives.map((n) => (
+        {objectives.map((n) => (
           <span
             key={n}
             className="text-[10px] font-medium px-2 py-0.5 rounded-full"
             style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}
           >
-            {objLabels[n] ?? `Q${n}`}
+            {OBJECTIVE_LABELS[n] ?? `Q${n}`}
           </span>
         ))}
       </div>
 
       <p className="text-xs text-muted-foreground border-t pt-2" style={{ borderColor: "hsl(var(--card-border))" }}>
         <span className="font-medium text-foreground">Honest status: </span>
-        {row.statusNote}
+        {statusNote}
       </p>
     </div>
   );
 }
 
-// ─── Engagement data ──────────────────────────────────────────────────────────
-
-const ENGAGEMENTS: EngagementRow[] = [
-  {
-    name: "Northern Band — Agency Contract (V4–V7)",
-    type: "paid",
-    objectives: ["1", "3", "4"],
-    status: "proven",
-    statusNote:
-      "Proved the community store model produces a legible operating system. Naming discipline reduced handover friction. Financial records are community-held. This is the first brick.",
-    codetryValue:
-      "The founding engagement. Proved the model works — a community can own and operate a food system built with Codetry tools and hand it over without losing institutional memory.",
-  },
-  {
-    name: "Deer Lake First Nation — Phase 1",
-    type: "paid",
-    objectives: ["1", "4"],
-    status: "in-progress",
-    statusNote:
-      "Proving the model replicates in a new community context. Phase 2 data (demand, financial) is what backs the 807 supply chain grant applications. The proof point is the January 2027 winter road.",
-    codetryValue:
-      "The replication test. Can Codetry run in a second community without rebuilding from scratch? Deer Lake Phase 2 data becomes the first piece of auditable supply chain evidence.",
-  },
-  {
-    name: "807 Food Co-operative — Supply Chain",
-    type: "paid",
-    objectives: ["1", "4", "5"],
-    status: "in-progress",
-    statusNote:
-      "The supply chain connection between NWO producers and First Nations communities. The aggregation layer — pricing, cold chain, bulk delivery — is the infrastructure that makes Deer Lake work. Grant applications June 2026.",
-    codetryValue:
-      "Builds the record that outlasts any individual engagement. NWO producer → 807 → community store is a documented supply chain. That documentation is the first piece of the trust layer.",
-  },
-  {
-    name: "Codetry Handbook — How a Community Runs Its Own Economy",
-    type: "in-development",
-    objectives: ["2", "3"],
-    status: "in-progress",
-    statusNote:
-      "The practitioner manual. Not proven yet — needs a second practitioner to run an engagement from the handbook alone before this column changes. That test is the milestone.",
-    codetryValue:
-      "Codifies the discipline so another practitioner can run it without the founder in the room. The handbook is what turns Codetry from a practice into a replicable methodology.",
-  },
-  {
-    name: "Brightside RT-LTC — SaaS Tool",
-    type: "in-development",
-    objectives: ["3", "4"],
-    status: "needs-proof",
-    statusNote:
-      "The tool that pays for itself. Improves the practitioner toolkit and builds a revenue stream that funds future unpaid field work. Proof comes when a second buyer signs on without the engagement relationship as the reason.",
-    codetryValue:
-      "Proves Codetry can produce tools that outlast any individual contract — software that communities or service providers can own and run independently.",
-  },
-  {
-    name: "Headwaters Print Marketing Suite",
-    type: "unpaid",
-    objectives: ["2", "3"],
-    status: "proven",
-    statusNote:
-      "Practice and tooling. Built the PDF generation discipline, the Deer Lake print packet format, and the community outreach design language. All of this feeds back into future paid engagements as a faster, better starting point.",
-    codetryValue:
-      "Test of the principle: unpaid work with clear objective value improves the tools and trains the practitioner. The Deer Lake packet took a fraction of the time because this ground had been walked.",
-  },
-  {
-    name: "Practitioners Guide V2 — this document",
-    type: "unpaid",
-    objectives: ["2", "3", "4"],
-    status: "in-progress",
-    statusNote:
-      "The operating ledger for the practice itself. Proves the principle that a practitioner can maintain strategic coherence across 20-30 years of work if the framework is legible and updated in real time.",
-    codetryValue:
-      "This is the field manual and the record simultaneously. Every page is evidence of the discipline running on itself — Codetry applied to Codetry.",
-  },
-];
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function StrategicLedgerPage() {
-  const paidCount = ENGAGEMENTS.filter((e) => e.type === "paid").length;
-  const unpaidCount = ENGAGEMENTS.filter(
-    (e) => e.type === "unpaid" || e.type === "in-development"
-  ).length;
-  const provenCount = ENGAGEMENTS.filter((e) => e.status === "proven").length;
+  const paidCount = CODETRY_ENGAGEMENTS.filter((e) => e.type === "paid").length;
+  const unpaidCount = CODETRY_ENGAGEMENTS.filter((e) => e.type === "unpaid" || e.type === "in-development").length;
+  const provenCount = CODETRY_ENGAGEMENTS.filter((e) => e.status === "proven").length;
 
   return (
     <div className="space-y-8" data-testid="page-strategic-ledger">
@@ -277,10 +194,7 @@ export function StrategicLedgerPage() {
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
               Codetry — strategic ledger
             </p>
-            <h1
-              className="mt-1 text-3xl font-semibold"
-              style={{ fontFamily: "var(--app-font-serif)" }}
-            >
+            <h1 className="mt-1 text-3xl font-semibold" style={{ fontFamily: "var(--app-font-serif)" }}>
               The long game.
             </h1>
             <p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
@@ -288,6 +202,13 @@ export function StrategicLedgerPage() {
               gives you a filter to evaluate any piece of work against that destination,
               and keeps an honest log of what's been proven and what still needs proof.
             </p>
+            <div
+              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs"
+              style={{ backgroundColor: ACCENT_SOFT, color: ACCENT_INK }}
+            >
+              Source of truth — shared with the Ship site's public window. Engagements marked
+              <span className="font-semibold ml-1">Public</span> appear there.
+            </div>
           </div>
         </div>
 
@@ -303,10 +224,7 @@ export function StrategicLedgerPage() {
               className="rounded-xl border bg-card px-4 py-3"
               style={{ borderTopWidth: "3px", borderTopColor: ACCENT }}
             >
-              <p
-                className="text-2xl font-bold"
-                style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}
-              >
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}>
                 {value}
               </p>
               <p className="mt-0.5 text-xs text-muted-foreground">{label}</p>
@@ -317,49 +235,23 @@ export function StrategicLedgerPage() {
 
       {/* ── Section 1: The destination ── */}
       <section className="space-y-4">
-        <h2
-          className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
-        >
+        <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           The destination
         </h2>
         <div
           className="rounded-xl border p-6 space-y-4"
           style={{ borderLeftWidth: "4px", borderLeftColor: ACCENT, backgroundColor: ACCENT_SOFT }}
         >
-          <p
-            className="text-lg leading-relaxed"
-            style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}
-          >
-            Codetry is building toward communities that own their economic
-            infrastructure — the records, the tools, the methodology — in a form
-            that cannot be extracted by consultants, captured by funders, or lost
-            in a personnel change.
+          <p className="text-lg leading-relaxed" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK }}>
+            {CODETRY_DESTINATION.p1}
           </p>
-          <p
-            className="text-base leading-relaxed"
-            style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK, opacity: 0.85 }}
-          >
-            The long-game is a trust layer: a ledger of real community economic
-            activity — provable, auditable, portable — that backs grants, supply
-            chain partnerships, and eventually inter-community trade without
-            requiring an outside institution to validate it. Blockchain is not the
-            product. It is the architecture that makes the ledger community-owned
-            instead of consultant-held.
+          <p className="text-base leading-relaxed" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK, opacity: 0.85 }}>
+            {CODETRY_DESTINATION.p2}
           </p>
-          <p
-            className="text-base leading-relaxed"
-            style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK, opacity: 0.85 }}
-          >
-            Every engagement is a proof point. Every tool built is a brick.
-            The 20-year window opened when the first community store ran its
-            first day on a legible system with a named ledger. We are in the
-            early innings of something most people will not understand for
-            another decade.
+          <p className="text-base leading-relaxed" style={{ fontFamily: "var(--app-font-serif)", color: ACCENT_INK, opacity: 0.85 }}>
+            {CODETRY_DESTINATION.p3}
           </p>
-          <div
-            className="border-t pt-4"
-            style={{ borderColor: ACCENT + "40" }}
-          >
+          <div className="border-t pt-4" style={{ borderColor: ACCENT + "40" }}>
             <p className="text-xs text-muted-foreground italic">
               This is not a mission statement. It is the navigational fixed point.
               When the day's work feels unmoored, read this paragraph first.
@@ -375,36 +267,19 @@ export function StrategicLedgerPage() {
             The decision filter
           </h2>
           <p className="text-xs text-muted-foreground">
-            Any piece of work — paid or unpaid — that answers yes to at least one of these belongs on the ledger.
+            Any piece of work — paid or unpaid — that answers yes to at least one belongs on the ledger.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <FilterQuestion
-            n="1"
-            question="Does it prove the model in a new context?"
-            note="New community, new sector, new region. Replication with evidence is how the model gains credibility it can't buy."
-          />
-          <FilterQuestion
-            n="2"
-            question="Does it build or train a practitioner?"
-            note="Grows the network of people who can run the Codetry discipline independently — without the founder in the room."
-          />
-          <FilterQuestion
-            n="3"
-            question="Does it improve the tools or discipline itself?"
-            note="Handbook refinement, new Codetry tools, better constellation models, improved gate logs. Practice that makes the next engagement faster and sharper."
-          />
-          <FilterQuestion
-            n="4"
-            question="Does it build a record that backs future work?"
-            note="Financial proof, demand data, grant applications, supply chain evidence. The ledger grows with every piece of documented economic activity."
-          />
-          <FilterQuestion
-            n="5"
-            question="Does it advance the trust layer?"
-            note="Portable records, auditable economic history, community-owned data infrastructure. The long infrastructure play — each step toward a ledger no outside institution controls."
-          />
+          {CODETRY_FILTER_QUESTIONS.map((q) => (
+            <FilterQuestion
+              key={q.n}
+              n={q.n}
+              question={q.internal}
+              note={q.internalNote}
+            />
+          ))}
         </div>
 
         <div
@@ -415,9 +290,8 @@ export function StrategicLedgerPage() {
           If a piece of work has no contract but answers yes to at least one question above,
           it belongs on the ledger as practice and testing with a practical application.
           Name which question it answers. That naming is what separates purposeful unpaid
-          work from drift.
-          Work that answers none of the five questions may still be worth doing — call it
-          cash flow, not trajectory, and budget for it accordingly.
+          work from drift. Work that answers none of the five questions may still be worth
+          doing — call it cash flow, not trajectory, and budget for it accordingly.
         </div>
       </section>
 
@@ -429,12 +303,13 @@ export function StrategicLedgerPage() {
           </h2>
           <p className="text-xs text-muted-foreground">
             Every piece of work, mapped to the five objectives. Honest status — no smoothing.
+            Engagements marked Public surface on the Ship site.
           </p>
         </div>
 
         <div className="space-y-3">
-          {ENGAGEMENTS.map((row) => (
-            <EngagementCard key={row.name} row={row} />
+          {CODETRY_ENGAGEMENTS.map((e) => (
+            <EngagementCard key={e.name} {...e} />
           ))}
         </div>
       </section>
@@ -446,7 +321,6 @@ export function StrategicLedgerPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Proven */}
           <div
             className="rounded-xl border bg-card p-5 space-y-3"
             style={{ borderTopWidth: "3px", borderTopColor: ACCENT }}
@@ -456,13 +330,7 @@ export function StrategicLedgerPage() {
               <p className="text-sm font-semibold" style={{ color: ACCENT_INK }}>What's been proven</p>
             </div>
             <ul className="space-y-2">
-              {[
-                "The community store model produces a legible operating system a community can own.",
-                "The naming discipline reduces handover friction — the next person can read what was built.",
-                "Kitchen table methodology produces systems the operator recognises as theirs.",
-                "One practitioner can hold the system the way ten used to, with the right tools.",
-                "Unpaid practice work feeds directly back into paid engagement quality.",
-              ].map((item) => (
+              {PROVEN_ITEMS.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
                   <span className="h-1.5 w-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: ACCENT }} />
                   {item}
@@ -471,7 +339,6 @@ export function StrategicLedgerPage() {
             </ul>
           </div>
 
-          {/* Needs proof */}
           <div
             className="rounded-xl border bg-card p-5 space-y-3"
             style={{ borderTopWidth: "3px", borderTopColor: RUST }}
@@ -481,13 +348,7 @@ export function StrategicLedgerPage() {
               <p className="text-sm font-semibold" style={{ color: RUST }}>What still needs proof</p>
             </div>
             <ul className="space-y-2">
-              {[
-                "The model replicates in a second community without the founder managing both — Deer Lake is the test.",
-                "A second practitioner can run an engagement from the handbook alone, without the founder in the room.",
-                "The trust layer (the ledger) has standalone value beyond the engagement that produced it.",
-                "Codetry tools produce revenue independent of any single client relationship.",
-                "The supply chain documentation (807 + Deer Lake) constitutes evidence that backs a grant without additional narrative from the practitioner.",
-              ].map((item) => (
+              {NEEDS_PROOF_ITEMS.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
                   <span className="h-1.5 w-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: RUST }} />
                   {item}
@@ -504,12 +365,11 @@ export function StrategicLedgerPage() {
         style={{ borderColor: "hsl(var(--card-border))" }}
       >
         <span className="font-medium text-foreground">How to use this page: </span>
-        When starting a new project, open this page first and ask whether the work
-        answers at least one of the five filter questions. If yes — name which one,
-        log the engagement, and proceed. If no — name it as cash flow and budget the
-        time accordingly. Update the engagement log as proof accumulates. The honest
-        accounting section should make you slightly uncomfortable. That discomfort
-        is the discipline working.
+        When starting a new project, open this page first and ask whether the work answers at least
+        one of the five filter questions. If yes — name which one, log the engagement, and proceed.
+        If no — name it as cash flow and budget the time accordingly. Update the engagement log as
+        proof accumulates. The honest accounting section should make you slightly uncomfortable.
+        That discomfort is the discipline working.
       </div>
     </div>
   );

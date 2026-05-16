@@ -17,6 +17,7 @@ import { WorkbenchPage } from "@/pages/WorkbenchPage";
 import { OperatorPage } from "@/pages/OperatorPage";
 import { PrivacyPage } from "@/pages/PrivacyPage";
 import { ListenPage } from "@/pages/ListenPage";
+import { TheWindowPage } from "@/pages/TheWindowPage";
 import { SiteNav } from "@/components/SiteNav";
 import { getStoredOwnerToken } from "@/lib/api";
 
@@ -50,6 +51,7 @@ function Router() {
       </Route>
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/listen" component={ListenPage} />
+      <Route path="/window" component={TheWindowPage} />
       <Route path="/bright-side" component={BrightSidePage} />
       <Route path="/deadhead/intake">
         {() => <ProtectedRoute component={DeadheadIntakePage} />}
