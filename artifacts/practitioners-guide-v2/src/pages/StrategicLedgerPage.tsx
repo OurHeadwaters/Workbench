@@ -17,6 +17,7 @@
 
 import { Link } from "wouter";
 import { CheckCircle2, Circle, AlertCircle, ArrowLeft } from "lucide-react";
+import { PageAnchor } from "@/components/PageAnchor";
 import {
   CODETRY_DESTINATION,
   CODETRY_FILTER_QUESTIONS,
@@ -174,6 +175,14 @@ export function StrategicLedgerPage() {
         <ArrowLeft className="h-3 w-3" />
         Dashboard
       </Link>
+
+      {/* ── Page anchor ── */}
+      <PageAnchor
+        storageKey="strategic-ledger"
+        whenToBeHere="You're evaluating a new opportunity, need to check whether something fits the long game, or want to update what's been proven."
+        theOneThing="Run any new inquiry through the 5-question filter before you say yes. If it clears all five, log it. If not, name why."
+        accentColor="#1f3d2e"
+      />
 
       {/* ── Page header ── */}
       <header className="space-y-4">

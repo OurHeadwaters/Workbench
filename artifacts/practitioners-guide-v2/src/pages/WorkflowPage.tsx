@@ -7,6 +7,7 @@
  * directly from this single reference page.
  */
 
+import { useState } from "react";
 import { Link } from "wouter";
 import {
   Globe,
@@ -20,7 +21,10 @@ import {
   ArrowLeft,
   Wrench,
   Clock,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+import { PageAnchor } from "@/components/PageAnchor";
 
 type TimeEstimate = "15 min" | "1 hr" | "half day";
 
@@ -212,8 +216,18 @@ function LinkButton({ link }: { link: StageLink }) {
   );
 }
 
+// ADHD-first StageCard:
+//   1. Header (what is this stage?) — always visible
+//   2. Time estimate + quick note — always visible
+//   3. Primary links — always visible (the action)
+//   4. "What this stage does ▼" — description collapsed by default
+//   5. Supporting links — always visible
+//
+// Order follows the ADHD scanning pattern: orient → how long → do it → learn more if needed.
 function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
   const Icon = stage.icon;
+  const [descExpanded, setDescExpanded] = useState(false);
+
   return (
     <div className="relative">
       <div
@@ -223,8 +237,8 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
         {/* Color bar top */}
         <div className="h-1" style={{ backgroundColor: stage.color }} />
 
-        <div className="p-5">
-          {/* Header row */}
+        <div className="p-5 space-y-4">
+          {/* 1. Header row */}
           <div className="flex items-start gap-4">
             <div
               className="h-10 w-10 rounded-lg grid place-items-center flex-shrink-0"
@@ -242,10 +256,7 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
                 </span>
                 <span
                   className="text-[10px] font-mono uppercase tracking-[0.18em] px-2 py-0.5 rounded-full font-bold"
-                  style={{
-                    backgroundColor: stage.colorSoft,
-                    color: stage.colorInk,
-                  }}
+                  style={{ backgroundColor: stage.colorSoft, color: stage.colorInk }}
                 >
                   {stage.role}
                 </span>
@@ -259,28 +270,25 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
             </div>
           </div>
 
-          {/* Description */}
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            {stage.description}
-          </p>
-
-          {/* Time estimate */}
-          <div className="mt-3 flex items-center gap-2">
+          {/* 2. Time estimate */}
+          <div className="flex items-center gap-2">
             <TimeBadge estimate={stage.timeEstimate} />
             <span className="text-xs text-muted-foreground">{stage.timeNote}</span>
           </div>
 
-          {/* Primary links */}
-          <div className="mt-4 flex flex-wrap gap-2">
+          {/* 3. Primary links — the action */}
+          <div className="flex flex-wrap gap-2">
             {stage.links.map((link) => (
               <LinkButton key={`${link.label}-${link.url}`} link={link} />
             ))}
           </div>
 
-          {/* Supporting links */}
+          {/* 4. Supporting links */}
           {stage.supporting && stage.supporting.length > 0 && (
-            <div className="mt-3 pt-3 border-t flex flex-wrap gap-2 items-center"
-              style={{ borderColor: "hsl(var(--card-border))" }}>
+            <div
+              className="pt-3 border-t flex flex-wrap gap-2 items-center"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+            >
               <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground flex items-center gap-1">
                 <Wrench className="h-3 w-3" /> supporting
               </span>
@@ -290,14 +298,43 @@ function StageCard({ stage, isLast }: { stage: Stage; isLast: boolean }) {
             </div>
           )}
         </div>
+
+        {/* 5. Collapsible description — context on demand */}
+        <div
+          className="border-t"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        >
+          <button
+            type="button"
+            onClick={() => setDescExpanded((v) => !v)}
+            className="w-full flex items-center justify-between gap-2 px-5 py-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted/20 transition-colors"
+            data-testid={`stage-desc-toggle-${stage.number}`}
+          >
+            <span className="font-medium">What this stage does</span>
+            {descExpanded ? (
+              <ChevronUp className="h-3.5 w-3.5 flex-shrink-0" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5 flex-shrink-0" />
+            )}
+          </button>
+          {descExpanded && (
+            <div
+              className="border-t px-5 pb-4 pt-3"
+              style={{ borderColor: "hsl(var(--card-border))" }}
+              data-testid={`stage-desc-${stage.number}`}
+            >
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {stage.description}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Connector arrow */}
       {!isLast && (
         <div className="flex justify-center my-2">
-          <ArrowRight
-            className="h-4 w-4 rotate-90 text-muted-foreground opacity-40"
-          />
+          <ArrowRight className="h-4 w-4 rotate-90 text-muted-foreground opacity-40" />
         </div>
       )}
     </div>
@@ -315,6 +352,15 @@ export function WorkflowPage() {
         <ArrowLeft className="h-3 w-3" />
         Dashboard
       </Link>
+
+      {/* ── Page anchor ── */}
+      <PageAnchor
+        storageKey="workflow"
+        whenToBeHere="You need to jump directly into a tool, check what's live across the whole ecosystem, or orient someone new."
+        theOneThing="Use the quick-access strip — six buttons, one click to any stage. The stage cards below have the detail when you need it."
+        accentColor="#c2410c"
+      />
+
       {/* Page header */}
       <header className="flex items-start gap-3">
         <div

@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Flame,
 } from "lucide-react";
+import { PageAnchor } from "@/components/PageAnchor";
 import { FOCUS_AREAS, type FocusArea, type EffortPayoff, type TimeEstimate } from "@/data/whatsNext";
 import { useScenario } from "@/lib/scenario";
 import { money } from "@/lib/format";
@@ -254,32 +255,31 @@ function FocusCard({
 
 // ─── Where You Are summary ────────────────────────────────────────────────────
 //
+// ADHD-first restructure: core tension leads (most actionable signal).
+// Confirmed + in-motion details collapse under "Full picture" toggle —
+// they're useful context but not the starting point on hard days.
+//
 // Content is derived from the current scenario state via useScenario().
-// Key status signals (tag.kind), amounts (netCash, fee, surplus), and framing
-// adapt as scenario data changes. Two values are confirmed constants that are
-// not yet typed in the Scenario interface but are sourced from the same scenario
-// data file (v7.ts): the $12,000 807 portal fee and the $175/$70 hourly rates.
-// These are named as constants here so a future type addition requires only one
-// change, not a search across prose.
-const PORTAL_FEE = 12_000; // 807 Co-op portal fee — confirmed, in v7.ts description
-const LEAD_RATE = 175; // $/hr billed lead rate — v7BobbieRate in v7.ts
-const SUPPORT_RATE = 70; // $/hr billed support rate — Tyler subcontract rate in v7.ts
+// Two values are confirmed constants sourced from v7.ts.
+const PORTAL_FEE = 12_000;
+const LEAD_RATE = 175;
+const SUPPORT_RATE = 70;
 
 function WhereYouAre() {
   const { scenario } = useScenario();
+  const [fullPicture, setFullPicture] = useState(false);
+
   const a = scenario.contracts.agency;
   const s = scenario.salts;
   const contractConfirmed = a.feeTag.kind === "confirmed";
   const saltsIsProvisional = s.pAndL.tag.kind !== "confirmed";
 
-  // Build confirmed list from live scenario fields
   const confirmedItems: string[] = [
     `${money(PORTAL_FEE)} 807 portal development fee — confirmed revenue, the bridge that opens the trial window.`,
     `Agency rates set at $${LEAD_RATE}/hr lead · $${SUPPORT_RATE}/hr support${contractConfirmed ? " — under contract." : " — contract not yet signed."}`,
     `Salts ${saltsIsProvisional ? "cash-positive at model" : "cash-positive"}: ~${money(s.pAndL.netCash)}/yr${saltsIsProvisional ? " on planning targets" : ""}.`,
   ];
 
-  // Build in-motion list from live scenario fields
   const inMotionItems: string[] = [
     contractConfirmed
       ? `Northern Band contract active — ${money(a.fee)}/mo engagement starting ${a.startDate}.`
@@ -287,61 +287,95 @@ function WhereYouAre() {
     "807 grants → benefits plan: open action item, grant not yet identified.",
   ];
 
-  // Tension derived from scenario state
   const tension = contractConfirmed
     ? `The agency waterfall is running — ${money(a.monthlySurplusSepOnward)}/mo business surplus attacking ${money(a.capitalRecoveryAmount)} in capital recovery.`
     : `One confirmed number ($12k portal fee) and a wide-open trial window. The business needs a signed contract to activate the ${money(a.monthlySurplusJunAug)}–${money(a.monthlySurplusSepOnward)}/mo agency surplus — and the runway clock is running.`;
 
   return (
     <div
-      className="rounded-xl border border-card-border bg-card p-5 space-y-4"
+      className="rounded-xl border border-card-border bg-card overflow-hidden"
       data-testid="where-you-are-panel"
     >
-      <h2
-        className="text-lg font-semibold"
-        style={{ fontFamily: "var(--app-font-serif)" }}
-      >
-        Where you are right now
-      </h2>
-
-      <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 flex items-center gap-1.5">
-          <CheckCircle2 className="h-3.5 w-3.5" />
-          What's confirmed
-        </p>
-        <ul className="space-y-1 pl-5">
-          {confirmedItems.map((item, i) => (
-            <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700 flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5" />
-          What's in motion
-        </p>
-        <ul className="space-y-1 pl-5">
-          {inMotionItems.map((item, i) => (
-            <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
+      {/* Core tension — always first, always visible */}
       <div
-        className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-        data-testid="core-tension"
+        className="px-5 pt-5 pb-4"
       >
-        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 flex items-center gap-1.5 mb-1">
-          <AlertTriangle className="h-3.5 w-3.5" />
-          The core tension right now
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+          Where you are right now
         </p>
-        <p className="text-sm text-amber-900 leading-relaxed">{tension}</p>
+        <div
+          className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+          data-testid="core-tension"
+        >
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 flex items-center gap-1.5 mb-1.5">
+            <AlertTriangle className="h-3.5 w-3.5" />
+            The core tension right now
+          </p>
+          <p className="text-sm text-amber-900 leading-relaxed">{tension}</p>
+        </div>
       </div>
+
+      {/* Full picture toggle */}
+      <div
+        className="border-t px-5 py-2.5"
+        style={{ borderColor: "hsl(var(--card-border))" }}
+      >
+        <button
+          type="button"
+          onClick={() => setFullPicture((v) => !v)}
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          data-testid="full-picture-toggle"
+        >
+          {fullPicture ? (
+            <>
+              <ChevronUp className="h-3.5 w-3.5" />
+              Hide full picture
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-3.5 w-3.5" />
+              Show full picture — what's confirmed and what's in motion
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Collapsible detail */}
+      {fullPicture && (
+        <div
+          className="border-t px-5 pb-5 pt-4 space-y-4"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+          data-testid="full-picture-detail"
+        >
+          <div className="space-y-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 flex items-center gap-1.5">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              What's confirmed
+            </p>
+            <ul className="space-y-1 pl-5">
+              {confirmedItems.map((item, i) => (
+                <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-blue-700 flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              What's in motion
+            </p>
+            <ul className="space-y-1 pl-5">
+              {inMotionItems.map((item, i) => (
+                <li key={i} className="text-sm text-muted-foreground list-disc leading-relaxed">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -393,6 +427,14 @@ export function WhatNextPage() {
         <ArrowLeft className="h-3 w-3" />
         Dashboard
       </Link>
+
+      {/* ── Page anchor ── */}
+      <PageAnchor
+        storageKey="what-next"
+        whenToBeHere="You're lost on what to do next, or you need to reset your focus after a context switch or interruption."
+        theOneThing="Read the core tension — it names exactly where the business is stuck. Then pick one focus area and expand its steps."
+        accentColor="#0F766E"
+      />
 
       {/* ── Header ── */}
       <header>
