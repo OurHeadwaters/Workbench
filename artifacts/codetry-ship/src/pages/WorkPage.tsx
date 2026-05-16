@@ -129,10 +129,10 @@ export function WorkPage() {
             <div className="relative flex items-start justify-between gap-6">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-                  Community client · Platform delivery · Founding board
+                  Community client · Platform delivery · Ongoing engagement
                 </p>
                 <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-                  807 Food Co-op — working platform in 8 weeks, $0 in licensing fees, board owns it outright
+                  807 Food Co-operative — purpose-built for a northern food system, board-owned, no licensing fees
                 </h2>
               </div>
               <img
@@ -146,14 +146,14 @@ export function WorkPage() {
 
           {/* summary blurb */}
           <p className="font-serif text-[15px] leading-[1.65] mb-5" style={{ color: "hsl(var(--muted-foreground))" }}>
-            The founding board of a new Northwestern Ontario food co-op needed a working platform before their launch — not a proposal, not a prototype. Member registration, equity tracking, producer onboarding, board administration, and AGM tooling, all built in 8 weeks alongside the bylaws, and handed off so the board owns it outright with no ongoing licensing fees.
+            The 807 Food Co-operative has been running since 2021, testing a wide range of platforms — OFN, LFM, Local Line, Square — looking for something that fits a northern food system. The current stack causes friction among members. Headwaters is building a purpose-built replacement: tools designed for how this co-op actually operates, in the language the community already uses, owned by the board outright.
           </p>
           <div
             className="flex flex-wrap gap-3 mb-8"
           >
             {[
-              { label: "Timeline", value: "8 weeks, Phase 1 to working platform" },
-              { label: "Members ready", value: "40+ household registrations at launch" },
+              { label: "Active since", value: "2021 — four years of real-world operation" },
+              { label: "Members", value: "40+ households registered" },
               { label: "Licensing fees", value: "$0 ongoing — board owns it outright" },
             ].map(({ label, value }) => (
               <div
@@ -171,17 +171,14 @@ export function WorkPage() {
             <section>
               <BlockLabel>The problem</BlockLabel>
               <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                The founding board of a new Northwestern Ontario food co-op needed more than a set of bylaws — they needed a working platform before their launch. Member registration, equity tracking, producer onboarding, board administration, and AGM tooling all had to exist before the co-op could open to members. Nothing off the shelf fit the governance model, and building it in the open was a condition from the start — the board needed to see it working at every stage, not receive a finished product at the end.
+                Running a food co-op in Northwestern Ontario means working against compounding barriers: limited producer capacity, a small consumer market spread across a vast geography, rural communities that can't access fresh supply without absorbing costly distribution margins, and no clear way to connect community supply lines sustainably. The 807 Co-op spent four years testing the off-the-shelf options. Each platform — OFN, LFM, Local Line, Square — arrived with its own language, its own logic, and a training curve built for someone else's context. Contractors recommended what worked for them. The board kept adapting to the software. That's the problem Headwaters is solving: build the tools inside out, in the language the community already uses, and hand them off so the board can run them without outside help.
               </p>
             </section>
 
             <section>
               <BlockLabel>Role</BlockLabel>
               <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Founding board member and platform builder. This is an unusual dual role — the platform was built by someone who also sits at the governance table, which meant the tooling stayed close to the real decisions being made. Platform architecture, member flows, and governance wiring were designed alongside the bylaws rather than after them.
-              </p>
-              <p className="font-serif text-[14px] italic mt-3 leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.8 }}>
-                Note: the co-op is pre-launch pending a board vote before June. The platform is live for internal use; public launch and domain migration to 807foodcoop.ca are pending.
+                Founding board member and ongoing platform builder. Headwaters has been inside this co-op since 2021 — not as a consultant parachuting in with a recommendation, but as someone sitting at the governance table building what the board actually needs. The next platform is being built the same way: from the inside out, starting with how the co-op already operates, not with what an existing tool can offer.
               </p>
             </section>
           </div>
@@ -191,15 +188,16 @@ export function WorkPage() {
               className="rounded-md border px-5 py-4"
               style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
             >
-              <BlockLabel>What was built</BlockLabel>
+              <BlockLabel>What was built — and what's coming</BlockLabel>
               <ul className="mt-3 space-y-2">
                 {[
                   "Member portal — household and producer views with role-based access",
                   "Producer onboarding flow — application to listing, no email back-and-forth",
                   "Board admin panel — AGM, meeting minutes, cashflow tracking",
-                  "AGM tools — voting, quorum tracking, member records",
                   "Governance rules wired directly into the platform flow",
-                  "Plain-language admin documentation for non-technical staff",
+                  "Snap to Shelf — producer listing tool built for farmers, not tech teams",
+                  "Meeting Builder — structured meeting tooling for board and member meetings",
+                  "Distribution line tooling — connecting rural supply to community demand",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5">
                     <span className="font-mono text-[11px] mt-[3px] shrink-0" style={{ color: "hsl(145 36% 30%)" }}>→</span>
@@ -213,14 +211,15 @@ export function WorkPage() {
               className="rounded-md border px-5 py-4"
               style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
             >
-              <BlockLabel>What the board left with</BlockLabel>
+              <BlockLabel>What the board owns</BlockLabel>
               <ul className="mt-3 space-y-2">
                 {[
-                  "A working platform the board owns outright — no licensing fees",
-                  "Member registration system ready for the first cohort",
+                  "A platform built for their operation — not adapted from someone else's",
+                  "Member registration and equity tracking running since launch",
                   "Governance tooling that follows their bylaws, not a generic template",
                   "Admin documentation written for their staff, not developers",
-                  "A platform ready for domain migration when the board votes to launch",
+                  "No licensing fees, no dependency on a vendor deciding to change their pricing",
+                  "A build process that stays inside the community's own language and logic",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5">
                     <span className="font-mono text-[11px] mt-[3px] shrink-0" style={{ color: "hsl(145 36% 30%)" }}>→</span>

@@ -583,13 +583,15 @@ export function HomePage() {
                   >
                     {t.name}
                   </p>
-                  <p
-                    className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                    style={{ color: "hsl(var(--muted-foreground))" }}
-                    data-testid="testimonial-title"
-                  >
-                    {t.title}
-                  </p>
+                  {t.title && (
+                    <p
+                      className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                      style={{ color: "hsl(var(--muted-foreground))" }}
+                      data-testid="testimonial-title"
+                    >
+                      {t.title}
+                    </p>
+                  )}
                   <p
                     className="font-mono text-[10px] uppercase tracking-[0.18em]"
                     style={{ color: "hsl(var(--muted-foreground))" }}
