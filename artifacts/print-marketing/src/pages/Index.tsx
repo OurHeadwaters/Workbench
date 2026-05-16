@@ -181,6 +181,14 @@ const mainPieces = [
     icon: "🤝",
   },
   {
+    href: "/constellation-session-may16",
+    title: "Constellation Session — May 16, 2026",
+    label: "Internal reference",
+    desc: "Single-page visual summary of the May 16 working session: the full personal constellation map, the unifying architectural shield pattern, four new strategic ledger entries (xbuckets, Saltbox, abattoir, Rootstock), decisions made, and open decisions remaining. Print and reread tonight.",
+    icon: "🗺️",
+    highlight: true,
+  },
+  {
     href: "/northern-economic-tools",
     title: "Tools & Training for Northern Economic Systems",
     label: "Working document",
