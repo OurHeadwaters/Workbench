@@ -40,7 +40,8 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={IndexPage} />
+      <Route path="/" component={WorkspacePage} />
+      <Route path="/dashboard" component={IndexPage} />
       <Route path="/salts" component={SaltsPage} />
       <Route path="/contracts" component={ContractsPage} />
       <Route path="/brightside" component={BrightsidePage} />
@@ -70,7 +71,6 @@ function Router() {
       <Route path="/year/check-in" component={AnnualCheckInPage} />
       <Route path="/strategic-ledger" component={StrategicLedgerPage} />
       <Route path="/session-handoff" component={SessionHandoffPage} />
-      <Route path="/workspace" component={WorkspacePage} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -81,7 +81,7 @@ function Router() {
 // sidebar). Other routes show only AppShell + their content.
 function PrologueGate() {
   const [location] = useLocation();
-  if (location !== "/") return null;
+  if (location !== "/dashboard") return null;
   return <EaglePrologue continueId="index-after-prologue" />;
 }
 
