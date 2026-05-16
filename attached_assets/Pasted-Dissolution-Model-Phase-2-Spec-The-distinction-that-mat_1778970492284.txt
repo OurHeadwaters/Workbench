@@ -1,0 +1,65 @@
+Dissolution Model — Phase 2 Spec
+
+The distinction that matters first
+
+Archived means the circle is dormant but fully intact. All data preserved. The organizer chose to step back temporarily — maybe the season of intensive help is over, but they want the record for reference. Can be reopened.
+
+Dissolved means the circle is closed and the sensitive record is wiped. The circle happened — that stays. What was needed and by whom — that goes. Cannot be reopened.
+
+These are two different acts with two different data outcomes. The current system only has archived. Dissolved does not exist yet.
+
+What triggers dissolution
+
+Three triggers, in order of likelihood:
+
+Organizer closes it. The organizer visits the circle and chooses "Close this circle." This is the primary path. It requires a deliberate confirmation — not a single tap — because the act is irreversible. The confirmation screen names exactly what will be deleted before they confirm.
+
+Time-based nudge. If a circle has had no activity for 90 days and has not been deliberately archived or dissolved, the organizer receives a quiet prompt: "It's been a while since the circle was active. Ready to close it?" This is a nudge, not an automatic action. The organizer still chooses. If they dismiss it, the nudge does not reappear for another 90 days.
+
+The supported person is not a trigger in this model. They likely aren't in the system. Even if they were, dissolution is the organizer's responsibility — it is an act of stewardship on behalf of the person, not something the person manages themselves.
+
+What stays after dissolution
+
+One row in the database, nothing more:
+
+The circle's name (e.g., "Support for the Williams Family")
+The date range it ran (created_at through dissolved_at)
+The member count (a number — not the names, not the roles)
+A dissolved status flag
+This is enough for the record that the circle existed and the circle was cared for. It surfaces in each member's home screen as a quiet historical entry — no link into it, no detail view, just the name and the dates.
+
+What goes
+
+Everything identifying or logistical is permanently deleted on dissolution:
+
+supportedPersonName — replaced with [circle closed] in the retained row
+supportedPersonContext — deleted
+situation — deleted
+address, allergies, dropoffInstructions, preferredContainers — deleted
+All slots and their titles — deleted
+All slot comments — deleted
+All activity events — deleted
+All calendar blocks and reminder records — deleted
+All invite tokens — deleted
+One open question — memories and encouragement notes. Memories and notes are expressions of affection, not records of need. They were given to the person, not about the person's circumstances. The argument for keeping them: they belong to the recipient, not to the system. The argument for deleting them: they are attached to the circle and the circle is dissolved. My recommendation is to offer a download step before dissolution — the organizer can export the notes and memories as a PDF or text file before the circle closes, then they are deleted from the system. But this is a design choice that should be confirmed before building.
+
+What the member sees
+
+Before dissolution: the circle looks and functions as it does today.
+
+After dissolution: the circle appears in the member's home screen as a single line — circle name, date range, greyed out. No detail. Tapping it shows: "This circle has been closed. The record has been cleared." Nothing else.
+
+For the organizer specifically: the same view, plus a note confirming when the dissolution happened and who initiated it (themselves).
+
+What the database migration looks like (not building yet — noting the shape)
+
+A dissolvedAt timestamp column on circles, plus a dissolved status alongside the existing archived boolean. On dissolution, a cascade delete removes all child records (slots, comments, activity, memories, notes, blocks, reminders, invites). The circles row is updated to clear all PII fields and set dissolvedAt.
+
+What I am not deciding unilaterally
+
+Whether memories and notes survive dissolution or get export-then-delete treatment
+Whether the supported person's first name alone (not last, not context) is retained in the circle name or fully anonymized
+Both of these touch Zone 1 values directly. Flagging them for your review before building.
+
+
+Scroll to latest
