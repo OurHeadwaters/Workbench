@@ -1,0 +1,104 @@
+Codetry Handbook — Development Handoff
+From: Workspace (Bobbie's constellation of apps) To: The agent maintaining the Codetry handbook Date: May 2026 Purpose: Ensure the handbook reflects the model as it has been developed and implemented here, with no conflicts.
+
+How to use this document
+Review each section. Where the handbook already covers the topic, check the language against what is written here and reconcile any divergence. Where the topic is absent from the handbook, add it. The workspace treats the handbook as authoritative — so the handbook should win on any genuine conflict, and we should flag it back here for correction.
+
+1. Primitives — three, not two
+The handbook may currently list two primitives. The model as implemented here carries three:
+
+Saltbox — one bounded thing you can point at
+Both-States — works empty and full, from day one
+Both-Sides — every concept has a vernacular name and a massity / grant-language name
+Both-Sides is a first-class primitive and is used actively in zone descriptions throughout this workspace. Please ensure it appears alongside Saltbox and Both-States wherever the primitives are introduced.
+
+2. The Eave — corrected framing
+The original working description in this workspace read:
+
+"structural boundary between Zone 1 and Zone 3"
+
+The document you should apply is:
+
+The Eave is a hard privacy boundary between Zone 1 (Lodge — private, household) and Zone 3+ (organizational, above-board). Zone 3 actors (wallet addresses) cannot reach Zone 1 data. Zone 4 is above the Eave (named producers). Zone 5 is Eave-optional — participants can stay below the Eave while wading in the idea commons.
+
+Key clarifications to reconcile in the handbook:
+
+"Lodge" as the Zone 1 identity name (private, household)
+Zone 4 is explicitly above the Eave (named producers)
+Zone 5 does not require crossing the Eave — anonymous DID participation is valid without disclosure
+3. Zone 4 — Trade / Community Hall / Nursery
+The following is the full working definition used in this workspace. Please integrate or reconcile with the handbook's Zone 4 section.
+
+Zone 4 is the managed bank and volunteer forming layer. Producers collaboratively develop surplus-based cooperative ideas from conception through the graduation gate. Zone 4 is local and physical — the Community Hall is where bodies gather in person to scout capacity, run test batches, and engage the community face-to-face.
+
+What Zone 4 is not:
+
+Not an exchange (Zone 3 is the exchange)
+Not board-controlled (the forming group leads; the board votes only at graduation)
+Not contractual (the moment Zone 4 work is contracted, it becomes Zone 2 work)
+Sub-shelves:
+
+Nursery — new ideas forming
+Fodder — Zone 3 ideas returned for reworking; carries history and scar tissue; distinct from Nursery
+Fallow — ideas resting between attempts, not formally demoted
+Graduation gate: a fully formed, actionable pilot handed to the Zone 3 producer board for a vote per 807's bylaws. Graduating means surviving one full cycle without 807 eating the risk.
+
+First Saltbox: 807's dog-treats co-op — surplus organs from member grazers → value-added processing → wholesale to member producers.
+
+Economic floor mechanism: 807 frames Zone 4 ideas in massity dialect → writes grants → grants fund Zone 2 workbenches of the people doing Zone 4 formation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly.
+
+Without a funded Zone 2 layer, Zone 4 stagnates. This is the root of the capacity crisis in 807's region.
+
+Both-Sides:
+
+Vernacular: "producer nursery," "Community Hall," "forming a co-op together"
+Massity: "rural innovation pilot," "producer-led cooperative development program"
+4. Zone 5 — Wild / The Shallows
+The following is the full working definition. Please integrate or reconcile with the handbook's Zone 5 section.
+
+Zone 5 is global, digital, anonymous. A public idea commons where anyone can wade in, and a regrouping space for producers exiting Zone 3. Not governed, not local, not contractual, not a harvest zone (Zone 4 does the harvesting).
+
+Identity: anonymous DID on XRPL. Re-entry has no social barrier — no history check, no credibility password. Zone 3 reputation is left at the water's edge. Participation does not require crossing the Eave.
+
+Economic layer: XRPL crypto tipping, peer-to-peer, anonymous wallet to anonymous wallet. Ambient, ungoverned, micro-economic. XRP as hempcrete — structural binder, lightweight, breathable, holds the wall without being the wall.
+
+Seam to Zone 4 — three named paths:
+
+Path B (discovery): Zone 4 nursery groups browse the Shallows like a seed catalog; posts that mature surface in a "ready to pick up" view.
+Path C (adoption): a Zone 4 group collectively adopts a Shallows post as their starting brief; DID attribution credits the anonymous author without naming them — digital drift becomes local action in a Community Hall.
+Path D (honest baseline): some posts never cross; that is the wilderness doing wilderness work.
+Named failure mode: dead backwater — the Shallows goes quiet, tip flow drops to zero, no new DIDs wading in. Prevention is Zone 3 and Zone 4's job, not Zone 5's.
+
+Sub-shelves:
+
+The Shallows — open feed
+Campfire chats — intimate small-group conversation at the wild edge
+First Saltbox: The Shallows — anonymous public feed on XRPL using DID. Day-one seeding via a founding drift DID (anonymous, recognizable as a voice) releasing a decade of the founder's soundbites so no one arrives to an empty pool.
+
+Both-Sides:
+
+Vernacular: "the shallows," "the drift," "campfire chats," "wading in"
+Massity: "open innovation commons" or "community knowledge commons" — avoid "marketplace of ideas" (carries political weight with funders)
+5. Zone implementation status in this workspace
+This is for the handbook agent's orientation only — the handbook does not need to document individual apps, but it may want to note live examples under each zone.
+
+Zone	Status	Artifact	Notes
+0 — Household	Live	Family Buckets, Saltbox (Homeschool), North Star, Fridge to Table	All household-scoped, no external identity required
+1 — Circle	Live	Sandbox (village bulletin)	Household identity: name + passphrase. Zone 1/3 boundary — XRPL wallet binding optional
+2 — Home Range	Referenced	—	Named in the economic floor mechanism; no dedicated artifact yet
+3 — Community	Live (backend)	The Field (807 Food Co-op producer portal)	Producer ordering, round management, coordinator controls
+4 — Trade	Conceptual	—	No artifact yet; Zone 4 model documented and ready
+5 — Wild	Partial	Codetry Print Suite	Public-facing, anonymous, no account — Zone 5-appropriate; The Shallows feed not yet built
+6. Naming decisions made in code
+These names are in use in the codebase and should match whatever the handbook settles on:
+
+Sandbox — the village bulletin (Zone 1). Named for the Dryden homeschool community.
+Saltbox — the homeschool day companion (Zone 0). The folder/package is gather for path stability; the brand name shown to users is "Saltbox."
+The Field — the 807 Food Co-op producer portal (Zone 3). Package is tester-onboarding for historical reasons; the brand is "The Field."
+Eave — the finance constellation for household envelopes (Zone 0/1 boundary). Lives at /sandbox/eave/ routes.
+The Eave (the structural concept) — used consistently as the privacy boundary name. No collision with the Eave app if both are always referred to with their full context.
+7. Open questions for the handbook
+Is "Lodge" the confirmed name for the Zone 1 identity layer, or is it still provisional?
+Does the handbook use "massity" as a single word, or "grant-language" / "institutional dialect"? This workspace uses "massity" consistently.
+The handbook's Zone 0 description — does it name the household unit anything beyond "Zone 0"? This workspace uses "household" throughout, with no named sub-structure inside Zone 0 yet.
+Path A in the Zone 4→5 seam is not defined here (Paths B, C, D are). Does the handbook define Path A?
