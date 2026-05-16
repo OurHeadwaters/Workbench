@@ -3918,58 +3918,53 @@ const partVI: Part = {
       number: "5.9",
       partRoman: "V",
       partLabel: "V · Open Questions",
-      title: "Lodge, Path A, and the Zone 4→5 seam — three names the workspace is using that the handbook has not confirmed",
+      title: "Lodge, Path A, and Zone 4 — three open questions, two resolved, one still held",
       blocks: [
         {
           kind: "small",
-          text: "Open question · three naming decisions made in the workspace · returned to here for confirmation or revision.",
+          text: "Open question · partially resolved May 2026 · Lodge still pending the rename test.",
         },
         {
           kind: "para",
           text:
-            "The workspace implementing the constellation ahead of the handbook has made three naming decisions the handbook has not yet adjudicated. Each is recorded here so the question lives in the handbook — in writing, in the place where unanswered questions are held — rather than drifting into assumed confirmation through continued use.",
+            "This chapter opened with three naming decisions the workspace was running ahead of handbook adjudication. Two have been resolved by the practitioner in session. One — Lodge — remains open pending the codetry rename test. The chapter records all three, with their resolution status, so the discipline knows what is confirmed and what is still being held.",
         },
         {
           kind: "subhead",
-          text: "Lodge — the Zone 1 identity layer name.",
+          text: "Path A — resolved. The return flow.",
         },
         {
           kind: "para",
           text:
-            "The workspace uses *Lodge* as the name for the Zone 1 household identity layer: the name-and-passphrase identity a household holds below the Eave, visible to the circle and invisible to Zone 3+. The metaphor is apt — a lodge is a place you belong to by membership, not by public registration; it has a door and the door has a keeper; it is not the house (Zone 0) and not the hall (Zone 3). What the name does structurally: it names the identity posture below the Eave, separates it from the financial posture of xbuckets/Eave, and gives agents building Zone 1 tools (Sandbox, Mama Support Brigade) a shared identity primitive to reference. The open question is whether *Lodge* is the confirmed name or whether the codetry rename test, applied here, surfaces a load-bearing constraint the current workspace use has not yet pulled on.",
+            "Path A is confirmed as the *return flow* — the direction Zone 4 → Zone 5, distinct from Paths B, C, and D which all run Zone 5 → Zone 4. A Zone 4 project that graduates Zone 3, runs its full cycle, and floats surplus vocabulary or lived experience back out to Zone 5 as founding drift. The successful community project seeds the Shallows with its hard-won language so the next Nursery group has something real to wade into — not a consultant's framing, not a funder's vocabulary, but the words the people who actually did it used to describe what they built. Path A is the return current. It is how the watershed replenishes the Shallows instead of only drawing from it.",
+        },
+        {
+          kind: "subhead",
+          text: "Zone 4 as two models — resolved. One zone, one role, two lenses.",
+        },
+        {
+          kind: "para",
+          text:
+            "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Community Hall* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Community Hall in the constellation data to reflect this.",
+        },
+        {
+          kind: "para",
+          text:
+            "The full flow the practitioner confirmed: Zone 5 (wild idea) → Zone 4 (informal group shapes and semi-organizes it) → Zone 3 board votes to approve → Zone 3 pushes a contract to Zone 2 (practitioner is paid to do the work) → work passes back to Zone 3 to operate and sustain → Zone 4 participants see collective benefit. Most people stay only in Zone 4 and see modest collective benefit. Some people also carry Zone 2 work — they have connective value across zones and benefit out both ends. The Zone 2 contractor is hired by Zone 3 to do the work the Zone 4 group organized; they are not the same role, even when the same person holds both.",
+        },
+        {
+          kind: "subhead",
+          text: "Lodge — still open. The rename test has not been run.",
+        },
+        {
+          kind: "para",
+          text:
+            "Lodge remains provisional. The metaphor is apt — a lodge is a place you belong to by membership, not by public registration; it has a door and a keeper; it is neither the house (Zone 0) nor the hall (Zone 3). It names the Zone 1 identity posture below the Eave — the name-and-passphrase identity a household holds within the circle, invisible to Zone 3+. The open question is whether the rename test, applied honestly, cracks it.",
         },
         {
           kind: "callout",
           text:
-            "Test for Lodge: rename it to *Membership*, *Profile*, or *Household ID*. Does anything crack? Membership imports a dues-and-benefits frame. Profile imports the social-media posture of public self-presentation. Household ID imports the government-register posture of official identity. Lodge carries: private, earned by invitation, held by a group with shared values, revocable by the keeper of the door. If those constraints are load-bearing for how Zone 1 tools are built, Lodge is earning its place.",
-        },
-        {
-          kind: "subhead",
-          text: "Path A — the undefined Zone 4→5 seam.",
-        },
-        {
-          kind: "para",
-          text:
-            "Three seams between Zone 4 and Zone 5 are named and in use in the workspace: Path B (discovery — Zone 4 nursery groups browse the Shallows like a seed catalog), Path C (adoption — a Zone 4 group collectively adopts a Shallows post as their starting brief, DID attribution credits the anonymous author), Path D (honest baseline — some posts never cross; that is the wilderness doing wilderness work). Path A is not defined. Its number is reserved; the seam it names is not yet described. A naming framework that defines B, C, and D and leaves A blank is either missing something or carrying the blank honestly — this chapter exists to force the question into writing rather than letting the workspace proceed as though Path A does not need to exist.",
-        },
-        {
-          kind: "para",
-          text:
-            "Path A's probable shape: the movement is not from Zone 5 to Zone 4 (that is Path B/C/D's direction — the Shallows feeding the Nursery), but from Zone 4 to Zone 5 — a Zone 4 idea that graduates Zone 3, runs its cycle, and then floats surplus energy or surplus vocabulary back out to Zone 5 as a founding drift. The successful co-op that seeds the Shallows with its hard-won language so the next Nursery group has something to wade into. That is a different path from a Shallows post becoming a Nursery brief. Whether that is Path A or whether Path A describes something else entirely is the question this chapter is written to keep open.",
-        },
-        {
-          kind: "subhead",
-          text: "Zone 4 as two things — the sector tool and the formation layer.",
-        },
-        {
-          kind: "para",
-          text:
-            "The constellation data for Zone 4 currently holds two distinct models in the same zone. The first is Zone 4 as *Arc* — the conventional-to-regenerative sector transition tool, built around NWO regen beef and the abattoir pilot, where a producer like the one at the pilot farm is the primary actor and the tool supports her capacity without taking over her ledger. The second is Zone 4 as the *cooperative formation layer* — the Community Hall, the Nursery/Fodder/Fallow sub-shelves, the graduation gate, the economic floor mechanism that runs grants through Zone 2 workbenches. These are not in conflict — they may be two expressions of the same zone — but the handbook has not yet said whether Zone 4 holds both models or whether one of them belongs in a different zone or under a different primitive. The workspace is currently treating them as compatible and additive. The open question is whether that treatment is correct or whether one of the models needs a zone of its own.",
-        },
-        {
-          kind: "callout",
-          text:
-            "Three questions kept open: (1) Is Lodge the confirmed name for the Zone 1 identity layer, or does the rename test crack it? (2) What does Path A name — the Zone 4-to-5 return flow, or something else? (3) Are Zone 4's sector-transition model and cooperative-formation model two faces of one zone, or do they need to be separated?",
+            "Test for Lodge: rename it to *Membership*, *Profile*, or *Household ID*. Membership imports a dues-and-benefits frame. Profile imports the social-media posture of public self-presentation. Household ID imports the government-register posture of official identity. Lodge carries: private, earned by invitation, held by a group with shared values, revocable by the keeper of the door. If those constraints are load-bearing for how Zone 1 tools are built, Lodge is earning its place. If the rename does not crack anything, the name is not yet doing structural work and a better one should be found. This chapter is returned to when the test has been run.",
         },
       ],
     },
