@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ChevronDown, ArrowUpRight } from "lucide-react";
 import {
   PRACTITIONER_RATES,
   ACTIVE_FEES,
@@ -7,6 +8,7 @@ import {
 } from "@workspace/codetry-public";
 
 const EVERGREEN = "#1f3d2e";
+const BLUE = "#1A5FA8";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -25,7 +27,7 @@ interface DoorGroup {
   doors: Door[];
 }
 
-// ─── Door definitions ─────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const DOOR_GROUPS: DoorGroup[] = [
   {
@@ -43,7 +45,7 @@ const DOOR_GROUPS: DoorGroup[] = [
       {
         label: "Financial Cockpit",
         job: "Practitioner's Guide",
-        detail: "Money picture. Contracts. Debt attack. Scenarios. What's next. Open when you need to see the whole business.",
+        detail: "Money picture. Contracts. Debt attack. Scenarios. What's next.",
         href: "/dashboard",
         internal: true,
         accent: EVERGREEN,
@@ -57,10 +59,10 @@ const DOOR_GROUPS: DoorGroup[] = [
       {
         label: "The Window",
         job: "Codetry Ship",
-        detail: "Shop front. Services, SOW, bio, operator view. What someone sees when you send them a link.",
+        detail: "Shop front. Services, SOW, bio, operator view. What a client sees when you send them a link.",
         href: "/codetry-ship/",
         internal: false,
-        accent: "#1A5FA8",
+        accent: BLUE,
       },
       {
         label: "Print Marketing",
@@ -79,7 +81,7 @@ const DOOR_GROUPS: DoorGroup[] = [
       {
         label: "Handbook",
         job: "How a Community Runs Its Economy",
-        detail: "The Codetry discipline. Zone model. Worked examples. The book behind the work.",
+        detail: "The Codetry discipline. Zone model. Worked examples.",
         href: "/codetry-handbook/",
         internal: false,
         accent: "#2D5F3F",
@@ -87,7 +89,7 @@ const DOOR_GROUPS: DoorGroup[] = [
       {
         label: "Research Library",
         job: "Northern Food Systems",
-        detail: "Research library for northern food system evidence. Backs grants and supply chain arguments.",
+        detail: "Research evidence for northern food systems. Backs grants and supply chain arguments.",
         href: "/library/",
         internal: false,
         accent: "#3B5998",
@@ -103,7 +105,7 @@ const DOOR_GROUPS: DoorGroup[] = [
       {
         label: "Session Handoff",
         job: "AI Context Handoff",
-        detail: "Paste this to a new AI session so it knows exactly where you are and what's been decided.",
+        detail: "Paste this to a new AI session so it knows exactly where you are.",
         href: "/session-handoff",
         internal: true,
         accent: "#5B3E8C",
@@ -111,8 +113,6 @@ const DOOR_GROUPS: DoorGroup[] = [
     ],
   },
 ];
-
-// ─── Number row ───────────────────────────────────────────────────────────────
 
 const NUMBERS = [
   { label: "Lead rate", value: `$${PRACTITIONER_RATES.lead}/hr` },
@@ -123,98 +123,143 @@ const NUMBERS = [
   { label: "XRPL / trust layer", value: "xbuckets — in progress" },
 ];
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Accordion row ────────────────────────────────────────────────────────────
 
-function DoorCard({ door }: { door: Door }) {
-  const inner = (
-    <div
-      className="group rounded-xl border bg-card h-full flex flex-col transition-shadow hover:shadow-md cursor-pointer"
-      style={{ borderTopColor: door.accent, borderTopWidth: "3px" }}
-    >
-      <div className="p-4 flex-1">
-        <p
-          className="text-[11px] font-black uppercase tracking-[0.18em] mb-0.5"
-          style={{ color: door.accent }}
-        >
-          {door.label}
-        </p>
-        <p className="text-sm font-semibold leading-snug mb-2" style={{ fontFamily: "var(--app-font-serif)" }}>
-          {door.job}
-        </p>
-        <p className="text-xs text-muted-foreground leading-relaxed">{door.detail}</p>
-      </div>
-      <div className="px-4 pb-3 pt-0">
-        <span
-          className="inline-flex items-center gap-1 text-[11px] font-semibold"
-          style={{ color: door.accent }}
-        >
-          Open <ArrowUpRight className="h-3 w-3" />
-        </span>
-      </div>
-    </div>
-  );
-
-  if (door.internal) {
-    return <Link href={door.href} className="block h-full">{inner}</Link>;
-  }
+function AccordionRow({
+  label,
+  sub,
+  accent,
+  children,
+  defaultOpen = false,
+}: {
+  label: string;
+  sub: string;
+  accent: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <a href={door.href} target="_blank" rel="noopener noreferrer" className="block h-full">
-      {inner}
-    </a>
+    <div className="border-b border-border/50 last:border-0">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-3 py-3 text-left group"
+      >
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span
+            className="text-[11px] font-black uppercase tracking-[0.18em] flex-shrink-0"
+            style={{ color: accent }}
+          >
+            {label}
+          </span>
+          {!open && (
+            <span className="text-xs text-muted-foreground truncate">{sub}</span>
+          )}
+        </div>
+        <ChevronDown
+          className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
+      </button>
+      {open && (
+        <div className="pb-3 text-xs text-muted-foreground leading-relaxed">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
-export function WorkspacePage() {
-  const today = new Date().toLocaleDateString("en-CA", {
-    weekday: "long", year: "numeric", month: "long", day: "numeric",
-  });
+// ─── Door row ─────────────────────────────────────────────────────────────────
+
+function DoorRow({ door }: { door: Door }) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className="space-y-7" data-testid="page-workspace">
-
-      {/* Header */}
-      <header className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-muted-foreground mb-1">
-            Headwaters Workspace
-          </p>
-          <h1
-            className="text-3xl sm:text-4xl font-semibold leading-tight"
-            style={{ fontFamily: "var(--app-font-serif)", color: EVERGREEN }}
+    <div className="border-b border-border/40 last:border-0">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-3 py-3 text-left"
+      >
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span
+            className="text-[11px] font-black uppercase tracking-[0.15em] flex-shrink-0"
+            style={{ color: door.accent }}
           >
-            One door.
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Everything you need is behind one of these. Bookmark this page.
-          </p>
+            {door.label}
+          </span>
+          {!open && (
+            <span className="text-xs text-muted-foreground truncate">{door.job}</span>
+          )}
         </div>
-        <p className="text-xs text-muted-foreground pt-1">{today}</p>
-      </header>
-
-      {/* Sources of truth */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        {/* Names ledger */}
-        <div className="rounded-xl border-2 p-4 space-y-3" style={{ borderColor: EVERGREEN, backgroundColor: "rgba(31,61,46,0.04)" }}>
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em]" style={{ color: EVERGREEN }}>
-              Names Ledger — Codetry Principles
-            </p>
+        <ChevronDown
+          className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
+      </button>
+      {open && (
+        <div className="pb-3 space-y-2">
+          <p className="text-sm font-medium" style={{ fontFamily: "var(--app-font-serif)" }}>
+            {door.job}
+          </p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{door.detail}</p>
+          {door.internal ? (
+            <Link
+              href={door.href}
+              className="inline-flex items-center gap-1 text-xs font-semibold mt-1"
+              style={{ color: door.accent }}
+            >
+              Open <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          ) : (
             <a
-              href="/codetry-handbook/"
+              href={door.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-semibold text-muted-foreground hover:opacity-70"
+              className="inline-flex items-center gap-1 text-xs font-semibold mt-1"
+              style={{ color: door.accent }}
             >
-              Edit source <ExternalLink className="h-2.5 w-2.5" />
+              Open <ArrowUpRight className="h-3 w-3" />
             </a>
-          </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Every engagement must clear all five.
-          </p>
-          <ol className="space-y-1.5">
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export function WorkspacePage() {
+  return (
+    <div className="max-w-2xl space-y-6" data-testid="page-workspace">
+
+      {/* Header */}
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground mb-1">
+          Headwaters Workspace
+        </p>
+        <h1
+          className="text-3xl font-semibold leading-tight"
+          style={{ fontFamily: "var(--app-font-serif)", color: EVERGREEN }}
+        >
+          One door.
+        </h1>
+      </div>
+
+      {/* Sources of truth */}
+      <div className="rounded-xl border overflow-hidden">
+
+        {/* Names ledger */}
+        <AccordionRow
+          label="Names Ledger"
+          sub="Codetry principles — 5 questions, every engagement"
+          accent={EVERGREEN}
+        >
+          <p className="mb-2 font-medium text-foreground">Every engagement must clear all five.</p>
+          <ol className="space-y-2">
             {CODETRY_FILTER_QUESTIONS.map((q) => (
-              <li key={q.n} className="flex gap-2.5 text-xs leading-snug">
+              <li key={q.n} className="flex gap-2">
                 <span
                   className="flex-shrink-0 h-4 w-4 rounded-full grid place-items-center text-[10px] font-black text-white mt-0.5"
                   style={{ backgroundColor: EVERGREEN }}
@@ -223,67 +268,58 @@ export function WorkspacePage() {
                 </span>
                 <span>
                   <span className="font-semibold text-foreground">{q.internal}</span>
-                  <span className="text-muted-foreground"> — {q.internalNote.split(".")[0]}.</span>
+                  {" — "}{q.internalNote.split(".")[0]}.
                 </span>
               </li>
             ))}
           </ol>
-        </div>
+        </AccordionRow>
 
         {/* Numbers ledger */}
-        <div className="rounded-xl border-2 p-4 space-y-3" style={{ borderColor: "#1A5FA8", backgroundColor: "rgba(26,95,168,0.04)" }}>
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em]" style={{ color: "#1A5FA8" }}>
-              Numbers Ledger — Rates & Costs
-            </p>
-            <Link
-              href="/what-next"
-              className="inline-flex items-center gap-1 text-[10px] font-semibold text-muted-foreground hover:opacity-70"
-            >
-              Edit source <ArrowUpRight className="h-2.5 w-2.5" />
-            </Link>
-          </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            Change a number in the shared ledger — both the cockpit and the daily bench update.
-          </p>
+        <AccordionRow
+          label="Numbers Ledger"
+          sub={`$${PRACTITIONER_RATES.lead}/hr lead · $${PRACTITIONER_RATES.support}/hr support · $${ACTIVE_FEES.portalDevelopment.toLocaleString()} portal`}
+          accent={BLUE}
+        >
           <div className="space-y-1.5">
             {NUMBERS.map((n) => (
-              <div key={n.label} className="flex items-baseline justify-between gap-2 text-xs">
-                <span className="text-muted-foreground">{n.label}</span>
+              <div key={n.label} className="flex justify-between gap-4">
+                <span>{n.label}</span>
                 <span className="font-mono font-semibold text-foreground tabular-nums">{n.value}</span>
               </div>
             ))}
           </div>
-          <div className="pt-1 border-t border-border/50">
-            <p className="text-[10px] text-muted-foreground leading-relaxed">
-              XRPL / internet of value = the trust layer that makes these numbers
-              community-owned and auditable without an outside institution.
-            </p>
-          </div>
-        </div>
+          <p className="mt-3 text-[11px] border-t border-border/40 pt-2">
+            XRPL / internet of value — the trust layer that makes these numbers
+            community-owned and auditable without an outside institution.
+          </p>
+          <p className="mt-1 text-[11px]">
+            Change a rate in the shared ledger → both cockpit and daily bench update automatically.
+          </p>
+        </AccordionRow>
+
       </div>
 
       {/* Tool doors */}
       {DOOR_GROUPS.map((group) => (
-        <div key={group.groupLabel}>
-          <div className="flex items-baseline gap-2 mb-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-foreground">
+        <div key={group.groupLabel} className="rounded-xl border overflow-hidden">
+          <div className="px-4 py-2 border-b border-border/40 flex items-baseline gap-2"
+            style={{ backgroundColor: "rgba(0,0,0,0.02)" }}>
+            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-foreground">
               {group.groupLabel}
-            </p>
-            <p className="text-[11px] text-muted-foreground">{group.groupNote}</p>
+            </span>
+            <span className="text-[10px] text-muted-foreground">{group.groupNote}</span>
           </div>
-          <div className={`grid gap-3 ${group.doors.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"}`}>
+          <div className="px-4">
             {group.doors.map((door) => (
-              <DoorCard key={door.label} door={door} />
+              <DoorRow key={door.label} door={door} />
             ))}
           </div>
         </div>
       ))}
 
-      {/* Footer rule */}
-      <p className="text-[11px] text-muted-foreground border-t pt-4">
+      <p className="text-[10px] text-muted-foreground border-t pt-3">
         Changed something? Update the source ledger — not the tool that displays it.
-        The tools read from one place. One change, everywhere updated.
       </p>
 
     </div>
