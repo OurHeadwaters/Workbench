@@ -1,0 +1,147 @@
+Bright Side — context transfer for the Headwaters agent
+Prepared 2026-05-16 by the Bright Side agent for Bobbie Parr's Headwaters practitioner workspace at ourheadwaters.ca. Zone 0 project. All sections are written for an agent reader, not a public audience.
+
+1. What Bright Side is
+The mission in one sentence. A staff-facing care-coordination PWA for small-to-mid residential care homes — primarily LTC (long-term care) but designed to be sector-agnostic — that makes the invisible daily work of caring for residents with cognitive decline visible, creditable, and sustainable.
+
+The fence metaphor (load-bearing, not a tagline). The fence is real: cognitive decline, the institutional walls, the things that don't go back the way they were. Bright Side is the choice to stand on the bright side of it and work the small things that still travel through. This metaphor is the design spec. Every word in the UI either hangs from it or codetry deletes it.
+
+Zone structure.
+
+Zone	What it means
+Zone 0	The proof-of-concept arm inside the Codetry constellation. Bright Side holds this designation today. Zone 0 work produces the methodology receipts (codetry passes) that every later zone app can reference. It is the app that runs first, breaks first, and teaches first.
+No other zones are defined for Bright Side today. Zone numbering in the Codetry constellation is operator-assigned per project; Headwaters and family-buckets are sibling constellation apps at different zone designations. Ask Bobbie if you need the full zone map — it lives in the Codetry handbook, not this repo.
+
+2. Current state
+What is live (deployed at the .replit.app domain):
+
+Full staff-facing PWA — mobile-first, installable.
+Resident roster with facesheets: room-anchored identity, joy bubbles, spark-of-joy logs, memory wizard, physio/session logs, today's-brightest (MVP) rollup.
+Hallway (shift feed): per-shift notes posted to a shared wall, with reply threading, PHI soft-warn, and "I've got this" one-tap ack for home alerts.
+Gather / beat sheet (transition clipboard): floor-by-floor bed roster with per-resident transition runs, attendance marking, checklist, closing note, and AI-generated prep suggestions.
+Home: today's shadows (barriers to clear), hallway digest, checklist card. Barriers sourced from unreplied hallway posts + severity keywords.
+Director dashboard: analytics, redirect watchlist, PHI override audit, nudge management, auto-closed transitions, display screens, facility settings (tabbed with deep links), staff roster management with end-of-shift replace/clear.
+Shared-kiosk hygiene: per-device "Helping as" picker, idle auto-clear (director-tunable per facility, default 15 min), kiosk mode toggle.
+Internal handbook (director-only, markdown, slug-keyed pages).
+Proposals page (structural change proposals, staff-visible).
+Codetry API: /api/codetry/index.json, /api/codetry/<slug>.md, /api/codetry/CONTRACT.md — public, unauthenticated, CORS-open, cached 60s. The codetry handbook on northern-store-plan.replit.app pulls from this.
+What is in development / task-agent active:
+
+Roughly 50+ completed task-agent merges since project start. Open proposed tasks include: Resident → Neighbour rename (the single largest deferred codetry rename), barrier rename (shadow in-app, Barrier at the gate), barrier lint enforcement, mobile artifact (not yet created), family-buckets source integration into the handbook.
+
+What is planned but not started:
+
+Mobile (Expo) companion artifact.
+EHR webhook / state-survey-ready export.
+Community Knowledge Hub and other constellation apps adopting the codetry contract.
+3. The client/user picture
+Primary user: Direct-care staff (PSWs, HCAs, nurses) in a residential care facility. Typically working a 12-hour floor shift, often on a shared hallway tablet in kiosk mode, sometimes on a personal phone. Not necessarily tech-confident. No login per device — authentication is shared passwords (staff password, director password) stored to a static role token.
+
+Secondary user: The director / facility manager. Has elevated access. Can tune facility-wide settings, curate the on-shift roster, review audit logs, manage nudges and display screens.
+
+What makes Bright Side different from what already exists: Existing care-home software is clinical, PHI-heavy, EHR-integrated, and designed for charting. Bright Side intentionally excludes all PHI from its own data model. It is the bright side of the fence — the part of the work that doesn't require a medical record. Joy bubbles, spark-of-joy logs, hallway notes, the gather — these are the relational, qualitative, moment-to-moment care acts that current software either ignores or records as a liability vector. Bright Side makes them visible and creditable without creating a chart.
+
+The barrier they're clearing: Staff doing the most meaningful parts of the job have no way to show it. The brag wall (today's brightest / MVP) and the credits page (/my-credits) are the first attempt at closing that gap.
+
+4. The institutional / funding context
+Bright Side is PHI-free by design — this is a funding/procurement strategy, not just a privacy preference. A tool that holds no Protected Health Information:
+
+Does not require PHIPA/HIPAA Business Associate Agreements.
+Is procurable by a facility director without an IT security review.
+Can be funded out of a care home's discretionary operational budget rather than requiring a capital technology procurement.
+Is potentially grant-eligible under programs that fund worker wellbeing, quality-of-life improvement, or dementia-care innovation (provincial disability support programs, Community Living funding streams, NWO-specific program envelopes).
+The 96-bed pilot home is the intended first real facility deployment. Task #212 (proposed) is to fill the demo with 96 lived-in residents for that pilot. No active funding agreements are reflected in this codebase; that work is on the Headwaters / Bobbie side.
+
+The BS_DIRECTOR_PASSWORD and BS_STAFF_PASSWORD secrets in this Replit are the only credential mechanism — by design. No user accounts, no email, no MFA. The procurement friction is in the password, not the onboarding.
+
+5. Connection to Codetry and Headwaters
+What Codetry is (one line): A methodology for naming and vocabulary discipline in software that evolves under institutional pressure. The codetry handbook on northern-store-plan.replit.app is the living manual.
+
+What Bright Side is to Codetry: Zone 0. The first constellation app to run the codetry passes and publish them back to the handbook. Bright Side's codetry passes at /api/codetry/* are the primary receipts the handbook was built to consume.
+
+What Codetry provides to Bright Side:
+
+A methodology for resolving word collisions as the app grows under real operator feedback.
+The gate doctrine (src/lib/gate.ts, src/lib/audit-gate.ts) that makes PHI-adjacent regulatory words live at one address and never bleed back into the app surface.
+A published, machine-readable record of every vocabulary decision — so future agents, contractors, or partners can reconstruct intent without asking Bobbie.
+What Bright Side provides to Codetry:
+
+The worked examples. Every codetry pass on Bright Side is a documented case study: the finding, the rule, the intervention, the falsifiable claim, the receipt. The handbook's methodology section is derived from these.
+The contract spec (docs/codetry/CONTRACT.md): the JSON shape, frontmatter convention, URL convention, and porting recipe every other constellation app adopts.
+Headwaters connection: Bobbie runs Bright Side and Headwaters as two arms of the same operating context. Decisions made in Headwaters (funding framing, practitioner vocabulary, NWO-specific language) can inform Bright Side's operator decisions — particularly the Resident → Neighbour rename and the sector-vocabulary path (Path A vs Path B on the beat sheet's Unit → Beat question, which asks whether community-living "Home" / retirement "Wing" should coexist with the screenwriting metaphor or be collapsed to "Beat" everywhere).
+
+6. What's proven and what still needs proof
+What has been demonstrated (even informally):
+
+The PHI-free positioning is coherent and self-consistent. The gate doctrine holds: three months of task-agent work has not produced a PHI leak through the fence.
+The codetry methodology is reproducible. Four passes have been run independently on Bright Side and the manual updated after each. The same one-word-one-referent rule was independently re-derived on SaltBox (pass 001-payday-words-bearing-weight.md), which the codetry passes document as evidence of universality.
+The kiosk-mode UX is technically sound. Per-device idle auto-clear, visibility-resume clear, director-tunable window, one-shot "cleared while you were away" notice — all of it covered by integrated tests including a race-condition guard for the AppShell-above-facesheet timer ordering.
+The hallway ack loop is complete. Post → ack → undo ack → barrier rearms. All four ends tested, including the concurrency case (8 simultaneous duplicate acks, exactly one wins).
+What is still open:
+
+Whether a real care facility will actually use it. The 96-bed pilot is the test. Task #212 is the demo-prep work.
+Whether the Resident → Neighbour rename will hold politically. Bobbie has not locked this decision. It is the single highest-impact deferred rename and the one most likely to require an institutional conversation before it ships.
+Whether the sector vocabulary (Path A vs Path B on Unit → Beat) needs to coexist with the screenwriting metaphor or whether LTC is the only sector that matters for the first deployment.
+Whether the family digest (the only current outbound / fence-crossing surface) is the right first export or whether a printable shift report is more operationally useful.
+Mobile companion artifact — not started; dependency on the web version stabilising first.
+7. Tech stack and artifact structure
+Monorepo: pnpm workspaces, TypeScript 5.9, Node 24.
+
+Artifact	Kind	Path	Purpose
+api-server	API	artifacts/api-server	Express 5, PostgreSQL + Drizzle ORM, all /api/bs/* routes. Deployed alongside the web app.
+bright-side	Web PWA	artifacts/bright-side	React + Vite + wouter + TanStack Query + shadcn/ui. Mobile-first.
+mockup-sandbox	Design	artifacts/mockup-sandbox	Canvas component preview server (internal, not user-facing).
+Shared packages (under lib/):
+
+Package	Purpose
+lib/db	Drizzle schema (bs_* tables), migrations, shared DATABASE_URL config.
+lib/api-spec	Single OpenAPI YAML — source of truth for the API contract.
+lib/api-client-react	Orval-generated React Query hooks from the spec.
+lib/api-zod	Orval-generated Zod schemas from the spec.
+Database: PostgreSQL. Single facility (FACILITY_ID = "default-facility"). All tables prefixed bs_*. PHI-free by schema — no names, DOBs, diagnoses, or identifiers in any column.
+
+AI: OpenAI (GPT-4-class model) for vibe suggestions (nickname/emoji), bright-spot suggestions, calendar suggestions, transcription. Graceful fallback when key is absent.
+
+Auth: Shared passwords → static role tokens in localStorage. BS_STAFF_PASSWORD and BS_DIRECTOR_PASSWORD secrets. No per-user accounts.
+
+Key files for cross-project understanding:
+
+artifacts/bright-side/src/lib/gate.ts — the only place clinical/regulatory words for five concepts exist in the bright-side artifact.
+artifacts/api-server/src/lib/audit-gate.ts — the audit log's gate (same doctrine, separate file).
+artifacts/bright-side/src/components/AppShell.legacy-vocabulary.test.tsx — the lint that enforces the gate doctrine. When a codetry rename ships, one entry is added here and nowhere else.
+artifacts/bright-side/docs/codetry/CONTRACT.md — the publish/pull contract for the handbook integration.
+8. Key decisions that are locked
+PHI-free by design. No resident names, DOBs, diagnoses, MRN-style identifiers in the Bright Side data model. Violations are prevented at the PHI scanner layer and audited. This is not a preference — it is the procurement and positioning strategy.
+Codetry passes are the vocabulary authority. A word does not change in the UI without a codetry pass. The pass documents the finding, the rule, the intervention, the falsifiable claim, and the receipt. No informal renames.
+The gate doctrine. Clinical and regulatory words live at exactly one address per outbound surface. The bright-side artifact's gate is src/lib/gate.ts. The audit log's gate is audit-gate.ts. No other file may write these words. This rule does not bend for convenience.
+One word → one referent. Every metaphor word in the surface UI points to exactly one thing in the architecture. The moment a word names two things, it names neither.
+Codetry is about what the user sees. DB columns, API route names, generated client identifiers, and server audit strings are out of scope for codetry passes. They may change in a companion wiring pass (as happened with joy moment → joy log in pass #003) but that is a separate task.
+API codegen is Orval from OpenAPI. The spec (lib/api-spec/openapi.yaml) is the contract. Generated clients are not hand-edited. A rename in the spec propagates to hooks and Zod schemas via pnpm --filter @workspace/api-spec run codegen.
+Shared-password auth is intentional and permanent (for now). No per-user accounts until there is a specific operational reason. Kiosk-mode hygiene (idle auto-clear, kiosk toggle) is the current mitigation.
+Sector vocabulary is deferred to Path A/B decision. The Unit → Beat question in pass #004 is an open operator question. Do not implement a path without Bobbie's answer.
+9. The vocabulary Bobbie uses
+Internal shorthand. Use these words when talking to Bobbie about Bright Side or when writing task descriptions for the Bright Side agent.
+
+Word	What it means
+the fence	The metaphor's spine — cognitive decline, the institutional walls. Brand voice only. Never on a button.
+shadows	Today's stack of barriers on the home page. "Clear today's shadows." One shadow = one barrier card.
+the gather	The shift-change activity — what staff do together using the beat sheet. The sidebar tab (currently still Handoff; the rename is pass #004, pending operator questions).
+beat sheet	The artifact — the bed-by-bed roster that the gather reads. The screenwriter's outline of today's beats.
+a beat	One floor's slice of the beat sheet. Unit → Beat is the proposed rename in pass #004.
+spark of joy	The in-app noun for a single bright moment logged for a resident. Applied in pass #003. The family-facing / regulator word is still "Joy moment" and lives at the gate.
+joy log	The API / DB / family-digest word for spark-of-joy events. Wiring word; not user-facing inside the fence.
+the gate	The single module in src/lib/gate.ts where clinical/regulatory words are translated. Brand-voice concept — not a button, not a tab.
+the audit gate	The server-side gate for audit-log strings. src/lib/audit-gate.ts.
+today's brightest	The daily MVP rollup on the lobby page. The in-app word since pass #001. "MVP" lives at the gate.
+hallway	The shift-feed notes wall. Renamed from "Shift feed" in pass #001. Route: /hallway.
+today's list	Standing staff tasks. Renamed from "Checklist" in pass #001. Route: /checklist (route unchanged).
+handbook	Internal director-only markdown pages. Renamed from "Planning" in pass #001. Route: /handbook.
+proposals	Structural change proposals. Kept from before. Route: /proposals.
+the brag wall	The lobby / today's-brightest page informally. Not a product term.
+codetry pass	A documented vocabulary intervention. Numbered, NNN-*.md, in docs/codetry/. Applied passes are the authority; draft passes are the contract for the next build task.
+the contract	docs/codetry/CONTRACT.md — the JSON shape / frontmatter / URL convention the handbook pulls from.
+constellation app	Any Replit project that adopts the codetry contract and publishes passes to the handbook. Bright Side, SaltBox, xBuckets, family-buckets, Headwaters, and others are constellation apps.
+the long game	Bobbie's phrase for the strategic patience behind PHI-free positioning and the gate doctrine — building infrastructure that makes future renames safe instead of fixing the symptom today.
+the window	The kiosk idle-clear window (default 15 min, director-tunable). Also used loosely for the transition auto-close window. Context-dependent.
+zone 0	Bright Side's designation in the constellation. The first mover, the proof-of-concept arm, the app that breaks the methodology in.
+End of context transfer. For the current open operator question blocking pass #004 (Path A vs Path B on Unit → Beat), ask Bobbie directly — it is the one decision neither this agent nor the Headwaters agent can resolve without her.
