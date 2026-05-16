@@ -19,7 +19,7 @@ export interface FocusStep {
 }
 
 export interface FocusArea {
-  id: "contracts" | "gmph" | "brightside";
+  id: "contracts" | "gmph";
   title: string;
   subtitle: string;
   whyNow: string;
@@ -107,52 +107,6 @@ export const FOCUS_AREAS: FocusArea[] = [
         action: "Confirm the drawdown structure in writing",
         detail:
           "Two weeks of tooling draws against the remaining $44,000 pre-paid balance. Any remaining balance after that clears through hourly work on objectives they define at $175/hr. Write it down and confirm on the call. No invoice ceremony — just delivery of what was always agreed.",
-        timeEstimate: "15 min",
-      },
-    ],
-  },
-  {
-    id: "brightside",
-    title: "Advance Brightside",
-    subtitle: "RT-LTC SaaS — first pilot conversation",
-    whyNow:
-      "Pre-revenue, but the pricing and cost basis are fully modelled. The only thing standing between 'scenario' and 'plan' is a first pilot conversation with an LTC administrator. That conversation costs nothing to start.",
-    effortPayoff: "slow-burn-high-upside",
-    effortLabel: "Slow burn",
-    payoffLabel: "High upside — founder's only profit-share line in the model",
-    accent: "#4A2080",
-    accentSoft: "#F0EAFA",
-    accentInk: "#2A0F5A",
-    steps: [
-      {
-        action: "Name one target LTC administrator and make contact",
-        detail:
-          "Not a list — one name, one outreach. A warm introduction through the health-authority network is the fastest path. The goal is not a sale; it's a 20-minute conversation to test the framing.",
-        timeEstimate: "15 min",
-      },
-      {
-        action: "Draft the one-paragraph pilot pitch",
-        detail:
-          "What does a Tier 1 facility get? Why does it cost what it costs? What does the pilot ask them to commit to? Write this before the call so you're not improvising the value proposition.",
-        timeEstimate: "1 hr",
-      },
-      {
-        action: "Clarify what a signed pilot agreement looks like",
-        detail:
-          "Not a full contract — a one-page letter of intent: facility commits to 90-day pilot at the Tier 1 rate ($" +
-          "195/mo + $500 setup), Brightside commits to onboarding and support. This is the first revenue event. Define it clearly.",
-        timeEstimate: "1 hr",
-      },
-      {
-        action: "Map the PHIPA compliance path",
-        detail:
-          "LTC administrators will ask. The $5k audit is already in the cost basis. Know who does it, how long it takes, and what the output looks like — this removes the biggest perceived risk for the buyer.",
-        timeEstimate: "half day",
-      },
-      {
-        action: "Set a milestone date for the first revenue window",
-        detail:
-          "The model says 'Oct 2026 onward.' Make that real: what has to be true by what date for first revenue to be possible? Name the milestone, date it, and put it somewhere you'll see it.",
         timeEstimate: "15 min",
       },
     ],

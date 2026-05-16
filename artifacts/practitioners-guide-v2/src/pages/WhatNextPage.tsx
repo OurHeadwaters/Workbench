@@ -19,7 +19,6 @@ import {
   ChevronUp,
   Handshake,
   Wrench,
-  Cpu,
   Zap,
   TrendingUp,
   Flame,
@@ -34,7 +33,7 @@ const REENTRY_KEY = "pgv2.reentry";
 function readStoredFocus(): FocusArea["id"] | null {
   if (typeof window === "undefined") return null;
   const v = window.localStorage.getItem(STORAGE_KEY);
-  if (v === "contracts" || v === "gmph" || v === "brightside") return v;
+  if (v === "contracts" || v === "gmph") return v;
   return null;
 }
 
@@ -102,7 +101,6 @@ function EffortBadge({ ep, label }: { ep: EffortPayoff; label: string }) {
 const AREA_ICONS: Record<FocusArea["id"], typeof Handshake> = {
   contracts: Handshake,
   gmph: Wrench,
-  brightside: Cpu,
 };
 
 // ─── Focus area card ─────────────────────────────────────────────────────────
@@ -271,11 +269,8 @@ function WhereYouAre() {
   const { scenario } = useScenario();
   const a = scenario.contracts.agency;
   const s = scenario.salts;
-  const bs = scenario.brightside;
-
   const contractConfirmed = a.feeTag.kind === "confirmed";
   const saltsIsProvisional = s.pAndL.tag.kind !== "confirmed";
-  const brightsidePreRevenue = bs.surplusDeployment.tag.kind !== "confirmed";
 
   // Build confirmed list from live scenario fields
   const confirmedItems: string[] = [
@@ -290,14 +285,11 @@ function WhereYouAre() {
       ? `Northern Band contract active — ${money(a.fee)}/mo engagement starting ${a.startDate}.`
       : "Northern Band trial: posture set, scope not yet defined, council date not yet booked.",
     "807 grants → benefits plan: open action item, grant not yet identified.",
-    brightsidePreRevenue
-      ? `Brightside pre-revenue: pricing modelled (${money(bs.pricing.tier1.monthly)}/mo Tier 1), no pilot LTC site in conversation.`
-      : `Brightside in market — ${money(bs.revenueTarget.cumulative18mo)} cumulative revenue scenario active.`,
   ];
 
   // Tension derived from scenario state
   const tension = contractConfirmed
-    ? `The agency waterfall is running — ${money(a.monthlySurplusSepOnward)}/mo business surplus attacking ${money(a.capitalRecoveryAmount)} in capital recovery. The key risk is Brightside: ${money(bs.surplusDeployment.surplus)} surplus scenario requires a pilot LTC site to commit.`
+    ? `The agency waterfall is running — ${money(a.monthlySurplusSepOnward)}/mo business surplus attacking ${money(a.capitalRecoveryAmount)} in capital recovery.`
     : `One confirmed number ($12k portal fee) and a wide-open trial window. The business needs a signed contract to activate the ${money(a.monthlySurplusJunAug)}–${money(a.monthlySurplusSepOnward)}/mo agency surplus — and the runway clock is running.`;
 
   return (
