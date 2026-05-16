@@ -102,11 +102,12 @@ export function HomePage() {
             For band councils and northern community organisations building food systems and community-owned economies — practitioner-built, flat fee, no retainer required.
           </p>
           <p
-            className="font-mono text-[10px] uppercase tracking-[0.2em] mb-8 opacity-70"
+            className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.2em] mb-8 opacity-70"
             data-testid="home-name-hierarchy"
           >
             Headwaters is the practice · Codetry is the discipline it runs on
           </p>
+          <div className="sm:hidden mb-8" />
 
           {/* Two real buttons side by side */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
