@@ -370,7 +370,7 @@ export const constellation: ConstellationSnapshot = {
         "Headwaters"
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
-      "tagline": "Channel every drop. Watch the ripple effect.",
+      "tagline": "Channel every drop. Nothing from nowhere.",
       "workedExamples": [
         {
           "name": "Eave",
