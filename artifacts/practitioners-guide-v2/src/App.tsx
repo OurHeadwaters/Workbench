@@ -32,6 +32,7 @@ import { FlaggedPage } from "@/pages/FlaggedPage";
 import { AnnualCheckInPage } from "@/pages/AnnualCheckInPage";
 import { StrategicLedgerPage } from "@/pages/StrategicLedgerPage";
 import { SessionHandoffPage } from "@/pages/SessionHandoffPage";
+import { WorkspacePage } from "@/pages/WorkspacePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/year/check-in" component={AnnualCheckInPage} />
       <Route path="/strategic-ledger" component={StrategicLedgerPage} />
       <Route path="/session-handoff" component={SessionHandoffPage} />
+      <Route path="/workspace" component={WorkspacePage} />
       <Route component={NotFound} />
     </Switch>
   );

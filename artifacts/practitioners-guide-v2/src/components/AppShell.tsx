@@ -31,6 +31,7 @@ import {
   Truck,
   CalendarCheck,
   BookMarked,
+  Map,
 } from "lucide-react";
 
 interface NavItem {
@@ -87,8 +88,9 @@ const NAV_GROUPS: NavGroup[] = [
     id: "now",
     label: "Now",
     icon: Home,
-    matchPaths: ["/", "/what-next", "/portfolio"],
+    matchPaths: ["/", "/what-next", "/portfolio", "/workspace"],
     items: [
+      { href: "/workspace", label: "Workspace", icon: Map, accent: "#1f3d2e" },
       { href: "/", label: "Dashboard", icon: Home },
       { href: "/what-next", label: "What's Next", icon: Compass, accent: "#0F766E" },
       { href: "/portfolio", label: "Portfolio Map", icon: LayoutGrid, accent: "#1A5FA8" },

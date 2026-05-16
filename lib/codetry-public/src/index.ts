@@ -275,6 +275,23 @@ export const NEEDS_PROOF_ITEMS = [
   "The household finance trust layer (xbuckets) serves a second household independently — the non-custodial architecture is proved; the network effect is not.",
 ];
 
+// ─── Practitioner rates (shared source of truth) ──────────────────────────────
+//
+// Edit here. Both the Practitioners Guide and the Operating Plan read from this.
+// Changing a rate here updates every surface that references it automatically.
+
+export const PRACTITIONER_RATES = {
+  /** Lead practitioner hourly rate ($/hr) */
+  lead: 175,
+  /** Support / subcontract hourly rate ($/hr) */
+  support: 70,
+} as const;
+
+export const ACTIVE_FEES = {
+  /** 807 portal development fee — confirmed revenue, bridge that opens the trial window */
+  portalDevelopment: 12_000,
+} as const;
+
 // ─── Objective label map (shared) ─────────────────────────────────────────────
 
 export const OBJECTIVE_LABELS: Record<string, string> = {

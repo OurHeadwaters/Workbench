@@ -27,6 +27,7 @@ import { PageAnchor } from "@/components/PageAnchor";
 import { FOCUS_AREAS, type FocusArea, type EffortPayoff, type TimeEstimate } from "@/data/whatsNext";
 import { useScenario } from "@/lib/scenario";
 import { money } from "@/lib/format";
+import { PRACTITIONER_RATES, ACTIVE_FEES } from "@workspace/codetry-public";
 
 const STORAGE_KEY = "pgv2.whatsnext.focus";
 const REENTRY_KEY = "pgv2.reentry";
@@ -261,9 +262,9 @@ function FocusCard({
 //
 // Content is derived from the current scenario state via useScenario().
 // Two values are confirmed constants sourced from v7.ts.
-const PORTAL_FEE = 12_000;
-const LEAD_RATE = 175;
-const SUPPORT_RATE = 70;
+const PORTAL_FEE = ACTIVE_FEES.portalDevelopment;
+const LEAD_RATE = PRACTITIONER_RATES.lead;
+const SUPPORT_RATE = PRACTITIONER_RATES.support;
 
 function WhereYouAre() {
   const { scenario } = useScenario();
