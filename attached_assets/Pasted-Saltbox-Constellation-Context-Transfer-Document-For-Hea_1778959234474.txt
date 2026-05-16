@@ -1,0 +1,249 @@
+Saltbox Constellation — Context Transfer Document
+For: Headwaters practitioner workspace agent
+Date: May 16, 2026
+Source: This Replit project (Codetry workspace)
+Prepared by: Agent of record for this workspace
+
+1. Full Inventory
+Artifacts (deployable applications)
+artifacts/gather → Saltbox — Homeschool Day Companion (/gather/)
+Zone 0. Bobbie's personal disability tool. Frontend-only React + Vite — no backend, no account, no server uploads. All data lives in IndexedDB (blobs) and localStorage via zustand/persist. This is the most actively developed artifact in the workspace. It is for Bobbie's household only.
+
+artifacts/north-star → North Star (/north-star/)
+Zone 0. Mobile-first hub for an ADHD-inattentive entrepreneur (Bobbie, in her producer role). Local-first via zustand/persist. Pages: Today, Guide (Codetry zone model + handbook link), Zones, Weekly review, Seasonal review, Settings, Tester kit, Inbox setup. Connects to Gmail via @replit/connectors-sdk. Companion to Saltbox — same user, different role (homeschool mother vs. producer).
+
+artifacts/family-buckets → Family Buckets (/family-buckets/)
+Zone 0. Household chores, savings goals, and memory-keeping ("Courage Bucket"). Full-stack (Express + Drizzle + Postgres). Includes a Helper role for kids (Big Brother / Co-Captain) with default chores, badges, and printable promotion packet. Photo uploads via Replit Object Storage. Status: built, in use or near-use.
+
+artifacts/sandbox → Sandbox — the village bulletin (/sandbox/)
+Zone 1 (Zone 1/3 boundary). Calm, pull-only weekly bulletin for ~60 Dryden homeschool families. Live whiteboard — no draft/publish. Saturday 8pm ET freeze → Sunday midnight ET fresh board. Sections: park-days, field-trips, asks, meetups, homestead, just-saying, events. Household identity: name + passphrase (scrypt-hashed). Optional Sunday digest email via Resend. XRPL wallet binding in Settings for Zone 3 identity. Status: live with a real community.
+
+artifacts/tester-onboarding → The Field (/fridge/)
+Zone 0 (consumer-facing). Single-page ingredient-to-meal assistant ("Fridge to Table"). Calls POST /api/fridge/suggest via Claude Haiku. Stateless, no account. Also serves as a tester onboarding surface for the broader constellation. Status: live, simple.
+
+artifacts/eave → Eave — Household Finance (registered, workflow running)
+Zone 0/1 boundary. Household finance tool. Named for the Eave — the hard privacy boundary between the household (Zone 1) and above-board organizational layers (Zone 3+). Status: registered and running; extent of current functionality not fully inventoried here — honest gap.
+
+artifacts/brief → Codetry Print Suite (/brief/)
+Zone 5 (public). Static React + Vite print suite. Letter-format (816×1056px) document gallery. Current documents: econ-dev (Economic Development One-Pager for NOHFC/FedNor) · funding-brief (Partnership & Funding Brief with editable author fields + QR code → handbook). Used for external/funder-facing communication about the Codetry model.
+
+artifacts/api-server → API Server (/api/)
+Shared Express 5 backend for all server-dependent artifacts. Drizzle + Postgres. Routes by constellation: fridge.ts · sandbox.ts · helper.ts · share.ts · inbox.ts · wallets.ts · storage.ts. Zone 3–5 backend.
+
+Shared Libraries (lib/)
+Package	Contents	Used by
+lib/db	Drizzle schema + migrations	api-server, family-buckets
+lib/api-spec	OpenAPI spec (openapi.yaml); Orval codegen	all backend-connected artifacts
+lib/api-client-react	Generated React Query hooks	sandbox, family-buckets, north-star
+lib/api-zod	Generated Zod schemas	api-server
+lib/zone-identity	XRPL wallet primitives: isValidXrplAddress, walletConnectDeepLink, buildZoneBindPayload, verifyZoneBindSignature	sandbox, potentially north-star
+lib/object-storage-web	useUpload hook → presigned PUT → GCS	family-buckets
+2. Saltbox — The Full Picture
+What it does day-to-day (from the user's experience):
+Saltbox is a daily homeschool companion that lives on a phone as a PWA. On a given morning, Bobbie opens it to see the day's shape: what's scheduled, what children are doing, what materials are queued. It holds the library of actual files (PDFs, audio, images) attached to lessons — not links, the files themselves — so nothing breaks when a curriculum site goes down. It tracks units, lesson resources, narration prompts, copywork passages. It has a Responsibilities section with personality-aware coaching for neurodivergent learners. It can generate a Family Recap for grandparents. It supports meal planning and kitchen timers. It has a Portfolio for capturing completed work and a Moments section for significant days.
+
+What problem it solves for this specific user:
+Bobbie has inattentive ADHD and is homeschooling a neurodivergent child. The structural problem it solves is: maintaining continuity of structure when working memory and executive function are unreliable. It's a low-friction daily anchor. Opening it in the morning is the triage step, not the planning step — the day is already shaped, she's just reading it. It replaces the mental overhead of holding "what are we doing today, where is that PDF, what did we cover, what does she need next" in working memory.
+
+What it has replaced or made unnecessary:
+Based on the codebase: external curriculum management apps, file-link-based approaches (broken links are explicitly called out as the failure mode the library solves), and the overhead of cross-referencing multiple tools. The Learning Hub (methodology cards, slow tour of homeschool styles) is built in — so Bobbie doesn't need to find external resources to understand Charlotte Mason, classical, unschooling, etc.
+
+Is it in daily active use?
+Active development is confirmed. Daily use is probable given the user profile (user = developer = proof), but this agent cannot confirm cadence of daily use — honest gap. The codebase shows recent work on onboarding, the Learning Hub tab, restore-from-backup, and iOS Safari layout fixes — all consistent with a tool being lived in, not just built.
+
+How long has it been running?
+Cannot confirm from this workspace alone. No CHANGELOG or dated commit log surfaced here.
+
+3. Neurodivergent Design Decisions
+What is captured in the codebase and design system:
+
+Cognitive load reduction:
+
+Mobile-first, 44px minimum tap targets — no precision required
+No emojis in UI (explicit rule) — visual noise reduction
+No push notifications, no badges on load — pull-only, calm UX
+No red for destructive actions — warm amber instead (removes anxiety signal)
+Fraunces serif headings + Inter body — distinct hierarchy without density
+Task initiation support:
+
+Today page is the primary entry point — day is pre-shaped, not a blank slate
+LearningHubTodayTrack on the home page surfaces the next learning card without requiring navigation
+Morning triage card connects to Gmail inbox — reduces the "what do I need to check" overhead
+Working memory accommodation:
+
+Library holds actual files (not links) — removes the "where did I save that" failure mode
+Narration prompts stored per-resource — one tap to see the question, no recall required
+Copywork passages stored per-resource — same
+Both-States design principle (works empty and full from day one) — no "set everything up before it's useful" friction
+Hard days / low-activation accommodation:
+
+The onboarding wizard has a "restore from backup" shortcut on step 0 — minimum friction to recover from device loss
+Learning Hub is positioned as "no quiz, no scoring, no club to join" — explicitly removes performance pressure
+Saltbox primitive: "one bounded thing you can point at" — scope is always clear, no sprawl
+What is explicitly excluded:
+
+No account required for Saltbox (gather) — no login friction
+No backend for Saltbox — no "it's down" failure mode
+No social features — pull-only, no community pressure
+No gamification — no streaks, no badges in the homeschool tool
+Gap: The Responsibilities page's "personality-aware coaching" is listed as a feature but the exact neurodivergent-specific design decisions within it are not surfaced in this summary — would require deeper code review.
+
+4. The Governing Metaphor / Design Constraint
+The Saltbox primitive is the load-bearing metaphor for this project. From the Codetry doctrine:
+
+Saltbox: one bounded thing you can point at.
+This functions as the design spec in the same way the fence functions for Bright Side. Every feature must be a Saltbox — a bounded, nameable thing. The Library is a Saltbox (your files, here). The Responsibilities section is a Saltbox. The Portfolio is a Saltbox. The constraint prevents scope creep by requiring that any new feature pass the test: can you point at it? Can you name it in one phrase? Can it exist on its own?
+
+The Both-States test is the secondary constraint: every feature must work when empty and when full, from day one. No "add three things and then it becomes useful" features.
+
+The Both-Sides test is the vocabulary constraint: every concept must have a vernacular name (for Bobbie) and a massity/grant-language name (for funders). This applies across the constellation, not just Saltbox.
+
+5. Vocabulary Discipline
+Known codetry pass: 001-payday-words-bearing-weight.md is referenced in replit.md but the full document is not in this workspace (it may live in the handbook at northern-store-plan.replit.app/codetry-handbook/). What is resolved: vocabulary for the economic model (Zone, Eave, Saltbox, etc.) carries structural weight. The finding appears to be that naming is architecture — wrong names create wrong expectations.
+
+Vocabulary in Saltbox UI (what the code shows):
+
+Words used and their likely reasoning:
+
+"Library" — resource-first, not "curriculum" (curriculum implies a program, library implies ownership of materials)
+"Responsibilities" — not "chores" (responsibilities implies agency, chores implies assignment)
+"Moments" — not "achievements" or "milestones" (moments are neutral, not evaluative)
+"Portfolio" — not "grades" or "progress report" (portfolio is the learner's, not an assessment of them)
+"Units" — neutral educational unit, not "lessons" or "curriculum blocks"
+"Courage Bucket" — in Family Buckets, a memory-keeping concept; vernacular, not clinical
+"Learning hub" — not "training" or "onboarding" or "resources" — hub implies center, not process
+"The slow tour" — the methodology card sequence is named for pace, not completion
+Words explicitly absent from the UI (patterns from codebase):
+
+No "progress" as a evaluative noun
+No "score," "grade," "level up"
+No "streak" or "consistency"
+No "lesson plan" (implies a formal document)
+Honest gap: The full vocabulary doctrine — what was rejected and why — is not captured in this workspace's code or replit.md in detail. It likely lives in the handbook or in Bobbie's spoken vocabulary. This is a known loose edge.
+
+6. The Codetry Constellation Connection
+Zone designation:
+
+Saltbox (gather): Zone 0 (household, most foundational)
+North Star: Zone 0
+Family Buckets: Zone 0
+Sandbox: Zone 1/3 boundary
+Eave: Zone 0/1 boundary
+The Field: Zone 0 consumer-facing
+Brief: Zone 5 (public)
+API Server: Zone 3–5 backend
+Codetry API endpoints: No /api/codetry/* route pattern exists in this workspace (unlike Bright Side's pattern, per your framing). The Codetry model lives in the replit.md, the handbook URL, and the brief print suite — not as API-published passes. This is a structural difference from Bright Side.
+
+What this project produces that other constellation projects depend on:
+
+The lib/zone-identity package (XRPL wallet primitives) is the shared Zone 3/5 identity layer — used by Sandbox and potentially consumable by Bright Side or xbuckets if they need zone-aware identity.
+The lib/db, lib/api-spec, lib/api-client-react, lib/api-zod packages are internal infrastructure.
+What this project proves that no other project proves:
+Saltbox proves that the Zone 0 disability tool model works for the individual practitioner — user = developer = proof = the person it's for. No other project in the constellation has this property. Every other artifact serves someone else or a community. Saltbox serves only Bobbie.
+
+7. Institutional / Funding Dimension
+Is Saltbox structured for adaptation?
+Not currently. It is wired to Bobbie's household model — her children, her library, her units. There is no multi-tenant model, no profile system, no "configure for a different household" layer. The data model is flat and single-household.
+
+What a "port" would look like:
+Generic methodology (transferable):
+
+Local-first PWA architecture (no backend, no account)
+Both-States/Saltbox primitive as feature gate
+The neurodivergent design decisions (no red, no gamification, no performance pressure, pull-only)
+The Learning Hub card format (methodology cards, slow tour)
+The Library model (files, not links)
+Specific to Bobbie's household (would need replacement):
+
+The specific curriculum areas (Charlotte Mason, classical, etc.)
+The ADHD-inattentive + neurodivergent child configuration
+The family structure assumptions (single caregiver, one child being schooled)
+The XRPL/Zone identity layer (irrelevant to a general disability tool)
+Funding mechanisms — what the codebase suggests:
+The brief artifact contains an Economic Development One-Pager (NOHFC/FedNor) and a Partnership & Funding Brief — these are the instruments Bobbie is using to position the broader Codetry model for institutional funders. There is no Saltbox-specific funding document visible here.
+
+PHI/personal data gate (equivalent to Bright Side's):
+Yes — and it's stronger than Bright Side's. Saltbox stores everything locally (IndexedDB + localStorage). No data ever leaves the device unless liveShare.enabled === true (the live follow-along link, off by default). There is no server-side personal data at all. This makes it procurable without institutional overhead — there is no data custodian, no privacy officer needed, because the data never leaves the household device. This is a structural procurement advantage if adapted for supported individuals.
+
+8. Current State — Honest Accounting
+Working and in active use (confirmed by recent development activity):
+
+Saltbox (gather): active development, recent fixes for iOS Safari layout, Learning Hub tab integration, onboarding restore-from-backup — consistent with daily use
+Sandbox: live with ~60 Dryden families, recent coordinator features and event persistence
+The Field: live, simple, stable
+In development / near completion:
+
+Family Buckets: full-stack, Helper role recently added
+North Star: features present, active refinement
+Running but not fully inventoried here:
+
+Eave (household finance): registered artifact, workflow running, but this agent has not deeply read its codebase in this session — honest gap
+Brief (print suite): Static, stable — used for funder-facing communication. Not in daily use operationally.
+
+Gap between vision and current state:
+The Codetry model (Zones 0–5, Shallows, Zone 4 Nursery, etc.) is fully articulated in replit.md and the handbook, but Zone 4 and Zone 5 have no live artifact here yet. The Shallows (XRPL DID anonymous feed) is articulated but not built. Zone 4 (Community Hall / Nursery) is articulated but not built. These are vision, not code.
+
+9. Tech Stack and Artifact Structure
+Stack:
+
+Monorepo: pnpm workspaces
+Node.js 24, TypeScript 5.9
+Frontend: React + Vite (all artifacts)
+Backend: Express 5 + Drizzle ORM + PostgreSQL
+Validation: Zod (zod/v4), drizzle-zod
+API codegen: Orval (from OpenAPI spec in lib/api-spec)
+Build: esbuild (CJS bundle for server)
+XRPL: zone-identity lib for wallet primitives
+AI: Claude Haiku (The Field / Fridge to Table suggestion endpoint only)
+Object storage: Replit Object Storage (family-buckets photo uploads)
+Email: Resend (Sandbox Sunday digest, requires RESEND_API_KEY)
+Auth: scrypt-hashed passphrase + httpOnly cookie (Sandbox only; Saltbox has no auth)
+Database schema highlights:
+Tables exist for: sandbox households + posts + invite tokens + events, family-buckets chores + savings + memory entries + helpers, inbox/share/storage routes. Saltbox (gather) has no database — everything local.
+
+AI constraints:
+Claude Haiku is used only for the ingredient-to-meal suggestion endpoint. No AI touches Saltbox, North Star, Sandbox, or any Zone 0 personal data. This is structural, not incidental.
+
+10. Locked Decisions
+From replit.md user preferences and codebase conventions — these should not be reopened:
+
+No emojis in UI copy or code comments — project-wide, absolute
+No red for destructive actions — warm amber — project-wide
+Fraunces serif headings + Inter body, always — design system locked
+Mobile-first, 44px tap targets — locked
+Saltbox is frontend-only, no backend — architectural, not a convenience choice
+liveShare.enabled === true is the only gate for any data leaving the device — privacy architecture
+Zone 3 actors cannot reach Zone 1 data (the Eave) — identity/privacy architecture
+Pull-only UX — no push notifications, no badges on load — ADHD-specific design constraint
+Library holds files, not links — "broken links" is the named failure mode being solved
+Logging: never console.log in server code — req.log in handlers, logger singleton elsewhere
+Package naming: @workspace/ prefix — monorepo convention
+11. Bobbie's Language for This Project
+Captured from codebase and replit.md:
+
+"Saltbox" — the app (gather), and also the design primitive (one bounded thing you can point at)
+"Both-States" — the test (works empty and full)
+"Both-Sides" — the vocabulary test (vernacular + massity)
+"The Eave" — the privacy boundary between household and organizational
+"Zone 0" — the household, the most foundational unit
+"The Shallows" — the Zone 5 anonymous idea commons (vision, not yet built)
+"The Library" — not "curriculum manager" — the place where her files live
+"The slow tour" — the methodology card sequence in the Learning Hub
+"Moments" — significant captures, not achievements
+"Courage Bucket" — memory-keeping in Family Buckets
+"The Field" — the tester-onboarding surface / Fridge to Table
+"Nursery" — Zone 4 new-idea forming layer (vision)
+"Fodder" — Zone 4 returned ideas with history
+"Fallow" — ideas resting between attempts
+Spoken vocabulary not captured in the codebase: this agent has no record of Bobbie's spoken shorthand beyond what's in replit.md. The handbook at northern-store-plan.replit.app/codetry-handbook/ is the authoritative external document.
+
+12. Open Questions That Belong to Bobbie
+Eave (household finance): What is its current state of use — daily, occasional, parked? What does it currently do vs. what is the vision?
+Saltbox daily use: Is Saltbox in daily active use as of this date, or is it still in the "building toward daily use" phase? What is the gap between what's built and what's needed before it replaces whatever she uses now?
+The Responsibilities page: What does "personality-aware coaching" mean in practice for her child? Is this working well, or is it aspirational? What is the child's specific learning profile that should inform that feature?
+Zone 4 and Zone 5 (Nursery / Shallows): Are these being built in this workspace or elsewhere? Is there a timeline or is it vision-only?
+Porting / disability tool service line: Has Bobbie made any concrete decision about whether Saltbox (or a version of it) is intended for eventual adaptation for other supported individuals? Or is it permanently a one-household tool?
+Vocabulary lock: The full codetry vocabulary doctrine is referenced but not fully present in this workspace. Is there a canonical document (in the handbook or elsewhere) that holds the locked/rejected vocabulary list for Saltbox specifically?
+North Star + Saltbox relationship: These are both Zone 0 tools for the same person but different roles. Is there a planned integration point (shared data, shared identity) or are they intentionally separate tools for separate contexts?
+The eave artifact: No clear documentation of what it does beyond its name and zone placement. Bobbie should confirm its current scope and status.
+This document was prepared from the live codebase, replit.md, and active development session context. Gaps are named rather than filled. The handbook URL (northern-store-plan.replit.app/codetry-handbook/) should be read independently for the full Codetry doctrine.
