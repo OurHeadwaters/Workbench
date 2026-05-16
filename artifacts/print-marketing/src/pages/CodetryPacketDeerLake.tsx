@@ -37,6 +37,7 @@ export default function CodetryPacketDeerLake() {
       <PrintNav
         targetId="pdf-target"
         filename="headwaters-codetry-packet-deer-lake.pdf"
+        paginate={true}
       />
       <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
         <CodetryPacketCoverSheet

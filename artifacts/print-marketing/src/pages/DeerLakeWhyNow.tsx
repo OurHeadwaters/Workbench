@@ -286,7 +286,7 @@ export default function DeerLakeWhyNow() {
         targetId="pdf-target"
         filename="headwaters-deer-lake-why-now.pdf"
       />
-      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div id="pdf-target" style={{ background: "#d8d2c8", padding: "2rem 0" }}>
         <DeerLakeWhyNowPage />
       </div>
     </>
