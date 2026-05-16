@@ -6,6 +6,7 @@ interface NavLink {
   href: string;
   label: string;
   external?: boolean;
+  desktopOnly?: boolean;
 }
 
 const NAV_LINKS: NavLink[] = [
@@ -13,7 +14,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/services", label: "The Work" },
   { href: "/work",     label: "Case Studies" },
   { href: "/bio",      label: "About" },
-  { href: "/listen",   label: "Listen" },
+  { href: "/listen",   label: "Listen", desktopOnly: true },
 ];
 
 const TOOLS: { icon: string; name: string; href: string }[] = [
@@ -328,7 +329,7 @@ export function SiteNav() {
         data-testid="mobile-nav-drawer"
       >
         <div className="flex flex-col px-5 py-4 gap-1">
-          {NAV_LINKS.map(({ href, label }) => {
+          {NAV_LINKS.filter((l) => !l.desktopOnly).map(({ href, label }) => {
             const active = isActive(href, location);
             return (
               <a
