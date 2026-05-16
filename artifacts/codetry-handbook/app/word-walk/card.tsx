@@ -14,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -72,10 +73,11 @@ export default function WordWalkCard() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionDecisions, setSessionDecisions] = useState<
-    Array<{ row: WordRow; verdict: Verdict }>
+    Array<{ row: WordRow; verdict: Verdict; chosenWord?: string }>
   >([]);
   const [effectsExpanded, setEffectsExpanded] = useState(false);
   const [deciding, setDeciding] = useState(false);
+  const [chosenWord, setChosenWord] = useState("");
   const sessionInitialized = useRef(false);
 
   // Slide animation
@@ -132,10 +134,12 @@ export default function WordWalkCard() {
       if (!row) return;
       setDeciding(true);
 
-      const newDecisions = [...sessionDecisions, { row, verdict }];
+      const word = chosenWord.trim() || undefined;
+      const newDecisions = [...sessionDecisions, { row, verdict, chosenWord: word }];
 
       animateOut(async () => {
         setEffectsExpanded(false);
+        setChosenWord("");
         setSessionDecisions(newDecisions);
         await decide(row.id, verdict);
         setDeciding(false);
@@ -274,6 +278,27 @@ export default function WordWalkCard() {
             ) : null}
           </View>
 
+          {/* Chosen word input */}
+          <View style={styles.chosenWordBlock}>
+            <Text style={[styles.fieldLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+              Your word (optional)
+            </Text>
+            <TextInput
+              value={chosenWord}
+              onChangeText={setChosenWord}
+              placeholder="Type the word you landed on…"
+              placeholderTextColor={c.mutedForeground}
+              style={[
+                styles.chosenWordInput,
+                { color: c.foreground, borderColor: c.rule, fontFamily: SERIF, backgroundColor: c.background },
+              ]}
+              autoCorrect={false}
+              autoCapitalize="none"
+              returnKeyType="done"
+              editable={!deciding}
+            />
+          </View>
+
           {/* Decision buttons */}
           <View style={styles.buttonRow}>
             <Pressable
@@ -346,7 +371,7 @@ function SummaryScreen({
   insets: { top: number; bottom: number };
   webTop: number;
   webBottom: number;
-  decisions: Array<{ row: WordRow; verdict: Verdict }>;
+  decisions: Array<{ row: WordRow; verdict: Verdict; chosenWord?: string }>;
   allDone: boolean;
   counts: { approved: number; rejected: number; deferred: number; proposed: number; applied: number };
 }) {
@@ -385,17 +410,24 @@ function SummaryScreen({
             <Text style={[styles.sectionLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
               TODAY'S VERDICTS
             </Text>
-            {decisions.map(({ row, verdict }) => (
+            {decisions.map(({ row, verdict, chosenWord }) => (
               <View
                 key={row.id}
                 style={[styles.summaryRow, { borderBottomColor: c.rule }]}
               >
-                <Text
-                  style={[styles.summaryTerm, { color: c.foreground, fontFamily: SERIF_BOLD }]}
-                  numberOfLines={1}
-                >
-                  #{row.id} · {stripMarkdown(row.term).slice(0, 40)}
-                </Text>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={[styles.summaryTerm, { color: c.foreground, fontFamily: SERIF_BOLD }]}
+                    numberOfLines={1}
+                  >
+                    #{row.id} · {stripMarkdown(row.term).slice(0, 40)}
+                  </Text>
+                  {chosenWord ? (
+                    <Text style={[styles.summaryChosen, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+                      → {chosenWord}
+                    </Text>
+                  ) : null}
+                </View>
                 <Text
                   style={[
                     styles.summaryVerdict,
@@ -523,6 +555,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingBottom: 14,
   },
+  chosenWordBlock: {
+    marginBottom: 14,
+  },
+  chosenWordInput: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 16,
+    lineHeight: 22,
+    marginTop: 6,
+  },
   buttonRow: {
     flexDirection: "row",
     gap: 8,
@@ -564,6 +608,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
     flex: 1,
+  },
+  summaryChosen: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 2,
   },
   summaryVerdict: {
     fontSize: 10,
