@@ -125,7 +125,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Zone",
     chapter: "Ch4",
     definition:
-      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market; Zone 5 — open public. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)",
+      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite), identity layer: Lodge (provisional); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market, also the cooperative formation layer (Community Hall, Nursery, Fodder, Fallow); Zone 5 — open public, Eave-optional. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)",
     section: "formal",
   },
 
@@ -160,6 +160,61 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
       "The active-monitoring posture during resting state: reading the morning advisory, keeping contact trees current, running generator test-starts. Also named as a rejected umbrella name for The Standby (too fast-side-only to hold the slow shelf).",
     section: "appendix",
     group: "The Standby",
+  },
+  {
+    term: "Lodge",
+    chapter: "Ch4 / Open Questions §5.9",
+    definition:
+      "Provisional name for the Zone 1 household identity layer. A Lodge identity is what a household holds below the Eave: a name the circle recognises, without disclosure to Zone 3+. Entry is by invitation and passphrase. Whether Lodge is the confirmed name or still provisional is an open question — see §5.9.",
+    section: "flagged",
+  },
+  {
+    term: "Nursery",
+    chapter: "Ch4 — Zone 4 formation model",
+    definition:
+      "The Zone 4 sub-shelf for new cooperative ideas in earliest formation — no history, no scar tissue, open slate. A Nursery idea has not yet been through the world.",
+    section: "appendix",
+    group: "Zone 4 Formation",
+  },
+  {
+    term: "Fodder",
+    chapter: "Ch4 — Zone 4 formation model",
+    definition:
+      "The Zone 4 sub-shelf for Zone 3 ideas returned for reworking. Carries history and scar tissue; distinct from Nursery. Named honestly so the difference between a new idea and a returned one is never flattened. A Fodder idea has already survived one round of the world.",
+    section: "appendix",
+    group: "Zone 4 Formation",
+  },
+  {
+    term: "Fallow",
+    chapter: "Ch4 — Zone 4 formation model",
+    definition:
+      "The Zone 4 sub-shelf for ideas resting between attempts, not formally demoted. Fallow ground still has life in it; fallow is not failure.",
+    section: "appendix",
+    group: "Zone 4 Formation",
+  },
+  {
+    term: "Graduation gate",
+    chapter: "Ch4 — Zone 4 formation model",
+    definition:
+      "The moment a Zone 4 cooperative idea becomes a fully formed, actionable pilot handed to the Zone 3 producer board for a vote per 807's bylaws. Graduating means surviving one full cycle without 807 eating the risk. The board votes only at graduation — not during formation.",
+    section: "appendix",
+    group: "Zone 4 Formation",
+  },
+  {
+    term: "Economic floor mechanism",
+    chapter: "Ch4 — Zone 4 formation model",
+    definition:
+      "807 frames Zone 4 ideas in massity dialect → writes grants → grants fund Zone 2 workbenches of the people doing Zone 4 formation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly. Without a funded Zone 2 layer, Zone 4 stagnates.",
+    section: "appendix",
+    group: "Zone 4 Formation",
+  },
+  {
+    term: "Dead backwater",
+    chapter: "Ch4 — Zone 5",
+    definition:
+      "Named failure mode for Zone 5 (The Shallows): the feed goes quiet, tip flow drops to zero, no new DIDs wading in. Prevention is Zone 3 and Zone 4's job, not Zone 5's.",
+    section: "appendix",
+    group: "Zone 5",
   },
   {
     term: "A calm membrane",

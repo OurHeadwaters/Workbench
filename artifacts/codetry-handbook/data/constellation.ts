@@ -371,6 +371,8 @@ export const constellation: ConstellationSnapshot = {
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
       "tagline": "Channel every drop. Nothing from nowhere.",
+      "identityLayer": "Lodge — provisional name for the Zone 1 household identity layer (private, named + passphrase). A Lodge identity is what a household holds below the Eave: a name the circle recognises, held without disclosure to Zone 3+. Open question: see §5.9.",
+      "privacyBoundary": "The Eave is a hard privacy boundary between Zone 1 (Lodge — private, household) and Zone 3+ (organizational, above-board). Zone 3 wallet addresses cannot reach Zone 1 data. Zone 4 is above the Eave — named producers operate with disclosed identity. Zone 5 is Eave-optional — participants can stay below the Eave while wading in the idea commons; anonymous DID participation is valid without disclosure.",
       "workedExamples": [
         {
           "name": "Eave",
@@ -621,6 +623,26 @@ export const constellation: ConstellationSnapshot = {
           "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
         }
       ],
+      "formationModel": {
+        "summary": "Zone 4 is also the managed bank and volunteer-forming layer — producers collaboratively developing surplus-based cooperative ideas from conception through the graduation gate. Zone 4 is local and physical: the Community Hall is where bodies gather in person to scout capacity, run test batches, and engage the community face-to-face. Not an exchange (Zone 3 is the exchange). Not board-controlled (the forming group leads; the board votes only at graduation). Not contractual (the moment Zone 4 work is contracted, it becomes Zone 2 work).",
+        "subShelves": [
+          { "name": "Nursery", "rule": "New ideas forming — no history, no scar tissue, open slate. Surplus-based cooperative ideas at earliest conception." },
+          { "name": "Fodder", "rule": "Zone 3 ideas returned for reworking. Carries history and scar tissue; distinct from Nursery. Named honestly so the difference between a new idea and a returned one is never flattened — a Fodder idea has already survived one round of the world." },
+          { "name": "Fallow", "rule": "Ideas resting between attempts, not formally demoted. Fallow ground still has life in it; fallow is not failure." }
+        ],
+        "graduationGate": "A fully formed, actionable pilot handed to the Zone 3 producer board for a vote per 807's bylaws. Graduating means surviving one full cycle without 807 eating the risk. First Saltbox: 807's dog-treats co-op — surplus organs from member grazers → value-added processing → wholesale to member producers.",
+        "economicFloor": "807 frames Zone 4 ideas in massity dialect → writes grants → grants fund Zone 2 workbenches of the people doing Zone 4 formation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly. Without a funded Zone 2 layer, Zone 4 stagnates. This is the root of the capacity crisis in 807's region.",
+        "bothSides": {
+          "bright": ["producer nursery", "Community Hall", "forming a co-op together"],
+          "massity": ["rural innovation pilot", "producer-led cooperative development program"]
+        },
+        "z5Seam": {
+          "pathA": "Undefined. See Open Questions §5.9.",
+          "pathB": "Discovery — Zone 4 nursery groups browse the Shallows like a seed catalog; posts that mature surface in a 'ready to pick up' view.",
+          "pathC": "Adoption — a Zone 4 group collectively adopts a Shallows post as their starting brief; DID attribution credits the anonymous author without naming them. Digital drift becomes local action in a Community Hall.",
+          "pathD": "Honest baseline — some posts never cross; that is the wilderness doing wilderness work."
+        }
+      },
       "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Jude herself. Sector → call → first-touched node is the modeling unit.",
       "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
       "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
@@ -657,6 +679,8 @@ export const constellation: ConstellationSnapshot = {
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
       ],
+      "eavePosture": "Eave-optional. Participants can stay below the Eave while wading in Zone 5 — anonymous DID participation is valid without disclosure. Re-entry has no social barrier: no history check, no credibility password. Zone 3 reputation is left at the water's edge. Participation does not require crossing the Eave.",
+      "failureMode": "Dead backwater — the Shallows goes quiet, tip flow drops to zero, no new DIDs wading in. Prevention is Zone 3 and Zone 4's job, not Zone 5's.",
       "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
       "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",
