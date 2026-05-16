@@ -1,0 +1,63 @@
+Your gap analysis was correct. Build in this order — language first, 
+dissolution second, the ask third. Do not attempt all six gaps at once.
+
+PHASE 1 — LANGUAGE (this session)
+
+Rename the following across every user-facing surface (UI copy, 
+notifications, empty states). Do not rename database columns or API 
+routes yet — only what the circle sees.
+
+  Tasks → Needs
+  Slots → Moments
+  Claim → I've got it
+  Complete / Mark done → Done (keep the verb, drop the bureaucratic frame)
+  Errand Board → Errands
+  Gift Card Rotation → Gift Cards
+  Impact → (remove the section entirely — do not replace it with 
+            anything. The circle does not need a count.)
+  Status: open / claimed / completed → open / someone's on it / done
+  "Create a project" → "Add a need"
+  "Add slots" → "Add moments"
+
+The test for each rename: does it sound like something a neighbour 
+would say at the door, or does it sound like a project management tool?
+If it sounds like a project management tool, it has not been renamed yet.
+
+PHASE 2 — DISSOLUTION (next session, after language lands)
+
+The data layer needs a concept of "this is over." Design — do not 
+build yet — a dissolution model:
+
+  - What triggers dissolution? (circle organizer closes it, a 
+    time-based prompt, or the supported person says it's over)
+  - What is kept? (the circle existed — that fact can remain)
+  - What is not kept? (the person's situation, address, allergies, 
+    drop-off notes, comments, slot-level activity)
+  - What does "archived" mean vs "dissolved"? These are two different 
+    things. Archived = dormant but intact. Dissolved = the sensitive 
+    record is gone.
+
+Write the dissolution model as a short plain-English spec (not code) 
+and show it to me before building it.
+
+PHASE 3 — THE ASK (after dissolution)
+
+The supported person or any circle member should be able to surface 
+an urgent need without the organizer building scaffolding first. 
+Design a direct ask flow: "I need Thursday covered — who's got it?" 
+goes to the circle immediately. One step, no project, no slots.
+
+WHAT NOT TO TOUCH YET
+
+- Auth and membership — correct as-is
+- The slot lifecycle (the mechanics work; only the language changes)
+- The invite link system (architecturally correct; link expiry is a 
+  Phase 4 hardening, not a Phase 1 priority)
+- The share page (Phase 4 — fix privacy defaults after dissolution 
+  is modelled)
+
+Zone 1 north star for every decision: does this feel like a circle 
+of people, or does it feel like a task queue? The circle of people 
+version is always shorter, quieter, and less permanent.
+
+Start with Phase 1. Show me the renamed surfaces before moving on.
