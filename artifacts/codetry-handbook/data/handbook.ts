@@ -59,6 +59,10 @@ const partPrologue: Part = {
         },
         {
           kind: "para",
+          text: "This handbook teaches you how to run a community economy — the vocabulary, the methods, and the repeatable moves that let a band council, a food co-op, or a community organisation build and hand forward systems it owns outright. It was written by a practitioner who built these systems in Northwestern Ontario and tested every word in the field. By the time you finish it, you will have the language to scope a problem, name the work precisely, and hand it over to the people who will run it — without importing someone else's assumptions along with the terminology.",
+        },
+        {
+          kind: "para",
           text: "This is the calm before the storm.",
         },
         {

@@ -86,142 +86,41 @@ export function BioPage() {
             style={{ borderColor: "hsl(var(--card-border))" }}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-[1.15fr_1fr] gap-6 sm:gap-8 print:gap-6 items-start">
-            <section
-              className="space-y-3 font-serif text-[14.5px] leading-[1.5]"
-              data-testid="bio-body"
-            >
+          <div className="space-y-3 font-serif text-[14.5px] leading-[1.5]" data-testid="bio-body">
               <p>
-                Bobbie is a Northwestern Ontario practitioner working in
-                food systems. Community development degree, years on the ground in
-                northern communities, and the founder and operator of
-                Parr&rsquo;s Jars — a small preserves business out of the
-                bush near Dryden that keeps her hands in the actual work
-                the operating plans are about.
+                Bobbie Parr holds a community development degree and has spent years on the ground in
+                northern Ontario communities — not as an outside advisor, but as someone who lives and
+                works in the territory the plans are about. She is the founder and operator of
+                Parr&rsquo;s Jars, a small preserves business out of the bush near Dryden, which
+                keeps her hands in the actual work: supply chains, seasonal realities, the economics
+                of a small food operation in the north.
               </p>
               <p>
-                She is the practitioner behind Headwaters and the codetry
-                practice: the author of the Practitioner Operating Plan,
-                the Codetry Handbook, and the community store operating
-                plan. The work is shipped, not proposed — a constellation
-                of running artifacts anyone can open and read for
-                themselves.
+                That combination — community development training, years of practical engagement, and
+                a running business of her own — is what shaped the Headwaters practice. When she
+                couldn&rsquo;t find the right tools for building food systems in northern
+                communities, she built them. When the existing language didn&rsquo;t fit, she wrote
+                the vocabulary from scratch.
               </p>
               <p>
-                The tools are practitioner-built: designed around the team
-                a community actually has, not the org chart the software
-                assumes. The voice is the same across all of it — plain,
-                dollar-honest, no startup-pitch tone.
+                <strong>Headwaters is the practice</strong> — food systems planning and community
+                economic development for northern organisations. <strong>Codetry is the
+                discipline it runs on</strong> — the method of building, naming, and handing over
+                systems that a community owns outright, without a consultant in the room to keep them
+                running.
               </p>
-            </section>
-
-            <section
-              className="rate-card rounded-md border-2 p-5 print:p-4"
-              style={{ borderColor: "hsl(var(--accent))" }}
-              data-testid="bio-rate-card"
-            >
-              <div className="flex items-baseline justify-between gap-3 mb-3">
-                <h2
-                  className="font-serif text-xl tracking-tight"
-                  data-testid="rate-card-title"
-                >
-                  Engagement fees
-                </h2>
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.22em]"
-                  style={{ color: "hsl(var(--accent))" }}
-                >
-                  engagement terms
-                </p>
-              </div>
-
-              <ul
-                className="divide-y"
-                style={{ borderColor: "hsl(var(--card-border))" }}
-              >
-                <RateRow
-                  label="Phase 1"
-                  amount="$28,000"
-                  note="6–8 weeks · fixed fee · defined scope · shorter engagement = reduced invoice"
-                  testId="rate-trial"
-                />
-                <RateRow
-                  label="Phase 2+"
-                  amount="Scoped per phase"
-                  note="Each phase is priced to its scope before work begins"
-                  testId="rate-fulltime"
-                />
-                <RateRow
-                  label="Travel & expenses"
-                  amount="At cost"
-                  note="Travel to site and expenses reimbursed at cost with receipts"
-                  testId="rate-travel"
-                />
-              </ul>
-
-              <p
-                className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.18em]"
-                style={{ color: "hsl(var(--muted-foreground))" }}
-                data-testid="rate-footnote"
-              >
-                All fees CAD · excludes HST
-              </p>
-            </section>
-          </div>
-
-          <hr
-            className="rule my-5 print:my-4"
-            style={{ borderColor: "hsl(var(--card-border))" }}
-          />
-
-          <section className="bio-skills" data-testid="bio-skills">
-            <div className="flex items-baseline justify-between gap-3 mb-3">
-              <h2
-                className="font-serif text-xl tracking-tight"
-                data-testid="skills-title"
-              >
-                Marketable skills
-              </h2>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.22em]"
-                style={{ color: "hsl(var(--accent))" }}
-              >
-                areas of practice
+              <p>
+                The work is shipped, not proposed — a constellation of running tools anyone can open
+                and read for themselves. The voice across all of it is plain, dollar-honest, no
+                startup-pitch tone.
               </p>
             </div>
 
-            <ul
-              className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-1 font-serif text-[14.5px] leading-[1.45]"
-              data-testid="skills-list"
-            >
-              <SkillPair
-                first="Website design"
-                second="Operational planning"
-                testId="skill-web-ops"
-              />
-              <SkillPair
-                first="App development"
-                second="Privacy hardware and devices"
-                testId="skill-app-privacy"
-              />
-              <SkillPair
-                first="Economic development (grassroots)"
-                second="grant writing"
-                testId="skill-econ-grants"
-              />
-              <SkillItem
-                label="Policy and procedure manuals"
-                testId="skill-policy"
-              />
-              <SkillItem label="Team handbooks" testId="skill-handbooks" />
-              <SkillItem label="Ghost writing" testId="skill-ghost" />
-            </ul>
-          </section>
-
           <hr
             className="rule my-5 print:my-4"
             style={{ borderColor: "hsl(var(--card-border))" }}
           />
+
 
           <section className="bio-work" data-testid="bio-work">
             <div className="flex items-baseline justify-between gap-3 mb-3">
@@ -327,8 +226,10 @@ export function BioPage() {
               className="font-serif text-[14.5px] leading-[1.5]"
               data-testid="contact-blurb"
             >
-              Reach out by email to scope a trial period or a community
-              engagement. Terms are on the rate card above.
+              If the work here looks like the problem your organisation is facing, the right
+              first move is a short message — what your community is trying to build, and where
+              you are in the process. Bobbie will write back directly. No proposal deck,
+              no sales call. Fee information is on the services page.
             </p>
 
             <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -338,7 +239,15 @@ export function BioPage() {
                 style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
                 data-testid="bio-cta-conversation"
               >
-                Start a conversation (short form) →
+                Reach out — short form →
+              </a>
+              <a
+                href={`${import.meta.env.BASE_URL}services#start`}
+                className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                data-testid="bio-cta-services"
+              >
+                See fees and how it starts →
               </a>
             </div>
 
@@ -389,70 +298,6 @@ export function BioPage() {
       </div>
     </main>
   );
-}
-
-interface RateRowProps {
-  label: string;
-  amount: string;
-  note: string;
-  testId: string;
-}
-
-function RateRow({ label, amount, note, testId }: RateRowProps) {
-  return (
-    <li
-      className="grid grid-cols-[1fr_auto] gap-3 py-2.5 first:pt-0 last:pb-0"
-      data-testid={testId}
-    >
-      <div>
-        <p className="font-serif text-[15px] leading-tight">
-          {label}
-        </p>
-        <p
-          className="font-sans text-[11px] mt-0.5 leading-tight"
-          style={{ color: "hsl(var(--muted-foreground))" }}
-        >
-          {note}
-        </p>
-      </div>
-      <p
-        className="font-mono text-[14px] tracking-tight self-start text-right whitespace-nowrap"
-        style={{ color: "hsl(var(--primary))" }}
-      >
-        {amount}
-      </p>
-    </li>
-  );
-}
-
-interface SkillPairProps {
-  first: string;
-  second: string;
-  testId: string;
-}
-
-function SkillPair({ first, second, testId }: SkillPairProps) {
-  return (
-    <li className="flex flex-wrap items-baseline gap-x-2" data-testid={testId}>
-      <span>{first}</span>
-      <span
-        className="font-mono text-[13px]"
-        style={{ color: "hsl(var(--accent))" }}
-      >
-        +
-      </span>
-      <span>{second}</span>
-    </li>
-  );
-}
-
-interface SkillItemProps {
-  label: string;
-  testId: string;
-}
-
-function SkillItem({ label, testId }: SkillItemProps) {
-  return <li data-testid={testId}>{label}</li>;
 }
 
 interface WorkLinkProps {

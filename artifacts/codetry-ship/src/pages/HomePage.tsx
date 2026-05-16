@@ -86,7 +86,7 @@ export function HomePage() {
               className="hover:opacity-80 transition-opacity"
               style={{ color: "hsl(38 36% 96%)" }}
             >
-              Bobbie Parr — practitioner, Headwaters
+              Bobbie Parr — practitioner, Headwaters · Northwestern Ontario
             </a>
           </p>
           <h1
@@ -96,10 +96,16 @@ export function HomePage() {
             Build it. Hand it off.<br className="hidden sm:block" /> Let the community run it.
           </h1>
           <p
-            className="font-serif text-base sm:text-lg italic mb-8 opacity-75"
+            className="font-serif text-base sm:text-lg italic mb-4 opacity-75"
             data-testid="home-tagline"
           >
-            Food systems planning and sovereign tools for northern communities — practitioner-built, flat fee, no retainer required.
+            For band councils and northern community organisations building food systems and community-owned economies — practitioner-built, flat fee, no retainer required.
+          </p>
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.2em] mb-8 opacity-70"
+            data-testid="home-name-hierarchy"
+          >
+            Headwaters is the practice · Codetry is the discipline it runs on
           </p>
 
           {/* Two real buttons side by side */}
@@ -144,6 +150,104 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
+        {/* ── how it starts ── */}
+        <section data-testid="home-how-it-starts">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            the first step
+          </p>
+          <h2
+            className="font-serif text-3xl tracking-tight mb-1"
+            data-testid="how-it-starts-heading"
+          >
+            A trial period, not a contract
+          </h2>
+          <p
+            className="font-serif text-[15px] italic mb-8"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
+            {[
+              { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
+              { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
+              { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
+              { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
+            ].map(({ step, label, body }) => (
+              <div
+                key={step}
+                className="rounded-md border bg-card p-5"
+                style={{ borderColor: "hsl(var(--card-border))" }}
+              >
+                <div
+                  className="font-mono text-[11px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+                >
+                  {step}
+                </div>
+                <p className="font-serif text-[15px] font-medium tracking-tight mb-1.5">{label}</p>
+                <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                  {body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="rounded-md border px-5 py-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
+            style={{ borderColor: "hsl(var(--accent))", borderStyle: "dashed", background: "hsl(var(--card))" }}
+            data-testid="flat-fee-callout"
+          >
+            <div
+              className="shrink-0 rounded-sm px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em]"
+              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+            >
+              How we charge
+            </div>
+            <p className="font-serif text-[14px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+              <strong style={{ color: "hsl(var(--foreground))" }}>Flat fee, not hourly.</strong>{" "}
+              You own every deliverable at handoff — no licensing, no retainer required to keep it working. The community keeps the tools.
+            </p>
+          </div>
+
+          <div
+            className="rounded-md border p-6 sm:p-8"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
+              phase fees
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
+                { label: "Phase 2+", value: "Scoped per phase", note: "Each subsequent phase is priced to its scope before work begins." },
+                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
+              ].map(({ label, value, note }) => (
+                <div key={label}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
+                  <p className="font-serif text-2xl font-medium tracking-tight mb-1">{value}</p>
+                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
+                </div>
+              ))}
+            </div>
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
+              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
+            >
+              All fees CAD · excludes HST
+            </p>
+          </div>
+        </section>
+
+        <hr
+          className="my-12 sm:my-16"
+          style={{ borderColor: "hsl(var(--card-border))" }}
+        />
+
         {/* ── the work ── */}
         <section data-testid="home-work">
           <div
@@ -171,7 +275,7 @@ export function HomePage() {
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="work-explainer"
           >
-            Seven simple tools. One community economy. Each tool connects to the next — learn the work, track the work, account for the work, and everything behind them that makes it run.
+            Seven simple tools. One community economy. <strong>Headwaters is the practice</strong> — the food systems and economic development work. <strong>Codetry is the discipline it runs on</strong> — the method for building and handing over systems that communities own outright. Each tool connects to the next: learn the work, track the work, account for the work, and everything behind them that makes it run.
           </p>
 
           {/* ── three entry cards replacing the blunt full-width services button ── */}
@@ -503,104 +607,6 @@ export function HomePage() {
           style={{ borderColor: "hsl(var(--card-border))" }}
         />
 
-        {/* ── how it starts ── */}
-        <section data-testid="home-how-it-starts">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
-            style={{ color: "hsl(var(--accent))" }}
-          >
-            the first step
-          </p>
-          <h2
-            className="font-serif text-3xl tracking-tight mb-1"
-            data-testid="how-it-starts-heading"
-          >
-            A trial period, not a contract
-          </h2>
-          <p
-            className="font-serif text-[15px] italic mb-8"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-10">
-            {[
-              { step: "1", label: "Send a message", body: "Tell us what your community is trying to build. A sentence or two is enough." },
-              { step: "2", label: "Phase 1", body: "6–8 weeks, fixed fee, bounded scope. You get something real at the end whether or not it continues." },
-              { step: "3", label: "Decision point", body: "If the fit is right, the next phase begins. If not, you leave with something useful and no obligation." },
-              { step: "4", label: "Continue", body: "Each phase has its own scope, fee, and deliverables. Renewed only if the work calls for it." },
-            ].map(({ step, label, body }) => (
-              <div
-                key={step}
-                className="rounded-md border bg-card p-5"
-                style={{ borderColor: "hsl(var(--card-border))" }}
-              >
-                <div
-                  className="font-mono text-[11px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
-                >
-                  {step}
-                </div>
-                <p className="font-serif text-[15px] font-medium tracking-tight mb-1.5">{label}</p>
-                <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  {body}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div
-            className="rounded-md border px-5 py-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
-            style={{ borderColor: "hsl(var(--accent))", borderStyle: "dashed", background: "hsl(var(--card))" }}
-            data-testid="flat-fee-callout"
-          >
-            <div
-              className="shrink-0 rounded-sm px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em]"
-              style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
-            >
-              How we charge
-            </div>
-            <p className="font-serif text-[14px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              <strong style={{ color: "hsl(var(--foreground))" }}>Flat fee, not hourly.</strong>{" "}
-              You own every deliverable at handoff — no licensing, no retainer required to keep it working. The community keeps the tools.
-            </p>
-          </div>
-
-          <div
-            className="rounded-md border p-6 sm:p-8"
-            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
-          >
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
-              phase fees
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {[
-                { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
-                { label: "Phase 2+", value: "Scoped per phase", note: "Each subsequent phase is priced to its scope before work begins." },
-                { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
-              ].map(({ label, value, note }) => (
-                <div key={label}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
-                  <p className="font-serif text-2xl font-medium tracking-tight mb-1">{value}</p>
-                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
-                </div>
-              ))}
-            </div>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
-              style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
-            >
-              All fees CAD · excludes HST
-            </p>
-          </div>
-        </section>
-
-        <hr
-          className="my-12 sm:my-16"
-          style={{ borderColor: "hsl(var(--card-border))" }}
-        />
-
         {/* ── start a conversation ── */}
         <section id="conversation" data-testid="home-intake">
           <p
@@ -828,10 +834,12 @@ export function HomePage() {
             style={{ color: "hsl(var(--muted-foreground))" }}
             data-testid="about-body"
           >
-            Northwestern Ontario practitioner. Community development degree, years on the ground in
-            northern communities, and the founder of Parr&rsquo;s Jars — a small preserves business
-            out of the bush near Dryden that keeps her hands in the actual work the operating plans
-            are about. The voice is the same across all of it: plain, dollar-honest, no startup-pitch tone.
+            Community development degree, years on the ground in northern communities, and the founder
+            of Parr&rsquo;s Jars — a small preserves business out of the bush near Dryden that keeps
+            her hands in the actual work the operating plans are about. She built Headwaters to solve
+            the problems she couldn&rsquo;t find help for: how a northern organisation plans a food
+            system, owns its own tools, and hands them forward without a consultant in the room. The
+            voice is plain, dollar-honest, no startup-pitch tone.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -849,7 +857,7 @@ export function HomePage() {
               style={{ color: "hsl(var(--muted-foreground))" }}
               data-testid="link-bio"
             >
-              Read the bio
+              Is Bobbie the right fit? Read the bio →
             </a>
           </div>
         </section>

@@ -41,10 +41,10 @@ export function WorkPage() {
             <div className="relative flex items-start justify-between gap-6">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5 opacity-70">
-                  Origin story · How the practice found its shape
+                  Origin story · The dual-identity problem every northern practitioner faces
                 </p>
                 <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-                  Parr's Jars — the rebrand that separated two identities
+                  Parr's Jars — what it takes to hold two identities without losing either one
                 </h2>
               </div>
               <img
@@ -58,7 +58,7 @@ export function WorkPage() {
 
           {/* summary blurb */}
           <p className="font-serif text-[15px] leading-[1.65] mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
-            A small-batch preserves business had grown into two distinct lines — food products and community consulting — but was still running on one brand that fit neither. This engagement rebuilt the visual identity from the ground up so both sides of the business could stand on their own.
+            Most northern practitioners carry two identities at once — the community-facing work, and the funding-facing work. The language that works at a farmers market table does not work in a band council resolution, and trying to run both under one name muddies both signals. This is the problem Bobbie solved for Parr&rsquo;s Jars, and it is the same problem her clients bring to Headwaters.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-8">
@@ -132,7 +132,7 @@ export function WorkPage() {
                   Community client · Platform delivery · Founding board
                 </p>
                 <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">
-                  807 Food Co-op — membership platform
+                  807 Food Co-op — working platform in 8 weeks, $0 in licensing fees, board owns it outright
                 </h2>
               </div>
               <img
@@ -146,7 +146,7 @@ export function WorkPage() {
 
           {/* summary blurb */}
           <p className="font-serif text-[15px] leading-[1.65] mb-5" style={{ color: "hsl(var(--muted-foreground))" }}>
-            A Northwestern Ontario food co-op needed a complete member portal, producer onboarding system, and board governance tooling — all ready before launch, and built alongside the bylaws rather than after them. The platform builder also sat on the founding board.
+            The founding board of a new Northwestern Ontario food co-op needed a working platform before their launch — not a proposal, not a prototype. Member registration, equity tracking, producer onboarding, board administration, and AGM tooling, all built in 8 weeks alongside the bylaws, and handed off so the board owns it outright with no ongoing licensing fees.
           </p>
           <div
             className="flex flex-wrap gap-3 mb-8"
@@ -280,11 +280,20 @@ export function WorkPage() {
               Start a conversation (short form) →
             </a>
             <a
+              href="https://community-knowledge-hub.replit.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              See how the 807 platform was built →
+            </a>
+            <a
               href={`${import.meta.env.BASE_URL}services`}
               className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
-              See what the work looks like
+              See what the work looks like →
             </a>
           </div>
         </section>
