@@ -74,14 +74,20 @@ export default function RootLayout() {
     JetBrainsMono_500Medium,
     JetBrainsMono_600SemiBold,
   });
+  const [fontTimedOut, setFontTimedOut] = React.useState(false);
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    const t = setTimeout(() => setFontTimedOut(true), 4000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded || fontError || fontTimedOut) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError, fontTimedOut]);
 
-  if (!fontsLoaded && !fontError) return null;
+  if (!fontsLoaded && !fontError && !fontTimedOut) return null;
 
   return (
     <SafeAreaProvider>
