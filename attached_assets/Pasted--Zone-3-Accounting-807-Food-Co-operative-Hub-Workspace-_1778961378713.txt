@@ -1,0 +1,241 @@
+# Zone 3 Accounting — 807 Food Co-operative & Hub Workspace
+**For:** Headwaters practitioner workspace agent  
+**From:** 807 / Headwaters platform agent (this Replit)  
+**Date:** May 2026  
+**Status:** Honest first-pass. Gaps named, not filled.
+
+---
+
+## 1. What Lives Here
+
+This workspace is entirely Zone 3. Everything it contains operates at the organizational layer — 807 Food Co-operative & Hub as an institution, plus the Headwaters platform that licenses the software to 807 and future co-operative tenants.
+
+### Artifacts
+
+| Artifact | Path | For | Status |
+|---|---|---|---|
+| **807 Benefits Membership** | `artifacts/807-benefits` | 807 members, producers, and board | Live and in use |
+| **API Server** | `artifacts/api-server` | Serves all artifacts | Live and in use |
+| **Deadhead** | `artifacts/deadhead` | Bobbie in her founder role (not her household role) | Live, founder-only |
+| **Market Mosaic** | `artifacts/market-mosaic` | Market coordinators, vendors, shoppers | In active development |
+| **Grants Finder** | `artifacts/grants-finder` | 807 board grant team (invited members only) | In active development |
+| **807 Garden** | `artifacts/807-garden` | 807 community members (mobile) | Prototype / early access |
+| **Standby Supplies** | `artifacts/standby-supplies` | Northern households — Zone-3-winter-adapted preparedness | Live, static |
+| **Rootwork** | `artifacts/parrs-jars-studio` | Headwaters-licensed practitioners (not 807 members) | Pilot-ready, pre-launch |
+
+### Key Shared Packages
+
+| Package | Path | Role |
+|---|---|---|
+| `@workspace/db` | `lib/db` | Drizzle ORM schema + encrypted field helpers — shared by all backend routes |
+| `@workspace/api-client-react` | `lib/api-client-react` | Generated React Query hooks from OpenAPI spec — frontend contract |
+| `@workspace/api-spec` | `lib/api-spec` | OpenAPI contract (source of truth for codegen) |
+
+### Significant Modules
+
+- **Treasurer Calm Monthly Journey** — `artifacts/807-benefits/src/pages/board-treasurer.tsx` (~7,600 lines). The most complex single component. Covers HST, reconciliation, year-end package generation, asset register, bank registry, dues, payout cycles, and the annual financial review card.
+- **Tenant Seam** — `artifacts/api-server/src/config/tenant.ts`. The abstraction point for future Headwaters licensees. Currently hardcoded to `"807"`. The seam exists; the second tenant does not.
+- **Seasonal Clock** — `artifacts/807-benefits/src/lib/season.ts`. Six custom NWO seasons (Deep Winter → Fall) used for context-aware UI, not cosmetics.
+- **Payout Reconciliation** — `artifacts/api-server/src/lib/payoutImportParser.ts`. Parses CSV payout exports and links them to the ledger.
+- **Stuck Board** — `artifacts/api-server/src/lib/stuckItems.ts`. Aggregates aging tasks across domains for the board.
+- **AGM Guide** — `artifacts/api-server/public/agm/`. Mobile-first annual meeting guide with live secretary notes (PIN-gated). Designed to become a reusable AGM Builder product in the board dashboard.
+
+---
+
+## 2. The Eave Relationship
+
+### What Zone 3 Can See
+- All 807 institutional data: membership tiers, producer sales, round reports, board minutes, HST filings, grant applications, event records, partner inquiries
+- Aggregated financial summaries (not raw household transactions)
+- Producer-level sales data, accessible to that producer and admins only
+
+### What Zone 3 Cannot Reach
+- Bobbie's personal Zone 0/1 data (household finances, personal calendar, private messages) — this is structurally absent from the schema, not just hidden
+- The workspace has no pull on Zone 0 data at all. There is no sync, no feed, no import path from household to institutional layer
+
+### Technical Enforcement of the Eave
+
+The Eave is enforced in four layers:
+
+1. **Authentication (Clerk)** — `artifacts/api-server/src/middlewares/clerkProxyMiddleware.ts`. Every request must carry a valid Clerk session. Unauthenticated requests reach no data.
+
+2. **Role middleware** — `requireAdmin`, `requireBoard`, `requireSeats("treasurer")` in route handlers. Board data (minutes, agendas, financial controls) is gated by seat. Producer data is scoped by `producer_slug` — producers can only read their own rows.
+
+3. **Object ACL** — `artifacts/api-server/src/lib/objectAcl.ts`. File objects (NWHU forms, licences) carry a JSON policy stored with the object. `canAccessObject()` is called before any file is streamed. Policy values: `owner`, `admin`, or explicit seat list.
+
+4. **Encryption at rest** — `encryptField` / `decryptFieldOrPassthrough` (AES-256-GCM). Applied to sensitive free-text fields: board minute bodies, partner inquiry messages, producer notes. Even a direct DB read returns ciphertext.
+
+### Governance Model for Crossing the Eave
+There is no formal consent/handshake protocol at this layer yet. The Eave is enforced technically (auth + RBAC + ACL) but there is no documented governance artifact — no consent record, no delegation model, no "Eave crossing" log. This is a gap.
+
+---
+
+## 3. The Governing Constraint
+
+**The tenant seam is the load-bearing design constraint at Zone 3.**
+
+Equivalent to the Saltbox at Zone 0, the tenant seam is the structural rule that prevents 807's board from becoming the platform operator. It reads:
+
+> *Multi-tenancy is a Headwaters commercial decision. 807 is tenant `"807"` — the first licensee, not the vendor. The board has no authority to onboard or configure new co-op tenants.*
+
+In code: `artifacts/api-server/src/config/tenant.ts` exports `getTenant()` which currently returns `"807"` unconditionally. The registry pattern is in place; the second slot is empty by design.
+
+Consequence: every feature built for 807 must be architecturally reusable by a future tenant. Features that are 807-specific are isolated in tenant config files, not hardcoded into business logic.
+
+---
+
+## 4. Vocabulary Discipline
+
+### Terms With Settled Definitions
+
+| Term | Zone 3 Definition | Notes |
+|---|---|---|
+| **Round** | A single distribution event (one Wednesday pickup) | Used in `treasurer_round_reports`. Not interchangeable with Cycle. |
+| **Cycle** | A monthly (4-week) producer payout period, Monday-anchored | `producer_payout_cycles` schema. Closes after all rounds in the window. |
+| **Pickup** | A scheduled order collection point (day + town) | Configured per tenant. Missed pickups may be "paid forward" to food banks. |
+| **Producer** | A member who sells goods through the co-op | Two streams: **Online** (Local Line only) and **Hub** (Online + shared storage + orientation) |
+| **Member** | Anyone with a co-op membership | Two views: **Household** (Community members) and **Business** (Producers) |
+| **Tier** | Informal — the code prefers **stream** or **class** for formal distinctions | "Tier" appears in UI copy; not in schema column names |
+| **Tenant** | A Headwaters licensee (one co-op) | 807 is `"807"`. Tenant slug drives config lookup. |
+| **Eave** | Not yet a first-class term in this codebase | Concept exists; no code symbol or constant named `eave` |
+
+### Both-Sides Test (vernacular vs. grant language)
+The clearest stress point is **producer** vs. **vendor**. In grant language (NOHFC, FedNor), 807's producers are called "vendors" or "local food producers." In co-op vernacular, they are members with producer status. The codebase uses `producer` throughout; grant applications use `vendor` in prose. No code-level reconciliation — this lives in the treasurer's head and in document templates.
+
+**Round** also carries tension: internally it means one distribution event; externally (Local Line API) a "round" is their own concept. The two are mapped but not formally documented.
+
+### Loose Edges
+- **Hub** — means both the physical co-op hub location and the producer membership stream that includes shared storage. One word, two referents.
+- **Coordinator** — used for market coordinators (Market Mosaic), partner shop coordinators, and informally for board members managing a domain. Not disambiguated in schema or middleware.
+
+### Codetry Passes
+No published codetry pass API endpoints. Vocabulary decisions are encoded in:
+- `artifacts/807-benefits/src/config/audienceCopy.ts` — community vs. producer view language
+- `artifacts/807-benefits/src/lib/season.ts` — NWO season definitions with explicit rationale
+- `replit.md` — architectural decisions section (informal decision log)
+
+---
+
+## 5. Codetry Constellation
+
+**Zone designation: confirmed Zone 3.** Boundary note: Deadhead and Rootwork both touch Zone 4/5 territory (founder-as-practitioner, Headwaters as platform vendor), but they are hosted here and operate through Zone 3 infrastructure.
+
+### What Zone 3 Proves
+That a co-operative with sub-$250K revenue can run full governance — treasurer tooling, producer payouts, AGM documentation, grant management, kitchen rental routing, member tier management — on a single-tenant platform without a full-time technical staff. The 2025 fiscal year is the live reference case.
+
+### What Other Zones Depend on That Zone 3 Produces
+- **Zone 0/1** (Bobbie's household): no dependency declared. The platform does not feed data to the household layer.
+- **Rootwork practitioners (Zone 4/5)**: the 807 deployment is the proof case that Rootwork sells. The `docs/zone3-financial-model.md` (just merged) quantifies this. Practitioners cite 807 as the live reference.
+- **Headwaters (platform vendor layer)**: depends on 807 remaining operational to validate the license model and attract future tenants.
+
+### Codetry Pass Endpoints
+None currently. Board minute bodies, AGM notes, and grant workspace content are stored encrypted. No public API for codetry outputs. The AGM guide (`/agm/`) is the closest thing to a published structured document — readable by anyone with the URL.
+
+---
+
+## 6. Honest Accounting
+
+### Built and Working
+- Membership management (Community, Sustaining, Harvest, Producer Basic/Premium tiers)
+- Square webhook payment processing
+- Treasurer dashboard: HST, reconciliation, year-end package, bank registry, asset register
+- Producer sales dashboard, payout cycles, HST export
+- Event management with moderation and calendar subscription
+- Partner inquiries (partner co-ops, kitchen rental) with acknowledgement emails and spam filtering
+- Board operations: minutes, agendas, stuck board, seasonal clock
+- AGM guide with live secretary notes (May 2026 deployment)
+- Deadhead: idea vetting, spotter magic links, triage sync
+- Grants Finder: NOHFC Grow Application workspace
+- Standby Supplies: static guidebook (live, no backend)
+
+### In Progress
+- Market Mosaic: marketplace core is running but ~50 moderation, admin, and seller-side features remain proposed
+- 807 Garden: functional prototype, not in community hands yet
+- Rootwork: pilot-ready, awaiting name lock and first pilot outreach
+
+### Vision Only
+- Full multi-tenancy (second tenant slot, tenant-scoped DB rows)
+- Stripe Connect as a real card-payment rail (currently modelled, not wired)
+- Zone 0 → Zone 3 consent handshake / Eave crossing governance artifact
+- AGM Builder as a reusable product (currently a one-off HTML template)
+- Formal codetry pass endpoints
+
+### The Gap
+The platform is functionally complete for 807's current operating scale. The gap between what exists and what the zone model calls for is governance formalism: the Eave is enforced technically but not documented as a consent architecture. There is no artifact that explains, to a member or auditor, how data flows between zones and what the handshake looks like. That document doesn't exist.
+
+---
+
+## 7. Tech Stack and Structure
+
+```
+artifacts/
+  807-benefits/     React + Vite + Tailwind + Clerk + TanStack Query
+  api-server/       Express 5 + Drizzle ORM + PostgreSQL + Clerk + Resend
+  deadhead/         React + Vite + Clerk
+  market-mosaic/    React + Vite + Tailwind + Clerk
+  grants-finder/    React + Vite + Tailwind + Clerk
+  807-garden/       Expo (React Native)
+  parrs-jars-studio/ React + Vite + Tailwind (Rootwork)
+  standby-supplies/ React + Vite (static)
+
+lib/
+  db/               Drizzle schema + migrations + encrypted field helpers
+  api-spec/         OpenAPI spec (source of codegen)
+  api-client-react/ Generated React Query hooks + Zod schemas
+
+Runtime: Node.js 24 / TypeScript 5.9
+ORM: Drizzle (PostgreSQL)
+Auth: Clerk (whitelabel, Replit-managed tenant)
+Payments: Square Payment Links + webhooks
+Email: Resend
+File storage: Replit Object Storage (with ACL)
+AI: None currently in production routes (Grants Finder uses AI matching, gated)
+```
+
+### Database Privacy Decisions
+- Sensitive free-text (board minutes, inquiry messages, producer notes) encrypted at rest with AES-256-GCM
+- No `tenant_id` column on member-facing tables yet — tenancy enforced at application layer
+- `BACKUP_ENCRYPTION_KEY` environment secret for backup encryption (separate from field-level key)
+- No personal biometric or financial data at Zone 0 granularity — the schema stops at co-op transaction level
+
+### AI Usage
+- Grants Finder uses LLM matching for grant-to-project fit scoring. PII is redacted before the outbound call via `artifacts/api-server/src/lib/grants/redact.ts` — names, emails, org names, and dollar amounts are replaced with stable placeholders before the prompt leaves the server.
+- No other AI in production routes.
+
+### Cross-Project Dependencies
+- **Zone 0/1 → Zone 3**: No declared dependency. Zone 3 does not pull from Zone 0.
+- **Zone 3 → Rootwork (Zone 4/5)**: Rootwork practitioners are onboarded separately at `rootwork.coop`. The 807 platform does not push data to Rootwork. The dependency is referential (807 as proof case), not technical.
+
+---
+
+## 8. Locked Decisions
+
+These should not be reopened without Bobbie's explicit instruction:
+
+1. **Multi-tenancy is Headwaters' decision.** 807's board has no authority to onboard new tenants. The tenant seam exists for Headwaters to use, not 807 to configure.
+2. **Clerk for authentication.** Not Replit Auth. Not rolling a custom session system.
+3. **Square for payment processing.** Stripe Connect is modelled but not wired. The Square integration is live and trusted.
+4. **Encryption at rest for sensitive free-text.** `encryptField` is applied at the route layer before insert. Removal would require a migration and a security review.
+5. **One API server, shared by all artifacts.** Routes are path-prefixed. No separate API per artifact.
+6. **The seasonal clock is NWO-specific.** Six seasons, not four. This is not cosmetic — it drives UI context. Do not flatten to standard seasons.
+7. **"Rootwork" is the working name (not yet locked).** This is the one vocabulary decision explicitly held open by Bobbie as of May 2026.
+
+---
+
+## 9. Open Questions That Belong to Bobbie
+
+1. **Rootwork name lock.** Pilot outreach is imminent. The name is still "working." Once pilots hear it, retracting costs trust. Decision point: now.
+
+2. **Eave governance artifact.** The technical Eave exists. The governance document — what it means, who consented, how crossing is permitted — does not. Does Bobbie want this formalized before Rootwork goes to external pilots?
+
+3. **807 Garden launch timing.** The prototype is functional. What triggers community access — board resolution, soft launch, something else?
+
+4. **AGM Builder productization.** The May 2026 AGM guide is a one-off HTML template. The replit.md explicitly flags this as a candidate for productization. Has Bobbie decided whether this becomes a Headwaters product or stays a 807 tool?
+
+5. **Zone 0 connection model.** The platform has no formal path from Zone 3 back to Zone 0. If 807's data (e.g., producer income, membership payments) should be importable into Bobbie's household financial picture, what is the consent model and the data format?
+
+6. **Accountant appointment resolution.** As of the May 23, 2026 AGM: did the extraordinary resolution (80% member vote) to waive the external accountant requirement get formally recorded in the minutes? Josh Butler's engagement covers the 2025 compilation — but the waiver must be renewed annually.
+
+---
+
+*Precision over completeness. Named gaps are honest; filled gaps would be fiction.*
