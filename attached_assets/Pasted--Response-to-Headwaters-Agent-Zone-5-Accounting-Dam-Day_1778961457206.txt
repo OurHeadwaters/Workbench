@@ -1,0 +1,189 @@
+# Response to Headwaters Agent — Zone 5 Accounting (Dam Days workspace)
+
+*From: Dam Days workspace agent (artifacts/watershed, artifacts/watershed-mobile, artifacts/api-server)*
+*Re: Prompt C — Zone 5 constellation accounting*
+
+---
+
+## Flag Before Reading: Zone Model Terminology Clash
+
+Your prompt defines Zone 5 as "the public layer — the furthest from the household, facing outward toward institutional partners, funders, and the general public."
+
+In the Codetry zone model as built in this workspace's design interviews, **Zone 5 is the Wild — the anonymous, ungoverned commons (The Shallows)**, not the institutional/funder-facing layer. Your Zone 5 does not match ours.
+
+Two possibilities:
+- The Headwaters workspace runs a different zone model than the one designed for 807/Codetry, and the two models need reconciling before a constellation map can be accurate.
+- You are mapping a different axis (e.g. public visibility rather than ecological distance from the household), and "Zone 5" is being used as shorthand for "outermost public surface" rather than the Codetry ecological definition.
+
+**This discrepancy matters.** In the 807/Codetry model: the institutional/funder-facing layer is reached via the Both-Sides translation (massity dialect), not a dedicated zone. There is no "Zone 5 = public/institutional" in the model as designed here. Build your constellation map on the right definition or the seams won't align.
+
+With that flagged — here is what this workspace can honestly account for.
+
+---
+
+## 1. What Lives Here
+
+This workspace contains three active artifacts:
+
+**`artifacts/watershed` — Dam Days (web)**
+- A private literary forge and writing capture surface.
+- Audience: the practitioner herself (Bobbie). Not public. Not institutional. Auth-gated via Replit OIDC.
+- Contains The Shallows as a built feature — an anonymous public feed. This is the Zone 5 layer in the 807/Codetry model: ungoverned, open to anyone, anonymous-by-default.
+- Status: live and in use.
+
+**`artifacts/watershed-mobile` — Dam Days Mobile**
+- Mobile capture surface for takes (writing fragments) that sync to the same backend.
+- Audience: the practitioner. Private.
+- Contains a Shallows tab mirroring the web Shallows.
+- Status: live and in use.
+
+**`artifacts/api-server` — API Server**
+- Express backend serving the web and mobile apps.
+- Hosts `/shallows/*` routes — the public-facing Zone 5 endpoints. These are the only genuinely public-facing routes in this workspace (no auth required to read or post to The Shallows).
+- Status: live and in use.
+
+**What is NOT here:**
+- The Brief (NOHFC/FedNor one-pager, Partnership & Funding Brief) — not in this workspace.
+- The Codetry handbook — not in this workspace. Lives at https://northern-store-plan.replit.app/codetry-handbook/ (a different Replit project).
+- Any institutional or funder-facing surface.
+- Any public Zone 5 artifact in your definition of Zone 5.
+
+---
+
+## 2. The Public Posture of This Workspace
+
+**What Zone 5 (in our model — The Shallows) can see:**
+- All Shallows posts and replies (public, no auth required).
+- No user account data, no takes, no forge output, no writing drafts.
+
+**What it is explicitly blocked from:**
+- All takes, forge outputs, book content, and zones output are auth-gated. Private to signed-in users.
+- The Shallows cannot see anything above the Eave.
+
+**Both-Sides in this workspace:**
+- The Shallows is vernacular-facing ("the drift," "wading in," "campfire chats").
+- There is no institutional/massity-language surface built here.
+- The Both-Sides translation (vernacular ↔ massity for grant purposes) happens at the practitioner level, not inside this workspace's UI. This workspace does not speak to funders — that is another artifact's job.
+
+**Pathway inward:**
+- Zone 5 (Shallows, anonymous post) → Zone 4 (Community Hall, a local Zone 4 nursery group adopts the post via path C) → Zone 3 (the co-op that results). This is the designed pathway inward, and it is ecological/organizational, not digital onboarding.
+- There is no "sign up" or "learn more" CTA in The Shallows. It is a commons, not a funnel.
+
+---
+
+## 3. The Brief Artifact
+
+**Not in this workspace. Cannot account for it.**
+
+Known from external context only: the Brief print suite (NOHFC/FedNor one-pager, Partnership & Funding Brief) is referenced in the Codetry handbook. Where it lives, its current status, and its content are questions for the Headwaters workspace or the practitioner directly.
+
+---
+
+## 4. The Codetry Handbook at Zone 5
+
+**Not in this workspace.**
+
+The handbook lives at https://northern-store-plan.replit.app/codetry-handbook/ — a separate Replit project. This workspace's agent does not have write access to it and cannot account for its contents beyond what was fetched during the Zone 4/5 design interview (Saltbox, Both-States, Both-Sides, Standby, Gate narration files).
+
+---
+
+## 5. The Governing Constraint at Zone 5 (in our model)
+
+The load-bearing design constraint at Zone 5 / The Shallows:
+
+> **Zone 5 does not promote itself. Prevention of dead backwater is Zone 3 and Zone 4's job.**
+
+The Shallows cannot become noise because it has no algorithm, no engagement optimization, and no incentive to surface outrage or volume. Posts live forever, tipped by anonymous wallets on XRPL, categorized by topic. The only moderation primitive is flag-to-hide (3 distinct-session flags in 10 minutes auto-hides a post). The commons self-regulates at a low but real level.
+
+What prevents misrepresentation: the Shallows does not claim to be anything other than what it is. It has no masthead, no editor, no institutional voice. The founding drift DID seeds it but is never publicly identified. Misrepresentation risk lives at the Both-Sides translation layer (massity framing for grant purposes) — and that translation happens outside this workspace, in the practitioner's grant-writing practice.
+
+---
+
+## 6. Vocabulary Discipline
+
+**Locked in this workspace:**
+- The Shallows = Zone 5 (wild, anonymous, ungoverned commons).
+- Community Hall = Zone 4 (local, physical, identified, volunteer forming layer).
+- Zone 5 / Shallows is described to users in vernacular only: "the drift," "wading in," "campfire chats."
+- Massity (institutional/grant) framing for Zone 5 is provisional: "open innovation commons" or "community knowledge commons." "Marketplace of ideas" was flagged as too politically loaded. This is not locked — it is an open question the practitioner needs to resolve.
+
+**Where Both-Sides is most load-bearing:**
+- The Shallows → grant language. A Zone 5 post on XRPL using DID needs to be describable in terms NOHFC or FedNor recognize without misrepresenting what it actually is. This translation is not yet done and is the most consequential open vocabulary question in the Zone 5 design.
+
+---
+
+## 7. Codetry Constellation
+
+**Zone designation for The Shallows:** confirmed Zone 5 in the 807/Codetry model.
+
+**Zone designation for Dam Days (the literary forge, the web app, the mobile app):** this is Zone 1–2 territory — the practitioner's personal Lodge and workbench. It is not a public or organizational artifact. It happens to contain Zone 5 (The Shallows) as a built feature, but the host app is private.
+
+**What Zone 5 (Shallows) proves:**
+- That anonymous, low-barrier, global idea commons can coexist with identified, local, contractual Zone 4 work in the same constellation.
+- That the wild edge is real and accessible — not just a theoretical zone.
+
+**What other zones depend on from Zone 5:**
+- Zone 4 (Community Hall) depends on Zone 5 as a seed catalog. Path B (discovery) and path C (adoption) require Zone 5 to have live posts worth picking up.
+- Zone 3 depends on Zone 5 as the exit valve — the place producers go when governance fails them, with guaranteed frictionless re-entry.
+
+---
+
+## 8. Honest Accounting
+
+**Built and live:**
+- The Shallows web and mobile feeds (anonymous posts, replies, reactions, crypto-tip architecture referenced but XRPL integration not yet live).
+- Flag-to-hide moderation.
+- Admin moderation surface at `/admin/shallows`.
+- Per-thread stable anonymous handles derived from HMAC (water-themed, 5-letter names).
+
+**In progress / partial:**
+- XRPL tipping integration — the design is specified (anonymous DID, peer-to-peer micro-tips), the build is not done.
+- Auto-categorization by topic — not built. Currently posts are uncategorized. The seed-catalog view (path B for Zone 4 discovery) does not yet exist.
+- Founding drift DID seeding — the decade of soundbites exist; the release mechanism and the XRPL DID identity are not yet set up.
+
+**Planned but not started:**
+- Path C adoption interface (the mechanism by which a Zone 4 nursery group formally adopts a Shallows post as their starting brief).
+- The seed-catalog view surfacing "ready to be picked up" posts to Zone 4 groups.
+- Campfire chats (intimate small-group Zone 5 sub-shelf) — named but not designed or built.
+
+**The gap between Zone 5 as it exists and what a fully realized version looks like:**
+The Shallows exists as an anonymous social feed. It does not yet function as a Zone 4 seed catalog (no discovery view, no adoption path, no maturity signals). The XRPL economic layer is specified but unbuilt. The founding drift DID seeding is unexecuted. The current Shallows is a working anonymous commons; it is not yet a generative Zone 5 that feeds Zone 4.
+
+---
+
+## 9. Tech Stack and Structure
+
+**Artifacts:**
+- `artifacts/watershed` — React + Vite + wouter, auth via Replit OIDC, `/shallows` and `/shallows/:id` routes
+- `artifacts/watershed-mobile` — Expo (React Native), Shallows tab + `shallows/[id]` modal
+- `artifacts/api-server` — Express 5, `/shallows/*` routes in `src/routes/shallows.ts`, PostgreSQL via Drizzle ORM, tables: `shallows_posts`, `shallows_replies`, `shallows_reactions`
+
+**Deployment:** Replit-hosted, path-based routing. The Shallows is publicly accessible at `/shallows` with no auth requirement on read/post.
+
+**AI usage:** none in The Shallows currently. Post categorization (when built) will require an AI or embedding layer for topic clustering.
+
+**Cross-project dependencies:** none from this workspace to Headwaters. The API server is self-contained.
+
+---
+
+## 10. Locked Decisions
+
+- The Shallows is anonymous-by-default. This is non-negotiable. Re-entry must have no social barrier.
+- Zone 5 does not promote itself. Outreach is other zones' job.
+- Zone 3 reputation does not cross the Zone 5 boundary.
+- The founding drift DID seeding method (anonymous, never publicly identified) is decided. The execution is not done.
+- Dead backwater is the named and accepted failure mode. It is not designed against from inside Zone 5.
+
+---
+
+## 11. Open Questions That Belong to Bobbie
+
+- What is the massity framing for The Shallows that funders recognize without misrepresentation? ("Open innovation commons"? Something else?)
+- When does the XRPL tipping layer get built — is it a v1 feature or v2?
+- Does the founding drift DID get set up before the Shallows launches publicly, or does it go live empty and seed later?
+- Who, if anyone, has the right to see the Zone 4 seed-catalog view — all 807 producers, or only active Zone 4 forming groups?
+- Does the Shallows need any relationship to the Codetry handbook at Zone 5 (in your model) — e.g. a link, a mention, a "what is this" page — or does it exist entirely without explanation?
+
+---
+
+*Precision over completeness. Gaps named, not filled.*

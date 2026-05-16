@@ -200,6 +200,58 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
     statusNote:
       "The operating ledger for the practice itself. Proves the principle that a practitioner can maintain strategic coherence across 20-30 years of work if the framework is legible and updated in real time.",
   },
+  {
+    name: "xbuckets — Household Finance on XRPL",
+    type: "in-development",
+    objectives: ["3", "5"],
+    status: "in-progress",
+    isPublic: false,
+    codetryValue:
+      "Zone 0 trust layer proof: a household can own and operate their own financial records without a bank as the intermediary. Non-custodial by construction — the server holds no keys and cannot move funds. The architecture that makes community-owned finance infrastructure possible at the household level.",
+    publicSummary:
+      "A household budgeting tool built on community-owned infrastructure — non-custodial by design, so the household holds their own financial records without a bank as the gatekeeper.",
+    statusNote:
+      "Working mainnet PWA on XRPL. Non-custodial architecture is genuine. Credit union and IG institutional interfaces are real skins with no live institutional API behind them yet — the architecture is the proof point, not the partnership. Proof advances when a second household runs on it independently.",
+  },
+  {
+    name: "Saltbox — Personal Disability Tool",
+    type: "in-development",
+    objectives: ["3"],
+    status: "in-progress",
+    isPublic: false,
+    codetryValue:
+      "Zone 0 individual proof: the user, the developer, and the proof are the same person. A custom homeschool companion built by a parent with inattentive ADHD for her own household — homeschooling a neurodivergent child. No other project in the constellation has this property. Proves the individual disability tool model at the most foundational level before it is offered to anyone else.",
+    publicSummary:
+      "A custom homeschool companion built for a neurodivergent family — designed from the inside by the person using it, not prescribed from the outside.",
+    statusNote:
+      "Active development, in use in Bobbie's household. The proof point is structural: user = developer = proof. Proof of concept for the individual support tool service line. Proof advances when the methodology is adapted for a second person's disability profile.",
+  },
+  {
+    name: "Coleman Custom Meats — Abattoir Operations",
+    type: "in-development",
+    objectives: ["1", "3", "4"],
+    status: "in-progress",
+    isPublic: false,
+    codetryValue:
+      "Zone 4 (Regen Revolution) proof: a regional abattoir in Northwestern Ontario can run full processing pipeline operations — single-animal traceability, yield estimation, farmer portal — on a single-operator platform without a technical team. Food systems infrastructure that serves the same NWO supply chain the 807 engagement is building.",
+    publicSummary:
+      "Processing pipeline operations for a regional abattoir — built so a small team can track every animal from booking to pickup with full yield accounting and farmer self-serve access.",
+    statusNote:
+      "Built and working in dev. Not yet deployed to production. Notification delivery is the one unbuilt piece of the core loop. Pilot deployment timing is an open decision. Proof comes when the operator runs a real season on it.",
+  },
+  {
+    name: "Rootwork — Headwaters Platform Licensing",
+    type: "in-development",
+    objectives: ["2", "3", "5"],
+    status: "needs-proof",
+    isPublic: false,
+    codetryValue:
+      "The commercialization layer. Proves Codetry tools can scale beyond 807 as a licensed platform. 807 is the proof case Rootwork sells — the 2025 fiscal year is the live reference. The tenant seam is built; the second tenant does not yet exist. Proof comes when a second co-op signs on without the founder-as-proof-case dynamic.",
+    publicSummary:
+      "The platform that licenses the co-op operating tools Codetry built for 807 to other co-operatives — so the next co-op starts from a proven foundation, not a blank page.",
+    statusNote:
+      "Pilot-ready. Name not yet locked as of May 2026 — name decision is the immediate gate before pilot outreach can begin. Proof comes when a second co-op tenant signs on independently.",
+  },
 ];
 
 // ─── Honest accounting (internal) ─────────────────────────────────────────────
@@ -218,6 +270,9 @@ export const NEEDS_PROOF_ITEMS = [
   "The trust layer (the ledger) has standalone value beyond the engagement that produced it.",
   "Codetry tools produce revenue independent of any single client relationship.",
   "The supply chain documentation (807 + Deer Lake) constitutes evidence that backs a grant without additional narrative from the practitioner.",
+  "The individual disability tool model works for someone other than the practitioner — Saltbox proves it for one household; a second person's profile is the test.",
+  "The platform licensing model (Rootwork) attracts a second co-op tenant without the founder-as-proof-case as the reason.",
+  "The household finance trust layer (xbuckets) serves a second household independently — the non-custodial architecture is proved; the network effect is not.",
 ];
 
 // ─── Objective label map (shared) ─────────────────────────────────────────────
