@@ -181,6 +181,13 @@ const mainPieces = [
     icon: "🤝",
   },
   {
+    href: "/xrpl-tip",
+    title: "The Shallows — XRPL Tipping PoC",
+    label: "Zone 5 · Dam Days",
+    desc: "Standalone proof-of-concept for peer-to-peer XRP tipping on XRPL Testnet. Connects to a testnet wallet via faucet, signs a real Payment transaction, and confirms on-chain — no server custody, no middleman. Includes hand-off notes for the Dam Days agent. Interactive (not printable).",
+    icon: "💧",
+  },
+  {
     href: "/constellation-session-may16",
     title: "Constellation Session — May 16, 2026",
     label: "Internal reference",

@@ -44,6 +44,7 @@ import CodetryPacketSandyLake from "@/pages/CodetryPacketSandyLake";
 import CodetryPacketDeerLake from "@/pages/CodetryPacketDeerLake";
 import CodetryPacketFoodSystems from "@/pages/CodetryPacketFoodSystems";
 import ConstellationSessionMay16 from "@/pages/ConstellationSessionMay16";
+import XRPLTip from "@/pages/XRPLTip";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -93,6 +94,7 @@ function Router() {
       <Route path="/codetry-packet-deer-lake" component={CodetryPacketDeerLake} />
       <Route path="/codetry-packet-food-systems" component={CodetryPacketFoodSystems} />
       <Route path="/constellation-session-may16" component={ConstellationSessionMay16} />
+      <Route path="/xrpl-tip" component={XRPLTip} />
       <Route component={NotFound} />
     </Switch>
   );
