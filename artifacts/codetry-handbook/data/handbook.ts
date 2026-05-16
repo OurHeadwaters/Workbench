@@ -317,6 +317,12 @@ const partI: Part = {
           text:
             "It is a quiet discipline. Most of it is naming. Most of the rest is refusing to translate the names the community handed you into the words the industry would have preferred. The little that is left is the work of building the system honestly enough that the names keep their promises.",
         },
+        {
+          kind: "tool",
+          label: "Practice Cards",
+          hint: "The rename test and load-bearing cards are in the stack. Test whether the discipline has landed — or only landed adjacent.",
+          route: "/stack",
+        },
       ],
     },
     {
@@ -340,6 +346,12 @@ const partI: Part = {
           kind: "pull",
           text:
             "Let the name carry weight a column would otherwise carry.",
+        },
+        {
+          kind: "tool",
+          label: "Author's Desk — Zone 0",
+          hint: "Zone 0 begins here. Before the chapter closes — write the three things that already live in your Saltbox, in your own words.",
+          route: "/author",
         },
       ],
     },
@@ -1433,6 +1445,12 @@ const partIII: Part = {
           kind: "small",
           text: `Snapshot: constellation v${constellation.version} · ${constellation.lastUpdated}.`,
         },
+        {
+          kind: "tool",
+          label: "Author's Desk — build your constellation",
+          hint: "The reader's own constellation will look nothing like this one. That is correct. Begin yours before the zones show you what to see.",
+          route: "/author",
+        },
       ],
     },
     ...zoneChapters,
@@ -1453,6 +1471,12 @@ const partIII: Part = {
           kind: "para",
           text:
             "That is the test of whether codetry has taken root: not whether anyone else uses these names, but whether anyone else's names start carrying their own weight.",
+        },
+        {
+          kind: "tool",
+          label: "Daily Prompt",
+          hint: "The constellation requires a daily question to stay alive. One question, drawn from the zones — return to it each morning until it answers itself.",
+          route: "/daily-prompt",
         },
       ],
     },
@@ -1883,6 +1907,12 @@ const partIV: Part = {
           text:
             "Don't teach codetry as theory. Show the audience the principle they have already been using in buildings, then let them feel it on a word they care about. The flinch is the proof; the named decision is the receipt.",
         },
+        {
+          kind: "tool",
+          label: "Practice Cards — explain it to your circle",
+          hint: "The 'explain it to your circle' card is in the stack. Write the two-minute version — no book terms — before you try it on anyone.",
+          route: "/stack",
+        },
       ],
     },
     {
@@ -2150,6 +2180,12 @@ const partQuietExamples: Part = {
           kind: "para",
           text: "The Jarista is not a certification. It is a posture — the household practitioner who has decided that the jar is the unit of measure for their food system, the season is the calendar they plan by, and the shelf is the first line of resilience when supply chains tighten. In a constellation context, the Jarista is the Zone 0 counterpart of the Zone 2 practitioner who runs the Operating Plan. Both are named practitioners. Both are running a system. The Zone 2 practitioner names and protects the vocabulary of the constellation's institutions; the Jarista names and protects the vocabulary of the household that the constellation exists to serve.",
         },
+        {
+          kind: "tool",
+          label: "Practice Cards — the Jarista",
+          hint: "The Jarista card is in the stack. Work it before the next chapter — the whole Jar Kitchen sequence rewards moving slowly.",
+          route: "/stack",
+        },
       ],
     },
     {
@@ -2230,6 +2266,12 @@ const partQuietExamples: Part = {
               text: "The product line was a Zone 0 practice producing Zone 3 commercial output. The Jar Kitchen didn't start as a business. It started as a household system that generated abundance — and the abundance had to go somewhere. That is the direction the Jar Kitchen runs: from abundance toward meals, toward products, toward community, not from market demand backward into production.",
             },
           ],
+        },
+        {
+          kind: "tool",
+          label: "Word Walk — Jar Kitchen vocabulary",
+          hint: "Walk the Jar Kitchen vocabulary. Five terms, one deliberate choice at a time — accept, reject, defer. The vocabulary only becomes yours when you've handled each term.",
+          route: "/word-walk",
         },
       ],
     },
@@ -2441,6 +2483,12 @@ const partQuietExamples: Part = {
         {
           kind: "para",
           text: "A note from the territory: the farmers market attendance in Dryden has been declining. Producers are exiting because the regulatory barriers are high and the customer base is thin. If the Seasonal Shelf matters — if the Jarista's practice matters — then buying locally is not a preference. It is maintenance. A community that does not support its local producers will one day find that no local producers remain. The Jarista's shelf and the farmer's market table are the same system, viewed from two directions.",
+        },
+        {
+          kind: "tool",
+          label: "Practice Cards — the full Jar Kitchen",
+          hint: "Six cards — Jarista, Jar Kitchen, Seasonal Shelf, Bulk Round, Harvest Hold, Preservation Season. Flag what hasn't landed. These are the names worth keeping.",
+          route: "/stack",
         },
       ],
     },
@@ -2655,6 +2703,12 @@ const partQuietExamples: Part = {
         {
           kind: "callout",
           text: "The wild edge is not a backup plan. It is not what the household eats when the store is empty. It is what the household eats when the practitioner has built the year around knowing the land's calendar — when the moose come through, when the berries ripen, when the ice makes the fish accessible. Name it as a primary system or it will be managed as a secondary one.",
+        },
+        {
+          kind: "tool",
+          label: "Author's Desk — all six zones",
+          hint: "All six zones read. The constellation doesn't exist until you've written it in your own vocabulary. The Author's Desk holds a prompt for each zone.",
+          route: "/author",
         },
       ],
     },
