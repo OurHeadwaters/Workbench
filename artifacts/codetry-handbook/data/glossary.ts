@@ -125,7 +125,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Zone",
     chapter: "Ch4",
     definition:
-      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite), identity layer: Lodge (provisional); Zone 2 — extended community; Zone 3 — trade (wallet); Zone 4 — wider market, also the cooperative formation layer (Community Hall, Nursery, Fodder, Fallow); Zone 5 — open public, Eave-optional. Primitives are hosted in zones but read by all zones. (Zone numbers are used in tool names throughout Ch1–Ch5 — Saltbox Zone Zero, Zone 1 - Eave, Dam Days Zone 5 — and are consistent with this enumeration.)",
+      "A domain of practice inside the constellation. Six zones, numbered by proximity to the household: Zone 0 — household; Zone 1 - Eave — your circle (invite), identity layer: Lodge; Zone 2 — practitioner's workbench (operating plan, contracted work); Zone 3 — community exchange (807 co-op, board-governed); Zone 4 — Community Hall (voluntary informal association, Nursery / Fodder / Fallow, graduation gate to Zone 3); Zone 5 — The Margin / Shallows (open public, Eave-optional, anonymous DID). Primitives are hosted in zones but read by all zones. Full zone flow: Zone 5 wild idea → Zone 4 informal shaping → Zone 3 approval + contract → Zone 2 paid execution → Zone 3 operation → Zone 4 collective benefit → Path A return drift to Zone 5.",
     section: "formal",
   },
 
@@ -163,10 +163,10 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
   },
   {
     term: "Lodge",
-    chapter: "Ch4 / Open Questions §5.9",
+    chapter: "Ch4 / §5.9",
     definition:
-      "Provisional name for the Zone 1 household identity layer. A Lodge identity is what a household holds below the Eave: a name the circle recognises, without disclosure to Zone 3+. Entry is by invitation and passphrase. Whether Lodge is the confirmed name or still provisional is an open question — see §5.9.",
-    section: "flagged",
+      "The confirmed name for the Zone 1 household identity layer. A Lodge identity is what a household holds below the Eave: a name the circle recognises, without disclosure to Zone 3+. Entry is by invitation and passphrase. Private — not public, not institutional. Earned by invitation — not enrolled, not registered. Held by a group with shared values, revocable by the keeper of the door. The rename test was run against Membership, Profile, and Household ID; all three cracked. Lodge is load-bearing.",
+    section: "formal",
   },
   {
     term: "Nursery",

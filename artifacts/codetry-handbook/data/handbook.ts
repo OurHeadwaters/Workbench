@@ -3954,17 +3954,22 @@ const partVI: Part = {
         },
         {
           kind: "subhead",
-          text: "Lodge — still open. The rename test has not been run.",
+          text: "Lodge — resolved. The rename test holds.",
         },
         {
           kind: "para",
           text:
-            "Lodge remains provisional. The metaphor is apt — a lodge is a place you belong to by membership, not by public registration; it has a door and a keeper; it is neither the house (Zone 0) nor the hall (Zone 3). It names the Zone 1 identity posture below the Eave — the name-and-passphrase identity a household holds within the circle, invisible to Zone 3+. The open question is whether the rename test, applied honestly, cracks it.",
+            "Lodge is confirmed. The rename test was run against three candidates: *Membership*, *Profile*, and *Household ID*. All three crack on contact.",
+        },
+        {
+          kind: "para",
+          text:
+            "*Membership* imports a dues-and-benefits frame — a membership can be public, can be enrolled in, can be tracked in a ledger. A membership tool gets built with a sign-up flow and a benefits page. Lodge is not something you enroll in; it is something you are brought into. *Profile* imports the social-media posture of public self-presentation — a profile shows you outward, to someone outside the circle. Profile tools become bios, follower counts, public visibility settings. Lodge does not present you outward; it holds you inward, among the people who already know you're there. *Household ID* imports the government-register posture of official identity — an ID is recognized by systems and institutions, not by people. Household ID tools become verification flows, KYC steps, login credentials. Lodge is recognized by the keeper of the door and the people behind it, not by a system checking a database.",
         },
         {
           kind: "callout",
           text:
-            "Test for Lodge: rename it to *Membership*, *Profile*, or *Household ID*. Membership imports a dues-and-benefits frame. Profile imports the social-media posture of public self-presentation. Household ID imports the government-register posture of official identity. Lodge carries: private, earned by invitation, held by a group with shared values, revocable by the keeper of the door. If those constraints are load-bearing for how Zone 1 tools are built, Lodge is earning its place. If the rename does not crack anything, the name is not yet doing structural work and a better one should be found. This chapter is returned to when the test has been run.",
+            "Lodge is confirmed as the Zone 1 identity layer name. What the name carries that none of the alternatives do: private (not public, not institutional), earned by invitation (not enrolled, not registered), held by a group with shared values (not by a platform, not by a regulator), revocable by the keeper of the door (not by a terms-of-service update). All three substitutes would quietly change what Zone 1 tools get built. Lodge is load-bearing.",
         },
       ],
     },

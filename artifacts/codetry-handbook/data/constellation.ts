@@ -371,7 +371,7 @@ export const constellation: ConstellationSnapshot = {
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
       "tagline": "Channel every drop. Nothing from nowhere.",
-      "identityLayer": "Lodge — provisional name for the Zone 1 household identity layer (private, named + passphrase). A Lodge identity is what a household holds below the Eave: a name the circle recognises, held without disclosure to Zone 3+. Open question: see §5.9.",
+      "identityLayer": "Lodge — confirmed Zone 1 identity layer name (May 2026, §5.9). Private, invitation-only, held by a group with shared values, revocable by the keeper of the door. A Lodge identity is what a household holds below the Eave: a name the circle recognises, invisible to Zone 3+. Rename test run and held against Membership, Profile, and Household ID — all three cracked.",
       "privacyBoundary": "The Eave is a hard privacy boundary between Zone 1 (Lodge — private, household) and Zone 3+ (organizational, above-board). Zone 3 wallet addresses cannot reach Zone 1 data. Zone 4 is above the Eave — named producers operate with disclosed identity. Zone 5 is Eave-optional — participants can stay below the Eave while wading in the idea commons; anonymous DID participation is valid without disclosure.",
       "workedExamples": [
         {
