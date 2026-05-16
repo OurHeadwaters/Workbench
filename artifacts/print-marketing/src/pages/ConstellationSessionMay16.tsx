@@ -111,21 +111,19 @@ const ledgerEntries = [
 ];
 
 const decisionsToday = [
-  { text: "Rootstock name locked — was 'Rootwork'. Name was holding up pilot outreach.", status: "locked" as StatusKind },
-  { text: "Zone model disambiguated: personal constellation zones ≠ Codetry model zones. Zone 4 in this project = Regen Revolution (abattoir). Zone 5 = The Wild (Shallows).", status: "locked" as StatusKind },
-  { text: "Both-Sides test is a translation practice, not a zone. Institutional/funder language lives in the practitioner's grant-writing — not in a dedicated layer.", status: "locked" as StatusKind },
-  { text: "Eave is confirmed technically enforced in 4 layers. Governance document (consent architecture) does not yet exist.", status: "locked" as StatusKind },
-  { text: "Saltbox confirmed in daily use + others testing — further along than agent knew.", status: "locked" as StatusKind },
-  { text: "xbuckets gap precisely named: P2P works, vendor settlement needs CU railing.", status: "locked" as StatusKind },
+  { text: "Zone 4 renamed Arc → Community Hall. Arc was a single-producer transition frame; Community Hall is the correct voluntary formation layer. Abattoir pilot remains valid as one Zone 4 expression.", status: "locked" as StatusKind },
+  { text: "Lodge confirmed as the Zone 1 identity layer name. Rename test run against Membership, Profile, and Household ID — all three cracked on Zone 1 constraints. §5.9 closed.", status: "locked" as StatusKind },
+  { text: "Watershed disambiguation resolved. Watershed concept (diversified income streams, flow not restriction) belongs exclusively to Zone 1. Zone 5's watershed.replit.app URL is infrastructure legacy with no conceptual weight.", status: "locked" as StatusKind },
+  { text: "Z5→Z1 direct feed documented as a named structural path. Massive Zone 5 public attention can feed the household watershed directly, bypassing Z2-3-4. Ideal standby posture: both the Z2-3-4 engine and Z5 direct feed running simultaneously.", status: "locked" as StatusKind },
+  { text: "Mama Support Hub Phase 1 shipped. Task-tracker language replaced across every member-facing surface: Tasks→Needs, Slots→Moments, Claim→I've got it, Impact section removed entirely.", status: "locked" as StatusKind },
+  { text: "Sandbox circle pulse shipped. calendarToken bridge confirmed as the correct layer (not liveShare). Count-only pulse (no names, no content), deliberate opt-in each time, one ping per household per week.", status: "locked" as StatusKind },
+  { text: "Mama Support Hub Phase 2 dissolution model spec approved. Archived vs dissolved distinction confirmed. First name retained in circle record, surname + all PII cleared. Memories: export-then-delete before dissolution.", status: "locked" as StatusKind },
 ];
 
 const openDecisions = [
+  { text: "Mama Support Hub Phase 2 (dissolution) — agent building now. When it ships: bring the dissolution model here to add as Zone 1 design principle in the handbook.", urgency: "Waiting on agent" },
+  { text: "Mama Support Hub Phase 3 (direct ask flow) — queued after Phase 2. Supported person or any circle member can surface an urgent need without organizer scaffolding.", urgency: "After Phase 2 ships" },
   { text: "Eave governance document — what it means, who consented, how crossing is permitted. Needed before Rootstock goes to external pilots.", urgency: "Before Rootstock pilots" },
-  { text: "'Hub' and 'Coordinator' each do double duty — one word, two referents. Codetry passes needed before second tenant inherits the confusion.", urgency: "Before second tenant" },
-  { text: "Shallows massity framing — how to describe it to NOHFC/FedNor without misrepresenting what it is. 'Open innovation commons' is provisional.", urgency: "Before grant references it" },
-  { text: "Saltbox proof milestone: when does the methodology get adapted for a second person's disability profile?", urgency: "Service line planning" },
-  { text: "Abattoir pilot deployment timing — when does the operator get a live instance?", urgency: "Bobbie's decision" },
-  { text: "XRPL tipping layer in The Shallows — v1 feature or v2?", urgency: "Medium" },
 ];
 
 const architecturalPattern = [
