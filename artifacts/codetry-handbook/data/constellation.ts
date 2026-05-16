@@ -369,7 +369,7 @@ export const constellation: ConstellationSnapshot = {
         "Watershed",
         "Headwaters"
       ],
-      "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
+      "formerNamesNote": "Watershed was an earlier product name for xBuckets before The Margin existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
       "tagline": "Channel every drop. Nothing from nowhere.",
       "workedExamples": [
         {
@@ -636,13 +636,11 @@ export const constellation: ConstellationSnapshot = {
       "domain": "Wild / observation — private capture (takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "status": "live",
-      "formerNames": [
-        "Watershed (still active at URL + storage namespace)"
-      ],
+      "formerNames": [],
       "workedExamples": [
         {
           "name": "The rebrand without a rewrite",
-          "rule": "Watershed → The Margin touched display strings, prose, and the Forge prompt. It did not touch chapter IDs, storage keys, table names, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name."
+          "rule": "The Zone 5 app was deployed as watershed.replit.app before The Margin existed as a zone name. When the rename happened, it touched display strings, prose, and the Forge prompt — not chapter IDs, storage keys, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name. The URL stayed watershed.replit.app; the concept Watershed moved to Zone 1 where it always belonged."
         },
         {
           "name": "Slowly at first, then all at once",

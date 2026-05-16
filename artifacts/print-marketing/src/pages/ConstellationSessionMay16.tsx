@@ -121,8 +121,7 @@ const decisionsToday = [
 ];
 
 const openDecisions = [
-  { text: "Mama Support Hub Phase 2 (dissolution) — agent building now. When it ships: bring the dissolution model here to add as Zone 1 design principle in the handbook.", urgency: "Waiting on agent" },
-  { text: "Mama Support Hub Phase 3 (direct ask flow) — queued after Phase 2. Supported person or any circle member can surface an urgent need without organizer scaffolding.", urgency: "After Phase 2 ships" },
+  { text: "Mama Support Hub Phase 3 (direct ask flow) — ready to build. Supported person or any circle member surfaces an urgent need without organizer scaffolding. One step, no project, no slots.", urgency: "Send prompt when ready" },
   { text: "Eave governance document — what it means, who consented, how crossing is permitted. Needed before Rootstock goes to external pilots.", urgency: "Before Rootstock pilots" },
 ];
 

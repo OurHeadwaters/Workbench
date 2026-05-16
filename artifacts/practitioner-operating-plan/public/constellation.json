@@ -335,7 +335,9 @@
         "Watershed",
         "Headwaters"
       ],
-      "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history \u2014 see openQuestions.",
+      "formerNamesNote": "Watershed was an earlier product name for xBuckets before The Margin existed as a separate zone. The name was retired as a product identifier but its metaphor — diversified income streams, flow not restriction — is retained as active concept language in Zone 1. The Zone 5 app (watershed.replit.app) inherited the name as an infrastructure artifact of that earlier period; the conceptual separation is now resolved. Watershed belongs to Zone 1.",
+      "identityLayer": "Lodge — confirmed Zone 1 identity layer name (May 2026, §5.9). Private, invitation-only, held by a group with shared values, revocable by the keeper of the door. Rename test held against Membership, Profile, and Household ID — all three cracked. Lodge is load-bearing.",
+      "careCircleDesignPrinciples": "Zone 1 care circle design principles (from Mama Support Hub, May 2026): (1) Language is the circle — task-tracker language quietly changes how people relate to showing up. Needs/Moments/I've got it/Someone's on it are not cosmetic; they are the architecture. (2) The ask dissolves when it is answered — no permanent audit log of care. The record that the circle existed is enough; what was needed and by whom is not the system's to keep. (3) Dissolution is the organizer's act of stewardship — not the system's automatic action, not the supported person's burden. What survives dissolution: the circle's name (first name only, surname cleared), date range, member count, dissolved flag. What goes: situation, address, logistics, slot content, comments, activity, memories (export-then-delete offered before dissolution). (4) Impact sections measure the wrong thing — quantifying care as productivity output (14 tasks completed) tells the circle nothing about whether the person felt held. Remove without replacement. (5) Invite links create closed circles by architecture — no open registration into a care circle is the correct posture, regardless of link expiry enforcement.",
       "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) \u2014 household balance is the source of the watershed",
       "url": "https://x-buckets-vision.replit.app/",
       "status": "live",
@@ -891,9 +893,9 @@
     {
       "zone": 5,
       "name": "The Margin",
-      "formerNames": [
-        "Watershed (still active at URL + storage namespace)"
-      ],
+      "formerNames": [],
+      "infrastructureNote": "The Zone 5 app is deployed at watershed.replit.app with watershed:* storage keys. This is a legacy infrastructure artifact — the app was built when Watershed was still an undifferentiated name. The conceptual name Watershed was never Zone 5's; it belongs to Zone 1 (diversified income streams). The URL and storage namespace are plumbing; they carry no conceptual weight for The Margin.",
+      "z1DirectFeed": "Zone 5 public presence can feed the Zone 1 watershed directly — without Zones 2-3-4 as the economic engine — if a practitioner's Margin contributions get massive outside attention. Audience-generated income flows straight to the household. The ideal standby posture is both running simultaneously: the Z2-3-4 economic engine as the steady floor, and the Z5 direct feed as the abundance layer above it. A practitioner who has only Z5 income is not in standby. One who has both is.",
       "domain": "Wild / observation \u2014 private capture (takes) with structured channel-out and opt-in float to the Shallows",
       "url": "https://conversation-log.replit.app/",
       "alsoAt": "published Expo mobile artifact; legacy Watershed URL still active at watershed.replit.app + watershed:* storage namespace",
@@ -938,7 +940,7 @@
       "workedExamples": [
         {
           "name": "The rebrand without a rewrite",
-          "rule": "Watershed \u2192 The Margin touched display strings, prose, and the Forge prompt. It did not touch chapter IDs, storage keys, table names, or schema. The codetry test: change the name, did the structure survive? Yes \u2014 because the structure was the metaphor underneath the name."
+          "rule": "The Zone 5 app was deployed as watershed.replit.app before The Margin existed as a zone name. When the rename happened, it touched display strings, prose, and the Forge prompt — not chapter IDs, storage keys, or schema. The codetry test: change the name, did the structure survive? Yes — because the structure was the metaphor underneath the name. The URL stayed watershed.replit.app; the concept Watershed moved to Zone 1 where it always belonged."
         },
         {
           "name": "Slowly at first, then all at once",

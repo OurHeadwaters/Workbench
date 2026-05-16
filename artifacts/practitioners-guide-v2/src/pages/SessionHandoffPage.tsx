@@ -30,23 +30,17 @@ const LANDED = [
     detail: "calendarToken bridge confirmed. Count-only pulse, no names, no content. Deliberate opt-in each time. One ping per household per week.",
   },
   {
-    label: "Phase 2 dissolution model spec approved",
-    detail: "Archived ≠ dissolved. First name retained in circle record; surname + all PII cleared on dissolution. Memories: export-then-delete. Agent is building.",
+    label: "Mama Support Hub Phase 2 shipped — dissolution built",
+    detail: "Archived ≠ dissolved. Two-step DissolveDialog with export-first flow. Cascade delete on dissolution. First name retained, surname + all PII cleared. Past circles appear as a quiet greyed strip — name and dates only. Zone 1 care circle design principles recorded in the constellation.",
   },
 ];
 
 const IN_FLIGHT = [
   {
-    label: "Mama Support Hub — Phase 2 building",
-    what: "Dissolution — archived vs dissolved, cascade delete, export-then-delete for memories, first name only retained.",
-    when: "Agent is building now. When it ships, bring the result here to record dissolution as a Zone 1 design principle in the handbook.",
+    label: "Mama Support Hub — Phase 3 ready",
+    what: "Direct ask flow — anyone in the circle surfaces an urgent need without organizer scaffolding first. One step, no project, no slots. 'I need Thursday covered — who's got it?' goes to the circle immediately.",
+    when: "Phase 2 is shipped. Phase 3 is next when you're ready to send the prompt.",
     isNext: true,
-  },
-  {
-    label: "Mama Support Hub — Phase 3 queued",
-    what: "Direct ask flow — anyone in the circle surfaces an urgent need without organizer scaffolding first.",
-    when: "Starts after Phase 2 ships.",
-    isNext: false,
   },
   {
     label: "Eave governance document",
@@ -70,7 +64,7 @@ export function SessionHandoffPage() {
       <PageAnchor
         storageKey="session-handoff"
         whenToBeHere="You're starting a new session and need to know exactly where things landed and what's waiting."
-        theOneThing="Check whether the Mama Support Hub Phase 2 build came back. If it did, bring it here — it needs a Zone 1 principle note in the handbook."
+        theOneThing="Phase 3 is next — the direct ask flow for Mama Support Hub. Send the Phase 3 prompt when you're ready. Zone 1 dissolution principles are already in the constellation."
         accentColor="#1f3d2e"
       />
 
@@ -96,14 +90,13 @@ export function SessionHandoffPage() {
           Your first move when you return
         </p>
         <p className="text-sm text-emerald-900 leading-relaxed font-medium">
-          Check the Mama Support Hub agent. Phase 2 (dissolution) is building. When it ships,
-          bring the result here — the dissolution model needs a short note in the handbook
-          as a Zone 1 design principle before Phase 3 starts.
+          Phase 2 is shipped. Phase 3 is ready — the direct ask flow for Mama Support Hub.
+          Send the Phase 3 prompt when you're ready to continue.
         </p>
         <p className="mt-2 text-xs text-emerald-700 leading-relaxed">
-          Two decisions already made that the agent knows: first name only retained in the circle record
-          (surname cleared), memories get export-then-delete treatment before dissolution.
-          The agent has both. Just review and confirm the build.
+          Zone 1 care circle design principles (dissolution model, language principles, privacy posture)
+          are now recorded in the constellation — they'll carry forward into any future Zone 1 tool
+          that gets built in this constellation.
         </p>
       </div>
 

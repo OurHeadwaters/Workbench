@@ -122,6 +122,13 @@ const ZONE_EXCLUDED_FIELDS = new Set([
   "proposedSeeds",
   "solutionShape",
   "knownGaps",
+  // Zone 1 design principles and identity layer (May 2026)
+  "identityLayer",
+  "careCircleDesignPrinciples",
+  "privacyBoundary",
+  // Zone 5 infrastructure and cross-zone feed notes (May 2026)
+  "infrastructureNote",
+  "z1DirectFeed",
 ]);
 
 // ---------------------------------------------------------------------------
