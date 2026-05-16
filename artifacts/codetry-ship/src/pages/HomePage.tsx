@@ -878,6 +878,14 @@ export function HomePage() {
               Privacy
             </a>
             <a
+              href={`${import.meta.env.BASE_URL}listen`}
+              className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+              data-testid="footer-listen-link"
+            >
+              Listen
+            </a>
+            <a
               href={`${import.meta.env.BASE_URL}operator`}
               className="font-mono text-[10px] uppercase tracking-[0.18em] hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.5 }}
