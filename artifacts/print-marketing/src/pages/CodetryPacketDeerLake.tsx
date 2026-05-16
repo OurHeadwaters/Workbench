@@ -1,12 +1,12 @@
 import { PrintNav } from "../components/PrintNav";
 import { CodetryPacketCoverSheet } from "../components/CodetryPacketCoverSheet";
 import { CodetryIntroLetterDeerLakePage } from "./CodetryIntroLetterDeerLake";
-import { CodetryOnePagerPage } from "./CodetryOnePager";
-import { CodetryFundingBriefPage } from "./CodetryFundingBrief";
+import { DeerLakeWhyNowPage } from "./DeerLakeWhyNow";
+import { CodetryFundingBriefDeerLakePage } from "./CodetryFundingBriefDeerLake";
 import { CodetryPilotProposalDeerLakePage } from "./CodetryPilotProposalDeerLake";
 
 const COMMUNITY = "Deer Lake First Nation";
-const DATE = "May 15, 2026";
+const DATE = "May 2026";
 
 const DOCUMENTS = [
   {
@@ -16,13 +16,13 @@ const DOCUMENTS = [
   },
   {
     num: "2",
-    title: "Economic Development One-Pager",
-    desc: "An overview of what Headwaters builds, how we work, and who we work with.",
+    title: "Why Deer Lake. Why Now.",
+    desc: "A one-page case for why Deer Lake is the right community for this model — the existing assets, the 807 supply chain story, and the January 2027 winter road window.",
   },
   {
     num: "3",
     title: "Partnership & Funding Brief",
-    desc: "A detailed brief on the Codetry model, the Working Constellation team structure, and the Phase 1 fee.",
+    desc: `A brief on the Codetry model, the Working Constellation team structure, the 807 connection, and the Phase 1 fee — prepared specifically for ${COMMUNITY}.`,
   },
   {
     num: "4",
@@ -45,8 +45,8 @@ export default function CodetryPacketDeerLake() {
           documents={DOCUMENTS}
         />
         <CodetryIntroLetterDeerLakePage />
-        <CodetryOnePagerPage />
-        <CodetryFundingBriefPage />
+        <DeerLakeWhyNowPage />
+        <CodetryFundingBriefDeerLakePage />
         <CodetryPilotProposalDeerLakePage />
       </div>
     </>
