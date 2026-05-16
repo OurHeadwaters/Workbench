@@ -1,0 +1,41 @@
+What the app currently does
+
+A trusted person (the organizer) creates a care circle, names who it's for, writes down the situation, address, allergies, and drop-off notes. They generate an invite link and bring in the circle. Inside, they create projects — Meal Train, Errand Board, Gift Card Rotation, and so on — and add slots to each. Members browse, claim a slot ("I'll do it"), deliver, and mark it done. There's a comment thread on each slot for logistics. An activity feed records everything that happens. A sidebar shows aggregate totals labeled "Impact." A public share page can be turned on, showing the person's name, situation, and what the circle has done.
+
+What the stepping-up flow looks like end-to-end
+
+Organizer creates circle with full details about the person → stored permanently
+Organizer creates a project and adds individual slots (or bulk-adds a week of dinners)
+Members receive a push notification or check in and see open tasks
+Member taps "I'll do it" — slot status moves to claimed
+Member delivers, taps "Done" — slot status moves to completed, completedAt is recorded
+The action is logged to the activity feed forever, with the member's name and timestamp
+What's missing or misaligned relative to Zone 1
+
+1. Nothing dissolves.
+
+The core constraint says "the ask dissolves when it's answered." In the current design, it does the opposite. Every slot ever claimed, every comment, every action is stored permanently. The "What's happening" activity feed I built last week is essentially a permanent audit log of every act of care — who did what for whom and when. The circle stores the person's name, medical situation, home address, allergies, and drop-off instructions indefinitely. Archived circles just go dormant; the data stays. There is no lifecycle. There is no closing ritual. The need never officially ends.
+
+2. The "ask" doesn't exist as a first-class concept.
+
+Zone 1 says "The ask goes to the circle; people respond." Right now, there is no ask — there are tasks. An organizer pre-creates slots on behalf of a need. The supported person has no voice in the system. A member cannot surface an urgent immediate need without the organizer first building the scaffolding for it. The thing that actually happens in Zone 1 — someone says "I need Thursday covered, who's got it?" — has no direct representation. What's here is a scheduling interface that happens to be used by a care circle.
+
+3. The "Impact" section measures care.
+
+The sidebar card labeled "Impact" shows Tasks Completed, Notes of Love, Memories, Member count. It quantifies care numerically and labels it productivity output. This is a mild version of the scoring/leaderboard constraint, but it goes in the wrong direction. Knowing that 14 tasks were completed tells the circle nothing meaningful — it doesn't tell you whether the person felt held.
+
+4. The public share page surfaces what should be private by default.
+
+The share page shows the person's name prominently ("For [name]"), their situation as a badge, and "What we've been doing" with project types and counts. If someone's situation is postpartum depression, miscarriage, or an abusive relationship — those become visible to whoever has the link. Sharing is opt-in, so an organizer can avoid it, but the page is designed to show it all when enabled. Privacy as a default posture would mean the share page starts with almost nothing and the organizer explicitly unlocks each piece.
+
+5. Language is a scheduling platform, not a care circle.
+
+The data model and UI consistently use: Tasks, Slots, Claim, Complete, Errand Board, Gift Card Rotation, Impact, Status: open/claimed/completed. This is task-tracker language. It shapes how the circle relates to the act of showing up. "I claimed a slot and marked it complete" is not the same feeling as "I've got you on Thursday." The language is the most tractable gap — it sits entirely in the UI.
+
+6. Invitation is link-based but not constrained.
+
+The invite link system is correct — no open registration into a circle. But links don't expire and aren't single-use by default. An invite link shared once lives until manually revoked. The "closed circle" constraint is architecturally present but not enforced at the link level.
+
+The honest summary
+
+The infrastructure is solid. Auth, membership, the slot lifecycle, notifications — all functional. What's missing is the philosophy at the data layer: things should close, sensitive information should be minimal and short-lived, and the language of the whole surface should feel like a circle of people, not a task queue. The biggest gap isn't a feature — it's that the data model has no concept of "this is over now, and we don't need to keep the record."
