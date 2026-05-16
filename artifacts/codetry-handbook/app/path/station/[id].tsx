@@ -29,6 +29,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ChapterBlock } from "@/components/ChapterBlock";
+import { CaptureSheet } from "@/components/CaptureSheet";
 import { StationAudio } from "@/components/path/StationAudio";
 import { pioneerPathStationExcerpt } from "@/data/pioneerPath";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
@@ -68,6 +69,7 @@ export default function StationScreen() {
   const existingPhoto = completion?.photoUri ?? "";
   const [noteDraft, setNoteDraft] = useState<string>(existingNote);
   const [photoDraft, setPhotoDraft] = useState<string>(existingPhoto);
+  const [captureOpen, setCaptureOpen] = useState(false);
 
   // Hydration sync: AsyncStorage loads asynchronously, so the first
   // render of this screen sees default progress. Once the store is
@@ -217,6 +219,17 @@ export default function StationScreen() {
           >
             <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
               ← Trail
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setCaptureOpen(true)}
+            hitSlop={12}
+            style={({ pressed }) => [styles.captureBtn, { borderColor: c.rule, backgroundColor: c.card, opacity: pressed ? 0.7 : 1 }]}
+            accessibilityLabel="Capture a thought"
+          >
+            <Ionicons name="pencil-outline" size={14} color={c.foreground} />
+            <Text style={[styles.captureBtnText, { color: c.foreground, fontFamily: MONO }]}>
+              Capture
             </Text>
           </Pressable>
           <Pressable
@@ -584,6 +597,11 @@ export default function StationScreen() {
           )}
         </View>
       </ScrollView>
+      <CaptureSheet
+        visible={captureOpen}
+        onClose={() => setCaptureOpen(false)}
+        defaultConstellation="Pioneer Path"
+      />
     </View>
   );
 }
@@ -642,6 +660,20 @@ const styles = StyleSheet.create({
   },
   backLink: {
     fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  captureBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  captureBtnText: {
+    fontSize: 10,
     letterSpacing: 1.4,
     textTransform: "uppercase",
   },

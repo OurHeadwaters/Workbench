@@ -16,6 +16,7 @@ import sargeRouter from "./sarge";
 import pdfRouter from "./pdf";
 import subcontractRouter from "./subcontract";
 import pgv2Router from "./pgv2";
+import captureRouter from "./capture";
 
 const router: IRouter = Router();
 
@@ -39,5 +40,6 @@ router.use("/", intakeRouter);
 router.use("/", deadheadRouter);
 router.use("/", subcontractRouter);
 router.use("/pgv2", pgv2Router);
+router.use("/capture", captureRouter);
 
 export default router;

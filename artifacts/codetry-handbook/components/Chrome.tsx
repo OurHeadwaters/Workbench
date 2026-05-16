@@ -117,6 +117,7 @@ export function BottomChrome({
   onCycleTheme,
   onShare,
   onPrint,
+  onCapture,
   onPrev,
   onNext,
   hasPrev,
@@ -130,6 +131,7 @@ export function BottomChrome({
   onCycleTheme: () => void;
   onShare: () => void;
   onPrint?: () => void;
+  onCapture?: () => void;
   onPrev: () => void;
   onNext: () => void;
   hasPrev: boolean;
@@ -218,6 +220,16 @@ export function BottomChrome({
             size={18}
             color={showPractitionerVoice ? c.foreground : c.mutedForeground}
           />
+        </Pressable>
+      ) : null}
+      {onCapture ? (
+        <Pressable
+          onPress={onCapture}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityLabel="Capture a thought"
+        >
+          <Ionicons name="pencil-outline" size={18} color={c.foreground} />
         </Pressable>
       ) : null}
       <Pressable

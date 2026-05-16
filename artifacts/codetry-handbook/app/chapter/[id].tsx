@@ -24,6 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ChapterBlock } from "@/components/ChapterBlock";
 import { BottomChrome, TopChrome } from "@/components/Chrome";
+import { CaptureSheet } from "@/components/CaptureSheet";
 import { GlossaryTermSheet } from "@/components/GlossaryTermSheet";
 import { useReader } from "@/contexts/ReaderState";
 import { useHandbookContent } from "@/contexts/HandbookContentContext";
@@ -68,6 +69,7 @@ export default function ChapterScreen() {
   const [chromeVisible, setChromeVisible] = useState(true);
   const [highlightedBlockIndex, setHighlightedBlockIndex] = useState<number | null>(null);
   const [activeGlossaryTerm, setActiveGlossaryTerm] = useState<string | null>(null);
+  const [captureOpen, setCaptureOpen] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
   const lastSavedY = useRef(0);
   const currentScrollYRef = useRef(0);
@@ -271,6 +273,11 @@ export default function ChapterScreen() {
       router.push({ pathname: "/print/[id]", params: { id: chapter.id } });
     }
   }, [chapter]);
+
+  const onCapture = useCallback(() => {
+    if (Platform.OS !== "web") Haptics.selectionAsync().catch(() => {});
+    setCaptureOpen(true);
+  }, []);
 
   const onShare = useCallback(async () => {
     if (!chapter) return;
@@ -501,12 +508,19 @@ export default function ChapterScreen() {
         onCycleTheme={cycleTheme}
         onShare={onShare}
         onPrint={onPrint}
+        onCapture={onCapture}
         onPrev={goPrev}
         onNext={goNext}
         hasPrev={!!prev}
         hasNext={!!next}
         showPractitionerVoice={showPractitionerVoice}
         onTogglePractitionerVoice={togglePractitionerVoice}
+      />
+
+      <CaptureSheet
+        visible={captureOpen}
+        onClose={() => setCaptureOpen(false)}
+        defaultConstellation="Codetry"
       />
 
       <GlossaryTermSheet

@@ -28,12 +28,12 @@ One entry per block. Copy the template, fill it in, leave the rest blank if you'
 >
 > When the planning agent files a CAPTURE entry as a task, it must add `constellation:` to the new task file's front-matter:
 >
-> ```yaml
-> ---
-> title: My task title
-> constellation: Codetry
-> ---
-> ```
+```yaml
+---
+title: My task title
+constellation: Codetry
+---
+```
 >
 > Valid values: `Codetry` / `Pioneer Path` / `Word Walk` / `The Gate & The Standby` / `Headwaters Platform` / `807 Benefits` / `Bright Side` / `Library` / `Print Marketing` / `Deer Lake` / `Agency Operations` / `Saltbox` / `Practitioner's Guide V2`
 >
