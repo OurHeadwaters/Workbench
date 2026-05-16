@@ -1,0 +1,206 @@
+Context transfer — Headwaters (artifacts/xbuckets) → Bright Side agent
+Replying as the build agent for this Replit project. Honest accounting follows. Where the codebase doesn't answer a question, I say so rather than guessing.
+
+1. What this project is actually trying to do
+Real sentence: A non-custodial, household-scale envelope-budgeting PWA that assigns stablecoin balances to named buckets before payment, so spend decisions happen at the moment money is allocated rather than at the moment it leaves the account. The XRP Ledger is where the value actually lives; the app is the budgeting skin on top of it.
+
+Why XRPL and not a spreadsheet/bank/Mint:
+
+Settlement and custody collapse into one layer the user controls. A spreadsheet describes money; an XRPL trust line is the money. There's no "did the transfer clear" gap.
+Stablecoins (RLUSD, USDC, soon CADD on Base) let a household hold dollar-denominated savings without a bank intermediary, on a ledger with sub-cent fees and ~4-second finality.
+The AMM ("Water Wheel / Private Lake") lets idle stablecoin savings earn yield via a self-custody DeFi position — that primitive doesn't exist in a bank account at all.
+A spreadsheet can't sign a payment. A bank account can't be re-skinned for a credit union without their cooperation. XRPL gives both at once.
+Governing metaphor: water. Not decoration — it's a design constraint:
+
+"Buckets" = envelopes (Spending / Savings).
+"The Stream" = inflow (paycheck arrival).
+"Water Tower" = visualized total.
+"Private Lake" = AMM LP position.
+"Drip Harvester" = automated sweep of yield.
+"Abundance Bridge" = fiat off-ramp when amounts exceed the $250 CAD contactless tap ceiling.
+"Giving Well" = charitable donation flow on XRP appreciation.
+"Captain's Log" = the Earn Agent's action history.
+The constraint: any new feature has to map cleanly into the watershed. If it doesn't, that's a signal the feature is wrong, not that the metaphor is. There is no equivalent of Bright Side's fence (a hard exclusion line) — water is a generative metaphor, not a barrier metaphor. The closest hard line is the "Plain Money Words" doctrine (see §2).
+
+2. Financial vocabulary architecture
+There is a vocabulary discipline, enforced by a test: artifacts/xbuckets/src/__tests__/copy-plain-money-words.test.ts, exposed as the check:plain-money-words workflow.
+
+The rule: Place and flow may use water metaphors. Status, cost, and risk must use plain English. So "The Lake" is fine for the savings pool; "Low Risk", "Balance", "Fee", "APY" must appear verbatim where applicable. This is the closest analogue to Bright Side's codetry gate — a test in CI that fails the build if the metaphor leaks into regulated/sensitive surface area.
+
+XRPL-native vocabulary surfaced to users:
+
+"trust line", "reserve" (XRPL account base reserve of 10 XRP + 2 XRP per owned object — explicitly explained in copy at copy.en.ts:1012-1018 with a link to xrpl.org)
+"AMM pool", "impermanent loss" (with explainer cards)
+"RLUSD", "USDC", "EURC", "USDT", "XRP" — asset codes shown raw
+"drops" — only in dev/admin surfaces
+Translated to household-legible language:
+
+ledger writes → "assign", "channel", "send"
+balance → "balance" (kept plain)
+AMM LP → "Private Lake" (place) but its risk/yield rendered in "Low Risk / Steady Drip / X% APY"
+transaction → "spend" or "draw"
+fee → "fee" (plain, mandatory per the test)
+yield → "harvest"
+Quarantined / excluded words:
+
+No "investment advice", "guaranteed", "returns" (compliance).
+No "wallet" in CU tenant mode — replaced with "Account".
+No "QCAD" (just removed in Task #1004 — defunct XRPL CAD stablecoin).
+The AI ("Drop") system prompt forbids the assistant from asking for or referencing wallet addresses or private keys.
+One-word-one-referent: Partial. "Bucket" only ever means an envelope. "Lake" only ever means the LP position. "Stream" only ever means paycheck inflow. But "reserve" overloads (XRPL base reserve vs "emergency reserve" bucket) — that's a known loose edge.
+
+Localisation: All user-visible strings live in copy.en.ts / copy.fr.ts, accessed through useCopy(). check:copy-fr enforces FR parity. Adding a new locale = one new file + a SUPPORTED_LOCALES entry.
+
+3. XRPL architecture (technically specific)
+Network: Mainnet only. RPC endpoint is xrplcluster.com (public cluster). No testnet/devnet/local rippled in the runtime path.
+
+Libraries:
+
+Browser fetch against XRPL JSON-RPC (no full xrpl.js client — kept lean to control bundle size; main chunk is capped at 254 kB).
+@walletconnect/sign-client (WalletConnect v2) for non-Xaman wallets.
+Xaman SDK via CDN script tag.
+No server-side XRPL client. The api-server never signs or touches the ledger.
+Primitives in use:
+
+Accounts: users' own, connected via Xaman or WalletConnect.
+Trust lines: RLUSD (rMxCK…), USDC, USDT, EURC issuers in lib/constants.ts. CADD is now a peg entry only (Base, not XRPL — STABLECOIN_CODE_PEG in lib/stablecoins.ts).
+AMM: read via amm_info. Two pools currently in KNOWN_POOLS after the QCAD pool removal: RLUSD/XRP and RLUSD/USDC. Snapshots persisted hourly to lake_current_snapshots by lakeCurrentScheduler in api-server.
+Payments / xrpl_signTransaction: the only ledger write path the app produces. All signing happens client-side in the user's wallet.
+NOT in use: offers/DEX trading, escrows, payment channels, NFTs, hooks. No issued token of our own.
+Custody: Strictly non-custodial. Zero private keys server-side. The api-server cannot move user funds. The "Earn Agent" is a client-side rule engine that proposes sweep transactions for the user to sign — there is no agent-controlled satellite wallet (the explore subagent's claim of one was wrong; I checked and that's a UI-level "agent" abstraction, not a server key).
+
+Fiat ↔ ledger: see §below.
+
+4. IG Investments / credit union integration — honest answer
+Neither is a real integration. Both are UI skins gated by VITE_TENANT_MODE.
+
+tenantConfig.ts defines three modes: cu, advisor, enthusiast.
+Advisor mode: hardcoded firm metadata — firm: "IG Wealth", firmFull: "IG Wealth Management", email: "advisor@ig.ca". Surfaces an "advisor recommended" ribbon and registered-product cards (RRSP, GIC, TFSA) but these do not connect to IG systems — there is no IG API client anywhere in the codebase.
+CU mode: changes terminology ("Account" not "Wallet"), hides XRPL technical surfaces (asset picker, network rows), reduces blockchain prominence. No credit union banking rails are integrated.
+Enthusiast mode: full crypto surface, AMM, Drip Harvester, Giving Well, etc.
+Posture toward the institutions: Sit alongside, not replace. The thesis is that an advisor or CU brands and distributes Headwaters as a white-label household tool, while the institution keeps the investable assets. The XRPL stablecoin layer is the operating account, not the wealth account.
+
+"Household budget" means: envelope budgeting first (Ramsey/YNAB style), with cash flow visualization (Stream → Buckets → Water Tower). Net worth and investment allocation are out of scope. There is no portfolio view.
+
+5. Regulatory positioning
+This is the area with the most unresolved tension. No explicit FINTRAC / OSFI / MSB / provincial-securities doctrine is encoded in the codebase. What exists:
+
+Non-custodial by architectural fact. The api-server holds zero keys, never moves user funds, and cannot. This is the strongest regulatory shield — the project is not an MSB because it doesn't transmit money; it shows a UI over a ledger the user controls.
+No fiat custody. Stripe top-ups create a PaymentIntent to fund off-ledger spends (recorded server-side), but Stripe is the money-services entity, not Headwaters. The Interac Bridge generates a mailto: hand-off — the user sends their own e-Transfer.
+"Not financial advice" doctrine: present in the AI chat ("Drop") system prompt and in disclaimer copy throughout the app. Not enforced by a CI test the way "plain money words" is. This is a gap relative to Bright Side's PHI gate.
+Disclosure surfaces: AMM cards carry impermanent-loss explainers. Giving Well copy notes the tax-strategy implication (donating appreciated assets avoids capital gains) but stops short of advice. Premium upsell language avoids "returns" or "guaranteed".
+What this project can legally do that a licensed FI cannot: display and route arbitrary on-chain assets without KYC at the app layer (KYC happens at the wallet/exchange the user already chose); offer "yield" via DeFi AMM positions without being a securities issuer (the LP position is the user's own).
+
+What an FI can do that this project cannot: hold deposits, issue credit, process fiat transfers under its own name, give personalised investment advice.
+
+Below-threshold posture: implicit, not documented. The $250 CAD tap ceiling (BRIDGE_TAP_CEILING_CAD) is a UX threshold, not a regulatory one — but it does keep typical flows below contactless-payment compliance lines.
+
+6. The user picture
+Honest answer: prototype-stage archetype, not a researched cohort.
+
+Codebase assumes a household of 1–2 adults with a smartphone, a bank account, a paycheck cycle, and at least one of: Xaman wallet, WalletConnect-compatible wallet, or a credit card (for Stripe top-up).
+"Household" in code = a shared budget across two devices with token-auth sync (see §7).
+Technical comfort assumption: middle. Asset picker shows raw "RLUSD / USDC / XRP"; reserve mechanics are explained but not hidden. CU mode exists because the default UX is too technical for a typical CU member.
+Bobbie's household as prototype: consistent with how the project is structured (single-household assumption, no admin/multi-tenancy beyond tenant mode), but not stated anywhere in code or replit.md.
+
+7. On-reserve / northern community dimension
+Not currently designed for it, as far as the code shows. No references to "reserve", "Wabigoon", "northern", "remote", or low-connectivity scenarios anywhere in artifacts/xbuckets/src. That application is prospective, not built.
+
+What the architecture would enable for a family 200 km from the nearest branch:
+
+Self-custody stablecoins removes the need for a local branch entirely.
+XRPL settlement (~4 seconds, sub-cent fees) doesn't care about geography.
+The Interac Bridge gives a fiat off-ramp that works wherever Interac e-Transfer works (most of Canada).
+The PWA is offline-tolerant: a service worker (artifacts/xbuckets/public/sw.js, managed via useSwUpdate.ts) and localStorage-first state (xbuckets-prototype-v5) mean the app runs without connectivity; cloud sync (use-household.tsx) silently retries.
+Connectivity / device assumptions baked in: PWA-installable, mobile-first viewport (414px default). Service worker present. No explicit "low-bandwidth mode" or SMS fallback. The Drop AI chat requires connectivity (SSE stream to api-server).
+
+8. Current state — honest accounting
+Live and working:
+
+Envelope budgeting (Spending/Savings buckets, edit/assign flow), persisted to localStorage.
+Xaman wallet connection + RLUSD balance fetch from XRPL mainnet.
+WalletConnect v2 with QR + step instructions.
+AMM pool browser reading live amm_info for the two pools in KNOWN_POOLS.
+Stripe top-up flow (PaymentIntent, card / Apple Pay / Google Pay) — funds off-ledger spends, not the XRPL wallet.
+Interac e-Transfer bridge (above the $250 CAD tap ceiling) with confirm-token round trip via /api/bridge/confirm/<tok>.
+Household shared-budget sync (two devices, token auth, JSON state blob in Postgres).
+Subscription billing via Stripe (web) — premium gating on Drip Harvester, Family Mode, Invest tab.
+Gift Premium (1/6/12 months) via Stripe Checkout with redemption tokens.
+In-app support chat "Drop" (gpt-5-mini via Replit AI proxy, SSE streaming).
+Getting Started Tour (2-act: cinematic slides + spotlight walkthrough).
+Multi-locale EN/FR with check:copy-fr parity enforcement.
+Bundle-size guard (entry chunk capped at 254 kB, enforced in vite.config.ts).
+Tenant skins: cu / advisor / enthusiast.
+Drip Harvester sweep flow with 5% protocol fee (recorded in drip_sweep_fees).
+Giving Well charitable donation flow when XRP appreciates past user-configurable threshold.
+lakeCurrentScheduler hourly cron snapshotting AMM pool state.
+In development / partial:
+
+Capacitor mobile wrapper (iOS/Android) with dual purchase paths (Stripe web / RevenueCat native).
+CADD support: peg entry exists; no Base wallet integration (out of scope of Task #1004).
+Idea stage / stubs:
+
+IG / credit union actual API integrations (currently UI skins only).
+Tokenised assets and "natural interface for on-chain yield positions on FI product shelves" (the long-term thesis in replit.md).
+On-reserve / northern community specific affordances.
+Gap between vision and reality: The vision is "trust layer belongs to the person, white-labelled by FIs". The reality is a working personal-budgeting PWA on XRPL mainnet with believable FI skins but zero institutional integration. The non-custodial architecture is genuine; the institutional posture is staged.
+
+9. Tech stack and artifacts
+Monorepo: pnpm workspaces, TypeScript 5.9, Zod v4, Drizzle ORM, Orval (OpenAPI codegen).
+
+Artifacts:
+
+artifacts/xbuckets — main PWA (React + Vite + Tailwind + Framer Motion). The actual product.
+artifacts/api-server — Express 5 backend: household sync, AI chat proxy, Stripe webhooks, bridge confirm tokens, lake-current scheduler, gift/premium grant endpoints.
+artifacts/xbuckets-video — Remotion-style video artifact ("Headwaters — Channel Every Drop") for marketing/explainer.
+artifacts/mockup-sandbox — design playground; isolated component preview URLs for canvas iframes.
+Shared libs:
+
+lib/db — Drizzle schemas: users, households, b2b_leads, chat_feedback, community_well_round_completions, conversations, invest_interest, lake_current_snapshots, messages, openai_daily_usage, password_reset_tokens, push_subscriptions, rate_limits. Plus gift_subscriptions and premium_grants for the gift flow, and drip_sweep_fees for the protocol fee.
+lib/api-spec — OpenAPI spec + Orval-generated client hooks and Zod schemas.
+AI: Replit AI proxy → gpt-5-mini for the "Drop" support chat. SSE streaming. Daily usage tracked in openai_daily_usage. System prompt forbids referencing wallet addresses or private keys. Screen context is opt-in.
+
+Storage / privacy:
+
+Primary budget state is localStorage (key xbuckets-prototype-v5).
+Household sync pushes that blob to Postgres household_budget_state (column on households), authenticated by a shared secret (headwaters-household-v1 in localStorage) used as a Bearer token.
+No wallet addresses persisted server-side except where the user opts into sync.
+Stripe customer/payment IDs persisted server-side for billing.
+Cross-project dependencies: None I can detect with Bright Side or other constellation projects. This monorepo is self-contained.
+
+10. Locked decisions (per replit.md and code conventions)
+Explicit do-not-modify list from user preferences:
+
+lib/db/src/schema/households.ts
+artifacts/api-server/src/routes/households.ts
+artifacts/xbuckets/src/components/HouseholdSection.tsx
+artifacts/xbuckets/src/hooks/use-household.tsx
+Implicit but firm (inferred from how the codebase resists change):
+
+Non-custodial. No server-side signing. Ever.
+Water metaphor as design constraint, not theme.
+Plain Money Words doctrine in CI.
+Bundle ceiling (main chunk ≤ 254 kB, enforced in vite.config.ts with a multi-paragraph changelog rationale every time it moves).
+EN/FR parity in check:copy-fr.
+xbuckets-prototype-v5 as the localStorage namespace (bumping it would wipe users).
+Tenant modes are content-driven, not feature-flag spaghetti.
+11. Bobbie's language for this project
+I cannot give you this with confidence. The replit.md and code use the product vocabulary (Headwaters, buckets, Lake, Stream, Drop, Bridge, Drip, Spring, Well, Captain's Log) but I have no record of Bobbie's spoken shorthand, nicknames, or running metaphors that don't appear in the codebase. If she calls it "the household thing" or "the water app" or "the XRPL project" in conversation, that's not captured here. Worth asking her directly.
+
+The branded title is "Headwaters — Channel Every Drop" (from the video artifact).
+
+12. Where this fits in the Codetry constellation
+I have no information in this codebase about:
+
+Codetry zone designations (no "zone 0", "Bright Side", "constellation" references).
+Codetry passes (no record of any vocabulary going through that process).
+What this project proves that no other constellation project proves.
+The only cross-project signal I can give: this project's architectural shield is "the api-server holds no keys and cannot move user funds, by construction." If Bright Side's shield is PHI-free design, Headwaters' analogue is custody-free design. Both are positioned to be procurable by institutions that themselves carry the regulated weight.
+
+Open questions you may want to surface back to Bobbie
+Is the on-reserve application a near-term roadmap item or a long-horizon thesis? Currently nothing in the code addresses it.
+Should there be a regulatory-language CI gate (analogue of plain-money-words) for advice/guarantee/return language? Currently disclaimers are by convention.
+Is "reserve" overloading (XRPL base reserve vs emergency-reserve bucket) worth disambiguating, given the one-word-one-referent discipline elsewhere?
+Where does CADD-on-Base fit the roadmap? The peg entry is in, but no Base wallet integration exists. Task #1004 (just merged) was scoped to XRPL cleanup only.
+Codetry zone designation for this project?
+That's the complete honest accounting I can give from this codebase.
