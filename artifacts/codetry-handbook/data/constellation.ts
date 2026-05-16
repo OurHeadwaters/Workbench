@@ -360,20 +360,21 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 1,
-      "name": "Headwaters",
+      "name": "Eave",
       "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) — household balance is the source of the watershed",
       "url": "https://x-buckets-vision.replit.app/",
       "status": "live",
       "formerNames": [
         "xBuckets",
-        "Watershed"
+        "Watershed",
+        "Headwaters"
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
       "tagline": "Channel every drop. Watch the ripple effect.",
       "workedExamples": [
         {
-          "name": "Headwaters",
-          "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up."
+          "name": "Eave",
+          "rule": "the eave is the first shelter outward from the household — the immediate circle of trust that catches what the household cannot hold alone. Rename to 'Network' and you lose the constraint that this zone is built on invitation, not open access; every downstream zone flows from that boundary being held."
         },
         {
           "name": "Buckets",

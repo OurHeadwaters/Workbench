@@ -1339,7 +1339,7 @@
           "number": "2.2",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Headwaters",
+          "title": "Eave",
           "blocks": [
             {
               "kind": "small",
@@ -1364,7 +1364,7 @@
             },
             {
               "kind": "small",
-              "text": "Formerly: xBuckets, Watershed"
+              "text": "Formerly: xBuckets, Watershed, Headwaters"
             },
             {
               "kind": "small",
@@ -1378,8 +1378,8 @@
               "kind": "examples",
               "items": [
                 {
-                  "name": "Headwaters",
-                  "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up."
+                  "name": "Eave",
+                  "rule": "the eave is the first shelter outward from the household — the immediate circle of trust that catches what the household cannot hold alone. Rename to 'Network' and you lose the constraint that this zone is built on invitation, not open access; every downstream zone flows from that boundary being held."
                 },
                 {
                   "name": "Buckets",
@@ -6774,7 +6774,7 @@
       "number": "2.2",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Headwaters",
+      "title": "Eave",
       "blocks": [
         {
           "kind": "small",
@@ -6799,7 +6799,7 @@
         },
         {
           "kind": "small",
-          "text": "Formerly: xBuckets, Watershed"
+          "text": "Formerly: xBuckets, Watershed, Headwaters"
         },
         {
           "kind": "small",
@@ -6813,8 +6813,8 @@
           "kind": "examples",
           "items": [
             {
-              "name": "Headwaters",
-              "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up."
+              "name": "Eave",
+              "rule": "the eave is the first shelter outward from the household — the immediate circle of trust that catches what the household cannot hold alone. Rename to 'Network' and you lose the constraint that this zone is built on invitation, not open access; every downstream zone flows from that boundary being held."
             },
             {
               "name": "Buckets",

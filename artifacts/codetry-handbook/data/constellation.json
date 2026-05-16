@@ -329,10 +329,11 @@
     },
     {
       "zone": 1,
-      "name": "Headwaters",
+      "name": "Eave",
       "formerNames": [
         "xBuckets",
-        "Watershed"
+        "Watershed",
+        "Headwaters"
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history \u2014 see openQuestions.",
       "domain": "Non-custodial XRPL stablecoin envelope-budgeting installable web app (PWA) \u2014 household balance is the source of the watershed",
@@ -395,8 +396,8 @@
       },
       "workedExamples": [
         {
-          "name": "Headwaters",
-          "rule": "the household balance is the source of the whole watershed; every other zone sits downstream. Rename to 'Budget App' and you lose the constraint that the source must keep flowing or every downstream zone dries up."
+          "name": "Eave",
+          "rule": "the eave is the first shelter outward from the household — the immediate circle of trust that catches what the household cannot hold alone. Rename to 'Network' and you lose the constraint that this zone is built on invitation, not open access; every downstream zone flows from that boundary being held."
         },
         {
           "name": "Buckets",
@@ -760,7 +761,7 @@
         "production": "community-knowledge-hub.replit.app",
         "ping": "edits to Z3 codebase land via project tasks in Z3's monorepo; cross-monorepo to Z2 requires practitioner relay"
       },
-      "z1Z3InterfaceStatus": "Z1 Headwaters proposed: 807 proposals \u2192 Community Well monthly rounds (shared schema needed). Z3's pack focused on offerings to Z4 governance and asks of Z2; did not address the Z1 proposal directly. Status: pending practitioner relay to confirm or decline.",
+      "z1Z3InterfaceStatus": "Z1 Eave proposed: 807 proposals \u2192 Community Well monthly rounds (shared schema needed). Z3's pack focused on offerings to Z4 governance and asks of Z2; did not address the Z1 proposal directly. Status: pending practitioner relay to confirm or decline.",
       "z3Z4InterfaceStatus": "Z4 raised: shared anonymized customer-ID convention before 807 (Z3) and CCM (Z4) both ship their own. CCM share-box pickup audience and 807 members portal audience are largely the same people. Standing decision needed; pending practitioner relay.",
       "standby": "Host zone for The Standby. Centralized disruptions (drought, fire, smoke, flood, ice, power, water, freight, payment systems, pandemic, evacuation, AGM-postponed, key-person-down) are felt collectively here first \u2014 at the co-op shelf, the producer pipeline, the orders ledger. Call history is the record kept here; standby stock is the inventory primitive; The Common Pantry is the food/supply sub-shelf; The Watch is the active-monitoring sub-noun.",
       "opening": "Treasurer is the job nobody wants. Some try and fail; a few do well. It is a big commitment for a volunteer organization, and this generation does not have the same bookkeeping skills that the last one had. Nobody wants to step up because they do not want to mess up.\n\nThe answer is not to lower the standard \u2014 it is to make the job fail-safe, stress-free, and easy as pie for the people willing to take it on. Calm is the contract. The name is not a vibe; it is a promise the system makes to the person who was brave enough to say yes.",
@@ -986,7 +987,7 @@
         "Chapter cover illustrations still depict watershed scenes (filenames preserved as IDs); rescue-at-sea cover art not yet generated.",
         "Mobile push doesn't yet send baseUpdatedAt, so mobile edits can't participate in twin-take conflict detection. Filed."
       ],
-      "z1Z5InterfaceStatus": "Z1 Headwaters proposed: Spring stage-transition events as triggers for private takes entries in The Margin. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the actual emit on Z1 side.",
+      "z1Z5InterfaceStatus": "Z1 Eave proposed: Spring stage-transition events as triggers for private takes entries in The Margin. Z5's /api/takes/sync is the natural ingestion endpoint (could accept a take with chapterHint='headwaters' for stage transitions). Awaiting practitioner relay to wire the actual emit on Z1 side.",
       "z4Z5InterfaceStatus": "Z4 (Arc) proposed candidate skip-stone: 'abattoir as commons, not service' \u2014 half-formed. Z5's Shallows is the natural surface when it's ready to float.",
       "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason \u2014 where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them \u2014 they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
@@ -1099,10 +1100,10 @@
     },
     "watchedCollisions": [
       "Library \u2014 three meanings already in play: Z3 (recipe-book library of audience-aware shelves), pre-zone (Brainstorm Library \u2014 idea seeds), and Z2's monorepo has artifacts/library (Northern Food Systems Research Library). Real forking risk; practitioner attention warranted.",
-      "Bucket \u2014 Z1 Headwaters has envelope buckets; Z1 Family Buckets sibling has memory + savings buckets. Same root metaphor (a thing that holds what you put in it), namespaced by app function, consistent with water-grammar.",
+      "Bucket \u2014 Z1 Eave has envelope buckets; Z1 Family Buckets sibling has memory + savings buckets. Same root metaphor (a thing that holds what you put in it), namespaced by app function, consistent with water-grammar.",
       "Moment \u2014 Saltbox keepsake; the Z0 agent flagged 'Moment \u2260 Note \u2260 Entry'. If any zone introduces 'Moment' as a noun, route through Z2 first.",
       "customer-ID schema \u2014 Z3 (807 members portal) and Z4 (CCM share-box pickup) audiences overlap heavily. Both apps will need to assign customer identifiers; without a shared anonymized convention, the same person becomes two different IDs across the constellation. Z4 explicitly raised this as a standing decision.",
-      "Watershed / headwaters \u2014 Z5 owns watershed.replit.app + watershed:* storage namespace + 'headwaters' as one of the chapter ID enum values. Z1 lists 'Watershed' as a former name and now goes by 'Headwaters'. Real cross-zone naming overlap at the URL/data layer (Z5) and the app-name layer (Z1). Practitioner attention to disambiguate the history before the registry calcifies.",
+      "Watershed / headwaters \u2014 Z5 owns watershed.replit.app + watershed:* storage namespace + 'headwaters' as one of the chapter ID enum values. Z1 lists 'Watershed' and 'Headwaters' as former names and now goes by 'Eave'. Real cross-zone naming overlap at the URL/data layer (Z5) and the app-name layer (Z1). Practitioner attention to disambiguate the history before the registry calcifies.",
       "Channel \u2014 Z5's primary output verb (POST /api/channel returns 6-zone shape). Watch for collisions if Z2 or other zones develop their own 'channel' verb. Also: Z5's Channel feature reads the user's life into Z0\u2013Z5 shape \u2014 naming overlap with the constellation's own zone vocabulary is intentional, not accidental.",
       "Legacy \u2014 three meanings emerging across the scratch projects: Surface Legacy (Legacy Gatekeeper, The Gate's prior live surface), Life Legacy (Legacy Builder Journey, memoir for retiring men), Asset Legacy (Legacy Asset Manager, extended-family planning). Same forking risk Library hit before disambiguation. Disambiguate with prefixes (Surface Legacy / Life Legacy / Asset Legacy) before any of these scratch projects come off scratch, or accept the polysemy?"
     ]
@@ -1123,7 +1124,7 @@
     "Bilingual surface area \u2014 Headwaters has copy.en.ts + copy.fr.ts. Does the codetry doc need a French mirror, or do the codetry names stay English everywhere with only descriptive copy translated?",
     "Z3 patterns to hoist into shared vocabulary \u2014 practitioner call needed: verb-as-route (currently Z3-local; Z1/Z2/Z5 could lean on it without re-deriving), role-rooms (Z4 governance could mirror), tenant seam (Z3 pattern for community-production co-ops). Hoist? Keep Z3-local? Per-pattern?",
     "Three Libraries \u2014 Z3's recipe-book library, pre-zone Brainstorm Library, and Z2 monorepo's artifacts/library (Northern Food Systems Research Library). Same word, three meanings; collision risk on the rise. Disambiguate with prefixes (Recipe Library / Brainstorm Library / Research Library), or accept the polysemy?",
-    "Z1\u2194Z3 proposal queue \u2014 Z1 Headwaters proposed 807 proposals \u2192 Community Well monthly rounds. Z3's pack didn't address it. Pending practitioner relay to confirm or decline.",
+    "Z1\u2194Z3 proposal queue \u2014 Z1 Eave proposed 807 proposals \u2192 Community Well monthly rounds. Z3's pack didn't address it. Pending practitioner relay to confirm or decline.",
     "Z1\u2194Z4 seam divergence \u2014 Z1 proposed 'regen-aligned' marker on Drip Harvester pools (pool tagging). Z4 proposed Local Line export from Black Barn pilot flowing into Headwaters household budget (cash-flow read-through). Two different seams; both could coexist. Which to pursue first?",
     "Cloverbelt Country Meats vs Coleman Custom Meats \u2014 Z4 reports both names in the codebase: Cloverbelt is the real coop; Coleman is test/demo branding in the live UI. Intentional separation (real pilot vs demo facade) or drift to converge?",
     "Customer-ID convention \u2014 Z4 raises a standing decision needed before Z3 (807 members portal) and Z4 (CCM share-box pickup) both ship their own. Audiences overlap heavily across Dryden + corridor. Anonymized shared schema, or scoped per-app?",
