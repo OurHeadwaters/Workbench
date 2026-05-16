@@ -227,7 +227,7 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
       "Active development, in use in Bobbie's household. The proof point is structural: user = developer = proof. Proof of concept for the individual support tool service line. Proof advances when the methodology is adapted for a second person's disability profile.",
   },
   {
-    name: "Coleman Custom Meats — Abattoir Operations",
+    name: "NWO Regional Abattoir — Operations Tool",
     type: "in-development",
     objectives: ["1", "3", "4"],
     status: "in-progress",
