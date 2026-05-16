@@ -543,84 +543,84 @@ export const STACK_CARDS: StackCard[] = [
   {
     id: "three-layers",
     category: "The Three Layers",
-    question: "What are the three layers of a Codetry-built platform, and who owns each one?",
+    question: "You can rearrange the furniture. You cannot move the load-bearing walls. Which layer of a Codetry platform is which?",
     context:
-      "Every platform Headwaters builds has three layers. Layer 1 — the Ledger of Words — is the vocabulary, zone structure, and logic that define how the platform thinks. Developer territory. Layer 2 — the Administrator Panel — is the day-to-day content and operations: listings, members, meetings, prices. Community territory, full control. Layer 3 — the Codetry Filter — is automatic validation that catches drift at the point of entry, keeping Layer 2 inside the shape Layer 1 defines. Communities run the platform. Only the grammar requires the developer back.",
+      "Every platform Headwaters builds has three layers. The Ledger of Words is the foundation — vocabulary, zone structure, logic. Load-bearing. The Administrator Panel is everything built on top of it: listings, members, prices, schedules. Furniture. The Codetry Filter is the door frame that makes sure nothing added through the admin panel damages the structure underneath. Communities have full run of the house. Only the walls require the developer back.",
     steps: [
       {
         id: "tl-1",
-        prompt: "Describe the three layers in your own words, as if explaining them to a band council who has never heard of Codetry.",
+        prompt: "What makes something load-bearing in a building — and what is the equivalent in a platform? What happens when someone tries to move the wrong thing?",
       },
       {
         id: "tl-2",
-        prompt: "What is the cost of confusing Layer 1 and Layer 2 — of letting an administrator edit the vocabulary? What breaks?",
+        prompt: "From the administrator's seat on day one, how would you explain which things are furniture and which are walls? What language would you use?",
       },
       {
         id: "tl-3",
-        prompt: "Which layer is most important to explain first when handing a platform off to a new administrator? Why that one?",
+        prompt: "The filter is the door frame. What does that mean — what does a door frame do that neither the wall nor the furniture does?",
       },
     ],
   },
   {
     id: "ledger-of-words",
     category: "The Three Layers",
-    question: "What is the Ledger of Words, and why can't it be edited from the admin panel?",
+    question: "The Ledger of Words is to a Codetry platform what bylaws are to a co-op. Who can read them, who wrote them, and who gets called when they need to change?",
     context:
-      "The Ledger of Words is the foundation layer — the vocabulary, zone names, envelope logic, and structural rules that define how the platform behaves. It is developer territory because changing it changes the grammar of the whole system. An administrator editing it would be like a board member rewriting the co-op's bylaws through the meeting-booking form. The ledger is what everything else is built on top of. When the community wants to change the underlying fundamentals, that is when they bring the developer back.",
+      "Bylaws define how the co-op thinks and behaves. You don't amend them through the meeting-booking form. The Ledger of Words is the same thing: the vocabulary, zone names, and structural rules that define how the platform operates. A board member can run a meeting inside those rules all day. When the rules themselves need to change — when the co-op wants to rename a zone or restructure an envelope — that is when the developer comes back. The ledger is the constitution. The admin panel is the day-to-day business of governance.",
     steps: [
       {
         id: "low-1",
-        prompt: "Use the bylaw analogy. How does it help explain the ledger boundary to a non-technical board member?",
+        prompt: "A board member asks: 'Can I just change that term in the system myself?' Walk through the bylaw analogy out loud. What does it help them understand?",
       },
       {
         id: "low-2",
-        prompt: "Give three examples of things a community might want to change that would require the developer back — and three that would not.",
+        prompt: "Name three things a community might want to change that would require amending the constitution — and three that are just the day-to-day business of governance.",
       },
       {
         id: "low-3",
-        prompt: "What is the risk if the ledger is too easy to change? What is lost if it is too hard? Where is the right boundary?",
+        prompt: "What is lost if the bylaws can be edited by anyone at any time? What does that analogy reveal about the Ledger of Words?",
       },
     ],
   },
   {
     id: "administrator-boundary",
     category: "The Three Layers",
-    question: "What can an administrator change without calling the developer?",
+    question: "Content flows freely. Grammar stays fixed. What does that boundary feel like from inside the administrator's seat?",
     context:
-      "An administrator has full control over content: product listings, member details, meeting agendas, producer profiles, prices, schedules, announcements. They cannot change the vocabulary terms, zone structure, bucket logic, or fundamental rules. The boundary is: content flows freely, grammar stays fixed. This is what makes the handoff real — the community is not dependent on the developer for operations, only for architecture changes.",
+      "Grammar is the Ledger of Words — the vocabulary and zone structure the platform is built on. Content is everything that moves through that grammar: listings, members, meetings, prices, schedules, announcements. The administrator has full, unsupervised control over all of it. They do not control the grammar. This is what makes the handoff real: the community isn't waiting on the developer for operations, only for architecture. Most administrators will never need to touch the grammar. That is the point.",
     steps: [
       {
         id: "ab-1",
-        prompt: "List five things an administrator of a food co-op platform should be able to do completely on their own.",
+        prompt: "What is 'grammar' in a platform — not linguistically, but operationally? Give two examples of grammar and two examples of content in a food co-op platform.",
       },
       {
         id: "ab-2",
-        prompt: "List three things that would require bringing the developer back. What do they have in common?",
+        prompt: "What does it feel like to have full control over content? What would it feel like if you also had to call someone every time you updated a price?",
       },
       {
         id: "ab-3",
-        prompt: "How would you explain this boundary to a board chair who is nervous about being stuck if the developer is unavailable?",
+        prompt: "'Grammar stays fixed' sounds like a constraint. How would you reframe it as a protection — something the administrator benefits from?",
       },
     ],
   },
   {
     id: "codetry-filter",
     category: "The Three Layers",
-    question: "What is the Codetry Filter, and how does it prevent drift?",
+    question: "A Codetry Filter is a gate, not a manual. What does it catch that even the best onboarding session cannot?",
     context:
-      "The Codetry Filter is validation rules embedded in every administrator action. When someone adds a record, the form's fields, labels, and help text reflect the Codetry vocabulary. If they try to create something that doesn't fit the model — a budget line with no bucket, a listing with no zone — the system catches it and explains why in the community's own language. Drift gets caught at the point of entry, not discovered six months later when the reports stop making sense.",
+      "A manual relies on memory. A gate acts at the moment of passage. When drift enters a platform — a listing in the wrong zone, a budget line with no bucket, a term that doesn't match the vocabulary — it usually enters through a well-meaning administrator who didn't remember the rule. The Codetry Filter doesn't rely on memory. It speaks the community's own vocabulary and catches the inconsistency at the moment it's being created, not six months later when the reports stop making sense.",
     steps: [
       {
         id: "cf-1",
-        prompt: "What is 'drift' in a platform context? Describe a concrete example of how it happens over time.",
+        prompt: "What is 'drift' — not as a concept, but as something you can watch happen in real time in an organisation you know? Describe a specific example.",
       },
       {
         id: "cf-2",
-        prompt: "Why is catching drift at the point of entry better than catching it in a quarterly review? What is the cost difference?",
+        prompt: "What is the difference between a gate and a manual? One relies on the person. What does the other rely on — and why does that matter at handoff?",
       },
       {
         id: "cf-3",
-        prompt: "What makes the Codetry Filter different from just having good documentation that admins are supposed to read?",
+        prompt: "The filter speaks the community's own vocabulary. What makes that different from a generic error message? What does it preserve?",
       },
     ],
   },
@@ -630,84 +630,84 @@ export const STACK_CARDS: StackCard[] = [
   {
     id: "build-inside-out",
     category: "Build Inside Out",
-    question: "What does 'build it inside out' mean, and what is it a response to?",
+    question: "Local Line was built for someone else. What is the difference between wearing clothes made for you and wearing what was on sale?",
     context:
-      "Building inside out means starting with how the community already operates — their language, their rhythms, their roles — and building tools that fit that. The alternative is building outside in: taking an existing platform (QuickBooks, Sage, Slack, Local Line, Google Drive) and training the community to use it. Outside-in fails because those tools carry a different language and a different set of assumptions about how organisations work. Contractors recommended them because they worked for the contractors. Inside-out tools wear the community's vocabulary from the first screen. Build it, hand it off, wear it proudly.",
+      "Building outside in means taking a platform built for a different body — a different language, a different set of rhythms, a different idea of what an 'organisation' looks like — and training the community to fit into it. The tool was on sale. The community reshapes itself around it. Building inside out starts with the community's actual body: their vocabulary, their roles, their cycles. The platform is cut to fit. It wears their name from the first screen. The community doesn't have to translate itself to use it.",
     steps: [
       {
         id: "bio-1",
-        prompt: "Name three tools a contractor might recommend and explain why each one fails in a northern or Indigenous community context.",
+        prompt: "Think of a platform recommended by a consultant: Local Line, QuickBooks, Square, Slack. Whose body was it cut for? What does the community have to do to fit into it?",
       },
       {
         id: "bio-2",
-        prompt: "What does building inside out require that building outside in does not? What makes it harder — and why is that the point?",
+        prompt: "What does 'built for someone else' mean at the level of language — not just interface? What assumptions are baked into the vocabulary of an outside-in tool?",
       },
       {
         id: "bio-3",
-        prompt: "'Build it inside out and wear it proudly.' What does wearing it proudly mean to you, specifically?",
+        prompt: "'Build it inside out and wear it proudly.' What does wearing it proudly mean — not as a slogan, but as something you would actually say to a band council?",
       },
     ],
   },
   {
     id: "handoff-promise",
     category: "Build Inside Out",
-    question: "What is the handoff promise, and what must be true of the platform for it to be real?",
+    question: "When is a handoff a gift — something the community owns outright — and when is it a loan with no clear end date?",
     context:
-      "The handoff promise is: build it, hand it off, let the community run it. For this to be real — not performative — the platform must be designed so the developer is not needed for ongoing operations. No licensing fees contingent on a vendor relationship. No vocabulary the community doesn't own. No admin task that requires developer access. The handoff is not a milestone at the end of the engagement. It is the design constraint from day one.",
+      "A gift changes hands completely. A loan keeps the original owner in the relationship. Most platform 'handoffs' are loans: the vendor stays in the relationship through licensing, through the admin password, through the fact that the community can't update the thing without calling someone. The Headwaters handoff is designed to be a gift from day one — not a milestone at the end of the engagement, but the design constraint that shapes what gets built. Build it so it can leave your hands entirely.",
     steps: [
       {
         id: "hp-1",
-        prompt: "What would make a handoff fake — things that look like a handoff but leave the community still dependent?",
+        prompt: "What are the signs that a handoff is a loan dressed as a gift? What keeps the original owner in the relationship?",
       },
       {
         id: "hp-2",
-        prompt: "What three things must be true of a platform before the handoff promise can honestly be made?",
+        prompt: "What three things must be true of a platform before the gift can honestly be given? What makes each one non-negotiable?",
       },
       {
         id: "hp-3",
-        prompt: "How does the handoff promise change how you price and scope the initial engagement? What does it rule out?",
+        prompt: "If the handoff is the design constraint from day one, what does it change about how you scope and price the initial engagement?",
       },
     ],
   },
   {
     id: "flat-fee-no-retainer",
     category: "Build Inside Out",
-    question: "What does 'flat fee, no retainer required' mean — and what does it rule out?",
+    question: "A retainer is rent. A flat fee is a deed. What does the community own when the invoice is paid and the developer is gone?",
     context:
-      "A flat fee means scope and price are set at the start. The community knows the total cost before committing. No retainer means there is no ongoing monthly fee to keep the developer in the relationship. This rules out dependency: the community doesn't keep paying Headwaters to keep the lights on. It also rules out scope creep dressed as service. The flat fee forces both sides to be honest about what is being built before the first line is written.",
+      "Rent keeps the landlord in the relationship. As long as the community is paying a retainer, the developer is still needed — and the community knows it. A deed transfers the thing entirely: the vocabulary, the platform, the logic. The community owns it and owes nothing further. The flat fee is how the deed is structured — scope and price agreed before the first line is written, total cost known before commitment. No scope creep dressed as service. No dependency dressed as support.",
     steps: [
       {
         id: "ffnr-1",
-        prompt: "What is the difference between a flat fee and a retainer? What does each one say about the relationship between practitioner and client?",
+        prompt: "What does rent say about a relationship that a deed does not? What power does the landlord hold that a deed removes?",
       },
       {
         id: "ffnr-2",
-        prompt: "What does 'no retainer required' signal to a band council or co-op board that is used to ongoing consultant dependency?",
+        prompt: "A band council or co-op board used to consultant dependency hears 'flat fee, no retainer required.' What does that signal to them — and why might it be hard to believe at first?",
       },
       {
         id: "ffnr-3",
-        prompt: "What does the flat fee require of you as the practitioner? What must be true before you can name a number with confidence?",
+        prompt: "The flat fee requires honesty about scope before the work starts. What must you know — about the community, the platform, and the work — before you can name a number that is also a deed?",
       },
     ],
   },
   {
     id: "sovereignty-over-tools",
     category: "Build Inside Out",
-    question: "What does it mean for a community to have sovereignty over its tools?",
+    question: "What can the landlord do to the tenant's tools that the tenant cannot prevent — and what changes when the community owns the building?",
     context:
-      "Tool sovereignty means the community owns the platform — the data, the vocabulary, the structure — and is not dependent on a vendor's pricing, availability, or terms of service. It is the opposite of SaaS subscriptions that can raise prices, shut down, or be acquired by a competitor. In northern and Indigenous contexts it also means cultural fit: the tools reflect the community's logic, not a product manager's assumptions about how organisations work. Sovereignty over tools is one expression of economic sovereignty.",
+      "Every SaaS platform is a landlord-tenant arrangement. The vendor can raise prices, change terms, shut down, be acquired, deprecate features, or simply decide the northern food co-op market isn't worth serving. The tenant has no recourse. When the community owns the platform outright — the data, the vocabulary, the codebase — the landlord is gone. In northern and Indigenous contexts, tool sovereignty is also cultural: the tools reflect the community's logic, not a product manager's assumptions about what 'normal' organisations look like.",
     steps: [
       {
         id: "sot-1",
-        prompt: "What is the risk of building a community food system on Local Line or Square? Name three things that could change without the community's consent.",
+        prompt: "Name three things a SaaS vendor could do — without asking — that would break a community food system built on their platform.",
       },
       {
         id: "sot-2",
-        prompt: "What does 'the board owns it outright' mean technically and legally? What changes when they own it versus when they subscribe to it?",
+        prompt: "What does 'owning the building' mean in practice? Not metaphorically — what does the board actually hold when the platform is theirs?",
       },
       {
         id: "sot-3",
-        prompt: "How does tool sovereignty connect to the broader principle of community economic sovereignty? What is the link?",
+        prompt: "Tool sovereignty is one expression of economic sovereignty. What is the connection? What does owning your tools protect that renting them does not?",
       },
     ],
   },
@@ -717,42 +717,42 @@ export const STACK_CARDS: StackCard[] = [
   {
     id: "saltbox-your-work",
     category: "Explain It",
-    question: "What is the Saltbox, and why does the practitioner's own work start there?",
+    question: "What gets salted in the Saltbox before it leaves — and what happens to something that leaves before it's ready?",
     context:
-      "The Saltbox is Zone 0 — the practitioner's own household, the most private space in the constellation. It is where you work on yourself before working with others. The Jar Kitchen lives in the Saltbox. Personal finances, vocabulary-building, and deep practice all start here. Work done well in the Saltbox generates the capacity that makes the Workbench, the Commons, and the Arc possible. You cannot hand off what you have not first built in your own space.",
+      "The Saltbox is Zone 0 — the practitioner's own household, the most private space in the constellation. Salt preserves. Work done in the Saltbox is work on yourself: vocabulary-building, personal finances, deep practice, the Jar Kitchen. It has to cure before it can be offered outward. The Workbench, the Commons, and the Arc are built on what was prepared in Zone 0. Something that leaves the Saltbox before it's ready — vocabulary that isn't precise yet, a practice that hasn't been tested — won't survive the journey.",
     steps: [
       {
         id: "sy-1",
-        prompt: "What kind of work belongs in the Saltbox? Give three concrete examples from your own practice.",
+        prompt: "What does 'salting' preserve? What quality does it protect that would otherwise be lost in transit or over time?",
       },
       {
         id: "sy-2",
-        prompt: "Why does the constellation start at Zone 0 rather than at the community level? What does that order say about how capacity is built?",
+        prompt: "What does something that left before it was ready look like — in your practice, specifically? Name an example. What got lost?",
       },
       {
         id: "sy-3",
-        prompt: "What are you currently building in your Saltbox that will eventually propagate outward? What does it need before it's ready to leave?",
+        prompt: "What are you currently salting in your own Saltbox? What is it not ready to do yet — and what will tell you when it is?",
       },
     ],
   },
   {
     id: "explain-codetry-to-your-circle",
     category: "Explain It",
-    question: "How do you explain Codetry to someone in your circle who has never heard of it?",
+    question: "The tool name doesn't survive. The trade name does. How do you explain that gap — in under two minutes, without the book?",
     context:
-      "Most people in your circle don't need the full framework. They need one clear idea that opens the door to the next conversation. The entry point is usually the contrast: we normally name the tool ('we use QuickBooks'), Codetry names the trade ('we track every drop of money through its natural destination'). The trade name survives when the tool changes. The tool name doesn't. Start there, and the rest follows.",
+      "The entry point for most people in your circle is the contrast: we normally name the tool ('we use QuickBooks for accounting'), Codetry names the trade ('we track every dollar through its natural destination'). When the tool changes, the tool name disappears. The trade name stays — it describes the practice, not the instrument. Most people have felt this gap without naming it: the moment a software migration wiped out everything that had been organised around the old tool's vocabulary. That is the opening.",
     steps: [
       {
         id: "ectc-1",
-        prompt: "Write the two-minute version. Explain Codetry to your husband, a co-op board member, or a band council contact — without using any terms from the book.",
+        prompt: "Write it. Two minutes, no book terms — explain Codetry to your husband, a board member, or a band council contact as if the handbook doesn't exist.",
       },
       {
         id: "ectc-2",
-        prompt: "What is the single idea you want them to understand first? Not the whole framework — the one thing that makes everything else make sense.",
+        prompt: "What is the one sentence — not paragraph — that everything else hangs from? The sentence that, if they get it, the rest follows?",
       },
       {
         id: "ectc-3",
-        prompt: "What objection or confused question do you expect them to raise? Write your answer to it, in plain language.",
+        prompt: "What is the confused question you expect them to ask? ('Is this like...?') Write your answer — not the corrected version, the one that meets them where they are.",
       },
     ],
   },
