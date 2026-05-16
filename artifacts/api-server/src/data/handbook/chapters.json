@@ -1723,7 +1723,7 @@
           "number": "2.5",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Community Hall",
+          "title": "Arc",
           "blocks": [
             {
               "kind": "small",
@@ -1731,7 +1731,7 @@
             },
             {
               "kind": "para",
-              "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nZone 4 is where neighbours find each other around an idea before anyone is ready to call it a business. It is informal by design. The formality comes later — at Zone 3's table, after the group has done enough work together to know whether the idea will hold.",
+              "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
               "practitioner": true
             },
             {
@@ -1740,11 +1740,7 @@
             },
             {
               "kind": "para",
-              "text": "Voluntary informal association — small groups collaborating to shape Zone 5 ideas into organized pilots, for Zone 3 approval and Zone 2 contract. The conventional→regenerative framing was an earlier lens; Zone 4 is now understood as the informal voluntary layer where wild ideas take real shape before they reach Zone 3's decision table."
-            },
-            {
-              "kind": "small",
-              "text": "Formerly: Arc"
+              "text": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO"
             },
             {
               "kind": "small",
@@ -1789,7 +1785,7 @@
             },
             {
               "kind": "pull",
-              "text": "What idea are you currently holding in Zone 4 — and who else is in the room with you on it?",
+              "text": "Which thread in your operation are you the only one holding right now?",
               "practitioner": true
             },
             {
@@ -1804,9 +1800,9 @@
             {
               "kind": "list",
               "items": [
-                "What is forming informally in your community right now that doesn't have a name yet?",
-                "Who is doing Zone 4 work without Zone 2 support — and what would change if they had it?",
-                "What has come back from Zone 3 as Fodder — and what does it know now that it didn't know the first time?"
+                "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
+                "What do you call what you do? Not what the movement calls it — what you call it.",
+                "What would systematic look like for one part of your operation this season?"
               ],
               "practitioner": true
             }
@@ -7291,7 +7287,7 @@
       "number": "2.5",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Community Hall",
+      "title": "Arc",
       "blocks": [
         {
           "kind": "small",
@@ -7299,7 +7295,7 @@
         },
         {
           "kind": "para",
-          "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nZone 4 is where neighbours find each other around an idea before anyone is ready to call it a business. It is informal by design. The formality comes later — at Zone 3's table, after the group has done enough work together to know whether the idea will hold.",
+          "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
           "practitioner": true
         },
         {
@@ -7308,11 +7304,7 @@
         },
         {
           "kind": "para",
-          "text": "Voluntary informal association — small groups collaborating to shape Zone 5 ideas into organized pilots, for Zone 3 approval and Zone 2 contract. The conventional→regenerative framing was an earlier lens; Zone 4 is now understood as the informal voluntary layer where wild ideas take real shape before they reach Zone 3's decision table."
-        },
-        {
-          "kind": "small",
-          "text": "Formerly: Arc"
+          "text": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO"
         },
         {
           "kind": "small",
@@ -7357,7 +7349,7 @@
         },
         {
           "kind": "pull",
-          "text": "What idea are you currently holding in Zone 4 — and who else is in the room with you on it?",
+          "text": "Which thread in your operation are you the only one holding right now?",
           "practitioner": true
         },
         {
@@ -7372,9 +7364,9 @@
         {
           "kind": "list",
           "items": [
-            "What is forming informally in your community right now that doesn't have a name yet?",
-            "Who is doing Zone 4 work without Zone 2 support — and what would change if they had it?",
-            "What has come back from Zone 3 as Fodder — and what does it know now that it didn't know the first time?"
+            "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
+            "What do you call what you do? Not what the movement calls it — what you call it.",
+            "What would systematic look like for one part of your operation this season?"
           ],
           "practitioner": true
         }

@@ -371,8 +371,6 @@ export const constellation: ConstellationSnapshot = {
       ],
       "formerNamesNote": "Zone 5 (The Margin) reports 'Watershed' is still active at the URL/storage layer for its takes-capture surface (watershed.replit.app + watershed:* storage namespace). Practitioner attention warranted to disambiguate the history — see openQuestions.",
       "tagline": "Channel every drop. Nothing from nowhere.",
-      "identityLayer": "Lodge — confirmed Zone 1 identity layer name (May 2026, §5.9). Private, invitation-only, held by a group with shared values, revocable by the keeper of the door. A Lodge identity is what a household holds below the Eave: a name the circle recognises, invisible to Zone 3+. Rename test run and held against Membership, Profile, and Household ID — all three cracked.",
-      "privacyBoundary": "The Eave is a hard privacy boundary between Zone 1 (Lodge — private, household) and Zone 3+ (organizational, above-board). Zone 3 wallet addresses cannot reach Zone 1 data. Zone 4 is above the Eave — named producers operate with disclosed identity. Zone 5 is Eave-optional — participants can stay below the Eave while wading in the idea commons; anonymous DID participation is valid without disclosure.",
       "workedExamples": [
         {
           "name": "Eave",
@@ -589,10 +587,8 @@ export const constellation: ConstellationSnapshot = {
     },
     {
       "zone": 4,
-      "name": "Community Hall",
-      "domain": "Voluntary informal association — small groups collaborating to shape Zone 5 ideas into organized pilots, for Zone 3 approval and Zone 2 contract. The conventional→regenerative framing was an earlier lens; Zone 4 is now understood as the informal voluntary layer where wild ideas take real shape before they reach Zone 3's decision table.",
-      "formerNames": ["Arc"],
-      "formerNamesNote": "Zone 4 was named 'Arc' during the NWO regen beef pilot phase, when the primary use case was individual producer transition (conventional → regenerative). That framing has been superseded: Zone 4 is now the collective voluntary formation layer, not a single-producer transition track. The abattoir pilot tool and Jude's operation remain valid Zone 4 examples but are now understood as one expression of Zone 4, not the defining one.",
+      "name": "Arc",
+      "domain": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO",
       "url": "https://regen-revolution-zone-4.replit.app/",
       "status": "live (v0.1 anchor shipping)",
       "workedExamples": [
@@ -625,36 +621,13 @@ export const constellation: ConstellationSnapshot = {
           "rule": "'Homestead-sitter / childcare app for farm families' — discovered during Black Barn discovery, deliberately not absorbed into Z4. Parked as a scratch thread; probably Z0 or Z5 when it finds a home."
         }
       ],
-      "formationModel": {
-        "summary": "Zone 4 is voluntary informal association — small groups of people finding each other around a shared idea and beginning to organize. No contracts, no board authority, no exchange. The Community Hall is where bodies gather in person to scout capacity, run test batches, and engage face-to-face. Zone 4 is the layer where wild ideas from Zone 5 take real shape before they reach Zone 3's decision table.",
-        "fullFlow": "Zone 5 (wild idea) → Zone 4 (informal group shapes and semi-organizes it) → Zone 3 board votes to approve → Zone 3 pushes a contract to Zone 2 (practitioner is paid to do the work) → work passes back to Zone 3 to operate and sustain → Zone 4 participants see collective benefit from that operation.",
-        "whoParticipates": "Most people stay only in Zone 4 — they form ideas, show up, and see modest collective benefit when a project succeeds. Some people also carry Zone 2 work (the practitioner who has connective value across zones) and get benefit out both ends. The Zone 2 contractor is hired by Zone 3 to do the work the Zone 4 group organized — they are not the same role, even when the same person holds both.",
-        "z3Relationship": "Two-way. Zone 4 feeds Zone 3 (ideas shaped here earn a seat at the table). Zone 3 feeds Zone 4 (Fodder — ideas that weren't ready or broke come back for reworking). Zone 4 is not defined by Zone 3 but is in genuine relationship with it.",
-        "subShelves": [
-          { "name": "Nursery", "rule": "New ideas forming — no history, no scar tissue, open slate. Often seeded from Zone 5." },
-          { "name": "Fodder", "rule": "Zone 3 ideas returned for reworking. Carries history and scar tissue; distinct from Nursery. A Fodder idea has already survived one round of the world. Named honestly so the difference is never flattened." },
-          { "name": "Fallow", "rule": "Ideas resting between attempts, not formally demoted. Fallow ground still has life in it; fallow is not failure." }
-        ],
-        "graduationGate": "A fully formed, actionable pilot handed to the Zone 3 producer board for a vote. Graduating means surviving one full cycle without Zone 3 eating the risk on behalf of Zone 4. First Saltbox: 807's dog-treats co-op — surplus organs from member grazers → value-added processing → wholesale to member producers.",
-        "economicFloor": "Zone 3 (807) frames Zone 4 ideas in massity dialect → writes grants → grants fund Zone 2 workbenches of the practitioners doing Zone 4 facilitation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly. Without a funded Zone 2 layer, Zone 4 stagnates. This is the root of the capacity crisis in 807's region.",
-        "bothSides": {
-          "bright": ["the Community Hall", "forming a co-op together", "a group of us working on it"],
-          "massity": ["rural innovation pilot", "producer-led cooperative development program", "pre-commercial collaboration"]
-        },
-        "z5Seam": {
-          "pathA": "Return flow — a Zone 4 project that graduates Zone 3, runs its cycle, and floats surplus vocabulary or lived experience back out to Zone 5 as founding drift; the successful co-op seeds the Shallows with its hard-won language so the next Nursery group has something to wade into. Confirmed direction: Zone 4 → Zone 5, distinct from Paths B/C/D which run Zone 5 → Zone 4.",
-          "pathB": "Discovery — Zone 4 nursery groups browse the Shallows like a seed catalog; posts that mature surface in a 'ready to pick up' view.",
-          "pathC": "Adoption — a Zone 4 group collectively adopts a Shallows post as their starting brief; DID attribution credits the anonymous author without naming them. Digital drift becomes local action in a Community Hall.",
-          "pathD": "Honest baseline — some posts never cross; that is the wilderness doing wilderness work."
-        }
-      },
-      "standby": "Reads The Standby as collective capacity fragility — which Zone 4 formation groups have which single-thread dependencies. A key-person-down call at Zone 4 is different from Zone 3's key-person-down: Zone 4 has no board to call an emergency meeting, no bylaws for quorum. The Standby here names who holds the thread and what the group does when that person is unavailable.",
-      "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nZone 4 is where neighbours find each other around an idea before anyone is ready to call it a business. It is informal by design. The formality comes later — at Zone 3's table, after the group has done enough work together to know whether the idea will hold.",
-      "inlinePrompt": "What idea are you currently holding in Zone 4 — and who else is in the room with you on it?",
+      "standby": "Reads The Standby as sector-level standby modeling — which industries have which fragilities to which calls. Regen beef in NWO, for example: a freight call hits the abattoir's outbound packed weights before it hits anything else; a power call hits cold storage; a key-person call hits Jude herself. Sector → call → first-touched node is the modeling unit.",
+      "opening": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
+      "inlinePrompt": "Which thread in your operation are you the only one holding right now?",
       "reflections": [
-        "What is forming informally in your community right now that doesn't have a name yet?",
-        "Who is doing Zone 4 work without Zone 2 support — and what would change if they had it?",
-        "What has come back from Zone 3 as Fodder — and what does it know now that it didn't know the first time?"
+        "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
+        "What do you call what you do? Not what the movement calls it — what you call it.",
+        "What would systematic look like for one part of your operation this season?"
       ]
     },
     {
@@ -684,8 +657,6 @@ export const constellation: ConstellationSnapshot = {
           "rule": "A user posts anonymously; their pseudonym in that thread is stable; in another thread they're someone else. The 'depths below the shallows' framing is literally the session-hash one-way derivation."
         }
       ],
-      "eavePosture": "Eave-optional. Participants can stay below the Eave while wading in Zone 5 — anonymous DID participation is valid without disclosure. Re-entry has no social barrier: no history check, no credibility password. Zone 3 reputation is left at the water's edge. Participation does not require crossing the Eave.",
-      "failureMode": "Dead backwater — the Shallows goes quiet, tip flow drops to zero, no new DIDs wading in. Prevention is Zone 3 and Zone 4's job, not Zone 5's.",
       "standby": "Reads The Standby as the surface where debriefs that someone wants to share publicly float to the Shallows. The private-by-default posture holds: a debrief stays a Take in The Margin unless its author chooses to float it. The Standby gives the chapter hint.",
       "opening": "A dam day is a day without rhyme or reason — where a spark was lit and a fire burst forth. It may be a creative hyperfocus, or a day that required a shift of energy that no constellation can contain. Dam days are fleeting. But there are gems worth harnessing in them — they may just be covered in muck.\n\nThe Shallows is where you clean them off. Not every take becomes something. But the practice of catching it before it disappears is the whole discipline.",
       "inlinePrompt": "What was the last dam day you had — and what did you catch from it before it passed?",

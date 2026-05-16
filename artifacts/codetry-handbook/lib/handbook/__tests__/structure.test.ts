@@ -201,6 +201,7 @@ const OPEN_QUESTIONS_EXPECTED_NUMBERS = [
   "5.6",
   "5.7",
   "5.8",
+  "5.9",
 ];
 
 const DEEP_DIVES_EXPECTED_NUMBERS = [
