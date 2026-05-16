@@ -1074,6 +1074,12 @@ const partII: Part = {
           kind: "small",
           text: "commit:ea059b3~1 · artifacts/practitioner-operating-plan/src/pages/Codetry.tsx (constellation array, The Gate entry)",
         },
+        {
+          kind: "tool",
+          label: "Gate Log — start your translation record",
+          hint: "Enter your first bright-side/massity pair. The Gate is only a gate if someone is keeping the log — both sides recorded, neither dissolved into the other.",
+          route: "/gate-log",
+        },
       ],
     },
     {
@@ -1604,6 +1610,12 @@ const partIV: Part = {
           kind: "small",
           text:
             "From the ledger — §FL.1, §FL.2, §FL.9, §FL.10 are the rule at work; the §FL.10 pair extends it to a loud-amber CTA and a transactional sheet's title-level register.",
+        },
+        {
+          kind: "tool",
+          label: "Rename Test — run it on a real name",
+          hint: "Bring one name from your practice. Try two alternatives. Write what would be lost. Deliver the verdict: load-bearing, decorative, or still unclear.",
+          route: "/rename-test",
         },
       ],
     },
@@ -4581,6 +4593,12 @@ const partConclusion: Part = {
         {
           kind: "para",
           text: "Freedom is not granted. Freedom is claimed — one Preservation Season at a time, one jar at a time, one community institution at a time. The discipline codetry adds is small: name the thing correctly, test the name by trying to rename it, and refuse to let the generic vocabulary quietly erase what makes the practice specific. The Jarista, the Jar Kitchen, the Seasonal Shelf, the Harvest Hold, the Bulk Round, Preservation Season — these names are the practice made legible. Keep them.",
+        },
+        {
+          kind: "tool",
+          label: "Your Constellation — name your six zones",
+          hint: "The Jarista named her zones so the practice could be taught and held. Name yours. Zone 0 through Zone 5, in your vocabulary — not the founding examples, yours.",
+          route: "/constellation-builder",
         },
         {
           kind: "tool",

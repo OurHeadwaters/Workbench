@@ -61,6 +61,9 @@ function RootLayoutNav() {
       <Stack.Screen name="stack/[id]" />
       <Stack.Screen name="author" />
       <Stack.Screen name="daily-prompt" />
+      <Stack.Screen name="rename-test" />
+      <Stack.Screen name="gate-log" />
+      <Stack.Screen name="constellation-builder" />
     </Stack>
   );
 }

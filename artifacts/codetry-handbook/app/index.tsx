@@ -408,6 +408,141 @@ export default function FrontPage() {
           </Text>
         </Pressable>
 
+        <Pressable
+          onPress={() => router.push("/rename-test")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Rename Test
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              {"Is the name load-bearing or decoration?"}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push("/gate-log")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Gate Log
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              {"Bright-side names and their massity translations"}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push("/constellation-builder")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              {"Your Constellation"}
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              {"Name your six zones in your own vocabulary"}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
 
         <View style={{ height: 32 }} />
 
