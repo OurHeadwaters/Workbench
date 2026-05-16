@@ -1723,7 +1723,7 @@
           "number": "2.5",
           "partRoman": "II",
           "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-          "title": "Arc",
+          "title": "Community Hall",
           "blocks": [
             {
               "kind": "small",
@@ -1731,7 +1731,7 @@
             },
             {
               "kind": "para",
-              "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
+              "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nZone 4 is where neighbours find each other around an idea before anyone is ready to call it a business. It is informal by design. The formality comes later — at Zone 3's table, after the group has done enough work together to know whether the idea will hold.",
               "practitioner": true
             },
             {
@@ -1740,7 +1740,11 @@
             },
             {
               "kind": "para",
-              "text": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO"
+              "text": "Voluntary informal association — small groups collaborating to shape Zone 5 ideas into organized pilots, for Zone 3 approval and Zone 2 contract. The conventional→regenerative framing was an earlier lens; Zone 4 is now understood as the informal voluntary layer where wild ideas take real shape before they reach Zone 3's decision table."
+            },
+            {
+              "kind": "small",
+              "text": "Formerly: Arc"
             },
             {
               "kind": "small",
@@ -1785,7 +1789,7 @@
             },
             {
               "kind": "pull",
-              "text": "Which thread in your operation are you the only one holding right now?",
+              "text": "What idea are you currently holding in Zone 4 — and who else is in the room with you on it?",
               "practitioner": true
             },
             {
@@ -1800,9 +1804,9 @@
             {
               "kind": "list",
               "items": [
-                "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
-                "What do you call what you do? Not what the movement calls it — what you call it.",
-                "What would systematic look like for one part of your operation this season?"
+                "What is forming informally in your community right now that doesn't have a name yet?",
+                "Who is doing Zone 4 work without Zone 2 support — and what would change if they had it?",
+                "What has come back from Zone 3 as Fodder — and what does it know now that it didn't know the first time?"
               ],
               "practitioner": true
             }
@@ -3976,6 +3980,59 @@
             {
               "kind": "callout",
               "text": "The visitor surface is empty by design. Sponsors and experts are added as the practitioner's own circle walks the path and earns the standing to invite the second cohort, and as that cohort in turn earns the standing to host visitors. The empty state is the discipline; the populated state is the milestone."
+            }
+          ]
+        },
+        {
+          "id": "6-9",
+          "number": "5.9",
+          "partRoman": "V",
+          "partLabel": "V · Open Questions",
+          "title": "Lodge, Path A, and Zone 4 — three open questions, two resolved, one still held",
+          "blocks": [
+            {
+              "kind": "small",
+              "text": "Open question · partially resolved May 2026 · Lodge still pending the rename test."
+            },
+            {
+              "kind": "para",
+              "text": "This chapter opened with three naming decisions the workspace was running ahead of handbook adjudication. Two have been resolved by the practitioner in session. One — Lodge — remains open pending the codetry rename test. The chapter records all three, with their resolution status, so the discipline knows what is confirmed and what is still being held."
+            },
+            {
+              "kind": "subhead",
+              "text": "Path A — resolved. The return flow."
+            },
+            {
+              "kind": "para",
+              "text": "Path A is confirmed as the *return flow* — the direction Zone 4 → Zone 5, distinct from Paths B, C, and D which all run Zone 5 → Zone 4. A Zone 4 project that graduates Zone 3, runs its full cycle, and floats surplus vocabulary or lived experience back out to Zone 5 as founding drift. The successful community project seeds the Shallows with its hard-won language so the next Nursery group has something real to wade into — not a consultant's framing, not a funder's vocabulary, but the words the people who actually did it used to describe what they built. Path A is the return current. It is how the watershed replenishes the Shallows instead of only drawing from it."
+            },
+            {
+              "kind": "subhead",
+              "text": "Zone 4 as two models — resolved. One zone, one role, two lenses."
+            },
+            {
+              "kind": "para",
+              "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Community Hall* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Community Hall in the constellation data to reflect this."
+            },
+            {
+              "kind": "para",
+              "text": "The full flow the practitioner confirmed: Zone 5 (wild idea) → Zone 4 (informal group shapes and semi-organizes it) → Zone 3 board votes to approve → Zone 3 pushes a contract to Zone 2 (practitioner is paid to do the work) → work passes back to Zone 3 to operate and sustain → Zone 4 participants see collective benefit. Most people stay only in Zone 4 and see modest collective benefit. Some people also carry Zone 2 work — they have connective value across zones and benefit out both ends. The Zone 2 contractor is hired by Zone 3 to do the work the Zone 4 group organized; they are not the same role, even when the same person holds both."
+            },
+            {
+              "kind": "subhead",
+              "text": "Lodge — resolved. The rename test holds."
+            },
+            {
+              "kind": "para",
+              "text": "Lodge is confirmed. The rename test was run against three candidates: *Membership*, *Profile*, and *Household ID*. All three crack on contact."
+            },
+            {
+              "kind": "para",
+              "text": "*Membership* imports a dues-and-benefits frame — a membership can be public, can be enrolled in, can be tracked in a ledger. A membership tool gets built with a sign-up flow and a benefits page. Lodge is not something you enroll in; it is something you are brought into. *Profile* imports the social-media posture of public self-presentation — a profile shows you outward, to someone outside the circle. Profile tools become bios, follower counts, public visibility settings. Lodge does not present you outward; it holds you inward, among the people who already know you're there. *Household ID* imports the government-register posture of official identity — an ID is recognized by systems and institutions, not by people. Household ID tools become verification flows, KYC steps, login credentials. Lodge is recognized by the keeper of the door and the people behind it, not by a system checking a database."
+            },
+            {
+              "kind": "callout",
+              "text": "Lodge is confirmed as the Zone 1 identity layer name. What the name carries that none of the alternatives do: private (not public, not institutional), earned by invitation (not enrolled, not registered), held by a group with shared values (not by a platform, not by a regulator), revocable by the keeper of the door (not by a terms-of-service update). All three substitutes would quietly change what Zone 1 tools get built. Lodge is load-bearing."
             }
           ]
         }
@@ -7234,7 +7291,7 @@
       "number": "2.5",
       "partRoman": "II",
       "partLabel": "II · The Constellation: 6 Zones and 3 Naming Primitives",
-      "title": "Arc",
+      "title": "Community Hall",
       "blocks": [
         {
           "kind": "small",
@@ -7242,7 +7299,7 @@
         },
         {
           "kind": "para",
-          "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nThe word they use is not \"regenerative.\" It is grass finished. Grazing. Fodder fed. The work names itself in what it produces and how it is done.",
+          "text": "It is not just the spreadsheet and the phone call. It is the Facebook comments, the Instagram comments, the Facebook messages, the marketplace comments, the email, the voicemail, the text message, the in-person conversation, the invoice. One person has to touch it all — because it is the only way the ball of yarn will not unravel.\n\nThe producers running these operations are not failing for lack of effort. They are failing for lack of capacity. If they had the capacity to systematize, they could find the efficiencies needed for real growth. That is the job this zone exists to do.\n\nZone 4 is where neighbours find each other around an idea before anyone is ready to call it a business. It is informal by design. The formality comes later — at Zone 3's table, after the group has done enough work together to know whether the idea will hold.",
           "practitioner": true
         },
         {
@@ -7251,7 +7308,11 @@
         },
         {
           "kind": "para",
-          "text": "Conventional → regenerative track for industries — multi-year, sector-scale; current sector is regen beef in NWO"
+          "text": "Voluntary informal association — small groups collaborating to shape Zone 5 ideas into organized pilots, for Zone 3 approval and Zone 2 contract. The conventional→regenerative framing was an earlier lens; Zone 4 is now understood as the informal voluntary layer where wild ideas take real shape before they reach Zone 3's decision table."
+        },
+        {
+          "kind": "small",
+          "text": "Formerly: Arc"
         },
         {
           "kind": "small",
@@ -7296,7 +7357,7 @@
         },
         {
           "kind": "pull",
-          "text": "Which thread in your operation are you the only one holding right now?",
+          "text": "What idea are you currently holding in Zone 4 — and who else is in the room with you on it?",
           "practitioner": true
         },
         {
@@ -7311,9 +7372,9 @@
         {
           "kind": "list",
           "items": [
-            "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
-            "What do you call what you do? Not what the movement calls it — what you call it.",
-            "What would systematic look like for one part of your operation this season?"
+            "What is forming informally in your community right now that doesn't have a name yet?",
+            "Who is doing Zone 4 work without Zone 2 support — and what would change if they had it?",
+            "What has come back from Zone 3 as Fodder — and what does it know now that it didn't know the first time?"
           ],
           "practitioner": true
         }
@@ -9466,6 +9527,59 @@
         {
           "kind": "callout",
           "text": "The visitor surface is empty by design. Sponsors and experts are added as the practitioner's own circle walks the path and earns the standing to invite the second cohort, and as that cohort in turn earns the standing to host visitors. The empty state is the discipline; the populated state is the milestone."
+        }
+      ]
+    },
+    {
+      "id": "6-9",
+      "number": "5.9",
+      "partRoman": "V",
+      "partLabel": "V · Open Questions",
+      "title": "Lodge, Path A, and Zone 4 — three open questions, two resolved, one still held",
+      "blocks": [
+        {
+          "kind": "small",
+          "text": "Open question · partially resolved May 2026 · Lodge still pending the rename test."
+        },
+        {
+          "kind": "para",
+          "text": "This chapter opened with three naming decisions the workspace was running ahead of handbook adjudication. Two have been resolved by the practitioner in session. One — Lodge — remains open pending the codetry rename test. The chapter records all three, with their resolution status, so the discipline knows what is confirmed and what is still being held."
+        },
+        {
+          "kind": "subhead",
+          "text": "Path A — resolved. The return flow."
+        },
+        {
+          "kind": "para",
+          "text": "Path A is confirmed as the *return flow* — the direction Zone 4 → Zone 5, distinct from Paths B, C, and D which all run Zone 5 → Zone 4. A Zone 4 project that graduates Zone 3, runs its full cycle, and floats surplus vocabulary or lived experience back out to Zone 5 as founding drift. The successful community project seeds the Shallows with its hard-won language so the next Nursery group has something real to wade into — not a consultant's framing, not a funder's vocabulary, but the words the people who actually did it used to describe what they built. Path A is the return current. It is how the watershed replenishes the Shallows instead of only drawing from it."
+        },
+        {
+          "kind": "subhead",
+          "text": "Zone 4 as two models — resolved. One zone, one role, two lenses."
+        },
+        {
+          "kind": "para",
+          "text": "The apparent tension between Zone 4 as *Arc* (individual producer transition, conventional → regenerative) and Zone 4 as *Community Hall* (voluntary collective formation) is resolved: *Arc* was an earlier lens that named Zone 4 from the vantage of a single producer's trajectory. That framing has been superseded. Zone 4 is now understood as *voluntary informal association* — small groups of people finding each other around an idea and beginning to organize, without contracts, without board authority, without an exchange. The abattoir pilot and the pilot farm operation are still valid Zone 4 examples, now understood as one expression of that voluntary formation process rather than the defining one. Zone 4 has been renamed Community Hall in the constellation data to reflect this."
+        },
+        {
+          "kind": "para",
+          "text": "The full flow the practitioner confirmed: Zone 5 (wild idea) → Zone 4 (informal group shapes and semi-organizes it) → Zone 3 board votes to approve → Zone 3 pushes a contract to Zone 2 (practitioner is paid to do the work) → work passes back to Zone 3 to operate and sustain → Zone 4 participants see collective benefit. Most people stay only in Zone 4 and see modest collective benefit. Some people also carry Zone 2 work — they have connective value across zones and benefit out both ends. The Zone 2 contractor is hired by Zone 3 to do the work the Zone 4 group organized; they are not the same role, even when the same person holds both."
+        },
+        {
+          "kind": "subhead",
+          "text": "Lodge — resolved. The rename test holds."
+        },
+        {
+          "kind": "para",
+          "text": "Lodge is confirmed. The rename test was run against three candidates: *Membership*, *Profile*, and *Household ID*. All three crack on contact."
+        },
+        {
+          "kind": "para",
+          "text": "*Membership* imports a dues-and-benefits frame — a membership can be public, can be enrolled in, can be tracked in a ledger. A membership tool gets built with a sign-up flow and a benefits page. Lodge is not something you enroll in; it is something you are brought into. *Profile* imports the social-media posture of public self-presentation — a profile shows you outward, to someone outside the circle. Profile tools become bios, follower counts, public visibility settings. Lodge does not present you outward; it holds you inward, among the people who already know you're there. *Household ID* imports the government-register posture of official identity — an ID is recognized by systems and institutions, not by people. Household ID tools become verification flows, KYC steps, login credentials. Lodge is recognized by the keeper of the door and the people behind it, not by a system checking a database."
+        },
+        {
+          "kind": "callout",
+          "text": "Lodge is confirmed as the Zone 1 identity layer name. What the name carries that none of the alternatives do: private (not public, not institutional), earned by invitation (not enrolled, not registered), held by a group with shared values (not by a platform, not by a regulator), revocable by the keeper of the door (not by a terms-of-service update). All three substitutes would quietly change what Zone 1 tools get built. Lodge is load-bearing."
         }
       ]
     },
