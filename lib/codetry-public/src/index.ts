@@ -211,7 +211,7 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
     publicSummary:
       "A household budgeting tool built on community-owned infrastructure — non-custodial by design, so the household holds their own financial records without a bank as the gatekeeper.",
     statusNote:
-      "Working mainnet PWA on XRPL. Non-custodial architecture is genuine. Credit union and IG institutional interfaces are real skins with no live institutional API behind them yet — the architecture is the proof point, not the partnership. Proof advances when a second household runs on it independently.",
+      "Working mainnet PWA on XRPL. Non-custodial architecture is genuine; peer-to-peer settlement works. Practical vendor settlement requires credit union railing — the CU must sit between the user's wallet and the merchant payment rail. Without that, it stays peer-to-peer or requires vendor XRPL acceptance. CU integration is real UI skins only; no live institutional API behind them yet. Proof advances when a CU rails it or a second household runs it for real daily use.",
   },
   {
     name: "Saltbox — Personal Disability Tool",
@@ -224,7 +224,7 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
     publicSummary:
       "A custom homeschool companion built for a neurodivergent family — designed from the inside by the person using it, not prescribed from the outside.",
     statusNote:
-      "Active development, in use in Bobbie's household. The proof point is structural: user = developer = proof. Proof of concept for the individual support tool service line. Proof advances when the methodology is adapted for a second person's disability profile.",
+      "In daily use by Bobbie. Others testing. The proof point is structural: user = developer = proof. Proof of concept for the individual support tool service line. Proof advances when the methodology is adapted for a second person's disability profile.",
   },
   {
     name: "NWO Regional Abattoir — Operations Tool",
