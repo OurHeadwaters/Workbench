@@ -240,17 +240,17 @@ export const CODETRY_ENGAGEMENTS: CodetryEngagement[] = [
       "Built and working in dev. Not yet deployed to production. Notification delivery is the one unbuilt piece of the core loop. Pilot deployment timing is an open decision. Proof comes when the operator runs a real season on it.",
   },
   {
-    name: "Rootwork — Headwaters Platform Licensing",
+    name: "Rootstock — Headwaters Platform Licensing",
     type: "in-development",
     objectives: ["2", "3", "5"],
     status: "needs-proof",
     isPublic: false,
     codetryValue:
-      "The commercialization layer. Proves Codetry tools can scale beyond 807 as a licensed platform. 807 is the proof case Rootwork sells — the 2025 fiscal year is the live reference. The tenant seam is built; the second tenant does not yet exist. Proof comes when a second co-op signs on without the founder-as-proof-case dynamic.",
+      "The commercialization layer. Proves Codetry tools can scale beyond 807 as a licensed platform. 807 is the proof case Rootstock sells — the 2025 fiscal year is the live reference. The tenant seam is built; the second tenant does not yet exist. Proof comes when a second co-op signs on without the founder-as-proof-case dynamic.",
     publicSummary:
       "The platform that licenses the co-op operating tools Codetry built for 807 to other co-operatives — so the next co-op starts from a proven foundation, not a blank page.",
     statusNote:
-      "Pilot-ready. Name not yet locked as of May 2026 — name decision is the immediate gate before pilot outreach can begin. Proof comes when a second co-op tenant signs on independently.",
+      "Pilot-ready. Name locked: Rootstock. Proof comes when a second co-op tenant signs on independently.",
   },
 ];
 
@@ -271,7 +271,7 @@ export const NEEDS_PROOF_ITEMS = [
   "Codetry tools produce revenue independent of any single client relationship.",
   "The supply chain documentation (807 + Deer Lake) constitutes evidence that backs a grant without additional narrative from the practitioner.",
   "The individual disability tool model works for someone other than the practitioner — Saltbox proves it for one household; a second person's profile is the test.",
-  "The platform licensing model (Rootwork) attracts a second co-op tenant without the founder-as-proof-case as the reason.",
+  "The platform licensing model (Rootstock) attracts a second co-op tenant without the founder-as-proof-case as the reason.",
   "The household finance trust layer (xbuckets) serves a second household independently — the non-custodial architecture is proved; the network effect is not.",
 ];
 
