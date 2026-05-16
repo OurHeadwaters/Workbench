@@ -1,0 +1,41 @@
+The gap: liveShare is the wrong layer for this.
+
+The liveShare mechanic is a one-way per-family publish slot. Grandparents see one family's snapshot. It has no circle roster, no cross-household concept, and no way to count across families. Extending it for the circle view would require building circle membership from scratch on top of an authentication model that was never designed for it.
+
+What does support this already exists: the calendarToken.
+
+The Sandbox schema already has a calendarToken column on sandbox_households with this comment in the code:
+
+"Read-only calendar feed token for Saltbox integration. Generated on first request. Allows Saltbox to pull events the household is going to without requiring a Sandbox session."
+
+There's already a working endpoint at GET /api/sandbox/calendar/:token — Saltbox uses a household's calendar token to pull their RSVP'd events. This is the designed bridge between Zone 0 (Saltbox, local, no session) and Zone 1 (Sandbox, the circle roster). It already exists and is already in use for event sync.
+
+The circle pulse should be built on this same token, not on liveShare.
+
+What would need to be built:
+
+1. New DB table: sandbox_circle_pings
+One row per household per week — just householdId + weekKey + pinnedAt. No content, no detail. Upsertable (one ping per household per week, refreshed if they tap again). This is a presence signal, not a content record.
+
+2. Two new API routes under the existing calendar token pattern:
+
+POST /api/sandbox/calendar/:token/ping — Saltbox sends "we ran our day today." No body. Upserts a ping for the current weekKey. Token identifies the household without requiring a Sandbox session.
+GET /api/sandbox/calendar/:token/circle-pulse — Returns { thisWeek: number, circleSize: number }. thisWeek is the count of distinct households who pinged this week. circleSize is the total number of households in the circle. Never returns names or which households pinged.
+3. A small "circle" card in Saltbox (gather), on the Today page
+
+Only renders if a Sandbox calendar token is stored in settings
+Shows: "N families in your circle ran their days this week" (or "You're the first one this week" when thisWeek === 0)
+A single quiet button: "We ran ours today" — fires the ping
+After tapping: the count updates, button becomes passive ("Logged for this week")
+No names, no timestamps shown, no who
+Privacy properties:
+
+The ping contains no day content — just "this household is active this week"
+The count endpoint returns only a number, never IDs or names
+A family without a calendarToken configured sees nothing (not a Sandbox member)
+The Sandbox side has no new data shown to other Sandbox members — the ping table is read only by the pulse endpoint
+One question before I build:
+
+The "We ran ours today" button — should this be an explicit opt-in each time (you tap it deliberately each day you want to signal), or should it be tied to the existing day wrap-up action in Saltbox? Deliberate opt-in feels right for Zone 0 posture, but I want to confirm before wiring it.
+
+If you say go, I'll build the DB table, two API routes, push the migration, and add the circle card to Today.
