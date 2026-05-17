@@ -13,7 +13,6 @@
  * so the full revision timeline is preserved and traceable.
  */
 
-import { getCostItem } from "@/data/costRegistry";
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -125,8 +124,7 @@ export function saveEdit(
   newValue: number,
   note?: string
 ): CostEdit {
-  const item = getCostItem(key);
-  const defaultValue = item?.defaultValue ?? newValue;
+  const defaultValue = newValue;
   const store = load();
   const existing = store[key];
 
@@ -164,8 +162,7 @@ export function saveEdit(
  * Appends the previous state to history so the timeline is preserved.
  */
 export function markSkipped(key: string, note?: string): void {
-  const item = getCostItem(key);
-  const defaultValue = item?.defaultValue ?? 0;
+  const defaultValue = 0;
   const store = load();
   const existing = store[key];
 

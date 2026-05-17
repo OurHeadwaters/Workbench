@@ -15,10 +15,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  COST_REGISTRY,
-  type CostItem,
-} from "@/data/costRegistry";
+import { PHASE_COSTS } from "@/data/costRegistry";
 import {
   loadEdits,
   saveEdit,
@@ -35,6 +32,24 @@ import {
   type HistoryEntry,
 } from "@/lib/costReview";
 import { fmt } from "@/data/budgetScenarios";
+
+/** Local cost-item shape — derived from phases, used for the review/edits UI */
+export interface CostItem {
+  key: string;
+  label: string;
+  description: string;
+  defaultValue: number;
+  scenario: "A" | "B" | "C";
+}
+
+/** Build a flat registry of reviewable cost lines from the phase data. */
+const COST_REGISTRY: CostItem[] = PHASE_COSTS.map((pc) => ({
+  key: pc.phase.id,
+  label: `Phase ${pc.phase.num} — ${pc.phase.label}`,
+  description: `${pc.phase.headline} · ${pc.phase.duration} · ${pc.feeDisplay}`,
+  defaultValue: pc.phase.feeFlat ?? pc.phase.feeMin ?? 0,
+  scenario: "B" as const,
+}));
 
 // ── Palette (matches app-wide print style) ────────────────────────────
 const CREAM  = "#f4ede0";

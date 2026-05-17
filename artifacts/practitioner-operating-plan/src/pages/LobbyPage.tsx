@@ -49,9 +49,7 @@ const SECTIONS: ToolSection[] = [
   {
     sec: SEC.week,
     tools: [
-      { label: "Week Plan",       sub: "Full week — Mon through Fri",              detail: "All five days. Copy AI prompts, jump to any day.",                            path: `${BASE}/plan/week/CURRENT`, accent: "#7A4E2D" },
-      { label: "Week Close-Out",  sub: "Printable audit record for the bookkeeper", detail: "Food handler bench and swap reasons. Cmd+P to save as PDF.",                  path: `${BASE}/tools/bench/close`,  accent: "#7A4E2D" },
-      { label: "Bench Swap",      sub: "Override food-handler coverage",            detail: "Swap primary or standby for any week. Reason is logged for the bookkeeper.", path: `${BASE}/tools/bench/week`,   accent: "#7A4E2D" },
+      { label: "Week Plan", sub: "Full week — Mon through Fri", detail: "All five days. Copy AI prompts, jump to any day.", path: `${BASE}/plan/week/CURRENT`, accent: "#7A4E2D" },
     ],
   },
   {
@@ -65,8 +63,7 @@ const SECTIONS: ToolSection[] = [
     tools: [
       { label: "Salt Monthly Close",   sub: "File this month's Salt revenue and expenses", detail: "One filing per month. Stamps an immutable record. The one-pager reads this automatically.", path: `${BASE}/tools/salt-close`,   accent: "#1A5FA8" },
       { label: "Salt Yearly Summary",  sub: "Full-year Salt P&L",                           detail: "All months filed so far. Net vs baseline. Sparkline trend.",                               path: `${BASE}/tools/salt-yearly`,  accent: "#1A5FA8" },
-      { label: "Cost Review",          sub: "Override any planning baseline number",         detail: "Review every Scenario B cost line. Override, add notes, export for board conversations.", path: `${BASE}/tools/cost-review`,  accent: "#1A5FA8" },
-      { label: "Hours by Pillar",      sub: "Time allocation across the practice",           detail: "See how contracted hours split across each practice pillar.",                             path: `${BASE}/hours`,              accent: "#1A5FA8" },
+      { label: "Cost Review",          sub: "Override any phase cost baseline",              detail: "Review phase fees, override any line, attach notes. Export for funder conversations.", path: `${BASE}/tools/cost-review`,  accent: "#1A5FA8" },
     ],
   },
   {
@@ -240,16 +237,6 @@ export function LobbyPage() {
       {/* Sections */}
       {SECTIONS.map((s) => <Section key={s.sec.label} s={s} />)}
 
-      {/* Numbers flag */}
-      <div style={{ padding: "10px 14px", borderRadius: 8, backgroundColor: "rgba(184,90,62,0.1)", borderLeft: `3px solid ${T.accent}` }}>
-        <p style={{ fontSize: 9, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.18em", color: T.accent, marginBottom: 4 }}>
-          Numbers check
-        </p>
-        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
-          Half-load ramp scenario still shows practitioner at <strong style={{ color: T.text }}>$150/hr</strong> — the shared ledger now has <strong style={{ color: T.text }}>$175/hr</strong> as the current rate.
-          If the ramp rate has changed, update <code style={{ fontSize: 10 }}>HALF_LOAD_LINES.practitioner</code> in <code style={{ fontSize: 10 }}>budgetScenarios.ts</code>.
-        </p>
-      </div>
 
     </div>
   );

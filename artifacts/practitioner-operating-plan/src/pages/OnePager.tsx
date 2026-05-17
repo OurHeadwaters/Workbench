@@ -1,39 +1,13 @@
 /**
  * OnePager.tsx — print-format one-pager for the contractor's CFO
  *
- * All dollar figures are imported from @/data/budgetScenarios.
- * Do NOT hardcode any cost-basis, reinvestment, ask, or bridge
- * numbers in this file.
+ * Phase-based pricing model. All dollar figures from @/data/budgetScenarios.
  */
 
 import { useState, useEffect } from "react";
-import {
-  A_LINES as A_LINE_VALS,
-  B_LINES,
-  C_ADDITIONAL_LINES,
-  COST_BASIS,
-  ASK,
-  REINVEST,
-  BRIDGE,
-  CAPEX,
-  SCENARIO_ROWS,
-  Y1,
-  fmt,
-  fmtK,
-} from "@/data/budgetScenarios";
-import {
-  getRecentHistory,
-  getStatus,
-  SALT_BASELINE_NET,
-  type SaltCloseRecord,
-} from "@/lib/saltClose";
+import { PHASES, PHASE_COSTS, PRACTITIONER_RATE, ENGAGEMENT_TOTAL, fmt, fmtK } from "@/data/budgetScenarios";
+import { TEAM } from "@/data/contractBaselines";
 import { loadEdits } from "@/lib/costReview";
-
-const CASHFLOW_XLSX = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/headwaters-cashflow-model.xlsx`;
-
-// Drift-guard phrase: must match every surface that carries the operator-couple framing.
-// prettier-ignore
-const STORE_STACK_PHRASE = "Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together";
 
 const CREAM     = "#f4ede0";
 const DARK      = "#1f3d2e";
@@ -43,121 +17,6 @@ const RULE      = "#c8bfa7";
 const TEXT      = "#2a2520";
 const INK       = "#2a2520";
 const GREEN     = "#2a6b3e";
-const YELLOW_DK = "#7a5c00";
-const RED_DK    = "#7a1a1a";
-
-const STATUS_PILL: Record<string, { bg: string; color: string; label: string }> = {
-  healthy: { bg: "rgba(42,107,62,0.10)",  color: GREEN,     label: "Healthy" },
-  watch:   { bg: "rgba(122,92,0,0.10)",   color: YELLOW_DK, label: "Watch"   },
-  below:   { bg: "rgba(122,26,26,0.10)",  color: RED_DK,    label: "Below"   },
-};
-
-function labelMonth(m: string): string {
-  const [y, mo] = m.split("-");
-  return new Date(Number(y), Number(mo) - 1, 1).toLocaleDateString("en-US", { month: "short" });
-}
-
-/** Inline SVG sparkline for the last N salt close nets vs. baseline */
-function SaltSparkline({ history }: { history: SaltCloseRecord[] }) {
-  if (history.length === 0) return null;
-
-  const W = 200, H = 40, PAD = 6;
-  const nets = history.map(r => r.net);
-  const minV = Math.min(...nets, 0);
-  const maxV = Math.max(...nets, SALT_BASELINE_NET * 1.3);
-  const scaleY = (v: number) => PAD + (H - 2 * PAD) * (1 - (v - minV) / (maxV - minV));
-  const scaleX = (i: number) =>
-    history.length === 1 ? W / 2 : PAD + (i / (history.length - 1)) * (W - 2 * PAD);
-
-  const baseY = scaleY(SALT_BASELINE_NET);
-
-  const points = history.map((_, i) => `${scaleX(i)},${scaleY(nets[i])}`).join(" ");
-
-  const areaPath =
-    `M ${scaleX(0)},${H} ` +
-    history.map((_, i) => `L ${scaleX(i)},${scaleY(nets[i])}`).join(" ") +
-    ` L ${scaleX(history.length - 1)},${H} Z`;
-
-  return (
-    <svg width={W} height={H} style={{ display: "block", overflow: "visible" }}>
-      {/* Baseline reference */}
-      <line x1={PAD} y1={baseY} x2={W - PAD} y2={baseY} stroke={RULE} strokeWidth={1} strokeDasharray="3,3" />
-
-      {/* Area fill */}
-      <path d={areaPath} fill="rgba(31,61,46,0.06)" />
-
-      {/* Line */}
-      <polyline points={points} fill="none" stroke={DARK} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
-
-      {/* Dots */}
-      {history.map((rec, i) => {
-        const status = getStatus(rec.net);
-        const dotColor = status === "healthy" ? GREEN : status === "watch" ? YELLOW_DK : RED_DK;
-        return (
-          <circle key={rec.month} cx={scaleX(i)} cy={scaleY(rec.net)} r={3} fill={dotColor} />
-        );
-      })}
-
-      {/* Month labels */}
-      {history.map((rec, i) => (
-        <text
-          key={rec.month}
-          x={scaleX(i)}
-          y={H + 9}
-          textAnchor="middle"
-          fontSize={6}
-          fontFamily="'IBM Plex Mono', ui-monospace, monospace"
-          fill={MUTED}
-        >
-          {labelMonth(rec.month)}
-        </text>
-      ))}
-    </svg>
-  );
-}
-
-// ── Cost-basis line items (A / B / C columns) ─────────────────────────
-// aVal comes from A_LINE_VALS (budgetScenarios.ts) — no hardcoded dollar values here.
-// bVal comes from B_LINES (budgetScenarios.ts).
-// cVal comes from C_ADDITIONAL_LINES (budgetScenarios.ts); null = not C-specific (same as B).
-// key matches costRegistry.ts — used to apply cost-review overrides.
-type CostTableRow = {
-  /** Registry key for cost-review overrides; null = no override possible */
-  key: string | null;
-  label: string;
-  description: string;
-  aVal: number | null;
-  bVal: number | null;
-  cVal: number | null;
-  scenario: "A" | "B" | "C";
-};
-
-const COST_TABLE_ROWS: CostTableRow[] = [
-  { key: "practitioner",    label: "Practitioner / Lead",             description: "Engagement owner — loaded monthly take",                                                                     aVal: A_LINE_VALS.practitioner,   bVal: B_LINES.practitioner,  cVal: null,                                   scenario: "A" },
-  { key: "opsManager",      label: "Operations Manager",              description: "Dryden, on-site · ~40 hrs/wk @ $40/hr loaded",                                                               aVal: A_LINE_VALS.opsManager,     bVal: B_LINES.opsManager,    cVal: null,                                   scenario: "A" },
-  { key: "itTech",          label: "IT / Tech",                       description: "Servers, privacy phones, transparency stack, store IT",                                                       aVal: A_LINE_VALS.itTech,         bVal: B_LINES.itTech,        cVal: null,                                   scenario: "A" },
-  { key: "bookkeeper",      label: "Bookkeeper / Admin",              description: "Remote ~10 hrs/wk · CRA, invoicing, monthly close",                                                          aVal: A_LINE_VALS.bookkeeper,     bVal: B_LINES.bookkeeper,    cVal: null,                                   scenario: "A" },
-  { key: "foodHandler",     label: "Food Handler (embedded at DL)",   description: "Headwaters-owned, on the store floor Day 1",                                                                 aVal: A_LINE_VALS.foodHandler,    bVal: B_LINES.foodHandler,   cVal: null,                                   scenario: "A" },
-  { key: "cdAssociate",     label: "Community Dev. Associate",        description: "Pilot #2 readiness; community-facing engagement",                                                            aVal: null,                       bVal: B_LINES.cdAssociate,   cVal: null,                                   scenario: "B" },
-  { key: "juniorAnalyst",   label: "Junior Analyst / Field",          description: "Data, household price lookups, fieldwork",                                                                   aVal: null,                       bVal: B_LINES.juniorAnalyst, cVal: null,                                   scenario: "B" },
-  { key: "srEngineer2",     label: "Sr Engineer #2",                  description: "Server resilience at scale — second senior engineer for the 9-server fleet",                                 aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.srEngineer2,         scenario: "C" },
-  { key: "regionalOutreach",label: "Regional Outreach",               description: "Pilot #2 community sourcing — the seat that makes the second engagement ready",                              aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.regionalOutreach,    scenario: "C" },
-  { key: "trainer",         label: "Council Trainer",                 description: "Training cohorts at receiving bands — knowledge transfer at scale",                                          aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.trainer,             scenario: "C" },
-  { key: "lifeSupports",    label: "Life supports + overhead",        description: "Cleaner $500/mo + tutor $900/mo + handyman $700/mo",                                                         aVal: A_LINE_VALS.lifeSupports,   bVal: B_LINES.lifeSupports,  cVal: null,                                   scenario: "A" },
-  { key: null,              label: "Life supports (scale delta)",     description: "C adds $2,900/mo scale delta on life supports",                                                                aVal: null,                       bVal: null,                  cVal: C_ADDITIONAL_LINES.lifeSupportsDelta,   scenario: "C" },
-  { key: "aggregationHub",  label: "Aggregation hub (Dad-warehouse)", description: `${STORE_STACK_PHRASE} — $2,200 rent + utilities all-in; see /lease-tooling`,                               aVal: A_LINE_VALS.aggregationHub, bVal: B_LINES.aggregationHub,cVal: null,                                   scenario: "A" },
-  { key: "tooling",         label: "Tooling, SaaS, insurance",        description: "Operating overhead — agency licenses and software stack",                                                    aVal: A_LINE_VALS.tooling,        bVal: B_LINES.tooling,       cVal: null,                                   scenario: "A" },
-  { key: "recurringTech",   label: "Recurring tech ops",              description: "Cloud, phone plans, monitoring — 9-server fleet monthly",                                                   aVal: A_LINE_VALS.recurringTech,  bVal: B_LINES.recurringTech, cVal: null,                                   scenario: "A" },
-  { key: "buffer",          label: "Buffer (statutory + variance)",   description: "Holds cost basis when payroll taxes or insurance jump",                                                      aVal: null,                       bVal: B_LINES.buffer,        cVal: null,                                   scenario: "B" },
-];
-
-// ── Reinvestment destination rows ─────────────────────────────────────
-const REINVEST_ROWS = [
-  { label: "Tech CAPEX (annual)",             year1: 60_000,  detail: "9 servers, 6 phones, 8 computers — owned by agency" },
-  { label: "Tooling subscriptions",           year1: 24_000,  detail: "Dashboard hosting, GIS, secure comms, bookkeeping" },
-  { label: "Training & R&D",                  year1: 36_000,  detail: "CANDO/AFOA/ANTCO, documentation, community training" },
-  { label: "Pilot scale reserve",             year1: 156_000, detail: "Accumulates so Pilot #2 doesn't wait for grants" },
-];
 
 function cell(content: string | number | null, right = false, bold = false, small = false) {
   return (
@@ -177,72 +36,16 @@ function cell(content: string | number | null, right = false, bold = false, smal
 }
 
 export default function OnePager() {
-  const [saltHistory, setSaltHistory] = useState<SaltCloseRecord[]>([]);
-  const latest = saltHistory.length > 0 ? saltHistory[saltHistory.length - 1] : null;
-  const [overrides, setOverrides] = useState<Record<string, number>>({});
+  const [hasOverrides, setHasOverrides] = useState(false);
 
   useEffect(() => {
-    setSaltHistory(getRecentHistory(6));
     const edits = loadEdits();
-    const map: Record<string, number> = {};
-    for (const edit of edits) {
-      if (!edit.skipped && edit.delta !== 0) {
-        map[edit.key] = edit.newValue;
-      }
-    }
-    setOverrides(map);
+    setHasOverrides(edits.some((e) => !e.skipped && e.delta !== 0));
   }, []);
 
-  // Returns the effective B value for a row, applying any cost-review override.
-  function effectiveBVal(row: CostTableRow): number | null {
-    if (row.bVal === null) return null;
-    if (row.key && overrides[row.key] !== undefined) return overrides[row.key];
-    return row.bVal;
-  }
-
-  // Returns the effective C value for a row, applying any cost-review override.
-  function effectiveCVal(row: CostTableRow): number | null {
-    if (row.cVal === null) return null;
-    if (row.key && overrides[row.key] !== undefined) return overrides[row.key];
-    return row.cVal;
-  }
-
-  function isBEdited(row: CostTableRow): boolean {
-    return row.bVal !== null && row.key !== null && overrides[row.key] !== undefined;
-  }
-
-  function isCEdited(row: CostTableRow): boolean {
-    return row.cVal !== null && row.key !== null && overrides[row.key] !== undefined;
-  }
-
-  const hasOverrides = Object.keys(overrides).length > 0;
-
-  // Effective cost basis totals — B and C use overrides; A uses planning defaults (not editable via cost review).
-  const effectiveBTotal = COST_TABLE_ROWS.reduce((sum, row) => {
-    const v = effectiveBVal(row);
-    return sum + (v ?? 0);
-  }, 0);
-
-  // C total = B total (with overrides) + all rows that carry a C-delta value.
-  // This includes the three scenario:"C" rows AND the lifeSupports row (scenario:"A"
-  // but cVal = C_ADDITIONAL_LINES.lifeSupportsDelta = $2,900) so we filter by
-  // row.cVal !== null rather than row.scenario === "C".
-  const effectiveCAdditional = COST_TABLE_ROWS.reduce((sum, row) => {
-    if (row.cVal === null) return sum;
-    const v = effectiveCVal(row);
-    return sum + (v ?? 0);
-  }, 0);
-  const effectiveCTotal = effectiveBTotal + effectiveCAdditional;
-
-  // Effective scenario rows for the bill scenarios table.
-  const effectiveScenarioRows = SCENARIO_ROWS.map((s) => {
-    if (s.id === "a") return s;
-    const costBasis = s.id === "b" ? effectiveBTotal : effectiveCTotal;
-    const reinvest = s.ask - costBasis;
-    const reinvestPct = Math.round((reinvest / costBasis) * 100);
-    const bridge = costBasis * 2 + (s.id === "b" ? CAPEX.b : CAPEX.c);
-    return { ...s, costBasis, reinvest, reinvestPct, bridge };
-  });
+  const totalDays = PHASES.reduce((s, p) => s + p.practDays, 0);
+  const totalMin  = PHASES.reduce((s, p) => s + (p.feeFlat ?? p.feeMin ?? 0), 0);
+  const totalMax  = PHASES.reduce((s, p) => s + (p.feeFlat ?? p.feeMax ?? 0), 0);
 
   return (
     <div style={{ background: "#d8d2c8", minHeight: "100vh" }}>
@@ -272,11 +75,12 @@ export default function OnePager() {
                 Practitioner Operating Plan
               </div>
               <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "22pt", fontWeight: 700, color: DARK, lineHeight: 1.1, marginBottom: "4pt" }}>
-                The Operating Budget
+                Engagement Pricing — Phase Model
               </div>
               <div style={{ fontSize: "9pt", color: MUTED, lineHeight: 1.5 }}>
-                A community development contract at {fmt(ASK.recommended)}/month.
-                Cost basis, reinvestment markup, and bridge capital — auditable line-by-line.
+                Phase-based fixed fees. ${PRACTITIONER_RATE}/hr practitioner baseline.
+                Each phase is a standalone deliverable — the community can stop at any point.
+                {hasOverrides && " ★ cost-review notes applied."}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
@@ -287,294 +91,117 @@ export default function OnePager() {
 
           {/* Introduction */}
           <p style={{ fontSize: "9.5pt", lineHeight: 1.5, color: TEXT, marginBottom: "12pt" }}>
-            A community development contract at {fmt(ASK.recommended)}/month is a real inflection point.
-            It only stays a yes if the practitioner's days with the kids stay sacred, the on-the-ground
-            execution doesn't depend on one tired person, and the band gets infrastructure that outlasts
-            the engagement. Below: the operating structure, the financial model with a {REINVEST.b.pct}% reinvestment
-            markup, and the path from one pilot to a repeatable template.
+            This engagement is structured in four phases. Phase 1 is priced as a flat fee ({fmt(28_000)}); Phases 2–4 are
+            ranges confirmed with the client at the start of each phase. The practitioner carries all roles in Phase 1.
+            A Community Coordinator — hired through the 807 Food Co-operative or Deer Lake band council — is the priority
+            staffing gap for Phase 2 onward. IT subcontracting is engaged per phase for QA review.
           </p>
 
-          {/* ── Section 1: Cost basis table ───────────────────────── */}
+          {/* ── Section 1: Phase pricing table ───────────────────── */}
           <div style={{ marginBottom: "12pt" }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "8pt", marginBottom: "5pt" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
-                The Cost Basis (A / B / C floor · the A floor cost basis is auditable line-by-line)
-              </div>
-              {hasOverrides && (
-                <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7pt", color: AMBER, opacity: 0.75, whiteSpace: "nowrap" }}>
-                  ★ cost-review overrides applied
-                </div>
-              )}
+            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "5pt" }}>
+              Phase pricing — stop-at-any-point structure
             </div>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "9pt", tableLayout: "fixed" }}>
               <thead>
                 <tr style={{ borderBottom: `1.5pt solid ${RULE}`, color: MUTED, fontWeight: 600 }}>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "22%" }}>Role / Line</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "34%" }}>What it covers</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>A floor</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>B rec.</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "12%" }}>C scale</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "8%" }}>Scen.</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "8%"  }}>Ph.</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "14%" }}>Label</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "30%" }}>Deliverables</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "11%" }}>Days</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "11%" }}>Travel</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "13%" }}>Cost</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "13%" }}>Client fee</th>
                 </tr>
               </thead>
               <tbody>
-                {COST_TABLE_ROWS.map((row) => {
-                  const effB = effectiveBVal(row);
-                  const effC = effectiveCVal(row);
-                  const bEdited = isBEdited(row);
-                  const cEdited = isCEdited(row);
-                  return (
-                    <tr key={row.label} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
-                      <td style={{ padding: "3pt 4pt", fontWeight: 600, fontSize: "9pt", verticalAlign: "top" }}>
-                        {row.label}
-                        {(bEdited || cEdited) && (
-                          <span style={{ marginLeft: "4pt", fontSize: "7pt", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontWeight: 400, color: AMBER }}>★ edited</span>
-                        )}
-                      </td>
-                      <td style={{ padding: "3pt 4pt", fontSize: "8.5pt", color: MUTED, lineHeight: 1.4, verticalAlign: "top" }}>{row.description}</td>
-                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "9pt", color: row.aVal === null ? MUTED : TEXT }}>{row.aVal === null ? "—" : fmt(row.aVal)}</td>
-                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario !== "C" ? 600 : 400, fontSize: "9pt", color: effB === null ? MUTED : TEXT }}>
-                        {effB === null ? "—" : fmt(effB)}
-                        {bEdited && row.bVal !== null && (
-                          <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(row.bVal)}</span>
-                        )}
-                      </td>
-                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: row.scenario === "C" ? 600 : 400, fontSize: "9pt", color: effC === null ? MUTED : TEXT }}>
-                        {effC === null ? "—" : fmt(effC)}
-                        {cEdited && row.cVal !== null && (
-                          <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(row.cVal)}</span>
-                        )}
-                      </td>
-                      <td style={{ padding: "3pt 4pt", textAlign: "right", fontSize: "8pt", color: MUTED }}>{row.scenario}</td>
-                    </tr>
-                  );
-                })}
+                {PHASE_COSTS.map((pc, i) => (
+                  <tr key={pc.phase.id} style={{ borderBottom: `0.5pt solid ${RULE}`, background: i % 2 === 0 ? "transparent" : "rgba(200,191,167,0.08)" }}>
+                    {cell(pc.phase.num)}
+                    {cell(pc.phase.label, false, true)}
+                    {cell(pc.phase.headline + " · " + pc.phase.duration)}
+                    {cell(pc.phase.practDays, true)}
+                    {cell(pc.phase.travelVisits === 0 ? "—" : `${pc.phase.travelVisits}× ${fmt(pc.travelCost)}`)}
+                    {cell(pc.totalCost, true)}
+                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9pt", color: AMBER }}>
+                      {pc.feeDisplay}
+                    </td>
+                  </tr>
+                ))}
                 <tr style={{ borderTop: `1.5pt solid ${RULE}`, background: "rgba(31,61,46,0.04)" }}>
-                  <td style={{ padding: "5pt 4pt", fontWeight: 700, fontSize: "9.5pt", color: DARK }} colSpan={2}>Cost basis total</td>
-                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{fmt(COST_BASIS.a)}</td>
-                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>
-                    {fmt(effectiveBTotal)}
-                    {hasOverrides && effectiveBTotal !== COST_BASIS.b && (
-                      <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(COST_BASIS.b)}</span>
-                    )}
-                  </td>
-                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>
-                    {fmt(effectiveCTotal)}
-                    {hasOverrides && effectiveCTotal !== COST_BASIS.c && (
-                      <span style={{ marginLeft: "3pt", fontSize: "7pt", color: MUTED, textDecoration: "line-through", fontWeight: 400 }}>{fmt(COST_BASIS.c)}</span>
-                    )}
-                  </td>
+                  <td colSpan={3} style={{ padding: "5pt 4pt", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>Full engagement total</td>
+                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: DARK }}>{totalDays}</td>
                   <td></td>
+                  <td></td>
+                  <td style={{ padding: "5pt 4pt", textAlign: "right", fontWeight: 700, fontSize: "9.5pt", color: AMBER }}>
+                    {fmt(totalMin)}{totalMin !== totalMax ? `–${fmt(totalMax)}` : ""}
+                  </td>
                 </tr>
               </tbody>
             </table>
             <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "3pt", lineHeight: 1.35 }}>
-              Cost basis includes the Dad-warehouse aggregation hub ({fmt(B_LINES.aggregationHub)}/mo all-in; see /lease-tooling for the related-party documentation).
-              Scenario C column shows the C-specific delta lines; all other lines carry forward from B. C total = {fmt(effectiveCTotal)}/mo.
+              Phase 1 is a flat fee. Phases 2–4 are ranges — confirmed with the client at the start of each phase.
+              Cost column shows practitioner labour + travel + subcontract costs. Fee is what the client is invoiced.
             </div>
           </div>
 
-          {/* ── Section 2: Bill scenarios ─────────────────────────── */}
+          {/* ── Section 2: Engagement team ───────────────────────── */}
           <div style={{ marginBottom: "12pt" }}>
             <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "5pt" }}>
-              Bill scenarios — cost basis + reinvestment markup ({REINVEST.b.pct}% target)
+              Engagement team — current model
             </div>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "9pt", tableLayout: "fixed" }}>
               <thead>
                 <tr style={{ borderBottom: `1.5pt solid ${RULE}`, color: MUTED, fontWeight: 600 }}>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "22%" }}>Scenario</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "20%" }}>Cost basis</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "20%" }}>Reinvestment</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "20%" }}>Bill / month</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "18%" }}>Bridge needed</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "30%" }}>Role</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>Rate / hr</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "12%" }}>Type</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "44%" }}>Note</th>
                 </tr>
               </thead>
               <tbody>
-                {effectiveScenarioRows.map((s) => (
-                  <tr key={s.id} style={{ borderBottom: `0.5pt solid ${RULE}` }}>
-                    <td style={{ padding: "3pt 4pt", fontWeight: 600 }}>{s.label}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right" }}>{fmt(s.costBasis)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right" }}>{fmt(s.reinvest)} ({s.reinvestPct}%)</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontWeight: 600 }}>{fmt(s.ask)}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right" }}>{fmtK(s.bridge)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "3pt", lineHeight: 1.35 }}>
-              Bridge = 2 months of cost basis + day-one tech CAPEX ({fmt(CAPEX.a)} / {fmt(CAPEX.b)} / {fmt(CAPEX.c)}).
-              Recovered when the last two net-60 invoices clear. {REINVEST.b.pct}% reinvestment is the target; actuals drift as cost basis grows.
-            </div>
-          </div>
-
-          {/* ── Section 3: What 35% reinvestment buys ─────────────── */}
-          <div style={{ marginBottom: "12pt" }}>
-            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "8pt", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "5pt" }}>
-              What the {REINVEST.b.pct}% reinvestment buys (recommended ask)
-            </div>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "9pt", tableLayout: "fixed" }}>
-              <thead>
-                <tr style={{ borderBottom: `1.5pt solid ${RULE}`, color: MUTED, fontWeight: 600 }}>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "26%" }}>Destination</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "18%" }}>Year 1</th>
-                  <th style={{ padding: "3pt 4pt", textAlign: "left", width: "56%" }}>What it ships</th>
-                </tr>
-              </thead>
-              <tbody>
-                {REINVEST_ROWS.map((row, i) => (
-                  <tr key={row.label} style={{ borderBottom: i < REINVEST_ROWS.length - 1 ? `0.5pt solid ${RULE}` : undefined }}>
-                    <td style={{ padding: "3pt 4pt", fontWeight: 600 }}>{row.label}</td>
-                    <td style={{ padding: "3pt 4pt", textAlign: "right" }}>{fmt(row.year1)}</td>
-                    <td style={{ padding: "3pt 4pt", color: MUTED, fontSize: "8.5pt" }}>{row.detail}</td>
+                {TEAM.map((m, i) => (
+                  <tr key={m.roleId} style={{ borderBottom: `0.5pt solid ${RULE}`, background: i % 2 === 0 ? "transparent" : "rgba(200,191,167,0.08)" }}>
+                    {cell(m.label, false, true)}
+                    <td style={{ padding: "3pt 4pt", textAlign: "right", fontFamily: "'IBM Plex Mono', ui-monospace, monospace", color: m.rate > 0 ? INK : MUTED }}>
+                      {m.rate > 0 ? `$${m.rate}` : "—"}
+                    </td>
+                    <td style={{ padding: "3pt 4pt", fontSize: "8pt",
+                      color: m.type === "practitioner" ? GREEN : m.type === "pending" ? "#7a5c00" : MUTED }}>
+                      {m.type === "pending" ? "pending" : m.type}
+                    </td>
+                    {cell(m.note ?? null, false, false, true)}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/* ── The Ask ────────────────────────────────────────────── */}
+          {/* ── Section 3: Key commitments ───────────────────────── */}
           <div style={{ background: DARK, borderRadius: "4pt", padding: "12pt 16pt", marginBottom: "12pt" }}>
             <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "6pt" }}>
-              The Ask
+              Key commitments
             </div>
-            <p style={{ fontSize: "9.5pt", color: "rgba(244,237,224,0.9)", lineHeight: 1.55, margin: 0 }}>
-              A monthly retainer of <strong style={{ color: CREAM }}>{fmt(ASK.recommended)}</strong> against a 12-month engagement,
-              reviewed at month 6, plus acknowledgement that{" "}
-              <strong style={{ color: CREAM }}>{fmtK(BRIDGE.b)} of bridge capital</strong> is required
-              on day one to cover team payroll plus tech CAPEX ({fmt(CAPEX.b)}) before the first
-              net-60 invoice clears. {REINVEST.b.pct}% is the target reinvestment line — it pays for the next
-              community, not a larger house.
-            </p>
-          </div>
-
-          {/* Y1 cash summary */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10pt" }}>
-            <div style={{ borderTop: `2pt solid ${AMBER}`, paddingTop: "6pt" }}>
-              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>Y1 revenue total</div>
-              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "16pt", fontWeight: 700, color: DARK }}>{fmt(Y1.revenue)}</div>
-            </div>
-            <div style={{ borderTop: `2pt solid ${RULE}`, paddingTop: "6pt" }}>
-              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>Y1 gap (before Cap. Recovery)</div>
-              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "16pt", fontWeight: 700, color: AMBER }}>({fmt(Math.abs(Y1.gap))})</div>
-            </div>
-            <div style={{ borderTop: `2pt solid ${RULE}`, paddingTop: "6pt" }}>
-              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>Capital Recovery (V2)</div>
-              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "16pt", fontWeight: 700, color: DARK }}>{fmt(Y1.capitalRecovery)}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10pt" }}>
+              {[
+                { label: "Phase 1 flat fee", value: fmt(28_000), note: "Discovery, audit, operations guide, hiring plan, grant roadmap" },
+                { label: "Practitioner rate", value: `$${PRACTITIONER_RATE}/hr`, note: "Billing baseline — phase fees are priced on outcomes, not hours" },
+                { label: "807 distribution", value: "2027", note: "807 Food Co-operative supply line activates — changes bulk economics" },
+                { label: "Community Coordinator", value: "Priority hire", note: "807 or Deer Lake band council. Dryden-based, food handler certified." },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", marginBottom: "2pt" }}>{item.label}</div>
+                  <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "13pt", fontWeight: 700, color: CREAM, marginBottom: "2pt" }}>{item.value}</div>
+                  <div style={{ fontSize: "8pt", color: "rgba(244,237,224,0.7)", lineHeight: 1.4 }}>{item.note}</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* ── SALT-01: net trend ─────────────────────────────────── */}
-          <div style={{ marginTop: "14pt", borderTop: `1pt solid ${RULE}`, paddingTop: "10pt" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16pt" }}>
-
-              {/* Left: label + status */}
-              <div style={{ minWidth: "1.6in" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "7.5pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "4pt" }}>
-                  SALT-01 · Net trend
-                </div>
-                {latest ? (
-                  <>
-                    <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "15pt", fontWeight: 700, color: DARK, lineHeight: 1.1 }}>
-                      {latest.net >= 0 ? fmt(latest.net) : `(${fmt(Math.abs(latest.net))})`}
-                    </div>
-                    <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "2pt" }}>
-                      {labelMonth(latest.month)} · most recent close
-                    </div>
-                    <div style={{ marginTop: "5pt" }}>
-                      {(() => {
-                        const st = STATUS_PILL[getStatus(latest.net)];
-                        return (
-                          <span style={{ display: "inline-block", padding: "1.5pt 7pt", borderRadius: "2pt", background: st.bg, color: st.color, fontSize: "7pt", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                            {st.label}
-                          </span>
-                        );
-                      })()}
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ fontSize: "8.5pt", color: MUTED, lineHeight: 1.45 }}>
-                    No closes filed yet.{" "}
-                    <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
-                      File the first month →
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              {/* Centre: sparkline */}
-              <div style={{ flex: 1, paddingTop: "4pt" }}>
-                {saltHistory.length > 0 ? (
-                  <>
-                    <SaltSparkline history={saltHistory} />
-                    <div style={{ fontSize: "7pt", color: MUTED, marginTop: "12pt", lineHeight: 1.35 }}>
-                      Last {saltHistory.length} month{saltHistory.length !== 1 ? "s" : ""} · dashed line = {fmt(SALT_BASELINE_NET)} planning baseline
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ height: "40pt", border: `1pt dashed ${RULE}`, borderRadius: "2pt", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: "7.5pt", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
-                      sparkline appears after first filed close
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Right: baseline reference */}
-              <div style={{ minWidth: "1.1in", textAlign: "right" }}>
-                <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>
-                  Plan baseline
-                </div>
-                <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "13pt", fontWeight: 700, color: DARK }}>
-                  {fmt(SALT_BASELINE_NET)}
-                </div>
-                <div style={{ fontSize: "7pt", color: MUTED, marginTop: "2pt", lineHeight: 1.35 }}>
-                  /month net
-                </div>
-                {latest && (
-                  <div style={{ marginTop: "6pt", fontSize: "7.5pt", color: latest.net >= SALT_BASELINE_NET ? GREEN : RED_DK, fontWeight: 600 }}>
-                    {latest.net >= SALT_BASELINE_NET ? "+" : "−"}{fmt(Math.abs(latest.net - SALT_BASELINE_NET))} vs. plan
-                  </div>
-                )}
-              </div>
-
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div style={{ marginTop: "14pt", borderTop: `1pt solid rgba(31,61,46,0.12)`, paddingTop: "8pt", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ fontSize: "7pt", color: MUTED, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Headwaters Development Services · Confidential
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "12pt" }}>
-              <div style={{ fontSize: "7pt", color: MUTED }}>
-                Numbers sourced from <code style={{ fontFamily: "monospace", fontSize: "7pt" }}>src/data/budgetScenarios.ts</code>
-                {" · "}
-                <a href={`${import.meta.env.BASE_URL}tools/salt-close`} style={{ color: AMBER, textDecoration: "none" }}>
-                  SALT-01 filing →
-                </a>
-              </div>
-              <a
-                href={CASHFLOW_XLSX}
-                download="headwaters-cashflow-model.xlsx"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4pt",
-                  padding: "3pt 7pt",
-                  borderRadius: "3pt",
-                  border: `1pt solid ${AMBER}`,
-                  color: AMBER,
-                  fontSize: "7pt",
-                  fontWeight: 600,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  textDecoration: "none",
-                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
-                }}
-              >
-                ↓ CFO model (.xlsx)
-              </a>
-            </div>
+          {/* ── Footer ────────────────────────────────────────────── */}
+          <div style={{ marginTop: "auto", paddingTop: "10pt", borderTop: `1pt solid ${RULE}`, display: "flex", justifyContent: "space-between", fontSize: "7.5pt", color: MUTED }}>
+            <div>Headwaters Development Services · Wabigoon, Ontario · Treaty 3 Territory</div>
+            <div>bobbie@ourheadwaters.ca · 807 220 3654 · ourheadwaters.ca</div>
           </div>
         </div>
       </div>

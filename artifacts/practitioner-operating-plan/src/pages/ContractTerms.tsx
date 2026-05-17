@@ -22,13 +22,12 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import {
-  BASELINES,
+  TEAM,
   PILLARS,
   CONTRACT_LABEL,
   CONTRACT_VERSION,
   CONTRACT_DATE,
   AMENDMENT_LOG,
-  type PillarId,
   type Amendment,
 } from "@/data/contractBaselines";
 
@@ -309,8 +308,8 @@ export default function ContractTerms() {
           <strong>{CONTRACT_DATE}</strong>
         </div>
         <div>
-          <span style={{ opacity: 0.55, marginRight: 6 }}>Roles</span>
-          <strong>{BASELINES.length}</strong>
+          <span style={{ opacity: 0.55, marginRight: 6 }}>Team</span>
+          <strong>{TEAM.length}</strong>
         </div>
         <div>
           <span style={{ opacity: 0.55, marginRight: 6 }}>Pillars</span>
@@ -321,9 +320,9 @@ export default function ContractTerms() {
         </div>
       </div>
 
-      {/* Current baselines table */}
+      {/* Current team table */}
       <section style={{ marginBottom: 36 }}>
-        <SectionHeading>Current contracted baselines (read-only)</SectionHeading>
+        <SectionHeading>Engagement team — current model (read-only)</SectionHeading>
 
         <div style={{ overflowX: "auto" }}>
           <table
@@ -338,59 +337,33 @@ export default function ContractTerms() {
           >
             <thead>
               <tr style={{ background: "#2a2520", color: CREAM }}>
-                <th style={{ padding: "9px 14px", textAlign: "left", fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", minWidth: 180 }}>
+                <th style={{ padding: "9px 14px", textAlign: "left", fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", minWidth: 200 }}>
                   ROLE
                 </th>
                 <th style={{ padding: "9px 12px", textAlign: "right", fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em" }}>
-                  HRS/MO
+                  RATE / HR
                 </th>
-                {PILLARS.map((p) => (
-                  <th
-                    key={p.id}
-                    style={{
-                      padding: "9px 12px",
-                      textAlign: "right",
-                      fontFamily: MONO,
-                      fontSize: 9,
-                      letterSpacing: "0.1em",
-                      color: p.color,
-                      filter: "brightness(1.6)",
-                    }}
-                  >
-                    {p.id.toUpperCase()} %
-                  </th>
-                ))}
+                <th style={{ padding: "9px 12px", textAlign: "left", fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em" }}>
+                  TYPE
+                </th>
               </tr>
             </thead>
             <tbody>
-              {BASELINES.map((role, i) => (
-                <tr key={role.roleId} style={{ background: i % 2 === 0 ? CREAM : "#ede8dc" }}>
+              {TEAM.map((member, i) => (
+                <tr key={member.roleId} style={{ background: i % 2 === 0 ? CREAM : "#ede8dc" }}>
                   <td style={{ padding: "9px 14px" }}>
-                    <div style={{ fontWeight: 600, color: DARK }}>{role.label}</div>
-                    {role.note && (
-                      <div style={{ fontSize: 10, color: MUTED, marginTop: 1 }}>{role.note}</div>
+                    <div style={{ fontWeight: 600, color: DARK }}>{member.label}</div>
+                    {member.note && (
+                      <div style={{ fontSize: 10, color: MUTED, marginTop: 1 }}>{member.note}</div>
                     )}
                   </td>
                   <td style={{ padding: "9px 12px", textAlign: "right", fontFamily: MONO, color: DARK }}>
-                    {role.contractedHrsPerMonth}
+                    {member.rate > 0 ? `$${member.rate}` : "—"}
                   </td>
-                  {PILLARS.map((p) => {
-                    const val = role.pillars[p.id as PillarId];
-                    return (
-                      <td
-                        key={p.id}
-                        style={{
-                          padding: "9px 12px",
-                          textAlign: "right",
-                          fontFamily: MONO,
-                          color: val > 0 ? DARK : MUTED,
-                          fontWeight: val >= 40 ? 700 : 400,
-                        }}
-                      >
-                        {val}%
-                      </td>
-                    );
-                  })}
+                  <td style={{ padding: "9px 12px", fontFamily: MONO, fontSize: 10,
+                    color: member.type === "practitioner" ? GREEN : member.type === "pending" ? "#7a5c00" : MUTED }}>
+                    {member.type === "pending" ? "pending hire" : member.type}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -406,23 +379,15 @@ export default function ContractTerms() {
             lineHeight: 1.6,
           }}
         >
-          These percentages are locked in{" "}
-          <code
-            style={{
-              background: "#e8e2d4",
-              padding: "1px 5px",
-              borderRadius: 3,
-              fontSize: 10,
-            }}
-          >
+          Team is practitioner-led — one engagement owner covers all pillars. Subcontractors engaged per phase.
+          These entries are locked in{" "}
+          <code style={{ background: "#e8e2d4", padding: "1px 5px", borderRadius: 3, fontSize: 10 }}>
             src/data/contractBaselines.ts
           </code>
-          . To change any number, record an amendment below, then apply the numeric change
-          to the code file and add the amendment entry to{" "}
+          . To amend, record a change below, apply it to the code file, and add the entry to{" "}
           <code style={{ background: "#e8e2d4", padding: "1px 5px", borderRadius: 3, fontSize: 10 }}>
             AMENDMENT_LOG
-          </code>{" "}
-          in the same file.
+          </code>.
         </p>
       </section>
 

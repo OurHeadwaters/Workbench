@@ -1,84 +1,64 @@
-import { Y1, fmt, fmtK, ASK } from "@/data/budgetScenarios";
+/**
+ * SecondAnchorScenarios.tsx — Second anchor / Pilot #2 timing scenarios
+ */
 
+import { fmt } from "@/data/budgetScenarios";
+
+const PHASE1_FEE = 28_000;
 const INSTALL_REVENUE = 148_500;
 const RETAINER_ANNUAL = 30_000;
-const INSTALL_WEEKS   = 12;
 
 interface TimingScenario {
+  label: string;
   landMonth: number;
-  installInflow: number;
-  retainerMonths: number;
-  retainerInflow: number;
-  totalInflow: number;
-  closesGap: boolean;
+  note: string;
+  y1Revenue: number;
 }
 
-function buildTiming(): TimingScenario[] {
-  const gap = Math.abs(Y1.gap);
-  return [3, 6, 9].map((landMonth) => {
-    const installCompletedInY1 = landMonth + INSTALL_WEEKS / 4 <= 12;
-    const installInflow = installCompletedInY1 ? INSTALL_REVENUE : Math.max(0, (12 - landMonth) / (INSTALL_WEEKS / 4)) * INSTALL_REVENUE;
-    const retainerMonths = installCompletedInY1 ? Math.max(0, 12 - (landMonth + INSTALL_WEEKS / 4)) : 0;
-    const retainerInflow = (RETAINER_ANNUAL / 12) * retainerMonths;
-    const totalInflow = installInflow + retainerInflow;
-    return { landMonth, installInflow, retainerMonths, retainerInflow, totalInflow, closesGap: totalInflow >= gap };
-  });
-}
+const SCENARIOS: TimingScenario[] = [
+  { label: "Early — Month 4",  landMonth: 4,  note: "Pilot #2 signed while Deer Lake Phase 1 is still running", y1Revenue: PHASE1_FEE + 35_000 * 12 + (INSTALL_REVENUE * 9 / 12) },
+  { label: "Mid — Month 7",   landMonth: 7,  note: "Phase 2 operational at Deer Lake, Pilot #2 Phase 1 begins", y1Revenue: PHASE1_FEE + 35_000 * 12 + (INSTALL_REVENUE * 6 / 12) },
+  { label: "Late — Month 10", landMonth: 10, note: "Deer Lake fully running, Pilot #2 starts Q4",              y1Revenue: PHASE1_FEE + 35_000 * 12 + (INSTALL_REVENUE * 3 / 12) },
+];
 
 export default function SecondAnchorScenarios() {
-  const timing = buildTiming();
-  const gap = Math.abs(Y1.gap);
-
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
       <div className="relative z-10 w-full h-full px-[6vw] py-[5vh] flex flex-col">
-        <div className="flex items-center justify-between mb-[2vh]">
-          <div className="flex items-center gap-[1vw]">
-            <div className="w-[1.1vw] h-[1.1vw] rounded-full bg-accent" />
-            <div className="font-mono uppercase tracking-[0.25em] text-[1vw] text-muted">Closing the Y1 gap</div>
+        <div className="flex items-center gap-[1vw] mb-[2vh]">
+          <div className="w-[1.1vw] h-[1.1vw] rounded-full bg-accent" />
+          <div className="font-mono uppercase tracking-[0.25em] text-[1vw] text-muted">
+            Pilot #2 — timing scenarios
           </div>
-          <div className="font-mono uppercase tracking-[0.22em] text-[0.95vw] text-muted">Second anchor — cross-reserve install</div>
         </div>
-        <h1 className="font-display font-medium text-[4vw] leading-[1] tracking-tight text-paper mb-[1vh]">
-          The second anchor closes the gap.
+
+        <h1 className="font-display font-medium text-[4vw] leading-[1] tracking-tight text-paper mb-[1.5vh]">
+          When does the second anchor land?
         </h1>
-        <div className="font-display italic text-[1.35vw] text-muted mb-[3vh]">
-          A single cross-reserve install lands before M9 and the Year-1 gap disappears.
-          Gap to close: {fmt(gap)}.
+        <div className="font-display italic text-[1.35vw] text-muted mb-[4vh] max-w-[65vw]">
+          The Deer Lake pilot creates the template. The question is which community picks it up first and when.
         </div>
-        <div className="grid grid-cols-3 gap-[2vw] flex-1">
-          {timing.map((t) => (
-            <div
-              key={t.landMonth}
-              className="rounded-[6px] px-[1.8vw] py-[2vh] flex flex-col"
-              style={{
-                border: t.closesGap ? "1px solid var(--slide-accent)" : "1px solid var(--color-rule)",
-                background: t.closesGap ? "rgba(184,90,62,0.08)" : "transparent",
-              }}
-            >
-              <div className="font-mono uppercase tracking-[0.18em] text-[0.75vw] text-muted mb-[1vh]">
-                Install lands M{t.landMonth}
+
+        <div className="flex-1 grid grid-cols-3 gap-[2vw]">
+          {SCENARIOS.map((s, i) => (
+            <div key={s.label} className="rounded-[6px] border px-[1.8vw] py-[2vh] flex flex-col gap-[1.2vh]"
+              style={{ borderColor: i === 1 ? "var(--slide-accent)" : "var(--slide-rule)", background: i === 1 ? "rgba(184,90,62,0.07)" : "transparent" }}>
+              <div className="font-mono uppercase tracking-[0.14em] text-[0.68vw]"
+                style={{ color: i === 1 ? "var(--slide-accent)" : "var(--slide-muted)" }}>
+                {i === 1 ? "Most likely" : i === 0 ? "Optimistic" : "Conservative"}
               </div>
-              <div className="font-display text-[2.2vw] font-semibold text-paper tabular-nums mb-[0.5vh]">
-                {fmt(t.totalInflow)}
+              <div className="font-display font-semibold text-[1.3vw] text-paper">{s.label}</div>
+              <div className="font-display font-semibold text-[2.4vw] text-paper tabular-nums leading-[1]">
+                {fmt(s.y1Revenue)}
               </div>
-              <div className="font-body text-[0.85vw] text-muted leading-[1.45] flex-1">
-                Install: {fmt(t.installInflow)}<br />
-                Retainer: {fmt(t.retainerInflow)} ({t.retainerMonths} mo)<br />
-                Surplus: {t.totalInflow >= gap ? `+${fmt(t.totalInflow - gap)}` : `(${fmt(gap - t.totalInflow)}) short`}
+              <div className="font-mono uppercase tracking-[0.1em] text-[0.65vw] text-muted">Year 1 total revenue</div>
+              <div className="font-body text-[0.8vw] text-muted leading-[1.4] mt-[0.5vh]">{s.note}</div>
+              <div className="mt-auto pt-[0.8vh] border-t font-mono text-[0.65vw] text-muted"
+                style={{ borderColor: "var(--slide-rule)" }}>
+                Retainer adds {fmt(RETAINER_ANNUAL)}/yr from Year 2
               </div>
-              {t.closesGap && (
-                <div className="mt-[1vh] font-mono uppercase tracking-[0.18em] text-[0.7vw] text-accent">
-                  ✓ Gap closed
-                </div>
-              )}
             </div>
           ))}
-        </div>
-        <div className="mt-[2vh] pt-[1.5vh] border-t border-rule font-body text-[0.85vw] text-muted leading-[1.45]">
-          Past M9, the {INSTALL_WEEKS}-week install can't complete inside Y1; install revenue starts to spill into Y2.
-          This slide closes the gap question — it does not pick which reserve the second anchor is
-          (see Pilot #2 candidate-scoring), nor redo the Y2/Y3 path-to-scale headlines.
         </div>
       </div>
     </div>
