@@ -1,0 +1,77 @@
+ - P2P Community Economy Engine — Codetry
+
+What & Why
+
+Build out the peer-to-peer community economy engine inside the Codetry platform. This is a time-banking and mutual aid system designed specifically for northern Indigenous reserve communities, where informal value exchange is already happening constantly — the platform's job is to make that value legible, trackable, and spendable. This is grounded in northern economic principles and real (material) reconciliation, not performative gestures.
+
+The founder describes the engine as "already built — it just needs oil and four tires." The core mechanics exist; this task is about tightening the onboarding, trust, and adoption layers so the system can actually reach critical mass in a community context.
+
+The Zone Model (Adoption Strategy)
+
+The community is organized into adoption zones. Design and language should reflect this:
+
+Zone 4/5 — Early Adopters: Self-organized, motivated by direct lifestyle improvement. Will adopt without incentives because the tool genuinely improves their daily life. These users pull the next ring in organically.
+Zone 2/3 — Incentive-Driven: Need visible perks and rewards to engage. The system must deliver a clear payoff before asking for effort. Referral mechanics and reward loops are the lever here.
+Zone 1 — Full Community: The eventual target. Reached once critical mass exists and the network itself is the incentive.
+The reserve geography is a structural advantage: dense, walkable, high social trust. Network effects hit faster than in dispersed populations. Build with this in mind — don't over-engineer for scale before you've cracked local depth.
+
+The Smallest Valuable Action (Core Mechanic)
+
+The on-ramp that converts hesitant users into active participants is:
+
+A defined amount of personal time converted into actual credit or cash, spendable on real things.
+This is the moment the system becomes real. Everything before it is setup; everything after it is habit. The design must make this moment:
+
+Legible — Plain language. "You just earned $X credit, spendable at Y." No ambiguity, no jargon, no "pending."
+Immediate — Credit lands before the user closes the app. Delay kills belief.
+Spendable today — There must be something worth spending credit on right now, not once the network grows.
+Shareable — The first user must have a natural reason to pull in the second. (e.g., "Refer someone and you both get a bonus hour credited.")
+Tip Function
+
+The founder has confirmed the tip function (tipping for information/knowledge shared) needs to be always-on. This is the primary P2P crypto transaction vector and should be treated as a first-class feature, not an add-on.
+
+Wallet / Sign-On Architecture
+
+Sign-on friction is a known risk. The agreed approach:
+
+Progressive wallet reveal: Users sign up with just an email. A wallet is created silently in the background. The user only "meets" their wallet at the moment of their first real transaction (sending or receiving a tip or credit). Motivation is highest at that moment — use it.
+Hybrid custodial/non-custodial from day one: The data model must support both paths. Custodial (platform manages keys) lowers friction for Zone 2/3 users. Non-custodial (user holds keys) is available for Zone 4/5 types who want full sovereignty. Do NOT build custodial-only and bolt on self-custody later — that migration is painful. Plan for both in the schema now.
+Get them to the finish line: Setup motivation is high when there's a real transaction waiting. Design the onboarding arc so the first meaningful action (earning or spending) is the reward for completing setup — not a promise of future reward.
+Three Layers That Must Be Solid
+
+1. Trust Layer
+
+Credits must feel permanent and real. No ambiguity about whether they'll disappear, expire without warning, or get devalued.
+Transparent transaction history the user owns.
+Clear terms: what a credit is worth, what backs it, and who controls it.
+2. Governance Layer
+
+Who sets conversion rates (time → credit → dollar equivalent)?
+Who resolves disputes?
+How does the community own this system rather than renting it from an outside platform?
+These don't all need to be solved in v1, but the UI should leave space for community governance to plug in — don't hard-code founder decisions as permanent.
+3. Growth Layer
+
+The zone model needs mechanical support: different entry points, reward tiers, and referral flows for different zone types.
+Zone 2/3 users need a perk or reward visible before they complete setup — give them a reason to push through the wallet friction.
+Zone 4/5 users need depth and autonomy — don't over-simplify for them.
+Done Looks Like
+
+A user can sign up with just an email and immediately see what the platform offers.
+A user can record a time contribution (helping hands) and see a credit land in plain language before leaving the app.
+A user can send a tip for information to another community member via the P2P tip function.
+A user who completes setup encounters their wallet naturally, at the moment of first real transaction — not as a gate.
+The hybrid custodial/non-custodial wallet paths are supported in the data model even if only custodial is exposed in v1 UI.
+The zone-based referral hook exists: completing setup gives the user a shareable link or action that benefits both them and the person they bring in.
+Out of Scope
+
+Full governance tooling (rate-setting UI, dispute resolution workflows) — leave architectural space but don't build it yet.
+Non-reserve or large-scale deployment optimization — build for the dense walkable community first.
+Fiat on/off ramp integrations — credit-to-spend within the network is v1; cash-out is later.
+Context & Voice
+
+This platform is grounded in northern economic principles and genuine reconciliation — the kind that materially changes the daily conditions of people's lives, not the kind that produces land acknowledgments. The language and design should reflect that: plain, direct, community-owned in feel, not startup-polished. Value flows that already exist in the community are being made visible and amplified — the platform is infrastructure, not the hero.
+
+Relevant Files
+
+artifacts/codetry-ship

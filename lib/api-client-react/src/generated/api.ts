@@ -6563,9 +6563,20 @@ export const getReleaseHhTaskMutationOptions = <
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
-}) => {
-  const mutationKey = [`/api/helping-hands/tasks/{id}/release`];
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof releaseHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["releaseHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof releaseHhTask>>,
@@ -6575,7 +6586,7 @@ export const getReleaseHhTaskMutationOptions = <
     return releaseHhTask(id, requestOptions);
   };
 
-  return { mutationKey, mutationFn, ...mutationOptions };
+  return { mutationFn, ...mutationOptions };
 };
 
 export type ReleaseHhTaskMutationResult = NonNullable<
@@ -6631,9 +6642,20 @@ export const getRepostHhTaskMutationOptions = <
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
-}) => {
-  const mutationKey = [`/api/helping-hands/tasks/{id}/repost`];
-  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof repostHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["repostHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof repostHhTask>>,
@@ -6643,7 +6665,7 @@ export const getRepostHhTaskMutationOptions = <
     return repostHhTask(id, requestOptions);
   };
 
-  return { mutationKey, mutationFn, ...mutationOptions };
+  return { mutationFn, ...mutationOptions };
 };
 
 export type RepostHhTaskMutationResult = NonNullable<
