@@ -4,14 +4,12 @@ import {
   quickBooksReportsNeeded,
   changelogEntries,
   INVOICE_GROSS_RECEIVED,
-  INVOICE_HST,
-  INVOICE_UPGRADE_LIABILITY,
   ADDITIONAL_INVOICES_GROSS,
   TOTAL_GROSS_RECEIVED,
   TOTAL_HST,
-  TOTAL_NET_AFTER_ALL_LIABILITIES,
-  GM_LOAN,
-  LOAN_GAP,
+  PERSONAL_NET_FROM_SALES,
+  GILLES_DEBT,
+  TRAILER_UPGRADE_LIABILITY,
   ACCOUNT_BALANCE,
   type StatusTag,
 } from "@/data/ownerReconciliation";
@@ -172,84 +170,67 @@ export default function Reconciliation() {
         <AlertDescription className="space-y-3">
           <div>
             <p className="font-semibold text-foreground mb-3">
-              Current position — confirmed invoices vs. GM loan outstanding
+              Current position — two separate tracks
             </p>
 
-            {/* Step 1: all invoices received */}
+            {/* Track A: Business liabilities */}
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 1 — All Parrs Jars invoices to 807 Food Co-op (confirmed)
+              Track A — Business liabilities (independent of equipment sales)
             </p>
             <div className="text-sm space-y-0.5 mb-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Invoice #001056 — Jun 19, 2025 (bank draft)</span>
+                <span className="text-muted-foreground pl-3">Owed to Gilles / GMPH — pre-paid business debt</span>
+                <span className="font-mono font-medium text-destructive tabular-nums">({fmt(GILLES_DEBT)})</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="text-muted-foreground pl-3">Trailer upgrades — Rockfront subcontract, 6-month cash-flow plan</span>
+                <span className="font-mono font-medium text-destructive tabular-nums">({fmt(TRAILER_UPGRADE_LIABILITY)})</span>
+              </div>
+              <div className="flex justify-between items-baseline border-t-2 border-destructive/30 pt-2 mt-1">
+                <span className="font-semibold text-foreground">Total business liabilities</span>
+                <span className="font-mono font-bold tabular-nums text-base text-destructive">({fmt(GILLES_DEBT + TRAILER_UPGRADE_LIABILITY)}) outstanding</span>
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground mb-4 pl-3 space-y-0.5">
+              <p><strong>Gilles plan:</strong> Tool-building work draws down at $175/hr. Snowball from business margin if needed. No new cash required from Gilles.</p>
+              <p><strong>Trailer plan:</strong> Cash-flow from first good contract. No salary draw until this clears.</p>
+            </div>
+
+            {/* Track B: Equipment sales — personal */}
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+              Track B — Parrs Jars equipment sales → personal income (not applied to business debt)
+            </p>
+            <div className="text-sm space-y-0.5 mb-3">
+              <div className="flex justify-between items-baseline">
+                <span className="text-muted-foreground pl-3">Invoice #001056 — Jun 19, 2025</span>
                 <span className="font-mono font-medium text-foreground tabular-nums">{fmt(INVOICE_GROSS_RECEIVED)}</span>
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-muted-foreground pl-3">Invoices #001057, #001062, #001066 — 2025–2026</span>
                 <span className="font-mono font-medium text-foreground tabular-nums">{fmt(ADDITIONAL_INVOICES_GROSS)}</span>
               </div>
-              <div className="flex justify-between items-baseline border-t border-primary/20 pt-1 mt-1">
-                <span className="font-medium text-foreground pl-3">Total gross received from co-op</span>
-                <span className="font-mono font-semibold text-foreground tabular-nums">{fmt(TOTAL_GROSS_RECEIVED)}</span>
-              </div>
-            </div>
-
-            {/* Step 2: deductions */}
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 2 — Deductions
-            </p>
-            <div className="text-sm space-y-0.5 mb-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Total HST collected — remitted to CRA</span>
+                <span className="text-muted-foreground pl-3">HST collected — remitted to CRA</span>
                 <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(TOTAL_HST)})</span>
               </div>
-              <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Trailer upgrades — paid but not yet delivered (liability to co-op)</span>
-                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(INVOICE_UPGRADE_LIABILITY)})</span>
-              </div>
               <div className="flex justify-between items-baseline border-t border-primary/20 pt-1 mt-1">
-                <span className="font-medium text-foreground pl-3">Net cash returned to owner (confirmed)</span>
-                <span className="font-mono font-semibold text-emerald-700 tabular-nums">{fmt(TOTAL_NET_AFTER_ALL_LIABILITIES)}</span>
+                <span className="font-medium text-foreground pl-3">Personal net from equipment sales</span>
+                <span className="font-mono font-semibold text-emerald-700 tabular-nums">{fmt(PERSONAL_NET_FROM_SALES)}</span>
               </div>
             </div>
-
-            {/* Step 3: against GM loan */}
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 3 — Against amount owed to Gilles / GMPH
+            <p className="text-xs text-muted-foreground mb-3 pl-3">
+              Allocated as personal income from Parrs Jars equipment sales. Personal income tax (~$6,100 est.) applies. These proceeds did <strong>not</strong> go toward the Gilles debt — the two tracks are separate.
             </p>
-            <div className="text-sm space-y-0.5 mb-3">
-              <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">Amount owed to Gilles / GMPH — pre-paid business debt</span>
-                <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(GM_LOAN)})</span>
-              </div>
-              <div className="flex justify-between items-baseline border-t-2 border-destructive/30 pt-2 mt-1">
-                <span className="font-semibold text-foreground">Gap remaining (before QB items)</span>
-                <span className="font-mono font-bold tabular-nums text-base text-destructive">({fmt(LOAN_GAP)}) still owed</span>
-              </div>
-            </div>
 
-            {/* Account balance callout */}
-            <div className="flex justify-between items-center border border-amber-200 bg-amber-50 rounded-md px-3 py-2 mb-3">
+            {/* Account balance */}
+            <div className="flex justify-between items-center border border-amber-200 bg-amber-50 rounded-md px-3 py-2">
               <span className="text-sm font-medium text-amber-900">Headwaters account balance — after HST payment</span>
               <span className="font-mono font-semibold text-amber-900 tabular-nums">{fmt(ACCOUNT_BALANCE)}</span>
-            </div>
-
-            {/* Step 4: pending QB may reduce gap */}
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 4 — May reduce gap (all pending QuickBooks)
-            </p>
-            <div className="text-sm space-y-0.5">
-              <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">LOC charges, personal funds advanced, equipment FMV, P&amp;L loss</span>
-                <span className="font-mono text-muted-foreground tabular-nums italic">pending QB</span>
-              </div>
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground leading-relaxed border-t border-primary/10 pt-2">
-            <strong>Do not rely on this for decisions.</strong> The ~{fmt(LOAN_GAP)} gap may shrink once QB exports confirm
-            personal funds advanced, equipment FMV, and operating P&amp;L. Personal income tax (~$6,100 est.) on the
-            2025–2026 invoice proceeds also applies. Upgrade liability ({fmt(INVOICE_UPGRADE_LIABILITY)}) resolves on delivery.
+            <strong>Do not rely on this for decisions.</strong> QB exports (Balance Sheet Oct 31, 2024 · Transaction Detail · P&amp;L sole-prop) may surface additional personal funds advanced, equipment FMV, and operating losses that further clarify the full picture.
           </p>
           <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">

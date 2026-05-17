@@ -143,10 +143,10 @@ export const ownerReconciliationSections: Section[] = [
       "Items not yet settled or still requiring QuickBooks confirmation before the net figure is final.",
     items: [
       {
-        description: "Trailer upgrades — received but not yet delivered to the co-op",
+        description: "Trailer upgrades — Rockfront Family Farms doing the work (subcontracted)",
         amount: 9995.0,
         sourceOrNote:
-          "Flagged as liability: goods paid for but delivery pending. Co-op holds a claim on this amount until delivered.",
+          "Paid on Invoice #001056 but work not yet delivered. Rockfront doing the physical work; Bobbie subcontracting. Plan: cash-flow from first good contract within 6 months. Avoiding salary draw during that period to clear this first.",
         status: "confirmed",
       },
       {
@@ -218,27 +218,40 @@ export const quickBooksReportsNeeded: QuickBooksReport[] = [
   },
 ];
 
-export const GM_LOAN = 72000.0;
+// ── Business liabilities (independent of equipment sales) ─────────────────────
+
+/** Amount owed to Gilles / GMPH. Pre-paid business debt for future development
+ *  services. NOT offset by equipment sales — those went to personal income.
+ *  Plan: tool-building work at $175/hr; snowball from business margin if needed. */
+export const GILLES_DEBT = 72000.0;
+
+/** Trailer upgrades paid to Rockfront Family Farms on behalf of 807 Food Co-op.
+ *  Goods paid for but not yet delivered. Rockfront doing the work; Bobbie
+ *  subcontracts. Target: cash-flowed out of business within 6 months. */
+export const TRAILER_UPGRADE_LIABILITY = 9995.0;
+
+// ── Equipment sales — personal income (separate from business liabilities) ────
+
 export const ACCOUNT_BALANCE = 4000.0;
 
 export const INVOICE_GROSS_RECEIVED = 34402.85;
 export const INVOICE_HST = 3957.85;
-export const INVOICE_UPGRADE_LIABILITY = 9995.0;
 
 export const ADDITIONAL_INVOICES_GROSS = 20961.5;
 export const ADDITIONAL_INVOICES_HST = 2411.5;
 
 export const TOTAL_GROSS_RECEIVED = INVOICE_GROSS_RECEIVED + ADDITIONAL_INVOICES_GROSS;
 export const TOTAL_HST = INVOICE_HST + ADDITIONAL_INVOICES_HST;
-export const TOTAL_NET_AFTER_ALL_LIABILITIES =
-  TOTAL_GROSS_RECEIVED - TOTAL_HST - INVOICE_UPGRADE_LIABILITY;
 
-export const NET_CASH_AFTER_LIABILITIES =
-  INVOICE_GROSS_RECEIVED - INVOICE_HST - INVOICE_UPGRADE_LIABILITY;
-export const CONFIRMED_OUT_TOTAL = INVOICE_GROSS_RECEIVED;
+/** Net personal income from Parrs Jars equipment sales after HST.
+ *  These proceeds went to personal — they do NOT reduce the Gilles debt. */
+export const PERSONAL_NET_FROM_SALES = TOTAL_GROSS_RECEIVED - TOTAL_HST;
+
 export const ESTIMATED_IN_TOTAL = 26337.0;
 
-export const LOAN_GAP = GM_LOAN - TOTAL_NET_AFTER_ALL_LIABILITIES;
+// ── Legacy alias — kept so any existing imports don't break ──────────────────
+/** @deprecated Use GILLES_DEBT instead. */
+export const GM_LOAN = GILLES_DEBT;
 
 export interface ChangelogEntry {
   date: string;
