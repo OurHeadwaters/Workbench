@@ -287,6 +287,89 @@ export const PRACTITIONER_RATES = {
   support: 70,
 } as const;
 
+// ─── Composite rate breakdown ─────────────────────────────────────────────────
+//
+// $175/hr is not a single-discipline hourly. It is a composite of the roles the
+// founder fills under one rate. This structure is the explanatory layer that
+// defends the number without a verbal explanation.
+//
+// scopeShare: estimated fraction of weekly scope this role consumes (must sum to 1.0)
+// marketRate: what this role would cost as a standalone hire in this context
+// contribution: marketRate × scopeShare — what this role contributes to the blended equivalent
+//
+// Do not change PRACTITIONER_RATES.lead here. Change the explanatory layer only.
+
+export interface CompositeRoleRow {
+  role: string;
+  description: string;
+  marketRate: number;
+  scopeShare: number;
+}
+
+export interface CompositeRateStructure {
+  filledRoles: CompositeRoleRow[];
+  hiredOut: { role: string; note: string }[];
+  subcontracted: { role: string; note: string }[];
+  billedRate: number;
+}
+
+export const PRACTITIONER_RATE_COMPOSITE: CompositeRateStructure = {
+  billedRate: PRACTITIONER_RATES.lead,
+
+  filledRoles: [
+    {
+      role: "Practitioner / Lead",
+      description: "Strategic engagement management, client relationships, community facilitation.",
+      marketRate: 200,
+      scopeShare: 0.50,
+    },
+    {
+      role: "Developer",
+      description: "Custom tools, digital infrastructure, Codetry platform builds.",
+      marketRate: 125,
+      scopeShare: 0.25,
+    },
+    {
+      role: "Bookkeeper",
+      description: "Cost records, grant tracking, engagement financial summaries.",
+      marketRate: 65,
+      scopeShare: 0.15,
+    },
+    {
+      role: "IT / Tech Support",
+      description: "Systems setup, QA, deployment, and technical review.",
+      marketRate: 85,
+      scopeShare: 0.10,
+    },
+  ],
+
+  hiredOut: [
+    {
+      role: "Customer Service",
+      note: "Hired out for direct community-facing sales and order support (e.g. Salt).",
+    },
+    {
+      role: "Community Engagement",
+      note: "Hired through 807 or band council — on-the-ground community coordinator role.",
+    },
+  ],
+
+  subcontracted: [
+    {
+      role: "Code Review",
+      note: "Subcontracted IT/QA review (~12 hrs/mo during active phases) at $65/hr.",
+    },
+    {
+      role: "Legal Support",
+      note: "Retained as needed for contract review and engagement structuring.",
+    },
+    {
+      role: "Accounting Support",
+      note: "Subcontracted for year-end and funder-facing financial reporting.",
+    },
+  ],
+};
+
 export const ACTIVE_FEES = {
   /** 807 portal development fee — confirmed revenue, bridge that opens the trial window */
   portalDevelopment: 12_000,

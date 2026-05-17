@@ -64,6 +64,7 @@ const SECTIONS: ToolSection[] = [
       { label: "Salt Monthly Close",   sub: "File this month's Salt revenue and expenses", detail: "One filing per month. Stamps an immutable record. The one-pager reads this automatically.", path: `${BASE}/tools/salt-close`,   accent: "#1A5FA8" },
       { label: "Salt Yearly Summary",  sub: "Full-year Salt P&L",                           detail: "All months filed so far. Net vs baseline. Sparkline trend.",                               path: `${BASE}/tools/salt-yearly`,  accent: "#1A5FA8" },
       { label: "Cost Review",          sub: "Override any phase cost baseline",              detail: "Review phase fees, override any line, attach notes. Export for funder conversations.", path: `${BASE}/tools/cost-review`,  accent: "#1A5FA8" },
+      { label: "Rate Breakdown",       sub: "Why $175/hr is a composite rate",               detail: "Roles filled, market equivalents, scope shares, blended rate, and what is deliberately hired out or subcontracted.", path: `${BASE}/rate-breakdown`,     accent: "#1A5FA8" },
     ],
   },
   {

@@ -25,6 +25,8 @@ import {
   PROVEN_ITEMS,
   NEEDS_PROOF_ITEMS,
   OBJECTIVE_LABELS,
+  PRACTITIONER_RATES,
+  PRACTITIONER_RATE_COMPOSITE,
   type ProofStatus,
   type EngagementType,
 } from "@workspace/codetry-public";
@@ -328,6 +330,44 @@ export function StrategicLedgerPage() {
         <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           The honest accounting
         </h2>
+
+        {/* Composite rate callout */}
+        <div
+          className="rounded-xl border p-5 space-y-2"
+          style={{ borderColor: ACCENT + "30", backgroundColor: ACCENT_SOFT }}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="h-7 w-7 rounded-md grid place-items-center flex-shrink-0 mt-0.5 text-xs font-bold"
+              style={{ backgroundColor: ACCENT, color: "#f4ede0" }}
+            >
+              $
+            </div>
+            <div className="flex-1 min-w-0 space-y-1">
+              <p className="text-sm font-semibold" style={{ color: ACCENT_INK }}>
+                The ${PRACTITIONER_RATES.lead}/hr rate is a founder-stage compression of roles — not a single-discipline hourly.
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Under that one rate sits four functions: Practitioner&nbsp;/&nbsp;Lead,
+                Developer, Bookkeeper, and IT&nbsp;/&nbsp;Tech Support.
+                The market blended equivalent for those roles at their respective scope weights is
+                ~${Math.round(
+                  PRACTITIONER_RATE_COMPOSITE.filledRoles.reduce(
+                    (sum, r) => sum + r.marketRate * r.scopeShare,
+                    0,
+                  )
+                )}/hr.
+                Customer Service and Community Engagement are deliberately hired out.
+                Code Review, Legal, and Accounting are subcontracted at their own disclosed rates.
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: ACCENT }}>
+                <span className="font-semibold">Maturity milestone:</span>{" "}
+                When those roles begin to separate into distinct people, the lead rate reflects
+                strategic engagement work only. That separation is a sign of health, not overhead.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div

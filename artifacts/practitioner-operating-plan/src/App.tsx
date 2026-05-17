@@ -17,6 +17,7 @@ import PlanToday from "./pages/PlanToday";
 import Week from "./pages/Week";
 import WeekCloseOut from "./pages/WeekCloseOut";
 import CostReviewModal from "./components/CostReviewModal";
+import RateBreakdown from "./pages/RateBreakdown";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -44,6 +45,7 @@ export default function App() {
       <Route path={`${BASE}/tools/bench/week`} component={Week} />
       <Route path={`${BASE}/tools/bench/close`} component={WeekCloseOut} />
       <Route path={`${BASE}/tools/cost-review`} component={CostReviewModal} />
+      <Route path={`${BASE}/rate-breakdown`} component={RateBreakdown} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
