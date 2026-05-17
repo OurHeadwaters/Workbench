@@ -525,6 +525,142 @@ export const TALES: Tale[] = [
     authorNote:
       "Some rooms change you before you understand what happened inside them. The gift usually arrives looking like loss.",
   },
+  {
+    id: "the-fish-who-stopped-trying-to-climb",
+    title: "The Fish Who Stopped Trying to Climb",
+    subtitle: "On knowing what you were built for",
+    excerpt:
+      "She had been told her whole life that the ones who get somewhere climb. She believed it. She spent two summers trying to get up the tree.",
+    body: [
+      {
+        kind: "para",
+        text: "She had been told her whole life that the ones who get somewhere climb.",
+      },
+      {
+        kind: "para",
+        text: "The heron said it from the top of the dead cedar. The osprey said it by going where she could not follow. The people on the bank said it without words — they looked up when they talked about the future, not down, not in.",
+      },
+      {
+        kind: "para",
+        text: "She was a small fish in a small creek. The creek ran cold and clear through the tamarack bog, past the old beaver dam, under the road, into the lake. It was a good creek. Everyone agreed it was too small.",
+      },
+      { kind: "italic", text: "Climb, they said. That is how you get somewhere." },
+      { kind: "break" },
+      { kind: "para", text: "She tried." },
+      {
+        kind: "para",
+        text: "In June she flopped herself out onto the bank, gripped the roots of the cedar, and pulled. She got nowhere. The mud was soft and she fell back into the water breathing sideways.",
+      },
+      {
+        kind: "para",
+        text: "She tried again in July. The mud was harder. She got higher — almost a body length up the root before she fell. She lay in the shallows a long time after that.",
+      },
+      {
+        kind: "italic",
+        text: "I am doing this wrong, she thought. I must be doing this wrong.",
+      },
+      {
+        kind: "para",
+        text: "By August she had stopped trying at night. She lay in the deep cold beneath the beaver dam and looked up at the light rippling on the surface and told herself she would try again in the morning.",
+      },
+      {
+        kind: "para",
+        text: "She didn't tell anyone she had stopped. It felt like something to be ashamed of.",
+      },
+      { kind: "break" },
+      { kind: "para", text: "In September the rains came hard." },
+      {
+        kind: "para",
+        text: "In three days the creek rose over its banks. The water moved down through the tamaracks in a wide silver sheet, and she went with it — not choosing, just carried. She passed through the culvert. She passed through the shallows at the lake's edge. She passed through the cold seam where the creek water and the lake water met, and then she was somewhere she had never been.",
+      },
+      { kind: "para", text: "She stopped trying to hold on." },
+      { kind: "italic", text: "The current knew where to go." },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "In two days she had seen more of the world than she had seen in her whole life.",
+      },
+      {
+        kind: "para",
+        text: "She swam through the shadow of the osprey without being taken. She found the deep pool behind the boulder where the big trout rested in the heat of the day, and they moved aside without a word. She felt the place where a cold spring entered from below — ten degrees colder in a body length — and she understood, for the first time, that water came from somewhere. It came from deep in the ground. It had been gathering itself in the dark for a long time before it found this opening.",
+      },
+      {
+        kind: "para",
+        text: "She had swum down, not up.",
+      },
+      {
+        kind: "italic",
+        text: "And in the going down, she had found the whole river.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "By October she could read the water the way some people read a map.",
+      },
+      {
+        kind: "para",
+        text: "She knew which bends went dry in drought and which held the deep pools that never emptied. She knew the gravel bars where the light came through and the undercut banks where it didn't. She knew the cold seams and the warm shallows and the places where the current lied — looked fast, was slow — and the places where it told the truth.",
+      },
+      {
+        kind: "para",
+        text: "She had not learned any of this from a teacher. She had learned it from being inside it.",
+      },
+      {
+        kind: "italic",
+        text: "The river gave her what the tree never could. Not a view from above. A knowledge from within.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "One evening in late October a child sat on the bank above the deep pool. She was young — maybe eight — with a stick and a line and a look on her face like she had been sent here by someone and wasn't sure why.",
+      },
+      {
+        kind: "para",
+        text: "The fish rose near the surface. Not to be caught. Just to see.",
+      },
+      {
+        kind: "para",
+        text: "The child saw the fish. The fish saw the child. They stayed like that — still in the last of the light — for longer than either of them planned.",
+      },
+      {
+        kind: "italic",
+        text: "I don't know why I'm here, the child said. Not to the fish. Just to the water.",
+      },
+      {
+        kind: "para",
+        text: "The fish turned and swam slowly upstream.",
+      },
+      {
+        kind: "para",
+        text: "The child stood and followed along the bank, stepping through the tall grass, over the roots, around the beaver dam. The fish led in the water. The child followed on land. Neither of them spoke. They went together for a long time in the last light.",
+      },
+      { kind: "para", text: "When they reached the cold spring, the fish circled twice." },
+      {
+        kind: "para",
+        text: "The child knelt at the bank and put her hand in the water. It was cold and clean and came from deep in the ground, from somewhere old and dark and patient. It had been there longer than either of them. It would be there long after.",
+      },
+      {
+        kind: "para",
+        text: "The child looked at the fish for a long moment.",
+      },
+      {
+        kind: "para",
+        text: "Then she picked up a smooth stone from the bottom, put it in her pocket, and walked back the way she came. She didn't know what she was taking it home for.",
+      },
+      { kind: "para", text: "That was all right." },
+      { kind: "break" },
+      { kind: "italic", text: "Some things don't need to be understood before they become yours." },
+      { kind: "break" },
+      { kind: "italic", text: "The fish went back to the deep pool and rested." },
+      { kind: "italic", text: "She had not climbed anything." },
+      {
+        kind: "italic",
+        text: "She had gone where the water went, and found that the whole river was her home.",
+      },
+    ],
+    authorNote:
+      "The freedom was never up the tree. It was already in the current — the fish just had to stop trying to climb long enough to feel it. The things we have been told to want and the things we were built for are sometimes the same, and sometimes they are not. Learning to tell the difference is not a single moment of clarity. It is a whole river, moved through over time. The child takes a stone home without knowing why. That is how it works — the knowing comes later, if it comes at all. The going is enough.",
+  },
 ];
 
 export function getTale(id: string | undefined): Tale | undefined {
