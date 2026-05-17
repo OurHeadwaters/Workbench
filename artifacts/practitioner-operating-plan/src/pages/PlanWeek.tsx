@@ -5,6 +5,7 @@ import {
   PHASE_COLORS,
   formatDateRange,
   getTodayWeek,
+  toLocalISODate,
   type Week,
   type Day,
   type Step,
@@ -205,7 +206,7 @@ export default function PlanWeek() {
     : undefined;
 
   const todayWeek = getTodayWeek();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toLocalISODate(new Date());
 
   if (!week) {
     return (
@@ -298,18 +299,21 @@ export default function PlanWeek() {
 
       {/* Week grid */}
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 16px 48px" }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-          {week.days.map((day, i) => {
-            const isToday = day.isoDate === today;
-            return (
-              <DayColumn
-                key={day.isoDate}
-                day={day}
-                label={DAY_LABELS[i] ?? `Day ${i + 1}`}
-                isToday={isToday}
-              />
-            );
-          })}
+        {/* Horizontal scroll on narrow viewports; 5-column flex on wide */}
+        <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "flex-start", minWidth: 600 }}>
+            {week.days.map((day, i) => {
+              const isToday = day.isoDate === today;
+              return (
+                <DayColumn
+                  key={day.isoDate}
+                  day={day}
+                  label={DAY_LABELS[i] ?? `Day ${i + 1}`}
+                  isToday={isToday}
+                />
+              );
+            })}
+          </div>
         </div>
 
         {/* Action key */}

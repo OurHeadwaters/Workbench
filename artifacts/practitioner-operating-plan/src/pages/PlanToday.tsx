@@ -152,7 +152,7 @@ export default function PlanToday() {
             No plan for today
           </div>
           <div style={{ fontSize: 13, color: "#7a7a6e", lineHeight: 1.6, marginBottom: 20 }}>
-            {todayFormatted} is outside the 2026 plan window, or it falls on a weekend.
+            {todayFormatted} is outside the 2026 plan window.
           </div>
           <button
             onClick={() => navigate(`${BASE}/plan`)}
@@ -165,11 +165,17 @@ export default function PlanToday() {
     );
   }
 
-  const { week, day } = result;
+  const { week, day, weekendMode } = result;
   const colors = PHASE_COLORS[week.phase];
   const dayIndex = week.days.findIndex((d) => d.isoDate === day.isoDate);
   const DAY_LABELS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const dayLabel = DAY_LABELS[dayIndex] ?? "Today";
+
+  const weekendBanner = weekendMode === "saturday"
+    ? "Saturday — showing Friday's plan. Rest today."
+    : weekendMode === "sunday"
+    ? "Sunday — showing Monday's plan. Rest today."
+    : null;
 
   return (
     <div style={{ minHeight: "100vh", background: "#f4ede0", fontFamily: "IBM Plex Sans, system-ui, sans-serif" }}>
@@ -237,12 +243,28 @@ export default function PlanToday() {
 
       {/* Steps */}
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "24px 20px 60px" }}>
+        {weekendBanner && (
+          <div style={{
+            background: "rgba(184,90,62,0.07)",
+            border: "1px solid rgba(184,90,62,0.2)",
+            borderRadius: 8,
+            padding: "10px 16px",
+            marginBottom: 20,
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: 11,
+            color: "#b85a3e",
+            letterSpacing: "0.06em",
+          }}>
+            {weekendBanner}
+          </div>
+        )}
+
         <div style={{ marginBottom: 28 }}>
           <NowView />
         </div>
 
         <div style={{ fontFamily: "IBM Plex Mono, monospace", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a7a6e", marginBottom: 14 }}>
-          Today's Steps · {day.steps.length} item{day.steps.length !== 1 ? "s" : ""}
+          {weekendMode ? `${dayLabel}'s Steps` : "Today's Steps"} · {day.steps.length} item{day.steps.length !== 1 ? "s" : ""}
         </div>
 
         {day.steps.map((step, i) => (
@@ -278,9 +300,14 @@ export default function PlanToday() {
                   <span style={{ fontFamily: "IBM Plex Mono, monospace", fontSize: 10, color: "#9a9a8e", width: 52, flexShrink: 0 }}>
                     {dDate.toLocaleDateString("en-CA", { month: "short", day: "numeric" })}
                   </span>
-                  <span style={{ fontSize: 12, color: isToday ? "#2a2520" : "#6a6a60", fontWeight: isToday ? 600 : 400 }}>
-                    {d.steps.map((s) => s.title).join(" · ")}
-                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    {d.steps.map((s, si) => (
+                      <div key={si} style={{ fontSize: 12, color: isToday ? "#2a2520" : "#6a6a60", fontWeight: isToday ? 600 : 400, lineHeight: 1.5, display: "flex", alignItems: "baseline", gap: 5 }}>
+                        <span style={{ fontSize: 9, color: isToday ? "#b85a3e" : "#b0a898", flexShrink: 0, marginTop: 1 }}>▸</span>
+                        <span style={{ wordBreak: "break-word" }}>{s.title}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               );
             })}

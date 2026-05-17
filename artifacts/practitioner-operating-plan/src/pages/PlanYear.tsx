@@ -8,15 +8,16 @@ import {
   getTodayWeek,
   type Phase,
 } from "@/data/plan2026";
+
 import { Q2_BATCHES } from "@/lib/saltBench";
 import { loadAllWeekBenchOverrides, clearWeekBenchOverride, type BenchOverride } from "@/lib/storage";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const PHASE_WEEK_RANGES: Record<Phase, string> = {
-  Foundation: "W1–W15",
-  "Pilot Execution": "W16–W44",
-  "Year-End Audit": "W45–W52",
+  Pursuit: "W20–W26",
+  Pivot: "W27–W35",
+  "Operating Season": "W36–W52",
 };
 
 // ── Bench Swap Audit Panel ─────────────────────────────────────────────────────
