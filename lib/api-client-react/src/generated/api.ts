@@ -6536,6 +6536,142 @@ export const useExpireHhTask = <
 };
 
 /**
+ * @summary Admin — release a claimed task back to available (no-show)
+ */
+export const getReleaseHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/release`;
+};
+
+export const releaseHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getReleaseHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getReleaseHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const mutationKey = [`/api/helping-hands/tasks/{id}/release`];
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+    return releaseHhTask(id, requestOptions);
+  };
+
+  return { mutationKey, mutationFn, ...mutationOptions };
+};
+
+export type ReleaseHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof releaseHhTask>>
+>;
+export type ReleaseHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+export const useReleaseHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof releaseHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof releaseHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getReleaseHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Admin — repost a missed task back to available
+ */
+export const getRepostHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/repost`;
+};
+
+export const repostHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getRepostHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRepostHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const mutationKey = [`/api/helping-hands/tasks/{id}/repost`];
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+    return repostHhTask(id, requestOptions);
+  };
+
+  return { mutationKey, mutationFn, ...mutationOptions };
+};
+
+export type RepostHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof repostHhTask>>
+>;
+export type RepostHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+export const useRepostHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof repostHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof repostHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getRepostHhTaskMutationOptions(options));
+};
+
+/**
  * @summary Admin — list all reliability bonus payments, most recent first
  */
 export const getListHhBonusesUrl = () => {

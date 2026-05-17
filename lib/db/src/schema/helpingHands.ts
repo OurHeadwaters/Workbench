@@ -40,6 +40,7 @@ export const hhMembersTable = pgTable(
     isActive: boolean("is_active").notNull().default(true),
     completedShiftCount: integer("completed_shift_count").notNull().default(0),
     missedShiftCount: integer("missed_shift_count").notNull().default(0),
+    noShowCount: integer("no_show_count").notNull().default(0),
     flaggedForDemotion: boolean("flagged_for_demotion").notNull().default(false),
     totalEarnedXrp: numeric("total_earned_xrp", { precision: 18, scale: 6 }).notNull().default("0"),
     totalEarnedToken: numeric("total_earned_token", { precision: 18, scale: 6 }).notNull().default("0"),

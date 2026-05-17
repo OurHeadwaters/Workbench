@@ -19,6 +19,7 @@ export interface HhMember {
   isActive: boolean;
   completedShiftCount: number;
   missedShiftCount: number;
+  noShowCount: number;
   flaggedForDemotion: boolean;
   totalEarnedXrp: string;
   totalEarnedToken: string;

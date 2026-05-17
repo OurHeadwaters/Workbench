@@ -4,6 +4,8 @@ import {
   useClaimHhTask,
   useCompleteHhTask,
   useConfirmHhTask,
+  useReleaseHhTask,
+  useRepostHhTask,
   getGetHhTasksQueryKey,
   getGetHhDashboardQueryKey,
 } from "@workspace/api-client-react";
@@ -55,6 +57,13 @@ export default function HHTasks() {
   const claimTask = useClaimHhTask();
   const completeTask = useCompleteHhTask();
   const confirmTask = useConfirmHhTask();
+  const releaseTask = useReleaseHhTask();
+  const repostTask = useRepostHhTask();
+
+  function invalidateTasks() {
+    qc.invalidateQueries({ queryKey: getGetHhTasksQueryKey() });
+    qc.invalidateQueries({ queryKey: getGetHhDashboardQueryKey() });
+  }
 
   function doAction(
     action: "claim" | "complete" | "confirm",
@@ -83,8 +92,7 @@ export default function HHTasks() {
               );
             }, 400);
           }
-          qc.invalidateQueries({ queryKey: getGetHhTasksQueryKey() });
-          qc.invalidateQueries({ queryKey: getGetHhDashboardQueryKey() });
+          invalidateTasks();
         },
         onError: (e: Error) => toast.error(e.message || "Something went wrong"),
       });
@@ -95,8 +103,27 @@ export default function HHTasks() {
     mutate.mutate({ id }, {
       onSuccess: () => {
         toast.success(`${labels[action]}: "${title}"`);
-        qc.invalidateQueries({ queryKey: getGetHhTasksQueryKey() });
-        qc.invalidateQueries({ queryKey: getGetHhDashboardQueryKey() });
+        invalidateTasks();
+      },
+      onError: (e: Error) => toast.error(e.message || "Something went wrong"),
+    });
+  }
+
+  function doRelease(id: string, title: string) {
+    releaseTask.mutate({ id }, {
+      onSuccess: () => {
+        toast.success(`Task released back to the pool: "${title}"`);
+        invalidateTasks();
+      },
+      onError: (e: Error) => toast.error(e.message || "Something went wrong"),
+    });
+  }
+
+  function doRepost(id: string, title: string) {
+    repostTask.mutate({ id }, {
+      onSuccess: () => {
+        toast.success(`Task reposted — open for new claims: "${title}"`);
+        invalidateTasks();
       },
       onError: (e: Error) => toast.error(e.message || "Something went wrong"),
     });
@@ -189,7 +216,7 @@ export default function HHTasks() {
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-2 shrink-0">
+              <div className="flex gap-2 shrink-0 flex-wrap justify-end">
                 {task.status === "available" && !isAdmin && (
                   <Button
                     size="sm"
@@ -209,6 +236,17 @@ export default function HHTasks() {
                     {completeTask.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Mark as done"}
                   </Button>
                 )}
+                {task.status === "claimed" && isAdmin && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-amber-700 border-amber-200 hover:bg-amber-50"
+                    onClick={() => doRelease(task.id, task.title)}
+                    disabled={releaseTask.isPending}
+                  >
+                    {releaseTask.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Release (no-show)"}
+                  </Button>
+                )}
                 {task.status === "completed" && isAdmin && (
                   <Button
                     size="sm"
@@ -216,6 +254,17 @@ export default function HHTasks() {
                     disabled={confirmTask.isPending}
                   >
                     {confirmTask.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Confirm & pay"}
+                  </Button>
+                )}
+                {task.status === "missed" && isAdmin && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+                    onClick={() => doRepost(task.id, task.title)}
+                    disabled={repostTask.isPending}
+                  >
+                    {repostTask.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Repost"}
                   </Button>
                 )}
               </div>

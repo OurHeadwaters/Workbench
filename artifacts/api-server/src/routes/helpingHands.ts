@@ -42,6 +42,7 @@ function serializeMember(row: typeof hhMembersTable.$inferSelect) {
     isActive: row.isActive,
     completedShiftCount: row.completedShiftCount ?? 0,
     missedShiftCount: row.missedShiftCount,
+    noShowCount: row.noShowCount ?? 0,
     flaggedForDemotion: row.flaggedForDemotion,
     totalEarnedXrp: row.totalEarnedXrp ?? "0",
     totalEarnedToken: row.totalEarnedToken ?? "0",
@@ -754,6 +755,131 @@ router.post("/tasks/:id/expire", requireAuth(), async (req: Request, res: Respon
           eq(hhMembersTable.tier, "full_time"),
         ),
       );
+  }
+
+  const serialized = await enrichTasksWithNames(updated);
+  res.json(serialized[0]);
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/tasks/:id/release
+// Admin: release a claimed task back to "available" without requiring the
+// date to have passed.  Increments the claimer's noShowCount (reliability
+// hit) but does NOT flag them for demotion — no-show is distinct from a
+// full missed shift.
+// ──────────────────────────────────────────────
+router.post("/tasks/:id/release", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admins only" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const taskId = param(req.params.id);
+
+  const existing = await db
+    .select()
+    .from(hhTasksTable)
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.bandId, band.id)))
+    .limit(1);
+
+  if (!existing[0]) {
+    res.status(404).json({ error: "Task not found" });
+    return;
+  }
+
+  const task = existing[0];
+
+  if (task.status !== "claimed") {
+    res.status(409).json({ error: `Task is '${task.status}', not 'claimed' — nothing to release` });
+    return;
+  }
+
+  // Atomically return task to available, clearing claim fields
+  const updated = await db
+    .update(hhTasksTable)
+    .set({
+      status: "available",
+      claimedByMemberId: null,
+      claimedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.status, "claimed")))
+    .returning();
+
+  if (!updated[0]) {
+    res.status(409).json({ error: "Task state changed concurrently — retry" });
+    return;
+  }
+
+  // Increment no-show count on the former claimer (all tiers, not just full_time)
+  if (task.claimedByMemberId) {
+    await db
+      .update(hhMembersTable)
+      .set({
+        noShowCount: sql`${hhMembersTable.noShowCount} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(hhMembersTable.id, task.claimedByMemberId),
+          eq(hhMembersTable.bandId, band.id),
+        ),
+      );
+  }
+
+  const serialized = await enrichTasksWithNames(updated);
+  res.json(serialized[0]);
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/tasks/:id/repost
+// Admin: reopen a "missed" task back to "available" so it can be claimed
+// again.  Clears the claim fields; the original task record is reused
+// (no duplicate created).
+// ──────────────────────────────────────────────
+router.post("/tasks/:id/repost", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admins only" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const taskId = param(req.params.id);
+
+  const existing = await db
+    .select()
+    .from(hhTasksTable)
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.bandId, band.id)))
+    .limit(1);
+
+  if (!existing[0]) {
+    res.status(404).json({ error: "Task not found" });
+    return;
+  }
+
+  if (existing[0].status !== "missed") {
+    res.status(409).json({ error: `Task is '${existing[0].status}', not 'missed' — cannot repost` });
+    return;
+  }
+
+  const updated = await db
+    .update(hhTasksTable)
+    .set({
+      status: "available",
+      claimedByMemberId: null,
+      claimedAt: null,
+      completedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.status, "missed")))
+    .returning();
+
+  if (!updated[0]) {
+    res.status(409).json({ error: "Task state changed concurrently — retry" });
+    return;
   }
 
   const serialized = await enrichTasksWithNames(updated);
