@@ -22,10 +22,10 @@ export const ownerReconciliationSections: Section[] = [
       "Capital, debt, and costs contributed by the owner before Headwaters (Ontario Corp) took over operations.",
     items: [
       {
-        description: "LFIF loan — Parrs Jars personal liability (GM)",
+        description: "Amount owed to Gilles / GMPH — pre-paid business debt for future development services",
         amount: 72000.0,
         sourceOrNote:
-          "Government loan held personally by Bobbie under Parrs Jars. Full balance outstanding. To be serviced from Headwaters draws.",
+          "Paid to Headwaters as a sole proprietor. Held as business debt toward future development services. To be settled through tool-building work at $175/hr or cash draws if needed.",
         status: "confirmed",
       },
       {
@@ -121,7 +121,7 @@ export const ownerReconciliationSections: Section[] = [
         status: "confirmed",
       },
       {
-        description: "Invoice #001066 — LFIF final shelving / supply cabinet",
+        description: "Invoice #001066 — Final shelving / supply cabinet",
         amount: 508.5,
         sourceOrNote:
           "Invoice #001066 · Mar 27, 2026 · incl. HST $58.50 · subtotal $450",
@@ -249,7 +249,7 @@ export const changelogEntries: ChangelogEntry[] = [
   {
     date: "2026-05-03",
     description:
-      "GM loan ($72,000 LFIF, Parrs Jars personal) added to reconciliation. Three additional invoices (#001057 $17,967 · #001062 $2,486 · #001066 $508.50) confirmed and added as 2025–2026 equipment sales section. Current Headwaters account balance ($4,000 after HST payment) noted. Revised gap: ~$33,000 remaining on loan before QB items.",
+      "Gilles / GMPH debt ($72,000 — pre-paid business development services, Parrs Jars sole-prop era) added to reconciliation. Three additional invoices (#001057 $17,967 · #001062 $2,486 · #001066 $508.50) confirmed and added as 2025–2026 equipment sales section. Current Headwaters account balance ($4,000 after HST payment) noted. Revised gap: ~$33,000 remaining before QB items.",
   },
   {
     date: "2026-05-03",

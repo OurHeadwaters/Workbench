@@ -106,7 +106,7 @@ const INVOICES = [
     paymentMethod: "Co-op payment",
     taxYear: 2026,
     items: [
-      { description: "LFIF final shelving / supply cabinet", amount: null, note: "" },
+      { description: "Final shelving / supply cabinet", amount: null, note: "" },
     ],
     subtotal: 450.00,
     hst: 58.50,

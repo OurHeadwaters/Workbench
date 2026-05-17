@@ -215,15 +215,15 @@ export default function Reconciliation() {
 
             {/* Step 3: against GM loan */}
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-              Step 3 — Against LFIF loan outstanding (GM · Parrs Jars personal)
+              Step 3 — Against amount owed to Gilles / GMPH
             </p>
             <div className="text-sm space-y-0.5 mb-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-muted-foreground pl-3">LFIF loan balance — Parrs Jars personal (GM)</span>
+                <span className="text-muted-foreground pl-3">Amount owed to Gilles / GMPH — pre-paid business debt</span>
                 <span className="font-mono font-medium text-muted-foreground tabular-nums">({fmt(GM_LOAN)})</span>
               </div>
               <div className="flex justify-between items-baseline border-t-2 border-destructive/30 pt-2 mt-1">
-                <span className="font-semibold text-foreground">Gap remaining on loan (before QB items)</span>
+                <span className="font-semibold text-foreground">Gap remaining (before QB items)</span>
                 <span className="font-mono font-bold tabular-nums text-base text-destructive">({fmt(LOAN_GAP)}) still owed</span>
               </div>
             </div>
