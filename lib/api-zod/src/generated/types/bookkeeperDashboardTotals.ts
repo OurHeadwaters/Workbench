@@ -12,4 +12,6 @@ export type BookkeeperDashboardTotals = {
   pendingSubmissionsCount: number;
   costCentres: number;
   accounts: number;
+  /** Count of uncleared posted transactions. */
+  receiptsToReview: number;
 };

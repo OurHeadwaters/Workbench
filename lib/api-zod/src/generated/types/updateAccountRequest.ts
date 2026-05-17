@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UpdateAccountRequestNormalSide } from "./updateAccountRequestNormalSide";
+import type { UpdateAccountRequestTaxCode } from "./updateAccountRequestTaxCode";
 import type { UpdateAccountRequestType } from "./updateAccountRequestType";
 
 export interface UpdateAccountRequest {
@@ -15,5 +16,6 @@ export interface UpdateAccountRequest {
   costCentreCode?: string | null;
   mirrorAccountCode?: string | null;
   notes?: string | null;
+  taxCode?: UpdateAccountRequestTaxCode;
   isActive?: boolean;
 }

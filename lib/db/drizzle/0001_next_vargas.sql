@@ -1,0 +1,1 @@
+ALTER TABLE "hh_earnings" ADD CONSTRAINT "hh_earnings_task_id_unique" UNIQUE("task_id");

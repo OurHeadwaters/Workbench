@@ -90,11 +90,14 @@ export default function OnePager() {
           </div>
 
           {/* Introduction */}
-          <p style={{ fontSize: "9.5pt", lineHeight: 1.5, color: TEXT, marginBottom: "12pt" }}>
+          <p style={{ fontSize: "9.5pt", lineHeight: 1.5, color: TEXT, marginBottom: "8pt" }}>
             This engagement is structured in four phases. Phase 1 is priced as a flat fee ({fmt(28_000)}); Phases 2–4 are
             ranges confirmed with the client at the start of each phase. The practitioner carries all roles in Phase 1.
             A Community Coordinator — hired through the 807 Food Co-operative or Deer Lake band council — is the priority
             staffing gap for Phase 2 onward. IT subcontracting is engaged per phase for QA review.
+          </p>
+          <p style={{ fontSize: "9pt", lineHeight: 1.5, color: MUTED, marginBottom: "12pt", fontStyle: "italic" }}>
+            Square at the till, QuickBooks on the books, Local Line for producers, the Headwaters cockpit tying them together.
           </p>
 
           {/* ── Section 1: Phase pricing table ───────────────────── */}

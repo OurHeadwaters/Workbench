@@ -19,6 +19,9 @@ export interface Transaction {
   voidedAt?: Date | null;
   reversesTransactionId?: string | null;
   sourceSubmissionId?: string | null;
+  cleared?: boolean;
+  clearedAt?: Date | null;
+  clearedByUserId?: string | null;
   totalDebit: number;
   totalCredit: number;
   lines: TransactionLine[];

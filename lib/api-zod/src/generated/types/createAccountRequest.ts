@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CreateAccountRequestNormalSide } from "./createAccountRequestNormalSide";
+import type { CreateAccountRequestTaxCode } from "./createAccountRequestTaxCode";
 import type { CreateAccountRequestType } from "./createAccountRequestType";
 
 export interface CreateAccountRequest {
@@ -18,4 +19,5 @@ export interface CreateAccountRequest {
   costCentreCode?: string;
   mirrorAccountCode?: string;
   notes?: string;
+  taxCode?: CreateAccountRequestTaxCode;
 }

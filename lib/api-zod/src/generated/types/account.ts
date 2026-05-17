@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AccountNormalSide } from "./accountNormalSide";
+import type { AccountTaxCode } from "./accountTaxCode";
 import type { AccountType } from "./accountType";
 
 export interface Account {
@@ -20,6 +21,8 @@ export interface Account {
   /** Counter-account for allocation entries (e.g. 5400 mirrors to 6020). */
   mirrorAccountCode?: string | null;
   notes?: string | null;
+  /** Default tax code for lines posted to this account. */
+  taxCode?: AccountTaxCode;
   isActive: boolean;
   createdAt: Date;
 }

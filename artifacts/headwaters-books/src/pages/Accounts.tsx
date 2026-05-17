@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { AccountType, AccountNormalSide, TaxCode } from "@workspace/api-client-react";
+import { AccountType, AccountNormalSide } from "@workspace/api-client-react";
 
 const TAX_CODE_LABELS: Record<string, string> = {
   "gst-collected": "GST Collected",
@@ -38,6 +38,9 @@ const TAX_CODE_LABELS: Record<string, string> = {
   "none": "None",
 };
 
+const TAX_CODE_VALUES = ["gst-collected", "gst-paid", "exempt", "zero-rated", "personal", "none"] as const;
+type TaxCodeValue = typeof TAX_CODE_VALUES[number];
+
 const accountSchema = z.object({
   code: z.string().min(1, "Code required"),
   name: z.string().min(1, "Name required"),
@@ -46,7 +49,7 @@ const accountSchema = z.object({
   costCentreCode: z.string().optional(),
   mirrorAccountCode: z.string().optional(),
   notes: z.string().optional(),
-  taxCode: z.nativeEnum(TaxCode).optional(),
+  taxCode: z.enum(TAX_CODE_VALUES).optional(),
 });
 
 export default function Accounts() {
@@ -203,7 +206,7 @@ export default function Accounts() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {Object.values(TaxCode).map(tc => (
+                              {TAX_CODE_VALUES.map(tc => (
                                 <SelectItem key={tc} value={tc}>
                                   {TAX_CODE_LABELS[tc] ?? tc}
                                 </SelectItem>
@@ -278,7 +281,7 @@ export default function Accounts() {
                         <TableCell className="capitalize text-muted-foreground text-sm">{acc.normalSide}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className="text-xs font-mono">
-                            {TAX_CODE_LABELS[acc.taxCode] ?? acc.taxCode}
+                            {TAX_CODE_LABELS[acc.taxCode ?? ""] ?? acc.taxCode ?? "—"}
                           </Badge>
                         </TableCell>
                         <TableCell>

@@ -6,7 +6,7 @@ import {
   useCreateTransaction,
   getListTransactionsQueryKey
 } from "@workspace/api-client-react";
-import type { TaxCode } from "@workspace/api-client-react";
+type TaxCode = "gst-collected" | "gst-paid" | "exempt" | "zero-rated" | "personal" | "none";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

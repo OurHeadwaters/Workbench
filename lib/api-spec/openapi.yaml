@@ -16,6 +16,8 @@ tags:
     description: Northern Food Systems Research Library — entries, producers, subjects, project buckets, contributors, and tokenized share links.
   - name: bookkeeper
     description: Headwaters Books — role-aware ledger, cost-centres, transactions, food-handler submissions, and dashboards.
+  - name: helping-hands
+    description: Helping Hands — band reserve workforce platform. Tasks, members, tiers, escrow tracking, and earnings history.
 paths:
   /healthz:
     get:
@@ -1293,6 +1295,368 @@ paths:
               schema:
                 $ref: '#/components/schemas/OkResponse'
 
+
+  # ─────────────────────────────────────────────────────────────
+  # BOOKKEEPER — Additional report + reconciliation endpoints
+  # ─────────────────────────────────────────────────────────────
+
+  /bookkeeper/reports/pnl-by-month:
+    get:
+      operationId: getPnlByMonth
+      tags: [bookkeeper]
+      summary: P&L summary aggregated by calendar month
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Monthly P&L data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PnlByMonthResponse'
+
+  /bookkeeper/reports/tax-summary:
+    get:
+      operationId: getTaxSummary
+      tags: [bookkeeper]
+      summary: GST collected and GST paid summary with line breakdown
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Tax summary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxSummaryResponse'
+
+  /bookkeeper/reports/by-category:
+    get:
+      operationId: getReportsByCategory
+      tags: [bookkeeper]
+      summary: Revenue and expense totals aggregated by account/category
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Category report.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryReportResponse'
+
+  /bookkeeper/receipts/uncleared:
+    get:
+      operationId: getUnclearedReceipts
+      tags: [bookkeeper]
+      summary: Posted transactions that have not yet been cleared/reconciled
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Uncleared receipts list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnclearedReceiptsResponse'
+
+  /bookkeeper/receipts/reconciliation:
+    get:
+      operationId: getReconciliationSummary
+      tags: [bookkeeper]
+      summary: Cleared vs uncleared debit/credit totals per account
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Reconciliation summary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconciliationSummaryResponse'
+
+  /bookkeeper/transactions/{id}/cleared:
+    patch:
+      operationId: toggleTransactionCleared
+      tags: [bookkeeper]
+      summary: Mark a transaction as cleared (or uncleared)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetTransactionClearedRequest'
+      responses:
+        '200':
+          description: Updated transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+
+  # ═══════════════════════════════════════════════════════════
+  # HELPING HANDS — Band Reserve Workforce Platform
+  # ═══════════════════════════════════════════════════════════
+
+  /helping-hands/band:
+    get:
+      operationId: getHhBand
+      tags: [helping-hands]
+      summary: Get band configuration
+      responses:
+        '200':
+          description: Band details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhBand'
+        '404':
+          description: No band found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /helping-hands/members:
+    get:
+      operationId: getHhMembers
+      tags: [helping-hands]
+      summary: List all members for the band
+      responses:
+        '200':
+          description: Member list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhMember'
+    post:
+      operationId: createHhMember
+      tags: [helping-hands]
+      summary: Add a new member to the band
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHhMemberRequest'
+      responses:
+        '201':
+          description: Member created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhMember'
+
+  /helping-hands/members/{id}:
+    patch:
+      operationId: updateHhMember
+      tags: [helping-hands]
+      summary: Update a member's tier, wallet address, or status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHhMemberRequest'
+      responses:
+        '200':
+          description: Updated member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhMember'
+
+  /helping-hands/tasks:
+    get:
+      operationId: getHhTasks
+      tags: [helping-hands]
+      summary: List tasks — optionally filtered by date or status
+      parameters:
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter to tasks available on this date (YYYY-MM-DD). Defaults to today.
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [available, claimed, completed, confirmed, all]
+          description: Filter by task status. Defaults to all.
+      responses:
+        '200':
+          description: Task list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhTask'
+    post:
+      operationId: createHhTask
+      tags: [helping-hands]
+      summary: Post a new task with escrow lock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHhTaskRequest'
+      responses:
+        '201':
+          description: Task created and escrow locked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhTask'
+
+  /helping-hands/tasks/{id}/claim:
+    post:
+      operationId: claimHhTask
+      tags: [helping-hands]
+      summary: Member claims an available task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task claimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhTask'
+        '409':
+          description: Task already claimed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /helping-hands/tasks/{id}/complete:
+    post:
+      operationId: completeHhTask
+      tags: [helping-hands]
+      summary: Member marks a claimed task as complete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task marked complete — awaiting admin confirmation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhTask'
+
+  /helping-hands/tasks/{id}/confirm:
+    post:
+      operationId: confirmHhTask
+      tags: [helping-hands]
+      summary: Admin confirms completion and releases escrow payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Payment released — task confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhTask'
+
+  /helping-hands/my/tasks:
+    get:
+      operationId: getMyHhTasks
+      tags: [helping-hands]
+      summary: Get the signed-in member's task history
+      responses:
+        '200':
+          description: Task history for this member
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhTask'
+
+  /helping-hands/my/earnings:
+    get:
+      operationId: getMyHhEarnings
+      tags: [helping-hands]
+      summary: Get the signed-in member's earnings history
+      responses:
+        '200':
+          description: Earnings list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhEarningsResponse'
+
+  /helping-hands/dashboard:
+    get:
+      operationId: getHhDashboard
+      tags: [helping-hands]
+      summary: Admin dashboard — task counts, pending confirmations, flagged members
+      responses:
+        '200':
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhDashboard'
+
 components:
   schemas:
     HealthStatus:
@@ -1837,6 +2201,11 @@ components:
           nullable: true
           description: Counter-account for allocation entries (e.g. 5400 mirrors to 6020).
         notes: { type: string, nullable: true }
+        taxCode:
+          type: string
+          nullable: true
+          description: Default tax code for lines posted to this account.
+          enum: [gst-collected, gst-paid, exempt, zero-rated, personal, none]
         isActive: { type: boolean }
         createdAt: { type: string, format: date-time }
 
@@ -1855,6 +2224,9 @@ components:
         costCentreCode: { type: string }
         mirrorAccountCode: { type: string }
         notes: { type: string }
+        taxCode:
+          type: string
+          enum: [gst-collected, gst-paid, exempt, zero-rated, personal, none]
 
     UpdateAccountRequest:
       type: object
@@ -1869,6 +2241,10 @@ components:
         costCentreCode: { type: string, nullable: true }
         mirrorAccountCode: { type: string, nullable: true }
         notes: { type: string, nullable: true }
+        taxCode:
+          type: string
+          nullable: true
+          enum: [gst-collected, gst-paid, exempt, zero-rated, personal, none]
         isActive: { type: boolean }
 
     TransactionLine:
@@ -1880,6 +2256,10 @@ components:
         accountName: { type: string }
         costCentreCode: { type: string, nullable: true }
         memo: { type: string, nullable: true }
+        taxCode:
+          type: string
+          nullable: true
+          description: Line-level tax code override.
         debit:
           type: number
           description: Amount in dollars (2dp).
@@ -1905,6 +2285,9 @@ components:
         voidedAt: { type: string, format: date-time, nullable: true }
         reversesTransactionId: { type: string, format: uuid, nullable: true }
         sourceSubmissionId: { type: string, format: uuid, nullable: true }
+        cleared: { type: boolean }
+        clearedAt: { type: string, format: date-time, nullable: true }
+        clearedByUserId: { type: string, format: uuid, nullable: true }
         totalDebit: { type: number }
         totalCredit: { type: number }
         lines:
@@ -2100,13 +2483,14 @@ components:
       properties:
         totals:
           type: object
-          required: [transactions, postedThisMonth, pendingSubmissionsCount, costCentres, accounts]
+          required: [transactions, postedThisMonth, pendingSubmissionsCount, costCentres, accounts, receiptsToReview]
           properties:
             transactions: { type: integer }
             postedThisMonth: { type: integer }
             pendingSubmissionsCount: { type: integer }
             costCentres: { type: integer }
             accounts: { type: integer }
+            receiptsToReview: { type: integer, description: "Count of uncleared posted transactions." }
         byCostCentre:
           type: array
           items:
@@ -2193,6 +2577,133 @@ components:
           additionalProperties: true
           nullable: true
         createdAt: { type: string, format: date-time }
+
+    PnlByMonthMonth:
+      type: object
+      required: [month, revenue, costs, net]
+      properties:
+        month: { type: string }
+        revenue: { type: number }
+        costs: { type: number }
+        net: { type: number }
+
+    PnlByMonthResponse:
+      type: object
+      required: [months]
+      properties:
+        from: { type: string, nullable: true }
+        to: { type: string, nullable: true }
+        months:
+          type: array
+          items:
+            $ref: '#/components/schemas/PnlByMonthMonth'
+
+    TaxSummaryLineItem:
+      type: object
+      required: [accountCode, accountName, taxCode, total, transactionCount]
+      properties:
+        accountCode: { type: string }
+        accountName: { type: string }
+        taxCode: { type: string }
+        total: { type: number }
+        transactionCount: { type: integer }
+
+    TaxSummaryResponse:
+      type: object
+      required: [collected, paid, netOwing, lines]
+      properties:
+        from: { type: string, nullable: true }
+        to: { type: string, nullable: true }
+        collected: { type: number }
+        paid: { type: number }
+        netOwing: { type: number }
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxSummaryLineItem'
+
+    CategoryReportRow:
+      type: object
+      required: [accountCode, accountName, type, taxCode, total, transactionCount]
+      properties:
+        accountCode: { type: string }
+        accountName: { type: string }
+        type: { type: string }
+        taxCode: { type: string }
+        total: { type: number }
+        transactionCount: { type: integer }
+
+    CategoryReportResponse:
+      type: object
+      required: [rows, totalRevenue, totalCosts, net]
+      properties:
+        from: { type: string, nullable: true }
+        to: { type: string, nullable: true }
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryReportRow'
+        totalRevenue: { type: number }
+        totalCosts: { type: number }
+        net: { type: number }
+
+    SetTransactionClearedRequest:
+      type: object
+      required: [cleared]
+      properties:
+        cleared: { type: boolean }
+
+    UnclearedReceiptItem:
+      allOf:
+        - $ref: '#/components/schemas/Transaction'
+        - type: object
+          required: [attachmentCount]
+          properties:
+            attachmentCount: { type: integer }
+
+    UnclearedReceiptsResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnclearedReceiptItem'
+        total: { type: integer }
+
+    ReconciliationAccountRow:
+      type: object
+      required: [accountCode, accountName, clearedDebit, clearedCredit, unclearedDebit, unclearedCredit]
+      properties:
+        accountCode: { type: string }
+        accountName: { type: string }
+        accountType: { type: string, nullable: true }
+        clearedDebit: { type: number }
+        clearedCredit: { type: number }
+        unclearedDebit: { type: number }
+        unclearedCredit: { type: number }
+
+    ReconciliationTotals:
+      type: object
+      required: [clearedDebit, clearedCredit, unclearedDebit, unclearedCredit]
+      properties:
+        clearedDebit: { type: number }
+        clearedCredit: { type: number }
+        unclearedDebit: { type: number }
+        unclearedCredit: { type: number }
+
+    ReconciliationSummaryResponse:
+      type: object
+      required: [accounts, totals]
+      properties:
+        from: { type: string, nullable: true }
+        to: { type: string, nullable: true }
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReconciliationAccountRow'
+        totals:
+          $ref: '#/components/schemas/ReconciliationTotals'
 
     OkResponse:
       type: object
@@ -2306,3 +2817,126 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/WordpilePile'
+
+
+    HhBand:
+      type: object
+      required: [id, name, communityTokenCode, defaultPayCurrency, missedShiftThreshold]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        communityTokenCode: { type: string }
+        communityTokenIssuer: { type: string, nullable: true }
+        defaultPayCurrency: { type: string, enum: [token, xrp] }
+        missedShiftThreshold: { type: integer }
+
+    HhMember:
+      type: object
+      required: [id, bandId, email, firstName, lastName, tier, isActive, missedShiftCount, flaggedForDemotion, totalEarnedXrp, totalEarnedToken, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        bandId: { type: string, format: uuid }
+        email: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        xrplAddress: { type: string, nullable: true }
+        didRef: { type: string, nullable: true }
+        tier: { type: string, enum: [full_time, casual, task_based] }
+        isActive: { type: boolean }
+        missedShiftCount: { type: integer }
+        flaggedForDemotion: { type: boolean }
+        totalEarnedXrp: { type: string }
+        totalEarnedToken: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    CreateHhMemberRequest:
+      type: object
+      required: [email, firstName, lastName]
+      properties:
+        email: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        xrplAddress: { type: string }
+        tier: { type: string, enum: [full_time, casual, task_based] }
+
+    UpdateHhMemberRequest:
+      type: object
+      properties:
+        tier: { type: string, enum: [full_time, casual, task_based] }
+        xrplAddress: { type: string }
+        isActive: { type: boolean }
+        flaggedForDemotion: { type: boolean }
+        missedShiftCount: { type: integer }
+
+    HhTask:
+      type: object
+      required: [id, bandId, postedByMemberId, title, description, estimatedMinutes, payAmount, payCurrency, status, availableDate, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        bandId: { type: string, format: uuid }
+        postedByMemberId: { type: string, format: uuid }
+        postedByName: { type: string }
+        claimedByMemberId: { type: string, format: uuid, nullable: true }
+        claimedByName: { type: string, nullable: true }
+        title: { type: string }
+        description: { type: string }
+        estimatedMinutes: { type: integer }
+        payAmount: { type: string }
+        payCurrency: { type: string, enum: [token, xrp] }
+        status: { type: string, enum: [available, claimed, completed, confirmed] }
+        escrowSequence: { type: integer, nullable: true }
+        escrowTxHash: { type: string, nullable: true }
+        claimedAt: { type: string, format: date-time, nullable: true }
+        completedAt: { type: string, format: date-time, nullable: true }
+        confirmedAt: { type: string, format: date-time, nullable: true }
+        availableDate: { type: string, format: date }
+        createdAt: { type: string, format: date-time }
+
+    CreateHhTaskRequest:
+      type: object
+      required: [title, description, payAmount, payCurrency, availableDate]
+      properties:
+        title: { type: string, minLength: 1 }
+        description: { type: string, minLength: 1 }
+        estimatedMinutes: { type: integer, minimum: 5 }
+        payAmount: { type: string }
+        payCurrency: { type: string, enum: [token, xrp] }
+        availableDate: { type: string, format: date }
+
+    HhEarning:
+      type: object
+      required: [id, taskId, taskTitle, amount, currency, earnedAt]
+      properties:
+        id: { type: string, format: uuid }
+        taskId: { type: string, format: uuid }
+        taskTitle: { type: string }
+        amount: { type: string }
+        currency: { type: string }
+        xrplTxHash: { type: string, nullable: true }
+        earnedAt: { type: string, format: date-time }
+
+    HhEarningsResponse:
+      type: object
+      required: [earnings, totalXrp, totalToken]
+      properties:
+        earnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/HhEarning'
+        totalXrp: { type: string }
+        totalToken: { type: string }
+
+    HhDashboard:
+      type: object
+      required: [todayAvailable, todayClaimed, pendingConfirmation, flaggedMembers, totalMembers]
+      properties:
+        todayAvailable: { type: integer }
+        todayClaimed: { type: integer }
+        pendingConfirmation: { type: integer }
+        flaggedMembers: { type: integer }
+        totalMembers: { type: integer }
+        recentTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/HhTask'
+

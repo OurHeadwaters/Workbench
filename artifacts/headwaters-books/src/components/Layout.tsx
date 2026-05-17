@@ -15,7 +15,10 @@ import {
   GitMerge,
   FileText,
   TrendingUp,
-  ClipboardCheck
+  ClipboardCheck,
+  HandHelping,
+  ListTodo,
+  Wallet,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -66,6 +69,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/pnl", label: "Reports", icon: TrendingUp, roles: ["owner", "bookkeeper"] },
     { href: "/reconciliation", label: "Reconciliation", icon: GitMerge, roles: ["owner", "bookkeeper"] },
     { href: "/accountant-handoff", label: "Accountant Handoff", icon: FileText, roles: ["owner", "bookkeeper"] },
+    { href: "/helping-hands", label: "Helping Hands", icon: HandHelping, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
+    { href: "/helping-hands/tasks", label: "Tasks", icon: ListTodo, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
+    { href: "/helping-hands/roster", label: "Member Roster", icon: Users, roles: ["owner", "ops_manager"], section: "hr" },
+    { href: "/helping-hands/earnings", label: "My Earnings", icon: Wallet, roles: ["food_handler", "owner", "ops_manager", "bookkeeper"], section: "hr" },
   ];
 
   const visibleNav = navItems.filter(item => item.roles.includes(role));
@@ -80,29 +87,43 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
         
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {visibleNav.map((item) => {
-            const isActive = location === item.href || location.startsWith(`${item.href}/`);
-            const badge = (item as { badge?: number }).badge;
-            return (
-              <Link 
-                key={item.href} 
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                }`}
-              >
-                <item.icon className="w-4 h-4 shrink-0" />
-                <span className="flex-1">{item.label}</span>
-                {badge != null && badge > 0 && (
-                  <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center">
-                    {badge > 99 ? "99+" : badge}
-                  </Badge>
-                )}
-              </Link>
-            );
-          })}
+          {(() => {
+            const nodes: React.ReactNode[] = [];
+            let shownHHDivider = false;
+            visibleNav.forEach((item) => {
+              const isHH = (item as { section?: string }).section === "hr";
+              if (isHH && !shownHHDivider) {
+                shownHHDivider = true;
+                nodes.push(
+                  <div key="__hh-divider" className="pt-3 pb-1">
+                    <p className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">Helping Hands</p>
+                  </div>
+                );
+              }
+              const isActive = location === item.href || location.startsWith(`${item.href}/`);
+              const badge = (item as { badge?: number }).badge;
+              nodes.push(
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                      : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  }`}
+                >
+                  <item.icon className="w-4 h-4 shrink-0" />
+                  <span className="flex-1">{item.label}</span>
+                  {badge != null && badge > 0 && (
+                    <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center">
+                      {badge > 99 ? "99+" : badge}
+                    </Badge>
+                  )}
+                </Link>
+              );
+            });
+            return nodes;
+          })()}
         </nav>
 
         <div className="p-4 border-t border-border">

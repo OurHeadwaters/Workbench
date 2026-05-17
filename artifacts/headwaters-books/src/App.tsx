@@ -27,6 +27,11 @@ import Reconciliation from "@/pages/Reconciliation";
 import AccountantHandoff from "@/pages/AccountantHandoff";
 import Pnl from "@/pages/Pnl";
 import Receipts from "@/pages/Receipts";
+import HHDashboard from "@/pages/HHDashboard";
+import HHTasks from "@/pages/HHTasks";
+import HHTaskNew from "@/pages/HHTaskNew";
+import HHRoster from "@/pages/HHRoster";
+import HHEarnings from "@/pages/HHEarnings";
 import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
@@ -178,6 +183,11 @@ function Router() {
       <ProtectedRoute path="/accountant-handoff" component={AccountantHandoff} />
       <ProtectedRoute path="/receipts" component={Receipts} />
       <ProtectedRoute path="/pnl" component={Pnl} />
+      <ProtectedRoute path="/helping-hands" component={HHDashboard} />
+      <ProtectedRoute path="/helping-hands/tasks/new" component={HHTaskNew} />
+      <ProtectedRoute path="/helping-hands/tasks" component={HHTasks} />
+      <ProtectedRoute path="/helping-hands/roster" component={HHRoster} />
+      <ProtectedRoute path="/helping-hands/earnings" component={HHEarnings} />
       <Route component={NotFound} />
     </Switch>
   );

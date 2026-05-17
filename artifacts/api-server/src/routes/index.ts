@@ -17,6 +17,7 @@ import pdfRouter from "./pdf";
 import subcontractRouter from "./subcontract";
 import pgv2Router from "./pgv2";
 import captureRouter from "./capture";
+import helpingHandsRouter from "./helpingHands";
 
 const router: IRouter = Router();
 
@@ -41,5 +42,6 @@ router.use("/", deadheadRouter);
 router.use("/", subcontractRouter);
 router.use("/pgv2", pgv2Router);
 router.use("/capture", captureRouter);
+router.use("/helping-hands", helpingHandsRouter);
 
 export default router;

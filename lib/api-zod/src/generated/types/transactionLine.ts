@@ -12,6 +12,8 @@ export interface TransactionLine {
   accountName: string;
   costCentreCode?: string | null;
   memo?: string | null;
+  /** Line-level tax code override. */
+  taxCode?: string | null;
   /** Amount in dollars (2dp). */
   debit: number;
   /** Amount in dollars (2dp). */

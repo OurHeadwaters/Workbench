@@ -1716,6 +1716,17 @@ export const ListAccountsResponseItem = zod.object({
       "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
     ),
   notes: zod.string().nullish(),
+  taxCode: zod
+    .enum([
+      "gst-collected",
+      "gst-paid",
+      "exempt",
+      "zero-rated",
+      "personal",
+      "none",
+    ])
+    .nullish()
+    .describe("Default tax code for lines posted to this account."),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
 });
@@ -1741,6 +1752,16 @@ export const CreateAccountBody = zod.object({
   costCentreCode: zod.string().optional(),
   mirrorAccountCode: zod.string().optional(),
   notes: zod.string().optional(),
+  taxCode: zod
+    .enum([
+      "gst-collected",
+      "gst-paid",
+      "exempt",
+      "zero-rated",
+      "personal",
+      "none",
+    ])
+    .optional(),
 });
 
 export const CreateAccountResponse = zod.object({
@@ -1770,6 +1791,17 @@ export const CreateAccountResponse = zod.object({
       "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
     ),
   notes: zod.string().nullish(),
+  taxCode: zod
+    .enum([
+      "gst-collected",
+      "gst-paid",
+      "exempt",
+      "zero-rated",
+      "personal",
+      "none",
+    ])
+    .nullish()
+    .describe("Default tax code for lines posted to this account."),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
 });
@@ -1798,6 +1830,16 @@ export const UpdateAccountBody = zod.object({
   costCentreCode: zod.string().nullish(),
   mirrorAccountCode: zod.string().nullish(),
   notes: zod.string().nullish(),
+  taxCode: zod
+    .enum([
+      "gst-collected",
+      "gst-paid",
+      "exempt",
+      "zero-rated",
+      "personal",
+      "none",
+    ])
+    .nullish(),
   isActive: zod.boolean().optional(),
 });
 
@@ -1828,6 +1870,17 @@ export const UpdateAccountResponse = zod.object({
       "Counter-account for allocation entries (e.g. 5400 mirrors to 6020).",
     ),
   notes: zod.string().nullish(),
+  taxCode: zod
+    .enum([
+      "gst-collected",
+      "gst-paid",
+      "exempt",
+      "zero-rated",
+      "personal",
+      "none",
+    ])
+    .nullish()
+    .describe("Default tax code for lines posted to this account."),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
 });
@@ -1874,6 +1927,9 @@ export const ListTransactionsResponse = zod.object({
       voidedAt: zod.coerce.date().nullish(),
       reversesTransactionId: zod.string().uuid().nullish(),
       sourceSubmissionId: zod.string().uuid().nullish(),
+      cleared: zod.boolean().optional(),
+      clearedAt: zod.coerce.date().nullish(),
+      clearedByUserId: zod.string().uuid().nullish(),
       totalDebit: zod.number(),
       totalCredit: zod.number(),
       lines: zod.array(
@@ -1883,6 +1939,10 @@ export const ListTransactionsResponse = zod.object({
           accountName: zod.string(),
           costCentreCode: zod.string().nullish(),
           memo: zod.string().nullish(),
+          taxCode: zod
+            .string()
+            .nullish()
+            .describe("Line-level tax code override."),
           debit: zod.number().describe("Amount in dollars (2dp)."),
           credit: zod.number().describe("Amount in dollars (2dp)."),
         }),
@@ -1934,6 +1994,9 @@ export const CreateTransactionResponse = zod.object({
   voidedAt: zod.coerce.date().nullish(),
   reversesTransactionId: zod.string().uuid().nullish(),
   sourceSubmissionId: zod.string().uuid().nullish(),
+  cleared: zod.boolean().optional(),
+  clearedAt: zod.coerce.date().nullish(),
+  clearedByUserId: zod.string().uuid().nullish(),
   totalDebit: zod.number(),
   totalCredit: zod.number(),
   lines: zod.array(
@@ -1943,6 +2006,7 @@ export const CreateTransactionResponse = zod.object({
       accountName: zod.string(),
       costCentreCode: zod.string().nullish(),
       memo: zod.string().nullish(),
+      taxCode: zod.string().nullish().describe("Line-level tax code override."),
       debit: zod.number().describe("Amount in dollars (2dp)."),
       credit: zod.number().describe("Amount in dollars (2dp)."),
     }),
@@ -1971,6 +2035,9 @@ export const GetTransactionResponse = zod.object({
   voidedAt: zod.coerce.date().nullish(),
   reversesTransactionId: zod.string().uuid().nullish(),
   sourceSubmissionId: zod.string().uuid().nullish(),
+  cleared: zod.boolean().optional(),
+  clearedAt: zod.coerce.date().nullish(),
+  clearedByUserId: zod.string().uuid().nullish(),
   totalDebit: zod.number(),
   totalCredit: zod.number(),
   lines: zod.array(
@@ -1980,6 +2047,7 @@ export const GetTransactionResponse = zod.object({
       accountName: zod.string(),
       costCentreCode: zod.string().nullish(),
       memo: zod.string().nullish(),
+      taxCode: zod.string().nullish().describe("Line-level tax code override."),
       debit: zod.number().describe("Amount in dollars (2dp)."),
       credit: zod.number().describe("Amount in dollars (2dp)."),
     }),
@@ -2014,6 +2082,9 @@ export const VoidTransactionResponse = zod.object({
   voidedAt: zod.coerce.date().nullish(),
   reversesTransactionId: zod.string().uuid().nullish(),
   sourceSubmissionId: zod.string().uuid().nullish(),
+  cleared: zod.boolean().optional(),
+  clearedAt: zod.coerce.date().nullish(),
+  clearedByUserId: zod.string().uuid().nullish(),
   totalDebit: zod.number(),
   totalCredit: zod.number(),
   lines: zod.array(
@@ -2023,12 +2094,51 @@ export const VoidTransactionResponse = zod.object({
       accountName: zod.string(),
       costCentreCode: zod.string().nullish(),
       memo: zod.string().nullish(),
+      taxCode: zod.string().nullish().describe("Line-level tax code override."),
       debit: zod.number().describe("Amount in dollars (2dp)."),
       credit: zod.number().describe("Amount in dollars (2dp)."),
     }),
   ),
   createdAt: zod.coerce.date(),
   createdByEmail: zod.string(),
+});
+
+/**
+ * @summary Request a presigned upload URL for a receipt photo (any authenticated bookkeeper user)
+ */
+
+export const RequestReceiptUploadUrlBody = zod.object({
+  name: zod.string().min(1),
+  size: zod.number().min(1),
+  contentType: zod.string().min(1),
+});
+
+export const RequestReceiptUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url(),
+  objectPath: zod.string(),
+  metadata: zod
+    .object({
+      name: zod.string().min(1),
+      size: zod.number().min(1),
+      contentType: zod.string().min(1),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Get a short-lived signed download URL for a receipt attachment
+ */
+export const GetAttachmentSignedUrlParams = zod.object({
+  id: zod.coerce.string().uuid(),
+  attachmentId: zod.coerce.string().uuid(),
+});
+
+export const GetAttachmentSignedUrlResponse = zod.object({
+  signedUrl: zod
+    .string()
+    .url()
+    .describe("Short-lived GCS signed download URL (valid for ~5 minutes)."),
+  expiresIn: zod.number().describe("Seconds until the URL expires."),
 });
 
 /**
@@ -2311,6 +2421,9 @@ export const GetBookkeeperDashboardResponse = zod.object({
     pendingSubmissionsCount: zod.number(),
     costCentres: zod.number(),
     accounts: zod.number(),
+    receiptsToReview: zod
+      .number()
+      .describe("Count of uncleared posted transactions."),
   }),
   byCostCentre: zod.array(
     zod.object({
@@ -2344,6 +2457,9 @@ export const GetBookkeeperDashboardResponse = zod.object({
       voidedAt: zod.coerce.date().nullish(),
       reversesTransactionId: zod.string().uuid().nullish(),
       sourceSubmissionId: zod.string().uuid().nullish(),
+      cleared: zod.boolean().optional(),
+      clearedAt: zod.coerce.date().nullish(),
+      clearedByUserId: zod.string().uuid().nullish(),
       totalDebit: zod.number(),
       totalCredit: zod.number(),
       lines: zod.array(
@@ -2353,6 +2469,10 @@ export const GetBookkeeperDashboardResponse = zod.object({
           accountName: zod.string(),
           costCentreCode: zod.string().nullish(),
           memo: zod.string().nullish(),
+          taxCode: zod
+            .string()
+            .nullish()
+            .describe("Line-level tax code override."),
           debit: zod.number().describe("Amount in dollars (2dp)."),
           credit: zod.number().describe("Amount in dollars (2dp)."),
         }),
@@ -2892,4 +3012,508 @@ export const DeleteWordpileWordParams = zod.object({
 
 export const DeleteWordpileWordResponse = zod.object({
   ok: zod.boolean(),
+});
+
+/**
+ * @summary P&L summary aggregated by calendar month
+ */
+export const GetPnlByMonthQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetPnlByMonthResponse = zod.object({
+  from: zod.string().nullish(),
+  to: zod.string().nullish(),
+  months: zod.array(
+    zod.object({
+      month: zod.string(),
+      revenue: zod.number(),
+      costs: zod.number(),
+      net: zod.number(),
+    }),
+  ),
+});
+
+/**
+ * @summary GST collected and GST paid summary with line breakdown
+ */
+export const GetTaxSummaryQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetTaxSummaryResponse = zod.object({
+  from: zod.string().nullish(),
+  to: zod.string().nullish(),
+  collected: zod.number(),
+  paid: zod.number(),
+  netOwing: zod.number(),
+  lines: zod.array(
+    zod.object({
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      taxCode: zod.string(),
+      total: zod.number(),
+      transactionCount: zod.number(),
+    }),
+  ),
+});
+
+/**
+ * @summary Revenue and expense totals aggregated by account/category
+ */
+export const GetReportsByCategoryQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetReportsByCategoryResponse = zod.object({
+  from: zod.string().nullish(),
+  to: zod.string().nullish(),
+  rows: zod.array(
+    zod.object({
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      type: zod.string(),
+      taxCode: zod.string(),
+      total: zod.number(),
+      transactionCount: zod.number(),
+    }),
+  ),
+  totalRevenue: zod.number(),
+  totalCosts: zod.number(),
+  net: zod.number(),
+});
+
+/**
+ * @summary Posted transactions that have not yet been cleared/reconciled
+ */
+export const GetUnclearedReceiptsQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetUnclearedReceiptsResponse = zod.object({
+  items: zod.array(
+    zod
+      .object({
+        id: zod.string().uuid(),
+        postedDate: zod.coerce.date(),
+        description: zod.string(),
+        reference: zod
+          .string()
+          .nullish()
+          .describe("External ref (invoice no, receipt no, batch ID)."),
+        status: zod.enum(["posted", "voided"]),
+        voidedReason: zod.string().nullish(),
+        voidedAt: zod.coerce.date().nullish(),
+        reversesTransactionId: zod.string().uuid().nullish(),
+        sourceSubmissionId: zod.string().uuid().nullish(),
+        cleared: zod.boolean().optional(),
+        clearedAt: zod.coerce.date().nullish(),
+        clearedByUserId: zod.string().uuid().nullish(),
+        totalDebit: zod.number(),
+        totalCredit: zod.number(),
+        lines: zod.array(
+          zod.object({
+            id: zod.string().uuid(),
+            accountCode: zod.string(),
+            accountName: zod.string(),
+            costCentreCode: zod.string().nullish(),
+            memo: zod.string().nullish(),
+            taxCode: zod
+              .string()
+              .nullish()
+              .describe("Line-level tax code override."),
+            debit: zod.number().describe("Amount in dollars (2dp)."),
+            credit: zod.number().describe("Amount in dollars (2dp)."),
+          }),
+        ),
+        createdAt: zod.coerce.date(),
+        createdByEmail: zod.string(),
+      })
+      .and(
+        zod.object({
+          attachmentCount: zod.number(),
+        }),
+      ),
+  ),
+  total: zod.number(),
+});
+
+/**
+ * @summary Cleared vs uncleared debit/credit totals per account
+ */
+export const GetReconciliationSummaryQueryParams = zod.object({
+  from: zod.date().optional(),
+  to: zod.date().optional(),
+});
+
+export const GetReconciliationSummaryResponse = zod.object({
+  from: zod.string().nullish(),
+  to: zod.string().nullish(),
+  accounts: zod.array(
+    zod.object({
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      accountType: zod.string().nullish(),
+      clearedDebit: zod.number(),
+      clearedCredit: zod.number(),
+      unclearedDebit: zod.number(),
+      unclearedCredit: zod.number(),
+    }),
+  ),
+  totals: zod.object({
+    clearedDebit: zod.number(),
+    clearedCredit: zod.number(),
+    unclearedDebit: zod.number(),
+    unclearedCredit: zod.number(),
+  }),
+});
+
+/**
+ * @summary Mark a transaction as cleared (or uncleared)
+ */
+export const ToggleTransactionClearedParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const ToggleTransactionClearedBody = zod.object({
+  cleared: zod.boolean(),
+});
+
+export const ToggleTransactionClearedResponse = zod.object({
+  id: zod.string().uuid(),
+  postedDate: zod.coerce.date(),
+  description: zod.string(),
+  reference: zod
+    .string()
+    .nullish()
+    .describe("External ref (invoice no, receipt no, batch ID)."),
+  status: zod.enum(["posted", "voided"]),
+  voidedReason: zod.string().nullish(),
+  voidedAt: zod.coerce.date().nullish(),
+  reversesTransactionId: zod.string().uuid().nullish(),
+  sourceSubmissionId: zod.string().uuid().nullish(),
+  cleared: zod.boolean().optional(),
+  clearedAt: zod.coerce.date().nullish(),
+  clearedByUserId: zod.string().uuid().nullish(),
+  totalDebit: zod.number(),
+  totalCredit: zod.number(),
+  lines: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      accountCode: zod.string(),
+      accountName: zod.string(),
+      costCentreCode: zod.string().nullish(),
+      memo: zod.string().nullish(),
+      taxCode: zod.string().nullish().describe("Line-level tax code override."),
+      debit: zod.number().describe("Amount in dollars (2dp)."),
+      credit: zod.number().describe("Amount in dollars (2dp)."),
+    }),
+  ),
+  createdAt: zod.coerce.date(),
+  createdByEmail: zod.string(),
+});
+
+/**
+ * @summary Get band configuration
+ */
+export const GetHhBandResponse = zod.object({
+  id: zod.string().uuid(),
+  name: zod.string(),
+  communityTokenCode: zod.string(),
+  communityTokenIssuer: zod.string().nullish(),
+  defaultPayCurrency: zod.enum(["token", "xrp"]),
+  missedShiftThreshold: zod.number(),
+});
+
+/**
+ * @summary List all members for the band
+ */
+export const GetHhMembersResponseItem = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  email: zod.string(),
+  firstName: zod.string(),
+  lastName: zod.string(),
+  xrplAddress: zod.string().nullish(),
+  didRef: zod.string().nullish(),
+  tier: zod.enum(["full_time", "casual", "task_based"]),
+  isActive: zod.boolean(),
+  missedShiftCount: zod.number(),
+  flaggedForDemotion: zod.boolean(),
+  totalEarnedXrp: zod.string(),
+  totalEarnedToken: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const GetHhMembersResponse = zod.array(GetHhMembersResponseItem);
+
+/**
+ * @summary Add a new member to the band
+ */
+export const CreateHhMemberBody = zod.object({
+  email: zod.string(),
+  firstName: zod.string(),
+  lastName: zod.string(),
+  xrplAddress: zod.string().optional(),
+  tier: zod.enum(["full_time", "casual", "task_based"]).optional(),
+});
+
+/**
+ * @summary Update a member's tier, wallet address, or status
+ */
+export const UpdateHhMemberParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const UpdateHhMemberBody = zod.object({
+  tier: zod.enum(["full_time", "casual", "task_based"]).optional(),
+  xrplAddress: zod.string().optional(),
+  isActive: zod.boolean().optional(),
+  flaggedForDemotion: zod.boolean().optional(),
+  missedShiftCount: zod.number().optional(),
+});
+
+export const UpdateHhMemberResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  email: zod.string(),
+  firstName: zod.string(),
+  lastName: zod.string(),
+  xrplAddress: zod.string().nullish(),
+  didRef: zod.string().nullish(),
+  tier: zod.enum(["full_time", "casual", "task_based"]),
+  isActive: zod.boolean(),
+  missedShiftCount: zod.number(),
+  flaggedForDemotion: zod.boolean(),
+  totalEarnedXrp: zod.string(),
+  totalEarnedToken: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List tasks — optionally filtered by date or status
+ */
+export const GetHhTasksQueryParams = zod.object({
+  date: zod
+    .date()
+    .optional()
+    .describe(
+      "Filter to tasks available on this date (YYYY-MM-DD). Defaults to today.",
+    ),
+  status: zod
+    .enum(["available", "claimed", "completed", "confirmed", "all"])
+    .optional()
+    .describe("Filter by task status. Defaults to all."),
+});
+
+export const GetHhTasksResponseItem = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+export const GetHhTasksResponse = zod.array(GetHhTasksResponseItem);
+
+/**
+ * @summary Post a new task with escrow lock
+ */
+
+export const createHhTaskBodyEstimatedMinutesMin = 5;
+
+export const CreateHhTaskBody = zod.object({
+  title: zod.string().min(1),
+  description: zod.string().min(1),
+  estimatedMinutes: zod
+    .number()
+    .min(createHhTaskBodyEstimatedMinutesMin)
+    .optional(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  availableDate: zod.coerce.date(),
+});
+
+/**
+ * @summary Member claims an available task
+ */
+export const ClaimHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const ClaimHhTaskResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Member marks a claimed task as complete
+ */
+export const CompleteHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const CompleteHhTaskResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Admin confirms completion and releases escrow payment
+ */
+export const ConfirmHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const ConfirmHhTaskResponse = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Get the signed-in member's task history
+ */
+export const GetMyHhTasksResponseItem = zod.object({
+  id: zod.string().uuid(),
+  bandId: zod.string().uuid(),
+  postedByMemberId: zod.string().uuid(),
+  postedByName: zod.string().optional(),
+  claimedByMemberId: zod.string().uuid().nullish(),
+  claimedByName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string(),
+  estimatedMinutes: zod.number(),
+  payAmount: zod.string(),
+  payCurrency: zod.enum(["token", "xrp"]),
+  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  escrowSequence: zod.number().nullish(),
+  escrowTxHash: zod.string().nullish(),
+  claimedAt: zod.coerce.date().nullish(),
+  completedAt: zod.coerce.date().nullish(),
+  confirmedAt: zod.coerce.date().nullish(),
+  availableDate: zod.coerce.date(),
+  createdAt: zod.coerce.date(),
+});
+export const GetMyHhTasksResponse = zod.array(GetMyHhTasksResponseItem);
+
+/**
+ * @summary Get the signed-in member's earnings history
+ */
+export const GetMyHhEarningsResponse = zod.object({
+  earnings: zod.array(
+    zod.object({
+      id: zod.string().uuid(),
+      taskId: zod.string().uuid(),
+      taskTitle: zod.string(),
+      amount: zod.string(),
+      currency: zod.string(),
+      xrplTxHash: zod.string().nullish(),
+      earnedAt: zod.coerce.date(),
+    }),
+  ),
+  totalXrp: zod.string(),
+  totalToken: zod.string(),
+});
+
+/**
+ * @summary Admin dashboard — task counts, pending confirmations, flagged members
+ */
+export const GetHhDashboardResponse = zod.object({
+  todayAvailable: zod.number(),
+  todayClaimed: zod.number(),
+  pendingConfirmation: zod.number(),
+  flaggedMembers: zod.number(),
+  totalMembers: zod.number(),
+  recentTasks: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        bandId: zod.string().uuid(),
+        postedByMemberId: zod.string().uuid(),
+        postedByName: zod.string().optional(),
+        claimedByMemberId: zod.string().uuid().nullish(),
+        claimedByName: zod.string().nullish(),
+        title: zod.string(),
+        description: zod.string(),
+        estimatedMinutes: zod.number(),
+        payAmount: zod.string(),
+        payCurrency: zod.enum(["token", "xrp"]),
+        status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+        escrowSequence: zod.number().nullish(),
+        escrowTxHash: zod.string().nullish(),
+        claimedAt: zod.coerce.date().nullish(),
+        completedAt: zod.coerce.date().nullish(),
+        confirmedAt: zod.coerce.date().nullish(),
+        availableDate: zod.coerce.date(),
+        createdAt: zod.coerce.date(),
+      }),
+    )
+    .optional(),
 });

@@ -19,11 +19,12 @@ import type {
 import type {
   Account,
   ApproveSubmissionRequest,
+  AttachmentSignedUrlResponse,
   AuditLogEntry,
   BookkeeperDashboard,
   BookkeeperMe,
   BookkeeperUser,
-  CategoryReport,
+  CategoryReportResponse,
   Contributor,
   CostCentre,
   CostCentrePnlReport,
@@ -31,6 +32,8 @@ import type {
   CreateContributorRequest,
   CreateCostCentreRequest,
   CreateEntryFromUrlRequest,
+  CreateHhMemberRequest,
+  CreateHhTaskRequest,
   CreateLibraryEntryRequest,
   CreateProducerRequest,
   CreateShareLinkRequest,
@@ -40,13 +43,20 @@ import type {
   CreateWordpileWordRequest,
   ErrorEnvelope,
   GetBookkeeperPnlParams,
+  GetHhTasksParams,
   GetPnlByMonthParams,
   GetRecentActivityParams,
+  GetReconciliationSummaryParams,
   GetReportsByCategoryParams,
   GetTaxSummaryParams,
-  TaxSummaryReport,
+  GetUnclearedReceiptsParams,
   HandlerActivity,
   HealthStatus,
+  HhBand,
+  HhDashboard,
+  HhEarningsResponse,
+  HhMember,
+  HhTask,
   LibraryEntry,
   LibraryEntryPage,
   LibraryEntryUpsertResult,
@@ -59,26 +69,27 @@ import type {
   ListTransactionsParams,
   NudgeHandlerRequest,
   OkResponse,
-  PnlByMonthReport,
+  PnlByMonthResponse,
   Producer,
   ProducerDetail,
   ProjectBucketWithCount,
   PublicShareLink,
+  ReconciliationSummaryResponse,
   RejectSubmissionRequest,
+  SetTransactionClearedRequest,
   ShareLink,
   ShareLinkSummary,
   SubjectWithCount,
   Submission,
   SyncWordpileRequest,
-  GetUnclearedReceiptsParams,
-  ReconciliationSummary,
-  ToggleClearedRequest,
+  TaxSummaryResponse,
   Transaction,
   TransactionPage,
   UnclearedReceiptsResponse,
   UpdateAccountRequest,
   UpdateBookkeeperUserRequest,
   UpdateCostCentreRequest,
+  UpdateHhMemberRequest,
   UpdateLibraryEntryRequest,
   UpdateWordpilePileRequest,
   UpdateWordpileWordRequest,
@@ -3250,6 +3261,200 @@ export const useVoidTransaction = <
 };
 
 /**
+ * @summary Request a presigned upload URL for a receipt photo (any authenticated bookkeeper user)
+ */
+export const getRequestReceiptUploadUrlUrl = () => {
+  return `/api/bookkeeper/uploads/request-url`;
+};
+
+export const requestReceiptUploadUrl = async (
+  uploadUrlRequest: UploadUrlRequest,
+  options?: RequestInit,
+): Promise<UploadUrlResponse> => {
+  return customFetch<UploadUrlResponse>(getRequestReceiptUploadUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(uploadUrlRequest),
+  });
+};
+
+export const getRequestReceiptUploadUrlMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestReceiptUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestReceiptUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  const mutationKey = ["requestReceiptUploadUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestReceiptUploadUrl>>,
+    { data: BodyType<UploadUrlRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestReceiptUploadUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestReceiptUploadUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestReceiptUploadUrl>>
+>;
+export type RequestReceiptUploadUrlMutationBody = BodyType<UploadUrlRequest>;
+export type RequestReceiptUploadUrlMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Request a presigned upload URL for a receipt photo (any authenticated bookkeeper user)
+ */
+export const useRequestReceiptUploadUrl = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestReceiptUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestReceiptUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  return useMutation(getRequestReceiptUploadUrlMutationOptions(options));
+};
+
+/**
+ * @summary Get a short-lived signed download URL for a receipt attachment
+ */
+export const getGetAttachmentSignedUrlUrl = (
+  id: string,
+  attachmentId: string,
+) => {
+  return `/api/bookkeeper/submissions/${id}/attachments/${attachmentId}/signed-url`;
+};
+
+export const getAttachmentSignedUrl = async (
+  id: string,
+  attachmentId: string,
+  options?: RequestInit,
+): Promise<AttachmentSignedUrlResponse> => {
+  return customFetch<AttachmentSignedUrlResponse>(
+    getGetAttachmentSignedUrlUrl(id, attachmentId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetAttachmentSignedUrlQueryKey = (
+  id: string,
+  attachmentId: string,
+) => {
+  return [
+    `/api/bookkeeper/submissions/${id}/attachments/${attachmentId}/signed-url`,
+  ] as const;
+};
+
+export const getGetAttachmentSignedUrlQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAttachmentSignedUrl>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  attachmentId: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAttachmentSignedUrl>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getGetAttachmentSignedUrlQueryKey(id, attachmentId);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getAttachmentSignedUrl>>
+  > = ({ signal }) =>
+    getAttachmentSignedUrl(id, attachmentId, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!(id && attachmentId),
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAttachmentSignedUrl>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAttachmentSignedUrlQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAttachmentSignedUrl>>
+>;
+export type GetAttachmentSignedUrlQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Get a short-lived signed download URL for a receipt attachment
+ */
+
+export function useGetAttachmentSignedUrl<
+  TData = Awaited<ReturnType<typeof getAttachmentSignedUrl>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(
+  id: string,
+  attachmentId: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAttachmentSignedUrl>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAttachmentSignedUrlQueryOptions(
+    id,
+    attachmentId,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
  * @summary List food-handler submissions (food_handler sees only own; staff see queue)
  */
 export const getListSubmissionsUrl = (params?: ListSubmissionsParams) => {
@@ -4896,322 +5101,41 @@ export const useDeleteWordpileWord = <
   return useMutation(getDeleteWordpileWordMutationOptions(options));
 };
 
-// ── PATCH /bookkeeper/transactions/:id/cleared ───────────────────────────────
-
-export const getToggleTransactionClearedUrl = (id: string) =>
-  `/api/bookkeeper/transactions/${id}/cleared`;
-
-export const toggleTransactionCleared = async (
-  id: string,
-  toggleClearedRequest: ToggleClearedRequest,
-  options?: RequestInit,
-): Promise<Transaction> => {
-  return customFetch<Transaction>(getToggleTransactionClearedUrl(id), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(toggleClearedRequest),
-  });
-};
-
-export type ToggleTransactionClearedMutationResult = NonNullable<
-  Awaited<ReturnType<typeof toggleTransactionCleared>>
->;
-export type ToggleTransactionClearedMutationError = ErrorType<unknown>;
-
-export const useToggleTransactionCleared = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof toggleTransactionCleared>>,
-    TError,
-    { id: string; data: BodyType<ToggleClearedRequest> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof toggleTransactionCleared>>,
-  TError,
-  { id: string; data: BodyType<ToggleClearedRequest> },
-  TContext
-> => {
-  const mutationKey = ["toggleTransactionCleared"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof toggleTransactionCleared>>,
-    { id: string; data: BodyType<ToggleClearedRequest> }
-  > = (props) => {
-    const { id, data } = props ?? {};
-    return toggleTransactionCleared(id, data, requestOptions);
-  };
-
-  return useMutation({ mutationFn, ...mutationOptions });
-};
-
-// ── GET /bookkeeper/receipts/uncleared ──────────────────────────────────────
-
-export const getGetUnclearedReceiptsUrl = (params?: GetUnclearedReceiptsParams) => {
-  const searchParams = new URLSearchParams();
-  if (params?.from !== undefined) searchParams.set("from", params.from);
-  if (params?.to !== undefined) searchParams.set("to", params.to);
-  const qs = searchParams.toString();
-  return `/api/bookkeeper/receipts/uncleared${qs ? `?${qs}` : ""}`;
-};
-
-export const getUnclearedReceipts = async (
-  params?: GetUnclearedReceiptsParams,
-  options?: RequestInit,
-): Promise<UnclearedReceiptsResponse> => {
-  return customFetch<UnclearedReceiptsResponse>(
-    getGetUnclearedReceiptsUrl(params),
-    options,
-  );
-};
-
-export const getGetUnclearedReceiptsQueryKey = (params?: GetUnclearedReceiptsParams) =>
-  [`/api/bookkeeper/receipts/uncleared`, ...(params ? [params] : [])] as const;
-
-export const getGetUnclearedReceiptsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetUnclearedReceiptsParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getUnclearedReceipts>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey =
-    queryOptions?.queryKey ?? getGetUnclearedReceiptsQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getUnclearedReceipts>>
-  > = ({ signal }) => getUnclearedReceipts(params, { signal, ...requestOptions });
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getUnclearedReceipts>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetUnclearedReceiptsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getUnclearedReceipts>>
->;
-export type GetUnclearedReceiptsQueryError = ErrorType<unknown>;
-
-export function useGetUnclearedReceipts<
-  TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetUnclearedReceiptsParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getUnclearedReceipts>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetUnclearedReceiptsQueryOptions(params, options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-// ── GET /bookkeeper/receipts/reconciliation ──────────────────────────────────
-
-export type GetReconciliationSummaryParams = {
-  from?: string;
-  to?: string;
-};
-
-export const getGetReconciliationSummaryUrl = (params?: GetReconciliationSummaryParams) => {
-  const searchParams = new URLSearchParams();
-  if (params?.from !== undefined) searchParams.set("from", params.from);
-  if (params?.to !== undefined) searchParams.set("to", params.to);
-  const qs = searchParams.toString();
-  return `/api/bookkeeper/receipts/reconciliation${qs ? `?${qs}` : ""}`;
-};
-
-export const getReconciliationSummary = async (
-  params?: GetReconciliationSummaryParams,
-  options?: RequestInit,
-): Promise<ReconciliationSummary> => {
-  return customFetch<ReconciliationSummary>(
-    getGetReconciliationSummaryUrl(params),
-    options,
-  );
-};
-
-export const getGetReconciliationSummaryQueryKey = (params?: GetReconciliationSummaryParams) =>
-  [`/api/bookkeeper/receipts/reconciliation`, ...(params ? [params] : [])] as const;
-
-export const getGetReconciliationSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetReconciliationSummaryParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getReconciliationSummary>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey =
-    queryOptions?.queryKey ?? getGetReconciliationSummaryQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getReconciliationSummary>>
-  > = ({ signal }) => getReconciliationSummary(params, { signal, ...requestOptions });
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getReconciliationSummary>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetReconciliationSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getReconciliationSummary>>
->;
-export type GetReconciliationSummaryQueryError = ErrorType<unknown>;
-
-export function useGetReconciliationSummary<
-  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetReconciliationSummaryParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getReconciliationSummary>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetReconciliationSummaryQueryOptions(params, options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-// ── GET /bookkeeper/reports/by-category ─────────────────────────────────────
-
-export const getGetReportsByCategoryUrl = (
-  params?: GetReportsByCategoryParams,
-) => {
-  const searchParams = new URLSearchParams();
-  if (params?.from !== undefined) searchParams.set("from", params.from);
-  if (params?.to !== undefined) searchParams.set("to", params.to);
-  const qs = searchParams.toString();
-  return `/api/bookkeeper/reports/by-category${qs ? `?${qs}` : ""}`;
-};
-
-export const getReportsByCategory = async (
-  params?: GetReportsByCategoryParams,
-  options?: RequestInit,
-): Promise<CategoryReport> => {
-  return customFetch<CategoryReport>(
-    getGetReportsByCategoryUrl(params),
-    options,
-  );
-};
-
-export const getGetReportsByCategoryQueryKey = (
-  params?: GetReportsByCategoryParams,
-) => [`/api/bookkeeper/reports/by-category`, ...(params ? [params] : [])] as const;
-
-export const getGetReportsByCategoryQueryOptions = <
-  TData = Awaited<ReturnType<typeof getReportsByCategory>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetReportsByCategoryParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getReportsByCategory>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey =
-    queryOptions?.queryKey ?? getGetReportsByCategoryQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getReportsByCategory>>
-  > = ({ signal }) =>
-    getReportsByCategory(params, { signal, ...requestOptions });
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getReportsByCategory>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetReportsByCategoryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getReportsByCategory>>
->;
-export type GetReportsByCategoryQueryError = ErrorType<unknown>;
-
-export function useGetReportsByCategory<
-  TData = Awaited<ReturnType<typeof getReportsByCategory>>,
-  TError = ErrorType<unknown>,
->(
-  params?: GetReportsByCategoryParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getReportsByCategory>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetReportsByCategoryQueryOptions(params, options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-// ── GET /bookkeeper/reports/pnl-by-month ────────────────────────────────────
-
+/**
+ * @summary P&L summary aggregated by calendar month
+ */
 export const getGetPnlByMonthUrl = (params?: GetPnlByMonthParams) => {
-  const searchParams = new URLSearchParams();
-  if (params?.from !== undefined) searchParams.set("from", params.from);
-  if (params?.to !== undefined) searchParams.set("to", params.to);
-  const qs = searchParams.toString();
-  return `/api/bookkeeper/reports/pnl-by-month${qs ? `?${qs}` : ""}`;
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/reports/pnl-by-month?${stringifiedParams}`
+    : `/api/bookkeeper/reports/pnl-by-month`;
 };
 
 export const getPnlByMonth = async (
   params?: GetPnlByMonthParams,
   options?: RequestInit,
-): Promise<PnlByMonthReport> => {
-  return customFetch<PnlByMonthReport>(getGetPnlByMonthUrl(params), options);
+): Promise<PnlByMonthResponse> => {
+  return customFetch<PnlByMonthResponse>(getGetPnlByMonthUrl(params), {
+    ...options,
+    method: "GET",
+  });
 };
 
-export const getGetPnlByMonthQueryKey = (params?: GetPnlByMonthParams) =>
-  [`/api/bookkeeper/reports/pnl-by-month`, ...(params ? [params] : [])] as const;
+export const getGetPnlByMonthQueryKey = (params?: GetPnlByMonthParams) => {
+  return [
+    `/api/bookkeeper/reports/pnl-by-month`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
 export const getGetPnlByMonthQueryOptions = <
   TData = Awaited<ReturnType<typeof getPnlByMonth>>,
@@ -5228,11 +5152,13 @@ export const getGetPnlByMonthQueryOptions = <
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey =
-    queryOptions?.queryKey ?? getGetPnlByMonthQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPnlByMonth>>
-  > = ({ signal }) => getPnlByMonth(params, { signal, ...requestOptions });
+
+  const queryKey = queryOptions?.queryKey ?? getGetPnlByMonthQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPnlByMonth>>> = ({
+    signal,
+  }) => getPnlByMonth(params, { signal, ...requestOptions });
+
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getPnlByMonth>>,
     TError,
@@ -5244,6 +5170,10 @@ export type GetPnlByMonthQueryResult = NonNullable<
   Awaited<ReturnType<typeof getPnlByMonth>>
 >;
 export type GetPnlByMonthQueryError = ErrorType<unknown>;
+
+/**
+ * @summary P&L summary aggregated by calendar month
+ */
 
 export function useGetPnlByMonth<
   TData = Awaited<ReturnType<typeof getPnlByMonth>>,
@@ -5260,31 +5190,49 @@ export function useGetPnlByMonth<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPnlByMonthQueryOptions(params, options);
+
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
   };
+
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-// ── GET /bookkeeper/reports/tax-summary ──────────────────────────────────────
-
+/**
+ * @summary GST collected and GST paid summary with line breakdown
+ */
 export const getGetTaxSummaryUrl = (params?: GetTaxSummaryParams) => {
-  const searchParams = new URLSearchParams();
-  if (params?.from !== undefined) searchParams.set("from", params.from);
-  if (params?.to !== undefined) searchParams.set("to", params.to);
-  const qs = searchParams.toString();
-  return `/api/bookkeeper/reports/tax-summary${qs ? `?${qs}` : ""}`;
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/reports/tax-summary?${stringifiedParams}`
+    : `/api/bookkeeper/reports/tax-summary`;
 };
 
 export const getTaxSummary = async (
   params?: GetTaxSummaryParams,
   options?: RequestInit,
-): Promise<TaxSummaryReport> => {
-  return customFetch<TaxSummaryReport>(getGetTaxSummaryUrl(params), options);
+): Promise<TaxSummaryResponse> => {
+  return customFetch<TaxSummaryResponse>(getGetTaxSummaryUrl(params), {
+    ...options,
+    method: "GET",
+  });
 };
 
-export const getGetTaxSummaryQueryKey = (params?: GetTaxSummaryParams) =>
-  [`/api/bookkeeper/reports/tax-summary`, ...(params ? [params] : [])] as const;
+export const getGetTaxSummaryQueryKey = (params?: GetTaxSummaryParams) => {
+  return [
+    `/api/bookkeeper/reports/tax-summary`,
+    ...(params ? [params] : []),
+  ] as const;
+};
 
 export const getGetTaxSummaryQueryOptions = <
   TData = Awaited<ReturnType<typeof getTaxSummary>>,
@@ -5301,11 +5249,13 @@ export const getGetTaxSummaryQueryOptions = <
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey =
-    queryOptions?.queryKey ?? getGetTaxSummaryQueryKey(params);
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getTaxSummary>>
-  > = ({ signal }) => getTaxSummary(params, { signal, ...requestOptions });
+
+  const queryKey = queryOptions?.queryKey ?? getGetTaxSummaryQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTaxSummary>>> = ({
+    signal,
+  }) => getTaxSummary(params, { signal, ...requestOptions });
+
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getTaxSummary>>,
     TError,
@@ -5317,6 +5267,10 @@ export type GetTaxSummaryQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTaxSummary>>
 >;
 export type GetTaxSummaryQueryError = ErrorType<unknown>;
+
+/**
+ * @summary GST collected and GST paid summary with line breakdown
+ */
 
 export function useGetTaxSummary<
   TData = Awaited<ReturnType<typeof getTaxSummary>>,
@@ -5333,8 +5287,1386 @@ export function useGetTaxSummary<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetTaxSummaryQueryOptions(params, options);
+
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
   };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Revenue and expense totals aggregated by account/category
+ */
+export const getGetReportsByCategoryUrl = (
+  params?: GetReportsByCategoryParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/reports/by-category?${stringifiedParams}`
+    : `/api/bookkeeper/reports/by-category`;
+};
+
+export const getReportsByCategory = async (
+  params?: GetReportsByCategoryParams,
+  options?: RequestInit,
+): Promise<CategoryReportResponse> => {
+  return customFetch<CategoryReportResponse>(
+    getGetReportsByCategoryUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetReportsByCategoryQueryKey = (
+  params?: GetReportsByCategoryParams,
+) => {
+  return [
+    `/api/bookkeeper/reports/by-category`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetReportsByCategoryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getReportsByCategory>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReportsByCategoryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReportsByCategory>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetReportsByCategoryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getReportsByCategory>>
+  > = ({ signal }) =>
+    getReportsByCategory(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getReportsByCategory>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetReportsByCategoryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getReportsByCategory>>
+>;
+export type GetReportsByCategoryQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Revenue and expense totals aggregated by account/category
+ */
+
+export function useGetReportsByCategory<
+  TData = Awaited<ReturnType<typeof getReportsByCategory>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReportsByCategoryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReportsByCategory>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetReportsByCategoryQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Posted transactions that have not yet been cleared/reconciled
+ */
+export const getGetUnclearedReceiptsUrl = (
+  params?: GetUnclearedReceiptsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/receipts/uncleared?${stringifiedParams}`
+    : `/api/bookkeeper/receipts/uncleared`;
+};
+
+export const getUnclearedReceipts = async (
+  params?: GetUnclearedReceiptsParams,
+  options?: RequestInit,
+): Promise<UnclearedReceiptsResponse> => {
+  return customFetch<UnclearedReceiptsResponse>(
+    getGetUnclearedReceiptsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetUnclearedReceiptsQueryKey = (
+  params?: GetUnclearedReceiptsParams,
+) => {
+  return [
+    `/api/bookkeeper/receipts/uncleared`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetUnclearedReceiptsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUnclearedReceiptsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUnclearedReceipts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetUnclearedReceiptsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getUnclearedReceipts>>
+  > = ({ signal }) =>
+    getUnclearedReceipts(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getUnclearedReceipts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetUnclearedReceiptsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUnclearedReceipts>>
+>;
+export type GetUnclearedReceiptsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Posted transactions that have not yet been cleared/reconciled
+ */
+
+export function useGetUnclearedReceipts<
+  TData = Awaited<ReturnType<typeof getUnclearedReceipts>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetUnclearedReceiptsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUnclearedReceipts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetUnclearedReceiptsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Cleared vs uncleared debit/credit totals per account
+ */
+export const getGetReconciliationSummaryUrl = (
+  params?: GetReconciliationSummaryParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/bookkeeper/receipts/reconciliation?${stringifiedParams}`
+    : `/api/bookkeeper/receipts/reconciliation`;
+};
+
+export const getReconciliationSummary = async (
+  params?: GetReconciliationSummaryParams,
+  options?: RequestInit,
+): Promise<ReconciliationSummaryResponse> => {
+  return customFetch<ReconciliationSummaryResponse>(
+    getGetReconciliationSummaryUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetReconciliationSummaryQueryKey = (
+  params?: GetReconciliationSummaryParams,
+) => {
+  return [
+    `/api/bookkeeper/receipts/reconciliation`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetReconciliationSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReconciliationSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReconciliationSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetReconciliationSummaryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getReconciliationSummary>>
+  > = ({ signal }) =>
+    getReconciliationSummary(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getReconciliationSummary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetReconciliationSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getReconciliationSummary>>
+>;
+export type GetReconciliationSummaryQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Cleared vs uncleared debit/credit totals per account
+ */
+
+export function useGetReconciliationSummary<
+  TData = Awaited<ReturnType<typeof getReconciliationSummary>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetReconciliationSummaryParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getReconciliationSummary>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetReconciliationSummaryQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Mark a transaction as cleared (or uncleared)
+ */
+export const getToggleTransactionClearedUrl = (id: string) => {
+  return `/api/bookkeeper/transactions/${id}/cleared`;
+};
+
+export const toggleTransactionCleared = async (
+  id: string,
+  setTransactionClearedRequest: SetTransactionClearedRequest,
+  options?: RequestInit,
+): Promise<Transaction> => {
+  return customFetch<Transaction>(getToggleTransactionClearedUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(setTransactionClearedRequest),
+  });
+};
+
+export const getToggleTransactionClearedMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof toggleTransactionCleared>>,
+    TError,
+    { id: string; data: BodyType<SetTransactionClearedRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof toggleTransactionCleared>>,
+  TError,
+  { id: string; data: BodyType<SetTransactionClearedRequest> },
+  TContext
+> => {
+  const mutationKey = ["toggleTransactionCleared"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof toggleTransactionCleared>>,
+    { id: string; data: BodyType<SetTransactionClearedRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return toggleTransactionCleared(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ToggleTransactionClearedMutationResult = NonNullable<
+  Awaited<ReturnType<typeof toggleTransactionCleared>>
+>;
+export type ToggleTransactionClearedMutationBody =
+  BodyType<SetTransactionClearedRequest>;
+export type ToggleTransactionClearedMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Mark a transaction as cleared (or uncleared)
+ */
+export const useToggleTransactionCleared = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof toggleTransactionCleared>>,
+    TError,
+    { id: string; data: BodyType<SetTransactionClearedRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof toggleTransactionCleared>>,
+  TError,
+  { id: string; data: BodyType<SetTransactionClearedRequest> },
+  TContext
+> => {
+  return useMutation(getToggleTransactionClearedMutationOptions(options));
+};
+
+/**
+ * @summary Get band configuration
+ */
+export const getGetHhBandUrl = () => {
+  return `/api/helping-hands/band`;
+};
+
+export const getHhBand = async (options?: RequestInit): Promise<HhBand> => {
+  return customFetch<HhBand>(getGetHhBandUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhBandQueryKey = () => {
+  return [`/api/helping-hands/band`] as const;
+};
+
+export const getGetHhBandQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhBand>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBand>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHhBandQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhBand>>> = ({
+    signal,
+  }) => getHhBand({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhBand>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhBandQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhBand>>
+>;
+export type GetHhBandQueryError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Get band configuration
+ */
+
+export function useGetHhBand<
+  TData = Awaited<ReturnType<typeof getHhBand>>,
+  TError = ErrorType<ErrorEnvelope>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBand>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhBandQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List all members for the band
+ */
+export const getGetHhMembersUrl = () => {
+  return `/api/helping-hands/members`;
+};
+
+export const getHhMembers = async (
+  options?: RequestInit,
+): Promise<HhMember[]> => {
+  return customFetch<HhMember[]>(getGetHhMembersUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhMembersQueryKey = () => {
+  return [`/api/helping-hands/members`] as const;
+};
+
+export const getGetHhMembersQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhMembers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMembers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHhMembersQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhMembers>>> = ({
+    signal,
+  }) => getHhMembers({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMembers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhMembersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhMembers>>
+>;
+export type GetHhMembersQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all members for the band
+ */
+
+export function useGetHhMembers<
+  TData = Awaited<ReturnType<typeof getHhMembers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhMembers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhMembersQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Add a new member to the band
+ */
+export const getCreateHhMemberUrl = () => {
+  return `/api/helping-hands/members`;
+};
+
+export const createHhMember = async (
+  createHhMemberRequest: CreateHhMemberRequest,
+  options?: RequestInit,
+): Promise<HhMember> => {
+  return customFetch<HhMember>(getCreateHhMemberUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createHhMemberRequest),
+  });
+};
+
+export const getCreateHhMemberMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhMember>>,
+    TError,
+    { data: BodyType<CreateHhMemberRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createHhMember>>,
+  TError,
+  { data: BodyType<CreateHhMemberRequest> },
+  TContext
+> => {
+  const mutationKey = ["createHhMember"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createHhMember>>,
+    { data: BodyType<CreateHhMemberRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createHhMember(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateHhMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createHhMember>>
+>;
+export type CreateHhMemberMutationBody = BodyType<CreateHhMemberRequest>;
+export type CreateHhMemberMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Add a new member to the band
+ */
+export const useCreateHhMember = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhMember>>,
+    TError,
+    { data: BodyType<CreateHhMemberRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createHhMember>>,
+  TError,
+  { data: BodyType<CreateHhMemberRequest> },
+  TContext
+> => {
+  return useMutation(getCreateHhMemberMutationOptions(options));
+};
+
+/**
+ * @summary Update a member's tier, wallet address, or status
+ */
+export const getUpdateHhMemberUrl = (id: string) => {
+  return `/api/helping-hands/members/${id}`;
+};
+
+export const updateHhMember = async (
+  id: string,
+  updateHhMemberRequest: UpdateHhMemberRequest,
+  options?: RequestInit,
+): Promise<HhMember> => {
+  return customFetch<HhMember>(getUpdateHhMemberUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateHhMemberRequest),
+  });
+};
+
+export const getUpdateHhMemberMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhMember>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhMemberRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateHhMember>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhMemberRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateHhMember"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateHhMember>>,
+    { id: string; data: BodyType<UpdateHhMemberRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateHhMember(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateHhMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateHhMember>>
+>;
+export type UpdateHhMemberMutationBody = BodyType<UpdateHhMemberRequest>;
+export type UpdateHhMemberMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update a member's tier, wallet address, or status
+ */
+export const useUpdateHhMember = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhMember>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhMemberRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateHhMember>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhMemberRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateHhMemberMutationOptions(options));
+};
+
+/**
+ * @summary List tasks — optionally filtered by date or status
+ */
+export const getGetHhTasksUrl = (params?: GetHhTasksParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/helping-hands/tasks?${stringifiedParams}`
+    : `/api/helping-hands/tasks`;
+};
+
+export const getHhTasks = async (
+  params?: GetHhTasksParams,
+  options?: RequestInit,
+): Promise<HhTask[]> => {
+  return customFetch<HhTask[]>(getGetHhTasksUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhTasksQueryKey = (params?: GetHhTasksParams) => {
+  return [`/api/helping-hands/tasks`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetHhTasksQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhTasks>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetHhTasksParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhTasks>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHhTasksQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhTasks>>> = ({
+    signal,
+  }) => getHhTasks(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhTasks>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhTasksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhTasks>>
+>;
+export type GetHhTasksQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List tasks — optionally filtered by date or status
+ */
+
+export function useGetHhTasks<
+  TData = Awaited<ReturnType<typeof getHhTasks>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetHhTasksParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHhTasks>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhTasksQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Post a new task with escrow lock
+ */
+export const getCreateHhTaskUrl = () => {
+  return `/api/helping-hands/tasks`;
+};
+
+export const createHhTask = async (
+  createHhTaskRequest: CreateHhTaskRequest,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getCreateHhTaskUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createHhTaskRequest),
+  });
+};
+
+export const getCreateHhTaskMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhTask>>,
+    TError,
+    { data: BodyType<CreateHhTaskRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createHhTask>>,
+  TError,
+  { data: BodyType<CreateHhTaskRequest> },
+  TContext
+> => {
+  const mutationKey = ["createHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createHhTask>>,
+    { data: BodyType<CreateHhTaskRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createHhTask(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createHhTask>>
+>;
+export type CreateHhTaskMutationBody = BodyType<CreateHhTaskRequest>;
+export type CreateHhTaskMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Post a new task with escrow lock
+ */
+export const useCreateHhTask = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhTask>>,
+    TError,
+    { data: BodyType<CreateHhTaskRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createHhTask>>,
+  TError,
+  { data: BodyType<CreateHhTaskRequest> },
+  TContext
+> => {
+  return useMutation(getCreateHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Member claims an available task
+ */
+export const getClaimHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/claim`;
+};
+
+export const claimHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getClaimHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getClaimHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof claimHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof claimHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["claimHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof claimHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return claimHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ClaimHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof claimHhTask>>
+>;
+
+export type ClaimHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Member claims an available task
+ */
+export const useClaimHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof claimHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof claimHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getClaimHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Member marks a claimed task as complete
+ */
+export const getCompleteHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/complete`;
+};
+
+export const completeHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getCompleteHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getCompleteHhTaskMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof completeHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof completeHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["completeHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof completeHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return completeHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CompleteHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof completeHhTask>>
+>;
+
+export type CompleteHhTaskMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Member marks a claimed task as complete
+ */
+export const useCompleteHhTask = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof completeHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof completeHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getCompleteHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Admin confirms completion and releases escrow payment
+ */
+export const getConfirmHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/confirm`;
+};
+
+export const confirmHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getConfirmHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getConfirmHhTaskMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof confirmHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof confirmHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["confirmHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof confirmHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return confirmHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ConfirmHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof confirmHhTask>>
+>;
+
+export type ConfirmHhTaskMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Admin confirms completion and releases escrow payment
+ */
+export const useConfirmHhTask = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof confirmHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof confirmHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getConfirmHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Get the signed-in member's task history
+ */
+export const getGetMyHhTasksUrl = () => {
+  return `/api/helping-hands/my/tasks`;
+};
+
+export const getMyHhTasks = async (
+  options?: RequestInit,
+): Promise<HhTask[]> => {
+  return customFetch<HhTask[]>(getGetMyHhTasksUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyHhTasksQueryKey = () => {
+  return [`/api/helping-hands/my/tasks`] as const;
+};
+
+export const getGetMyHhTasksQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyHhTasks>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhTasks>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyHhTasksQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhTasks>>> = ({
+    signal,
+  }) => getMyHhTasks({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhTasks>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyHhTasksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyHhTasks>>
+>;
+export type GetMyHhTasksQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get the signed-in member's task history
+ */
+
+export function useGetMyHhTasks<
+  TData = Awaited<ReturnType<typeof getMyHhTasks>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhTasks>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyHhTasksQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get the signed-in member's earnings history
+ */
+export const getGetMyHhEarningsUrl = () => {
+  return `/api/helping-hands/my/earnings`;
+};
+
+export const getMyHhEarnings = async (
+  options?: RequestInit,
+): Promise<HhEarningsResponse> => {
+  return customFetch<HhEarningsResponse>(getGetMyHhEarningsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyHhEarningsQueryKey = () => {
+  return [`/api/helping-hands/my/earnings`] as const;
+};
+
+export const getGetMyHhEarningsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyHhEarnings>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEarnings>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyHhEarningsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhEarnings>>> = ({
+    signal,
+  }) => getMyHhEarnings({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEarnings>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyHhEarningsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyHhEarnings>>
+>;
+export type GetMyHhEarningsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get the signed-in member's earnings history
+ */
+
+export function useGetMyHhEarnings<
+  TData = Awaited<ReturnType<typeof getMyHhEarnings>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhEarnings>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyHhEarningsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Admin dashboard — task counts, pending confirmations, flagged members
+ */
+export const getGetHhDashboardUrl = () => {
+  return `/api/helping-hands/dashboard`;
+};
+
+export const getHhDashboard = async (
+  options?: RequestInit,
+): Promise<HhDashboard> => {
+  return customFetch<HhDashboard>(getGetHhDashboardUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHhDashboardQueryKey = () => {
+  return [`/api/helping-hands/dashboard`] as const;
+};
+
+export const getGetHhDashboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhDashboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetHhDashboardQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhDashboard>>> = ({
+    signal,
+  }) => getHhDashboard({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhDashboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhDashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhDashboard>>
+>;
+export type GetHhDashboardQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Admin dashboard — task counts, pending confirmations, flagged members
+ */
+
+export function useGetHhDashboard<
+  TData = Awaited<ReturnType<typeof getHhDashboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getHhDashboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhDashboardQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
   return { ...query, queryKey: queryOptions.queryKey };
 }

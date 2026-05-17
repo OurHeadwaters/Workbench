@@ -28,6 +28,13 @@ export interface UploadUrlResponse {
   metadata?: UploadUrlRequest;
 }
 
+export interface AttachmentSignedUrlResponse {
+  /** Short-lived GCS signed download URL (valid for ~5 minutes). */
+  signedUrl: string;
+  /** Seconds until the URL expires. */
+  expiresIn: number;
+}
+
 export interface Subject {
   id: string;
   slug: string;
@@ -439,9 +446,14 @@ export const AccountNormalSide = {
   credit: "credit",
 } as const;
 
-export type TaxCode = (typeof TaxCode)[keyof typeof TaxCode];
+/**
+ * Default tax code for lines posted to this account.
+ */
+export type AccountTaxCode =
+  | (typeof AccountTaxCode)[keyof typeof AccountTaxCode]
+  | null;
 
-export const TaxCode = {
+export const AccountTaxCode = {
   "gst-collected": "gst-collected",
   "gst-paid": "gst-paid",
   exempt: "exempt",
@@ -462,8 +474,8 @@ export interface Account {
   /** Counter-account for allocation entries (e.g. 5400 mirrors to 6020). */
   mirrorAccountCode?: string | null;
   notes?: string | null;
-  /** GST/HST tax code for this account. */
-  taxCode: TaxCode;
+  /** Default tax code for lines posted to this account. */
+  taxCode?: AccountTaxCode;
   isActive: boolean;
   createdAt: string;
 }
@@ -489,6 +501,18 @@ export const CreateAccountRequestNormalSide = {
   credit: "credit",
 } as const;
 
+export type CreateAccountRequestTaxCode =
+  (typeof CreateAccountRequestTaxCode)[keyof typeof CreateAccountRequestTaxCode];
+
+export const CreateAccountRequestTaxCode = {
+  "gst-collected": "gst-collected",
+  "gst-paid": "gst-paid",
+  exempt: "exempt",
+  "zero-rated": "zero-rated",
+  personal: "personal",
+  none: "none",
+} as const;
+
 export interface CreateAccountRequest {
   /** @minLength 1 */
   code: string;
@@ -499,7 +523,7 @@ export interface CreateAccountRequest {
   costCentreCode?: string;
   mirrorAccountCode?: string;
   notes?: string;
-  taxCode?: TaxCode;
+  taxCode?: CreateAccountRequestTaxCode;
 }
 
 export type UpdateAccountRequestType =
@@ -523,6 +547,19 @@ export const UpdateAccountRequestNormalSide = {
   credit: "credit",
 } as const;
 
+export type UpdateAccountRequestTaxCode =
+  | (typeof UpdateAccountRequestTaxCode)[keyof typeof UpdateAccountRequestTaxCode]
+  | null;
+
+export const UpdateAccountRequestTaxCode = {
+  "gst-collected": "gst-collected",
+  "gst-paid": "gst-paid",
+  exempt: "exempt",
+  "zero-rated": "zero-rated",
+  personal: "personal",
+  none: "none",
+} as const;
+
 export interface UpdateAccountRequest {
   name?: string;
   type?: UpdateAccountRequestType;
@@ -530,7 +567,7 @@ export interface UpdateAccountRequest {
   costCentreCode?: string | null;
   mirrorAccountCode?: string | null;
   notes?: string | null;
-  taxCode?: TaxCode | null;
+  taxCode?: UpdateAccountRequestTaxCode;
   isActive?: boolean;
 }
 
@@ -540,7 +577,7 @@ export interface TransactionLine {
   accountName: string;
   costCentreCode?: string | null;
   memo?: string | null;
-  /** Per-line GST/HST tax code override. null = inherit from account. */
+  /** Line-level tax code override. */
   taxCode?: string | null;
   /** Amount in dollars (2dp). */
   debit: number;
@@ -567,10 +604,9 @@ export interface Transaction {
   voidedAt?: string | null;
   reversesTransactionId?: string | null;
   sourceSubmissionId?: string | null;
-  /** Whether this transaction has been reconciled/cleared. */
-  cleared: boolean;
-  /** ISO timestamp of when the transaction was cleared, or null. */
+  cleared?: boolean;
   clearedAt?: string | null;
+  clearedByUserId?: string | null;
   totalDebit: number;
   totalCredit: number;
   lines: TransactionLine[];
@@ -588,8 +624,6 @@ export interface CreateTransactionLine {
   accountCode: string;
   costCentreCode?: string;
   memo?: string;
-  /** Per-line GST/HST override. Omit to inherit from account default. */
-  taxCode?: TaxCode;
   /** @minimum 0 */
   debit: number;
   /** @minimum 0 */
@@ -743,7 +777,7 @@ export type BookkeeperDashboardTotals = {
   pendingSubmissionsCount: number;
   costCentres: number;
   accounts: number;
-  /** Count of posted transactions not yet cleared/reconciled. */
+  /** Count of uncleared posted transactions. */
   receiptsToReview: number;
 };
 
@@ -807,6 +841,91 @@ export interface AuditLogEntry {
   actorRole?: BookkeeperRole;
   details?: AuditLogEntryDetails;
   createdAt: string;
+}
+
+export interface PnlByMonthMonth {
+  month: string;
+  revenue: number;
+  costs: number;
+  net: number;
+}
+
+export interface PnlByMonthResponse {
+  from?: string | null;
+  to?: string | null;
+  months: PnlByMonthMonth[];
+}
+
+export interface TaxSummaryLineItem {
+  accountCode: string;
+  accountName: string;
+  taxCode: string;
+  total: number;
+  transactionCount: number;
+}
+
+export interface TaxSummaryResponse {
+  from?: string | null;
+  to?: string | null;
+  collected: number;
+  paid: number;
+  netOwing: number;
+  lines: TaxSummaryLineItem[];
+}
+
+export interface CategoryReportRow {
+  accountCode: string;
+  accountName: string;
+  type: string;
+  taxCode: string;
+  total: number;
+  transactionCount: number;
+}
+
+export interface CategoryReportResponse {
+  from?: string | null;
+  to?: string | null;
+  rows: CategoryReportRow[];
+  totalRevenue: number;
+  totalCosts: number;
+  net: number;
+}
+
+export interface SetTransactionClearedRequest {
+  cleared: boolean;
+}
+
+export type UnclearedReceiptItem = Transaction & {
+  attachmentCount: number;
+};
+
+export interface UnclearedReceiptsResponse {
+  items: UnclearedReceiptItem[];
+  total: number;
+}
+
+export interface ReconciliationAccountRow {
+  accountCode: string;
+  accountName: string;
+  accountType?: string | null;
+  clearedDebit: number;
+  clearedCredit: number;
+  unclearedDebit: number;
+  unclearedCredit: number;
+}
+
+export interface ReconciliationTotals {
+  clearedDebit: number;
+  clearedCredit: number;
+  unclearedDebit: number;
+  unclearedCredit: number;
+}
+
+export interface ReconciliationSummaryResponse {
+  from?: string | null;
+  to?: string | null;
+  accounts: ReconciliationAccountRow[];
+  totals: ReconciliationTotals;
 }
 
 export interface OkResponse {
@@ -930,6 +1049,166 @@ export interface SyncWordpileRequest {
   piles: WordpilePile[];
 }
 
+export type HhBandDefaultPayCurrency =
+  (typeof HhBandDefaultPayCurrency)[keyof typeof HhBandDefaultPayCurrency];
+
+export const HhBandDefaultPayCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export interface HhBand {
+  id: string;
+  name: string;
+  communityTokenCode: string;
+  communityTokenIssuer?: string | null;
+  defaultPayCurrency: HhBandDefaultPayCurrency;
+  missedShiftThreshold: number;
+}
+
+export type HhMemberTier = (typeof HhMemberTier)[keyof typeof HhMemberTier];
+
+export const HhMemberTier = {
+  full_time: "full_time",
+  casual: "casual",
+  task_based: "task_based",
+} as const;
+
+export interface HhMember {
+  id: string;
+  bandId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  xrplAddress?: string | null;
+  didRef?: string | null;
+  tier: HhMemberTier;
+  isActive: boolean;
+  missedShiftCount: number;
+  flaggedForDemotion: boolean;
+  totalEarnedXrp: string;
+  totalEarnedToken: string;
+  createdAt: string;
+}
+
+export type CreateHhMemberRequestTier =
+  (typeof CreateHhMemberRequestTier)[keyof typeof CreateHhMemberRequestTier];
+
+export const CreateHhMemberRequestTier = {
+  full_time: "full_time",
+  casual: "casual",
+  task_based: "task_based",
+} as const;
+
+export interface CreateHhMemberRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  xrplAddress?: string;
+  tier?: CreateHhMemberRequestTier;
+}
+
+export type UpdateHhMemberRequestTier =
+  (typeof UpdateHhMemberRequestTier)[keyof typeof UpdateHhMemberRequestTier];
+
+export const UpdateHhMemberRequestTier = {
+  full_time: "full_time",
+  casual: "casual",
+  task_based: "task_based",
+} as const;
+
+export interface UpdateHhMemberRequest {
+  tier?: UpdateHhMemberRequestTier;
+  xrplAddress?: string;
+  isActive?: boolean;
+  flaggedForDemotion?: boolean;
+  missedShiftCount?: number;
+}
+
+export type HhTaskPayCurrency =
+  (typeof HhTaskPayCurrency)[keyof typeof HhTaskPayCurrency];
+
+export const HhTaskPayCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export type HhTaskStatus = (typeof HhTaskStatus)[keyof typeof HhTaskStatus];
+
+export const HhTaskStatus = {
+  available: "available",
+  claimed: "claimed",
+  completed: "completed",
+  confirmed: "confirmed",
+} as const;
+
+export interface HhTask {
+  id: string;
+  bandId: string;
+  postedByMemberId: string;
+  postedByName?: string;
+  claimedByMemberId?: string | null;
+  claimedByName?: string | null;
+  title: string;
+  description: string;
+  estimatedMinutes: number;
+  payAmount: string;
+  payCurrency: HhTaskPayCurrency;
+  status: HhTaskStatus;
+  escrowSequence?: number | null;
+  escrowTxHash?: string | null;
+  claimedAt?: string | null;
+  completedAt?: string | null;
+  confirmedAt?: string | null;
+  availableDate: string;
+  createdAt: string;
+}
+
+export type CreateHhTaskRequestPayCurrency =
+  (typeof CreateHhTaskRequestPayCurrency)[keyof typeof CreateHhTaskRequestPayCurrency];
+
+export const CreateHhTaskRequestPayCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export interface CreateHhTaskRequest {
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  description: string;
+  /** @minimum 5 */
+  estimatedMinutes?: number;
+  payAmount: string;
+  payCurrency: CreateHhTaskRequestPayCurrency;
+  availableDate: string;
+}
+
+export interface HhEarning {
+  id: string;
+  taskId: string;
+  taskTitle: string;
+  amount: string;
+  currency: string;
+  xrplTxHash?: string | null;
+  earnedAt: string;
+}
+
+export interface HhEarningsResponse {
+  earnings: HhEarning[];
+  totalXrp: string;
+  totalToken: string;
+}
+
+export interface HhDashboard {
+  todayAvailable: number;
+  todayClaimed: number;
+  pendingConfirmation: number;
+  flaggedMembers: number;
+  totalMembers: number;
+  recentTasks?: HhTask[];
+}
+
 export type ListLibraryEntriesParams = {
   search?: string;
   /**
@@ -1008,8 +1287,6 @@ export type ListTransactionsParams = {
   from?: string;
   to?: string;
   search?: string;
-  /** Filter by reconciliation/cleared flag. */
-  cleared?: boolean;
   /**
    * @minimum 1
    * @maximum 200
@@ -1056,108 +1333,49 @@ export type ListAuditLogParams = {
   limit?: number;
 };
 
-// ── New types: cleared toggle, receipts queue, reports ──────────────────────
-
-export interface ToggleClearedRequest {
-  cleared: boolean;
-}
-
-export interface UnclearedReceiptItem extends Transaction {
-  attachmentCount: number;
-}
-
-export interface UnclearedReceiptsResponse {
-  items: UnclearedReceiptItem[];
-  total: number;
-}
-
-export type GetUnclearedReceiptsParams = {
+export type GetPnlByMonthParams = {
   from?: string;
   to?: string;
 };
 
-export interface ReconciliationAccountRow {
-  accountCode: string;
-  accountName: string;
-  accountType: string | null;
-  clearedDebit: number;
-  clearedCredit: number;
-  unclearedDebit: number;
-  unclearedCredit: number;
-}
-
-export interface ReconciliationSummary {
-  from: string | null;
-  to: string | null;
-  accounts: ReconciliationAccountRow[];
-  totals: {
-    clearedDebit: number;
-    clearedCredit: number;
-    unclearedDebit: number;
-    unclearedCredit: number;
-  };
-}
-
-export interface CategoryReportRow {
-  accountCode: string;
-  accountName: string;
-  type: string;
-  taxCode: string;
-  total: number;
-  transactionCount: number;
-}
-
-export interface CategoryReport {
-  from: string | null;
-  to: string | null;
-  rows: CategoryReportRow[];
-  totalRevenue: number;
-  totalCosts: number;
-  net: number;
-}
+export type GetTaxSummaryParams = {
+  from?: string;
+  to?: string;
+};
 
 export type GetReportsByCategoryParams = {
   from?: string;
   to?: string;
 };
 
-export interface PnlByMonthRow {
-  /** YYYY-MM */
-  month: string;
-  revenue: number;
-  costs: number;
-  net: number;
-}
-
-export interface PnlByMonthReport {
-  from: string | null;
-  to: string | null;
-  months: PnlByMonthRow[];
-}
-
-export type GetPnlByMonthParams = {
+export type GetUnclearedReceiptsParams = {
   from?: string;
   to?: string;
 };
 
-export interface TaxSummaryLineItem {
-  accountCode: string;
-  accountName: string;
-  taxCode: "gst-collected" | "gst-paid";
-  total: number;
-  transactionCount: number;
-}
-
-export interface TaxSummaryReport {
-  from: string | null;
-  to: string | null;
-  collected: number;
-  paid: number;
-  netOwing: number;
-  lines: TaxSummaryLineItem[];
-}
-
-export type GetTaxSummaryParams = {
+export type GetReconciliationSummaryParams = {
   from?: string;
   to?: string;
 };
+
+export type GetHhTasksParams = {
+  /**
+   * Filter to tasks available on this date (YYYY-MM-DD). Defaults to today.
+   */
+  date?: string;
+  /**
+   * Filter by task status. Defaults to all.
+   */
+  status?: GetHhTasksStatus;
+};
+
+export type GetHhTasksStatus =
+  (typeof GetHhTasksStatus)[keyof typeof GetHhTasksStatus];
+
+export const GetHhTasksStatus = {
+  available: "available",
+  claimed: "claimed",
+  completed: "completed",
+  confirmed: "confirmed",
+  all: "all",
+} as const;
