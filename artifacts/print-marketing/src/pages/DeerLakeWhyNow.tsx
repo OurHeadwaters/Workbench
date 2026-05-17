@@ -198,7 +198,7 @@ export function DeerLakeWhyNowPage() {
             </div>
 
             <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.64rem", fontStyle: "italic", color: MUTED, lineHeight: 1.5, marginTop: "0.12in" }}>
-              Grant applications for this supply line are being submitted June 15, 2026. The demand data gathered in Phase 2 is what backs those applications.
+              Grant applications for this supply line are being submitted mid 2026. The demand data gathered in Phase 2 is what backs those applications.
             </p>
           </div>
         </div>
