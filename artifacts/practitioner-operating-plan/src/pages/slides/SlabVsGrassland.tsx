@@ -33,6 +33,7 @@ export default function SlabVsGrassland() {
               <li>Software owned by the bands. Reused across every reserve.</li>
               <li>Six people. No single point of failure.</li>
               <li>Rooted — survives any one person leaving.</li>
+              <li>Built for the seventh generation — not the current funder's timeline.</li>
             </ul>
           </div>
         </div>

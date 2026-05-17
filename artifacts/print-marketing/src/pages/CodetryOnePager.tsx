@@ -24,8 +24,7 @@ function buildPlainText(): string {
     "Most economic development work in remote northern communities follows the same pattern: a consultant comes in, writes a report, collects a fee, and leaves. The community gets a document. The consultant gets paid. The problem stays.",
     "",
     "The tools don't stay. The knowledge doesn't stay. The infrastructure doesn't stay.",
-    "",
-    "Headwaters does it differently.",
+    "We build for the seventh generation — not the funder's reporting cycle.",
     "",
     "---",
     "",
@@ -151,7 +150,7 @@ export function CodetryOnePagerPage() {
                 </p>
                 <div style={{ borderLeft: `3px solid ${RUST}`, paddingLeft: "0.18in" }}>
                   <p style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "0.95rem", fontStyle: "italic", color: EVERGREEN, lineHeight: 1.5, margin: 0 }}>
-                    "The tools don't stay. The knowledge doesn't stay. The infrastructure doesn't stay. Headwaters does it differently."
+                    "The tools don't stay. The knowledge doesn't stay. The infrastructure doesn't stay. We build for the seventh generation — not the funder's reporting cycle."
                   </p>
                 </div>
               </div>

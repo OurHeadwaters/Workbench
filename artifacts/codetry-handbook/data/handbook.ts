@@ -2781,6 +2781,16 @@ const partV: Part = {
             },
           ],
         },
+        { kind: "rule" },
+        { kind: "subhead", text: "The oldest horizon." },
+        {
+          kind: "para",
+          text: "The Haudenosaunee Great Law of Peace names the design constraint this practice tries to answer: a decision is not finished until its consequence for the seventh generation has been named. Seven generations is roughly 175 years — far past any individual practitioner's working life, far past any current software stack, far past any funder's reporting cycle. Codetry's bet is that the names a community coins for its own systems are the things likeliest to survive those horizons, because they are the things the community can hold without an outside contractor, a platform licence, or an institutional login. The seventh generation is the test. The name is the thing that could pass it.",
+        },
+        {
+          kind: "small",
+          text: "The seven-generation principle runs through the whole constellation. It is named first here, in the grounding, because it is the reason the discipline exists — not as an ambition for scale, but as a standard of honesty about what the work is actually for.",
+        },
       ],
     },
     {

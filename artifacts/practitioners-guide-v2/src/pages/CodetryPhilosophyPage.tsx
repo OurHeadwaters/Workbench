@@ -201,12 +201,22 @@ export function CodetryPhilosophyPage() {
                 legibility durable enough to survive a change in personnel, a change in software,
                 or a decade of growth.
               </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The design horizon is not a fiscal year. It is not a decade. The Haudenosaunee
+                Great Law of Peace names it plainly: every decision carries a consequence for the
+                seventh generation — roughly 175 years forward. A community system built on names
+                the community owns, in language the community recognises, is the only kind of system
+                that has any chance of being readable at that horizon. Codetry is not an ambition
+                for permanence. It is a standard of honesty about what the work is actually for.
+              </p>
               <KitchenTable>
                 Nobody at a band council table is asking for a SaaS dashboard with KPI tiles.
                 They're asking: can we see where the money went? Can the next person who sits in
                 this chair read what we built? Can we hand this over without losing a year's worth
-                of institutional memory? Codetry is the answer to that question — written in a
-                language the chair recognises.
+                of institutional memory — and can the person two generations from now still find
+                the thread? Codetry is the answer to that question — written in a language the
+                chair recognises, and built to stay legible after the chair has changed hands
+                more times than anyone in the room can count.
               </KitchenTable>
             </div>
           </AccordionContent>
