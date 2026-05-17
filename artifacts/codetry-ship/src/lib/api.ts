@@ -229,3 +229,140 @@ export async function patchDeadheadItem(
   }
   return (await res.json()) as { id: string; status: string };
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// P2P Community Economy Engine
+// ──────────────────────────────────────────────────────────────────────────────
+
+const HH_PREFIX = "/api/helping-hands";
+
+async function hhFetch<T>(
+  path: string,
+  options?: RequestInit,
+): Promise<T> {
+  const res = await fetch(`${HH_PREFIX}${path}`, {
+    ...options,
+    headers: {
+      "content-type": "application/json",
+      ...(options?.headers ?? {}),
+    },
+  });
+  if (!res.ok) {
+    let msg = "Something went wrong.";
+    let retry: number | undefined;
+    try {
+      const body = (await res.json()) as { error?: string; retryAfterSec?: number };
+      if (body.error) msg = body.error;
+      retry = body.retryAfterSec;
+    } catch {
+      // non-JSON body
+    }
+    throw new ApiError(res.status, msg, retry);
+  }
+  return (await res.json()) as T;
+}
+
+// ── Wallet state ──
+
+export interface WalletState {
+  memberId: string;
+  firstName: string;
+  lastName: string;
+  tokenBalance: string;
+  xrpBalance: string;
+  tokenCode: string;
+  walletType: "custodial" | "self_custody";
+  walletRevealed: boolean;
+  referralCode: string | null;
+  referralBonusAmount: string;
+  referralCount: number;
+}
+
+export async function fetchWallet(): Promise<WalletState> {
+  return hhFetch<WalletState>("/my/wallet");
+}
+
+// ── Tips ──
+
+export interface TipEntry {
+  id: string;
+  direction: "sent" | "received";
+  otherName: string;
+  amount: string;
+  currency: string;
+  tokenCode: string;
+  note: string;
+  sentAt: string;
+}
+
+export async function fetchMyTips(): Promise<{ tips: TipEntry[] }> {
+  return hhFetch<{ tips: TipEntry[] }>("/my/tips");
+}
+
+export interface SendTipPayload {
+  toMemberId: string;
+  amount: string;
+  currency?: string;
+  note?: string;
+}
+
+export interface SendTipResult {
+  id: string;
+  recipientName: string;
+  amount: string;
+  currency: string;
+  tokenCode: string;
+  note: string;
+  sentAt: string;
+}
+
+export async function sendTip(payload: SendTipPayload): Promise<SendTipResult> {
+  return hhFetch<SendTipResult>("/tips", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+// ── Member search ──
+
+export interface MemberSearchResult {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export async function searchMembers(q: string): Promise<MemberSearchResult[]> {
+  const url = `/api/helping-hands/members/search?q=${encodeURIComponent(q)}`;
+  const res = await fetch(url, { headers: { "content-type": "application/json" } });
+  if (!res.ok) {
+    throw new ApiError(res.status, "Search failed");
+  }
+  return (await res.json()) as MemberSearchResult[];
+}
+
+// ── Referral join ──
+
+export interface JoinViaReferralPayload {
+  referralCode: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface JoinViaReferralResult {
+  memberId: string;
+  firstName: string;
+  bonusAmount: string;
+  tokenCode: string;
+}
+
+export async function joinViaReferral(
+  payload: JoinViaReferralPayload,
+): Promise<JoinViaReferralResult> {
+  const { referralCode, ...rest } = payload;
+  return hhFetch<JoinViaReferralResult>(`/join/${referralCode}`, {
+    method: "POST",
+    body: JSON.stringify(rest),
+  });
+}

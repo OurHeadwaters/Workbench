@@ -20,6 +20,10 @@ import { ListenPage } from "@/pages/ListenPage";
 import { TheWindowPage } from "@/pages/TheWindowPage";
 import { SiteNav } from "@/components/SiteNav";
 import { getStoredOwnerToken } from "@/lib/api";
+import { EconomyPage } from "@/pages/EconomyPage";
+import { EconomyJoinPage } from "@/pages/EconomyJoinPage";
+import { WalletPage } from "@/pages/WalletPage";
+import { TipPage } from "@/pages/TipPage";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +60,12 @@ function Router() {
       <Route path="/deadhead/intake">
         {() => <ProtectedRoute component={DeadheadIntakePage} />}
       </Route>
+
+      {/* ── P2P Community Economy Engine ── */}
+      <Route path="/economy" component={EconomyPage} />
+      <Route path="/economy/wallet" component={WalletPage} />
+      <Route path="/economy/tip" component={TipPage} />
+      <Route path="/economy/join/:code" component={EconomyJoinPage} />
 
       <Route component={NotFound} />
     </Switch>

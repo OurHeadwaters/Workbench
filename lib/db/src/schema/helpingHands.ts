@@ -44,12 +44,29 @@ export const hhMembersTable = pgTable(
     flaggedForDemotion: boolean("flagged_for_demotion").notNull().default(false),
     totalEarnedXrp: numeric("total_earned_xrp", { precision: 18, scale: 6 }).notNull().default("0"),
     totalEarnedToken: numeric("total_earned_token", { precision: 18, scale: 6 }).notNull().default("0"),
+    // ── Wallet architecture ──────────────────────────────────────────────────
+    // walletType: custodial (platform holds keys, lower friction, Zone 2/3) or
+    // self_custody (member holds keys, full sovereignty, Zone 4/5).
+    // Both paths are supported in the data model from day one; V1 UI exposes
+    // custodial only — migration to self_custody is a user-initiated action.
+    walletType: text("wallet_type").notNull().default("custodial"),
+    // walletRevealedAt: null until the user has their first real transaction
+    // (tip sent/received, or first earn confirmed). Progressive reveal —
+    // the wallet exists silently from signup but users only "meet" it when
+    // motivation is highest: at the moment of first real value exchange.
+    walletRevealedAt: timestamp("wallet_revealed_at", { withTimezone: true }),
+    // referralCode: unique short code the member can share.
+    // Auto-generated on member creation.
+    referralCode: text("referral_code").unique(),
+    // referredByMemberId: set when member joined via a referral link
+    referredByMemberId: uuid("referred_by_member_id"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => ({
     bandIdx: index("hh_members_band_id_idx").on(t.bandId),
     clerkIdx: index("hh_members_clerk_user_id_idx").on(t.clerkUserId),
+    referralCodeIdx: index("hh_members_referral_code_idx").on(t.referralCode),
   }),
 );
 
@@ -196,5 +213,54 @@ export const hhEnvelopeTransactionsTable = pgTable(
     envelopeIdx: index("hh_env_txn_envelope_id_idx").on(t.envelopeId),
     memberIdx: index("hh_env_txn_member_id_idx").on(t.memberId),
     bandIdx: index("hh_env_txn_band_id_idx").on(t.bandId),
+  }),
+);
+
+// ---------- hh_tips ----------
+// P2P tip transactions — community members tipping each other for
+// information, knowledge, and practical help shared. This is the primary
+// P2P value exchange vector and the moment the wallet "becomes real" for
+// most users. V1: XRPL payment simulated; schema ready for on-chain.
+export const hhTipsTable = pgTable(
+  "hh_tips",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    fromMemberId: uuid("from_member_id").notNull().references(() => hhMembersTable.id),
+    toMemberId: uuid("to_member_id").notNull().references(() => hhMembersTable.id),
+    amount: numeric("amount", { precision: 18, scale: 6 }).notNull(),
+    // token = community credit; xrp = on-chain
+    currency: text("currency").notNull().default("token"),
+    // Plain-language context: "for the bannock recipe", "for freight advice"
+    note: text("note").notNull().default(""),
+    xrplTxHash: text("xrpl_tx_hash"),
+    sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    fromIdx: index("hh_tips_from_member_id_idx").on(t.fromMemberId),
+    toIdx: index("hh_tips_to_member_id_idx").on(t.toMemberId),
+    bandIdx: index("hh_tips_band_id_idx").on(t.bandId),
+  }),
+);
+
+// ---------- hh_referrals ----------
+// Zone-based referral tracking. When a new member joins via a referral link
+// both the referrer and the new member receive a bonus credit. This is the
+// zone 2/3 adoption lever — visible reward before any effort is asked.
+export const hhReferralsTable = pgTable(
+  "hh_referrals",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    referrerId: uuid("referrer_id").notNull().references(() => hhMembersTable.id),
+    referredMemberId: uuid("referred_member_id").notNull().unique().references(() => hhMembersTable.id),
+    referrerBonusAmount: numeric("referrer_bonus_amount", { precision: 18, scale: 6 }).notNull().default("5"),
+    referredBonusAmount: numeric("referred_bonus_amount", { precision: 18, scale: 6 }).notNull().default("5"),
+    currency: text("currency").notNull().default("token"),
+    awardedAt: timestamp("awarded_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    referrerIdx: index("hh_referrals_referrer_id_idx").on(t.referrerId),
+    bandIdx: index("hh_referrals_band_id_idx").on(t.bandId),
   }),
 );

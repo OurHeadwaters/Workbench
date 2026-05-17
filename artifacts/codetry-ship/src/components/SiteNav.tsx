@@ -16,6 +16,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/window",   label: "The Window" },
   { href: "/bio",      label: "About" },
   { href: "/listen",   label: "Listen" },
+  { href: "/economy",  label: "Economy", desktopOnly: true },
 ];
 
 const TOOLS: { icon: string; name: string; href: string }[] = [

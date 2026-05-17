@@ -10,8 +10,10 @@ import {
   hhMerchantsTable,
   hhEnvelopesTable,
   hhEnvelopeTransactionsTable,
+  hhTipsTable,
+  hhReferralsTable,
 } from "@workspace/db";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
 
 const router: IRouter = Router();
@@ -123,7 +125,8 @@ async function loadHhMember(req: Request) {
 
   const band = await getOrCreateDefaultBand();
 
-  const existing = await db
+  // ── Primary lookup: by clerkUserId (fast path for returning users) ──
+  const byClerk = await db
     .select()
     .from(hhMembersTable)
     .where(
@@ -134,15 +137,107 @@ async function loadHhMember(req: Request) {
     )
     .limit(1);
 
-  if (existing[0]) return { member: existing[0], band, bkUser };
+  if (byClerk[0]) return { member: byClerk[0], band, bkUser };
 
+  // ── Identity reconciliation: referral-created members have no clerkUserId ──
+  // When a user signed up via a referral link (/economy/join/:code) we created
+  // an hh_members row with only their email. The first time they authenticate
+  // with Clerk we land here. We match on normalised email + band and backfill
+  // clerkUserId so their referral bonus and member state aren't orphaned.
+  const normalizedEmail = bkUser.email.toLowerCase();
+  const byEmail = await db
+    .select()
+    .from(hhMembersTable)
+    .where(
+      and(
+        eq(hhMembersTable.email, normalizedEmail),
+        eq(hhMembersTable.bandId, band.id),
+        sql`${hhMembersTable.clerkUserId} IS NULL`,
+      ),
+    )
+    .limit(1);
+
+  if (byEmail[0]) {
+    // Backfill clerkUserId and sync name fields from the authoritative Clerk record
+    const [updated] = await db
+      .update(hhMembersTable)
+      .set({
+        clerkUserId: bkUser.clerkUserId,
+        firstName: bkUser.firstName ?? byEmail[0].firstName,
+        lastName: bkUser.lastName ?? byEmail[0].lastName,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(hhMembersTable.id, byEmail[0].id),
+          sql`${hhMembersTable.clerkUserId} IS NULL`,
+        ),
+      )
+      .returning();
+
+    const resolvedMember = updated ?? byEmail[0];
+
+    // ── Deferred referral bonus award ──────────────────────────────────────
+    // If this member was created via a referral link (referredByMemberId set)
+    // and no hh_referrals record exists yet, award the bonus now — the first
+    // authenticated sign-in is the verifiable completion event. This prevents
+    // bonus farming via unauthenticated form submissions.
+    if (resolvedMember?.referredByMemberId) {
+      const [existingReferral] = await db
+        .select({ id: hhReferralsTable.id })
+        .from(hhReferralsTable)
+        .where(eq(hhReferralsTable.referredMemberId, resolvedMember.id))
+        .limit(1);
+
+      if (!existingReferral) {
+        const REFERRAL_BONUS = "5";
+        try {
+          await db.insert(hhReferralsTable).values({
+            bandId: resolvedMember.bandId,
+            referrerId: resolvedMember.referredByMemberId,
+            referredMemberId: resolvedMember.id,
+            referrerBonusAmount: REFERRAL_BONUS,
+            referredBonusAmount: REFERRAL_BONUS,
+            currency: "token",
+          });
+          // Reveal both wallets — for the referrer this may be their first
+          // real value event too.
+          await Promise.all([
+            maybeRevealWallet(resolvedMember.id),
+            maybeRevealWallet(resolvedMember.referredByMemberId),
+          ]);
+        } catch (err) {
+          // unique_violation (23505) means a concurrent session awarded it —
+          // swallow it. Any other error propagates.
+          const pgCode = (err as { code?: string })?.code;
+          if (pgCode !== "23505") throw err;
+        }
+      }
+    }
+
+    if (updated) return { member: updated, band, bkUser };
+    // Tiny race: another request won the update — reload by clerkUserId
+    const raceWinner = await db
+      .select()
+      .from(hhMembersTable)
+      .where(
+        and(
+          eq(hhMembersTable.clerkUserId, bkUser.clerkUserId),
+          eq(hhMembersTable.bandId, band.id),
+        ),
+      )
+      .limit(1);
+    if (raceWinner[0]) return { member: raceWinner[0], band, bkUser };
+  }
+
+  // ── No prior record — create a fresh member ──
   const inserted = await db
     .insert(hhMembersTable)
     .values({
       bandId: band.id,
       clerkUserId: bkUser.clerkUserId,
-      email: bkUser.email,
-      firstName: bkUser.firstName ?? bkUser.email.split("@")[0],
+      email: normalizedEmail,
+      firstName: bkUser.firstName ?? normalizedEmail.split("@")[0],
       lastName: bkUser.lastName ?? "",
       tier: "task_based",
     })
@@ -1631,6 +1726,612 @@ router.get("/my/health", requireAuth(), async (req: Request, res: Response) => {
     totalSpent: totalSpent.toFixed(2),
     savingsRate: (savingsRate * 100).toFixed(1),
     discipline: (discipline * 100).toFixed(0),
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// P2P COMMUNITY ECONOMY ENGINE
+// ══════════════════════════════════════════════════════════════
+
+// ── Shared helpers ─────────────────────────────────────────────────────────
+
+/**
+ * Generate a short, human-friendly referral code from a member's UUID and
+ * an optional salt (used for collision-retry).
+ * Output looks like: "hw-3e7a-f2c1-4b8d"
+ */
+function generateReferralCode(memberId: string, salt = 0): string {
+  // Deterministic from UUID but unique per member; salt shifts the window on
+  // retry so a collision on the base code produces a different candidate code.
+  const hex = memberId.replace(/-/g, "");
+  const offset = (salt * 4) % (hex.length - 12);
+  const seg = hex.slice(offset, offset + 12);
+  const parts = seg.match(/.{1,4}/g) ?? [seg];
+  return `hw-${parts.slice(0, 3).join("-")}`;
+}
+
+/**
+ * Ensure a member has a referral code — assign one if missing.
+ * Retries with a different candidate code on unique-constraint collision
+ * instead of silently falling back to a non-persisted value.
+ */
+async function ensureReferralCode(
+  memberId: string,
+  bandId: string,
+): Promise<string> {
+  const existing = await db
+    .select({ referralCode: hhMembersTable.referralCode })
+    .from(hhMembersTable)
+    .where(eq(hhMembersTable.id, memberId))
+    .limit(1);
+
+  if (existing[0]?.referralCode) return existing[0].referralCode;
+
+  const MAX_RETRIES = 5;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const code = generateReferralCode(memberId, attempt);
+    try {
+      await db
+        .update(hhMembersTable)
+        .set({ referralCode: code, updatedAt: new Date() })
+        .where(
+          and(
+            eq(hhMembersTable.id, memberId),
+            eq(hhMembersTable.bandId, bandId),
+            sql`${hhMembersTable.referralCode} IS NULL`,
+          ),
+        );
+      // If no rows were updated, either someone else set the code concurrently
+      // or the member record is missing — the refreshed read below covers both.
+      break;
+    } catch (err) {
+      const pgCode = (err as { code?: string })?.code;
+      if (pgCode !== "23505") throw err;
+      // unique_violation on referral_code — try the next salt value
+      if (attempt === MAX_RETRIES - 1) {
+        // All candidates exhausted — fall through to the refreshed read.
+        // This is astronomically unlikely but must not cause a hang.
+      }
+    }
+  }
+
+  const refreshed = await db
+    .select({ referralCode: hhMembersTable.referralCode })
+    .from(hhMembersTable)
+    .where(eq(hhMembersTable.id, memberId))
+    .limit(1);
+
+  const persistedCode = refreshed[0]?.referralCode;
+  if (!persistedCode) {
+    // Edge case: all salts collided with existing codes belonging to other
+    // members. Fall back to a timestamp-suffixed code that is guaranteed novel.
+    const fallback = `hw-${memberId.slice(0, 4)}-${Date.now().toString(36).slice(-6)}`;
+    await db
+      .update(hhMembersTable)
+      .set({ referralCode: fallback, updatedAt: new Date() })
+      .where(
+        and(
+          eq(hhMembersTable.id, memberId),
+          sql`${hhMembersTable.referralCode} IS NULL`,
+        ),
+      );
+    return fallback;
+  }
+  return persistedCode;
+}
+
+/** Mark wallet as revealed if not already. */
+async function maybeRevealWallet(memberId: string): Promise<void> {
+  await db
+    .update(hhMembersTable)
+    .set({ walletRevealedAt: new Date(), updatedAt: new Date() })
+    .where(
+      and(
+        eq(hhMembersTable.id, memberId),
+        sql`${hhMembersTable.walletRevealedAt} IS NULL`,
+      ),
+    );
+}
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/my/wallet
+// Returns the member's balance, wallet state, and referral link details.
+// Creates the referral code on first call.
+// ──────────────────────────────────────────────
+router.get("/my/wallet", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const { member, band } = ctx;
+
+  const referralCode = await ensureReferralCode(member.id, band.id);
+
+  // Count how many people joined via this member's referral
+  const [referralRow] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(hhReferralsTable)
+    .where(
+      and(
+        eq(hhReferralsTable.referrerId, member.id),
+        eq(hhReferralsTable.bandId, band.id),
+      ),
+    );
+
+  // Compute actual spendable balance:
+  // earned (tasks + bonuses + referral bonuses + tips received)
+  // minus spent (envelope transactions + tips sent)
+
+  const [tipReceivedAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhTipsTable.amount}), '0')` })
+    .from(hhTipsTable)
+    .where(
+      and(
+        eq(hhTipsTable.toMemberId, member.id),
+        eq(hhTipsTable.bandId, band.id),
+        eq(hhTipsTable.currency, "token"),
+      ),
+    );
+
+  const [tipSentAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhTipsTable.amount}), '0')` })
+    .from(hhTipsTable)
+    .where(
+      and(
+        eq(hhTipsTable.fromMemberId, member.id),
+        eq(hhTipsTable.bandId, band.id),
+        eq(hhTipsTable.currency, "token"),
+      ),
+    );
+
+  const [spentAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhEnvelopeTransactionsTable.amount}), '0')` })
+    .from(hhEnvelopeTransactionsTable)
+    .where(
+      and(
+        eq(hhEnvelopeTransactionsTable.memberId, member.id),
+        eq(hhEnvelopeTransactionsTable.bandId, band.id),
+        eq(hhEnvelopeTransactionsTable.currency, "token"),
+      ),
+    );
+
+  const [referralBonusAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhReferralsTable.referredBonusAmount}), '0')` })
+    .from(hhReferralsTable)
+    .where(
+      and(
+        eq(hhReferralsTable.referredMemberId, member.id),
+        eq(hhReferralsTable.bandId, band.id),
+        eq(hhReferralsTable.currency, "token"),
+      ),
+    );
+
+  const [referralGivenAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhReferralsTable.referrerBonusAmount}), '0')` })
+    .from(hhReferralsTable)
+    .where(
+      and(
+        eq(hhReferralsTable.referrerId, member.id),
+        eq(hhReferralsTable.bandId, band.id),
+        eq(hhReferralsTable.currency, "token"),
+      ),
+    );
+
+  const tokenEarned =
+    parseFloat(member.totalEarnedToken ?? "0") +
+    parseFloat(tipReceivedAgg?.total ?? "0") +
+    parseFloat(referralBonusAgg?.total ?? "0") +
+    parseFloat(referralGivenAgg?.total ?? "0");
+
+  const tokenSpent =
+    parseFloat(spentAgg?.total ?? "0") +
+    parseFloat(tipSentAgg?.total ?? "0");
+
+  const tokenBalance = Math.max(0, tokenEarned - tokenSpent).toFixed(2);
+
+  // ── Progressive reveal: auto-reveal on positive balance ───────────────────
+  // If the wallet hasn't been explicitly revealed yet but the member now has
+  // a positive balance (from a tip received, earned task credit, or referral
+  // bonus), reveal it now so the wallet page can show the "first look" panel.
+  // This covers all first-value paths: tip receive, task earn, referral credit —
+  // not just tip send (which triggers reveal inline).
+  const alreadyRevealed =
+    (member as { walletRevealedAt?: Date | null }).walletRevealedAt !== null &&
+    (member as { walletRevealedAt?: Date | null }).walletRevealedAt !== undefined;
+
+  if (!alreadyRevealed && parseFloat(tokenBalance) > 0) {
+    await maybeRevealWallet(member.id);
+  }
+
+  const walletRevealed =
+    alreadyRevealed ||
+    (!alreadyRevealed && parseFloat(tokenBalance) > 0);
+
+  res.json({
+    memberId: member.id,
+    firstName: member.firstName,
+    lastName: member.lastName,
+    tokenBalance,
+    xrpBalance: member.totalEarnedXrp ?? "0",
+    tokenCode: band.communityTokenCode,
+    walletType: (member as { walletType?: string }).walletType ?? "custodial",
+    walletRevealed,
+    referralCode,
+    referralBonusAmount: "5",
+    referralCount: referralRow?.count ?? 0,
+  });
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/members/search?q=
+// Returns matching active members for the tip-send recipient picker.
+// Excludes the calling member from results.
+// ──────────────────────────────────────────────
+router.get("/members/search", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (q.length < 2) {
+    res.json([]);
+    return;
+  }
+
+  const pattern = `%${q}%`;
+
+  const members = await db
+    .select({
+      id: hhMembersTable.id,
+      firstName: hhMembersTable.firstName,
+      lastName: hhMembersTable.lastName,
+      email: hhMembersTable.email,
+    })
+    .from(hhMembersTable)
+    .where(
+      and(
+        eq(hhMembersTable.bandId, ctx.band.id),
+        eq(hhMembersTable.isActive, true),
+        sql`${hhMembersTable.id} != ${ctx.member.id}`,
+        or(
+          ilike(hhMembersTable.firstName, pattern),
+          ilike(hhMembersTable.lastName, pattern),
+          ilike(sql`${hhMembersTable.firstName} || ' ' || ${hhMembersTable.lastName}`, pattern),
+        ),
+      ),
+    )
+    .limit(10);
+
+  res.json(members);
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/tips
+// Send a P2P credit tip to another community member for knowledge/help shared.
+// The tip function is always-on and first-class — this is the primary P2P
+// value exchange vector. Credits land immediately.
+// ──────────────────────────────────────────────
+const SendTipSchema = z.object({
+  toMemberId: z.string().uuid(),
+  amount: z
+    .string()
+    .min(1)
+    .refine((v) => /^\d+(\.\d+)?$/.test(v.trim()) && parseFloat(v) > 0, {
+      message: "Amount must be a positive number",
+    }),
+  currency: z.enum(["token", "xrp"]).optional().default("token"),
+  note: z.string().max(120).optional().default(""),
+});
+
+router.post("/tips", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const parsed = SendTipSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const { toMemberId, amount, currency, note } = parsed.data;
+
+  if (toMemberId === ctx.member.id) {
+    res.status(400).json({ error: "You cannot tip yourself." });
+    return;
+  }
+
+  const sendAmt = parseFloat(amount);
+
+  // Verify recipient exists in the same band
+  const [recipient] = await db
+    .select({ id: hhMembersTable.id, firstName: hhMembersTable.firstName, lastName: hhMembersTable.lastName })
+    .from(hhMembersTable)
+    .where(
+      and(
+        eq(hhMembersTable.id, toMemberId),
+        eq(hhMembersTable.bandId, ctx.band.id),
+        eq(hhMembersTable.isActive, true),
+      ),
+    )
+    .limit(1);
+
+  if (!recipient) {
+    res.status(404).json({ error: "Recipient not found in this community." });
+    return;
+  }
+
+  // Check sender's balance (earned tokens minus already sent tips and spent envelopes)
+  const [tipSentAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhTipsTable.amount}), '0')` })
+    .from(hhTipsTable)
+    .where(
+      and(
+        eq(hhTipsTable.fromMemberId, ctx.member.id),
+        eq(hhTipsTable.bandId, ctx.band.id),
+        eq(hhTipsTable.currency, currency),
+      ),
+    );
+
+  const [tipReceivedAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhTipsTable.amount}), '0')` })
+    .from(hhTipsTable)
+    .where(
+      and(
+        eq(hhTipsTable.toMemberId, ctx.member.id),
+        eq(hhTipsTable.bandId, ctx.band.id),
+        eq(hhTipsTable.currency, currency),
+      ),
+    );
+
+  const [spentAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhEnvelopeTransactionsTable.amount}), '0')` })
+    .from(hhEnvelopeTransactionsTable)
+    .where(
+      and(
+        eq(hhEnvelopeTransactionsTable.memberId, ctx.member.id),
+        eq(hhEnvelopeTransactionsTable.currency, currency),
+      ),
+    );
+
+  const [referralBonusAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhReferralsTable.referredBonusAmount}), '0')` })
+    .from(hhReferralsTable)
+    .where(eq(hhReferralsTable.referredMemberId, ctx.member.id));
+
+  const [referralGivenAgg] = await db
+    .select({ total: sql<string>`coalesce(sum(${hhReferralsTable.referrerBonusAmount}), '0')` })
+    .from(hhReferralsTable)
+    .where(eq(hhReferralsTable.referrerId, ctx.member.id));
+
+  const totalEarned =
+    currency === "token"
+      ? parseFloat(ctx.member.totalEarnedToken ?? "0") +
+        parseFloat(tipReceivedAgg?.total ?? "0") +
+        parseFloat(referralBonusAgg?.total ?? "0") +
+        parseFloat(referralGivenAgg?.total ?? "0")
+      : parseFloat(ctx.member.totalEarnedXrp ?? "0");
+
+  const totalSpent =
+    parseFloat(spentAgg?.total ?? "0") +
+    parseFloat(tipSentAgg?.total ?? "0");
+
+  const available = totalEarned - totalSpent;
+
+  if (sendAmt > available) {
+    const sym = currency === "xrp" ? "XRP" : ctx.band.communityTokenCode;
+    res.status(409).json({
+      error: `Insufficient balance. You have ${Math.max(0, available).toFixed(2)} ${sym} available.`,
+    });
+    return;
+  }
+
+  // V1: XRPL payment simulated
+  const mockTxHash = `SIM_TIP_${Date.now().toString(16).toUpperCase()}`;
+
+  const [tip] = await db
+    .insert(hhTipsTable)
+    .values({
+      bandId: ctx.band.id,
+      fromMemberId: ctx.member.id,
+      toMemberId,
+      amount,
+      currency,
+      note: note ?? "",
+      xrplTxHash: mockTxHash,
+    })
+    .returning();
+
+  // Reveal wallet for both sender AND recipient — for the recipient this may be
+  // the first time real value has moved to their account (the progressive reveal
+  // moment). Run both in parallel; they're idempotent.
+  await Promise.all([
+    maybeRevealWallet(ctx.member.id),
+    maybeRevealWallet(toMemberId),
+  ]);
+
+  res.status(201).json({
+    id: tip.id,
+    recipientName: `${recipient.firstName} ${recipient.lastName}`,
+    amount: tip.amount,
+    currency: tip.currency,
+    tokenCode: ctx.band.communityTokenCode,
+    note: tip.note,
+    sentAt: tip.sentAt instanceof Date ? tip.sentAt.toISOString() : String(tip.sentAt),
+  });
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/my/tips
+// Returns tips sent and received by the authenticated member.
+// ──────────────────────────────────────────────
+router.get("/my/tips", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const { member, band } = ctx;
+
+  const [sent, received] = await Promise.all([
+    db
+      .select({
+        tip: hhTipsTable,
+        otherFirst: hhMembersTable.firstName,
+        otherLast: hhMembersTable.lastName,
+      })
+      .from(hhTipsTable)
+      .innerJoin(hhMembersTable, eq(hhTipsTable.toMemberId, hhMembersTable.id))
+      .where(
+        and(
+          eq(hhTipsTable.fromMemberId, member.id),
+          eq(hhTipsTable.bandId, band.id),
+        ),
+      )
+      .orderBy(desc(hhTipsTable.sentAt))
+      .limit(50),
+    db
+      .select({
+        tip: hhTipsTable,
+        otherFirst: hhMembersTable.firstName,
+        otherLast: hhMembersTable.lastName,
+      })
+      .from(hhTipsTable)
+      .innerJoin(hhMembersTable, eq(hhTipsTable.fromMemberId, hhMembersTable.id))
+      .where(
+        and(
+          eq(hhTipsTable.toMemberId, member.id),
+          eq(hhTipsTable.bandId, band.id),
+        ),
+      )
+      .orderBy(desc(hhTipsTable.sentAt))
+      .limit(50),
+  ]);
+
+  const tips = [
+    ...sent.map((r) => ({
+      id: r.tip.id,
+      direction: "sent" as const,
+      otherName: `${r.otherFirst} ${r.otherLast}`,
+      amount: r.tip.amount ?? "0",
+      currency: r.tip.currency,
+      tokenCode: band.communityTokenCode,
+      note: r.tip.note ?? "",
+      sentAt: r.tip.sentAt instanceof Date ? r.tip.sentAt.toISOString() : String(r.tip.sentAt),
+    })),
+    ...received.map((r) => ({
+      id: r.tip.id,
+      direction: "received" as const,
+      otherName: `${r.otherFirst} ${r.otherLast}`,
+      amount: r.tip.amount ?? "0",
+      currency: r.tip.currency,
+      tokenCode: band.communityTokenCode,
+      note: r.tip.note ?? "",
+      sentAt: r.tip.sentAt instanceof Date ? r.tip.sentAt.toISOString() : String(r.tip.sentAt),
+    })),
+  ].sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
+
+  res.json({ tips });
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/join/:referralCode
+// New member joins via a referral link. Awards bonus credits to both the
+// new member and the referrer. This is the zone 2/3 adoption lever:
+// visible reward before any effort is asked.
+// ──────────────────────────────────────────────
+const JoinViaReferralSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().email(),
+});
+
+router.post("/join/:referralCode", async (req: Request, res: Response) => {
+  const referralCode = param(req.params.referralCode);
+
+  const parsed = JoinViaReferralSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  // Find the referrer — load their full record so we can derive band membership
+  const [referrer] = await db
+    .select()
+    .from(hhMembersTable)
+    .where(eq(hhMembersTable.referralCode, referralCode))
+    .limit(1);
+
+  if (!referrer) {
+    res.status(404).json({ error: "Referral code not found." });
+    return;
+  }
+
+  // Derive band from the referrer's own bandId — this is the only correct
+  // approach. Using getOrCreateDefaultBand() here could produce a different
+  // band in a multi-band deployment, creating cross-band referral links and
+  // incorrect ledger state.
+  const [band] = await db
+    .select()
+    .from(hhBandsTable)
+    .where(eq(hhBandsTable.id, referrer.bandId))
+    .limit(1);
+
+  if (!band) {
+    res.status(500).json({ error: "Referrer's band not found." });
+    return;
+  }
+
+  // Check if email already exists
+  const [existing] = await db
+    .select({ id: hhMembersTable.id })
+    .from(hhMembersTable)
+    .where(
+      and(
+        eq(hhMembersTable.email, parsed.data.email.toLowerCase()),
+        eq(hhMembersTable.bandId, band.id),
+      ),
+    )
+    .limit(1);
+
+  if (existing) {
+    res.status(409).json({ error: "An account with this email already exists." });
+    return;
+  }
+
+  // Create the new member
+  const [newMember] = await db
+    .insert(hhMembersTable)
+    .values({
+      bandId: band.id,
+      email: parsed.data.email.toLowerCase(),
+      firstName: parsed.data.firstName,
+      lastName: parsed.data.lastName,
+      tier: "task_based",
+      referredByMemberId: referrer.id,
+    })
+    .returning();
+
+  // Give new member a referral code now so they can share it immediately
+  const newCode = generateReferralCode(newMember.id);
+  await db
+    .update(hhMembersTable)
+    .set({ referralCode: newCode, updatedAt: new Date() })
+    .where(
+      and(
+        eq(hhMembersTable.id, newMember.id),
+        sql`${hhMembersTable.referralCode} IS NULL`,
+      ),
+    );
+
+  // ── Referral bonus is NOT awarded here ──
+  // The bonus is deferred to the member's first authenticated session.
+  // `loadHhMember` checks for a referredByMemberId with no hh_referrals
+  // record and awards the bonus at that point (after Clerk email verification).
+  // This prevents bonus farming via unauthenticated form submissions.
+  const REFERRAL_BONUS = "5";
+
+  res.status(201).json({
+    memberId: newMember.id,
+    firstName: newMember.firstName,
+    bonusAmount: REFERRAL_BONUS,
+    tokenCode: band.communityTokenCode,
+    referralCode: newCode,
   });
 });
 
