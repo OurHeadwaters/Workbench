@@ -209,6 +209,14 @@ const mainPieces = [
     desc: "Formal compliance notice addressed to the 807 Food Co-operative Inc. board, dated May 23, 2026. Covers two required actions before the AGM: CPA engagement letter for the 2025 compilation, and confirming the members' waiver extraordinary resolution. Print-ready letter (8.5×11).",
     icon: "📑",
   },
+  {
+    href: "/community-finance-brief",
+    title: "Gamified Community Finance — Partner Brief",
+    label: "Product brief · 2027",
+    desc: "Partner-facing product brief for the gamified Helping Hands + household budgeting system. Covers the problem, the two-instrument circuit (HWBAND + xbuckets), five gamification mechanics, regulatory position, and four partner angles. Shareable link — no login required.",
+    icon: "💧",
+    highlight: true,
+  },
 ];
 
 const outreachPieces = [
