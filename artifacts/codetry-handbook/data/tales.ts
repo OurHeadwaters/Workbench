@@ -14,6 +14,149 @@ export interface Tale {
 
 export const TALES: Tale[] = [
   {
+    id: "the-button-she-almost-didnt-press",
+    title: "The Button She Almost Didn't Press",
+    subtitle: "A tale about labour, patience, and the weight of meaning",
+    excerpt:
+      "Kaya had been inside for eleven days. Not sick. Not grounded. Just — inside. The summer had gotten long in a way summers sometimes do when you're sixteen and there's nothing that needs you.",
+    body: [
+      { kind: "para", text: "Kaya had been inside for eleven days." },
+      {
+        kind: "para",
+        text: "Not sick. Not grounded. Just — inside. The summer had gotten long in a way summers sometimes do when you're sixteen and there's nothing that needs you.",
+      },
+      {
+        kind: "para",
+        text: "Her cousin was at her dad's in Thunder Bay. The community centre was doing little kids' programs. Everyone seemed to be somewhere that wasn't for her.",
+      },
+      {
+        kind: "para",
+        text: "She opened the Helping Hands app the way you open the fridge when you're not hungry — just to see.",
+      },
+      {
+        kind: "para",
+        text: "There was a section she'd never clicked: Skills. A list of things people in the community knew how to do. Beading. Bannock. Net repair. Chainsaw maintenance. Cree syllabics. And near the bottom, under Food and Harvest:",
+      },
+      { kind: "italic", text: "Wild Rice Harvesting." },
+      {
+        kind: "para",
+        text: "She didn't know why she stopped there. She'd eaten wild rice her whole life. She'd never thought about where it came from, exactly. The lake. Obviously the lake. But she'd never been out there when it happened.",
+      },
+      {
+        kind: "para",
+        text: "There was a small button beneath the description. It just said: I'm watching this.",
+      },
+      {
+        kind: "para",
+        text: "She pressed it. Nothing happened. The screen didn't change. No confetti. No notification. She put her phone down and went back to watching the ceiling.",
+      },
+      { kind: "break" },
+      { kind: "para", text: "Four days later, Margaret Swain called her." },
+      {
+        kind: "para",
+        text: "Kaya almost didn't answer. She didn't know Margaret well — she was an old woman who lived near the dock, the kind of person adults talked about with a certain respectful hush. She had a boat she'd been taking out alone for forty years.",
+      },
+      {
+        kind: "italic",
+        text: "I saw your name on the list, Margaret said. You want to learn the rice?",
+      },
+      {
+        kind: "para",
+        text: "Kaya said yes before she understood what she was agreeing to.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "They went out the first morning before the sun was fully up.",
+      },
+      {
+        kind: "para",
+        text: "The lake smelled like cold and green things. Margaret handed her a pole and showed her how to hold it — low, steady, moving from the hips, not the arms. They pushed through the rice beds in silence. The stalks were taller than Kaya expected, brushing against her arms, the grains hanging heavy at the top.",
+      },
+      { kind: "italic", text: "Not yet, Margaret said." },
+      { kind: "italic", text: "How do you know?" },
+      {
+        kind: "italic",
+        text: "Pinch one. Rub it. Is it soft or does it hold?",
+      },
+      {
+        kind: "para",
+        text: "Kaya tried. She didn't know what she was feeling for.",
+      },
+      { kind: "italic", text: "Soft, Margaret said. We wait." },
+      {
+        kind: "para",
+        text: "They went out four mornings that week and came back each time without rice. Kaya learned to read the colour of the stalk. She learned how the grains sounded against each other when the wind came through — not ready, not ready, not ready. She learned that Margaret never seemed impatient, and that this was itself a kind of teaching.",
+      },
+      {
+        kind: "para",
+        text: "On the fifth morning, Margaret reached up, rubbed a grain between her fingers, and looked at her.",
+      },
+      { kind: "italic", text: "Today, she said." },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The ricing sticks were smooth from decades of use. Margaret showed her the motion — one stick to bend the stalk over the canoe, one to knock the grains loose. Gentle but decisive. You weren't hitting the rice, you were inviting it to fall.",
+      },
+      {
+        kind: "para",
+        text: "At first Kaya was too hard. Rice scattered into the water.",
+      },
+      { kind: "italic", text: "Not like that, Margaret said. She didn't explain further. She just showed her again." },
+      {
+        kind: "para",
+        text: "Kaya tried softer. More rice stayed. She found the rhythm slowly — bend, knock, bend, knock — the grains raining down into the hull in a sound she had never heard before and would not forget. Dry and full and alive.",
+      },
+      {
+        kind: "para",
+        text: "Her arms ached by midmorning. Her back hurt in a new way. The mosquitoes found the gap between her collar and her hat. The sun came up and the lake got bright and she kept going because Margaret kept going, and stopping felt like the wrong answer to something, though she couldn't have said what the question was.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "They worked through the morning until the canoe was heavy with it. The rice lay in the hull like small dark keys, thousands of them, the whole summer's patience made into something you could hold.",
+      },
+      {
+        kind: "para",
+        text: "Margaret cut the engine on the way back and let them drift for a moment.",
+      },
+      {
+        kind: "italic",
+        text: "My grandmother showed me, she said. Hers showed her. It goes back further than either of us can name.",
+      },
+      {
+        kind: "para",
+        text: "Kaya looked at the rice. She looked at her sore hands. She didn't say anything because there wasn't anything to say that would fit.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "That night, opening the app to show her mom, Kaya noticed her name had moved. Under wild rice harvesting, where it used to say Watching, it now said Learning.",
+      },
+      {
+        kind: "para",
+        text: "She wasn't sure how to explain what that meant. It was just a word on a screen.",
+      },
+      {
+        kind: "para",
+        text: "But she'd been out on that lake. She'd waited when the rice said wait. She'd learned the knock that doesn't scatter. She'd come home with something real in the hull and something different in her chest — a kind of weight she'd been missing without knowing it.",
+      },
+      { kind: "para", text: "She put her phone down." },
+      {
+        kind: "para",
+        text: "Tomorrow, Margaret said, they would parch it.",
+      },
+      { kind: "para", text: "There was more to learn." },
+      { kind: "break" },
+      {
+        kind: "italic",
+        text: "In the Helping Hands skill directory, wild rice harvesting lives under Food and Harvest. Anyone can press I'm watching this. The Knowledge Holder who carries the skill sees your name. What happens after that has been happening on this lake for longer than the app — longer than the phones — longer than most of the words we have for it. The technology just made sure the door was easy to find.",
+      },
+    ],
+    authorNote:
+      "The Watching stage is the door before the door. No commitment, no test, no credentials. Just: I see this and I'm curious. Someone who holds something real sees your name. That thread — between a restless kid and a person with forty years in a boat — is what the system is actually for.",
+  },
+  {
     id: "the-girl-who-waited-for-the-eagle",
     title: "The Girl Who Waited for the Eagle",
     subtitle: "A tale for children of all ages, on every kind of ground",
