@@ -34,6 +34,8 @@ import HHRoster from "@/pages/HHRoster";
 import HHEarnings from "@/pages/HHEarnings";
 import HHEnvelopes from "@/pages/HHEnvelopes";
 import HHMerchants from "@/pages/HHMerchants";
+import HHBadges from "@/pages/HHBadges";
+import HHMyBadges from "@/pages/HHMyBadges";
 import HHPartnershipPortal from "@/pages/HHPartnershipPortal";
 import HHEnvelopeHistory from "@/pages/HHEnvelopeHistory";
 import Layout from "@/components/Layout";
@@ -196,6 +198,8 @@ function Router() {
       <ProtectedRoute path="/helping-hands/envelopes" component={HHEnvelopes} />
       <ProtectedRoute path="/helping-hands/merchants" component={HHMerchants} />
       <ProtectedRoute path="/helping-hands/partnership" component={HHPartnershipPortal} />
+      <ProtectedRoute path="/helping-hands/badges" component={HHBadges} />
+      <ProtectedRoute path="/helping-hands/my-badges" component={HHMyBadges} />
       <Route component={NotFound} />
     </Switch>
   );

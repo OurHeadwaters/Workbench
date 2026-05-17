@@ -243,6 +243,69 @@ export const hhTipsTable = pgTable(
   }),
 );
 
+// ---------- hh_badge_categories ----------
+// Skill and knowledge areas the band recognises with formal credentials.
+// Proposed by any member (Zone 4 idea pool), activated by band admin after
+// Elder/Knowledge Keeper validation. Headwaters develops training resources
+// that map to active categories. stageModel governs which stages are used.
+//   binary       — verified (practicing) only; for clear pass/fail skills
+//   three_stage  — learning → practicing → teaching
+//   four_stage   — watching → learning → practicing → teaching (full model)
+// rateModifierEnabled: if true, the band can attach a task rate uplift to
+// members who hold this badge at "practicing" or "teaching" stage.
+export const hhBadgeCategoriesTable = pgTable(
+  "hh_badge_categories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    // Domain helps group the directory: food | land | care | craft | governance | knowledge
+    domain: text("domain").notNull().default("knowledge"),
+    stageModel: text("stage_model").notNull().default("four_stage"),
+    rateModifierEnabled: boolean("rate_modifier_enabled").notNull().default(false),
+    // proposedByMemberId: the Zone 4 member who submitted the idea (null = admin-created directly)
+    proposedByMemberId: uuid("proposed_by_member_id").references(() => hhMembersTable.id),
+    // status: proposed (in pool) | active (band approved) | archived
+    status: text("status").notNull().default("proposed"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    bandIdx: index("hh_badge_cats_band_id_idx").on(t.bandId),
+    statusIdx: index("hh_badge_cats_status_idx").on(t.status),
+  }),
+);
+
+// ---------- hh_member_badges ----------
+// One row per member per category — stage advances in place.
+// Self-service: any member can create a "watching" row for themselves.
+// Admin/Knowledge Keeper required to advance beyond watching.
+// Unique on (member_id, category_id) so there is exactly one badge record
+// per person per skill — no duplicate rows at different stages.
+export const hhMemberBadgesTable = pgTable(
+  "hh_member_badges",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    memberId: uuid("member_id").notNull().references(() => hhMembersTable.id),
+    categoryId: uuid("category_id").notNull().references(() => hhBadgeCategoriesTable.id),
+    // stage: watching | learning | practicing | teaching
+    stage: text("stage").notNull().default("watching"),
+    // issuedByMemberId: who advanced this badge (null for self-initiated watching)
+    issuedByMemberId: uuid("issued_by_member_id").references(() => hhMembersTable.id),
+    notes: text("notes").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    memberIdx: index("hh_member_badges_member_id_idx").on(t.memberId),
+    categoryIdx: index("hh_member_badges_category_id_idx").on(t.categoryId),
+    bandIdx: index("hh_member_badges_band_id_idx").on(t.bandId),
+    memberCategoryUniq: index("hh_member_badges_member_cat_uniq_idx").on(t.memberId, t.categoryId),
+  }),
+);
+
 // ---------- hh_referrals ----------
 // Zone-based referral tracking. When a new member joins via a referral link
 // both the referrer and the new member receive a bonus credit. This is the

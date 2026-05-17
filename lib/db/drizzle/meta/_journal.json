@@ -29,6 +29,13 @@
       "when": 1747494000000,
       "tag": "0003_p2p_economy",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779038188905,
+      "tag": "0004_long_silver_fox",
+      "breakpoints": true
     }
   ]
 }

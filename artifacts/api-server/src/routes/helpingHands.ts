@@ -12,6 +12,8 @@ import {
   hhEnvelopeTransactionsTable,
   hhTipsTable,
   hhReferralsTable,
+  hhBadgeCategoriesTable,
+  hhMemberBadgesTable,
 } from "@workspace/db";
 import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
@@ -2390,5 +2392,381 @@ router.get("/partnership-portal", requireAuth(), async (req: Request, res: Respo
     note: "V1 stub — data is aggregate only; no individual PII is exposed. Full consent-gated member profiles planned for V2.",
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BADGE / CREDENTIAL SYSTEM
+// Four-stage knowledge identity: Watching → Learning → Practicing → Teaching
+// ══════════════════════════════════════════════════════════════════════════════
+
+const BADGE_STAGES = ["watching", "learning", "practicing", "teaching"] as const;
+type BadgeStage = (typeof BADGE_STAGES)[number];
+
+function stageIndex(s: string): number {
+  return BADGE_STAGES.indexOf(s as BadgeStage);
+}
+
+// ── GET /helping-hands/badges/categories ──────────────────────────────────────
+// Returns all badge categories for the band. Defaults to status=active.
+// Pass ?status=proposed to see the idea pool; ?status=all for everything.
+router.get(
+  "/helping-hands/badges/categories",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const statusFilter = req.query.status as string | undefined;
+    const rows = await db
+      .select()
+      .from(hhBadgeCategoriesTable)
+      .where(
+        statusFilter === "all"
+          ? eq(hhBadgeCategoriesTable.bandId, band.id)
+          : and(
+              eq(hhBadgeCategoriesTable.bandId, band.id),
+              eq(hhBadgeCategoriesTable.status, statusFilter ?? "active"),
+            ),
+      )
+      .orderBy(hhBadgeCategoriesTable.domain, hhBadgeCategoriesTable.name);
+
+    res.json(rows);
+  },
+);
+
+// ── POST /helping-hands/badges/categories ─────────────────────────────────────
+// Any member can propose a category (status=proposed).
+// Admin can set status=active directly to bypass the proposal pool.
+const createBadgeCategorySchema = z.object({
+  name: z.string().min(1).max(120),
+  description: z.string().default(""),
+  domain: z.enum(["food", "land", "care", "craft", "governance", "knowledge"]).default("knowledge"),
+  stageModel: z.enum(["binary", "three_stage", "four_stage"]).default("four_stage"),
+  rateModifierEnabled: z.boolean().default(false),
+  status: z.enum(["proposed", "active"]).optional(),
+});
+
+router.post(
+  "/helping-hands/badges/categories",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string; role: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const member = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
+    });
+    if (!member) { res.status(404).json({ error: "Member not found" }); return; }
+
+    const isAdmin = user.role === "owner" || user.role === "ops_manager";
+    const parsed = createBadgeCategorySchema.safeParse(req.body);
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
+
+    const { name, description, domain, stageModel, rateModifierEnabled, status } = parsed.data;
+    const finalStatus = isAdmin && status === "active" ? "active" : "proposed";
+
+    const [row] = await db
+      .insert(hhBadgeCategoriesTable)
+      .values({
+        bandId: band.id,
+        name,
+        description,
+        domain,
+        stageModel,
+        rateModifierEnabled: isAdmin ? rateModifierEnabled : false,
+        proposedByMemberId: member.id,
+        status: finalStatus,
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    res.status(201).json(row);
+  },
+);
+
+// ── PATCH /helping-hands/badges/categories/:id ────────────────────────────────
+// Admin only. Activate/archive a category, toggle rate modifier.
+const updateBadgeCategorySchema = z.object({
+  status: z.enum(["proposed", "active", "archived"]).optional(),
+  rateModifierEnabled: z.boolean().optional(),
+  description: z.string().optional(),
+});
+
+router.patch(
+  "/helping-hands/badges/categories/:id",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; role: string } }).bookkeeperUser;
+    if (user.role !== "owner" && user.role !== "ops_manager") {
+      res.status(403).json({ error: "Admin only" }); return;
+    }
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const parsed = updateBadgeCategorySchema.safeParse(req.body);
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
+
+    const id = param(req.params.id);
+    const existing = await db.query.hhBadgeCategoriesTable.findFirst({
+      where: and(eq(hhBadgeCategoriesTable.id, id), eq(hhBadgeCategoriesTable.bandId, band.id)),
+    });
+    if (!existing) { res.status(404).json({ error: "Category not found" }); return; }
+
+    const [updated] = await db
+      .update(hhBadgeCategoriesTable)
+      .set({ ...parsed.data, updatedAt: new Date() })
+      .where(eq(hhBadgeCategoriesTable.id, id))
+      .returning();
+
+    res.json(updated);
+  },
+);
+
+// ── POST /helping-hands/badges/watch/:categoryId ──────────────────────────────
+// Self-service. Any member presses "I'm watching this." Creates a watching-stage
+// badge record. No-ops if they already have any badge for this category.
+router.post(
+  "/helping-hands/badges/watch/:categoryId",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const member = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
+    });
+    if (!member) { res.status(404).json({ error: "Member not found" }); return; }
+
+    const categoryId = param(req.params.categoryId);
+    const category = await db.query.hhBadgeCategoriesTable.findFirst({
+      where: and(eq(hhBadgeCategoriesTable.id, categoryId), eq(hhBadgeCategoriesTable.bandId, band.id)),
+    });
+    if (!category) { res.status(404).json({ error: "Badge category not found" }); return; }
+    if (category.status === "archived") { res.status(400).json({ error: "This skill area is archived" }); return; }
+
+    const existing = await db.query.hhMemberBadgesTable.findFirst({
+      where: and(eq(hhMemberBadgesTable.memberId, member.id), eq(hhMemberBadgesTable.categoryId, categoryId)),
+    });
+    if (existing) { res.json(existing); return; }
+
+    const [row] = await db
+      .insert(hhMemberBadgesTable)
+      .values({
+        bandId: band.id,
+        memberId: member.id,
+        categoryId,
+        stage: "watching",
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    res.status(201).json(row);
+  },
+);
+
+// ── GET /helping-hands/my/badges ──────────────────────────────────────────────
+// Returns the calling member's badges with category details joined.
+router.get(
+  "/helping-hands/my/badges",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const member = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
+    });
+    if (!member) { res.status(404).json({ error: "Member not found" }); return; }
+
+    const rows = await db
+      .select({
+        id: hhMemberBadgesTable.id,
+        memberId: hhMemberBadgesTable.memberId,
+        categoryId: hhMemberBadgesTable.categoryId,
+        stage: hhMemberBadgesTable.stage,
+        notes: hhMemberBadgesTable.notes,
+        createdAt: hhMemberBadgesTable.createdAt,
+        updatedAt: hhMemberBadgesTable.updatedAt,
+        categoryName: hhBadgeCategoriesTable.name,
+        categoryDescription: hhBadgeCategoriesTable.description,
+        categoryDomain: hhBadgeCategoriesTable.domain,
+        categoryStageModel: hhBadgeCategoriesTable.stageModel,
+        categoryRateModifierEnabled: hhBadgeCategoriesTable.rateModifierEnabled,
+      })
+      .from(hhMemberBadgesTable)
+      .innerJoin(hhBadgeCategoriesTable, eq(hhMemberBadgesTable.categoryId, hhBadgeCategoriesTable.id))
+      .where(eq(hhMemberBadgesTable.memberId, member.id))
+      .orderBy(hhBadgeCategoriesTable.domain, hhBadgeCategoriesTable.name);
+
+    res.json(rows);
+  },
+);
+
+// ── GET /helping-hands/members/:memberId/badges ───────────────────────────────
+// Returns a specific member's badges with category details. Admin or self.
+router.get(
+  "/helping-hands/members/:memberId/badges",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string; role: string } }).bookkeeperUser;
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const memberId = param(req.params.memberId);
+    const target = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)),
+    });
+    if (!target) { res.status(404).json({ error: "Member not found" }); return; }
+
+    const rows = await db
+      .select({
+        id: hhMemberBadgesTable.id,
+        memberId: hhMemberBadgesTable.memberId,
+        categoryId: hhMemberBadgesTable.categoryId,
+        stage: hhMemberBadgesTable.stage,
+        notes: hhMemberBadgesTable.notes,
+        createdAt: hhMemberBadgesTable.createdAt,
+        updatedAt: hhMemberBadgesTable.updatedAt,
+        categoryName: hhBadgeCategoriesTable.name,
+        categoryDescription: hhBadgeCategoriesTable.description,
+        categoryDomain: hhBadgeCategoriesTable.domain,
+        categoryStageModel: hhBadgeCategoriesTable.stageModel,
+        categoryRateModifierEnabled: hhBadgeCategoriesTable.rateModifierEnabled,
+      })
+      .from(hhMemberBadgesTable)
+      .innerJoin(hhBadgeCategoriesTable, eq(hhMemberBadgesTable.categoryId, hhBadgeCategoriesTable.id))
+      .where(eq(hhMemberBadgesTable.memberId, memberId))
+      .orderBy(hhBadgeCategoriesTable.domain, hhBadgeCategoriesTable.name);
+
+    res.json(rows);
+  },
+);
+
+// ── POST /helping-hands/members/:memberId/badges/:categoryId ──────────────────
+// Admin/Knowledge Keeper issues or advances a badge. The stage can only move
+// forward (watching → learning → practicing → teaching). Teaching can only be
+// assigned to someone already at practicing.
+const issueBadgeSchema = z.object({
+  stage: z.enum(["watching", "learning", "practicing", "teaching"]),
+  notes: z.string().default(""),
+});
+
+router.post(
+  "/helping-hands/members/:memberId/badges/:categoryId",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; id: string; role: string } }).bookkeeperUser;
+    if (user.role !== "owner" && user.role !== "ops_manager") {
+      res.status(403).json({ error: "Admin only" }); return;
+    }
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const issuer = await db.query.hhMembersTable.findFirst({
+      where: and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.clerkUserId, user.id)),
+    });
+    if (!issuer) { res.status(404).json({ error: "Issuer member record not found" }); return; }
+
+    const memberId = param(req.params.memberId);
+    const categoryId = param(req.params.categoryId);
+
+    const [target, category] = await Promise.all([
+      db.query.hhMembersTable.findFirst({
+        where: and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)),
+      }),
+      db.query.hhBadgeCategoriesTable.findFirst({
+        where: and(eq(hhBadgeCategoriesTable.id, categoryId), eq(hhBadgeCategoriesTable.bandId, band.id)),
+      }),
+    ]);
+    if (!target) { res.status(404).json({ error: "Member not found" }); return; }
+    if (!category) { res.status(404).json({ error: "Badge category not found" }); return; }
+
+    const parsed = issueBadgeSchema.safeParse(req.body);
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return; }
+
+    const { stage, notes } = parsed.data;
+
+    const existing = await db.query.hhMemberBadgesTable.findFirst({
+      where: and(eq(hhMemberBadgesTable.memberId, memberId), eq(hhMemberBadgesTable.categoryId, categoryId)),
+    });
+
+    if (existing) {
+      if (stageIndex(stage) <= stageIndex(existing.stage)) {
+        res.status(400).json({ error: `Cannot move badge backwards. Current stage: ${existing.stage}` }); return;
+      }
+      const [updated] = await db
+        .update(hhMemberBadgesTable)
+        .set({ stage, notes, issuedByMemberId: issuer.id, updatedAt: new Date() })
+        .where(eq(hhMemberBadgesTable.id, existing.id))
+        .returning();
+      res.json(updated); return;
+    }
+
+    const [row] = await db
+      .insert(hhMemberBadgesTable)
+      .values({
+        bandId: band.id,
+        memberId,
+        categoryId,
+        stage,
+        issuedByMemberId: issuer.id,
+        notes,
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    res.status(201).json(row);
+  },
+);
+
+// ── GET /helping-hands/badges/watchers/:categoryId ────────────────────────────
+// Admin sees who is watching a given skill — the "invitation" view.
+router.get(
+  "/helping-hands/badges/watchers/:categoryId",
+  requireAuth,
+  loadBookkeeperUser,
+  async (req: Request, res: Response) => {
+    const user = (req as Request & { bookkeeperUser: { bandId: string; role: string } }).bookkeeperUser;
+    if (user.role !== "owner" && user.role !== "ops_manager") {
+      res.status(403).json({ error: "Admin only" }); return;
+    }
+    const band = await db.query.hhBandsTable.findFirst({ where: eq(hhBandsTable.id, user.bandId) });
+    if (!band) { res.status(404).json({ error: "Band not found" }); return; }
+
+    const categoryId = param(req.params.categoryId);
+    const rows = await db
+      .select({
+        badgeId: hhMemberBadgesTable.id,
+        stage: hhMemberBadgesTable.stage,
+        createdAt: hhMemberBadgesTable.createdAt,
+        memberId: hhMembersTable.id,
+        firstName: hhMembersTable.firstName,
+        lastName: hhMembersTable.lastName,
+        email: hhMembersTable.email,
+      })
+      .from(hhMemberBadgesTable)
+      .innerJoin(hhMembersTable, eq(hhMemberBadgesTable.memberId, hhMembersTable.id))
+      .where(
+        and(
+          eq(hhMemberBadgesTable.categoryId, categoryId),
+          eq(hhMemberBadgesTable.bandId, band.id),
+          eq(hhMemberBadgesTable.stage, "watching"),
+        ),
+      )
+      .orderBy(hhMemberBadgesTable.createdAt);
+
+    res.json(rows);
+  },
+);
 
 export default router;

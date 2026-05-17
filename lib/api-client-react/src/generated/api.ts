@@ -7075,3 +7075,395 @@ export function useGetHhDashboard<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BADGE / CREDENTIAL SYSTEM
+// Manually maintained — follows orval patterns exactly.
+// ══════════════════════════════════════════════════════════════════════════════
+
+export interface HhBadgeCategory {
+  id: string;
+  bandId: string;
+  name: string;
+  description: string;
+  domain: string;
+  stageModel: string;
+  rateModifierEnabled: boolean;
+  proposedByMemberId: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HhMemberBadgeWithCategory {
+  id: string;
+  memberId: string;
+  categoryId: string;
+  stage: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+  categoryName: string;
+  categoryDescription: string;
+  categoryDomain: string;
+  categoryStageModel: string;
+  categoryRateModifierEnabled: boolean;
+}
+
+export interface CreateHhBadgeCategoryRequest {
+  name: string;
+  description?: string;
+  domain?: "food" | "land" | "care" | "craft" | "governance" | "knowledge";
+  stageModel?: "binary" | "three_stage" | "four_stage";
+  rateModifierEnabled?: boolean;
+  status?: "proposed" | "active";
+}
+
+export interface UpdateHhBadgeCategoryRequest {
+  status?: "proposed" | "active" | "archived";
+  rateModifierEnabled?: boolean;
+  description?: string;
+}
+
+export interface IssueHhBadgeRequest {
+  stage: "watching" | "learning" | "practicing" | "teaching";
+  notes?: string;
+}
+
+// ── GET /helping-hands/badges/categories ─────────────────────────────────────
+
+export const getGetHhBadgeCategoriesUrl = (status?: string) =>
+  `/helping-hands/badges/categories${status ? `?status=${status}` : ""}`;
+
+export const getHhBadgeCategories = async (
+  status?: string,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhBadgeCategory[]> => {
+  return customFetch<HhBadgeCategory[]>(getGetHhBadgeCategoriesUrl(status), {
+    method: "GET",
+    ...options,
+  });
+};
+
+export const getGetHhBadgeCategoriesQueryKey = (status?: string) =>
+  [`/helping-hands/badges/categories`, status] as const;
+
+export const getGetHhBadgeCategoriesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHhBadgeCategories>>,
+  TError = ErrorType<unknown>,
+>(
+  status?: string,
+  options?: {
+    query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData>;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData> & {
+  queryKey: QueryKey;
+} => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetHhBadgeCategoriesQueryKey(status);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHhBadgeCategories>>> = ({
+    signal,
+  }) => getHhBadgeCategories(status, { signal, ...requestOptions });
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHhBadgeCategories>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHhBadgeCategoriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHhBadgeCategories>>
+>;
+export type GetHhBadgeCategoriesQueryError = ErrorType<unknown>;
+
+export function useGetHhBadgeCategories<
+  TData = Awaited<ReturnType<typeof getHhBadgeCategories>>,
+  TError = ErrorType<unknown>,
+>(
+  status?: string,
+  options?: {
+    query?: UseQueryOptions<Awaited<ReturnType<typeof getHhBadgeCategories>>, TError, TData>;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHhBadgeCategoriesQueryOptions(status, options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+// ── POST /helping-hands/badges/categories ────────────────────────────────────
+
+export const getCreateHhBadgeCategoryUrl = () => `/helping-hands/badges/categories`;
+
+export const createHhBadgeCategory = async (
+  body: BodyType<CreateHhBadgeCategoryRequest>,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhBadgeCategory> => {
+  return customFetch<HhBadgeCategory>(getCreateHhBadgeCategoryUrl(), {
+    method: "POST",
+    body: JSON.stringify(body),
+    ...options,
+  });
+};
+
+export const useCreateHhBadgeCategory = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createHhBadgeCategory>>,
+    TError,
+    { data: BodyType<CreateHhBadgeCategoryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createHhBadgeCategory>>,
+  TError,
+  { data: BodyType<CreateHhBadgeCategoryRequest> },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createHhBadgeCategory>>,
+    { data: BodyType<CreateHhBadgeCategoryRequest> }
+  > = ({ data }) => createHhBadgeCategory(data, requestOptions);
+  return useMutation({ mutationFn, ...mutationOptions });
+};
+
+// ── PATCH /helping-hands/badges/categories/:id ───────────────────────────────
+
+export const getUpdateHhBadgeCategoryUrl = (id: string) =>
+  `/helping-hands/badges/categories/${id}`;
+
+export const updateHhBadgeCategory = async (
+  id: string,
+  body: BodyType<UpdateHhBadgeCategoryRequest>,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhBadgeCategory> => {
+  return customFetch<HhBadgeCategory>(getUpdateHhBadgeCategoryUrl(id), {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    ...options,
+  });
+};
+
+export const useUpdateHhBadgeCategory = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+    TError,
+    { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+  TError,
+  { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateHhBadgeCategory>>,
+    { id: string; data: BodyType<UpdateHhBadgeCategoryRequest> }
+  > = ({ id, data }) => updateHhBadgeCategory(id, data, requestOptions);
+  return useMutation({ mutationFn, ...mutationOptions });
+};
+
+// ── POST /helping-hands/badges/watch/:categoryId ─────────────────────────────
+
+export const getWatchHhBadgeUrl = (categoryId: string) =>
+  `/helping-hands/badges/watch/${categoryId}`;
+
+export const watchHhBadge = async (
+  categoryId: string,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhMemberBadgeWithCategory> => {
+  return customFetch<HhMemberBadgeWithCategory>(getWatchHhBadgeUrl(categoryId), {
+    method: "POST",
+    ...options,
+  });
+};
+
+export const useWatchHhBadge = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof watchHhBadge>>,
+    TError,
+    { categoryId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof watchHhBadge>>,
+  TError,
+  { categoryId: string },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof watchHhBadge>>,
+    { categoryId: string }
+  > = ({ categoryId }) => watchHhBadge(categoryId, requestOptions);
+  return useMutation({ mutationFn, ...mutationOptions });
+};
+
+// ── GET /helping-hands/my/badges ─────────────────────────────────────────────
+
+export const getGetMyHhBadgesUrl = () => `/helping-hands/my/badges`;
+
+export const getMyHhBadges = async (
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhMemberBadgeWithCategory[]> => {
+  return customFetch<HhMemberBadgeWithCategory[]>(getGetMyHhBadgesUrl(), {
+    method: "GET",
+    ...options,
+  });
+};
+
+export const getGetMyHhBadgesQueryKey = () => [`/helping-hands/my/badges`] as const;
+
+export const getGetMyHhBadgesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyHhBadges>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData> & {
+  queryKey: QueryKey;
+} => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMyHhBadgesQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyHhBadges>>> = ({ signal }) =>
+    getMyHhBadges({ signal, ...requestOptions });
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyHhBadges>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyHhBadgesQueryResult = NonNullable<Awaited<ReturnType<typeof getMyHhBadges>>>;
+export type GetMyHhBadgesQueryError = ErrorType<unknown>;
+
+export function useGetMyHhBadges<
+  TData = Awaited<ReturnType<typeof getMyHhBadges>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getMyHhBadges>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyHhBadgesQueryOptions(options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+// ── GET /helping-hands/members/:memberId/badges ───────────────────────────────
+
+export const getGetMemberHhBadgesUrl = (memberId: string) =>
+  `/helping-hands/members/${memberId}/badges`;
+
+export const getMemberHhBadges = async (
+  memberId: string,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhMemberBadgeWithCategory[]> => {
+  return customFetch<HhMemberBadgeWithCategory[]>(getGetMemberHhBadgesUrl(memberId), {
+    method: "GET",
+    ...options,
+  });
+};
+
+export const getGetMemberHhBadgesQueryKey = (memberId: string) =>
+  [`/helping-hands/members/${memberId}/badges`] as const;
+
+export const getGetMemberHhBadgesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMemberHhBadges>>,
+  TError = ErrorType<unknown>,
+>(
+  memberId: string,
+  options?: {
+    query?: UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData>;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData> & {
+  queryKey: QueryKey;
+} => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMemberHhBadgesQueryKey(memberId);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMemberHhBadges>>> = ({ signal }) =>
+    getMemberHhBadges(memberId, { signal, ...requestOptions });
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMemberHhBadges>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMemberHhBadgesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMemberHhBadges>>
+>;
+export type GetMemberHhBadgesQueryError = ErrorType<unknown>;
+
+export function useGetMemberHhBadges<
+  TData = Awaited<ReturnType<typeof getMemberHhBadges>>,
+  TError = ErrorType<unknown>,
+>(
+  memberId: string,
+  options?: {
+    query?: UseQueryOptions<Awaited<ReturnType<typeof getMemberHhBadges>>, TError, TData>;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMemberHhBadgesQueryOptions(memberId, options);
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+// ── POST /helping-hands/members/:memberId/badges/:categoryId ──────────────────
+
+export const getIssueHhBadgeUrl = (memberId: string, categoryId: string) =>
+  `/helping-hands/members/${memberId}/badges/${categoryId}`;
+
+export const issueHhBadge = async (
+  memberId: string,
+  categoryId: string,
+  body: BodyType<IssueHhBadgeRequest>,
+  options?: SecondParameter<typeof customFetch>,
+): Promise<HhMemberBadgeWithCategory> => {
+  return customFetch<HhMemberBadgeWithCategory>(getIssueHhBadgeUrl(memberId, categoryId), {
+    method: "POST",
+    body: JSON.stringify(body),
+    ...options,
+  });
+};
+
+export const useIssueHhBadge = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof issueHhBadge>>,
+    TError,
+    { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof issueHhBadge>>,
+  TError,
+  { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof issueHhBadge>>,
+    { memberId: string; categoryId: string; data: BodyType<IssueHhBadgeRequest> }
+  > = ({ memberId, categoryId, data }) => issueHhBadge(memberId, categoryId, data, requestOptions);
+  return useMutation({ mutationFn, ...mutationOptions });
+};

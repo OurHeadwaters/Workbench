@@ -19,6 +19,8 @@ import {
   HandHelping,
   ListTodo,
   Wallet,
+  Award,
+  Star,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -73,6 +75,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/helping-hands/tasks", label: "Tasks", icon: ListTodo, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
     { href: "/helping-hands/roster", label: "Member Roster", icon: Users, roles: ["owner", "ops_manager"], section: "hr" },
     { href: "/helping-hands/earnings", label: "My Earnings", icon: Wallet, roles: ["food_handler", "owner", "ops_manager", "bookkeeper"], section: "hr" },
+    { href: "/helping-hands/badges", label: "Skill Directory", icon: Award, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
+    { href: "/helping-hands/my-badges", label: "My Credentials", icon: Star, roles: ["owner", "ops_manager", "bookkeeper", "food_handler"], section: "hr" },
   ];
 
   const visibleNav = navItems.filter(item => item.roles.includes(role));
