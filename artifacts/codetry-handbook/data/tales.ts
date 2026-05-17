@@ -661,6 +661,367 @@ export const TALES: Tale[] = [
     authorNote:
       "The freedom was never up the tree. It was already in the current — the fish just had to stop trying to climb long enough to feel it. The things we have been told to want and the things we were built for are sometimes the same, and sometimes they are not. Learning to tell the difference is not a single moment of clarity. It is a whole river, moved through over time. The child takes a stone home without knowing why. That is how it works — the knowing comes later, if it comes at all. The going is enough.",
   },
+  {
+    id: "the-boy-who-counted-the-rings",
+    title: "The Boy Who Counted the Rings",
+    subtitle: "On learning that is not done to you",
+    excerpt:
+      "His grandfather handed him the knife before he had asked for it. That was the first lesson — that the lesson does not wait for you to be ready.",
+    body: [
+      {
+        kind: "para",
+        text: "The tree came down in early December, after the ground had frozen hard enough to drag on.",
+      },
+      {
+        kind: "para",
+        text: "His grandfather cut it — a white spruce, old and straight, taller than the barn — and when it fell it made a sound the boy felt in his chest. Then his grandfather walked to the stump, crouched down, and looked at it for a long time without saying anything.",
+      },
+      {
+        kind: "para",
+        text: "The boy came and crouched beside him. The stump was wide — wider than his arms could reach — and the rings inside it ran close together in some places and far apart in others. He had learned in school that you could read the age of a tree in the rings. He waited for his grandfather to start reading.",
+      },
+      {
+        kind: "para",
+        text: "His grandfather reached into his jacket and handed him a knife.",
+      },
+      { kind: "italic", text: "You count them, he said." },
+      {
+        kind: "para",
+        text: "The boy looked at him. He had expected to watch. He had expected to be told.",
+      },
+      { kind: "italic", text: "Start at the outside and work in, his grandfather said. That's all." },
+      {
+        kind: "para",
+        text: "Then he stood, went to the sled, and started cutting branches.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The boy knelt at the stump and pressed the blade lightly against the wood. The rings were thin near the outside — the last few years — and he traced each one with the tip of the knife, counting under his breath.",
+      },
+      {
+        kind: "para",
+        text: "He lost count at thirty-one. Started again.",
+      },
+      {
+        kind: "para",
+        text: "He lost count again at forty-something. The rings got blurry where they ran close together.",
+      },
+      {
+        kind: "para",
+        text: "He pressed his thumb against the wood instead. He could feel the difference between the dense rings and the wide ones — the hard years and the easy years, though he did not know that yet in those words. He went slowly. He started to understand where one ring ended and the next began not by looking but by feeling, the way you learn a path in the dark.",
+      },
+      {
+        kind: "para",
+        text: "He counted eighty-seven rings before he reached the center, where the wood was dark and tight.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "His grandfather came back and looked over his shoulder.",
+      },
+      { kind: "italic", text: "Eighty-seven, the boy said." },
+      {
+        kind: "para",
+        text: "His grandfather was quiet for a moment. He ran his own thumb along a stretch of close rings near the middle of the stump.",
+      },
+      { kind: "italic", text: "That was a dry spell, he said. Tree barely grew." },
+      {
+        kind: "para",
+        text: "The boy looked at the tight rings and looked at the wide ones and suddenly he could read them — not every detail, but the shape of the story. The hard years narrow. The good years wide. The tree remembering every season it had ever been through, in the wood itself.",
+      },
+      { kind: "italic", text: "How did you know I could do it? the boy asked." },
+      {
+        kind: "para",
+        text: "His grandfather picked up the knife and folded it closed and handed it back to him.",
+      },
+      { kind: "italic", text: "I didn't know, he said. But you did it anyway." },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The boy kept the knife. He did not know yet what else it would open.",
+      },
+      { kind: "break" },
+      {
+        kind: "italic",
+        text: "Eighty-seven years of weather, in the wood of a tree that fell on a December morning. You don't need to be told what that means. You just need to count it yourself.",
+      },
+    ],
+    authorNote:
+      "The lesson is not in the telling. It is in the doing before you feel ready — the knife in your hand before you asked for it, the counting that gets harder before it gets easier. A grandfather who explains robs the grandchild of the discovery. One who hands over the knife and walks away gives something that cannot be taught any other way.",
+  },
+  {
+    id: "the-girl-who-stopped-waiting-for-spring",
+    title: "The Girl Who Stopped Waiting for Spring",
+    subtitle: "On the aliveness that does not wait for permission",
+    excerpt:
+      "Every year she waited for the ice to break. Every year, when it did, she felt like herself again. One February she started wondering where that feeling had been going in between.",
+    body: [
+      {
+        kind: "para",
+        text: "Every year she waited for the ice to break on the lake.",
+      },
+      {
+        kind: "para",
+        text: "It happened in April, sometimes May. There was a sound to it — not a crack so much as a low, settling groan, like the lake was exhaling something it had held all winter. She had been hearing that sound her whole life and it still made her stop whatever she was doing and listen.",
+      },
+      {
+        kind: "para",
+        text: "When the ice broke she felt like herself again. Full and awake and in the right place. She could not have explained it to anyone who asked.",
+      },
+      {
+        kind: "para",
+        text: "The months between freeze and breakup — October through May — she spent in a kind of holding. Not unhappy. Not exactly. Just waiting. Keeping herself in reserve until the world said it was time.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "One February, the hardest month, the one that showed no signs of ending, she was looking out the back window at the yard when she saw it.",
+      },
+      {
+        kind: "para",
+        text: "A small push of green, coming up through the snow at the base of the fence.",
+      },
+      {
+        kind: "para",
+        text: "She went outside in her coat and crouched down to look at it. The ground was still frozen six inches down. The temperature had not been above minus ten in three weeks. Whatever this was had no business being here. Nothing had said it could.",
+      },
+      { kind: "italic", text: "And yet." },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "She watched it for the next two weeks. Some mornings it was buried under new snow and she would find it again when the snow shifted — still green, still pushing, as if it had not gotten the message that this was not its season.",
+      },
+      {
+        kind: "para",
+        text: "It did not ask if it was time. It did not look at the ice on the lake. It grew toward something it could not see yet, through ground that had not softened, in a month that gave it nothing to work with.",
+      },
+      {
+        kind: "para",
+        text: "She started going outside in the mornings to check on it. She did not tell anyone. It was hers in a way she could not explain.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "April came. The ice broke — she heard it, the same exhale — and she went to the lake the way she always did, and stood at the edge, and felt it: the fullness, the waking.",
+      },
+      {
+        kind: "para",
+        text: "But this year it was different. This year she recognized it.",
+      },
+      {
+        kind: "para",
+        text: "She had felt this in February, kneeling in the snow at the base of the fence. She had felt it every morning she went outside to check on the green thing that grew without permission. The feeling had not been stored away waiting for the ice. The feeling had been available the whole time. She just had not known to look for it before April.",
+      },
+      { kind: "break" },
+      { kind: "italic", text: "The ice broke anyway." },
+      { kind: "italic", text: "But this year she was already there when it did." },
+    ],
+    authorNote:
+      "The aliveness that arrives with spring is real. But the capacity for it was never seasonal. It was only ever waiting for her to stop waiting. The February green that grows without permission is not a lesson — it's a reminder. The internal drive that needs an external cue to feel legitimate is still the drive. It just hasn't trusted itself yet.",
+  },
+  {
+    id: "the-elder-who-sat-at-the-creek",
+    title: "The Elder Who Sat at the Creek",
+    subtitle: "On the kind of teaching that happens without a lesson",
+    excerpt:
+      "Everyone thought she was resting. She was not resting. But she never corrected anyone about it.",
+    body: [
+      {
+        kind: "para",
+        text: "Every afternoon at the same time, the old woman walked down the slope behind the house and sat at the same place on the bank where the creek bent around the root of an old birch.",
+      },
+      {
+        kind: "para",
+        text: "She brought nothing with her. She did not fish. She did not read. She sat and she looked at the water.",
+      },
+      {
+        kind: "para",
+        text: "The children called it her resting time. They said it the way children say things they have learned from adults without understanding — with a careful respect that was mostly just caution. She heard them. She did not correct them.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The first child who came to sit beside her was the restless one — the one who couldn't be still anywhere else, who moved through every room like something was chasing her. She came and sat on the bank and lasted four minutes before she got up and left.",
+      },
+      {
+        kind: "para",
+        text: "She came back the next day. She lasted six minutes.",
+      },
+      {
+        kind: "para",
+        text: "The old woman said nothing. She watched the water.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "By the end of the week the restless one was lasting twenty minutes, and she had stopped fidgeting by the third day. She was watching the place where the current split around the root that reached into the water — the way it went smooth on one side and rippled on the other. She watched it the way you watch something you are trying to understand.",
+      },
+      {
+        kind: "para",
+        text: "Then the curious one came. Then two more. By midsummer there were often three or four children on the bank at any given afternoon, and the old woman among them, and no one speaking.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "They began to see things.",
+      },
+      {
+        kind: "para",
+        text: "The dragonfly that held still in moving air. The heron downstream who could stand in the current without shifting for twenty minutes at a time. The way the light hit the water differently in the hour before the sun went behind the tree line — everything going gold and then going quiet. The place on the far bank where the mink came every third day or so, so reliable you could set your afternoon by it.",
+      },
+      {
+        kind: "para",
+        text: "They did not talk about what they saw. They just saw it.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "One afternoon the curious one asked:",
+      },
+      { kind: "italic", text: "What are you looking for?" },
+      {
+        kind: "para",
+        text: "The old woman was quiet for a moment.",
+      },
+      { kind: "italic", text: "Nothing now, she said." },
+      {
+        kind: "para",
+        text: "The child thought about this for a while.",
+      },
+      { kind: "italic", text: "What were you looking for before?" },
+      { kind: "italic", text: "The same thing, the old woman said. Until I found it." },
+      {
+        kind: "para",
+        text: "The child did not understand. She went home thinking about it.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "A year later she was sitting at the same spot alone, a Saturday in March, the creek running high and cold with the melt. She had come without thinking about it, the way you go to a place your body knows.",
+      },
+      {
+        kind: "para",
+        text: "She sat and looked at the water.",
+      },
+      {
+        kind: "para",
+        text: "She was not looking for anything.",
+      },
+      { kind: "italic", text: "And then she understood." },
+      { kind: "break" },
+      {
+        kind: "italic",
+        text: "You look until you stop looking. And then you see.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The old woman had not taught any of them anything. She had just shown them how to stay.",
+      },
+    ],
+    authorNote:
+      "The deepest teaching is not a curriculum. It is a posture — someone at the water's edge who has learned to be still and does not hide it. The children came because something in them recognized something in her. She didn't call them. She didn't explain. She just kept showing up at the same place at the same time. That is sometimes all that is needed.",
+  },
+  {
+    id: "the-man-who-came-back-with-empty-hands",
+    title: "The Man Who Came Back with Empty Hands",
+    subtitle: "On the freedom that was never somewhere else",
+    excerpt:
+      "He left at nineteen, certain the life worth living was somewhere he hadn't been yet. He came back at twenty-six with none of what he went to find.",
+    body: [
+      {
+        kind: "para",
+        text: "He left at nineteen.",
+      },
+      {
+        kind: "para",
+        text: "He didn't leave angry. He left the way you walk away from something you love and still cannot stay — with one hand still almost reaching back. He told himself he was going to find something. He did not know the name of it yet, but he was sure it was not here.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "He worked construction in the city for two years. He was good at it. He made more money than he had ever seen and spent it on things that filled his hands for a week and then didn't.",
+      },
+      {
+        kind: "para",
+        text: "He moved further. He tried other cities and other kinds of work. He drove long stretches of highway alone, which he had expected to feel like freedom, and which felt like something else — not bad, just not what the word had promised.",
+      },
+      {
+        kind: "para",
+        text: "He made friends and lost track of them. He had nights that were exactly what he'd imagined, and mornings after those nights that were not. He tried to want what the people around him wanted. Sometimes he almost did.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "He came back in January, twenty-six years old, in a truck that needed work, with less money than he'd left with and nothing to show for the years except the fact of having spent them.",
+      },
+      {
+        kind: "para",
+        text: "He expected things to feel different when he pulled off the main road. They did not feel different. The bush came up on both sides the same way it always had. The sky was the same particular grey it got in January when the cloud sat low and the light went flat. The tracks in the driveway were his mother's, from the morning, already half filled in by the snow.",
+      },
+      {
+        kind: "para",
+        text: "He sat in the truck for a few minutes before he went in.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "His grandmother was at the kitchen table. She did not ask where he had been. She slid a bowl of soup across the table and went back to what she was doing.",
+      },
+      {
+        kind: "para",
+        text: "He sat down and ate. The kitchen smelled the same as it always had — something about the wood and the stove and the particular cold that came in under the door in January. He hadn't known he remembered that smell until it was in his nose.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "Later he walked down the slope to the creek behind the house. It was frozen solid, but he could hear it — moving water under the ice, the same low sound it made every winter. He had been hearing that sound his whole life and had not thought about it once in seven years.",
+      },
+      {
+        kind: "para",
+        text: "He stood on the bank for a long time.",
+      },
+      {
+        kind: "para",
+        text: "He had traveled looking for the feeling of being his own — of life belonging to him, of moving through the world on his terms. He had found it in pieces, in moments, and lost it again. He had chased it across a lot of geography without it getting any closer.",
+      },
+      {
+        kind: "para",
+        text: "Standing at the frozen creek in January, empty-handed, he could feel it. Not arriving. Already here. It had been here the whole time. He had just been somewhere else.",
+      },
+      { kind: "break" },
+      {
+        kind: "italic",
+        text: "The freedom he had been looking for was not a location.",
+      },
+      {
+        kind: "italic",
+        text: "It was a permission. And he had always had it.",
+      },
+      {
+        kind: "italic",
+        text: "He just hadn't known it was his to take until he had tried to find it somewhere else and failed.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "He went back inside. His grandmother was still at the table.",
+      },
+      { kind: "italic", text: "Welcome home, she said." },
+      {
+        kind: "para",
+        text: "He sat down.",
+      },
+      {
+        kind: "para",
+        text: "He didn't know yet what came next. That was all right. He was here now. The creek was still running under the ice. The kitchen still smelled like itself.",
+      },
+      { kind: "italic", text: "That was a beginning." },
+    ],
+    authorNote:
+      "Some people have to leave to find out that what they were looking for was not a place. The leaving is not a mistake — it is part of the knowing. You cannot understand that the freedom was always yours until you have spent real time looking for it somewhere else and come home with empty hands. The empty hands are not a failure. They are what you bring back when you are finally ready to receive what was here the whole time.",
+  },
 ];
 
 export function getTale(id: string | undefined): Tale | undefined {
