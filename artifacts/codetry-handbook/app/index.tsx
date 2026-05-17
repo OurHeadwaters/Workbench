@@ -364,6 +364,51 @@ export default function FrontPage() {
         </Pressable>
 
         <Pressable
+          onPress={() => router.push("/tales")}
+          style={({ pressed }) => [
+            styles.authorBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: c.foreground,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              {"Children\u2019s Tales"}
+            </Text>
+            <Text
+              style={{
+                color: c.mutedForeground,
+                fontFamily: SERIF_ITALIC,
+                fontSize: 13,
+                marginTop: 3,
+              }}
+            >
+              {"Bedtime stories, told sideways"}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: c.mutedForeground,
+              fontFamily: MONO,
+              fontSize: 18,
+            }}
+          >
+            {"→"}
+          </Text>
+        </Pressable>
+
+        <Pressable
           onPress={() => router.push("/author")}
           style={({ pressed }) => [
             styles.authorBtn,
