@@ -313,6 +313,12 @@ export const constellation: ConstellationSnapshot = {
       "channel": null,
       "tagline": "peer-to-peer community organization, co-founded by Derrick Broze and John Bush",
       "url": "https://freedomcells.org/"
+    },
+    {
+      "name": "Henry Cloud",
+      "channel": "Boundaries / Your Desired Future",
+      "tagline": "you cannot change what you do not own; you cannot build what you have not named",
+      "url": "https://www.drcloud.com/"
     }
   ],
   "zones": [
@@ -355,7 +361,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "What are the things that are true and unshakeable in your household right now?",
         "Where are you measuring a fish by how well it climbs a tree?",
-        "What would it look like to let someone grow brave in their own time instead of pushing the pace?"
+        "What would it look like to let someone grow brave in their own time instead of pushing the pace?",
+        "Where are you saying yes in the household when you mean no — and what is that costing the person you said it to?",
+        "What does the household you are building toward actually look like — not a fixed picture, a direction?"
       ]
     },
     {
@@ -479,7 +487,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "What in your financial life feels like restriction — and what would it feel like as flow instead?",
         "Where is your siphon larger than you chose it to be?",
-        "What would it mean to channel every drop on purpose this week?"
+        "What would it mean to channel every drop on purpose this week?",
+        "Where is your financial life organized around a hope instead of a decision?",
+        "What limit in your money does not yet have a name — and what happens when you cross it?"
       ]
     },
     {
@@ -516,7 +526,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "Where are you still using the language of a founder when you mean the work of a practitioner?",
         "What step have you been carrying over longest — and what would it mean to set it down instead of forward?",
-        "Who in the community did you listen to this week?"
+        "Who in the community did you listen to this week?",
+        "Of the deals or relationships in your practice right now: which will change, which could but won’t, which simply can’t — and is your time going to the right group?",
+        "What does the practitioner you are becoming look like in three years — not the work, the person doing it?"
       ]
     },
     {
@@ -582,7 +594,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "Where in your organization is bravery being asked for without a safety net underneath it?",
         "What would change if the hardest volunteer job was also the most supported one?",
-        "Who said yes to something difficult recently — and did they hear that it was noticed?"
+        "Who said yes to something difficult recently — and did they hear that it was noticed?",
+        "What has this community been saying yes to that costs something every time it does?",
+        "What does a thriving version of this commons look like in ten years — and does today’s work point there?"
       ]
     },
     {
@@ -627,7 +641,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
         "What do you call what you do? Not what the movement calls it — what you call it.",
-        "What would systematic look like for one part of your operation this season?"
+        "What would systematic look like for one part of your operation this season?",
+        "Which producers in this sector will change, which could but won’t, and which simply can’t — and where is your energy going?",
+        "What has to end in this sector for the regenerative arc to become possible?"
       ]
     },
     {
@@ -661,7 +677,9 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "What is sitting in the muck right now that might be worth cleaning off?",
         "How do you know when a day is a dam day versus a day that just got away from you?",
-        "What would it mean to trust the dam day instead of fighting it?"
+        "What would it mean to trust the dam day instead of fighting it?",
+        "What are you protecting this creative space from — and is that protection actually in place?",
+        "What is the specific future you are moving toward — not the vague better, the named thing?"
       ]
     }
   ],
@@ -677,7 +695,8 @@ export const constellation: ConstellationSnapshot = {
       "inlinePrompt": "What idea have you been walking past for months that might just be waiting for the right season?",
       "reflections": [
         "What is sitting in your seed bed right now that you have not yet named?",
-        "When did an idea that had no zone find its place — and what gave it the opening?"
+        "When did an idea that had no zone find its place — and what gave it the opening?",
+        "Which seed in this bed represents your desired future — and what would it take to give it a zone?"
       ]
     }
   ],
