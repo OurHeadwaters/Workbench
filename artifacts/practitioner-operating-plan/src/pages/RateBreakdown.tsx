@@ -40,12 +40,12 @@ export default function RateBreakdown() {
   const premium = billedRate - blendedEquivalent;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-paper text-text">
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
 
         <Link
           href={`${BASE}/`}
-          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors"
         >
           <ArrowLeft className="h-3 w-3" />
           Dashboard
@@ -65,7 +65,7 @@ export default function RateBreakdown() {
           >
             Why {fmt(billedRate)}/hr is a composite rate
           </h1>
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="text-sm text-muted leading-relaxed max-w-2xl">
             The {fmt(billedRate)}/hr lead rate is not a single-discipline hourly. At founder stage,
             one person carries the roles that a mature practice separates into distinct people.
             This breakdown shows what sits inside that number — and what is deliberately
@@ -76,7 +76,7 @@ export default function RateBreakdown() {
         {/* ── Role stack table ── */}
         <section className="space-y-3">
           <h2
-            className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
+            className="text-xs font-medium uppercase tracking-[0.2em] text-muted"
           >
             Roles filled under {fmt(billedRate)}/hr
           </h2>
@@ -113,14 +113,14 @@ export default function RateBreakdown() {
                     <p className="text-sm font-semibold" style={{ color: ACCENT_INK }}>
                       {row.role}
                     </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
+                    <p className="text-xs text-muted leading-relaxed mt-0.5">
                       {row.description}
                     </p>
                   </div>
                   <div className="text-sm font-mono tabular-nums text-right pt-0.5" style={{ color: ACCENT_INK }}>
                     {fmt(row.marketRate)}/hr
                   </div>
-                  <div className="text-sm font-mono tabular-nums text-right pt-0.5 text-muted-foreground">
+                  <div className="text-sm font-mono tabular-nums text-right pt-0.5 text-muted">
                     {fmtPct(row.scopeShare)}
                   </div>
                   <div
@@ -142,7 +142,7 @@ export default function RateBreakdown() {
                 <p className="text-xs font-medium uppercase tracking-[0.15em]" style={{ color: ACCENT_INK }}>
                   Market blended equivalent
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-xs text-muted mt-0.5">
                   What hiring each role separately would cost at scope-weighted rates.
                 </p>
               </div>
@@ -205,7 +205,7 @@ export default function RateBreakdown() {
         {/* ── What is externalized ── */}
         <section className="space-y-4">
           <h2
-            className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
+            className="text-xs font-medium uppercase tracking-[0.2em] text-muted"
           >
             What is deliberately externalized
           </h2>
@@ -213,13 +213,13 @@ export default function RateBreakdown() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Hired out */}
             <div
-              className="rounded-xl border bg-card p-5 space-y-3"
+              className="rounded-xl border bg-paper p-5 space-y-3"
               style={{ borderTopWidth: "3px", borderTopColor: ACCENT }}
             >
               <p className="text-xs font-medium uppercase tracking-[0.16em]" style={{ color: ACCENT }}>
                 Hired out
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted leading-relaxed">
                 These roles are not inside the {fmt(billedRate)}/hr — they are filled by separate people,
                 hired or contracted through community channels.
               </p>
@@ -229,7 +229,7 @@ export default function RateBreakdown() {
                     <p className="text-sm font-semibold" style={{ color: ACCENT_INK }}>
                       {item.role}
                     </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-muted leading-relaxed">
                       {item.note}
                     </p>
                   </li>
@@ -239,13 +239,13 @@ export default function RateBreakdown() {
 
             {/* Subcontracted */}
             <div
-              className="rounded-xl border bg-card p-5 space-y-3"
+              className="rounded-xl border bg-paper p-5 space-y-3"
               style={{ borderTopWidth: "3px", borderTopColor: RUST }}
             >
               <p className="text-xs font-medium uppercase tracking-[0.16em]" style={{ color: RUST }}>
                 Subcontracted
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted leading-relaxed">
                 These are billed separately at their own rates — not buried inside {fmt(billedRate)}/hr.
                 Costs are disclosed in each phase budget.
               </p>
@@ -255,7 +255,7 @@ export default function RateBreakdown() {
                     <p className="text-sm font-semibold" style={{ color: ACCENT_INK }}>
                       {item.role}
                     </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-muted leading-relaxed">
                       {item.note}
                     </p>
                   </li>
@@ -267,10 +267,10 @@ export default function RateBreakdown() {
 
         {/* ── Footer note ── */}
         <div
-          className="rounded-lg border px-4 py-3 text-xs text-muted-foreground leading-relaxed"
-          style={{ borderColor: "hsl(var(--card-border))" }}
+          className="rounded-lg border px-4 py-3 text-xs text-muted leading-relaxed"
+          style={{ borderColor: ACCENT + "30" }}
         >
-          <span className="font-medium text-foreground">Model maturity milestone: </span>
+          <span className="font-medium text-text">Model maturity milestone: </span>
           The {fmt(billedRate)}/hr rate reflects founder-stage compression of roles.
           The model's maturity milestone is when those roles begin to separate into distinct people —
           a developer on retainer, a part-time bookkeeper, an IT contractor — and the lead rate
