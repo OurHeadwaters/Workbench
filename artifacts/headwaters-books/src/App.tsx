@@ -32,6 +32,10 @@ import HHTasks from "@/pages/HHTasks";
 import HHTaskNew from "@/pages/HHTaskNew";
 import HHRoster from "@/pages/HHRoster";
 import HHEarnings from "@/pages/HHEarnings";
+import HHEnvelopes from "@/pages/HHEnvelopes";
+import HHMerchants from "@/pages/HHMerchants";
+import HHPartnershipPortal from "@/pages/HHPartnershipPortal";
+import HHEnvelopeHistory from "@/pages/HHEnvelopeHistory";
 import Layout from "@/components/Layout";
 import EmbedOpenRecords from "@/embed/OpenRecords";
 import EmbedDailyClose from "@/embed/DailyClose";
@@ -188,6 +192,10 @@ function Router() {
       <ProtectedRoute path="/helping-hands/tasks" component={HHTasks} />
       <ProtectedRoute path="/helping-hands/roster" component={HHRoster} />
       <ProtectedRoute path="/helping-hands/earnings" component={HHEarnings} />
+      <ProtectedRoute path="/helping-hands/envelopes/:id/history" component={HHEnvelopeHistory} />
+      <ProtectedRoute path="/helping-hands/envelopes" component={HHEnvelopes} />
+      <ProtectedRoute path="/helping-hands/merchants" component={HHMerchants} />
+      <ProtectedRoute path="/helping-hands/partnership" component={HHPartnershipPortal} />
       <Route component={NotFound} />
     </Switch>
   );

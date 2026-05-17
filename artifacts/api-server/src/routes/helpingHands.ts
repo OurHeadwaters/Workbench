@@ -7,6 +7,9 @@ import {
   hhTasksTable,
   hhEarningsTable,
   hhBonusesTable,
+  hhMerchantsTable,
+  hhEnvelopesTable,
+  hhEnvelopeTransactionsTable,
 } from "@workspace/db";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
@@ -988,6 +991,576 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
       totalEarnedToken: m.totalEarnedToken ?? "0",
       totalEarnedXrp: m.totalEarnedXrp ?? "0",
     })),
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// MERCHANTS
+// ══════════════════════════════════════════════════════════════
+
+function serializeMerchant(row: typeof hhMerchantsTable.$inferSelect) {
+  return {
+    id: row.id,
+    bandId: row.bandId,
+    name: row.name,
+    description: row.description,
+    category: row.category,
+    merchantWallet: row.merchantWallet,
+    isActive: row.isActive,
+    createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : String(row.createdAt),
+  };
+}
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/merchants
+// ?includeInactive=true — admin only; returns all merchants including inactive
+// Default (no flag) returns active merchants only — suitable for member spend flows
+// ──────────────────────────────────────────────
+router.get("/merchants", requireAuth(), async (req: Request, res: Response) => {
+  const band = await getOrCreateDefaultBand();
+  const includeInactive = req.query.includeInactive === "true";
+  const bkUser = req.bookkeeperUser!;
+  const isAdmin = ["owner", "ops_manager"].includes(bkUser.role);
+
+  // Only admins can request inactive merchants
+  const showAll = includeInactive && isAdmin;
+
+  const conditions = showAll
+    ? [eq(hhMerchantsTable.bandId, band.id)]
+    : [eq(hhMerchantsTable.bandId, band.id), eq(hhMerchantsTable.isActive, true)];
+
+  const rows = await db
+    .select()
+    .from(hhMerchantsTable)
+    .where(and(...conditions))
+    .orderBy(hhMerchantsTable.name);
+  res.json(rows.map(serializeMerchant));
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/merchants  (admin)
+// ──────────────────────────────────────────────
+const CreateMerchantSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional().default(""),
+  category: z.enum(["grocery", "fuel", "pharmacy", "school", "general"]).optional().default("general"),
+  merchantWallet: z.string().min(1),
+});
+
+router.post("/merchants", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+
+  const parsed = CreateMerchantSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const inserted = await db
+    .insert(hhMerchantsTable)
+    .values({ bandId: band.id, ...parsed.data })
+    .returning();
+  res.status(201).json(serializeMerchant(inserted[0]));
+});
+
+// ──────────────────────────────────────────────
+// PATCH /helping-hands/merchants/:id  (admin)
+// ──────────────────────────────────────────────
+const UpdateMerchantSchema = z.object({
+  name: z.string().min(1).optional(),
+  description: z.string().optional(),
+  category: z.enum(["grocery", "fuel", "pharmacy", "school", "general"]).optional(),
+  merchantWallet: z.string().min(1).optional(),
+  isActive: z.boolean().optional(),
+});
+
+router.patch("/merchants/:id", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+
+  const parsed = UpdateMerchantSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid" });
+    return;
+  }
+
+  const merchantId = param(req.params.id);
+  const band = await getOrCreateDefaultBand();
+  const updated = await db
+    .update(hhMerchantsTable)
+    .set({ ...parsed.data, updatedAt: new Date() })
+    .where(and(eq(hhMerchantsTable.id, merchantId), eq(hhMerchantsTable.bandId, band.id)))
+    .returning();
+
+  if (!updated[0]) {
+    res.status(404).json({ error: "Merchant not found" });
+    return;
+  }
+  res.json(serializeMerchant(updated[0]));
+});
+
+// ══════════════════════════════════════════════════════════════
+// ENVELOPES
+// ══════════════════════════════════════════════════════════════
+
+function currentMonth(): string {
+  return new Date().toISOString().slice(0, 7);
+}
+
+function serializeEnvelope(row: typeof hhEnvelopesTable.$inferSelect) {
+  return {
+    id: row.id,
+    memberId: row.memberId,
+    bandId: row.bandId,
+    label: row.label,
+    icon: row.icon,
+    currency: row.currency,
+    monthlyBudget: row.monthlyBudget ?? "0",
+    spentThisMonth: row.spentMonth === currentMonth() ? (row.spentThisMonth ?? "0") : "0",
+    createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : String(row.createdAt),
+  };
+}
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/my/envelopes
+// ──────────────────────────────────────────────
+router.get("/my/envelopes", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const rows = await db
+    .select()
+    .from(hhEnvelopesTable)
+    .where(and(eq(hhEnvelopesTable.memberId, ctx.member.id), eq(hhEnvelopesTable.bandId, ctx.band.id)))
+    .orderBy(hhEnvelopesTable.label);
+
+  res.json(rows.map(serializeEnvelope));
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/my/envelopes
+// ──────────────────────────────────────────────
+const decimalString = z
+  .string()
+  .min(1)
+  .refine((v) => /^\d+(\.\d+)?$/.test(v.trim()) && parseFloat(v) >= 0, {
+    message: "Must be a non-negative number",
+  });
+
+const positiveDecimalString = decimalString.refine((v) => parseFloat(v) > 0, {
+  message: "Must be a positive number greater than zero",
+});
+
+const CreateEnvelopeSchema = z.object({
+  label: z.string().min(1),
+  icon: z.string().optional().default("wallet"),
+  currency: z.enum(["token", "xrp"]).optional().default("token"),
+  monthlyBudget: decimalString,
+});
+
+router.post("/my/envelopes", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const parsed = CreateEnvelopeSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid" });
+    return;
+  }
+
+  const inserted = await db
+    .insert(hhEnvelopesTable)
+    .values({
+      memberId: ctx.member.id,
+      bandId: ctx.band.id,
+      label: parsed.data.label,
+      icon: parsed.data.icon,
+      currency: parsed.data.currency,
+      monthlyBudget: parsed.data.monthlyBudget,
+      spentMonth: currentMonth(),
+    })
+    .returning();
+
+  res.status(201).json(serializeEnvelope(inserted[0]));
+});
+
+// ──────────────────────────────────────────────
+// PATCH /helping-hands/my/envelopes/:id
+// ──────────────────────────────────────────────
+const UpdateEnvelopeSchema = z.object({
+  label: z.string().min(1).optional(),
+  icon: z.string().optional(),
+  monthlyBudget: z.string().optional(),
+});
+
+router.patch("/my/envelopes/:id", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const parsed = UpdateEnvelopeSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid" });
+    return;
+  }
+
+  const envelopeId = param(req.params.id);
+  const updated = await db
+    .update(hhEnvelopesTable)
+    .set({ ...parsed.data, updatedAt: new Date() })
+    .where(
+      and(
+        eq(hhEnvelopesTable.id, envelopeId),
+        eq(hhEnvelopesTable.memberId, ctx.member.id),
+      ),
+    )
+    .returning();
+
+  if (!updated[0]) { res.status(404).json({ error: "Envelope not found" }); return; }
+  res.json(serializeEnvelope(updated[0]));
+});
+
+// ──────────────────────────────────────────────
+// DELETE /helping-hands/my/envelopes/:id
+// ──────────────────────────────────────────────
+router.delete("/my/envelopes/:id", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const envelopeId = param(req.params.id);
+  const deleted = await db
+    .delete(hhEnvelopesTable)
+    .where(
+      and(
+        eq(hhEnvelopesTable.id, envelopeId),
+        eq(hhEnvelopesTable.memberId, ctx.member.id),
+      ),
+    )
+    .returning();
+
+  if (!deleted[0]) { res.status(404).json({ error: "Envelope not found" }); return; }
+  res.json({ ok: true });
+});
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/my/envelopes/:id/spend
+// Simulates an XRPL payment from the member's wallet to a merchant wallet.
+// ──────────────────────────────────────────────
+const SpendSchema = z.object({
+  merchantId: z.string().uuid(),
+  amount: positiveDecimalString,
+  note: z.string().optional().default(""),
+});
+
+router.post("/my/envelopes/:id/spend", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const parsed = SpendSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid" });
+    return;
+  }
+
+  const envelopeId = param(req.params.id);
+  const spendAmt = parseFloat(parsed.data.amount);
+
+  // Verify merchant exists and is active before entering the transaction
+  const [merchant] = await db
+    .select()
+    .from(hhMerchantsTable)
+    .where(
+      and(
+        eq(hhMerchantsTable.id, parsed.data.merchantId),
+        eq(hhMerchantsTable.bandId, ctx.band.id),
+        eq(hhMerchantsTable.isActive, true),
+      ),
+    )
+    .limit(1);
+
+  if (!merchant) { res.status(404).json({ error: "Merchant not found" }); return; }
+
+  // ── Atomic spend block ──
+  // Re-fetch the envelope with FOR UPDATE inside a transaction to prevent
+  // concurrent overdrafts. All checks and writes happen within the same tx.
+  type SpendResult =
+    | { ok: true; txn: typeof hhEnvelopeTransactionsTable.$inferSelect }
+    | { ok: false; status: number; error: string };
+
+  const result = await db.transaction(async (tx): Promise<SpendResult> => {
+    const [envelope] = await tx
+      .select()
+      .from(hhEnvelopesTable)
+      .where(
+        and(
+          eq(hhEnvelopesTable.id, envelopeId),
+          eq(hhEnvelopesTable.memberId, ctx.member.id),
+        ),
+      )
+      .for("update")
+      .limit(1);
+
+    if (!envelope) return { ok: false, status: 404, error: "Envelope not found" };
+
+    const month = currentMonth();
+    const prevSpent = envelope.spentMonth === month ? parseFloat(envelope.spentThisMonth ?? "0") : 0;
+
+    // ── Earned-balance check ──
+    const currency = envelope.currency;
+    const totalEarned =
+      currency === "xrp"
+        ? parseFloat(ctx.member.totalEarnedXrp ?? "0")
+        : parseFloat(ctx.member.totalEarnedToken ?? "0");
+
+    const [spentAggregate] = await tx
+      .select({ total: sql<string>`coalesce(sum(${hhEnvelopeTransactionsTable.amount}), '0')` })
+      .from(hhEnvelopeTransactionsTable)
+      .where(
+        and(
+          eq(hhEnvelopeTransactionsTable.memberId, ctx.member.id),
+          eq(hhEnvelopeTransactionsTable.currency, currency),
+        ),
+      );
+
+    const totalAlreadySpent = parseFloat(spentAggregate?.total ?? "0");
+    const available = totalEarned - totalAlreadySpent;
+
+    if (spendAmt > available) {
+      return {
+        ok: false,
+        status: 409,
+        error: `Insufficient balance. You have ${available.toFixed(currency === "xrp" ? 6 : 2)} ${currency === "xrp" ? "XRP" : "tokens"} available to spend.`,
+      };
+    }
+
+    const budget = parseFloat(envelope.monthlyBudget ?? "0");
+    if (budget > 0 && prevSpent + spendAmt > budget * 1.2) {
+      return { ok: false, status: 409, error: "Spend would exceed 120 % of this envelope's monthly budget" };
+    }
+
+    await tx
+      .update(hhEnvelopesTable)
+      .set({
+        spentThisMonth: String((prevSpent + spendAmt).toFixed(6)),
+        spentMonth: month,
+        updatedAt: new Date(),
+      })
+      .where(eq(hhEnvelopesTable.id, envelopeId));
+
+    // V1: XRPL payment is simulated
+    const mockTxHash = `SIM_SPEND_${Date.now().toString(16).toUpperCase()}`;
+
+    const [txnRow] = await tx
+      .insert(hhEnvelopeTransactionsTable)
+      .values({
+        envelopeId: envelope.id,
+        memberId: ctx.member.id,
+        merchantId: merchant.id,
+        bandId: ctx.band.id,
+        amount: parsed.data.amount,
+        currency,
+        note: parsed.data.note,
+        xrplTxHash: mockTxHash,
+      })
+      .returning();
+
+    return { ok: true, txn: txnRow };
+  });
+
+  if (!result.ok) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  const { txn } = result;
+  res.status(201).json({
+    id: txn.id,
+    envelopeId: txn.envelopeId,
+    merchantId: txn.merchantId,
+    merchantName: merchant.name,
+    merchantWallet: merchant.merchantWallet,
+    amount: txn.amount,
+    currency: txn.currency,
+    note: txn.note,
+    xrplTxHash: txn.xrplTxHash,
+    spentAt: txn.spentAt instanceof Date ? txn.spentAt.toISOString() : String(txn.spentAt),
+  });
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/my/envelopes/:id/transactions
+// ──────────────────────────────────────────────
+router.get("/my/envelopes/:id/transactions", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const envelopeId = param(req.params.id);
+
+  const [envelope] = await db
+    .select()
+    .from(hhEnvelopesTable)
+    .where(
+      and(
+        eq(hhEnvelopesTable.id, envelopeId),
+        eq(hhEnvelopesTable.memberId, ctx.member.id),
+      ),
+    )
+    .limit(1);
+
+  if (!envelope) { res.status(404).json({ error: "Envelope not found" }); return; }
+
+  const rows = await db
+    .select({
+      txn: hhEnvelopeTransactionsTable,
+      merchantName: hhMerchantsTable.name,
+    })
+    .from(hhEnvelopeTransactionsTable)
+    .leftJoin(hhMerchantsTable, eq(hhEnvelopeTransactionsTable.merchantId, hhMerchantsTable.id))
+    .where(eq(hhEnvelopeTransactionsTable.envelopeId, envelopeId))
+    .orderBy(desc(hhEnvelopeTransactionsTable.spentAt))
+    .limit(50);
+
+  res.json(
+    rows.map((r) => ({
+      id: r.txn.id,
+      envelopeId: r.txn.envelopeId,
+      merchantId: r.txn.merchantId,
+      merchantName: r.merchantName ?? "Unknown",
+      amount: r.txn.amount ?? "0",
+      currency: r.txn.currency,
+      note: r.txn.note,
+      xrplTxHash: r.txn.xrplTxHash ?? null,
+      spentAt: r.txn.spentAt instanceof Date ? r.txn.spentAt.toISOString() : String(r.txn.spentAt),
+    })),
+  );
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/my/health
+// Returns a simple financial health score (0–100) based on savings rate
+// and envelope discipline. No jargon — just three plain signals.
+// ──────────────────────────────────────────────
+router.get("/my/health", requireAuth(), async (req: Request, res: Response) => {
+  const ctx = await loadHhMember(req);
+  if (!ctx) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  const month = currentMonth();
+
+  const envelopes = await db
+    .select()
+    .from(hhEnvelopesTable)
+    .where(
+      and(
+        eq(hhEnvelopesTable.memberId, ctx.member.id),
+        eq(hhEnvelopesTable.bandId, ctx.band.id),
+      ),
+    );
+
+  const totalBudget = envelopes.reduce((s, e) => s + parseFloat(e.monthlyBudget ?? "0"), 0);
+  const totalSpent = envelopes.reduce(
+    (s, e) => s + (e.spentMonth === month ? parseFloat(e.spentThisMonth ?? "0") : 0),
+    0,
+  );
+
+  const savingsEnv = envelopes.find((e) => e.label.toLowerCase().includes("saving"));
+  const savingsBudget = savingsEnv ? parseFloat(savingsEnv.monthlyBudget ?? "0") : 0;
+  const savingsRate = totalBudget > 0 ? savingsBudget / totalBudget : 0;
+
+  // Envelope discipline: what fraction of envelopes are on or under budget
+  const month_envelopes = envelopes.filter((e) => e.spentMonth === month && parseFloat(e.monthlyBudget ?? "0") > 0);
+  const onBudget = month_envelopes.filter(
+    (e) => parseFloat(e.spentThisMonth ?? "0") <= parseFloat(e.monthlyBudget ?? "0"),
+  ).length;
+  const discipline = month_envelopes.length > 0 ? onBudget / month_envelopes.length : 1;
+
+  // Has at least one savings envelope
+  const hasSavings = envelopes.some((e) => e.label.toLowerCase().includes("saving"));
+
+  // Score: savings rate (40 pts max, target 10%) + discipline (40 pts) + has savings envelope (20 pts)
+  const savingsScore = Math.min(savingsRate / 0.1, 1) * 40;
+  const disciplineScore = discipline * 40;
+  const savingsBonus = hasSavings ? 20 : 0;
+  const score = Math.round(savingsScore + disciplineScore + savingsBonus);
+
+  let tier: string;
+  let message: string;
+  if (score >= 80) { tier = "strong"; message = "Your household budget is looking healthy. Keep it up."; }
+  else if (score >= 55) { tier = "steady"; message = "You're on a good track. A small savings envelope could push things further."; }
+  else if (score >= 30) { tier = "building"; message = "A few envelopes are running over — try trimming one category to free up room."; }
+  else { tier = "early"; message = "Set a monthly budget in each envelope and you'll see this score climb fast."; }
+
+  res.json({
+    score,
+    tier,
+    message,
+    envelopeCount: envelopes.length,
+    totalBudget: totalBudget.toFixed(2),
+    totalSpent: totalSpent.toFixed(2),
+    savingsRate: (savingsRate * 100).toFixed(1),
+    discipline: (discipline * 100).toFixed(0),
+  });
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/partnership-portal
+// Stub: aggregate anonymised savings/reliability data for lender review.
+// Returns member count and aggregate metrics only — no PII.
+// Access requires admin or a future "partner" role.
+// ──────────────────────────────────────────────
+router.get("/partnership-portal", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admin or partner access required" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const month = currentMonth();
+
+  const members = await db
+    .select()
+    .from(hhMembersTable)
+    .where(and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.isActive, true)));
+
+  const envelopes = await db
+    .select()
+    .from(hhEnvelopesTable)
+    .where(eq(hhEnvelopesTable.bandId, band.id));
+
+  const savingsEnvelopes = envelopes.filter((e) => e.label.toLowerCase().includes("saving"));
+  const avgSavingsBudget =
+    savingsEnvelopes.length > 0
+      ? (savingsEnvelopes.reduce((s, e) => s + parseFloat(e.monthlyBudget ?? "0"), 0) / savingsEnvelopes.length).toFixed(2)
+      : "0";
+
+  const onBudgetThisMonth = envelopes.filter(
+    (e) =>
+      e.spentMonth === month &&
+      parseFloat(e.monthlyBudget ?? "0") > 0 &&
+      parseFloat(e.spentThisMonth ?? "0") <= parseFloat(e.monthlyBudget ?? "0"),
+  ).length;
+  const totalWithBudget = envelopes.filter((e) => parseFloat(e.monthlyBudget ?? "0") > 0).length;
+  const envelopeDisciplinePct =
+    totalWithBudget > 0 ? Math.round((onBudgetThisMonth / totalWithBudget) * 100) : 0;
+
+  const membersWithSavings = new Set(savingsEnvelopes.map((e) => e.memberId)).size;
+
+  res.json({
+    bandName: band.name,
+    month,
+    activeMembers: members.length,
+    membersWithSavingsEnvelope: membersWithSavings,
+    savingsAdoptionPct: members.length > 0 ? Math.round((membersWithSavings / members.length) * 100) : 0,
+    avgMonthlyTokenSavingsBudget: avgSavingsBudget,
+    envelopeDisciplinePct,
+    note: "V1 stub — data is aggregate only; no individual PII is exposed. Full consent-gated member profiles planned for V2.",
   });
 });
 

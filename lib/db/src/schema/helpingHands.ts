@@ -122,3 +122,78 @@ export const hhBonusesTable = pgTable(
     bandIdx: index("hh_bonuses_band_id_idx").on(t.bandId),
   }),
 );
+
+// ---------- hh_merchants ----------
+// Reserve stores and service providers that accept community tokens at POS.
+// Registered by a band admin; merchantWallet is the XRPL address payments flow to.
+export const hhMerchantsTable = pgTable(
+  "hh_merchants",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    // category: grocery | fuel | pharmacy | school | general
+    category: text("category").notNull().default("general"),
+    merchantWallet: text("merchant_wallet").notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    bandIdx: index("hh_merchants_band_id_idx").on(t.bandId),
+  }),
+);
+
+// ---------- hh_envelopes ----------
+// Named budget buckets a member creates from their token/XRP balance.
+// Each envelope has a monthly budget and a running spent-this-month counter.
+export const hhEnvelopesTable = pgTable(
+  "hh_envelopes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    memberId: uuid("member_id").notNull().references(() => hhMembersTable.id),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    // label: free-form name (e.g. "Groceries", "Fuel", "School supplies")
+    label: text("label").notNull(),
+    // icon hint stored as a text key (e.g. "shopping-cart", "fuel", "book")
+    icon: text("icon").notNull().default("wallet"),
+    currency: text("currency").notNull().default("token"),
+    // monthly budget target set by the member
+    monthlyBudget: numeric("monthly_budget", { precision: 18, scale: 6 }).notNull().default("0"),
+    // running total spent in the current calendar month — reset on the 1st
+    spentThisMonth: numeric("spent_this_month", { precision: 18, scale: 6 }).notNull().default("0"),
+    // month this spent counter belongs to, e.g. "2026-05"
+    spentMonth: text("spent_month").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    memberIdx: index("hh_envelopes_member_id_idx").on(t.memberId),
+    bandIdx: index("hh_envelopes_band_id_idx").on(t.bandId),
+  }),
+);
+
+// ---------- hh_envelope_transactions ----------
+// Immutable spend log — one row per checkout event.
+// V1: XRPL payment is simulated (same pattern as task escrow).
+export const hhEnvelopeTransactionsTable = pgTable(
+  "hh_envelope_transactions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    envelopeId: uuid("envelope_id").notNull().references(() => hhEnvelopesTable.id),
+    memberId: uuid("member_id").notNull().references(() => hhMembersTable.id),
+    merchantId: uuid("merchant_id").notNull().references(() => hhMerchantsTable.id),
+    bandId: uuid("band_id").notNull().references(() => hhBandsTable.id),
+    amount: numeric("amount", { precision: 18, scale: 6 }).notNull(),
+    currency: text("currency").notNull(),
+    note: text("note").notNull().default(""),
+    xrplTxHash: text("xrpl_tx_hash"),
+    spentAt: timestamp("spent_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    envelopeIdx: index("hh_env_txn_envelope_id_idx").on(t.envelopeId),
+    memberIdx: index("hh_env_txn_member_id_idx").on(t.memberId),
+    bandIdx: index("hh_env_txn_band_id_idx").on(t.bandId),
+  }),
+);

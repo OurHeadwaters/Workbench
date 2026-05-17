@@ -1,7 +1,9 @@
 import { useGetHhDashboard, useConfirmHhTask, useExpireOverdueHhTasks, getGetHhDashboardQueryKey, getGetHhTasksQueryKey, getGetHhMembersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { customFetch } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { CheckCircle2, Clock, Users, AlertTriangle, Loader2, Coins, RefreshCw, Star, Trophy } from "lucide-react";
+import { CheckCircle2, Clock, Users, AlertTriangle, Loader2, Coins, RefreshCw, Star, Trophy, Wallet, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -125,6 +127,16 @@ export default function HHDashboard() {
             : <RefreshCw className="w-4 h-4 mr-1" />}
           Run missed-shift check
         </Button>
+        <Link href="/helping-hands/envelopes">
+          <Button variant="outline">
+            <Wallet className="w-4 h-4 mr-1" /> My envelopes
+          </Button>
+        </Link>
+        <Link href="/helping-hands/merchants">
+          <Button variant="outline">
+            <TrendingUp className="w-4 h-4 mr-1" /> Stores
+          </Button>
+        </Link>
       </div>
 
       {/* Top contributors — shown first, 10× more prominent than the flags section */}
@@ -162,6 +174,9 @@ export default function HHDashboard() {
           </div>
         </div>
       )}
+
+      {/* Envelope summary */}
+      <EnvelopeSummary />
 
       {/* Tasks needing confirmation */}
       {d.pendingConfirmation > 0 && (
@@ -220,6 +235,84 @@ export default function HHDashboard() {
         <strong className="text-foreground">How payment works:</strong> When you post a task, the pay is locked in a secure hold (XRPL escrow).
         When you confirm the task is done, the payment goes directly to the member's wallet — instantly and automatically.
         No bank transfers, no waiting.
+      </div>
+    </div>
+  );
+}
+
+// ── Envelope summary widget ─────────────────────────────────────────
+interface Envelope {
+  id: string;
+  label: string;
+  icon: string;
+  monthlyBudget: string;
+  spentThisMonth: string;
+}
+
+interface HealthData {
+  score: number;
+  tier: string;
+  message: string;
+}
+
+function EnvelopeSummary() {
+  const { data: envelopes } = useQuery<Envelope[]>({
+    queryKey: ["hh-envelopes"],
+    queryFn: () => customFetch<Envelope[]>("/helping-hands/my/envelopes", {}),
+  });
+  const { data: health } = useQuery<HealthData>({
+    queryKey: ["hh-health"],
+    queryFn: () => customFetch<HealthData>("/helping-hands/my/health", {}),
+  });
+
+  if (!envelopes || envelopes.length === 0) return null;
+
+  const tierColor = (tier: string) => {
+    switch (tier) {
+      case "strong": return "text-emerald-700 bg-emerald-50 border-emerald-200";
+      case "steady": return "text-blue-700 bg-blue-50 border-blue-200";
+      case "building": return "text-amber-700 bg-amber-50 border-amber-200";
+      default: return "text-slate-700 bg-slate-50 border-slate-200";
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-lg font-semibold text-foreground">My envelope budgets</h2>
+        <Link href="/helping-hands/envelopes">
+          <button className="text-xs text-muted-foreground hover:text-foreground">
+            Manage &rarr;
+          </button>
+        </Link>
+      </div>
+
+      {health && (
+        <div className={`rounded-lg border px-4 py-3 mb-3 text-sm flex items-center justify-between gap-3 ${tierColor(health.tier)}`}>
+          <span>{health.message}</span>
+          <span className="font-bold text-base shrink-0">{health.score}<span className="font-normal text-xs">/100</span></span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {envelopes.slice(0, 4).map((env) => {
+          const budget = parseFloat(env.monthlyBudget);
+          const spent = parseFloat(env.spentThisMonth);
+          const p = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
+          return (
+            <div key={env.id} className="bg-card border border-border rounded-lg p-3">
+              <p className="text-xs font-medium text-foreground truncate">{env.label}</p>
+              <p className="text-sm font-bold text-foreground mt-1">{spent.toFixed(2)}</p>
+              <p className="text-[10px] text-muted-foreground">of {budget.toFixed(2)}</p>
+              <div className="h-1.5 bg-muted rounded-full mt-2 overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${p >= 90 ? "bg-red-500" : p >= 70 ? "bg-amber-500" : "bg-emerald-500"}`}
+                  style={{ width: `${p}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

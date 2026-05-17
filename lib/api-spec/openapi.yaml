@@ -1716,6 +1716,216 @@ paths:
               schema:
                 $ref: '#/components/schemas/HhDashboard'
 
+  /helping-hands/merchants:
+    get:
+      operationId: getHhMerchants
+      tags: [helping-hands]
+      summary: List active participating merchants for the band
+      responses:
+        '200':
+          description: Merchant list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhMerchant'
+    post:
+      operationId: createHhMerchant
+      tags: [helping-hands]
+      summary: Register a new reserve store as a participating merchant (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHhMerchantRequest'
+      responses:
+        '201':
+          description: Merchant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhMerchant'
+
+  /helping-hands/merchants/{id}:
+    patch:
+      operationId: updateHhMerchant
+      tags: [helping-hands]
+      summary: Update a merchant's details or active status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHhMerchantRequest'
+      responses:
+        '200':
+          description: Updated merchant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhMerchant'
+
+  /helping-hands/my/envelopes:
+    get:
+      operationId: getMyHhEnvelopes
+      tags: [helping-hands]
+      summary: List the signed-in member's budget envelopes
+      responses:
+        '200':
+          description: Envelope list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhEnvelope'
+    post:
+      operationId: createMyHhEnvelope
+      tags: [helping-hands]
+      summary: Create a new budget envelope
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHhEnvelopeRequest'
+      responses:
+        '201':
+          description: Envelope created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhEnvelope'
+
+  /helping-hands/my/envelopes/{id}:
+    patch:
+      operationId: updateMyHhEnvelope
+      tags: [helping-hands]
+      summary: Update an envelope's label, icon, or monthly budget
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHhEnvelopeRequest'
+      responses:
+        '200':
+          description: Updated envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhEnvelope'
+    delete:
+      operationId: deleteMyHhEnvelope
+      tags: [helping-hands]
+      summary: Delete an envelope
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+
+  /helping-hands/my/envelopes/{id}/spend:
+    post:
+      operationId: spendFromHhEnvelope
+      tags: [helping-hands]
+      summary: Spend from an envelope at a participating merchant (XRPL payment)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HhEnvelopeSpendRequest'
+      responses:
+        '201':
+          description: Payment recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhEnvelopeTransaction'
+
+  /helping-hands/my/envelopes/{id}/transactions:
+    get:
+      operationId: getHhEnvelopeTransactions
+      tags: [helping-hands]
+      summary: List transactions for an envelope
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhEnvelopeTransaction'
+
+  /helping-hands/my/health:
+    get:
+      operationId: getMyHhHealth
+      tags: [helping-hands]
+      summary: Financial health score for the signed-in member
+      responses:
+        '200':
+          description: Health score and guidance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhHealthScore'
+
+  /helping-hands/partnership-portal:
+    get:
+      operationId: getHhPartnershipPortal
+      tags: [helping-hands]
+      summary: Anonymised aggregate savings and reliability data for partner organisations (admin)
+      responses:
+        '200':
+          description: Partnership portal data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhPartnershipPortal'
+
 components:
   schemas:
     HealthStatus:
@@ -3051,4 +3261,113 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HhTopContributor'
+
+    HhMerchant:
+      type: object
+      required: [id, bandId, name, description, category, merchantWallet, isActive, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        bandId: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        category: { type: string, enum: [grocery, fuel, pharmacy, school, general] }
+        merchantWallet: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    CreateHhMerchantRequest:
+      type: object
+      required: [name, merchantWallet]
+      properties:
+        name: { type: string, minLength: 1 }
+        description: { type: string }
+        category: { type: string, enum: [grocery, fuel, pharmacy, school, general] }
+        merchantWallet: { type: string, minLength: 1 }
+
+    UpdateHhMerchantRequest:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        description: { type: string }
+        category: { type: string, enum: [grocery, fuel, pharmacy, school, general] }
+        merchantWallet: { type: string, minLength: 1 }
+        isActive: { type: boolean }
+
+    HhEnvelope:
+      type: object
+      required: [id, memberId, bandId, label, icon, currency, monthlyBudget, spentThisMonth, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        memberId: { type: string, format: uuid }
+        bandId: { type: string, format: uuid }
+        label: { type: string }
+        icon: { type: string }
+        currency: { type: string, enum: [token, xrp] }
+        monthlyBudget: { type: string }
+        spentThisMonth: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    CreateHhEnvelopeRequest:
+      type: object
+      required: [label, monthlyBudget]
+      properties:
+        label: { type: string, minLength: 1 }
+        icon: { type: string }
+        currency: { type: string, enum: [token, xrp] }
+        monthlyBudget: { type: string }
+
+    UpdateHhEnvelopeRequest:
+      type: object
+      properties:
+        label: { type: string, minLength: 1 }
+        icon: { type: string }
+        monthlyBudget: { type: string }
+
+    HhEnvelopeSpendRequest:
+      type: object
+      required: [merchantId, amount]
+      properties:
+        merchantId: { type: string, format: uuid }
+        amount: { type: string }
+        note: { type: string }
+
+    HhEnvelopeTransaction:
+      type: object
+      required: [id, envelopeId, merchantId, merchantName, amount, currency, spentAt]
+      properties:
+        id: { type: string, format: uuid }
+        envelopeId: { type: string, format: uuid }
+        merchantId: { type: string, format: uuid }
+        merchantName: { type: string }
+        amount: { type: string }
+        currency: { type: string }
+        note: { type: string }
+        xrplTxHash: { type: string, nullable: true }
+        spentAt: { type: string, format: date-time }
+
+    HhHealthScore:
+      type: object
+      required: [score, tier, message, envelopeCount, totalBudget, totalSpent, savingsRate, discipline]
+      properties:
+        score: { type: integer }
+        tier: { type: string, enum: [strong, steady, building, early] }
+        message: { type: string }
+        envelopeCount: { type: integer }
+        totalBudget: { type: string }
+        totalSpent: { type: string }
+        savingsRate: { type: string }
+        discipline: { type: string }
+
+    HhPartnershipPortal:
+      type: object
+      required: [bandName, month, activeMembers, membersWithSavingsEnvelope, savingsAdoptionPct, avgMonthlyTokenSavingsBudget, envelopeDisciplinePct, note]
+      properties:
+        bandName: { type: string }
+        month: { type: string }
+        activeMembers: { type: integer }
+        membersWithSavingsEnvelope: { type: integer }
+        savingsAdoptionPct: { type: integer }
+        avgMonthlyTokenSavingsBudget: { type: string }
+        envelopeDisciplinePct: { type: integer }
+        note: { type: string }
 
