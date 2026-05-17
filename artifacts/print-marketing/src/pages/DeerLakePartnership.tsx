@@ -269,78 +269,39 @@ export default function DeerLakePartnership() {
               );
 
               return (<>
-                {/* COL 1 — Fresh Perimeter + Coffee */}
+                {/* COL 1 — Produce + Coffee */}
                 <div>
                   {DEPT("Produce")}
-                  {S("Rockfront Family Farms", "Sioux Lookout", "Microgreens, sunflower/pea/fava shoots, radish blends. Grown to order weekly.")}
-                  {S("DeBruin's Greenhouse", "Slate River", "Living lettuce, basil, cherry + grape tomatoes. No pesticides. Tue/Fri delivery included.")}
-                  {S("Belluz Farms", "Thunder Bay", "Arugula, butterblend lettuce, scallions. Via Superior Seasons.")}
-                  {S("Warner's Farm", "NWO", "Apples — Cortland, 2nds mixed, half-bushel. Via Superior Seasons.")}
-                  {S("Matt Corbett Garlic Farm", "NWO", "Garlic. Local market channel.")}
-                  {S("Edible Wilds", "Superior Seasons", "Wild-harvested leeks (ramps). Sustainable, seasonal.")}
-                  {S("Lennox Farms", "Superior Seasons", "Forced pink rhubarb. Seasonal.")}
-
-                  <div style={{ marginTop: "0.09in" }}>
-                    {DEPT("Baking")}
-                    {S("Emily's Bread", "Thunder Bay", "Sandwich bread, buns, tortillas, rye, Kaiser rolls. From $2.75/unit. Manitoulin Transport.")}
-                    {S("Brûlée Creek Farms", "Kakabeka Falls", "Stone-ground flour (whole wheat, rye, sifted), cold-pressed canola oil, baking mixes. $6/unit.")}
-                  </div>
+                  {S("Rockfront Family Farms", "Sioux Lookout · 807 member", "Microgreens, sunflower/pea/fava shoots, radish blends. Grown to order weekly.")}
 
                   <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Beverages")}
-                    {S("The Hub Roastery", "Sioux Lookout", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
-                    {S("Nautical Coffee", "Keewatin", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
-                    {S("Boreal Coffee", "NWO via 807", "6 products on the 807 Local Line weekly shop.")}
-                    {S("Sap Sucker", "NWO", "Sparkling maple water. 5 flavours. $1.90/355ml can (case of 12).")}
+                    {S("The Hub Roastery", "Sioux Lookout · 807 member", "Small-batch, single-origin. 8 roasts. Wholesale $13.50/12oz, $27/2lb.")}
+                    {S("Nautical Coffee", "Keewatin · 807 member", "Off-grid houseboat roaster. 5 blends incl. decaf. $13.25/340g (min. 12 bags).")}
+                    {S("Boreal Coffee", "Dryden · 807 member", "6 products on the 807 Local Line weekly shop.")}
                   </div>
                 </div>
 
-                {/* COL 2 — Meat, Fish, Dairy + Pantry */}
+                {/* COL 2 — Meat + Pantry */}
                 <div>
                   {DEPT("Meat")}
-                  {S("Black Barn Farms", "NWO via 807", "19 products on the 807 Local Line. Beef and proteins, weekly.")}
-                  {S("Huber's Bavarian Meats", "NWO via 807", "18 products — deli meats, sausage, Bavarian specialties. Weekly on 807.")}
-                  {S("Cloverbelt Country Meats", "Oxdrift (Hwy 17)", "Abattoir + butcher shop between Sioux Lookout & Dryden. Beef, pork, poultry.")}
-                  {S("Walls' Pork Shop", "Oxdrift", "103-year-old family farm. Pork + fresh vegetables. No chemicals or preservatives.")}
-                  {S("Zurbrigg Family Farm", "Oxdrift", "Mixed farm. Beef, lamb, and seasonal. zurbriggfamilyfarm.com")}
-
-                  <div style={{ marginTop: "0.09in" }}>
-                    {DEPT("Fish")}
-                    {S("Eat the Fish", "Lake Superior / Nipigon", "Lake trout (boneless, skin-on) $14/lb. Whitefish (boneless, skin-off) $15/lb.")}
-                  </div>
-
-                  <div style={{ marginTop: "0.09in" }}>
-                    {DEPT("Dairy")}
-                    {S("Lock City Dairies", "Sault Ste. Marie → NWO", "Licensed Ontario distributor. Fluid milk (homo, 2%, 1%, skim), chocolate milk, butter, half & half. Sat. delivery near Dryden, $200/skid. School nutrition program participant.")}
-                  </div>
+                  {S("Black Barn Farms", "NWO · 807 member", "19 products on the 807 Local Line. Beef and proteins, weekly.")}
+                  {S("Huber's Bavarian Meats", "NWO · 807 member", "18 products — deli meats, sausage, Bavarian specialties. Weekly on 807.")}
 
                   <div style={{ marginTop: "0.09in" }}>
                     {DEPT("Pantry")}
-                    {S("Big Lake Pasta", "NWO", "Fusilli, radiatore, creste di gallo. 350g retail or 5 lb food-service. $3.75/unit.")}
-                    {S("Foraged North", "NWO via 807", "Wild rice salad kit, Hagens dressing, Busters Championship Seasoning. 10 products.")}
+                    {S("Foraged North", "Dryden · 807 member", "Wild rice, chaga, wild teas and herbs. Sustainably harvested. 10+ products on the 807 Local Line.")}
                   </div>
                 </div>
 
-                {/* COL 3 — The Shelves */}
+                {/* COL 3 — Condiments + Value-Added */}
                 <div>
-                  {DEPT("Sweets")}
-                  {S("Canada West Maple", "Thunder Bay", "Pure maple syrup, blueberry maple, maple sugar, pancake mix. Wood-fired. From $7.50/200ml.")}
-                  {S("Roy Sidders Maple Syrup", "NWO", "Local maple. Dryden / Oxdrift area markets.")}
-                  {S("Eady's Honey", "NWO", "Local beekeeper. Area farmers' markets.")}
+                  {DEPT("Condiments")}
+                  {S("Bucky's BBQ Blend", "NWO · 807 member", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
 
                   <div style={{ marginTop: "0.09in" }}>
-                    {DEPT("Spices")}
-                    {S("Thunder Oak Cheese", "NWO", "Gouda (mild, jalapeño, smoked, dill) + cheese curds. From $5.69/wedge.")}
-                    {S("June & Jo Spice Co", "Thunder Bay", "Original, Sweet & Smokey, Hot & Spicy. GF crispy coating mix. $8.00/unit.")}
-                    {S("Shumka Dust Spices", "NWO", "Artisan spice blends. Local market channel.")}
-                    {S("Heartbeat Hot Sauce", "Thunder Bay", "12 varieties incl. Poirier's Louisiana Style + Lion's Mane Piri Piri. $8.25/bottle.")}
-                    {S("Bucky's BBQ Blend", "NWO", "What's the Dill, Devils Dill, Lemon Pepper, Dill Garlic Parm + more. buckysbbqblend.com")}
-                  </div>
-
-                  <div style={{ marginTop: "0.09in" }}>
-                    {DEPT("Boxes & Snacks")}
-                    {S("Superior Bakes", "Thunder Bay", "Keto snacks & package mixes — protein balls, keto cups, pancake and cake mixes. GF options. From $2.25/unit.")}
-                    {S("Parr's Jars", "NWO via 807", "Gourmet salt blends. Circular economy partner since 2020 — near-expiry botanicals transformed into shelf-stable value-added product. On the 807 Local Line.")}
+                    {DEPT("Value-Added")}
+                    {S("Parr's Jars", "Dryden · 807 member", "Gourmet salt blends. Circular economy partner since 2020 — near-expiry botanicals transformed into shelf-stable value-added product. On the 807 Local Line.")}
                   </div>
                 </div>
               </>);
@@ -356,13 +317,11 @@ export default function DeerLakePartnership() {
               </div>
               <div>
                 <p style={{ fontWeight: 700, fontSize: "0.66rem", color: EVERGREEN, margin: "0 0 0.04in" }}>
-                  Four supply channels — all already running
+                  Two supply channels — all already running
                 </p>
                 <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
                   <strong style={{ color: INK }}>807 Local Line</strong> — weekly shop Thu–Mon, Dryden + Sioux Lookout deliveries, out-of-town pickup Thursdays 3–4pm. &nbsp;
-                  <strong style={{ color: INK }}>Emily's Bread NWO order form</strong> — single order covers 8+ NWO producers, Tuesday Thunder Bay pickup → Wednesday Dryden delivery. &nbsp;
                   <strong style={{ color: INK }}>Superior Seasons</strong> — Thunder Bay online farmers' market, ordering opens Wed 5:30pm, closes Fri 4:30pm, Wed/Thu distribution. &nbsp;
-                  <strong style={{ color: INK }}>Lock City Dairies</strong> — Saturday 4–6pm delivery to a meeting point near Dryden, 48ft trailer, $200/skid. &nbsp;
                   Folding Deer Lake in extends routes that are already moving.
                 </p>
               </div>
@@ -479,25 +438,25 @@ export default function DeerLakePartnership() {
 
               {/* Example 2 */}
               <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
-                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Emily's bread — day 3 loaves</p>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Huber's deli — end-of-week cuts</p>
                 <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
-                  Sandwich loaves at day 3. System flags → kitchen gets: <em>"Thick-cut French toast with Warner's apple compote and Roy Sidders maple."</em> Saturday breakfast special — guests love it, store clears the shelf.
+                  Bavarian sausage nearing rotation window. System flags → kitchen gets: <em>"Housemade sausage and egg breakfast wrap. Bratwurst lunch special with local mustard."</em> Two menu runs, store clears the shelf.
                 </p>
               </div>
 
               {/* Example 3 */}
               <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
-                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Rhubarb in season — Superior Seasons order</p>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Foraged North wild rice — slow week</p>
                 <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
-                  Lennox Farms forced rhubarb arrives in quantity. System flags surplus → kitchen gets: <em>"Rhubarb compote for oatmeal station. Rhubarb crumble for dinner dessert."</em> Two uses, one delivery, zero waste.
+                  Wild rice moving slower than projected. System flags → kitchen gets: <em>"Wild rice pilaf as the dinner starch. Wild rice soup for the lunch board."</em> Two uses, zero waste, guests get something genuinely local.
                 </p>
               </div>
 
               {/* Example 4 */}
               <div style={{ borderLeft: `3px solid ${EVERGREEN}`, paddingLeft: "0.14in" }}>
-                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Walls' pork — mixed cuts</p>
+                <p style={{ fontWeight: 700, fontSize: "0.63rem", color: INK, margin: "0 0 0.05in" }}>Black Barn ground beef — mixed cuts</p>
                 <p style={{ fontSize: "0.58rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>
-                  A whole-animal order includes cuts that move slower at retail. System flags → kitchen gets: <em>"Pork shoulder hash for Saturday breakfast. House-made sausage patties for the week."</em> Butcher shop math works out.
+                  A bulk beef order includes cuts that move slower at retail. System flags → kitchen gets: <em>"Ground beef chili for the lunch board. Beef patties for the dinner special."</em> Bulk purchasing math works out.
                 </p>
               </div>
             </div>
@@ -514,7 +473,7 @@ export default function DeerLakePartnership() {
                 </div>
                 <div>
                   <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>NWO recipe knowledge, producer by producer</p>
-                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>We know what Rockfront microgreens do on a plate. We know how Emily's day-3 bread performs in a French toast. The recipe library is built from real experience with this exact supply chain — not food-service theory.</p>
+                  <p style={{ fontSize: "0.57rem", color: MUTED, margin: 0, lineHeight: 1.55 }}>We know what Rockfront microgreens do on a plate. We know how Huber's Bavarian cuts perform on a lunch board. The recipe library is built from real experience with this exact supply chain — not food-service theory.</p>
                 </div>
                 <div>
                   <p style={{ fontWeight: 600, fontSize: "0.6rem", color: INK, margin: "0 0 0.05in" }}>Software turns the model into a daily habit</p>

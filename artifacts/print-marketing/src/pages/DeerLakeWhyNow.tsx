@@ -41,7 +41,7 @@ const assets = [
 ];
 
 const flowSteps = [
-  { label: "NWO Producers", sub: "Dryden region — Rockfront, DeBruin's, and others" },
+  { label: "NWO Producers", sub: "Dryden region — Rockfront and other 807 member producers" },
   { label: "807 Food Co-operative", sub: "Aggregation, cold storage, and bulk pricing" },
   { label: "Winter road delivery", sub: "January 2027 — bulk truck, not air freight" },
   { label: "Deer Lake Community Store", sub: "Affordable food owned and run by the community" },
