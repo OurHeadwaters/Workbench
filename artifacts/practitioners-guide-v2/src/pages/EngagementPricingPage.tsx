@@ -393,6 +393,77 @@ export function EngagementPricingPage() {
           </AccordionContent>
         </AccordionItem>
 
+        {/* 6 — Funding pathways */}
+        <AccordionItem
+          value="funding-pathways"
+          className="rounded-xl border border-card-border bg-card overflow-hidden border-b-0"
+          style={{ borderLeftColor: ACCENT, borderLeftWidth: "3px" }}
+        >
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-baseline gap-3 text-left">
+              <span className="font-semibold text-sm">Funding pathways</span>
+              <span className="text-xs text-muted-foreground">
+                Rate never changes · many engagements qualify for federal or provincial funding
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <EditableSection id="ep.funding-pathways" label="Funding pathways">
+            <div className="space-y-3 text-sm leading-relaxed">
+              <p>
+                <strong>The rate doesn't change based on who funds it.</strong> Whether a community
+                pays at cost, is partially supported by a capacity fund, or qualifies for a federal
+                program, the $175/hr rate stays the same. The funding pathway changes what the
+                community's net expenditure looks like — it doesn't change the work or the fee.
+                The metaphor: "The work doesn't change based on who funds it. The rate is the rate.
+                What we do at the start is figure out the best pathway to get there."
+              </p>
+              <p>
+                <strong>Phase 01 as the entry point.</strong> The planning phase is always fully
+                priced upfront — from $28,000 — giving the community a confirmed flat number they
+                can take to band council or a funder before any further commitment. That number is
+                real and bounded. It's the right place to start the funding conversation because the
+                scope is defined and the ask is specific.
+              </p>
+              <p>
+                <strong>Federal and provincial programs that commonly apply.</strong> Many community
+                store and economic development engagements qualify — fully or partially — through:
+              </p>
+              <ul className="ml-4 list-disc space-y-1 text-sm">
+                <li>
+                  <strong>ISC</strong> (Indigenous Services Canada) — community capacity and
+                  economic development streams
+                </li>
+                <li>
+                  <strong>FEDNOR</strong> — Northern Ontario economic development funding for
+                  community and business infrastructure
+                </li>
+                <li>
+                  <strong>NOHFC</strong> (Northern Ontario Heritage Fund Corporation) — business
+                  and community investment programs
+                </li>
+                <li>
+                  Tribal council capacity funds and community-specific program envelopes
+                </li>
+              </ul>
+              <p>
+                Finding the right pathway is a shared first conversation — not something the
+                practitioner solves alone, and not a prerequisite before the engagement can start.
+                If grant timing doesn't align, the engagement still pays for itself at client cost.
+              </p>
+              <p>
+                <strong>Grants are upside, not the baseline.</strong> The engagement is priced to
+                make sense without any external funding. When a grant aligns, it reduces the
+                community's net expenditure — sometimes dramatically. As proof of what focused
+                grant foresight work can return: in 2025, that work converted into{" "}
+                <strong>$233,000 in community revenue</strong>. That's not a typical result,
+                but it illustrates the leverage when timing and eligibility line up.
+              </p>
+            </div>
+            </EditableSection>
+          </AccordionContent>
+        </AccordionItem>
+
       </Accordion>
 
       <div className="pt-2">

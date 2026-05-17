@@ -350,6 +350,7 @@ export function generateCapabilityStatementHtml(): string {
         <p class="rate-eyebrow">Engagement terms</p>
         <h3 class="rate-h3">Trial period, not a contract</h3>
         <p class="rate-desc">The usual first step is a six-week bounded scope at $175/hr. Stop at any point. No retainer, no long commitment. If the fit is right, it continues. If not, you leave with something useful.</p>
+        <p class="rate-desc" style="margin-top:0.14rem;">Many engagements are fully or partially funded through federal and provincial programs — ISC, FEDNOR, NOHFC, and community capacity funds. That conversation happens at the start, not as a condition of moving forward.</p>
         <p class="rate-note">All rates CAD · excludes HST</p>
       </div>
       <div class="rate-amount">
