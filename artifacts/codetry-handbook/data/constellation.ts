@@ -362,8 +362,8 @@ export const constellation: ConstellationSnapshot = {
         "What are the things that are true and unshakeable in your household right now?",
         "Where are you measuring a fish by how well it climbs a tree?",
         "What would it look like to let someone grow brave in their own time instead of pushing the pace?",
-        "Where are you saying yes in the household when you mean no — and what is that costing the person you said it to?",
-        "What does the household you are building toward actually look like — not a fixed picture, a direction?"
+        "What were you handed by the generations before you in this household — and what are you handing forward to the ones who will sit in this kitchen after you?",
+        "What does this household look like three generations from now — and is anything you are building today pointed at that?"
       ]
     },
     {
@@ -488,8 +488,8 @@ export const constellation: ConstellationSnapshot = {
         "What in your financial life feels like restriction — and what would it feel like as flow instead?",
         "Where is your siphon larger than you chose it to be?",
         "What would it mean to channel every drop on purpose this week?",
-        "Where is your financial life organized around a hope instead of a decision?",
-        "What limit in your money does not yet have a name — and what happens when you cross it?"
+        "Is the way your household earns and spends today something you would want your great-grandchildren to inherit as normal — or is it a pattern worth interrupting now?",
+        "What financial pattern has been passed down through your family for two or three generations — and does it deserve to continue?"
       ]
     },
     {
@@ -527,8 +527,8 @@ export const constellation: ConstellationSnapshot = {
         "Where are you still using the language of a founder when you mean the work of a practitioner?",
         "What step have you been carrying over longest — and what would it mean to set it down instead of forward?",
         "Who in the community did you listen to this week?",
-        "Of the deals or relationships in your practice right now: which will change, which could but won’t, which simply can’t — and is your time going to the right group?",
-        "What does the practitioner you are becoming look like in three years — not the work, the person doing it?"
+        "Is the practice you are building something you would want a grandchild to inherit — not the business, the way of working?",
+        "What will be different in this community in fifty years if this practice continues — and is that the difference you intend?"
       ]
     },
     {
@@ -595,8 +595,8 @@ export const constellation: ConstellationSnapshot = {
         "Where in your organization is bravery being asked for without a safety net underneath it?",
         "What would change if the hardest volunteer job was also the most supported one?",
         "Who said yes to something difficult recently — and did they hear that it was noticed?",
-        "What has this community been saying yes to that costs something every time it does?",
-        "What does a thriving version of this commons look like in ten years — and does today’s work point there?"
+        "Who in this community is making decisions as if they will be held accountable by people not yet born — and what does that look like in practice?",
+        "What does a thriving version of this commons look like in 175 years — and what has to be true today for that to be possible?"
       ]
     },
     {
@@ -642,8 +642,8 @@ export const constellation: ConstellationSnapshot = {
         "Where is the ball of yarn closest to unraveling — and what would it take to add one more pair of hands?",
         "What do you call what you do? Not what the movement calls it — what you call it.",
         "What would systematic look like for one part of your operation this season?",
-        "Which producers in this sector will change, which could but won’t, and which simply can’t — and where is your energy going?",
-        "What has to end in this sector for the regenerative arc to become possible?"
+        "Is the land in this sector producing more or less life than it was seven generations ago — and which direction are you pointed?",
+        "What would this sector look like if every decision made in it for the last 175 years had been made with the seventh generation in mind — and how far is today from that?"
       ]
     },
     {
@@ -678,8 +678,8 @@ export const constellation: ConstellationSnapshot = {
         "What is sitting in the muck right now that might be worth cleaning off?",
         "How do you know when a day is a dam day versus a day that just got away from you?",
         "What would it mean to trust the dam day instead of fighting it?",
-        "What are you protecting this creative space from — and is that protection actually in place?",
-        "What is the specific future you are moving toward — not the vague better, the named thing?"
+        "Which ideas in your margin are too big for your lifetime — and does that make them worth keeping or worth letting go?",
+        "What would you want the seventh generation after you to know you were trying to do — and does anything you captured today point at that?"
       ]
     }
   ],
@@ -696,7 +696,7 @@ export const constellation: ConstellationSnapshot = {
       "reflections": [
         "What is sitting in your seed bed right now that you have not yet named?",
         "When did an idea that had no zone find its place — and what gave it the opening?",
-        "Which seed in this bed represents your desired future — and what would it take to give it a zone?"
+        "Which seed in this bed is not for you — it is for someone two generations forward who will know exactly what to do with it?"
       ]
     }
   ],
