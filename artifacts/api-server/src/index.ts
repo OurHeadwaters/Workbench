@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { seedBookkeeper } from "./lib/bookkeeperSeed";
+import { runExpireOverdue } from "./routes/helpingHands";
 
 const rawPort = process.env["PORT"];
 
@@ -39,4 +40,24 @@ app.listen(port, "0.0.0.0", (err) => {
   seedBookkeeper().catch((seedErr) => {
     logger.error({ err: seedErr }, "bookkeeper seed failed");
   });
+
+  // ── Daily missed-shift scheduler ───────────────────────────────
+  // Runs once at startup (catches any tasks that went overdue while
+  // the server was down), then every 24 hours thereafter.
+  // This is the automatic leg of the missed-shift check; admins can
+  // also trigger it manually via POST /helping-hands/expire-overdue.
+  async function scheduledExpire() {
+    try {
+      const result = await runExpireOverdue();
+      if (result.expired > 0) {
+        logger.info(result, "scheduled missed-shift check complete");
+      }
+    } catch (schedErr) {
+      logger.error({ err: schedErr }, "scheduled missed-shift check failed");
+    }
+  }
+
+  // Run immediately on startup, then repeat every 24 h
+  scheduledExpire();
+  setInterval(scheduledExpire, 24 * 60 * 60 * 1000);
 });

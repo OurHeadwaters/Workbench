@@ -6,6 +6,7 @@ import {
   hhMembersTable,
   hhTasksTable,
   hhEarningsTable,
+  hhBonusesTable,
 } from "@workspace/db";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { requireAuth, loadBookkeeperUser } from "../lib/bookkeeperAuth";
@@ -36,6 +37,7 @@ function serializeMember(row: typeof hhMembersTable.$inferSelect) {
     didRef: row.didRef ?? null,
     tier: row.tier,
     isActive: row.isActive,
+    completedShiftCount: row.completedShiftCount ?? 0,
     missedShiftCount: row.missedShiftCount,
     flaggedForDemotion: row.flaggedForDemotion,
     totalEarnedXrp: row.totalEarnedXrp ?? "0",
@@ -157,6 +159,9 @@ router.get("/band", requireAuth(), async (_req: Request, res: Response) => {
     communityTokenIssuer: band.communityTokenIssuer ?? null,
     defaultPayCurrency: band.defaultPayCurrency,
     missedShiftThreshold: band.missedShiftThreshold,
+    reliabilityBonusThreshold: band.reliabilityBonusThreshold,
+    reliabilityBonusAmount: band.reliabilityBonusAmount,
+    reliabilityBonusCurrency: band.reliabilityBonusCurrency,
   });
 });
 
@@ -477,7 +482,7 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
       // Idempotent: return the already-confirmed task
       const already = await db.select().from(hhTasksTable).where(eq(hhTasksTable.id, taskId)).limit(1);
       const serialized = await enrichTasksWithNames(already);
-      res.json(serialized[0]);
+      res.json({ task: serialized[0], bonusAwarded: null });
       return;
     }
     res.status(409).json({ error: `Task must be in 'completed' state before it can be confirmed (current: ${current})` });
@@ -498,23 +503,98 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
     xrplTxHash: mockTxHash,
   }).onConflictDoNothing();
 
-  // Increment the correct member total
-  if (task.payCurrency === "xrp") {
-    await db
-      .update(hhMembersTable)
-      .set({
-        totalEarnedXrp: sql`${hhMembersTable.totalEarnedXrp} + ${task.payAmount}::numeric`,
-        updatedAt: new Date(),
+  // Atomically increment completedShiftCount and update the correct total.
+  // RETURNING gives us the post-increment count without an extra SELECT.
+  const memberUpdated = await db
+    .update(hhMembersTable)
+    .set(
+      task.payCurrency === "xrp"
+        ? {
+            completedShiftCount: sql`${hhMembersTable.completedShiftCount} + 1`,
+            totalEarnedXrp: sql`${hhMembersTable.totalEarnedXrp} + ${task.payAmount}::numeric`,
+            updatedAt: new Date(),
+          }
+        : {
+            completedShiftCount: sql`${hhMembersTable.completedShiftCount} + 1`,
+            totalEarnedToken: sql`${hhMembersTable.totalEarnedToken} + ${task.payAmount}::numeric`,
+            updatedAt: new Date(),
+          },
+    )
+    .where(and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)))
+    .returning({
+      completedShiftCount: hhMembersTable.completedShiftCount,
+      firstName: hhMembersTable.firstName,
+      lastName: hhMembersTable.lastName,
+    });
+
+  // ── Reliability bonus ──────────────────────────────────────────────────────
+  // Award a bonus every time completedShiftCount hits a multiple of the band's
+  // reliability threshold. Insert into hh_bonuses and credit the member total.
+  let bonusAwarded: {
+    id: string;
+    memberId: string;
+    firstName: string;
+    lastName: string;
+    amount: string;
+    currency: string;
+    reason: string;
+    milestone: number;
+    awardedAt: string;
+  } | null = null;
+
+  const newCount = memberUpdated[0]?.completedShiftCount ?? 0;
+  const threshold = band.reliabilityBonusThreshold;
+  const bonusAmount = band.reliabilityBonusAmount;
+  const bonusCurrency = band.reliabilityBonusCurrency;
+
+  if (newCount > 0 && threshold > 0 && newCount % threshold === 0) {
+    const reason = `Reliability bonus — ${newCount} confirmed shifts`;
+    const bonusMockTxHash = `BONUS_SIM_${Date.now().toString(16).toUpperCase()}`;
+
+    const inserted = await db
+      .insert(hhBonusesTable)
+      .values({
+        bandId: band.id,
+        memberId,
+        amount: bonusAmount,
+        currency: bonusCurrency,
+        reason,
+        milestone: newCount,
       })
-      .where(and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)));
-  } else {
-    await db
-      .update(hhMembersTable)
-      .set({
-        totalEarnedToken: sql`${hhMembersTable.totalEarnedToken} + ${task.payAmount}::numeric`,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)));
+      .returning();
+
+    // Credit the bonus earnings to the member total
+    if (bonusCurrency === "xrp") {
+      await db
+        .update(hhMembersTable)
+        .set({
+          totalEarnedXrp: sql`${hhMembersTable.totalEarnedXrp} + ${bonusAmount}::numeric`,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)));
+    } else {
+      await db
+        .update(hhMembersTable)
+        .set({
+          totalEarnedToken: sql`${hhMembersTable.totalEarnedToken} + ${bonusAmount}::numeric`,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(hhMembersTable.id, memberId), eq(hhMembersTable.bandId, band.id)));
+    }
+
+    void bonusMockTxHash; // reserved for future XRPL escrow integration
+    const bonus = inserted[0]!;
+    bonusAwarded = {
+      id: bonus.id,
+      memberId,
+      firstName: memberUpdated[0]?.firstName ?? "",
+      lastName: memberUpdated[0]?.lastName ?? "",
+      amount: bonus.amount,
+      currency: bonus.currency,
+      reason: bonus.reason,
+      milestone: bonus.milestone,
+      awardedAt: bonus.awardedAt instanceof Date ? bonus.awardedAt.toISOString() : String(bonus.awardedAt),
+    };
   }
 
   const confirmed = await db
@@ -523,7 +603,7 @@ router.post("/tasks/:id/confirm", requireAuth(), async (req: Request, res: Respo
     .where(eq(hhTasksTable.id, taskId))
     .limit(1);
   const serialized = await enrichTasksWithNames(confirmed);
-  res.json(serialized[0]);
+  res.json({ task: serialized[0], bonusAwarded });
 });
 
 // ──────────────────────────────────────────────
@@ -599,6 +679,225 @@ router.get("/my/earnings", requireAuth(), async (req: Request, res: Response) =>
 });
 
 // ──────────────────────────────────────────────
+// POST /helping-hands/tasks/:id/expire
+// Admin-callable: expire a single overdue claimed task and
+// increment the claimer's missed-shift count if they are full_time.
+// ──────────────────────────────────────────────
+router.post("/tasks/:id/expire", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admins only" });
+    return;
+  }
+
+  const band = await getOrCreateDefaultBand();
+  const taskId = param(req.params.id);
+
+  const existing = await db
+    .select()
+    .from(hhTasksTable)
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.bandId, band.id)))
+    .limit(1);
+
+  if (!existing[0]) {
+    res.status(404).json({ error: "Task not found" });
+    return;
+  }
+
+  const task = existing[0];
+
+  if (task.status !== "claimed") {
+    res.status(409).json({ error: `Task is '${task.status}', not 'claimed' — nothing to expire` });
+    return;
+  }
+
+  if (task.availableDate >= today()) {
+    res.status(409).json({ error: "Task date has not passed yet" });
+    return;
+  }
+
+  // Transition task to missed
+  const updated = await db
+    .update(hhTasksTable)
+    .set({ status: "missed", updatedAt: new Date() })
+    .where(and(eq(hhTasksTable.id, taskId), eq(hhTasksTable.status, "claimed")))
+    .returning();
+
+  if (!updated[0]) {
+    res.status(409).json({ error: "Task state changed concurrently — retry" });
+    return;
+  }
+
+  // Only penalise full_time members — use atomic SQL increment to
+  // avoid read-then-write races with the daily scheduler.
+  if (task.claimedByMemberId) {
+    await db
+      .update(hhMembersTable)
+      .set({
+        missedShiftCount: sql`${hhMembersTable.missedShiftCount} + 1`,
+        flaggedForDemotion: sql`
+          CASE
+            WHEN ${hhMembersTable.missedShiftCount} + 1 >= ${band.missedShiftThreshold}
+            THEN true
+            ELSE ${hhMembersTable.flaggedForDemotion}
+          END
+        `,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(hhMembersTable.id, task.claimedByMemberId),
+          eq(hhMembersTable.bandId, band.id),
+          eq(hhMembersTable.tier, "full_time"),
+        ),
+      );
+  }
+
+  const serialized = await enrichTasksWithNames(updated);
+  res.json(serialized[0]);
+});
+
+// ──────────────────────────────────────────────
+// runExpireOverdue — shared core logic
+// Exported so the scheduler in index.ts can call it without HTTP.
+// Returns { expired, flagged } — the number of tasks transitioned to
+// "missed" and the number of Full-Time members newly flagged.
+// ──────────────────────────────────────────────
+export async function runExpireOverdue(): Promise<{ expired: number; flagged: number; message: string }> {
+  const band = await getOrCreateDefaultBand();
+  const todayStr = today();
+
+  // Atomically transition all overdue claimed tasks to "missed" and
+  // return only the rows that were actually updated — this avoids the
+  // race-condition overcounting that would occur if we computed
+  // penalties from a prior SELECT that may include tasks updated
+  // concurrently by another process.
+  const transitioned = await db
+    .update(hhTasksTable)
+    .set({ status: "missed", updatedAt: new Date() })
+    .where(
+      and(
+        eq(hhTasksTable.bandId, band.id),
+        eq(hhTasksTable.status, "claimed"),
+        sql`${hhTasksTable.availableDate} < ${todayStr}`,
+      ),
+    )
+    .returning();
+
+  if (transitioned.length === 0) {
+    return { expired: 0, flagged: 0, message: "No overdue tasks found" };
+  }
+
+  // Aggregate missed shifts per member using only actually-transitioned rows
+  const countByMember = new Map<string, number>();
+  for (const task of transitioned) {
+    if (task.claimedByMemberId) {
+      countByMember.set(task.claimedByMemberId, (countByMember.get(task.claimedByMemberId) ?? 0) + 1);
+    }
+  }
+
+  let newlyFlagged = 0;
+
+  for (const [memberId, missedCount] of countByMember) {
+    // Atomically increment the count and set the flag in a single UPDATE,
+    // using RETURNING to read the post-increment values without a prior
+    // SELECT — this prevents lost updates under concurrent expire runs.
+    const updated = await db
+      .update(hhMembersTable)
+      .set({
+        missedShiftCount: sql`${hhMembersTable.missedShiftCount} + ${missedCount}`,
+        flaggedForDemotion: sql`
+          CASE
+            WHEN ${hhMembersTable.missedShiftCount} + ${missedCount} >= ${band.missedShiftThreshold}
+            THEN true
+            ELSE ${hhMembersTable.flaggedForDemotion}
+          END
+        `,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(hhMembersTable.id, memberId),
+          eq(hhMembersTable.bandId, band.id),
+          eq(hhMembersTable.tier, "full_time"),
+        ),
+      )
+      .returning({
+        flaggedForDemotion: hhMembersTable.flaggedForDemotion,
+        missedShiftCount: hhMembersTable.missedShiftCount,
+      });
+
+    // Row not updated means the member is not full_time — skip
+    if (!updated[0]) continue;
+
+    // Newly flagged = flag is now true AND count just crossed the threshold
+    const isNowFlagged = updated[0].flaggedForDemotion;
+    const justCrossed = updated[0].missedShiftCount >= band.missedShiftThreshold
+      && updated[0].missedShiftCount - missedCount < band.missedShiftThreshold;
+    if (isNowFlagged && justCrossed) newlyFlagged++;
+  }
+
+  return {
+    expired: transitioned.length,
+    flagged: newlyFlagged,
+    message: `${transitioned.length} task${transitioned.length !== 1 ? "s" : ""} expired; ${newlyFlagged} member${newlyFlagged !== 1 ? "s" : ""} newly flagged`,
+  };
+}
+
+// ──────────────────────────────────────────────
+// POST /helping-hands/expire-overdue
+// Admin-callable HTTP trigger for the same logic (also runs on a
+// daily schedule via the startup scheduler in index.ts).
+// ──────────────────────────────────────────────
+router.post("/expire-overdue", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admins only" });
+    return;
+  }
+
+  const result = await runExpireOverdue();
+  res.json(result);
+});
+
+// ──────────────────────────────────────────────
+// GET /helping-hands/bonuses
+// Admin — list all reliability bonus payments
+// ──────────────────────────────────────────────
+router.get("/bonuses", requireAuth(), async (req: Request, res: Response) => {
+  const bkUser = req.bookkeeperUser!;
+  if (!["owner", "ops_manager"].includes(bkUser.role)) {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  const band = await getOrCreateDefaultBand();
+
+  const rows = await db
+    .select({
+      id: hhBonusesTable.id,
+      memberId: hhBonusesTable.memberId,
+      firstName: hhMembersTable.firstName,
+      lastName: hhMembersTable.lastName,
+      amount: hhBonusesTable.amount,
+      currency: hhBonusesTable.currency,
+      reason: hhBonusesTable.reason,
+      milestone: hhBonusesTable.milestone,
+      awardedAt: hhBonusesTable.awardedAt,
+    })
+    .from(hhBonusesTable)
+    .innerJoin(hhMembersTable, eq(hhBonusesTable.memberId, hhMembersTable.id))
+    .where(eq(hhBonusesTable.bandId, band.id))
+    .orderBy(desc(hhBonusesTable.awardedAt));
+
+  res.json(
+    rows.map((r) => ({
+      ...r,
+      awardedAt: r.awardedAt instanceof Date ? r.awardedAt.toISOString() : String(r.awardedAt),
+    })),
+  );
+});
+
+// ──────────────────────────────────────────────
 // GET /helping-hands/dashboard
 // ──────────────────────────────────────────────
 router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
@@ -610,7 +909,7 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
   const band = await getOrCreateDefaultBand();
   const todayStr = today();
 
-  const [available, claimed, pendingConf, flagged, totalMembers, recent] = await Promise.all([
+  const [available, claimed, pendingConf, flagged, totalMembers, recent, topContributors] = await Promise.all([
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(hhTasksTable)
@@ -654,6 +953,21 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
       .where(eq(hhTasksTable.bandId, band.id))
       .orderBy(desc(hhTasksTable.updatedAt))
       .limit(8),
+    // Top 5 most active members, sorted by confirmed shifts desc
+    db
+      .select({
+        id: hhMembersTable.id,
+        firstName: hhMembersTable.firstName,
+        lastName: hhMembersTable.lastName,
+        tier: hhMembersTable.tier,
+        completedShiftCount: hhMembersTable.completedShiftCount,
+        totalEarnedToken: hhMembersTable.totalEarnedToken,
+        totalEarnedXrp: hhMembersTable.totalEarnedXrp,
+      })
+      .from(hhMembersTable)
+      .where(and(eq(hhMembersTable.bandId, band.id), eq(hhMembersTable.isActive, true)))
+      .orderBy(desc(hhMembersTable.completedShiftCount))
+      .limit(5),
   ]);
 
   const recentSerialized = await enrichTasksWithNames(recent);
@@ -665,6 +979,15 @@ router.get("/dashboard", requireAuth(), async (req: Request, res: Response) => {
     flaggedMembers: flagged[0]?.count ?? 0,
     totalMembers: totalMembers[0]?.count ?? 0,
     recentTasks: recentSerialized,
+    topContributors: topContributors.map((m) => ({
+      id: m.id,
+      firstName: m.firstName,
+      lastName: m.lastName,
+      tier: m.tier,
+      completedShiftCount: m.completedShiftCount ?? 0,
+      totalEarnedToken: m.totalEarnedToken ?? "0",
+      totalEarnedXrp: m.totalEarnedXrp ?? "0",
+    })),
   });
 });
 

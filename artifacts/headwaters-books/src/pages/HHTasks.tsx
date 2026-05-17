@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
-type TaskStatus = "all" | "available" | "claimed" | "completed" | "confirmed";
+type TaskStatus = "all" | "available" | "claimed" | "completed" | "confirmed" | "missed";
 
 function statusBadge(status: string) {
   switch (status) {
@@ -23,6 +23,7 @@ function statusBadge(status: string) {
     case "claimed": return <Badge className="bg-blue-100 text-blue-800 border-0 text-xs">In progress</Badge>;
     case "completed": return <Badge className="bg-amber-100 text-amber-800 border-0 text-xs">Needs review</Badge>;
     case "confirmed": return <Badge className="bg-slate-100 text-slate-700 border-0 text-xs">Paid</Badge>;
+    case "missed": return <Badge className="bg-red-100 text-red-700 border-0 text-xs">Missed</Badge>;
     default: return <Badge variant="outline" className="text-xs">{status}</Badge>;
   }
 }
@@ -60,17 +61,37 @@ export default function HHTasks() {
     id: string,
     title: string,
   ) {
-    const mutate =
-      action === "claim" ? claimTask :
-      action === "complete" ? completeTask :
-      confirmTask;
-
     const labels: Record<string, string> = {
       claim: "Task claimed",
       complete: "Marked as done — waiting for review",
       confirm: "Payment released",
     };
 
+    if (action === "confirm") {
+      confirmTask.mutate({ id }, {
+        onSuccess: (result) => {
+          toast.success(`${labels.confirm}: "${title}"`);
+          if (result.bonusAwarded) {
+            const b = result.bonusAwarded;
+            const name = `${b.firstName ?? ""} ${b.lastName ?? ""}`.trim();
+            const amount = parseFloat(b.amount).toLocaleString(undefined, { maximumFractionDigits: 2 });
+            const label = b.currency === "xrp" ? "XRP" : "tokens";
+            setTimeout(() => {
+              toast.success(
+                `Reliability bonus! ${name} hit ${b.milestone} confirmed shifts — +${amount} ${label} awarded`,
+                { duration: 6000, icon: "🏆" },
+              );
+            }, 400);
+          }
+          qc.invalidateQueries({ queryKey: getGetHhTasksQueryKey() });
+          qc.invalidateQueries({ queryKey: getGetHhDashboardQueryKey() });
+        },
+        onError: (e: Error) => toast.error(e.message || "Something went wrong"),
+      });
+      return;
+    }
+
+    const mutate = action === "claim" ? claimTask : completeTask;
     mutate.mutate({ id }, {
       onSuccess: () => {
         toast.success(`${labels[action]}: "${title}"`);
@@ -87,6 +108,7 @@ export default function HHTasks() {
     { label: "In progress", value: "claimed" },
     { label: "Needs review", value: "completed" },
     { label: "Paid", value: "confirmed" },
+    { label: "Missed", value: "missed" },
   ];
 
   return (

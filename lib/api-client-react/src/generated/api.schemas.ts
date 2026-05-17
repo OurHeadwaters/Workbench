@@ -1057,6 +1057,14 @@ export const HhBandDefaultPayCurrency = {
   xrp: "xrp",
 } as const;
 
+export type HhBandReliabilityBonusCurrency =
+  (typeof HhBandReliabilityBonusCurrency)[keyof typeof HhBandReliabilityBonusCurrency];
+
+export const HhBandReliabilityBonusCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
 export interface HhBand {
   id: string;
   name: string;
@@ -1064,6 +1072,11 @@ export interface HhBand {
   communityTokenIssuer?: string | null;
   defaultPayCurrency: HhBandDefaultPayCurrency;
   missedShiftThreshold: number;
+  /** Bonus awarded every N confirmed shifts */
+  reliabilityBonusThreshold: number;
+  /** Bonus payment amount (as string numeric) */
+  reliabilityBonusAmount: string;
+  reliabilityBonusCurrency: HhBandReliabilityBonusCurrency;
 }
 
 export type HhMemberTier = (typeof HhMemberTier)[keyof typeof HhMemberTier];
@@ -1084,6 +1097,7 @@ export interface HhMember {
   didRef?: string | null;
   tier: HhMemberTier;
   isActive: boolean;
+  completedShiftCount: number;
   missedShiftCount: number;
   flaggedForDemotion: boolean;
   totalEarnedXrp: string;
@@ -1140,6 +1154,7 @@ export const HhTaskStatus = {
   claimed: "claimed",
   completed: "completed",
   confirmed: "confirmed",
+  missed: "missed",
 } as const;
 
 export interface HhTask {
@@ -1200,6 +1215,49 @@ export interface HhEarningsResponse {
   totalToken: string;
 }
 
+export interface ExpireOverdueResponse {
+  /** Number of tasks transitioned to missed */
+  expired: number;
+  /** Number of Full-Time members newly flagged for demotion */
+  flagged: number;
+  message: string;
+}
+
+export type HhBonusCurrency =
+  (typeof HhBonusCurrency)[keyof typeof HhBonusCurrency];
+
+export const HhBonusCurrency = {
+  token: "token",
+  xrp: "xrp",
+} as const;
+
+export interface HhBonus {
+  id: string;
+  memberId: string;
+  firstName?: string;
+  lastName?: string;
+  amount: string;
+  currency: HhBonusCurrency;
+  reason: string;
+  milestone: number;
+  awardedAt: string;
+}
+
+export interface HhConfirmResponse {
+  task: HhTask;
+  bonusAwarded?: HhBonus | null;
+}
+
+export interface HhTopContributor {
+  id: string;
+  firstName: string;
+  lastName: string;
+  tier?: string;
+  completedShiftCount: number;
+  totalEarnedToken: string;
+  totalEarnedXrp: string;
+}
+
 export interface HhDashboard {
   todayAvailable: number;
   todayClaimed: number;
@@ -1207,6 +1265,7 @@ export interface HhDashboard {
   flaggedMembers: number;
   totalMembers: number;
   recentTasks?: HhTask[];
+  topContributors?: HhTopContributor[];
 }
 
 export type ListLibraryEntriesParams = {
@@ -1377,5 +1436,6 @@ export const GetHhTasksStatus = {
   claimed: "claimed",
   completed: "completed",
   confirmed: "confirmed",
+  missed: "missed",
   all: "all",
 } as const;

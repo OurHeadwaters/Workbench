@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { HhTask } from "./hhTask";
+import type { HhTopContributor } from "./hhTopContributor";
 
 export interface HhDashboard {
   todayAvailable: number;
@@ -14,4 +15,5 @@ export interface HhDashboard {
   flaggedMembers: number;
   totalMembers: number;
   recentTasks?: HhTask[];
+  topContributors?: HhTopContributor[];
 }

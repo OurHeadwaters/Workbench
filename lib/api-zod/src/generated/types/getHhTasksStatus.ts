@@ -14,5 +14,6 @@ export const GetHhTasksStatus = {
   claimed: "claimed",
   completed: "completed",
   confirmed: "confirmed",
+  missed: "missed",
   all: "all",
 } as const;

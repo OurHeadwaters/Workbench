@@ -42,6 +42,7 @@ import type {
   CreateWordpilePileRequest,
   CreateWordpileWordRequest,
   ErrorEnvelope,
+  ExpireOverdueResponse,
   GetBookkeeperPnlParams,
   GetHhTasksParams,
   GetPnlByMonthParams,
@@ -53,6 +54,8 @@ import type {
   HandlerActivity,
   HealthStatus,
   HhBand,
+  HhBonus,
+  HhConfirmResponse,
   HhDashboard,
   HhEarningsResponse,
   HhMember,
@@ -6363,7 +6366,7 @@ export const useCompleteHhTask = <
 };
 
 /**
- * @summary Admin confirms completion and releases escrow payment
+ * @summary Admin confirms completion and releases escrow payment; awards reliability bonus at milestone
  */
 export const getConfirmHhTaskUrl = (id: string) => {
   return `/api/helping-hands/tasks/${id}/confirm`;
@@ -6372,8 +6375,8 @@ export const getConfirmHhTaskUrl = (id: string) => {
 export const confirmHhTask = async (
   id: string,
   options?: RequestInit,
-): Promise<HhTask> => {
-  return customFetch<HhTask>(getConfirmHhTaskUrl(id), {
+): Promise<HhConfirmResponse> => {
+  return customFetch<HhConfirmResponse>(getConfirmHhTaskUrl(id), {
     ...options,
     method: "POST",
   });
@@ -6424,7 +6427,7 @@ export type ConfirmHhTaskMutationResult = NonNullable<
 export type ConfirmHhTaskMutationError = ErrorType<unknown>;
 
 /**
- * @summary Admin confirms completion and releases escrow payment
+ * @summary Admin confirms completion and releases escrow payment; awards reliability bonus at milestone
  */
 export const useConfirmHhTask = <
   TError = ErrorType<unknown>,
@@ -6444,6 +6447,250 @@ export const useConfirmHhTask = <
   TContext
 > => {
   return useMutation(getConfirmHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Admin expires a single overdue claimed task — increments the member's missed-shift count and sets flaggedForDemotion if the threshold is crossed.
+
+ */
+export const getExpireHhTaskUrl = (id: string) => {
+  return `/api/helping-hands/tasks/${id}/expire`;
+};
+
+export const expireHhTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<HhTask> => {
+  return customFetch<HhTask>(getExpireHhTaskUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getExpireHhTaskMutationOptions = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof expireHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof expireHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["expireHhTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof expireHhTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return expireHhTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ExpireHhTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof expireHhTask>>
+>;
+
+export type ExpireHhTaskMutationError = ErrorType<ErrorEnvelope>;
+
+/**
+ * @summary Admin expires a single overdue claimed task — increments the member's missed-shift count and sets flaggedForDemotion if the threshold is crossed.
+
+ */
+export const useExpireHhTask = <
+  TError = ErrorType<ErrorEnvelope>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof expireHhTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof expireHhTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getExpireHhTaskMutationOptions(options));
+};
+
+/**
+ * @summary Admin — list all reliability bonus payments, most recent first
+ */
+export const getListHhBonusesUrl = () => {
+  return `/api/helping-hands/bonuses`;
+};
+
+export const listHhBonuses = async (
+  options?: RequestInit,
+): Promise<HhBonus[]> => {
+  return customFetch<HhBonus[]>(getListHhBonusesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListHhBonusesQueryKey = () => {
+  return [`/api/helping-hands/bonuses`] as const;
+};
+
+export const getListHhBonusesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listHhBonuses>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listHhBonuses>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListHhBonusesQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listHhBonuses>>> = ({
+    signal,
+  }) => listHhBonuses({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listHhBonuses>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListHhBonusesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listHhBonuses>>
+>;
+export type ListHhBonusesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Admin — list all reliability bonus payments, most recent first
+ */
+
+export function useListHhBonuses<
+  TData = Awaited<ReturnType<typeof listHhBonuses>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listHhBonuses>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListHhBonusesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Admin bulk-expires all claimed tasks whose date has passed — increments missed-shift counts and flags Full-Time members who exceed the band's threshold.
+
+ */
+export const getExpireOverdueHhTasksUrl = () => {
+  return `/api/helping-hands/expire-overdue`;
+};
+
+export const expireOverdueHhTasks = async (
+  options?: RequestInit,
+): Promise<ExpireOverdueResponse> => {
+  return customFetch<ExpireOverdueResponse>(getExpireOverdueHhTasksUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getExpireOverdueHhTasksMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof expireOverdueHhTasks>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof expireOverdueHhTasks>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["expireOverdueHhTasks"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof expireOverdueHhTasks>>,
+    void
+  > = () => {
+    return expireOverdueHhTasks(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ExpireOverdueHhTasksMutationResult = NonNullable<
+  Awaited<ReturnType<typeof expireOverdueHhTasks>>
+>;
+
+export type ExpireOverdueHhTasksMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Admin bulk-expires all claimed tasks whose date has passed — increments missed-shift counts and flags Full-Time members who exceed the band's threshold.
+
+ */
+export const useExpireOverdueHhTasks = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof expireOverdueHhTasks>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof expireOverdueHhTasks>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getExpireOverdueHhTasksMutationOptions(options));
 };
 
 /**

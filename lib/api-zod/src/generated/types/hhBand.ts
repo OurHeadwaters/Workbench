@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { HhBandDefaultPayCurrency } from "./hhBandDefaultPayCurrency";
+import type { HhBandReliabilityBonusCurrency } from "./hhBandReliabilityBonusCurrency";
 
 export interface HhBand {
   id: string;
@@ -14,4 +15,9 @@ export interface HhBand {
   communityTokenIssuer?: string | null;
   defaultPayCurrency: HhBandDefaultPayCurrency;
   missedShiftThreshold: number;
+  /** Bonus awarded every N confirmed shifts */
+  reliabilityBonusThreshold: number;
+  /** Bonus payment amount (as string numeric) */
+  reliabilityBonusAmount: string;
+  reliabilityBonusCurrency: HhBandReliabilityBonusCurrency;
 }

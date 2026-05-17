@@ -217,6 +217,10 @@ export default function HHRoster() {
                   <div className="border-t border-border p-4 space-y-4 bg-muted/10">
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div>
+                        <p className="text-xs text-muted-foreground mb-0.5">Confirmed shifts</p>
+                        <p className="font-medium text-emerald-700">{m.completedShiftCount ?? 0}</p>
+                      </div>
+                      <div>
                         <p className="text-xs text-muted-foreground mb-0.5">Total earned (token)</p>
                         <p className="font-medium text-foreground">{parseFloat(m.totalEarnedToken).toFixed(2)}</p>
                       </div>
@@ -226,9 +230,11 @@ export default function HHRoster() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground mb-0.5">Missed shifts</p>
-                        <p className="font-medium text-foreground">{m.missedShiftCount}</p>
+                        <p className={`font-medium ${m.missedShiftCount > 0 ? "text-red-600" : "text-foreground"}`}>
+                          {m.missedShiftCount}
+                        </p>
                       </div>
-                      <div>
+                      <div className="sm:col-span-2">
                         <p className="text-xs text-muted-foreground mb-0.5">XRPL wallet</p>
                         <p className="font-mono text-xs text-foreground truncate">{m.xrplAddress ?? "Not connected"}</p>
                       </div>

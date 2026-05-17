@@ -1521,7 +1521,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [available, claimed, completed, confirmed, all]
+            enum: [available, claimed, completed, confirmed, missed, all]
           description: Filter by task status. Defaults to all.
       responses:
         '200':
@@ -1600,7 +1600,7 @@ paths:
     post:
       operationId: confirmHhTask
       tags: [helping-hands]
-      summary: Admin confirms completion and releases escrow payment
+      summary: Admin confirms completion and releases escrow payment; awards reliability bonus at milestone
       parameters:
         - name: id
           in: path
@@ -1610,11 +1610,70 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Payment released — task confirmed
+          description: Payment released — task confirmed; bonusAwarded is set if a milestone was hit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HhConfirmResponse'
+
+  /helping-hands/tasks/{id}/expire:
+    post:
+      operationId: expireHhTask
+      tags: [helping-hands]
+      summary: >
+        Admin expires a single overdue claimed task — increments the member's
+        missed-shift count and sets flaggedForDemotion if the threshold is crossed.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task expired and member missed-shift count updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HhTask'
+        '409':
+          description: Task is not in 'claimed' state or date has not passed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /helping-hands/bonuses:
+    get:
+      operationId: listHhBonuses
+      tags: [helping-hands]
+      summary: Admin — list all reliability bonus payments, most recent first
+      responses:
+        '200':
+          description: List of bonuses awarded
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HhBonus'
+
+  /helping-hands/expire-overdue:
+    post:
+      operationId: expireOverdueHhTasks
+      tags: [helping-hands]
+      summary: >
+        Admin bulk-expires all claimed tasks whose date has passed —
+        increments missed-shift counts and flags Full-Time members who exceed
+        the band's threshold.
+      responses:
+        '200':
+          description: Summary of expired tasks and newly flagged members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpireOverdueResponse'
 
   /helping-hands/my/tasks:
     get:
@@ -2821,7 +2880,7 @@ components:
 
     HhBand:
       type: object
-      required: [id, name, communityTokenCode, defaultPayCurrency, missedShiftThreshold]
+      required: [id, name, communityTokenCode, defaultPayCurrency, missedShiftThreshold, reliabilityBonusThreshold, reliabilityBonusAmount, reliabilityBonusCurrency]
       properties:
         id: { type: string, format: uuid }
         name: { type: string }
@@ -2829,10 +2888,13 @@ components:
         communityTokenIssuer: { type: string, nullable: true }
         defaultPayCurrency: { type: string, enum: [token, xrp] }
         missedShiftThreshold: { type: integer }
+        reliabilityBonusThreshold: { type: integer, description: "Bonus awarded every N confirmed shifts" }
+        reliabilityBonusAmount: { type: string, description: "Bonus payment amount (as string numeric)" }
+        reliabilityBonusCurrency: { type: string, enum: [token, xrp] }
 
     HhMember:
       type: object
-      required: [id, bandId, email, firstName, lastName, tier, isActive, missedShiftCount, flaggedForDemotion, totalEarnedXrp, totalEarnedToken, createdAt]
+      required: [id, bandId, email, firstName, lastName, tier, isActive, completedShiftCount, missedShiftCount, flaggedForDemotion, totalEarnedXrp, totalEarnedToken, createdAt]
       properties:
         id: { type: string, format: uuid }
         bandId: { type: string, format: uuid }
@@ -2843,6 +2905,7 @@ components:
         didRef: { type: string, nullable: true }
         tier: { type: string, enum: [full_time, casual, task_based] }
         isActive: { type: boolean }
+        completedShiftCount: { type: integer }
         missedShiftCount: { type: integer }
         flaggedForDemotion: { type: boolean }
         totalEarnedXrp: { type: string }
@@ -2883,7 +2946,7 @@ components:
         estimatedMinutes: { type: integer }
         payAmount: { type: string }
         payCurrency: { type: string, enum: [token, xrp] }
-        status: { type: string, enum: [available, claimed, completed, confirmed] }
+        status: { type: string, enum: [available, claimed, completed, confirmed, missed] }
         escrowSequence: { type: integer, nullable: true }
         escrowTxHash: { type: string, nullable: true }
         claimedAt: { type: string, format: date-time, nullable: true }
@@ -2926,6 +2989,51 @@ components:
         totalXrp: { type: string }
         totalToken: { type: string }
 
+    ExpireOverdueResponse:
+      type: object
+      required: [expired, flagged, message]
+      properties:
+        expired: { type: integer, description: Number of tasks transitioned to missed }
+        flagged: { type: integer, description: Number of Full-Time members newly flagged for demotion }
+        message: { type: string }
+
+    HhBonus:
+      type: object
+      required: [id, memberId, amount, currency, reason, milestone, awardedAt]
+      properties:
+        id: { type: string, format: uuid }
+        memberId: { type: string, format: uuid }
+        firstName: { type: string }
+        lastName: { type: string }
+        amount: { type: string }
+        currency: { type: string, enum: [token, xrp] }
+        reason: { type: string }
+        milestone: { type: integer }
+        awardedAt: { type: string, format: date-time }
+
+    HhConfirmResponse:
+      type: object
+      required: [task]
+      properties:
+        task:
+          $ref: '#/components/schemas/HhTask'
+        bonusAwarded:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/HhBonus'
+
+    HhTopContributor:
+      type: object
+      required: [id, firstName, lastName, completedShiftCount, totalEarnedToken, totalEarnedXrp]
+      properties:
+        id: { type: string, format: uuid }
+        firstName: { type: string }
+        lastName: { type: string }
+        tier: { type: string }
+        completedShiftCount: { type: integer }
+        totalEarnedToken: { type: string }
+        totalEarnedXrp: { type: string }
+
     HhDashboard:
       type: object
       required: [todayAvailable, todayClaimed, pendingConfirmation, flaggedMembers, totalMembers]
@@ -2939,4 +3047,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HhTask'
+        topContributors:
+          type: array
+          items:
+            $ref: '#/components/schemas/HhTopContributor'
 

@@ -3227,6 +3227,13 @@ export const GetHhBandResponse = zod.object({
   communityTokenIssuer: zod.string().nullish(),
   defaultPayCurrency: zod.enum(["token", "xrp"]),
   missedShiftThreshold: zod.number(),
+  reliabilityBonusThreshold: zod
+    .number()
+    .describe("Bonus awarded every N confirmed shifts"),
+  reliabilityBonusAmount: zod
+    .string()
+    .describe("Bonus payment amount (as string numeric)"),
+  reliabilityBonusCurrency: zod.enum(["token", "xrp"]),
 });
 
 /**
@@ -3242,6 +3249,7 @@ export const GetHhMembersResponseItem = zod.object({
   didRef: zod.string().nullish(),
   tier: zod.enum(["full_time", "casual", "task_based"]),
   isActive: zod.boolean(),
+  completedShiftCount: zod.number(),
   missedShiftCount: zod.number(),
   flaggedForDemotion: zod.boolean(),
   totalEarnedXrp: zod.string(),
@@ -3286,6 +3294,7 @@ export const UpdateHhMemberResponse = zod.object({
   didRef: zod.string().nullish(),
   tier: zod.enum(["full_time", "casual", "task_based"]),
   isActive: zod.boolean(),
+  completedShiftCount: zod.number(),
   missedShiftCount: zod.number(),
   flaggedForDemotion: zod.boolean(),
   totalEarnedXrp: zod.string(),
@@ -3304,7 +3313,7 @@ export const GetHhTasksQueryParams = zod.object({
       "Filter to tasks available on this date (YYYY-MM-DD). Defaults to today.",
     ),
   status: zod
-    .enum(["available", "claimed", "completed", "confirmed", "all"])
+    .enum(["available", "claimed", "completed", "confirmed", "missed", "all"])
     .optional()
     .describe("Filter by task status. Defaults to all."),
 });
@@ -3321,7 +3330,13 @@ export const GetHhTasksResponseItem = zod.object({
   estimatedMinutes: zod.number(),
   payAmount: zod.string(),
   payCurrency: zod.enum(["token", "xrp"]),
-  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
   escrowSequence: zod.number().nullish(),
   escrowTxHash: zod.string().nullish(),
   claimedAt: zod.coerce.date().nullish(),
@@ -3369,7 +3384,13 @@ export const ClaimHhTaskResponse = zod.object({
   estimatedMinutes: zod.number(),
   payAmount: zod.string(),
   payCurrency: zod.enum(["token", "xrp"]),
-  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
   escrowSequence: zod.number().nullish(),
   escrowTxHash: zod.string().nullish(),
   claimedAt: zod.coerce.date().nullish(),
@@ -3398,7 +3419,13 @@ export const CompleteHhTaskResponse = zod.object({
   estimatedMinutes: zod.number(),
   payAmount: zod.string(),
   payCurrency: zod.enum(["token", "xrp"]),
-  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
   escrowSequence: zod.number().nullish(),
   escrowTxHash: zod.string().nullish(),
   claimedAt: zod.coerce.date().nullish(),
@@ -3409,13 +3436,64 @@ export const CompleteHhTaskResponse = zod.object({
 });
 
 /**
- * @summary Admin confirms completion and releases escrow payment
+ * @summary Admin confirms completion and releases escrow payment; awards reliability bonus at milestone
  */
 export const ConfirmHhTaskParams = zod.object({
   id: zod.coerce.string().uuid(),
 });
 
 export const ConfirmHhTaskResponse = zod.object({
+  task: zod.object({
+    id: zod.string().uuid(),
+    bandId: zod.string().uuid(),
+    postedByMemberId: zod.string().uuid(),
+    postedByName: zod.string().optional(),
+    claimedByMemberId: zod.string().uuid().nullish(),
+    claimedByName: zod.string().nullish(),
+    title: zod.string(),
+    description: zod.string(),
+    estimatedMinutes: zod.number(),
+    payAmount: zod.string(),
+    payCurrency: zod.enum(["token", "xrp"]),
+    status: zod.enum([
+      "available",
+      "claimed",
+      "completed",
+      "confirmed",
+      "missed",
+    ]),
+    escrowSequence: zod.number().nullish(),
+    escrowTxHash: zod.string().nullish(),
+    claimedAt: zod.coerce.date().nullish(),
+    completedAt: zod.coerce.date().nullish(),
+    confirmedAt: zod.coerce.date().nullish(),
+    availableDate: zod.coerce.date(),
+    createdAt: zod.coerce.date(),
+  }),
+  bonusAwarded: zod
+    .object({
+      id: zod.string().uuid(),
+      memberId: zod.string().uuid(),
+      firstName: zod.string().optional(),
+      lastName: zod.string().optional(),
+      amount: zod.string(),
+      currency: zod.enum(["token", "xrp"]),
+      reason: zod.string(),
+      milestone: zod.number(),
+      awardedAt: zod.coerce.date(),
+    })
+    .nullish(),
+});
+
+/**
+ * @summary Admin expires a single overdue claimed task — increments the member's missed-shift count and sets flaggedForDemotion if the threshold is crossed.
+
+ */
+export const ExpireHhTaskParams = zod.object({
+  id: zod.coerce.string().uuid(),
+});
+
+export const ExpireHhTaskResponse = zod.object({
   id: zod.string().uuid(),
   bandId: zod.string().uuid(),
   postedByMemberId: zod.string().uuid(),
@@ -3427,7 +3505,13 @@ export const ConfirmHhTaskResponse = zod.object({
   estimatedMinutes: zod.number(),
   payAmount: zod.string(),
   payCurrency: zod.enum(["token", "xrp"]),
-  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
   escrowSequence: zod.number().nullish(),
   escrowTxHash: zod.string().nullish(),
   claimedAt: zod.coerce.date().nullish(),
@@ -3435,6 +3519,34 @@ export const ConfirmHhTaskResponse = zod.object({
   confirmedAt: zod.coerce.date().nullish(),
   availableDate: zod.coerce.date(),
   createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Admin — list all reliability bonus payments, most recent first
+ */
+export const ListHhBonusesResponseItem = zod.object({
+  id: zod.string().uuid(),
+  memberId: zod.string().uuid(),
+  firstName: zod.string().optional(),
+  lastName: zod.string().optional(),
+  amount: zod.string(),
+  currency: zod.enum(["token", "xrp"]),
+  reason: zod.string(),
+  milestone: zod.number(),
+  awardedAt: zod.coerce.date(),
+});
+export const ListHhBonusesResponse = zod.array(ListHhBonusesResponseItem);
+
+/**
+ * @summary Admin bulk-expires all claimed tasks whose date has passed — increments missed-shift counts and flags Full-Time members who exceed the band's threshold.
+
+ */
+export const ExpireOverdueHhTasksResponse = zod.object({
+  expired: zod.number().describe("Number of tasks transitioned to missed"),
+  flagged: zod
+    .number()
+    .describe("Number of Full-Time members newly flagged for demotion"),
+  message: zod.string(),
 });
 
 /**
@@ -3452,7 +3564,13 @@ export const GetMyHhTasksResponseItem = zod.object({
   estimatedMinutes: zod.number(),
   payAmount: zod.string(),
   payCurrency: zod.enum(["token", "xrp"]),
-  status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+  status: zod.enum([
+    "available",
+    "claimed",
+    "completed",
+    "confirmed",
+    "missed",
+  ]),
   escrowSequence: zod.number().nullish(),
   escrowTxHash: zod.string().nullish(),
   claimedAt: zod.coerce.date().nullish(),
@@ -3505,7 +3623,13 @@ export const GetHhDashboardResponse = zod.object({
         estimatedMinutes: zod.number(),
         payAmount: zod.string(),
         payCurrency: zod.enum(["token", "xrp"]),
-        status: zod.enum(["available", "claimed", "completed", "confirmed"]),
+        status: zod.enum([
+          "available",
+          "claimed",
+          "completed",
+          "confirmed",
+          "missed",
+        ]),
         escrowSequence: zod.number().nullish(),
         escrowTxHash: zod.string().nullish(),
         claimedAt: zod.coerce.date().nullish(),
@@ -3513,6 +3637,19 @@ export const GetHhDashboardResponse = zod.object({
         confirmedAt: zod.coerce.date().nullish(),
         availableDate: zod.coerce.date(),
         createdAt: zod.coerce.date(),
+      }),
+    )
+    .optional(),
+  topContributors: zod
+    .array(
+      zod.object({
+        id: zod.string().uuid(),
+        firstName: zod.string(),
+        lastName: zod.string(),
+        tier: zod.string().optional(),
+        completedShiftCount: zod.number(),
+        totalEarnedToken: zod.string(),
+        totalEarnedXrp: zod.string(),
       }),
     )
     .optional(),

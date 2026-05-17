@@ -17,6 +17,7 @@ export interface HhMember {
   didRef?: string | null;
   tier: HhMemberTier;
   isActive: boolean;
+  completedShiftCount: number;
   missedShiftCount: number;
   flaggedForDemotion: boolean;
   totalEarnedXrp: string;
