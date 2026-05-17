@@ -374,6 +374,157 @@ export const TALES: Tale[] = [
     authorNote:
       "A true story, told sideways.\nThe eagle was real. The waiting was real. The old woman is still waiting to be found.\nThis work is for her.",
   },
+  {
+    id: "the-girl-who-never-knew",
+    title: "The Girl Who Never Knew",
+    subtitle: "A coming-of-age tale, told in decades",
+    excerpt:
+      "She had always worn her heart on the outside, where everyone could see it. She thought that was simply how hearts worked. She didn't know, then, what she was being prepared for.",
+    body: [
+      {
+        kind: "para",
+        text: "She was born with her heart already outside her chest.",
+      },
+      {
+        kind: "para",
+        text: "Not broken — just worn on the outside, where everyone could see it. She didn't know this made her different. She thought that was simply how hearts worked.",
+      },
+      {
+        kind: "para",
+        text: "She lived at the edge of the trees, where the yard gave way to roots and shadows and the kind of quiet that isn't really quiet at all. She brought wildflowers to the neighbours without being asked. She sat with the old dog next door when it was sick. She noticed, without being told, when someone's eyes held too much water — and she would simply stay nearby, as if nearness were a kind of medicine.",
+      },
+      {
+        kind: "para",
+        text: "Her world was small. And in that smallness, it was full.",
+      },
+      {
+        kind: "para",
+        text: "Her mother called her beautiful inside and out. She accepted this the way she accepted most things — warmly, without question. She didn't know, then, that not every girl heard those words.",
+      },
+      {
+        kind: "italic",
+        text: "She didn't know, then, what the world outside the trees was made of.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "When she became a teenager, she pulled her circle tighter — not from fear, exactly, but from a kind of knowing.",
+      },
+      {
+        kind: "para",
+        text: "She had found her nook. A corner of the forest that was hers to tend. She knew which mosses grew along the north-facing rocks, which paths stayed dry after rain, which branches held the best quiet. She kept it beautiful the only way she knew how: slowly, tenderly, a little at a time.",
+      },
+      {
+        kind: "para",
+        text: "Her friends were few and chosen. Her joy was specific. She did not need much from the world because she had learned how to make enough from what was near.",
+      },
+      {
+        kind: "italic",
+        text: "Some people called this small.",
+      },
+      {
+        kind: "italic",
+        text: "She called it enough.",
+      },
+      {
+        kind: "italic",
+        text: "She didn't know, then, that enough can be a wall as much as a gift.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "University took her to bigger rooms and louder voices, and she moved through them the way a creek moves through a city — finding the quieter channels, the grassy margins, the places where the noise didn't reach.",
+      },
+      {
+        kind: "para",
+        text: "She was supposed to graduate on time. There was one course — a small one, taken online — that stood between her and the finish line. But it never quite arrived. The screen felt thin and far away, and outside the window there were always more beautiful things to look at. Always some reason to disappear back through the trees.",
+      },
+      {
+        kind: "para",
+        text: "So when the calendar gave her one more semester and the chance to choose something of her own, she chose a course she couldn't explain. A program. A place. The heart of downtown Winnipeg, which might as well have been another country.",
+      },
+      {
+        kind: "para",
+        text: "She was pulled there the way you are pulled somewhere you cannot name. A million reasons, none of them speakable.",
+      },
+      {
+        kind: "italic",
+        text: "So she went.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "The room was small — a relief. But the faces were unfamiliar, and that was a new kind of discomfort.",
+      },
+      {
+        kind: "para",
+        text: "She sat the way she had always sat: with big ears and a tender heart. And she listened.",
+      },
+      {
+        kind: "para",
+        text: "What she heard undid her.",
+      },
+      {
+        kind: "para",
+        text: "These were people of all ages — some her parents' age, some younger than she expected. And one by one, in that room in the heart of the city, they opened their lives and let her look inside. Stories of things she had no word for. Experiences that her small and careful world had never once prepared her to hold.",
+      },
+      {
+        kind: "para",
+        text: "She went home each night and cried herself quiet.",
+      },
+      {
+        kind: "para",
+        text: "Not from sadness, exactly. From the rearranging.",
+      },
+      {
+        kind: "para",
+        text: "Thirty days. Thirty days of a world she had not known was there — grey in the places she had always imagined as bright, and pitch black in corners that had never once occurred to her. People who had seemingly never, not once, felt warmth from the inside.",
+      },
+      {
+        kind: "para",
+        text: "It tore her to pieces.",
+      },
+      {
+        kind: "italic",
+        text: "And then, slowly, it put her back together differently.",
+      },
+      {
+        kind: "italic",
+        text: "She didn't know, then, that this was the gift. That being torn is how the container gets bigger.",
+      },
+      { kind: "break" },
+      {
+        kind: "para",
+        text: "Years later she would be sitting on a deck, watching the light go long across the yard, and she would think: that was the moment. That room. That city. Those thirty days. That was where the path turned.",
+      },
+      {
+        kind: "para",
+        text: "She hadn't seen it clearly then. You never do.",
+      },
+      {
+        kind: "para",
+        text: "But she would sit at a table, later still, and watch an old woman's hands — the way they moved without hurry, the way they held things gently, the way they had learned, over a long life, to carry what was heavy without letting it show.",
+      },
+      {
+        kind: "para",
+        text: "And she would understand, finally, what she had been learning all along.",
+      },
+      {
+        kind: "italic",
+        text: "That a heart worn on the outside is not a weakness.",
+      },
+      {
+        kind: "italic",
+        text: "It is a kind of readiness.",
+      },
+      {
+        kind: "italic",
+        text: "She just never knew, until then, what she was ready for.",
+      },
+    ],
+    authorNote:
+      "Some rooms change you before you understand what happened inside them. The gift usually arrives looking like loss.",
+  },
 ];
 
 export function getTale(id: string | undefined): Tale | undefined {
