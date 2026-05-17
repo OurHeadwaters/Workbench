@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
+import { LobbyPage } from "./pages/LobbyPage";
 import OnePager from "./pages/OnePager";
 import HiringTemplates from "./pages/HiringTemplates";
 import HoursByPillar from "./pages/HoursByPillar";
@@ -24,6 +25,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 export default function App() {
   return (
     <Switch>
+      <Route path={`${BASE}/`} component={LobbyPage} />
+      <Route path={`${BASE}/deck`} component={DeckPlayer} />
       <Route path={`${BASE}/one-pager`} component={OnePager} />
       <Route path={`${BASE}/hiring-templates`} component={HiringTemplates} />
       <Route path={`${BASE}/hours`} component={HoursByPillar} />
@@ -44,7 +47,7 @@ export default function App() {
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
-      <Route component={DeckPlayer} />
+      <Route component={LobbyPage} />
     </Switch>
   );
 }
