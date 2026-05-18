@@ -30,6 +30,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
+      "@workspace/practitioners-guide-v2": path.resolve(import.meta.dirname, "../../artifacts/practitioners-guide-v2"),
     },
     dedupe: ["react", "react-dom"],
   },
