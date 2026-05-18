@@ -4,6 +4,7 @@ const palette = {
   paper: "#ede4d2",
   sand: "#c8bfa7",
   stone: "#6b7665",
+  rust: "#b85a3e",
 };
 
 const colors = {
@@ -30,6 +31,7 @@ const colors = {
     pullQuote: palette.stone,
     chrome: "rgba(244,237,224,0.94)",
     chromeBorder: "rgba(31,61,46,0.10)",
+    rust: palette.rust,
   },
   dark: {
     text: "#e8e0cf",
@@ -54,6 +56,7 @@ const colors = {
     pullQuote: "#9aa89c",
     chrome: "rgba(14,26,20,0.94)",
     chromeBorder: "rgba(232,224,207,0.10)",
+    rust: "#c97055",
   },
   radius: 4,
 };
