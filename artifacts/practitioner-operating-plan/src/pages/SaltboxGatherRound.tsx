@@ -90,6 +90,41 @@ const BLOCKS: Block[] = [
     ],
   },
   {
+    title: "Option A · Financial model",
+    badge: "YOUR NUMBER AT 75%",
+    color: T.accent,
+    points: [
+      {
+        label: "What we know about the market",
+        body: "Gather Round serves 100,000+ families across 70+ countries. The Legacy Pass is a one-time lifetime purchase, capped at an undisclosed number — sold in limited windows, potentially never returning. Premium lifetime products in markets this size typically represent 5–12% of total customers. That puts the total Legacy Pass pool at roughly 5,000–12,000 holders. There is no public confirmation of the exact number. These projections use an honest range.",
+      },
+      {
+        label: "You already have one data point — you",
+        body: "You're a Legacy Pass holder. That means your demo is built on real content you already own. Your outreach email can open with 'As a Legacy Pass holder myself, I've been building a tool for this exact problem.' That one sentence changes the entire credibility dynamic. It's not a cold pitch from a developer. It's a customer who built a solution to their own problem and is offering to share it.",
+      },
+      {
+        label: "The licensing fee assumption",
+        body: "Option A: Gather Round pays Headwaters a per-verified-user annual licensing fee — Saltbox is free to Legacy Pass families, Gather Round carries the cost as a platform improvement. A reasonable B2B platform licensing fee for this use case is $8–$15/user/year. This reflects reduced support burden, improved Legacy Pass retention, and enhanced value for future pass sales. It's less than one support email per user resolved per year at any reasonable support cost.",
+      },
+      {
+        label: "The projection at 75% — conservative",
+        body: "Pool: 5,000 Legacy Pass holders. 75% adoption: 3,750 users. At $8/user/year: $30,000/year ($7,500/quarter). At $12/user/year: $45,000/year ($11,250/quarter). This is the floor. It assumes the smallest plausible Legacy Pass pool and a mid-range licensing rate. For a solo practitioner operation, $30–45K/year in recurring quarterly licensing revenue is a meaningful, defensible baseline.",
+      },
+      {
+        label: "The projection at 75% — mid",
+        body: "Pool: 8,000 Legacy Pass holders. 75% adoption: 6,000 users. At $8/user/year: $48,000/year ($12,000/quarter). At $12/user/year: $72,000/year ($18,000/quarter). This is the most likely range given a 100,000-family customer base and a well-received premium lifetime product. $48–72K/year in recurring revenue, with no per-family billing relationship to manage.",
+      },
+      {
+        label: "The projection at 75% — optimistic",
+        body: "Pool: 12,000 Legacy Pass holders. 75% adoption: 9,000 users. At $12/user/year: $108,000/year ($27,000/quarter). At $15/user/year: $135,000/year ($33,750/quarter). This requires a larger Legacy Pass pool and a higher licensing rate — both defensible given the demonstrated value. $108–135K/year puts this in the range of a funded product line, not a side project. This number is what you're building toward, not what you negotiate on day one.",
+      },
+      {
+        label: "What to negotiate first",
+        body: "Don't open with the per-user rate. Open with the problem and the demo. If she wants to move forward, propose a pilot: 500 families, flat $2,500/quarter pilot fee, 90-day trial. That's $10,000/year at a fraction of the eventual rate — low enough she says yes without a budget fight, high enough to prove commercial intent on both sides. After 90 days, you have adoption data to justify the full per-user rate.",
+      },
+    ],
+  },
+  {
     title: "Three-track roadmap",
     badge: "WHAT TO BUILD AND WHEN",
     color: T.gold,
