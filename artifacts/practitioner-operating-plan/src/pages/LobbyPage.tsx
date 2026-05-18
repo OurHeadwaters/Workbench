@@ -30,6 +30,9 @@ const SEC = {
   money:   { header: "#1A5FA8", label: "MONEY",           note: "Salt, costs, and numbers" },
   hiring:  { header: "#3D4A5C", label: "HIRING & TOOLS",  note: "Templates, scripts, and trackers" },
   ref:     { header: "#5B3E8C", label: "REFERENCE",       note: "One-pager and full deck" },
+  deer:    { header: "#1F5446", label: "DEER LAKE DOCS",  note: "Coaching docs for founder conversations" },
+  guide:   { header: "#2D5A7B", label: "PRACTITIONER'S GUIDE", note: "Strategic tools from the guide" },
+  ship:    { header: "#4A3728", label: "CODETRY SHIP",    note: "Internal workbench and SOW" },
 } as const;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -43,7 +46,8 @@ const SECTIONS: ToolSection[] = [
   {
     sec: SEC.today,
     tools: [
-      { label: "Today's Tasks", sub: "Step-by-step for today's date", detail: "Every task scheduled for today with AI prompts ready to copy.", path: `${BASE}/plan/today`, accent: "#b85a3e" },
+      { label: "Morning Debrief",  sub: "Start here — review yesterday, write your note, move into today", detail: "Yesterday's plan, a personal notes field saved by date, your week priorities, and quick links into today. Open this first every morning.", path: `${BASE}/debrief`,      accent: "#b85a3e" },
+      { label: "Today's Tasks",    sub: "Step-by-step for today's date",                                   detail: "Every task scheduled for today with AI prompts ready to copy.",                                                                  path: `${BASE}/plan/today`, accent: "#b85a3e" },
     ],
   },
   {
@@ -84,6 +88,34 @@ const SECTIONS: ToolSection[] = [
       { label: "Full Slide Deck", sub: "Complete practitioner presentation", detail: "All slides — prologue through closing. For council presentations.",       path: `${BASE}/deck`,      accent: "#5B3E8C" },
     ],
   },
+  {
+    sec: SEC.deer,
+    tools: [
+      { label: "Responding to Exclusivity", sub: "Talking points for the exclusivity conversation", detail: "Step-by-step founder coaching doc: acknowledge the ask, offer something real, hold the line. Includes the one-liner to say out loud.", path: `${BASE}/deer-lake-talking-points`, accent: "#1F5446" },
+      { label: "How the Model Spreads",     sub: "Replication roadmap + financial projections",     detail: "Phase 1 → Phase 2 → Constellation. What carries forward, what each community customizes, and the full financial picture by phase.", path: `${BASE}/deer-lake-roadmap`,         accent: "#1F5446" },
+    ],
+  },
+  {
+    sec: SEC.guide,
+    tools: [
+      { label: "Dashboard",        sub: "Current state summary across all active scenarios",      detail: "High-level snapshot of where the practitioner stands — active scenarios, bucket status, and financial position at a glance.",                     path: `/practitioners-guide-v2/dashboard`,       accent: "#2D5A7B" },
+      { label: "Session Handoff",  sub: "Generate AI context for session continuity",             detail: "Creates a context prompt you can paste into a new AI session so it picks up exactly where you left off — no re-explaining needed.",              path: `/practitioners-guide-v2/session-handoff`,  accent: "#2D5A7B" },
+      { label: "Strategic Ledger", sub: "Log of strategic decisions and pivots",                  detail: "A running record of every major strategic call — what was decided, when, and why. Useful for debriefs and accountability.",                        path: `/practitioners-guide-v2/strategic-ledger`, accent: "#2D5A7B" },
+      { label: "Debt Attack",      sub: "Aggressive debt reduction planner",                      detail: "Financial coaching tool for mapping the fastest path out of personal or business debt — ordered payoff, surplus allocation, and milestones.",      path: `/practitioners-guide-v2/debt-attack`,      accent: "#2D5A7B" },
+      { label: "What Next",        sub: "Strategic planning for the next phase",                  detail: "A structured coaching doc for thinking through the next major move — what's available, what's required, and what the decision actually is.",       path: `/practitioners-guide-v2/what-next`,        accent: "#2D5A7B" },
+      { label: "Annual Check-In",  sub: "Structured yearly review",                               detail: "A guided annual review process for practitioners — what worked, what didn't, what the model learned, and what changes going into the next year.",  path: `/practitioners-guide-v2/year/check-in`,    accent: "#2D5A7B" },
+      { label: "Workflow Map",     sub: "Step-by-step practitioner workflow visualization",       detail: "A visual walkthrough of the full practitioner process from intake to handoff — useful for orientation and for explaining the model to others.",    path: `/practitioners-guide-v2/workflow`,          accent: "#2D5A7B" },
+      { label: "Replication",      sub: "Guidelines for replicating the model across communities", detail: "The internal playbook for taking what works in one community and applying it to the next — what transfers, what must be rebuilt, what to watch.", path: `/practitioners-guide-v2/replication`,       accent: "#2D5A7B" },
+      { label: "Sarge HQ",         sub: "Mobile-focused operational control interface",           detail: "A compact, mobile-optimized hub for real-time operational decisions when you're on-site or in the field.",                                          path: `/practitioners-guide-v2/sarge`,             accent: "#2D5A7B" },
+    ],
+  },
+  {
+    sec: SEC.ship,
+    tools: [
+      { label: "Workbench",         sub: "Internal operator dashboard and tool hub",              detail: "Central hub linking to all internal workspace tools — Research Library, Books, Handbook, Rootwork, Grants Finder — in one place.",  path: `/workbench`,  accent: "#4A3728" },
+      { label: "Statement of Work", sub: "Formal, printable engagement terms document",           detail: "The locked SOW outlining hourly engagement terms ($175/hr) and scope. Printable. For use when a formal agreement is needed before the contract.",  path: `/sow`,        accent: "#4A3728" },
+    ],
+  },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -98,6 +130,19 @@ function getNearestWeek() {
 
 // ─── Tool row ─────────────────────────────────────────────────────────────────
 
+function isExternalArtifactPath(path: string): boolean {
+  if (!BASE) return path.startsWith("/practitioners-guide-v2") || path.startsWith("/workbench") || path.startsWith("/sow");
+  return !path.startsWith(BASE + "/") && path !== BASE;
+}
+
+function openPath(href: string, navigate: (to: string) => void) {
+  if (isExternalArtifactPath(href)) {
+    window.location.href = href;
+  } else {
+    navigate(href);
+  }
+}
+
 function Row({ tool }: { tool: ToolRow }) {
   const [open, setOpen] = useState(false);
   const [, navigate] = useLocation();
@@ -105,6 +150,8 @@ function Row({ tool }: { tool: ToolRow }) {
   const href = tool.path.includes("CURRENT")
     ? tool.path.replace("CURRENT", String(getTodayWeek()?.isoWeek ?? 1))
     : tool.path;
+
+  const external = isExternalArtifactPath(href);
 
   return (
     <div style={{ borderBottom: `1px solid ${T.rule}` }} className="last-no-border">
@@ -135,12 +182,21 @@ function Row({ tool }: { tool: ToolRow }) {
         <div style={{ padding: "0 16px 14px 29px", display: "flex", flexDirection: "column", gap: 6 }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: tool.accent, margin: 0 }}>{tool.sub}</p>
           <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>{tool.detail}</p>
+          {external ? (
+            <a
+              href={href}
+              style={{ alignSelf: "flex-start", fontSize: 11, fontWeight: 700, color: tool.accent, background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "none" }}
+            >
+              Open →
+            </a>
+          ) : (
           <button
-            onClick={() => navigate(href)}
+            onClick={() => openPath(href, navigate)}
             style={{ alignSelf: "flex-start", fontSize: 11, fontWeight: 700, color: tool.accent, background: "none", border: "none", cursor: "pointer", padding: 0 }}
           >
             Open →
           </button>
+          )}
         </div>
       )}
     </div>

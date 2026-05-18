@@ -18,6 +18,9 @@ import Week from "./pages/Week";
 import WeekCloseOut from "./pages/WeekCloseOut";
 import CostReviewModal from "./components/CostReviewModal";
 import RateBreakdown from "./pages/RateBreakdown";
+import DeerLakeTalkingPoints from "./pages/DeerLakeTalkingPoints";
+import DeerLakeRoadmap from "./pages/DeerLakeRoadmap";
+import DailyDebrief from "./pages/DailyDebrief";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -46,6 +49,9 @@ export default function App() {
       <Route path={`${BASE}/tools/bench/close`} component={WeekCloseOut} />
       <Route path={`${BASE}/tools/cost-review`} component={CostReviewModal} />
       <Route path={`${BASE}/rate-breakdown`} component={RateBreakdown} />
+      <Route path={`${BASE}/deer-lake-talking-points`} component={DeerLakeTalkingPoints} />
+      <Route path={`${BASE}/deer-lake-roadmap`} component={DeerLakeRoadmap} />
+      <Route path={`${BASE}/debrief`} component={DailyDebrief} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
