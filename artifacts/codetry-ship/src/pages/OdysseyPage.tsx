@@ -273,6 +273,22 @@ export function OdysseyPage() {
       {/* ══════════════════════════════════════ MAIN CONTENT COLUMN ══ */}
       <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
 
+        {/* ══════════════════════════════════ PLAIN-LANGUAGE INTRO ══ */}
+        <section className="pt-14 pb-10" data-testid="odyssey-intro">
+          <p
+            className="font-serif text-[17px] leading-[1.75] mb-4"
+            style={{ color: "#1f3d2e" }}
+          >
+            The Headwaters Odyssey is a free, self-paced learning journey through the economic concepts that underpin community-owned development. Working through five phases and twenty stations, you build a practical understanding of how the Headwaters model applies to your own community — and produce real field notes along the way.
+          </p>
+          <p
+            className="font-serif text-[15.5px] leading-[1.7]"
+            style={{ color: "rgba(31,61,46,0.68)" }}
+          >
+            By the time you reach the final station, you hold a clear map of the economic levers your community can pull and the language to discuss them with councils, funders, and neighbours alike. Each station unlocks only after you complete the one before it — there are no shortcuts, and no cost.
+          </p>
+        </section>
+
         {/* Trail divider */}
         <div className="od-trail-rule">
           <span>Phase trail</span>
