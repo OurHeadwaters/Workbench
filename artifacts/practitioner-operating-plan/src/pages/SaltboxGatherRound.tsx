@@ -127,6 +127,33 @@ const BLOCKS: Block[] = [
       },
     ],
   },
+  {
+    title: "She's building the team — we build the tools",
+    badge: "LIVE INTELLIGENCE · MAY 2026",
+    color: T.teal,
+    points: [
+      {
+        label: "What the hiring post tells us",
+        body: "Gather Round is actively hiring a 'Data Entry and Software Implementation Clerk' to handle course, subscription, membership, and enrollment data migrations. The role description — 80 wpm typing, file import/export, copy/paste between systems — is a manual workaround for a missing tech stack. They are paying a person to do what software should do automatically. This confirms they are mid-migration, the problem is live, and the timing is real.",
+      },
+      {
+        label: "Do not lead with job replacement",
+        body: "Pitching 'I could save you from hiring 2–3 people' creates anxiety in a founder who's already mid-process. She has momentum. Stalling a hire she's already committed to feels like a threat, not an opportunity — even if you're right. The people-first, community-driven nature of Gather Round's brand makes this doubly risky. Do not open with subtraction.",
+      },
+      {
+        label: "The right pitch — compound the human value",
+        body: "What to actually say: 'You're building a team to run your new offerings. I can build the platform before your new hires start — so they walk in on day one with working infrastructure instead of a data migration project. Your clerk becomes a Platform Administrator. Your team's time goes to relationships and growth rather than spreadsheets and file imports. The system compounds: each person you hire becomes more effective, not more dependent on manual process.' This is the Codetry model stated plainly. It's also true.",
+      },
+      {
+        label: "Blockchain membership — hold for the second conversation",
+        body: "The flexibility angle is real and compelling: a blockchain-anchored membership platform means she can add NFT-based tiers, transferable passes, alumni credentials, or resale-protected content — without rebuilding from scratch when her offerings evolve. But surface this after she says yes to the base build. Lead with the problem her clerk will solve. Offer the blockchain architecture as 'why this doesn't hit a ceiling the way a Kajabi or Teachable build does.' It's the answer to a question she'll ask once she's already bought in, not the hook that gets her there.",
+      },
+      {
+        label: "Positions this could touch",
+        body: "Data Entry & Software Implementation Clerk (the current posting) — the entire scope of this role becomes either unnecessary or dramatically reduced with a working content sync and membership platform in place. Potential 2–3 role equivalents replaced by infrastructure — but frame this internally as your ROI proof, not as the pitch to her. The argument to her is: your team does better work, faster, with less overhead. Let her draw the line to headcount herself.",
+      },
+    ],
+  },
 ];
 
 function Block({ b }: { b: Block }) {
