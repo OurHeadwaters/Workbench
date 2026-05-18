@@ -550,12 +550,12 @@ const styles = StyleSheet.create({
   },
   sectionAccentBar: {
     width: 3,
-    height: 13,
+    height: 16,
     borderRadius: 2,
   },
   sectionLabel: {
-    fontSize: 9,
-    letterSpacing: 2.5,
+    fontSize: 12,
+    letterSpacing: 2,
     textTransform: "uppercase",
   },
   sectionLine: {
