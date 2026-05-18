@@ -23,11 +23,11 @@ const BLOCKS: Block[] = [
     points: [
       {
         label: "Gather Round Legacy Pass",
-        body: "Gather Round is a homeschool curriculum company. Their Legacy Pass gives families lifetime access to the full curriculum library — but delivery is entirely download-based. Families manage folders, PDFs, and content files manually across devices. That's friction every single week.",
+        body: "Gather Round is a Christian homeschool curriculum company founded in 2019 by Rebecca Spooner — homeschool mom of five, second-generation homeschooler, now building a significant multi-product business. The Legacy Pass is a one-time lifetime purchase that unlocks the full curriculum library plus all future releases. Delivery is entirely download-based. Families manage hundreds of PDFs manually across devices — download from the website, sort into folders, repeat. That's friction every single week, for every family.",
       },
       {
-        label: "Saltbox is the easy button",
-        body: "Saltbox (built on the Codetry/Saily framework) is a local-first app that hosts content on-device, syncs offline, and organises materials so families don't have to. For a Legacy Pass holder, Saltbox would mean: log in once, your curriculum is there, works without internet, always current.",
+        label: "They have an app — and it doesn't solve this",
+        body: "Gather Round launched their own app in April 2025, built on Mighty Networks (a white-label community platform). The app is a strong community tool: forums, live class replays, discussion, podcasts. It does not and cannot manage the Legacy Pass content library. Mighty Networks has no offline access, no native file downloads, and no local content storage — these are confirmed platform-level limitations, not gaps they're planning to close. Legacy Pass families still go to the website to download files. The app doesn't change that.",
       },
       {
         label: "The identity layer — XRPL NFT",
@@ -36,6 +36,33 @@ const BLOCKS: Block[] = [
       {
         label: "Why this matters to Headwaters",
         body: "Saltbox already needs to exist for the Codetry model to reach homeschooling communities in the north. If Gather Round families become early users, Saltbox gains a proven customer base, a credibility story, and a revenue path — before a single NAN community is formally onboarded.",
+      },
+    ],
+  },
+  {
+    title: "Know their stack before you walk in",
+    badge: "TECH INTELLIGENCE",
+    color: T.gold,
+    points: [
+      {
+        label: "Their app is Mighty Networks — a community platform",
+        body: "The Gather Round app (launched April 2025, on iOS and Android) is a white-label build on Mighty Networks, formerly MightyBell. Mighty Networks is excellent at what it does: community discussion, live event replays, courses, podcasts. It powers thousands of online communities. It is not a content delivery or file management platform — and it was never designed to be. This distinction is the foundation of your pitch.",
+      },
+      {
+        label: "Mighty Networks cannot go offline — ever",
+        body: "This is a confirmed, permanent, platform-level limitation: Mighty Networks requires an active internet connection for all content access. No offline mode. No content caching. No local storage. Every member of the Gather Round community using their app — including every Legacy Pass holder — loses access the moment they lose signal. For a curriculum used by families in rural areas, in trucks, at the kitchen table with spotty wifi, this is a real daily problem.",
+      },
+      {
+        label: "Mighty Networks cannot handle file downloads",
+        body: "The Legacy Pass is a library of PDFs, printables, and curriculum files. Mighty Networks has no native mechanism to download files to a device for offline use — members can view course content online but cannot save it locally through the app. Legacy Pass families are still going to the Gather Round website, downloading files manually, and organizing them in their own folder systems. The app does not change this at all.",
+      },
+      {
+        label: "The Data Entry Clerk is bridging Shopify to Mighty Networks by hand",
+        body: "Gather Round sells through Shopify. Their community and courses live in Mighty Networks. These are two separate systems with no native integration that handles membership tiers, Legacy Pass verification, or enrollment sync automatically. The Data Entry and Software Implementation Clerk role exists to move data between them manually — importing purchases, migrating memberships, updating enrollment lists. Saltbox doesn't compete with Mighty Networks. It fills what Mighty Networks cannot touch.",
+      },
+      {
+        label: "How to say this in the email",
+        body: "You don't need to name-drop Mighty Networks or reveal how much you know. Say it simply: 'I noticed your app focuses on community and live learning — which it does really well. I've been building a companion tool for the offline curriculum side: local-first, device-synced, works without internet. For Legacy Pass families especially, I think it fills a gap your current setup doesn't cover.' That's all. It shows you've looked, you respect what they've built, and you're offering something that fits alongside it.",
       },
     ],
   },
@@ -133,8 +160,12 @@ const BLOCKS: Block[] = [
     color: T.teal,
     points: [
       {
+        label: "Who you're pitching — Rebecca Spooner",
+        body: "Founder and CEO. Homeschool mom of five, second-generation homeschooler, married to an RCMP officer, based in Winterville, Georgia. She built Gather Round from scratch in 2019 and has taken no outside funding. She describes herself as 'surviving on coffee and Jesus.' She is a Canadian in the American homeschool market — and she knows what it's like to build something real from the ground up without institutional support. That's common ground. Don't waste it on a generic cold pitch.",
+      },
+      {
         label: "What the hiring post tells us",
-        body: "Gather Round is actively hiring a 'Data Entry and Software Implementation Clerk' to handle course, subscription, membership, and enrollment data migrations. The role description — 80 wpm typing, file import/export, copy/paste between systems — is a manual workaround for a missing tech stack. They are paying a person to do what software should do automatically. This confirms they are mid-migration, the problem is live, and the timing is real.",
+        body: "Gather Round is actively hiring a 'Data Entry and Software Implementation Clerk' to handle course, subscription, membership, and enrollment data migrations. The role description — 80 wpm typing, file import/export, copy/paste between systems — is a manual workaround for a missing tech stack. Specifically: someone to bridge Shopify (sales) and Mighty Networks (community) by hand, because there's no automated integration between the two systems. They are paying a person to do what software should do automatically. This confirms they are mid-migration, the problem is live, and the timing is real.",
       },
       {
         label: "Do not lead with job replacement",
