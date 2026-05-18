@@ -149,8 +149,24 @@ const BLOCKS: Block[] = [
         body: "The flexibility angle is real and compelling: a blockchain-anchored membership platform means she can add NFT-based tiers, transferable passes, alumni credentials, or resale-protected content — without rebuilding from scratch when her offerings evolve. But surface this after she says yes to the base build. Lead with the problem her clerk will solve. Offer the blockchain architecture as 'why this doesn't hit a ceiling the way a Kajabi or Teachable build does.' It's the answer to a question she'll ask once she's already bought in, not the hook that gets her there.",
       },
       {
-        label: "Positions this could touch",
-        body: "Data Entry & Software Implementation Clerk (the current posting) — the entire scope of this role becomes either unnecessary or dramatically reduced with a working content sync and membership platform in place. Potential 2–3 role equivalents replaced by infrastructure — but frame this internally as your ROI proof, not as the pitch to her. The argument to her is: your team does better work, faster, with less overhead. Let her draw the line to headcount herself.",
+        label: "The full hiring picture — 11 open positions",
+        body: "Gather Round is not making one or two hires. They have 11 open roles: Video Editor, Customer Experience Specialist, Education Sales Coordinator, Media Buyer, Administrative Assistant, Designer (Promotional), Illustrator, Online Academy Teacher, Warehouse Labourer, Writer, and Data Entry & Software Implementation Clerk. This is a company in full-scale build mode — standing up new revenue streams, content delivery, and operations all at once. The timing is not incidental.",
+      },
+      {
+        label: "Roles the platform directly reduces",
+        body: "Data Entry & Software Implementation Clerk — this role exists entirely because they lack the right tooling. A working membership + content sync platform eliminates 80–90% of its stated scope. Administrative Assistant — automated enrollment, membership status management, and communications routing cuts admin overhead significantly. One person can carry what they're currently sizing for two or three. These two alone represent the core ROI argument.",
+      },
+      {
+        label: "Roles the platform amplifies",
+        body: "Customer Experience Specialist — a self-service member portal, automated order status, and a knowledge base let one CX person carry 3x the ticket volume without burning out. Education Sales Coordinator — automated enrollment funnels and a sales tracking dashboard mean the coordinator spends time on relationships, not manual follow-up. Online Academy Teacher — the course delivery platform is the infrastructure the teacher needs; better tooling means more students per teacher without adding more teachers.",
+      },
+      {
+        label: "Roles with no honest tech angle",
+        body: "Warehouse Labourer — physical fulfilment, no tech play. Illustrator and Designer (Promotional) — creative work, not reduceable by platform. Video Editor — same. Writer — content management tools help marginally but don't replace the creative function. Media Buyer — analytics tooling can sharpen their work but a platform build doesn't change the headcount equation here. Be honest about which roles you touch and which you don't.",
+      },
+      {
+        label: "What this adds up to — internal framing only",
+        body: "A well-built membership and content platform plausibly touches 5 of the 11 roles — directly reducing 2, meaningfully amplifying 3. That is a strong ROI case for you to hold internally. It is not the opening line. The pitch to her remains: your team arrives to working infrastructure instead of a backlog. She will do the math on headcount herself, in her own time, with her own numbers.",
       },
     ],
   },
