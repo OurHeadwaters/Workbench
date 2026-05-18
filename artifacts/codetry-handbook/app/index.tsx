@@ -136,34 +136,8 @@ export default function FrontPage() {
           </View>
         </View>
 
-        {/* ── DAILY PROMPT ──────────────────────────────────────────── */}
-        <Pressable
-          onPress={() => router.push("/daily-prompt")}
-          style={({ pressed }) => [
-            styles.promptCard,
-            { backgroundColor: EVERGREEN, opacity: pressed ? 0.92 : 1 },
-          ]}
-        >
-          <View style={styles.promptInner}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.promptEyebrow, { fontFamily: MONO }]}>
-                TODAY
-              </Text>
-              <Text style={[styles.promptTitle, { fontFamily: SERIF_BOLD }]}>
-                Daily Prompt
-              </Text>
-              <Text style={[styles.promptSub, { fontFamily: SERIF_ITALIC }]}>
-                One question, drawn from your constellation
-              </Text>
-            </View>
-            <View style={styles.promptArrowWrap}>
-              <Text style={[styles.promptArrow, { fontFamily: MONO }]}>→</Text>
-            </View>
-          </View>
-        </Pressable>
-
-        {/* ── CHILDREN'S TALES ──────────────────────────────────────── */}
-        <SectionHeader label="CHILDREN'S TALES" accent={RUST} />
+        {/* ── CHILDREN'S TALES — always visible ────────────────────── */}
+        <SectionHeader label="CHILDREN'S TALES" accent={RUST} topGap={28} />
 
         <Pressable
           onPress={() => router.push("/tales")}
@@ -199,131 +173,144 @@ export default function FrontPage() {
           </View>
         </Pressable>
 
-        {/* ── PRACTICE ──────────────────────────────────────────────── */}
-        <SectionHeader label="PRACTICE" accent={EVERGREEN} topGap={36} />
+        {/* ── NEW READER: orienting close ───────────────────────────── */}
+        {!isReturning && (
+          <View style={styles.orientWrap}>
+            <View style={[styles.orientRule, { backgroundColor: `${EVERGREEN}18` }]} />
+            <Text style={[styles.orientText, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+              Read straight through. Each chapter builds on the next.
+            </Text>
+          </View>
+        )}
 
-        <ToolRow
-          label="Practice Cards"
-          sub="Test what has landed, one card at a time"
-          onPress={() => router.push("/stack")}
-          c={c}
-          accent={EVERGREEN}
-        />
-        <ToolRow
-          label="Rename Test"
-          sub="Is this name load-bearing or decoration?"
-          onPress={() => router.push("/rename-test")}
-          c={c}
-          accent={EVERGREEN}
-        />
-        <ToolRow
-          label="Gate Log"
-          sub="Bright-side names and their massity translations"
-          onPress={() => router.push("/gate-log")}
-          c={c}
-          accent={EVERGREEN}
-        />
-
-        {/* ── YOUR WORK ─────────────────────────────────────────────── */}
-        <SectionHeader label="YOUR WORK" accent={RUST} topGap={32} />
-
-        <ToolRow
-          label="Your Constellation"
-          sub="Name your six zones in your own vocabulary"
-          onPress={() => router.push("/constellation-builder")}
-          c={c}
-          accent={RUST}
-        />
-        <ToolRow
-          label="Author's Desk"
-          sub="Your constellation, in your words"
-          onPress={() => router.push("/author")}
-          c={c}
-          accent={RUST}
-        />
-        <ToolRow
-          label={glossaryTerms.length > 0 ? `Glossary \u00b7 ${glossaryTerms.length} saved` : "Glossary"}
-          sub="All formally defined terms, searchable"
-          onPress={() => router.push("/glossary")}
-          c={c}
-          accent={RUST}
-        />
-
-        {/* ── THE BOOK ──────────────────────────────────────────────── */}
-        <SectionHeader label="THE BOOK" accent={EVERGREEN} topGap={36} />
-
-        {mainParts.map((p, i) => {
-          const firstCh = CHAPTERS.find((ch) => ch.partRoman === p.roman);
-          return (
+        {/* ── RETURNING READER: full dashboard ─────────────────────── */}
+        {isReturning && (
+          <>
+            {/* Daily Prompt */}
             <Pressable
-              key={p.roman}
-              onPress={() => {
-                if (firstCh) {
-                  router.push({
-                    pathname: "/chapter/[id]",
-                    params: { id: firstCh.id },
-                  });
-                }
-              }}
+              onPress={() => router.push("/daily-prompt")}
               style={({ pressed }) => [
-                styles.partRow,
-                {
-                  borderBottomColor: `${EVERGREEN}14`,
-                  backgroundColor: i % 2 === 0 ? "transparent" : `${EVERGREEN}04`,
-                  opacity: pressed ? 0.65 : 1,
-                },
+                styles.promptCard,
+                { backgroundColor: EVERGREEN, opacity: pressed ? 0.92 : 1 },
               ]}
             >
-              <Text
-                style={[
-                  styles.partRoman,
-                  { color: EVERGREEN, fontFamily: SERIF_BOLD },
-                ]}
-              >
-                {p.roman}
-              </Text>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={[
-                    styles.partTitle,
-                    { color: c.foreground, fontFamily: SERIF_BOLD },
-                  ]}
-                >
-                  {p.title}
-                </Text>
-                <Text
-                  style={[
-                    styles.partBlurb,
-                    { color: c.mutedForeground, fontFamily: SERIF_ITALIC },
-                  ]}
-                >
-                  {p.blurb}
-                </Text>
+              <View style={styles.promptInner}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.promptEyebrow, { fontFamily: MONO }]}>
+                    TODAY
+                  </Text>
+                  <Text style={[styles.promptTitle, { fontFamily: SERIF_BOLD }]}>
+                    Daily Prompt
+                  </Text>
+                  <Text style={[styles.promptSub, { fontFamily: SERIF_ITALIC }]}>
+                    One question, drawn from your constellation
+                  </Text>
+                </View>
+                <View style={styles.promptArrowWrap}>
+                  <Text style={[styles.promptArrow, { fontFamily: MONO }]}>→</Text>
+                </View>
               </View>
-              <Text
-                style={{
-                  color: RUST,
-                  fontFamily: MONO,
-                  fontSize: 16,
-                  opacity: 0.55,
-                  paddingTop: 3,
-                }}
-              >
-                →
-              </Text>
             </Pressable>
-          );
-        })}
 
-        {/* ── COLOPHON ──────────────────────────────────────────────── */}
-        <View style={styles.colophonWrap}>
-          <View style={[styles.colophonRule, { backgroundColor: `${EVERGREEN}18` }]} />
-          <Text
-            style={[styles.colophon, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}
-          >
-            Drawn from the constellation manifest. The discipline travels; the examples don't.
-          </Text>
-        </View>
+            {/* PRACTICE */}
+            <SectionHeader label="PRACTICE" accent={EVERGREEN} topGap={36} />
+            <ToolRow
+              label="Practice Cards"
+              sub="Test what has landed, one card at a time"
+              onPress={() => router.push("/stack")}
+              c={c}
+              accent={EVERGREEN}
+            />
+            <ToolRow
+              label="Rename Test"
+              sub="Is this name load-bearing or decoration?"
+              onPress={() => router.push("/rename-test")}
+              c={c}
+              accent={EVERGREEN}
+            />
+            <ToolRow
+              label="Gate Log"
+              sub="Bright-side names and their massity translations"
+              onPress={() => router.push("/gate-log")}
+              c={c}
+              accent={EVERGREEN}
+            />
+
+            {/* YOUR WORK */}
+            <SectionHeader label="YOUR WORK" accent={RUST} topGap={32} />
+            <ToolRow
+              label="Your Constellation"
+              sub="Name your six zones in your own vocabulary"
+              onPress={() => router.push("/constellation-builder")}
+              c={c}
+              accent={RUST}
+            />
+            <ToolRow
+              label="Author's Desk"
+              sub="Your constellation, in your words"
+              onPress={() => router.push("/author")}
+              c={c}
+              accent={RUST}
+            />
+            <ToolRow
+              label={glossaryTerms.length > 0 ? `Glossary \u00b7 ${glossaryTerms.length} saved` : "Glossary"}
+              sub="All formally defined terms, searchable"
+              onPress={() => router.push("/glossary")}
+              c={c}
+              accent={RUST}
+            />
+
+            {/* THE BOOK */}
+            <SectionHeader label="THE BOOK" accent={EVERGREEN} topGap={36} />
+            {mainParts.map((p, i) => {
+              const firstCh = CHAPTERS.find((ch) => ch.partRoman === p.roman);
+              return (
+                <Pressable
+                  key={p.roman}
+                  onPress={() => {
+                    if (firstCh) {
+                      router.push({
+                        pathname: "/chapter/[id]",
+                        params: { id: firstCh.id },
+                      });
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    styles.partRow,
+                    {
+                      borderBottomColor: `${EVERGREEN}14`,
+                      backgroundColor: i % 2 === 0 ? "transparent" : `${EVERGREEN}04`,
+                      opacity: pressed ? 0.65 : 1,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.partRoman, { color: EVERGREEN, fontFamily: SERIF_BOLD }]}>
+                    {p.roman}
+                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.partTitle, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+                      {p.title}
+                    </Text>
+                    <Text style={[styles.partBlurb, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+                      {p.blurb}
+                    </Text>
+                  </View>
+                  <Text style={{ color: RUST, fontFamily: MONO, fontSize: 16, opacity: 0.55, paddingTop: 3 }}>
+                    →
+                  </Text>
+                </Pressable>
+              );
+            })}
+
+            {/* Colophon */}
+            <View style={styles.colophonWrap}>
+              <View style={[styles.colophonRule, { backgroundColor: `${EVERGREEN}18` }]} />
+              <Text style={[styles.colophon, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+                Drawn from the constellation manifest. The discipline travels; the examples don't.
+              </Text>
+            </View>
+          </>
+        )}
 
       </ScrollView>
     </View>
@@ -667,6 +654,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     marginTop: 3,
+  },
+
+  // ORIENT (new reader close)
+  orientWrap: {
+    paddingHorizontal: 22,
+    marginTop: 36,
+    marginBottom: 8,
+  },
+  orientRule: {
+    height: 1,
+    marginBottom: 16,
+  },
+  orientText: {
+    fontSize: 14,
+    lineHeight: 22,
+    opacity: 0.65,
+    textAlign: "center",
   },
 
   // COLOPHON
