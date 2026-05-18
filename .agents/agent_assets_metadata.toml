@@ -83,3 +83,9 @@ id = "uCVvwD6fbKkovZUucHYm_"
 uri = "file://.local/codetry-handbook-context.md"
 type = "text"
 title = "Handbook Build Context & Decision Log"
+
+[[outputs]]
+id = "ezGP0cpYB1wkGTE2xzPdv"
+uri = "file://.local/handbook-how-to-paste.md"
+type = "text"
+title = "How to Paste the Handbook — 8-Chunk Guide"
