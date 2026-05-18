@@ -143,9 +143,40 @@ const CARRIES = [
 
 // ─── Components ──────────────────────────────────────────────────────────────
 
+function PrintButton() {
+  return (
+    <button
+      className="no-print"
+      onClick={() => window.print()}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "8px 14px",
+        borderRadius: 7,
+        border: `1px solid ${T.rule}`,
+        backgroundColor: "rgba(255,255,255,0.06)",
+        color: T.muted,
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: "0.07em",
+        cursor: "pointer",
+        fontFamily: "var(--font-body)",
+      }}
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print / Save as PDF
+    </button>
+  );
+}
+
 function FinancialCard({ data }: { data: typeof FINANCIALS[0] }) {
   return (
-    <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${T.rule}` }}>
+    <div className="print-card" style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${T.rule}` }}>
       <div style={{ padding: "10px 16px", backgroundColor: data.color }}>
         <span style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#fff" }}>
           {data.phase}
@@ -255,9 +286,9 @@ function PhaseCard({ p, index }: { p: PhaseItem; index: number }) {
 
 export default function DeerLakeRoadmap() {
   return (
-    <div style={{ maxWidth: 680, margin: "0 auto", padding: "28px 16px 64px" }}>
+    <div className="print-root" style={{ maxWidth: 680, margin: "0 auto", padding: "28px 16px 64px" }}>
 
-      <div style={{ marginBottom: 20 }}>
+      <div className="no-print" style={{ marginBottom: 20 }}>
         <a
           href={BASE + "/"}
           style={{ fontSize: 11, fontWeight: 700, color: T.muted, textDecoration: "none", letterSpacing: "0.08em" }}
@@ -267,19 +298,24 @@ export default function DeerLakeRoadmap() {
       </div>
 
       <div style={{ marginBottom: 28 }}>
-        <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 8px" }}>
-          Deer Lake — Replication Roadmap
-        </p>
-        <h1 style={{
-          fontFamily: "var(--font-display)",
-          fontSize: 30,
-          fontWeight: 600,
-          lineHeight: 1.2,
-          color: T.paper,
-          margin: "0 0 10px",
-        }}>
-          How the Model Spreads
-        </h1>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 12, flexWrap: "wrap" as const }}>
+          <div>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 8px" }}>
+              Deer Lake — Replication Roadmap
+            </p>
+            <h1 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 30,
+              fontWeight: 600,
+              lineHeight: 1.2,
+              color: T.paper,
+              margin: "0 0 10px",
+            }}>
+              How the Model Spreads
+            </h1>
+          </div>
+          <PrintButton />
+        </div>
         <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.6, margin: 0, maxWidth: 560 }}>
           Deer Lake seeds a model designed to travel. This document shows the progression from anchor community to regional constellation — what carries forward, what each community builds fresh, and what the whole network earns with each addition.
         </p>
@@ -373,7 +409,7 @@ export default function DeerLakeRoadmap() {
       </div>
 
       {/* See also */}
-      <div style={{
+      <div className="no-print" style={{
         padding: "16px 20px",
         borderRadius: 10,
         backgroundColor: "rgba(255,255,255,0.04)",
