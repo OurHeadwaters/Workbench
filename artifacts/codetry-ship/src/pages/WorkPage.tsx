@@ -246,22 +246,6 @@ export function WorkPage() {
 
         <hr style={{ borderColor: "hsl(var(--card-border))" }} />
 
-        {/* ── Placeholder for additional case studies ── */}
-        <div
-          className="rounded-md border px-6 py-5"
-          style={{ borderColor: "hsl(var(--card-border))", borderStyle: "dashed", background: "hsl(var(--card))", opacity: 0.65 }}
-          data-testid="case-study-placeholder"
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-            More case studies in progress
-          </p>
-          <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-            Additional community engagements will be documented here as they complete — community store plans, co-op builds, and custom tools.
-          </p>
-        </div>
-
-        <hr style={{ borderColor: "hsl(var(--card-border))" }} />
-
         {/* ── CTA ── */}
         <section className="pb-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3" style={{ color: "hsl(var(--accent))" }}>
