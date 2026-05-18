@@ -220,7 +220,9 @@
 
 /* ─── Headwaters section label — bold filled bar ──────────────────────── */
 /* Usage: <div class="hw-label">Section</div>                             */
-/* Colour variants: hw-label--rust  hw-label--blue  hw-label--cream      */
+/* Colour variants: hw-label--evergreen  hw-label--blue  hw-label--cream  */
+/* Note: hw-label--rust is now an alias for evergreen — section titles    */
+/* use the calm evergreen background; reserve orange/rust for buttons.    */
 .hw-label {
   display: inline-block;
   background: #1f3d2e;
@@ -235,9 +237,10 @@
   line-height: 1.1;
   margin-bottom: 0.75rem;
 }
-.hw-label--rust  { background: #b85a3e; }
-.hw-label--blue  { background: #1B5E8A; }
-.hw-label--cream { background: #f4ede0; color: #1f3d2e; }
+.hw-label--evergreen { background: #1f3d2e; }
+.hw-label--rust      { background: #1f3d2e; }
+.hw-label--blue      { background: #1B5E8A; }
+.hw-label--cream     { background: #f4ede0; color: #1f3d2e; }
 
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button {
