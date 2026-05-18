@@ -167,7 +167,7 @@ export default function FrontPage() {
               ]}
             >
               <Text style={[styles.nightSkyDots, { fontFamily: MONO }]}>· · ·</Text>
-              <Text style={[styles.nightSkyLabel, { fontFamily: MONO }]}>Night sky</Text>
+              <Text style={[styles.nightSkyLabel, { fontFamily: MONO }]}>Look up</Text>
             </Pressable>
           )}
         </View>

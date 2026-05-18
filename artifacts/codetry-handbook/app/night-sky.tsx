@@ -161,21 +161,18 @@ export default function NightSkyScreen() {
                 {guide.zone}
               </Text>
 
-              {/* Zone name */}
-              <Text
-                style={[
-                  styles.zoneName,
-                  {
-                    color: named ? CREAM : `${CREAM}35`,
-                    fontFamily: named ? SERIF_BOLD : MONO,
-                    fontSize: named ? 13 : 10,
-                    letterSpacing: named ? 0 : 1.2,
-                  },
-                ]}
-                numberOfLines={2}
-              >
-                {displayName}
-              </Text>
+              {/* Zone name — only shown when named */}
+              {named && (
+                <Text
+                  style={[
+                    styles.zoneName,
+                    { color: CREAM, fontFamily: SERIF_BOLD, fontSize: 13, letterSpacing: 0 },
+                  ]}
+                  numberOfLines={2}
+                >
+                  {userZone!.name}
+                </Text>
+              )}
             </Pressable>
           );
         })}
