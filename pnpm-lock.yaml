@@ -1102,6 +1102,9 @@ importers:
 
   artifacts/practitioner-operating-plan:
     dependencies:
+      '@workspace/practitioners-guide-v2':
+        specifier: workspace:*
+        version: link:../practitioners-guide-v2
       clsx:
         specifier: 'catalog:'
         version: 2.1.1

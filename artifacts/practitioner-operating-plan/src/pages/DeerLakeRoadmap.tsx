@@ -1,3 +1,30 @@
+import {
+  PHASE1_FLAT_FEE,
+  PHASE1_HOURS_PER_WEEK,
+  PHASE1_WEEKS,
+  PHASE1_TITHE,
+  PHASE1_TITHE_PCT,
+  PHASE1_POST_TITHE,
+  PHASE1_BOBBIE_COST,
+  PHASE1_GAP,
+  TOTAL_MONTHLY_BILLED,
+  BOBBIE_DRAW_MONTHLY,
+  TYLER_COST_MONTHLY,
+  OVERHEADS_MONTHLY,
+  MONTHLY_SURPLUS,
+  ANNUAL_SURPLUS,
+  TERM_MONTHS,
+  MILESTONE_BRIDGE_DEADLINE,
+  MILESTONE_HARD_DECISION,
+  MILESTONE_807_TARGET,
+  MILESTONE_SCENARIO_A_FLOOR,
+  fmtDollar,
+  fmtMonthly,
+  fmtAnnual,
+  fmtApproxAnnual,
+  fmtMilestoneDate,
+} from "@/data/v7";
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const T = {
@@ -19,12 +46,12 @@ const FINANCIALS = [
     phase: "Phase 1 — Deer Lake",
     color: T.teal,
     rows: [
-      { label: "Flat fee (8-week trial)", value: "$25,000" },
-      { label: "Practitioner hours", value: "40 hrs/wk · 8 wks" },
-      { label: "Tithe (10%)", value: "$2,500" },
-      { label: "Post-tithe revenue", value: "$22,500" },
-      { label: "Practitioner draw (8 wks)", value: "$33,600" },
-      { label: "Intentional gap (entry posture)", value: "−$11,100" },
+      { label: "Flat fee (8-week trial)", value: fmtDollar(PHASE1_FLAT_FEE) },
+      { label: "Practitioner hours", value: `${PHASE1_HOURS_PER_WEEK} hrs/wk · ${PHASE1_WEEKS} wks` },
+      { label: `Tithe (${PHASE1_TITHE_PCT}%)`, value: fmtDollar(PHASE1_TITHE) },
+      { label: "Post-tithe revenue", value: fmtDollar(PHASE1_POST_TITHE) },
+      { label: `Practitioner draw (${PHASE1_WEEKS} wks)`, value: fmtDollar(PHASE1_BOBBIE_COST) },
+      { label: "Intentional gap (entry posture)", value: fmtDollar(PHASE1_GAP) },
     ],
     note: "Phase 1 is deliberately below cost. It establishes trust, produces documentation, and seeds Phase 2.",
   },
@@ -32,12 +59,12 @@ const FINANCIALS = [
     phase: "Phase 2 — Full Engagement",
     color: T.blue,
     rows: [
-      { label: "Monthly billed (Deer Lake)", value: "$39,200 / mo" },
-      { label: "Practitioner draw", value: "$16,800 / mo" },
-      { label: "Distribution subcontract", value: "$11,200 / mo" },
-      { label: "Lean overheads", value: "$1,292 / mo" },
-      { label: "Monthly surplus", value: "$9,908 / mo" },
-      { label: "Annual surplus (Phase 2)", value: "$118,896 / yr" },
+      { label: "Monthly billed (Deer Lake)", value: fmtMonthly(TOTAL_MONTHLY_BILLED) },
+      { label: "Practitioner draw", value: fmtMonthly(BOBBIE_DRAW_MONTHLY) },
+      { label: "Distribution subcontract", value: fmtMonthly(TYLER_COST_MONTHLY) },
+      { label: "Lean overheads", value: fmtMonthly(OVERHEADS_MONTHLY) },
+      { label: "Monthly surplus", value: fmtMonthly(MONTHLY_SURPLUS) },
+      { label: `Annual surplus (Phase 2)`, value: fmtAnnual(ANNUAL_SURPLUS) },
     ],
     note: "Full engagement rate: $175/hr blended composite. Tyler at $70/hr distribution subcontract.",
   },
@@ -45,11 +72,11 @@ const FINANCIALS = [
     phase: "Phase 3+ — Constellation",
     color: T.purple,
     rows: [
-      { label: "Second community engagement", value: "~$39,200 / mo" },
-      { label: "Combined annual billings (2 communities)", value: "~$940,800 / yr" },
-      { label: "Network surplus (est.)", value: "~$237,000 / yr" },
-      { label: "807 co-op supply activation", value: "Targeting 2027" },
-      { label: "Hard decision date (Plan B trigger)", value: "July 31, 2026" },
+      { label: "Second community engagement", value: `~${fmtMonthly(TOTAL_MONTHLY_BILLED)}` },
+      { label: "Combined annual billings (2 communities)", value: `~${fmtAnnual(TOTAL_MONTHLY_BILLED * TERM_MONTHS * 2)}` },
+      { label: "Network surplus (est.)", value: fmtApproxAnnual(ANNUAL_SURPLUS * 2) },
+      { label: "807 co-op supply activation", value: `Targeting ${MILESTONE_807_TARGET}` },
+      { label: "Hard decision date (Plan B trigger)", value: fmtMilestoneDate(MILESTONE_HARD_DECISION) },
     ],
     note: "Economics flip when the store proves it pays for itself. Each added community increases grant eligibility, supply leverage, and policy surface area.",
   },
@@ -396,13 +423,13 @@ export default function DeerLakeRoadmap() {
           </p>
           <ul style={{ margin: 0, paddingLeft: 16 }}>
             <li style={{ fontSize: 12, color: T.paper, lineHeight: 1.7 }}>
-              <strong>May 30, 2026</strong> — Bridge capital floor: $48,000/month cost basis if no bridge lands
+              <strong>{fmtMilestoneDate(MILESTONE_BRIDGE_DEADLINE)}</strong> — Bridge capital floor: {fmtDollar(MILESTONE_SCENARIO_A_FLOOR)}/month cost basis if no bridge lands
             </li>
             <li style={{ fontSize: 12, color: T.paper, lineHeight: 1.7 }}>
-              <strong>July 31, 2026</strong> — Hard decision date: if Northern Band hasn't signed, shift to Plan B cluster outreach
+              <strong>{fmtMilestoneDate(MILESTONE_HARD_DECISION)}</strong> — Hard decision date: if Northern Band hasn't signed, shift to Plan B cluster outreach
             </li>
             <li style={{ fontSize: 12, color: T.paper, lineHeight: 1.7 }}>
-              <strong>2027 target</strong> — 807 Food Co-operative supply line activates; Phase 3 economics flip
+              <strong>{MILESTONE_807_TARGET} target</strong> — 807 Food Co-operative supply line activates; Phase 3 economics flip
             </li>
           </ul>
         </div>

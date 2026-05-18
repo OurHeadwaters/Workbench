@@ -83,41 +83,41 @@ import {
 
 // ── Phase 2 rates ─────────────────────────────────────────────────────────────
 
-const v7HoursPerMonth = 160; // 40 hr/wk × 4 wk billing basis
+export const v7HoursPerMonth = 160; // 40 hr/wk × 4 wk billing basis
 
-const v7BobbieRate = 175;   // billed to client
-const v7TylerRate  = 70;    // billed to client / paid to Tyler
-const v7BobbieNet  = 105;   // Bobbie nets (billed minus Tyler-funded delta)
+export const v7BobbieRate = 175;   // billed to client
+export const v7TylerRate  = 70;    // billed to client / paid to Tyler
+export const v7BobbieNet  = 105;   // Bobbie nets (billed minus Tyler-funded delta)
 
 const v7BobbieMonthlyBilled = v7HoursPerMonth * v7BobbieRate; // 28,000
 const v7TylerMonthlyBilled  = v7HoursPerMonth * v7TylerRate;  // 11,200
-const v7TotalMonthlyBilled  = v7BobbieMonthlyBilled + v7TylerMonthlyBilled; // 39,200
+export const v7TotalMonthlyBilled  = v7BobbieMonthlyBilled + v7TylerMonthlyBilled; // 39,200
 
-const v7BobbieDrawMonthly = v7HoursPerMonth * v7BobbieNet; // 16,800
-const v7TylerCostMonthly  = v7TylerMonthlyBilled;          // 11,200
+export const v7BobbieDrawMonthly = v7HoursPerMonth * v7BobbieNet; // 16,800
+export const v7TylerCostMonthly  = v7TylerMonthlyBilled;          // 11,200
 
-const v7TithePct     = 10;
+export const v7TithePct = 10;
 // Tithe is first claim on practitioner DRAWINGS only — not on business revenue.
 // Rule (permanent): Bobbie tithes 10% of what she draws, not 10% of what the client pays.
 const v7TitheMonthly = v7BobbieDrawMonthly * 0.10; // 1,680  (10% × $16,800 draw)
 
 // V7 lean overheads (same as V6 — client pays the tech stack)
-const v7OverheadsMonthly = 1292; // space $500 + insurance/petty $500 + acct $125 + legal $167
+export const v7OverheadsMonthly = 1292; // space $500 + insurance/petty $500 + acct $125 + legal $167
 
 // Business surplus: tithe is personal (comes from Bobbie's draw), so NOT a business deduction.
-const v7MonthlySurplus =
+export const v7MonthlySurplus =
   v7TotalMonthlyBilled - v7BobbieDrawMonthly - v7TylerCostMonthly - v7OverheadsMonthly;
 // 39,200 - 16,800 - 11,200 - 1,292 = 9,908
 
 // ── Phase 2 × 12 months ───────────────────────────────────────────────────────
 
-const v7TermMonths   = 12;
+export const v7TermMonths   = 12;
 const v7Phase2Revenue  = v7TotalMonthlyBilled * v7TermMonths; // 470,400
 const v7Phase2Tithe    = v7TitheMonthly * v7TermMonths;       // 20,160  (1,680 × 12 — on draw, not revenue)
 const v7Phase2Bobbie   = v7BobbieDrawMonthly * v7TermMonths;  // 201,600
 const v7Phase2Tyler    = v7TylerCostMonthly  * v7TermMonths;  // 134,400
 const v7Phase2Overhead = v7OverheadsMonthly  * v7TermMonths;  // 15,504
-const v7Phase2Surplus  = v7MonthlySurplus    * v7TermMonths;  // 118,896  (9,908 × 12)
+export const v7Phase2Surplus  = v7MonthlySurplus * v7TermMonths;  // 118,896  (9,908 × 12)
 
 // ── Phase 1 ───────────────────────────────────────────────────────────────────
 

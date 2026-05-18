@@ -29,6 +29,25 @@ export interface Week {
   days: Day[]; // Mon–Fri
 }
 
+// ─── Key milestone dates ──────────────────────────────────────────────────────
+// Sourced here as the plan data is the canonical home for operational deadlines.
+
+/** Bridge capital commitment deadline — "May 30 deadline" (Week 20–21 theme). */
+export const BRIDGE_CAPITAL_DEADLINE = "2026-05-30";
+
+/** Hard decision date for Northern Band / Plan B trigger (Week 30 — July 31). */
+export const PLAN_B_HARD_DEADLINE = "2026-07-31";
+
+/** Target year for 807 Food Co-operative supply line activation. */
+export const SUPPLY_CHAIN_TARGET_YEAR = "2027";
+
+/**
+ * Scenario A cost-basis floor — the monthly operating floor if bridge capital
+ * does not land by the May 30 deadline. Senior hires are deferred at this level.
+ * Referenced throughout the plan as "$48k cost-basis floor".
+ */
+export const SCENARIO_A_COST_BASIS_MONTHLY = 48_000;
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 // Plan anchored to W20, May 18, 2026 (current week as of plan rebuild).
 // Three phases: Pursuit (W20–W26), Pivot (W27–W35), Operating Season (W36–W52).
