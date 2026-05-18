@@ -95,14 +95,37 @@ export default function FrontPage() {
 
           {/* Pioneer Path station — returning readers only */}
           {isReturning && currentStation && (
-            <View style={styles.stationBadge}>
-              <Text style={[styles.stationBadgeText, { fontFamily: MONO }]}>
-                {`Station ${currentStation.ordinal} of ${PIONEER_STATIONS.length} \u00b7 ${currentStation.name}`}
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/path/station/[id]",
+                  params: { id: currentStation.id },
+                })
+              }
+              style={({ pressed }) => [
+                styles.stationBadge,
+                styles.stationBadgePressable,
+                { opacity: pressed ? 0.7 : 1 },
+              ]}
+              accessibilityLabel={`Open station: ${currentStation.name}`}
+            >
+              <View style={styles.stationBadgeInner}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.stationBadgeText, { fontFamily: MONO }]}>
+                    {`Station ${currentStation.ordinal} of ${PIONEER_STATIONS.length} \u00b7 ${currentStation.name}`}
+                  </Text>
+                  <Text style={[styles.stationBadgeSub, { fontFamily: SERIF_ITALIC }]}>
+                    {currentStation.subtitle}
+                  </Text>
+                </View>
+                <Text style={[styles.stationBadgeArrow, { fontFamily: MONO, color: `${EVERGREEN}66` }]}>
+                  →
+                </Text>
+              </View>
+              <Text style={[styles.stationBadgeCta, { fontFamily: MONO, color: `${EVERGREEN}55` }]}>
+                TAP TO MARK DONE
               </Text>
-              <Text style={[styles.stationBadgeSub, { fontFamily: SERIF_ITALIC }]}>
-                {currentStation.subtitle}
-              </Text>
-            </View>
+            </Pressable>
           )}
 
           <Pressable
@@ -479,6 +502,29 @@ const styles = StyleSheet.create({
   stationBadge: {
     marginBottom: 12,
     paddingHorizontal: 4,
+  },
+  stationBadgePressable: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: `${EVERGREEN}18`,
+    backgroundColor: `${EVERGREEN}06`,
+  },
+  stationBadgeInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  stationBadgeArrow: {
+    fontSize: 16,
+    flexShrink: 0,
+  },
+  stationBadgeCta: {
+    fontSize: 9,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
+    marginTop: 6,
   },
   stationBadgeText: {
     fontSize: 10,
