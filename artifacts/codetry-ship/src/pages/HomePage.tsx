@@ -149,7 +149,7 @@ export function HomePage() {
         className="relative w-full overflow-hidden"
         style={{
           background: "#1f3d2e",
-          backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hero-banner.png")`,
+          backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hero-banner.jpg")`,
           backgroundSize: "cover",
           backgroundPosition: "center 55%",
         }}

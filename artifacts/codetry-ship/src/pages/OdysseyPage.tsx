@@ -187,7 +187,7 @@ export function OdysseyPage() {
         className="relative overflow-hidden px-6 sm:px-10 pt-20 pb-28"
         style={{
           background: "#1f3d2e",
-          backgroundImage: `url("${BASE}odyssey/hero-banner.png")`,
+          backgroundImage: `url("${BASE}odyssey/hero-banner.jpg")`,
           backgroundSize: "cover",
           backgroundPosition: "center 40%",
         }}
@@ -217,7 +217,7 @@ export function OdysseyPage() {
               style={{ background: "#d4a017" }}
             />
             <p
-              className="font-mono text-[9.5px] uppercase tracking-[0.32em]"
+              className="font-mono text-[12px] uppercase tracking-[0.32em]"
               style={{ color: "rgba(212,160,23,0.85)" }}
             >
               Headwaters Odyssey
@@ -237,7 +237,7 @@ export function OdysseyPage() {
             Whether the flood comes or not.
           </p>
           <p
-            className="font-serif text-[15.5px] leading-[1.7] max-w-2xl mt-6"
+            className="font-serif text-[17px] leading-[1.7] max-w-2xl mt-6"
             style={{ color: "rgba(244,237,224,0.85)" }}
           >
             A disciplined, self-paced pioneer journey for people who already speak
@@ -248,14 +248,14 @@ export function OdysseyPage() {
           <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2">
             <a
               href="#start"
-              className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] transition-opacity hover:opacity-80"
+              className="inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.24em] transition-opacity hover:opacity-80"
               style={{ color: "rgba(212,160,23,0.9)" }}
             >
               Begin ↓
             </a>
             <a
               href="/story"
-              className="font-mono text-[8.5px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+              className="font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
               style={{ color: "rgba(244,237,224,0.38)" }}
             >
               New here? Read the story first →
@@ -282,7 +282,7 @@ export function OdysseyPage() {
             The Headwaters Odyssey is a free, self-paced learning journey through the economic concepts that underpin community-owned development. Working through five phases and twenty stations, you build a practical understanding of how the Headwaters model applies to your own community — and produce real field notes along the way.
           </p>
           <p
-            className="font-serif text-[15.5px] leading-[1.7]"
+            className="font-serif text-[17px] leading-[1.7]"
             style={{ color: "rgba(31,61,46,0.68)" }}
           >
             By the time you reach the final station, you hold a clear map of the economic levers your community can pull and the language to discuss them with councils, funders, and neighbours alike. Each station unlocks only after you complete the one before it — there are no shortcuts, and no cost.
@@ -297,7 +297,7 @@ export function OdysseyPage() {
         {/* ═════════════════════════════════════ HOW IT WORKS ══ */}
         <section data-testid="odyssey-how-it-works">
           <p
-            className="font-mono text-[9.5px] uppercase tracking-[0.28em] mb-3"
+            className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
             style={{ color: "#b85a3e" }}
           >
             How it works
@@ -309,7 +309,7 @@ export function OdysseyPage() {
             5 Phases. 20 Stations.
           </h2>
           <p
-            className="font-serif text-[15px] italic mb-8"
+            className="font-serif text-[16px] italic mb-8"
             style={{ color: "rgba(31,61,46,0.55)" }}
           >
             You do the work. The next station opens.
@@ -320,7 +320,7 @@ export function OdysseyPage() {
             {MECHANIC_TAGS.map(({ glyph, text }) => (
               <span
                 key={text}
-                className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] px-3 py-1.5"
+                className="inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.14em] px-3 py-1.5"
                 style={{
                   color: "rgba(31,61,46,0.72)",
                   borderBottom: "1.5px solid rgba(31,61,46,0.2)",
@@ -376,26 +376,26 @@ export function OdysseyPage() {
                 >
                   <div className="flex items-baseline justify-between gap-2 mb-1 flex-wrap">
                     <p
-                      className="font-serif text-[15.5px] font-semibold tracking-tight"
+                      className="font-serif text-[17px] font-semibold tracking-tight"
                       style={{ color: "#1f3d2e" }}
                     >
                       {p.label}
                     </p>
                     <span
-                      className="font-mono text-[9px] uppercase tracking-[0.16em] shrink-0"
+                      className="font-mono text-[12px] uppercase tracking-[0.16em] shrink-0"
                       style={{ color: "rgba(184,90,62,0.7)" }}
                     >
                       Phase {p.n}
                     </span>
                   </div>
                   <p
-                    className="font-serif text-[13.5px] leading-[1.55]"
+                    className="font-serif text-[15px] leading-[1.55]"
                     style={{ color: "rgba(31,61,46,0.72)" }}
                   >
                     {p.body}
                   </p>
                   <p
-                    className="font-mono text-[9px] uppercase tracking-[0.14em] mt-2 italic"
+                    className="font-mono text-[12px] uppercase tracking-[0.14em] mt-2 italic"
                     style={{ color: "rgba(31,61,46,0.38)" }}
                   >
                     {p.season}
@@ -415,13 +415,13 @@ export function OdysseyPage() {
             }}
           >
             <span
-              className="shrink-0 font-mono text-[8.5px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
+              className="shrink-0 font-mono text-[11px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
               style={{ background: "#1f3d2e", color: "#f4ede0" }}
             >
               Each station
             </span>
             <p
-              className="font-serif text-[14px] leading-[1.5]"
+              className="font-serif text-[16px] leading-[1.5]"
               style={{ color: "rgba(31,61,46,0.7)" }}
             >
               One piece of real work. One field note. One unlock. No skipping.
@@ -437,7 +437,7 @@ export function OdysseyPage() {
         {/* ═══════════════════════════════════════ INTAKE / CONFIRM ══ */}
         <section id="start" data-testid="odyssey-intake">
           <p
-            className="font-mono text-[9.5px] uppercase tracking-[0.28em] mb-3"
+            className="font-mono text-[12px] uppercase tracking-[0.28em] mb-3"
             style={{ color: "#b85a3e" }}
           >
             Begin the journey
@@ -449,7 +449,7 @@ export function OdysseyPage() {
             Three short questions.
           </h2>
           <p
-            className="font-serif text-[15px] italic mb-8"
+            className="font-serif text-[16px] italic mb-8"
             style={{ color: "rgba(31,61,46,0.55)" }}
           >
             So the journey begins in your real context, not a hypothetical one.
@@ -474,13 +474,13 @@ export function OdysseyPage() {
                 Welcome to the trail, {confirmedName}.
               </p>
               <p
-                className="font-serif text-[15px] leading-[1.6] mb-2"
+                className="font-serif text-[16px] leading-[1.6] mb-2"
                 style={{ color: "rgba(31,61,46,0.72)" }}
               >
                 Station 1 is now unlocked for you in the app.
               </p>
               <p
-                className="font-serif text-[13.5px] italic mb-8"
+                className="font-serif text-[15px] italic mb-8"
                 style={{ color: "rgba(31,61,46,0.52)" }}
               >
                 Phase 01 · The Saltbox — find the substrate you're standing on.
@@ -489,13 +489,13 @@ export function OdysseyPage() {
                 href="/codetry-handbook/path"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
                 style={{ background: "#1f3d2e", color: "#f4ede0" }}
               >
                 Open the Pioneer Path →
               </a>
               <p
-                className="mt-5 font-mono text-[8.5px] uppercase tracking-[0.18em]"
+                className="mt-5 font-mono text-[11px] uppercase tracking-[0.18em]"
                 style={{ color: "rgba(31,61,46,0.38)" }}
               >
                 Headwaters Odyssey · sealed with hempcrete
@@ -515,21 +515,21 @@ export function OdysseyPage() {
                 className="px-6 sm:px-8 py-4 flex items-center gap-3"
                 style={{
                   background: "#1f3d2e",
-                  backgroundImage: `url("${BASE}odyssey/journal-page.png")`,
+                  backgroundImage: `url("${BASE}odyssey/journal-page.jpg")`,
                   backgroundSize: "cover",
                   backgroundBlendMode: "multiply",
                 }}
               >
                 <span style={{ color: "#d4a017", fontSize: "16px", opacity: 0.9 }}>⌁</span>
                 <p
-                  className="font-mono text-[9px] uppercase tracking-[0.28em]"
+                  className="font-mono text-[12px] uppercase tracking-[0.28em]"
                   style={{ color: "rgba(244,237,224,0.78)" }}
                 >
                   Pioneer intake · Field Journal
                 </p>
                 <div className="flex-1" />
                 <p
-                  className="font-mono text-[8.5px] uppercase tracking-[0.16em]"
+                  className="font-mono text-[11px] uppercase tracking-[0.16em]"
                   style={{ color: "rgba(244,237,224,0.4)" }}
                 >
                   W20 · Phase 01
@@ -606,7 +606,7 @@ export function OdysseyPage() {
 
                 {error && (
                   <p
-                    className="font-serif text-[13px]"
+                    className="font-serif text-[15px]"
                     style={{ color: "#9c4a2f" }}
                     role="alert"
                   >
@@ -618,14 +618,14 @@ export function OdysseyPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90 disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-all hover:opacity-90 disabled:opacity-50"
                     style={{ background: "#b85a3e", color: "#f4ede0" }}
                     data-testid="odyssey-submit"
                   >
                     {submitting ? "Sending…" : "Begin the Odyssey →"}
                   </button>
                   <p
-                    className="font-mono text-[9px] uppercase tracking-[0.14em]"
+                    className="font-mono text-[12px] uppercase tracking-[0.14em]"
                     style={{ color: "rgba(31,61,46,0.4)" }}
                   >
                     Free · No account required · No spam
@@ -651,13 +651,13 @@ export function OdysseyPage() {
               <span style={{ fontSize: "22px", lineHeight: 1, marginTop: "2px", flexShrink: 0 }}>🌿</span>
               <div>
                 <p
-                  className="font-serif text-[15.5px] font-medium mb-2 tracking-tight"
+                  className="font-serif text-[17px] font-medium mb-2 tracking-tight"
                   style={{ color: "#1f3d2e" }}
                 >
                   Are you an artist from a community this trail passes through?
                 </p>
                 <p
-                  className="font-serif text-[14px] leading-[1.65] mb-4"
+                  className="font-serif text-[16px] leading-[1.65] mb-4"
                   style={{ color: "rgba(31,61,46,0.68)" }}
                 >
                   If this landscape is yours — if you've lived at the headwaters — we want your work here.
@@ -666,13 +666,13 @@ export function OdysseyPage() {
                 </p>
                 <a
                   href="mailto:bobbie@ourheadwaters.ca?subject=Trail%20Art%20Submission"
-                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+                  className="inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
                   style={{ color: "#b85a3e" }}
                 >
                   Submit your work → bobbie@ourheadwaters.ca
                 </a>
                 <p
-                  className="font-mono text-[8.5px] uppercase tracking-[0.14em] mt-3 leading-[1.7]"
+                  className="font-mono text-[11px] uppercase tracking-[0.14em] mt-3 leading-[1.7]"
                   style={{ color: "rgba(31,61,46,0.38)" }}
                 >
                   Include: your name · your community · a title if you have one · your XRPL address for tips (optional)
@@ -702,7 +702,7 @@ function JournalField({
   return (
     <label className="flex flex-col gap-2">
       <span
-        className="font-mono text-[9.5px] uppercase tracking-[0.18em] od-pencil"
+        className="font-mono text-[12px] uppercase tracking-[0.18em] od-pencil"
         style={{
           color: "rgba(31,61,46,0.65)",
           textDecorationColor: "rgba(184,90,62,0.25)",

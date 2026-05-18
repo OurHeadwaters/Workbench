@@ -53,13 +53,13 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
         }}
       >
         <span
-          className="font-mono text-[8.5px] uppercase tracking-[0.22em]"
+          className="font-mono text-[11px] uppercase tracking-[0.22em]"
           style={{ color: "rgba(31,61,46,0.42)" }}
         >
           Pebbles left on the trail
         </span>
         <span
-          className="font-mono text-[8.5px] uppercase tracking-[0.14em]"
+          className="font-mono text-[11px] uppercase tracking-[0.14em]"
           style={{ color: "rgba(31,61,46,0.3)" }}
         >
           {current + 1} of {total}
@@ -71,7 +71,7 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
         <img
           src={art.src}
           alt={art.alt}
-          className="w-full object-cover transition-opacity duration-500"
+          className="w-full object-cover transition-opacity duration-500" loading="lazy"
           style={{ maxHeight: 440, objectPosition: "center 30%" }}
           key={art.src}
         />
@@ -93,7 +93,7 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
           <div className="flex items-end justify-between gap-3 flex-wrap">
             <div>
               <span
-                className="font-mono text-[9px] uppercase tracking-[0.22em]"
+                className="font-mono text-[12px] uppercase tracking-[0.22em]"
                 style={{ color: "rgba(212,160,23,0.95)" }}
               >
                 {art.artist}
@@ -101,7 +101,7 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
               </span>
               {art.nation && (
                 <span
-                  className="block font-mono text-[8px] uppercase tracking-[0.16em] mt-0.5"
+                  className="block font-mono text-[11px] uppercase tracking-[0.16em] mt-0.5"
                   style={{ color: "rgba(212,160,23,0.62)" }}
                 >
                   {art.nation} artist
@@ -112,7 +112,7 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
             {!art.isGenerated && (
               <button
                 onClick={() => setTipOpen((o) => !o)}
-                className="font-mono text-[8.5px] uppercase tracking-[0.18em] px-3 py-1.5 rounded-sm transition-all"
+                className="font-mono text-[11px] uppercase tracking-[0.18em] px-3 py-1.5 rounded-sm transition-all"
                 style={{
                   background: tipOpen
                     ? "rgba(212,160,23,0.28)"
@@ -137,14 +137,14 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
               }}
             >
               <p
-                className="font-serif text-[13px] italic mb-1"
+                className="font-serif text-[15px] italic mb-1"
                 style={{ color: "#f4ede0" }}
               >
                 XRPL community token tipping is coming with the community
                 economic engine launch.
               </p>
               <p
-                className="font-mono text-[8px] uppercase tracking-[0.16em]"
+                className="font-mono text-[11px] uppercase tracking-[0.16em]"
                 style={{ color: "rgba(212,160,23,0.55)" }}
               >
                 Each band issues its own token · tips flow directly to artists
@@ -182,14 +182,14 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
         style={{ background: "rgba(31,61,46,0.03)" }}
       >
         <p
-          className="font-serif text-[13px] italic"
+          className="font-serif text-[15px] italic"
           style={{ color: "rgba(31,61,46,0.48)" }}
         >
           Art left along the trail for the next person.
         </p>
         <a
           href="#submit-art"
-          className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+          className="font-mono text-[11px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
           style={{ color: "#b85a3e" }}
         >
           Leave your mark →

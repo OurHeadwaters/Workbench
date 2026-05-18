@@ -15,7 +15,7 @@ export function ServicesPage() {
         />
         <div className="relative mx-auto max-w-[52rem]">
           <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4 opacity-70"
+            className="font-mono text-[13px] uppercase tracking-[0.28em] mb-4 opacity-70"
           >
             headwaters · what the work looks like
           </p>
@@ -27,7 +27,7 @@ export function ServicesPage() {
             One community economy system — delivered as a store plan, a membership platform, or a custom tool.
           </p>
           <div
-            className="rounded-md p-5 max-w-2xl font-serif text-[15px] leading-[1.6]"
+            className="rounded-md p-5 max-w-2xl font-serif text-[16px] leading-[1.6]"
             style={{ background: "rgba(255,255,255,0.10)" }}
           >
             Headwaters is a set of seven connected tools — the Handbook, the Practitioner's Guide, the Accounts, and four supporting layers. Every engagement deploys some part of that stack. A community store plan, a co-op membership platform, and a custom internal tool are the three ways a community reaches into that system. Here is what each looks like, phase by phase, and what you leave with at the end.
@@ -51,7 +51,7 @@ export function ServicesPage() {
             <a
               key={href}
               href={href}
-              className="font-mono text-[10px] uppercase tracking-[0.2em] px-4 py-3.5 whitespace-nowrap border-b-2 border-transparent hover:border-accent transition-colors"
+              className="font-mono text-[13px] uppercase tracking-[0.2em] px-4 py-3.5 whitespace-nowrap border-b-2 border-transparent hover:border-accent transition-colors"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               {label}
@@ -68,10 +68,10 @@ export function ServicesPage() {
             className="rounded-md border px-6 py-5"
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-2" style={{ color: "hsl(var(--accent))" }}>
+            <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-2" style={{ color: "hsl(var(--accent))" }}>
               who this is for
             </p>
-            <p className="font-serif text-[15px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
+            <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
               Headwaters works with band councils and community organizations in Northwestern Ontario that are planning or running a community-owned store, a food co-op, or a purpose-built internal tool. If your organization is in the early stages of asking "how would we even start?" — that is the right moment to reach out.
             </p>
           </div>
@@ -79,12 +79,12 @@ export function ServicesPage() {
 
         {/* ── the seven tools ── */}
         <section className="pt-10 pb-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-4" style={{ color: "hsl(var(--accent))" }}>
+          <p className="font-mono text-[13px] uppercase tracking-[0.26em] mb-4" style={{ color: "hsl(var(--accent))" }}>
             The seven tools
           </p>
 
           {/* Core flow */}
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-mono text-[12px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
             Core flow — learn · track · account
           </p>
           <div className="space-y-2 mb-5">
@@ -115,15 +115,15 @@ export function ServicesPage() {
               >
                 <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
                 <div>
-                  <p className="font-serif text-[14.5px] font-medium tracking-tight mb-0.5">{name}</p>
-                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+                  <p className="font-serif text-[16px] font-medium tracking-tight mb-0.5">{name}</p>
+                  <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Supporting layers */}
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-mono text-[12px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
             Supporting layers
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -160,8 +160,8 @@ export function ServicesPage() {
               >
                 <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
                 <div>
-                  <p className="font-serif text-[14px] font-medium tracking-tight mb-0.5">{name}</p>
-                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+                  <p className="font-serif text-[16px] font-medium tracking-tight mb-0.5">{name}</p>
+                  <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
                 </div>
               </div>
             ))}
@@ -175,7 +175,7 @@ export function ServicesPage() {
           <SectionBand color="hsl(30 55% 38%)" label="Community economic development">
             Building the store — start to handoff
           </SectionBand>
-          <p className="font-serif text-[15px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
             Six phases. Plain language. Open numbers.
           </p>
 
@@ -246,7 +246,7 @@ export function ServicesPage() {
           <SectionBand color="hsl(145 36% 22%)" label="Governance + digital infrastructure">
             From paper bylaws to a working member platform
           </SectionBand>
-          <p className="font-serif text-[15px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
             Built around your governance structure — not a template you shoehorn bylaws into.
           </p>
 
@@ -311,7 +311,7 @@ export function ServicesPage() {
           <SectionBand color="hsl(145 18% 32%)" label="Operations · Built for your team">
             A tool your team actually uses — not another thing to learn
           </SectionBand>
-          <p className="font-serif text-[15px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-serif text-[16px] italic mt-2 mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
             Built around how your operation actually works. Changed when your operation changes.
           </p>
 
@@ -374,7 +374,7 @@ export function ServicesPage() {
         ══════════════════════════════════════ */}
         <section id="start" className="pt-14 pb-16">
           <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3"
+            className="font-mono text-[13px] uppercase tracking-[0.28em] mb-3"
             style={{ color: "hsl(var(--accent))" }}
           >
             the first step
@@ -382,7 +382,7 @@ export function ServicesPage() {
           <h2 className="font-serif text-3xl tracking-tight mb-1">
             A trial period, not a contract
           </h2>
-          <p className="font-serif text-[15px] italic mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
+          <p className="font-serif text-[16px] italic mb-8" style={{ color: "hsl(var(--muted-foreground))" }}>
             Every engagement starts with a defined phase — a fixed fee, a clear scope, and a real deliverable. No retainer, no open-ended commitment.
           </p>
 
@@ -399,13 +399,13 @@ export function ServicesPage() {
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
                 <div
-                  className="font-mono text-[11px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
+                  className="font-mono text-[13px] font-semibold mb-2 w-7 h-7 rounded-full flex items-center justify-center"
                   style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
                 >
                   {step}
                 </div>
-                <p className="font-serif text-[15px] font-medium tracking-tight mb-1.5">{label}</p>
-                <p className="font-serif text-[13.5px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                <p className="font-serif text-[16px] font-medium tracking-tight mb-1.5">{label}</p>
+                <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>
                   {body}
                 </p>
               </div>
@@ -416,7 +416,7 @@ export function ServicesPage() {
             className="rounded-md border p-6 sm:p-8"
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
+            <p className="font-mono text-[13px] uppercase tracking-[0.22em] mb-3" style={{ color: "hsl(var(--accent))" }}>
               phase fees
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -426,14 +426,14 @@ export function ServicesPage() {
                 { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
+                  <p className="font-mono text-[13px] uppercase tracking-[0.18em] mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>{label}</p>
                   <p className="font-serif text-2xl font-medium tracking-tight mb-1">{value}</p>
-                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
+                  <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{note}</p>
                 </div>
               ))}
             </div>
             <p
-              className="font-mono text-[10px] uppercase tracking-[0.14em] mt-5"
+              className="font-mono text-[13px] uppercase tracking-[0.14em] mt-5"
               style={{ color: "hsl(var(--muted-foreground))", opacity: 0.7 }}
             >
               All fees CAD · excludes HST
@@ -446,21 +446,21 @@ export function ServicesPage() {
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
               href={`${import.meta.env.BASE_URL}`}
-              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-sm px-5 py-3 font-mono text-[13px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
               style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
             >
               Start a conversation (short form) →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}bio`}
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              className="font-mono text-[13px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               Read the bio
             </a>
             <a
               href="/print-marketing/capability-statement"
-              className="font-mono text-[10px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+              className="font-mono text-[13px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
               Capability statement →
@@ -486,7 +486,7 @@ function SectionBand({ color, label, children }: { color: string; label: string;
         className="pointer-events-none absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10"
         style={{ background: "hsl(38 36% 94%)" }}
       />
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-1.5 opacity-70">{label}</p>
+      <p className="font-mono text-[13px] uppercase tracking-[0.14em] mb-1.5 opacity-70">{label}</p>
       <h2 className="font-serif text-2xl sm:text-3xl tracking-tight break-words">{children}</h2>
     </div>
   );
@@ -495,7 +495,7 @@ function SectionBand({ color, label, children }: { color: string; label: string;
 function SubHeading({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <p
-      className={`font-mono text-[10px] uppercase tracking-[0.26em] mb-4 ${className}`}
+      className={`font-mono text-[13px] uppercase tracking-[0.26em] mb-4 ${className}`}
       style={{ color: "hsl(var(--accent))" }}
     >
       {children}
@@ -521,21 +521,21 @@ function Timeline({ items, accentColor }: {
             className="absolute -left-8 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center"
             style={{ background: accentColor }}
           >
-            <span className="font-mono text-[8px] font-bold" style={{ color: "hsl(38 36% 96%)" }}>
+            <span className="font-mono text-[11px] font-bold" style={{ color: "hsl(38 36% 96%)" }}>
               {i + 1}
             </span>
           </div>
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 mb-1.5">
             <p className="font-serif text-[16px] font-medium tracking-tight">{title}</p>
             <span
-              className="font-mono text-[9px] uppercase tracking-[0.14em]"
+              className="font-mono text-[12px] uppercase tracking-[0.14em]"
               style={{ color: accentColor }}
             >
               {duration}
             </span>
           </div>
           <p
-            className="font-serif text-[14px] leading-[1.55]"
+            className="font-serif text-[16px] leading-[1.55]"
             style={{ color: "hsl(var(--muted-foreground))" }}
           >
             {body}
@@ -559,8 +559,8 @@ function DeliverableGrid({ items }: {
         >
           <span className="text-[20px] leading-none mt-0.5 shrink-0">{icon}</span>
           <div>
-            <p className="font-serif text-[14.5px] font-medium tracking-tight mb-0.5 break-words">{title}</p>
-            <p className="font-serif text-[13px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+            <p className="font-serif text-[16px] font-medium tracking-tight mb-0.5 break-words">{title}</p>
+            <p className="font-serif text-[15px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
           </div>
         </div>
       ))}
@@ -583,8 +583,8 @@ function WhatItIsNot({ items }: { items: string[] }) {
       <ul className="space-y-1.5">
         {items.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
-            <span className="font-mono text-[11px] mt-[2px] shrink-0" style={{ color: "hsl(var(--muted-foreground))" }}>✕</span>
-            <span className="font-serif text-[13.5px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{item}</span>
+            <span className="font-mono text-[13px] mt-[2px] shrink-0" style={{ color: "hsl(var(--muted-foreground))" }}>✕</span>
+            <span className="font-serif text-[15px] leading-[1.5] break-words" style={{ color: "hsl(var(--muted-foreground))" }}>{item}</span>
           </li>
         ))}
       </ul>

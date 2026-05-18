@@ -277,7 +277,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/odyssey/hempcrete-texture.png');
+  background-image: url('/odyssey/hempcrete-texture.jpg');
   background-size: cover;
   opacity: 0.09;
   border-radius: inherit;

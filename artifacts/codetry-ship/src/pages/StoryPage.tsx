@@ -86,7 +86,7 @@ export function StoryPage() {
         style={{ minHeight: "58vw", maxHeight: 560 }}
       >
         <img
-          src="/story/hero-banner.png"
+          src="/story/hero-banner.jpg"
           alt="A warm boreal forest trail at golden hour"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center 40%" }}
