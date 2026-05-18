@@ -244,14 +244,23 @@ export function OdysseyPage() {
             basic development language and want to strengthen their communities from the source.
           </p>
 
-          {/* Scroll cue */}
-          <a
-            href="#start"
-            className="inline-flex items-center gap-2 mt-10 font-mono text-[10px] uppercase tracking-[0.24em] transition-opacity hover:opacity-80"
-            style={{ color: "rgba(212,160,23,0.9)" }}
-          >
-            Begin ↓
-          </a>
+          {/* Scroll cue + story crosslink */}
+          <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <a
+              href="#start"
+              className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(212,160,23,0.9)" }}
+            >
+              Begin ↓
+            </a>
+            <a
+              href="/story"
+              className="font-mono text-[8.5px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(244,237,224,0.38)" }}
+            >
+              New here? Read the story first →
+            </a>
+          </div>
         </div>
       </section>
 

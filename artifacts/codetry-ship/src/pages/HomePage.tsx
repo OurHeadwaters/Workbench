@@ -186,26 +186,57 @@ export function HomePage() {
               Built for headwaters people who are already organising locally.
             </p>
 
-            <a
-              href={`${import.meta.env.BASE_URL}odyssey`}
-              className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
-              style={{ background: "#b85a3e", color: "#f4ede0" }}
-              data-testid="odyssey-cta"
-            >
-              Begin the Odyssey →
-            </a>
+            {/* Dual CTA — practitioner path and story path */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a
+                href={`${import.meta.env.BASE_URL}odyssey`}
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
+                style={{ background: "#b85a3e", color: "#f4ede0" }}
+                data-testid="odyssey-cta"
+              >
+                Begin the Odyssey →
+              </a>
+              <a
+                href={`${import.meta.env.BASE_URL}story`}
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-80"
+                style={{
+                  background: "transparent",
+                  color: "rgba(244,237,224,0.82)",
+                  border: "1px solid rgba(244,237,224,0.28)",
+                }}
+                data-testid="story-cta"
+              >
+                Read the Story →
+              </a>
+            </div>
 
             {/* Trail tags row */}
             <div className="flex items-center justify-center gap-3 mt-6 flex-wrap">
-              {["Free", "Self-paced", "5 Phases · 20 Stations"].map(tag => (
-                <span
-                  key={tag}
-                  className="font-mono text-[8.5px] uppercase tracking-[0.14em]"
-                  style={{ color: "rgba(244,237,224,0.4)" }}
-                >
-                  {tag}
-                </span>
-              ))}
+              {[
+                { label: "Free",                    href: null },
+                { label: "Self-paced",              href: null },
+                { label: "5 Phases · 20 Stations",  href: null },
+                { label: "The Story: for everyone", href: `${import.meta.env.BASE_URL}story` },
+              ].map(({ label, href }) =>
+                href ? (
+                  <a
+                    key={label}
+                    href={href}
+                    className="font-mono text-[8.5px] uppercase tracking-[0.14em] underline-offset-2 hover:opacity-80 transition-opacity"
+                    style={{ color: "rgba(212,160,23,0.65)", textDecoration: "underline" }}
+                  >
+                    {label}
+                  </a>
+                ) : (
+                  <span
+                    key={label}
+                    className="font-mono text-[8.5px] uppercase tracking-[0.14em]"
+                    style={{ color: "rgba(244,237,224,0.4)" }}
+                  >
+                    {label}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </div>

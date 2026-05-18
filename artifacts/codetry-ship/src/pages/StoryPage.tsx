@@ -126,6 +126,26 @@ export function StoryPage() {
         />
 
         <div className="relative z-10 flex flex-col justify-end h-full px-6 sm:px-10 pb-10 pt-20" style={{ minHeight: "inherit" }}>
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-5">
+            <a
+              href="/"
+              className="font-mono text-[8px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+              style={{ color: "rgba(212,160,23,0.55)" }}
+            >
+              ourheadwaters.ca
+            </a>
+            <span className="font-mono text-[8px]" style={{ color: "rgba(212,160,23,0.28)" }}>
+              /
+            </span>
+            <span
+              className="font-mono text-[8px] uppercase tracking-[0.2em]"
+              style={{ color: "rgba(212,160,23,0.55)" }}
+            >
+              The Story
+            </span>
+          </div>
+
           <p
             className="font-mono text-[9px] uppercase tracking-[0.32em] mb-3"
             style={{ color: "rgba(212,160,23,0.88)" }}
