@@ -91,11 +91,20 @@ export function StoryPage() {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center 40%" }}
         />
+        {/* Base darkening layer — dense at top where text sits */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(160deg, rgba(18,38,28,0.5) 0%, rgba(31,61,46,0.28) 40%, rgba(18,38,28,0.78) 100%)",
+              "linear-gradient(to bottom, rgba(8,20,14,0.78) 0%, rgba(14,30,20,0.55) 35%, rgba(14,30,20,0.42) 55%, rgba(14,30,20,0.82) 100%)",
+          }}
+        />
+        {/* Side vignette for focal pull */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 110% 100% at 50% 100%, transparent 40%, rgba(6,16,10,0.45) 100%)",
           }}
         />
 
@@ -128,7 +137,7 @@ export function StoryPage() {
               fontSize: "clamp(2rem, 6vw, 3.4rem)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
-              textShadow: "0 2px 16px rgba(0,0,0,0.35)",
+              textShadow: "0 2px 20px rgba(0,0,0,0.7), 0 4px 40px rgba(0,0,0,0.5)",
             }}
           >
             The Youth Odyssey
@@ -136,9 +145,10 @@ export function StoryPage() {
           <p
             className="font-serif italic mb-4"
             style={{
-              color: "rgba(244,237,224,0.72)",
+              color: "rgba(244,237,224,0.88)",
               fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
               maxWidth: "38ch",
+              textShadow: "0 1px 10px rgba(0,0,0,0.6)",
             }}
           >
             4 phases · 8 stations · your own story at the end.
@@ -193,141 +203,164 @@ export function StoryPage() {
       <TrailArtGallery />
 
       {/* ══════════════════════════════════════════ TRAIL MAP ══ */}
-      <section className="max-w-[44rem] mx-auto px-6 sm:px-8 py-14">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="flex-1 h-px" style={{ background: "rgba(31,61,46,0.12)" }} />
-          <p className="font-mono text-[8.5px] uppercase tracking-[0.26em]" style={{ color: "rgba(31,61,46,0.35)" }}>
-            The Trail
-          </p>
-          <div className="flex-1 h-px" style={{ background: "rgba(31,61,46,0.12)" }} />
-        </div>
+      <section
+        style={{
+          background: "linear-gradient(to bottom, #16261e 0%, #1a2e24 60%, #162535 100%)",
+          paddingTop: 56,
+          paddingBottom: 72,
+        }}
+      >
+        <div className="max-w-[44rem] mx-auto px-6 sm:px-8">
 
-        {YOUTH_PHASES.map((phase) => {
-          const stations = YOUTH_STATIONS.filter((s) => s.phase === phase.n);
-          return (
-            <div key={phase.n} className="mb-14" data-testid={`youth-phase-${phase.n}`}>
-              {/* Phase header */}
-              <div className="flex items-baseline gap-3 mb-1">
-                <span
-                  className="font-mono text-[8px] uppercase tracking-[0.22em]"
-                  style={{ color: "rgba(184,90,62,0.65)" }}
+          {/* Section label */}
+          <div className="flex items-center gap-3 mb-12">
+            <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.18)" }} />
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.3em]" style={{ color: "rgba(212,160,23,0.55)" }}>
+              The Trail
+            </p>
+            <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.18)" }} />
+          </div>
+
+          {YOUTH_PHASES.map((phase, phaseIdx) => {
+            const stations = YOUTH_STATIONS.filter((s) => s.phase === phase.n);
+            return (
+              <div
+                key={phase.n}
+                className={phaseIdx < YOUTH_PHASES.length - 1 ? "mb-16" : "mb-0"}
+                data-testid={`youth-phase-${phase.n}`}
+              >
+                {/* Phase header */}
+                <div className="flex items-center gap-3 mb-3">
+                  <span
+                    className="font-mono text-[8px] uppercase tracking-[0.24em] px-2 py-0.5 rounded-sm"
+                    style={{
+                      background: "rgba(212,160,23,0.12)",
+                      color: "rgba(212,160,23,0.75)",
+                      border: "1px solid rgba(212,160,23,0.2)",
+                    }}
+                  >
+                    Phase {String(phase.n).padStart(2, "0")}
+                  </span>
+                  <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.1)" }} />
+                </div>
+                <h2
+                  className="font-serif mb-1"
+                  style={{
+                    fontSize: "clamp(1.45rem, 4.5vw, 2rem)",
+                    color: "#f4ede0",
+                    fontWeight: 500,
+                    letterSpacing: "-0.015em",
+                    lineHeight: 1.15,
+                  }}
                 >
-                  Phase {String(phase.n).padStart(2, "0")}
-                </span>
-                <div className="flex-1 h-px" style={{ background: "rgba(31,61,46,0.08)" }} />
-              </div>
-              <h2
-                className="font-serif mb-1"
-                style={{
-                  fontSize: "clamp(1.45rem, 4.5vw, 2rem)",
-                  color: "#1f3d2e",
-                  fontWeight: 500,
-                  letterSpacing: "-0.015em",
-                  lineHeight: 1.15,
-                }}
-              >
-                {phase.label}
-              </h2>
-              <p
-                className="font-serif italic mb-6"
-                style={{ color: "rgba(31,61,46,0.5)", fontSize: "14px", lineHeight: 1.6 }}
-              >
-                {phase.desc}
-              </p>
+                  {phase.label}
+                </h2>
+                <p
+                  className="font-serif italic mb-7"
+                  style={{ color: "rgba(244,237,224,0.42)", fontSize: "14px", lineHeight: 1.6 }}
+                >
+                  {phase.desc}
+                </p>
 
-              {/* Station cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {stations.map((station) => {
-                  const isOpen = openStation === station.ordinal;
-                  return (
-                    <button
-                      key={station.ordinal}
-                      onClick={() => setOpenStation(isOpen ? null : station.ordinal)}
-                      className="text-left rounded-xl transition-all"
-                      style={{
-                        background: isOpen ? "rgba(31,61,46,0.07)" : "rgba(31,61,46,0.04)",
-                        border: isOpen
-                          ? "1px solid rgba(31,61,46,0.18)"
-                          : "1px solid rgba(31,61,46,0.09)",
-                        padding: "18px 20px",
-                        cursor: "pointer",
-                      }}
-                      data-testid={`youth-station-${station.ordinal}`}
-                      aria-expanded={isOpen}
-                    >
-                      {/* Station number */}
-                      <span
-                        className="font-mono text-[7.5px] uppercase tracking-[0.24em] block mb-2"
-                        style={{ color: "rgba(184,90,62,0.55)" }}
-                      >
-                        Station {String(station.ordinal).padStart(2, "0")}
-                      </span>
-
-                      {/* Station name */}
-                      <p
-                        className="font-serif mb-1"
+                {/* Station cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {stations.map((station) => {
+                    const isOpen = openStation === station.ordinal;
+                    return (
+                      <button
+                        key={station.ordinal}
+                        onClick={() => setOpenStation(isOpen ? null : station.ordinal)}
+                        className="text-left transition-all"
                         style={{
-                          fontSize: "clamp(1.1rem, 3.5vw, 1.3rem)",
-                          color: "#1f3d2e",
-                          fontWeight: 500,
-                          letterSpacing: "-0.01em",
-                          lineHeight: 1.2,
+                          background: isOpen
+                            ? "rgba(212,160,23,0.08)"
+                            : "rgba(244,237,224,0.05)",
+                          border: isOpen
+                            ? "1px solid rgba(212,160,23,0.28)"
+                            : "1px solid rgba(244,237,224,0.1)",
+                          borderRadius: 10,
+                          padding: "18px 20px",
+                          cursor: "pointer",
+                          boxShadow: isOpen
+                            ? "0 2px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(212,160,23,0.08)"
+                            : "0 1px 8px rgba(0,0,0,0.2)",
                         }}
+                        data-testid={`youth-station-${station.ordinal}`}
+                        aria-expanded={isOpen}
                       >
-                        {station.name}
-                      </p>
-
-                      {/* Subtitle */}
-                      <p
-                        className="font-serif italic"
-                        style={{ fontSize: "13px", color: "rgba(31,61,46,0.55)", lineHeight: 1.55 }}
-                      >
-                        {station.subtitle}
-                      </p>
-
-                      {/* Expandable excerpt */}
-                      {isOpen && (
-                        <div className="mt-4">
-                          <div
-                            className="h-px mb-3"
-                            style={{ background: "rgba(31,61,46,0.1)" }}
-                          />
-                          <p
-                            className="font-serif italic"
-                            style={{
-                              fontSize: "14px",
-                              color: "#2a3d34",
-                              lineHeight: 1.72,
-                              fontStyle: "italic",
-                            }}
-                          >
-                            "{station.excerpt}"
-                          </p>
-                          <p
-                            className="font-mono text-[7.5px] uppercase tracking-[0.18em] mt-2"
-                            style={{ color: "rgba(31,61,46,0.38)" }}
-                          >
-                            From: {station.sourceTale}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Tap hint */}
-                      {!isOpen && (
-                        <p
-                          className="font-mono text-[7px] uppercase tracking-[0.18em] mt-3"
-                          style={{ color: "rgba(31,61,46,0.28)" }}
+                        {/* Station number */}
+                        <span
+                          className="font-mono text-[7.5px] uppercase tracking-[0.26em] block mb-2"
+                          style={{ color: "rgba(212,160,23,0.6)" }}
                         >
-                          Tap to read a fragment →
+                          Station {String(station.ordinal).padStart(2, "0")}
+                        </span>
+
+                        {/* Station name */}
+                        <p
+                          className="font-serif mb-1"
+                          style={{
+                            fontSize: "clamp(1.1rem, 3.5vw, 1.25rem)",
+                            color: "#f4ede0",
+                            fontWeight: 500,
+                            letterSpacing: "-0.01em",
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {station.name}
                         </p>
-                      )}
-                    </button>
-                  );
-                })}
+
+                        {/* Subtitle */}
+                        <p
+                          className="font-serif italic"
+                          style={{ fontSize: "13px", color: "rgba(244,237,224,0.48)", lineHeight: 1.55 }}
+                        >
+                          {station.subtitle}
+                        </p>
+
+                        {/* Expandable excerpt */}
+                        {isOpen && (
+                          <div className="mt-4">
+                            <div
+                              className="h-px mb-3"
+                              style={{ background: "rgba(212,160,23,0.2)" }}
+                            />
+                            <p
+                              className="font-serif italic"
+                              style={{
+                                fontSize: "14px",
+                                color: "rgba(244,237,224,0.82)",
+                                lineHeight: 1.75,
+                              }}
+                            >
+                              "{station.excerpt}"
+                            </p>
+                            <p
+                              className="font-mono text-[7.5px] uppercase tracking-[0.18em] mt-3"
+                              style={{ color: "rgba(212,160,23,0.4)" }}
+                            >
+                              From: {station.sourceTale}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Tap hint */}
+                        {!isOpen && (
+                          <p
+                            className="font-mono text-[7px] uppercase tracking-[0.18em] mt-3"
+                            style={{ color: "rgba(244,237,224,0.22)" }}
+                          >
+                            Tap to read a fragment →
+                          </p>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </section>
 
       {/* ════════════════════════════════════════ ARTIST SUBMIT ══ */}

@@ -250,43 +250,45 @@ export function TrailSignPost({ mode = "fork", compact = false }: TrailSignPostP
             </span>
           </LeftSign>
 
-          {/* Small phase pointer signs */}
+          {/* Small phase pointer signs — gap post between each */}
           {!compact && ODYSSEY_PHASES.map((p, i) => (
-            <LeftSign
-              key={p.name}
-              bg={i % 2 === 0 ? ODYSSEY_SM : "#432610"}
-              arrowH={17}
-              arrowW={11}
-              href="/odyssey"
-              minW={210}
-            >
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 9,
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    color: GOLD,
-                    flexShrink: 0,
-                  }}
-                >
-                  {p.label}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 11,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: CREAM,
-                    opacity: 0.88,
-                  }}
-                >
-                  {p.name}
-                </span>
-              </div>
-            </LeftSign>
+            <div key={p.name} style={{ display: "contents" }}>
+              <Post h={4} />
+              <LeftSign
+                bg={i % 2 === 0 ? ODYSSEY_SM : "#432610"}
+                arrowH={17}
+                arrowW={11}
+                href="/odyssey"
+                minW={210}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono, monospace)",
+                      fontSize: 9,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: GOLD,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {p.label}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono, monospace)",
+                      fontSize: 11,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: CREAM,
+                      opacity: 0.88,
+                    }}
+                  >
+                    {p.name}
+                  </span>
+                </div>
+              </LeftSign>
+            </div>
           ))}
 
           <Post h={compact ? 10 : 14} />
@@ -326,43 +328,45 @@ export function TrailSignPost({ mode = "fork", compact = false }: TrailSignPostP
             </span>
           </RightSign>
 
-          {/* Small phase pointer signs */}
+          {/* Small phase pointer signs — gap post between each */}
           {!compact && YOUTH_PHASES.map((p, i) => (
-            <RightSign
-              key={p.name}
-              bg={i % 2 === 0 ? YOUTH_SM : "#5a3418"}
-              arrowH={17}
-              arrowW={11}
-              href="/story"
-              minW={220}
-            >
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 9,
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    color: GOLD,
-                    flexShrink: 0,
-                  }}
-                >
-                  {p.label}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 11,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: CREAM,
-                    opacity: 0.88,
-                  }}
-                >
-                  {p.name}
-                </span>
-              </div>
-            </RightSign>
+            <div key={p.name} style={{ display: "contents" }}>
+              <Post h={4} />
+              <RightSign
+                bg={i % 2 === 0 ? YOUTH_SM : "#5a3418"}
+                arrowH={17}
+                arrowW={11}
+                href="/story"
+                minW={220}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono, monospace)",
+                      fontSize: 9,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: GOLD,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {p.label}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono, monospace)",
+                      fontSize: 11,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: CREAM,
+                      opacity: 0.88,
+                    }}
+                  >
+                    {p.name}
+                  </span>
+                </div>
+              </RightSign>
+            </div>
           ))}
         </>
       )}
