@@ -19,7 +19,7 @@ export interface FocusStep {
 }
 
 export interface FocusArea {
-  id: "contracts" | "gmph";
+  id: "contracts" | "gmph" | "odyssey";
   title: string;
   subtitle: string;
   whyNow: string;
@@ -36,9 +36,9 @@ export const FOCUS_AREAS: FocusArea[] = [
   {
     id: "contracts",
     title: "Land the next contract",
-    subtitle: "Northern Band trial window",
+    subtitle: "Northern Band — W20 bridge capital push · deadline May 30",
     whyNow:
-      "The $12k portal fee is confirmed and the trial window is open — but the 2026-06-15 soft deadline is approaching fast. Every week without a council date is runway draining.",
+      "This is W20 (May 18–22). The bridge capital deadline is May 30 — ten days out. The Northern Band council window closes June 15. These two clocks are running in parallel and both require a concrete action this week, not next.",
     effortPayoff: "medium-high-payoff",
     effortLabel: "Medium effort",
     payoffLabel: "High payoff — unlocks the full agency waterfall",
@@ -47,34 +47,34 @@ export const FOCUS_AREAS: FocusArea[] = [
     accentInk: "#0F3460",
     steps: [
       {
-        action: "Define what 'yes' actually looks like for the council",
+        action: "Send written follow-up to bridge funder — request commitment by May 30",
         detail:
-          "Before you book the meeting, write one paragraph: what scope does the council need to see in the trial to commit to an ongoing engagement? What's the minimum that proves the model? Answer this first — it shapes everything else.",
+          "One clear paragraph: state the deadline, what a commitment looks like (email confirmation, wire reference, or signed term sheet), and the consequence of missing it (drop to $48k Scenario A floor, senior hires deferred). Direct, not threatening.",
         timeEstimate: "1 hr",
       },
       {
-        action: "Get a council date on the calendar",
+        action: "Confirm Northern Band council calendar — is there a date before June 15?",
         detail:
-          "A meeting request with a specific agenda is not pressure — it's professionalism. Aim for a date before 2026-06-01 so you have runway before the 2026-06-15 soft deadline.",
+          "One question through your existing channel: is there a council or committee meeting between now and June 15 where the Headwaters engagement can be on the agenda? Get a yes or a no this week.",
         timeEstimate: "15 min",
       },
       {
-        action: "Prepare the trial brief (one page, plain language)",
+        action: "Prepare the one-page Northern Band council brief",
         detail:
-          "Scope, deliverables, bounded timeline, what a 'yes' looks like at the end of it. The Ship Manifest has the structure — adapt it to the specific scope the council needs to see.",
+          "One page, no appendices. Header: what the trial is. Body: Phase 1 cost ($25k flat, 8 weeks, Bobbie solo), Phase 2 rates ($175/hr + Tyler at $70/hr), what the council can stop at any time, what the community keeps. Footer: contact and the ask (30-minute meeting or BCR date).",
         timeEstimate: "half day",
       },
       {
         action: "Set the Plan B trigger date in writing",
         detail:
-          "Write the date (2026-06-15 or your revised equivalent) somewhere visible. Plan B is not a fallback — it's a parallel track that activates on a specific signal.",
+          "Write June 15 somewhere visible. If no council date confirmed by then, Plan B activates — not as a fallback, as a parallel track. One flag is information. Two consecutive weeks flagged is the trigger.",
         timeEstimate: "15 min",
       },
       {
-        action: "Facilitate 807 grants application for benefits plan build-out",
+        action: "Friday: three-column week review",
         detail:
-          "This is an open action item you own. Identify the grant (LFIF, FedNor CEDP, or equivalent), confirm 807 Co-op board as proponent, and move it from 'not yet identified' to 'submitted.'",
-        timeEstimate: "1 hr",
+          "Bridge Capital (committed / pending / no response) · Northern Band (meeting confirmed / in progress / no date) · Week 21 actions. File the note. This is the weekly habit.",
+        timeEstimate: "15 min",
       },
     ],
   },
@@ -83,7 +83,7 @@ export const FOCUS_AREAS: FocusArea[] = [
     title: "Activate the Gilles engagement",
     subtitle: "Pitch sent · $28k of $72k used · Phase 2 starts on his reply",
     whyNow:
-      "Phase 1 is complete — six weeks, $28,000, the one-pager is built and sent. The message went with it. $44,000 remains. The ball is in his court. When he replies, the next two weeks draw against that balance and the engagement is live.",
+      "Phase 1 is complete — six weeks, $28,000, the one-pager is built and sent. $44,000 remains pre-paid. This week: a 15-minute Gilles check-in is on the W20 plan (Thursday). Use it to read the Northern Band council mood and confirm what the first two weeks of Phase 2 focus on.",
     effortPayoff: "medium-high-payoff",
     effortLabel: "Medium effort",
     payoffLabel: "$44k remaining pre-paid credit — delivery, not a new sale",
@@ -92,22 +92,61 @@ export const FOCUS_AREAS: FocusArea[] = [
     accentInk: "#0f1e17",
     steps: [
       {
-        action: "Book one call — not to sell, to confirm scope",
+        action: "Thursday check-in call — 15 minutes",
         detail:
-          "The question isn't whether he wants this. It's what the first two weeks focus on. Voice tool first? Knowledge capture? Asset tracking? Let him direct it — that's how he operates best.",
+          "Two questions: what's his read of the council's mood, and is there any back-channel intel on the June calendar? Also: what does he want the first two weeks of Phase 2 to focus on — voice tool, knowledge capture, or asset tracking? Let him direct it.",
         timeEstimate: "15 min",
       },
       {
-        action: "Draft the two-week scope in one paragraph",
+        action: "Draft the two-week Phase 2 scope before the call",
         detail:
-          "Before the call: write one paragraph describing what two weeks produces and what the first draw against the balance covers. Concrete deliverables, not service descriptions. What does he hold in his hand at the end of it?",
+          "One paragraph: what two weeks produces, what the first draw against the $44k balance covers. Concrete deliverables — not service descriptions. What does he hold in his hand at the end of week two?",
         timeEstimate: "1 hr",
       },
       {
-        action: "Confirm the drawdown structure in writing",
+        action: "Confirm the drawdown structure on the call",
         detail:
-          "Two weeks of tooling draws against the remaining $44,000 pre-paid balance. Any remaining balance after that clears through hourly work on objectives they define at $175/hr. Write it down and confirm on the call. No invoice ceremony — just delivery of what was always agreed.",
+          "Two weeks of tooling draws against the remaining $44k pre-paid balance. Any remaining balance after that clears through hourly at $175/hr on objectives he defines. Write it down and confirm. No invoice ceremony — just delivery of what was always agreed.",
         timeEstimate: "15 min",
+      },
+    ],
+  },
+  {
+    id: "odyssey",
+    title: "Odyssey launch — follow through this week",
+    subtitle: "Live as of May 18 · intake form live · PWA link needs confirming",
+    whyNow:
+      "The Odyssey section and /odyssey page went live today (May 18). The intake form is collecting responses. Three things need to happen this week to make it real: confirm the PWA Pioneer Path link, share it in the right place, and prep the first voice note script for Phase 01.",
+    effortPayoff: "fast-low-risk",
+    effortLabel: "Low effort this week",
+    payoffLabel: "Activates the practice layer — the Odyssey becomes real when the first person completes Station 1",
+    accent: "#7c4a1e",
+    accentSoft: "#fdf3e8",
+    accentInk: "#3d2008",
+    steps: [
+      {
+        action: "Confirm and update the PWA Pioneer Path link",
+        detail:
+          "The 'Open the Pioneer Path →' button on /odyssey currently uses a placeholder URL. Get the actual published URL for the Codetry Handbook PWA and paste it in — one edit, two minutes.",
+        timeEstimate: "15 min",
+      },
+      {
+        action: "Share the Odyssey page in one targeted place",
+        detail:
+          "Not a broadcast — one specific person or group who is already organising locally and would benefit from this. Send the link directly with one sentence of context. Watch the intake form for their response.",
+        timeEstimate: "15 min",
+      },
+      {
+        action: "Write the Phase 01 voice note script (Station 1 — The Saltbox)",
+        detail:
+          "Pre-recorded guidance for Station 1. The prompt: 'Name the work that already exists. Find the substrate you're standing on.' Three minutes max. Write the script first — one page, plain spoken language, no jargon. Record when the script feels right.",
+        timeEstimate: "1 hr",
+      },
+      {
+        action: "Draft the Trail Signal group rules (one short doc)",
+        detail:
+          "Private group for field notes — async, low-pressure. Three rules maximum. What belongs there, what doesn't, and how often Bobbie checks in. Publish it before the first person completes Station 1.",
+        timeEstimate: "1 hr",
       },
     ],
   },

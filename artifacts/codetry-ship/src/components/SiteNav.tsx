@@ -17,16 +17,17 @@ const NAV_LINKS: NavLink[] = [
   { href: "/bio",      label: "About" },
   { href: "/listen",   label: "Listen" },
   { href: "/economy",  label: "Economy", desktopOnly: true },
+  { href: "/odyssey",  label: "Odyssey" },
 ];
 
-const TOOLS: { icon: string; name: string; href: string }[] = [
+const TOOLS: { icon: string; name: string; href: string; comingSoon?: boolean }[] = [
   { icon: "📖", name: "The Handbook",          href: "/codetry-handbook/" },
   { icon: "📋", name: "Practitioner's Guide",  href: "/practitioners-guide-v2/" },
   { icon: "📚", name: "The Accounts",          href: "/headwaters-books/" },
   { icon: "🔬", name: "Research Library",      href: "/library/" },
   { icon: "🖨️", name: "Print Marketing Suite", href: "/print-marketing/" },
   { icon: "🚢", name: "Crew Manifest",         href: "/" },
-  { icon: "🗄️", name: "Media Library",         href: "/media/" },
+  { icon: "🗄️", name: "Media Library",         href: "/media/",            comingSoon: true },
 ];
 
 function isActive(path: string, location: string): boolean {
@@ -227,17 +228,26 @@ export function SiteNav() {
                   role="menu"
                   data-testid="nav-tools-dropdown"
                 >
-                  {TOOLS.map(({ icon, name, href }) => (
+                  {TOOLS.map(({ icon, name, href, comingSoon }) => (
                     <a
                       key={name}
-                      href={href}
-                      className="flex items-center gap-2.5 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-muted"
+                      href={comingSoon ? undefined : href}
+                      className={`flex items-center gap-2.5 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
                       style={{ color: "hsl(var(--foreground))" }}
                       role="menuitem"
+                      aria-disabled={comingSoon}
                       data-testid={`nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                     >
                       <span className="text-base leading-none shrink-0">{icon}</span>
-                      {name}
+                      <span className="flex-1">{name}</span>
+                      {comingSoon && (
+                        <span
+                          className="font-mono text-[8px] uppercase tracking-[0.12em] rounded-sm px-1.5 py-0.5"
+                          style={{ background: "hsl(var(--card-border))", color: "hsl(var(--muted-foreground))" }}
+                        >
+                          Soon
+                        </span>
+                      )}
                     </a>
                   ))}
                 </div>
@@ -384,16 +394,25 @@ export function SiteNav() {
                 className="border-t"
                 style={{ borderColor: "hsl(var(--card-border))" }}
               >
-                {TOOLS.map(({ icon, name, href }) => (
+                {TOOLS.map(({ icon, name, href, comingSoon }) => (
                   <a
                     key={name}
-                    href={href}
-                    className="flex items-center gap-2.5 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-muted"
+                    href={comingSoon ? undefined : href}
+                    className={`flex items-center gap-2.5 px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${comingSoon ? "cursor-default opacity-50" : "hover:bg-muted"}`}
                     style={{ color: "hsl(var(--foreground))" }}
+                    aria-disabled={comingSoon}
                     data-testid={`mobile-nav-tool-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     <span className="text-base leading-none shrink-0">{icon}</span>
-                    {name}
+                    <span className="flex-1">{name}</span>
+                    {comingSoon && (
+                      <span
+                        className="font-mono text-[8px] uppercase tracking-[0.12em] rounded-sm px-1.5 py-0.5"
+                        style={{ background: "hsl(var(--card-border))", color: "hsl(var(--muted-foreground))" }}
+                      >
+                        Soon
+                      </span>
+                    )}
                   </a>
                 ))}
               </div>

@@ -19,6 +19,7 @@ import {
   ChevronUp,
   Handshake,
   Wrench,
+  Compass,
   Zap,
   TrendingUp,
   Flame,
@@ -103,6 +104,7 @@ function EffortBadge({ ep, label }: { ep: EffortPayoff; label: string }) {
 const AREA_ICONS: Record<FocusArea["id"], typeof Handshake> = {
   contracts: Handshake,
   gmph: Wrench,
+  odyssey: Compass,
 };
 
 // ─── Focus area card ─────────────────────────────────────────────────────────
