@@ -148,9 +148,21 @@ export default function PathHome() {
           station opens.
         </Text>
 
-        <Text style={[styles.progressLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
-          {progressLabel}
-        </Text>
+        <View style={styles.progressRow}>
+          <Text style={[styles.progressLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+            {progressLabel}
+          </Text>
+          <Pressable
+            onPress={() => router.push("/path/journal")}
+            hitSlop={8}
+            style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+            accessibilityLabel="Your trail journal"
+          >
+            <Text style={[styles.journalLink, { color: c.mutedForeground, fontFamily: MONO }]}>
+              Journal →
+            </Text>
+          </Pressable>
+        </View>
 
         {PIONEER_PHASES.map((phase) => {
           const phaseStations = PIONEER_STATIONS.filter(
@@ -437,11 +449,21 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 24,
   },
+  progressRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
   progressLabel: {
     fontSize: 11,
     letterSpacing: 1.4,
     textTransform: "uppercase",
-    marginBottom: 20,
+  },
+  journalLink: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
   },
   phaseBlock: {
     marginBottom: 32,
