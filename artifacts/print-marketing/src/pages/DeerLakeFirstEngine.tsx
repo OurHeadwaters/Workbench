@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { PrintNav } from "../components/PrintNav";
 
 const EVERGREEN = "#1f3d2e";
@@ -260,11 +261,16 @@ export function DeerLakeFirstEnginePage() {
               Wabigoon, Ontario — Treaty 3 Territory
             </p>
           </div>
-          <div style={{ textAlign: "right" }}>
-            <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.66rem", color: "rgba(244,237,224,0.45)", margin: 0, lineHeight: 1.7 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.06in" }}>
+            <QRCodeSVG
+              value="https://ourheadwaters.ca"
+              size={58}
+              fgColor={CREAM}
+              bgColor="transparent"
+            />
+            <p style={{ fontFamily: "'Courier New', monospace", fontSize: "0.38rem", color: "rgba(244,237,224,0.38)", margin: 0, letterSpacing: "0.08em", textAlign: "right", lineHeight: 1.5 }}>
               ourheadwaters.ca<br />
-              bobbie@ourheadwaters.ca<br />
-              807 220 3654
+              <span style={{ color: "rgba(201,147,10,0.65)" }}>Scan → The Youth Odyssey</span>
             </p>
           </div>
         </div>

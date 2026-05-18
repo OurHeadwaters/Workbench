@@ -3,6 +3,7 @@ import { CodetryPacketCoverSheet } from "../components/CodetryPacketCoverSheet";
 import { DeerLakeFirstEnginePage } from "./DeerLakeFirstEngine";
 import { CodetryIntroLetterDeerLakePage } from "./CodetryIntroLetterDeerLake";
 import { DeerLakeWhyNowPage } from "./DeerLakeWhyNow";
+import { DeerLakeYouthOdysseyPage } from "./DeerLakeYouthOdyssey";
 import { EngineOnePagerPage } from "./EngineOnePager";
 import { CodetryFundingBriefDeerLakePage } from "./CodetryFundingBriefDeerLake";
 import { CodetryPilotProposalDeerLakePage } from "./CodetryPilotProposalDeerLake";
@@ -28,16 +29,21 @@ const DOCUMENTS = [
   },
   {
     num: "4",
+    title: "The Youth Odyssey",
+    desc: "Eight stations. Four phases. One story — theirs. The programme that connects Deer Lake's young people to the community economy they will come back to.",
+  },
+  {
+    num: "5",
     title: "The Economic Engine",
     desc: "What one engine eliminates: eight systemic problems that hold communities in dependency — and the system built to replace each one. Community-owned. No licensing. Handover is the exit.",
   },
   {
-    num: "5",
+    num: "6",
     title: "Partnership & Funding Brief",
     desc: `A brief on the Codetry model, the Working Constellation team structure, the 807 connection, and the Phase 1 fee — prepared specifically for ${COMMUNITY}.`,
   },
   {
-    num: "6",
+    num: "7",
     title: "Pilot Proposal Outline",
     desc: `A four-phase community store pilot proposal prepared specifically for ${COMMUNITY}.`,
   },
@@ -71,6 +77,7 @@ export default function CodetryPacketDeerLake() {
         <DeerLakeFirstEnginePage />
         <CodetryIntroLetterDeerLakePage />
         <DeerLakeWhyNowPage />
+        <DeerLakeYouthOdysseyPage />
         <EngineOnePagerPage />
         <CodetryFundingBriefDeerLakePage />
         <CodetryPilotProposalDeerLakePage />

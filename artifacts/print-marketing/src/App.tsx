@@ -48,6 +48,7 @@ import XRPLTip from "@/pages/XRPLTip";
 import CommunityFinanceBrief from "@/pages/CommunityFinanceBrief";
 import EngineOnePager from "@/pages/EngineOnePager";
 import DeerLakeFirstEngine from "@/pages/DeerLakeFirstEngine";
+import DeerLakeYouthOdyssey from "@/pages/DeerLakeYouthOdyssey";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -94,6 +95,7 @@ function Router() {
       <Route path="/codetry-funding-brief-deer-lake" component={CodetryFundingBriefDeerLake} />
       <Route path="/deer-lake-why-now" component={DeerLakeWhyNow} />
       <Route path="/deer-lake-first-engine" component={DeerLakeFirstEngine} />
+      <Route path="/deer-lake-youth-odyssey" component={DeerLakeYouthOdyssey} />
       <Route path="/nan-outreach-packet" component={NANOutreachPacket} />
       <Route path="/codetry-packet-sandy-lake" component={CodetryPacketSandyLake} />
       <Route path="/codetry-packet-deer-lake" component={CodetryPacketDeerLake} />
