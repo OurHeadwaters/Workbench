@@ -43,6 +43,8 @@ Entries with a task number are already filed — skip them.
 
 # User Preferences
 
+**Direct links in chat:** Whenever a new page, tool, or file is deployed and accessible via URL, always post the full direct link in the chat so it can be tapped immediately on a phone. Do not describe where to navigate — just give the link.
+
 **Photography — standing rule:** All photos used across every artifact must come from the founder's own library. No stock photos, no AI-generated images used as photos. Nature and outdoor activity photos are fair game to use freely. Any photo that includes a recognizable face must be checked with the user before use. The founder will add photos to the project as they go; use what's available and ask when something specific is needed.
 
 **Design — section headings:** Always use bold filled bars for section headings, never subtle small-caps or muted text labels. The pattern: solid background color (EVERGREEN, RUST, or BLUE depending on context), rounded corners (3px), padding ~0.045in vertical / 0.12–0.14in horizontal, `display: inline-block`, uppercase text at 0.62–0.72rem, fontWeight 800, cream/white color, letterSpacing 0.13em. Think store aisle signs — readable at a glance, not a footnote.
