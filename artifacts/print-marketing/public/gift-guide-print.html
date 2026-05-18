@@ -145,6 +145,17 @@ html, body {
   border-radius: 50%; background: var(--green); margin-top: 5px;
 }
 
+/* JAR COLOUR BADGE */
+.jar-colour {
+  display: inline-block;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; border-radius: 4px;
+  padding: 1px 6px; margin-left: 5px;
+  vertical-align: middle; font-family: 'Inter', sans-serif;
+}
+.jar-colour.brown { background: #6b3d1e; color: #f5dcc0; }
+.jar-colour.white { background: #e8e0d4; color: #5a4a3a; }
+
 /* FOOTER */
 .footer {
   text-align: center; padding: 10px 0 14px;
@@ -216,7 +227,7 @@ html, body {
   <div class="item">
     <div class="item-icon">🍄</div>
     <div class="item-body">
-      <div class="item-name">Chaga</div>
+      <div class="item-name">Chaga <span class="jar-colour brown">Brown pieces in the jar</span></div>
       <div class="item-tag">Antioxidant · anti-inflammatory · immune support</div>
       <div class="item-note">Simmer chunks or powder in water 20–30 min to make a dark, earthy tea. Can also steep powder like regular tea. Mild flavour — a little like coffee. Add honey if you like.</div>
       <div class="warn">⚠️ Chaga can stimulate immune activity — check with your pharmacist if you're on immunosuppressants. Also high in oxalates; drink water alongside it.</div>
@@ -226,7 +237,7 @@ html, body {
   <div class="item">
     <div class="item-icon">🌿</div>
     <div class="item-body">
-      <div class="item-name">Birch Polypore</div>
+      <div class="item-name">Birch Polypore <span class="jar-colour white">White pieces in the jar</span></div>
       <div class="item-tag">Antimicrobial · immune support · gentle on the gut</div>
       <div class="item-note">Simmer dried pieces in water for 20–30 min, strain, and sip as tea. Slightly bitter and earthy — honey softens it. Traditionally used to support the body during illness and recovery.</div>
     </div>
