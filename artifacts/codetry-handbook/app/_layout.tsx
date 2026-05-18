@@ -30,6 +30,7 @@ import { HandbookContentProvider } from "@/contexts/HandbookContentContext";
 import { ReaderStateProvider } from "@/contexts/ReaderState";
 import { StackProvider } from "@/contexts/StackContext";
 import { AuthorProvider } from "@/lib/authorStore";
+import { PioneerPathProvider } from "@/lib/pioneerPath/store";
 import { initNetworkWatcher } from "@/lib/saveStatus";
 
 initNetworkWatcher();
@@ -64,6 +65,7 @@ function RootLayoutNav() {
       <Stack.Screen name="rename-test" />
       <Stack.Screen name="gate-log" />
       <Stack.Screen name="constellation-builder" />
+      <Stack.Screen name="night-sky" />
     </Stack>
   );
 }
@@ -100,6 +102,7 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <ReaderStateProvider>
+                <PioneerPathProvider>
                 <AuthorProvider>
                   <StackProvider>
                     <RootLayoutNav />
@@ -108,6 +111,7 @@ export default function RootLayout() {
                     <UpdateAvailableBanner />
                   </StackProvider>
                 </AuthorProvider>
+                </PioneerPathProvider>
               </ReaderStateProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>

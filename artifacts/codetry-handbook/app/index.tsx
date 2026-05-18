@@ -15,7 +15,9 @@ import { useReader } from "@/contexts/ReaderState";
 import { useColors } from "@/hooks/useColors";
 import type { Palette } from "@/hooks/useColors";
 import { constellation } from "@/data/constellation";
+import { PIONEER_STATIONS } from "@/data/pioneerPath";
 import { TALES } from "@/data/tales";
+import { usePioneerPath } from "@/lib/pioneerPath/store";
 
 const SERIF = "Lora_400Regular";
 const SERIF_ITALIC = "Lora_400Regular_Italic";
@@ -34,10 +36,17 @@ export default function FrontPage() {
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
+  const { ready: pathReady, isCompleted, isUnlocked } = usePioneerPath();
+
   const lastChapter = lastRead ? getChapter(lastRead.chapterId) : undefined;
   const firstChapter = CHAPTERS[0];
   const beginTarget = lastChapter ? lastChapter.id : firstChapter.id;
   const isReturning = !!lastChapter;
+
+  const currentStation = pathReady
+    ? (PIONEER_STATIONS.find((s) => isUnlocked(s.id) && !isCompleted(s.id)) ??
+       [...PIONEER_STATIONS].reverse().find((s) => isCompleted(s.id)))
+    : undefined;
 
   const mainParts = PARTS.filter(
     (p) => p.kind !== "backMatter" && p.kind !== "frontMatter",
@@ -83,6 +92,19 @@ export default function FrontPage() {
 
         {/* ── BEGIN READING ─────────────────────────────────────────── */}
         <View style={styles.beginSection}>
+
+          {/* Pioneer Path station — returning readers only */}
+          {isReturning && currentStation && (
+            <View style={styles.stationBadge}>
+              <Text style={[styles.stationBadgeText, { fontFamily: MONO }]}>
+                {`Station ${currentStation.ordinal} of ${PIONEER_STATIONS.length} \u00b7 ${currentStation.name}`}
+              </Text>
+              <Text style={[styles.stationBadgeSub, { fontFamily: SERIF_ITALIC }]}>
+                {currentStation.subtitle}
+              </Text>
+            </View>
+          )}
+
           <Pressable
             onPress={() =>
               router.push({
@@ -110,14 +132,14 @@ export default function FrontPage() {
 
           <View style={styles.ghostRow}>
             <Pressable
-              onPress={() => router.push("/contents")}
+              onPress={() => router.push(isReturning ? "/path" : "/contents")}
               style={({ pressed }) => [
                 styles.ghostBtn,
                 { borderColor: `${EVERGREEN}35`, opacity: pressed ? 0.7 : 1 },
               ]}
             >
               <Text style={[styles.ghostBtnText, { color: EVERGREEN, fontFamily: MONO }]}>
-                Contents
+                {isReturning ? "Trail" : "Contents"}
               </Text>
             </Pressable>
             <Pressable
@@ -134,6 +156,20 @@ export default function FrontPage() {
               </Text>
             </Pressable>
           </View>
+
+          {/* Night sky entry — returning readers only */}
+          {isReturning && (
+            <Pressable
+              onPress={() => router.push("/night-sky")}
+              style={({ pressed }) => [
+                styles.nightSkyBtn,
+                { opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <Text style={[styles.nightSkyDots, { fontFamily: MONO }]}>· · ·</Text>
+              <Text style={[styles.nightSkyLabel, { fontFamily: MONO }]}>Night sky</Text>
+            </Pressable>
+          )}
         </View>
 
         {/* ── CHILDREN'S TALES — always visible ────────────────────── */}
@@ -437,6 +473,45 @@ const styles = StyleSheet.create({
   beginSection: {
     paddingHorizontal: 22,
     paddingTop: 24,
+  },
+
+  // STATION BADGE
+  stationBadge: {
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  stationBadgeText: {
+    fontSize: 10,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    color: `${EVERGREEN}99`,
+    marginBottom: 2,
+  },
+  stationBadgeSub: {
+    fontSize: 13,
+    color: `${EVERGREEN}88`,
+    lineHeight: 19,
+  },
+
+  // NIGHT SKY ENTRY
+  nightSkyBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 14,
+    paddingVertical: 10,
+  },
+  nightSkyDots: {
+    fontSize: 11,
+    letterSpacing: 4,
+    color: `${EVERGREEN}50`,
+  },
+  nightSkyLabel: {
+    fontSize: 9,
+    letterSpacing: 2.5,
+    textTransform: "uppercase",
+    color: `${EVERGREEN}50`,
   },
   primaryBtn: {
     flexDirection: "row",

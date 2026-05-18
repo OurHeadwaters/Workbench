@@ -5,7 +5,6 @@ import { Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 
-import { PioneerPathProvider } from "@/lib/pioneerPath/store";
 
 type ImportMetaWithEnv = ImportMeta & { env?: { BASE_URL?: string } };
 
@@ -35,13 +34,11 @@ export default function PathLayout() {
   }, []);
 
   return (
-    <PioneerPathProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: "transparent" },
-        }}
-      />
-    </PioneerPathProvider>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: "transparent" },
+      }}
+    />
   );
 }
