@@ -1,6 +1,8 @@
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
+  Easing,
   Platform,
   Pressable,
   StyleSheet,
@@ -116,7 +118,6 @@ export default function NightSkyScreen() {
             ? manifest.zones.find((z) => z.zone === guide.zone)
             : undefined;
           const named = !!(userZone?.name?.trim());
-          const displayName = named ? userZone!.name : guide.label;
 
           return (
             <Pressable
@@ -131,25 +132,7 @@ export default function NightSkyScreen() {
                 },
               ]}
             >
-              {/* Outer glow ring — only for named zones */}
-              {named && (
-                <View style={[styles.starGlowRing, { borderColor: `${CREAM}22` }]} />
-              )}
-
-              {/* Star dot */}
-              <View
-                style={[
-                  styles.starDot,
-                  {
-                    backgroundColor: named ? GLOW : DIM,
-                    shadowColor: named ? CREAM : "transparent",
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: named ? 0.55 : 0,
-                    shadowRadius: named ? 8 : 0,
-                    elevation: named ? 4 : 0,
-                  },
-                ]}
-              />
+              <AnimatedStar named={named} />
 
               {/* Zone number */}
               <Text
@@ -185,6 +168,86 @@ export default function NightSkyScreen() {
         </Text>
       </View>
     </View>
+  );
+}
+
+function AnimatedStar({ named }: { named: boolean }) {
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!named) return;
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 2200,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulse, {
+          toValue: 0,
+          duration: 2200,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [named, pulse]);
+
+  const ringOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.10, 0.32],
+  });
+
+  const dotScale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.35],
+  });
+
+  const dotOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.82, 1],
+  });
+
+  if (!named) {
+    return (
+      <View
+        style={[
+          styles.starDot,
+          { backgroundColor: DIM },
+        ]}
+      />
+    );
+  }
+
+  return (
+    <>
+      {/* Animated outer glow ring */}
+      <Animated.View
+        style={[
+          styles.starGlowRing,
+          { borderColor: CREAM, opacity: ringOpacity },
+        ]}
+      />
+      {/* Animated star dot */}
+      <Animated.View
+        style={[
+          styles.starDot,
+          {
+            backgroundColor: GLOW,
+            shadowColor: CREAM,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.55,
+            shadowRadius: 8,
+            elevation: 4,
+            transform: [{ scale: dotScale }],
+            opacity: dotOpacity,
+          },
+        ]}
+      />
+    </>
   );
 }
 
