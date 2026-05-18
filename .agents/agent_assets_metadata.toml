@@ -72,6 +72,30 @@ uri = "file://artifacts/codetry-ship/public/odyssey/icon-saltbox.png"
 type = "image"
 title = "woodcut water drop icon"
 
+[[generated]]
+id = "cN47hSB0m-UQKSeRYWiZ8"
+uri = "file://artifacts/codetry-ship/public/story/hero-banner.png"
+type = "image"
+title = "children story boreal hero"
+
+[[generated]]
+id = "CohWnf-GLrqPhvDMqfDdQ"
+uri = "file://artifacts/codetry-ship/public/story/chapter-river.png"
+type = "image"
+title = "river frozen flowing children illustration"
+
+[[generated]]
+id = "sFXeR0dOG7tZvhepkD_O9"
+uri = "file://artifacts/codetry-ship/public/story/chapter-gate.png"
+type = "image"
+title = "wooden gate open golden light"
+
+[[generated]]
+id = "3g-9mI5wvo8z2aJfMYTpz"
+uri = "file://artifacts/codetry-ship/public/story/chapter-saltbox.png"
+type = "image"
+title = "saltbox wooden box seeds herbs"
+
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"

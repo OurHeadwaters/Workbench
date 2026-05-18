@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { ApiError, postIntake } from "@/lib/api";
+import { TrailArtGallery } from "@/components/TrailArtGallery";
 
 /* ── Phase data ────────────────────────────────────────────────────────── */
 
@@ -253,6 +254,12 @@ export function OdysseyPage() {
           </a>
         </div>
       </section>
+
+      {/* ════════════════════════════════════════ TRAIL ART GALLERY ══ */}
+      {/* Sophie's watercolour — the first painting left on the trail.  */}
+      {/* Real art by real people from the communities this journey     */}
+      {/* passes through. Each piece is a pebble left for the next one. */}
+      <TrailArtGallery />
 
       {/* ══════════════════════════════════════ MAIN CONTENT COLUMN ══ */}
       <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
@@ -603,6 +610,51 @@ export function OdysseyPage() {
             </div>
 
           )}
+        </section>
+
+        {/* ═══════════════════════════════════ SUBMIT YOUR ART ══ */}
+        <div className="od-trail-rule mt-4">
+          <span>Leave your mark</span>
+        </div>
+
+        <section id="submit-art" className="pb-6" data-testid="odyssey-submit-art">
+          <div
+            className="od-card rounded-md px-6 py-7"
+            style={{ background: "#f4ede0" }}
+          >
+            <div className="flex items-start gap-4 flex-wrap sm:flex-nowrap">
+              <span style={{ fontSize: "22px", lineHeight: 1, marginTop: "2px", flexShrink: 0 }}>🌿</span>
+              <div>
+                <p
+                  className="font-serif text-[15.5px] font-medium mb-2 tracking-tight"
+                  style={{ color: "#1f3d2e" }}
+                >
+                  Are you an artist from a community this trail passes through?
+                </p>
+                <p
+                  className="font-serif text-[14px] leading-[1.65] mb-4"
+                  style={{ color: "rgba(31,61,46,0.68)" }}
+                >
+                  If this landscape is yours — if you've lived at the headwaters — we want your work here.
+                  Any medium. Any format. The only rule: it has to be yours and it has to be real.
+                  When it's here, people on the trail can tip you directly using community tokens.
+                </p>
+                <a
+                  href="mailto:bobbie@ourheadwaters.ca?subject=Trail%20Art%20Submission"
+                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity hover:opacity-80"
+                  style={{ color: "#b85a3e" }}
+                >
+                  Submit your work → bobbie@ourheadwaters.ca
+                </a>
+                <p
+                  className="font-mono text-[8.5px] uppercase tracking-[0.14em] mt-3 leading-[1.7]"
+                  style={{ color: "rgba(31,61,46,0.38)" }}
+                >
+                  Include: your name · your community · a title if you have one · your XRPL address for tips (optional)
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <div className="pb-24" />
