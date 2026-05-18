@@ -128,6 +128,18 @@ export function HomePage() {
               What it looks like to build →
             </a>
           </div>
+
+          {/* Story entry point — visible on mobile before any scroll */}
+          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em]">
+            <a
+              href={`${import.meta.env.BASE_URL}story`}
+              className="transition-opacity hover:opacity-90"
+              style={{ color: "hsla(38, 36%, 96%, 0.45)" }}
+              data-testid="hero-story-link"
+            >
+              📖 Read the story — for kids &amp; curious people →
+            </a>
+          </p>
         </div>
       </section>
 
