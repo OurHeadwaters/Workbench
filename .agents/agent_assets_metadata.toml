@@ -71,3 +71,9 @@ id = "iJxfz2zrFkScPw_4HKY2E"
 uri = "file://attached_assets/generated_images/salts-no-bg.png"
 type = "image"
 title = "Salt Display — background removed"
+
+[[outputs]]
+id = "5cHN4knLbc6JcnYW1jvPa"
+uri = "file://.local/codetry-handbook-full.md"
+type = "text"
+title = "Codetry Handbook — Full Content Extraction"
