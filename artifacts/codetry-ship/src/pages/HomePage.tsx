@@ -133,53 +133,81 @@ export function HomePage() {
 
       {/* ── odyssey ── */}
       <section
-        className="w-full px-6 sm:px-10 py-16 sm:py-20 text-center"
+        className="relative w-full overflow-hidden"
         style={{
-          background: "hsl(38 36% 94%)",
-          borderTop: "3px solid hsl(145 36% 18%)",
-          borderBottom: "1px solid hsl(38 30% 84%)",
+          background: "#1f3d2e",
+          backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hero-banner.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center 55%",
         }}
         data-testid="home-odyssey"
       >
-        <div className="mx-auto max-w-[38rem]">
-          <p
-            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4"
-            style={{ color: "hsl(145 36% 18%)" }}
-          >
-            Headwaters Odyssey
-          </p>
-          <h2
-            className="font-serif text-3xl sm:text-4xl tracking-tight leading-[1.15] mb-5"
-            style={{ color: "hsl(145 36% 18%)" }}
-          >
-            Become the hempcrete your community needs —<br className="hidden sm:block" /> whether the flood comes or not.
-          </h2>
-          <p
-            className="font-serif text-base sm:text-[17px] leading-[1.65] mb-4"
-            style={{ color: "hsl(145 36% 22%)" }}
-          >
-            A guided, self-paced pioneer journey that turns Codetry — language, discipline, and constellation practice — into real community infrastructure.
-          </p>
-          <p
-            className="font-serif text-[14px] italic leading-[1.6] mb-9"
-            style={{ color: "hsl(38 20% 45%)" }}
-          >
-            Built for headwaters people who are already organising locally.
-          </p>
-          <a
-            href={`${import.meta.env.BASE_URL}odyssey`}
-            className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-85"
-            style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 94%)" }}
-            data-testid="odyssey-cta"
-          >
-            Begin the Odyssey →
-          </a>
-          <p
-            className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.18em]"
-            style={{ color: "hsl(38 20% 52%)" }}
-          >
-            Free · Self-paced · Tools included in the existing PWA
-          </p>
+        {/* Darkening overlay */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, rgba(20,46,32,0.72) 0%, rgba(20,46,32,0.88) 100%)",
+          }}
+        />
+        {/* Topographic overlay */}
+        <div aria-hidden className="absolute inset-0 od-topo" style={{ opacity: 0.15 }} />
+
+        <div className="relative z-10 px-6 sm:px-10 py-16 sm:py-20">
+          <div className="mx-auto max-w-[38rem] text-center">
+            {/* Eyebrow with gold rule */}
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <div className="h-px w-6" style={{ background: "rgba(212,160,23,0.6)" }} />
+              <p
+                className="font-mono text-[9.5px] uppercase tracking-[0.32em]"
+                style={{ color: "rgba(212,160,23,0.85)" }}
+              >
+                Headwaters Odyssey
+              </p>
+              <div className="h-px w-6" style={{ background: "rgba(212,160,23,0.6)" }} />
+            </div>
+
+            <h2
+              className="font-serif text-3xl sm:text-4xl tracking-tight leading-[1.12] mb-5"
+              style={{ color: "#f4ede0" }}
+            >
+              Become the hempcrete your community needs —<br className="hidden sm:block" /> whether the flood comes or not.
+            </h2>
+            <p
+              className="font-serif text-base sm:text-[16.5px] leading-[1.65] mb-3"
+              style={{ color: "rgba(244,237,224,0.82)" }}
+            >
+              A guided, self-paced pioneer journey that turns Codetry — language, discipline, and constellation practice — into real community infrastructure.
+            </p>
+            <p
+              className="font-serif text-[14px] italic leading-[1.6] mb-9"
+              style={{ color: "rgba(244,237,224,0.55)" }}
+            >
+              Built for headwaters people who are already organising locally.
+            </p>
+
+            <a
+              href={`${import.meta.env.BASE_URL}odyssey`}
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-all hover:opacity-90"
+              style={{ background: "#b85a3e", color: "#f4ede0" }}
+              data-testid="odyssey-cta"
+            >
+              Begin the Odyssey →
+            </a>
+
+            {/* Trail tags row */}
+            <div className="flex items-center justify-center gap-3 mt-6 flex-wrap">
+              {["Free", "Self-paced", "5 Phases · 20 Stations"].map(tag => (
+                <span
+                  key={tag}
+                  className="font-mono text-[8.5px] uppercase tracking-[0.14em]"
+                  style={{ color: "rgba(244,237,224,0.4)" }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

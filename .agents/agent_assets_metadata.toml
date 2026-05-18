@@ -42,6 +42,36 @@ uri = "file://artifacts/print-marketing/public/service-tools.png"
 type = "image"
 title = "internal tools document desk illustration"
 
+[[generated]]
+id = "SOV2upuYJSySfeOHIFIT3"
+uri = "file://artifacts/codetry-ship/public/odyssey/hero-banner.png"
+type = "image"
+title = "boreal trail dawn fire glow"
+
+[[generated]]
+id = "6ubJ3HsTbydB7x-fu0tpe"
+uri = "file://artifacts/codetry-ship/public/odyssey/hempcrete-texture.png"
+type = "image"
+title = "hempcrete fiber texture"
+
+[[generated]]
+id = "LPTIAZxn5MnvOvLWayUrV"
+uri = "file://artifacts/codetry-ship/public/odyssey/journal-page.png"
+type = "image"
+title = "field journal page paper"
+
+[[generated]]
+id = "4TUb3kHi2QfR-aOE5m9LW"
+uri = "file://artifacts/codetry-ship/public/odyssey/icon-lantern.png"
+type = "image"
+title = "woodcut lantern icon"
+
+[[generated]]
+id = "WPT0eG_d0O7GCxBmMt-5K"
+uri = "file://artifacts/codetry-ship/public/odyssey/icon-saltbox.png"
+type = "image"
+title = "woodcut water drop icon"
+
 [[outputs]]
 id = "fAkXwaa1zHxK8nTbCpXPq"
 uri = "file://artifacts/practitioner-operating-plan/public/practitioner-operating-plan-onepager.pdf"

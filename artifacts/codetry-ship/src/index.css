@@ -248,6 +248,122 @@
   }
 }
 
+/* ─── Headwaters Odyssey — Boreal Field Journal Design Language ─────────── */
+
+:root {
+  --od-evergreen:    #1f3d2e;
+  --od-cream:        #f4ede0;
+  --od-rust:         #b85a3e;
+  --od-moss:         #2e5a3f;
+  --od-charcoal:     #2c2c2c;
+  --od-burnt-sienna: #9c4a2f;
+  --od-firefly-gold: #d4a017;
+}
+
+/* Topographic contour lines — subtle tiling SVG pattern */
+.od-topo {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><path d='M0 40 Q150 18 300 44 Q450 70 600 40' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 80 Q150 58 300 84 Q450 110 600 80' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 120 Q150 98 300 124 Q450 150 600 120' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 160 Q150 138 300 164 Q450 190 600 160' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 200 Q150 176 300 204 Q450 232 600 200' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 240 Q150 218 300 244 Q450 270 600 240' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 280 Q150 258 300 284 Q450 310 600 280' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 320 Q150 298 300 324 Q450 350 600 320' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 360 Q150 338 300 364 Q450 390 600 360' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/></svg>");
+  background-size: 600px 400px;
+  background-repeat: repeat;
+}
+
+/* Hempcrete texture card overlay */
+.od-card {
+  position: relative;
+  border: 1px solid rgba(184, 90, 62, 0.32);
+  box-shadow: 0 2px 12px rgba(31, 61, 46, 0.09), 0 1px 3px rgba(31, 61, 46, 0.06);
+}
+.od-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/odyssey/hempcrete-texture.png');
+  background-size: cover;
+  opacity: 0.09;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.od-card > * { position: relative; z-index: 1; }
+
+/* Ember pulse animation — active station node */
+@keyframes od-ember {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px #f4ede0,
+      0 0 0 5px #d4a017,
+      0 0 14px 4px rgba(212, 160, 23, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px #f4ede0,
+      0 0 0 6px #d4a017,
+      0 0 24px 9px rgba(212, 160, 23, 0.65);
+  }
+}
+.od-ember {
+  animation: od-ember 2.8s ease-in-out infinite;
+}
+
+/* Firelight glow — confirmation screen */
+.od-firelight {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 115%, rgba(212, 160, 23, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 105%, rgba(184, 90, 62, 0.16) 0%, transparent 55%),
+    #f4ede0;
+}
+
+/* Pencil-wavy underline for hand-annotated feel */
+.od-pencil {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgba(156, 74, 47, 0.38);
+  text-underline-offset: 3px;
+}
+
+/* Journal form inputs — underline only, no box */
+.od-field-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(31, 61, 46, 0.3);
+  padding: 8px 2px 7px;
+  font-family: var(--app-font-serif);
+  font-size: 14px;
+  color: #2c2c2c;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+  border-radius: 0;
+}
+.od-field-input:focus {
+  border-bottom-color: #b85a3e;
+}
+.od-field-input::placeholder {
+  color: rgba(31, 61, 46, 0.38);
+  font-style: italic;
+}
+
+/* Trail divider — winding path rule */
+.od-trail-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0;
+  color: rgba(31, 61, 46, 0.35);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.od-trail-rule::before,
+.od-trail-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(31,61,46,0.22), transparent);
+}
+
 /* ─── Headwaters section label — bold filled bar ──────────────────────── */
 /* Usage: <div class="hw-label">Section</div>                             */
 /* Colour variants: hw-label--rust  hw-label--blue  hw-label--cream      */

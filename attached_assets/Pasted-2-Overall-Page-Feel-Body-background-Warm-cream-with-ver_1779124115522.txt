@@ -1,0 +1,32 @@
+2. Overall Page Feel
+•  Body background: Warm cream with very faint topographic contour lines (subtle repeating SVG pattern).
+•  All cards/stations: Soft drop shadow + thin rust border + hempcrete texture overlay at 8–12% opacity.
+•  Typography: Keep Lora for prose, JetBrains Mono for metadata. Add slight “hand-annotated” feel on reflections (light pencil-line underline or margin notes via CSS).
+3. Hero / Trail Map (Home & Progress Screen) — Most Important Visual
+Create a full-width living trail map:
+•  Hand-drawn watershed illustration: winding river as the main path.
+•  5 distinct phase zones (use the images I referenced earlier as style guide: misty headwaters → dense forest → open meadows → hempcrete shelter → branching valley).
+•  User position = glowing ember/lantern icon that pulses softly.
+•  On station complete: animate new leaves, small fires, or stacking hempcrete blocks along the trail.
+•  Seasonal tint shifts as progress advances (green → rust → soft snow).
+Reference style: Hand-illustrated field journal maps (like the Tofino journal example).
+4. Station & Card Design
+•  Each station header: Woodcut-style icon (river drop, hemp fibers, open gate, lantern) on the left in rust/evergreen.
+•  Reflection area: Looks like a scanned notebook page — slight paper curl shadow, pencil smudge effects, ink bleed on prompts.
+•  Complete button: Rust background that shifts to deep evergreen with “sealed with hempcrete” checkmark animation.
+5. Key Motifs to Use Everywhere
+•  Hempcrete texture on all progress bars, borders, and milestone screens.
+•  Firelight glow (warm radial gradient in rust/gold) on phase transitions and Echoes.
+•  Small woodcut icons for every tool (Rename Test = gate, Standby = lantern, etc.).
+6. Image Assets Needed (generate or source in these exact styles)
+1.  Hero banner: Misty boreal trail at dawn with single set of footprints leading toward a distant warm fire glow.
+2.  Trail map master illustration (topographic + hand-drawn).
+3.  Hempcrete close-up texture (fibrous material in wooden forms).
+4.  Field journal page background with pencil sketches.
+5.  Phase icons: 5 woodcut-style illustrations.
+Implementation Priority Order:
+1.  Update CSS variables + global paper/hempcrete textures.
+2.  Redesign homepage hero with new Odyssey section using the trail map style.
+3.  Update Pioneer Path / station screens with the journal + icon treatment.
+4.  Add subtle animations (ember pulse, page-turn on unlock).
+This will create an absolutely immersive, vivid user experience that makes people feel they’re on a real pioneer journey — not just using an app.
