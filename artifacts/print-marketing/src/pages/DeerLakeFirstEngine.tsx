@@ -166,7 +166,7 @@ export function DeerLakeFirstEnginePage() {
           marginBottom: "0.38in",
           maxWidth: "6.4in",
         }}>
-          Deer Lake is not being offered a pilot program. It is not being asked to be a test case. It is being recognized as the community that already has what this engine needs to run — and invited to be the community that proves what economic freedom looks like when the tools are built right.
+          Deer Lake is not being offered a pilot program. It is not being asked to be a test case. It is being recognized as the community that already has what this engine needs to run. We don't show up with a finished car and hand you the keys. We build this together — your people in the room for every piece of it. And when the engine turns over for the first time, it is your community's hands that start it. Your people drive it. Headwaters steps back. And because Deer Lake is first, you are not just building a community store. You are paving the road every community behind you will use.
         </p>
 
         {/* Thin divider */}

@@ -25,7 +25,9 @@ function buildPlainText(): string {
     "",
     `For the past several years I've been building community economic infrastructure in northern Ontario: co-op platforms, community store feasibility plans, and the operational systems that make those stores actually run after the consultant leaves. I'm the founder of Parr's Jars — a circular-economy food business — and a founding board member of the 807 Food Co-operative, which is working to build a permanent supply line moving locally sourced food from producers in the northwest into First Nations communities that have historically had no access to it. That supply line is being built right now. ${COMMUNITY_SHORT} is the kind of community it was designed to reach.`,
     "",
-    "I hold a Community Development degree from the University of Manitoba with a minor in Indigenous Studies. That background shapes how I work: I came into this field because I believe community wellbeing is inseparable from economic self-determination, and the study of Indigenous governance and self-determination gave me language and grounding I couldn't have gotten anywhere else. I'm not a consultant who parachutes in, delivers a report, and disappears. I sit at the table, learn what the community already knows, and build something the community owns — not the funder, not me.",
+    "I hold a Community Development degree from the University of Manitoba with a minor in Indigenous Studies. That background shapes how I work: I came into this field because I believe community wellbeing is inseparable from economic self-determination, and the study of Indigenous governance and self-determination gave me language and grounding I couldn't have gotten anywhere else.",
+    "",
+    "I don't show up with a finished store and hand you the keys. What I do is different: we build the Deer Lake car together. Your people are in the room for every piece of it — the planning, the systems, the supply chain, the numbers. And when the engine turns over for the first time, it is your community that starts it. Your people drive it. Headwaters doesn't stay in the car — we step back. And because Deer Lake is doing this first, you are not just running a community store. You are paving the road every community behind you will use.",
     "",
     `The reason I'm writing to ${COMMUNITY_SHORT} specifically is what's already there.`,
     "",
@@ -117,7 +119,11 @@ export function CodetryIntroLetterDeerLakePage() {
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
-                I hold a Community Development degree from the University of Manitoba with a minor in Indigenous Studies. That background shapes how I work: I came into this field because I believe community wellbeing is inseparable from economic self-determination, and the study of Indigenous governance and self-determination gave me language and grounding I couldn't have gotten anywhere else. I'm not a consultant who parachutes in, delivers a report, and disappears. I sit at the table, learn what the community already knows, and build something the community owns — not the funder, not me.
+                I hold a Community Development degree from the University of Manitoba with a minor in Indigenous Studies. That background shapes how I work: I came into this field because I believe community wellbeing is inseparable from economic self-determination, and the study of Indigenous governance and self-determination gave me language and grounding I couldn't have gotten anywhere else.
+              </p>
+
+              <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
+                I don't show up with a finished store and hand you the keys. What I do is different: we build the Deer Lake car together. Your people are in the room for every piece of it — the planning, the systems, the supply chain, the numbers. And when the engine turns over for the first time, it is your community that starts it. Your people drive it. Headwaters doesn't stay in the car — we step back. And because Deer Lake is doing this first, you are not just running a community store. You are paving the road every community behind you will use.
               </p>
 
               <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: INK, margin: 0 }}>
