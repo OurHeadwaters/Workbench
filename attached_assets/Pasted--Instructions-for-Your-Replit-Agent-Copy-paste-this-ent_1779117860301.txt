@@ -1,0 +1,88 @@
+**✅ Instructions for Your Replit Agent**
+
+Copy-paste this entire block directly to your Replit agent.
+
+-----
+
+**Task: Add “Headwaters Odyssey” section to ourheadwaters.ca**
+
+**Goal:** Create a prominent new entry point on the homepage (or a clean dedicated page) that introduces the Odyssey as the **practice layer** for the food systems / community work already on the site. Keep the existing calm, northern, practitioner tone. Use the Evergreen/Cream/Rust palette already in the app.
+
+### 1. New Section Copy (add near top or as a new hero block after the main intro)
+
+```html
+<!-- Headwaters Odyssey Section -->
+<section class="odyssey-section" style="background: #f4ede0; padding: 4rem 1rem; text-align: center; border-top: 3px solid #1f3d2e;">
+  <h2 style="color: #1f3d2e; font-family: 'Lora', serif; margin-bottom: 1rem;">
+    Headwaters Odyssey
+  </h2>
+  
+  <p style="font-size: 1.35rem; max-width: 620px; margin: 0 auto 2rem; color: #1f3d2e;">
+    <strong>Become the hempcrete your community needs — whether the flood comes or not.</strong>
+  </p>
+  
+  <p style="max-width: 580px; margin: 0 auto 2.5rem; color: #444;">
+    A guided, self-paced pioneer journey that turns Codetry (language, discipline, and constellation practice) into real community infrastructure. 
+    Built for headwaters people who are already organizing locally.
+  </p>
+
+  <a href="/odyssey" 
+     class="cta-button" 
+     style="background: #1f3d2e; color: #f4ede0; padding: 1rem 2rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: inline-block;">
+    Begin the Odyssey →
+  </a>
+
+  <p style="margin-top: 2rem; font-size: 0.95rem; color: #666;">
+    Free • Self-paced • Tools included in the existing PWA
+  </p>
+</section>
+```
+
+### 2. Create New Page `/odyssey` (or `/headwaters-odyssey`)
+
+**Page Title:** Headwaters Odyssey | ourheadwaters.ca
+
+**Main Content (top of page):**
+
+```markdown
+# Headwaters Odyssey
+
+**Become the hempcrete your community needs — whether the flood comes or not.**
+
+A disciplined, self-paced pioneer journey for people who already speak basic development language and want to strengthen their communities from the source.
+
+### How it works
+- 5 Phases • 20 Stations  
+- Sequential unlocks (you must do the work)  
+- All tools already built into the PWA  
+- Pre-recorded guidance you can use on your own time  
+- Private Trail Signal group for field notes (async, low-pressure)
+
+**Start here** — answer three short questions so the journey begins in your real context.
+```
+
+**Embed the 3-question gateway right below** (use Typeform, Tally, or a simple form that posts to your existing system):
+
+**Question 1:** Which community or place are you called to serve?  
+**Question 2:** Share one word or phrase in your community that feels “off” or load-bearing.  
+**Question 3:** What have you already tried to organize or strengthen? What happened?
+
+On submit → auto message:  
+“Thank you. Station 1 is now unlocked for you in the app.” + direct link to the PWA Pioneer Path.
+
+### 3. Technical Notes for You (Replit)
+
+- Link the CTA button to the existing PWA (where the Pioneer Path lives).
+- Keep mobile-first and clean — match the current site typography.
+- Add this section without disrupting the food systems / co-op content.
+- Optional: Add a small “Trail Map” teaser image if you have one.
+
+**Priority:** Get the homepage teaser section live first, then the full /odyssey page.
+
+Let me know when it’s up and I’ll give you the next batch (voice note scripts for Phase 1 + Signal group rules).
+
+-----
+
+Paste that to your Replit agent now.
+
+Once they confirm it’s live or you tweak anything, tell me and we’ll move straight to the next piece (Phase 1 recording scripts). No lag.
