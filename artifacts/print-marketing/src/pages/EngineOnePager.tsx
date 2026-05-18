@@ -100,31 +100,10 @@ function buildPlainText(): string {
   return lines.join("\n");
 }
 
-export default function EngineOnePager() {
+export function EngineOnePagerPage() {
   return (
-    <>
-      <PrintNav
-        targetId="engine-one-pager"
-        filename="headwaters-economic-engine.pdf"
-        format="letter"
-        orientation="portrait"
-        onCopyPlainText={buildPlainText}
-      />
-
-      <div
-        style={{
-          background: "#d0c9bc",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "0.4in 0 0.6in",
-          fontFamily: "Inter, system-ui, sans-serif",
-        }}
-      >
-        <div
-          id="engine-one-pager"
-          className="page-letter"
+    <div
+      className="page-letter"
           style={{
             width: "8.5in",
             minHeight: "11in",
@@ -485,6 +464,33 @@ export default function EngineOnePager() {
               </p>
             </div>
           </div>
+        </div>
+  );
+}
+
+export default function EngineOnePager() {
+  return (
+    <>
+      <PrintNav
+        targetId="engine-one-pager-standalone"
+        filename="headwaters-economic-engine.pdf"
+        format="letter"
+        orientation="portrait"
+        onCopyPlainText={buildPlainText}
+      />
+      <div
+        style={{
+          background: "#d0c9bc",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "0.4in 0 0.6in",
+          fontFamily: "Inter, system-ui, sans-serif",
+        }}
+      >
+        <div id="engine-one-pager-standalone">
+          <EngineOnePagerPage />
         </div>
       </div>
     </>
