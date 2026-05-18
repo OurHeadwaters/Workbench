@@ -1,0 +1,36 @@
+Task: Visual Redesign – Trail Map + Station Screens for Headwaters Odyssey
+Goal: Transform the Pioneer Path from a dull checklist into a vivid, immersive “Boreal Field Journal” experience. Striking visuals and text must remain highly readable and prominent. Use the existing Evergreen (#1f3d2e), Cream (#f4ede0), Rust (#b85a3e) palette. Make it feel like a living hand-drawn trail journal carried through Northwestern Ontario forests.
+1. Global Style Updates (apply site-wide for Odyssey sections)
+•  Background: Warm cream (#f4ede0) with subtle paper-fiber texture (low opacity, ~8%). Faint topographic contour lines in moss green.
+•  Cards & Stations: Soft drop shadow + thin rust border + very light hempcrete fibrous texture overlay.
+•  Typography: Lora remains for all body text (keep excellent readability). JetBrains Mono for labels/metadata. Add subtle hand-annotation style (light pencil underlines or margin notes) on reflections.
+2. Main Trail Map (Home Screen after Onboarding – Highest Priority)
+Create a full-width interactive Trail Map as the central dashboard.
+Detailed Visual Prompt for Generation/Illustration: “Hand-drawn topographic trail map in the style of a well-worn boreal field journal. Northwestern Ontario landscape: misty headwaters river at top left flowing into dense cedar/pine forest, then open meadows, then a rising hempcrete shelter structure, ending in a wide branching valley. Winding main trail as the Odyssey path with 5 distinct phase zones marked by subtle terrain changes. Use earthy tones: deep evergreen forest canopy, warm cream paper base, rust iron-soil accents, moss greens, burnt sienna, and soft firefly gold glows. Small woodcut-style icons along the trail. User progress marker is a glowing ember lantern that pulses softly. Completed sections show small fires, stacked hempcrete blocks, and turning leaves. Highly detailed but clean, excellent contrast for text overlays, scanned paper texture visible, vintage journal feel.”
+•  Implementation: Make this the hero on the Odyssey home. Show current station glowing. Click any phase/ station to jump. Subtle seasonal shift based on overall progress.
+3. Individual Station Screen Redesign
+Every station page needs this layout:
+Top: Orientation Header
+•  Large woodcut icon (left) — examples: river drop (Grounding), lantern (Discipline), hands mixing hempcrete (Practice), etc.
+•  Station title in bold Lora, large, evergreen.
+•  Short 1–2 sentence “Trail Condition” teaser in rust (e.g., “The cage becomes visible here.”).
+Middle: Core Practice Area
+•  Clean white/cream panel with strong rust accent border.
+•  Prominent “Do Today” one-line action (big, bold, readable).
+•  Estimated time badge (mono font).
+•  Pre-recorded voice note player with fire-glow button.
+Bottom: Field Journal Reflection
+•  Background that looks like an open notebook page: slight curl shadow, pencil smudges, faint ink bleed.
+•  Prompts in clear Lora text with generous spacing.
+•  Text input area styled as handwritten notes on lined paper.
+•  “Mark Complete” button: large rust-to-evergreen gradient with hempcrete stamp animation.
+Visual Prompt for Station Background & Elements: “Close-up of an open field journal page on cream textured paper, boreal forest edge visible in background. Rust ink headings, pencil sketches of hempcrete, gates, and lanterns in margins. High readability for black text, warm lighting with soft fire glow from the side, woodcut icons, northern Ontario natural details — pine needles, river stones, subtle hemp fibers binding the page edges.”
+4. Phase Transition Screens
+Full-bleed beautiful image with overlay text when a phase completes.
+Prompt: “Warm fire circle at dusk in boreal forest clearing, silhouettes of hands passing knowledge, sparks rising, glowing embers in rust and gold. Deep evergreen trees framing the scene, cream sky fading. Powerful, sacred, grounded feeling. Large white text overlay space with excellent contrast.”
+5. Implementation Order & Notes
+1.  Implement Trail Map as new home screen (this single change will fix most of the “dull” feeling).
+2.  Redesign one sample station (e.g. Station 1) with the full journal treatment.
+3.  Apply textures, icons, and fire-glow accents globally to Odyssey.
+4.  Ensure all text remains large, high-contrast, and mobile-perfect — never sacrifice readability for style.
+This redesign will make the Odyssey feel alive, sacred, and deeply aligned with the northern practitioner tone of ourheadwaters.ca while keeping your existing tools and discipline intact.

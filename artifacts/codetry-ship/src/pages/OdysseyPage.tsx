@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { ApiError, postIntake } from "@/lib/api";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
+import { TrailMapHero } from "@/components/TrailMapHero";
 
 /* ── Phase data ────────────────────────────────────────────────────────── */
 
@@ -146,8 +147,19 @@ export function OdysseyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError]       = useState<string | null>(null);
   const [confirmedName, setConfirmedName] = useState<string | null>(null);
+  const [activePhase, setActivePhase] = useState(0);
+  const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const BASE = import.meta.env.BASE_URL;
+
+  const handlePhaseClick = (n: number) => {
+    setActivePhase(n);
+    const el = phaseRefs.current[n - 1];
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   const set = (field: keyof FormState) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -309,14 +321,14 @@ export function OdysseyPage() {
             5 Phases. 20 Stations.
           </h2>
           <p
-            className="font-serif text-[16px] italic mb-8"
+            className="font-serif text-[16px] italic mb-6"
             style={{ color: "rgba(31,61,46,0.55)" }}
           >
             You do the work. The next station opens.
           </p>
 
           {/* Mechanic tags */}
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div className="flex flex-wrap gap-2 mb-8">
             {MECHANIC_TAGS.map(({ glyph, text }) => (
               <span
                 key={text}
@@ -331,103 +343,157 @@ export function OdysseyPage() {
               </span>
             ))}
           </div>
+        </section>
 
-          {/* ─ Phase Trail ─ */}
-          <div className="relative pl-2">
-            {/* Connecting trail line */}
-            <div
-              aria-hidden
-              className="absolute top-6 w-0.5"
-              style={{
-                left: "23px",
-                bottom: "24px",
-                background:
-                  "linear-gradient(to bottom, #d4a017 0%, #b85a3e 40%, #2e5a3f 80%, rgba(46,90,63,0.2) 100%)",
-              }}
-            />
+      </div>{/* close max-w column */}
 
-            {PHASES.map((p, i) => (
-              <div key={p.n} className="relative flex gap-5 mb-5 last:mb-0">
-                {/* Node */}
+      {/* ═══════════════════════════════════════════ TRAIL MAP HERO ══ */}
+      {/* Full-width illustrated trail map — 5 phase zones, interactive */}
+      <section
+        className="w-full overflow-hidden"
+        style={{ borderTop: "1px solid rgba(31,61,46,0.10)", borderBottom: "1px solid rgba(31,61,46,0.10)" }}
+        data-testid="odyssey-trail-map"
+      >
+        <div
+          className="px-4 py-3 flex items-center justify-between"
+          style={{
+            background: "#0d1d15",
+            borderBottom: "1px solid rgba(244,237,224,0.07)",
+          }}
+        >
+          <span className="font-mono text-[9px] uppercase tracking-[0.28em]"
+            style={{ color: "rgba(244,237,224,0.3)" }}>
+            Headwaters Odyssey · Trail Map
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em]"
+            style={{ color: "rgba(212,160,23,0.45)" }}>
+            Tap a phase to read it ↓
+          </span>
+        </div>
+        <TrailMapHero
+          currentPhase={activePhase}
+          onPhaseClick={handlePhaseClick}
+        />
+      </section>
+
+      {/* ════════════════════════════════════ PHASE JOURNAL CARDS ══ */}
+      {/* Each phase rendered as a boreal field-journal entry card.    */}
+      <section
+        className="w-full py-10 px-4 sm:px-8"
+        style={{ background: "#f4ede0" }}
+        data-testid="odyssey-phase-cards"
+      >
+        <div className="mx-auto max-w-[52rem] space-y-4">
+          {PHASES.map((p, i) => {
+            const phaseColors = ["#b85a3e","#d4a017","#2e8b4e","#c97c2e","#4a8aab"];
+            const accent = phaseColors[i] ?? "#b85a3e";
+            const isActive = activePhase === i + 1;
+            return (
+              <div
+                key={p.n}
+                ref={(el) => { phaseRefs.current[i] = el; }}
+                className="rounded-md overflow-hidden transition-all duration-300"
+                style={{
+                  background: isActive ? "#fffdf8" : "#f9f3e9",
+                  border: `1.5px solid ${isActive ? accent : "rgba(184,90,62,0.18)"}`,
+                  boxShadow: isActive
+                    ? `0 4px 20px rgba(0,0,0,0.10), 0 0 0 1px ${accent}22`
+                    : "0 2px 8px rgba(0,0,0,0.06)",
+                }}
+              >
+                {/* Card header — rust accent border-left */}
                 <div
-                  className={`relative z-10 shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${i === 0 ? "od-ember" : ""}`}
+                  className="flex items-start gap-4 px-5 py-4"
+                  style={{ borderLeft: `4px solid ${accent}` }}
+                >
+                  <div
+                    className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center mt-0.5"
+                    style={{ background: `${accent}22`, border: `1.5px solid ${accent}55`, color: accent }}
+                  >
+                    <PhaseIcon n={p.n} className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-2 flex-wrap mb-1">
+                      <h3
+                        className="font-serif text-[18px] font-semibold tracking-tight"
+                        style={{ color: "#1f3d2e" }}
+                      >
+                        {p.label}
+                      </h3>
+                      <span
+                        className="font-mono text-[10px] uppercase tracking-[0.22em] shrink-0 px-2 py-0.5 rounded-sm"
+                        style={{ background: `${accent}18`, color: accent }}
+                      >
+                        Phase {p.n}
+                      </span>
+                    </div>
+                    {/* Trail condition — "rust italic" teaser */}
+                    <p
+                      className="font-serif text-[13px] italic mb-2"
+                      style={{ color: accent, opacity: 0.85 }}
+                    >
+                      {p.season}
+                    </p>
+                    <p
+                      className="font-serif text-[15px] leading-[1.65]"
+                      style={{ color: "rgba(31,61,46,0.78)" }}
+                    >
+                      {p.body}
+                    </p>
+                  </div>
+                </div>
+                {/* Pencil-line separator + station count */}
+                <div
+                  className="flex items-center justify-between px-5 py-2"
                   style={{
-                    background:
-                      i === 0
-                        ? "#d4a017"
-                        : i === 1
-                        ? "#b85a3e"
-                        : i === 2
-                        ? "#9c4a2f"
-                        : i === 3
-                        ? "#2e5a3f"
-                        : "#1f3d2e",
-                    color: "#f4ede0",
-                    opacity: i === 0 ? 1 : 0.7 + i * 0.06,
+                    borderTop: "1px dashed rgba(184,90,62,0.18)",
+                    background: "rgba(31,61,46,0.025)",
                   }}
                 >
-                  <PhaseIcon n={p.n} />
-                </div>
-
-                {/* Phase card */}
-                <div
-                  className="od-card flex-1 rounded-md px-5 py-4"
-                  style={{ background: "#f4ede0" }}
-                >
-                  <div className="flex items-baseline justify-between gap-2 mb-1 flex-wrap">
-                    <p
-                      className="font-serif text-[17px] font-semibold tracking-tight"
-                      style={{ color: "#1f3d2e" }}
-                    >
-                      {p.label}
-                    </p>
-                    <span
-                      className="font-mono text-[12px] uppercase tracking-[0.16em] shrink-0"
-                      style={{ color: "rgba(184,90,62,0.7)" }}
-                    >
-                      Phase {p.n}
-                    </span>
-                  </div>
-                  <p
-                    className="font-serif text-[15px] leading-[1.55]"
-                    style={{ color: "rgba(31,61,46,0.72)" }}
+                  <span
+                    className="font-mono text-[9px] uppercase tracking-[0.22em]"
+                    style={{ color: "rgba(31,61,46,0.32)" }}
                   >
-                    {p.body}
-                  </p>
-                  <p
-                    className="font-mono text-[12px] uppercase tracking-[0.14em] mt-2 italic"
-                    style={{ color: "rgba(31,61,46,0.38)" }}
+                    4 stations · earn each one
+                  </span>
+                  <button
+                    onClick={() => handlePhaseClick(i + 1)}
+                    className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+                    style={{ color: accent }}
                   >
-                    {p.season}
-                  </p>
+                    {isActive ? "↑ on map" : "show on map ↑"}
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
 
-          {/* Station key */}
+          {/* Station key note */}
           <div
-            className="od-card mt-8 rounded-md px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            className="rounded-md px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-2"
             style={{
-              background: "#f4ede0",
-              borderStyle: "dashed",
-              borderColor: "rgba(184,90,62,0.45)",
+              background: "#f0e8d8",
+              border: "1.5px dashed rgba(184,90,62,0.32)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
             }}
           >
             <span
-              className="shrink-0 font-mono text-[11px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
+              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.24em] px-3 py-1.5 rounded-sm"
               style={{ background: "#1f3d2e", color: "#f4ede0" }}
             >
               Each station
             </span>
             <p
               className="font-serif text-[16px] leading-[1.5]"
-              style={{ color: "rgba(31,61,46,0.7)" }}
+              style={{ color: "rgba(31,61,46,0.72)" }}
             >
               One piece of real work. One field note. One unlock. No skipping.
             </p>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
 
         {/* Trail divider */}
         <div className="od-trail-rule">

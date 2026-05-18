@@ -130,14 +130,15 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
           {/* XRPL tip panel */}
           {tipOpen && !art.isGenerated && (
             <div
-              className="mt-3 px-4 py-3 rounded-sm"
+              className="mt-3 px-4 py-4 rounded-sm"
               style={{
-                background: "rgba(18,38,28,0.82)",
-                border: "1px solid rgba(212,160,23,0.22)",
+                background: "rgba(8,18,12,0.97)",
+                border: "1px solid rgba(212,160,23,0.45)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
               }}
             >
               <p
-                className="font-serif text-[15px] italic mb-1"
+                className="font-serif text-[15px] italic mb-2 leading-snug"
                 style={{ color: "#f4ede0" }}
               >
                 XRPL community token tipping is coming with the community
@@ -145,7 +146,7 @@ export function TrailArtGallery({ artworks = DEFAULT_ARTWORKS }: TrailArtGallery
               </p>
               <p
                 className="font-mono text-[11px] uppercase tracking-[0.16em]"
-                style={{ color: "rgba(212,160,23,0.55)" }}
+                style={{ color: "rgba(212,160,23,0.85)" }}
               >
                 Each band issues its own token · tips flow directly to artists
               </p>
