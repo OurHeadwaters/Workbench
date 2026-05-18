@@ -227,6 +227,22 @@ function Section({ s }: { s: ToolSection }) {
   );
 }
 
+// ─── Search filter ────────────────────────────────────────────────────────────
+
+function filterSections(query: string): ToolSection[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return SECTIONS;
+  return SECTIONS.flatMap((s) => {
+    const tools = s.tools.filter(
+      (t) =>
+        t.label.toLowerCase().includes(q) ||
+        t.sub.toLowerCase().includes(q) ||
+        t.detail.toLowerCase().includes(q),
+    );
+    return tools.length ? [{ ...s, tools }] : [];
+  });
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function LobbyPage() {
@@ -238,6 +254,9 @@ export function LobbyPage() {
   const phaseColors  = phase ? PHASE_COLORS[phase] : null;
   const currentWeek  = todayWeek?.isoWeek ?? "—";
   const dateRange    = todayWeek ? formatDateRange(todayWeek) : "—";
+
+  const [query, setQuery] = useState("");
+  const filtered = filterSections(query);
 
   const todayLabel = new Date().toLocaleDateString("en-CA", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -291,8 +310,47 @@ export function LobbyPage() {
         </div>
       )}
 
+      {/* Search */}
+      <div style={{ position: "relative" }}>
+        <svg
+          width="14" height="14" viewBox="0 0 14 14" fill="none"
+          style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", opacity: 0.45 }}
+        >
+          <circle cx="6" cy="6" r="4.25" stroke={T.paper} strokeWidth="1.5" />
+          <path d="M9.5 9.5L12 12" stroke={T.paper} strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+        <input
+          type="search"
+          placeholder="Search coaching docs…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={{
+            width: "100%", boxSizing: "border-box",
+            padding: "10px 12px 10px 34px",
+            fontSize: 12, color: T.paper,
+            background: "rgba(255,255,255,0.08)",
+            border: `1px solid rgba(200,191,167,0.25)`,
+            borderRadius: 8,
+            outline: "none",
+          }}
+        />
+      </div>
+
       {/* Sections */}
-      {SECTIONS.map((s) => <Section key={s.sec.label} s={s} />)}
+      {filtered.length > 0
+        ? filtered.map((s) => <Section key={s.sec.label} s={s} />)
+        : (
+          <div style={{
+            padding: "32px 16px", textAlign: "center",
+            borderRadius: 10, border: `1px solid ${T.rule}`,
+            background: "rgba(255,255,255,0.04)",
+          }}>
+            <p style={{ fontSize: 12, color: T.muted, margin: 0 }}>
+              No results for <strong style={{ color: T.paper }}>"{query}"</strong>
+            </p>
+          </div>
+        )
+      }
 
 
     </div>
