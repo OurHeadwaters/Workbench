@@ -19,12 +19,19 @@ const personalizedDocs = [
 
 const mainPieces = [
   {
+    href: "/engine-one-pager",
+    title: "Economic Engine — What One Platform Eliminates",
+    label: "New · Lead piece",
+    desc: "Eight persistent problems. Eight engine components. The $28k Phase 1 close. Your sharpest pitch tool for band councils, EDOs, and NAN communities.",
+    icon: "⚙️",
+    highlight: true,
+  },
+  {
     href: "/overview",
     title: "Project Overview — All 7 Headwaters Tools",
     label: "Start here",
     desc: "A plain-language visual guide showing what every Headwaters tool does and how they all connect. Open on your phone or print as a one-pager.",
     icon: "🗺️",
-    highlight: true,
   },
   {
     href: "/brand",

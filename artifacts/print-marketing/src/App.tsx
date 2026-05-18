@@ -46,6 +46,7 @@ import CodetryPacketFoodSystems from "@/pages/CodetryPacketFoodSystems";
 import ConstellationSessionMay16 from "@/pages/ConstellationSessionMay16";
 import XRPLTip from "@/pages/XRPLTip";
 import CommunityFinanceBrief from "@/pages/CommunityFinanceBrief";
+import EngineOnePager from "@/pages/EngineOnePager";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -75,6 +76,7 @@ function Router() {
       <Route path="/gilles-pitch" component={GillesPitch} />
       <Route path="/pace-referral" component={PaceReferral} />
       <Route path="/northern-economic-tools" component={NorthernEconomicTools} />
+      <Route path="/engine-one-pager" component={EngineOnePager} />
       <Route path="/internal-scope-plan" component={InternalScopePlan} />
       <Route path="/brand" component={BrandingKit} />
       <Route path="/privacy" component={Privacy} />
