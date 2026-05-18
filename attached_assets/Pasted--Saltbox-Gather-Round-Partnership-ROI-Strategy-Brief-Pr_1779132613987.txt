@@ -1,0 +1,206 @@
+# Saltbox × Gather Round — Partnership & ROI Strategy Brief
+**Prepared for Saily Operating Plan**
+Date: May 2026
+
+---
+
+## 1. The Situation
+
+Saltbox is a local-first homeschool day companion — a privacy-forward app that lives entirely on the family's device. It stores curriculum, photos, portfolios, lesson notes, and daily plans in local storage (IndexedDB), with no cloud dependency and no account required. It is built on the Codetry framework, which treats the household as the most foundational economic unit (Zone 0) and the family's data as fully within their own boundary.
+
+Growth by word-of-mouth in the homeschool software market is real but slow. Families are cautious, trust is earned incrementally, and the critical mass needed to make a standalone app economically viable takes time to accumulate. A partnership channel that delivers warm, pre-qualified users at scale — without requiring Saltbox to build its own audience from scratch — would meaningfully change the timeline to return on investment.
+
+Gather Round Homeschool represents exactly that channel.
+
+---
+
+## 2. The Opportunity
+
+### Who Gather Round Is
+
+Gather Round Homeschool is a curriculum publisher with a large, loyal homeschool family audience. Their founder has built the business on direct community relationships and a high-volume release cadence — consistently putting out new study units, activity packs, printables, and supplementary resources throughout the year.
+
+Their flagship product, the **Legacy Pass**, gives purchasers access to their entire library — past, present, and future releases — for the life of the pass. It is positioned as the highest-value offering for families who are committed to the Gather Round curriculum long-term.
+
+### The Documented Pain Point
+
+Legacy Pass holders face a recurring frustration: keeping up with downloads. Gather Round releases content frequently and enthusiastically. Families who have purchased full library access still have to manually check for new releases, download files individually, organize them locally, and ensure nothing falls through the cracks. For families managing multiple children across multiple subjects, this administrative overhead is real and persistent.
+
+This is not a niche complaint. It surfaces consistently across Gather Round's own community channels. It is a pain point that belongs to exactly the families most committed to the product — the Legacy Pass holders — which makes it high-leverage to solve.
+
+### Why Saltbox Is the Right Solution
+
+Saltbox is designed around local file ownership. Families import PDFs, audio files, and images directly into their library where they are stored privately on the device. The app already has:
+
+- A structured Library and Units system for organizing curriculum resources
+- Per-child assignment and progress tracking
+- Local-first architecture that keeps all data on the device with no server dependency
+- An XRPL wallet binding layer already built into Settings (Zone identity infrastructure)
+
+The gap between what Saltbox already does and what a Gather Round integration requires is narrow. The identity layer — which is the hardest part of any third-party content integration — is already solved.
+
+---
+
+## 3. The Technical Architecture
+
+### Why XRPL Solves the Identity Problem
+
+Most content integrations require OAuth flows, license key systems, or API partnerships that demand significant engineering effort on the partner's side. The Gather Round integration sidesteps this entirely because Saltbox already has XRPL wallet binding.
+
+The mechanism:
+
+1. Gather Round issues a **Legacy Pass NFT on the XRP Ledger** to each purchaser's XRPL wallet. This is a natural move for a publisher whose audience increasingly expects digital ownership credentials — and it adds a genuine product enhancement to the Legacy Pass itself.
+2. The user connects their wallet in Saltbox Settings. This flow already exists.
+3. Saltbox makes a single API call to the XRPL ledger, checks the connected wallet for an NFT from Gather Round's known issuing address, and unlocks the Legacy Pass sync feature if present.
+4. No OAuth. No license keys. No backend handshake with Gather Round's systems. The ledger is the proof of purchase.
+
+From Gather Round's perspective, the technical ask is: issue the NFTs (which is a one-time setup), and maintain a content feed (a structured JSON file hosted at a URL they control listing available downloads with metadata and release dates). That is the full scope of what they build. Everything else lives in Saltbox.
+
+### The Sync Flow
+
+Once the wallet check passes:
+
+- Saltbox fetches Gather Round's content catalog feed
+- New releases since the user's last sync are surfaced as "Available to download" in Library
+- One tap imports the file to local storage and indexes it in the user's curriculum library
+- Files are stored on the device, privately, permanently — no ongoing dependency on Gather Round's servers beyond the initial download
+
+The user experience from the family's perspective: their Legacy Pass purchase now automatically keeps their Saltbox library current. No manual checking, no missed releases, no file management overhead. The pain point is gone.
+
+---
+
+## 4. The Easy Button Layer
+
+### Why Technical Capability Alone Is Not Enough
+
+The XRPL integration is straightforward to build. It will not sell itself. Gather Round's founder and her audience are not XRPL-native — asking them to "connect an XRPL wallet" without support infrastructure is asking them to take a step alone into unfamiliar territory. That friction is enough to stall the partnership at the door.
+
+The easy button is the layer that removes that friction entirely. It means neither Gather Round nor her families ever feel like they are doing something technical without a guide.
+
+### For Gather Round as a Partner
+
+The onboarding ask is framed as a concierge service, not a technical integration:
+
+- "Send us your Legacy Pass customer list. We handle the credential issuance."
+- Each customer receives a simple guided email: "Your Legacy Pass is now on your XRPL wallet. Here's how to connect it to Saltbox in two minutes."
+- Gather Round announces it as a feature benefit. She does not need to understand or maintain the infrastructure.
+
+### For Families
+
+The in-app flow never uses the word "wallet" or "XRPL" in the primary path. The user sees:
+
+- "Connect your Legacy Pass — takes about two minutes"
+- Step-by-step guided setup through Xaman (the consumer XRPL wallet app, designed for exactly this)
+- Wallet connects, credential is found, library populates
+- The technical layer is invisible. The experience is: my purchase unlocked something.
+
+### The Human Layer
+
+The easy button is not just UX. It requires a person — specifically, the builder of this integration — to be available as the guide through early adoption. This means handling questions from Gather Round's community directly, ensuring no family feels stranded, and being the bridge between the technical infrastructure and the lived experience of using it. This is not a burden; it is the service relationship that makes the partnership sustainable and positions Saltbox as genuinely invested in the outcome, not just the handoff.
+
+---
+
+## 5. The Partnership Pitch
+
+### The Frame
+
+This is not pitched as a technology partnership or an API deal. It is pitched as:
+
+**"Your Legacy Pass holders already paid for content they love. Here is how they keep it, permanently, privately, on their own device — with no ongoing cloud dependency. Saltbox handles the infrastructure. You announce a feature your most loyal customers have been quietly wanting."**
+
+That framing is additive to Gather Round's business. It does not compete with her app, her platform, or her revenue. It enhances the value of the product her highest-value customers already purchased.
+
+### What Gather Round Gets
+
+- A differentiator for Legacy Pass renewals and new purchases ("automatic sync to Saltbox")
+- A solved problem for her most vocal community frustration
+- A credential infrastructure (XRPL NFT issuance) that modernizes her digital ownership story
+- Zero ongoing technical maintenance burden
+
+### What Saltbox Gets
+
+- Distribution to a warm, pre-qualified audience of exactly the families Saltbox is designed for
+- A credible partnership that signals product seriousness to the broader homeschool market
+- A pathway to revenue through per-family Saltbox subscriptions or a bundled partnership arrangement
+- Installs that arrive with context and intent, not cold discovery
+
+### How to Make Contact
+
+Gather Round's founder is accessible and relationship-oriented. The pitch is not a formal deck — it is a short, direct message:
+
+"I built a local-first homeschool app for families who want their curriculum on their own device, privately. I've been thinking about Legacy Pass holders and the download management problem. I have a working demo of how the sync would look. Would you be open to a ten-minute call?"
+
+Attach a screen recording. Let the demo speak. Keep the ask small.
+
+---
+
+## 6. Revenue and ROI Model
+
+### The Core Argument
+
+Saltbox does not need to grow organically to find its first several thousand users if the Gather Round channel opens. Legacy Pass holders are a self-selected group of highly committed homeschool families — the exact demographic. They arrive warm, they understand the value of organized curriculum, and they are already paying for quality tools.
+
+### Revenue Pathways
+
+**Option A — Freemium with Saltbox Pro**
+Saltbox remains free for core use. Legacy Pass sync is available within a Saltbox subscription (family plan, billed annually). Gather Round promotes Saltbox as a recommended companion tool. Revenue comes from the subscriber base built through that channel.
+
+**Option B — Bundled Partnership**
+Gather Round bundles a Saltbox family subscription as part of the Legacy Pass offering. A per-seat revenue share flows back to Saltbox. This is simpler for the family (one purchase, everything included) and creates a direct revenue relationship with the partnership rather than relying on conversion.
+
+**Option C — Concierge Onboarding Fee**
+For the initial cohort of Legacy Pass holders, a one-time assisted onboarding service is offered. This is the easy button in its most explicit form and generates immediate revenue while building the user base.
+
+These options are not mutually exclusive. The partnership could begin with Option A, mature into Option B as trust builds, and use Option C to accelerate the early cohort.
+
+### Why This Changes the ROI Timeline
+
+Without a partnership channel, Saltbox reaches critical mass through individual family discovery — slow, unpredictable, and marketing-dependent. With the Gather Round channel, the first meaningful cohort arrives through a trusted recommendation from a figure whose audience already has high purchase intent and low friction to try new tools. That changes the economics of the build substantially.
+
+---
+
+## 7. Three-Track Roadmap
+
+### Track 1 — Complete the Core Product (Weeks 1–2)
+Continue the current UX polish work. The Family page, home screen, and action bar refinements underway are exactly the right work. The app needs to feel calm, complete, and considered before it is shown to a partner audience. First impressions in this community are decisive.
+
+### Track 2 — Build the Proof of Concept (Weeks 2–4)
+- Add "Connect Legacy Pass" to Saltbox Settings
+- Build the XRPL wallet check against a known issuing address
+- Design and implement the catalog sync screen in Library
+- Build the one-tap download-to-local-library flow
+- Test against a mocked Gather Round content feed
+
+The majority of this work does not require Gather Round's participation. Build to the spec, then show what exists.
+
+### Track 3 — Make Contact (Weeks 3–4, parallel with Track 2)
+- Draft the outreach message while the demo is being built
+- Prepare a two-minute screen recording showing the sync flow end-to-end
+- Send the message when the recording is ready
+- The goal of the first contact is a conversation, not a signed agreement
+
+---
+
+## 8. Risks and Honest Constraints
+
+**Gather Round does not pursue XRPL.** If she is not interested in NFT-based credentialing, the identity mechanism requires a fallback — most likely a simple license key issued at purchase. This is more friction but still workable. The easy button narrative still applies; it just runs through a different technical path.
+
+**Content feed maintenance.** Gather Round has to maintain the catalog JSON as she releases new content. This is a small but real ongoing task on her side. The simpler the feed format, the lower the barrier. The onboarding process should include setup of this feed as a first step, ideally automated from her existing release workflow.
+
+**Saltbox needs to be genuinely good first.** If the app is not ready when the conversation happens, the partnership cannot be consummated. The next two weeks of polish are not optional — they are the prerequisite for everything else.
+
+**Adoption curve within her community.** Even with Gather Round's endorsement, families will adopt at their own pace. The easy button reduces friction but does not eliminate it. Early adopters will become the community advocates; patience through the first cohort is required.
+
+---
+
+## 9. The Codetry Framing
+
+This partnership is a Zone 4 move in the Codetry model — a producer-led development idea being formed before it is contracted or formal. The Gather Round integration is the first Saltbox from which a real economic return can be generated, not through Saltbox becoming a platform, but through Saltbox solving a specific, documented problem for a specific, identifiable community.
+
+The privacy story — local-first, on-device, no cloud dependency, family data stays with the family — is not a technical detail. It is the value proposition that makes this different from every other curriculum management app in the market. Gather Round's audience will understand it immediately. It speaks directly to the trust ethic that homeschool families already hold.
+
+The easy button is how that value proposition crosses the XRPL adoption gap without leaving anyone behind. And the person standing behind the easy button — available, responsive, invested in the outcome — is what turns a feature into a relationship and a relationship into a sustainable return.
+
+---
+
+*This document is intended for incorporation into the Saily operating plan as a strategic initiative brief. Next review milestone: completion of the Saltbox Legacy Pass proof-of-concept demo (Target: end of Week 4).*
