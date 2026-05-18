@@ -92,7 +92,7 @@ export default function FrontPage() {
             }
             style={({ pressed }) => [
               styles.primaryBtn,
-              { backgroundColor: EVERGREEN, opacity: pressed ? 0.85 : 1 },
+              { backgroundColor: isReturning ? RUST : EVERGREEN, opacity: pressed ? 0.85 : 1 },
             ]}
           >
             <View style={{ flex: 1 }}>
