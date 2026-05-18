@@ -96,10 +96,10 @@ export default function FrontPage() {
             ]}
           >
             <View style={{ flex: 1 }}>
-              <Text style={[styles.primaryBtnEyebrow, { fontFamily: MONO }]}>
-                {isReturning ? "CONTINUE WHERE YOU LEFT OFF" : "START HERE"}
-              </Text>
               <Text style={[styles.primaryBtnLabel, { fontFamily: SERIF_BOLD }]}>
+                {isReturning ? "Continue where\nyou left off" : "Start here"}
+              </Text>
+              <Text style={[styles.primaryBtnEyebrow, { fontFamily: MONO, marginBottom: 0, marginTop: 5 }]}>
                 {isReturning
                   ? `${lastChapter!.number} ${lastChapter!.title}`
                   : `${firstChapter.number} ${firstChapter.title}`}
