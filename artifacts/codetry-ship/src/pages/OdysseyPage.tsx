@@ -224,12 +224,27 @@ export function OdysseyPage() {
               style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--card))" }}
               data-testid="odyssey-confirmed"
             >
-              <p className="font-serif text-xl mb-2">You're in, {confirmedName}.</p>
+              <p className="font-serif text-xl mb-3">Thank you, {confirmedName}.</p>
               <p
-                className="font-serif text-[14px] italic"
+                className="font-serif text-[15px] mb-6"
                 style={{ color: "hsl(var(--muted-foreground))" }}
               >
-                Watch for a reply. Phase 01 — The Saltbox — is waiting.
+                Station 1 is now unlocked for you in the app.
+              </p>
+              <a
+                href="https://codetry-handbook.replit.app/pioneer-path"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-85"
+                style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+              >
+                Open the Pioneer Path →
+              </a>
+              <p
+                className="mt-4 font-mono text-[9px] uppercase tracking-[0.14em]"
+                style={{ color: "hsl(var(--muted-foreground))", opacity: 0.6 }}
+              >
+                Headwaters Odyssey · Phase 01 · The Saltbox
               </p>
             </div>
           ) : (
@@ -272,32 +287,32 @@ export function OdysseyPage() {
                 </Field>
               </div>
 
-              <Field label="1. What community are you part of?" required>
+              <Field label="1. Which community or place are you called to serve?" required>
                 <input
                   type="text"
                   required
                   value={form.community}
                   onChange={set("community")}
-                  placeholder="Band council, co-op, neighbourhood group, town — whatever fits"
+                  placeholder="Band council, co-op, neighbourhood, town — whatever fits"
                 />
               </Field>
 
-              <Field label="2. What are you already organising locally?" required>
+              <Field label="2. Share one word or phrase in your community that feels 'off' or load-bearing." required>
                 <textarea
                   required
-                  rows={3}
+                  rows={2}
                   value={form.q1}
                   onChange={set("q1")}
-                  placeholder="A sentence or two is enough. Food systems, housing, economic development — whatever the real work is."
+                  placeholder="A word people use that doesn't quite fit. Or one that carries more weight than it should."
                 />
               </Field>
 
-              <Field label="3. What would it look like for the community to run this without you?">
+              <Field label="3. What have you already tried to organise or strengthen? What happened?">
                 <textarea
                   rows={3}
                   value={form.q2}
                   onChange={set("q2")}
-                  placeholder="Who would hold it? What would they need to know? No right answer — just what comes to mind."
+                  placeholder="Don't polish it. What you tried and what actually happened — that's the real starting point."
                 />
               </Field>
 
