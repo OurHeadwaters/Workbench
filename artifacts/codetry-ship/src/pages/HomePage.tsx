@@ -58,87 +58,158 @@ export function HomePage() {
 
       {/* ── hero ── */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 pt-16 pb-14"
-        style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 96%)" }}
+        className="relative overflow-hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
         data-testid="home-header"
       >
+        {/* Hempcrete texture overlay — boreal field journal aesthetic */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-16 -right-16 w-80 h-80 rounded-full opacity-10"
-          style={{ background: "hsl(38 36% 94%)" }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
         />
-        <div className="relative mx-auto max-w-[52rem]">
+        {/* Topographic contour lines */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        {/* Edge vignette */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.45) 100%)",
+          }}
+        />
 
-          {/* Eagle mark — sunset disc */}
-          <div className="mb-7" data-testid="home-eyebrow">
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-14 pb-16 text-center">
+
+          {/* Eagle mark — centered */}
+          <div className="flex justify-center mb-7" data-testid="home-eyebrow">
             <img
               src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
               alt="Headwaters — Northwestern Ontario"
-              style={{ width: 88, height: 72, objectFit: "contain" }}
+              style={{ height: 68, width: "auto", objectFit: "contain", filter: "brightness(1.08)" }}
             />
           </div>
 
+          {/* Name + role hierarchy */}
           <p
-            className="font-serif text-xl sm:text-2xl font-medium mb-2 leading-tight"
+            className="font-serif mb-0.5 leading-tight"
             data-testid="home-practitioner-byline"
           >
             <a
               href={`${import.meta.env.BASE_URL}bio`}
               className="hover:opacity-80 transition-opacity"
-              style={{ color: "hsl(38 36% 96%)" }}
+              style={{ color: "#f4ede0" }}
             >
-              Bobbie Parr — practitioner, Headwaters · Northwestern Ontario
+              <span
+                className="block font-serif font-semibold tracking-tight"
+                style={{ fontSize: "clamp(1.5rem, 5vw, 2rem)", color: "#f4ede0" }}
+              >
+                Bobbie Parr
+              </span>
+              <span
+                className="block font-serif font-medium"
+                style={{ fontSize: "clamp(1.1rem, 3.5vw, 1.4rem)", color: "#b85a3e", lineHeight: 1.2 }}
+              >
+                Headwaters Practitioner
+              </span>
+              <span
+                className="block font-mono text-[11px] uppercase tracking-[0.22em] mt-1"
+                style={{ color: "rgba(244,237,224,0.55)" }}
+              >
+                Northwestern Ontario
+              </span>
             </a>
           </p>
+
+          {/* Mantra — the three lines */}
           <h1
-            className="font-serif text-[1.6rem] sm:text-5xl leading-[1.1] tracking-tight mb-3"
+            className="font-serif leading-[1.18] tracking-tight mt-7 mb-8"
+            style={{ fontSize: "clamp(1.75rem, 6.5vw, 2.6rem)" }}
             data-testid="home-title"
           >
-            Build it. Hand it off.<br className="hidden sm:block" /> Let the community run it.
+            Build it.<br />
+            Hand it off.<br />
+            <span style={{ color: "#b85a3e" }}>Let the community run it.</span>
           </h1>
-          <p
-            className="font-serif text-base sm:text-lg italic mb-4 opacity-75"
-            data-testid="home-tagline"
-          >
-            For band councils and northern community organisations building food systems and community-owned economies — practitioner-built, flat fee, no retainer required.
-          </p>
-          <p
-            className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.2em] mb-8 opacity-70"
-            data-testid="home-name-hierarchy"
-          >
-            Headwaters is the practice · Codetry is the discipline it runs on
-          </p>
-          <div className="sm:hidden mb-8" />
 
-          {/* Two real buttons side by side */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Service description box */}
+          <div
+            className="rounded-md mx-auto mb-8 px-5 py-5 text-left"
+            style={{
+              background: "rgba(244,237,224,0.07)",
+              border: "1px solid rgba(184,90,62,0.55)",
+              maxWidth: 480,
+              boxShadow: "0 2px 16px rgba(0,0,0,0.2)",
+            }}
+          >
+            <p
+              className="font-serif leading-[1.5] mb-3"
+              style={{ fontSize: "clamp(0.95rem, 2.8vw, 1.05rem)", color: "#f4ede0" }}
+              data-testid="home-tagline"
+            >
+              For band councils and northern communities building resilient food systems and community-owned economies.
+            </p>
+            <p
+              className="font-mono text-[10.5px] uppercase tracking-[0.18em]"
+              style={{ color: "#d4a017" }}
+              data-testid="home-name-hierarchy"
+            >
+              Practitioner-built · Flat fee · No retainer required
+            </p>
+          </div>
+
+          {/* Primary CTA — Odyssey entry */}
+          <a
+            href={`${import.meta.env.BASE_URL}odyssey`}
+            className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 font-mono text-[11.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90 mb-5"
+            style={{ background: "#b85a3e", color: "#f4ede0" }}
+          >
+            Enter the Headwaters Odyssey →
+          </a>
+
+          {/* Secondary CTAs */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
             <a
               href="#conversation"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
-              style={{ background: "hsl(var(--accent))", color: "hsl(38 36% 96%)" }}
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{
+                background: "rgba(244,237,224,0.10)",
+                border: "1px solid rgba(244,237,224,0.28)",
+                color: "#f4ede0",
+              }}
               data-testid="hero-cta-primary"
             >
-              Start a conversation (short form) →
+              Start a conversation →
             </a>
             <a
               href={`${import.meta.env.BASE_URL}services`}
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] border transition-opacity hover:opacity-90"
-              style={{ borderColor: "hsla(38, 36%, 96%, 0.55)", color: "hsl(38 36% 96%)" }}
+              className="inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-opacity hover:opacity-90"
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(244,237,224,0.22)",
+                color: "rgba(244,237,224,0.72)",
+              }}
               data-testid="hero-cta-services"
             >
               What it looks like to build →
             </a>
           </div>
 
-          {/* Story entry point — visible on mobile before any scroll */}
+          {/* Youth Odyssey trail link */}
           <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em]">
             <a
               href={`${import.meta.env.BASE_URL}story`}
               className="transition-opacity hover:opacity-90"
-              style={{ color: "hsla(38, 36%, 96%, 0.45)" }}
+              style={{ color: "rgba(244,237,224,0.35)" }}
               data-testid="hero-story-link"
             >
-              📖 The Youth Odyssey — 4 phases · 8 stations →
+              Youth Odyssey — 4 phases · 8 stations →
             </a>
           </p>
         </div>
