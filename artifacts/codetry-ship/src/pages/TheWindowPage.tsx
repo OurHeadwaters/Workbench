@@ -157,59 +157,72 @@ export function TheWindowPage() {
 
       {/* ── Hero ── */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 pt-16 pb-14"
-        style={{ background: EVERGREEN, color: CREAM }}
+        className="relative overflow-hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-16 -right-16 w-80 h-80 rounded-full opacity-10"
-          style={{ background: CREAM }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
         />
-        <div className="relative mx-auto max-w-[52rem]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5 opacity-60">
-            Headwaters · a window into the work
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5"
+            style={{ color: "rgba(212,160,23,0.8)" }}
+          >
+            headwaters · a window into the work
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-5">
+          <h1
+            className="font-serif leading-[1.12] tracking-tight mb-4"
+            style={{ fontSize: "clamp(1.8rem, 6vw, 2.6rem)" }}
+          >
             A window into the work.
           </h1>
-          <p className="font-serif text-lg leading-relaxed mb-8" style={{ color: CREAM_MUTED, maxWidth: "42rem" }}>
-            Most organizations separate their business plan from their operations.
+          <p
+            className="font-serif italic mb-8"
+            style={{ fontSize: "clamp(0.9rem, 2.5vw, 1rem)", color: "rgba(244,237,224,0.68)", lineHeight: 1.55 }}
+          >
+            Most organisations separate their business plan from their operations.
             This page doesn't. When the work changes, this changes.
           </p>
 
-          {/* Stats */}
-          <div className="flex items-center gap-8 flex-wrap">
-            <div>
-              <p className="font-serif text-3xl font-semibold" style={{ color: CREAM }}>
+          {/* Stats — centred row */}
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            <div className="text-center">
+              <p className="font-serif text-3xl font-semibold" style={{ color: "#f4ede0" }}>
                 {activeCount}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: CREAM_MUTED }}>
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: "rgba(244,237,224,0.5)" }}>
                 Active engagements
               </p>
             </div>
-            <div
-              className="w-px h-10 self-center opacity-20"
-              style={{ background: CREAM }}
-              aria-hidden
-            />
-            <div>
-              <p className="font-serif text-3xl font-semibold" style={{ color: CREAM }}>
+            <div className="w-px h-10 self-center opacity-20" style={{ background: "#f4ede0" }} aria-hidden />
+            <div className="text-center">
+              <p className="font-serif text-3xl font-semibold" style={{ color: "#f4ede0" }}>
                 {provenCount}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: CREAM_MUTED }}>
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: "rgba(244,237,224,0.5)" }}>
                 Proven on the ledger
               </p>
             </div>
-            <div
-              className="w-px h-10 self-center opacity-20"
-              style={{ background: CREAM }}
-              aria-hidden
-            />
-            <div>
-              <p className="font-serif text-3xl font-semibold" style={{ color: CREAM }}>
+            <div className="w-px h-10 self-center opacity-20" style={{ background: "#f4ede0" }} aria-hidden />
+            <div className="text-center">
+              <p className="font-serif text-3xl font-semibold" style={{ color: "#f4ede0" }}>
                 20 yr
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: CREAM_MUTED }}>
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mt-0.5" style={{ color: "rgba(244,237,224,0.5)" }}>
                 Trajectory
               </p>
             </div>

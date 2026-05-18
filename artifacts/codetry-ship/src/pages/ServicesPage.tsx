@@ -4,33 +4,61 @@ export function ServicesPage() {
 
       {/* ── hero ── */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 pt-16 pb-14"
-        style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 96%)" }}
+        className="relative overflow-hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
       >
-        {/* decorative circle */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-16 -right-16 w-80 h-80 rounded-full opacity-10"
-          style={{ background: "hsl(38 36% 94%)" }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
         />
-        <div className="relative mx-auto max-w-[52rem]">
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
           <p
-            className="font-mono text-[13px] uppercase tracking-[0.28em] mb-4 opacity-70"
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5"
+            style={{ color: "rgba(212,160,23,0.8)" }}
           >
             headwaters · what the work looks like
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3">
-            Seven simple tools.<br />
-            Three ways to engage.
-          </h1>
-          <p className="font-serif text-lg italic mb-6 opacity-75">
-            One community economy system — delivered as a store plan, a membership platform, or a custom tool.
-          </p>
-          <div
-            className="rounded-md p-5 max-w-2xl font-serif text-[16px] leading-[1.6]"
-            style={{ background: "rgba(255,255,255,0.10)" }}
+          <h1
+            className="font-serif leading-[1.12] tracking-tight mb-6"
+            style={{ fontSize: "clamp(1.8rem, 6vw, 2.6rem)" }}
           >
-            Headwaters is a set of seven connected tools — the Handbook, the Practitioner's Guide, the Accounts, and four supporting layers. Every engagement deploys some part of that stack. A community store plan, a co-op membership platform, and a custom internal tool are the three ways a community reaches into that system. Here is what each looks like, phase by phase, and what you leave with at the end.
+            Seven simple tools.<br />
+            <span style={{ color: "#b85a3e" }}>Three ways to engage.</span>
+          </h1>
+          <div
+            className="rounded-md mx-auto px-5 py-5 text-left"
+            style={{
+              background: "rgba(244,237,224,0.07)",
+              border: "1px solid rgba(184,90,62,0.55)",
+              maxWidth: 480,
+              boxShadow: "0 2px 16px rgba(0,0,0,0.2)",
+            }}
+          >
+            <p
+              className="font-serif leading-[1.55] mb-3"
+              style={{ fontSize: "clamp(0.9rem, 2.5vw, 1rem)", color: "#f4ede0" }}
+            >
+              One community economy system — delivered as a store plan, a membership platform, or a custom tool.
+            </p>
+            <p
+              className="font-serif leading-[1.5] text-[13px]"
+              style={{ color: "rgba(244,237,224,0.7)" }}
+            >
+              Headwaters is seven connected tools deployed differently depending on what a community needs to build. Here is what each engagement looks like, phase by phase, and what you leave with at the end.
+            </p>
           </div>
         </div>
       </section>

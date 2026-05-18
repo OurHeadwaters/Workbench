@@ -17,6 +17,65 @@ function handleDownloadPdf() {
 export function BioPage() {
   return (
     <main className="bio-page min-h-screen w-full bg-background text-foreground">
+
+      {/* ── boreal field journal hero — hidden in print ── */}
+      <section
+        className="relative overflow-hidden print:hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
+          <div className="flex justify-center mb-6">
+            <img
+              src={`${import.meta.env.BASE_URL}eagle-mark.svg`}
+              alt=""
+              aria-hidden
+              style={{ height: 60, width: "auto", objectFit: "contain", filter: "brightness(1.08)" }}
+            />
+          </div>
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4"
+            style={{ color: "rgba(212,160,23,0.8)" }}
+          >
+            practitioner · headwaters
+          </p>
+          <h1
+            className="font-serif leading-[1.12] tracking-tight mb-2"
+            style={{ fontSize: "clamp(1.8rem, 6vw, 2.4rem)", color: "#f4ede0" }}
+          >
+            Bobbie Parr
+          </h1>
+          <p
+            className="font-serif mb-1"
+            style={{ fontSize: "clamp(1rem, 3vw, 1.25rem)", color: "#b85a3e", lineHeight: 1.3 }}
+          >
+            Headwaters Practitioner
+          </p>
+          <p
+            className="font-mono text-[10.5px] uppercase tracking-[0.22em]"
+            style={{ color: "rgba(244,237,224,0.5)" }}
+          >
+            Northwestern Ontario · Founder, Parr&rsquo;s Jars
+          </p>
+        </div>
+      </section>
+
       <div className="mx-auto max-w-[64rem] px-6 sm:px-8 py-6 print:py-0 print:px-0 print:max-w-none">
         <div
           className="bio-download-row mb-3 flex justify-end print:hidden"

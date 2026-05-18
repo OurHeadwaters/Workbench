@@ -3,21 +3,47 @@ import { Link } from "wouter";
 export function EconomyPage() {
   return (
     <main className="min-h-screen w-full bg-background text-foreground">
-      <div className="mx-auto max-w-[44rem] px-6 sm:px-8 py-16 sm:py-24">
 
-        {/* ── Header ── */}
-        <header className="space-y-6">
+      {/* ── boreal field journal hero ── */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
           <p
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: "hsl(var(--accent))" }}
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5"
+            style={{ color: "rgba(212,160,23,0.8)" }}
           >
             codetry · community economy
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight">
+          <h1
+            className="font-serif leading-[1.15] tracking-tight"
+            style={{ fontSize: "clamp(1.7rem, 5.5vw, 2.5rem)" }}
+          >
             The value is already moving.<br />
-            We just made it visible.
+            <span style={{ color: "#b85a3e" }}>We just made it visible.</span>
           </h1>
-        </header>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-[44rem] px-6 sm:px-8 pt-10 pb-16">
 
         {/* ── Premise ── */}
         <section

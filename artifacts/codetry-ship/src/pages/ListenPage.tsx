@@ -59,20 +59,47 @@ export function ListenPage() {
 
   return (
     <main className="listen-page min-h-screen w-full bg-background text-foreground">
-      <div className="mx-auto max-w-[42rem] px-6 sm:px-8 py-16 sm:py-24 print:py-0 print:max-w-full">
 
-        {/* ---- eyebrow ---- */}
-        <p
-          className="font-mono text-[11px] uppercase tracking-[0.22em]"
-          style={{ color: "hsl(var(--accent))" }}
-        >
-          headwaters · heard on the survival podcast
-        </p>
+      {/* ── boreal field journal hero — hidden in print ── */}
+      <section
+        className="relative overflow-hidden print:hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5"
+            style={{ color: "rgba(212,160,23,0.8)" }}
+          >
+            headwaters · heard on the survival podcast
+          </p>
+          <h1
+            className="font-serif leading-[1.12] tracking-tight"
+            style={{ fontSize: "clamp(1.6rem, 5.5vw, 2.4rem)" }}
+          >
+            A community store that belongs to{" "}
+            <span style={{ color: "#b85a3e" }}>the people who shop in it.</span>
+          </h1>
+        </div>
+      </section>
 
-        {/* ---- headline ---- */}
-        <h1 className="mt-5 font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight">
-          A community store that belongs to the people who shop in it.
-        </h1>
+      <div className="mx-auto max-w-[42rem] px-6 sm:px-8 pt-10 pb-16 print:py-0 print:max-w-full">
 
         {/* ---- print-only one-liner ---- */}
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">

@@ -4,22 +4,43 @@ export function WorkPage() {
 
       {/* ── hero ── */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 pt-16 pb-14"
-        style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 96%)" }}
+        className="relative overflow-hidden"
+        style={{ background: "#1f3d2e", color: "#f4ede0" }}
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-16 -right-16 w-80 h-80 rounded-full opacity-10"
-          style={{ background: "hsl(38 36% 94%)" }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${import.meta.env.BASE_URL}odyssey/hempcrete-texture.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.10,
+            mixBlendMode: "multiply",
+          }}
         />
-        <div className="relative mx-auto max-w-[52rem]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4 opacity-70">
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.10 }} />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(10,22,14,0.4) 100%)" }}
+        />
+        <div className="relative z-10 mx-auto max-w-[38rem] px-6 sm:px-8 pt-12 pb-14 text-center">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-5"
+            style={{ color: "rgba(212,160,23,0.8)" }}
+          >
             headwaters · selected work
           </p>
-          <h1 className="font-serif text-4xl sm:text-5xl leading-[1.05] tracking-tight mb-3">
+          <h1
+            className="font-serif leading-[1.12] tracking-tight mb-4"
+            style={{ fontSize: "clamp(1.8rem, 6vw, 2.6rem)" }}
+          >
             Case studies
           </h1>
-          <p className="font-serif text-lg italic mb-0 opacity-75">
+          <p
+            className="font-serif italic"
+            style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.05rem)", color: "rgba(244,237,224,0.72)", lineHeight: 1.55 }}
+          >
             One community client. One origin story. What the problem was, what was built, what they left with.
           </p>
         </div>
