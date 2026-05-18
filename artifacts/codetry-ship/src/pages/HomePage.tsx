@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { ApiError, postIntake } from "@/lib/api";
 import testimonials from "@/data/testimonials";
+import { TrailSignPost } from "@/components/TrailSignPost";
 
 interface IntakeFormState {
   name: string;
@@ -137,7 +138,7 @@ export function HomePage() {
               style={{ color: "hsla(38, 36%, 96%, 0.45)" }}
               data-testid="hero-story-link"
             >
-              📖 Read the story — for kids &amp; curious people →
+              📖 The Youth Odyssey — 4 phases · 8 stations →
             </a>
           </p>
         </div>
@@ -198,6 +199,11 @@ export function HomePage() {
               Built for headwaters people who are already organising locally.
             </p>
 
+            {/* Trail fork sign — visual junction of both paths */}
+            <div className="flex justify-center mb-8">
+              <TrailSignPost mode="fork" compact />
+            </div>
+
             {/* Dual CTA — practitioner path and story path */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
@@ -218,7 +224,7 @@ export function HomePage() {
                 }}
                 data-testid="story-cta"
               >
-                Read the Story →
+                Youth Odyssey →
               </a>
             </div>
 
@@ -228,7 +234,7 @@ export function HomePage() {
                 { label: "Free",                    href: null },
                 { label: "Self-paced",              href: null },
                 { label: "5 Phases · 20 Stations",  href: null },
-                { label: "The Story: for everyone", href: `${import.meta.env.BASE_URL}story` },
+                { label: "Youth Odyssey: 4 phases · 8 stations", href: `${import.meta.env.BASE_URL}story` },
               ].map(({ label, href }) =>
                 href ? (
                   <a
