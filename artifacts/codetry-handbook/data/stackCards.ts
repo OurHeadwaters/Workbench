@@ -14,7 +14,7 @@ export interface StackCard {
 export const STACK_CARDS: StackCard[] = [
   {
     id: "rename-test",
-    category: "Core Discipline",
+    category: "Foundation Skills",
     question: "What does the rename test check for?",
     context:
       "The rename test is codetry's primary diagnostic. Before accepting a name, you try to rename the thing. If a better name comes easily, the first name was generic. If renaming is difficult — if something would be lost — the name is doing real work.",
@@ -35,7 +35,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "load-bearing-vs-decorative",
-    category: "Core Discipline",
+    category: "Foundation Skills",
     question: "What is the difference between a load-bearing name and a decorative one?",
     context:
       "A load-bearing name carries meaning that would be lost if you replaced it with a synonym. A decorative name could be swapped for a generic term without changing what people understand. The distinction matters because only load-bearing names earn their place in a vocabulary.",
@@ -59,7 +59,7 @@ export const STACK_CARDS: StackCard[] = [
     category: "Positioning",
     question: "How does codetry differ from Domain-Driven Design?",
     context:
-      "Both codetry and DDD take language seriously as a design tool. DDD works inside software systems, building ubiquitous language for technical teams. Codetry works at the practitioner level — it is about how a person names the things that make their specific practice distinct, not about software architecture.",
+      "Both codetry and DDD take language seriously as a design tool. DDD works inside software systems, building ubiquitous language for technical teams. Codetry works at the practitioner level — it is about how a person names the things that make their specific practice distinct, not about software architecture. The distinction matters because codetry asks the same question DDD does — whose language runs the system? — but asks it on behalf of the community, not the development team. A self-reliant practitioner who names their water system, their food reserve, and their mutual-aid network precisely is doing codetry whether or not they have ever written a line of code.",
     steps: [
       {
         id: "ddd-1",
@@ -80,7 +80,7 @@ export const STACK_CARDS: StackCard[] = [
     category: "Positioning",
     question: "How does codetry relate to literate programming?",
     context:
-      "Literate programming, as Knuth described it, interweaves code and prose so the program reads as a coherent essay. Codetry is interested in a narrower question: whether the names a practitioner assigns to their concepts are precise enough that the practice survives translation — into writing, into conversation, into someone else's hands.",
+      "Literate programming, as Knuth described it, interweaves code and prose so the program reads as a coherent essay — the human logic drives the machine, documented in the same breath. Codetry is interested in a narrower question: whether the names a practitioner assigns to their concepts are precise enough that the practice survives translation — into writing, into conversation, into someone else's hands. For a self-reliant practitioner, the stakes are direct: if your food storage system, your mutual-aid network, or your water management only makes sense to you, it will not survive you. Codetry is how you make it transferable.",
     steps: [
       {
         id: "lp-1",
@@ -245,7 +245,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "standby-primitive",
-    category: "Codetry Primitives",
+    category: "Key Concepts",
     question: "What is the Standby primitive, and what posture does it require?",
     context:
       "Standby is the practice of building capacity before it is needed — infrastructure, vocabulary, relationships, skills — so that when the activated state arrives, the practitioner is already positioned to act. Standby is not waiting. It is a specific form of preparation that is only possible during periods of relative ease.",
@@ -266,7 +266,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "seven-generation-horizon",
-    category: "Codetry Primitives",
+    category: "Key Concepts",
     question: "What does the seven-generation horizon framing ask of a practitioner?",
     context:
       "The seven-generation framing — drawn from Haudenosaunee governance — asks that decisions account for consequences seven generations forward. Applied to codetry, it means the names a practitioner chooses, the infrastructure they build, and the vocabulary they develop should be legible and useful beyond their own working life.",
@@ -287,7 +287,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "trust-as-protocol",
-    category: "Codetry Primitives",
+    category: "Key Concepts",
     question: "What does it mean to treat trust as a protocol rather than a feeling?",
     context:
       "Trust-as-protocol means designing collaboration around explicit, legible agreements — roles, vocabulary, decision rules — rather than relying on personal rapport alone. Protocol-based trust can be transferred to new collaborators, audited, and repaired when broken. Rapport-based trust cannot.",
@@ -308,7 +308,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "name-as-infrastructure",
-    category: "Core Discipline",
+    category: "Foundation Skills",
     question: "In what sense is a name infrastructure?",
     context:
       "Infrastructure is what other things are built on top of. A name becomes infrastructure when other people, decisions, and practices depend on it. When a name is infrastructure, changing it has costs — dependencies break. This is why load-bearing names must be chosen carefully: they are harder to revise than they appear at the moment of naming.",
@@ -329,7 +329,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "generic-vocabulary-erosion",
-    category: "Core Discipline",
+    category: "Foundation Skills",
     question: "How does generic vocabulary quietly erase a practice?",
     context:
       "When a practitioner stops using their specific vocabulary and defaults to generic equivalents, the precision of the practice leaks away. 'Preserving food' in place of 'Preservation Season' loses the temporal frame. 'Workspace' in place of 'Jar Kitchen' loses the identity. The practice becomes harder to teach, replicate, or defend — not because it changed, but because the language did.",
@@ -434,7 +434,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "vocabulary-as-evidence",
-    category: "Core Discipline",
+    category: "Foundation Skills",
     question: "Why is vocabulary described as evidence that a practice is real?",
     context:
       "A practice that cannot be named — whose methods, phases, roles, and outputs lack specific language — may be real to the practitioner but is invisible to everyone else. Vocabulary is the form in which a practice becomes legible: teachable, auditable, reproducible. Without it, the practice dies with the practitioner.",
@@ -476,7 +476,7 @@ export const STACK_CARDS: StackCard[] = [
   },
   {
     id: "forward-motion-principle",
-    category: "Codetry Primitives",
+    category: "Key Concepts",
     question: "What is the 'forward motion is easier to redirect than stillness' principle?",
     context:
       "This principle holds that beginning — even imperfectly, even with incomplete information — creates the conditions for correction. A practice in motion can be steered. A practice that hasn't started cannot. The Jar Kitchen didn't wait for perfect infrastructure; the co-op didn't wait for regulatory clarity. The logic is that starting generates the feedback that planning cannot.",

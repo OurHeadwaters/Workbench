@@ -116,17 +116,17 @@ export function OdysseyPage() {
             className="font-serif text-[15px] italic mb-8"
             style={{ color: "hsl(var(--muted-foreground))" }}
           >
-            Sequential unlocks — you do the work, then the next station opens.
+            You do the work. The next station opens.
           </p>
 
           {/* mechanic pills */}
           <div className="flex flex-wrap gap-2 mb-10">
             {[
-              "Sequential unlocks",
-              "All tools in the existing PWA",
-              "Pre-recorded guidance",
-              "Private Trail Signal group",
-              "Async · low-pressure",
+              "Earn each station",
+              "Full toolkit included",
+              "Learn on your own time",
+              "Private Signal group",
+              "No deadlines · no pressure",
               "Free",
             ].map(tag => (
               <span

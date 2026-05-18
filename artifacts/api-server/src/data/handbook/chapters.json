@@ -39,7 +39,7 @@
             },
             {
               "kind": "para",
-              "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
+              "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming — the practice of writing code so the human logic drives the machine, not the other way around — is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
             },
             {
               "kind": "subhead",
@@ -114,7 +114,7 @@
             },
             {
               "kind": "para",
-              "text": "The vocabulary is organized around *primitives* — named systems that do a specific job inside the constellation. Each primitive has a name chosen to hold across every context in which it appears. The Standby, for instance, is not a pantry and not an emergency callout. It is the single system that holds both — in its resting state, an always-on preparation discipline; in its activated state, a fast collective response. One word. Both states. The name does not bend."
+              "text": "The vocabulary is organized around *primitives* — named systems that do a specific job inside the constellation. A primitive, in programming and in the natural world, is a base element: the bedrock everything else is built from. That the word crosses both registers is intentional — this handbook is trying to make new programmers out of people who already think in systems. Each primitive has a name chosen to hold across every context in which it appears. The Standby, for instance, is not a pantry and not an emergency callout. It is the single system that holds both — in its resting state, an always-on preparation discipline; in its activated state, a fast collective response. One word. Both states. The name does not bend."
             },
             {
               "kind": "para",
@@ -564,11 +564,11 @@
             },
             {
               "kind": "para",
-              "text": "Quinn's *Mother Culture* — the voice that whispers the Taker premises into the room before any conscious thought is spoken — is the other contribution. Codetry's *massity* names the same thing one floor closer to the working surface: the legacy-world dialect that arrives in the room without being invited and substitutes its nouns for the local ones unless the practitioner is listening. The *Gate* primitive in the constellation is the practitioner's working answer to Mother Culture in real time: a passage that lets the legacy-world vocabulary cross when it must, but logs the substitution so the original noun is never silently lost."
+              "text": "Quinn's *Mother Culture* — the voice that whispers the Taker premises into the room before any conscious thought is spoken — is the other contribution. What codetry calls *the systems* names the same thing one floor closer to the working surface: the outside world's dialect that arrives in the room without being invited and substitutes its nouns for the local ones unless the practitioner is listening. The *Gate* primitive in the constellation is the practitioner's working answer to Mother Culture in real time: a passage that lets the legacy-world vocabulary cross when it must, but logs the substitution so the original noun is never silently lost."
             },
             {
               "kind": "para",
-              "text": "*Quinn's Leavers are the lineage ancestor of the Practitioner role; Mother Culture is the older name for what codetry calls massity, and the Gate is the practitioner's answer to it.*"
+              "text": "*Quinn's Leavers are the lineage ancestor of the Practitioner role; Mother Culture is the older name for what codetry calls the systems, and the Gate is the practitioner's answer to it.*"
             },
             {
               "kind": "rule"
@@ -911,7 +911,7 @@
             },
             {
               "kind": "para",
-              "text": "Codetry is a hedge. It hedges against the slow ways a community's own words get taken from it inside the systems built in its name. Knowledge creeps: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck. Language drifts: *the books* becomes *the ledger* becomes *the financial management module*, and the original noun is no longer in the room. LLMs tokenize: a load-bearing noun gets sheared into sub-word fragments and reassembled as something more generic, more poolable, more average. Consultants and SaaS vendors translate: the community's vocabulary is rewritten into the vendor's data model on the way to a contract, and the contract is what survives."
+              "text": "Codetry is a hedge. It hedges against the slow ways a community's own words get taken from it inside the systems built in its name. Knowledge creeps: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck. Language drifts: *the books* becomes *the ledger* becomes *the financial management module*, and the original noun is no longer in the room. Technocracy runs the same erosion through AI: LLMs tokenize a load-bearing noun, shearing it into sub-word fragments and reassembling it as something more generic, more poolable, more average — legible to the model, emptied of the community's meaning. Consultants and SaaS vendors translate: the community's vocabulary is rewritten into the vendor's data model on the way to a contract, and the contract is what survives."
             },
             {
               "kind": "para",
@@ -927,7 +927,7 @@
             },
             {
               "kind": "para",
-              "text": "Governance is something else. Governance is formal authority — Chief and Council, hereditary leadership, treaty relationships, band council resolutions, election cycles, the legal and political channels through which a community speaks for itself. Governance has its own carriers, its own language, its own time."
+              "text": "Governance is something else. This holds whether you are running a homestead, a food co-op, or a community on treaty territory — the practitioner's job is the same. Governance is formal authority — Chief and Council, hereditary leadership, treaty relationships, band council resolutions, election cycles, the legal and political channels through which a community speaks for itself. Governance has its own carriers, its own language, its own time."
             },
             {
               "kind": "para",
@@ -1071,7 +1071,7 @@
             },
             {
               "kind": "para",
-              "text": "The constellation's second non-zone primitive — *The Gate* (worked out in §2.9) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts."
+              "text": "The constellation's second non-zone primitive — *The Gate* (worked out in §2.9) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *the systems* (the outside world's dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts."
             },
             {
               "kind": "para",
@@ -1087,7 +1087,7 @@
             },
             {
               "kind": "para",
-              "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar."
+              "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the systems side: Refused records that a word in the outside world's dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar."
             },
             {
               "kind": "subhead",
@@ -1095,7 +1095,7 @@
             },
             {
               "kind": "para",
-              "text": "Both tests are pick-one-then-the-other, but the axis is different. The both-states test picks a *state*: pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects massity, then pick the massity side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding and the system is one system."
+              "text": "Both tests are pick-one-then-the-other, but the axis is different. The both-states test picks a *state*: pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects the systems, then pick the systems side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding and the system is one system."
             },
             {
               "kind": "para",
@@ -2131,7 +2131,7 @@
             },
             {
               "kind": "para",
-              "text": "A calm passage between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable."
+              "text": "A calm passage between the bright side and the systems. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable."
             },
             {
               "kind": "para",
@@ -2143,15 +2143,15 @@
             },
             {
               "kind": "para",
-              "text": "The Gate holds two registers that an outside system would not even recognise as siblings. On one side is the *bright side* — the constellation's own dialect, the words a community uses with itself in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. On the other side is *massity* — mass-society dialect, the language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. Neither side is wrong inside its own context. Each side is unfit currency in the other's context."
+              "text": "The Gate holds two registers that an outside system would not even recognise as siblings. On one side is the *bright side* — the constellation's own dialect, the words a community uses with itself in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. On the other side is *the systems* — the outside world's dialect, the language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. Neither side is wrong inside its own context. Each side is unfit currency in the other's context."
             },
             {
               "kind": "para",
-              "text": "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
+              "text": "If the two sides were named separately — *Translator* for the bright-to-systems direction, *Importer* for the systems-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the systems-side equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the systems side; pick the systems side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
             },
             {
               "kind": "callout",
-              "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and massity both look at it at once; the name has to hold from either direction."
+              "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and the systems both look at it at once; the name has to hold from either direction."
             },
             {
               "kind": "subhead",
@@ -2170,8 +2170,8 @@
               "items": [
                 "the Gate — the umbrella system + always-on posture",
                 "the bright side — the codetry-vocabulary side; the constellation's own dialect",
-                "massity — the legacy-world side; mass-society dialect (regulator, banker, funder, lawyer, generic SaaS English)",
-                "a mapping — a registered correspondence between a bright-side term and its massity equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)",
+                "the systems — the outside world's side; the systems dialect (regulators, bankers, funders, lawyers, generic SaaS English)",
+                "a mapping — a registered correspondence between a bright-side term and its systems-side equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)",
                 "a substitution — a single instance of a mapping being applied to a piece of crossing language",
                 "a category — the domain a mapping belongs to (Pragmatism, Politics, Regulations, Privacy, Banking, …); each category is a sub-shelf inside the Gate",
                 "a translation — a piece of language that has passed through the Gate in either direction; the auditable record of what crossed and what changed",
@@ -2188,7 +2188,7 @@
                 "draft — language has been written but not run past the Gate yet; no posture change required",
                 "under-review — the Gate is reading the language; mappings are being proposed; the founder is in the loop",
                 "cleared — the language has crossed; substitutions are logged; the translation is part of the record",
-                "refused — the Gate declined to translate — usually because the bright-side noun has no honest massity equivalent and forcing one would lose the meaning the founder is trying to keep"
+                "refused — the Gate declined to translate — usually because the bright-side noun has no honest systems-side equivalent and forcing one would lose the meaning the founder is trying to keep"
               ]
             },
             {
@@ -2223,12 +2223,12 @@
             {
               "kind": "list",
               "items": [
-                "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the massity word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The massity-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest massity equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
-                "Eave — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; massity says *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
+                "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the systems' word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The systems-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest systems-side equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
+                "Eave — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; the systems say *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
                 "Zone 2 (Workbench) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary; the workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
                 "Zone 3 (Commons) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
-                "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
-                "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor massity. The Gate handles bright-to-massity and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
+                "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one systems-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
+                "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor the systems. The Gate handles bright-to-systems and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
               ]
             },
             {
@@ -2253,8 +2253,8 @@
                 "Should *refused* (the rung) become its own ledger, or is it just a category of *cleared with a note that no honest equivalent existed*? The first treats refusal as a first-class outcome the practitioner reviews periodically; the second treats it as a footnote on a clearance and lets it disappear into the file.",
                 "Where does the third register — plain public language for Zone 5 — live? Inside the Gate as a fourth direction, alongside it as a sibling primitive (a *Public Voice*?), or out of scope entirely on the grounds that the Shallows already do it without naming it?",
                 "When the Gate refuses to translate, what is the next move? Does the practitioner rewrite the source-side language until it is gateable, or does the document just go out untranslated with a footnote saying *this term has no honest equivalent in the target dialect*? The first protects the document; the second protects the noun.",
-                "Does the Gate need a severity escalation when massity tries to *replace* a bright-side word inside source documents — not just translate them on the way out? A funder editing the practitioner's own kitchen-language inside a draft is a different event than the practitioner translating it on the way out, and the manifest currently does not distinguish.",
-                "Is *massity* the right name for the other side? It carries the load (mass society, the world of forms and dashboards and policy) but it is also a coined word, which means it has no native speakers. The Standby's vocabulary is largely borrowed and weight-tested; the Gate's *massity* is invented. That is allowed — but worth re-examining once the Gate has been used in the field."
+                "Does the Gate need a severity escalation when the systems try to *replace* a bright-side word inside source documents — not just translate them on the way out? A funder editing the practitioner's own kitchen-language inside a draft is a different event than the practitioner translating it on the way out, and the manifest currently does not distinguish.",
+                "Is *the systems* precise enough as the name for the outside-world side? It carries the load — the world of regulators, forms, dashboards, and policy — and it uses language the self-reliant community already knows and trusts. Worth re-examining once the Gate has been used in the field to see whether it holds under pressure or needs a sharper edge."
               ]
             }
           ]
@@ -2955,11 +2955,11 @@
             },
             {
               "kind": "para",
-              "text": "It is also a bright-side word with no massity equivalent. When a Jarista speaks to a grant officer, a public health inspector, or a food hub coordinator, they use whatever language the context requires — *home food producer*, *small-scale preservationist*, *food security practitioner*. But at home, in the kitchen, in the co-op's training program, the word is *Jarista*. The Gate logs the translation; the bright-side noun stays unchanged."
+              "text": "It is also a bright-side word with no systems-side equivalent. When a Jarista speaks to a grant officer, a public health inspector, or a food hub coordinator, they use whatever language the context requires — *home food producer*, *small-scale preservationist*, *food security practitioner*. But at home, in the kitchen, in the co-op's training program, the word is *Jarista*. The Gate logs the translation; the bright-side noun stays unchanged."
             },
             {
               "kind": "callout",
-              "text": "The Jarista is a both-sides word: the household practitioner in their own language on the bright side; *food producer* or *preservationist* on the massity side. The Gate holds the translation. The name stays."
+              "text": "The Jarista is a both-sides word: the household practitioner in their own language on the bright side; *food producer* or *preservationist* on the systems side. The Gate holds the translation. The name stays."
             },
             {
               "kind": "subhead",
@@ -3809,7 +3809,7 @@
             },
             {
               "kind": "para",
-              "text": "§2.9 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.9 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it."
+              "text": "§2.9 names *the gate* as the membrane between *the bright side* and *the systems* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.9 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it."
             },
             {
               "kind": "subhead",
@@ -3935,7 +3935,7 @@
             },
             {
               "kind": "para",
-              "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
+              "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming — the practice of writing code so the human logic drives the machine, not the other way around — is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
             },
             {
               "kind": "subhead",
@@ -4468,11 +4468,11 @@
             },
             {
               "kind": "para",
-              "text": "A calm membrane between *the bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and *massity* (mass-society dialect: resident, bank account, financial statements, inventory reserves, compliance officer). Holds the umbrella system + always-on posture for passing language across institutional boundaries — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in."
+              "text": "A calm membrane between *the bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and *the systems* (the outside world's dialect: resident, bank account, financial statements, inventory reserves, compliance officer). Holds the umbrella system + always-on posture for passing language across institutional boundaries — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in."
             },
             {
               "kind": "para",
-              "text": "Eight-word vocabulary: *the Gate* (umbrella + always-on posture), *the bright side* (codetry-vocabulary side), *massity* (legacy-world side), *a mapping* (a registered correspondence between a bright-side term and its massity equivalent), *a substitution* (one applied instance of a mapping), *a category* (the domain a mapping belongs to), *a translation* (the auditable record of what crossed and what changed), *a calm membrane* (the metaphor doing the load — selectively permeable, alive, not a wall and not an open door). Four-rung severity ladder: draft / under-review / cleared / refused — the *refused* rung is first-class, for source-side language with no honest target-side equivalent the founder is unwilling to lose."
+              "text": "Eight-word vocabulary: *the Gate* (umbrella + always-on posture), *the bright side* (codetry-vocabulary side), *the systems* (the outside world's side), *a mapping* (a registered correspondence between a bright-side term and its systems-side equivalent), *a substitution* (one applied instance of a mapping), *a category* (the domain a mapping belongs to), *a translation* (the auditable record of what crossed and what changed), *a calm membrane* (the metaphor doing the load — selectively permeable, alive, not a wall and not an open door). Four-rung severity ladder: draft / under-review / cleared / refused — the *refused* rung is first-class, for source-side language with no honest target-side equivalent the founder is unwilling to lose."
             },
             {
               "kind": "para",
@@ -4492,7 +4492,7 @@
             {
               "kind": "tool",
               "label": "Gate Log — start your translation record",
-              "hint": "Enter your first bright-side/massity pair. The Gate is only a gate if someone is keeping the log — both sides recorded, neither dissolved into the other.",
+              "hint": "Enter your first pairing — your community's word on the left, the systems' word on the right. The Gate is only a gate if someone is keeping the log — both sides recorded, neither dissolved into the other.",
               "route": "/gate-log"
             }
           ]
@@ -4525,7 +4525,7 @@
             },
             {
               "kind": "para",
-              "text": "The axis distinction is the load-bearing difference. Both-states is a temporal test: the system runs at two speeds, and the umbrella name has to survive the tempo change. Both-sides is a contextual test: the system faces two rooms simultaneously, and the umbrella name has to survive the room change. A system can fail one test without failing the other. The Standby fails only the both-states test if you force it — it holds in both states but would not survive being read as a both-sides primitive, because *standby* is not a term of art in massity-dialect. The Gate fails only the both-sides test if you force it — it holds from bright side and from massity, but it does not run at two tempos; it runs at one tempo in two simultaneous contexts."
+              "text": "The axis distinction is the load-bearing difference. Both-states is a temporal test: the system runs at two speeds, and the umbrella name has to survive the tempo change. Both-sides is a contextual test: the system faces two rooms simultaneously, and the umbrella name has to survive the room change. A system can fail one test without failing the other. The Standby fails only the both-states test if you force it — it holds in both states but would not survive being read as a both-sides primitive, because *standby* is not a term of art in the systems' dialect. The Gate fails only the both-sides test if you force it — it holds from bright side and from the systems' side, but it does not run at two tempos; it runs at one tempo in two simultaneous contexts."
             },
             {
               "kind": "pull",
@@ -4564,11 +4564,11 @@
             },
             {
               "kind": "para",
-              "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents."
+              "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the systems side: Refused records that a word in the outside world's dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents."
             },
             {
               "kind": "para",
-              "text": "The Parr's Jars smoked salt crossing (passage 4-R in the harvest) is the field demonstration. The health unit's form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The Gate Refused: no honest massity equivalent existed. The product crossed; the story did not. The lesson the field example adds to the bar-level definition: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label."
+              "text": "The Parr's Jars smoked salt crossing (passage 4-R in the harvest) is the field demonstration. The health unit's form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The Gate Refused: no honest systems-side equivalent existed. The product crossed; the story did not. The lesson the field example adds to the bar-level definition: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label."
             },
             {
               "kind": "pull",
@@ -5616,7 +5616,7 @@
             },
             {
               "kind": "small",
-              "text": "Snapshot v0.5.7 · 2026-05-05. Offline-readable. State held under codetry-handbook:v1."
+              "text": "Version 0.5.7 · 2026-05-05. Readable offline. Field-tested in Northwestern Ontario."
             }
           ]
         }
@@ -5657,7 +5657,7 @@
         },
         {
           "kind": "para",
-          "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
+          "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming — the practice of writing code so the human logic drives the machine, not the other way around — is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
         },
         {
           "kind": "subhead",
@@ -5732,7 +5732,7 @@
         },
         {
           "kind": "para",
-          "text": "The vocabulary is organized around *primitives* — named systems that do a specific job inside the constellation. Each primitive has a name chosen to hold across every context in which it appears. The Standby, for instance, is not a pantry and not an emergency callout. It is the single system that holds both — in its resting state, an always-on preparation discipline; in its activated state, a fast collective response. One word. Both states. The name does not bend."
+          "text": "The vocabulary is organized around *primitives* — named systems that do a specific job inside the constellation. A primitive, in programming and in the natural world, is a base element: the bedrock everything else is built from. That the word crosses both registers is intentional — this handbook is trying to make new programmers out of people who already think in systems. Each primitive has a name chosen to hold across every context in which it appears. The Standby, for instance, is not a pantry and not an emergency callout. It is the single system that holds both — in its resting state, an always-on preparation discipline; in its activated state, a fast collective response. One word. Both states. The name does not bend."
         },
         {
           "kind": "para",
@@ -6175,11 +6175,11 @@
         },
         {
           "kind": "para",
-          "text": "Quinn's *Mother Culture* — the voice that whispers the Taker premises into the room before any conscious thought is spoken — is the other contribution. Codetry's *massity* names the same thing one floor closer to the working surface: the legacy-world dialect that arrives in the room without being invited and substitutes its nouns for the local ones unless the practitioner is listening. The *Gate* primitive in the constellation is the practitioner's working answer to Mother Culture in real time: a passage that lets the legacy-world vocabulary cross when it must, but logs the substitution so the original noun is never silently lost."
+          "text": "Quinn's *Mother Culture* — the voice that whispers the Taker premises into the room before any conscious thought is spoken — is the other contribution. What codetry calls *the systems* names the same thing one floor closer to the working surface: the outside world's dialect that arrives in the room without being invited and substitutes its nouns for the local ones unless the practitioner is listening. The *Gate* primitive in the constellation is the practitioner's working answer to Mother Culture in real time: a passage that lets the legacy-world vocabulary cross when it must, but logs the substitution so the original noun is never silently lost."
         },
         {
           "kind": "para",
-          "text": "*Quinn's Leavers are the lineage ancestor of the Practitioner role; Mother Culture is the older name for what codetry calls massity, and the Gate is the practitioner's answer to it.*"
+          "text": "*Quinn's Leavers are the lineage ancestor of the Practitioner role; Mother Culture is the older name for what codetry calls the systems, and the Gate is the practitioner's answer to it.*"
         },
         {
           "kind": "rule"
@@ -6515,7 +6515,7 @@
         },
         {
           "kind": "para",
-          "text": "Codetry is a hedge. It hedges against the slow ways a community's own words get taken from it inside the systems built in its name. Knowledge creeps: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck. Language drifts: *the books* becomes *the ledger* becomes *the financial management module*, and the original noun is no longer in the room. LLMs tokenize: a load-bearing noun gets sheared into sub-word fragments and reassembled as something more generic, more poolable, more average. Consultants and SaaS vendors translate: the community's vocabulary is rewritten into the vendor's data model on the way to a contract, and the contract is what survives."
+          "text": "Codetry is a hedge. It hedges against the slow ways a community's own words get taken from it inside the systems built in its name. Knowledge creeps: a word a person used in a kitchen ends up, three meetings later, as a different word in a deck. Language drifts: *the books* becomes *the ledger* becomes *the financial management module*, and the original noun is no longer in the room. Technocracy runs the same erosion through AI: LLMs tokenize a load-bearing noun, shearing it into sub-word fragments and reassembling it as something more generic, more poolable, more average — legible to the model, emptied of the community's meaning. Consultants and SaaS vendors translate: the community's vocabulary is rewritten into the vendor's data model on the way to a contract, and the contract is what survives."
         },
         {
           "kind": "para",
@@ -6531,7 +6531,7 @@
         },
         {
           "kind": "para",
-          "text": "Governance is something else. Governance is formal authority — Chief and Council, hereditary leadership, treaty relationships, band council resolutions, election cycles, the legal and political channels through which a community speaks for itself. Governance has its own carriers, its own language, its own time."
+          "text": "Governance is something else. This holds whether you are running a homestead, a food co-op, or a community on treaty territory — the practitioner's job is the same. Governance is formal authority — Chief and Council, hereditary leadership, treaty relationships, band council resolutions, election cycles, the legal and political channels through which a community speaks for itself. Governance has its own carriers, its own language, its own time."
         },
         {
           "kind": "para",
@@ -6675,7 +6675,7 @@
         },
         {
           "kind": "para",
-          "text": "The constellation's second non-zone primitive — *The Gate* (worked out in §2.9) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *massity* (mass-society dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts."
+          "text": "The constellation's second non-zone primitive — *The Gate* (worked out in §2.9) — is the cleanest worked example of this principle so far. The Gate names both the *bright side* (the constellation's own dialect — *neighbour*, *channel*, *the books*, *standby stock*, *the watch*) and *the systems* (the outside world's dialect — *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*) inside one umbrella that does not pick a side. One word, two contexts."
         },
         {
           "kind": "para",
@@ -6691,7 +6691,7 @@
         },
         {
           "kind": "para",
-          "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar."
+          "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the systems side: Refused records that a word in the outside world's dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents. Refused passes the both-sides test and earns its place as a bar."
         },
         {
           "kind": "subhead",
@@ -6699,7 +6699,7 @@
         },
         {
           "kind": "para",
-          "text": "Both tests are pick-one-then-the-other, but the axis is different. The both-states test picks a *state*: pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects massity, then pick the massity side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding and the system is one system."
+          "text": "Both tests are pick-one-then-the-other, but the axis is different. The both-states test picks a *state*: pick the resting state first and ask whether the noun also holds in the activated state, then pick the activated state and ask whether the noun also holds in the resting state. The both-sides test picks a *context*: pick the bright side and ask whether the umbrella name still respects the systems, then pick the systems side and ask whether the umbrella name still respects the bright side. In both tests, if the answer to either question is *not really*, the system has already started forking — into two cultures (both-states) or into two pipes (both-sides). If the answer to both is *yes — same word, different rung* (both-states) or *yes — same word, different room* (both-sides), the name is holding and the system is one system."
         },
         {
           "kind": "para",
@@ -7728,7 +7728,7 @@
         },
         {
           "kind": "para",
-          "text": "A calm passage between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable."
+          "text": "A calm passage between the bright side and the systems. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable."
         },
         {
           "kind": "para",
@@ -7740,15 +7740,15 @@
         },
         {
           "kind": "para",
-          "text": "The Gate holds two registers that an outside system would not even recognise as siblings. On one side is the *bright side* — the constellation's own dialect, the words a community uses with itself in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. On the other side is *massity* — mass-society dialect, the language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. Neither side is wrong inside its own context. Each side is unfit currency in the other's context."
+          "text": "The Gate holds two registers that an outside system would not even recognise as siblings. On one side is the *bright side* — the constellation's own dialect, the words a community uses with itself in its own kitchens, meetings, and ledgers: *neighbour*, *channel*, *the books*, *standby stock*, *the watch*. On the other side is *the systems* — the outside world's dialect, the language a regulator, a banker, a funder, a lawyer, or generic SaaS English will accept: *resident*, *bank account*, *financial statements*, *inventory reserves*, *compliance officer*. Neither side is wrong inside its own context. Each side is unfit currency in the other's context."
         },
         {
           "kind": "para",
-          "text": "If the two sides were named separately — *Translator* for the bright-to-massity direction, *Importer* for the massity-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the massity equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the massity side; pick the massity side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
+          "text": "If the two sides were named separately — *Translator* for the bright-to-systems direction, *Importer* for the systems-to-bright direction — the constellation would end up with two pipes and no posture. The Gate is more than directional substitution. It decides whether a piece of language *should* cross at all, in either direction; it logs every substitution so the bright-side noun stays on file alongside the systems-side equivalent; and it has a *refused* bar — a function that passes the both-sides test in its own right — for source-side language that has no honest target-side equivalent and would lose its meaning under any substitution. The both-sides test catches the shape: pick the bright side, ask whether the umbrella name still respects the systems side; pick the systems side, ask whether the umbrella name still respects the bright side. *Gate* passes both — neither side is the inside, neither is the outside; the Gate is the membrane that lets each context keep its own language while still allowing communication across."
         },
         {
           "kind": "callout",
-          "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and massity both look at it at once; the name has to hold from either direction."
+          "text": "The both-sides principle applies here: one membrane — the Gate — that faces two rooms simultaneously, always. Bright side and the systems both look at it at once; the name has to hold from either direction."
         },
         {
           "kind": "subhead",
@@ -7767,8 +7767,8 @@
           "items": [
             "the Gate — the umbrella system + always-on posture",
             "the bright side — the codetry-vocabulary side; the constellation's own dialect",
-            "massity — the legacy-world side; mass-society dialect (regulator, banker, funder, lawyer, generic SaaS English)",
-            "a mapping — a registered correspondence between a bright-side term and its massity equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)",
+            "the systems — the outside world's side; the systems dialect (regulators, bankers, funders, lawyers, generic SaaS English)",
+            "a mapping — a registered correspondence between a bright-side term and its systems-side equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)",
             "a substitution — a single instance of a mapping being applied to a piece of crossing language",
             "a category — the domain a mapping belongs to (Pragmatism, Politics, Regulations, Privacy, Banking, …); each category is a sub-shelf inside the Gate",
             "a translation — a piece of language that has passed through the Gate in either direction; the auditable record of what crossed and what changed",
@@ -7785,7 +7785,7 @@
             "draft — language has been written but not run past the Gate yet; no posture change required",
             "under-review — the Gate is reading the language; mappings are being proposed; the founder is in the loop",
             "cleared — the language has crossed; substitutions are logged; the translation is part of the record",
-            "refused — the Gate declined to translate — usually because the bright-side noun has no honest massity equivalent and forcing one would lose the meaning the founder is trying to keep"
+            "refused — the Gate declined to translate — usually because the bright-side noun has no honest systems-side equivalent and forcing one would lose the meaning the founder is trying to keep"
           ]
         },
         {
@@ -7820,12 +7820,12 @@
         {
           "kind": "list",
           "items": [
-            "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the massity word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The massity-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest massity equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
-            "Eave — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; massity says *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
+            "Zone 0 (Saltbox + Bright Side) — every form filled out for the school, the doctor, the child welfare office crosses a small gate; the household's word for who-belongs is *kin* or *neighbour*; the form's word is *resident* or *legal guardian*. The household keeps both on the fridge; the form goes out with the systems' word. *Gate Refused (Zone 0 — Parrs Jars, 2020–2022):* the Jarista built a smoked salt blend from freeze-dried local microgreens, hydroponic greens, and farm-sourced onions — a circular economy product whose value proposition was the specific sourcing. The health unit required lab testing for each farm ingredient and recommended switching to commercial ingredients instead. The practitioner crossed with commercial ingredients to meet orders. The product crossed; the story did not. The systems-side form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The bright-side value proposition was Gate Refused: no honest systems-side equivalent existed that could carry the same meaning, so the sourcing story stayed on the bright side and the jar went out with a different recipe. The lesson: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label.",
+            "Eave — every grant application, CRA filing, and banker meeting is a Gate event. The bright side says *channel*; the systems say *bank account*. Same plumbing, different room. The mappings ledger is what keeps the two from drifting apart in the practitioner's own head.",
             "Zone 2 (Workbench) — proposals, contracts, and statements of work cross the Gate between practitioner-vocabulary and client-vocabulary; the workbench logs which words crossed, in which direction, and what they became, so the next contract starts from the previous translation, not from scratch.",
             "Zone 3 (Commons) — host zone alongside The Standby. Co-op invoices, band council resolutions, and regulator filings are the highest-volume gate traffic in the constellation. Host because Z3 is where the community's collective economic surface meets every external counterparty at once.",
-            "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one massity-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
-            "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor massity. The Gate handles bright-to-massity and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
+            "Zone 4 (Arc) — sector-level translation: a *trapline*, a *family-run cold truck*, a *seed library* gets one systems-side equivalent for grant purposes (*harvesting operation*, *refrigerated logistics SME*, *plant-genetic-resource program*) and the bright-side name continues to live unchanged at home.",
+            "Zone 5 (The Margin) — public communication runs into a third register the Gate refuses to formalise: *plain language for the wider public*, neither bright-side nor the systems. The Gate handles bright-to-systems and back; the third register lives one zone over, and the Shallows decide what gets said publicly in whose words."
           ]
         },
         {
@@ -7850,8 +7850,8 @@
             "Should *refused* (the rung) become its own ledger, or is it just a category of *cleared with a note that no honest equivalent existed*? The first treats refusal as a first-class outcome the practitioner reviews periodically; the second treats it as a footnote on a clearance and lets it disappear into the file.",
             "Where does the third register — plain public language for Zone 5 — live? Inside the Gate as a fourth direction, alongside it as a sibling primitive (a *Public Voice*?), or out of scope entirely on the grounds that the Shallows already do it without naming it?",
             "When the Gate refuses to translate, what is the next move? Does the practitioner rewrite the source-side language until it is gateable, or does the document just go out untranslated with a footnote saying *this term has no honest equivalent in the target dialect*? The first protects the document; the second protects the noun.",
-            "Does the Gate need a severity escalation when massity tries to *replace* a bright-side word inside source documents — not just translate them on the way out? A funder editing the practitioner's own kitchen-language inside a draft is a different event than the practitioner translating it on the way out, and the manifest currently does not distinguish.",
-            "Is *massity* the right name for the other side? It carries the load (mass society, the world of forms and dashboards and policy) but it is also a coined word, which means it has no native speakers. The Standby's vocabulary is largely borrowed and weight-tested; the Gate's *massity* is invented. That is allowed — but worth re-examining once the Gate has been used in the field."
+            "Does the Gate need a severity escalation when the systems try to *replace* a bright-side word inside source documents — not just translate them on the way out? A funder editing the practitioner's own kitchen-language inside a draft is a different event than the practitioner translating it on the way out, and the manifest currently does not distinguish.",
+            "Is *the systems* precise enough as the name for the outside-world side? It carries the load — the world of regulators, forms, dashboards, and policy — and it uses language the self-reliant community already knows and trusts. Worth re-examining once the Gate has been used in the field to see whether it holds under pressure or needs a sharper edge."
           ]
         }
       ]
@@ -8538,11 +8538,11 @@
         },
         {
           "kind": "para",
-          "text": "It is also a bright-side word with no massity equivalent. When a Jarista speaks to a grant officer, a public health inspector, or a food hub coordinator, they use whatever language the context requires — *home food producer*, *small-scale preservationist*, *food security practitioner*. But at home, in the kitchen, in the co-op's training program, the word is *Jarista*. The Gate logs the translation; the bright-side noun stays unchanged."
+          "text": "It is also a bright-side word with no systems-side equivalent. When a Jarista speaks to a grant officer, a public health inspector, or a food hub coordinator, they use whatever language the context requires — *home food producer*, *small-scale preservationist*, *food security practitioner*. But at home, in the kitchen, in the co-op's training program, the word is *Jarista*. The Gate logs the translation; the bright-side noun stays unchanged."
         },
         {
           "kind": "callout",
-          "text": "The Jarista is a both-sides word: the household practitioner in their own language on the bright side; *food producer* or *preservationist* on the massity side. The Gate holds the translation. The name stays."
+          "text": "The Jarista is a both-sides word: the household practitioner in their own language on the bright side; *food producer* or *preservationist* on the systems side. The Gate holds the translation. The name stays."
         },
         {
           "kind": "subhead",
@@ -9385,7 +9385,7 @@
         },
         {
           "kind": "para",
-          "text": "§2.9 names *the gate* as the membrane between *the bright side* and *massity* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.9 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it."
+          "text": "§2.9 names *the gate* as the membrane between *the bright side* and *the systems* — two legitimate vocabularies meeting at a controlled crossing. §3.3 already closes by saying *drift caught at the gate is drift caught*, which is the corpus saying — without yet naming the role — that the gate is the most expensive but most reliable place to catch a kind-drift edit on its way out. The relationship the corpus has been carrying without naming is structural: the gate is a *location*, and the inspector is the *role* that makes the gate function as a gate rather than a door. Without an inspector standing at it, the gate decays into a doorway anyone can walk through. The two are paired; neither alone is the defense. A gate without an inspector catches no drift. An inspector without a gate has nowhere along the wall to stand and read what is crossing. §2.9 and this chapter are reading the same primitive from two angles — the gate names where the membrane is; this chapter names who certifies what crosses through it."
         },
         {
           "kind": "subhead",
@@ -9511,7 +9511,7 @@
         },
         {
           "kind": "para",
-          "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
+          "text": "The Headwaters icon is a ship. Not a fortress. Not a temple. A vessel — trim, seaworthy, ready to leave the known shore. AI is the new territory: vast, unmapped, alive with both peril and possibility. Literate programming — the practice of writing code so the human logic drives the machine, not the other way around — is only the first small sail on that horizon, a tiny blip of clarity in an ocean of code. It still lacks shape. It still needs hands — many hands — practicing, refining, grounding it in reality."
         },
         {
           "kind": "subhead",
@@ -10036,11 +10036,11 @@
         },
         {
           "kind": "para",
-          "text": "A calm membrane between *the bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and *massity* (mass-society dialect: resident, bank account, financial statements, inventory reserves, compliance officer). Holds the umbrella system + always-on posture for passing language across institutional boundaries — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in."
+          "text": "A calm membrane between *the bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock, the watch) and *the systems* (the outside world's dialect: resident, bank account, financial statements, inventory reserves, compliance officer). Holds the umbrella system + always-on posture for passing language across institutional boundaries — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in."
         },
         {
           "kind": "para",
-          "text": "Eight-word vocabulary: *the Gate* (umbrella + always-on posture), *the bright side* (codetry-vocabulary side), *massity* (legacy-world side), *a mapping* (a registered correspondence between a bright-side term and its massity equivalent), *a substitution* (one applied instance of a mapping), *a category* (the domain a mapping belongs to), *a translation* (the auditable record of what crossed and what changed), *a calm membrane* (the metaphor doing the load — selectively permeable, alive, not a wall and not an open door). Four-rung severity ladder: draft / under-review / cleared / refused — the *refused* rung is first-class, for source-side language with no honest target-side equivalent the founder is unwilling to lose."
+          "text": "Eight-word vocabulary: *the Gate* (umbrella + always-on posture), *the bright side* (codetry-vocabulary side), *the systems* (the outside world's side), *a mapping* (a registered correspondence between a bright-side term and its systems-side equivalent), *a substitution* (one applied instance of a mapping), *a category* (the domain a mapping belongs to), *a translation* (the auditable record of what crossed and what changed), *a calm membrane* (the metaphor doing the load — selectively permeable, alive, not a wall and not an open door). Four-rung severity ladder: draft / under-review / cleared / refused — the *refused* rung is first-class, for source-side language with no honest target-side equivalent the founder is unwilling to lose."
         },
         {
           "kind": "para",
@@ -10060,7 +10060,7 @@
         {
           "kind": "tool",
           "label": "Gate Log — start your translation record",
-          "hint": "Enter your first bright-side/massity pair. The Gate is only a gate if someone is keeping the log — both sides recorded, neither dissolved into the other.",
+          "hint": "Enter your first pairing — your community's word on the left, the systems' word on the right. The Gate is only a gate if someone is keeping the log — both sides recorded, neither dissolved into the other.",
           "route": "/gate-log"
         }
       ]
@@ -10093,7 +10093,7 @@
         },
         {
           "kind": "para",
-          "text": "The axis distinction is the load-bearing difference. Both-states is a temporal test: the system runs at two speeds, and the umbrella name has to survive the tempo change. Both-sides is a contextual test: the system faces two rooms simultaneously, and the umbrella name has to survive the room change. A system can fail one test without failing the other. The Standby fails only the both-states test if you force it — it holds in both states but would not survive being read as a both-sides primitive, because *standby* is not a term of art in massity-dialect. The Gate fails only the both-sides test if you force it — it holds from bright side and from massity, but it does not run at two tempos; it runs at one tempo in two simultaneous contexts."
+          "text": "The axis distinction is the load-bearing difference. Both-states is a temporal test: the system runs at two speeds, and the umbrella name has to survive the tempo change. Both-sides is a contextual test: the system faces two rooms simultaneously, and the umbrella name has to survive the room change. A system can fail one test without failing the other. The Standby fails only the both-states test if you force it — it holds in both states but would not survive being read as a both-sides primitive, because *standby* is not a term of art in the systems' dialect. The Gate fails only the both-sides test if you force it — it holds from bright side and from the systems' side, but it does not run at two tempos; it runs at one tempo in two simultaneous contexts."
         },
         {
           "kind": "pull",
@@ -10132,11 +10132,11 @@
         },
         {
           "kind": "para",
-          "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the massity side: Refused records that a word in mass-society dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents."
+          "text": "*Refused* — the sub-shelf for source-side language that has no honest equivalent on the other side — is the sharpest bar-level worked example. From the bright side: Refused records that a word in the constellation's dialect cannot be translated without distorting it, and so will not be. From the systems side: Refused records that a word in the outside world's dialect has been examined and found to have no honest landing point in the constellation's vocabulary. The finding is the same finding read from two directions. Both rooms are served by knowing the Gate will not invent false equivalents."
         },
         {
           "kind": "para",
-          "text": "The Parr's Jars smoked salt crossing (passage 4-R in the harvest) is the field demonstration. The health unit's form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The Gate Refused: no honest massity equivalent existed. The product crossed; the story did not. The lesson the field example adds to the bar-level definition: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label."
+          "text": "The Parr's Jars smoked salt crossing (passage 4-R in the harvest) is the field demonstration. The health unit's form had no slot for *freeze-dried microgreens from our own hydroponics, blended with onions from Walls Farm* — only for *kale powder (commercial source)*. The Gate Refused: no honest systems-side equivalent existed. The product crossed; the story did not. The lesson the field example adds to the bar-level definition: the Gate does not always find an equivalent. Sometimes it refuses. When it refuses, the practitioner notes what was lost in the crossing and keeps the bright-side language alive at home, even when it cannot appear on the label."
         },
         {
           "kind": "pull",
@@ -11168,7 +11168,7 @@
         },
         {
           "kind": "small",
-          "text": "Snapshot v0.5.7 · 2026-05-05. Offline-readable. State held under codetry-handbook:v1."
+          "text": "Version 0.5.7 · 2026-05-05. Readable offline. Field-tested in Northwestern Ontario."
         }
       ]
     }

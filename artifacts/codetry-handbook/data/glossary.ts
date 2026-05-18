@@ -20,7 +20,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Both-sides",
     chapter: "Ch4",
     definition:
-      "A test for naming a primitive that faces two contexts simultaneously. Does the umbrella name hold from the bright side and from the massity side? If the name privileges one context, the membrane becomes a wall. Same word, different room.",
+      "A test for naming a primitive that faces two contexts simultaneously. Does the umbrella name hold from the bright side and from the systems side? If the name privileges one context, the membrane becomes a wall. Same word, different room.",
     section: "formal",
   },
   {
@@ -34,7 +34,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Bright side",
     chapter: "Ch4",
     definition:
-      "The community's own dialect — the words a community uses with itself in its own kitchens, meetings, and ledgers. Neighbour. Channel. The books. Standby stock. The watch. Neither informal nor incorrect. Simply a different room. The name originates in dementia care practice: an effective support person cannot hold massity's frame of reality and do the work simultaneously. Not because that side is better, but because certain things are only visible from inside it.",
+      "The community's own dialect — the words a community uses with itself in its own kitchens, meetings, and ledgers. Neighbour. Channel. The books. Standby stock. The watch. Neither informal nor incorrect. Simply a different room. The name originates in dementia care practice: an effective support person cannot hold the systems' frame of reality and do the work simultaneously. Not because that side is better, but because certain things are only visible from inside it.",
     section: "formal",
   },
   {
@@ -69,7 +69,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "The Gate",
     chapter: "Ch4",
     definition:
-      "The primitive that holds the community's own language (bright side) and institutional language (massity) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent. The constellation's second non-zone primitive. Full eight-word vocabulary: see Appendix I.",
+      "The primitive that holds the community's own language (bright side) and institutional language (the systems) as two simultaneous sides of one membrane. It decides what crosses, logs every substitution, and refuses to translate what has no honest equivalent. The constellation's second non-zone primitive. Full eight-word vocabulary: see Appendix I.",
     section: "formal",
   },
   {
@@ -80,10 +80,10 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     section: "formal",
   },
   {
-    term: "Massity",
+    term: "The systems",
     chapter: "Ch4",
     definition:
-      "Mass-society dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.",
+      "The outside world's dialect — the language a regulator, banker, funder, or lawyer will accept. Resident. Bank account. Financial statements. Inventory reserves. Compliance officer. Neither dialect is wrong inside its own context. Each is unfit currency in the other's.",
     section: "formal",
   },
   {
@@ -204,7 +204,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "Economic floor mechanism",
     chapter: "Ch4 — Zone 4 formation model",
     definition:
-      "807 frames Zone 4 ideas in massity dialect → writes grants → grants fund Zone 2 workbenches of the people doing Zone 4 formation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly. Without a funded Zone 2 layer, Zone 4 stagnates.",
+      "807 frames Zone 4 ideas in outside-world dialect → writes grants → grants fund Zone 2 workbenches of the people doing Zone 4 formation work → strengthened Zone 2 capacity → better Zone 4 output → Zone 3 graduation → Zone 3 surplus eventually funds Zone 2 directly. Without a funded Zone 2 layer, Zone 4 stagnates.",
     section: "appendix",
     group: "Zone 4 Formation",
   },
@@ -220,7 +220,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "A calm membrane",
     chapter: "App II",
     definition:
-      "The governing metaphor for The Gate: selectively permeable, alive, not a wall and not an open door. Describes how the Gate holds bright side and massity simultaneously without collapsing into either.",
+      "The governing metaphor for The Gate: selectively permeable, alive, not a wall and not an open door. Describes how the Gate holds bright side and the systems simultaneously without collapsing into either.",
     section: "appendix",
     group: "The Gate",
   },
@@ -236,7 +236,7 @@ export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
     term: "A mapping",
     chapter: "App II",
     definition:
-      "A registered correspondence between a bright-side term and its massity equivalent. The foundational record in the Gate's ledger.",
+      "A registered correspondence between a bright-side term and its systems-side equivalent. The foundational record in the Gate's ledger.",
     section: "appendix",
     group: "The Gate",
   },

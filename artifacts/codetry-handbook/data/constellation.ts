@@ -116,7 +116,7 @@ export const constellation: ConstellationSnapshot = {
       "id": "both-sides",
       "name": "the name has to hold both sides",
       "statement": "When a system has language that has to live in two contexts that hold different vocabularies as legitimate, the umbrella name has to fit both contexts in one word, or the system will pick a dialect and lose the other room.",
-      "workedExample": "The Gate — the umbrella name had to hold both the *bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock) and *massity* (mass-society dialect: resident, bank account, financial statements, inventory reserves). Splitting into two names — say, *Translator* for the bright-to-massity direction and *Importer* for the massity-to-bright direction — would have produced two pipes and no posture, with no record that both names exist for the same thing. One word, two contexts."
+      "workedExample": "The Gate — the umbrella name had to hold both the *bright side* (the constellation's own dialect: neighbour, channel, the books, standby stock) and *the systems* (the outside world's dialect: resident, bank account, financial statements, inventory reserves). Splitting into two names — say, *Translator* for the bright-to-systems direction and *Importer* for the systems-to-bright direction — would have produced two pipes and no posture, with no record that both names exist for the same thing. One word, two contexts."
     }
   ],
   "constellationWidePrimitives": [
@@ -198,7 +198,7 @@ export const constellation: ConstellationSnapshot = {
       "id": "the-gate",
       "name": "The Gate",
       "kind": "constellation-wide primitive",
-      "summary": "A calm passage between the bright side and massity. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
+      "summary": "A calm passage between the bright side and the systems. The umbrella system + posture for *passing language across institutional boundaries* — codetry vocabulary going out to a regulator, banker, funder, lawyer, or other legacy-world counterparty; their vocabulary coming back in. Holds both sides without flattening either: the founder/practitioner keeps the original noun, the counterparty receives the dialect they can act on, and the gate logs the substitution so the translation stays auditable.",
       "hostZone": 3,
       "hostZoneRationale": "Hosted in Zone 3 (community production) because that is where the community meets the legacy world — the co-op invoices a wholesaler, the producer signs a band council resolution, the Headwaters bookkeeper files with CRA. Sibling to The Standby (also Z3-hosted): both umbrella systems operate at the boundary where centralized systems and the community-controlled side touch. Read by every zone whose work has to leave the constellation in writing.",
       "vocabulary": [
@@ -211,12 +211,12 @@ export const constellation: ConstellationSnapshot = {
           "role": "the codetry-vocabulary side; the constellation's own dialect"
         },
         {
-          "term": "massity",
-          "role": "the legacy-world side; mass-society dialect (regulator, banker, funder, lawyer, generic SaaS English)"
+          "term": "the systems",
+          "role": "the outside world's side; the systems dialect (regulators, bankers, funders, lawyers, generic SaaS English)"
         },
         {
           "term": "a mapping",
-          "role": "a registered correspondence between a bright-side term and its massity equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)"
+          "role": "a registered correspondence between a bright-side term and its systems-side equivalent (e.g. neighbour → resident, send → remit, fee → service charge, money → funds)"
         },
         {
           "term": "a substitution",
@@ -250,7 +250,7 @@ export const constellation: ConstellationSnapshot = {
         },
         {
           "rung": "refused",
-          "meaning": "the Gate declined to translate — usually because the bright-side noun has no honest massity equivalent and forcing one would lose the meaning the founder is trying to keep"
+          "meaning": "the Gate declined to translate — usually because the bright-side noun has no honest systems-side equivalent and forcing one would lose the meaning the founder is trying to keep"
         }
       ],
       "subShelves": [
@@ -286,7 +286,7 @@ export const constellation: ConstellationSnapshot = {
         }
       ],
       "principle": "both-sides",
-      "scope": "in-repo runnable surface lives at /gate inside artifacts/headwaters-books — a sibling route to /standby that reads this manifest verbatim for vocabulary, severity ladder (draft/under-review/cleared/refused), sub-shelves, and rejected alternatives, lets a real bright-side ↔ massity substitution be entered with category and direction, and persists the substitution ledger in the browser so it survives reload. The legacy surface at legacy-gatekeeper.replit.app is linked from the page footer for historical reference but is no longer the source of truth. Task #489 first landed the in-constellation home as a shell page that read this entry verbatim and linked out to the legacy surface; Task #478 then brought the runnable substitution surface fully in-repo at the same /gate route. The artifact-limit on this project ruled out a standalone artifacts/the-gate at this pass; if the limit is raised the page may move to a dedicated artifact without changing the manifest contract."
+      "scope": "in-repo runnable surface lives at /gate inside artifacts/headwaters-books — a sibling route to /standby that reads this manifest verbatim for vocabulary, severity ladder (draft/under-review/cleared/refused), sub-shelves, and rejected alternatives, lets a real bright-side ↔ systems substitution be entered with category and direction, and persists the substitution ledger in the browser so it survives reload. The legacy surface at legacy-gatekeeper.replit.app is linked from the page footer for historical reference but is no longer the source of truth. Task #489 first landed the in-constellation home as a shell page that read this entry verbatim and linked out to the legacy surface; Task #478 then brought the runnable substitution surface fully in-repo at the same /gate route. The artifact-limit on this project ruled out a standalone artifacts/the-gate at this pass; if the limit is raised the page may move to a dedicated artifact without changing the manifest contract."
     }
   ],
   "teachers": [

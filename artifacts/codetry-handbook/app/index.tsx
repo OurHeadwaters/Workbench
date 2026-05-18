@@ -260,6 +260,19 @@ export default function FrontPage() {
           </View>
         </Pressable>
 
+        {/* Story Path entry — always visible */}
+        <Pressable
+          onPress={() => router.push("/story-path")}
+          style={({ pressed }) => [
+            styles.storyPathBtn,
+            { borderColor: `${RUST}50`, opacity: pressed ? 0.7 : 1 },
+          ]}
+        >
+          <Text style={[styles.storyPathBtnText, { color: RUST, fontFamily: MONO }]}>
+            Write your own story →
+          </Text>
+        </Pressable>
+
         {/* ── NEW READER: orienting close ───────────────────────────── */}
         {!isReturning && (
           <View style={styles.orientWrap}>
@@ -317,7 +330,7 @@ export default function FrontPage() {
             />
             <ToolRow
               label="Gate Log"
-              sub="Bright-side names and their massity translations"
+              sub="Bright-side names and their systems translations"
               onPress={() => router.push("/gate-log")}
               c={c}
               accent={EVERGREEN}
@@ -746,6 +759,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   talesReadBtnText: {
+    fontSize: 10,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+  },
+
+  storyPathBtn: {
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    marginTop: 10,
+  },
+  storyPathBtnText: {
     fontSize: 10,
     letterSpacing: 1.5,
     textTransform: "uppercase",

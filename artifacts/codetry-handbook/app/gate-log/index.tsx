@@ -27,23 +27,23 @@ export default function GateLogScreen() {
   const { ready, entries, addEntry, deleteEntry } = useGateLog();
 
   const [brightSide, setBrightSide] = useState("");
-  const [massity, setMassity] = useState("");
+  const [systemsWord, setSystemsWord] = useState("");
   const [context, setContext] = useState("");
   const [saving, setSaving] = useState(false);
   const [formOpen, setFormOpen] = useState(true);
 
-  const canSave = brightSide.trim().length > 0 && massity.trim().length > 0;
+  const canSave = brightSide.trim().length > 0 && systemsWord.trim().length > 0;
 
   async function handleAdd() {
     if (!canSave) return;
     setSaving(true);
     await addEntry({
       brightSide: brightSide.trim(),
-      massity: massity.trim(),
+      massity: systemsWord.trim(),
       context: context.trim(),
     });
     setBrightSide("");
-    setMassity("");
+    setSystemsWord("");
     setContext("");
     setSaving(false);
     setFormOpen(false);
@@ -133,23 +133,23 @@ export default function GateLogScreen() {
                 />
               </View>
 
-              {/* Massity */}
+              {/* The systems */}
               <View style={styles.formColumn}>
                 <Text style={[styles.columnLabel, { color: c.foreground, fontFamily: MONO }]}>
-                  MASSITY
+                  THE SYSTEMS
                 </Text>
                 <Text style={[styles.columnHint, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
                   What the other side calls it
                 </Text>
                 <TextInput
-                  value={massity}
-                  onChangeText={setMassity}
+                  value={systemsWord}
+                  onChangeText={setSystemsWord}
                   placeholder="e.g. Pantry Inventory"
                   placeholderTextColor={c.mutedForeground}
                   style={[
                     styles.input,
                     {
-                      borderColor: massity ? c.primary : c.border,
+                      borderColor: systemsWord ? c.primary : c.border,
                       color: c.foreground,
                       fontFamily: SERIF_BOLD,
                       backgroundColor: c.background,
@@ -221,7 +221,7 @@ export default function GateLogScreen() {
                   <View style={[styles.entrySep, { backgroundColor: c.rule }]} />
                   <View style={styles.entryCol}>
                     <Text style={[styles.entryColLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
-                      MASSITY
+                      THE SYSTEMS
                     </Text>
                     <Text style={[styles.entryTerm, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
                       {entry.massity}
@@ -253,7 +253,7 @@ export default function GateLogScreen() {
 
         {ready && entries.length === 0 && !formOpen && (
           <Text style={[styles.emptyText, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
-            No entries yet. Add your first bright-side/massity pair.
+            No entries yet. Add your first pairing — your community's word on the left, the systems' word on the right.
           </Text>
         )}
       </ScrollView>
