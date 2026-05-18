@@ -77,3 +77,9 @@ id = "5cHN4knLbc6JcnYW1jvPa"
 uri = "file://.local/codetry-handbook-full.md"
 type = "text"
 title = "Codetry Handbook — Full Content Extraction"
+
+[[outputs]]
+id = "uCVvwD6fbKkovZUucHYm_"
+uri = "file://.local/codetry-handbook-context.md"
+type = "text"
+title = "Handbook Build Context & Decision Log"
