@@ -131,6 +131,58 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ── odyssey ── */}
+      <section
+        className="w-full px-6 sm:px-10 py-16 sm:py-20 text-center"
+        style={{
+          background: "hsl(38 36% 94%)",
+          borderTop: "3px solid hsl(145 36% 18%)",
+          borderBottom: "1px solid hsl(38 30% 84%)",
+        }}
+        data-testid="home-odyssey"
+      >
+        <div className="mx-auto max-w-[38rem]">
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.28em] mb-4"
+            style={{ color: "hsl(145 36% 18%)" }}
+          >
+            Headwaters Odyssey
+          </p>
+          <h2
+            className="font-serif text-3xl sm:text-4xl tracking-tight leading-[1.15] mb-5"
+            style={{ color: "hsl(145 36% 18%)" }}
+          >
+            Become the hempcrete your community needs —<br className="hidden sm:block" /> whether the flood comes or not.
+          </h2>
+          <p
+            className="font-serif text-base sm:text-[17px] leading-[1.65] mb-4"
+            style={{ color: "hsl(145 36% 22%)" }}
+          >
+            A guided, self-paced pioneer journey that turns Codetry — language, discipline, and constellation practice — into real community infrastructure.
+          </p>
+          <p
+            className="font-serif text-[14px] italic leading-[1.6] mb-9"
+            style={{ color: "hsl(38 20% 45%)" }}
+          >
+            Built for headwaters people who are already organising locally.
+          </p>
+          <a
+            href={`${import.meta.env.BASE_URL}odyssey`}
+            className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-85"
+            style={{ background: "hsl(145 36% 18%)", color: "hsl(38 36% 94%)" }}
+            data-testid="odyssey-cta"
+          >
+            Begin the Odyssey →
+          </a>
+          <p
+            className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.18em]"
+            style={{ color: "hsl(38 20% 52%)" }}
+          >
+            Free · Self-paced · Tools included in the existing PWA
+          </p>
+        </div>
+      </section>
+
       <div className="mx-auto max-w-[52rem] px-6 sm:px-8">
 
         {/* ── hero photo ── */}
