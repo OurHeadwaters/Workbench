@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>A little something for you 🌿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #fdf6ec;
+      --card:     #fffdf8;
+      --gold:     #c08a2a;
+      --gold-bg:  #fef7e6;
+      --green:    #2d4a3e;
+      --green-lt: #e8f0ec;
+      --rust:     #9e4e2e;
+      --text:     #3a2e22;
+      --muted:    #8a7060;
+      --rule:     #e8d5b5;
+      --shadow:   rgba(60,40,10,0.08);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--green);
+      color: #fff;
+      padding: 36px 24px 28px;
+      text-align: center;
+    }
+    .header .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .header .subtitle {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+
+    /* ── BODY ── */
+    .body {
+      padding: 24px 16px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 32px 0 12px;
+    }
+
+    /* ── ITEM CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .card-icon {
+      font-size: 26px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .card-name {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .card-type {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+    .card-for {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 500;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .card-for::before { content: "✦ Good for: "; }
+    .card-how {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .card-how strong {
+      font-weight: 500;
+    }
+
+    /* ── CAUTION TAG ── */
+    .caution {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 6px;
+      background: #fff8f0;
+      border: 1px solid #f0d4b0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #7a4a20;
+      line-height: 1.45;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .caution-icon { flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+
+    /* ── RECIPE CARD ── */
+    .recipe {
+      background: var(--gold-bg);
+      border: 1.5px solid #e0b96a;
+      border-radius: 16px;
+      padding: 22px 20px;
+      margin-top: 8px;
+    }
+    .recipe-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .recipe h2 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .recipe .recipe-sub {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .recipe-steps {
+      list-style: none;
+      counter-reset: step;
+    }
+    .recipe-steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(180,140,60,0.18);
+    }
+    .recipe-steps li:last-child { border-bottom: none; }
+    .recipe-steps li::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* ── NOTE SECTION ── */
+    .note-card {
+      background: var(--green-lt);
+      border: 1px solid #b8cfc5;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .note-card h3 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .note-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #2a3e35;
+      margin-bottom: 10px;
+    }
+    .note-item:last-child { margin-bottom: 0; }
+    .note-dot {
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-top: 6px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 0 16px 32px;
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .footer .heart { color: var(--rust); font-style: normal; }
+
+    /* ── DIVIDER ── */
+    hr { border: none; border-top: 1px solid var(--rule); margin: 6px 0 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="eyebrow">A little something for you</div>
+    <h1>Feel better soon 🌿</h1>
+    <div class="subtitle">A few things to sip, rest with,<br>and help your body heal.</div>
+  </div>
+
+  <div class="body">
+
+    <!-- ── WHAT'S INSIDE ── -->
+    <div class="section-label">What's in the package</div>
+
+    <!-- NeoCitran -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🌙</div>
+        <div>
+          <div class="card-name">NeoCitran Cold &amp; Sore Throat Night</div>
+          <div class="card-type">Lemon · 2 pouches</div>
+        </div>
+      </div>
+      <div class="card-for">sore throat relief, pain, nighttime comfort</div>
+      <div class="card-how">
+        Dissolve <strong>1 pouch</strong> in a full cup of boiling water. Let it cool enough to sip comfortably. Every <strong>4–6 hours</strong> as needed. No more than 4 pouches in 24 hours.
+        <br><br>The nighttime formula will make you drowsy — lean into it. Take before bed and let yourself sleep.
+      </div>
+      <div class="caution">
+        <span class="caution-icon">⚠️</span>
+        Contains <strong>acetaminophen</strong> — don't combine with Tylenol or any other product that has acetaminophen. Check labels on anything else you're taking.
+      </div>
+    </div>
+
+    <!-- Honey Ginger Tea -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🫚</div>
+        <div>
+          <div class="card-name">Instant Honey Ginger Tea</div>
+          <div class="card-type">Pocas · honey, ginger extract, cane sugar</div>
+        </div>
+      </div>
+      <div class="card-for">coating and soothing a raw throat, gentle warmth</div>
+      <div class="card-how">
+        Dissolve the <strong>whole sachet</strong> in a mug of hot water. Sip slowly — let it coat your throat on the way down. No steeping time, no fussing. Just pour and drink.
+        <br><br>Ginger settles the stomach too, which is nice when you're not eating well.
+      </div>
+    </div>
+
+    <!-- Green Tea -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🍵</div>
+        <div>
+          <div class="card-name">Green Tea Lemon Ginseng</div>
+          <div class="card-type">Lipton · antioxidants, light caffeine</div>
+        </div>
+      </div>
+      <div class="card-for">hydration, antioxidants, gentle lift when you need it</div>
+      <div class="card-how">
+        Steep in <strong>hot (not boiling)</strong> water for 2–3 minutes — boiling water makes green tea bitter. A little honey is nice if your throat is still rough.
+        <br><br>Has a small amount of caffeine, so morning or early afternoon is the sweet spot.
+      </div>
+    </div>
+
+    <!-- Golden Cure -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">✨</div>
+        <div>
+          <div class="card-name">Golden Cure Elixir Blend</div>
+          <div class="card-type">Awakened Roots · turmeric, ashwagandha, cinnamon, clove, black pepper, lucuma</div>
+        </div>
+      </div>
+      <div class="card-for">anti-inflammatory, warming, stress support</div>
+      <div class="card-how">
+        Best as <strong>golden milk</strong> — see the recipe below. Or stir <strong>1 tsp</strong> into any warm drink: tea, coffee, or just hot water with honey. The black pepper in the blend helps your body absorb the turmeric.
+      </div>
+      <div class="caution">
+        <span class="caution-icon">⚠️</span>
+        Contains <strong>ashwagandha</strong>, which is an adaptogen that can interact with immunosuppressant medications. If you're on anything for immune suppression, just check with your doctor or pharmacist before using this one.
+      </div>
+    </div>
+
+    <!-- Coconut Milk -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🥥</div>
+        <div>
+          <div class="card-name">Organic Coconut Milk</div>
+          <div class="card-type">Cha's Organics · premium, 405mL</div>
+        </div>
+      </div>
+      <div class="card-for">the base for golden milk, extra calories when appetite is low</div>
+      <div class="card-how">
+        Warm gently on the stove — don't boil. Full-fat coconut milk is rich and calorie-dense, which is helpful when you're sick and not eating much. Use what you need and store the rest covered in the fridge for 3–4 days.
+      </div>
+    </div>
+
+    <!-- ── RECIPE ── -->
+    <div class="section-label">The recipe to make first</div>
+
+    <div class="recipe">
+      <div class="recipe-eyebrow">⭐ Featured recipe</div>
+      <h2>Golden Milk</h2>
+      <div class="recipe-sub">Warm, anti-inflammatory, soothing for a dry cough</div>
+      <ol class="recipe-steps">
+        <li>Pour about <strong>¾ cup of coconut milk</strong> into a small pot. Warm over low heat — just until steaming, not bubbling.</li>
+        <li>Whisk in <strong>1 teaspoon of Golden Cure</strong> until fully blended and smooth.</li>
+        <li>Pour into a mug. Add a <strong>drizzle of honey</strong> if you'd like it a little sweet.</li>
+        <li>Sip slowly. The warmth and turmeric are doing the work — let it coat your throat on the way down.</li>
+      </ol>
+    </div>
+
+    <!-- ── NOTES ── -->
+    <div class="section-label">One note for you</div>
+
+    <div class="note-card">
+      <h3>Because you're immunocompromised</h3>
+      <div class="note-item">
+        <div class="note-dot"></div>
+        <div>The <strong>Honey Ginger Tea</strong> and <strong>Green Tea</strong> are the most straightforward — gentle, no drug interactions, just sip freely.</div>
+      </div>
+      <div class="note-item">
+        <div class="note-dot"></div>
+        <div>The <strong>NeoCitran</strong> is safe to use as directed, just watch for double-dosing acetaminophen with anything else you're taking.</div>
+      </div>
+      <div class="note-item">
+        <div class="note-dot"></div>
+        <div>The <strong>Golden Cure</strong> is the one to check on if you're taking immunosuppressants — the ashwagandha is the ingredient to ask about. If you're not on immunosuppressants, it's likely fine.</div>
+      </div>
+      <div class="note-item">
+        <div class="note-dot"></div>
+        <div>Drink more water than you think you need. All of these work better when you're hydrated.</div>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <div class="footer">
+    Thinking of you. Rest as much as you can.<br>
+    <span class="heart">♥</span>
+  </div>
+
+</body>
+</html>
