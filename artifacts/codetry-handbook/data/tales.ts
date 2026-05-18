@@ -530,11 +530,11 @@ export const TALES: Tale[] = [
     title: "The Fish Who Stopped Trying to Climb",
     subtitle: "On knowing what you were built for",
     excerpt:
-      "She had been told her whole life that the ones who get somewhere climb. She believed it. She spent two summers trying to get up the tree.",
+      "She had been told her whole life that the ones who get somewhere are the ones who climb. She believed it. She spent two summers trying to get up the tree.",
     body: [
       {
         kind: "para",
-        text: "She had been told her whole life that the ones who get somewhere climb.",
+        text: "She had been told her whole life that the ones who get somewhere are the ones who climb.",
       },
       {
         kind: "para",
