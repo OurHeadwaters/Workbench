@@ -72,6 +72,7 @@ export const NAV: NavItem[] = [
   { href: "/codetry-philosophy", label: "Codetry — the discipline", icon: Flame, accent: "#7A3E1A" },
   { href: "/codetry", label: "How this guide is named", icon: ScrollText, accent: "#3B2A6E" },
   { href: "/sarge", label: "Sarge HQ", icon: Smartphone, accent: "#0F766E" },
+  { href: "/saltbox-gather-round", label: "Saltbox × Gather Round", icon: Handshake, accent: "#4B6070" },
   { href: "/community-store", label: "Community Store Playbook", icon: Store, accent: "#b85a3e", dormant: true },
 ];
 

@@ -31,6 +31,7 @@ const SEC = {
   hiring:  { header: "#3D4A5C", label: "HIRING & TOOLS",  note: "Templates, scripts, and trackers" },
   ref:     { header: "#5B3E8C", label: "REFERENCE",       note: "One-pager and full deck" },
   deer:    { header: "#1F5446", label: "DEER LAKE DOCS",  note: "Coaching docs for founder conversations" },
+  saltbox: { header: "#4B6070", label: "SALTBOX × GATHER ROUND", note: "Partnership & ROI strategy brief" },
   guide:   { header: "#2D5A7B", label: "PRACTITIONER'S GUIDE", note: "Strategic tools from the guide" },
   ship:    { header: "#4A3728", label: "CODETRY SHIP",    note: "Internal workbench and SOW" },
 } as const;
@@ -93,6 +94,18 @@ const SECTIONS: ToolSection[] = [
     tools: [
       { label: "Responding to Exclusivity", sub: "Talking points for the exclusivity conversation", detail: "Step-by-step founder coaching doc: acknowledge the ask, offer something real, hold the line. Includes the one-liner to say out loud.", path: `${BASE}/deer-lake-talking-points`, accent: "#1F5446" },
       { label: "How the Model Spreads",     sub: "Replication roadmap + financial projections",     detail: "Phase 1 → Phase 2 → Constellation. What carries forward, what each community customizes, and the full financial picture by phase.", path: `${BASE}/deer-lake-roadmap`,         accent: "#1F5446" },
+    ],
+  },
+  {
+    sec: SEC.saltbox,
+    tools: [
+      {
+        label: "Saltbox × Gather Round Brief",
+        sub: "Partnership case, revenue paths, and 4-week roadmap",
+        detail: "Gather Round Legacy Pass families spend real time managing downloads. Saltbox solves it via local-first delivery and an XRPL NFT identity layer. Covers three revenue options (Freemium, Bundle, Concierge), the three-track sprint roadmap, and first-email language for reaching out to Gather Round.",
+        path: `${BASE}/saltbox-gather-round`,
+        accent: "#4B6070",
+      },
     ],
   },
   {

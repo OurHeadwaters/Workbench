@@ -33,6 +33,7 @@ import { AnnualCheckInPage } from "@/pages/AnnualCheckInPage";
 import { StrategicLedgerPage } from "@/pages/StrategicLedgerPage";
 import { SessionHandoffPage } from "@/pages/SessionHandoffPage";
 import { WorkspacePage } from "@/pages/WorkspacePage";
+import { SaltboxGatherRoundPage } from "@/pages/SaltboxGatherRoundPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/year/check-in" component={AnnualCheckInPage} />
       <Route path="/strategic-ledger" component={StrategicLedgerPage} />
       <Route path="/session-handoff" component={SessionHandoffPage} />
+      <Route path="/saltbox-gather-round" component={SaltboxGatherRoundPage} />
       <Route component={NotFound} />
     </Switch>
   );

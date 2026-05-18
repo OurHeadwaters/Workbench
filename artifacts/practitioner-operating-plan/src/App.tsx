@@ -21,6 +21,7 @@ import RateBreakdown from "./pages/RateBreakdown";
 import DeerLakeTalkingPoints from "./pages/DeerLakeTalkingPoints";
 import DeerLakeRoadmap from "./pages/DeerLakeRoadmap";
 import DailyDebrief from "./pages/DailyDebrief";
+import SaltboxGatherRound from "./pages/SaltboxGatherRound";
 
 const SaltMonthlyClose = lazy(() => import("./pages/SaltMonthlyClose"));
 
@@ -52,6 +53,7 @@ export default function App() {
       <Route path={`${BASE}/deer-lake-talking-points`} component={DeerLakeTalkingPoints} />
       <Route path={`${BASE}/deer-lake-roadmap`} component={DeerLakeRoadmap} />
       <Route path={`${BASE}/debrief`} component={DailyDebrief} />
+      <Route path={`${BASE}/saltbox-gather-round`} component={SaltboxGatherRound} />
       <Route path={`${BASE}/plan`} component={PlanYear} />
       <Route path={`${BASE}/plan/today`} component={PlanToday} />
       <Route path={`${BASE}/plan/week/:n`} component={PlanWeek} />
