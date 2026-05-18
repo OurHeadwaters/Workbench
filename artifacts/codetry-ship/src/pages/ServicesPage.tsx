@@ -77,6 +77,97 @@ export function ServicesPage() {
           </div>
         </section>
 
+        {/* ── the seven tools ── */}
+        <section className="pt-10 pb-2">
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] mb-4" style={{ color: "hsl(var(--accent))" }}>
+            The seven tools
+          </p>
+
+          {/* Core flow */}
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Core flow — learn · track · account
+          </p>
+          <div className="space-y-2 mb-5">
+            {[
+              {
+                icon: "📖",
+                name: "The Handbook",
+                desc: "Where you start. Plain-language guide to the Headwaters way of working — scoping, handing over, and building community-owned systems.",
+                color: "hsl(145 36% 22%)",
+              },
+              {
+                icon: "📋",
+                name: "Practitioner's Guide",
+                desc: "Where your work lives. Tracks each engagement — the scope, the phases, the decisions, and the handover.",
+                color: "hsl(145 28% 32%)",
+              },
+              {
+                icon: "📚",
+                name: "The Accounts",
+                desc: "Where the money is recorded. What came in, what went out, and what the work delivered — so the community always knows where it stands.",
+                color: "hsl(145 22% 42%)",
+              },
+            ].map(({ icon, name, desc, color }) => (
+              <div
+                key={name}
+                className="rounded-md border bg-card p-4 flex gap-3.5 items-start"
+                style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
+              >
+                <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
+                <div>
+                  <p className="font-serif text-[14.5px] font-medium tracking-tight mb-0.5">{name}</p>
+                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Supporting layers */}
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(var(--muted-foreground))" }}>
+            Supporting layers
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[
+              {
+                icon: "🔬",
+                name: "Research Library",
+                desc: "Curated research and reports on northern food systems — so every decision is grounded in real data.",
+                color: "hsl(14 64% 36%)",
+              },
+              {
+                icon: "🖨️",
+                name: "Print Marketing Suite",
+                desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment.",
+                color: "hsl(14 50% 44%)",
+              },
+              {
+                icon: "🚢",
+                name: "Crew Manifest",
+                desc: "Shows who is on which project, what role they fill, and how the crew fits together.",
+                color: "hsl(220 20% 32%)",
+              },
+              {
+                icon: "🗄️",
+                name: "Media Library",
+                desc: "Stores photos, documents, and assets so every other tool can pull from one reliable source.",
+                color: "hsl(200 25% 35%)",
+              },
+            ].map(({ icon, name, desc, color }) => (
+              <div
+                key={name}
+                className="rounded-md border bg-card p-4 flex gap-3 items-start"
+                style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
+              >
+                <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
+                <div>
+                  <p className="font-serif text-[14px] font-medium tracking-tight mb-0.5">{name}</p>
+                  <p className="font-serif text-[13px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ══════════════════════════════════════
             SECTION 1 — COMMUNITY STORE PLAN
         ══════════════════════════════════════ */}
