@@ -422,7 +422,7 @@ export function ServicesPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
                 { label: "Phase 1", value: "$28,000", note: "6–8 weeks. Fixed fee, defined scope, real deliverable. Shorter engagement = reduced invoice." },
-                { label: "Phase 2+", value: "Scoped per phase", note: "Each subsequent phase is priced to its scope before work begins." },
+                { label: "Phase 2+", value: "$18,000–$60,000", note: "Typical per-phase range depending on scope and duration. Phase 2 (the main build) commonly runs $52,000–$60,000 over 4–6 months; later phases step down as the community takes ownership. Each phase is confirmed with the community before work begins." },
                 { label: "Travel & expenses", value: "At cost", note: "Travel to site and expenses reimbursed at cost with receipts." },
               ].map(({ label, value, note }) => (
                 <div key={label}>
