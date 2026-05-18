@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
 import { TrailSignPost } from "@/components/TrailSignPost";
+import { YouthTrailMap } from "@/components/YouthTrailMap";
 
 /* ── Youth path data (from youthPath.ts source) ────────────────────────── */
 
@@ -74,6 +75,17 @@ const YOUTH_STATIONS = [
 
 export function StoryPage() {
   const [openStation, setOpenStation] = useState<number | null>(null);
+  const [activePhase, setActivePhase] = useState(0);
+  const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handlePhaseClick = (n: number) => {
+    setActivePhase(n);
+    const el = phaseRefs.current[n - 1];
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   return (
     <main
@@ -203,46 +215,87 @@ export function StoryPage() {
       <TrailArtGallery />
 
       {/* ══════════════════════════════════════════ TRAIL MAP ══ */}
+
+      {/* ── Illustrated youth trail map hero ── */}
+      <section
+        className="w-full overflow-hidden"
+        style={{ borderTop: "1px solid rgba(31,61,46,0.10)", borderBottom: "1px solid rgba(31,61,46,0.10)" }}
+        data-testid="youth-trail-map-section"
+      >
+        <div
+          className="px-4 py-3 flex items-center justify-between"
+          style={{ background: "#0d1d15", borderBottom: "1px solid rgba(244,237,224,0.07)" }}
+        >
+          <span className="font-mono text-[9px] uppercase tracking-[0.28em]"
+            style={{ color: "rgba(244,237,224,0.3)" }}>
+            Youth Odyssey · Trail Map
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em]"
+            style={{ color: "rgba(212,160,23,0.45)" }}>
+            Tap a phase to read it ↓
+          </span>
+        </div>
+        <YouthTrailMap
+          currentPhase={activePhase}
+          onPhaseClick={handlePhaseClick}
+        />
+      </section>
+
+      {/* ── Phase journal cards (dark boreal) ── */}
       <section
         style={{
           background: "linear-gradient(to bottom, #16261e 0%, #1a2e24 60%, #162535 100%)",
-          paddingTop: 56,
-          paddingBottom: 72,
+          paddingTop: 48,
+          paddingBottom: 64,
         }}
+        data-testid="youth-phase-cards"
       >
-        <div className="max-w-[44rem] mx-auto px-6 sm:px-8">
+        <div className="max-w-[44rem] mx-auto px-4 sm:px-8 space-y-12">
 
           {/* Section label */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-3">
             <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.18)" }} />
-            <p className="font-mono text-[8.5px] uppercase tracking-[0.3em]" style={{ color: "rgba(212,160,23,0.55)" }}>
+            <p className="font-mono text-[8.5px] uppercase tracking-[0.3em]"
+              style={{ color: "rgba(212,160,23,0.55)" }}>
               The Trail
             </p>
             <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.18)" }} />
           </div>
 
           {YOUTH_PHASES.map((phase, phaseIdx) => {
+            const phaseAccents = ["#c97c2e", "#d4a017", "#b85a3e", "#7ab3cc"];
+            const accent  = phaseAccents[phaseIdx] ?? "#d4a017";
+            const isPhaseActive = activePhase === phase.n;
             const stations = YOUTH_STATIONS.filter((s) => s.phase === phase.n);
+
             return (
               <div
                 key={phase.n}
-                className={phaseIdx < YOUTH_PHASES.length - 1 ? "mb-16" : "mb-0"}
+                ref={(el) => { phaseRefs.current[phaseIdx] = el; }}
                 data-testid={`youth-phase-${phase.n}`}
               >
                 {/* Phase header */}
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3 mb-4">
                   <span
-                    className="font-mono text-[8px] uppercase tracking-[0.24em] px-2 py-0.5 rounded-sm"
+                    className="font-mono text-[8px] uppercase tracking-[0.24em] px-2.5 py-1 rounded-sm"
                     style={{
-                      background: "rgba(212,160,23,0.12)",
-                      color: "rgba(212,160,23,0.75)",
-                      border: "1px solid rgba(212,160,23,0.2)",
+                      background: `${accent}1a`,
+                      color: isPhaseActive ? accent : `${accent}cc`,
+                      border: `1px solid ${accent}35`,
                     }}
                   >
                     Phase {String(phase.n).padStart(2, "0")}
                   </span>
-                  <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.1)" }} />
+                  <div className="flex-1 h-px" style={{ background: `${accent}18` }} />
+                  <button
+                    onClick={() => handlePhaseClick(phase.n)}
+                    className="font-mono text-[8px] uppercase tracking-[0.16em] transition-opacity hover:opacity-70"
+                    style={{ color: isPhaseActive ? accent : "rgba(244,237,224,0.25)" }}
+                  >
+                    {isPhaseActive ? "↑ on map" : "show on map ↑"}
+                  </button>
                 </div>
+
                 <h2
                   className="font-serif mb-1"
                   style={{
@@ -256,13 +309,13 @@ export function StoryPage() {
                   {phase.label}
                 </h2>
                 <p
-                  className="font-serif italic mb-7"
-                  style={{ color: "rgba(244,237,224,0.42)", fontSize: "14px", lineHeight: 1.6 }}
+                  className="font-serif italic mb-6"
+                  style={{ color: `${accent}aa`, fontSize: "14px", lineHeight: 1.6 }}
                 >
                   {phase.desc}
                 </p>
 
-                {/* Station cards */}
+                {/* Station cards — journal treatment, dark */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {stations.map((station) => {
                     const isOpen = openStation === station.ordinal;
@@ -270,89 +323,98 @@ export function StoryPage() {
                       <button
                         key={station.ordinal}
                         onClick={() => setOpenStation(isOpen ? null : station.ordinal)}
-                        className="text-left transition-all"
+                        className="text-left transition-all duration-200 rounded-xl overflow-hidden"
                         style={{
                           background: isOpen
-                            ? "rgba(212,160,23,0.08)"
-                            : "rgba(244,237,224,0.05)",
+                            ? "rgba(244,237,224,0.07)"
+                            : "rgba(244,237,224,0.04)",
                           border: isOpen
-                            ? "1px solid rgba(212,160,23,0.28)"
-                            : "1px solid rgba(244,237,224,0.1)",
-                          borderRadius: 10,
-                          padding: "18px 20px",
-                          cursor: "pointer",
+                            ? `1.5px solid ${accent}50`
+                            : "1.5px solid rgba(244,237,224,0.09)",
                           boxShadow: isOpen
-                            ? "0 2px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(212,160,23,0.08)"
-                            : "0 1px 8px rgba(0,0,0,0.2)",
+                            ? `0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px ${accent}18`
+                            : "0 1px 8px rgba(0,0,0,0.25)",
                         }}
                         data-testid={`youth-station-${station.ordinal}`}
                         aria-expanded={isOpen}
                       >
-                        {/* Station number */}
-                        <span
-                          className="font-mono text-[7.5px] uppercase tracking-[0.26em] block mb-2"
-                          style={{ color: "rgba(212,160,23,0.6)" }}
+                        {/* Left accent strip + content */}
+                        <div
+                          className="flex items-stretch"
+                          style={{ borderLeft: `3px solid ${isOpen ? accent : `${accent}55`}` }}
                         >
-                          Station {String(station.ordinal).padStart(2, "0")}
-                        </span>
+                          <div className="px-4 py-4 flex-1">
+                            {/* Station badge */}
+                            <span
+                              className="font-mono text-[7.5px] uppercase tracking-[0.26em] block mb-2"
+                              style={{ color: isOpen ? accent : `${accent}88` }}
+                            >
+                              Station {String(station.ordinal).padStart(2, "0")}
+                            </span>
 
-                        {/* Station name */}
-                        <p
-                          className="font-serif mb-1"
-                          style={{
-                            fontSize: "clamp(1.1rem, 3.5vw, 1.25rem)",
-                            color: "#f4ede0",
-                            fontWeight: 500,
-                            letterSpacing: "-0.01em",
-                            lineHeight: 1.2,
-                          }}
-                        >
-                          {station.name}
-                        </p>
+                            {/* Station name */}
+                            <p
+                              className="font-serif mb-1.5"
+                              style={{
+                                fontSize: "clamp(1.05rem, 3.5vw, 1.2rem)",
+                                color: "#f4ede0",
+                                fontWeight: 500,
+                                letterSpacing: "-0.01em",
+                                lineHeight: 1.2,
+                              }}
+                            >
+                              {station.name}
+                            </p>
 
-                        {/* Subtitle */}
-                        <p
-                          className="font-serif italic"
-                          style={{ fontSize: "13px", color: "rgba(244,237,224,0.48)", lineHeight: 1.55 }}
-                        >
-                          {station.subtitle}
-                        </p>
-
-                        {/* Expandable excerpt */}
-                        {isOpen && (
-                          <div className="mt-4">
-                            <div
-                              className="h-px mb-3"
-                              style={{ background: "rgba(212,160,23,0.2)" }}
-                            />
+                            {/* Subtitle */}
                             <p
                               className="font-serif italic"
                               style={{
-                                fontSize: "14px",
-                                color: "rgba(244,237,224,0.82)",
-                                lineHeight: 1.75,
+                                fontSize: "13px",
+                                color: "rgba(244,237,224,0.52)",
+                                lineHeight: 1.55,
                               }}
                             >
-                              "{station.excerpt}"
+                              {station.subtitle}
                             </p>
-                            <p
-                              className="font-mono text-[7.5px] uppercase tracking-[0.18em] mt-3"
-                              style={{ color: "rgba(212,160,23,0.4)" }}
-                            >
-                              From: {station.sourceTale}
-                            </p>
-                          </div>
-                        )}
 
-                        {/* Tap hint */}
-                        {!isOpen && (
-                          <p
-                            className="font-mono text-[7px] uppercase tracking-[0.18em] mt-3"
-                            style={{ color: "rgba(244,237,224,0.22)" }}
-                          >
-                            Tap to read a fragment →
-                          </p>
-                        )}
+                            {/* Expandable excerpt */}
+                            {isOpen && (
+                              <div className="mt-4">
+                                <div
+                                  className="h-px mb-3"
+                                  style={{ background: `${accent}30` }}
+                                />
+                                <p
+                                  className="font-serif italic"
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "rgba(244,237,224,0.88)",
+                                    lineHeight: 1.78,
+                                  }}
+                                >
+                                  "{station.excerpt}"
+                                </p>
+                                <p
+                                  className="font-mono text-[7.5px] uppercase tracking-[0.18em] mt-3"
+                                  style={{ color: `${accent}70` }}
+                                >
+                                  From: {station.sourceTale}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Tap hint */}
+                            {!isOpen && (
+                              <p
+                                className="font-mono text-[7px] uppercase tracking-[0.18em] mt-3"
+                                style={{ color: "rgba(244,237,224,0.20)" }}
+                              >
+                                Tap to read a fragment →
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </button>
                     );
                   })}
