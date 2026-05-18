@@ -1,6 +1,7 @@
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
   Platform,
   Pressable,
   ScrollView,
@@ -38,6 +39,9 @@ export default function FrontPage() {
 
   const { ready: pathReady, isCompleted, isUnlocked } = usePioneerPath();
 
+  const badgePulse = useRef(new Animated.Value(1)).current;
+  const prevStationId = useRef<string | undefined>(undefined);
+
   const lastChapter = lastRead ? getChapter(lastRead.chapterId) : undefined;
   const firstChapter = CHAPTERS[0];
   const beginTarget = lastChapter ? lastChapter.id : firstChapter.id;
@@ -47,6 +51,28 @@ export default function FrontPage() {
     ? (PIONEER_STATIONS.find((s) => isUnlocked(s.id) && !isCompleted(s.id)) ??
        [...PIONEER_STATIONS].reverse().find((s) => isCompleted(s.id)))
     : undefined;
+
+  // Pulse the station badge whenever the active station changes (i.e. one was
+  // just marked done and the next station unlocked).
+  useEffect(() => {
+    if (!pathReady) return;
+    const id = currentStation?.id;
+    if (id === prevStationId.current) return;
+    prevStationId.current = id;
+    if (prevStationId.current === undefined) return;
+    Animated.sequence([
+      Animated.timing(badgePulse, {
+        toValue: 1.05,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.timing(badgePulse, {
+        toValue: 1,
+        duration: 260,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [pathReady, currentStation?.id, badgePulse]);
 
   const mainParts = PARTS.filter(
     (p) => p.kind !== "backMatter" && p.kind !== "frontMatter",
@@ -95,6 +121,7 @@ export default function FrontPage() {
 
           {/* Pioneer Path station — returning readers only */}
           {isReturning && currentStation && (
+            <Animated.View style={{ transform: [{ scale: badgePulse }] }}>
             <Pressable
               onPress={() =>
                 router.push({
@@ -126,6 +153,7 @@ export default function FrontPage() {
                 TAP TO MARK DONE
               </Text>
             </Pressable>
+            </Animated.View>
           )}
 
           <Pressable

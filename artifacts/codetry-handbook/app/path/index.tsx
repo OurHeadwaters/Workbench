@@ -2,8 +2,8 @@
 // markers. Replaces the 5-star ConstellationMap now that the path has 20
 // stations across five phases.
 
-import { router } from "expo-router";
-import React, { useCallback, useMemo, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Modal,
   Platform,
@@ -50,6 +50,35 @@ export default function PathHome() {
   const webTop = Platform.OS === "web" ? 67 : 0;
   const webBottom = Platform.OS === "web" ? 34 : 0;
 
+  const params = useLocalSearchParams<{ just?: string }>();
+  const just = typeof params.just === "string" ? params.just : null;
+
+  const scrollViewRef = useRef<ScrollView>(null);
+  const phaseYMap = useRef<Record<number, number>>({});
+  const stationYMap = useRef<Record<string, number>>({});
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
+  // When arriving after marking a station done, scroll to and briefly
+  // highlight the newly-unlocked next station.
+  useEffect(() => {
+    if (!just || !ready) return;
+    const completed = PIONEER_STATIONS.find((s) => s.id === just);
+    if (!completed) return;
+    const next = PIONEER_STATIONS.find((s) => s.ordinal === completed.ordinal + 1);
+    if (!next) return;
+    setHighlightedId(next.id);
+    const scrollTimer = setTimeout(() => {
+      const phaseY = phaseYMap.current[next.phase] ?? 0;
+      const stationY = stationYMap.current[next.id] ?? 0;
+      scrollViewRef.current?.scrollTo({ y: phaseY + stationY - 32, animated: true });
+    }, 180);
+    const clearTimer = setTimeout(() => setHighlightedId(null), 2200);
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [just, ready, PIONEER_STATIONS]);
+
   const [peek, setPeek] = useState<PioneerStation | null>(null);
   const closePeek = useCallback(() => setPeek(null), []);
 
@@ -80,6 +109,7 @@ export default function PathHome() {
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={[
           styles.scroll,
           {
@@ -127,7 +157,13 @@ export default function PathHome() {
             (s) => s.phase === phase.number,
           );
           return (
-            <View key={phase.number} style={styles.phaseBlock}>
+            <View
+              key={phase.number}
+              style={styles.phaseBlock}
+              onLayout={(e) => {
+                phaseYMap.current[phase.number] = e.nativeEvent.layout.y;
+              }}
+            >
               <View style={[styles.phaseHeaderRow, { borderBottomColor: c.rule }]}>
                 <Text
                   style={[styles.phaseEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}
@@ -152,10 +188,14 @@ export default function PathHome() {
                 const isCurrent =
                   unlocked && !completed;
                 const isLast = i === phaseStations.length - 1;
+                const isHighlighted = station.id === highlightedId;
 
                 return (
                   <Pressable
                     key={station.id}
+                    onLayout={(e) => {
+                      stationYMap.current[station.id] = e.nativeEvent.layout.y;
+                    }}
                     onPress={() => {
                       if (!unlocked) {
                         setPeek(station);
@@ -170,7 +210,14 @@ export default function PathHome() {
                     style={({ pressed }) => [
                       styles.stationRow,
                       !isLast && styles.stationRowBorder,
-                      { borderBottomColor: c.rule, opacity: pressed ? 0.7 : 1 },
+                      {
+                        borderBottomColor: c.rule,
+                        opacity: pressed ? 0.7 : 1,
+                        backgroundColor: isHighlighted
+                          ? c.foreground + "12"
+                          : "transparent",
+                        borderRadius: isHighlighted ? 6 : 0,
+                      },
                     ]}
                   >
                     <View style={styles.stationLeft}>

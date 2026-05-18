@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Animated,
   Image,
   Platform,
   Pressable,
@@ -70,6 +71,8 @@ export default function StationScreen() {
   const [noteDraft, setNoteDraft] = useState<string>(existingNote);
   const [photoDraft, setPhotoDraft] = useState<string>(existingPhoto);
   const [captureOpen, setCaptureOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const flashAnim = useRef(new Animated.Value(0)).current;
 
   // Hydration sync: AsyncStorage loads asynchronously, so the first
   // render of this screen sees default progress. Once the store is
@@ -118,8 +121,12 @@ export default function StationScreen() {
 
   const onClearPhoto = useCallback(() => setPhotoDraft(""), []);
 
+  // Station id to navigate to after the celebration animation completes.
+  // Set when celebrating starts; cleared by the useEffect cleanup below.
+  const celebrateTargetRef = useRef<string | null>(null);
+
   const onMarkDone = useCallback(() => {
-    if (!station) return;
+    if (!station || celebrating) return;
     const trimmed = noteDraft.trim();
     const extras: { note?: string; photoUri?: string } = {};
     if (trimmed.length > 0) extras.note = trimmed;
@@ -128,7 +135,34 @@ export default function StationScreen() {
       station.id,
       Object.keys(extras).length > 0 ? extras : undefined,
     );
-  }, [markDone, noteDraft, photoDraft, station]);
+    celebrateTargetRef.current = station.id;
+    setCelebrating(true);
+    Animated.sequence([
+      Animated.timing(flashAnim, {
+        toValue: 1,
+        duration: 220,
+        useNativeDriver: true,
+      }),
+      Animated.timing(flashAnim, {
+        toValue: 0,
+        duration: 420,
+        delay: 160,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [celebrating, flashAnim, markDone, noteDraft, photoDraft, station]);
+
+  // Navigate to the trail after the celebration animation. Managed in a
+  // useEffect so the timeout is properly cancelled if the component unmounts.
+  useEffect(() => {
+    if (!celebrating) return;
+    const targetId = celebrateTargetRef.current;
+    if (!targetId) return;
+    const t = setTimeout(() => {
+      router.replace({ pathname: "/path", params: { just: targetId } });
+    }, 1050);
+    return () => clearTimeout(t);
+  }, [celebrating]);
 
   const onUnmark = useCallback(() => {
     if (!station) return;
@@ -202,6 +236,20 @@ export default function StationScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
+      {/* Full-screen celebration flash — fades in then out when station is marked */}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.flashOverlay,
+          {
+            backgroundColor: c.foreground,
+            opacity: flashAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 0.12],
+            }),
+          },
+        ]}
+      />
       <ScrollView
         contentContainerStyle={[
           styles.scroll,
@@ -455,8 +503,22 @@ export default function StationScreen() {
           </View>
         ) : null}
 
-        {completed ? (
-          <View style={styles.markedRow}>
+        {completed || celebrating ? (
+          <Animated.View
+            style={[
+              styles.markedRow,
+              celebrating && {
+                transform: [
+                  {
+                    scale: flashAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1, 1.03],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
             <View
               style={[
                 styles.markedPill,
@@ -470,17 +532,25 @@ export default function StationScreen() {
                 STATION WALKED
               </Text>
             </View>
-            <Pressable
-              onPress={onUnmark}
-              style={({ pressed }) => [styles.unmarkBtn, { opacity: pressed ? 0.6 : 1 }]}
-            >
+            {!celebrating ? (
+              <Pressable
+                onPress={onUnmark}
+                style={({ pressed }) => [styles.unmarkBtn, { opacity: pressed ? 0.6 : 1 }]}
+              >
+                <Text
+                  style={[styles.unmarkLabel, { color: c.mutedForeground, fontFamily: MONO }]}
+                >
+                  Unmark
+                </Text>
+              </Pressable>
+            ) : (
               <Text
                 style={[styles.unmarkLabel, { color: c.mutedForeground, fontFamily: MONO }]}
               >
-                Unmark
+                Returning to trail…
               </Text>
-            </Pressable>
-          </View>
+            )}
+          </Animated.View>
         ) : (
           <Pressable
             onPress={onMarkDone}
@@ -609,6 +679,10 @@ export default function StationScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  flashOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 99,
   },
   scroll: {
     paddingHorizontal: 22,
