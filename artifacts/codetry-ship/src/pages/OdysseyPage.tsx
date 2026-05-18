@@ -232,7 +232,7 @@ export function OdysseyPage() {
                 Station 1 is now unlocked for you in the app.
               </p>
               <a
-                href="https://codetry-handbook.replit.app/pioneer-path"
+                href="/codetry-handbook/path"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-85"
