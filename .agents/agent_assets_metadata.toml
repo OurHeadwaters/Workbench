@@ -149,3 +149,9 @@ id = "8SHnXpNEXxmiZ9NXmnDD9"
 uri = "file://.local/tasks/reviewer-brief-public-journey.md"
 type = "text"
 title = "Public Journey Reviewer Brief"
+
+[[outputs]]
+id = "gwQAn6vMD3OReXipI6ID9"
+uri = "file://.local/tasks/807-numbers-prompt.md"
+type = "text"
+title = "Prompt for 807 Project Agent — Pull Real Numbers"
