@@ -44,6 +44,8 @@ export type YouthProgress = {
   draftAnswers: Record<string, Record<string, string>>;
   // Independent of completion — can be set any time a station is visited
   trailMemory: Record<string, TrailMemory>;
+  // TTS block index saved when the child leaves mid-read (stationId → blockIdx)
+  ttsProgress: Record<string, number>;
 };
 
 const DEFAULT_PROGRESS: YouthProgress = {
@@ -51,6 +53,7 @@ const DEFAULT_PROGRESS: YouthProgress = {
   completed: {},
   draftAnswers: {},
   trailMemory: {},
+  ttsProgress: {},
 };
 
 type StoreCtx = {
@@ -70,6 +73,10 @@ type StoreCtx = {
   saveNote: (stationId: string, note: string) => void;
   savePhoto: (stationId: string, photoUri: string) => void;
   clearPhoto: (stationId: string) => void;
+  // TTS reading position
+  getTtsProgress: (stationId: string) => number;
+  saveTtsProgress: (stationId: string, blockIndex: number) => void;
+  clearTtsProgress: (stationId: string) => void;
 };
 
 const YouthCtx = createContext<StoreCtx | null>(null);
@@ -91,6 +98,10 @@ function parseProgress(raw: string | null): YouthProgress {
       trailMemory:
         p.trailMemory && typeof p.trailMemory === "object"
           ? p.trailMemory
+          : {},
+      ttsProgress:
+        p.ttsProgress && typeof p.ttsProgress === "object"
+          ? p.ttsProgress
           : {},
     };
   } catch {
@@ -269,6 +280,30 @@ export function YouthPathProvider({
     [persist, progress],
   );
 
+  const getTtsProgress = useCallback(
+    (stationId: string): number => progress.ttsProgress[stationId] ?? 0,
+    [progress.ttsProgress],
+  );
+
+  const saveTtsProgress = useCallback(
+    (stationId: string, blockIndex: number) => {
+      persist({
+        ...progress,
+        ttsProgress: { ...progress.ttsProgress, [stationId]: blockIndex },
+      });
+    },
+    [persist, progress],
+  );
+
+  const clearTtsProgress = useCallback(
+    (stationId: string) => {
+      const next = { ...progress.ttsProgress };
+      delete next[stationId];
+      persist({ ...progress, ttsProgress: next });
+    },
+    [persist, progress],
+  );
+
   const value = useMemo<StoreCtx>(
     () => ({
       ready,
@@ -286,6 +321,9 @@ export function YouthPathProvider({
       saveNote,
       savePhoto,
       clearPhoto,
+      getTtsProgress,
+      saveTtsProgress,
+      clearTtsProgress,
     }),
     [
       ready,
@@ -302,6 +340,9 @@ export function YouthPathProvider({
       saveNote,
       savePhoto,
       clearPhoto,
+      getTtsProgress,
+      saveTtsProgress,
+      clearTtsProgress,
     ],
   );
 

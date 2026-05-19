@@ -139,14 +139,6 @@ const taleStyles = StyleSheet.create({
   wordHighlight: { backgroundColor: "#F59E0B", borderRadius: 3 },
 });
 
-function blocksToPlainText(blocks: TaleBlock[]): string {
-  return blocks
-    .filter((b): b is Extract<TaleBlock, { kind: "para" | "italic" }> =>
-      b.kind === "para" || b.kind === "italic"
-    )
-    .map((b) => b.text)
-    .join("\n\n");
-}
 
 type TtsSpeed = "slow" | "normal" | "fast";
 const TTS_SPEED_RATES: Record<TtsSpeed, number> = { slow: 0.7, normal: 0.92, fast: 1.3 };
@@ -248,6 +240,58 @@ const ttsStyles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 0.3,
   },
+  resumeHint: {
+    fontSize: 11,
+    letterSpacing: 0.5,
+    marginBottom: 12,
+    marginTop: -8,
+  },
+  settingsToggleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 14,
+  },
+  settingsPanel: {
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    gap: 10,
+  },
+  settingsLabel: {
+    fontSize: 10,
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  speedRow: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  speedChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  speedChipLabel: {
+    fontSize: 11,
+    letterSpacing: 0.5,
+  },
+  voiceScroll: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  voiceChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+    maxWidth: 140,
+  },
+  voiceChipLabel: {
+    fontSize: 11,
+    letterSpacing: 0.3,
+  },
 });
 
 export default function StoryStationScreen() {
@@ -272,6 +316,9 @@ export default function StoryStationScreen() {
     saveNote,
     savePhoto,
     clearPhoto,
+    getTtsProgress,
+    saveTtsProgress,
+    clearTtsProgress,
   } = useYouthPath();
 
   const station = useMemo(() => getYouthStation(id), [id]);
@@ -325,6 +372,18 @@ export default function StoryStationScreen() {
 
   // Tale expansion state
   const [taleExpanded, setTaleExpanded] = useState(false);
+
+  // Speakable blocks (paragraphs + italic, no section breaks)
+  const speakableBlocks = useMemo(
+    () =>
+      tale
+        ? tale.body.filter(
+            (b): b is Extract<typeof b, { kind: "para" | "italic" }> =>
+              b.kind === "para" || b.kind === "italic",
+          )
+        : [],
+    [tale],
+  );
 
   // Read-aloud (TTS) state
   const [ttsPlaying, setTtsPlaying] = useState(false);
@@ -380,48 +439,91 @@ export default function StoryStationScreen() {
     }
   }, []);
 
+  // Refs used in unmount cleanup — must not be stale
+  const stationIdRef = useRef(station?.id ?? "");
+  useEffect(() => { stationIdRef.current = station?.id ?? ""; }, [station?.id]);
+  const ttsBlockIdxRef = useRef(0);   // which speakable block is currently playing
+  const ttsDoneRef = useRef(false);    // true when playback ran to the very end
+  const saveTtsProgressRef = useRef(saveTtsProgress);
+  useEffect(() => { saveTtsProgressRef.current = saveTtsProgress; }, [saveTtsProgress]);
+  const clearTtsProgressRef = useRef(clearTtsProgress);
+  useEffect(() => { clearTtsProgressRef.current = clearTtsProgress; }, [clearTtsProgress]);
+
+  // True once speech actually starts in the current session; prevents
+  // the phase-change effect (which calls ttsStop on mount) from
+  // clearing previously-saved progress before the user has done anything.
+  const ttsSessionActiveRef = useRef(false);
+
+  // Mutable ref so the recursive callback always sees the latest blocks list
+  const speakBlockRef = useRef<(idx: number) => void>(() => {});
+  useEffect(() => {
+    speakBlockRef.current = (idx: number) => {
+      const blocks = speakableBlocks;
+      if (idx >= blocks.length) {
+        // Finished the whole tale — clear saved position
+        ttsDoneRef.current = true;
+        ttsBlockIdxRef.current = 0;
+        ttsSessionActiveRef.current = false;
+        setTtsPlaying(false);
+        setTtsPaused(false);
+        const sid = stationIdRef.current;
+        if (sid) clearTtsProgressRef.current(sid);
+        return;
+      }
+      ttsBlockIdxRef.current = idx;
+      const opts: Speech.SpeechOptions = {
+        onStart: () => { ttsSessionActiveRef.current = true; setTtsPlaying(true); setTtsPaused(false); },
+        onDone: () => { speakBlockRef.current(idx + 1); },
+        onStopped: () => { setTtsPlaying(false); setTtsPaused(false); },
+        onError: () => { setTtsPlaying(false); setTtsPaused(false); },
+        rate: TTS_SPEED_RATES[ttsSpeedRef.current],
+      };
+      if (ttsVoiceRef.current) opts.voice = ttsVoiceRef.current;
+      Speech.speak(blocks[idx].text, opts);
+    };
+  }, [speakableBlocks]);
+
   const ttsStop = useCallback(() => {
     Speech.stop();
+    // Only sync progress when a real speech session was started this visit.
+    // This guards against the initial-mount phase-change effect firing ttsStop
+    // before any speaking has occurred and wiping the saved position.
+    if (ttsSessionActiveRef.current) {
+      const sid = stationIdRef.current;
+      const idx = ttsBlockIdxRef.current;
+      if (sid && !ttsDoneRef.current) {
+        if (idx > 0) {
+          saveTtsProgressRef.current(sid, idx);
+        } else {
+          clearTtsProgressRef.current(sid);
+        }
+      }
+      ttsSessionActiveRef.current = false;
+    }
     setTtsPlaying(false);
     setTtsPaused(false);
     setCurrentWordIdx(null);
   }, []);
 
-  const ttsSpeak = useCallback(() => {
-    if (!tale) return;
-    const text = blocksToPlainText(tale.body);
-    // Pre-compute char positions of every word for boundary mapping
-    const wordPositions = buildWordPositions(text);
-    ttsStop();
-    const opts: Speech.SpeechOptions = {
-      onStart: () => { setTtsPlaying(true); setTtsPaused(false); },
-      onDone: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
-      onStopped: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
-      onError: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
-      // onBoundary fires on native iOS/Android; gracefully absent on web
-      onBoundary: Platform.OS !== "web"
-        ? ({ charIndex }: { charIndex: number }) => {
-            // Binary search: find the word whose start is <= charIndex
-            let lo = 0;
-            let hi = wordPositions.length - 1;
-            let idx = 0;
-            while (lo <= hi) {
-              const mid = (lo + hi) >> 1;
-              if (wordPositions[mid] <= charIndex) {
-                idx = mid;
-                lo = mid + 1;
-              } else {
-                hi = mid - 1;
-              }
-            }
-            setCurrentWordIdx(idx);
-          }
-        : undefined,
-      rate: TTS_SPEED_RATES[ttsSpeed],
-    };
-    if (ttsVoice) opts.voice = ttsVoice;
-    Speech.speak(text, opts);
-  }, [tale, ttsStop, ttsSpeed, ttsVoice]);
+  const ttsSpeakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const ttsSpeak = useCallback((startFrom = 0) => {
+    Speech.stop();
+    if (ttsSpeakTimerRef.current !== null) {
+      clearTimeout(ttsSpeakTimerRef.current);
+      ttsSpeakTimerRef.current = null;
+    }
+    ttsDoneRef.current = false;
+    ttsBlockIdxRef.current = startFrom;
+    setTtsPlaying(true);
+    setTtsPaused(false);
+    setCurrentWordIdx(null);
+    // Small delay so stop() clears before the next speak() call
+    ttsSpeakTimerRef.current = setTimeout(() => {
+      ttsSpeakTimerRef.current = null;
+      speakBlockRef.current(startFrom);
+    }, 50);
+  }, []);
 
   const ttsPause = useCallback(() => {
     Speech.pause();
@@ -433,8 +535,30 @@ export default function StoryStationScreen() {
     setTtsPaused(false);
   }, []);
 
-  // Stop TTS when leaving the screen or phase changes
-  useEffect(() => () => { Speech.stop(); }, []);
+  // Save progress when leaving the screen mid-read; stop TTS on unmount
+  useEffect(() => {
+    return () => {
+      Speech.stop();
+      if (ttsSpeakTimerRef.current !== null) {
+        clearTimeout(ttsSpeakTimerRef.current);
+        ttsSpeakTimerRef.current = null;
+      }
+      const sid = stationIdRef.current;
+      const idx = ttsBlockIdxRef.current;
+      if (!sid) return;
+      if (ttsDoneRef.current) return;
+      if (idx > 0) {
+        // Save block position so child can continue where they left off
+        saveTtsProgressRef.current(sid, idx);
+      } else {
+        // They left at (or restarted to) the very beginning — clear any
+        // stale saved position so "Continue" does not prompt incorrectly
+        clearTtsProgressRef.current(sid);
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Stop TTS when phase changes (e.g. child moves to the writing section)
   useEffect(() => { ttsStop(); }, [phase, ttsStop]);
 
   // Trail memory state (note + photo)
@@ -907,50 +1031,87 @@ export default function StoryStationScreen() {
                 </Text>
                 <View style={[styles.taleRule, { backgroundColor: c.rule }]} />
                 {/* ── Read-aloud controls ─────────────────────────────── */}
-                <View style={ttsStyles.row}>
-                  {!ttsPlaying ? (
-                    <Pressable
-                      onPress={ttsSpeak}
-                      style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
-                      accessibilityLabel="Read this tale aloud"
-                    >
-                      <Ionicons name="volume-high-outline" size={16} color={c.background} />
-                      <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>
-                        Read to me
-                      </Text>
-                    </Pressable>
-                  ) : (
+                {(() => {
+                  const savedBlock = station ? getTtsProgress(station.id) : 0;
+                  return (
                     <>
-                      {ttsPaused ? (
-                        <Pressable
-                          onPress={ttsResume}
-                          style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
-                          accessibilityLabel="Resume reading"
-                        >
-                          <Ionicons name="play-outline" size={16} color={c.background} />
-                          <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Resume</Text>
-                        </Pressable>
-                      ) : (
-                        <Pressable
-                          onPress={ttsPause}
-                          style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
-                          accessibilityLabel="Pause reading"
-                        >
-                          <Ionicons name="pause-outline" size={16} color={c.background} />
-                          <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Pause</Text>
-                        </Pressable>
-                      )}
-                      <Pressable
-                        onPress={ttsStop}
-                        style={({ pressed }) => [ttsStyles.stopBtn, { borderColor: c.rule, opacity: pressed ? 0.6 : 1 }]}
-                        accessibilityLabel="Stop reading"
-                      >
-                        <Ionicons name="stop-outline" size={16} color={c.mutedForeground} />
-                        <Text style={[ttsStyles.btnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>Stop</Text>
-                      </Pressable>
+                      <View style={ttsStyles.row}>
+                        {!ttsPlaying ? (
+                          savedBlock > 0 ? (
+                            <>
+                              <Pressable
+                                onPress={() => ttsSpeak(savedBlock)}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                accessibilityLabel="Continue reading from where you left off"
+                              >
+                                <Ionicons name="play-forward-outline" size={16} color={c.background} />
+                                <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>
+                                  Continue
+                                </Text>
+                              </Pressable>
+                              <Pressable
+                                onPress={() => ttsSpeak(0)}
+                                style={({ pressed }) => [ttsStyles.stopBtn, { borderColor: c.rule, opacity: pressed ? 0.6 : 1 }]}
+                                accessibilityLabel="Start reading from the beginning"
+                              >
+                                <Ionicons name="refresh-outline" size={16} color={c.mutedForeground} />
+                                <Text style={[ttsStyles.btnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                                  From the start
+                                </Text>
+                              </Pressable>
+                            </>
+                          ) : (
+                            <Pressable
+                              onPress={() => ttsSpeak(0)}
+                              style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                              accessibilityLabel="Read this tale aloud"
+                            >
+                              <Ionicons name="volume-high-outline" size={16} color={c.background} />
+                              <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>
+                                Read to me
+                              </Text>
+                            </Pressable>
+                          )
+                        ) : (
+                          <>
+                            {ttsPaused ? (
+                              <Pressable
+                                onPress={ttsResume}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                accessibilityLabel="Resume reading"
+                              >
+                                <Ionicons name="play-outline" size={16} color={c.background} />
+                                <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Resume</Text>
+                              </Pressable>
+                            ) : (
+                              <Pressable
+                                onPress={ttsPause}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                accessibilityLabel="Pause reading"
+                              >
+                                <Ionicons name="pause-outline" size={16} color={c.background} />
+                                <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Pause</Text>
+                              </Pressable>
+                            )}
+                            <Pressable
+                              onPress={ttsStop}
+                              style={({ pressed }) => [ttsStyles.stopBtn, { borderColor: c.rule, opacity: pressed ? 0.6 : 1 }]}
+                              accessibilityLabel="Stop reading"
+                            >
+                              <Ionicons name="stop-outline" size={16} color={c.mutedForeground} />
+                              <Text style={[ttsStyles.btnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>Stop</Text>
+                            </Pressable>
+                          </>
+                        )}
+                      </View>
+                      {!ttsPlaying && savedBlock > 0 ? (
+                        <Text style={[ttsStyles.resumeHint, { color: c.mutedForeground, fontFamily: MONO }]}>
+                          Continue from where you left off
+                        </Text>
+                      ) : null}
                     </>
-                  )}
-                </View>
+                  );
+                })()}
                 {/* ── Reading settings toggle ──────────────────────────── */}
                 <Pressable
                   onPress={() => setShowVoiceSettings((v) => !v)}
