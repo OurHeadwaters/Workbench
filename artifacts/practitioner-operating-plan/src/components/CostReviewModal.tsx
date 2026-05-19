@@ -44,6 +44,7 @@ import {
   type Zone3InputDef,
 } from "@/lib/stonemasonOverrides";
 import { fmt } from "@/data/budgetScenarios";
+import { computeIncomeYears, computeRunwayQuarters } from "@/data/stonemason";
 
 /** Local cost-item shape — derived from phases, used for the review/edits UI */
 export interface CostItem {
@@ -1116,9 +1117,10 @@ interface Zone3RowProps {
   override: Zone3Override | null;
   onSave: (key: string, value: number, note: string) => void;
   onClear: (key: string) => void;
+  onLiveChange: (key: string, value: number) => void;
 }
 
-function Zone3Row({ def, override, onSave, onClear }: Zone3RowProps) {
+function Zone3Row({ def, override, onSave, onClear, onLiveChange }: Zone3RowProps) {
   const [value, setValue] = useState<string>(
     override ? String(override.value) : String(def.defaultValue)
   );
@@ -1147,6 +1149,7 @@ function Zone3Row({ def, override, onSave, onClear }: Zone3RowProps) {
     setNote("");
     setDirty(false);
     onClear(def.key);
+    onLiveChange(def.key, def.defaultValue);
   };
 
   return (
@@ -1178,7 +1181,12 @@ function Zone3Row({ def, override, onSave, onClear }: Zone3RowProps) {
           min={def.min}
           max={def.max}
           step={def.step ?? 1}
-          onChange={(e) => { setValue(e.target.value); setDirty(true); }}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setDirty(true);
+            const parsed = parseFloat(e.target.value);
+            if (!isNaN(parsed)) onLiveChange(def.key, parsed);
+          }}
           style={{
             width: "100%",
             padding: "3pt 5pt",
@@ -1268,14 +1276,156 @@ const ZONE3_GROUP_LABELS: Record<string, string> = {
   year3: "Year 3 assumptions",
 };
 
+function fmtK(n: number): string {
+  if (n >= 1_000) return "$" + Math.round(n / 1_000) + "k";
+  return "$" + Math.round(n).toLocaleString("en-CA");
+}
+
 function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
   const groups = ["rates", "year1", "year2", "year3"] as const;
   const overrideCount = Object.values(overrideMap).filter(
     (ov) => ov.value !== ov.defaultValue
   ).length;
 
+  // Live values mirror the saved overrides but update on every keystroke
+  const [liveValues, setLiveValues] = useState<Record<string, number>>(() => {
+    const base = { ...ZONE3_DEFAULTS };
+    for (const [k, ov] of Object.entries(overrideMap)) base[k] = ov.value;
+    return base;
+  });
+
+  // Resync when overrideMap changes (e.g. Reset All, or external save).
+  // Each Zone3Row owns its own input state, so we simply write the saved
+  // overrides back to liveValues here — the row will fire onLiveChange
+  // again if the user continues typing.
+  useEffect(() => {
+    const next = { ...ZONE3_DEFAULTS };
+    for (const [k, ov] of Object.entries(overrideMap)) next[k] = ov.value;
+    setLiveValues(next);
+  }, [overrideMap]);
+
+  const handleLiveChange = useCallback((key: string, value: number) => {
+    setLiveValues((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  const liveYears   = computeIncomeYears(liveValues);
+  const liveRunway  = computeRunwayQuarters(liveValues);
+  // Nearest current-or-future quarter as the runway headline.
+  // Quarter IDs are "q1-2026" … "q4-2027" (1-based), so add 1 to the
+  // 0-based Math.floor(month/3) to match.
+  const now = new Date();
+  const nowYM = now.getFullYear() * 10 + (Math.floor(now.getMonth() / 3) + 1);
+  const nextQ = liveRunway.find((q) => {
+    const [qPart, yr] = q.id.split("-");
+    const qNum = parseInt(qPart.replace("q", ""), 10);
+    const yrNum = parseInt(yr, 10);
+    return yrNum * 10 + qNum >= nowYM;
+  }) ?? liveRunway[liveRunway.length - 1];
+
   return (
     <div>
+      {/* ── Live income summary panel ── */}
+      <div
+        style={{
+          background: DARK,
+          borderRadius: "4pt",
+          padding: "12pt 16pt",
+          marginBottom: "14pt",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+            fontSize: "6.5pt",
+            fontWeight: 700,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: AMBER,
+            marginBottom: "10pt",
+          }}
+        >
+          Projected income — updates as you type
+        </div>
+        <div style={{ display: "flex", gap: "0", marginBottom: "10pt" }}>
+          {liveYears.map((yr, i) => (
+            <div
+              key={yr.label}
+              style={{
+                flex: 1,
+                paddingRight: i < 2 ? "16pt" : "0",
+                borderRight: i < 2 ? `1pt solid rgba(255,255,255,0.12)` : "none",
+                marginRight: i < 2 ? "16pt" : "0",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "7pt",
+                  fontWeight: 600,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.5)",
+                  marginBottom: "3pt",
+                }}
+              >
+                {yr.label}
+              </div>
+              <div
+                style={{
+                  fontFamily: "Fraunces, Georgia, serif",
+                  fontSize: "17pt",
+                  fontWeight: 700,
+                  color: CREAM,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {fmtK(yr.low)}–{fmtK(yr.high)}
+              </div>
+              <div style={{ fontSize: "7pt", color: "rgba(255,255,255,0.45)", marginTop: "2pt" }}>
+                low–high range
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Quarterly headline */}
+        <div
+          style={{
+            borderTop: "1pt solid rgba(255,255,255,0.1)",
+            paddingTop: "8pt",
+            display: "flex",
+            alignItems: "baseline",
+            gap: "8pt",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "6.5pt",
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.4)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {nextQ.label} target
+          </div>
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "9pt",
+              fontWeight: 700,
+              color: AMBER,
+            }}
+          >
+            {fmtK(nextQ.revenueMin)}–{fmtK(nextQ.revenueMax)}
+          </div>
+          <div style={{ fontSize: "7pt", color: "rgba(255,255,255,0.35)" }}>
+            {nextQ.focus}
+          </div>
+        </div>
+      </div>
+
       <div
         style={{
           background: "rgba(31,61,46,0.05)",
@@ -1289,10 +1439,10 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
         }}
       >
         <strong style={{ color: DARK }}>Zone 3 income assumptions:</strong>{" "}
-        Adjust the driver inputs below and the{" "}
+        Adjust the driver inputs below — the summary above updates on every keystroke.
+        Hit <strong>Save</strong> on any row to persist the value; the{" "}
         <strong>Income Projections &amp; Runway</strong> and{" "}
-        <strong>Pricing</strong> slides will update live when you return to them.
-        Overrides are saved to your browser and persist across sessions.
+        <strong>Pricing</strong> slides will reflect saved values when you return to them.
       </div>
 
       {groups.map((group) => {
@@ -1332,6 +1482,7 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
                     override={overrideMap[def.key] ?? null}
                     onSave={onSave}
                     onClear={onClear}
+                    onLiveChange={handleLiveChange}
                   />
                 ))}
               </tbody>
