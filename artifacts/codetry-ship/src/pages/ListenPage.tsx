@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { QRCodeSVG } from "qrcode.react";
-import { ApiError, postSignOn } from "@/lib/api";
+import { ApiError, postSignOn, postIntake } from "@/lib/api";
 
 interface FormState {
   name: string;
@@ -38,11 +38,56 @@ const BRIDGE_SOURCE: "youtube" | "tsp" | null =
     ? "tsp"
     : null;
 
+interface CoopFormState {
+  name: string;
+  email: string;
+  community: string;
+  whatTheyNeed: string;
+}
+
+const EMPTY_COOP: CoopFormState = {
+  name: "",
+  email: "",
+  community: "",
+  whatTheyNeed: "",
+};
+
 export function ListenPage() {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmedName, setConfirmedName] = useState<string | null>(null);
+
+  const [coopForm, setCoopForm] = useState<CoopFormState>(EMPTY_COOP);
+  const [coopSubmitting, setCoopSubmitting] = useState(false);
+  const [coopError, setCoopError] = useState<string | null>(null);
+  const [coopConfirmedName, setCoopConfirmedName] = useState<string | null>(null);
+
+  const onCoopSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (coopSubmitting) return;
+    setCoopError(null);
+    setCoopSubmitting(true);
+    try {
+      const res = await postIntake({
+        name: coopForm.name.trim(),
+        email: coopForm.email.trim(),
+        community: coopForm.community.trim(),
+        role: "co-op-builder",
+        whatTheyNeed: coopForm.whatTheyNeed.trim() || "General inquiry from /listen",
+      });
+      setCoopConfirmedName(res.name);
+      setCoopForm(EMPTY_COOP);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setCoopError(err.message);
+      } else {
+        setCoopError("Could not reach the server just now. Try again in a moment.");
+      }
+    } finally {
+      setCoopSubmitting(false);
+    }
+  };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -705,6 +750,127 @@ export function ListenPage() {
               </p>
             </form>
           )}
+        </section>
+
+        {/* ---- co-op builder CTA ---- */}
+        <section className="mt-10 sm:mt-12 print:hidden" data-testid="section-coop-builder">
+          <div
+            className="rounded-sm border px-6 py-6 space-y-5"
+            style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
+          >
+            <div>
+              <p
+                className="font-mono text-[11px] uppercase tracking-[0.22em] mb-3"
+                style={{ color: "hsl(var(--accent))" }}
+              >
+                building this in your community?
+              </p>
+              <h2 className="font-serif text-xl sm:text-2xl leading-snug">
+                The platform that runs 807 Food Co-op is available to other co-ops.
+              </h2>
+              <p className="mt-3 font-serif text-base leading-relaxed text-foreground/75">
+                If you&rsquo;re organising something similar — a buying club, a
+                food hub, a producer co-op — Headwaters can set up and run the
+                same operating stack for your community. Leave your details and
+                we&rsquo;ll have a real conversation about whether it fits.
+              </p>
+            </div>
+
+            {coopConfirmedName ? (
+              <div
+                role="status"
+                aria-live="polite"
+                data-testid="coop-confirmation"
+                className="space-y-3"
+              >
+                <p
+                  className="font-mono text-[11px] uppercase tracking-[0.22em]"
+                  style={{ color: "hsl(var(--accent))" }}
+                >
+                  received
+                </p>
+                <p className="font-serif text-lg leading-snug">
+                  Got it, {coopConfirmedName}. We&rsquo;ll be in touch.
+                </p>
+                <p className="font-serif text-sm text-foreground/65">
+                  We saved what you wrote. Expect a short note to your inbox — then quiet until there&rsquo;s a reason to write.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setCoopConfirmedName(null)}
+                  className="font-mono text-[11px] uppercase tracking-[0.18em] underline underline-offset-4 hover:opacity-80"
+                  data-testid="coop-reset"
+                >
+                  submit another inquiry
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={onCoopSubmit}
+                className="space-y-4"
+                data-testid="form-coop-builder"
+                noValidate
+              >
+                <Field
+                  id="coop-name"
+                  label="Your name"
+                  required
+                  value={coopForm.name}
+                  onChange={(v) => setCoopForm({ ...coopForm, name: v })}
+                  testId="coop-input-name"
+                />
+                <Field
+                  id="coop-email"
+                  label="Email"
+                  required
+                  type="email"
+                  value={coopForm.email}
+                  onChange={(v) => setCoopForm({ ...coopForm, email: v })}
+                  testId="coop-input-email"
+                />
+                <Field
+                  id="coop-community"
+                  label="Community or region"
+                  required
+                  value={coopForm.community}
+                  onChange={(v) => setCoopForm({ ...coopForm, community: v })}
+                  testId="coop-input-community"
+                  hint="Where are you trying to build?"
+                />
+                <FieldArea
+                  id="coop-need"
+                  label="What are you trying to build or solve? (optional)"
+                  value={coopForm.whatTheyNeed}
+                  onChange={(v) => setCoopForm({ ...coopForm, whatTheyNeed: v })}
+                  testId="coop-input-need"
+                  hint="A sentence or two is plenty. Early stage is fine."
+                  rows={3}
+                />
+
+                {coopError ? (
+                  <p
+                    role="alert"
+                    className="font-sans text-sm text-destructive"
+                    data-testid="coop-error"
+                  >
+                    {coopError}
+                  </p>
+                ) : null}
+
+                <div className="flex flex-wrap items-center gap-6 pt-1">
+                  <button
+                    type="submit"
+                    disabled={coopSubmitting}
+                    className="inline-flex items-center justify-center px-7 py-3 rounded-sm font-sans text-sm font-medium tracking-wide bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
+                    data-testid="button-coop-submit"
+                  >
+                    {coopSubmitting ? "Sending…" : "Get in touch →"}
+                  </button>
+                  <p className="signoff">— headwaters</p>
+                </div>
+              </form>
+            )}
+          </div>
         </section>
 
         {/* ---- shareable / printable footer block ---- */}
