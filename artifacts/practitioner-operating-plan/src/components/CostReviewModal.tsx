@@ -658,6 +658,7 @@ function HistoryPanel({ history }: { history: HistoryEntry[] }) {
 interface EditsViewProps {
   edits: CostEdit[];
   customLines: CustomLine[];
+  zone3Overrides: Zone3Override[];
   showSkipped: boolean;
   onToggleSkipped: () => void;
   onClearAll: () => void;
@@ -666,6 +667,7 @@ interface EditsViewProps {
 function EditsView({
   edits,
   customLines,
+  zone3Overrides,
   showSkipped,
   onToggleSkipped,
   onClearAll,
@@ -681,12 +683,16 @@ function EditsView({
     });
   };
 
-  const valueEdits   = edits.filter((e) => !e.skipped && e.delta !== 0);
-  const skippedEdits = edits.filter((e) => e.skipped);
-  const customEdits  = customLinesToEdits(customLines);
-  const totalDelta   = valueEdits.reduce((sum, e) => sum + e.delta, 0) +
-                       customEdits.reduce((sum, e) => sum + e.delta, 0);
-  const hasContent   = valueEdits.length > 0 || skippedEdits.length > 0 || customEdits.length > 0;
+  const valueEdits      = edits.filter((e) => !e.skipped && e.delta !== 0);
+  const skippedEdits    = edits.filter((e) => e.skipped);
+  const customEdits     = customLinesToEdits(customLines);
+  const zone3Edited     = zone3Overrides.filter((ov) => {
+    const def = ZONE3_INPUTS.find((d) => d.key === ov.key);
+    return def !== undefined && ov.value !== def.defaultValue;
+  });
+  const totalDelta      = valueEdits.reduce((sum, e) => sum + e.delta, 0) +
+                          customEdits.reduce((sum, e) => sum + e.delta, 0);
+  const hasContent      = valueEdits.length > 0 || skippedEdits.length > 0 || customEdits.length > 0 || zone3Edited.length > 0;
 
   if (!hasContent) {
     return (
@@ -1004,6 +1010,94 @@ function EditsView({
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Zone 3 assumptions */}
+      {zone3Edited.length > 0 && (
+        <div style={{ marginBottom: "16pt" }}>
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+              fontSize: "7.5pt",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: AMBER,
+              marginBottom: "5pt",
+            }}
+          >
+            Zone 3 assumptions — {zone3Edited.length} input{zone3Edited.length !== 1 ? "s" : ""} overridden from planning defaults
+          </div>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "8.5pt",
+              tableLayout: "fixed",
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  borderBottom: `1.5pt solid ${RULE}`,
+                  color: MUTED,
+                  fontWeight: 600,
+                  fontSize: "8pt",
+                }}
+              >
+                <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "30%" }}>Assumption</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "16%" }}>Plan default</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "16%" }}>Your value</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "right", width: "14%" }}>Δ</th>
+                <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "24%" }}>Last edited</th>
+              </tr>
+            </thead>
+            <tbody>
+              {zone3Edited.map((ov) => {
+                const def   = ZONE3_INPUTS.find((d) => d.key === ov.key)!;
+                const delta = ov.value - def.defaultValue;
+                const sign  = delta > 0 ? "+" : "−";
+                const absDelta = Math.abs(delta).toLocaleString("en-CA");
+                return (
+                  <tr key={ov.key} style={{ borderBottom: `0.5pt solid ${RULE}`, background: "rgba(42,107,62,0.05)" }}>
+                    <td style={{ padding: "4pt 4pt", fontWeight: 600, verticalAlign: "top" }}>
+                      {def.label}
+                      <div style={{ fontSize: "7pt", color: MUTED, fontWeight: 400, marginTop: "1pt" }}>
+                        {def.description}
+                      </div>
+                    </td>
+                    <td style={{ padding: "4pt 4pt", textAlign: "right", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                      {def.defaultValue.toLocaleString("en-CA")}
+                      <div style={{ fontSize: "7pt", color: MUTED }}>{def.unit}</div>
+                    </td>
+                    <td style={{ padding: "4pt 4pt", textAlign: "right", fontWeight: 700, fontFamily: "'IBM Plex Mono', ui-monospace, monospace", verticalAlign: "top" }}>
+                      {ov.value.toLocaleString("en-CA")}
+                      <div style={{ fontSize: "7pt", color: MUTED }}>{def.unit}</div>
+                    </td>
+                    <td
+                      style={{
+                        padding: "4pt 4pt",
+                        textAlign: "right",
+                        fontWeight: 700,
+                        fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                        color: delta > 0 ? GREEN : RED_DK,
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {delta === 0 ? "—" : `${sign}${absDelta}`}
+                      {delta !== 0 && (
+                        <div style={{ fontSize: "7pt", color: MUTED, fontWeight: 400 }}>{def.unit}</div>
+                      )}
+                    </td>
+                    <td style={{ padding: "4pt 4pt", fontSize: "7pt", color: MUTED, verticalAlign: "top" }}>
+                      {fmtDate(ov.editedAt)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -1900,6 +1994,7 @@ export default function CostReviewModal() {
               <EditsView
                 edits={editList}
                 customLines={customLines}
+                zone3Overrides={Object.values(zone3Map)}
                 showSkipped={showSkipped}
                 onToggleSkipped={() => setShowSkipped((v) => !v)}
                 onClearAll={handleClearAll}
