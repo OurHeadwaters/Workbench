@@ -318,13 +318,6 @@ const outreachPieces = [
     desc: "Complete outreach packet for Deer Lake — eight pages in one PDF: founding community declaration, intro letter, Why Deer Lake Why Now, Youth Odyssey, Economic Engine one-pager, funding brief, pilot proposal, and Chief Brief. Letter size (8.5×11).",
     icon: "📦",
   },
-  {
-    href: "/deer-lake-chief-brief",
-    title: "Chief Brief — Deer Lake First Nation",
-    label: "Deer Lake",
-    desc: "Plain-language one-read for the Chief — what a community store is, the 807 proof, youth opportunity, the 8-week trial, and the ask. Letter size (8.5×11).",
-    icon: "📜",
-  },
 ];
 
 export default function Index() {
