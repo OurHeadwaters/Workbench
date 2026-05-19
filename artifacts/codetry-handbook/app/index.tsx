@@ -343,21 +343,21 @@ export default function FrontPage() {
               sub="Name your six zones in your own vocabulary"
               onPress={() => router.push("/constellation-builder")}
               c={c}
-              accent={RUST}
+              accent={EVERGREEN}
             />
             <ToolRow
               label="Author's Desk"
               sub="Your constellation, in your words"
               onPress={() => router.push("/author")}
               c={c}
-              accent={RUST}
+              accent={EVERGREEN}
             />
             <ToolRow
               label={glossaryTerms.length > 0 ? `Glossary \u00b7 ${glossaryTerms.length} saved` : "Glossary"}
               sub="All formally defined terms, searchable"
               onPress={() => router.push("/glossary")}
               c={c}
-              accent={RUST}
+              accent={EVERGREEN}
             />
 
             {/* THE BOOK */}
