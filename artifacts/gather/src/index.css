@@ -1,0 +1,72 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-cream: #FAF6F0;
+  --color-charcoal: #2E2620;
+  --color-terracotta: #C7613B;
+  --color-moss: #4A6741;
+  --color-sage: #5C7A5C;
+  --color-cream-dark: #F0E9DF;
+  --color-charcoal-light: #4A3F38;
+  --color-terracotta-light: #E8896A;
+  --color-moss-light: #6B9060;
+  --color-warm-white: #FFFDF9;
+  --color-border-warm: #E4D9CC;
+  --color-text-muted: #7A6B60;
+}
+
+:root {
+  --background: #FAF6F0;
+  --foreground: #2E2620;
+  --border: #E4D9CC;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #FAF6F0;
+  color: #2E2620;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+}
+
+/* Minimum 44px tap targets */
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.tap-target {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4D9CC;
+  border-radius: 2px;
+}
