@@ -32,7 +32,7 @@ const SEC = {
   week:    { header: "#7A4E2D", label: "THIS WEEK",       note: "Weekly rhythm" },
   year:    { header: "#1f3d2e", label: "THE YEAR",        note: "2026 full plan" },
   money:   { header: "#1A5FA8", label: "MONEY",           note: "Salt, costs, and numbers" },
-  hiring:  { header: "#3D4A5C", label: "HIRING & TOOLS",  note: "Templates, scripts, and trackers" },
+  hiring:  { header: "#3D4A5C", label: "SUBCONTRACTOR LIST",  note: "Partner organizations, templates, and trackers" },
   ref:     { header: "#5B3E8C", label: "REFERENCE",       note: "One-pager and full deck" },
   deer:    { header: "#1F5446", label: "DEER LAKE DOCS",  note: "Coaching docs for founder conversations" },
   saltbox:       { header: "#4B6070", label: "SALTBOX × GATHER ROUND", note: "Partnership & ROI strategy brief" },
@@ -81,6 +81,13 @@ const SECTIONS: ToolSection[] = [
   {
     sec: SEC.hiring,
     tools: [
+      { label: "Rockfront Family Farm",         sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
+      { label: "Superior Seasons",              sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
+      { label: "807 Food Co-op",                sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
+      { label: "GMPH",                          sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
+      { label: "Ontario Co-operatives Association", sub: "Partner organization", detail: "Subcontractor partner.", path: "#", accent: "#3D4A5C" },
+      { label: "Walls Farm",                    sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
+      { label: "Zurbriggs Farm",                sub: "Partner organization",  detail: "Subcontractor partner.",  path: "#", accent: "#3D4A5C" },
       { label: "Hiring Templates",          sub: "Job postings, onboarding checklists",               detail: "Print-ready hiring materials for every role in the plan.",                                                                  path: `${BASE}/hiring-templates`,               accent: "#3D4A5C" },
       { label: "Reference Call — Standard", sub: "8 questions · 3 calls minimum",                     detail: "One-page printable script for any hired role. Listening cues and flag legend included.",                                    path: `${BASE}/tools/reference-call`,           accent: "#3D4A5C" },
       { label: "Reference Call — Handyman", sub: "Child-safety extended · C5 is the key question",    detail: "6 standard + 5 child-safety questions. Hesitation is a no on C2, C3, and C5.",                                             path: `${BASE}/tools/reference-call-handyman`,  accent: "#b85a3e" },
