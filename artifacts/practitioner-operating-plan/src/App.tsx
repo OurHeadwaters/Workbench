@@ -22,6 +22,7 @@ import DeerLakeTalkingPoints from "./pages/DeerLakeTalkingPoints";
 import DeerLakeRoadmap from "./pages/DeerLakeRoadmap";
 import DeerLakeChiefBrief from "./pages/DeerLakeChiefBrief";
 import DailyDebrief from "./pages/DailyDebrief";
+import EveningDump from "./pages/EveningDump";
 import SaltboxGatherRound from "./pages/SaltboxGatherRound";
 import ConstellationSession from "./pages/ConstellationSession";
 
@@ -56,6 +57,7 @@ export default function App() {
       <Route path={`${BASE}/deer-lake-talking-points`} component={DeerLakeTalkingPoints} />
       <Route path={`${BASE}/deer-lake-roadmap`} component={DeerLakeRoadmap} />
       <Route path={`${BASE}/debrief`} component={DailyDebrief} />
+      <Route path={`${BASE}/debrief/evening`} component={EveningDump} />
       <Route path={`${BASE}/saltbox-gather-round`} component={SaltboxGatherRound} />
       <Route path={`${BASE}/constellation-session`} component={ConstellationSession} />
       <Route path={`${BASE}/plan`} component={PlanYear} />

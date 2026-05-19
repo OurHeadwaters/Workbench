@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import {
   getTodayWeek,
@@ -6,7 +6,10 @@ import {
   formatDateRange,
   PHASE_COLORS,
   PLAN_2026,
+  toLocalISODate,
 } from "@/data/plan2026";
+import { getMostRecentEveningDump } from "./EveningDump";
+import { setDailyThing, todayKey, loadDayThings } from "@/lib/threeThings";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -49,19 +52,20 @@ const SECTIONS: ToolSection[] = [
     sec: SEC.today,
     tools: [
       { label: "Morning Debrief",  sub: "Start here — review yesterday, write your note, move into today", detail: "Yesterday's plan, a personal notes field saved by date, your week priorities, and quick links into today. Open this first every morning.", path: `${BASE}/debrief`,      accent: "#b85a3e" },
+      { label: "Evening Dump",     sub: "Brain dump before you close the day — phone-friendly, no structure", detail: "Full-screen, open text area. No fields, no limits. Write whatever's on your mind about today's work. Saves automatically. Opens the morning brief thread for tomorrow.", path: `${BASE}/debrief/evening`, accent: "#b85a3e" },
       { label: "Today's Tasks",    sub: "Step-by-step for today's date",                                   detail: "Every task scheduled for today with AI prompts ready to copy.",                                                                  path: `${BASE}/plan/today`, accent: "#b85a3e" },
     ],
   },
   {
     sec: SEC.week,
     tools: [
-      { label: "Week Plan", sub: "Full week — Mon through Fri", detail: "All five days. Copy AI prompts, jump to any day.", path: `${BASE}/plan/week/CURRENT`, accent: "#7A4E2D" },
+      { label: "Week Plan", sub: "Full week — by category: Proposals, Print, Relationships, Admin, Build", detail: "All five working tracks. See the whole week by category — what's in each lane, what day it falls on.", path: `${BASE}/plan/week/CURRENT`, accent: "#7A4E2D" },
     ],
   },
   {
     sec: SEC.year,
     tools: [
-      { label: "Year Overview", sub: "All 52 weeks — Foundation → Pilot Execution → Year-End Audit", detail: "The full 2026 operating plan. Three phases. Every week has a theme and tasks.", path: `${BASE}/plan`, accent: "#1f3d2e" },
+      { label: "Year Overview", sub: "All phases — Pursuit → Pivot → Operating Season", detail: "The full 2026 plan. Three phases anchored to real milestones: Deer Lake proposal, 807 computing runway, AGM, Tyler's cold storage, and farmers market / print delivery.", path: `${BASE}/plan`, accent: "#1f3d2e" },
     ],
   },
   {
@@ -270,6 +274,324 @@ function filterSections(query: string): ToolSection[] {
   });
 }
 
+// ─── Pattern-matched framing ──────────────────────────────────────────────────
+
+function deriveFraming(text: string): string[] {
+  const lower = text.toLowerCase();
+  const notes: string[] = [];
+
+  if (lower.includes("deer lake") || lower.includes("chief") || lower.includes("council")) {
+    notes.push("Deer Lake is on your mind — that's the anchor deal. Protect time today to move it one concrete step forward.");
+  }
+  if (lower.includes("807") || lower.includes("computing") || lower.includes("saltbox")) {
+    notes.push("807 is your active revenue floor. Whatever else is uncertain, that relationship needs consistent attention.");
+  }
+  if (lower.includes("tyler") || lower.includes("cold storage")) {
+    notes.push("The cold storage thread is alive in your head — Tyler needs a clear next step from you, not just good intentions.");
+  }
+  if (lower.includes("print") || lower.includes("farmers market") || lower.includes("signage") || lower.includes("flyer")) {
+    notes.push("Physical work is in the mix. Print and farmers market tasks have real deadlines — don't let them slide to the end of the week.");
+  }
+  if (lower.includes("agm") || lower.includes("board") || lower.includes("meeting")) {
+    notes.push("Board and governance is on your radar. Those relationships need care, not just task management — make sure there's a human moment in there.");
+  }
+  if (lower.includes("gather round") || lower.includes("pace") || lower.includes("nan")) {
+    notes.push("Pipeline relationships are in your head. Keep outreach brief and direct — the goal is one response, not a perfect pitch.");
+  }
+  if (lower.includes("tired") || lower.includes("sleep") || lower.includes("exhausted") || lower.includes("stressed")) {
+    notes.push("You mentioned being tired or stressed. The non-negotiables are: kids, sleep, partner time. If any of those are slipping, that's the first thing to fix — not the proposals.");
+  }
+
+  // Generic fallback if nothing matched
+  if (notes.length === 0) {
+    const wordCount = text.trim().split(/\s+/).length;
+    if (wordCount > 20) {
+      notes.push("You had a lot on your mind last night. The fact that you wrote it down means you can let go of it now — it's captured.");
+    } else {
+      notes.push("Short dump last night. Sometimes the most important thing is just getting it out. What's the one thing that would make today feel complete?");
+    }
+  }
+
+  return notes.slice(0, 3);
+}
+
+function formatDumpDate(isoDate: string): string {
+  const d = new Date(isoDate + "T12:00:00");
+  const todayIso = toLocalISODate(new Date());
+  if (isoDate === todayIso) return "today";
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  if (isoDate === toLocalISODate(yesterdayDate)) return "last night";
+  return d.toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" });
+}
+
+// ─── Morning Brief Card ───────────────────────────────────────────────────────
+
+function MorningBriefCard() {
+  const [, navigate] = useLocation();
+  const [morningNote, setMorningNote] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const dump = getMostRecentEveningDump();
+
+  function handleMorningNote(e: React.FormEvent) {
+    e.preventDefault();
+    const text = morningNote.trim();
+    if (!text) return;
+    // Pre-seed today's evening dump key with the morning note
+    const today = toLocalISODate(new Date());
+    try {
+      const existing = localStorage.getItem(`evening-dump-${today}`) ?? "";
+      const combined = existing
+        ? `${existing}\n\n[Morning — ${new Date().toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" })}]: ${text}`
+        : `[Morning]: ${text}`;
+      localStorage.setItem(`evening-dump-${today}`, combined);
+    } catch { /* noop */ }
+    // Also seed the first available slot in today's Three Things
+    try {
+      const key = todayKey();
+      const slots = loadDayThings(key);
+      const emptySlot = ([0, 1, 2] as const).find((i) => slots[i] === null);
+      if (emptySlot !== undefined) {
+        setDailyThing(key, emptySlot, { text, done: false });
+      }
+    } catch { /* noop */ }
+    setSubmitted(true);
+    setMorningNote("");
+  }
+
+  // No dump yet — show the habit nudge
+  if (!dump) {
+    return (
+      <div
+        style={{
+          borderRadius: 10,
+          overflow: "hidden",
+          border: `1px solid ${T.rule}`,
+        }}
+      >
+        <div
+          style={{
+            padding: "10px 16px",
+            backgroundColor: "rgba(184,90,62,0.18)",
+            display: "flex",
+            alignItems: "baseline",
+            gap: 8,
+          }}
+        >
+          <span style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", color: T.paper }}>
+            YOUR THREAD
+          </span>
+          <span style={{ fontSize: 10, color: "rgba(244,237,224,0.6)", fontWeight: 500 }}>
+            morning brief
+          </span>
+        </div>
+        <div style={{ backgroundColor: T.paper, padding: "16px 16px 14px" }}>
+          <p style={{ margin: "0 0 10px", fontSize: 13, color: T.text, lineHeight: 1.6 }}>
+            No evening dump yet. Tonight, before you close the laptop, spend 5 minutes writing what's on your mind. Tomorrow morning it'll be waiting here.
+          </p>
+          <button
+            onClick={() => navigate(`${BASE}/debrief/evening`)}
+            style={{
+              padding: "8px 14px",
+              background: T.accent,
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: "pointer",
+              letterSpacing: "0.03em",
+            }}
+          >
+            Start tonight's dump →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const framingNotes = deriveFraming(dump.text);
+  const dumpLabel = formatDumpDate(dump.isoDate);
+
+  return (
+    <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${T.rule}` }}>
+      {/* Header */}
+      <div
+        style={{
+          padding: "10px 16px",
+          backgroundColor: "rgba(184,90,62,0.22)",
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", color: T.paper }}>
+            YOUR THREAD
+          </span>
+          <span style={{ fontSize: 10, color: "rgba(244,237,224,0.6)", fontWeight: 500 }}>
+            from {dumpLabel}
+          </span>
+        </div>
+        <button
+          onClick={() => navigate(`${BASE}/debrief/evening`)}
+          style={{
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "rgba(244,237,224,0.55)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          Add to tonight's dump →
+        </button>
+      </div>
+
+      <div style={{ backgroundColor: T.paper, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 12 }}>
+
+        {/* The user's own words */}
+        <div
+          style={{
+            borderLeft: `3px solid ${T.accent}`,
+            paddingLeft: 12,
+            paddingTop: 4,
+            paddingBottom: 4,
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontSize: 12,
+              color: T.text,
+              lineHeight: 1.7,
+              fontStyle: "italic",
+              whiteSpace: "pre-line",
+              maxHeight: 160,
+              overflow: "hidden",
+            }}
+          >
+            {dump.text.length > 480
+              ? dump.text.slice(0, 480).trimEnd() + "…"
+              : dump.text}
+          </p>
+        </div>
+
+        {/* Framing observations */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <p
+            style={{
+              margin: "0 0 4px",
+              fontSize: 9,
+              fontWeight: 900,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: T.muted,
+            }}
+          >
+            What I'm noticing about this
+          </p>
+          {framingNotes.map((note, i) => (
+            <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+              <div
+                style={{
+                  width: 3,
+                  height: 3,
+                  borderRadius: "50%",
+                  background: T.accent,
+                  flexShrink: 0,
+                  marginTop: 6,
+                }}
+              />
+              <p style={{ margin: 0, fontSize: 12, color: T.muted, lineHeight: 1.6 }}>
+                {note}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Morning check-in prompt */}
+        {!submitted ? (
+          <form onSubmit={handleMorningNote} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <label
+              style={{
+                fontSize: 9,
+                fontWeight: 900,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: T.muted,
+              }}
+            >
+              Where's your head at after a good sleep?
+            </label>
+            <div style={{ display: "flex", gap: 6 }}>
+              <input
+                type="text"
+                value={morningNote}
+                onChange={(e) => setMorningNote(e.target.value)}
+                placeholder="One line — redirect, confirm, or add something…"
+                style={{
+                  flex: 1,
+                  padding: "9px 12px",
+                  fontSize: 12,
+                  fontFamily: "var(--font-body)",
+                  color: T.text,
+                  background: "rgba(31,61,46,0.04)",
+                  border: `1.5px solid ${T.rule}`,
+                  borderRadius: 6,
+                  outline: "none",
+                }}
+              />
+              <button
+                type="submit"
+                style={{
+                  padding: "9px 14px",
+                  background: T.accent,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 6,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Lock it in
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div
+            style={{
+              padding: "10px 12px",
+              background: "rgba(31,84,70,0.07)",
+              border: "1px solid rgba(31,84,70,0.18)",
+              borderRadius: 6,
+              fontSize: 12,
+              color: "#1F5446",
+              fontWeight: 600,
+            }}
+          >
+            Good. That's your starting point for the day.{" "}
+            <button
+              onClick={() => navigate(`${BASE}/plan/today`)}
+              style={{ fontWeight: 700, color: "#1F5446", background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline", fontSize: 12 }}
+            >
+              See today's tasks →
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function LobbyPage() {
@@ -289,6 +611,10 @@ export function LobbyPage() {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
 
+  // Force re-render once on mount so MorningBriefCard reads fresh localStorage
+  const [, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", padding: "28px 16px 56px", display: "flex", flexDirection: "column", gap: 14 }}>
 
@@ -302,8 +628,11 @@ export function LobbyPage() {
         </h1>
       </div>
 
+      {/* Morning brief card — always first */}
+      {!query && <MorningBriefCard />}
+
       {/* Phase banner */}
-      {todayWeek && phaseColors && (
+      {!query && todayWeek && phaseColors && (
         <div style={{
           display: "flex", alignItems: "center", gap: 10, padding: "10px 14px",
           borderRadius: 8, backgroundColor: phaseColors.bg, flexWrap: "wrap",

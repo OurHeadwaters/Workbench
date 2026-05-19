@@ -4,6 +4,8 @@ export type Phase = "Pursuit" | "Pivot" | "Operating Season";
 
 export type ActionType = "copy-ai-prompt" | "copy-replit-task-brief";
 
+export type StepCategory = "proposals" | "print" | "relationship" | "admin" | "build";
+
 export interface StepAction {
   type: ActionType;
   label: string;
@@ -15,6 +17,7 @@ export interface Step {
   detail?: string;
   actions?: StepAction[];
   link?: { label: string; path: string };
+  category?: StepCategory;
 }
 
 export interface Day {
@@ -30,57 +33,132 @@ export interface Week {
 }
 
 // ─── Key milestone dates ──────────────────────────────────────────────────────
-// Sourced here as the plan data is the canonical home for operational deadlines.
 
-/** Bridge capital commitment deadline — "May 30 deadline" (Week 20–21 theme). */
+/** AGM — Annual General Meeting. Near-term board milestone; aim for W22. */
+export const AGM_TARGET_WEEK = 22;
+
+/** Deer Lake proposal soft decision window. */
+export const DEER_LAKE_SOFT_DEADLINE = "2026-06-15";
+
+/** Hard deadline for confirming an active operating contract. */
+export const OPERATING_CONTRACT_DEADLINE = "2026-07-31";
+
+/** 807 computing runway available. */
+export const COMPUTING_RUNWAY_807 = 12_000;
+
+/** Total startup budget. */
+export const STARTUP_BUDGET = 28_000;
+
+// ─── Backward-compat constants (used by v7.ts) ────────────────────────────────
+// These are kept for import compatibility with other data files.
+
+/** @deprecated - kept for v7.ts compat. Use DEER_LAKE_SOFT_DEADLINE instead. */
 export const BRIDGE_CAPITAL_DEADLINE = "2026-05-30";
 
-/** Hard decision date for Northern Band / Plan B trigger (Week 30 — July 31). */
+/** @deprecated - kept for v7.ts compat. Use OPERATING_CONTRACT_DEADLINE instead. */
 export const PLAN_B_HARD_DEADLINE = "2026-07-31";
 
-/** Target year for 807 Food Co-operative supply line activation. */
+/** @deprecated - kept for v7.ts compat. */
 export const SUPPLY_CHAIN_TARGET_YEAR = "2027";
 
-/**
- * Scenario A cost-basis floor — the monthly operating floor if bridge capital
- * does not land by the May 30 deadline. Senior hires are deferred at this level.
- * Referenced throughout the plan as "$48k cost-basis floor".
- */
+/** @deprecated - kept for v7.ts compat. */
 export const SCENARIO_A_COST_BASIS_MONTHLY = 48_000;
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-// Plan anchored to W20, May 18, 2026 (current week as of plan rebuild).
-// Three phases: Pursuit (W20–W26), Pivot (W27–W35), Operating Season (W36–W52).
+// ─── Phase order ─────────────────────────────────────────────────────────────
+
+export const PHASE_ORDER: Phase[] = ["Pursuit", "Pivot", "Operating Season"];
+
+// ─── Phase colours ────────────────────────────────────────────────────────────
+
+export const PHASE_COLORS: Record<Phase, { bg: string; text: string; dot: string }> = {
+  "Pursuit":          { bg: "rgba(184,90,62,0.12)",  text: "#f4ede0", dot: "#b85a3e" },
+  "Pivot":            { bg: "rgba(26,95,168,0.14)",  text: "#f4ede0", dot: "#1A5FA8" },
+  "Operating Season": { bg: "rgba(31,61,46,0.80)",   text: "#f4ede0", dot: "#a3c4a8" },
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+export function toLocalISODate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+export function formatDateRange(week: Week): string {
+  const mon = new Date(week.days[0].isoDate + "T12:00:00");
+  const fri = new Date(week.days[week.days.length - 1].isoDate + "T12:00:00");
+  const fmt = (d: Date) => d.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+  return `${fmt(mon)} – ${fmt(fri)}`;
+}
+
+export function getTodayWeek(): Week | null {
+  const today = toLocalISODate(new Date());
+  return PLAN_2026.find((w) => w.days.some((d) => d.isoDate === today)) ?? null;
+}
+
+export function getTodayDay(): { week: Week; day: Day; weekendMode?: "saturday" | "sunday" } | null {
+  const today = toLocalISODate(new Date());
+  for (const week of PLAN_2026) {
+    for (const day of week.days) {
+      if (day.isoDate === today) return { week, day };
+    }
+  }
+  // Weekend handling: Saturday → show Friday's plan, Sunday → show Monday's plan
+  const now = new Date();
+  const dow = now.getDay(); // 0=Sun, 6=Sat
+  if (dow === 6) {
+    // Saturday → find Friday
+    const fri = new Date(now);
+    fri.setDate(fri.getDate() - 1);
+    const friStr = toLocalISODate(fri);
+    for (const week of PLAN_2026) {
+      for (const day of week.days) {
+        if (day.isoDate === friStr) return { week, day, weekendMode: "saturday" };
+      }
+    }
+  } else if (dow === 0) {
+    // Sunday → find Monday
+    const mon = new Date(now);
+    mon.setDate(mon.getDate() + 1);
+    const monStr = toLocalISODate(mon);
+    for (const week of PLAN_2026) {
+      for (const day of week.days) {
+        if (day.isoDate === monStr) return { week, day, weekendMode: "sunday" };
+      }
+    }
+  }
+  return null;
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+// Plan anchored to W20, May 18, 2026.
+// Three phases:
+//   Pursuit         W20–W26  (May 18 – Jul 3)   Proposals out, AGM, print work
+//   Pivot           W27–W35  (Jul 6 – Aug 28)   Post-AGM follow-up, Tyler cold storage, pipeline
+//   Operating Season W36–W52 (Aug 31 – Dec 25)  Active contracts, seasonal rhythm
 
 export const PLAN_2026: Week[] = [
 
   // ══════════════════════════════════════════════════════════
   //  PURSUIT  W20–W26  (May 18 – Jul 3, 2026)
-  //  Northern Band pursuit / bridge capital crunch
+  //  Deer Lake is the anchor. 807 is the floor. AGM is the gate.
   // ══════════════════════════════════════════════════════════
 
   {
     isoWeek: 20,
     phase: "Pursuit",
-    theme: "Bridge capital push — May 30 deadline",
+    theme: "Set the table — Deer Lake brief, 807 check-in, evening dump habit",
     days: [
       {
         isoDate: "2026-05-18",
         steps: [
           {
-            title: "Set the week's single objective: bridge capital committed or escalated by May 30",
-            detail: "Write it on paper. Every task this week is in service of that one outcome. Clear the decks of everything that isn't bridge capital, Northern Band, or a non-negotiable family obligation.",
+            title: "Write down this week's single most important outcome",
+            detail: "On paper. Not a list — one sentence. If only one thing moves this week, what must it be? Everything else is secondary.",
+            category: "admin",
           },
           {
-            title: "Send written follow-up to bridge funder — request written commitment by May 30",
-            detail: "Clear, one-paragraph note: state the deadline, what a commitment looks like (email confirmation, wire reference, or signed term sheet), and the consequence of missing it (Scenario A cost-basis floor, senior hires deferred).",
-            actions: [
-              {
-                type: "copy-ai-prompt",
-                label: "Draft bridge funder follow-up",
-                content: "Draft a one-paragraph follow-up email to a bridge capital funder for a northern Ontario Indigenous food-systems engagement. The engagement is the Headwaters / Northern Band store project. We need written commitment of bridge funding by May 30, 2026. If the commitment doesn't land by May 30, we drop to the $48k cost-basis floor (Scenario A), defer senior hires, and run bridge capital outreach in parallel with Northern Band. Tone: direct, professional, not threatening. Show the consequence as a planning fact, not a negotiating threat. Do not use jargon or acronyms.",
-              },
-            ],
+            title: "807 check-in — confirm computing runway and current scope",
+            detail: "$12k computing runway from 807 is the floor that keeps the lights on. Confirm the current active scope, invoice status, and any upcoming work that needs scoping. 807 is the active revenue relationship — treat it with the care it deserves.",
+            category: "relationship",
           },
         ],
       },
@@ -88,24 +166,16 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-19",
         steps: [
           {
-            title: "Northern Band — confirm council calendar: is there a scheduled date before June 15?",
-            detail: "Reach through the existing channel (council liaison or band office contact). One clear question: is there a council or committee meeting between now and June 15 where the Headwaters engagement can be on the agenda?",
+            title: "Deer Lake brief — review and sharpen the one-page proposal",
+            detail: "Deer Lake is the anchor deal. The brief needs to be one page, plain language, emotionally direct. Review the current Chief Brief and confirm the 8-week trial framing is clear: what it costs, what the community controls, what the council can stop at any time.",
+            link: { label: "Open Chief Brief", path: "/deer-lake-chief-brief" },
+            category: "proposals",
           },
           {
-            title: "Review V7 financial model — confirm Phase 1 flat-fee posture and trial framing",
-            detail: "$25,000 flat fee, 8-week trial, Bobbie solo, 40 hr/wk. The trial is intentionally below cost — the entry price for a bounded first engagement. Make sure the pitch framing matches this: it's a trial-first offer, not a full-year ask.",
-            link: { label: "View V7 scenario", path: "/practitioners-guide-v2/" },
-          },
-          {
-            title: "Gather Round — send first-contact Instagram DM to Rebecca Spooner",
-            detail: "The tools are fully built as of today: QR device-to-device handoff, Legacy Pass NFT verification, Evidence Package print doc, and the Gather Round pitch doc are all live. The first-contact channel is Instagram DM (@homeschoolon) — no public business inquiry email exists. The only action is sending a 2-sentence message: a plain-language problem statement and one question. Do not pitch the credential architecture in the first message. Lead with the Legacy Pass download problem, then ask if it's worth a 20-minute call.",
-            actions: [
-              {
-                type: "copy-ai-prompt",
-                label: "Draft the Instagram DM",
-                content: "Write a 2-sentence Instagram DM from a homeschool mom who is also a developer. She is reaching out to Rebecca Spooner, founder of Gather Round Homeschool (@homeschoolon). The message should: (1) open by naming the Legacy Pass download management problem in plain language — families spending real time downloading PDFs, sorting files across devices, losing access without internet; (2) ask if it would make sense to show Rebecca a local-first tool she has built for exactly this problem. Tone: warm, peer-to-peer, not a cold pitch. No jargon. No mention of blockchain, NFTs, or XRPL in the first message. Two sentences only. She is a Canadian homeschool mom building tools for families like Gather Round's own customers — that's the common ground.",
-              },
-            ],
+            title: "Start the evening dump habit tonight",
+            detail: "The evening brain dump is a new rhythm. Tonight: open the evening dump page before you close your computer. Write for 5 minutes — anything on your mind about the day's work. No structure needed.",
+            link: { label: "Evening dump →", path: "/debrief/evening" },
+            category: "admin",
           },
         ],
       },
@@ -113,15 +183,21 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-20",
         steps: [
           {
-            title: "Prepare one-page Northern Band council brief for a May/June meeting",
-            detail: "One page, no appendices. Header: what the trial is. Body: what it costs (Phase 1 flat, Phase 2 rates), what the council can stop at any time, what the community gets. Footer: the practitioner's contact and the ask (a 30-minute meeting or a BCR date).",
+            title: "Print materials — confirm what's in the queue",
+            detail: "Farmers market materials and any other print/physical deliverables that are in progress or needed soon. Make a short list: what's done, what's in progress, what has a deadline. Don't let print work pile up into a sprint.",
+            category: "print",
+          },
+          {
+            title: "Gather Round — prepare first-contact message",
+            detail: "Gather Round is the top of the outreach pipeline. The first message goes to Rebecca Spooner (@homeschoolon on Instagram). Two sentences: name the Legacy Pass download problem, ask if a 20-minute call makes sense. No pitch, no credentials — just the problem.",
             actions: [
               {
                 type: "copy-ai-prompt",
-                label: "Draft council brief",
-                content: "Draft a one-page council brief for a northern Ontario First Nations band council. The subject is a proposed community food store engagement with Headwaters Development Services. Phase 1: 8-week trial at a $25,000 flat fee — Bobbie leads, 40 hr/wk, solo. Phase 2 (if council confirms after trial): Bobbie at $175/hr + Tyler (distribution subcontract) at $70/hr, each 160 hr/mo = $39,200/mo total billed. Council can stop at the end of Phase 1 with no penalty. The engagement runs the store on behalf of the band; the store belongs to the community. Format: heading, 3-4 short paragraphs, no bullet lists, plain language. Tone: respectful, direct, community-minded. No jargon.",
+                label: "Draft the DM",
+                content: "Write a 2-sentence Instagram DM from a homeschool mom who is also a developer. She is reaching out to Rebecca Spooner, founder of Gather Round Homeschool (@homeschoolon). Open with the Legacy Pass download management problem (families spending real time managing PDFs across devices, losing access without internet). Ask if it would make sense to show Rebecca a local-first tool she has built for exactly this. Tone: warm, peer-to-peer, not a cold pitch. No jargon. No mention of blockchain, NFTs, or XRPL. Two sentences only.",
               },
             ],
+            category: "relationship",
           },
         ],
       },
@@ -129,12 +205,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-21",
         steps: [
           {
-            title: "Gilles check-in — where does the Northern Band conversation stand from his view?",
-            detail: "Gilles is the relationship anchor. Fifteen minutes on the phone: what's his read of the council's mood? Any back-channel intel on the June calendar? Any advice on timing the council brief delivery?",
+            title: "AGM agenda — draft the key items for the board meeting",
+            detail: "AGM is the near-term board milestone. The agenda should include: financial position ($28k startup budget, $12k 807 runway), Deer Lake partnership path for board approval, and any other items requiring a board resolution. Get this into a draft form now so there's time to refine it.",
+            category: "admin",
           },
           {
-            title: "Weekly close-out — review non-negotiables: kids, sleep, partner time",
-            detail: "Write a one-paragraph honest note. Did this week breach any of the three non-negotiables? If yes, flag it. Two consecutive flagged weeks is the Plan B trigger for sole-customer dependency. One flag is information, not a crisis.",
+            title: "Tyler — confirm cold storage conversation is on the calendar",
+            detail: "Tyler's cold storage development plan is a live thread. Make sure there's a scheduled time to sit down and map out the actual plan — timeline, costs, what Tyler needs to move forward. This shouldn't stay as a background conversation much longer.",
+            category: "build",
           },
         ],
       },
@@ -142,8 +220,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-22",
         steps: [
           {
-            title: "Week 20 review: bridge capital status, Northern Band status, next actions",
-            detail: "Three columns on paper: Bridge Capital (committed / pending / no response), Northern Band (meeting confirmed / in progress / no date), Week 21 actions. File the note in /Operations. This becomes the weekly habit.",
+            title: "Week 20 close-out — three-column review",
+            detail: "Write a short note: Deer Lake (where does the brief stand?), 807 (runway confirmed?), AGM (agenda drafted?). What carried over to next week? File it somewhere you'll actually look at it.",
+            category: "admin",
           },
         ],
       },
@@ -153,22 +232,21 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 21,
     phase: "Pursuit",
-    theme: "Northern Band soft deadline approach",
+    theme: "AGM prep, print deliverables, Gather Round first contact",
     days: [
       {
         isoDate: "2026-05-25",
         steps: [
           {
-            title: "Send council brief to Northern Band liaison — request agenda placement",
-            detail: "Attach the one-pager prepared last week. Ask for a 15-minute slot on the next council or committee meeting. Frame it as information, not a sales call.",
+            title: "AGM prep — confirm board members are notified and have the agenda",
+            detail: "Send the draft agenda to board members with the meeting date confirmed. Make sure the Deer Lake partnership path item is clearly framed: this is a board approval item, not just an update.",
+            category: "admin",
           },
           {
-            title: "Bridge capital: follow-up call or written status check",
-            detail: "May 30 deadline is 5 days away. If no written commitment yet, call. Document the outcome of the call in writing.",
-          },
-          {
-            title: "Gather Round — follow up if no DM response; prepare 20-minute demo script",
-            detail: "If no response to the Instagram DM sent last Tuesday, send one light follow-up — same channel, one sentence: 'Wanted to make sure this didn't get buried — happy to share a quick demo if the timing is ever right.' Do not send more than two total messages before waiting. In parallel, prepare the 20-minute demo script for the first call if she does respond. A successful first call covers: (1) the Legacy Pass download problem restated from the family's experience; (2) a live demo of the QR device handoff — one device to another, no internet, no account; (3) the credential flow in plain language — 'your pass travels with your family, not with a login'; (4) the ask: a 90-day pilot with 5 families, flat fee, before any per-user rate conversation.",
+            title: "Deer Lake — send the brief to the right person",
+            detail: "The Chief Brief is ready. Get it into the right hands this week — not next week. One page, hand it over, ask for a 30-minute conversation.",
+            link: { label: "Chief Brief", path: "/deer-lake-chief-brief" },
+            category: "proposals",
           },
         ],
       },
@@ -176,8 +254,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-26",
         steps: [
           {
-            title: "Prepare Scenario A cost-basis transition plan — in case bridge doesn't land",
-            detail: "Scenario A: $48k cost-basis floor, defer Senior Engineer #2, Outreach, and Trainer hires. Write the one-page version: what changes, what stays the same, what the runway looks like at the floor. This is not pessimism — it's the responsible thing to have ready.",
+            title: "Farmers market print materials — confirm what's needed by when",
+            detail: "What materials need to be ready for the farmers market? Signage, flyers, price lists, QR codes? Nail down the list and the deadline. If anything needs to be printed professionally, get the files ready this week.",
+            category: "print",
+          },
+          {
+            title: "807 — confirm next work scope and timeline",
+            detail: "The computing runway from 807 needs to stay active. Confirm with 807 what's next: is there a new scope to propose, or is existing work continuing? Don't let the relationship go quiet.",
+            category: "relationship",
           },
         ],
       },
@@ -185,13 +269,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-27",
         steps: [
           {
-            title: "Northern Band — confirm or request a June meeting date",
-            detail: "One clear ask: is there a council date before June 15 where the Headwaters brief can be on the agenda? If yes, confirm and calendar it immediately. If no, ask what the earliest available date is.",
+            title: "Gather Round — send the Instagram DM if not done",
+            detail: "This is the last chance before it becomes a delayed thing. Two sentences to Rebecca Spooner. If already sent, note the status.",
+            category: "relationship",
           },
           {
-            title: "Review Plan B trigger conditions — is any trigger approaching?",
-            detail: "The four triggers: hard no from council, stall past June 15, bridge doesn't land by May 30, practitioner burnout signal. Which are live? Which need monitoring? Update the risk log.",
-            link: { label: "Plan B overview", path: "/practitioners-guide-v2/" },
+            title: "PACE — background research in preparation for first outreach",
+            detail: "PACE is in the outreach pipeline. What do you know about them? Who is the right contact? What's the entry framing for a first conversation? Write a short note: 3 bullet points about why this conversation makes sense right now.",
+            category: "relationship",
           },
         ],
       },
@@ -199,8 +284,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-28",
         steps: [
           {
-            title: "Gilles deepening — schedule a longer conversation about Northern Band strategy",
-            detail: "Not a status call — a strategy conversation. What does Gilles think the council needs to hear that it hasn't heard yet? What's the gap between the practitioner's framing and the council's actual concern?",
+            title: "Tyler cold storage — planning session",
+            detail: "Sit down with Tyler and map the cold storage plan: what infrastructure is needed, what the timeline looks like, what it costs, and what Tyler needs to move forward. This is a development thread that needs a real plan, not just good intentions.",
+            category: "build",
           },
         ],
       },
@@ -208,12 +294,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-05-29",
         steps: [
           {
-            title: "Bridge capital deadline eve — document current status in writing",
-            detail: "One paragraph: committed, pending, or no response. If pending, what specifically is the funder waiting on? If no response, send a final written notice today and prepare to activate Scenario A tomorrow.",
+            title: "Print files — finalize and send to printer if needed",
+            detail: "If farmers market materials need professional printing, today's the day to send the files. Don't wait for next week.",
+            category: "print",
           },
           {
-            title: "Weekly close-out — non-negotiables check",
-            detail: "Honest note: kids, sleep, partner time — all three intact this week?",
+            title: "Week 21 close-out — non-negotiables check",
+            detail: "Kids, sleep, partner time — all three intact? Write an honest one-liner. One missed week is information. Two in a row is a signal.",
+            category: "admin",
           },
         ],
       },
@@ -223,14 +311,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 22,
     phase: "Pursuit",
-    theme: "Bridge capital deadline and Northern Band council window",
+    theme: "AGM — board approval on Deer Lake path",
     days: [
       {
         isoDate: "2026-06-01",
         steps: [
           {
-            title: "Bridge capital: committed or activate Scenario A",
-            detail: "May 30 was the deadline. If committed: record it in writing, update the financial model, calendar the wire date. If not committed: activate Scenario A today — drop to the $48k cost-basis floor, defer the senior hires, update the runway model. Do not wait for another week.",
+            title: "AGM final prep — review the agenda one more time",
+            detail: "Read the agenda out loud. Every item should have: (1) a clear framing, (2) what the board needs to decide or know, (3) how long it will take. Trim anything that isn't a decision or essential update.",
+            category: "admin",
+          },
+          {
+            title: "Deer Lake — confirm status before the AGM",
+            detail: "Before the board meeting, know exactly where the Deer Lake proposal stands. Have they responded to the brief? Is there a conversation scheduled? The board will ask, and 'I'm working on it' isn't an answer.",
+            category: "proposals",
           },
         ],
       },
@@ -238,12 +332,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-02",
         steps: [
           {
-            title: "Northern Band council date — confirm or request urgently",
-            detail: "June 15 is the soft deadline. Confirm a meeting date is on the council calendar. If no date is confirmed, send a written note through the Gilles channel asking for the next available slot.",
-          },
-          {
-            title: "Update financial model for bridge capital outcome",
-            detail: "Whatever happened on June 1: update the runway model to reflect the actual starting position. Share the updated one-pager with Gilles if appropriate.",
+            title: "Run the AGM",
+            detail: "Key items: financial position update, Deer Lake partnership path (board approval), any other resolutions. Document decisions in writing immediately after — don't let the notes get stale.",
+            category: "admin",
           },
         ],
       },
@@ -251,15 +342,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-03",
         steps: [
           {
-            title: "IFNA cluster — background research in preparation for a first call",
-            detail: "Independent First Nations Alliance member communities on the Thunder Bay → Sioux Lookout → Dryden corridor. Who is the current economic development lead at IFNA? What's the right entry point — cluster-level or band-direct? Document findings in /Operations/IFNA.",
-            actions: [
-              {
-                type: "copy-ai-prompt",
-                label: "Research IFNA entry points",
-                content: "Help me prepare for a first outreach call to the Independent First Nations Alliance (IFNA) in northern Ontario. IFNA represents First Nations communities along the Thunder Bay → Sioux Lookout → Dryden corridor. I am the lead practitioner at Headwaters Development Services, proposing a community food store operating system (store-in-a-box: Square POS, Local Line procurement, full back-office) that runs on the same freight corridor the IFNA communities already use. I need to know: (1) who the current economic development lead at IFNA is likely to be, (2) whether to approach the alliance-level or go band-direct to a specific member community first, and (3) what tone and framing works best for a cold call to an Indigenous economic development arm in northern Ontario. Focus on what would make a first 30-minute call land well.",
-              },
-            ],
+            title: "Post-AGM — distribute meeting minutes and confirmed decisions",
+            detail: "Write the minutes, circulate to board members, and file them. The Deer Lake decision needs to be documented clearly: what was approved, what the conditions are, what happens next.",
+            category: "admin",
+          },
+          {
+            title: "NAN — first outreach note if not already sent",
+            detail: "NAN (Nishnawbe Aski Nation) is in the outreach pipeline alongside PACE. One paragraph: who Headwaters is, what the store-in-a-box does, why NAN communities are the right conversation, and the ask (a 30-minute call).",
+            category: "relationship",
           },
         ],
       },
@@ -267,8 +357,10 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-04",
         steps: [
           {
-            title: "Gilles call — council brief debrief and June 15 strategy",
-            detail: "What feedback has Gilles heard since the brief went to the liaison? What's the council's current mood? What's the single best action in the next 10 days to move the conversation forward?",
+            title: "Saltbox / computing work — 807 scope review",
+            detail: "With AGM done and the Deer Lake path approved, confirm the 807 computing scope for the next 4-6 weeks. The $12k runway is the floor — make sure the work is scoped to keep it active.",
+            link: { label: "Saltbox × Gather Round brief", path: "/saltbox-gather-round" },
+            category: "build",
           },
         ],
       },
@@ -276,8 +368,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-05",
         steps: [
           {
-            title: "Weekly close-out — document bridge capital status, Northern Band status, risk flags",
-            detail: "Three-column note: Bridge Capital, Northern Band, Plan B triggers. Any trigger closer to firing this week than last week? File in /Operations.",
+            title: "Week 22 close-out — AGM outcome documented",
+            detail: "Three questions: (1) What did the board approve on Deer Lake? (2) Is the 807 scope confirmed? (3) What's the next concrete action on each proposal in the pipeline (Deer Lake, Gather Round, PACE, NAN)?",
+            category: "admin",
           },
         ],
       },
@@ -287,18 +380,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 23,
     phase: "Pursuit",
-    theme: "Northern Band council meeting prep",
+    theme: "Post-AGM follow-up — Deer Lake conversation, pipeline warming",
     days: [
       {
         isoDate: "2026-06-08",
         steps: [
           {
-            title: "Northern Band — rehearse the council presentation out loud",
-            detail: "Fifteen minutes, out loud, to nobody. The brief should be 12 minutes of content and 3 minutes of silence for questions. Trim anything that isn't essential. The council's time is the most constrained resource in this conversation.",
+            title: "Deer Lake — follow up on the brief",
+            detail: "The brief has been out for ~3 weeks. One clear follow-up: 'I'd like to understand what questions the council has before our next conversation. Is there a 30-minute call that works this week?' If there's no response by Friday, schedule an in-person visit.",
+            category: "proposals",
           },
           {
-            title: "Prepare answers to the five most likely council questions",
-            detail: "Write the answers in plain language. (1) What does it cost? (2) What does the community control? (3) What happens if we want to stop? (4) Who is Tyler and why is he on the bill? (5) What happened at the last store that tried this?",
+            title: "Print materials — farmers market preparation",
+            detail: "Farmers market is physical execution work. Confirm all print materials are ready. Walk through the setup: table, signage, samples, payment system. Nothing should be scrambled the morning of.",
+            category: "print",
           },
         ],
       },
@@ -306,8 +401,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-09",
         steps: [
           {
-            title: "IFNA — send first outreach note to economic development contact",
-            detail: "One paragraph: who Headwaters is, what the store-in-a-box does, why IFNA communities are the right second call after Northern Band, and the ask (a 30-minute call). Do not attach a deck. Attach nothing.",
+            title: "Gather Round — follow up or prepare demo",
+            detail: "If no DM response after two messages, move to the next pipeline item and revisit Gather Round in 4 weeks. If she responded, prepare the 20-minute demo: (1) Legacy Pass download problem from the family's view, (2) live QR device handoff demo, (3) the credential flow in plain language, (4) the ask: 90-day pilot, 5 families, flat fee.",
+            category: "relationship",
+          },
+          {
+            title: "Tyler cold storage — review plan and identify first action",
+            detail: "After the planning session last week: what's the single first action that moves the cold storage plan forward? Assign it, calendar it, or make a decision to delay it deliberately (not passively).",
+            category: "build",
           },
         ],
       },
@@ -315,12 +416,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-10",
         steps: [
           {
-            title: "Shibogama First Nations Council — background research",
-            detail: "Member communities along the Wasaya/Bearskin airline corridor. Who is the economic development lead? What is the current strategic priority? Document in /Operations/Shibogama.",
+            title: "PACE outreach — send the first note",
+            detail: "One paragraph to the right PACE contact. Lead with the corridor framing: same freight routes, same procurement logic as 807. Ask for a 30-minute call.",
+            category: "relationship",
           },
           {
-            title: "Prepare weekly financial review — runway projection at current cost basis",
-            detail: "How many weeks of runway at the current cost basis? What does the runway look like if Northern Band signs (Phase 1 only)? What does it look like at Scenario A floor with Plan B parallel?",
+            title: "Financial position review — startup budget and runway",
+            detail: "Quick review: how much of the $28k startup budget has been deployed? What's the current monthly burn? How many weeks of runway at the current rate? This should take 20 minutes — just keep the numbers honest.",
+            category: "admin",
           },
         ],
       },
@@ -328,8 +431,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-11",
         steps: [
           {
-            title: "Northern Band — final prep for any council meeting this week",
-            detail: "Confirm logistics: who is in the room, how long, who chairs, what the decision process looks like after the meeting. Know the answer to 'what happens next' before you walk in.",
+            title: "807 work — progress check and any blockers",
+            detail: "Confirm computing work is progressing. Any blockers? Any scope changes? Keep 807 well-served — this is the active revenue relationship.",
+            category: "build",
           },
         ],
       },
@@ -337,12 +441,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-12",
         steps: [
           {
-            title: "Weekly close-out — document Northern Band meeting outcome (if held)",
-            detail: "If the council meeting happened: write the outcome in one paragraph. What was the response? What is the next step? What is the expected decision timeline? If no meeting happened: note the gap and set the June 15 soft-deadline protocol.",
-          },
-          {
-            title: "Non-negotiables check — kids, sleep, partner time",
-            detail: "Flag any breach. Two consecutive weeks flagged = Plan B trigger for sole-customer dependency.",
+            title: "Week 23 close-out — proposal pipeline status",
+            detail: "Where does each proposal stand? Deer Lake (response received? meeting scheduled?), Gather Round (demo call booked?), PACE (outreach sent?), NAN (outreach sent?). One line each. File it.",
+            category: "admin",
           },
         ],
       },
@@ -352,18 +453,21 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 24,
     phase: "Pursuit",
-    theme: "June 15 soft deadline — pivot signal or continue",
+    theme: "Deer Lake soft deadline — decision window",
     days: [
       {
         isoDate: "2026-06-15",
         steps: [
           {
-            title: "June 15 soft deadline — formal assessment",
-            detail: "Evaluate: is there a signed contract, a signed BCR, or a concrete next council date on the calendar? If yes to any: continue Pursuit. If no to all: send the one-paragraph pivot note through the Northern Band channel and open Plan B's IFNA outreach in parallel — do not wait for a reply.",
+            title: "Deer Lake soft deadline — formal assessment",
+            detail: "Is there a signed agreement, a scheduled decision date, or a concrete next step on the calendar? If yes: continue Pursuit, calendar the decision date, stay warm. If no: don't panic, but open parallel outreach to the next community on the list — don't let Deer Lake stall create a single point of failure.",
+            category: "proposals",
           },
           {
-            title: "If pivoting: send Northern Band pivot note",
-            detail: "One paragraph through the existing channel: 'I'm moving a portion of capacity to parallel outreach while the Northern Band conversation continues. I remain committed to the engagement and will update you when the next council date is confirmed.' Do not burn the bridge. Do not apologize.",
+            title: "Talking points review — prepare for the exclusivity conversation if needed",
+            detail: "If Deer Lake asks about exclusivity (as they might), review the talking points doc before any call or meeting.",
+            link: { label: "Exclusivity talking points", path: "/deer-lake-talking-points" },
+            category: "proposals",
           },
         ],
       },
@@ -371,12 +475,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-16",
         steps: [
           {
-            title: "IFNA — follow up on outreach note if no response yet",
-            detail: "One short follow-up. Warm close: 'Happy to work around your schedule — even a 20-minute call would be valuable.' If no response after two attempts, move to band-direct approach.",
+            title: "NAN — follow up on first outreach note",
+            detail: "One short follow-up to NAN. Warm close: 'Happy to work around your schedule — even a 20-minute call would be useful.' If no response after two attempts, move to a band-direct approach.",
+            category: "relationship",
           },
           {
-            title: "Keewaytinook Okimakanak (KO) — background research",
-            detail: "Long-standing operational sophistication: KO Telehealth, KORI, K-Net. The economic development contact is the right door — not K-Net directly. What food-systems work is currently in their portfolio? Document in /Operations/KO.",
+            title: "Print materials — farmers market post-mortem",
+            detail: "How did the farmers market materials land? What worked, what needs to change for next time? Write a one-paragraph note. This is how print work improves.",
+            category: "print",
           },
         ],
       },
@@ -384,8 +490,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-17",
         steps: [
           {
-            title: "Gilles deepening — strategy conversation (scheduled last week)",
-            detail: "Longer format: 45–60 minutes. What is the council's actual concern — the cost? The control? The precedent? The relationship? What would need to be true for them to say yes quickly?",
+            title: "807 deepening — is there a next scope to propose?",
+            detail: "807 is the active revenue relationship. Don't wait for them to bring the next scope to you. Think about what Headwaters can offer in the next 6 weeks that would be genuinely valuable to 807. Bring it to them.",
+            category: "relationship",
           },
         ],
       },
@@ -393,8 +500,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-18",
         steps: [
           {
-            title: "Financial model review — update runway projection for current scenario",
-            detail: "Where are we now: bridge capital status, Northern Band status, Plan B activity level. Update the three-scenario runway (Plan A only, Plan A + Plan B parallel, Plan B only). Which scenario is the operating assumption this week?",
+            title: "Tyler cold storage — timeline check",
+            detail: "Is the cold storage plan on track? What's the critical path item right now? Is Tyler blocked on anything?",
+            category: "build",
+          },
+          {
+            title: "Runway model update",
+            detail: "Update the three-scenario runway: Deer Lake only, Deer Lake + 807, 807 only. Which scenario is the current operating assumption?",
+            category: "admin",
           },
         ],
       },
@@ -402,8 +515,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-19",
         steps: [
           {
-            title: "Weekly close-out — June 15 checkpoint documented",
-            detail: "One-page note: June 15 assessment outcome, current operating assumption (Plan A / parallel / Plan B), next trigger date (July 31 hard deadline), risk flags. File in /Operations.",
+            title: "Week 24 close-out — June 15 checkpoint documented",
+            detail: "What was the Deer Lake status as of June 15? What's the current operating assumption? What's the July 31 hard deadline plan? File it.",
+            category: "admin",
           },
         ],
       },
@@ -413,18 +527,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 25,
     phase: "Pursuit",
-    theme: "Parallel outreach opens — Gilles deepening",
+    theme: "Parallel outreach opens — proposals, build, and physical track all moving",
     days: [
       {
         isoDate: "2026-06-22",
         steps: [
           {
-            title: "IFNA first call — if scheduled, run it; if not, re-attempt contact",
-            detail: "First call: 30 minutes. The pitch: same freight corridor, same POS, different community. Walk through the procurement dashboard. Ask what their biggest current concern about community food access is — listen more than you talk.",
+            title: "PACE — follow up or book a call",
+            detail: "If PACE responded, book a 30-minute call this week. If no response, send one more note and then park it for 3 weeks. Don't over-rotate on non-responsive pipeline.",
+            category: "relationship",
           },
           {
-            title: "Northern Band — stay warm, no pressure",
-            detail: "One short note to the liaison: 'Checking in — is there anything I can provide ahead of the next council meeting?' This maintains the relationship without forcing a timeline.",
+            title: "Deer Lake — stay warm, no pressure",
+            detail: "One short note through the existing channel: 'Is there anything useful I can send ahead of the next conversation?' Keep the relationship warm. Don't force a timeline.",
+            category: "proposals",
           },
         ],
       },
@@ -432,12 +548,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-23",
         steps: [
           {
-            title: "Shibogama — send first outreach note",
-            detail: "Same format as IFNA: one paragraph, no deck, ask for a 30-minute call. Lead with the corridor pricing angle: cross-reserve freight pass-through, nothing marked up.",
+            title: "Build — 807 computing work progress",
+            detail: "Confirm current 807 computing work is on track. Any scope changes or new requests? Keep the relationship well-served.",
+            category: "build",
           },
           {
-            title: "Plan B grant-shaped workstreams — identify which are ready to submit",
-            detail: "Review the 807 co-op infrastructure, Food Hub on Wheels, and jar recycling loop. Which are closest to a submittable state? Which funder is the best first attempt? Document the readiness assessment.",
+            title: "Print — inventory physical deliverables",
+            detail: "What physical deliverables are in progress or upcoming? Signage, printed materials, any cold storage documentation Tyler needs? Make a clean list.",
+            category: "print",
           },
         ],
       },
@@ -445,8 +563,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-24",
         steps: [
           {
-            title: "Gilles deepening call — what is the council's actual walk-away condition?",
-            detail: "Direct question: if Northern Band doesn't proceed, what is the most likely stated reason? What's the thing the practitioner can't change, and what's the thing that could still move?",
+            title: "Gather Round — status check and decision",
+            detail: "If still no response from Gather Round after two DMs, formally park it. Move Gather Round to 'revisit in September' and take it off the active weekly list. Don't let non-responsive pipeline drain attention.",
+            category: "relationship",
+          },
+          {
+            title: "Cold storage plan — Tyler update",
+            detail: "What has moved since last week? What's the next milestone? Is Tyler getting what he needs?",
+            category: "build",
           },
         ],
       },
@@ -454,8 +578,10 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-25",
         steps: [
           {
-            title: "V7 rate model — prepare a simplified one-page cost summary for outreach calls",
-            detail: "$175/hr Bobbie, $70/hr Tyler, 160 hr/mo each = $39,200/mo total billed. Phase 1: $25k flat trial. This one-pager goes to any warm prospect who asks 'what does it cost?' before a full proposal.",
+            title: "Replication roadmap — review for the Deer Lake conversation",
+            detail: "When the Deer Lake conversation moves to a closer, review the replication roadmap so you can speak confidently to Phase 1 → Phase 2 → Constellation. This framing is important for community buy-in.",
+            link: { label: "How the model spreads", path: "/deer-lake-roadmap" },
+            category: "proposals",
           },
         ],
       },
@@ -463,12 +589,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-26",
         steps: [
           {
-            title: "Weekly close-out — outreach call log, Northern Band status, runway update",
-            detail: "Document: every outreach contact this week, response or no response, next step for each. Northern Band: any new information. Runway: current scenario assumption.",
-          },
-          {
-            title: "Non-negotiables check",
-            detail: "Flag any breach. Honest note.",
+            title: "Week 25 close-out — mid-phase review",
+            detail: "We're 6 weeks into Pursuit. Quick review: Deer Lake (where are we?), 807 (strong?), Gather Round (parked or active?), PACE (call scheduled?), NAN (response?), Tyler (plan in place?). What's the realistic operating assumption for July?",
+            category: "admin",
           },
         ],
       },
@@ -478,14 +601,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 26,
     phase: "Pursuit",
-    theme: "Pre-July 31 hard deadline — runway reconciliation",
+    theme: "End of Pursuit — Jul 3 check: contract or Pivot",
     days: [
       {
         isoDate: "2026-06-29",
         steps: [
           {
-            title: "Runway reconciliation — update month-by-month cash schedule to July 31",
-            detail: "The July 31 hard deadline is five weeks away. How much runway remains at the current cost basis? What is the cash position on July 31 if: (a) Northern Band signs Phase 1, (b) Northern Band stalls, (c) Plan B produces a warm partner? Document all three.",
+            title: "July 1 week — reflect before the half-year mark",
+            detail: "Before the holiday: write a one-page note. What happened in the first 6 weeks of this phase? What was harder than expected? What worked? What does the second half of the year need to look different?",
+            category: "admin",
+          },
+          {
+            title: "Deer Lake — final Pursuit push",
+            detail: "If there is any action that would move the Deer Lake decision before July 31, do it this week. Not a pressure play — a genuine offer of whatever they need to be ready to decide.",
+            category: "proposals",
           },
         ],
       },
@@ -493,12 +622,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-06-30",
         steps: [
           {
-            title: "Northern Band — final push before July 31 protocol",
-            detail: "Through Gilles or the liaison: is there any council date between now and July 31? If yes, calendar it. If no, ask what it would take to get one. The goal is a concrete next step — not a soft agreement to meet 'sometime soon'.",
-          },
-          {
-            title: "IFNA / Shibogama / KO — status check on all open outreach",
-            detail: "Which calls have happened? Which have a scheduled date? Which have gone cold? Rank by warmth and set the next action for each.",
+            title: "807 — confirm H2 scope",
+            detail: "What does 807 need from Headwaters in the second half of the year? Scope it, price it, and put it in writing. The computing runway needs to be renewed, not assumed.",
+            category: "relationship",
           },
         ],
       },
@@ -506,8 +632,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-01",
         steps: [
           {
-            title: "Canada Day — reduced operational pace; family time protected",
-            detail: "Complete one desk task (runway model update or outreach follow-up) if needed, then close the laptop. No client-facing communication today.",
+            title: "Canada Day — rest if you can",
+            detail: "Protect the non-negotiables. If the kids are home, be home. The work will still be there Wednesday.",
+            category: "admin",
           },
         ],
       },
@@ -515,8 +642,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-02",
         steps: [
           {
-            title: "Windigo First Nations Council — background research and outreach prep",
-            detail: "Member communities span the Sioux Lookout / Pickle Lake catchment. Multi-community engagement is realistic. Document the economic development contact and the right lead-with angle.",
+            title: "Phase gate: do we have a contract, a committed deal, or a hard no?",
+            detail: "Honest assessment: Deer Lake — contract signed, committed but not signed, or stalled? 807 — scope confirmed for H2? PACE / NAN — any responses? Based on this, is the July 31 hard deadline still viable for an operating contract? If not, Pivot starts now, not July 31.",
+            category: "admin",
           },
         ],
       },
@@ -524,8 +652,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-03",
         steps: [
           {
-            title: "Weekly close-out — Pursuit phase checkpoint",
-            detail: "Seven weeks into Pursuit. Write the honest assessment: Northern Band trajectory (yes / stalling / cooling), outreach heat map (which circles are warm), Plan B readiness (which grant-shaped workstreams could submit in the next 30 days), runway position. File in /Operations.",
+            title: "Week 26 close-out — Pursuit phase complete",
+            detail: "Document the outcome of Pursuit phase: what proposals are active, what is closed, what moves into Pivot. This is the record that future you will be glad you wrote.",
+            category: "admin",
           },
         ],
       },
@@ -533,25 +662,27 @@ export const PLAN_2026: Week[] = [
   },
 
   // ══════════════════════════════════════════════════════════
-  //  PIVOT  W27–W35  (Jul 6 – Sep 4, 2026)
-  //  Plan B outreach activation + Gilles deepening
+  //  PIVOT  W27–W35  (Jul 6 – Aug 28, 2026)
+  //  Post-AGM follow-up. 807 deepening. Tyler cold storage. Pipeline.
   // ══════════════════════════════════════════════════════════
 
   {
     isoWeek: 27,
     phase: "Pivot",
-    theme: "July 31 hard deadline — watch and outreach acceleration",
+    theme: "Pivot opens — 807 deepening and cold storage plan finalization",
     days: [
       {
         isoDate: "2026-07-06",
         steps: [
           {
-            title: "Set Pivot phase operating rhythm",
-            detail: "Pivot runs W27–W35. The rhythm: Mondays set the week's priorities. Fridays close out with an honest three-column note (Northern Band, outreach, runway). No more than one 'waiting for a response' item per column — chase or move on.",
+            title: "Pivot orientation — write the single goal for this phase",
+            detail: "Pivot is 9 weeks. What is the one outcome that would make Pivot a success? Write it down. Everything else is in service of that.",
+            category: "admin",
           },
           {
-            title: "IFNA — follow-up or first call debrief",
-            detail: "If the first call happened in Pursuit: document the outcome and the ask they left with. If not yet: this week is the last warm-window attempt before moving to band-direct.",
+            title: "807 — deepening conversation",
+            detail: "Schedule a relationship conversation with 807, not a task call. What is 807 working toward in the next 6 months? Where does Headwaters fit in that picture? Listen more than you pitch.",
+            category: "relationship",
           },
         ],
       },
@@ -559,12 +690,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-07",
         steps: [
           {
-            title: "Shibogama — first call (if scheduled)",
-            detail: "30-minute intro: Headwaters, the store-in-a-box, the corridor pricing model. Listen for their current food-access pain point. Ask who else on their member list is having the same conversation.",
-          },
-          {
-            title: "NAN Economic Development — background research",
-            detail: "Nishnawbe Aski Nation's economic development apparatus. Who is the current director? What corridor-scale initiatives are in their current portfolio? Document in /Operations/NAN.",
+            title: "Tyler cold storage — finalize the development plan",
+            detail: "The cold storage plan should be in near-final form by now. Review the timeline, the cost estimate, and what Tyler needs to start. If the plan isn't finalized, set a hard deadline: finalized by end of W27, no exceptions.",
+            category: "build",
           },
         ],
       },
@@ -572,8 +700,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-08",
         steps: [
           {
-            title: "Gilles check-in — Northern Band trajectory assessment",
-            detail: "Three weeks to the hard deadline. What is Gilles' honest read: is Northern Band still a live conversation, or is it cooling beyond recovery? What one action could move it before July 31?",
+            title: "Deer Lake — active follow-up (not passive waiting)",
+            detail: "If Deer Lake hasn't moved since June 15, this is the week to make a direct ask. One clear question: 'Is there a decision coming before July 31, or should we plan for a later timeline?' Get a real answer.",
+            category: "proposals",
+          },
+          {
+            title: "PACE — call or park",
+            detail: "If PACE has responded, run the call this week. If not, park it to September. Make the decision explicitly — don't let it drift.",
+            category: "relationship",
           },
         ],
       },
@@ -581,8 +715,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-09",
         steps: [
           {
-            title: "Plan B grant workstream — 807 co-op infrastructure scoping",
-            detail: "The 807 co-op infrastructure (cold storage, hub equipment, distribution rigging) fits the LFIF/ICBF envelope. Is the co-op board willing to be the proponent on a follow-on application? Schedule a call to find out.",
+            title: "Print — review physical deliverables for summer season",
+            detail: "What physical deliverables are needed for the summer farmers market season? Get ahead of the print queue.",
+            category: "print",
           },
         ],
       },
@@ -590,8 +725,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-10",
         steps: [
           {
-            title: "Weekly close-out — July 31 countdown: 21 days",
-            detail: "Northern Band status, outreach heat map, Plan B grant readiness, runway position. Is any trigger at the point of firing? If yes, document the decision and the action taken.",
+            title: "Week 27 close-out",
+            detail: "One line each: 807 (deepening conversation status), Tyler cold storage (plan finalized?), Deer Lake (real answer received?), pipeline (PACE, NAN status).",
+            category: "admin",
           },
         ],
       },
@@ -601,18 +737,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 28,
     phase: "Pivot",
-    theme: "Outreach deepening — Shibogama, KO, NAN",
+    theme: "July 31 hard deadline approaching — contracts or redirect",
     days: [
       {
         isoDate: "2026-07-13",
         steps: [
           {
-            title: "KO — send first outreach note to economic development contact",
-            detail: "One paragraph: Headwaters, the store-in-a-box, and why KO's operational sophistication (KO Telehealth, KORI) means the infrastructure-as-public-good framing lands naturally. Ask for a 30-minute call.",
+            title: "July 31 countdown — 18 days out",
+            detail: "July 31 is the hard deadline for confirming an active operating contract. What needs to happen in the next 18 days? Write it down. If Deer Lake isn't going to make it, what does the redirect look like?",
+            category: "proposals",
           },
           {
-            title: "IFNA — debrief first call; set next step",
-            detail: "If the call happened: what did they say, what did they ask, what is the next action? If no call yet: decide to go band-direct or move IFNA to the cold list.",
+            title: "807 computing work — confirm H2 scope in writing",
+            detail: "Get the H2 807 scope documented. This is the floor. It needs to be confirmed, not assumed.",
+            category: "build",
           },
         ],
       },
@@ -620,12 +758,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-14",
         steps: [
           {
-            title: "NAN Economic Development — send first outreach note",
-            detail: "Corridor template pitch, not a single-store pitch: one install, then the next community inherits the same software and back-office at an install fee. Ask for a meeting with the economic development team.",
-          },
-          {
-            title: "Prepare outreach call log for all active prospects",
-            detail: "Spreadsheet: prospect name, first contact date, call date (if any), outcome, next action, next action date. Keep this current — it's the only way to know where the heat actually is.",
+            title: "Cold storage plan — what does Tyler need right now?",
+            detail: "Check in with Tyler. Is the plan funded? Does he have what he needs to start? What's the single thing that would unblock progress?",
+            category: "build",
           },
         ],
       },
@@ -633,8 +768,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-15",
         steps: [
           {
-            title: "Northern Band — written status check (two weeks to hard deadline)",
-            detail: "Short note through the channel: 'Checking in — is there a council date between now and July 31 where the Headwaters engagement can be on the agenda?' One question, one ask.",
+            title: "NAN — follow up or plan a direct approach",
+            detail: "NAN hasn't moved if there's been no response to two outreach notes. Consider a band-direct approach to a specific NAN member community rather than going through the national body.",
+            category: "relationship",
+          },
+          {
+            title: "Financial model — update for current scenario",
+            detail: "Where are we against the $28k startup budget? What's the runway at current burn? What does the July 31 outcome do to the numbers in each scenario?",
+            category: "admin",
           },
         ],
       },
@@ -642,8 +783,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-16",
         steps: [
           {
-            title: "Gilles deepening — strategy conversation, not status update",
-            detail: "What does Gilles think about the outreach circles? Is there a door he can open to Shibogama, KO, or NAN that the practitioner can't open cold? What's his honest assessment of the Northern Band trajectory now?",
+            title: "Print — farmers market mid-season check",
+            detail: "Are the farmers market materials holding up? Anything needing reprinting or replacement?",
+            category: "print",
           },
         ],
       },
@@ -651,12 +793,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-17",
         steps: [
           {
-            title: "Weekly close-out — outreach call log updated, runway refreshed",
-            detail: "July 31 is 14 days away. Outreach: rank all prospects by heat. Plan B grant: which application is closest to submittable? Runway: what is the cash position on Aug 1 under each scenario?",
-          },
-          {
-            title: "Non-negotiables check",
-            detail: "Pivot phase is high-activity. Flag any breach. Two consecutive weeks = trigger.",
+            title: "Week 28 close-out",
+            detail: "July 31 is two weeks away. Honest assessment: what is the most likely outcome? Contract signed, in-progress but close, or redirect?",
+            category: "admin",
           },
         ],
       },
@@ -666,14 +805,15 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 29,
     phase: "Pivot",
-    theme: "July 31 countdown — decision-ready",
+    theme: "Hard decisions — commit or redirect with clarity",
     days: [
       {
         isoDate: "2026-07-20",
         steps: [
           {
-            title: "Prepare the July 31 decision brief",
-            detail: "One page: Northern Band status (signed / council date confirmed / stalling / cooling), top three outreach prospects and their status, runway position on Aug 1, recommended operating assumption for August. Have this ready before July 31 — not on the day.",
+            title: "Deer Lake — make the direct ask for a decision",
+            detail: "One clear, respectful ask: 'We're planning our August operations. Is there a decision on the Deer Lake engagement before July 31, or should we plan for a later timeline?' This is not pressure — it's honest planning.",
+            category: "proposals",
           },
         ],
       },
@@ -681,12 +821,14 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-21",
         steps: [
           {
-            title: "Shibogama — first or second call",
-            detail: "If no call yet: final warm-window attempt. If first call happened: debrief and set the next action.",
+            title: "807 — relationship check-in beyond the scope",
+            detail: "How is the 807 relationship going at a human level? Beyond the computing work, are you a trusted partner to them? What would deepen that trust in the next quarter?",
+            category: "relationship",
           },
           {
-            title: "KO — follow-up if no response to outreach note",
-            detail: "One short follow-up. If no response after two attempts, note it and move the call to the cold list.",
+            title: "Cold storage — Tyler progress update",
+            detail: "Where is Tyler on the cold storage plan? What's the next milestone?",
+            category: "build",
           },
         ],
       },
@@ -694,8 +836,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-22",
         steps: [
           {
-            title: "807 co-op — call with co-op board on application proponent question",
-            detail: "Is the board willing to be the proponent on a follow-on LFIF/ICBF application? Which program gets first attempt? What is the expected timeline for a decision? Document the outcome.",
+            title: "Gather Round — revisit if parked (it's been 4 weeks)",
+            detail: "If Gather Round was parked in June, it's been 4 weeks. One more light note to Rebecca: 'Following up in case the timing is better now.' One message. Then park until September if no response.",
+            category: "relationship",
           },
         ],
       },
@@ -703,8 +846,10 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-23",
         steps: [
           {
-            title: "Financial model update — three scenarios for August",
-            detail: "Scenario 1: Northern Band signs Phase 1. Scenario 2: Northern Band stalls, outreach produces one warm partner. Scenario 3: Plan B only, no Northern Band, grant applications in progress. Monthly cash position for each through Dec 31.",
+            title: "Build — review Saltbox/computing work pipeline",
+            detail: "What's in the pipeline after the current 807 scope? Is there a next project visible, or does new work need to be actively created?",
+            link: { label: "Saltbox × Gather Round brief", path: "/saltbox-gather-round" },
+            category: "build",
           },
         ],
       },
@@ -712,8 +857,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-24",
         steps: [
           {
-            title: "Weekly close-out — July 31 brief finalized",
-            detail: "The decision brief is ready. File it in /Operations. Review with Gilles if possible before July 31.",
+            title: "Week 29 close-out — July 31 one week out",
+            detail: "One week to the hard deadline. What's the honest outlook on each active deal? Where does the runway model land in each scenario?",
+            category: "admin",
           },
         ],
       },
@@ -723,14 +869,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 30,
     phase: "Pivot",
-    theme: "July 31 hard deadline — decide and act",
+    theme: "July 31 hard deadline — commit to the operating path",
     days: [
       {
         isoDate: "2026-07-27",
         steps: [
           {
-            title: "Northern Band — final contact before July 31",
-            detail: "One clear message through the channel: the practitioner's planning horizon requires a council date or a contract indication by July 31. If no response by EOD July 31, the operating assumption shifts to Plan B capacity allocation.",
+            title: "Final week before July 31 hard deadline",
+            detail: "Whatever actions are still open on Deer Lake, PACE, NAN — do them this week. After July 31, stop chasing and start building on what's confirmed.",
+            category: "proposals",
+          },
+          {
+            title: "Cold storage — confirm Tyler's timeline and any funding needs",
+            detail: "Is cold storage going to move this summer or fall? Confirm the timeline and what resources are needed.",
+            category: "build",
           },
         ],
       },
@@ -738,12 +890,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-28",
         steps: [
           {
-            title: "Review July 31 decision brief with Gilles",
-            detail: "Walk Gilles through the three scenarios. What is his recommendation? What would he do differently? What are the relationship implications of each path?",
-          },
-          {
-            title: "LFIF follow-on application — draft outline if 807 co-op confirmed as proponent",
-            detail: "If the co-op board confirmed: start the application outline this week. Timeline, equipment list, community benefit statement. The application is due when it's ready, not at the deadline — start now.",
+            title: "807 computing — check on H2 scope progress",
+            detail: "Confirm the H2 807 work is progressing as expected. No surprises.",
+            category: "build",
           },
         ],
       },
@@ -751,8 +900,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-29",
         steps: [
           {
-            title: "NAN Economic Development — first call (if scheduled)",
-            detail: "Corridor template pitch: one install, then the next community inherits the same system. Listen for what NAN is currently trying to fund at the corridor scale.",
+            title: "Print — summer season wrap-up",
+            detail: "What print/physical work needs to wrap up before the operating season starts? Make a short list and move through it.",
+            category: "print",
           },
         ],
       },
@@ -760,8 +910,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-30",
         steps: [
           {
-            title: "Prepare August operating rhythm — regardless of Northern Band outcome",
-            detail: "August starts Monday Aug 3. What are the three things that must happen in August regardless of which scenario is operating? Write them down. This week's close-out is the last Pursuit/Pivot-boundary document.",
+            title: "Prepare July 31 decision document",
+            detail: "One page: what is committed (signed or verbal commitment with a signed date), what is in-progress (likely to close in August), what is parked. This document is the starting point for Operating Season planning.",
+            category: "admin",
           },
         ],
       },
@@ -769,12 +920,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-07-31",
         steps: [
           {
-            title: "July 31 hard deadline — formal decision and documentation",
-            detail: "Evaluate: Northern Band signed, concrete council date, or stalling past the runway trough. If stalling: treat Northern Band as paused (not killed), move all team capacity to Plan B, submit the LFIF follow-on the same week if ready, schedule the first NAN economic development call. Document the decision in writing. This is not a gut call — it's a planned response to a pre-agreed trigger.",
-          },
-          {
-            title: "July close-out — honest month review",
-            detail: "What happened in July? What was decided? What is the August operating assumption? What are the three most important actions in the next 30 days? File the note in /Operations.",
+            title: "July 31 hard deadline — document and decide",
+            detail: "The hard deadline is here. Document the status of every active proposal. Make a clear decision: what is the operating model going into August and the fall? Write it down. Share it with anyone who needs to know.",
+            category: "admin",
           },
         ],
       },
@@ -784,18 +932,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 31,
     phase: "Pivot",
-    theme: "Plan B activation — grant workstreams and warm outreach",
+    theme: "Transition — building toward Operating Season",
     days: [
       {
         isoDate: "2026-08-03",
         steps: [
           {
-            title: "Set August Plan B operating rhythm",
-            detail: "Mondays: outreach call or grant workstream progress. Wednesdays: Gilles or warm-prospect call. Fridays: close-out note. The rhythm is the same as Pursuit but the energy shifts from waiting to building.",
+            title: "Operating Season prep — what needs to be in place by W36?",
+            detail: "Operating Season starts W36 (Aug 31). That's 5 weeks away. What infrastructure, agreements, or systems need to be in place? Make the list now.",
+            category: "admin",
           },
           {
-            title: "LFIF follow-on — begin application draft if not already started",
-            detail: "Funding envelope: community infrastructure (cold storage, hub equipment, distribution rigging). Proponent: 807 co-op board (if confirmed). Write the community benefit section first — it's the hardest part and it shapes the rest.",
+            title: "807 — confirm relationship health and H2 plan",
+            detail: "Is the 807 relationship strong? Is H2 scope confirmed? Any concerns?",
+            category: "relationship",
           },
         ],
       },
@@ -803,8 +953,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-04",
         steps: [
           {
-            title: "IFNA — second call or band-direct first call",
-            detail: "If IFNA alliance-level is stalling: pick the specific member community most likely to move and call the band directly. Use the 'same corridor, different store' framing.",
+            title: "Tyler cold storage — August progress check",
+            detail: "Cold storage development should be progressing. Where is Tyler? What's the next milestone?",
+            category: "build",
           },
         ],
       },
@@ -812,12 +963,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-05",
         steps: [
           {
-            title: "Shibogama — second call or relationship deepening",
-            detail: "If first call happened: what did they ask for? Can you send a one-page cost summary tailored to their community's freight position? Do that today.",
-          },
-          {
-            title: "Northern Band — stay-warm note (not a deadline)",
-            detail: "One short note: 'The Northern Band engagement remains a priority. I'll continue to make myself available when the council's calendar opens.' No pressure. No deadline language.",
+            title: "Deer Lake / active proposals — follow-up on any post-July-31 commitments",
+            detail: "If any proposals moved to 'committed but not signed' at July 31, follow up this week to get them signed.",
+            category: "proposals",
           },
         ],
       },
@@ -825,8 +973,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-06",
         steps: [
           {
-            title: "Workshops and training cohorts — assess grant-shaped readiness",
-            detail: "Capacity-building programs (food-handling, store operations, bookkeeping) are a natural FedNor / NOHFC envelope. What would a submittable application look like? Who is the proponent? Document the readiness assessment.",
+            title: "Print — fall materials planning",
+            detail: "What print/physical materials will be needed for the fall season? Get ahead of the queue.",
+            category: "print",
           },
         ],
       },
@@ -834,12 +983,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-07",
         steps: [
           {
-            title: "Weekly close-out — Plan B activation week 1",
-            detail: "Outreach heat map, grant application status (LFIF draft, other), Northern Band pulse, runway position. The note should show momentum, not stasis.",
-          },
-          {
-            title: "Non-negotiables check",
-            detail: "Plan B activation is high-energy. Protect kids, sleep, partner time.",
+            title: "Week 31 close-out",
+            detail: "Progress toward Operating Season: what's in place, what still needs to happen.",
+            category: "admin",
           },
         ],
       },
@@ -849,14 +995,15 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 32,
     phase: "Pivot",
-    theme: "Co-pitch exploration and grant drafts",
+    theme: "Build momentum — systems and relationships for the operating season",
     days: [
       {
         isoDate: "2026-08-10",
         steps: [
           {
-            title: "Identify the first co-pitch partner candidate",
-            detail: "A co-pitch requires a band partner as proponent. Which warm outreach prospect is closest to saying yes to a co-pitch application? What would they need to see to agree? Document the assessment.",
+            title: "808 relationship — proactive check-in",
+            detail: "Don't wait for 807 to come to you. Reach out proactively: is there anything Headwaters can do in the next 4 weeks that would make a meaningful difference for 807?",
+            category: "relationship",
           },
         ],
       },
@@ -864,12 +1011,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-11",
         steps: [
           {
-            title: "LFIF application — community benefit section draft review",
-            detail: "Read the draft out loud. Does it sound like the community wrote it, or like a consultant wrote it? The community benefit section should be in the band's voice, not the practitioner's.",
-          },
-          {
-            title: "KO — first or second call",
-            detail: "Lead with the KORI/KO Telehealth analogy: you already operate community infrastructure at scale — the store is the same model applied to food. Listen for where their food-systems portfolio actually sits.",
+            title: "Cold storage — is Tyler on track?",
+            detail: "Review Tyler's cold storage progress. Are there any blockers? Any decisions needed from you?",
+            category: "build",
           },
         ],
       },
@@ -877,8 +1021,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-12",
         steps: [
           {
-            title: "Gilles deepening — what's the best outreach lead right now?",
-            detail: "Ask Gilles directly: of all the outreach circles, which one does he think is closest to a yes? Does he have a relationship with anyone in the Shibogama / KO / NAN ecosystem that would make an introduction faster than a cold call?",
+            title: "PACE / NAN — September outreach plan",
+            detail: "If PACE and NAN haven't responded by now, plan a September outreach relaunch. What would make the next outreach more likely to land?",
+            category: "relationship",
           },
         ],
       },
@@ -886,8 +1031,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-13",
         steps: [
           {
-            title: "NAN Economic Development — second contact or call debrief",
-            detail: "If the first call happened: what is the ask? Can NAN facilitate an introduction to a member community that is already considering a store? If no call yet: final warm-window attempt.",
+            title: "Operating plan documentation",
+            detail: "Document the operating plan for the fall: active contracts, monthly revenue, key milestones, and team structure. This is the document you'll refer to every week in Operating Season.",
+            category: "admin",
           },
         ],
       },
@@ -895,8 +1041,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-14",
         steps: [
           {
-            title: "Weekly close-out — co-pitch prospect identified or not",
-            detail: "The most important output from this week: is there one warm prospect willing to explore a co-pitch application? If yes, name them and note the next step. If no, note the gap and adjust the Plan B sequencing.",
+            title: "Week 32 close-out",
+            detail: "Where does each active thread stand? 807, Tyler, proposals, print. What needs to move in the next 3 weeks to be ready for Operating Season?",
+            category: "admin",
           },
         ],
       },
@@ -906,14 +1053,15 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 33,
     phase: "Pivot",
-    theme: "Gilles deepening and 807 co-op infrastructure",
+    theme: "Pre-season systems check",
     days: [
       {
         isoDate: "2026-08-17",
         steps: [
           {
-            title: "Schedule a longer Gilles session — 60–90 minutes, not a status call",
-            detail: "The topic: what does a Plan B operating season look like from his perspective? What's the corridor's biggest food-access problem that isn't being addressed? What would Headwaters need to build to be the answer to that problem?",
+            title: "POS and procurement systems — confirm readiness",
+            detail: "Square POS and Local Line procurement need to be confirmed ready for operating season. Are both set up and tested? Any outstanding configurations?",
+            category: "build",
           },
         ],
       },
@@ -921,12 +1069,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-18",
         steps: [
           {
-            title: "807 co-op — LFIF application progress review",
-            detail: "How far along is the application? Equipment list, community benefit section, proponent confirmation. What is the expected submission date? What is blocking the next section?",
-          },
-          {
-            title: "Jar recycling loop — feasibility and grant program match",
-            detail: "Circular-economy and waste-diversion programs at the federal and Northern Ontario level. Which program specifically? Who is the proponent? Is this active or deferred? Document the decision.",
+            title: "807 computing work — any pre-season requests?",
+            detail: "Does 807 need anything done before the operating season starts? Confirm and scope it.",
+            category: "build",
           },
         ],
       },
@@ -934,8 +1079,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-19",
         steps: [
           {
-            title: "Windigo First Nations Council — first call (if scheduled)",
-            detail: "Multi-community framing: one install, then the next community inherits the same system. Windigo's structure is a feature if they're already operating across multiple member communities.",
+            title: "Print — final pre-season materials",
+            detail: "Any print materials needed before Operating Season starts? Get them done this week.",
+            category: "print",
           },
         ],
       },
@@ -943,8 +1089,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-20",
         steps: [
           {
-            title: "Gilles 60–90 minute session",
-            detail: "Deep strategy conversation. Document the key insights immediately after — not the next day. What changed in your understanding of the corridor? What changed in the operating plan?",
+            title: "Tyler cold storage — pre-season review",
+            detail: "Where does the cold storage plan land relative to Operating Season? Is it on track to be operational before winter?",
+            category: "build",
           },
         ],
       },
@@ -952,12 +1099,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-21",
         steps: [
           {
-            title: "Weekly close-out — Pivot phase mid-point assessment",
-            detail: "Honest mid-Pivot assessment: what has changed since July 31? Which outreach prospects are live? Which grants are in progress? What is the operating assumption for September? File in /Operations.",
-          },
-          {
-            title: "Non-negotiables check",
-            detail: "August is a high-activity month. Protect the three non-negotiables.",
+            title: "Week 33 close-out",
+            detail: "Two weeks to Operating Season. What's still outstanding?",
+            category: "admin",
           },
         ],
       },
@@ -967,14 +1111,20 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 34,
     phase: "Pivot",
-    theme: "Grant application push and warm prospect deepening",
+    theme: "Final Pivot week — confirm everything for Operating Season",
     days: [
       {
         isoDate: "2026-08-24",
         steps: [
           {
-            title: "LFIF application — equipment and budget section",
-            detail: "Cold storage, hub equipment, distribution rigging. Each item: description, supplier quote, purpose, community benefit. The budget section is the most scrutinized part of any LFIF application — be precise.",
+            title: "Confirm all active contracts are signed",
+            detail: "No verbal commitments into Operating Season. Every active engagement needs a signed agreement or a signed commitment with a defined signing date.",
+            category: "proposals",
+          },
+          {
+            title: "807 H2 scope — final confirmation",
+            detail: "Confirm the full H2 807 scope is agreed and documented. No ambiguity going into the fall.",
+            category: "relationship",
           },
         ],
       },
@@ -982,8 +1132,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-25",
         steps: [
           {
-            title: "Top warm prospect — relationship deepening call",
-            detail: "Whichever outreach prospect is currently warmest: schedule a follow-up call this week. Move from introductory to substantive: what would a scoping engagement look like for their community? What questions do they need answered before they can say yes to a call with their council?",
+            title: "Tyler cold storage — August milestone review",
+            detail: "What did Tyler accomplish in August? What's the September plan?",
+            category: "build",
           },
         ],
       },
@@ -991,8 +1142,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-26",
         steps: [
           {
-            title: "Northern Band — check in through Gilles",
-            detail: "Not a direct contact. Ask Gilles: what is the council's current mood? Is there any indication of a fall council calendar? Should the practitioner send a brief update note or stay quiet for now?",
+            title: "Gather Round — September re-engagement",
+            detail: "It's been a full summer. One message to Rebecca: 'Circling back as we head into fall — still would love to show you what this looks like if the timing is right.' This is the last attempt before parking permanently.",
+            category: "relationship",
           },
         ],
       },
@@ -1000,8 +1152,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-27",
         steps: [
           {
-            title: "Financial close for bridge period — Q3 bookkeeping",
-            detail: "July and August actuals: what was spent, what was invoiced, what was received. Update the QuickBooks (or equivalent) entries. Make sure the bridge capital is correctly recorded. Prepare the Q3 summary for the bookkeeper.",
+            title: "Operating plan — final version",
+            detail: "Finalize the operating plan document. Active contracts, monthly revenue, team, key milestones for fall. Share with anyone who needs it.",
+            category: "admin",
           },
         ],
       },
@@ -1009,8 +1162,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-08-28",
         steps: [
           {
-            title: "Weekly close-out — grant progress, prospect heat, Q3 actuals",
-            detail: "Three-column note: grant applications (status, next action), outreach (heat map, next contacts), runway (Q3 actuals vs projection). Any gap between the projection and the actual? If yes, document it now.",
+            title: "Pivot phase complete — final close-out note",
+            detail: "Write the Pivot phase close-out note. What changed between W27 and W34? What did you learn? What does Operating Season need to get right?",
+            category: "admin",
           },
         ],
       },
@@ -1020,14 +1174,15 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 35,
     phase: "Pivot",
-    theme: "Pivot-to-Operating handoff preparation",
+    theme: "Bridge week — rest, prep, then Operating Season opens",
     days: [
       {
         isoDate: "2026-08-31",
         steps: [
           {
-            title: "Prepare the Operating Season launch note",
-            detail: "Operating Season starts Sep 7. Write a one-page internal note: what is the operating assumption for September (Plan A contract, Plan B parallel, Plan B only)? What are the three most important milestones for October, November, and December? What is the year-end audit preparation timeline?",
+            title: "Rest day — no deliverables",
+            detail: "This is a one-day buffer before Operating Season. No proposals, no outreach. Rest.",
+            category: "admin",
           },
         ],
       },
@@ -1035,8 +1190,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-01",
         steps: [
           {
-            title: "LFIF application — final section and internal review",
-            detail: "Read the full application as if you are the funder. Is the community benefit clear? Is the budget defensible? Is the proponent credible? Mark any section that needs strengthening before submission.",
+            title: "Set-the-season note — what does a good fall look like?",
+            detail: "Not a plan — a paragraph. What would make October feel like it worked? Write it before the season starts.",
+            category: "admin",
           },
         ],
       },
@@ -1044,12 +1200,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-02",
         steps: [
           {
-            title: "Co-pitch partner — confirm or move on",
-            detail: "Is there a band partner willing to co-sign a grant application? If yes: schedule the co-pitch call this week. If no: note the gap and plan the fall outreach calendar without assuming a co-pitch.",
-          },
-          {
-            title: "Gilles check-in — Operating Season prep",
-            detail: "Brief call: what does Gilles think the fall priority should be? Northern Band, outreach, or grant execution? What's his read on the corridor's rhythm in September and October?",
+            title: "Operating Season client list — final review",
+            detail: "Who are the active clients entering fall? What's each engagement? Any loose threads to close before W36?",
+            category: "proposals",
           },
         ],
       },
@@ -1057,8 +1210,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-03",
         steps: [
           {
-            title: "Operating Season calendar — set monthly milestones Sep–Dec",
-            detail: "For each month: one primary milestone, one secondary milestone, one non-negotiable family commitment. Write it down. Share with Gilles if appropriate.",
+            title: "Weekly rhythm doc — write it before you need it",
+            detail: "Monday: set the week. Wednesday: client check-ins. Friday: close-out note. Write this rhythm down somewhere you'll actually see it every Monday morning.",
+            category: "admin",
           },
         ],
       },
@@ -1066,12 +1220,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-04",
         steps: [
           {
-            title: "Pivot phase close-out — honest nine-week retrospective",
-            detail: "What did Pivot accomplish? Northern Band: where did it land? Plan B: which circles are warm, which are cold, which grants are in flight? Personal: how many non-negotiable breaches? What would you do differently in the next nine weeks? File the note in /Operations — this is the most important document of the year so far.",
-          },
-          {
-            title: "Non-negotiables check — Pivot phase final",
-            detail: "Two consecutive breaches in any month = trigger to flag. How did the Pivot phase land on all three: kids, sleep, partner time?",
+            title: "Pivot → Operating Season transition complete",
+            detail: "Four months of pursuit and repositioning. Write the one-sentence version: what changed, and what are you walking into fall with?",
+            category: "admin",
           },
         ],
       },
@@ -1079,25 +1230,27 @@ export const PLAN_2026: Week[] = [
   },
 
   // ══════════════════════════════════════════════════════════
-  //  OPERATING SEASON  W36–W52  (Sep 7 – Dec 31, 2026)
-  //  Contract execution or scaled Plan B + year-end audit
+  //  OPERATING SEASON  W36–W52  (Sep 7 – Dec 25, 2026)
+  //  Active contracts. Seasonal rhythm. Weekly close-outs.
   // ══════════════════════════════════════════════════════════
 
   {
     isoWeek: 36,
     phase: "Operating Season",
-    theme: "Operating Season launch",
+    theme: "Operating Season opens — contracts live, rhythm established",
     days: [
       {
         isoDate: "2026-09-07",
         steps: [
           {
-            title: "Operating Season Day 1 — confirm the operating assumption for fall",
-            detail: "Which scenario is live: (1) Northern Band Phase 1 underway, (2) Plan B outreach producing a warm partner, (3) Plan B only with grant applications in flight? Write it down. The fall operating plan follows from this.",
+            title: "Operating Season orientation — write the weekly rhythm",
+            detail: "Every week in Operating Season follows the same rhythm: Monday set-the-week, Friday close-out, Wednesday check-in with active clients. Write this down and commit to it.",
+            category: "admin",
           },
           {
-            title: "Set the Operating Season weekly rhythm",
-            detail: "Mondays: primary client or grant work. Wednesdays: outreach or relationship call. Fridays: close-out note. One Gilles call per month minimum.",
+            title: "807 — week one of H2 operating scope",
+            detail: "Confirm the H2 807 scope is active. What's this week's deliverable?",
+            category: "build",
           },
         ],
       },
@@ -1105,12 +1258,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-08",
         steps: [
           {
-            title: "Northern Band — September status check",
-            detail: "If Phase 1 is underway: confirm the weekly reporting cadence with the council liaison. If stalled: check in through Gilles for fall council calendar. If paused: no contact until Gilles signals a re-opening.",
-          },
-          {
-            title: "LFIF application — final review and submission prep",
-            detail: "If the application is complete: get the proponent's sign-off and submit. If not complete: set a hard submission date (no later than Oct 1) and identify the one section still blocking it.",
+            title: "Active contract check-in — Deer Lake (if signed)",
+            detail: "First full week of Operating Season. If Deer Lake is signed, check in with the council: what do they need this week? What does the first week look like on the ground?",
+            category: "relationship",
           },
         ],
       },
@@ -1118,8 +1268,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-09",
         steps: [
           {
-            title: "Warm prospect deepening — schedule next call with the warmest outreach contact",
-            detail: "Move from introductory to substantive. What would a scoping engagement look like? What does their council need to see before saying yes?",
+            title: "Tyler cold storage — September plan",
+            detail: "What is Tyler doing in September? What needs to be done before winter? Confirm the September plan is documented and resourced.",
+            category: "build",
           },
         ],
       },
@@ -1127,8 +1278,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-10",
         steps: [
           {
-            title: "V7 financial model review — September actuals vs projection",
-            detail: "Update the model with September's opening cash position. Flag any variance from the July 31 projection.",
+            title: "Print — fall season materials check",
+            detail: "Any print materials needed for September? Get them into the queue.",
+            category: "print",
           },
         ],
       },
@@ -1136,8 +1288,9 @@ export const PLAN_2026: Week[] = [
         isoDate: "2026-09-11",
         steps: [
           {
-            title: "Weekly close-out — Operating Season Week 1",
-            detail: "One-paragraph note: operating assumption confirmed, primary client or grant status, outreach heat map. File in /Operations.",
+            title: "Week 36 close-out — Operating Season week one",
+            detail: "How did week one feel? Is the rhythm working? What needs to change?",
+            category: "admin",
           },
         ],
       },
@@ -1147,55 +1300,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 37,
     phase: "Operating Season",
-    theme: "October milestone prep and outreach follow-through",
+    theme: "Operating rhythm — relationships, build, physical work",
     days: [
       {
         isoDate: "2026-09-14",
         steps: [
-          {
-            title: "October milestone: what is the single most important thing to accomplish by Oct 31?",
-            detail: "Write it at the top of a blank page. Everything else this month is in service of it. Do not add a second item until the first is confirmed.",
-          },
-          {
-            title: "Plan B grant — second application scoping",
-            detail: "If LFIF is submitted or close to submission: which is the next grant-shaped workstream to develop? Workshops and training cohorts, Food Hub on Wheels, or something else? What's the application timeline?",
-          },
+          { title: "807 — weekly scope check", category: "build", detail: "Confirm this week's 807 deliverable is on track." },
+          { title: "Active contracts — weekly check-in", category: "relationship", detail: "One check-in with each active contract client. What do they need? Any issues?" },
         ],
       },
       {
         isoDate: "2026-09-15",
         steps: [
-          {
-            title: "Outreach — second contact with the top two warm prospects",
-            detail: "Move the conversation forward. Offer to send the one-page cost summary tailored to their community. Ask for a date to talk to their council liaison.",
-          },
+          { title: "Cold storage progress", category: "build", detail: "Tyler update: where are we on the cold storage timeline?" },
         ],
       },
       {
         isoDate: "2026-09-16",
         steps: [
-          {
-            title: "Gilles — monthly check-in",
-            detail: "Brief call: what is he hearing about the corridor? Any new community considering a store? Any shift in Northern Band's position? Any door he can open this month that the practitioner can't?",
-          },
+          { title: "PACE / NAN September outreach", category: "relationship", detail: "September relaunch on PACE and NAN. One note each. Keep it brief." },
         ],
       },
       {
         isoDate: "2026-09-17",
         steps: [
-          {
-            title: "Year-end audit timeline — draft the Q4 schedule",
-            detail: "The year-end audit runs November–December. What needs to be in place by Nov 1 for the audit to go smoothly? Financial records current, producer agreements filed, staff hours logged, council reports on file. Draft the checklist now.",
-          },
+          { title: "Print — upcoming deliverables", category: "print", detail: "What's in the print queue for October?" },
         ],
       },
       {
         isoDate: "2026-09-18",
         steps: [
-          {
-            title: "Weekly close-out — September Week 2",
-            detail: "Primary milestone progress, outreach contacts this week, grants in flight. Non-negotiables check.",
-          },
+          { title: "Week 37 close-out", category: "admin", detail: "Operating Season rhythm check: is the weekly pattern working?" },
         ],
       },
     ],
@@ -1204,51 +1339,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 38,
     phase: "Operating Season",
-    theme: "Client execution and grant submission",
+    theme: "Mid-September check — revenue, relationships, build",
     days: [
       {
         isoDate: "2026-09-21",
         steps: [
-          {
-            title: "Primary client work — whatever the operating assumption requires",
-            detail: "If Northern Band Phase 1 is underway: week 3 of 8 (or wherever we are). Deliver the week's planned output. If Plan B: the primary client is the grant application or the warm outreach prospect.",
-          },
+          { title: "Monthly revenue review", category: "admin", detail: "What came in this month? What's the September projection?" },
+          { title: "807 — relationship check-in", category: "relationship", detail: "Beyond the scope — how is 807 doing? Is the relationship strong?" },
         ],
       },
       {
         isoDate: "2026-09-22",
         steps: [
-          {
-            title: "LFIF application — submit if ready; final review if not",
-            detail: "Target submission date: Sept 30 at the latest. If any section is still incomplete, it becomes today's task.",
-          },
+          { title: "Tyler cold storage — mid-month review", category: "build", detail: "Is cold storage on track for winter?" },
         ],
       },
       {
         isoDate: "2026-09-23",
         steps: [
-          {
-            title: "Second grant application — first section draft",
-            detail: "Workshops and training cohorts or Food Hub on Wheels — whichever is next in the queue. Write the first section today. Progress over perfection.",
-          },
+          { title: "Deer Lake — status check (if contract active)", category: "relationship", detail: "How is the Deer Lake engagement going? What does the council need?" },
         ],
       },
       {
         isoDate: "2026-09-24",
         steps: [
-          {
-            title: "Warm prospect — council liaison introduction request",
-            detail: "If any prospect has agreed to a scoping call: ask for an introduction to their council liaison. The council liaison is the door to a BCR. Do not skip this step.",
-          },
+          { title: "Build — Saltbox/computing pipeline", category: "build", detail: "What's in the computing pipeline for October?" },
         ],
       },
       {
         isoDate: "2026-09-25",
         steps: [
-          {
-            title: "Weekly close-out — September Week 3",
-            detail: "LFIF status, second grant status, outreach council-liaison introductions, primary client progress. One paragraph. File in /Operations.",
-          },
+          { title: "Week 38 close-out", category: "admin", detail: "Three-column review: Revenue (on track?), Relationships (any issues?), Build (cold storage, 807 — on track?)." },
         ],
       },
     ],
@@ -1257,55 +1378,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 39,
     phase: "Operating Season",
-    theme: "September close-out",
+    theme: "Late September — Q4 planning begins",
     days: [
       {
         isoDate: "2026-09-28",
         steps: [
-          {
-            title: "LFIF — submit application",
-            detail: "Last chance before the September 30 self-imposed deadline. Submit today. File the submission confirmation in /Operations/Grants.",
-          },
+          { title: "Q4 planning — what does October-December look like?", category: "admin", detail: "Quick sketch of Q4: active contracts, known deliverables, holiday closures, cash flow." },
+          { title: "807 — Q4 scope", category: "build", detail: "What does 807 need in Q4? Scope it now." },
         ],
       },
       {
         isoDate: "2026-09-29",
         steps: [
-          {
-            title: "September financial close — actuals vs projection",
-            detail: "Three months into the operating year (Jun–Sep). What are the actual revenues and costs? How does that compare to the V7 projection? Update the financial model. Flag any variance to Gilles if material.",
-          },
+          { title: "Cold storage — pre-winter deadline check", category: "build", detail: "Cold storage needs to be operational before winter. Is Tyler on track?" },
         ],
       },
       {
         isoDate: "2026-09-30",
         steps: [
-          {
-            title: "Outreach heat map — September update",
-            detail: "Rank all active outreach contacts by heat. Who is warm, who is cooling, who has gone cold? Set the October follow-up calendar based on this ranking.",
-          },
+          { title: "September close-out — monthly review", category: "admin", detail: "One paragraph: what happened in September? Revenue, relationships, build. File it." },
         ],
       },
       {
         isoDate: "2026-10-01",
         steps: [
-          {
-            title: "October operating plan — set the month's three milestones",
-            detail: "One primary (client / grant), one secondary (outreach), one non-negotiable (family). Write them on paper. Post them somewhere visible.",
-          },
+          { title: "October opens — confirm top three priorities", category: "admin", detail: "What are the three most important things in October? Write them down." },
         ],
       },
       {
         isoDate: "2026-10-02",
         steps: [
-          {
-            title: "Monthly close-out — September retrospective",
-            detail: "What did September accomplish? What didn't happen that was supposed to? What is the operating assumption going into October? File the note in /Operations. This is the monthly habit that will make the year-end audit straightforward.",
-          },
-          {
-            title: "Non-negotiables check — September month-end",
-            detail: "How many weeks in September had a breach? If two or more: flag for the Plan B trigger review.",
-          },
+          { title: "Week 39 close-out", category: "admin", detail: "Into Q4. What's in good shape? What needs attention?" },
         ],
       },
     ],
@@ -1314,55 +1417,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 40,
     phase: "Operating Season",
-    theme: "October deep work",
+    theme: "October — active contracts, cold storage, Q4 rhythm",
     days: [
       {
         isoDate: "2026-10-05",
         steps: [
-          {
-            title: "Primary client or grant — week's main deliverable set and started",
-            detail: "One clear deliverable this week. Write it at the top of the close-out note on Friday.",
-          },
-          {
-            title: "Second grant application — community benefit section",
-            detail: "The community benefit section is always the hardest. Write it first. Make it specific: what does a family in this community gain from the store in year one?",
-          },
+          { title: "807 — October scope confirmation", category: "build", detail: "Confirm October deliverables with 807." },
+          { title: "Active contracts — weekly check-in", category: "relationship", detail: "One check-in with each active contract client." },
         ],
       },
       {
         isoDate: "2026-10-06",
         steps: [
-          {
-            title: "Northern Band — quarterly check-in through Gilles",
-            detail: "One call, one question: is there any indication the council is considering reopening the Headwaters engagement conversation in Q4? No pressure, no ask. Just stay informed.",
-          },
+          { title: "Tyler — cold storage status", category: "build", detail: "Is cold storage on track for winter?" },
         ],
       },
       {
         isoDate: "2026-10-07",
         steps: [
-          {
-            title: "Warm prospect — follow-up call or note",
-            detail: "Move the warmest prospect forward. What is the next concrete step toward a council introduction?",
-          },
+          { title: "Print — Q4 materials planning", category: "print", detail: "What print materials are needed for Q4?" },
         ],
       },
       {
         isoDate: "2026-10-08",
         steps: [
-          {
-            title: "Year-end audit prep — producer agreements audit",
-            detail: "Pull all active producer agreements. Are they current? Are the terms still accurate? File the list in /Operations/Producers. Any gaps need to be closed before the year-end audit.",
-          },
+          { title: "Pipeline — any new outreach to open?", category: "relationship", detail: "PACE, NAN — any movement? Any new potential relationships to start?" },
         ],
       },
       {
         isoDate: "2026-10-09",
         steps: [
-          {
-            title: "Weekly close-out — October Week 1",
-            detail: "Primary deliverable: done or not? Grant: which section is next? Outreach: any movement? Non-negotiables: all intact?",
-          },
+          { title: "Week 40 close-out", category: "admin", detail: "October rhythm: is it working?" },
         ],
       },
     ],
@@ -1371,55 +1456,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 41,
     phase: "Operating Season",
-    theme: "Mid-October execution",
+    theme: "Mid-October — build, relationships, cold storage final push",
     days: [
       {
         isoDate: "2026-10-12",
         steps: [
-          {
-            title: "Thanksgiving (Canada) — reduced pace",
-            detail: "One desk task if needed. Otherwise: protect family time. No client-facing communication.",
-          },
+          { title: "807 — week deliverable", category: "build", detail: "This week's 807 work." },
+          { title: "Cold storage — is it operational?", category: "build", detail: "Tyler's cold storage should be operational or nearly so by now. Status check." },
         ],
       },
       {
         isoDate: "2026-10-13",
         steps: [
-          {
-            title: "Primary client or grant — week's main deliverable",
-            detail: "Back to full pace after the long weekend. Clear one concrete deliverable by Thursday.",
-          },
-          {
-            title: "Gilles — October check-in",
-            detail: "Monthly call. What's his read on the corridor in October? Any new doors? Any relationship risks to manage?",
-          },
+          { title: "Deer Lake — check-in (if contract active)", category: "relationship", detail: "Midway through the operating engagement — what's the council's experience?" },
         ],
       },
       {
         isoDate: "2026-10-14",
         steps: [
-          {
-            title: "Second grant — equipment and budget section",
-            detail: "Budget is the most scrutinized section. Be precise. Every line item should have a purpose statement and a supplier reference.",
-          },
+          { title: "Financial review — October mid-month", category: "admin", detail: "Revenue tracking, burn rate, runway projection." },
         ],
       },
       {
         isoDate: "2026-10-15",
         steps: [
-          {
-            title: "Outreach — cold circle first contact attempt",
-            detail: "If all warm and warm-mid circles have been contacted: make one cold-circle first contact. Treaty 3 Grand Council secretariat or Dryden-area bands. A cold call is still a call.",
-          },
+          { title: "Build — computing pipeline", category: "build", detail: "What's in the pipeline after current 807 scope?" },
         ],
       },
       {
         isoDate: "2026-10-16",
         steps: [
-          {
-            title: "Weekly close-out — October Week 2",
-            detail: "Primary deliverable status. Grant: on track for submission by Nov 1? Outreach: cold circle contacted? Non-negotiables check.",
-          },
+          { title: "Week 41 close-out", category: "admin", detail: "Mid-October review." },
         ],
       },
     ],
@@ -1428,51 +1495,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 42,
     phase: "Operating Season",
-    theme: "Grant push and year-end audit prep",
+    theme: "Late October — winter prep, year-end planning starts",
     days: [
       {
         isoDate: "2026-10-19",
         steps: [
-          {
-            title: "Second grant application — final sections",
-            detail: "Executive summary and organizational capacity sections. These go last because they're easier when the rest of the application exists. Write tight.",
-          },
+          { title: "Year-end planning — what does December look like?", category: "admin", detail: "Quick sketch: contract renewals, deliverables, year-end financial position." },
+          { title: "807 — Q4 relationship check-in", category: "relationship", detail: "Beyond the scope — is the relationship strong going into Q4?" },
         ],
       },
       {
         isoDate: "2026-10-20",
         steps: [
-          {
-            title: "Year-end audit prep — financial records audit",
-            detail: "Pull the QuickBooks (or equivalent) records. Are all invoices filed? Are all expenses categorized? Are the payroll records current? Identify any gaps and close them now, not in December.",
-          },
+          { title: "Tyler — cold storage operational check", category: "build", detail: "Is cold storage fully operational? Any final items?" },
         ],
       },
       {
         isoDate: "2026-10-21",
         steps: [
-          {
-            title: "Warm prospect — council liaison meeting (if arranged)",
-            detail: "If a council liaison meeting is on the calendar: prepare a one-page community brief tailored to their specific community. No generic decks.",
-          },
+          { title: "Print — November materials", category: "print", detail: "Any print materials needed in November?" },
         ],
       },
       {
         isoDate: "2026-10-22",
         steps: [
-          {
-            title: "Second grant — internal review",
-            detail: "Read the full application as the funder. Is the community benefit specific? Is the budget defensible? Is the proponent credible? Mark what needs revision.",
-          },
+          { title: "Constellation session review", category: "admin", detail: "Review locked constellation decisions. Are any still open? Are any ready to act on?", link: { label: "Constellation session", path: "/constellation-session" } },
         ],
       },
       {
         isoDate: "2026-10-23",
         steps: [
-          {
-            title: "Weekly close-out — October Week 3",
-            detail: "Grant: ready for submission by Nov 1? Financial records: any gaps closed? Outreach: council liaison meeting outcome. Non-negotiables check.",
-          },
+          { title: "Week 42 close-out", category: "admin", detail: "October done. What carries into November?" },
         ],
       },
     ],
@@ -1481,55 +1534,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 43,
     phase: "Operating Season",
-    theme: "October close and November launch",
+    theme: "November opens — contracts, build, pipeline",
     days: [
       {
         isoDate: "2026-10-26",
         steps: [
-          {
-            title: "Second grant — submit",
-            detail: "File the submission confirmation in /Operations/Grants. Note the expected decision timeline.",
-          },
-          {
-            title: "November operating plan — set the month's three milestones",
-            detail: "One primary (client / grant), one secondary (outreach or year-end audit prep), one non-negotiable (family). November is the last full month before the audit crunch.",
-          },
+          { title: "807 — November scope", category: "build", detail: "Confirm November deliverables." },
+          { title: "Active contracts — weekly check-in", category: "relationship", detail: "Check in with each active contract client." },
         ],
       },
       {
         isoDate: "2026-10-27",
         steps: [
-          {
-            title: "Northern Band — Q4 check-in through Gilles",
-            detail: "Is there any council calendar movement before year-end? If yes: prepare a brief update note. If no: maintain the relationship and plan for a January re-opening.",
-          },
+          { title: "Pipeline — year-end outreach plan", category: "relationship", detail: "Are there any year-end conversations to open? PACE, NAN — last call for 2026." },
         ],
       },
       {
         isoDate: "2026-10-28",
         steps: [
-          {
-            title: "Outreach — November calendar set",
-            detail: "Book all November outreach calls now. The year-end audit crunch in November and December will squeeze outreach time. Get the calls on the calendar before it fills.",
-          },
+          { title: "Financial — year-end projection", category: "admin", detail: "Project year-end financial position. How does 2026 close?" },
         ],
       },
       {
         isoDate: "2026-10-29",
         steps: [
-          {
-            title: "Year-end audit prep — council report template",
-            detail: "Draft the year-end report template for the council: what the store accomplished, what was spent, what was produced, what the community got. This template makes the December report a fill-in exercise, not a writing exercise.",
-          },
+          { title: "Build — computing work pipeline", category: "build", detail: "What computing work is in the Q4 pipeline?" },
         ],
       },
       {
         isoDate: "2026-10-30",
         steps: [
-          {
-            title: "Monthly close-out — October retrospective",
-            detail: "Three months in the Operating Season. What happened? What didn't? What is the operating assumption going into November? File in /Operations. Non-negotiables check.",
-          },
+          { title: "Week 43 close-out", category: "admin", detail: "End of October. November rhythm confirmed?" },
         ],
       },
     ],
@@ -1538,51 +1573,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 44,
     phase: "Operating Season",
-    theme: "November — year-end audit begins",
+    theme: "November — operational rhythm, renewal conversations",
     days: [
       {
         isoDate: "2026-11-02",
         steps: [
-          {
-            title: "Year-end audit — financial records final audit",
-            detail: "All invoices filed, all expenses categorized, all payroll records current. Hand the complete package to the bookkeeper for the year-end review. This is the last week to catch gaps before the audit crunch.",
-          },
+          { title: "807 — renewal conversation", category: "relationship", detail: "Start the renewal conversation for 2027. What does 807 need from Headwaters next year?" },
+          { title: "Deer Lake — renewal or close (if contract active)", category: "proposals", detail: "Where does the Deer Lake engagement go after the initial term? Renewal, expansion, or close?" },
         ],
       },
       {
         isoDate: "2026-11-03",
         steps: [
-          {
-            title: "Primary client work — November deliverable",
-            detail: "Whatever the operating assumption requires: deliver the November milestone by Nov 28.",
-          },
+          { title: "Tyler — cold storage Q4 review", category: "build", detail: "How is cold storage performing? Any issues going into winter?" },
         ],
       },
       {
         isoDate: "2026-11-04",
         steps: [
-          {
-            title: "Gilles — November check-in",
-            detail: "Monthly call. Any corridor news? Any relationship risks heading into year-end? What's his priority for the December conversation?",
-          },
+          { title: "Print — holiday season materials", category: "print", detail: "Any print materials needed for the holiday season?" },
         ],
       },
       {
         isoDate: "2026-11-05",
         steps: [
-          {
-            title: "Outreach — November call 1",
-            detail: "Warmest active prospect. Move the conversation forward. If no warm prospect remains active: start the Treaty 3 / cold-circle sequence.",
-          },
+          { title: "Build — 807 November progress", category: "build", detail: "Mid-November 807 check." },
         ],
       },
       {
         isoDate: "2026-11-06",
         steps: [
-          {
-            title: "Weekly close-out — November Week 1",
-            detail: "Year-end audit: financial records handed to bookkeeper? Primary deliverable: on track? Outreach: one call done. Non-negotiables check.",
-          },
+          { title: "Week 44 close-out", category: "admin", detail: "November week two. Renewal conversations started?" },
         ],
       },
     ],
@@ -1591,51 +1612,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 45,
     phase: "Operating Season",
-    theme: "Year-end audit — producer and staff records",
+    theme: "Mid-November — wrap active work, plan December",
     days: [
       {
         isoDate: "2026-11-09",
         steps: [
-          {
-            title: "Year-end audit — producer agreement audit",
-            detail: "Confirm all active producer agreements are current, signed, and filed. Any producer whose agreement lapsed or was never formalized: contact them this week. Do not carry an unsigned agreement into the year-end report.",
-          },
+          { title: "807 — November deliverable progress", category: "build", detail: "Are November deliverables on track?" },
+          { title: "Year-end financial review", category: "admin", detail: "Updated year-end projection." },
         ],
       },
       {
         isoDate: "2026-11-10",
         steps: [
-          {
-            title: "Remembrance Day observance",
-            detail: "Reduced pace. One desk task if needed. No client-facing communication.",
-          },
+          { title: "Active contracts — pre-December check", category: "relationship", detail: "What needs to be done before December? Any year-end deliverables?" },
         ],
       },
       {
         isoDate: "2026-11-11",
         steps: [
-          {
-            title: "Remembrance Day — honour the day",
-            detail: "If this falls on a Wednesday: no operational work. Observe the day with your family.",
-          },
+          { title: "Remembrance Day — rest if you can", category: "admin", detail: "Non-negotiables. Kids, rest." },
         ],
       },
       {
         isoDate: "2026-11-12",
         steps: [
-          {
-            title: "Year-end audit — staff hours and payroll records",
-            detail: "All staff hours logged for the year. All payroll records filed. Any discrepancy between hours claimed and hours recorded: investigate and resolve before the audit.",
-          },
+          { title: "December plan — write it now", category: "admin", detail: "December is short. Write the December plan now: what gets done, what waits until January, what closes." },
         ],
       },
       {
         isoDate: "2026-11-13",
         steps: [
-          {
-            title: "Weekly close-out — November Week 2",
-            detail: "Producer agreements: all current? Staff records: all filed? Primary deliverable: on track? Non-negotiables check.",
-          },
+          { title: "Week 45 close-out", category: "admin", detail: "Mid-November check. December is coming fast." },
         ],
       },
     ],
@@ -1644,51 +1651,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 46,
     phase: "Operating Season",
-    theme: "Year-end audit — council report draft",
+    theme: "Late November — year-end prep, renewals, close-outs",
     days: [
       {
         isoDate: "2026-11-16",
         steps: [
-          {
-            title: "Council report — draft the year-end narrative",
-            detail: "Using the template from Week 43: fill in the actuals. What did the store do in year one? What was spent? What was produced? What did the community gain? One page of honest numbers and one paragraph of plain-language narrative.",
-          },
+          { title: "807 — renewal confirmed or in progress?", category: "relationship", detail: "Is the 2027 807 relationship confirmed? If not, what's the timeline?" },
+          { title: "Deer Lake — year-end review (if active)", category: "relationship", detail: "Year-end review with Deer Lake: what happened in the engagement? What does Phase 2 look like?" },
         ],
       },
       {
         isoDate: "2026-11-17",
         steps: [
-          {
-            title: "Outreach — November call 2",
-            detail: "Second warm outreach call of the month. If a council introduction is on the table: schedule it for December.",
-          },
+          { title: "Tyler — year-end cold storage review", category: "build", detail: "Year-end summary of the cold storage project. What was accomplished?" },
         ],
       },
       {
         isoDate: "2026-11-18",
         steps: [
-          {
-            title: "Financial model — November actuals vs projection",
-            detail: "Update the V7 model with November actuals. Six months into the engagement (if Plan A is running). Flag any material variance.",
-          },
+          { title: "Print — year-end materials inventory", category: "print", detail: "What print materials were produced in 2026? Document the full list." },
         ],
       },
       {
         isoDate: "2026-11-19",
         steps: [
-          {
-            title: "Year-end audit — bookkeeper review meeting",
-            detail: "Meet with the bookkeeper (or review their preliminary report). What questions do they have? What documents are still outstanding? Set a hard deadline for the complete bookkeeper package: Dec 15.",
-          },
+          { title: "Pipeline — 2027 plan starts here", category: "relationship", detail: "What does the 2027 proposal pipeline look like? PACE, NAN, Gather Round, new communities — what's the opening plan?" },
         ],
       },
       {
         isoDate: "2026-11-20",
         steps: [
-          {
-            title: "Weekly close-out — November Week 3",
-            detail: "Council report draft: done? Bookkeeper meeting: done? Outreach: two calls this month? Non-negotiables check.",
-          },
+          { title: "Week 46 close-out", category: "admin", detail: "End of November. Six weeks left in 2026." },
         ],
       },
     ],
@@ -1697,51 +1690,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 47,
     phase: "Operating Season",
-    theme: "November push — wrap active workstreams",
+    theme: "December approaches — wind down active work",
     days: [
       {
         isoDate: "2026-11-23",
         steps: [
-          {
-            title: "Primary client work — November deliverable final push",
-            detail: "Deliver the November milestone by Friday. If it's not deliverable by Friday, escalate and document the reason.",
-          },
+          { title: "807 — December scope (last active scope of 2026)", category: "build", detail: "What does 807 need in December? Last deliverable of the year." },
+          { title: "Active contracts — December close-out plan", category: "admin", detail: "What needs to be completed before the holidays? Make a list and stick to it." },
         ],
       },
       {
         isoDate: "2026-11-24",
         steps: [
-          {
-            title: "Year-end audit — impact data collection",
-            detail: "Collect the data that the year-end report needs: sales by category (if store is running), producer volume by producer, household accounts served, staff hours by role. This data takes longer to gather than expected — start now.",
-          },
+          { title: "Year-end financial close", category: "admin", detail: "Prepare the year-end financial summary: revenue, costs, startup budget utilization, runway going into 2027." },
         ],
       },
       {
         isoDate: "2026-11-25",
         steps: [
-          {
-            title: "Gilles — November close-out call",
-            detail: "Brief call. What does he want to see in the year-end report? What does the council care about most? Is there anything the report should address that a standard financial audit wouldn't surface?",
-          },
+          { title: "Build — complete any open computing items", category: "build", detail: "What computing work needs to close before year-end?" },
         ],
       },
       {
         isoDate: "2026-11-26",
         steps: [
-          {
-            title: "Grant applications — status check on submitted applications",
-            detail: "LFIF, second grant: any decision or adjudicator communication? Document the current status of each. If any application is approaching its adjudication window, confirm receipt with the program officer.",
-          },
+          { title: "Print — holiday materials", category: "print", detail: "Any holiday season print materials needed?" },
         ],
       },
       {
         isoDate: "2026-11-27",
         steps: [
-          {
-            title: "Monthly close-out — November retrospective",
-            detail: "Four months in Operating Season. What happened? Year-end audit: on track for Dec 31? Primary client: November milestone delivered? Outreach: any warm prospects entering December? Non-negotiables check.",
-          },
+          { title: "Week 47 close-out", category: "admin", detail: "Thanksgiving week. Rest if you can." },
         ],
       },
     ],
@@ -1750,55 +1729,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 48,
     phase: "Operating Season",
-    theme: "December — year-end audit crunch",
+    theme: "December — final deliverables, renewals, year-end close",
     days: [
       {
         isoDate: "2026-11-30",
         steps: [
-          {
-            title: "December operating plan — protect the audit crunch",
-            detail: "December has two competing demands: year-end audit and holiday family time. Write the December calendar now. Block the audit weeks. Block the family days. The two should not collide.",
-          },
+          { title: "December orientation — what absolutely needs to ship?", category: "admin", detail: "Write the list of December must-ships. Be ruthless: if it doesn't need to be done in December, move it to January." },
+          { title: "807 — final 2026 deliverable", category: "build", detail: "Deliver the last 807 item of 2026. Thank them for the year." },
         ],
       },
       {
         isoDate: "2026-12-01",
         steps: [
-          {
-            title: "Year-end audit — bookkeeper package: all documents delivered by Dec 15",
-            detail: "Confirm with the bookkeeper that the Dec 15 deadline is firm. If they need anything, deliver it today.",
-          },
-          {
-            title: "Council report — second draft",
-            detail: "Incorporate any feedback from the Gilles call. Tighten the narrative. The report should answer the council's question before they ask it.",
-          },
+          { title: "Deer Lake — year-end relationship note (if active)", category: "relationship", detail: "One genuine note to the Deer Lake team: what you're proud of from the engagement, and what you're looking forward to in Phase 2." },
         ],
       },
       {
         isoDate: "2026-12-02",
         steps: [
-          {
-            title: "Primary client work — December deliverable set",
-            detail: "What is the December milestone? It should be achievable by Dec 19. Write it down.",
-          },
+          { title: "Tyler — cold storage year-end summary", category: "build", detail: "Document what was built, what's operational, and what the 2027 plan is." },
         ],
       },
       {
         isoDate: "2026-12-03",
         steps: [
-          {
-            title: "Northern Band — year-end check-in through Gilles",
-            detail: "Is there any chance of a January conversation? What does Gilles recommend as the year-end posture: a brief update note, a report summary, or silence until January?",
-          },
+          { title: "2027 planning — first draft", category: "admin", detail: "Write the first draft of the 2027 operating plan. One page. What did 2026 teach you? What's the opening posture for 2027?" },
         ],
       },
       {
         isoDate: "2026-12-04",
         steps: [
-          {
-            title: "Weekly close-out — December Week 1",
-            detail: "Audit timeline: on track for Dec 15 bookkeeper package? December deliverable: set? Northern Band: year-end posture decided? Non-negotiables check.",
-          },
+          { title: "Week 48 close-out", category: "admin", detail: "Three weeks left. What's in good shape? What needs attention before holidays?" },
         ],
       },
     ],
@@ -1807,51 +1768,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 49,
     phase: "Operating Season",
-    theme: "Bookkeeper package and impact data",
+    theme: "Final active week — close everything that can close",
     days: [
       {
         isoDate: "2026-12-07",
         steps: [
-          {
-            title: "Year-end audit — complete bookkeeper package assembly",
-            detail: "All invoices, all expense records, all payroll records, all producer payments, all council invoices issued. The package is complete when the bookkeeper can do the year-end review without asking for anything else.",
-          },
+          { title: "Active contracts — final deliverables week", category: "relationship", detail: "This is the last full week for active contract work before the holidays. Deliver everything that was promised." },
+          { title: "807 — relationship close for 2026", category: "relationship", detail: "Phone call or note: thank 807 for the year, confirm 2027 renewal intent." },
         ],
       },
       {
         isoDate: "2026-12-08",
         steps: [
-          {
-            title: "Impact data — finalize the year-one numbers",
-            detail: "The numbers the council report will carry: total revenue, total cost, net to community (if store model), producer volume, households served, staff hours. Lock these numbers this week.",
-          },
+          { title: "Year-end admin — invoices, records, filings", category: "admin", detail: "Get all outstanding invoices sent. File monthly records." },
         ],
       },
       {
         isoDate: "2026-12-09",
         steps: [
-          {
-            title: "Outreach — December check-in with warmest active prospect",
-            detail: "One short note: 'Looking forward to continuing this conversation in January. Happy to send a year-one cost summary tailored to your community if that would be useful.' No ask. Just stay warm.",
-          },
+          { title: "Build — final computing close for 2026", category: "build", detail: "Complete and document any remaining computing work." },
         ],
       },
       {
         isoDate: "2026-12-10",
         steps: [
-          {
-            title: "Primary client — December deliverable progress check",
-            detail: "Is the December milestone on track? If not: escalate today, not next week.",
-          },
+          { title: "2027 operating plan — review and sharpen", category: "admin", detail: "Second pass on the 2027 plan draft. What's clearer now than it was last week?" },
         ],
       },
       {
         isoDate: "2026-12-11",
         steps: [
-          {
-            title: "Weekly close-out — December Week 2",
-            detail: "Bookkeeper package: delivered or on track for Dec 15? Impact data: locked? Outreach: year-end note sent? Primary deliverable: on track?",
-          },
+          { title: "Week 49 close-out", category: "admin", detail: "Two weeks to holidays. What's truly done? What's carrying to January?" },
         ],
       },
     ],
@@ -1860,55 +1807,37 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 50,
     phase: "Operating Season",
-    theme: "Year-end report and council brief",
+    theme: "Wind-down week — protect the non-negotiables",
     days: [
       {
         isoDate: "2026-12-14",
         steps: [
-          {
-            title: "Bookkeeper package — deliver to bookkeeper by Dec 15",
-            detail: "Today or tomorrow at the latest. File the delivery confirmation in /Operations.",
-          },
+          { title: "Final year-end outreach — any open conversations", category: "relationship", detail: "Any conversations that need to close or reset before year-end? Do them this week." },
+          { title: "Financial year-end close", category: "admin", detail: "Final financial close for 2026. Revenue total, costs total, startup budget utilization, 2027 opening position." },
         ],
       },
       {
         isoDate: "2026-12-15",
         steps: [
-          {
-            title: "Year-end report — final draft",
-            detail: "Incorporate the locked impact data. Read it out loud. Does it answer the council's question: was this year worth it? If yes: it's done. If no: revise the narrative section.",
-          },
-          {
-            title: "Primary client — December milestone delivery",
-            detail: "Deliver the December milestone this week if possible. The window before the holiday close is narrow.",
-          },
+          { title: "2026 year-end review — write it for yourself", category: "admin", detail: "One page, honest, for you. What happened in 2026? What did you learn? What do you wish you'd done differently? What are you proud of?" },
         ],
       },
       {
         isoDate: "2026-12-16",
         steps: [
-          {
-            title: "Gilles — year-end report review",
-            detail: "Send Gilles the draft year-end report. Ask one question: is there anything here the council will push back on, and is it answerable?",
-          },
+          { title: "Print — year-end materials done", category: "print", detail: "Is all print work for 2026 completed and filed?" },
         ],
       },
       {
         isoDate: "2026-12-17",
         steps: [
-          {
-            title: "Pilot #2 brief — begin draft",
-            detail: "Based on year-one learnings: what does the Pilot #2 brief look like? Which community is the most likely second store? What would the year-two engagement look like? This brief is for January, but starting the thinking now.",
-          },
+          { title: "Tyler — year-end check-in", category: "relationship", detail: "Personal check-in with Tyler. How is he doing? What does he need going into the new year?" },
         ],
       },
       {
         isoDate: "2026-12-18",
         steps: [
-          {
-            title: "Weekly close-out — December Week 3",
-            detail: "Bookkeeper package: delivered. Year-end report: final draft done. December milestone: delivered or final push next week? Non-negotiables check.",
-          },
+          { title: "Week 50 close-out — pre-holiday", category: "admin", detail: "One week until the holidays. Everything essential is done or can wait until January. Protect the non-negotiables." },
         ],
       },
     ],
@@ -1917,59 +1846,36 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 51,
     phase: "Operating Season",
-    theme: "Year-end close and holiday wind-down",
+    theme: "Holiday week — rest is the work",
     days: [
       {
         isoDate: "2026-12-21",
         steps: [
-          {
-            title: "Year-end report — distribute to council and band office",
-            detail: "Send one copy to the council liaison, one to the band office, and file one in /Operations. The report is the practitioner's primary Year 1 legacy document.",
-          },
-          {
-            title: "December milestone — final delivery if not yet complete",
-            detail: "This is the last full week. Any deliverable not yet complete needs to land today or tomorrow.",
-          },
+          { title: "Solstice — mark the turning of the year", category: "admin", detail: "No task. Write a short reflection." },
         ],
       },
       {
         isoDate: "2026-12-22",
         steps: [
-          {
-            title: "Pilot #2 brief — complete first draft",
-            detail: "Ready to present to a prospective Pilot #2 community in January. One page: what the second store is, what the community gets, what it costs, what the practitioner brings from year one.",
-          },
+          { title: "Pre-holiday close-out", category: "admin", detail: "Send any final year-end notes. File any outstanding records. Then close the laptop." },
         ],
       },
       {
         isoDate: "2026-12-23",
         steps: [
-          {
-            title: "Store moves to holiday reduced hours — confirm with all staff",
-            detail: "Dec 24–Jan 1: confirm hours with food handler and OM (if applicable). The community should know the holiday schedule well in advance.",
-          },
-          {
-            title: "Financial model — year-end update with full-year actuals",
-            detail: "Update the V7 model with the full year actuals. What was the final position? Was the V7 projection accurate? What would you change in the year-two model?",
-          },
+          { title: "Rest", category: "admin", detail: "Kids are home. Be home. The work is done." },
         ],
       },
       {
         isoDate: "2026-12-24",
         steps: [
-          {
-            title: "Staff year-end recognition — written notes and confirmed bonuses",
-            detail: "Every team member who completed the year gets a written note. The bonus is secondary to the recognition.",
-          },
+          { title: "Rest", category: "admin", detail: "Non-negotiables: family first." },
         ],
       },
       {
         isoDate: "2026-12-25",
         steps: [
-          {
-            title: "Christmas Day — full rest",
-            detail: "The practitioner ran a community food system for a year while protecting family time. Both are true today. Rest.",
-          },
+          { title: "Rest", category: "admin", detail: "Merry Christmas. The plan worked." },
         ],
       },
     ],
@@ -1978,164 +1884,33 @@ export const PLAN_2026: Week[] = [
   {
     isoWeek: 52,
     phase: "Operating Season",
-    theme: "Year-end — year-two planning seeds",
+    theme: "Year close — rest, reflect, and open 2027",
     days: [
       {
         isoDate: "2026-12-28",
         steps: [
-          {
-            title: "Year retrospective — honest full-year review",
-            detail: "Write the one-page honest year review. What went better than expected? What went worse? What was the right call at each trigger point (bridge capital, June 15, July 31)? What would you do differently in year two? File in /Operations. This is the most important document you write all year.",
-          },
+          { title: "2026 close — file the year", category: "admin", detail: "Final administrative close for 2026. Everything filed, everything recorded." },
+          { title: "2027 plan — finalize and commit", category: "admin", detail: "The 2027 operating plan is ready. Commit to the opening posture. Write the first week's priorities." },
         ],
       },
       {
         isoDate: "2026-12-29",
         steps: [
-          {
-            title: "Year-two goals — set three objectives for Q1 2027",
-            detail: "Write them down: (1) what is the primary engagement (Northern Band year 2, new community, Plan B scale), (2) what is the outreach target (which community is the Pilot #2 candidate), (3) what is the personal goal (kids, sleep, partner time maintained for 12 consecutive weeks)?",
-          },
+          { title: "Reflect on the year", category: "admin", detail: "Read the year-end review you wrote in W50. What would you add now? What do you want to carry into 2027?" },
         ],
       },
       {
         isoDate: "2026-12-30",
         steps: [
-          {
-            title: "Gilles — year-end call and thank-you",
-            detail: "One call: thank him for the year. What is his read of the corridor heading into 2027? What does he think Headwaters should prioritize in Q1?",
-          },
-          {
-            title: "Non-negotiables — full-year check",
-            detail: "How many weeks in 2026 had a non-negotiables breach? If more than four: what changes in 2027 to protect the three non-negotiables? Write the change, not just the intention.",
-          },
+          { title: "Open the 2027 plan", category: "admin", detail: "Set the 2027 plan somewhere you'll see it. The new year starts fresh." },
         ],
       },
       {
         isoDate: "2026-12-31",
         steps: [
-          {
-            title: "New Year's Eve — close the year",
-            detail: "File the last close-out note of 2026 in /Operations. One paragraph: what was 2026? What is 2027 going to be? Then close the laptop and celebrate with your family.",
-          },
-        ],
-      },
-      {
-        isoDate: "2027-01-01",
-        steps: [
-          {
-            title: "New Year's Day — full rest",
-            detail: "Protect family time. No operational decisions today. Year one is done.",
-          },
+          { title: "New Year's Eve — be present", category: "admin", detail: "Non-negotiables. Rest and celebrate." },
         ],
       },
     ],
   },
 ];
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/**
- * Returns the local calendar date as "YYYY-MM-DD" (no UTC shift).
- * Using toISOString() would give the UTC date, which can be one day behind
- * in timezones west of UTC — this helper always uses the device's local date.
- */
-export function toLocalISODate(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-export function getWeek(isoWeek: number): Week | undefined {
-  return PLAN_2026.find((w) => w.isoWeek === isoWeek);
-}
-
-/**
- * Returns the week for the given calendar date (using local date, not UTC).
- * On Saturday, returns the week containing the previous Friday.
- * On Sunday, returns the week containing the upcoming Monday.
- */
-export function getTodayWeek(): Week | undefined {
-  const today = new Date();
-  const dow = today.getDay(); // 0=Sun, 1=Mon, ... 6=Sat
-
-  if (dow === 6) {
-    // Saturday → show Friday's week
-    const fri = new Date(today);
-    fri.setDate(today.getDate() - 1);
-    const friStr = toLocalISODate(fri);
-    return PLAN_2026.find((w) => w.days.some((d) => d.isoDate === friStr));
-  }
-
-  if (dow === 0) {
-    // Sunday → show Monday's week
-    const mon = new Date(today);
-    mon.setDate(today.getDate() + 1);
-    const monStr = toLocalISODate(mon);
-    return PLAN_2026.find((w) => w.days.some((d) => d.isoDate === monStr));
-  }
-
-  const todayStr = toLocalISODate(today);
-  return PLAN_2026.find((w) => w.days.some((d) => d.isoDate === todayStr));
-}
-
-/**
- * Returns the week and day for display in the Today view (using local date).
- * On Saturday, returns Friday's plan with a weekend flag.
- * On Sunday, returns Monday's plan with a weekend flag.
- */
-export function getTodayDay(): { week: Week; day: Day; weekendMode?: "saturday" | "sunday" } | undefined {
-  const today = new Date();
-  const dow = today.getDay(); // 0=Sun, 6=Sat
-
-  if (dow === 6) {
-    // Saturday → show Friday's plan
-    const fri = new Date(today);
-    fri.setDate(today.getDate() - 1);
-    const friStr = toLocalISODate(fri);
-    for (const week of PLAN_2026) {
-      const day = week.days.find((d) => d.isoDate === friStr);
-      if (day) return { week, day, weekendMode: "saturday" };
-    }
-    return undefined;
-  }
-
-  if (dow === 0) {
-    // Sunday → show Monday's plan
-    const mon = new Date(today);
-    mon.setDate(today.getDate() + 1);
-    const monStr = toLocalISODate(mon);
-    for (const week of PLAN_2026) {
-      const day = week.days.find((d) => d.isoDate === monStr);
-      if (day) return { week, day, weekendMode: "sunday" };
-    }
-    return undefined;
-  }
-
-  const todayStr = toLocalISODate(today);
-  for (const week of PLAN_2026) {
-    const day = week.days.find((d) => d.isoDate === todayStr);
-    if (day) return { week, day };
-  }
-  return undefined;
-}
-
-export function formatDateRange(week: Week): string {
-  const dates = week.days.map((d) => new Date(d.isoDate + "T12:00:00"));
-  const first = dates[0];
-  const last = dates[dates.length - 1];
-  const opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
-  if (first.getMonth() === last.getMonth()) {
-    return `${first.toLocaleDateString("en-CA", { month: "short" })} ${first.getDate()}–${last.getDate()}`;
-  }
-  return `${first.toLocaleDateString("en-CA", opts)} – ${last.toLocaleDateString("en-CA", opts)}`;
-}
-
-export const PHASE_ORDER: Phase[] = ["Pursuit", "Pivot", "Operating Season"];
-
-export const PHASE_COLORS: Record<Phase, { bg: string; text: string; dot: string }> = {
-  Pursuit: { bg: "rgba(184,90,62,0.12)", text: "#b85a3e", dot: "#b85a3e" },
-  Pivot: { bg: "rgba(31,61,46,0.15)", text: "#1f3d2e", dot: "#1f3d2e" },
-  "Operating Season": { bg: "rgba(122,122,110,0.15)", text: "#4a5240", dot: "#7a7a6e" },
-};
