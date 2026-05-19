@@ -1,20 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 :root {
-  --cream:        #f4ede0;
-  --cream-dark:   #ebe2d0;
-  --evergreen:    #1f3d2e;
-  --evergreen-mid:#2e5c44;
-  --evergreen-light: #4a7c61;
-  --rust:         #b85a3e;
-  --rust-dark:    #9a4530;
-  --rust-light:   #d4866a;
-  --ink:          #2b2116;
-  --muted:        #6b7665;
+  --cream:          #f4ede0;
+  --cream-dark:     #ebe2d0;
+  --evergreen:      #1f3d2e;
+  --evergreen-mid:  #2e5a3f;
+  --evergreen-light:#4a7c61;
+  --rust:           #b85a3e;
+  --rust-dark:      #9a4530;
+  --rust-light:     #d4866a;
+  --firefly-gold:   #d4a017;
+  --ink:            #2b2116;
+  --muted:          #6b7665;
+
+  --elevate-1: rgba(0, 0, 0, 0.03);
+  --elevate-2: rgba(0, 0, 0, 0.08);
 
   --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Menlo', 'Consolas', monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +42,7 @@ h1, h2, h3, h4, h5 {
   font-kerning: normal;
   font-feature-settings: "kern" 1, "liga" 1;
   text-rendering: optimizeLegibility;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
 
 td, th {
@@ -80,10 +85,8 @@ td, th {
 }
 
 /* Cascade print-color-adjust to every nested element so browsers never strip
-   background colours from deeply-nested blocks (header bands, callout boxes,
-   table rows, etc.) even when they set their own background property.
-   Both the standard and the legacy -webkit- prefix are required for full
-   Chrome / Safari / Firefox coverage. */
+   background colours from deeply-nested blocks even when they set their own
+   background property. Both prefixes required for full browser coverage. */
 .page-letter *,
 .page-letter-landscape * {
   print-color-adjust: exact;
@@ -177,6 +180,23 @@ body.print-preview .page-letter-landscape::before {
   z-index: 9999;
 }
 
+/* ── Lobby nav hero: topo pattern behind the navigation header ── */
+.lobby-hero {
+  background: var(--evergreen);
+}
+
+/* ── Document preview cards: warm cream, no plain white ── */
+.doc-card {
+  background: var(--cream);
+  border: 1px solid rgba(31, 61, 46, 0.14);
+  box-shadow: 0 2px 8px rgba(31, 61, 46, 0.07);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.doc-card:hover {
+  box-shadow: 0 4px 16px rgba(31, 61, 46, 0.12);
+  transform: translateY(-1px);
+}
+
 @media print {
   .no-print,
   .screen-nav { display: none !important; }
@@ -199,4 +219,112 @@ body.print-preview .page-letter-landscape::before {
     size: letter portrait;
     margin: 0;
   }
+}
+
+/* ─── Headwaters Odyssey tokens ───────────────────────────────────────── */
+:root {
+  --od-evergreen:    #1f3d2e;
+  --od-cream:        #f4ede0;
+  --od-rust:         #b85a3e;
+  --od-moss:         #2e5a3f;
+  --od-charcoal:     #2c2c2c;
+  --od-burnt-sienna: #9c4a2f;
+  --od-firefly-gold: #d4a017;
+  --od-ink:          #2b2116;
+}
+
+.od-topo {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><path d='M0 40 Q150 18 300 44 Q450 70 600 40' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 80 Q150 58 300 84 Q450 110 600 80' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 120 Q150 98 300 124 Q450 150 600 120' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 160 Q150 138 300 164 Q450 190 600 160' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 200 Q150 176 300 204 Q450 232 600 200' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 240 Q150 218 300 244 Q450 270 600 240' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 280 Q150 258 300 284 Q450 310 600 280' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 320 Q150 298 300 324 Q450 350 600 320' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 360 Q150 338 300 364 Q450 390 600 360' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/></svg>");
+  background-size: 600px 400px;
+  background-repeat: repeat;
+}
+
+/* Light-stroke variant for dark hero backgrounds */
+.od-topo-light {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><path d='M0 40 Q150 18 300 44 Q450 70 600 40' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 80 Q150 58 300 84 Q450 110 600 80' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 120 Q150 98 300 124 Q450 150 600 120' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 160 Q150 138 300 164 Q450 190 600 160' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 200 Q150 176 300 204 Q450 232 600 200' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 240 Q150 218 300 244 Q450 270 600 240' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 280 Q150 258 300 284 Q450 310 600 280' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 320 Q150 298 300 324 Q450 350 600 320' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 360 Q150 338 300 364 Q450 390 600 360' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/></svg>");
+  background-size: 600px 400px;
+  background-repeat: repeat;
+}
+
+.od-card {
+  position: relative;
+  border: 1px solid rgba(184, 90, 62, 0.32);
+  box-shadow: 0 2px 12px rgba(31, 61, 46, 0.09), 0 1px 3px rgba(31, 61, 46, 0.06);
+}
+.od-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  opacity: 0.09;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.od-card > * { position: relative; z-index: 1; }
+
+@keyframes od-ember {
+  0%, 100% { box-shadow: 0 0 0 3px #f4ede0, 0 0 0 5px #d4a017, 0 0 14px 4px rgba(212, 160, 23, 0.5); }
+  50% { box-shadow: 0 0 0 3px #f4ede0, 0 0 0 6px #d4a017, 0 0 24px 9px rgba(212, 160, 23, 0.65); }
+}
+.od-ember { animation: od-ember 2.8s ease-in-out infinite; }
+
+.od-firelight {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 115%, rgba(212, 160, 23, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 105%, rgba(184, 90, 62, 0.16) 0%, transparent 55%),
+    #f4ede0;
+}
+
+.od-pencil {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgba(156, 74, 47, 0.38);
+  text-underline-offset: 3px;
+}
+
+.od-trail-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0;
+  color: rgba(31, 61, 46, 0.35);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.od-trail-rule::before,
+.od-trail-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(31,61,46,0.22), transparent);
+}
+
+.hw-label {
+  display: inline-block;
+  background: #1f3d2e;
+  color: #f4ede0;
+  border-radius: 3px;
+  padding: 0.28em 0.55em;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+.hw-label--evergreen { background: #1f3d2e; color: #f4ede0; }
+.hw-label--rust      { background: #1f3d2e; color: #f4ede0; }
+.hw-label--gold      { background: #d4a017; color: #1f3d2e; }
+.hw-label--cream     { background: #f4ede0; color: #1f3d2e; }
+.hw-label--blue      { background: #1B5E8A; color: #f4ede0; }
+
+.hover-elevate {
+  transition: box-shadow 0.12s, transform 0.12s, border-color 0.12s;
+}
+.hover-elevate:hover {
+  box-shadow: 0 3px 12px rgba(0,0,0,0.09);
+  transform: translateY(-1px);
 }

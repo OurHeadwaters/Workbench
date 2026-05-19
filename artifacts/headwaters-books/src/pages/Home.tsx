@@ -29,7 +29,9 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative">
+        <div aria-hidden className="pointer-events-none absolute inset-0 od-topo" style={{ opacity: 0.09 }} />
+        <div className="hw-label" style={{ marginBottom: "1.5rem" }}>Headwaters Books</div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-foreground mb-6 leading-tight">
           We've always known how to fix it, now we can.
         </h1>

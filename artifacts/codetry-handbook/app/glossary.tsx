@@ -24,9 +24,9 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import { useReader } from "@/contexts/ReaderState";
 
-const SERIF = "Lora_400Regular";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF = "Fraunces_400Regular";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 function normalize(s: string) {

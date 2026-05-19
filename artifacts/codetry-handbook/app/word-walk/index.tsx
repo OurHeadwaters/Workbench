@@ -19,9 +19,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 import { useWordWalk } from "@/hooks/useWordWalk";
 
-const SERIF = "Lora_400Regular";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF = "Fraunces_400Regular";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 export default function WordWalkHub() {

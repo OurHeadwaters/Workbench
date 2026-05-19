@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useColors } from "@/hooks/useColors";
 import { usePioneerPath } from "@/lib/pioneerPath/store";
 
-const SERIF_ITALIC = "Lora_400Regular_Italic";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
 const MONO = "JetBrainsMono_500Medium";
 
 type ImportMetaWithEnv = ImportMeta & { env?: { BASE_URL?: string } };

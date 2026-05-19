@@ -5,7 +5,7 @@ import { useColors } from "@/hooks/useColors";
 import { getTale } from "@/data/tales";
 import { TaleReader } from "@/components/TaleReader";
 
-const SERIF_ITALIC = "Lora_400Regular_Italic";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
 
 export default function TaleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

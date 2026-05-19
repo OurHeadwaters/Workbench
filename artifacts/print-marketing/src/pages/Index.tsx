@@ -17,8 +17,6 @@ const personalizedDocs = [
   { label: "Pilot Proposal", slug: "codetry-pilot-proposal" },
 ];
 
-/* ── Topo SVG pattern (inline data URI matching Odyssey) ─────────────────── */
-const TOPO_BG = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><path d='M0 40 Q150 18 300 44 Q450 70 600 40' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 80 Q150 58 300 84 Q450 110 600 80' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 120 Q150 98 300 124 Q450 150 600 120' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 160 Q150 138 300 164 Q450 190 600 160' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 200 Q150 176 300 204 Q450 232 600 200' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 240 Q150 218 300 244 Q450 270 600 240' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 280 Q150 258 300 284 Q450 310 600 280' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 320 Q150 298 300 324 Q450 350 600 320' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/><path d='M0 360 Q150 338 300 364 Q450 390 600 360' fill='none' stroke='%23f4ede0' stroke-width='0.9' opacity='0.15'/></svg>")`;
 
 /* ── Eagle Mark SVG (inlined from public/eagle-mark.svg) ─────────────────── */
 function EagleMark({ size = 160 }: { size?: number }) {
@@ -125,7 +123,7 @@ const ZONES = [
     name: "Both-States",
     subtitle: "Community Outreach",
     season: "Two weathers in one letter.",
-    accent: "#2e8b4e",
+    accent: "#2e5a3f",
     docs: [
       { href: "/codetry-intro-letter", title: "Intro Letter — Generic NAN", label: "Aboriginal Outreach", desc: "Warm introduction to NAN leadership with a direct ask for a meeting." },
       { href: "/codetry-intro-letter-sandy-lake", title: "Intro Letter — Sandy Lake", label: "Aboriginal Outreach", desc: "Personalized letter addressed directly to Chief and Council of Sandy Lake." },
@@ -140,7 +138,7 @@ const ZONES = [
     name: "The Gate",
     subtitle: "Engine & Strategy",
     season: "Write the method down. Hand it off.",
-    accent: "#4a8aab",
+    accent: "#1B5E8A",
     docs: [
       { href: "/engine-one-pager", title: "Economic Engine One-Pager", label: "Lead piece", desc: "Eight problems. Eight engine components. The $28k Phase 1 close." },
       { href: "/capability-statement", title: "Capability Statement", label: "Headwaters", desc: "One-pager for procurement packages — services, engagement model, case studies." },
@@ -163,7 +161,7 @@ const ZONES = [
     name: "The Standby",
     subtitle: "Internal & Ops",
     season: "Provisions laid in before the flood.",
-    accent: "#7a6a55",
+    accent: "#9c4a2f",
     docs: [
       { href: "/overview", title: "Project Overview — All 7 Headwaters Tools", label: "Start here", desc: "Plain-language visual guide showing what every tool does and how they connect." },
       { href: "/internal-scope-plan", title: "Internal Scope Plan", label: "Internal", desc: "Internal reference for active engagement scope and milestones." },
@@ -272,14 +270,7 @@ export default function Index() {
           background: "linear-gradient(to bottom, rgba(20,44,30,0.72) 0%, rgba(20,44,30,0.88) 60%, rgba(15,35,24,0.97) 100%)",
         }} />
         {/* Topographic texture */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: TOPO_BG,
-          backgroundSize: "600px 400px",
-          backgroundRepeat: "repeat",
-          opacity: 0.18,
-          pointerEvents: "none",
-        }} />
+        <div aria-hidden className="od-topo-light pointer-events-none absolute inset-0" style={{ opacity: 0.18 }} />
 
         <div style={{ position: "relative", maxWidth: "52rem", margin: "0 auto", padding: "0 1.5rem", textAlign: "center" }}>
           {/* Eagle mark */}
@@ -553,7 +544,7 @@ export default function Index() {
             aria-label="Search documents"
             style={{
               width: "100%",
-              background: "white",
+              background: "#f4ede0",
               border: "1.5px solid rgba(31,61,46,0.22)",
               borderRadius: "6px",
               padding: "0.65rem 2.5rem 0.65rem 2.25rem",
@@ -565,8 +556,8 @@ export default function Index() {
               transition: "border-color 0.15s, box-shadow 0.15s",
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#2e8b4e";
-              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(46,139,78,0.12)";
+              e.currentTarget.style.borderColor = "#1f3d2e";
+              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(31,61,46,0.12)";
             }}
             onBlur={(e) => {
               e.currentTarget.style.borderColor = "rgba(31,61,46,0.22)";
@@ -670,17 +661,7 @@ export default function Index() {
                         <span style={{ fontWeight: 400, color: "rgba(31,61,46,0.5)", marginLeft: "0.4rem" }}>—</span>
                         <span style={{ fontWeight: 400, color: "rgba(31,61,46,0.7)", marginLeft: "0.3rem" }}>{z.subtitle}</span>
                       </h2>
-                      <span style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.65rem",
-                        letterSpacing: "0.22em",
-                        textTransform: "uppercase",
-                        padding: "0.2rem 0.55rem",
-                        borderRadius: "3px",
-                        background: `${z.accent}18`,
-                        color: z.accent,
-                        flexShrink: 0,
-                      }}>
+                      <span className="hw-label" style={{ background: z.accent, flexShrink: 0 }}>
                         Zone {z.n}
                       </span>
                     </div>
@@ -724,28 +705,18 @@ export default function Index() {
                       <Link
                         key={doc.href}
                         href={doc.href}
+                        className="hover-elevate"
                         style={{
                           display: "flex",
                           alignItems: "center",
                           gap: "0.75rem",
-                          background: "rgba(255,255,255,0.7)",
+                          background: "rgba(244,237,224,0.85)",
                           border: "1px solid rgba(31,61,46,0.09)",
                           borderRadius: "5px",
                           padding: "0.7rem 1rem",
                           textDecoration: "none",
                           color: "inherit",
-                          transition: "box-shadow 0.12s, border-color 0.12s, transform 0.12s",
                           cursor: "pointer",
-                        }}
-                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                          e.currentTarget.style.boxShadow = `0 3px 12px rgba(0,0,0,0.09)`;
-                          e.currentTarget.style.borderColor = `${z.accent}44`;
-                          e.currentTarget.style.transform = "translateY(-1px)";
-                        }}
-                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                          e.currentTarget.style.boxShadow = "none";
-                          e.currentTarget.style.borderColor = "rgba(31,61,46,0.09)";
-                          e.currentTarget.style.transform = "none";
                         }}
                       >
                         <div style={{ flex: 1, minWidth: 0 }}>
@@ -880,7 +851,7 @@ export default function Index() {
               fontWeight: 700,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: "#2e8b4e",
+              color: "#2e5a3f",
               marginBottom: "0.3rem",
             }}>
               Zone 2 · NAN Outreach Packet
@@ -954,7 +925,7 @@ export default function Index() {
               style={{
                 flex: 1,
                 minWidth: "14rem",
-                background: "white",
+                background: "#f4ede0",
                 border: "1.5px solid rgba(31,61,46,0.22)",
                 borderRadius: "4px",
                 padding: "0.5rem 0.75rem",
@@ -984,7 +955,7 @@ export default function Index() {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.6rem",
-                    background: "white",
+                    background: "#f4ede0",
                     border: "1px solid rgba(31,61,46,0.12)",
                     borderRadius: "4px",
                     padding: "0.5rem 0.75rem",

@@ -22,9 +22,9 @@ import { ZONE_AUTHOR_ENTRIES } from "@/data/authorPrompts";
 import { useColors } from "@/hooks/useColors";
 import { useAuthor } from "@/lib/authorStore";
 
-const SERIF = "Lora_700Bold";
-const SERIF_I = "Lora_400Regular_Italic";
-const SERIF_R = "Lora_400Regular";
+const SERIF = "Fraunces_700Bold";
+const SERIF_I = "Fraunces_400Regular_Italic";
+const SERIF_R = "Fraunces_400Regular";
 const MONO = "JetBrainsMono_500Medium";
 
 export default function AuthorZone() {

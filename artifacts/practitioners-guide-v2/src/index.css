@@ -69,7 +69,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE — Headwaters: warm oat paper, deep evergreen ink */
+/* LIGHT MODE — canonical Odyssey: warm oat paper, deep evergreen ink */
 :root {
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
@@ -79,41 +79,45 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .07);
 
+  /* Headwaters cream — paper, not white */
   --background: 38 35% 97%;
-  --foreground: 195 24% 12%;
+  --foreground: 145 28% 14%;
 
-  --border: 36 18% 84%;
-  --input: 36 18% 84%;
-  --ring: 167 48% 24%;
+  --border: 38 18% 84%;
+  --input: 38 18% 84%;
+  --ring: 145 36% 22%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 195 24% 12%;
-  --card-border: 36 18% 86%;
+  /* Cards are warm cream, not white */
+  --card: 38 32% 97%;
+  --card-foreground: 145 28% 14%;
+  --card-border: 38 18% 82%;
 
   --sidebar: 38 28% 93%;
-  --sidebar-foreground: 195 24% 14%;
-  --sidebar-border: 36 18% 84%;
-  --sidebar-primary: 167 48% 24%;
+  --sidebar-foreground: 145 28% 14%;
+  --sidebar-border: 38 18% 84%;
+  --sidebar-primary: 145 36% 22%;
   --sidebar-primary-foreground: 38 35% 97%;
-  --sidebar-accent: 36 22% 88%;
-  --sidebar-accent-foreground: 195 24% 14%;
-  --sidebar-ring: 167 48% 24%;
+  --sidebar-accent: 38 22% 88%;
+  --sidebar-accent-foreground: 145 28% 14%;
+  --sidebar-ring: 145 36% 22%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 195 24% 12%;
-  --popover-border: 36 18% 86%;
+  --popover: 38 32% 97%;
+  --popover-foreground: 145 28% 14%;
+  --popover-border: 38 18% 82%;
 
-  --primary: 167 48% 24%;
+  /* Evergreen primary */
+  --primary: 145 36% 22%;
   --primary-foreground: 38 35% 97%;
 
   --secondary: 38 26% 92%;
-  --secondary-foreground: 195 24% 14%;
+  --secondary-foreground: 145 28% 14%;
 
   --muted: 38 22% 93%;
-  --muted-foreground: 195 12% 38%;
+  --muted-foreground: 145 12% 38%;
 
-  --accent: 36 24% 90%;
-  --accent-foreground: 195 24% 14%;
+  /* Rust accent — only warm accent, Firefly Gold via od-* tokens */
+  --accent: 14 64% 36%;
+  --accent-foreground: 38 36% 96%;
 
   --destructive: 0 62% 42%;
   --destructive-foreground: 0 0% 98%;
@@ -121,25 +125,25 @@
   --warning: 32 86% 38%;
   --warning-foreground: 38 40% 97%;
 
-  --chart-1: 167 48% 28%;   /* Contracts evergreen */
+  --chart-1: 145 36% 22%;   /* Contracts evergreen */
   --chart-2: 32 70% 42%;    /* Salts amber */
-  --chart-3: 200 56% 32%;   /* Brightside deep blue */
-  --chart-4: 12 64% 46%;    /* V3 alt — terracotta */
-  --chart-5: 195 28% 56%;   /* legacy cool tone — kept for chart palette parity */
+  --chart-3: 14 64% 36%;    /* Brightside rust (replaces off-brand blue) */
+  --chart-4: 38 60% 52%;    /* Firefly Gold warm */
+  --chart-5: 145 18% 45%;   /* Muted moss */
 
   --app-font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --app-font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --app-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 
   --radius: .625rem;
-  --shadow-2xs: 0px 1px 2px 0px hsl(195 24% 12% / 0.04);
-  --shadow-xs: 0px 1px 3px 0px hsl(195 24% 12% / 0.06);
-  --shadow-sm: 0px 1px 2px 0px hsl(195 24% 12% / 0.06), 0px 2px 4px -1px hsl(195 24% 12% / 0.04);
-  --shadow: 0px 2px 4px 0px hsl(195 24% 12% / 0.07), 0px 4px 8px -2px hsl(195 24% 12% / 0.05);
-  --shadow-md: 0px 4px 8px 0px hsl(195 24% 12% / 0.08), 0px 6px 12px -3px hsl(195 24% 12% / 0.05);
-  --shadow-lg: 0px 8px 16px 0px hsl(195 24% 12% / 0.10), 0px 12px 20px -4px hsl(195 24% 12% / 0.06);
-  --shadow-xl: 0px 16px 28px 0px hsl(195 24% 12% / 0.12);
-  --shadow-2xl: 0px 24px 48px 0px hsl(195 24% 12% / 0.18);
+  --shadow-2xs: 0px 1px 2px 0px rgba(20, 30, 25, 0.04);
+  --shadow-xs: 0px 1px 3px 0px rgba(20, 30, 25, 0.06);
+  --shadow-sm: 0px 1px 2px 0px rgba(20, 30, 25, 0.06), 0px 2px 4px -1px rgba(20, 30, 25, 0.04);
+  --shadow: 0px 2px 4px 0px rgba(20, 30, 25, 0.07), 0px 4px 8px -2px rgba(20, 30, 25, 0.05);
+  --shadow-md: 0px 4px 8px 0px rgba(20, 30, 25, 0.08), 0px 6px 12px -3px rgba(20, 30, 25, 0.05);
+  --shadow-lg: 0px 8px 16px 0px rgba(20, 30, 25, 0.10), 0px 12px 20px -4px rgba(20, 30, 25, 0.06);
+  --shadow-xl: 0px 16px 28px 0px rgba(20, 30, 25, 0.12);
+  --shadow-2xl: 0px 24px 48px 0px rgba(20, 30, 25, 0.18);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -159,6 +163,7 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* DARK MODE — darkened Evergreen, not generic dark grey */
 .dark {
   --button-outline: rgba(255,255,255, .10);
   --badge-outline: rgba(255,255,255, .05);
@@ -166,48 +171,53 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 195 24% 8%;
-  --foreground: 38 30% 94%;
-  --border: 195 12% 20%;
-  --input: 195 12% 20%;
-  --ring: 167 48% 50%;
-  --card: 195 24% 11%;
-  --card-foreground: 38 30% 94%;
-  --card-border: 195 12% 20%;
-  --sidebar: 195 24% 9%;
-  --sidebar-foreground: 38 30% 94%;
-  --sidebar-border: 195 12% 18%;
-  --sidebar-primary: 167 48% 50%;
-  --sidebar-primary-foreground: 195 24% 8%;
-  --sidebar-accent: 195 18% 16%;
-  --sidebar-accent-foreground: 38 30% 94%;
-  --sidebar-ring: 167 48% 50%;
-  --popover: 195 24% 11%;
-  --popover-foreground: 38 30% 94%;
-  --popover-border: 195 12% 20%;
-  --primary: 167 48% 56%;
-  --primary-foreground: 195 24% 8%;
-  --secondary: 195 18% 18%;
-  --secondary-foreground: 38 30% 94%;
-  --muted: 195 18% 16%;
+  --background: 145 18% 10%;
+  --foreground: 38 30% 92%;
+  --border: 145 12% 22%;
+  --input: 145 12% 22%;
+  --ring: 38 36% 80%;
+  --card: 145 18% 13%;
+  --card-foreground: 38 30% 92%;
+  --card-border: 145 12% 22%;
+  --sidebar: 145 18% 9%;
+  --sidebar-foreground: 38 30% 92%;
+  --sidebar-border: 145 12% 18%;
+  --sidebar-primary: 38 36% 80%;
+  --sidebar-primary-foreground: 145 28% 12%;
+  --sidebar-accent: 145 14% 18%;
+  --sidebar-accent-foreground: 38 30% 92%;
+  --sidebar-ring: 38 36% 80%;
+  --popover: 145 18% 13%;
+  --popover-foreground: 38 30% 92%;
+  --popover-border: 145 12% 22%;
+  --primary: 38 36% 80%;
+  --primary-foreground: 145 28% 12%;
+  --secondary: 145 14% 18%;
+  --secondary-foreground: 38 30% 92%;
+  --muted: 145 14% 18%;
   --muted-foreground: 38 14% 64%;
-  --accent: 195 18% 18%;
-  --accent-foreground: 38 30% 94%;
+  --accent: 14 50% 50%;
+  --accent-foreground: 38 36% 96%;
   --destructive: 0 62% 52%;
   --destructive-foreground: 0 0% 98%;
   --warning: 32 86% 56%;
-  --warning-foreground: 195 24% 8%;
-  --chart-1: 167 48% 50%;
+  --warning-foreground: 145 28% 10%;
+  --chart-1: 38 36% 80%;
   --chart-2: 32 70% 60%;
-  --chart-3: 200 56% 60%;
-  --chart-4: 12 64% 60%;
-  --chart-5: 195 28% 70%;
+  --chart-3: 14 50% 55%;
+  --chart-4: 38 60% 65%;
+  --chart-5: 145 18% 55%;
 }
 
 @layer base {
   * { @apply border-border; }
   body { @apply font-sans antialiased bg-background text-foreground; }
   h1, h2, h3, h4 { font-family: var(--app-font-serif); letter-spacing: -0.01em; }
+
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
 }
 
 @layer utilities {
@@ -255,11 +265,91 @@
   .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 }
 
-/* ─── Headwaters section label — bold filled bar ──────────────────────── */
-/* Usage: <div class="hw-label">Section</div>                             */
-/* Colour variants: hw-label--evergreen  hw-label--blue  hw-label--cream  */
-/* Note: hw-label--rust is now an alias for evergreen — section titles    */
-/* use the calm evergreen background; reserve orange/rust for buttons.    */
+/* ─── Community Store Playbook theme ─────────────────────────────────── */
+.cs-theme {
+  --cs-bg:          #f4ede0;
+  --cs-paper:       #ebe2d0;
+  --cs-rule:        rgba(31, 61, 46, 0.18);
+  --cs-primary:     #1f3d2e;
+  --cs-accent:      #e9c8a8;
+  --cs-accent-warm: #b85a3e;
+  --cs-text:        #2b2116;
+  --cs-muted:       #6b7665;
+}
+
+/* ─── Headwaters Odyssey tokens ───────────────────────────────────────── */
+:root {
+  --od-evergreen:    #1f3d2e;
+  --od-cream:        #f4ede0;
+  --od-rust:         #b85a3e;
+  --od-moss:         #2e5a3f;
+  --od-charcoal:     #2c2c2c;
+  --od-burnt-sienna: #9c4a2f;
+  --od-firefly-gold: #d4a017;
+  --od-ink:          #2b2116;
+}
+
+.od-topo {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><path d='M0 40 Q150 18 300 44 Q450 70 600 40' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 80 Q150 58 300 84 Q450 110 600 80' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 120 Q150 98 300 124 Q450 150 600 120' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 160 Q150 138 300 164 Q450 190 600 160' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 200 Q150 176 300 204 Q450 232 600 200' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 240 Q150 218 300 244 Q450 270 600 240' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 280 Q150 258 300 284 Q450 310 600 280' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 320 Q150 298 300 324 Q450 350 600 320' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/><path d='M0 360 Q150 338 300 364 Q450 390 600 360' fill='none' stroke='%231f3d2e' stroke-width='0.9' opacity='0.22'/></svg>");
+  background-size: 600px 400px;
+  background-repeat: repeat;
+}
+
+.od-card {
+  position: relative;
+  border: 1px solid rgba(184, 90, 62, 0.32);
+  box-shadow: 0 2px 12px rgba(31, 61, 46, 0.09), 0 1px 3px rgba(31, 61, 46, 0.06);
+}
+.od-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  opacity: 0.09;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.od-card > * { position: relative; z-index: 1; }
+
+@keyframes od-ember {
+  0%, 100% { box-shadow: 0 0 0 3px #f4ede0, 0 0 0 5px #d4a017, 0 0 14px 4px rgba(212, 160, 23, 0.5); }
+  50% { box-shadow: 0 0 0 3px #f4ede0, 0 0 0 6px #d4a017, 0 0 24px 9px rgba(212, 160, 23, 0.65); }
+}
+.od-ember { animation: od-ember 2.8s ease-in-out infinite; }
+
+.od-firelight {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 115%, rgba(212, 160, 23, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 105%, rgba(184, 90, 62, 0.16) 0%, transparent 55%),
+    #f4ede0;
+}
+
+.od-pencil {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgba(156, 74, 47, 0.38);
+  text-underline-offset: 3px;
+}
+
+.od-trail-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0;
+  color: rgba(31, 61, 46, 0.35);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.od-trail-rule::before,
+.od-trail-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(31,61,46,0.22), transparent);
+}
+
 .hw-label {
   display: inline-block;
   background: #1f3d2e;
@@ -274,20 +364,8 @@
   line-height: 1.1;
   margin-bottom: 0.75rem;
 }
-.hw-label--evergreen { background: #1f3d2e; }
-.hw-label--rust      { background: #1f3d2e; }
-.hw-label--blue      { background: #1B5E8A; }
+.hw-label--evergreen { background: #1f3d2e; color: #f4ede0; }
+.hw-label--rust      { background: #1f3d2e; color: #f4ede0; }
+.hw-label--gold      { background: #d4a017; color: #1f3d2e; }
 .hw-label--cream     { background: #f4ede0; color: #1f3d2e; }
-
-/* ─── Community Store Playbook theme ─────────────────────────────────── */
-.cs-theme {
-  --cs-bg:          #f4ede0;
-  --cs-paper:       #ebe2d0;
-  --cs-rule:        rgba(31, 61, 46, 0.18);
-  --cs-primary:     #1f3d2e;
-  --cs-accent:      #e9c8a8;
-  --cs-accent-warm: #b85a3e;
-  --cs-text:        #2b2116;
-  --cs-muted:       #6b7665;
-}
-
+.hw-label--blue      { background: #1B5E8A; color: #f4ede0; }

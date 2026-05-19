@@ -19,9 +19,9 @@ import { useReader } from "@/contexts/ReaderState";
 import { YOUTH_PHASES, YOUTH_STATIONS, type YouthStation } from "@/data/youthPath";
 import { useYouthPath } from "@/lib/youthPath/store";
 
-const SERIF = "Lora_400Regular";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF = "Fraunces_400Regular";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 const PHASE_ROMAN: Record<number, string> = {

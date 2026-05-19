@@ -20,9 +20,9 @@ import { PIONEER_STATIONS } from "@/data/pioneerPath";
 import { TALES } from "@/data/tales";
 import { usePioneerPath } from "@/lib/pioneerPath/store";
 
-const SERIF = "Lora_400Regular";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF = "Fraunces_400Regular";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 const EVERGREEN = "#1f3d2e";

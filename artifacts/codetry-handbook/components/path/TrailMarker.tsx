@@ -14,8 +14,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useColors } from "@/hooks/useColors";
 
-const SERIF_BOLD = "Lora_700Bold";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
 const MONO = "JetBrainsMono_500Medium";
 
 const ROMAN: Record<number, string> = {

@@ -63,8 +63,8 @@ const LinearGradient =
 
 import type { PioneerStation } from "@/data/pioneerPath";
 
-const SERIF_BOLD = "Lora_700Bold";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
 const MONO = "JetBrainsMono_500Medium";
 
 export type StationState = "locked" | "unlocked" | "completed";

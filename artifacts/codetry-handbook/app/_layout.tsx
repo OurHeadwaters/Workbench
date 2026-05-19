@@ -3,12 +3,12 @@ import {
   JetBrainsMono_600SemiBold,
 } from "@expo-google-fonts/jetbrains-mono";
 import {
-  Lora_400Regular,
-  Lora_400Regular_Italic,
-  Lora_500Medium,
-  Lora_700Bold,
+  Fraunces_400Regular,
+  Fraunces_400Regular_Italic,
+  Fraunces_500Medium,
+  Fraunces_700Bold,
   useFonts,
-} from "@expo-google-fonts/lora";
+} from "@expo-google-fonts/fraunces";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -72,10 +72,10 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Lora_400Regular,
-    Lora_400Regular_Italic,
-    Lora_500Medium,
-    Lora_700Bold,
+    Fraunces_400Regular,
+    Fraunces_400Regular_Italic,
+    Fraunces_500Medium,
+    Fraunces_700Bold,
     JetBrainsMono_500Medium,
     JetBrainsMono_600SemiBold,
   });

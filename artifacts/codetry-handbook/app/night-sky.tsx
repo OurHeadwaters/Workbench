@@ -14,8 +14,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ZONE_GUIDES, useConstellationBuilder } from "@/hooks/useConstellationBuilder";
 
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 const SKY = "#0e1a14";

@@ -33,7 +33,9 @@ export default function Home() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
+        <div className="relative">
+          <div aria-hidden className="pointer-events-none absolute -inset-6 od-topo" style={{ opacity: 0.08 }} />
+          <div className="hw-label mb-3">Northern Food Systems Research Library</div>
           <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-2">Library Overview</h1>
           <p className="text-muted-foreground text-lg">
             Northern Food Systems Research
@@ -126,7 +128,10 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-serif font-semibold text-primary">Recent Additions</h2>
+            <div>
+              <div className="hw-label mb-1">Recent Additions</div>
+              <h2 className="text-2xl font-serif font-semibold text-primary sr-only">Recent Additions</h2>
+            </div>
             <Link href="/entries">
               <Button variant="link" className="text-secondary gap-1">
                 View all <ArrowRight className="h-4 w-4" />

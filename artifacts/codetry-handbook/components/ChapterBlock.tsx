@@ -8,9 +8,9 @@ import { useReader } from "@/contexts/ReaderState";
 import type { Block } from "@/data/handbook";
 import { InlineText } from "./InlineText";
 
-const SERIF = "Lora_400Regular";
-const SERIF_ITALIC = "Lora_400Regular_Italic";
-const SERIF_BOLD = "Lora_700Bold";
+const SERIF = "Fraunces_400Regular";
+const SERIF_ITALIC = "Fraunces_400Regular_Italic";
+const SERIF_BOLD = "Fraunces_700Bold";
 const MONO = "JetBrainsMono_500Medium";
 
 export function ChapterBlock({

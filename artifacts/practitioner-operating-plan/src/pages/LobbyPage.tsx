@@ -616,13 +616,14 @@ export function LobbyPage() {
   useEffect(() => { setMounted(true); }, []);
 
   return (
-    <div style={{ maxWidth: 620, margin: "0 auto", padding: "28px 16px 56px", display: "flex", flexDirection: "column", gap: 14 }}>
+    <div style={{ maxWidth: 620, margin: "0 auto", padding: "28px 16px 56px", display: "flex", flexDirection: "column", gap: 14, position: "relative" }}>
+      <div aria-hidden className="pointer-events-none od-topo" style={{ position: "absolute", inset: 0, opacity: 0.07, pointerEvents: "none" }} />
 
       {/* Header */}
       <div style={{ marginBottom: 4 }}>
-        <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.25em", textTransform: "uppercase", color: T.muted, marginBottom: 6 }}>
+        <div className="hw-label hw-label--cream" style={{ marginBottom: 6 }}>
           Daily Bench — Practitioner's Operating Plan
-        </p>
+        </div>
         <h1 style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.2, color: T.paper, fontFamily: "var(--font-display)", margin: 0 }}>
           {todayLabel}
         </h1>

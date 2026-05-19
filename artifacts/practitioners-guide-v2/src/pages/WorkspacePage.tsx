@@ -302,10 +302,9 @@ export function WorkspacePage() {
     <div className="max-w-2xl space-y-4" data-testid="page-workspace">
 
       {/* Header */}
-      <div className="pb-2">
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">
-          Headwaters Workspace
-        </p>
+      <div className="pb-2 relative">
+        <div aria-hidden className="pointer-events-none absolute -inset-4 od-topo" style={{ opacity: 0.08 }} />
+        <div className="hw-label mb-2">Headwaters Workspace</div>
         <h1
           className="text-3xl font-semibold leading-tight"
           style={{ fontFamily: "var(--app-font-serif)", color: C.evergreen }}
