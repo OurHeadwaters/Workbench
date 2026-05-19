@@ -1,14 +1,14 @@
 // Youth Odyssey station screen.
 //
 // Flow:
-//   READ   — 2-3 line excerpt from the anchor tale
+//   READ   — full tale from the Codetry book (collapsible inline)
 //   DO     — sequential prompts, one at a time, with a log of completed answers
 //   STORY  — AI-generated story using the collected answers
 //   MARK   — mark done to unlock the next station
-//
-// If the station is already completed, the stored story is shown directly.
+//   MEMORY — trail note + photo, always editable (local-only until XRPL DID)
 
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import React, {
   useCallback,
@@ -19,6 +19,7 @@ import React, {
 } from "react";
 import {
   Animated,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -36,6 +37,7 @@ import {
   getYouthNeighbors,
   type AgeTrack,
 } from "@/data/youthPath";
+import { TALES, type TaleBlock } from "@/data/tales";
 import { useYouthPath } from "@/lib/youthPath/store";
 
 const SERIF = "Lora_400Regular";
@@ -53,6 +55,51 @@ const API_BASE = process.env.EXPO_PUBLIC_DOMAIN
   : "http://localhost:3001/api";
 
 type ScreenPhase = "prompts" | "generating" | "story" | "done";
+
+// Render TaleBlock[] inline (no outer ScrollView wrapper)
+function TaleBlocks({
+  blocks,
+  colors,
+}: {
+  blocks: TaleBlock[];
+  colors: ReturnType<typeof useColors>;
+}) {
+  return (
+    <>
+      {blocks.map((block, i) => {
+        if (block.kind === "break") {
+          return (
+            <View key={i} style={taleStyles.breakRow}>
+              <View style={[taleStyles.ornament, { backgroundColor: colors.rule }]} />
+            </View>
+          );
+        }
+        if (block.kind === "para") {
+          return (
+            <Text key={i} style={[taleStyles.para, { color: colors.foreground, fontFamily: SERIF }]}>
+              {block.text}
+            </Text>
+          );
+        }
+        if (block.kind === "italic") {
+          return (
+            <Text key={i} style={[taleStyles.italic, { color: colors.foreground, fontFamily: SERIF_ITALIC }]}>
+              {block.text}
+            </Text>
+          );
+        }
+        return null;
+      })}
+    </>
+  );
+}
+
+const taleStyles = StyleSheet.create({
+  para: { fontSize: 17, lineHeight: 28, marginBottom: 18 },
+  italic: { fontSize: 17, lineHeight: 28, marginBottom: 18, paddingLeft: 6 },
+  breakRow: { alignItems: "center", marginVertical: 24 },
+  ornament: { width: 28, height: 1, opacity: 0.45 },
+});
 
 export default function StoryStationScreen() {
   const params = useLocalSearchParams<{ id: string }>();
@@ -72,6 +119,10 @@ export default function StoryStationScreen() {
     markDone,
     unmark,
     getStory,
+    getTrailMemory,
+    saveNote,
+    savePhoto,
+    clearPhoto,
   } = useYouthPath();
 
   const station = useMemo(() => getYouthStation(id), [id]);
@@ -83,8 +134,15 @@ export default function StoryStationScreen() {
   const prompts = station?.prompts[track] ?? [];
   const storyInstruction = station?.storyInstruction[track] ?? "";
 
+  // Find the source tale
+  const tale = useMemo(
+    () => station ? TALES.find((t) => t.id === station.sourceTaleId) ?? null : null,
+    [station],
+  );
+
   const storedAnswers = station ? getAnswers(station.id) : {};
   const storedStory = station ? getStory(station.id) : undefined;
+  const storedMemory = station ? getTrailMemory(station.id) : {};
 
   const firstUnanswered = prompts.findIndex(
     (p) => !storedAnswers[p.id] || storedAnswers[p.id].trim() === "",
@@ -108,6 +166,14 @@ export default function StoryStationScreen() {
 
   const inputRef = useRef<TextInput>(null);
 
+  // Tale expansion state
+  const [taleExpanded, setTaleExpanded] = useState(false);
+
+  // Trail memory state (note + photo)
+  const [localNote, setLocalNote] = useState(storedMemory.note ?? "");
+  const [localPhotoUri, setLocalPhotoUri] = useState(storedMemory.photoUri ?? "");
+  const noteDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Sync hydration from store after AsyncStorage loads
   const hydratedRef = useRef(false);
   useEffect(() => {
@@ -125,7 +191,10 @@ export default function StoryStationScreen() {
     if (isCompleted(station.id) || (allDone && story)) {
       setPhase("story");
     }
-  }, [ready, station, prompts, getAnswers, getStory, isCompleted]);
+    const mem = getTrailMemory(station.id);
+    setLocalNote(mem.note ?? "");
+    setLocalPhotoUri(mem.photoUri ?? "");
+  }, [ready, station, prompts, getAnswers, getStory, isCompleted, getTrailMemory]);
 
   const onNext = useCallback(() => {
     if (!station) return;
@@ -210,6 +279,45 @@ export default function StoryStationScreen() {
     setPhase("story");
   }, [station, unmark]);
 
+  // Note autosave (debounced)
+  const onNoteChange = useCallback(
+    (text: string) => {
+      setLocalNote(text);
+      if (!station) return;
+      if (noteDebounceRef.current) clearTimeout(noteDebounceRef.current);
+      noteDebounceRef.current = setTimeout(() => {
+        saveNote(station.id, text);
+      }, 800);
+    },
+    [station, saveNote],
+  );
+
+  // Photo picker
+  const handlePickPhoto = useCallback(async () => {
+    if (!station) return;
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.75,
+      });
+      if (!result.canceled && result.assets[0]) {
+        const uri = result.assets[0].uri;
+        setLocalPhotoUri(uri);
+        savePhoto(station.id, uri);
+      }
+    } catch {
+      // Permission denied or cancelled — silent
+    }
+  }, [station, savePhoto]);
+
+  const handleClearPhoto = useCallback(() => {
+    if (!station) return;
+    setLocalPhotoUri("");
+    clearPhoto(station.id);
+  }, [station, clearPhoto]);
+
   if (!station) {
     return (
       <View style={[styles.root, { backgroundColor: c.background }]}>
@@ -268,6 +376,11 @@ export default function StoryStationScreen() {
   const completedPrompts = prompts.slice(0, currentPromptIdx);
   const allPromptsAnswered = currentPromptIdx >= prompts.length;
 
+  // First block of the tale (used as hook when collapsed)
+  const firstTaleBlock = tale?.body.find((b) => b.kind === "para" || b.kind === "italic");
+  const firstTaleText =
+    firstTaleBlock && firstTaleBlock.kind !== "break" ? firstTaleBlock.text : "";
+
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
       <Animated.View
@@ -291,6 +404,7 @@ export default function StoryStationScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Nav row */}
         <View style={styles.navRow}>
           <Pressable onPress={() => router.replace("/story-path")} accessibilityLabel="Back to path">
             <Text style={[styles.backLink, { color: c.mutedForeground, fontFamily: MONO }]}>
@@ -316,32 +430,66 @@ export default function StoryStationScreen() {
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
-        {/* READ */}
+        {/* ── THE STORY FROM THE BOOK ───────────────────────────────────── */}
         <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
           READ
         </Text>
-        <View style={[styles.excerptCard, { backgroundColor: c.card, borderColor: c.rule }]}>
-          <Text style={[styles.excerptText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
-            {station.taleExcerpt}
-          </Text>
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: "/tales/[id]" as never,
-                params: { id: station.sourceTaleId },
-              })
-            }
-            style={({ pressed }) => [styles.readMoreRow, { opacity: pressed ? 0.6 : 1 }]}
-          >
-            <Text style={[styles.readMoreLabel, { color: c.foreground, fontFamily: MONO }]}>
-              Read the full tale →
+
+        {tale ? (
+          <View style={[styles.taleCard, { backgroundColor: c.card, borderColor: c.rule }]}>
+            <Text style={[styles.taleBookLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+              FROM THE CODETRY BOOK
             </Text>
-          </Pressable>
-        </View>
+            <Text style={[styles.taleTitleInline, { color: c.foreground, fontFamily: SERIF_BOLD }]}>
+              {tale.title}
+            </Text>
+            <Text style={[styles.taleSubtitleInline, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+              {tale.subtitle}
+            </Text>
+            <View style={[styles.taleRule, { backgroundColor: c.rule }]} />
+
+            {/* Hook — first paragraph always visible */}
+            <Text style={[taleStyles.para, { color: c.foreground, fontFamily: SERIF }]}>
+              {firstTaleText}
+            </Text>
+
+            {/* Full body — shown when expanded */}
+            {taleExpanded ? (
+              <>
+                <TaleBlocks blocks={tale.body.slice(1)} colors={c} />
+                {tale.authorNote ? (
+                  <>
+                    <View style={[styles.taleRule, { backgroundColor: c.rule, marginTop: 8, marginBottom: 20 }]} />
+                    <Text style={[styles.authorNote, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+                      {tale.authorNote}
+                    </Text>
+                  </>
+                ) : null}
+              </>
+            ) : null}
+
+            {/* Expand / collapse toggle */}
+            <Pressable
+              onPress={() => setTaleExpanded((v) => !v)}
+              style={({ pressed }) => [styles.expandBtn, { opacity: pressed ? 0.6 : 1 }]}
+            >
+              <Text style={[styles.expandLabel, { color: c.foreground, fontFamily: MONO }]}>
+                {taleExpanded ? "Close story ↑" : "Read the full story ↓"}
+              </Text>
+            </Pressable>
+          </View>
+        ) : (
+          // Fallback to excerpt if tale not found
+          <View style={[styles.excerptCard, { backgroundColor: c.card, borderColor: c.rule }]}>
+            <Text style={[styles.excerptText, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
+              {station.taleExcerpt}
+            </Text>
+          </View>
+        )}
 
         <View style={[styles.rule, { backgroundColor: c.rule }]} />
 
-        {/* DO — sequential prompts */}
+        {/* ── WRITE PROMPTS ─────────────────────────────────────────────── */}
         {phase === "prompts" || phase === "generating" ? (
           <>
             <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
@@ -441,7 +589,7 @@ export default function StoryStationScreen() {
           </View>
         ) : null}
 
-        {/* STORY */}
+        {/* ── YOUR STORY ────────────────────────────────────────────────── */}
         {(phase === "story" || phase === "done") && localStory ? (
           <>
             <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
@@ -522,7 +670,75 @@ export default function StoryStationScreen() {
           </>
         ) : null}
 
-        {/* Navigation */}
+        {/* ── TRAIL MEMORY ──────────────────────────────────────────────── */}
+        {/* Always shown once a station is unlocked — photo + note live here.  */}
+        {/* Local-only now. Extension point for XRPL DID shared layer later.  */}
+        <View style={[styles.rule, { backgroundColor: c.rule, marginTop: 28 }]} />
+        <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
+          YOUR TRAIL MEMORY
+        </Text>
+        <Text style={[styles.memoryHint, { color: c.mutedForeground, fontFamily: SERIF_ITALIC }]}>
+          Leave a note or photo from this spot. Stays on your device for now.
+        </Text>
+
+        {/* Photo display */}
+        {localPhotoUri ? (
+          <View style={styles.photoWrap}>
+            <Image
+              source={{ uri: localPhotoUri }}
+              style={styles.trailPhoto}
+              resizeMode="cover"
+            />
+            <Pressable
+              onPress={handleClearPhoto}
+              style={({ pressed }) => [styles.clearPhotoBtn, { opacity: pressed ? 0.6 : 1 }]}
+            >
+              <Text style={[styles.clearPhotoLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                Remove photo
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+
+        {/* Photo picker button */}
+        <Pressable
+          onPress={handlePickPhoto}
+          style={({ pressed }) => [
+            styles.photoBtn,
+            {
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <Ionicons name={localPhotoUri ? "camera-outline" : "camera-outline"} size={16} color={c.foreground} />
+          <Text style={[styles.photoBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+            {localPhotoUri ? "Change photo" : "Add a photo from here"}
+          </Text>
+        </Pressable>
+
+        {/* Note input */}
+        <TextInput
+          value={localNote}
+          onChangeText={onNoteChange}
+          placeholder="What stayed with you at this station?"
+          placeholderTextColor={c.mutedForeground}
+          style={[
+            styles.noteInput,
+            {
+              color: c.foreground,
+              borderColor: c.rule,
+              backgroundColor: c.card,
+              fontFamily: SERIF_ITALIC,
+            },
+          ]}
+          multiline
+          numberOfLines={4}
+          textAlignVertical="top"
+        />
+
+        {/* ── NAVIGATION ────────────────────────────────────────────────── */}
         <View style={[styles.rule, { backgroundColor: c.rule, marginTop: 28 }]} />
         <View style={styles.nextRow}>
           {prev ? (
@@ -608,136 +824,303 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 8,
   },
-  lockedBody: { fontSize: 17, lineHeight: 26, marginTop: 10, marginBottom: 24 },
+  lockedBody: {
+    fontSize: 18,
+    lineHeight: 28,
+    marginBottom: 28,
+    marginTop: 8,
+  },
   lockedBtn: {
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 6,
     paddingVertical: 12,
     paddingHorizontal: 20,
     alignSelf: "flex-start",
   },
-  lockedBtnLabel: { fontSize: 11, letterSpacing: 1.4, textTransform: "uppercase" },
+  lockedBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
   navRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    alignItems: "center",
+    marginBottom: 28,
   },
-  backLink: { fontSize: 11, letterSpacing: 1.4, textTransform: "uppercase" },
-  eyebrow: { fontSize: 11, letterSpacing: 1.8, textTransform: "uppercase", marginBottom: 6 },
-  title: { fontSize: 34, lineHeight: 38, letterSpacing: 0.4, marginTop: 2 },
-  subtitle: { fontSize: 17, lineHeight: 24, marginTop: 6 },
-  rule: { height: 1, marginVertical: 18, opacity: 0.7 },
+  backLink: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  eyebrow: {
+    fontSize: 10,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 34,
+    lineHeight: 40,
+    letterSpacing: 0.2,
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginTop: 6,
+  },
+  rule: {
+    height: 1,
+    marginVertical: 28,
+    opacity: 0.4,
+  },
   sectionEyebrow: {
     fontSize: 10,
     letterSpacing: 1.8,
     textTransform: "uppercase",
+    marginBottom: 14,
+  },
+  // Tale card
+  taleCard: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 8,
+    padding: 20,
+    marginBottom: 4,
+  },
+  taleBookLabel: {
+    fontSize: 9,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
     marginBottom: 10,
+    opacity: 0.7,
   },
+  taleTitleInline: {
+    fontSize: 22,
+    lineHeight: 28,
+    marginBottom: 4,
+  },
+  taleSubtitleInline: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 0,
+    opacity: 0.8,
+  },
+  taleRule: {
+    height: 1,
+    width: 36,
+    marginTop: 16,
+    marginBottom: 20,
+    opacity: 0.4,
+  },
+  authorNote: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  expandBtn: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "rgba(128,128,128,0.2)",
+    alignItems: "center",
+  },
+  expandLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  // Fallback excerpt
   excerptCard: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-    gap: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 8,
+    padding: 20,
   },
-  excerptText: { fontSize: 17, lineHeight: 28 },
-  readMoreRow: { alignSelf: "flex-start" },
-  readMoreLabel: { fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase" },
+  excerptText: {
+    fontSize: 17,
+    lineHeight: 28,
+  },
+  // Prompts
   answerLog: {
     borderLeftWidth: 2,
     paddingLeft: 14,
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  answerLogQ: { fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 3 },
-  answerLogA: { fontSize: 16, lineHeight: 23 },
-  promptCard: {
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 18,
-    gap: 12,
+  answerLogQ: {
+    fontSize: 9,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
     marginBottom: 4,
   },
-  promptQ: { fontSize: 18, lineHeight: 27 },
+  answerLogA: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  generateWrap: { marginTop: 8 },
+  generateIntro: { fontSize: 17, lineHeight: 26, marginBottom: 20 },
+  errorNote: {
+    fontSize: 13,
+    letterSpacing: 0.6,
+    marginBottom: 12,
+    opacity: 0.8,
+  },
+  generateBtn: {
+    borderRadius: 6,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  generateBtnLabel: {
+    fontSize: 12,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+  },
+  promptCard: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 18,
+  },
+  promptQ: {
+    fontSize: 17,
+    lineHeight: 26,
+    marginBottom: 14,
+  },
   promptInput: {
     borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 10,
+    borderRadius: 6,
     paddingHorizontal: 12,
+    paddingVertical: 10,
     fontSize: 16,
     lineHeight: 24,
     minHeight: 72,
-    textAlignVertical: "top",
   },
   nextBtn: {
-    borderRadius: 4,
+    borderRadius: 6,
     paddingVertical: 12,
     alignItems: "center",
+    marginTop: 12,
   },
-  nextBtnLabel: { fontSize: 12, letterSpacing: 1.4, textTransform: "uppercase" },
+  nextBtnLabel: {
+    fontSize: 12,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
+  },
   promptCounter: {
     fontSize: 10,
     letterSpacing: 1.2,
     textTransform: "uppercase",
     textAlign: "right",
+    marginTop: 8,
   },
-  generateWrap: { gap: 14, marginBottom: 8 },
-  generateIntro: { fontSize: 17, lineHeight: 26 },
-  errorNote: { fontSize: 12, letterSpacing: 0.4 },
-  generateBtn: {
-    borderRadius: 4,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  generateBtnLabel: { fontSize: 13, letterSpacing: 1.4, textTransform: "uppercase" },
-  generatingWrap: {
-    paddingVertical: 32,
-    alignItems: "center",
-  },
-  generatingText: { fontSize: 17, lineHeight: 26 },
+  generatingWrap: { paddingVertical: 20, alignItems: "center" },
+  generatingText: { fontSize: 16, lineHeight: 24 },
+  // Story
   storyCard: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 8,
+    padding: 20,
     marginBottom: 4,
   },
-  storyPara: { fontSize: 18, lineHeight: 30 },
-  markIntro: { fontSize: 16, lineHeight: 24, marginBottom: 14 },
+  storyPara: { fontSize: 17, lineHeight: 28 },
+  // Mark done
+  markIntro: { fontSize: 16, lineHeight: 24, marginBottom: 18 },
   markBtn: {
-    borderRadius: 4,
+    borderRadius: 6,
     paddingVertical: 14,
+    paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     gap: 8,
+    alignSelf: "flex-start",
   },
-  markBtnLabel: { fontSize: 13, letterSpacing: 1.4, textTransform: "uppercase" },
+  markBtnLabel: {
+    fontSize: 12,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
+  },
   markedRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 4,
+    gap: 14,
+    marginTop: 8,
   },
   markedPill: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 4,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderRadius: 20,
   },
-  markedPillLabel: { fontSize: 11, letterSpacing: 1.4, textTransform: "uppercase" },
-  unmarkBtn: { paddingVertical: 8, paddingHorizontal: 4 },
-  unmarkLabel: { fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase" },
+  markedPillLabel: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  unmarkBtn: { padding: 4 },
+  unmarkLabel: { fontSize: 11, letterSpacing: 1, textTransform: "uppercase" },
+  // Trail memory
+  memoryHint: {
+    fontSize: 14,
+    lineHeight: 22,
+    marginBottom: 18,
+  },
+  photoWrap: {
+    marginBottom: 12,
+  },
+  trailPhoto: {
+    width: "100%",
+    aspectRatio: 4 / 3,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  clearPhotoBtn: {
+    alignSelf: "flex-end",
+  },
+  clearPhotoLabel: {
+    fontSize: 10,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  photoBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginBottom: 14,
+    alignSelf: "flex-start",
+  },
+  photoBtnLabel: {
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  noteInput: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    lineHeight: 26,
+    minHeight: 100,
+  },
+  // Navigation
   nextRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 16,
-    marginTop: 4,
+    alignItems: "flex-start",
   },
-  navBtn: { flex: 1 },
+  navBtn: { flex: 1, maxWidth: "45%" },
   navBtnRight: { alignItems: "flex-end" },
-  navHint: { fontSize: 9, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 2 },
-  navName: { fontSize: 14, lineHeight: 20 },
+  navHint: {
+    fontSize: 10,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  navName: {
+    fontSize: 15,
+    lineHeight: 20,
+  },
   navNameRight: { textAlign: "right" },
 });

@@ -7,6 +7,8 @@
 //
 // Also stores:
 //   ageTrack: the reader's selected age range (set once at entry)
+//   trailMemory: per-station photo URI + note, independent of completion
+//                (local-only until XRPL DID identity layer is built)
 //
 // Local-only on purpose. The story belongs to the child. Nothing syncs.
 
@@ -31,16 +33,24 @@ export type YouthCompletion = {
   story?: string;
 };
 
+export type TrailMemory = {
+  note?: string;
+  photoUri?: string;
+};
+
 export type YouthProgress = {
   ageTrack: AgeTrack | null;
   completed: Record<string, YouthCompletion>;
   draftAnswers: Record<string, Record<string, string>>;
+  // Independent of completion — can be set any time a station is visited
+  trailMemory: Record<string, TrailMemory>;
 };
 
 const DEFAULT_PROGRESS: YouthProgress = {
   ageTrack: null,
   completed: {},
   draftAnswers: {},
+  trailMemory: {},
 };
 
 type StoreCtx = {
@@ -55,6 +65,11 @@ type StoreCtx = {
   markDone: (stationId: string, story?: string) => void;
   unmark: (stationId: string) => void;
   getStory: (stationId: string) => string | undefined;
+  // Trail memory
+  getTrailMemory: (stationId: string) => TrailMemory;
+  saveNote: (stationId: string, note: string) => void;
+  savePhoto: (stationId: string, photoUri: string) => void;
+  clearPhoto: (stationId: string) => void;
 };
 
 const YouthCtx = createContext<StoreCtx | null>(null);
@@ -72,6 +87,10 @@ function parseProgress(raw: string | null): YouthProgress {
       draftAnswers:
         p.draftAnswers && typeof p.draftAnswers === "object"
           ? p.draftAnswers
+          : {},
+      trailMemory:
+        p.trailMemory && typeof p.trailMemory === "object"
+          ? p.trailMemory
           : {},
     };
   } catch {
@@ -200,6 +219,56 @@ export function YouthPathProvider({
     [progress.completed],
   );
 
+  const getTrailMemory = useCallback(
+    (stationId: string): TrailMemory =>
+      progress.trailMemory[stationId] ?? {},
+    [progress.trailMemory],
+  );
+
+  const saveNote = useCallback(
+    (stationId: string, note: string) => {
+      const existing = progress.trailMemory[stationId] ?? {};
+      persist({
+        ...progress,
+        trailMemory: {
+          ...progress.trailMemory,
+          [stationId]: { ...existing, note },
+        },
+      });
+    },
+    [persist, progress],
+  );
+
+  const savePhoto = useCallback(
+    (stationId: string, photoUri: string) => {
+      const existing = progress.trailMemory[stationId] ?? {};
+      persist({
+        ...progress,
+        trailMemory: {
+          ...progress.trailMemory,
+          [stationId]: { ...existing, photoUri },
+        },
+      });
+    },
+    [persist, progress],
+  );
+
+  const clearPhoto = useCallback(
+    (stationId: string) => {
+      const existing = progress.trailMemory[stationId] ?? {};
+      const next = { ...existing };
+      delete next.photoUri;
+      persist({
+        ...progress,
+        trailMemory: {
+          ...progress.trailMemory,
+          [stationId]: next,
+        },
+      });
+    },
+    [persist, progress],
+  );
+
   const value = useMemo<StoreCtx>(
     () => ({
       ready,
@@ -213,6 +282,10 @@ export function YouthPathProvider({
       markDone,
       unmark,
       getStory,
+      getTrailMemory,
+      saveNote,
+      savePhoto,
+      clearPhoto,
     }),
     [
       ready,
@@ -225,6 +298,10 @@ export function YouthPathProvider({
       markDone,
       unmark,
       getStory,
+      getTrailMemory,
+      saveNote,
+      savePhoto,
+      clearPhoto,
     ],
   );
 
