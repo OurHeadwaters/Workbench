@@ -77,14 +77,14 @@ export default function PaceReferral() {
       <div
         id="pdf-target"
         className="print-page page-letter"
-        style={{ padding: 0, overflow: "hidden", background: "var(--cream)", minHeight: "11in" }}
+        style={{ padding: 0, overflow: "hidden", background: "var(--cream)", height: "11in", maxHeight: "11in" }}
       >
-        <div style={{ position: "relative", minHeight: "11in", display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "relative", height: "11in", maxHeight: "11in", overflow: "hidden", display: "flex", flexDirection: "column" }}>
 
           {/* Header */}
-          <div style={{ background: "var(--evergreen)", padding: "0.48in 0.65in 0.38in", flexShrink: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.22in", marginBottom: "0.22in" }}>
-              <img src={`${base}eagle-mark.svg`} alt="Headwaters logo" style={{ width: "0.6in", height: "0.5in", objectFit: "contain", flexShrink: 0 }} />
+          <div style={{ background: "var(--evergreen)", padding: "0.28in 0.65in 0.2in", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.15in", marginBottom: "0.11in" }}>
+              <img src={`${base}eagle-mark.svg`} alt="Headwaters logo" style={{ width: "0.45in", height: "0.38in", objectFit: "contain", flexShrink: 0 }} />
               <div>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)", lineHeight: 1.3 }}>
                   Headwaters Development Services
@@ -92,25 +92,25 @@ export default function PaceReferral() {
               </div>
             </div>
 
-            <div style={{ width: "0.5in", height: 3, background: "var(--rust)", marginBottom: "0.18in" }} />
+            <div style={{ width: "0.5in", height: 3, background: "var(--rust)", marginBottom: "0.12in" }} />
 
-            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2.2rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.08, letterSpacing: "-0.02em", marginBottom: "0.16in" }}>
+            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "2.1rem", fontWeight: 900, color: "var(--cream)", lineHeight: 1.08, letterSpacing: "-0.02em", marginBottom: "0.1in" }}>
               Building a business<br />in Northwestern Ontario?
             </h1>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.92rem", fontStyle: "italic", color: "rgba(244,237,224,0.78)", lineHeight: 1.55, maxWidth: "5.2in" }}>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.88rem", fontStyle: "italic", color: "rgba(244,237,224,0.78)", lineHeight: 1.5, maxWidth: "5.2in" }}>
               For small businesses, non-profits, co-ops, and community enterprises across NWO — a practitioner who knows the north and stays until it works.
             </p>
           </div>
 
           {/* Body */}
-          <div style={{ flex: 1, padding: "0.38in 0.65in 0.28in", display: "flex", flexDirection: "column", gap: "0.3in" }}>
+          <div style={{ flex: 1, padding: "0.24in 0.65in 0.16in", display: "flex", flexDirection: "column", gap: "0.18in", minHeight: 0 }}>
 
             {/* Is this you */}
             <section>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.1in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.07in" }}>
                 Is this you?
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.07in", marginBottom: "0.14in" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.05in", marginBottom: "0.1in" }}>
                 {[
                   "Are you managing an entire operation where everything goes through you — and you're burning out?",
                   "Are you in love with your work, but your blind spots are eating you alive?",
@@ -129,12 +129,12 @@ export default function PaceReferral() {
 
             {/* The engagement */}
             <section>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.12in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.08in" }}>
                 The engagement
               </p>
 
               {/* Fee block */}
-              <div style={{ background: "var(--evergreen)", borderRadius: 5, padding: "0.2in 0.28in", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.18in" }}>
+              <div style={{ background: "var(--evergreen)", borderRadius: 5, padding: "0.14in 0.24in", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.1in" }}>
                 <div>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(244,237,224,0.6)", marginBottom: "0.04rem" }}>
                     Phase 1
@@ -153,7 +153,7 @@ export default function PaceReferral() {
               </div>
 
               {/* Deliverables */}
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.1in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.07in" }}>
                 What you walk away with
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 0.4in" }}>
@@ -175,7 +175,7 @@ export default function PaceReferral() {
                     body: "Year-one budget, grant matches, co-op or band-council options. Every number open and editable — nothing locked in a proprietary model.",
                   },
                 ].map((item) => (
-                  <div key={item.title} style={{ display: "flex", gap: "0.12in", alignItems: "flex-start", borderBottom: "1px solid rgba(31,61,46,0.1)", paddingBottom: "0.12in", marginBottom: "0.1in" }}>
+                  <div key={item.title} style={{ display: "flex", gap: "0.1in", alignItems: "flex-start", borderBottom: "1px solid rgba(31,61,46,0.1)", paddingBottom: "0.08in", marginBottom: "0.07in" }}>
                     <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.9rem", color: "var(--rust)", lineHeight: 1.2, flexShrink: 0, marginTop: "0.02rem" }}>→</span>
                     <div>
                       <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.82rem", fontWeight: 700, color: "var(--evergreen)", marginBottom: "0.03rem" }}>{item.title}</p>
@@ -187,8 +187,8 @@ export default function PaceReferral() {
             </section>
 
             {/* Short engagement */}
-            <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.22in", alignItems: "start" }}>
-              <div style={{ background: "rgba(184,90,62,0.07)", borderRadius: 5, padding: "0.15in 0.2in", borderTop: "2px solid var(--rust)" }}>
+            <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.18in", alignItems: "start" }}>
+              <div style={{ background: "rgba(184,90,62,0.07)", borderRadius: 5, padding: "0.11in 0.18in", borderTop: "2px solid var(--rust)" }}>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.06rem" }}>
                   Short engagement · 1–2 weeks
                 </p>
@@ -199,7 +199,7 @@ export default function PaceReferral() {
                   Grant applications, business plans, funding arguments, operational documents. Fixed fee, priced to scope. A fraction of the cost of a full engagement.
                 </p>
               </div>
-              <div style={{ background: "rgba(31,61,46,0.05)", borderRadius: 5, padding: "0.15in 0.2in", borderTop: "2px solid rgba(31,61,46,0.2)" }}>
+              <div style={{ background: "rgba(31,61,46,0.05)", borderRadius: 5, padding: "0.11in 0.18in", borderTop: "2px solid rgba(31,61,46,0.2)" }}>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: "0.06rem" }}>
                   Grant writing &amp; funding support
                 </p>
@@ -212,29 +212,22 @@ export default function PaceReferral() {
               </div>
             </section>
 
-            {/* Who does this work */}
-            <section style={{ background: "rgba(31,61,46,0.05)", borderRadius: 5, padding: "0.18in 0.22in", borderLeft: "3px solid var(--rust)" }}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--rust)", marginBottom: "0.09in" }}>
-                Who does this work
-              </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.83rem", color: "var(--ink)", lineHeight: 1.6 }}>
-                <strong>Bobbie Parr</strong> is a Northwestern Ontario practitioner, founder of Parr's Jars, and a founding board member of the 807 Food Co-op. Headwaters Development Services builds community capacity through operational plans, digital platforms, and custom tools for northern communities. Based in Wabigoon — working across Northwestern Ontario. The work is dollar-honest and designed to run without a consultant in the room.
-              </p>
-            </section>
-
           </div>
 
           {/* Footer / CTA */}
-          <div style={{ background: "var(--rust)", padding: "0.22in 0.65in", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginBottom: "0.05rem" }}>
+          <div style={{ background: "var(--rust)", padding: "0.14in 0.65in", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+            <div style={{ flex: 1, marginRight: "0.3in" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginBottom: "0.04rem" }}>
                 To get started — send a message
               </p>
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "white" }}>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 700, color: "white", lineHeight: 1.2 }}>
                 bobbie@ourheadwaters.ca
               </p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(255,255,255,0.75)" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(255,255,255,0.75)", marginBottom: "0.07rem" }}>
                 ourheadwaters.ca
+              </p>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "0.7rem", fontStyle: "italic", color: "rgba(255,255,255,0.6)", lineHeight: 1.4, marginTop: "0.06rem" }}>
+                Bobbie Parr — NWO practitioner, founder of Parr's Jars, founding board member of the 807 Food Co-op. Based in Wabigoon.
               </p>
             </div>
             <QRCodeStamp />

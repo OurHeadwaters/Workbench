@@ -1,0 +1,97 @@
+The Business Structure
+Headwaters is the platform vendor. It builds and licenses a co-operative membership platform. 807 Food Co-operative & Hub is the first licensee (tenant "807") — a customer, not the operator. The platform is designed for future co-op tenants via a multi-tenancy seam already built into the codebase.
+
+Rootwork is the practitioner-facing product — the tool sold to local community champions. 807 and Parr's Jars are proof cases / credibility, not sibling products.
+
+Revenue Model — Three Layers (Stonemason Model)
+Layer 1 — The Commons (open, free)
+Zone 3 infrastructure stays public. 807's live deployment is the portfolio and proof. No revenue at this layer — it's the reputation asset.
+
+Layer 2 — The Practitioner (primary income)
+Communities hire the founder to deploy and configure the platform for them.
+
+Engagement	Scope	Price (CAD)
+Discovery & Scoping	1 session, community portrait	$500
+Foundation Build	Full constellation deployment	$4,500
+Training & Handoff	3 sessions, admin team trained	$1,500
+Complete Launch Package	Discovery + Foundation + Training	$6,000
+Ongoing Stewardship	Monthly retainer, per community	$400/mo
+Emergency / Ad hoc	Per diem	$350/day
+These are intentionally accessible launch prices with room to raise as demand grows.
+
+Layer 3 — The Guild (passive / legacy income)
+
+Practitioners complete a training cohort: $1,200–$1,800/person, groups of 4–6
+Certified practitioners deploy Zone 3 independently
+Guild tithe: 8% of each practitioner's Zone 3 engagement fees flows back to the founding practitioner, for life of their certification
+Deadhead SaaS Pricing (proven in production)
+Monthly: $9/mo
+Annual: $90/yr (2 months free)
+Trial: 14 days free, Square collects payment info upfront
+Payment processor: Square Payment Links
+This pricing is live and active — cited in the financial model as proof that SaaS pricing is viable on this platform if pursued.
+
+807 Membership Tiers (proof of membership model)
+Community: $5/mo
+Sustaining: $10/mo
+Harvest: $20/mo
+Marketplace seller plans: Casual (free), Basic ($15/mo), Pro ($40/mo)
+Income Projections
+Year 1 survival target (family floor ~$4,000/mo = $48K/year)
+
+Source	Amount
+2 complete launch packages	$12,000
+Stewardship retainers (avg 3 active)	$14,400/yr
+3 training-only engagements	$4,500
+Grants (NOHFC, capacity-building — one grant)	$15,000–$25,000
+Year 1 realistic total	$46,000–$56,000
+Year 2 (with 4 trained practitioners)
+
+Source	Amount
+Guild tithe (4 practitioners × 3 builds × $6K × 8%)	$5,760/yr
+Direct builds (2/year)	$12,000
+Cohort training (1 cohort of 5)	$7,500
+Stewardship retainers (6 active)	$28,800
+Year 2 realistic total	~$54,000–$60,000
+Year 3+ (network effect)
+
+10+ practitioners active
+Guild tithe: $15,000–$25,000/yr passively
+Founder shifts from builder → trainer/certifier
+Cumulative 24-month target: ~$68,500–$80,000
+
+24-Month Runway Map
+Quarter	Focus	Revenue Target
+Q1 2026	Finalize 807, document method, identify 2 pilot communities	$6,000
+Q2 2026	Launch 2nd community, submit first grant	$9,500
+Q3 2026	First training cohort (4–5 practitioners)	$13,000
+Q4 2026	3 stewardship retainers active, 2 practitioner builds in market	$11,000
+Q1 2027	Second cohort, 6 retainers, guild tithe begins	$14,000
+Q2 2027	8+ practitioners, founder shifts to trainer/certifier	$15,000+
+Grant Positioning
+Strong candidate for infrastructure + capacity-building grants:
+
+6 years of sustained no-income community infrastructure work
+Live, operational platform with a real co-op tenant (807)
+Explicit public-good design (tools stay open)
+Indigenous and rural community applicability
+Target programs: NOHFC Grow, Ontario Trillium Foundation, New Horizons, Canada Digital Adoption Program
+Debt / Cash Flow Guidance (from the model)
+Pay founder first (family floor) — model collapses without this
+Build stewardship retainers to 6–8 as fast as possible — most reliable income base
+Use grant income specifically for debt reduction once floor is covered
+Guild tithe = long-term insurance so six years of work keeps paying even when direct engagements slow
+What's Out of Scope (by design)
+SaaS subscriptions or platform fees from communities
+Equity fundraising or outside investors
+807's membership revenue (belongs to 807, not Headwaters)
+Charging for the infrastructure itself
+Rootwork Pilot Strategy (6 avatars identified)
+Art gallery & events champion
+Hairstylist gift-market organizer
+Meat abattoir operator
+Fishing lodge owner
+Soap maker / farmers' market seller
+Tyler (Sioux Lookout) — Pilot #1, chosen because his "mesh" of community projects stress-tests the common core
+Open pilot decisions not yet made: pilot ask (free vs. paid-but-cheap vs. time+feedback), pilot floor commitments, which 2 avatars get warm outreach first, whether pilots are all in the 807/Sioux Lookout region or spread geographically.
+
