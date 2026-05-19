@@ -1079,6 +1079,9 @@ const AGE_TRACK_LABELS: Record<AgeTrack, string> = {
   older: "Older (Ages 14–18)",
 };
 
+const VOICE_SESSION_KEY = "hw_story_voice_index";
+const MAX_VOICES = 3;
+
 function StoryDisplay({
   story,
   stationName,
@@ -1093,14 +1096,59 @@ function StoryDisplay({
   onWriteAnother: () => void;
 }) {
   const [isReading, setIsReading] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoiceIdx, setSelectedVoiceIdx] = useState<number>(() => {
+    try {
+      const parsed = parseInt(
+        sessionStorage.getItem(VOICE_SESSION_KEY) ?? "0",
+        10
+      );
+      return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+    } catch {
+      return 0;
+    }
+  });
+
   const speechSupported =
     typeof window !== "undefined" && "speechSynthesis" in window;
+
+  useEffect(() => {
+    if (!speechSupported) return;
+
+    function pickVoices() {
+      const all = window.speechSynthesis.getVoices();
+      if (all.length === 0) return;
+      const preferred = all.filter(
+        (v) => v.lang.startsWith("en") || v.lang === ""
+      );
+      const pool = (preferred.length > 0 ? preferred : all).slice(
+        0,
+        MAX_VOICES
+      );
+      setVoices(pool);
+    }
+
+    pickVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", pickVoices);
+    return () => {
+      window.speechSynthesis.removeEventListener("voiceschanged", pickVoices);
+    };
+  }, [speechSupported]);
 
   useEffect(() => {
     return () => {
       if (speechSupported) window.speechSynthesis.cancel();
     };
   }, [speechSupported]);
+
+  function selectVoice(idx: number) {
+    setSelectedVoiceIdx(idx);
+    try {
+      sessionStorage.setItem(VOICE_SESSION_KEY, String(idx));
+    } catch {
+      /* ignore */
+    }
+  }
 
   const paragraphs = story
     .split(/\n{2,}/)
@@ -1224,6 +1272,10 @@ function StoryDisplay({
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(paragraphs.join(" "));
     utterance.rate = 0.92;
+    const safeIdx = Math.min(selectedVoiceIdx, voices.length - 1);
+    if (voices.length > 0 && safeIdx >= 0) {
+      utterance.voice = voices[safeIdx];
+    }
     utterance.onstart = () => setIsReading(true);
     utterance.onend = () => setIsReading(false);
     utterance.onerror = () => setIsReading(false);
@@ -1306,23 +1358,51 @@ function StoryDisplay({
         </button>
 
         {speechSupported && (
-          isReading ? (
-            <button
-              onClick={handleStop}
-              className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
-              style={{ color: `${accent}99` }}
-            >
-              Stop ◼
-            </button>
-          ) : (
-            <button
-              onClick={handleReadAloud}
-              className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
-              style={{ color: `${accent}99` }}
-            >
-              Read aloud →
-            </button>
-          )
+          <div className="flex items-center gap-3 flex-wrap">
+            {voices.length > 1 && !isReading && (
+              <div className="flex items-center gap-1.5">
+                {voices.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => selectVoice(idx)}
+                    title={`Voice ${idx + 1}`}
+                    className="font-mono text-[7.5px] uppercase tracking-[0.18em] px-2 py-1 rounded transition-all"
+                    style={{
+                      background:
+                        selectedVoiceIdx === idx
+                          ? `${accent}30`
+                          : "transparent",
+                      border: `1px solid ${
+                        selectedVoiceIdx === idx ? accent : `${accent}40`
+                      }`,
+                      color:
+                        selectedVoiceIdx === idx ? accent : `${accent}70`,
+                    }}
+                  >
+                    Voice {idx + 1}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {isReading ? (
+              <button
+                onClick={handleStop}
+                className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+                style={{ color: `${accent}99` }}
+              >
+                Stop ◼
+              </button>
+            ) : (
+              <button
+                onClick={handleReadAloud}
+                className="font-mono text-[8.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-70"
+                style={{ color: `${accent}99` }}
+              >
+                Read aloud →
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
