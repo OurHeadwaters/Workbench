@@ -267,6 +267,10 @@ export function WorkPage() {
 
         <hr style={{ borderColor: "hsl(var(--card-border))" }} />
 
+        <p className="font-serif text-[13.5px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))", opacity: 0.75 }}>
+          New engagements are underway — documentation follows each phase completion.
+        </p>
+
         {/* ── CTA ── */}
         <section className="pb-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] mb-3" style={{ color: "hsl(var(--accent))" }}>
