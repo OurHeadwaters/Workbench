@@ -8,6 +8,7 @@
 //   MEMORY — trail note + photo, always editable (local-only until XRPL DID)
 
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import * as Speech from "expo-speech";
@@ -116,12 +117,18 @@ function blocksToPlainText(blocks: TaleBlock[]): string {
     .join("\n\n");
 }
 
+type TtsSpeed = "slow" | "normal" | "fast";
+const TTS_SPEED_RATES: Record<TtsSpeed, number> = { slow: 0.7, normal: 0.92, fast: 1.3 };
+const TTS_SPEED_LABELS: Record<TtsSpeed, string> = { slow: "Slow", normal: "Normal", fast: "Fast" };
+const ASYNC_KEY_SPEED = "@tts_speed";
+const ASYNC_KEY_VOICE = "@tts_voice";
+
 const ttsStyles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 8,
   },
   btn: {
     flexDirection: "row",
@@ -143,6 +150,52 @@ const ttsStyles = StyleSheet.create({
   btnLabel: {
     fontSize: 12,
     letterSpacing: 0.8,
+  },
+  settingsToggleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 14,
+  },
+  settingsPanel: {
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    gap: 10,
+  },
+  settingsLabel: {
+    fontSize: 10,
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  speedRow: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  speedChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  speedChipLabel: {
+    fontSize: 11,
+    letterSpacing: 0.5,
+  },
+  voiceScroll: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  voiceChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+    maxWidth: 140,
+  },
+  voiceChipLabel: {
+    fontSize: 11,
+    letterSpacing: 0.3,
   },
 });
 
@@ -219,6 +272,54 @@ export default function StoryStationScreen() {
   // Read-aloud (TTS) state
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const [ttsPaused, setTtsPaused] = useState(false);
+  const [ttsSpeed, setTtsSpeedState] = useState<TtsSpeed>("normal");
+  const [ttsVoice, setTtsVoiceState] = useState<string | null>(null);
+  const [availableVoices, setAvailableVoices] = useState<Speech.Voice[]>([]);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+
+  // Load persisted TTS preferences and available voices on mount
+  useEffect(() => {
+    async function loadTtsPrefs() {
+      try {
+        const [savedSpeed, savedVoice] = await Promise.all([
+          AsyncStorage.getItem(ASYNC_KEY_SPEED),
+          AsyncStorage.getItem(ASYNC_KEY_VOICE),
+        ]);
+        if (savedSpeed && (savedSpeed === "slow" || savedSpeed === "normal" || savedSpeed === "fast")) {
+          setTtsSpeedState(savedSpeed as TtsSpeed);
+        }
+        if (savedVoice) {
+          setTtsVoiceState(savedVoice);
+        }
+      } catch {
+        // ignore storage errors
+      }
+    }
+    async function loadVoices() {
+      try {
+        const voices = await Speech.getAvailableVoicesAsync();
+        setAvailableVoices(voices);
+      } catch {
+        // voices unavailable on this platform
+      }
+    }
+    loadTtsPrefs();
+    loadVoices();
+  }, []);
+
+  const setTtsSpeed = useCallback((speed: TtsSpeed) => {
+    setTtsSpeedState(speed);
+    AsyncStorage.setItem(ASYNC_KEY_SPEED, speed).catch(() => {});
+  }, []);
+
+  const setTtsVoice = useCallback((identifier: string | null) => {
+    setTtsVoiceState(identifier);
+    if (identifier) {
+      AsyncStorage.setItem(ASYNC_KEY_VOICE, identifier).catch(() => {});
+    } else {
+      AsyncStorage.removeItem(ASYNC_KEY_VOICE).catch(() => {});
+    }
+  }, []);
 
   const ttsStop = useCallback(() => {
     Speech.stop();
@@ -230,14 +331,16 @@ export default function StoryStationScreen() {
     if (!tale) return;
     const text = blocksToPlainText(tale.body);
     ttsStop();
-    Speech.speak(text, {
+    const opts: Speech.SpeechOptions = {
       onStart: () => { setTtsPlaying(true); setTtsPaused(false); },
       onDone: () => { setTtsPlaying(false); setTtsPaused(false); },
       onStopped: () => { setTtsPlaying(false); setTtsPaused(false); },
       onError: () => { setTtsPlaying(false); setTtsPaused(false); },
-      rate: 0.92,
-    });
-  }, [tale, ttsStop]);
+      rate: TTS_SPEED_RATES[ttsSpeed],
+    };
+    if (ttsVoice) opts.voice = ttsVoice;
+    Speech.speak(text, opts);
+  }, [tale, ttsStop, ttsSpeed, ttsVoice]);
 
   const ttsPause = useCallback(() => {
     Speech.pause();
@@ -767,6 +870,104 @@ export default function StoryStationScreen() {
                     </>
                   )}
                 </View>
+                {/* ── Reading settings toggle ──────────────────────────── */}
+                <Pressable
+                  onPress={() => setShowVoiceSettings((v) => !v)}
+                  style={({ pressed }) => [ttsStyles.settingsToggleRow, { opacity: pressed ? 0.6 : 1 }]}
+                  accessibilityLabel="Reading settings"
+                >
+                  <Ionicons name={showVoiceSettings ? "settings" : "settings-outline"} size={13} color={c.mutedForeground} />
+                  <Text style={[ttsStyles.btnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                    {showVoiceSettings ? "Hide settings" : "Reading settings"}
+                  </Text>
+                </Pressable>
+                {showVoiceSettings ? (
+                  <View style={[ttsStyles.settingsPanel, { backgroundColor: c.background, borderWidth: 1, borderColor: c.rule }]}>
+                    {/* Speed */}
+                    <View>
+                      <Text style={[ttsStyles.settingsLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                        SPEED
+                      </Text>
+                      <View style={ttsStyles.speedRow}>
+                        {(["slow", "normal", "fast"] as TtsSpeed[]).map((speed) => {
+                          const active = ttsSpeed === speed;
+                          return (
+                            <Pressable
+                              key={speed}
+                              onPress={() => setTtsSpeed(speed)}
+                              style={({ pressed }) => [
+                                ttsStyles.speedChip,
+                                {
+                                  backgroundColor: active ? c.foreground : c.card,
+                                  borderColor: active ? c.foreground : c.rule,
+                                  opacity: pressed ? 0.7 : 1,
+                                },
+                              ]}
+                              accessibilityLabel={`Speed: ${TTS_SPEED_LABELS[speed]}`}
+                            >
+                              <Text style={[ttsStyles.speedChipLabel, { color: active ? c.background : c.foreground, fontFamily: MONO }]}>
+                                {TTS_SPEED_LABELS[speed]}
+                              </Text>
+                            </Pressable>
+                          );
+                        })}
+                      </View>
+                    </View>
+                    {/* Voice */}
+                    {availableVoices.length > 0 ? (
+                      <View>
+                        <Text style={[ttsStyles.settingsLabel, { color: c.mutedForeground, fontFamily: MONO }]}>
+                          VOICE
+                        </Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={ttsStyles.voiceScroll}>
+                          <Pressable
+                            onPress={() => setTtsVoice(null)}
+                            style={({ pressed }) => [
+                              ttsStyles.voiceChip,
+                              {
+                                backgroundColor: ttsVoice === null ? c.foreground : c.card,
+                                borderColor: ttsVoice === null ? c.foreground : c.rule,
+                                opacity: pressed ? 0.7 : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              numberOfLines={1}
+                              style={[ttsStyles.voiceChipLabel, { color: ttsVoice === null ? c.background : c.foreground, fontFamily: MONO }]}
+                            >
+                              Default
+                            </Text>
+                          </Pressable>
+                          {availableVoices.map((voice) => {
+                            const active = ttsVoice === voice.identifier;
+                            return (
+                              <Pressable
+                                key={voice.identifier}
+                                onPress={() => setTtsVoice(voice.identifier)}
+                                style={({ pressed }) => [
+                                  ttsStyles.voiceChip,
+                                  {
+                                    backgroundColor: active ? c.foreground : c.card,
+                                    borderColor: active ? c.foreground : c.rule,
+                                    opacity: pressed ? 0.7 : 1,
+                                  },
+                                ]}
+                                accessibilityLabel={`Voice: ${voice.name}`}
+                              >
+                                <Text
+                                  numberOfLines={1}
+                                  style={[ttsStyles.voiceChipLabel, { color: active ? c.background : c.foreground, fontFamily: MONO }]}
+                                >
+                                  {voice.name}
+                                </Text>
+                              </Pressable>
+                            );
+                          })}
+                        </ScrollView>
+                      </View>
+                    ) : null}
+                  </View>
+                ) : null}
                 <TaleBlocks blocks={tale.body} colors={c} />
                 {tale.authorNote ? (
                   <>
