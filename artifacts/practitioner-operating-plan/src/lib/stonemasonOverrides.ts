@@ -314,3 +314,68 @@ export function clearAllOverrides(): void {
 export function hasAnyOverrides(): boolean {
   return Object.keys(load()).length > 0;
 }
+
+// ── Scenario link helpers ───────────────────────────────────────────────
+
+const PARAM_PREFIX = "z3_";
+
+/**
+ * Build a shareable URL that encodes all current non-default overrides
+ * as query params. Returns the full URL string (ready to copy).
+ */
+export function buildScenarioUrl(): string {
+  const store = load();
+  const url = new URL(window.location.href);
+
+  // Strip any stale z3_ params first
+  for (const key of [...url.searchParams.keys()]) {
+    if (key.startsWith(PARAM_PREFIX)) url.searchParams.delete(key);
+  }
+
+  for (const ov of Object.values(store)) {
+    if (ov.value !== ov.defaultValue) {
+      url.searchParams.set(`${PARAM_PREFIX}${ov.key}`, String(ov.value));
+    }
+  }
+
+  return url.toString();
+}
+
+/**
+ * Detect scenario params in the current URL and, if present, apply them
+ * to localStorage. Returns true when at least one valid param was found.
+ *
+ * When scenario params are present, all existing local overrides are cleared
+ * first so the recipient's state exactly matches the shared scenario — no
+ * stale local overrides bleed through for keys omitted from the link.
+ *
+ * Note: stripping z3_ params from the address bar is the caller's
+ * responsibility (see CostReviewModal mount effect) so it can be combined
+ * with the history.replaceState call that happens regardless of validity.
+ */
+export function applyScenarioFromUrl(): boolean {
+  const params = new URLSearchParams(window.location.search);
+
+  // Collect all z3_ params upfront
+  const scenarioParams: Array<{ key: string; value: number }> = [];
+  for (const [param, rawValue] of params.entries()) {
+    if (!param.startsWith(PARAM_PREFIX)) continue;
+    const key = param.slice(PARAM_PREFIX.length);
+    const value = parseFloat(rawValue);
+    if (isNaN(value)) continue;
+    if (!ZONE3_INPUTS.find((d) => d.key === key)) continue;
+    scenarioParams.push({ key, value });
+  }
+
+  const hasScenarioParams = scenarioParams.length > 0;
+
+  if (hasScenarioParams) {
+    // Wipe local overrides so the result is an exact copy of the shared scenario
+    clearAllOverrides();
+    for (const { key, value } of scenarioParams) {
+      saveOverride(key, value);
+    }
+  }
+
+  return hasScenarioParams;
+}

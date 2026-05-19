@@ -40,6 +40,8 @@ import {
   clearOverride,
   clearAllOverrides,
   hasAnyOverrides,
+  buildScenarioUrl,
+  applyScenarioFromUrl,
   type Zone3Override,
   type Zone3InputDef,
 } from "@/lib/stonemasonOverrides";
@@ -1361,6 +1363,7 @@ interface Zone3TabProps {
   onSave: (key: string, value: number, note: string) => void;
   onClear: (key: string) => void;
   onClearAll: () => void;
+  sharedScenarioApplied?: boolean;
 }
 
 const ZONE3_GROUP_LABELS: Record<string, string> = {
@@ -1375,7 +1378,7 @@ function fmtK(n: number): string {
   return "$" + Math.round(n).toLocaleString("en-CA");
 }
 
-function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
+function Zone3Tab({ overrideMap, onSave, onClear, onClearAll, sharedScenarioApplied }: Zone3TabProps) {
   const groups = ["rates", "year1", "year2", "year3"] as const;
   const overrideCount = Object.values(overrideMap).filter(
     (ov) => ov.value !== ov.defaultValue
@@ -1389,9 +1392,6 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
   });
 
   // Resync when overrideMap changes (e.g. Reset All, or external save).
-  // Each Zone3Row owns its own input state, so we simply write the saved
-  // overrides back to liveValues here — the row will fire onLiveChange
-  // again if the user continues typing.
   useEffect(() => {
     const next = { ...ZONE3_DEFAULTS };
     for (const [k, ov] of Object.entries(overrideMap)) next[k] = ov.value;
@@ -1404,9 +1404,6 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
 
   const liveYears   = computeIncomeYears(liveValues);
   const liveRunway  = computeRunwayQuarters(liveValues);
-  // Nearest current-or-future quarter as the runway headline.
-  // Quarter IDs are "q1-2026" … "q4-2027" (1-based), so add 1 to the
-  // 0-based Math.floor(month/3) to match.
   const now = new Date();
   const nowYM = now.getFullYear() * 10 + (Math.floor(now.getMonth() / 3) + 1);
   const nextQ = liveRunway.find((q) => {
@@ -1416,8 +1413,62 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
     return yrNum * 10 + qNum >= nowYM;
   }) ?? liveRunway[liveRunway.length - 1];
 
+  const [copyLabel, setCopyLabel] = useState("Copy scenario link");
+
+  const handleCopyLink = () => {
+    const url = buildScenarioUrl();
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(url).then(() => {
+        setCopyLabel("Copied!");
+        setTimeout(() => setCopyLabel("Copy scenario link"), 2500);
+      }).catch(() => {
+        setCopyLabel("Copy failed");
+        setTimeout(() => setCopyLabel("Copy scenario link"), 2500);
+      });
+    } else {
+      // Fallback for insecure contexts or older browsers
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        setCopyLabel("Copied!");
+        setTimeout(() => setCopyLabel("Copy scenario link"), 2500);
+      } catch {
+        setCopyLabel("Copy failed");
+        setTimeout(() => setCopyLabel("Copy scenario link"), 2500);
+      }
+    }
+  };
+
   return (
     <div>
+      {/* ── Shared scenario notice (shown when opened via a shared link) ── */}
+      {sharedScenarioApplied && (
+        <div
+          style={{
+            background: "rgba(42,107,62,0.08)",
+            border: `1pt solid ${GREEN}`,
+            borderRadius: "3pt",
+            padding: "7pt 12pt",
+            fontSize: "8pt",
+            color: DARK,
+            lineHeight: 1.55,
+            marginBottom: "10pt",
+            display: "flex",
+            alignItems: "center",
+            gap: "8pt",
+          }}
+        >
+          <span style={{ fontWeight: 700, color: GREEN }}>Shared scenario loaded.</span>{" "}
+          You're viewing overrides that were encoded in this link. They have been saved to your browser and will persist here.
+        </div>
+      )}
+
       {/* ── Live income summary panel ── */}
       <div
         style={{
@@ -1530,13 +1581,41 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
           color: MUTED,
           lineHeight: 1.55,
           marginBottom: "14pt",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: "12pt",
         }}
       >
-        <strong style={{ color: DARK }}>Zone 3 income assumptions:</strong>{" "}
-        Adjust the driver inputs below — the summary above updates on every keystroke.
-        Hit <strong>Save</strong> on any row to persist the value; the{" "}
-        <strong>Income Projections &amp; Runway</strong> and{" "}
-        <strong>Pricing</strong> slides will reflect saved values when you return to them.
+        <div>
+          <strong style={{ color: DARK }}>Zone 3 income assumptions:</strong>{" "}
+          Adjust the driver inputs below — the summary above updates on every keystroke.
+          Hit <strong>Save</strong> on any row to persist the value; the{" "}
+          <strong>Income Projections &amp; Runway</strong> and{" "}
+          <strong>Pricing</strong> slides will reflect saved values when you return to them.
+        </div>
+        {overrideCount > 0 && (
+          <button
+            onClick={handleCopyLink}
+            style={{
+              flexShrink: 0,
+              padding: "4pt 12pt",
+              fontSize: "7.5pt",
+              fontWeight: 700,
+              background: copyLabel === "Copied!" ? GREEN : DARK,
+              color: CREAM,
+              border: "none",
+              borderRadius: "3pt",
+              cursor: "pointer",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
+              transition: "background 0.2s",
+            }}
+          >
+            {copyLabel}
+          </button>
+        )}
       </div>
 
       {groups.map((group) => {
@@ -1633,6 +1712,7 @@ export default function CostReviewModal() {
 
   // Zone 3 override state
   const [zone3Map, setZone3Map] = useState<Record<string, Zone3Override>>({});
+  const [sharedScenarioApplied, setSharedScenarioApplied] = useState(false);
 
   const refreshZone3 = useCallback(() => {
     const list = loadOverrides();
@@ -1652,6 +1732,22 @@ export default function CostReviewModal() {
   }, []);
 
   useEffect(() => {
+    // Apply any scenario params from a shared link before loading state
+    const applied = applyScenarioFromUrl();
+    if (applied) {
+      setSharedScenarioApplied(true);
+      setTab("zone3");
+    }
+    // Always strip z3_ params from the address bar — even if none were valid —
+    // so malformed or already-processed links don't persist in the URL.
+    const url = new URL(window.location.href);
+    const hasZ3Params = [...url.searchParams.keys()].some((k) => k.startsWith("z3_"));
+    if (hasZ3Params) {
+      for (const key of [...url.searchParams.keys()]) {
+        if (key.startsWith("z3_")) url.searchParams.delete(key);
+      }
+      window.history.replaceState({}, "", url.toString());
+    }
     refresh();
     refreshZone3();
   }, [refresh, refreshZone3]);
@@ -2009,6 +2105,7 @@ export default function CostReviewModal() {
               onSave={handleZone3Save}
               onClear={handleZone3Clear}
               onClearAll={handleZone3ClearAll}
+              sharedScenarioApplied={sharedScenarioApplied}
             />
           )}
 
