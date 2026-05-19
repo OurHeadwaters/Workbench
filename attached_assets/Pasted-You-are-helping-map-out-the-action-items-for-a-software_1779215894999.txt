@@ -1,0 +1,42 @@
+You are helping map out the action items for a software partnership or acquisition strategy. Here is the full context.
+
+What exists:
+
+Saltbox is a local-first homeschool day companion app. "Local-first" means all family data — curriculum, portfolios, photos, lesson notes, daily plans — lives entirely on the family's device. No cloud account, no server dependency, no data leaving the household unless the family explicitly opens the door. It is built on a privacy model called the Eave: a hard architectural boundary between what the family owns and what any outside organization can see. That boundary is not a permission setting — it is structural absence. There is no route connecting the two layers.
+
+The app is feature-complete and growing: curriculum library with per-child assignment and progress tracking, portfolio capture, projects, interests, mentor moments, career pathways, a family calendar, meals and kitchen timers, responsibilities and personality-aware coaching, family recap exports, and an end-of-day wrap-up. The privacy story is genuine, not a marketing position.
+
+The partner:
+
+Gather Round Homeschool is a curriculum publisher with a large, loyal audience of committed homeschool families. Their flagship product, the Legacy Pass, gives purchasers access to their entire library — past, present, and all future releases — for life. Legacy Pass holders face a persistent, documented pain point: keeping up with downloads. Gather Round releases content frequently. Families have to manually check, download individually, and organize locally. This problem belongs to exactly the families most committed to the product.
+
+The opportunity:
+
+Saltbox already has an XRPL wallet binding layer built into its settings. The proposed integration: Gather Round issues Legacy Pass NFTs on the XRP Ledger. Saltbox checks the connected wallet, finds the credential, and unlocks a sync feature that pulls the Gather Round content catalog automatically into the user's local library. One tap per new release. No manual checking. No file management overhead. No ongoing cloud dependency — files are downloaded once, stored permanently on the device.
+
+The in-app experience never uses the words "wallet" or "XRPL." The user sees: "Connect your Legacy Pass — takes about two minutes." The technical layer is invisible. The experience is: my purchase unlocked something.
+
+The two paths:
+
+Path A — Freemium conversion: Gather Round families discover Saltbox through a recommended integration. Core use is free. Legacy Pass sync is a Saltbox subscription feature. Families arrive warm, with context, already using curriculum the app is built to organize. The goal is to make the app so undeniably useful that conversion to a paid plan is frictionless.
+
+Path B — Acquisition: Gather Round's founder, Rebecca, acquires Saltbox. She gets the privacy infrastructure as the technical underbelly of her business. This is especially relevant given the current political climate around homeschool families and digital surveillance — a local-first, privacy-forward tool is a genuine product differentiator that her community understands immediately and will pay for. She does not need to build it; it exists and works.
+
+The context that makes Path B compelling right now:
+
+Homeschool families in the US (and increasingly in Canada) are acutely aware of legislative pressure, data collection by ed-tech platforms, and the risk of government visibility into their educational choices. A curriculum platform that can honestly say "your family's data never leaves your device, no account required, the architecture makes it structurally impossible for us to see your content" is a different kind of product than anything else in the market. The Eave is not a privacy policy. It is an architectural guarantee. That distinction matters to this community.
+
+What I need you to map out:
+
+What are the highest-leverage action items to move toward either Path A or Path B in the next 30–60 days?
+What does the outreach message to Rebecca look like for each path — and which path should lead the conversation?
+What would Rebecca need to evaluate this as an acquisition? What is the minimum viable diligence package?
+What is the honest risk in each path, and what would cause each to stall?
+If Path B is the right move, what does a realistic deal structure look like for a founder-to-founder acquisition of a privacy-forward tool at this stage?
+Frame your answers around the privacy story and the political moment — that is the differentiator that makes this more than a file management feature.
+
+That's the prompt. A few notes on what changed from what you sent before:
+
+The previous brief was written for a builder — all zone model, auth patterns, and DB conventions. The business agent doesn't need any of that.
+This one leads with why the moment matters and gives them the two paths to evaluate, rather than asking them to figure out what to do with a technical spec.
+Path B (acquisition) is explicitly framed — which is what you actually want to explore but may not have stated clearly in the first version.

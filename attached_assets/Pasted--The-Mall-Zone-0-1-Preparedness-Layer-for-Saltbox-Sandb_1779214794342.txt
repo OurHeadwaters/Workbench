@@ -1,0 +1,236 @@
+# The Mall — Zone 0–1 Preparedness Layer for Saltbox + Sandbox
+
+## What this is
+
+You are building a new feature layer called **the Mall** — a shared architecture that sits across two existing artifacts:
+
+- **Saltbox** (`artifacts/gather`) — a fully local-first, private household day companion. No server. All data lives on the device in IndexedDB + Zustand/localStorage. This is the household's private space (Zone 0).
+- **Sandbox** (`artifacts/sandbox`) — a private, invite-only village bulletin board for ~60 homeschool families. Server-backed (Express + Drizzle + Postgres). Household identity is a name + passphrase, scrypt-hashed, no email required. This sits at the Zone 1/3 boundary.
+
+The Mall is **not a new app**. It is a coordinated addition to both — a structured layer for family emergency preparedness, gamified role ownership, and a plain-language standby alert protocol. Think of the financial model: just as Zone 0 holds the household ledger (Eave), the Mall holds the household's *operational readiness* — what your family knows how to do when everything goes sideways.
+
+---
+
+## The Codetry Zone Model (essential context)
+
+**Zone 0** — Household. Most private. On-device. No server can reach it.
+**Zone 1** — Circle. Trusted extended family and close community. The Sandbox village lives here.
+**The Eave** — The hard privacy boundary between Zones 0–1 (household/lodge) and Zone 3+ (organizational, above-board). Zone 3 actors cannot see Zone 0 data. The Mall must never cross the Eave accidentally.
+
+The Mall is a Zone 0–1 feature. It lives:
+- **In Saltbox** as private household preparedness state (on-device only — parents, roles, kits, plans, owned skills).
+- **In Sandbox** as opt-in community coordination (standby alerts, neighbourhood resource sharing, check-in pings).
+
+Nothing from Saltbox's Mall layer ever touches the Sandbox server unless the parent explicitly chooses to share it (e.g., posting a "we have a working generator" offer to the village). Default is private.
+
+---
+
+## Design constraints (non-negotiable)
+
+- **Palette:** warm cream `#FAF6F0` · deep charcoal `#2E2620` · terracotta `#C7613B` · moss `#4A6741` · sage `#5C7A5C`
+- **Type:** Fraunces serif headings + Inter body. Always.
+- **No emojis** in UI copy or code comments.
+- **No red** for destructive or alert actions — use warm amber.
+- **Mobile-first**, 44px minimum tap targets.
+- **Plain language everywhere.** If a 9-year-old can't read it, rewrite it. The standby protocol is for families, not incident commanders.
+- **Calm UX.** No push notifications. No badges on load. No alarm sounds. The tone is steady and capable, not anxious.
+- **Local-first bias.** Anything that can live on the device should. Server involvement is opt-in.
+- **Both-States test:** every screen must work empty (new family, nothing set up yet) and full (all roles assigned, kits built, plans filed). A family should feel welcomed on day one, not overwhelmed.
+- **Both-Sides naming:** every feature needs a plain family name and, where relevant, a preparedness/resilience term that maps to real emergency management language (for grant writing, not UI copy).
+
+---
+
+## The Mall — What it contains
+
+The Mall is the household's preparedness hub. It has two sides:
+
+### Side A — Household Readiness (Saltbox, on-device)
+
+A new top-level section in Saltbox called **"The Mall"** or simply **"Ready"** — TBD on final name, but it should feel like a place the family goes together, not a checklist parents fill out alone.
+
+#### 1. Family Roles (Standby Ownership)
+
+Each family member (parents + children) can be assigned one or more **standby roles**. These are the things that person *owns* in an emergency — not assigned by a parent in the moment, but decided ahead of time in a calm, game-like context.
+
+Role examples (use plain names; avoid military/corporate tone):
+- **Fire Keeper** — builds and maintains the fire (indoor fireplace or outdoor). Owns fire-starting, safety check, and shutdown.
+- **Light Tender** — knows where all candles, flashlights, and lanterns are. Owns batteries, wicks, placement.
+- **Kitchen Lead** — knows what food is in the kit and how to prepare a meal without power.
+- **Water Watcher** — knows the water storage location, can refill jugs, knows the filter.
+- **First Aid Holder** — knows where the kit is, can do basic first aid, knows who to call.
+- **Animal Tender** — owns pet food, water, and comfort for any animals.
+- **Little Navigator** — knows the fire escape routes, can lead younger siblings out.
+- **Communication Keeper** — knows how to reach neighbours, where the battery radio is, what channel to monitor.
+
+Age-appropriate: an 8-year-old can absolutely own Fire Keeper after practicing in good times. The whole point is that the skill is practiced and owned *before* it is needed. Assign roles in Saltbox; they show up in the child's daily view as a small "I've got this" card — not a chore, a point of pride.
+
+#### 2. The Standby Protocol (plain-language alert system)
+
+A household-level alert status with three states. Name these carefully — they must feel calm and empowering, not alarming:
+
+| State | Meaning | What triggers it |
+|---|---|---|
+| **Everyday** | Normal life. Nothing to do. | Default. |
+| **Heads Up** | Something might be coming. Check your role. Top up anything low. | Parent sets manually, or Sandbox community posts a Heads Up. |
+| **Standby** | It is happening. Everyone knows their job. No confusion. | Parent sets manually. |
+
+When a parent moves the household to **Heads Up** or **Standby** in Saltbox:
+- Each family member's role card becomes the first thing they see on the Today screen.
+- The role card shows what their job is *right now*, in plain language appropriate to their age.
+- No pop-ups, no alarms — just a clear, steady reordering of the screen.
+
+Parents can optionally share their household's status to Sandbox (the village board) so neighbours know: "The Hendersons are on Heads Up — maybe check in." This is opt-in, one tap, and can be withdrawn at any time.
+
+#### 3. Gamified Preparedness Activities
+
+These are the four core activities that build readiness through play. Each is a self-contained game the family completes together. Completion earns the family (and individual role-holders) a recognition in Saltbox — not a badge system with points, but a quiet acknowledgement: "Your family completed the Blackout Kit build on March 4th."
+
+**Activity 1 — Build a Blackout Kit**
+A scavenger-hunt-style build that walks the family through assembling a power-outage kit. The Light Tender leads. Steps are presented one at a time. Each step has a child-readable instruction and a parent-readable rationale (two-level UI). When the kit is "complete" (all items confirmed), it gets logged to the household record with a completion date and the name of the role-holder who led it. The kit item list is editable — families add what fits their home.
+
+**Activity 2 — Junk Scavenger Hunt**
+A playful indoor scavenger hunt that reveals what the family already has. Framing: "What useful things are hiding in plain sight?" Kids search the house for items on a list (candles, blankets, rope, matches, hand-crank tools, etc.). Each found item gets checked off by the kid who found it. Items found but not on the list can be added. The output is a living "what we already have" inventory that feeds into the kit views. This one should feel chaotic and fun — it is a game, not an audit.
+
+**Activity 3 — Fire Escape Plan**
+Walk-through builder for a household fire escape plan. Prompted screen by screen: draw (or describe) the layout of your home, mark exits, choose a meeting spot outside, assign who leads whom out (the Little Navigator role connects here), practice the count (every person accounted for at the meeting spot). Completion is logged. The plan is viewable and printable from within Saltbox.
+
+**Activity 4 — Gather Round (the village check-in game)**
+This is the Sandbox side. Families in the village can opt in to a monthly neighbourhood readiness check-in: "What does your household have? What do you need? What can you offer?" Not a resource registry — a conversation prompt on the board. Framing is warm, not transactional. "We have a working hand pump if anyone needs water." "Does anyone have a cast iron we could borrow for a test cook?" Households that participate get a quiet acknowledgement on their Sandbox profile: "Participated in May check-in."
+
+#### 4. Kit Inventory (living list)
+
+A simple, editable household inventory tied to preparedness. Organized by role (the Fire Keeper's kit, the Light Tender's kit, etc.). Each item has: name, quantity, location in the house, last-checked date. The Light Tender and Fire Keeper can mark their kits as "checked" — this resets a quiet indicator so the parent can see at a glance when items were last verified without nagging anyone.
+
+---
+
+### Side B — Village Coordination (Sandbox, server-backed)
+
+New additions to Sandbox that support the standby protocol at the community level.
+
+#### 1. Standby Status on the Board
+
+A new section (bucket) in Sandbox: **"Heads Up"**. This is a dedicated space — not mixed into the general feed — where households can post a brief status when they are on alert. Plain text only, no photos. Framing: "We are keeping an eye on the weather this weekend. Our generator is fuelled." Posts in this bucket auto-expire after 72 hours.
+
+Privacy: posting to Heads Up is opt-in and manual. Saltbox status does not automatically publish to Sandbox. The parent decides.
+
+#### 2. Auto-Assigned Community Roles
+
+In Sandbox, the community organizer can set up **neighbourhood standby roles** — things the village has collectively agreed someone will own in a crisis:
+
+- Who has the community first-aid kit
+- Who has a working vehicle that can transport
+- Who knows how to contact the local fire hall
+- Who can shelter additional families
+
+These are stored against household profiles (not public — only visible to the community organizer and, optionally, to all village members if the household consents). During a Standby event, these show up as a simple "who has what" reference card for the organizer.
+
+#### 3. Check-In Ping
+
+During a Standby event (organizer-declared), the board shows a simple check-in list: households mark themselves as "we are okay." No location data, no details required — just a green/grey status. The organizer can see who has not checked in and follow up personally. This is never automated — no push, no email unless the household has opted into the Sunday digest (and even then, only the organizer would trigger it manually).
+
+---
+
+## Role assignment in Saltbox — technical notes
+
+Saltbox is fully local. Roles are stored in Zustand/localStorage against each `Child` and `Parent` record. The `Responsibility` data type already exists (`artifacts/gather/src/lib/types.ts`) with `assigneeIds`, `recurrence`, and `timeBucket`. Standby roles should be a new lightweight type — they are *not* daily responsibilities, they are identity-level skills the person owns.
+
+Proposed type shape (implement in `artifacts/gather/src/lib/types.ts`):
+
+```ts
+type StandbyRole = {
+  id: string;
+  name: string;             // plain name: "Fire Keeper"
+  description: string;      // plain language, child-readable
+  assigneeIds: string[];    // Child or Parent ids
+  kitItems?: KitItem[];     // items this role is responsible for
+  lastPracticed?: string;   // ISO date string
+};
+
+type KitItem = {
+  id: string;
+  label: string;
+  qty: number;
+  location: string;
+  lastChecked?: string;
+};
+
+type HouseholdReadiness = {
+  status: 'everyday' | 'heads-up' | 'standby';
+  roles: StandbyRole[];
+  inventory: KitItem[];
+  activitiesCompleted: ActivityCompletion[];
+};
+
+type ActivityCompletion = {
+  activityId: 'blackout-kit' | 'junk-hunt' | 'fire-escape' | 'gather-round';
+  completedAt: string;
+  ledByIds: string[];     // who led it
+  notes?: string;
+};
+```
+
+All of this is stored in localStorage via Zustand persist — no server, no sync.
+
+---
+
+## Sandbox technical notes
+
+Sandbox is server-backed: Express 5 + Drizzle + Postgres. New DB tables will be needed:
+
+- `sandbox_standby_posts` — the Heads Up bucket (household_id, body, expires_at, created_at)
+- `sandbox_community_roles` — neighbourhood standby role assignments (role_name, household_id, is_public, assigned_by_organizer)
+- `sandbox_checkins` — per-Standby-event check-in records (event_id, household_id, checked_in_at)
+
+Routes go in `artifacts/api-server/src/routes/` — a new `standby.ts` route file is appropriate. Follow the existing pattern: `req.log` for logging, Zod validation on inputs, Drizzle for DB access.
+
+The `sandbox_households` table already has `isOrganizer` flag — use that to gate community-role management and check-in event declaration.
+
+---
+
+## Emotional design brief (the "why it matters" layer)
+
+This is not a feature about disaster. It is a feature about **capability and belonging**.
+
+A family that has completed the Blackout Kit build together, where the 8-year-old proudly knows they are the Fire Keeper, where the 6-year-old can name the meeting spot — that family is not afraid of the dark. They have practiced. They have laughed about finding three half-melted candles in the junk drawer. They have a shared story.
+
+The Mall should feel like the time you spent building something real together. Not a compliance form. Not a parent's anxiety turned into a chore chart.
+
+Design principles that reinforce this:
+- **Celebrate completion, not compliance.** No progress bars on the main view. Completion acknowledgements appear once, warmly, and then move to a quiet history.
+- **The child's view is first-person and proud.** "I am the Fire Keeper. Here is what that means." Not "Assigned role: Fire Keeper."
+- **The parent's view is calm and complete.** A single glance tells them: status, who has checked their kit, which activities are done, what needs attention. No alarms, no reds.
+- **The village view is communal and light.** The Sandbox Heads Up bucket is a place to say "we're watching" and "we've got this together." Not a crisis dashboard.
+- **Tech-optional.** A family without smartphones can print the fire escape plan. The kit inventory can be written on paper inside the actual kit. The village check-in can happen by knocking on a door. The app supports the practice — it does not replace it.
+
+---
+
+## Files to start from
+
+### Saltbox (gather)
+- `artifacts/gather/src/lib/types.ts` — add StandbyRole, KitItem, HouseholdReadiness, ActivityCompletion types
+- `artifacts/gather/src/lib/storage.ts` — extend Zustand store with readiness slice
+- `artifacts/gather/src/pages/home.tsx` — Today page; role card appears here when status is heads-up or standby
+- `artifacts/gather/src/pages/responsibilities.tsx` — structural reference for role/chore UI patterns
+- `artifacts/gather/src/pages/settings.tsx` — where backup/restore lives; readiness data should be included in backup export
+
+### Sandbox
+- `artifacts/api-server/src/routes/sandbox.ts` — existing sandbox routes
+- `artifacts/api-server/src/lib/sandbox.ts` — shared sandbox logic
+- `lib/db/src/schema.ts` — add new Drizzle tables
+- `artifacts/sandbox/src/` — frontend pages and components
+
+### Shared
+- `lib/api-spec/openapi.yaml` — add new standby endpoints here first; run codegen after
+- `pnpm --filter @workspace/api-spec run codegen` — regenerates hooks and Zod schemas after spec changes
+- `pnpm --filter @workspace/db run push` — applies schema changes to dev DB
+
+---
+
+## Out of scope for this build
+
+- Push notifications of any kind
+- Automated alerts (no cron-triggered standby declarations)
+- Location sharing or mapping
+- Integration with external emergency services APIs
+- Any Zone 3+ data reaching Zone 0 (the Eave holds)
+- Monetisation or paywalling any safety feature
