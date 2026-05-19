@@ -59,8 +59,8 @@ const FEATURE_CARDS = [
   {
     icon: ShieldCheck,
     label: "The Gate",
-    heading: "Bright-side ↔ massity ledger",
-    body: "The substitution ledger that tracks every time a community-side actor replaces a massity product or service with a local alternative — and what that shift is worth.",
+    heading: "Bright-side ↔ the systems ledger",
+    body: "The substitution ledger that tracks every time a community-side actor replaces a systems product or service with a local alternative — and what that shift is worth.",
     links: [{ href: "/gate", label: "Open the Gate" }],
     accent: "gold",
   },
@@ -320,7 +320,7 @@ export default function Home() {
           <span className="text-muted-foreground/40" aria-hidden>·</span>
           <Link href="/gate">
             <span className="text-foreground/70 hover:text-foreground underline-offset-4 hover:underline cursor-pointer">
-              The Gate — bright-side ↔ massity ledger
+              The Gate — bright-side ↔ the systems ledger
             </span>
           </Link>
           <span className="text-muted-foreground/40" aria-hidden>·</span>
