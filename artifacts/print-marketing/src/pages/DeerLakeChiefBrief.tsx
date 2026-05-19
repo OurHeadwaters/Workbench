@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { PrintNav } from "../components/PrintNav";
 
 const EVERGREEN = "#1f3d2e";
 const CREAM = "#f4ede0";
@@ -305,18 +304,3 @@ export function DeerLakeChiefBriefPage() {
   );
 }
 
-export default function DeerLakeChiefBrief() {
-  return (
-    <>
-      <PrintNav
-        targetId="chief-brief-page"
-        filename="deer-lake-chief-brief.pdf"
-        format="letter"
-        orientation="portrait"
-      />
-      <div style={{ background: "#d8d2c8", padding: "2rem 0" }}>
-        <DeerLakeChiefBriefPage />
-      </div>
-    </>
-  );
-}
