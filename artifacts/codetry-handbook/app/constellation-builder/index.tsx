@@ -40,12 +40,12 @@ function ZoneCard({
   const filled = zone.name.trim().length > 0;
 
   return (
-    <View style={[styles.zoneCard, { borderColor: filled ? c.primary : c.rule, backgroundColor: c.card }]}>
+    <View style={[styles.zoneCard, { borderColor: filled ? c.rust : c.rule, backgroundColor: c.card }]}>
       <Pressable
         onPress={() => setOpen(!open)}
         style={({ pressed }) => [styles.zoneHeader, { opacity: pressed ? 0.75 : 1 }]}
       >
-        <View style={[styles.zoneBadge, { backgroundColor: filled ? c.primary : c.muted }]}>
+        <View style={[styles.zoneBadge, { backgroundColor: filled ? c.rust : c.muted }]}>
           <Text style={[styles.zoneBadgeText, { color: filled ? c.primaryForeground : c.mutedForeground, fontFamily: MONO }]}>
             {guide.zone}
           </Text>
@@ -84,7 +84,7 @@ function ZoneCard({
             style={[
               styles.input,
               {
-                borderColor: zone.name ? c.primary : c.border,
+                borderColor: zone.name ? c.rust : c.border,
                 color: c.foreground,
                 fontFamily: SERIF_BOLD,
                 backgroundColor: c.background,
@@ -107,7 +107,7 @@ function ZoneCard({
             style={[
               styles.inputMulti,
               {
-                borderColor: zone.domain ? c.primary : c.border,
+                borderColor: zone.domain ? c.rust : c.border,
                 color: c.foreground,
                 fontFamily: SERIF,
                 backgroundColor: c.background,
@@ -130,7 +130,7 @@ function ZoneCard({
             style={[
               styles.inputMulti,
               {
-                borderColor: zone.vocabulary ? c.primary : c.border,
+                borderColor: zone.vocabulary ? c.rust : c.border,
                 color: c.foreground,
                 fontFamily: SERIF,
                 backgroundColor: c.background,
@@ -207,7 +207,7 @@ export default function ConstellationBuilderScreen() {
             style={({ pressed }) => [
               styles.modeBtn,
               {
-                backgroundColor: viewMode === "build" ? c.primary : "transparent",
+                backgroundColor: viewMode === "build" ? c.rust : "transparent",
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
@@ -229,7 +229,7 @@ export default function ConstellationBuilderScreen() {
             style={({ pressed }) => [
               styles.modeBtn,
               {
-                backgroundColor: viewMode === "manifest" ? c.primary : "transparent",
+                backgroundColor: viewMode === "manifest" ? c.rust : "transparent",
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
@@ -268,7 +268,7 @@ export default function ConstellationBuilderScreen() {
                 style={[
                   styles.input,
                   {
-                    borderColor: localPractitioner ? c.primary : c.border,
+                    borderColor: localPractitioner ? c.rust : c.border,
                     color: c.foreground,
                     fontFamily: SERIF_BOLD,
                     backgroundColor: c.background,
@@ -290,7 +290,7 @@ export default function ConstellationBuilderScreen() {
                 style={[
                   styles.input,
                   {
-                    borderColor: localPractice ? c.primary : c.border,
+                    borderColor: localPractice ? c.rust : c.border,
                     color: c.foreground,
                     fontFamily: SERIF_BOLD,
                     backgroundColor: c.background,

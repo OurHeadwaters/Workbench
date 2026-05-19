@@ -237,12 +237,12 @@ export default function PathHome() {
                         style={[
                           styles.stationDot,
                           completed
-                            ? { backgroundColor: c.foreground }
+                            ? { backgroundColor: c.rust }
                             : isCurrent
                               ? {
                                   backgroundColor: "transparent",
                                   borderWidth: 2,
-                                  borderColor: c.foreground,
+                                  borderColor: c.rust,
                                 }
                               : {
                                   backgroundColor: "transparent",
@@ -376,7 +376,7 @@ export default function PathHome() {
                     }}
                     style={({ pressed }) => [
                       styles.peekOpenBtn,
-                      { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                      { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 },
                     ]}
                   >
                     <Text

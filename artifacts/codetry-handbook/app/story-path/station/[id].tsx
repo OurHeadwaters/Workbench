@@ -780,10 +780,10 @@ export default function StoryStationScreen() {
             onPress={() => router.replace("/story-path")}
             style={({ pressed }) => [
               styles.lockedBtn,
-              { borderColor: c.foreground, backgroundColor: c.background, opacity: pressed ? 0.7 : 1 },
+              { borderColor: c.rust, backgroundColor: c.background, opacity: pressed ? 0.7 : 1 },
             ]}
           >
-            <Text style={[styles.lockedBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+            <Text style={[styles.lockedBtnLabel, { color: c.rust, fontFamily: MONO }]}>
               Back to the path
             </Text>
           </Pressable>
@@ -827,7 +827,7 @@ export default function StoryStationScreen() {
             </Text>
             <Pressable
               onPress={handleShareKeepsake}
-              style={({ pressed }) => [keepsakeStyles.shareBtn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+              style={({ pressed }) => [keepsakeStyles.shareBtn, { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
               accessibilityLabel="Share story"
             >
               <Ionicons name="share-outline" size={16} color={c.background} />
@@ -898,11 +898,11 @@ export default function StoryStationScreen() {
                 disabled={savingPhoto}
                 style={({ pressed }) => [
                   keepsakeStyles.actionBtn,
-                  { borderColor: c.foreground, backgroundColor: c.background, opacity: pressed || savingPhoto ? 0.6 : 1 },
+                  { borderColor: c.rust, backgroundColor: c.background, opacity: pressed || savingPhoto ? 0.6 : 1 },
                 ]}
               >
-                <Ionicons name="download-outline" size={15} color={c.foreground} />
-                <Text style={[keepsakeStyles.actionBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+                <Ionicons name="download-outline" size={15} color={c.rust} />
+                <Text style={[keepsakeStyles.actionBtnLabel, { color: c.rust, fontFamily: MONO }]}>
                   {savingPhoto ? "Saving…" : "Save to Photos"}
                 </Text>
               </Pressable>
@@ -910,7 +910,7 @@ export default function StoryStationScreen() {
                 onPress={handleShareKeepsake}
                 style={({ pressed }) => [
                   keepsakeStyles.actionBtnFilled,
-                  { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                  { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 },
                 ]}
               >
                 <Ionicons name="share-outline" size={15} color={c.background} />
@@ -1001,7 +1001,7 @@ export default function StoryStationScreen() {
                             <>
                               <Pressable
                                 onPress={() => ttsSpeak(savedBlock)}
-                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
                                 accessibilityLabel="Continue reading from where you left off"
                               >
                                 <Ionicons name="play-forward-outline" size={16} color={c.background} />
@@ -1023,7 +1023,7 @@ export default function StoryStationScreen() {
                           ) : (
                             <Pressable
                               onPress={() => ttsSpeak(0)}
-                              style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                              style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
                               accessibilityLabel="Read this tale aloud"
                             >
                               <Ionicons name="volume-high-outline" size={16} color={c.background} />
@@ -1037,7 +1037,7 @@ export default function StoryStationScreen() {
                             {ttsPaused ? (
                               <Pressable
                                 onPress={ttsResume}
-                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
                                 accessibilityLabel="Resume reading"
                               >
                                 <Ionicons name="play-outline" size={16} color={c.background} />
@@ -1046,7 +1046,7 @@ export default function StoryStationScreen() {
                             ) : (
                               <Pressable
                                 onPress={ttsPause}
-                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                                style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
                                 accessibilityLabel="Pause reading"
                               >
                                 <Ionicons name="pause-outline" size={16} color={c.background} />
@@ -1100,8 +1100,8 @@ export default function StoryStationScreen() {
                               style={({ pressed }) => [
                                 ttsStyles.speedChip,
                                 {
-                                  backgroundColor: active ? c.foreground : c.card,
-                                  borderColor: active ? c.foreground : c.rule,
+                                  backgroundColor: active ? c.rust : c.card,
+                                  borderColor: active ? c.rust : c.rule,
                                   opacity: pressed ? 0.7 : 1,
                                 },
                               ]}
@@ -1127,8 +1127,8 @@ export default function StoryStationScreen() {
                             style={({ pressed }) => [
                               ttsStyles.voiceChip,
                               {
-                                backgroundColor: ttsVoice === null ? c.foreground : c.card,
-                                borderColor: ttsVoice === null ? c.foreground : c.rule,
+                                backgroundColor: ttsVoice === null ? c.rust : c.card,
+                                borderColor: ttsVoice === null ? c.rust : c.rule,
                                 opacity: pressed ? 0.7 : 1,
                               },
                             ]}
@@ -1149,8 +1149,8 @@ export default function StoryStationScreen() {
                                 style={({ pressed }) => [
                                   ttsStyles.voiceChip,
                                   {
-                                    backgroundColor: active ? c.foreground : c.card,
-                                    borderColor: active ? c.foreground : c.rule,
+                                    backgroundColor: active ? c.rust : c.card,
+                                    borderColor: active ? c.rust : c.rule,
                                     opacity: pressed ? 0.7 : 1,
                                   },
                                 ]}
@@ -1196,7 +1196,7 @@ export default function StoryStationScreen() {
               onPress={() => setPhase("prompts")}
               style={({ pressed }) => [
                 styles.generateBtn,
-                { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1, marginTop: 24 },
+                { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1, marginTop: 24 },
               ]}
             >
               <Text style={[styles.generateBtnLabel, { color: c.background, fontFamily: MONO }]}>
@@ -1281,7 +1281,7 @@ export default function StoryStationScreen() {
                   disabled={generating}
                   style={({ pressed }) => [
                     styles.generateBtn,
-                    { backgroundColor: c.foreground, opacity: pressed || generating ? 0.7 : 1 },
+                    { backgroundColor: c.rust, opacity: pressed || generating ? 0.7 : 1 },
                   ]}
                 >
                   <Text style={[styles.generateBtnLabel, { color: c.background, fontFamily: MONO }]}>
@@ -1290,7 +1290,7 @@ export default function StoryStationScreen() {
                 </Pressable>
               </View>
             ) : currentPrompt ? (
-              <View style={[styles.promptCard, { backgroundColor: c.card, borderColor: c.foreground }]}>
+              <View style={[styles.promptCard, { backgroundColor: c.card, borderColor: c.rust }]}>
                 <Text style={[styles.promptQ, { color: c.foreground, fontFamily: SERIF }]}>
                   {currentPrompt.question}
                 </Text>
@@ -1315,7 +1315,7 @@ export default function StoryStationScreen() {
                   style={({ pressed }) => [
                     styles.nextBtn,
                     {
-                      backgroundColor: currentInput.trim() ? c.foreground : c.rule,
+                      backgroundColor: currentInput.trim() ? c.rust : c.rule,
                       opacity: pressed ? 0.7 : 1,
                     },
                   ]}
@@ -1372,11 +1372,11 @@ export default function StoryStationScreen() {
               onPress={() => setKeepsakeVisible(true)}
               style={({ pressed }) => [
                 styles.keepsakeBtn,
-                { borderColor: c.foreground, backgroundColor: c.background, opacity: pressed ? 0.7 : 1 },
+                { borderColor: c.rust, backgroundColor: c.background, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <Ionicons name="bookmark-outline" size={15} color={c.foreground} />
-              <Text style={[styles.keepsakeBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+              <Ionicons name="bookmark-outline" size={15} color={c.rust} />
+              <Text style={[styles.keepsakeBtnLabel, { color: c.rust, fontFamily: MONO }]}>
                 Save as keepsake
               </Text>
             </Pressable>
@@ -1394,7 +1394,7 @@ export default function StoryStationScreen() {
                   onPress={onMarkDone}
                   style={({ pressed }) => [
                     styles.markBtn,
-                    { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                    { backgroundColor: c.rust, opacity: pressed ? 0.7 : 1 },
                   ]}
                 >
                   <Ionicons name="checkmark" size={18} color={c.background} />
@@ -1416,7 +1416,7 @@ export default function StoryStationScreen() {
                   },
                 ]}
               >
-                <View style={[styles.markedPill, { backgroundColor: c.foreground }]}>
+                <View style={[styles.markedPill, { backgroundColor: c.rust }]}>
                   <Ionicons name="checkmark" size={14} color={c.background} />
                   <Text style={[styles.markedPillLabel, { color: c.background, fontFamily: MONO }]}>
                     STATION WALKED

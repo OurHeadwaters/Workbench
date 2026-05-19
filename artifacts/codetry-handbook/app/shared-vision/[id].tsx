@@ -331,7 +331,7 @@ function PickerView({
               style={({ pressed }) => [
                 styles.tile,
                 {
-                  borderColor: selected ? c.foreground : c.rule,
+                  borderColor: selected ? c.rust : c.rule,
                   backgroundColor: selected ? c.card : "transparent",
                   borderRadius: c.radius * 2,
                   opacity: pressed ? 0.7 : 1,
@@ -429,7 +429,7 @@ function PickerView({
             styles.customBtn,
             {
               backgroundColor:
-                customDraft.trim().length === 0 ? c.muted : c.primary,
+                customDraft.trim().length === 0 ? c.muted : c.rust,
               borderRadius: c.radius,
               opacity: pressed ? 0.85 : 1,
             },
@@ -581,8 +581,8 @@ function ComposeView({
               style={({ pressed }) => [
                 styles.dot,
                 {
-                  borderColor: c.foreground,
-                  backgroundColor: here || filled ? c.foreground : "transparent",
+                  borderColor: c.rust,
+                  backgroundColor: here || filled ? c.rust : "transparent",
                   opacity: pressed ? 0.6 : 1,
                 },
               ]}
@@ -631,7 +631,7 @@ function ComposeView({
           style={({ pressed }) => [
             styles.navBtn,
             {
-              borderColor: c.foreground,
+              borderColor: c.rust,
               borderRadius: c.radius,
               opacity:
                 safePromptIndex === 0 ? 0.3 : pressed ? 0.6 : 1,
@@ -641,7 +641,7 @@ function ComposeView({
         >
           <Text
             style={{
-              color: c.foreground,
+              color: c.rust,
               fontFamily: MONO,
               fontSize: 12,
               letterSpacing: 1,
@@ -657,7 +657,7 @@ function ComposeView({
           style={({ pressed }) => [
             styles.navBtn,
             {
-              borderColor: c.foreground,
+              borderColor: c.rust,
               borderRadius: c.radius,
               opacity:
                 safePromptIndex === total - 1 ? 0.3 : pressed ? 0.6 : 1,
@@ -667,7 +667,7 @@ function ComposeView({
         >
           <Text
             style={{
-              color: c.foreground,
+              color: c.rust,
               fontFamily: MONO,
               fontSize: 12,
               letterSpacing: 1,
@@ -764,7 +764,7 @@ function ComposeView({
         style={({ pressed }) => [
           styles.handoffBtn,
           {
-            backgroundColor: c.primary,
+            backgroundColor: c.rust,
             borderRadius: c.radius,
             opacity: pressed ? 0.85 : 1,
           },
@@ -812,7 +812,7 @@ function LensTab({
       style={({ pressed }) => [
         styles.lensTab,
         {
-          backgroundColor: active ? c.foreground : "transparent",
+          backgroundColor: active ? c.rust : "transparent",
           opacity: pressed ? 0.7 : 1,
         },
       ]}
@@ -1247,7 +1247,7 @@ function HandoffView({
           style={({ pressed }) => [
             styles.handoffBtn,
             {
-              backgroundColor: c.primary,
+              backgroundColor: c.rust,
               borderRadius: c.radius,
               opacity: pressed ? 0.85 : 1,
             },
@@ -1271,7 +1271,7 @@ function HandoffView({
           style={({ pressed }) => [
             styles.handoffBtnGhost,
             {
-              borderColor: c.foreground,
+              borderColor: c.rust,
               borderRadius: c.radius,
               opacity: pressed ? 0.7 : 1,
             },
@@ -1284,7 +1284,7 @@ function HandoffView({
         >
           <Text
             style={{
-              color: c.foreground,
+              color: c.rust,
               fontFamily: MONO,
               fontSize: 13,
               letterSpacing: 1,
@@ -1299,7 +1299,7 @@ function HandoffView({
           style={({ pressed }) => [
             styles.handoffBtnGhost,
             {
-              borderColor: c.foreground,
+              borderColor: c.rust,
               borderRadius: c.radius,
               opacity: pressed ? 0.7 : 1,
             },
@@ -1308,7 +1308,7 @@ function HandoffView({
         >
           <Text
             style={{
-              color: c.foreground,
+              color: c.rust,
               fontFamily: MONO,
               fontSize: 13,
               letterSpacing: 1,

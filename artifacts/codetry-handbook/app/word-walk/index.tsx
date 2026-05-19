@@ -97,10 +97,10 @@ export default function WordWalkHub() {
               onPress={retry}
               style={({ pressed }) => [
                 styles.retryBtn,
-                { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                { borderColor: c.rust, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <Text style={[styles.retryBtnText, { color: c.foreground, fontFamily: MONO }]}>
+              <Text style={[styles.retryBtnText, { color: c.rust, fontFamily: MONO }]}>
                 Try again →
               </Text>
             </Pressable>
@@ -179,7 +179,7 @@ export default function WordWalkHub() {
                 }
                 style={({ pressed }) => [
                   styles.startBtn,
-                  { backgroundColor: c.primary, opacity: pressed ? 0.85 : 1 },
+                  { backgroundColor: c.rust, opacity: pressed ? 0.85 : 1 },
                 ]}
               >
                 <Text style={[styles.startBtnText, { color: c.primaryForeground, fontFamily: MONO }]}>
@@ -201,10 +201,10 @@ export default function WordWalkHub() {
                     }
                     style={({ pressed }) => [
                       styles.keepGoingBtn,
-                      { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                      { borderColor: c.rust, opacity: pressed ? 0.7 : 1 },
                     ]}
                   >
-                    <Text style={[styles.keepGoingBtnText, { color: c.foreground, fontFamily: MONO }]}>
+                    <Text style={[styles.keepGoingBtnText, { color: c.rust, fontFamily: MONO }]}>
                       Keep going →
                     </Text>
                   </Pressable>

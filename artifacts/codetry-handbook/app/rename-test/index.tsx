@@ -174,7 +174,7 @@ export default function RenameTestScreen() {
               onPress={() => setPhase("name")}
               style={({ pressed }) => [
                 styles.beginBtn,
-                { backgroundColor: c.primary, opacity: pressed ? 0.85 : 1 },
+                { backgroundColor: c.rust, opacity: pressed ? 0.85 : 1 },
               ]}
             >
               <Text style={[styles.beginBtnText, { color: c.primaryForeground, fontFamily: MONO }]}>
@@ -276,7 +276,7 @@ export default function RenameTestScreen() {
               style={[
                 styles.input,
                 {
-                  borderColor: draftName ? c.primary : c.border,
+                  borderColor: draftName ? c.rust : c.border,
                   color: c.foreground,
                   fontFamily: SERIF_BOLD,
                   backgroundColor: c.card,
@@ -299,7 +299,7 @@ export default function RenameTestScreen() {
               style={[
                 styles.inputMulti,
                 {
-                  borderColor: draftDescription ? c.primary : c.border,
+                  borderColor: draftDescription ? c.rust : c.border,
                   color: c.foreground,
                   fontFamily: SERIF,
                   backgroundColor: c.card,
@@ -311,7 +311,7 @@ export default function RenameTestScreen() {
               style={({ pressed }) => [
                 styles.nextBtn,
                 {
-                  backgroundColor: canAdvanceFromName ? c.primary : c.muted,
+                  backgroundColor: canAdvanceFromName ? c.rust : c.muted,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
@@ -349,7 +349,7 @@ export default function RenameTestScreen() {
                   style={[
                     styles.input,
                     {
-                      borderColor: alt.text ? c.primary : c.border,
+                      borderColor: alt.text ? c.rust : c.border,
                       color: c.foreground,
                       fontFamily: SERIF_BOLD,
                       backgroundColor: c.card,
@@ -368,7 +368,7 @@ export default function RenameTestScreen() {
                   style={[
                     styles.inputMulti,
                     {
-                      borderColor: alt.whatWasLost ? c.primary : c.border,
+                      borderColor: alt.whatWasLost ? c.rust : c.border,
                       color: c.foreground,
                       fontFamily: SERIF,
                       backgroundColor: c.card,
@@ -394,7 +394,7 @@ export default function RenameTestScreen() {
               style={({ pressed }) => [
                 styles.nextBtn,
                 {
-                  backgroundColor: canAdvanceFromAlternatives ? c.primary : c.muted,
+                  backgroundColor: canAdvanceFromAlternatives ? c.rust : c.muted,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
@@ -458,7 +458,7 @@ export default function RenameTestScreen() {
               style={({ pressed }) => [
                 styles.nextBtn,
                 {
-                  backgroundColor: verdict ? c.primary : c.muted,
+                  backgroundColor: verdict ? c.rust : c.muted,
                   opacity: pressed ? 0.85 : 1,
                   marginTop: 28,
                 },

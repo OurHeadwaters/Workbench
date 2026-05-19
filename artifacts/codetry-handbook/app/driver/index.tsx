@@ -93,7 +93,7 @@ export default function DriverHome() {
                     styles.todayCard,
                     {
                       backgroundColor: c.card,
-                      borderColor: c.foreground,
+                      borderColor: c.rust,
                       opacity: pressed ? 0.85 : 1,
                     },
                   ]}
@@ -242,10 +242,10 @@ export default function DriverHome() {
           onPress={() => router.push("/driver/new")}
           style={({ pressed }) => [
             styles.newBtn,
-            { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+            { borderColor: c.rust, opacity: pressed ? 0.7 : 1 },
           ]}
         >
-          <Text style={[styles.newBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
+          <Text style={[styles.newBtnLabel, { color: c.rust, fontFamily: MONO }]}>
             + New driver
           </Text>
         </Pressable>
@@ -270,7 +270,7 @@ function EmptyState({ c }: { c: ReturnType<typeof useColors> }) {
         onPress={() => router.push("/driver/new")}
         style={({ pressed }) => [
           styles.emptyBtn,
-          { backgroundColor: c.foreground, opacity: pressed ? 0.85 : 1 },
+          { backgroundColor: c.rust, opacity: pressed ? 0.85 : 1 },
         ]}
       >
         <Text style={[styles.emptyBtnLabel, { color: c.background, fontFamily: MONO }]}>

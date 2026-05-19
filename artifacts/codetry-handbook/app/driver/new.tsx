@@ -164,7 +164,7 @@ export default function NewDriver() {
           style={[
             styles.progressFill,
             {
-              backgroundColor: c.foreground,
+              backgroundColor: c.rust,
               width: `${(progress / total) * 100}%` as `${number}%`,
             },
           ]}
@@ -248,7 +248,7 @@ export default function NewDriver() {
             style={({ pressed }) => [
               styles.continueBtn,
               {
-                backgroundColor: canContinue ? c.foreground : c.rule,
+                backgroundColor: canContinue ? c.rust : c.rule,
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
@@ -290,7 +290,7 @@ function ChoiceInput({
             style={({ pressed }) => [
               styles.choiceCard,
               {
-                borderColor: isActive ? c.foreground : c.rule,
+                borderColor: isActive ? c.rust : c.rule,
                 backgroundColor: isActive ? c.card : "transparent",
                 opacity: pressed ? 0.75 : 1,
               },
@@ -423,7 +423,7 @@ function Summary({
           onPress={onConfirm}
           style={({ pressed }) => [
             styles.continueBtn,
-            { backgroundColor: c.foreground, opacity: pressed ? 0.8 : 1 },
+            { backgroundColor: c.rust, opacity: pressed ? 0.8 : 1 },
           ]}
         >
           <Text style={[styles.continueBtnLabel, { color: c.background, fontFamily: MONO }]}>

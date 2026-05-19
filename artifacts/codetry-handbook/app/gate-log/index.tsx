@@ -124,7 +124,7 @@ export default function GateLogScreen() {
                   style={[
                     styles.input,
                     {
-                      borderColor: brightSide ? c.primary : c.border,
+                      borderColor: brightSide ? c.rust : c.border,
                       color: c.foreground,
                       fontFamily: SERIF_BOLD,
                       backgroundColor: c.background,
@@ -149,7 +149,7 @@ export default function GateLogScreen() {
                   style={[
                     styles.input,
                     {
-                      borderColor: systemsWord ? c.primary : c.border,
+                      borderColor: systemsWord ? c.rust : c.border,
                       color: c.foreground,
                       fontFamily: SERIF_BOLD,
                       backgroundColor: c.background,
@@ -173,7 +173,7 @@ export default function GateLogScreen() {
               style={[
                 styles.input,
                 {
-                  borderColor: context ? c.primary : c.border,
+                  borderColor: context ? c.rust : c.border,
                   color: c.foreground,
                   fontFamily: SERIF,
                   backgroundColor: c.background,
@@ -186,7 +186,7 @@ export default function GateLogScreen() {
               style={({ pressed }) => [
                 styles.saveBtn,
                 {
-                  backgroundColor: canSave ? c.primary : c.muted,
+                  backgroundColor: canSave ? c.rust : c.muted,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}

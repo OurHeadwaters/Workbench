@@ -195,7 +195,7 @@ export default function StoryPathHome() {
                       {
                         borderBottomColor: c.rule,
                         opacity: pressed ? 0.7 : 1,
-                        backgroundColor: isHighlighted ? c.foreground + "12" : "transparent",
+                        backgroundColor: isHighlighted ? c.rust + "12" : "transparent",
                         borderRadius: isHighlighted ? 6 : 0,
                       },
                     ]}
@@ -205,9 +205,9 @@ export default function StoryPathHome() {
                         style={[
                           styles.stationDot,
                           completed
-                            ? { backgroundColor: c.foreground }
+                            ? { backgroundColor: c.rust }
                             : isCurrent
-                              ? { backgroundColor: "transparent", borderWidth: 2, borderColor: c.foreground }
+                              ? { backgroundColor: "transparent", borderWidth: 2, borderColor: c.rust }
                               : { backgroundColor: "transparent", borderWidth: 1, borderColor: c.mutedForeground },
                         ]}
                       >
@@ -289,8 +289,8 @@ export default function StoryPathHome() {
                 style={({ pressed }) => [
                   styles.ageOption,
                   {
-                    backgroundColor: ageTrack === track ? c.foreground : c.card,
-                    borderColor: c.foreground,
+                    backgroundColor: ageTrack === track ? c.rust : c.card,
+                    borderColor: c.rust,
                     opacity: pressed ? 0.75 : 1,
                   },
                 ]}

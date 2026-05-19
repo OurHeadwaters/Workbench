@@ -141,7 +141,7 @@ export default function AuthorZone() {
             style={[
               styles.progressFill,
               {
-                backgroundColor: c.primary,
+                backgroundColor: c.rust,
                 width: `${Math.round(((promptIndex + 1) / entry.prompts.length) * 100)}%` as any,
               },
             ]}
@@ -220,7 +220,7 @@ export default function AuthorZone() {
             style={({ pressed }) => [
               styles.navBtnPrimary,
               {
-                backgroundColor: c.primary,
+                backgroundColor: c.rust,
                 opacity: pressed ? 0.85 : 1,
               },
             ]}
@@ -258,7 +258,7 @@ export default function AuthorZone() {
                   styles.dot,
                   {
                     backgroundColor: isCurrent
-                      ? c.primary
+                      ? c.rust
                       : hasText
                         ? c.accent
                         : c.rule,

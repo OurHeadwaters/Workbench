@@ -96,7 +96,7 @@ export default function AuthorIndex() {
                 styles.card,
                 {
                   backgroundColor: c.card,
-                  borderColor: complete ? c.primary : c.rule,
+                  borderColor: complete ? c.rust : c.rule,
                   opacity: pressed ? 0.75 : 1,
                 },
               ]}
@@ -110,7 +110,7 @@ export default function AuthorIndex() {
                 <Text
                   style={[
                     styles.cardCount,
-                    { color: complete ? c.primary : c.mutedForeground, fontFamily: MONO },
+                    { color: complete ? c.rust : c.mutedForeground, fontFamily: MONO },
                   ]}
                 >
                   {done}/{total}
@@ -127,7 +127,7 @@ export default function AuthorIndex() {
                     style={[
                       styles.barFill,
                       {
-                        backgroundColor: c.primary,
+                        backgroundColor: c.rust,
                         width: `${Math.round(pct * 100)}%` as any,
                       },
                     ]}

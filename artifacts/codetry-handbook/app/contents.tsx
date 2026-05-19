@@ -249,7 +249,7 @@ export default function Contents() {
                         <View
                           style={[
                             styles.dot,
-                            { backgroundColor: c.foreground },
+                            { backgroundColor: c.rust },
                           ]}
                         />
                       ) : null}

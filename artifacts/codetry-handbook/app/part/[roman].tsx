@@ -212,7 +212,7 @@ export default function PartLanding() {
                       <View
                         style={[
                           styles.dot,
-                          { backgroundColor: c.foreground },
+                          { backgroundColor: c.rust },
                         ]}
                       />
                     ) : null}

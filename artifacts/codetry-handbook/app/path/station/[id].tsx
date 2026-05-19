@@ -217,14 +217,14 @@ export default function StationScreen() {
             style={({ pressed }) => [
               styles.lockedBtn,
               {
-                borderColor: c.foreground,
+                borderColor: c.rust,
                 backgroundColor: c.background,
                 opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
             <Text
-              style={[styles.lockedBtnLabel, { color: c.foreground, fontFamily: MONO }]}
+              style={[styles.lockedBtnLabel, { color: c.rust, fontFamily: MONO }]}
             >
               Back to the trail
             </Text>
@@ -522,7 +522,7 @@ export default function StationScreen() {
             <View
               style={[
                 styles.markedPill,
-                { backgroundColor: c.foreground },
+                { backgroundColor: c.rust },
               ]}
             >
               <Ionicons name="checkmark" size={14} color={c.background} />
@@ -557,7 +557,7 @@ export default function StationScreen() {
             style={({ pressed }) => [
               styles.markBtn,
               {
-                backgroundColor: c.foreground,
+                backgroundColor: c.rust,
                 opacity: pressed ? 0.7 : 1,
               },
             ]}

@@ -455,7 +455,7 @@ function SummaryScreen({
           onPress={() => router.replace("/word-walk")}
           style={({ pressed }) => [
             styles.doneBtn,
-            { backgroundColor: c.primary, opacity: pressed ? 0.85 : 1 },
+            { backgroundColor: c.rust, opacity: pressed ? 0.85 : 1 },
           ]}
         >
           <Text style={[styles.doneBtnText, { color: c.primaryForeground, fontFamily: MONO }]}>

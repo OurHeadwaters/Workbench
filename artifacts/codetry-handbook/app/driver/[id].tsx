@@ -267,7 +267,7 @@ export default function DriverDetail() {
               onPress={() => setActiveTab(t.id)}
               style={[
                 styles.tabBtn,
-                activeTab === t.id && { borderBottomColor: c.foreground, borderBottomWidth: 2 },
+                activeTab === t.id && { borderBottomColor: c.rust, borderBottomWidth: 2 },
               ]}
             >
               <Text
@@ -358,7 +358,7 @@ export default function DriverDetail() {
                 disabled={!bumpDraft.trim()}
                 style={({ pressed }) => [
                   styles.modalConfirm,
-                  { backgroundColor: bumpDraft.trim() ? c.foreground : c.rule, opacity: pressed ? 0.8 : 1 },
+                  { backgroundColor: bumpDraft.trim() ? c.rust : c.rule, opacity: pressed ? 0.8 : 1 },
                 ]}
               >
                 <Text style={[styles.modalConfirmLabel, { color: bumpDraft.trim() ? c.background : c.mutedForeground, fontFamily: MONO }]}>
@@ -399,7 +399,7 @@ export default function DriverDetail() {
                 disabled={!actionDraft.trim()}
                 style={({ pressed }) => [
                   styles.modalConfirm,
-                  { backgroundColor: actionDraft.trim() ? c.foreground : c.rule, opacity: pressed ? 0.8 : 1 },
+                  { backgroundColor: actionDraft.trim() ? c.rust : c.rule, opacity: pressed ? 0.8 : 1 },
                 ]}
               >
                 <Text style={[styles.modalConfirmLabel, { color: actionDraft.trim() ? c.background : c.mutedForeground, fontFamily: MONO }]}>
@@ -528,7 +528,7 @@ export default function DriverDetail() {
                     (editingCardId !== null || pivotalLabel.trim().length > 0);
                   return [
                     styles.modalConfirm,
-                    { backgroundColor: ok ? c.foreground : c.rule, opacity: pressed ? 0.8 : 1 },
+                    { backgroundColor: ok ? c.rust : c.rule, opacity: pressed ? 0.8 : 1 },
                   ];
                 }}
               >
@@ -595,7 +595,7 @@ function TodayTab({
           onPress={onMarkDone}
           style={({ pressed }) => [
             styles.doneBtn,
-            { backgroundColor: c.foreground, opacity: pressed ? 0.8 : 1 },
+            { backgroundColor: c.rust, opacity: pressed ? 0.8 : 1 },
           ]}
         >
           <Ionicons name="checkmark" size={14} color={c.background} />
@@ -778,7 +778,7 @@ function ScenarioCard({
       style={[
         styles.scenarioCard,
         {
-          borderColor: isActive ? c.foreground : c.rule,
+          borderColor: isActive ? c.rust : c.rule,
           backgroundColor: c.card,
           opacity: isActive ? 1 : 0.55,
         },
@@ -809,7 +809,7 @@ function ScenarioCard({
         {!isActive && (
           <Pressable
             onPress={() => onActivate(scenario.id)}
-            style={({ pressed }) => [styles.scenarioBtn, { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+            style={({ pressed }) => [styles.scenarioBtn, { borderColor: c.rust, opacity: pressed ? 0.7 : 1 }]}
           >
             <Text style={[styles.scenarioBtnLabel, { color: c.foreground, fontFamily: MONO }]}>
               Make active

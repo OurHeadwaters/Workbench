@@ -49,14 +49,14 @@ function EntryCard({
       ? c.primary
       : entry.section === "appendix"
         ? c.mutedForeground
-        : "#c2410c";
+        : c.rust;
 
   const badgeBg =
     entry.section === "formal"
       ? `${c.primary}18`
       : entry.section === "appendix"
         ? `${c.mutedForeground}18`
-        : "rgba(194,65,12,0.10)";
+        : `${c.rust}1a`;
 
   return (
     <View
@@ -91,7 +91,7 @@ function EntryCard({
             <Ionicons
               name={bookmarked ? "bookmark" : "bookmark-outline"}
               size={16}
-              color={bookmarked ? c.primary : c.mutedForeground}
+              color={bookmarked ? c.rust : c.mutedForeground}
             />
           </Pressable>
         </View>
@@ -107,11 +107,11 @@ function EntryCard({
         </Text>
       ) : null}
       {entry.section === "flagged" ? (
-        <View style={[styles.flagBanner, { backgroundColor: "rgba(194,65,12,0.07)" }]}>
+        <View style={[styles.flagBanner, { backgroundColor: `${c.rust}12` }]}>
           <Text
             style={[
               styles.flagLabel,
-              { color: "#c2410c", fontFamily: MONO },
+              { color: c.rust, fontFamily: MONO },
             ]}
           >
             Pending definition — founder decision required
@@ -265,7 +265,7 @@ export default function Glossary() {
           onPress={() => setActiveTab("all")}
           style={[
             styles.tab,
-            activeTab === "all" && { borderBottomColor: c.primary, borderBottomWidth: 2 },
+            activeTab === "all" && { borderBottomColor: c.rust, borderBottomWidth: 2 },
           ]}
           accessibilityLabel="All terms"
         >
@@ -274,7 +274,7 @@ export default function Glossary() {
               styles.tabText,
               {
                 fontFamily: MONO,
-                color: activeTab === "all" ? c.primary : c.mutedForeground,
+                color: activeTab === "all" ? c.rust : c.mutedForeground,
               },
             ]}
           >
@@ -285,7 +285,7 @@ export default function Glossary() {
           onPress={() => setActiveTab("mine")}
           style={[
             styles.tab,
-            activeTab === "mine" && { borderBottomColor: c.primary, borderBottomWidth: 2 },
+            activeTab === "mine" && { borderBottomColor: c.rust, borderBottomWidth: 2 },
           ]}
           accessibilityLabel="My bookmarked terms"
         >
@@ -293,7 +293,7 @@ export default function Glossary() {
             <Ionicons
               name="bookmark"
               size={12}
-              color={activeTab === "mine" ? c.primary : c.mutedForeground}
+              color={activeTab === "mine" ? c.rust : c.mutedForeground}
               style={{ marginRight: 4 }}
             />
             <Text
@@ -301,7 +301,7 @@ export default function Glossary() {
                 styles.tabText,
                 {
                   fontFamily: MONO,
-                  color: activeTab === "mine" ? c.primary : c.mutedForeground,
+                  color: activeTab === "mine" ? c.rust : c.mutedForeground,
                 },
               ]}
             >
@@ -313,7 +313,7 @@ export default function Glossary() {
                   styles.tabBadge,
                   {
                     backgroundColor:
-                      activeTab === "mine" ? c.primary : c.mutedForeground,
+                      activeTab === "mine" ? c.rust : c.mutedForeground,
                   },
                 ]}
               >

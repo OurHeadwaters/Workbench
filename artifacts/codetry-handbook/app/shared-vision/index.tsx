@@ -225,7 +225,7 @@ export default function SharedVisionList() {
           style={({ pressed }) => [
             styles.primaryBtn,
             {
-              backgroundColor: c.primary,
+              backgroundColor: c.rust,
               opacity: pressed ? 0.85 : 1,
             },
           ]}
@@ -416,7 +416,7 @@ export default function SharedVisionList() {
                 style={({ pressed }) => [
                   styles.modalBtn,
                   {
-                    backgroundColor: c.primary,
+                    backgroundColor: c.rust,
                     borderRadius: c.radius,
                     opacity: pressed ? 0.85 : 1,
                   },

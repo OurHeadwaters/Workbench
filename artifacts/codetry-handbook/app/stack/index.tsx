@@ -132,7 +132,7 @@ export default function StackHome() {
                     styles.topCard,
                     {
                       backgroundColor: c.background,
-                      borderColor: c.foreground,
+                      borderColor: c.rust,
                       zIndex: 10,
                     },
                   ]}
@@ -192,7 +192,7 @@ export default function StackHome() {
                       style={({ pressed }) => [
                         styles.workBtn,
                         {
-                          backgroundColor: c.primary,
+                          backgroundColor: c.rust,
                           opacity: pressed ? 0.85 : 1,
                         },
                       ]}

@@ -158,7 +158,7 @@ export default function StackCardDetail() {
               style={[
                 styles.progressFill,
                 {
-                  backgroundColor: c.foreground,
+                  backgroundColor: c.rust,
                   width: `${(answeredCount / totalSteps) * 100}%` as `${number}%`,
                 },
               ]}
@@ -181,7 +181,7 @@ export default function StackCardDetail() {
               style={[
                 styles.stepCard,
                 {
-                  borderColor: isCurrent ? c.foreground : c.rule,
+                  borderColor: isCurrent ? c.rust : c.rule,
                   backgroundColor: isCurrent ? c.card : "transparent",
                 },
               ]}
@@ -191,8 +191,8 @@ export default function StackCardDetail() {
                   style={[
                     styles.stepNumber,
                     {
-                      backgroundColor: hasAnswer ? c.foreground : "transparent",
-                      borderColor: hasAnswer ? c.foreground : c.rule,
+                      backgroundColor: hasAnswer ? c.rust : "transparent",
+                      borderColor: hasAnswer ? c.rust : c.rule,
                     },
                   ]}
                 >
@@ -291,7 +291,7 @@ export default function StackCardDetail() {
                 style={({ pressed }) => [
                   styles.doneBtn,
                   {
-                    backgroundColor: allAnswered ? c.foreground : c.rule,
+                    backgroundColor: allAnswered ? c.rust : c.rule,
                     opacity: pressed && allAnswered ? 0.85 : 1,
                   },
                 ]}
@@ -334,7 +334,7 @@ export default function StackCardDetail() {
           <View
             style={[
               styles.doneBtn,
-              { backgroundColor: c.foreground },
+              { backgroundColor: c.rust },
             ]}
           >
             <Text

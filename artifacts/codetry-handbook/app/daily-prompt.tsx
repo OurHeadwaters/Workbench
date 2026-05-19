@@ -182,11 +182,11 @@ export default function DailyPromptScreen() {
           </Text>
 
           {isToday && (
-            <View style={[styles.todayBadge, { borderColor: c.primary }]}>
+            <View style={[styles.todayBadge, { borderColor: c.rust }]}>
               <Text
                 style={[
                   styles.todayText,
-                  { color: c.primary, fontFamily: MONO },
+                  { color: c.rust, fontFamily: MONO },
                 ]}
               >
                 Today's prompt
@@ -208,7 +208,7 @@ export default function DailyPromptScreen() {
                     i === index
                       ? c.foreground
                       : i === defaultIndex
-                        ? c.primary
+                        ? c.rust
                         : c.rule,
                   width: i === index ? 18 : 7,
                 },
@@ -243,7 +243,7 @@ export default function DailyPromptScreen() {
             style={({ pressed }) => [
               styles.todayBtn,
               {
-                backgroundColor: c.primary,
+                backgroundColor: c.rust,
                 opacity: pressed ? 0.8 : 1,
               },
             ]}

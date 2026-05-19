@@ -286,13 +286,13 @@ export default function StandbyChecklist() {
               onPress={closeCall}
               style={({ pressed }) => [
                 styles.callBtn,
-                { borderColor: c.foreground, opacity: pressed ? 0.7 : 1 },
+                { borderColor: c.rust, opacity: pressed ? 0.7 : 1 },
               ]}
               accessibilityLabel="Close the call — move to standdown"
             >
               <Text
                 style={{
-                  color: c.foreground,
+                  color: c.rust,
                   fontFamily: MONO,
                   fontSize: 11,
                   letterSpacing: 1.2,
@@ -308,8 +308,8 @@ export default function StandbyChecklist() {
               style={({ pressed }) => [
                 styles.callBtn,
                 {
-                  backgroundColor: c.primary,
-                  borderColor: c.primary,
+                  backgroundColor: c.rust,
+                  borderColor: c.rust,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
@@ -353,8 +353,8 @@ export default function StandbyChecklist() {
                 style={({ pressed }) => [
                   styles.rungChip,
                   {
-                    borderColor: active ? c.foreground : c.rule,
-                    backgroundColor: active ? c.foreground : "transparent",
+                    borderColor: active ? c.rust : c.rule,
+                    backgroundColor: active ? c.rust : "transparent",
                     opacity: pressed ? 0.75 : 1,
                   },
                 ]}
@@ -504,8 +504,8 @@ function SubShelfBlock({
                 style={[
                   styles.checkbox,
                   {
-                    borderColor: checked ? c.foreground : c.rule,
-                    backgroundColor: checked ? c.foreground : "transparent",
+                    borderColor: checked ? c.rust : c.rule,
+                    backgroundColor: checked ? c.rust : "transparent",
                   },
                 ]}
               >
