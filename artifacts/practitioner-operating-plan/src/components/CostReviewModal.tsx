@@ -1384,6 +1384,12 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll, sharedScenarioAppl
     (ov) => ov.value !== ov.defaultValue
   ).length;
 
+  // Which year cards have their source breakdown expanded (collapsed by default)
+  const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>({});
+
+  const toggleYear = (idx: number) =>
+    setExpandedYears((prev) => ({ ...prev, [idx]: !prev[idx] }));
+
   // Live values mirror the saved overrides but update on every keystroke
   const [liveValues, setLiveValues] = useState<Record<string, number>>(() => {
     const base = { ...ZONE3_DEFAULTS };
@@ -1529,6 +1535,80 @@ function Zone3Tab({ overrideMap, onSave, onClear, onClearAll, sharedScenarioAppl
               <div style={{ fontSize: "7pt", color: "rgba(255,255,255,0.45)", marginTop: "2pt" }}>
                 low–high range
               </div>
+              {/* Source breakdown toggle */}
+              <button
+                onClick={() => toggleYear(i)}
+                style={{
+                  marginTop: "6pt",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "3pt",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  color: "rgba(255,255,255,0.38)",
+                  fontSize: "6.5pt",
+                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                  fontWeight: 600,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}
+              >
+                <span style={{ fontSize: "7pt", lineHeight: 1 }}>
+                  {expandedYears[i] ? "▾" : "▸"}
+                </span>
+                {expandedYears[i] ? "Hide sources" : "Show sources"}
+              </button>
+              {/* Collapsible source lines */}
+              {expandedYears[i] && (
+                <div
+                  style={{
+                    marginTop: "6pt",
+                    borderTop: "1pt solid rgba(255,255,255,0.1)",
+                    paddingTop: "6pt",
+                  }}
+                >
+                  {yr.sources.map((src, si) => (
+                    <div
+                      key={si}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                        gap: "6pt",
+                        paddingBottom: "3pt",
+                        marginBottom: si < yr.sources.length - 1 ? "1pt" : 0,
+                        borderBottom: si < yr.sources.length - 1
+                          ? "0.5pt solid rgba(255,255,255,0.07)"
+                          : "none",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "7pt",
+                          color: "rgba(255,255,255,0.55)",
+                          lineHeight: 1.35,
+                          flex: 1,
+                        }}
+                      >
+                        {src.label}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                          fontSize: "7pt",
+                          fontWeight: 700,
+                          color: AMBER,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {src.amount}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
