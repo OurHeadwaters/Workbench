@@ -122,23 +122,29 @@ export function ServicesPage() {
                 name: "The Handbook",
                 desc: "Where you start. Plain-language guide to the Headwaters way of working — scoping, handing over, and building community-owned systems.",
                 color: "hsl(145 36% 22%)",
+                href: "/codetry-handbook/",
               },
               {
                 icon: "📋",
                 name: "Practitioner's Guide",
                 desc: "Where your work lives. Tracks each engagement — the scope, the phases, the decisions, and the handover.",
                 color: "hsl(145 28% 32%)",
+                href: "/practitioners-guide-v2/",
               },
               {
                 icon: "📚",
                 name: "The Accounts",
                 desc: "Where the money is recorded. What came in, what went out, and what the work delivered — so the community always knows where it stands.",
                 color: "hsl(145 22% 42%)",
+                href: "/headwaters-books/",
               },
-            ].map(({ icon, name, desc, color }) => (
-              <div
+            ].map(({ icon, name, desc, color, href }) => (
+              <a
                 key={name}
-                className="rounded-md border bg-card p-4 flex gap-3.5 items-start"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative group block rounded-md border bg-card p-4 flex gap-3.5 items-start transition-opacity hover:opacity-80"
                 style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
               >
                 <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
@@ -146,7 +152,7 @@ export function ServicesPage() {
                   <p className="font-serif text-[16px] font-medium tracking-tight mb-0.5">{name}</p>
                   <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
 
@@ -161,29 +167,36 @@ export function ServicesPage() {
                 name: "Research Library",
                 desc: "Curated research and reports on northern food systems — so every decision is grounded in real data.",
                 color: "hsl(14 64% 36%)",
+                href: "/library/",
               },
               {
                 icon: "🖨️",
                 name: "Print Marketing Suite",
                 desc: "Print-ready flyers, posters, rack cards, and forms for every public-facing moment.",
                 color: "hsl(14 50% 44%)",
+                href: "/print-marketing/",
               },
               {
                 icon: "🚢",
                 name: "Crew Manifest",
                 desc: "Shows who is on which project, what role they fill, and how the crew fits together.",
                 color: "hsl(220 20% 32%)",
+                href: "/",
               },
               {
                 icon: "🗄️",
                 name: "Media Library",
                 desc: "Stores photos, documents, and assets so every other tool can pull from one reliable source.",
                 color: "hsl(200 25% 35%)",
+                href: "/media/",
               },
-            ].map(({ icon, name, desc, color }) => (
-              <div
+            ].map(({ icon, name, desc, color, href }) => (
+              <a
                 key={name}
-                className="rounded-md border bg-card p-4 flex gap-3 items-start"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative group block rounded-md border bg-card p-4 flex gap-3 items-start transition-opacity hover:opacity-80"
                 style={{ borderColor: "hsl(var(--card-border))", borderLeft: `4px solid ${color}` }}
               >
                 <span className="text-xl leading-none mt-0.5 shrink-0">{icon}</span>
@@ -191,7 +204,7 @@ export function ServicesPage() {
                   <p className="font-serif text-[16px] font-medium tracking-tight mb-0.5">{name}</p>
                   <p className="font-serif text-[15px] leading-[1.5]" style={{ color: "hsl(var(--muted-foreground))" }}>{desc}</p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </section>
