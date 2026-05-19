@@ -143,3 +143,9 @@ id = "ezGP0cpYB1wkGTE2xzPdv"
 uri = "file://.local/handbook-how-to-paste.md"
 type = "text"
 title = "How to Paste the Handbook — 8-Chunk Guide"
+
+[[outputs]]
+id = "8SHnXpNEXxmiZ9NXmnDD9"
+uri = "file://.local/tasks/reviewer-brief-public-journey.md"
+type = "text"
+title = "Public Journey Reviewer Brief"
