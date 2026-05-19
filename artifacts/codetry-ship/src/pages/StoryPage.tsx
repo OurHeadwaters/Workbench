@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { TrailArtGallery } from "@/components/TrailArtGallery";
-import { TrailSignPost } from "@/components/TrailSignPost";
 import { YouthTrailMap } from "@/components/YouthTrailMap";
 
 /* ── Youth path data (from youthPath.ts source) ────────────────────────── */
@@ -189,27 +188,6 @@ export function StoryPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════ TRAIL FORK — WHERE ARE YOU? ══ */}
-      <section
-        className="py-10 px-6 sm:px-10 flex flex-col items-center"
-        style={{ background: "rgba(31,61,46,0.03)", borderBottom: "1px solid rgba(31,61,46,0.08)" }}
-      >
-        <p
-          className="font-mono text-[8.5px] uppercase tracking-[0.28em] mb-6 text-center"
-          style={{ color: "rgba(31,61,46,0.38)" }}
-        >
-          You are here
-        </p>
-        <TrailSignPost mode="fork" />
-        <p
-          className="font-serif italic text-center mt-6 max-w-sm"
-          style={{ color: "rgba(31,61,46,0.45)", fontSize: "13.5px", lineHeight: 1.65 }}
-        >
-          Two paths leave the same trailhead. The Youth Odyssey is for the ones
-          who don't yet have a community to build — but have something worth
-          carrying into one.
-        </p>
-      </section>
 
       {/* ══════════════════════════════════ SOPHIE'S WATERCOLOUR ══ */}
       <TrailArtGallery />

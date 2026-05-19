@@ -135,7 +135,7 @@ export function HomePage() {
           >
             Build it.<br />
             Hand it off.<br />
-            <span style={{ color: "#b85a3e" }}>Let the community run it.</span>
+            <span style={{ color: "#b85a3e" }}>Community Runs It.</span>
           </h1>
 
           {/* Service description box */}
@@ -157,23 +157,14 @@ export function HomePage() {
             </p>
             <p
               className="font-mono text-[10.5px] uppercase tracking-[0.18em]"
-              style={{ color: "#d4a017" }}
+              style={{ color: "#d4a017", whiteSpace: "nowrap" }}
               data-testid="home-name-hierarchy"
             >
               Practitioner-built · Flat fee · No retainer required
             </p>
           </div>
 
-          {/* Primary CTA — Odyssey entry */}
-          <a
-            href={`${import.meta.env.BASE_URL}odyssey`}
-            className="inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 font-mono text-[11.5px] uppercase tracking-[0.2em] transition-opacity hover:opacity-90 mb-5"
-            style={{ background: "#b85a3e", color: "#f4ede0" }}
-          >
-            Enter the Headwaters Odyssey →
-          </a>
-
-          {/* Secondary CTAs */}
+          {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
             <a
               href="#conversation"

@@ -365,6 +365,19 @@ export function YouthTrailMap({ currentPhase = 0, onPhaseClick, className = "" }
           );
         })}
 
+        {/* ── Start Here cue — anchored near Phase 1 / Your Kitchen (bottom) ── */}
+        <g transform="translate(260,440)">
+          <text
+            x={0} y={16}
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', 'Courier New', monospace"
+            fontSize="7.5" letterSpacing="0.16em"
+            fill="rgba(201,124,46,0.82)"
+          >
+            START HERE ↓
+          </text>
+        </g>
+
         {/* ── Legend ── */}
         <g transform="translate(10,462)">
           <circle cx={5} cy={0} r={3.5} fill="none" stroke="rgba(244,237,224,0.38)" strokeWidth="1.2" />
