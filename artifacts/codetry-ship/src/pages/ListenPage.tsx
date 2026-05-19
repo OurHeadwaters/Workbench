@@ -475,7 +475,7 @@ export function ListenPage() {
               </a>
               , the{" "}
               <a
-                href="https://807foodcoop.ca"
+                href="https://community-knowledge-hub.replit.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-4 hover:opacity-80"
@@ -547,15 +547,15 @@ export function ListenPage() {
             <TrustRow
               label="807 Food Co-op"
               detail="A working food co-op in Northwestern Ontario. Real members, real orders, real logistics — the proof-of-concept that Codetry grew out of."
-              href="https://807foodcoop.ca"
+              href="https://community-knowledge-hub.replit.app/"
             />
             <TrustRow
               label="Co-operators CDP financial inclusion project"
-              detail="The 807 Food Co-op is part of a Co-operators Community Development Program partnership targeting financial inclusion for northern households by end of 2026. The grant relationship is active."
+              detail="A partnership with a national insurer targeting financial inclusion for northern households. Funding relationship in place."
             />
             <TrustRow
-              label="Deer Lake First Nation — active delivery"
-              detail="Headwaters is currently delivering the store operating system to Deer Lake First Nation: software, accounts, freight coordination, and on-site training. Not planned. In progress."
+              label="Northern reserve community — expansion in progress"
+              detail="Headwaters is delivering the store operating system to a northern First Nations community. Not planned. In progress."
             />
             <TrustRow
               label="The Codetry Handbook"
