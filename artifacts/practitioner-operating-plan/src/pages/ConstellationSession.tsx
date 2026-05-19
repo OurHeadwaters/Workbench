@@ -96,6 +96,37 @@ const openDecisions = [
   { text: "Eave governance document — what it means, who consented, how crossing is permitted. Needed before Rootstock goes to external pilots.", urgency: "Before Rootstock pilots" },
 ];
 
+const may19Shipped = [
+  {
+    label: "Device-to-device QR handoff",
+    detail: "Full offline curriculum transfer. Settings → \"Transfer to another device\" bundles all children, curriculum files, and schedules into a compressed archive, uploads to the API server (15-min TTL), and displays a QR code. Scanning on a second device imports everything in one tap. One-time use; auto-deletes on claim.",
+  },
+  {
+    label: "XRPL Legacy Pass NFT verification",
+    detail: "Settings → \"Gather Round Legacy Pass\" — families enter their XRPL wallet address. Saltbox calls account_nfts on the public XRP Ledger mainnet directly (no Saltbox server, no API key), checks issuer + taxon, and grants Founding Family status stored in IndexedDB. Simulation mode available (VITE_LEGACY_PASS_SIM=true) before real NFTs exist.",
+  },
+  {
+    label: "Legacy Pass Evidence Package (Brief gallery)",
+    detail: "Printable one-pager for the Gather Round tester pilot. Left column: 5-step demo flow + technical proof summary. Right column: live demo QR code + three localStorage-backed family story boxes for capturing tester friction-reduction accounts after pilot sessions.",
+  },
+  {
+    label: "Gather Round First-Contact Pitch (Brief gallery)",
+    detail: "Pitch document for the first conversation with Rebecca Spooner. Covers the customer problem (purchase is permanent, access is fragile), what Saltbox does, the credential architecture in plain English, the ask (20-minute call), and one revenue option. Sender fields editable and saved to localStorage — personalise and print without any export step.",
+  },
+];
+
+const gatherRound = {
+  who: "Rebecca Spooner — Founder & CEO of Gather Round. Homeschool mom of 5. Founded in 2019 from a notebook sketch. 100,000+ families, 70+ countries. Small remote team.",
+  channel: "Instagram: @homeschoolon — DM is the right first channel. No public business inquiry email.",
+  legacyPass: "One-time purchase; gives the family lifetime access to every GR digital resource (all current and future units, Seatwork books, MP3s, planners) plus 25% off print upgrades for life (capped at $2,000/year).",
+  pitch: "\"Your Legacy Pass holders paid for everything you've made. What they don't have is a reliable way to access it without a fast internet connection and a working Shopify session. Saltbox is free for all Legacy Pass holders in year one. Your only action is configuring one XRPL wallet address. Saltbox handles the rest.\"",
+  blockers: [
+    "GR side: Create an XRPL issuer wallet (Xaman, ~10 XRP reserve), decide on existing holder onboarding, mint test NFTs to 3–5 tester families.",
+    "Saltbox side: Deploy to a stable URL (one-click, already ready), set VITE_GATHER_ROUND_NFT_ISSUER, confirm NFT taxon with GR.",
+    "Realistic timeline from \"she says yes\" to 5 families with it working: 3–4 weeks, gated on GR's wallet and minting pace.",
+  ],
+};
+
 const CARD: React.CSSProperties = {
   background: "rgba(244,237,224,0.06)",
   border: `1px solid ${T.rule}`,
@@ -211,6 +242,85 @@ export default function ConstellationSession() {
       <div style={{ padding: "12px 16px", borderRadius: 8, background: "rgba(44,74,53,0.18)", border: `1px solid rgba(44,74,53,0.35)` }}>
         <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
           Source: Constellation session, May 16, 2026. Seven decisions locked. Zone 4 is now Community Hall (formerly Arc). Rootstock needs a second co-op to prove the tenant seam.
+        </p>
+      </div>
+
+      {/* ════════════════════════════════════════════════
+          MAY 19 SESSION
+      ════════════════════════════════════════════════ */}
+      <div style={{ borderTop: `1px solid ${T.rule}`, margin: "36px 0 28px" }} />
+
+      <div style={{ marginBottom: 28 }}>
+        <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.28em", textTransform: "uppercase", color: "#2C4A35", margin: "0 0 8px" }}>
+          Constellation · Session Debrief
+        </p>
+        <h2 style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.2, color: T.paper, fontFamily: "var(--font-display, Georgia, serif)", margin: "0 0 10px" }}>
+          May 19, 2026
+        </h2>
+        <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.6, margin: 0, maxWidth: 520 }}>
+          Four items shipped. Gather Round opportunity framing locked and ready for first contact.
+        </p>
+      </div>
+
+      {/* ── What shipped ── */}
+      <section style={{ marginBottom: 28 }}>
+        <p style={SECTION_LABEL}>Shipped — locked and proven</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {may19Shipped.map((item, i) => (
+            <div key={i} style={{ ...CARD, display: "flex", alignItems: "flex-start", gap: 10 }}>
+              <span style={{ fontSize: 11, color: T.teal, fontWeight: 700, flexShrink: 0, marginTop: 1, lineHeight: 1.5 }}>✓</span>
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 700, color: T.paper, margin: "0 0 4px", lineHeight: 1.4 }}>{item.label}</p>
+                <p style={{ fontSize: 11, color: T.muted, margin: 0, lineHeight: 1.6 }}>{item.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Gather Round opportunity ── */}
+      <section style={{ marginBottom: 28 }}>
+        <p style={SECTION_LABEL}>Gather Round — opportunity reference</p>
+        <div style={{ ...CARD, display: "flex", flexDirection: "column", gap: 14 }}>
+
+          <div>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 5px" }}>Who</p>
+            <p style={{ fontSize: 12, color: T.paper, margin: 0, lineHeight: 1.6 }}>{gatherRound.who}</p>
+          </div>
+
+          <div>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 5px" }}>First channel</p>
+            <p style={{ fontSize: 12, color: T.paper, margin: 0, lineHeight: 1.6 }}>{gatherRound.channel}</p>
+          </div>
+
+          <div>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 5px" }}>Legacy Pass</p>
+            <p style={{ fontSize: 12, color: T.paper, margin: 0, lineHeight: 1.6 }}>{gatherRound.legacyPass}</p>
+          </div>
+
+          <div style={{ background: "rgba(15,118,110,0.1)", border: `1px solid rgba(15,118,110,0.25)`, borderRadius: 6, padding: "12px 14px" }}>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.teal, margin: "0 0 7px" }}>The pitch</p>
+            <p style={{ fontSize: 12, color: T.paper, margin: 0, lineHeight: 1.65, fontStyle: "italic", fontFamily: "var(--font-display, Georgia, serif)" }}>{gatherRound.pitch}</p>
+          </div>
+
+          <div>
+            <p style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.muted, margin: "0 0 5px" }}>What needs to happen next</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {gatherRound.blockers.map((b, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{ fontSize: 11, color: T.muted, flexShrink: 0, marginTop: 1 }}>·</span>
+                  <p style={{ fontSize: 11, color: T.muted, margin: 0, lineHeight: 1.6 }}>{b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <div style={{ padding: "12px 16px", borderRadius: 8, background: "rgba(44,74,53,0.18)", border: `1px solid rgba(44,74,53,0.35)` }}>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
+          Source: Constellation session, May 19, 2026. Four items shipped across Saltbox and Brief. Gather Round opportunity framing locked. All typechecks clean across gather, api-server, brief, and shared libs.
         </p>
       </div>
 
