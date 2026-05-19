@@ -153,7 +153,7 @@ export function HomePage() {
               style={{ fontSize: "clamp(0.95rem, 2.8vw, 1.05rem)", color: "#f4ede0" }}
               data-testid="home-tagline"
             >
-              For band councils and northern communities building resilient food systems and community-owned economies.
+              For communities that want to own what they build — resilient food systems and community-run economies, handed off without lock-in.
             </p>
             <p
               className="font-mono text-[10.5px] uppercase tracking-[0.18em]"

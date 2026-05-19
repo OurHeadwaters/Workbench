@@ -100,7 +100,7 @@ export function ServicesPage() {
               who this is for
             </p>
             <p className="font-serif text-[16px] leading-[1.6]" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Headwaters works with band councils and community organizations in Northwestern Ontario that are planning or running a community-owned store, a food co-op, or a purpose-built internal tool. If your organization is in the early stages of asking "how would we even start?" — that is the right moment to reach out.
+              Headwaters works with community organizations — co-ops, band councils, local economies — that are building something they intend to own and run themselves. The work is grounded in Northwestern Ontario, where it has been built and tested with First Nations communities and regional food systems. If your organization is in the early stages of asking "how would we even start?" — that is the right moment to reach out.
             </p>
           </div>
         </section>
