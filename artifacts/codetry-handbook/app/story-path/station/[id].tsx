@@ -434,7 +434,7 @@ export default function StoryStationScreen() {
         {phase === "tale" ? (
           <>
             <Text style={[styles.sectionEyebrow, { color: c.mutedForeground, fontFamily: MONO }]}>
-              FROM THE CODETRY BOOK
+              READ THIS STORY FIRST
             </Text>
             {tale ? (
               <View style={[styles.taleCard, { backgroundColor: c.card, borderColor: c.rule }]}>
@@ -473,7 +473,7 @@ export default function StoryStationScreen() {
               ]}
             >
               <Text style={[styles.generateBtnLabel, { color: c.background, fontFamily: MONO }]}>
-                Now write yours →
+                I read it — now I'll write mine →
               </Text>
             </Pressable>
           </>

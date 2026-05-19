@@ -114,7 +114,7 @@ export const TALES: Tale[] = [
       { kind: "break" },
       {
         kind: "para",
-        text: "They worked through the morning until the canoe was heavy with it. The rice lay in the hull like small dark keys, thousands of them, the whole summer's patience made into something you could hold.",
+        text: "They worked through the morning until the canoe was heavy with it. The rice lay in the hull like small dark keys, thousands of them — all that waiting, now something real you could hold.",
       },
       {
         kind: "para",
@@ -190,7 +190,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "Not looking for them. Watching them. There is a difference. Looking is wanting. Watching is waiting without wanting.",
+        text: "Not looking for them. Watching them. There is a difference. Looking is hoping something will come. Watching is being ready when it does.",
       },
       {
         kind: "para",
@@ -256,7 +256,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "She understood that some questions get answered in bird time, not human time. And that the answer had been yes for longer than she had been listening.",
+        text: "She understood that some questions take much longer to answer than you expect. And that the answer had already been yes — she just hadn't heard it yet.",
       },
       { kind: "break" },
       {
@@ -277,7 +277,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "The old woman talked for a long time about things that had no English words. She talked about how her people said enough in a way that also meant full and grateful. How they said trade in a way that also meant you are now inside my story. How they said home in a way that held the river, the season, the name of a grandmother, and a specific kind of light all at once.",
+        text: "The old woman talked for a long time about things that had no English words. She talked about how her people said enough in a way that also meant full and grateful. How they said trade in a way that also meant we are part of each other's story now. How they said home in a way that held the river, the season, the name of a grandmother, and a specific kind of light all at once.",
       },
       {
         kind: "para",
@@ -323,7 +323,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "Not with an idea. Not with a plan. With an old woman saying show me to a girl who had finally stopped explaining and started listening.",
+        text: "Not with an idea or a plan. Just an old woman saying show me — and a girl who had stopped talking and started listening.",
       },
       {
         kind: "para",
@@ -391,7 +391,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "She lived at the edge of the trees, where the yard gave way to roots and shadows and the kind of quiet that isn't really quiet at all. She brought wildflowers to the neighbours without being asked. She sat with the old dog next door when it was sick. She noticed, without being told, when someone's eyes held too much water — and she would simply stay nearby, as if nearness were a kind of medicine.",
+        text: "She lived at the edge of the trees, where the yard gave way to roots and shadows and a deep kind of quiet. She brought wildflowers to the neighbours without being asked. She sat with the old dog next door when it was sick. She noticed, without being told, when someone was about to cry — and she would simply stay nearby, because being close was its own kind of help.",
       },
       {
         kind: "para",
@@ -433,7 +433,7 @@ export const TALES: Tale[] = [
       { kind: "break" },
       {
         kind: "para",
-        text: "University took her to bigger rooms and louder voices, and she moved through them the way a creek moves through a city — finding the quieter channels, the grassy margins, the places where the noise didn't reach.",
+        text: "University took her to bigger rooms and louder voices. She moved through them quietly — always finding the calmer edges and the places where the noise didn't reach.",
       },
       {
         kind: "para",
@@ -445,7 +445,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "She was pulled there the way you are pulled somewhere you cannot name. A million reasons, none of them speakable.",
+        text: "She was pulled there for reasons she couldn't name. A lot of reasons, none of them in words.",
       },
       {
         kind: "italic",
@@ -490,7 +490,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "italic",
-        text: "She didn't know, then, that this was the gift. That being torn is how the container gets bigger.",
+        text: "She didn't know, then, that this was the gift. That being broken open is how you make room for more.",
       },
       { kind: "break" },
       {
@@ -538,7 +538,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "The heron said it from the top of the dead cedar. The osprey said it by going where she could not follow. The people on the bank said it without words — they looked up when they talked about the future, not down, not in.",
+        text: "The heron said it from the top of the dead cedar. The osprey said it by going where she could not follow. The people on the bank showed it without words — they always looked up when they talked about the future, never down.",
       },
       {
         kind: "para",
@@ -582,7 +582,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "She swam through the shadow of the osprey without being taken. She found the deep pool behind the boulder where the big trout rested in the heat of the day, and they moved aside without a word. She felt the place where a cold spring entered from below — ten degrees colder in a body length — and she understood, for the first time, that water came from somewhere. It came from deep in the ground. It had been gathering itself in the dark for a long time before it found this opening.",
+        text: "She swam through the shadow of the osprey without being taken. She found the deep pool behind the boulder where the big trout rested in the heat of the day, and they moved aside without a word. She felt the place where a cold spring entered from below — icy cold in just a body length — and she understood, for the first time, that water came from somewhere. It came from deep in the ground. It had been there a long time before it found its way out.",
       },
       {
         kind: "para",
@@ -599,7 +599,7 @@ export const TALES: Tale[] = [
       },
       {
         kind: "para",
-        text: "She knew which bends went dry in drought and which held the deep pools that never emptied. She knew the gravel bars where the light came through and the undercut banks where it didn't. She knew the cold seams and the warm shallows and the places where the current lied — looked fast, was slow — and the places where it told the truth.",
+        text: "She knew which bends went dry in drought and which held the deep pools that never emptied. She knew the gravel bars where the sunlight reached and the shaded banks where it didn't. She knew the cold patches and the warm shallows and the places where the river looked fast but wasn't — and the places where it moved exactly as fast as it seemed.",
       },
       {
         kind: "para",

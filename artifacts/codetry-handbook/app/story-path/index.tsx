@@ -121,7 +121,7 @@ export default function StoryPathHome() {
           Write Your Story
         </Text>
         <Text style={[styles.subtitle, { color: c.foreground, fontFamily: SERIF_ITALIC }]}>
-          Eight stations. Read a tale. Answer a few questions. Your story writes itself.
+          Eight stations. Read the story first — then answer a few questions. Your story writes itself.
         </Text>
 
         {ageTrack ? (
