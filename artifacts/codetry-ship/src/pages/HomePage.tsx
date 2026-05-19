@@ -157,10 +157,10 @@ export function HomePage() {
             </p>
             <p
               className="font-mono text-[10.5px] uppercase tracking-[0.18em]"
-              style={{ color: "#d4a017", whiteSpace: "nowrap" }}
+              style={{ color: "#d4a017" }}
               data-testid="home-name-hierarchy"
             >
-              Practitioner-built · Flat fee · No retainer required
+              Practitioner-built · Flat fee<br />No retainer required
             </p>
           </div>
 
