@@ -29,8 +29,14 @@ const FROM_PARAM =
   typeof window !== "undefined"
     ? new URLSearchParams(window.location.search).get("from") ?? ""
     : "";
+const IS_TSP_PATH =
+  typeof window !== "undefined" && window.location.pathname.endsWith("/tsp");
 const BRIDGE_SOURCE: "youtube" | "tsp" | null =
-  FROM_PARAM === "youtube" ? "youtube" : FROM_PARAM === "tsp" ? "tsp" : null;
+  FROM_PARAM === "youtube"
+    ? "youtube"
+    : FROM_PARAM === "tsp" || IS_TSP_PATH
+    ? "tsp"
+    : null;
 
 export function ListenPage() {
   const [form, setForm] = useState<FormState>(EMPTY);
