@@ -703,6 +703,7 @@ export function StoryPage() {
                               <StoryDisplay
                                 story={storyState.story ?? ""}
                                 stationName={station.name}
+                                ageTrack={track}
                                 accent={accent}
                                 onWriteAnother={() => handleWriteAnother(station.ordinal)}
                               />
@@ -953,14 +954,22 @@ export function StoryPage() {
 
 /* ── Story display sub-component ────────────────────────────────────────── */
 
+const AGE_TRACK_LABELS: Record<AgeTrack, string> = {
+  young: "Young (Ages 6–10)",
+  tween: "Tween (Ages 10–14)",
+  older: "Older (Ages 14–18)",
+};
+
 function StoryDisplay({
   story,
   stationName,
+  ageTrack,
   accent,
   onWriteAnother,
 }: {
   story: string;
   stationName: string;
+  ageTrack: AgeTrack;
   accent: string;
   onWriteAnother: () => void;
 }) {
@@ -978,6 +987,118 @@ function StoryDisplay({
     .split(/\n{2,}/)
     .map((p) => p.trim())
     .filter(Boolean);
+
+  const trackLabel = AGE_TRACK_LABELS[ageTrack];
+
+  function escapeHtml(s: string): string {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function buildStoryHtml(): string {
+    const safeStation = escapeHtml(stationName);
+    const safeTrack = escapeHtml(trackLabel);
+    const escapedParagraphs = paragraphs
+      .map((p) => `<p>${escapeHtml(p)}</p>`)
+      .join("\n    ");
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>${safeStation} — My Story</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: #faf7f2;
+      color: #1f3d2e;
+      padding: 3rem 2rem;
+      max-width: 38rem;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid rgba(31,61,46,0.18);
+      padding-bottom: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .label {
+      font-family: monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: rgba(31,61,46,0.45);
+      margin-bottom: 0.4rem;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    .track {
+      font-family: monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(31,61,46,0.45);
+      margin-top: 0.35rem;
+    }
+    main p {
+      font-size: 1rem;
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.005em;
+    }
+    footer {
+      margin-top: 2.5rem;
+      font-family: monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(31,61,46,0.3);
+    }
+    @media print {
+      body { background: white; padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="label">Youth Trail · Station</p>
+    <h1>${safeStation}</h1>
+    <p class="track">${safeTrack}</p>
+  </header>
+  <main>
+    ${escapedParagraphs}
+  </main>
+  <footer>Headwaters Youth Odyssey</footer>
+</body>
+</html>`;
+  }
+
+  function handleDownload() {
+    const html = buildStoryHtml();
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${stationName.toLowerCase().replace(/\s+/g, "-")}-my-story.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handlePrint() {
+    const html = buildStoryHtml();
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    win.print();
+  }
 
   function handleReadAloud() {
     if (!speechSupported) return;
@@ -1029,6 +1150,31 @@ function StoryDisplay({
             </p>
           ))}
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <button
+          onClick={handleDownload}
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2 rounded-lg transition-all hover:opacity-85"
+          style={{
+            background: `${accent}22`,
+            border: `1px solid ${accent}50`,
+            color: accent,
+          }}
+        >
+          Save my story ↓
+        </button>
+        <button
+          onClick={handlePrint}
+          className="font-mono text-[8.5px] uppercase tracking-[0.2em] px-4 py-2 rounded-lg transition-all hover:opacity-85"
+          style={{
+            background: "rgba(244,237,224,0.06)",
+            border: "1px solid rgba(244,237,224,0.18)",
+            color: "rgba(244,237,224,0.55)",
+          }}
+        >
+          Print ⎙
+        </button>
       </div>
 
       <div className="flex items-center gap-5 flex-wrap">
