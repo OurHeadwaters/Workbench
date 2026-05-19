@@ -9,6 +9,7 @@
 
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import * as Speech from "expo-speech";
 import { router, useLocalSearchParams } from "expo-router";
 import React, {
   useCallback,
@@ -101,6 +102,45 @@ const taleStyles = StyleSheet.create({
   ornament: { width: 28, height: 1, opacity: 0.45 },
 });
 
+function blocksToPlainText(blocks: TaleBlock[]): string {
+  return blocks
+    .filter((b): b is Extract<TaleBlock, { kind: "para" | "italic" }> =>
+      b.kind === "para" || b.kind === "italic"
+    )
+    .map((b) => b.text)
+    .join("\n\n");
+}
+
+const ttsStyles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  stopBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  btnLabel: {
+    fontSize: 12,
+    letterSpacing: 0.8,
+  },
+});
+
 export default function StoryStationScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const id = typeof params.id === "string" ? params.id : "";
@@ -170,6 +210,43 @@ export default function StoryStationScreen() {
 
   // Tale expansion state
   const [taleExpanded, setTaleExpanded] = useState(false);
+
+  // Read-aloud (TTS) state
+  const [ttsPlaying, setTtsPlaying] = useState(false);
+  const [ttsPaused, setTtsPaused] = useState(false);
+
+  const ttsStop = useCallback(() => {
+    Speech.stop();
+    setTtsPlaying(false);
+    setTtsPaused(false);
+  }, []);
+
+  const ttsSpeak = useCallback(() => {
+    if (!tale) return;
+    const text = blocksToPlainText(tale.body);
+    ttsStop();
+    Speech.speak(text, {
+      onStart: () => { setTtsPlaying(true); setTtsPaused(false); },
+      onDone: () => { setTtsPlaying(false); setTtsPaused(false); },
+      onStopped: () => { setTtsPlaying(false); setTtsPaused(false); },
+      onError: () => { setTtsPlaying(false); setTtsPaused(false); },
+      rate: 0.92,
+    });
+  }, [tale, ttsStop]);
+
+  const ttsPause = useCallback(() => {
+    Speech.pause();
+    setTtsPaused(true);
+  }, []);
+
+  const ttsResume = useCallback(() => {
+    Speech.resume();
+    setTtsPaused(false);
+  }, []);
+
+  // Stop TTS when leaving the screen or phase changes
+  useEffect(() => () => { Speech.stop(); }, []);
+  useEffect(() => { ttsStop(); }, [phase, ttsStop]);
 
   // Trail memory state (note + photo)
   const [localNote, setLocalNote] = useState(storedMemory.note ?? "");
@@ -448,6 +525,51 @@ export default function StoryStationScreen() {
                   {tale.subtitle}
                 </Text>
                 <View style={[styles.taleRule, { backgroundColor: c.rule }]} />
+                {/* ── Read-aloud controls ─────────────────────────────── */}
+                <View style={ttsStyles.row}>
+                  {!ttsPlaying ? (
+                    <Pressable
+                      onPress={ttsSpeak}
+                      style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                      accessibilityLabel="Read this tale aloud"
+                    >
+                      <Ionicons name="volume-high-outline" size={16} color={c.background} />
+                      <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>
+                        Read to me
+                      </Text>
+                    </Pressable>
+                  ) : (
+                    <>
+                      {ttsPaused ? (
+                        <Pressable
+                          onPress={ttsResume}
+                          style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                          accessibilityLabel="Resume reading"
+                        >
+                          <Ionicons name="play-outline" size={16} color={c.background} />
+                          <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Resume</Text>
+                        </Pressable>
+                      ) : (
+                        <Pressable
+                          onPress={ttsPause}
+                          style={({ pressed }) => [ttsStyles.btn, { backgroundColor: c.foreground, opacity: pressed ? 0.7 : 1 }]}
+                          accessibilityLabel="Pause reading"
+                        >
+                          <Ionicons name="pause-outline" size={16} color={c.background} />
+                          <Text style={[ttsStyles.btnLabel, { color: c.background, fontFamily: MONO }]}>Pause</Text>
+                        </Pressable>
+                      )}
+                      <Pressable
+                        onPress={ttsStop}
+                        style={({ pressed }) => [ttsStyles.stopBtn, { borderColor: c.rule, opacity: pressed ? 0.6 : 1 }]}
+                        accessibilityLabel="Stop reading"
+                      >
+                        <Ionicons name="stop-outline" size={16} color={c.mutedForeground} />
+                        <Text style={[ttsStyles.btnLabel, { color: c.mutedForeground, fontFamily: MONO }]}>Stop</Text>
+                      </Pressable>
+                    </>
+                  )}
+                </View>
                 <TaleBlocks blocks={tale.body} colors={c} />
                 {tale.authorNote ? (
                   <>
