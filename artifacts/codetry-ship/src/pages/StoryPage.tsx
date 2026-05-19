@@ -304,7 +304,9 @@ const AGE_TRACKS: { value: AgeTrack; label: string; note: string }[] = [
 export function StoryPage() {
   const [openStation, setOpenStation] = useState<number | null>(null);
   const [activePhase, setActivePhase] = useState(0);
+  const [scrollPhase, setScrollPhase] = useState(0);
   const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollingRef = useRef(false);
 
   const [ageTracks, setAgeTracks] = useState<Record<number, AgeTrack>>({});
   const [answers, setAnswers] = useState<Record<number, Record<string, string>>>({});
@@ -326,12 +328,43 @@ export function StoryPage() {
     setStoryStates((prev) => ({ ...prev, [ordinal]: state }));
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (scrollingRef.current) return;
+        let best: { phase: number; ratio: number } | null = null;
+        entries.forEach((entry) => {
+          const el = entry.target as HTMLDivElement;
+          const phaseIdx = phaseRefs.current.indexOf(el);
+          if (phaseIdx === -1) return;
+          const phaseN = phaseIdx + 1;
+          if (entry.isIntersecting) {
+            if (!best || entry.intersectionRatio > best.ratio) {
+              best = { phase: phaseN, ratio: entry.intersectionRatio };
+            }
+          }
+        });
+        if (best !== null) {
+          setScrollPhase(best.phase);
+          setActivePhase(best.phase);
+        }
+      },
+      { threshold: [0.1, 0.3, 0.5], rootMargin: "-80px 0px -20% 0px" }
+    );
+
+    phaseRefs.current.forEach((el) => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
   const handlePhaseClick = (n: number) => {
     setActivePhase(n);
+    setScrollPhase(n);
     const el = phaseRefs.current[n - 1];
     if (el) {
+      scrollingRef.current = true;
       const top = el.getBoundingClientRect().top + window.scrollY - 90;
       window.scrollTo({ top, behavior: "smooth" });
+      setTimeout(() => { scrollingRef.current = false; }, 800);
     }
   };
 
@@ -557,6 +590,73 @@ export function StoryPage() {
             </p>
             <div className="flex-1 h-px" style={{ background: "rgba(212,160,23,0.18)" }} />
           </div>
+
+          {/* ── You are here ── sticky progress indicator ── */}
+          {scrollPhase > 0 && (() => {
+            const phaseAccents = ["#c97c2e", "#d4a017", "#b85a3e", "#7ab3cc"];
+            const currentAccent = phaseAccents[scrollPhase - 1] ?? "#d4a017";
+            const currentLabel = YOUTH_PHASES[scrollPhase - 1]?.label ?? "";
+            return (
+              <div
+                className="sticky top-0 z-20 -mx-4 sm:-mx-8 px-4 sm:px-8 py-2.5"
+                style={{
+                  background: "rgba(13,29,21,0.96)",
+                  borderBottom: `1px solid ${currentAccent}25`,
+                  backdropFilter: "blur(8px)",
+                }}
+                data-testid="you-are-here-indicator"
+                aria-live="polite"
+                aria-label={`You are here: Phase ${scrollPhase} of 4 — ${currentLabel}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className="font-mono text-[8px] uppercase tracking-[0.22em]"
+                    style={{ color: "rgba(244,237,224,0.32)" }}
+                  >
+                    You are here
+                  </span>
+                  <div className="w-px h-3 self-center" style={{ background: "rgba(244,237,224,0.15)" }} />
+                  <span
+                    className="font-mono text-[8px] uppercase tracking-[0.22em]"
+                    style={{ color: currentAccent }}
+                  >
+                    Phase {scrollPhase} of 4
+                  </span>
+                  <span
+                    className="font-mono text-[8px]"
+                    style={{ color: "rgba(244,237,224,0.25)" }}
+                  >
+                    ·
+                  </span>
+                  <span
+                    className="font-serif italic"
+                    style={{ fontSize: "12px", color: "rgba(244,237,224,0.65)" }}
+                  >
+                    {currentLabel}
+                  </span>
+                  <div className="flex-1" />
+                  <div className="flex items-center gap-1">
+                    {YOUTH_PHASES.map((p) => (
+                      <div
+                        key={p.n}
+                        className="rounded-full transition-all duration-300"
+                        style={{
+                          width: p.n === scrollPhase ? 16 : 5,
+                          height: 5,
+                          background: p.n === scrollPhase
+                            ? phaseAccents[p.n - 1]
+                            : p.n < scrollPhase
+                              ? `${phaseAccents[p.n - 1]}60`
+                              : "rgba(244,237,224,0.12)",
+                        }}
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {YOUTH_PHASES.map((phase, phaseIdx) => {
             const phaseAccents = ["#c97c2e", "#d4a017", "#b85a3e", "#7ab3cc"];
