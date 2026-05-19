@@ -20,6 +20,7 @@ import CostReviewModal from "./components/CostReviewModal";
 import RateBreakdown from "./pages/RateBreakdown";
 import DeerLakeTalkingPoints from "./pages/DeerLakeTalkingPoints";
 import DeerLakeRoadmap from "./pages/DeerLakeRoadmap";
+import DeerLakeChiefBrief from "./pages/DeerLakeChiefBrief";
 import DailyDebrief from "./pages/DailyDebrief";
 import SaltboxGatherRound from "./pages/SaltboxGatherRound";
 
@@ -50,6 +51,7 @@ export default function App() {
       <Route path={`${BASE}/tools/bench/close`} component={WeekCloseOut} />
       <Route path={`${BASE}/tools/cost-review`} component={CostReviewModal} />
       <Route path={`${BASE}/rate-breakdown`} component={RateBreakdown} />
+      <Route path={`${BASE}/deer-lake-chief-brief`} component={DeerLakeChiefBrief} />
       <Route path={`${BASE}/deer-lake-talking-points`} component={DeerLakeTalkingPoints} />
       <Route path={`${BASE}/deer-lake-roadmap`} component={DeerLakeRoadmap} />
       <Route path={`${BASE}/debrief`} component={DailyDebrief} />

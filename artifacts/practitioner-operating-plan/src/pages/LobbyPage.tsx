@@ -92,8 +92,9 @@ const SECTIONS: ToolSection[] = [
   {
     sec: SEC.deer,
     tools: [
-      { label: "Responding to Exclusivity", sub: "Talking points for the exclusivity conversation", detail: "Step-by-step founder coaching doc: acknowledge the ask, offer something real, hold the line. Includes the one-liner to say out loud.", path: `${BASE}/deer-lake-talking-points`, accent: "#1F5446" },
-      { label: "How the Model Spreads",     sub: "Replication roadmap + financial projections",     detail: "Phase 1 → Phase 2 → Constellation. What carries forward, what each community customizes, and the full financial picture by phase.", path: `${BASE}/deer-lake-roadmap`,         accent: "#1F5446" },
+      { label: "Chief Brief",               sub: "Plain-language proposal for the Chief — print-ready", detail: "Short, emotionally direct, no jargon. The 807 co-op precedent, rising-tide framing, youth economics angle, the 8-week ask. One read. Print and hand it over.", path: `${BASE}/deer-lake-chief-brief`,    accent: "#b85a3e" },
+      { label: "Responding to Exclusivity", sub: "Talking points for the exclusivity conversation",    detail: "Step-by-step founder coaching doc: acknowledge the ask, offer something real, hold the line. Includes the one-liner to say out loud.", path: `${BASE}/deer-lake-talking-points`, accent: "#1F5446" },
+      { label: "How the Model Spreads",     sub: "Replication roadmap + financial projections",        detail: "Phase 1 → Phase 2 → Constellation. What carries forward, what each community customizes, and the full financial picture by phase.", path: `${BASE}/deer-lake-roadmap`,         accent: "#1F5446" },
     ],
   },
   {
