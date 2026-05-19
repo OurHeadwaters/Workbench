@@ -379,7 +379,7 @@ export default function StoryStationScreen() {
   // First block of the tale (used as hook when collapsed)
   const firstTaleBlock = tale?.body.find((b) => b.kind === "para" || b.kind === "italic");
   const firstTaleText =
-    firstTaleBlock && firstTaleBlock.kind !== "break" ? firstTaleBlock.text : "";
+    firstTaleBlock != null ? firstTaleBlock.text : "";
 
   return (
     <View style={[styles.root, { backgroundColor: c.background }]}>
