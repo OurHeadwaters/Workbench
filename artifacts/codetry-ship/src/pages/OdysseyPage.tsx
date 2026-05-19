@@ -456,6 +456,13 @@ export function OdysseyPage() {
                   >
                     4 stations · earn each one
                   </span>
+                  <a
+                    href="#start"
+                    className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
+                    style={{ color: accent }}
+                  >
+                    Begin now →
+                  </a>
                   <button
                     onClick={() => handlePhaseClick(i + 1)}
                     className="font-mono text-[9px] uppercase tracking-[0.18em] transition-opacity hover:opacity-70"
