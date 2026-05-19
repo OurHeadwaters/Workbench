@@ -456,18 +456,18 @@ export default function BrandingKit() {
         {/* ── Section labels ──────────────────────────────────────────────────── */}
         <SectionHead label="Section Labels" />
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: MUTED, marginBottom: "1.75rem", lineHeight: 1.6 }}>
-          The filled-bar label is the Headwaters way of naming a section — used on print pieces, digital artifacts, and anywhere a category needs to feel like a posted sign. Inter 800, all-caps, 0.13em tracking, 3px radius. Choose the colour by context.
+          The filled-bar label is the Headwaters way of naming a section — used on print pieces, digital artifacts, and anywhere a category needs to feel like a posted sign. Inter 800, all-caps, 0.13em tracking, 3px radius. <strong style={{ color: EVERGREEN }}>Colour rule: evergreen is the default for section-title labels. Blue and Cream are permitted for specific institutional or contrast contexts. Orange/rust is reserved for interactive buttons only — never use it for labels or headings.</strong>
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "1.5rem", marginBottom: "1.5rem" }}>
-          <LabelDemo bg={EVERGREEN} label="Evergreen" name="Default" usage="Section names, general categories, most print pieces." />
-          <LabelDemo bg={RUST}     label="Rust"      name="Rust"    usage="Action items, warmth, Parr's Jars, community contexts." />
+          <LabelDemo bg={EVERGREEN} label="Evergreen" name="Default — use for labels" usage="Section names, general categories, most print pieces. Default choice for all label contexts." />
+          <LabelDemo bg={RUST}     label="Rust"      name="Rust (buttons only)"    usage="Reserved for interactive buttons only — do not use for section labels or headings." />
           <LabelDemo bg={BLUE}     label="Lake Blue" name="Blue"    usage="Co-op, institutional, grant, or data-heavy contexts." />
           <LabelDemo bg={CREAM}    label="Cream"     name="Cream"   usage="Labels on dark (evergreen/rust) backgrounds only." />
         </div>
 
         <div style={{ background: "rgba(31,61,46,0.06)", borderRadius: 6, padding: "0.85rem 1.1rem", fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: MUTED, lineHeight: 1.65 }}>
-          <strong style={{ color: EVERGREEN }}>CSS:</strong> Use <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label</code> (evergreen), <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--rust</code>, <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--blue</code>, <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--cream</code>. Available in all web artifacts.
+          <strong style={{ color: EVERGREEN }}>CSS:</strong> Use <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label</code> or <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--evergreen</code> for section labels (these are equivalent). <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--rust</code> is now an evergreen alias and should only appear on interactive buttons, not labels. <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--blue</code>, <code style={{ fontFamily: "var(--font-mono, monospace)", background: "rgba(0,0,0,0.06)", padding: "0.05em 0.3em", borderRadius: 3 }}>.hw-label--cream</code> remain unchanged. Available in all web artifacts.
         </div>
 
         <Rule />
