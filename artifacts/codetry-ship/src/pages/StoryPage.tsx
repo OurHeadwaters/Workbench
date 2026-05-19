@@ -490,6 +490,25 @@ export function StoryPage() {
       </section>
 
 
+      {/* ════════════════════════════════ PLAIN-LANGUAGE INTRO ══ */}
+      <section
+        className="mx-auto max-w-[52rem] px-6 sm:px-8 pt-14 pb-10"
+        data-testid="youth-odyssey-intro"
+      >
+        <p
+          className="font-serif text-[17px] leading-[1.75] mb-4"
+          style={{ color: "#1f3d2e" }}
+        >
+          The Youth Odyssey is a free, self-paced journey for young people ages 6–18 — four phases, eight stations, each one built around their own story: their kitchen, their people, the hard thing they've faced, and what they carry across the crossing.
+        </p>
+        <p
+          className="font-serif text-[17px] leading-[1.7]"
+          style={{ color: "rgba(31,61,46,0.68)" }}
+        >
+          By the final station they hold a written record of their own experience and a clearer sense of where they stand in their community. Younger children move through it with a caregiver; older youth go at their own pace — no grades, no deadlines, no cost.
+        </p>
+      </section>
+
       {/* ══════════════════════════════════ SOPHIE'S WATERCOLOUR ══ */}
       <TrailArtGallery />
 
