@@ -246,52 +246,6 @@ const ttsStyles = StyleSheet.create({
     marginBottom: 12,
     marginTop: -8,
   },
-  settingsToggleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    marginBottom: 14,
-  },
-  settingsPanel: {
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 16,
-    gap: 10,
-  },
-  settingsLabel: {
-    fontSize: 10,
-    letterSpacing: 1,
-    marginBottom: 4,
-  },
-  speedRow: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  speedChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 14,
-    borderWidth: 1,
-  },
-  speedChipLabel: {
-    fontSize: 11,
-    letterSpacing: 0.5,
-  },
-  voiceScroll: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  voiceChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-    borderWidth: 1,
-    maxWidth: 140,
-  },
-  voiceChipLabel: {
-    fontSize: 11,
-    letterSpacing: 0.3,
-  },
 });
 
 export default function StoryStationScreen() {
@@ -442,6 +396,12 @@ export default function StoryStationScreen() {
   // Refs used in unmount cleanup — must not be stale
   const stationIdRef = useRef(station?.id ?? "");
   useEffect(() => { stationIdRef.current = station?.id ?? ""; }, [station?.id]);
+
+  // Refs for TTS speed and voice so speakBlockRef callback always sees latest values
+  const ttsSpeedRef = useRef<TtsSpeed>(ttsSpeed);
+  useEffect(() => { ttsSpeedRef.current = ttsSpeed; }, [ttsSpeed]);
+  const ttsVoiceRef = useRef<string | null>(ttsVoice);
+  useEffect(() => { ttsVoiceRef.current = ttsVoice; }, [ttsVoice]);
   const ttsBlockIdxRef = useRef(0);   // which speakable block is currently playing
   const ttsDoneRef = useRef(false);    // true when playback ran to the very end
   const saveTtsProgressRef = useRef(saveTtsProgress);

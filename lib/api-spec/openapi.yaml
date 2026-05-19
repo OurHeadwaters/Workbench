@@ -18,6 +18,8 @@ tags:
     description: Headwaters Books — role-aware ledger, cost-centres, transactions, food-handler submissions, and dashboards.
   - name: helping-hands
     description: Helping Hands — band reserve workforce platform. Tasks, members, tiers, escrow tracking, and earnings history.
+  - name: sandbox
+    description: Sandbox — invite-only village bulletin board for homeschool families. Household auth, feed buckets, Heads Up (72h expiry), standby events with check-ins, Gather Round monthly prompt.
 paths:
   /healthz:
     get:
@@ -1926,6 +1928,422 @@ paths:
               schema:
                 $ref: '#/components/schemas/HhPartnershipPortal'
 
+  # ── Sandbox — village board ──────────────────────────────────────────────
+
+  /api/sandbox/households:
+    post:
+      operationId: sandboxCreateHousehold
+      tags: [sandbox]
+      summary: Create a new household (invite-only; bootstrap exemption for first household)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, passphrase]
+              properties:
+                name: { type: string, maxLength: 80 }
+                passphrase: { type: string, minLength: 4 }
+                inviteCode: { type: string, description: Required for all households after the first }
+      responses:
+        '201':
+          description: Household created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxAuthResult' }
+        '403': { description: Missing or invalid invite code }
+        '409': { description: Household name already taken }
+    get:
+      operationId: sandboxListHouseholds
+      tags: [sandbox]
+      summary: List all households (organizer only)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: All households
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SandboxHousehold' }
+        '403': { description: Organizer access required }
+
+  /api/sandbox/sessions:
+    post:
+      operationId: sandboxLogin
+      tags: [sandbox]
+      summary: Sign in as an existing household
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, passphrase]
+              properties:
+                name: { type: string }
+                passphrase: { type: string }
+      responses:
+        '200':
+          description: Session token
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxAuthResult' }
+        '401': { description: Incorrect name or passphrase }
+
+  /api/sandbox/me:
+    get:
+      operationId: sandboxGetMe
+      tags: [sandbox]
+      summary: Return the currently authenticated household
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Current household
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxHousehold' }
+        '401': { description: Unauthorized }
+
+  /api/sandbox/invites:
+    get:
+      operationId: sandboxListInvites
+      tags: [sandbox]
+      summary: List all invite codes (organizer only)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Invite list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SandboxInvite' }
+    post:
+      operationId: sandboxCreateInvite
+      tags: [sandbox]
+      summary: Generate a new one-time invite code (organizer only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string, maxLength: 100, description: Optional label e.g. "For the Walsh family" }
+      responses:
+        '201':
+          description: Created invite
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxInvite' }
+
+  /api/sandbox/invites/{id}:
+    delete:
+      operationId: sandboxRevokeInvite
+      tags: [sandbox]
+      summary: Revoke an unused invite code (organizer only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Revoked }
+        '400': { description: Invite already used }
+        '404': { description: Invite not found }
+
+  /api/sandbox/buckets:
+    get:
+      operationId: sandboxListBuckets
+      tags: [sandbox]
+      summary: List all post buckets
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Buckets
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SandboxBucket' }
+    post:
+      operationId: sandboxCreateBucket
+      tags: [sandbox]
+      summary: Create a custom post bucket (organizer only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [label]
+              properties:
+                label: { type: string, maxLength: 50 }
+      responses:
+        '201':
+          description: Created bucket
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxBucket' }
+
+  /api/sandbox/buckets/{id}:
+    patch:
+      operationId: sandboxUpdateBucket
+      tags: [sandbox]
+      summary: Update a bucket label or Gather Round prompt text (organizer only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label: { type: string, maxLength: 50 }
+                promptText: { type: string, maxLength: 1000, nullable: true, description: Monthly prompt for the gather_round bucket }
+      responses:
+        '200':
+          description: Updated bucket
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxBucket' }
+
+  /api/sandbox/posts:
+    get:
+      operationId: sandboxListPosts
+      tags: [sandbox]
+      summary: List posts (optionally filtered by bucketId); expired Heads Up posts are purged on read
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: bucketId
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SandboxPost' }
+    post:
+      operationId: sandboxCreatePost
+      tags: [sandbox]
+      summary: Create a post; Heads Up posts auto-expire after 72 h
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bucketId, body]
+              properties:
+                bucketId: { type: string, format: uuid }
+                body: { type: string, maxLength: 2000 }
+      responses:
+        '201':
+          description: Created post
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxPost' }
+
+  /api/sandbox/posts/{id}:
+    delete:
+      operationId: sandboxDeletePost
+      tags: [sandbox]
+      summary: Delete a post (own post or organizer)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Deleted }
+        '403': { description: Cannot delete another household's post }
+
+  /api/sandbox/roles:
+    get:
+      operationId: sandboxListRoles
+      tags: [sandbox]
+      summary: |
+        List community standby roles.
+        Organizers see all. Members see public roles (with full household identity for the standby reference card)
+        and their own private assignments. Other households' private roles are hidden.
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SandboxRole' }
+    post:
+      operationId: sandboxCreateRole
+      tags: [sandbox]
+      summary: Create a community role (organizer only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [roleName]
+              properties:
+                roleName: { type: string, maxLength: 100 }
+                description: { type: string, maxLength: 500 }
+      responses:
+        '201':
+          description: Created role
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxRole' }
+
+  /api/sandbox/roles/{id}:
+    patch:
+      operationId: sandboxUpdateRole
+      tags: [sandbox]
+      summary: Update a role — assign household, toggle public visibility (organizer only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roleName: { type: string, maxLength: 100 }
+                description: { type: string, maxLength: 500 }
+                householdId: { type: string, format: uuid, nullable: true }
+                isPublic: { type: boolean }
+      responses:
+        '200':
+          description: Updated role
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxRole' }
+    delete:
+      operationId: sandboxDeleteRole
+      tags: [sandbox]
+      summary: Delete a community role (organizer only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Deleted }
+
+  /api/sandbox/standby/active:
+    get:
+      operationId: sandboxGetActiveStandby
+      tags: [sandbox]
+      summary: Return the current active standby event, or null
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Active event or null
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SandboxStandbyEvent'
+                  - type: 'null'
+
+  /api/sandbox/standby:
+    post:
+      operationId: sandboxDeclareStandby
+      tags: [sandbox]
+      summary: Declare a neighbourhood standby event (organizer only)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, maxLength: 200 }
+      responses:
+        '201':
+          description: Declared event
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SandboxStandbyEvent' }
+
+  /api/sandbox/standby/{id}/end:
+    post:
+      operationId: sandboxEndStandby
+      tags: [sandbox]
+      summary: End an active standby event (organizer only)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Event ended
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+                  isActive: { type: boolean }
+
+  /api/sandbox/checkins:
+    get:
+      operationId: sandboxGetCheckins
+      tags: [sandbox]
+      summary: |
+        Checkin summary for the active standby event.
+        All members see counts and who checked in.
+        Organizer additionally receives the list of household IDs that have NOT yet checked in.
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Checkin summary or null when no active event
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SandboxCheckinSummary'
+                  - type: 'null'
+    post:
+      operationId: sandboxCheckin
+      tags: [sandbox]
+      summary: Mark the authenticated household as safe/present
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+        '400': { description: No active standby event }
+
 components:
   schemas:
     HealthStatus:
@@ -1935,6 +2353,105 @@ components:
           type: string
       required:
         - status
+    # ── Sandbox schemas ──────────────────────────────────────────────────────
+    SandboxHousehold:
+      type: object
+      required: [id, name, isOrganizer, gatherRoundParticipated, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        isOrganizer: { type: boolean }
+        gatherRoundParticipated: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    SandboxAuthResult:
+      type: object
+      required: [token, household]
+      properties:
+        token: { type: string }
+        household: { $ref: '#/components/schemas/SandboxHousehold' }
+    SandboxInvite:
+      type: object
+      required: [id, code, note, createdAt, usedAt, usedByHouseholdName]
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        note: { type: string }
+        createdAt: { type: string, format: date-time }
+        usedAt: { type: string, format: date-time, nullable: true }
+        usedByHouseholdName: { type: string, nullable: true }
+    SandboxBucket:
+      type: object
+      required: [id, slug, label, isBuiltIn, isHeadsUp, isGatherRound, sortOrder, promptText]
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        label: { type: string }
+        isBuiltIn: { type: boolean }
+        isHeadsUp: { type: boolean }
+        isGatherRound: { type: boolean }
+        sortOrder: { type: string }
+        promptText: { type: string, nullable: true, description: Monthly prompt text for the gather_round bucket }
+    SandboxPost:
+      type: object
+      required: [id, householdId, householdName, bucketId, bucketSlug, body, expiresAt, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        householdId: { type: string, format: uuid }
+        householdName: { type: string }
+        bucketId: { type: string, format: uuid }
+        bucketSlug: { type: string }
+        body: { type: string }
+        expiresAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+    SandboxRole:
+      type: object
+      required: [id, roleName, description, householdId, householdName, isPublic, assignedByOrganizer]
+      properties:
+        id: { type: string, format: uuid }
+        roleName: { type: string }
+        description: { type: string }
+        householdId: { type: string, format: uuid, nullable: true }
+        householdName: { type: string, nullable: true, description: Shown for public roles and to the assigned household; null otherwise }
+        isPublic: { type: boolean }
+        assignedByOrganizer: { type: boolean }
+    SandboxStandbyEvent:
+      type: object
+      required: [id, name, declaredByHouseholdId, declaredByName, isActive, declaredAt, endedAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        declaredByHouseholdId: { type: string, format: uuid }
+        declaredByName: { type: string }
+        isActive: { type: boolean }
+        declaredAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time, nullable: true }
+    SandboxCheckinSummary:
+      type: object
+      required: [eventId, total, checkedIn, myCheckedIn, remaining, checkins]
+      properties:
+        eventId: { type: string, format: uuid }
+        total: { type: integer }
+        checkedIn: { type: integer }
+        myCheckedIn: { type: boolean }
+        remaining:
+          type: array
+          description: Households that have not yet checked in (organizer-only; empty array for non-organizers)
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id: { type: string, format: uuid }
+              name: { type: string }
+        checkins:
+          type: array
+          items:
+            type: object
+            required: [householdId, householdName, checkedInAt]
+            properties:
+              householdId: { type: string, format: uuid }
+              householdName: { type: string }
+              checkedInAt: { type: string, format: date-time }
+    # ── End sandbox schemas ───────────────────────────────────────────────────
     ErrorEnvelope:
       type: object
       required: [error]

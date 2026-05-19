@@ -53,6 +53,17 @@ if (fs.existsSync(printMarketingDist)) {
   });
 }
 
+// Serve sandbox SPA at /sandbox/ — invite-only village board
+// Built with: pnpm --filter @workspace/sandbox run build
+// Use import.meta.url so the path resolves correctly regardless of CWD.
+const sandboxDist = new URL("../../sandbox/dist/public", import.meta.url).pathname;
+if (fs.existsSync(sandboxDist)) {
+  app.use("/sandbox", express.static(sandboxDist));
+  app.get("/sandbox/*path", (_req, res) => {
+    res.sendFile(path.join(sandboxDist, "index.html"));
+  });
+}
+
 // Serve the media manager UI at /media/ (internal workspace tool)
 // Use import.meta.url so the path works regardless of CWD in dev or prod.
 const mediaManagerHtml = new URL("../src/media-manager.html", import.meta.url).pathname;

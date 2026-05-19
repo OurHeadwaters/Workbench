@@ -19,6 +19,7 @@ import pgv2Router from "./pgv2";
 import captureRouter from "./capture";
 import helpingHandsRouter from "./helpingHands";
 import youthPathRouter from "./youthPath";
+import sandboxRouter from "./sandbox";
 
 const router: IRouter = Router();
 
@@ -45,5 +46,6 @@ router.use("/pgv2", pgv2Router);
 router.use("/capture", captureRouter);
 router.use("/helping-hands", helpingHandsRouter);
 router.use("/youth-path", youthPathRouter);
+router.use("/sandbox", sandboxRouter);
 
 export default router;
