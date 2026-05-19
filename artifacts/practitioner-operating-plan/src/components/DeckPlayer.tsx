@@ -20,6 +20,11 @@ import PaperworkVSC from "../pages/slides/PaperworkVSC";
 import PaperworkNDA from "../pages/slides/PaperworkNDA";
 import PaperworkContractor from "../pages/slides/PaperworkContractor";
 import PaperworkPaidTrial from "../pages/slides/PaperworkPaidTrial";
+import StonemasonOverview from "../pages/slides/StonemasonOverview";
+import StonemasonPricing from "../pages/slides/StonemasonPricing";
+import StonemasonRunway from "../pages/slides/StonemasonRunway";
+import StonemasonGrants from "../pages/slides/StonemasonGrants";
+import StonemasonCashFlow from "../pages/slides/StonemasonCashFlow";
 import SaltBench from "../pages/slides/SaltBench";
 import SaltKlaviyo from "../pages/slides/SaltKlaviyo";
 import SaltOpsNote from "../pages/slides/SaltOpsNote";
@@ -36,6 +41,11 @@ const COMPONENTS: ComponentType[] = [
   BridgeFunding,
   SecondAnchorScenarios,
   PathToScale,
+  StonemasonOverview,
+  StonemasonPricing,
+  StonemasonRunway,
+  StonemasonGrants,
+  StonemasonCashFlow,
   Closing,
   HiringHandyman,
   HiringBookkeeper,
