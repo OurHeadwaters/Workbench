@@ -340,6 +340,22 @@ export default function ConstellationSession() {
         </p>
       </div>
 
+      <div style={{ marginTop: 12, padding: "12px 16px", borderRadius: 8, background: "rgba(91,62,140,0.08)", border: `1px solid rgba(91,62,140,0.22)` }}>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: "0 0 6px" }}>
+          <strong style={{ color: "#5B3E8C" }}>Phase 3 in practice</strong>
+        </p>
+        <p style={{ fontSize: 11, color: T.muted, lineHeight: 1.6, margin: 0 }}>
+          The{" "}
+          <button
+            onClick={() => navigate(`${BASE}/deer-lake-roadmap`)}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 11, color: "#5B3E8C", textDecoration: "underline" }}
+          >
+            Deer Lake Roadmap
+          </button>
+          {" "}shows how Phase 3 ("Constellation expands") plays out on the ground — the zone architecture translated into phase-by-phase financial projections, carry-forward assets, and the milestone dates that trigger the economics flip.
+        </p>
+      </div>
+
     </div>
   );
 }

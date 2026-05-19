@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import {
   PHASE1_FLAT_FEE,
   PHASE1_HOURS_PER_WEEK,
@@ -312,6 +313,8 @@ function PhaseCard({ p, index }: { p: PhaseItem; index: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DeerLakeRoadmap() {
+  const [, navigate] = useLocation();
+
   return (
     <div className="print-root" style={{ maxWidth: 680, margin: "0 auto", padding: "28px 16px 64px" }}>
 
@@ -457,6 +460,13 @@ export default function DeerLakeRoadmap() {
           <a href={`${BASE}/rate-breakdown`} style={{ fontSize: 12, fontWeight: 700, color: T.accent, textDecoration: "none" }}>
             Rate Breakdown →
           </a>
+          <span style={{ color: T.rule, fontSize: 12 }}>|</span>
+          <button
+            onClick={() => navigate(`${BASE}/constellation-session`)}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 12, fontWeight: 700, color: "#5B3E8C", textDecoration: "none", fontFamily: "inherit" }}
+          >
+            Constellation Session →
+          </button>
         </div>
       </div>
 
