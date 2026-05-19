@@ -174,6 +174,131 @@ export const RUNWAY_QUARTERS: RunwayQuarter[] = [
   },
 ];
 
+// ── Computed income + runway from overrideable driver values ──────────────────
+//
+// Call these with a values map from loadOverrideValues() (stonemasonOverrides.ts).
+// The ZONE3_INPUTS defaults in stonemasonOverrides.ts are calibrated so that
+// computeIncomeYears(ZONE3_DEFAULTS) approximates the static INCOME_YEARS
+// baseline ranges. Exact match is not guaranteed — the static ranges were
+// hand-authored; these are derived from discrete driver midpoints.
+
+function fmtRange(lo: number, hi: number): string {
+  const f = (n: number) => "$" + Math.round(n).toLocaleString("en-CA");
+  return lo === hi ? f(lo) : `${f(lo)}–${f(hi)}`;
+}
+
+export function computeIncomeYears(ov: Record<string, number>): IncomeYear[] {
+  const retainerRate      = ov["retainer_rate"]         ?? 400;
+  const fullLaunchFee     = ov["full_launch_fee"]        ?? 6_000;
+  const guildPricePerPerson = ov["guild_price_per_person"] ?? 1_500;
+  const guildTithePct     = ov["guild_tithe_pct"]        ?? 8;
+  const discoveryFee      = ov["discovery_fee"]          ?? 500;
+
+  // ── Year 1 ──
+  const y1e  = ov["y1_engagements"]     ?? 1;
+  const y1r  = ov["y1_retainers"]       ?? 2;
+  const y1gc = ov["y1_guild_cohort"]    ?? 5;
+  const y1d  = ov["y1_discovery_calls"] ?? 7;
+  const y1g  = ov["y1_grant"]           ?? 10_000;
+
+  const y1EngagementIncome  = y1e * fullLaunchFee;
+  const y1RetainerIncome    = y1r * retainerRate * 12;
+  const y1GuildIncome       = y1gc * guildPricePerPerson;
+  const y1DiscoveryIncome   = y1d * discoveryFee;
+  const y1Total             = y1EngagementIncome + y1RetainerIncome + y1GuildIncome + y1DiscoveryIncome + y1g;
+
+  // ── Year 2 ──
+  const y2e  = ov["y2_engagements"]  ?? 4;
+  const y2r  = ov["y2_retainers"]    ?? 7;
+  const y2gc = ov["y2_guild_cohort"] ?? 10;
+  const y2g  = ov["y2_grant"]        ?? 19_500;
+
+  // Guild tithe: Year 1 graduates × price × tithe%
+  const y2TitheIncome       = Math.round(y1gc * guildPricePerPerson * (guildTithePct / 100));
+  const y2EngagementIncome  = y2e * fullLaunchFee;
+  const y2RetainerIncome    = y2r * retainerRate * 12;
+  const y2GuildIncome       = y2gc * guildPricePerPerson;
+  const y2Total             = y2EngagementIncome + y2RetainerIncome + y2GuildIncome + y2TitheIncome + y2g;
+
+  // ── Year 3 ──
+  const y3e  = ov["y3_engagements"]  ?? 7;
+  const y3r  = ov["y3_retainers"]    ?? 13;
+  const y3gc = ov["y3_guild_cohort"] ?? 16;
+  const y3g  = ov["y3_grant"]        ?? 32_000;
+
+  // Tithe compounds: Years 1+2 graduates
+  const y3TitheIncome       = Math.round((y1gc + y2gc) * guildPricePerPerson * (guildTithePct / 100));
+  const y3EngagementIncome  = y3e * fullLaunchFee;
+  const y3RetainerIncome    = y3r * retainerRate * 12;
+  const y3GuildIncome       = y3gc * guildPricePerPerson;
+  const y3Total             = y3EngagementIncome + y3RetainerIncome + y3GuildIncome + y3TitheIncome + y3g;
+
+  return [
+    {
+      label: "Year 1",
+      low:   Math.round(y1Total * 0.75),
+      high:  Math.round(y1Total * 1.25),
+      sources: [
+        { label: `${y1e} practitioner engagement${y1e !== 1 ? "s" : ""}`,   amount: fmtRange(y1EngagementIncome * 0.9, y1EngagementIncome * 1.1) },
+        { label: `Stewardship retainers (${y1r} clients)`,                  amount: fmtRange(y1RetainerIncome * 0.9,   y1RetainerIncome * 1.1) },
+        { label: `Discovery calls (${y1d})`,                                amount: fmtRange(y1DiscoveryIncome, y1DiscoveryIncome) },
+        { label: "Grant positioning / consulting",                           amount: fmtRange(y1g * 0.9, y1g * 1.1) },
+        { label: `Guild pilot cohort (${y1gc} people)`,                     amount: fmtRange(y1GuildIncome * 0.9, y1GuildIncome * 1.1) },
+      ],
+    },
+    {
+      label: "Year 2",
+      low:   Math.round(y2Total * 0.8),
+      high:  Math.round(y2Total * 1.2),
+      sources: [
+        { label: `${y2e} new engagement${y2e !== 1 ? "s" : ""}`,            amount: fmtRange(y2EngagementIncome * 0.9, y2EngagementIncome * 1.1) },
+        { label: `Stewardship retainers (${y2r} clients)`,                  amount: fmtRange(y2RetainerIncome * 0.9,   y2RetainerIncome * 1.1) },
+        { label: `Guild cohort (${y2gc} people)`,                           amount: fmtRange(y2GuildIncome * 0.9, y2GuildIncome * 1.1) },
+        { label: "Guild tithe income (Year 1 grads)",                       amount: fmtRange(y2TitheIncome * 0.9, y2TitheIncome * 1.1) },
+        { label: "Grant fees + consulting",                                  amount: fmtRange(y2g * 0.9, y2g * 1.1) },
+      ],
+    },
+    {
+      label: "Year 3+",
+      low:   Math.round(y3Total * 0.8),
+      high:  Math.round(y3Total * 1.2),
+      sources: [
+        { label: `${y3e} new engagement${y3e !== 1 ? "s" : ""} / yr`,       amount: fmtRange(y3EngagementIncome * 0.9, y3EngagementIncome * 1.1) },
+        { label: `Stewardship retainers (${y3r})`,                          amount: fmtRange(y3RetainerIncome * 0.9,   y3RetainerIncome * 1.1) },
+        { label: `Guild cohort (${y3gc} people / yr)`,                      amount: fmtRange(y3GuildIncome * 0.9, y3GuildIncome * 1.1) },
+        { label: "Guild tithe (compounding)",                               amount: fmtRange(y3TitheIncome * 0.9, y3TitheIncome * 1.1) },
+        { label: "Grant + consulting fees",                                  amount: fmtRange(y3g * 0.9, y3g * 1.1) },
+      ],
+    },
+  ];
+}
+
+/**
+ * Scale quarterly runway targets proportionally to the computed Year-1 total.
+ * This keeps the runway map live when income assumptions change.
+ */
+export function computeRunwayQuarters(ov: Record<string, number>): RunwayQuarter[] {
+  const computed = computeIncomeYears(ov);
+  const computedY1Mid = (computed[0].low + computed[0].high) / 2;
+  const staticY1Mid   = (INCOME_YEARS[0].low + INCOME_YEARS[0].high) / 2;
+  const computedY2Mid = (computed[1].low + computed[1].high) / 2;
+  const staticY2Mid   = (INCOME_YEARS[1].low + INCOME_YEARS[1].high) / 2;
+
+  const scale = (quarter: RunwayQuarter, idx: number): RunwayQuarter => {
+    // First 4 quarters scale off Year 1; last 2 off Year 2
+    const ratio = idx < 4
+      ? (staticY1Mid > 0 ? computedY1Mid / staticY1Mid : 1)
+      : (staticY2Mid > 0 ? computedY2Mid / staticY2Mid : 1);
+    return {
+      ...quarter,
+      revenueMin: Math.round(quarter.revenueMin * ratio),
+      revenueMax: Math.round(quarter.revenueMax * ratio),
+    };
+  };
+
+  return RUNWAY_QUARTERS.map((q, i) => scale(q, i));
+}
+
 // ── Grant programs ────────────────────────────────────────────────────────────
 
 export interface GrantProgram {

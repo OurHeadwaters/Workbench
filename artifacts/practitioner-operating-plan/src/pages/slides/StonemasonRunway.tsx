@@ -1,15 +1,36 @@
 /**
  * StonemasonRunway.tsx — Year 1–3+ income projections + 24-month quarterly runway map
+ *
+ * Reacts live to Zone 3 override assumptions set in the Cost Review modal.
  */
 
-import { INCOME_YEARS, RUNWAY_QUARTERS } from "@/data/stonemason";
+import { useState, useEffect } from "react";
+import { computeIncomeYears, computeRunwayQuarters } from "@/data/stonemason";
+import { loadOverrideValues } from "@/lib/stonemasonOverrides";
 
 function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString("en-CA");
 }
 
 export default function StonemasonRunway() {
-  const maxRevMax = Math.max(...RUNWAY_QUARTERS.map((q) => q.revenueMax));
+  const [overrideValues, setOverrideValues] = useState<Record<string, number>>(
+    () => loadOverrideValues()
+  );
+
+  // Re-read overrides whenever the tab gains focus or localStorage changes
+  useEffect(() => {
+    const refresh = () => setOverrideValues(loadOverrideValues());
+    window.addEventListener("focus", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  const incomeYears    = computeIncomeYears(overrideValues);
+  const runwayQuarters = computeRunwayQuarters(overrideValues);
+  const maxRevMax      = Math.max(...runwayQuarters.map((q) => q.revenueMax));
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
@@ -31,9 +52,9 @@ export default function StonemasonRunway() {
           {/* Year 1–3 income table */}
           <div className="flex flex-col gap-[1.2vh] overflow-auto">
             <div className="font-mono uppercase tracking-[0.16em] text-[0.7vw] text-muted">
-              Annual income — realistic ranges
+              Annual income — computed from assumptions
             </div>
-            {INCOME_YEARS.map((yr) => (
+            {incomeYears.map((yr) => (
               <div key={yr.label} className="border border-rule rounded-[6px] px-[1.4vw] py-[1.4vh]">
                 <div className="flex items-baseline justify-between mb-[0.6vh]">
                   <div className="font-display font-semibold text-[1.1vw] text-paper">{yr.label}</div>
@@ -59,8 +80,8 @@ export default function StonemasonRunway() {
               24-month quarterly runway — Q1 2026 → Q2 2027
             </div>
             <div className="flex flex-col gap-[0.55vh] flex-1">
-              {RUNWAY_QUARTERS.map((q) => {
-                const barPct = (q.revenueMax / maxRevMax) * 100;
+              {runwayQuarters.map((q) => {
+                const barPct = maxRevMax > 0 ? (q.revenueMax / maxRevMax) * 100 : 0;
                 return (
                   <div key={q.id} className="flex items-center gap-[1.2vw]">
                     <div className="font-mono text-[0.68vw] text-muted tabular-nums w-[5.2vw] shrink-0">

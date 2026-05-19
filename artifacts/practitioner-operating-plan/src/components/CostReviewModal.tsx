@@ -31,6 +31,18 @@ import {
   type CustomLine,
   type HistoryEntry,
 } from "@/lib/costReview";
+import {
+  ZONE3_INPUTS,
+  ZONE3_DEFAULTS,
+  loadOverrideValues,
+  loadOverrides,
+  saveOverride,
+  clearOverride,
+  clearAllOverrides,
+  hasAnyOverrides,
+  type Zone3Override,
+  type Zone3InputDef,
+} from "@/lib/stonemasonOverrides";
 import { fmt } from "@/data/budgetScenarios";
 
 /** Local cost-item shape — derived from phases, used for the review/edits UI */
@@ -61,7 +73,7 @@ const TEXT   = "#2a2520";
 const GREEN  = "#2a6b3e";
 const RED_DK = "#7a1a1a";
 
-type Tab = "review" | "edits";
+type Tab = "review" | "edits" | "zone3";
 
 // ── Formatting helpers ────────────────────────────────────────────────
 
@@ -1097,6 +1109,274 @@ function EditsView({
   );
 }
 
+// ── Zone 3 override row ────────────────────────────────────────────────
+
+interface Zone3RowProps {
+  def: Zone3InputDef;
+  override: Zone3Override | null;
+  onSave: (key: string, value: number, note: string) => void;
+  onClear: (key: string) => void;
+}
+
+function Zone3Row({ def, override, onSave, onClear }: Zone3RowProps) {
+  const [value, setValue] = useState<string>(
+    override ? String(override.value) : String(def.defaultValue)
+  );
+  const [note, setNote] = useState<string>(override?.note ?? "");
+  const [dirty, setDirty] = useState(false);
+
+  // Resync when the override is cleared externally (e.g. "Reset all")
+  useEffect(() => {
+    setValue(override ? String(override.value) : String(def.defaultValue));
+    setNote(override?.note ?? "");
+    setDirty(false);
+  }, [override, def.defaultValue]);
+
+  const parsedValue = parseFloat(value);
+  const isEdited    = override !== null && override.value !== def.defaultValue;
+  const delta       = isNaN(parsedValue) ? 0 : parsedValue - def.defaultValue;
+
+  const handleSave = () => {
+    if (isNaN(parsedValue)) return;
+    onSave(def.key, parsedValue, note);
+    setDirty(false);
+  };
+
+  const handleClear = () => {
+    setValue(String(def.defaultValue));
+    setNote("");
+    setDirty(false);
+    onClear(def.key);
+  };
+
+  return (
+    <tr
+      style={{
+        borderBottom: `0.5pt solid ${RULE}`,
+        background: isEdited ? "rgba(42,107,62,0.05)" : "transparent",
+      }}
+    >
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "28%" }}>
+        <div style={{ fontWeight: 600, fontSize: "8.5pt", color: TEXT }}>{def.label}</div>
+        <div style={{ fontSize: "7.5pt", color: MUTED, marginTop: "2pt", lineHeight: 1.35 }}>
+          {def.description}
+        </div>
+        {isEdited && (
+          <div style={{ fontSize: "7pt", fontWeight: 700, color: GREEN, marginTop: "3pt", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Edited
+          </div>
+        )}
+      </td>
+      <td style={{ padding: "5pt 4pt", textAlign: "right", verticalAlign: "top", width: "10%", fontSize: "9pt", color: MUTED, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
+        {def.defaultValue.toLocaleString("en-CA")}
+        <div style={{ fontSize: "7pt", color: MUTED }}>{def.unit}</div>
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "14%" }}>
+        <input
+          type="number"
+          value={value}
+          min={def.min}
+          max={def.max}
+          step={def.step ?? 1}
+          onChange={(e) => { setValue(e.target.value); setDirty(true); }}
+          style={{
+            width: "100%",
+            padding: "3pt 5pt",
+            fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+            fontSize: "8.5pt",
+            border: `1pt solid ${dirty || isEdited ? AMBER : RULE}`,
+            borderRadius: "3pt",
+            background: CREAM,
+            color: TEXT,
+            boxSizing: "border-box",
+          }}
+        />
+        <div style={{ fontSize: "6.5pt", color: MUTED, marginTop: "2pt" }}>{def.unit}</div>
+        {dirty && !isNaN(parsedValue) && delta !== 0 && (
+          <div style={{ fontSize: "7pt", marginTop: "1pt", color: delta > 0 ? RED_DK : GREEN, fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}>
+            {delta > 0 ? "+" : "−"}{Math.abs(delta).toLocaleString("en-CA")} vs default
+          </div>
+        )}
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "30%" }}>
+        <input
+          type="text"
+          placeholder="Private note (optional)…"
+          value={note}
+          onChange={(e) => { setNote(e.target.value); setDirty(true); }}
+          style={{
+            width: "100%",
+            padding: "3pt 5pt",
+            fontSize: "8pt",
+            border: `1pt solid ${RULE}`,
+            borderRadius: "3pt",
+            background: CREAM,
+            color: TEXT,
+            boxSizing: "border-box",
+          }}
+        />
+      </td>
+      <td style={{ padding: "5pt 4pt", verticalAlign: "top", width: "18%", textAlign: "right" }}>
+        <div style={{ display: "flex", gap: "5pt", justifyContent: "flex-end", flexWrap: "wrap" }}>
+          <button
+            onClick={handleSave}
+            disabled={!dirty}
+            style={{
+              padding: "3pt 9pt", fontSize: "7.5pt", fontWeight: 700,
+              background: dirty ? AMBER : RULE,
+              color: dirty ? CREAM : MUTED,
+              border: "none", borderRadius: "3pt",
+              cursor: dirty ? "pointer" : "default",
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}
+          >
+            Save
+          </button>
+          {isEdited && (
+            <button
+              onClick={handleClear}
+              style={{
+                padding: "3pt 9pt", fontSize: "7.5pt", fontWeight: 600,
+                background: "transparent", color: RED_DK,
+                border: `1pt solid rgba(122,26,26,0.3)`,
+                borderRadius: "3pt", cursor: "pointer",
+                letterSpacing: "0.04em", textTransform: "uppercase",
+              }}
+            >
+              Reset
+            </button>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// ── Zone 3 tab content ─────────────────────────────────────────────────
+
+interface Zone3TabProps {
+  overrideMap: Record<string, Zone3Override>;
+  onSave: (key: string, value: number, note: string) => void;
+  onClear: (key: string) => void;
+  onClearAll: () => void;
+}
+
+const ZONE3_GROUP_LABELS: Record<string, string> = {
+  rates: "Global rates",
+  year1: "Year 1 assumptions",
+  year2: "Year 2 assumptions",
+  year3: "Year 3 assumptions",
+};
+
+function Zone3Tab({ overrideMap, onSave, onClear, onClearAll }: Zone3TabProps) {
+  const groups = ["rates", "year1", "year2", "year3"] as const;
+  const overrideCount = Object.values(overrideMap).filter(
+    (ov) => ov.value !== ov.defaultValue
+  ).length;
+
+  return (
+    <div>
+      <div
+        style={{
+          background: "rgba(31,61,46,0.05)",
+          border: `1pt solid ${RULE}`,
+          borderRadius: "3pt",
+          padding: "7pt 12pt",
+          fontSize: "8pt",
+          color: MUTED,
+          lineHeight: 1.55,
+          marginBottom: "14pt",
+        }}
+      >
+        <strong style={{ color: DARK }}>Zone 3 income assumptions:</strong>{" "}
+        Adjust the driver inputs below and the{" "}
+        <strong>Income Projections &amp; Runway</strong> and{" "}
+        <strong>Pricing</strong> slides will update live when you return to them.
+        Overrides are saved to your browser and persist across sessions.
+      </div>
+
+      {groups.map((group) => {
+        const inputs = ZONE3_INPUTS.filter((d) => d.group === group);
+        return (
+          <div key={group} style={{ marginBottom: "14pt" }}>
+            <SectionHeader label={ZONE3_GROUP_LABELS[group]} />
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "8.5pt",
+                tableLayout: "fixed",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    borderBottom: `1.5pt solid ${RULE}`,
+                    color: MUTED,
+                    fontWeight: 600,
+                    fontSize: "8pt",
+                  }}
+                >
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "28%" }}>Input</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "10%" }}>Default</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "14%" }}>Your value</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "left",  width: "30%" }}>Private note</th>
+                  <th style={{ padding: "3pt 4pt", textAlign: "right", width: "18%" }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inputs.map((def) => (
+                  <Zone3Row
+                    key={def.key}
+                    def={def}
+                    override={overrideMap[def.key] ?? null}
+                    onSave={onSave}
+                    onClear={onClear}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+
+      {overrideCount > 0 && (
+        <div
+          style={{
+            marginTop: "12pt",
+            paddingTop: "10pt",
+            borderTop: `1pt solid ${RULE}`,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            onClick={() => {
+              if (window.confirm("Remove all Zone 3 overrides and restore every input to its planning default?")) {
+                onClearAll();
+              }
+            }}
+            style={{
+              padding: "3pt 12pt",
+              fontSize: "7.5pt",
+              fontWeight: 700,
+              background: "transparent",
+              color: RED_DK,
+              border: `1pt solid rgba(122,26,26,0.3)`,
+              borderRadius: "3pt",
+              cursor: "pointer",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+            }}
+          >
+            Reset all Zone 3 overrides
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────────
 
 export default function CostReviewModal() {
@@ -1105,6 +1385,18 @@ export default function CostReviewModal() {
   const [customLines, setCustomLines] = useState<CustomLine[]>([]);
   const [showSkipped, setShowSkipped] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+
+  // Zone 3 override state
+  const [zone3Map, setZone3Map] = useState<Record<string, Zone3Override>>({});
+
+  const refreshZone3 = useCallback(() => {
+    const list = loadOverrides();
+    const map: Record<string, Zone3Override> = {};
+    for (const ov of list) map[ov.key] = ov;
+    setZone3Map(map);
+    // Notify slides (same-tab storage event doesn't fire for self)
+    window.dispatchEvent(new Event("storage"));
+  }, []);
 
   const refresh = useCallback(() => {
     const list = loadEdits();
@@ -1116,7 +1408,24 @@ export default function CostReviewModal() {
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+    refreshZone3();
+  }, [refresh, refreshZone3]);
+
+  // Zone 3 handlers
+  const handleZone3Save = (key: string, value: number, note: string) => {
+    saveOverride(key, value, note);
+    refreshZone3();
+  };
+
+  const handleZone3Clear = (key: string) => {
+    clearOverride(key);
+    refreshZone3();
+  };
+
+  const handleZone3ClearAll = () => {
+    clearAllOverrides();
+    refreshZone3();
+  };
 
   const handleSave = (key: string, value: number, note: string) => {
     saveEdit(key, value, note);
@@ -1250,11 +1559,16 @@ export default function CostReviewModal() {
               marginBottom: "14pt",
             }}
           >
-            {(["review", "edits"] as Tab[]).map((t) => {
+            {(["review", "edits", "zone3"] as Tab[]).map((t) => {
+              const zone3OverrideCount = Object.values(zone3Map).filter(
+                (ov) => ov.value !== ov.defaultValue
+              ).length;
               const label =
                 t === "review"
                   ? "Review"
-                  : `Edits${editCount + skipCount + customCount > 0 ? ` (${editCount + skipCount + customCount})` : ""}`;
+                  : t === "edits"
+                  ? `Edits${editCount + skipCount + customCount > 0 ? ` (${editCount + skipCount + customCount})` : ""}`
+                  : `Zone 3${zone3OverrideCount > 0 ? ` (${zone3OverrideCount})` : ""}`;
               return (
                 <button
                   key={t}
@@ -1440,6 +1754,16 @@ export default function CostReviewModal() {
                 onClearAll={handleClearAll}
               />
             </>
+          )}
+
+          {/* ── ZONE 3 TAB ── */}
+          {tab === "zone3" && (
+            <Zone3Tab
+              overrideMap={zone3Map}
+              onSave={handleZone3Save}
+              onClear={handleZone3Clear}
+              onClearAll={handleZone3ClearAll}
+            />
           )}
 
         </div>

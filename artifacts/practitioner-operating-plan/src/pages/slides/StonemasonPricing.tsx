@@ -1,19 +1,44 @@
 /**
  * StonemasonPricing.tsx — Practitioner-layer pricing table + Guild cohort / tithe
+ *
+ * Guild cohort price, tithe %, and stewardship rate react live to Zone 3
+ * override assumptions set in the Cost Review modal.
  */
 
-import {
-  PRACTITIONER_TIERS,
-  GUILD_COHORT_MIN,
-  GUILD_COHORT_MAX,
-  GUILD_TITHE_PCT,
-  DEADHEAD_MONTHLY,
-  DEADHEAD_ANNUAL,
-  DEADHEAD_TRIAL_DAYS,
-  DEADHEAD_POS,
-} from "@/data/stonemason";
+import { useState, useEffect } from "react";
+import { PRACTITIONER_TIERS, DEADHEAD_MONTHLY, DEADHEAD_ANNUAL, DEADHEAD_TRIAL_DAYS, DEADHEAD_POS } from "@/data/stonemason";
+import { loadOverrideValues, ZONE3_DEFAULTS } from "@/lib/stonemasonOverrides";
 
 export default function StonemasonPricing() {
+  const [ov, setOv] = useState<Record<string, number>>(() => loadOverrideValues());
+
+  useEffect(() => {
+    const refresh = () => setOv(loadOverrideValues());
+    window.addEventListener("focus", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  const guildMin     = ov["guild_price_per_person"] ?? ZONE3_DEFAULTS["guild_price_per_person"];
+  const guildTithe   = ov["guild_tithe_pct"] ?? ZONE3_DEFAULTS["guild_tithe_pct"];
+  const retainerRate = ov["retainer_rate"] ?? ZONE3_DEFAULTS["retainer_rate"];
+  const fullLaunch   = ov["full_launch_fee"] ?? ZONE3_DEFAULTS["full_launch_fee"];
+
+  // Build a live-overridden version of the practitioner tiers for the two
+  // rate-sensitive rows (full-launch and stewardship).
+  const liveTiers = PRACTITIONER_TIERS.map((tier) => {
+    if (tier.id === "full-launch") {
+      return { ...tier, price: `$${fullLaunch.toLocaleString("en-CA")}` };
+    }
+    if (tier.id === "stewardship") {
+      return { ...tier, price: `$${retainerRate.toLocaleString("en-CA")} / mo` };
+    }
+    return tier;
+  });
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-bg">
       <div className="relative z-10 w-full h-full px-[6vw] py-[5vh] flex flex-col">
@@ -37,7 +62,7 @@ export default function StonemasonPricing() {
               Practitioner Layer
             </div>
             <div className="flex flex-col gap-[0.5vh] flex-1 overflow-auto">
-              {PRACTITIONER_TIERS.map((tier) => (
+              {liveTiers.map((tier) => (
                 <div
                   key={tier.id}
                   className="flex items-start gap-[1.2vw] border border-rule rounded-[4px] px-[1.2vw] py-[1vh]"
@@ -64,14 +89,14 @@ export default function StonemasonPricing() {
                 <div>
                   <div className="font-body text-[0.78vw] text-muted mb-[0.4vh]">Training cohort</div>
                   <div className="font-display font-semibold text-[2.4vw] text-paper tabular-nums leading-[1]">
-                    ${GUILD_COHORT_MIN.toLocaleString("en-CA")}–${GUILD_COHORT_MAX.toLocaleString("en-CA")}
+                    ${guildMin.toLocaleString("en-CA")}
                     <span className="font-body font-normal text-[0.9vw] text-muted"> / person</span>
                   </div>
                 </div>
                 <div className="border-t border-rule pt-[1vh]">
                   <div className="font-body text-[0.78vw] text-muted mb-[0.4vh]">Founding practitioner tithe</div>
                   <div className="font-display font-semibold text-[2.4vw] text-accent tabular-nums leading-[1]">
-                    {GUILD_TITHE_PCT}%
+                    {guildTithe}%
                   </div>
                   <div className="font-body text-[0.78vw] text-muted mt-[0.3vh]">
                     Of every certification fee — for the life of the practitioner's certification.
