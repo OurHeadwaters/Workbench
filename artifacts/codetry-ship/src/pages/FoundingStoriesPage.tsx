@@ -2,7 +2,15 @@
  * FoundingStoriesPage — shared front door for both the youth and adult Odyssey.
  * Renders the three founding "girl" stories with a creek/stream motif between them.
  * At the bottom: two onward paths — youth journey or pioneer odyssey.
+ *
+ * Reading progress: scroll position is saved to localStorage so returning visitors
+ * resume where they left off. Each story also has a "mark as read" toggle.
  */
+
+import { useEffect, useRef, useState, useCallback } from "react";
+
+const SCROLL_KEY = "founding-stories:scroll";
+const READ_KEY   = "founding-stories:read";
 
 /* ── Creek SVG divider ───────────────────────────────────────────────────── */
 
@@ -241,9 +249,210 @@ function StoryBody({ blocks }: { blocks: StoryBlock[] }) {
   );
 }
 
+/* ── Mark-as-read toggle ─────────────────────────────────────────────────── */
+
+function ReadToggle({
+  storyId,
+  read,
+  onToggle,
+}: {
+  storyId: string;
+  read: boolean;
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <button
+      onClick={() => onToggle(storyId)}
+      aria-pressed={read}
+      aria-label={read ? "Mark story as unread" : "Mark story as read"}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        background: read ? "rgba(46,139,78,0.15)" : "rgba(244,237,224,0.04)",
+        border: read
+          ? "1px solid rgba(46,139,78,0.45)"
+          : "1px solid rgba(244,237,224,0.1)",
+        borderRadius: "2rem",
+        padding: "0.3rem 0.8rem",
+        cursor: "pointer",
+        transition: "background 0.2s, border-color 0.2s",
+      }}
+    >
+      {/* small leaf / checkmark icon */}
+      <svg
+        viewBox="0 0 14 14"
+        width="11"
+        height="11"
+        aria-hidden="true"
+        style={{ flexShrink: 0 }}
+      >
+        {read ? (
+          <path
+            d="M2 7 L5.5 10.5 L12 3.5"
+            fill="none"
+            stroke="rgba(46,139,78,0.9)"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <circle
+            cx="7"
+            cy="7"
+            r="4.5"
+            fill="none"
+            stroke="rgba(244,237,224,0.22)"
+            strokeWidth="1.3"
+          />
+        )}
+      </svg>
+      <span
+        className="font-mono uppercase tracking-[0.2em]"
+        style={{
+          fontSize: "7.5px",
+          color: read ? "rgba(46,139,78,0.85)" : "rgba(244,237,224,0.3)",
+        }}
+      >
+        {read ? "Read" : "Mark as read"}
+      </span>
+    </button>
+  );
+}
+
+/* ── Resume banner ───────────────────────────────────────────────────────── */
+
+function ResumeBanner({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div
+      role="status"
+      style={{
+        position: "fixed",
+        bottom: "1.5rem",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+        background: "rgba(13,29,21,0.94)",
+        border: "1px solid rgba(46,139,78,0.4)",
+        borderRadius: "2rem",
+        padding: "0.55rem 1.1rem",
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.45)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
+        <path
+          d="M2 7 L5.5 10.5 L12 3.5"
+          fill="none"
+          stroke="rgba(46,139,78,0.9)"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span
+        className="font-mono uppercase tracking-[0.2em]"
+        style={{ fontSize: "8px", color: "rgba(244,237,224,0.65)" }}
+      >
+        Resumed where you left off
+      </span>
+      <button
+        onClick={onDismiss}
+        aria-label="Dismiss"
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: "0 0.1rem",
+          color: "rgba(244,237,224,0.3)",
+          fontSize: "13px",
+          lineHeight: 1,
+        }}
+      >
+        ×
+      </button>
+    </div>
+  );
+}
+
 /* ── Main page ───────────────────────────────────────────────────────────── */
 
 export function FoundingStoriesPage() {
+  const [readStories, setReadStories] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(READ_KEY);
+      return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const [showResumeBanner, setShowResumeBanner] = useState(false);
+  const scrollRestoredRef = useRef(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* ── Restore scroll on first mount ── */
+  useEffect(() => {
+    if (scrollRestoredRef.current) return;
+    scrollRestoredRef.current = true;
+
+    let savedY = 0;
+    try {
+      const raw = localStorage.getItem(SCROLL_KEY);
+      if (raw) savedY = parseInt(raw, 10);
+    } catch {
+      /* localStorage unavailable — skip restore */
+      return;
+    }
+
+    if (savedY > 0) {
+      window.scrollTo(0, savedY);
+      setShowResumeBanner(true);
+    }
+  }, []);
+
+  /* ── Save scroll position (debounced) ── */
+  useEffect(() => {
+    function handleScroll() {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => {
+        try {
+          localStorage.setItem(SCROLL_KEY, String(Math.round(window.scrollY)));
+        } catch {
+          /* ignore */
+        }
+      }, 300);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, []);
+
+  /* ── Toggle read state ── */
+  const toggleRead = useCallback((id: string) => {
+    setReadStories((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      try {
+        localStorage.setItem(READ_KEY, JSON.stringify([...next]));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+
   return (
     <main
       style={{
@@ -314,12 +523,19 @@ export function FoundingStoriesPage() {
           <div key={tale.id}>
             {/* Story header */}
             <div className="mb-8">
-              <span
-                className="font-mono uppercase tracking-[0.22em] block mb-3"
-                style={{ fontSize: "8.5px", color: "rgba(201,124,46,0.6)" }}
-              >
-                Story {String(idx + 1).padStart(2, "0")} of 03
-              </span>
+              <div className="flex items-center justify-between mb-3 gap-4">
+                <span
+                  className="font-mono uppercase tracking-[0.22em]"
+                  style={{ fontSize: "8.5px", color: "rgba(201,124,46,0.6)" }}
+                >
+                  Story {String(idx + 1).padStart(2, "0")} of 03
+                </span>
+                <ReadToggle
+                  storyId={tale.id}
+                  read={readStories.has(tale.id)}
+                  onToggle={toggleRead}
+                />
+              </div>
               <h2
                 className="font-serif mb-2"
                 style={{
@@ -478,6 +694,11 @@ export function FoundingStoriesPage() {
           </a>
         </div>
       </footer>
+
+      {/* ── Resume banner (shown when scroll was restored) ── */}
+      {showResumeBanner && (
+        <ResumeBanner onDismiss={() => setShowResumeBanner(false)} />
+      )}
     </main>
   );
 }
