@@ -93,9 +93,19 @@ export function ListenPage() {
             className="font-serif leading-[1.12] tracking-tight"
             style={{ fontSize: "clamp(1.6rem, 5.5vw, 2.4rem)" }}
           >
-            A community store that belongs to{" "}
-            <span style={{ color: "#b85a3e" }}>the people who shop in it.</span>
+            The supply chain you depend on{" "}
+            <span style={{ color: "#b85a3e" }}>was never designed to serve you.</span>
           </h1>
+          <p
+            className="mt-5 font-serif leading-relaxed"
+            style={{ fontSize: "clamp(1rem, 3vw, 1.15rem)", color: "rgba(244,237,224,0.78)" }}
+          >
+            Northwestern Ontario. Towns of 3,000–10,000 people, hours from the
+            nearest distribution centre. Local producers who can&rsquo;t reach
+            markets. Communities bleeding money outward to chain grocery. One
+            co-op decided to pool its demand instead — and built a food system
+            the chain never would.
+          </p>
         </div>
       </section>
 
@@ -103,10 +113,10 @@ export function ListenPage() {
 
         {/* ---- print-only one-liner ---- */}
         <p className="hidden print:block mt-3 font-serif text-base leading-snug">
-          Codetry is the operating system for a community economy — store, accounts, freight, and training — built in the open, owned by the band.
+          807 Food Co-op is a member-owned food co-operative in Dryden, Ontario — incorporated under the Co-operative Corporations Act, operated by 14+ member businesses, $147,000 moved through a community-owned channel in 27 months.
         </p>
 
-        {/* ---- 807 outcomes block (outcomes-first) ---- */}
+        {/* ---- 807 outcomes block ---- */}
         <section className="mt-8 print:hidden" data-testid="section-outcomes">
           <p
             className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
@@ -115,41 +125,138 @@ export function ListenPage() {
             proof it works
           </p>
           <div
-            className="rounded-sm border px-6 py-5 space-y-5"
+            className="rounded-sm border px-6 py-5 space-y-6"
             style={{ borderColor: "hsl(var(--card-border))", background: "hsl(var(--muted))" }}
           >
             <p className="font-serif font-semibold text-lg sm:text-xl leading-snug">
-              807 Food Co-op — Northwestern Ontario
+              807 Food Co-op — Dryden, Ontario
             </p>
-            {/* Outcome stats row */}
-            <div className="grid grid-cols-3 gap-4 pt-1">
-              {[
-                { value: "142",      label: "Households served" },
-                { value: "592",      label: "Orders fulfilled" },
-                { value: "$43,724", label: "Kept local" },
-              ].map(({ value, label }) => (
-                <div key={label} className="text-center">
-                  <p
-                    className="font-serif font-semibold leading-none mb-1"
-                    style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)", color: "hsl(var(--foreground))" }}
-                  >
-                    {value}
-                  </p>
-                  <p
-                    className="font-mono text-[10px] uppercase tracking-[0.16em]"
-                    style={{ color: "hsl(var(--muted-foreground))" }}
-                  >
-                    {label}
-                  </p>
-                </div>
-              ))}
+
+            {/* Local Line — online orders */}
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(var(--muted-foreground))" }}>
+                Local Line online orders · Feb 2023 – May 2026
+              </p>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { value: "142",      label: "Unique customers" },
+                  { value: "592",      label: "Orders fulfilled" },
+                  { value: "$43,725",  label: "Revenue" },
+                ].map(({ value, label }) => (
+                  <div key={label} className="text-center">
+                    <p
+                      className="font-serif font-semibold leading-none mb-1"
+                      style={{ fontSize: "clamp(1.3rem, 3.8vw, 1.85rem)", color: "hsl(var(--foreground))" }}
+                    >
+                      {value}
+                    </p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                      {label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-2 font-mono text-[10px]" style={{ color: "hsl(var(--muted-foreground))" }}>
+                avg order $73.85 · first order Feb 18, 2023
+              </p>
             </div>
-            <p className="font-serif text-sm sm:text-base leading-relaxed text-foreground/70">
-              Board-owned, no vendor fees. The same platform Bobbie built for the 807 Food Co-op is being handed off to Deer Lake First Nation right now — software, accounts, and training included. Parr&rsquo;s Jars, the homestead operation Bobbie built before the co-op, proved the model at the household scale before it moved to the community.
-            </p>
+
+            {/* Square POS — in-person */}
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(var(--muted-foreground))" }}>
+                Square POS in-person (markets + food hub) · 2023–2025
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm font-serif border-collapse">
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
+                      <th className="text-left pb-2 font-semibold">Year</th>
+                      <th className="text-right pb-2 font-semibold">Gross</th>
+                      <th className="text-right pb-2 font-semibold">Transactions</th>
+                      <th className="text-right pb-2 font-semibold">Avg</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-foreground/75">
+                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
+                      <td className="py-1.5">2023</td>
+                      <td className="text-right py-1.5">$15,417</td>
+                      <td className="text-right py-1.5">510</td>
+                      <td className="text-right py-1.5">$30.23</td>
+                    </tr>
+                    <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
+                      <td className="py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>2024</td>
+                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$79,328</td>
+                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>1,707</td>
+                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$46.47</td>
+                    </tr>
+                    <tr>
+                      <td className="pt-1.5">2025</td>
+                      <td className="text-right pt-1.5">$8,952</td>
+                      <td className="text-right pt-1.5">239</td>
+                      <td className="text-right pt-1.5">$37.45</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 font-serif text-sm leading-relaxed" style={{ color: "hsl(var(--muted-foreground))" }}>
+                The 2024 spike: an NOHFC People &amp; Talent grant funded a coordinator and regular store hours
+                from August 2024 through April 2025. When access and capacity were added, the community
+                showed up. The 2025 drop is the grant period ending — not demand collapsing.
+              </p>
+            </div>
+
+            {/* Combined total */}
+            <div
+              className="rounded-sm px-4 py-3 flex flex-wrap items-center justify-between gap-3"
+              style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--card-border))" }}
+            >
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
+                  Combined all-time · 27 months
+                </p>
+                <p className="font-serif font-semibold text-xl sm:text-2xl" style={{ color: "hsl(var(--foreground))" }}>
+                  ~$147,000
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
+                  Transactions
+                </p>
+                <p className="font-serif font-semibold text-xl sm:text-2xl" style={{ color: "hsl(var(--foreground))" }}>
+                  ~3,048
+                </p>
+              </div>
+            </div>
+
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/40">
               807foodcoop.ca · parrsjars.ca
             </p>
+          </div>
+        </section>
+
+        {/* ---- what ownership actually means ---- */}
+        <section className="mt-6 print:hidden" data-testid="section-ownership">
+          <div
+            className="rounded-sm border px-6 py-5 space-y-4"
+            style={{ borderColor: "hsl(var(--card-border))" }}
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: "hsl(var(--accent))" }}>
+              what ownership actually means
+            </p>
+            <p className="font-serif font-semibold text-base sm:text-lg leading-snug">
+              No VC. No franchise fee. No margin pulled to a head office.
+            </p>
+            <div className="space-y-2 font-serif text-sm sm:text-base leading-relaxed text-foreground/75">
+              <p>
+                Platform costs: ~$2,500/yr (Local Line SaaS) + ~$20/mo banking. That&rsquo;s the whole overhead stack.
+              </p>
+              <p>
+                Incorporated under Ontario&rsquo;s <em>Co-operative Corporations Act</em>. Members own it — not investors, not a parent organization, not a vendor.
+              </p>
+              <p>
+                <strong style={{ color: "hsl(var(--foreground))" }}>14+ active member businesses</strong> confirmed as of the May 2026 AGM.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -191,32 +298,34 @@ export function ListenPage() {
         <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
         <p className="mt-6 font-serif text-xl sm:text-2xl leading-snug text-foreground/70 print:hidden">
-          Not a co-op pitch. Not a grant application. A working system — being
-          built right now, in Northwestern Ontario, by a household that lives
-          the same logistical reality you do.
+          Not a co-op pitch. Not a grant application. A working system —
+          three years of real numbers, real members, real logistics — in a
+          region that the existing food system has never prioritised.
         </p>
 
         <hr className="rule mt-10 sm:mt-12 print:hidden" />
 
-        {/* ---- what is codetry ---- */}
-        <section className="mt-10 sm:mt-12 space-y-5 font-serif text-base sm:text-lg leading-relaxed print:hidden">
+        {/* ---- the flywheel ---- */}
+        <section className="mt-10 sm:mt-12 space-y-5 font-serif text-base sm:text-lg leading-relaxed print:hidden" data-testid="section-flywheel">
           <p>
-            <strong>Codetry</strong> is the operating system for a community
-            economy. Store, accounts, freight, training — everything a small
-            northern community needs to run its own supply without importing
-            outside management or handing control to a southern vendor.
+            <strong>The insight is simple.</strong> A single farm or store
+            can&rsquo;t justify the distribution route. A single household
+            can&rsquo;t negotiate freight. But pool the demand — get enough
+            households ordering together — and suddenly the route is
+            justifiable. The route justifies producers listing. Producers
+            attract more members. More members justify better logistics.
           </p>
           <p>
-            The short version: your community gets a real store, real
-            transparent accounts, and a trained local team. Headwaters builds the
-            software and teaches the people. The band owns the result.
+            That&rsquo;s the flywheel. It doesn&rsquo;t require a grant to
+            start. It requires a group of people willing to put their name on
+            an order before the system exists. The 807 Food Co-op started
+            with that. The numbers above are what three years of that looks like.
           </p>
           <p>
-            It&rsquo;s designed for the north — for communities where the road
-            closes with the ice, where the workforce flexes with hunting season,
-            where the current system costs more than it returns. Not a southern
-            model patched for a northern address. A different design for a
-            different foundation.
+            The platform cost is ~$2,500/yr. The overhead is one part-time
+            coordinator when a grant supports it, and volunteers when it
+            doesn&rsquo;t. The community keeps every dollar of margin that
+            would otherwise leave the region.
           </p>
         </section>
 
@@ -376,6 +485,26 @@ export function ListenPage() {
             <TrustRow
               label="The Codetry Handbook"
               detail="A full practitioner guide to running a community economy — the vocabulary, the tools, the operating model. Freely available. Built in the open."
+            />
+          </div>
+        </section>
+
+        {/* ---- what's next ---- */}
+        <section className="mt-10 sm:mt-12 print:hidden" data-testid="section-whats-next">
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
+            style={{ color: "hsl(var(--accent))" }}
+          >
+            what&rsquo;s next
+          </p>
+          <div className="space-y-4">
+            <TrustRow
+              label="Phase 1 — cold distribution lane (AGM-ratified, May 21 2026)"
+              detail="A bi-weekly Thunder Bay/Neebing → Sioux Lookout → Dryden cold run. ~$50K capital, AGM-approved. This is the logistics backbone that lets producers move product without depending on individual vehicle runs. Same flywheel — bigger radius."
+            />
+            <TrustRow
+              label="Phase 2 — northern reserve service"
+              detail="Extending the distribution lane into Deer Lake First Nation. Headwaters is already delivering the store operating system there: software, accounts, freight coordination, and on-site training. The lane follows the relationship."
             />
           </div>
         </section>
