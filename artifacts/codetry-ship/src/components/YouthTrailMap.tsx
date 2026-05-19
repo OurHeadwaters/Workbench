@@ -366,7 +366,7 @@ export function YouthTrailMap({ currentPhase = 0, onPhaseClick, className = "" }
         })}
 
         {/* ── Start Here cue — anchored near Phase 1 / Your Kitchen (bottom) ── */}
-        <g transform="translate(260,418)">
+        <g transform="translate(318,418)">
           <text
             x={0} y={0}
             textAnchor="middle"
