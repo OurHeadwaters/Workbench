@@ -1,0 +1,115 @@
+# Agent Brief — Headwaters `/listen` Landing Page
+
+**Status:** Research complete, page not yet built
+
+---
+
+## What this is
+
+A public landing page at `/listen` in the `artifacts/807-benefits` app (the 807 Food Co-op member web app). It targets listeners of the **Survival Podcast** who are being sent there from an episode or ad read. The goal is to tell the flywheel story of how 807 Food Co-operative works, use real numbers as social proof, and funnel listeners toward membership.
+
+**Headwaters** is the platform vendor/owner. **807 Food Co-operative & Hub** (Dryden, ON) is the flagship tenant and the proof case. The page tells 807's story as evidence that the Headwaters model works — not as a pitch to join 807 specifically (though that's fine as a CTA).
+
+---
+
+## The audience
+
+Survival Podcast listeners. They care about:
+- Food sovereignty and resilience
+- Not being dependent on supply chains they don't control
+- Community ownership vs corporate extraction
+- Practical proof over theory — numbers matter to them
+- Local producers and knowing where food comes from
+
+They are skeptical of green-washing and co-op romanticism. Lead with outcomes, not ideology.
+
+---
+
+## The flywheel story arc
+
+This is the narrative spine of the page:
+
+1. **Hook — the fragility problem.** NW Ontario communities (towns of 3,000–10,000, hours from the nearest distribution centre) have almost no control over their food supply. Local producers exist but can't reach markets. Communities bleed money outward to chain grocery.
+
+2. **The insight.** Pool the demand. A co-op can justify the distribution route that no single farm or store can. Members aggregate buying power; buying power justifies producers listing; producers attract more members; more members justify better logistics. That's the flywheel.
+
+3. **The numbers — social proof.** These are real, pulled from the live DB and Square sales reports:
+
+   | Channel | Gross | Transactions | Period |
+   |---|---|---|---|
+   | Local Line (online orders) | $43,724.59 | 592 orders | Feb 2023 – May 2026 |
+   | Square POS (in-person, markets + hub) | $103,696.66 | 2,456 transactions | 2023–2025 |
+   | **Combined** | **~$147,000** | **~3,048** | **27 months** |
+
+   Year-over-year Square: **$15K (2023) → $79K (2024) → $9K (2025)**
+   - The 2024 spike: NOHFC People & Talent coordinator + member volunteers ran the food hub with store hours Aug 2024 – Apr 2025. When access and capacity were added, the community showed up. The 2025 drop is the grant period ending, not demand collapsing.
+   - Local Line: 142 unique customers, avg order ~$73.85, first order Feb 18 2023.
+
+4. **What ownership actually means.**
+   - Platform costs ~$2,500/yr (Local Line SaaS) + ~$20/mo banking. That's it.
+   - No VC extraction. No franchise fee. No margin pulled to a head office.
+   - Incorporated under Ontario's Co-operative Corporations Act — members own it.
+   - 14+ active member businesses confirmed as of May 2026 AGM.
+
+5. **The flywheel expanding.** What's next: a bi-weekly Tbay/Neebing → Sioux Lookout → Dryden cold distribution lane (Phase 1, AGM-ratified May 21 2026, ~$50K cap). Then Northern reserve service into Deer Lake First Nation (Phase 2). Same flywheel, bigger radius.
+
+6. **CTA.** Join the co-op / become a member. Or: "If you're building something like this in your community, the platform that runs this is available to other co-ops."
+
+---
+
+## Tone and style
+
+- Direct and data-first. Not warm and fuzzy. These listeners want proof.
+- No co-op jargon unless immediately explained.
+- Acknowledge the hard parts. The 2025 Square drop is honest — say what it was and why it doesn't undermine the thesis.
+- Community voice, not corporate voice. First person plural ("we"), conversational, grounded.
+- Match the visual style of `artifacts/807-benefits/src/pages/coming-soon.tsx` — dark primary hero, serif headings, card-based sections, muted backgrounds.
+
+---
+
+## Where to build it
+
+- **File:** `artifacts/807-benefits/src/pages/listen.tsx`
+- **Route:** Add `/listen` as a public route (no auth required) in the app router
+- **Nav:** Do NOT add to the main nav — standalone landing page reached only via the podcast link
+- **Style reference:** `artifacts/807-benefits/src/pages/coming-soon.tsx` — same layout component, same design tokens, same hero / section / card structure
+- **Tenant config:** `artifacts/807-benefits/src/config/tenant` — use `tenant.shortName` etc. for 807-specific strings
+
+---
+
+## Confirmed data (do not approximate or fabricate)
+
+Local Line orders:        592 orders
+Local Line customers:     142 unique
+Local Line revenue:       $43,724.59
+Local Line first order:   Feb 18, 2023
+Local Line avg order:     ~$73.85
+
+Square 2023:              $15,416.96 gross / 510 transactions / avg $30.23
+Square 2024:              $79,327.99 gross / 1,707 transactions / avg $46.47
+Square 2025 (partial):    $8,951.71 gross / 239 transactions / avg $37.45
+Square all-time:          $103,696.66 / 2,456 transactions
+
+Combined all-time:        ~$147,000 / ~3,048 transactions / 27 months
+
+Active member businesses: 14+
+Platform SaaS cost:       ~$2,500/yr (Local Line) + ~$20/mo banking
+Incorporated:             Ontario Co-operative Corporations Act
+
+---
+
+## What NOT to do
+
+- Do not add this page to the main nav or member dashboard flows
+- Do not gate it behind Clerk auth
+- Do not use placeholder or fabricated numbers — all figures above are confirmed
+- Do not romanticise the co-op model without grounding it in the data
+- Do not conflate Headwaters (platform vendor) with 807 (tenant/licensee)
+
+---
+
+## Files to read before starting
+
+1. `artifacts/807-benefits/src/pages/coming-soon.tsx` — style reference
+2. App router file — to understand how to register `/listen` as a public route
+3. `docs/nw-ontario-distribution/01-master-strategy.md` — Phase 1/2/3 expansion narrative for the "what's next" section
