@@ -413,6 +413,32 @@ export function TrailMapHero({ currentPhase = 0, onPhaseClick, className = "" }:
           );
         })}
 
+        {/* ── Start Here cue — anchored near Phase 1 / The Saltbox (bottom) ── */}
+        <g transform="translate(178,468)">
+          <text
+            x={0} y={0}
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', 'Courier New', monospace"
+            fontSize="14" fontWeight="700" letterSpacing="0.14em"
+            fill="rgba(201,124,46,0.96)"
+          >
+            START HERE
+          </text>
+          <text
+            x={0} y={17}
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', 'Courier New', monospace"
+            fontSize="13" fontWeight="700"
+            fill="rgba(201,124,46,0.96)"
+          >
+            ↓
+          </text>
+          <line
+            x1={-38} y1={5} x2={38} y2={5}
+            stroke="rgba(201,124,46,0.38)" strokeWidth="1.2" strokeLinecap="round"
+          />
+        </g>
+
         {/* ── Map legend ── */}
         <g transform="translate(10, 490)">
           <circle cx={5} cy={0} r={3.5} fill="none" stroke="rgba(244,237,224,0.4)" strokeWidth="1.2" />

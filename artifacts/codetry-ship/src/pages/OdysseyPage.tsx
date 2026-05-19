@@ -266,7 +266,7 @@ export function OdysseyPage() {
               Begin ↓
             </a>
             <a
-              href="/story"
+              href="/founding-stories"
               className="font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity hover:opacity-80"
               style={{ color: "rgba(244,237,224,0.38)" }}
             >

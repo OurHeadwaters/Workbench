@@ -20,6 +20,7 @@ import { ListenPage } from "@/pages/ListenPage";
 import { TheWindowPage } from "@/pages/TheWindowPage";
 import { OdysseyPage } from "@/pages/OdysseyPage";
 import { StoryPage } from "@/pages/StoryPage";
+import { FoundingStoriesPage } from "@/pages/FoundingStoriesPage";
 import { SiteNav } from "@/components/SiteNav";
 import { getStoredOwnerToken } from "@/lib/api";
 import { EconomyPage } from "@/pages/EconomyPage";
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/window" component={TheWindowPage} />
       <Route path="/odyssey" component={OdysseyPage} />
       <Route path="/story" component={StoryPage} />
+      <Route path="/founding-stories" component={FoundingStoriesPage} />
       <Route path="/bright-side" component={BrightSidePage} />
       <Route path="/deadhead/intake">
         {() => <ProtectedRoute component={DeadheadIntakePage} />}
