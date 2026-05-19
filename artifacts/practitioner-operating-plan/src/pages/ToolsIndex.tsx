@@ -189,6 +189,67 @@ export default function ToolsIndex() {
             </div>
           ))}
 
+          {/* Zone 3 divider */}
+          <div style={{ marginTop: "22pt", marginBottom: "16pt" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10pt" }}>
+              <div style={{ height: "1pt", background: RULE, flex: 1 }} />
+              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER }}>
+                Zone 3 — Business Model
+              </div>
+              <div style={{ height: "1pt", background: RULE, flex: 1 }} />
+            </div>
+          </div>
+
+          {/* Zone 3 card */}
+          <div
+            style={{
+              marginBottom: "22pt",
+              display: "grid",
+              gridTemplateColumns: "0.4in 1fr auto",
+              gap: "0 16pt",
+              alignItems: "start",
+            }}
+          >
+            {/* Number */}
+            <div style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace", fontSize: "22pt", fontWeight: 700, color: "rgba(184,90,62,0.18)", lineHeight: 1, paddingTop: "2pt" }}>
+              Z3
+            </div>
+
+            {/* Content */}
+            <div>
+              <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "3pt" }}>
+                Founder · three-layer revenue model · Rootwork pilot
+              </div>
+              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: "15pt", fontWeight: 700, color: DARK, lineHeight: 1.15, marginBottom: "6pt" }}>
+                Zone 3 Business Model
+              </div>
+              <div style={{ fontSize: "9pt", color: TEXT, lineHeight: 1.55 }}>
+                Five slides covering the Stonemason revenue structure: Commons (platform infrastructure), Practitioner (deployment engagement), and Guild (certification network). Includes pricing tables, income projections, grant positioning, the Rootwork pilot launch plan, and cash-flow sequencing. Opens directly at the Zone 3 Overview slide.
+              </div>
+            </div>
+
+            {/* Link */}
+            <div style={{ paddingTop: "20pt" }}>
+              <a
+                href={`${BASE}/deck?slide=10`}
+                style={{
+                  display: "inline-block",
+                  fontSize: "8pt",
+                  fontWeight: 700,
+                  color: CREAM,
+                  background: DARK,
+                  padding: "5pt 12pt",
+                  borderRadius: "3pt",
+                  textDecoration: "none",
+                  letterSpacing: "0.04em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Open Zone 3 slides →
+              </a>
+            </div>
+          </div>
+
           {/* Quick reference */}
           <div style={{ marginTop: "22pt", background: "rgba(31,61,46,0.05)", border: `1pt solid ${RULE}`, borderRadius: "3pt", padding: "10pt 14pt" }}>
             <div style={{ fontSize: "7pt", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: AMBER, marginBottom: "7pt" }}>

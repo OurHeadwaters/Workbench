@@ -89,7 +89,13 @@ export default function DeckPlayer() {
 
   useEffect(() => {
     if (!isOnSlide) {
-      navigate(slidePath(0), { replace: true });
+      const params = new URLSearchParams(window.location.search);
+      const slideParam = params.get("slide");
+      const parsed = slideParam ? parseInt(slideParam, 10) : NaN;
+      const startIdx = Number.isFinite(parsed)
+        ? Math.max(0, Math.min(parsed - 1, TOTAL - 1))
+        : 0;
+      navigate(slidePath(startIdx), { replace: true });
     }
   }, [isOnSlide, navigate]);
 
