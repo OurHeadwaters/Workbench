@@ -64,12 +64,18 @@ const API_BASE = process.env.EXPO_PUBLIC_DOMAIN
 type ScreenPhase = "tale" | "prompts" | "generating" | "story" | "done";
 
 // Render TaleBlock[] inline (no outer ScrollView wrapper)
+// When highlightedWordIndex and blockWordOffsets are provided, renders
+// word-by-word spans so the current spoken word can be highlighted.
 function TaleBlocks({
   blocks,
   colors,
+  highlightedWordIndex = null,
+  blockWordOffsets,
 }: {
   blocks: TaleBlock[];
   colors: ReturnType<typeof useColors>;
+  highlightedWordIndex?: number | null;
+  blockWordOffsets?: number[];
 }) {
   return (
     <>
@@ -81,17 +87,41 @@ function TaleBlocks({
             </View>
           );
         }
-        if (block.kind === "para") {
+        if (block.kind === "para" || block.kind === "italic") {
+          const baseStyle = block.kind === "para" ? taleStyles.para : taleStyles.italic;
+          const fontFamily = block.kind === "para" ? SERIF : SERIF_ITALIC;
+
+          // Plain render when TTS highlighting is not active
+          if (highlightedWordIndex == null || !blockWordOffsets) {
+            return (
+              <Text key={i} style={[baseStyle, { color: colors.foreground, fontFamily }]}>
+                {block.text}
+              </Text>
+            );
+          }
+
+          // Word-by-word render for karaoke highlighting
+          // split(/(\S+)/) gives alternating [sep, word, sep, word …]
+          // odd indices are words, even indices are separators
+          const tokens = block.text.split(/(\S+)/);
+          const blockOffset = blockWordOffsets[i];
+          let wordCount = 0;
+
           return (
-            <Text key={i} style={[taleStyles.para, { color: colors.foreground, fontFamily: SERIF }]}>
-              {block.text}
-            </Text>
-          );
-        }
-        if (block.kind === "italic") {
-          return (
-            <Text key={i} style={[taleStyles.italic, { color: colors.foreground, fontFamily: SERIF_ITALIC }]}>
-              {block.text}
+            <Text key={i} style={[baseStyle, { color: colors.foreground, fontFamily }]}>
+              {tokens.map((token, j) => {
+                if (j % 2 === 1) {
+                  const globalIdx = blockOffset + wordCount;
+                  const isHighlighted = globalIdx === highlightedWordIndex;
+                  wordCount++;
+                  return (
+                    <Text key={j} style={isHighlighted ? taleStyles.wordHighlight : undefined}>
+                      {token}
+                    </Text>
+                  );
+                }
+                return token ? <Text key={j}>{token}</Text> : null;
+              })}
             </Text>
           );
         }
@@ -106,6 +136,7 @@ const taleStyles = StyleSheet.create({
   italic: { fontSize: 17, lineHeight: 28, marginBottom: 18, paddingLeft: 6 },
   breakRow: { alignItems: "center", marginVertical: 24 },
   ornament: { width: 28, height: 1, opacity: 0.45 },
+  wordHighlight: { backgroundColor: "#F59E0B", borderRadius: 3 },
 });
 
 function blocksToPlainText(blocks: TaleBlock[]): string {
@@ -122,6 +153,26 @@ const TTS_SPEED_RATES: Record<TtsSpeed, number> = { slow: 0.7, normal: 0.92, fas
 const TTS_SPEED_LABELS: Record<TtsSpeed, string> = { slow: "Slow", normal: "Normal", fast: "Fast" };
 const ASYNC_KEY_SPEED = "@tts_speed";
 const ASYNC_KEY_VOICE = "@tts_voice";
+
+function buildWordPositions(text: string): number[] {
+  const positions: number[] = [];
+  for (const m of text.matchAll(/\S+/g)) {
+    positions.push(m.index!);
+  }
+  return positions;
+}
+
+function computeBlockWordOffsets(blocks: TaleBlock[]): number[] {
+  const offsets: number[] = [];
+  let count = 0;
+  for (const block of blocks) {
+    offsets.push(count);
+    if (block.kind === "para" || block.kind === "italic") {
+      count += block.text.match(/\S+/g)?.length ?? 0;
+    }
+  }
+  return offsets;
+}
 
 const ttsStyles = StyleSheet.create({
   row: {
@@ -238,6 +289,12 @@ export default function StoryStationScreen() {
     [station],
   );
 
+  // Pre-computed global word offset for each block — stable as long as tale doesn't change
+  const blockWordOffsets = useMemo(
+    () => (tale ? computeBlockWordOffsets(tale.body) : []),
+    [tale],
+  );
+
   const storedAnswers = station ? getAnswers(station.id) : {};
   const storedStory = station ? getStory(station.id) : undefined;
   const storedMemory = station ? getTrailMemory(station.id) : {};
@@ -276,6 +333,8 @@ export default function StoryStationScreen() {
   const [ttsVoice, setTtsVoiceState] = useState<string | null>(null);
   const [availableVoices, setAvailableVoices] = useState<Speech.Voice[]>([]);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  // Index of the word currently being spoken (null = none)
+  const [currentWordIdx, setCurrentWordIdx] = useState<number | null>(null);
 
   // Load persisted TTS preferences and available voices on mount
   useEffect(() => {
@@ -325,17 +384,39 @@ export default function StoryStationScreen() {
     Speech.stop();
     setTtsPlaying(false);
     setTtsPaused(false);
+    setCurrentWordIdx(null);
   }, []);
 
   const ttsSpeak = useCallback(() => {
     if (!tale) return;
     const text = blocksToPlainText(tale.body);
+    // Pre-compute char positions of every word for boundary mapping
+    const wordPositions = buildWordPositions(text);
     ttsStop();
     const opts: Speech.SpeechOptions = {
       onStart: () => { setTtsPlaying(true); setTtsPaused(false); },
-      onDone: () => { setTtsPlaying(false); setTtsPaused(false); },
-      onStopped: () => { setTtsPlaying(false); setTtsPaused(false); },
-      onError: () => { setTtsPlaying(false); setTtsPaused(false); },
+      onDone: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
+      onStopped: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
+      onError: () => { setTtsPlaying(false); setTtsPaused(false); setCurrentWordIdx(null); },
+      // onBoundary fires on native iOS/Android; gracefully absent on web
+      onBoundary: Platform.OS !== "web"
+        ? ({ charIndex }: { charIndex: number }) => {
+            // Binary search: find the word whose start is <= charIndex
+            let lo = 0;
+            let hi = wordPositions.length - 1;
+            let idx = 0;
+            while (lo <= hi) {
+              const mid = (lo + hi) >> 1;
+              if (wordPositions[mid] <= charIndex) {
+                idx = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
+              }
+            }
+            setCurrentWordIdx(idx);
+          }
+        : undefined,
       rate: TTS_SPEED_RATES[ttsSpeed],
     };
     if (ttsVoice) opts.voice = ttsVoice;
@@ -968,7 +1049,12 @@ export default function StoryStationScreen() {
                     ) : null}
                   </View>
                 ) : null}
-                <TaleBlocks blocks={tale.body} colors={c} />
+                <TaleBlocks
+                  blocks={tale.body}
+                  colors={c}
+                  highlightedWordIndex={currentWordIdx}
+                  blockWordOffsets={blockWordOffsets}
+                />
                 {tale.authorNote ? (
                   <>
                     <View style={[styles.taleRule, { backgroundColor: c.rule, marginTop: 8, marginBottom: 20 }]} />
@@ -1024,7 +1110,12 @@ export default function StoryStationScreen() {
                   </Pressable>
                   {taleExpanded ? (
                     <View style={{ marginTop: 12 }}>
-                      <TaleBlocks blocks={tale.body} colors={c} />
+                      <TaleBlocks
+                        blocks={tale.body}
+                        colors={c}
+                        highlightedWordIndex={currentWordIdx}
+                        blockWordOffsets={blockWordOffsets}
+                      />
                     </View>
                   ) : null}
                 </>
