@@ -5,10 +5,12 @@
  *   - OdysseyPage "New here?" link points to /founding-stories, not /story
  *   - FoundingStoriesPage renders all three story titles
  *   - FoundingStoriesPage bottom CTAs link to /story and /odyssey
+ *   - OdysseyPage post-completion screen (Guild cohort / What's next block)
  */
 
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import * as api from "@/lib/api";
 import { OdysseyPage } from "@/pages/OdysseyPage";
 import { FoundingStoriesPage } from "@/pages/FoundingStoriesPage";
 
@@ -21,6 +23,8 @@ vi.mock("@/components/TrailMapHero", () => ({
 vi.mock("@/lib/api", () => ({
   getStoredOwnerToken: () => null,
   apiRequest: vi.fn(),
+  postIntake: vi.fn(),
+  ApiError: class ApiError extends Error {},
 }));
 
 /* ── OdysseyPage entry link ── */
@@ -66,5 +70,61 @@ describe("FoundingStoriesPage — content", () => {
     render(<FoundingStoriesPage />);
     const link = screen.getByRole("link", { name: /practitioner/i });
     expect(link).toHaveAttribute("href", "/odyssey");
+  });
+});
+
+/* ── OdysseyPage post-completion screen ── */
+
+async function submitOdysseyForm() {
+  render(<OdysseyPage />);
+
+  fireEvent.change(screen.getByPlaceholderText(/first name is fine/i), {
+    target: { value: "Alex" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/where i can reach you/i), {
+    target: { value: "alex@example.com" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/band council, co-op/i), {
+    target: { value: "Test Community" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/a word people use/i), {
+    target: { value: "growth" },
+  });
+
+  fireEvent.click(screen.getByTestId("odyssey-submit"));
+}
+
+describe("OdysseyPage — post-completion screen", () => {
+  beforeEach(() => {
+    vi.mocked(api.postIntake).mockResolvedValue({ name: "Alex" } as Awaited<ReturnType<typeof api.postIntake>>);
+  });
+
+  it("shows the odyssey-whats-next block after submission", async () => {
+    await submitOdysseyForm();
+    await waitFor(() =>
+      expect(screen.getByTestId("odyssey-whats-next")).toBeInTheDocument()
+    );
+  });
+
+  it("renders the 'Guild cohort + Signal group' heading", async () => {
+    await submitOdysseyForm();
+    await waitFor(() =>
+      expect(screen.getByText(/guild cohort \+ signal group/i)).toBeInTheDocument()
+    );
+  });
+
+  it("renders the '$1,200 – $1,500 / person' price", async () => {
+    await submitOdysseyForm();
+    await waitFor(() =>
+      expect(screen.getByText(/\$1,200\s*–\s*\$1,500\s*\/\s*person/i)).toBeInTheDocument()
+    );
+  });
+
+  it("'Express interest' link points to /sign-on", async () => {
+    await submitOdysseyForm();
+    await waitFor(() => {
+      const link = screen.getByRole("link", { name: /express interest/i });
+      expect(link).toHaveAttribute("href", "/sign-on");
+    });
   });
 });
