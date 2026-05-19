@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const T = {
@@ -12,10 +14,14 @@ const T = {
 };
 
 function PrintButton() {
+  function handlePrint() {
+    const url = window.location.href.split("?")[0] + "?print";
+    window.open(url, "_blank");
+  }
   return (
     <button
       className="no-print"
-      onClick={() => window.print()}
+      onClick={handlePrint}
       style={{
         display: "flex",
         alignItems: "center",
@@ -95,13 +101,19 @@ function Body({ children }: { children: React.ReactNode }) {
 
 function Bullets({ items }: { items: string[] }) {
   return (
-    <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>
+    <ul style={{
+      margin: "0 0 10px",
+      paddingLeft: 22,
+      listStyleType: "disc",
+    }}>
       {items.map((item, i) => (
         <li key={i} style={{
+          display: "list-item",
+          listStyleType: "disc",
           fontSize: 14,
           color: T.text,
           lineHeight: 1.75,
-          marginBottom: 4,
+          marginBottom: 5,
         }}>
           {item}
         </li>
@@ -132,6 +144,13 @@ function Callout({ children }: { children: React.ReactNode }) {
 }
 
 export default function DeerLakeChiefBrief() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("print")) {
+      setTimeout(() => window.print(), 300);
+    }
+  }, []);
+
   return (
     <div
       className="print-root"
@@ -176,7 +195,7 @@ export default function DeerLakeChiefBrief() {
           color: T.text,
           margin: "0 0 14px",
         }}>
-          A Store That Belongs to Everyone
+          A Place for Everyone
         </h1>
         <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, margin: 0, maxWidth: 480 }}>
           For the Chief — plain language, one read. May 2026.
@@ -188,13 +207,13 @@ export default function DeerLakeChiefBrief() {
       {/* Section 1 */}
       <Section eyebrow="What this is" heading="Not a business pitch. A community tool.">
         <Body>
-          A band store built right doesn't compete with what's already there.
+          A community store built right doesn't compete with what's already there.
           It lifts everything — the hunters who need gas, the families who drive to Sioux Lookout for groceries,
           the elders who need basics without the trip.
           The goal isn't to take market share. It's to keep money in the community that's leaving it every week.
         </Body>
         <Callout>
-          A rising tide floats all boats. A well-run store makes the whole community stronger — including the people already in business.
+          A rising tide floats all boats. A well-run community store makes everyone stronger — including the people already in business.
         </Callout>
       </Section>
 
@@ -203,7 +222,7 @@ export default function DeerLakeChiefBrief() {
       {/* Section 2 — 807 proof */}
       <Section eyebrow="We've done this before" heading="The 807 Food Co-op started the same way.">
         <Body>
-          In Thunder Bay, the 807 Food Co-op & Hub began as a question: what if the community owned
+          In Dryden, the 807 Food Co-op & Hub began as a question: what if the community owned
           the supply chain instead of depending on it? It didn't put anyone out of business.
           It created a platform that independent producers, local sellers, and northern communities
           could plug into — and it grew because it was designed to include, not compete.
@@ -223,7 +242,7 @@ export default function DeerLakeChiefBrief() {
           Right now, when a young person from Deer Lake wants to understand business,
           they have to leave to find it. The store changes that.
           It becomes a place where youth can work real inventory, watch real decisions get made,
-          and learn what it means to run something that their community depends on.
+          and learn what it means to run something their community depends on.
           Not a classroom. Not a simulation. The real thing — with guidance.
         </Body>
         <Bullets items={[
