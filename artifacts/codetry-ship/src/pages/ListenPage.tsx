@@ -139,9 +139,9 @@ export function ListenPage() {
               </p>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { value: "142",      label: "Unique customers" },
-                  { value: "592",      label: "Orders fulfilled" },
-                  { value: "$43,725",  label: "Revenue" },
+                  { value: "142",          label: "Households" },
+                  { value: "592",          label: "Orders fulfilled" },
+                  { value: "$43,724.59",   label: "Revenue" },
                 ].map(({ value, label }) => (
                   <div key={label} className="text-center">
                     <p
@@ -179,19 +179,19 @@ export function ListenPage() {
                   <tbody className="text-foreground/75">
                     <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
                       <td className="py-1.5">2023</td>
-                      <td className="text-right py-1.5">$15,417</td>
+                      <td className="text-right py-1.5">$15,416.96</td>
                       <td className="text-right py-1.5">510</td>
                       <td className="text-right py-1.5">$30.23</td>
                     </tr>
                     <tr style={{ borderBottom: "1px solid hsl(var(--card-border))" }}>
                       <td className="py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>2024</td>
-                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$79,328</td>
+                      <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$79,327.99</td>
                       <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>1,707</td>
                       <td className="text-right py-1.5 font-semibold" style={{ color: "hsl(var(--foreground))" }}>$46.47</td>
                     </tr>
                     <tr>
                       <td className="pt-1.5">2025</td>
-                      <td className="text-right pt-1.5">$8,952</td>
+                      <td className="text-right pt-1.5">$8,951.71</td>
                       <td className="text-right pt-1.5">239</td>
                       <td className="text-right pt-1.5">$37.45</td>
                     </tr>
