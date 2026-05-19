@@ -198,7 +198,26 @@ export default function Index() {
   const [community, setCommunity] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
   const [activeZone, setActiveZone] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const zoneRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const isSearching = normalizedQuery.length > 0;
+
+  const filteredZones = ZONES.map((z) => ({
+    ...z,
+    docs: isSearching
+      ? z.docs.filter(
+          (doc) =>
+            doc.title.toLowerCase().includes(normalizedQuery) ||
+            doc.label.toLowerCase().includes(normalizedQuery) ||
+            doc.desc.toLowerCase().includes(normalizedQuery)
+        )
+      : z.docs,
+  }));
+
+  const totalMatches = filteredZones.reduce((sum, z) => sum + z.docs.length, 0);
 
   async function handlePacketDownload() {
     setPacketLoading(true);
@@ -508,9 +527,92 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════ SEARCH BAR ══ */}
+      <div style={{ maxWidth: "52rem", margin: "0 auto", padding: "1.5rem 1.25rem 0" }}>
+        <div style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+        }}>
+          <span style={{
+            position: "absolute",
+            left: "0.9rem",
+            color: "rgba(31,61,46,0.45)",
+            fontSize: "1rem",
+            lineHeight: 1,
+            pointerEvents: "none",
+          }}>
+            ⌕
+          </span>
+          <input
+            ref={searchRef}
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={'Search documents \u2014 try \u201cdeer lake\u201d, \u201cprice\u201d, \u201cNAN\u201d \u2026'}
+            aria-label="Search documents"
+            style={{
+              width: "100%",
+              background: "white",
+              border: "1.5px solid rgba(31,61,46,0.22)",
+              borderRadius: "6px",
+              padding: "0.65rem 2.5rem 0.65rem 2.25rem",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.92rem",
+              color: "var(--ink)",
+              outline: "none",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+              transition: "border-color 0.15s, box-shadow 0.15s",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "#2e8b4e";
+              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(46,139,78,0.12)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "rgba(31,61,46,0.22)";
+              e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.06)";
+            }}
+          />
+          {isSearching && (
+            <button
+              onClick={() => setSearchQuery("")}
+              aria-label="Clear search"
+              style={{
+                position: "absolute",
+                right: "0.75rem",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgba(31,61,46,0.5)",
+                fontSize: "1rem",
+                lineHeight: 1,
+                padding: "0.2rem",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        {isSearching && (
+          <p style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.75rem",
+            color: "rgba(31,61,46,0.5)",
+            marginTop: "0.5rem",
+            marginBottom: 0,
+          }}>
+            {totalMatches === 0
+              ? "No documents match that search."
+              : `${totalMatches} document${totalMatches !== 1 ? "s" : ""} match${totalMatches === 1 ? "es" : ""} "${searchQuery.trim()}"`}
+          </p>
+        )}
+      </div>
+
       {/* ══════════════════════════════════════ ZONE JOURNAL CARDS ══ */}
-      <div style={{ maxWidth: "52rem", margin: "0 auto", padding: "2.5rem 1.25rem 0.5rem" }}>
-        {ZONES.map((z, zi) => {
+      <div style={{ maxWidth: "52rem", margin: "0 auto", padding: "1.25rem 1.25rem 0.5rem" }}>
+        {filteredZones.map((z, zi) => {
           const isActive = activeZone === z.n;
           return (
             <div
@@ -605,6 +707,18 @@ export default function Index() {
 
                 {/* Document list */}
                 <div style={{ padding: "0.75rem 1.25rem 1.25rem" }}>
+                  {isSearching && z.docs.length === 0 ? (
+                    <p style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "0.78rem",
+                      color: "rgba(31,61,46,0.38)",
+                      fontStyle: "italic",
+                      margin: "0.25rem 0 0.5rem",
+                      padding: "0.5rem 0.25rem",
+                    }}>
+                      No documents in this zone match your search.
+                    </p>
+                  ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {z.docs.map((doc) => (
                       <Link
@@ -681,6 +795,7 @@ export default function Index() {
                       </Link>
                     ))}
                   </div>
+                  )}
                 </div>
 
                 {/* Card footer */}
